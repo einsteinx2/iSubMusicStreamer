@@ -1,0 +1,9 @@
+//
+// Prefix header for all source files of the 'Sub' target in the 'Sub' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+    #import "LibSub.h"
+#endif
+

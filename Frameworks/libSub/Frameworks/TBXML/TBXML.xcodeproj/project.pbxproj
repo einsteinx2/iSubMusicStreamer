@@ -1,0 +1,690 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8290352714D9F5B200ACF7E4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8290352614D9F5B200ACF7E4 /* Foundation.framework */; };
+		8290353414D9F5B200ACF7E4 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 829FA0B114D5B52A00D18697 /* SenTestingKit.framework */; };
+		8290353714D9F5B200ACF7E4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8290352614D9F5B200ACF7E4 /* Foundation.framework */; };
+		8290353A14D9F5B200ACF7E4 /* libTBXML-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8290352514D9F5B200ACF7E4 /* libTBXML-iOS.a */; };
+		8290354B14D9F6B100ACF7E4 /* TBXML+Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = 829FA0C914D5B55D00D18697 /* TBXML+Compression.m */; };
+		8290354C14D9F6B100ACF7E4 /* TBXML+HTTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 829FA0CA14D5B55D00D18697 /* TBXML+HTTP.m */; };
+		8290354D14D9F6B100ACF7E4 /* TBXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 829FA0CB14D5B55D00D18697 /* TBXML.m */; };
+		8290354E14D9F6E100ACF7E4 /* TBXML+Compression.h in Headers */ = {isa = PBXBuildFile; fileRef = 829FA0CD14D5B55D00D18697 /* TBXML+Compression.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8290354F14D9F6E100ACF7E4 /* TBXML+HTTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 829FA0CE14D5B55D00D18697 /* TBXML+HTTP.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8290355014D9F6E100ACF7E4 /* TBXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 829FA0CF14D5B55D00D18697 /* TBXML.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8290355E14D9F8DA00ACF7E4 /* books.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8290355914D9F8BF00ACF7E4 /* books.xml */; };
+		8290355F14D9F8DD00ACF7E4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8290355A14D9F8BF00ACF7E4 /* InfoPlist.strings */; };
+		8290356014D9F8E300ACF7E4 /* TBXMLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8290355D14D9F8BF00ACF7E4 /* TBXMLTests.m */; };
+		8290356114D9F8F100ACF7E4 /* TBXMLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8290355D14D9F8BF00ACF7E4 /* TBXMLTests.m */; };
+		8290356214D9F8F300ACF7E4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8290355A14D9F8BF00ACF7E4 /* InfoPlist.strings */; };
+		8290356314D9F8F600ACF7E4 /* books.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8290355914D9F8BF00ACF7E4 /* books.xml */; };
+		829FA0A014D5B52A00D18697 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 829FA09F14D5B52A00D18697 /* Cocoa.framework */; };
+		829FA0B214D5B52A00D18697 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 829FA0B114D5B52A00D18697 /* SenTestingKit.framework */; };
+		829FA0B314D5B52A00D18697 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 829FA09F14D5B52A00D18697 /* Cocoa.framework */; };
+		829FA0B614D5B52A00D18697 /* libTBXML.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 829FA09C14D5B52A00D18697 /* libTBXML.a */; };
+		829FA0D014D5B55D00D18697 /* TBXML+Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = 829FA0C914D5B55D00D18697 /* TBXML+Compression.m */; };
+		829FA0D114D5B55D00D18697 /* TBXML+HTTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 829FA0CA14D5B55D00D18697 /* TBXML+HTTP.m */; };
+		829FA0D214D5B55D00D18697 /* TBXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 829FA0CB14D5B55D00D18697 /* TBXML.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8290353814D9F5B200ACF7E4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 829FA09314D5B52A00D18697 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8290352414D9F5B200ACF7E4;
+			remoteInfo = "TBXML-iOS";
+		};
+		829FA0B414D5B52A00D18697 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 829FA09314D5B52A00D18697 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 829FA09B14D5B52A00D18697;
+			remoteInfo = TBXML;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		8290352514D9F5B200ACF7E4 /* libTBXML-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libTBXML-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8290352614D9F5B200ACF7E4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		8290353314D9F5B200ACF7E4 /* TBXML-iOSTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TBXML-iOSTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8290355514D9F85C00ACF7E4 /* TBXML-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TBXML-iOS-Prefix.pch"; sourceTree = "<group>"; };
+		8290355614D9F85C00ACF7E4 /* TBXML-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TBXML-Prefix.pch"; sourceTree = "<group>"; };
+		8290355914D9F8BF00ACF7E4 /* books.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = books.xml; sourceTree = "<group>"; };
+		8290355A14D9F8BF00ACF7E4 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
+		8290355B14D9F8BF00ACF7E4 /* TBXMLTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TBXMLTests-Info.plist"; sourceTree = "<group>"; };
+		8290355C14D9F8BF00ACF7E4 /* TBXMLTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBXMLTests.h; sourceTree = "<group>"; };
+		8290355D14D9F8BF00ACF7E4 /* TBXMLTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBXMLTests.m; sourceTree = "<group>"; };
+		829FA09C14D5B52A00D18697 /* libTBXML.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTBXML.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		829FA09F14D5B52A00D18697 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		829FA0A214D5B52A00D18697 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		829FA0A314D5B52A00D18697 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		829FA0A414D5B52A00D18697 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		829FA0B014D5B52A00D18697 /* TBXMLTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TBXMLTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		829FA0B114D5B52A00D18697 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		829FA0C914D5B55D00D18697 /* TBXML+Compression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TBXML+Compression.m"; sourceTree = "<group>"; };
+		829FA0CA14D5B55D00D18697 /* TBXML+HTTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TBXML+HTTP.m"; sourceTree = "<group>"; };
+		829FA0CB14D5B55D00D18697 /* TBXML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBXML.m; sourceTree = "<group>"; };
+		829FA0CD14D5B55D00D18697 /* TBXML+Compression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TBXML+Compression.h"; sourceTree = "<group>"; };
+		829FA0CE14D5B55D00D18697 /* TBXML+HTTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TBXML+HTTP.h"; sourceTree = "<group>"; };
+		829FA0CF14D5B55D00D18697 /* TBXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBXML.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8290352214D9F5B200ACF7E4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8290352714D9F5B200ACF7E4 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8290352F14D9F5B200ACF7E4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8290353414D9F5B200ACF7E4 /* SenTestingKit.framework in Frameworks */,
+				8290353714D9F5B200ACF7E4 /* Foundation.framework in Frameworks */,
+				8290353A14D9F5B200ACF7E4 /* libTBXML-iOS.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		829FA09914D5B52A00D18697 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				829FA0A014D5B52A00D18697 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		829FA0AC14D5B52A00D18697 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				829FA0B214D5B52A00D18697 /* SenTestingKit.framework in Frameworks */,
+				829FA0B314D5B52A00D18697 /* Cocoa.framework in Frameworks */,
+				829FA0B614D5B52A00D18697 /* libTBXML.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8290355414D9F85C00ACF7E4 /* TBXML-Support */ = {
+			isa = PBXGroup;
+			children = (
+				8290355514D9F85C00ACF7E4 /* TBXML-iOS-Prefix.pch */,
+				8290355614D9F85C00ACF7E4 /* TBXML-Prefix.pch */,
+			);
+			path = "TBXML-Support";
+			sourceTree = "<group>";
+		};
+		8290355714D9F8BF00ACF7E4 /* TBXML-Tests */ = {
+			isa = PBXGroup;
+			children = (
+				8290355814D9F8BF00ACF7E4 /* Supporting Files */,
+				8290355C14D9F8BF00ACF7E4 /* TBXMLTests.h */,
+				8290355D14D9F8BF00ACF7E4 /* TBXMLTests.m */,
+			);
+			path = "TBXML-Tests";
+			sourceTree = "<group>";
+		};
+		8290355814D9F8BF00ACF7E4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8290355914D9F8BF00ACF7E4 /* books.xml */,
+				8290355A14D9F8BF00ACF7E4 /* InfoPlist.strings */,
+				8290355B14D9F8BF00ACF7E4 /* TBXMLTests-Info.plist */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		829FA09114D5B52A00D18697 = {
+			isa = PBXGroup;
+			children = (
+				829FA0C814D5B55D00D18697 /* TBXML-Code */,
+				829FA0CC14D5B55D00D18697 /* TBXML-Headers */,
+				8290355414D9F85C00ACF7E4 /* TBXML-Support */,
+				8290355714D9F8BF00ACF7E4 /* TBXML-Tests */,
+				829FA09E14D5B52A00D18697 /* Frameworks */,
+				829FA09D14D5B52A00D18697 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		829FA09D14D5B52A00D18697 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				829FA09C14D5B52A00D18697 /* libTBXML.a */,
+				829FA0B014D5B52A00D18697 /* TBXMLTests.octest */,
+				8290352514D9F5B200ACF7E4 /* libTBXML-iOS.a */,
+				8290353314D9F5B200ACF7E4 /* TBXML-iOSTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		829FA09E14D5B52A00D18697 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				829FA09F14D5B52A00D18697 /* Cocoa.framework */,
+				829FA0B114D5B52A00D18697 /* SenTestingKit.framework */,
+				8290352614D9F5B200ACF7E4 /* Foundation.framework */,
+				829FA0A114D5B52A00D18697 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		829FA0A114D5B52A00D18697 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				829FA0A214D5B52A00D18697 /* AppKit.framework */,
+				829FA0A314D5B52A00D18697 /* CoreData.framework */,
+				829FA0A414D5B52A00D18697 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		829FA0C814D5B55D00D18697 /* TBXML-Code */ = {
+			isa = PBXGroup;
+			children = (
+				829FA0C914D5B55D00D18697 /* TBXML+Compression.m */,
+				829FA0CA14D5B55D00D18697 /* TBXML+HTTP.m */,
+				829FA0CB14D5B55D00D18697 /* TBXML.m */,
+			);
+			path = "TBXML-Code";
+			sourceTree = "<group>";
+		};
+		829FA0CC14D5B55D00D18697 /* TBXML-Headers */ = {
+			isa = PBXGroup;
+			children = (
+				829FA0CD14D5B55D00D18697 /* TBXML+Compression.h */,
+				829FA0CE14D5B55D00D18697 /* TBXML+HTTP.h */,
+				829FA0CF14D5B55D00D18697 /* TBXML.h */,
+			);
+			path = "TBXML-Headers";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		8290352314D9F5B200ACF7E4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8290355014D9F6E100ACF7E4 /* TBXML.h in Headers */,
+				8290354F14D9F6E100ACF7E4 /* TBXML+HTTP.h in Headers */,
+				8290354E14D9F6E100ACF7E4 /* TBXML+Compression.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		829FA09A14D5B52A00D18697 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		8290352414D9F5B200ACF7E4 /* TBXML-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8290354814D9F5B200ACF7E4 /* Build configuration list for PBXNativeTarget "TBXML-iOS" */;
+			buildPhases = (
+				8290352114D9F5B200ACF7E4 /* Sources */,
+				8290352214D9F5B200ACF7E4 /* Frameworks */,
+				8290352314D9F5B200ACF7E4 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "TBXML-iOS";
+			productName = "TBXML-iOS";
+			productReference = 8290352514D9F5B200ACF7E4 /* libTBXML-iOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		8290353214D9F5B200ACF7E4 /* TBXML-iOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8290354914D9F5B200ACF7E4 /* Build configuration list for PBXNativeTarget "TBXML-iOSTests" */;
+			buildPhases = (
+				8290352E14D9F5B200ACF7E4 /* Sources */,
+				8290352F14D9F5B200ACF7E4 /* Frameworks */,
+				8290353014D9F5B200ACF7E4 /* Resources */,
+				8290353114D9F5B200ACF7E4 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8290353914D9F5B200ACF7E4 /* PBXTargetDependency */,
+			);
+			name = "TBXML-iOSTests";
+			productName = "TBXML-iOSTests";
+			productReference = 8290353314D9F5B200ACF7E4 /* TBXML-iOSTests.octest */;
+			productType = "com.apple.product-type.bundle.ocunit-test";
+		};
+		829FA09B14D5B52A00D18697 /* TBXML */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 829FA0C214D5B52A00D18697 /* Build configuration list for PBXNativeTarget "TBXML" */;
+			buildPhases = (
+				829FA09814D5B52A00D18697 /* Sources */,
+				829FA09914D5B52A00D18697 /* Frameworks */,
+				829FA09A14D5B52A00D18697 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TBXML;
+			productName = TBXML;
+			productReference = 829FA09C14D5B52A00D18697 /* libTBXML.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		829FA0AF14D5B52A00D18697 /* TBXMLTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 829FA0C514D5B52A00D18697 /* Build configuration list for PBXNativeTarget "TBXMLTests" */;
+			buildPhases = (
+				829FA0AB14D5B52A00D18697 /* Sources */,
+				829FA0AC14D5B52A00D18697 /* Frameworks */,
+				829FA0AD14D5B52A00D18697 /* Resources */,
+				829FA0AE14D5B52A00D18697 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				829FA0B514D5B52A00D18697 /* PBXTargetDependency */,
+			);
+			name = TBXMLTests;
+			productName = TBXMLTests;
+			productReference = 829FA0B014D5B52A00D18697 /* TBXMLTests.octest */;
+			productType = "com.apple.product-type.bundle.ocunit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		829FA09314D5B52A00D18697 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0810;
+				ORGANIZATIONNAME = "71 Squared";
+			};
+			buildConfigurationList = 829FA09614D5B52A00D18697 /* Build configuration list for PBXProject "TBXML" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 829FA09114D5B52A00D18697;
+			productRefGroup = 829FA09D14D5B52A00D18697 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				829FA09B14D5B52A00D18697 /* TBXML */,
+				829FA0AF14D5B52A00D18697 /* TBXMLTests */,
+				8290352414D9F5B200ACF7E4 /* TBXML-iOS */,
+				8290353214D9F5B200ACF7E4 /* TBXML-iOSTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8290353014D9F5B200ACF7E4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8290356314D9F8F600ACF7E4 /* books.xml in Resources */,
+				8290356214D9F8F300ACF7E4 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		829FA0AD14D5B52A00D18697 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8290355E14D9F8DA00ACF7E4 /* books.xml in Resources */,
+				8290355F14D9F8DD00ACF7E4 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8290353114D9F5B200ACF7E4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+		829FA0AE14D5B52A00D18697 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8290352114D9F5B200ACF7E4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8290354B14D9F6B100ACF7E4 /* TBXML+Compression.m in Sources */,
+				8290354C14D9F6B100ACF7E4 /* TBXML+HTTP.m in Sources */,
+				8290354D14D9F6B100ACF7E4 /* TBXML.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8290352E14D9F5B200ACF7E4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8290356114D9F8F100ACF7E4 /* TBXMLTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		829FA09814D5B52A00D18697 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				829FA0D014D5B55D00D18697 /* TBXML+Compression.m in Sources */,
+				829FA0D114D5B55D00D18697 /* TBXML+HTTP.m in Sources */,
+				829FA0D214D5B55D00D18697 /* TBXML.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		829FA0AB14D5B52A00D18697 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8290356014D9F8E300ACF7E4 /* TBXMLTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8290353914D9F5B200ACF7E4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8290352414D9F5B200ACF7E4 /* TBXML-iOS */;
+			targetProxy = 8290353814D9F5B200ACF7E4 /* PBXContainerItemProxy */;
+		};
+		829FA0B514D5B52A00D18697 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 829FA09B14D5B52A00D18697 /* TBXML */;
+			targetProxy = 829FA0B414D5B52A00D18697 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		8290354414D9F5B200ACF7E4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEAD_CODE_STRIPPING = NO;
+				DSTROOT = /tmp/TBXML_iOS.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TBXML-Support/TBXML-iOS-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = include/TBXML;
+				SDKROOT = iphoneos;
+				SEPARATE_STRIP = NO;
+				SKIP_INSTALL = YES;
+				STRIP_STYLE = debugging;
+			};
+			name = Debug;
+		};
+		8290354514D9F5B200ACF7E4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = NO;
+				DSTROOT = /tmp/TBXML_iOS.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TBXML-Support/TBXML-iOS-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = include/TBXML;
+				SDKROOT = iphoneos;
+				SEPARATE_STRIP = NO;
+				SKIP_INSTALL = YES;
+				STRIP_STYLE = debugging;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8290354614D9F5B200ACF7E4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TBXML-Support/TBXML-iOS-Prefix.pch";
+				INFOPLIST_FILE = "TBXML-Tests/Supporting Files/TBXMLTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.71Squared.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		8290354714D9F5B200ACF7E4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TBXML-Support/TBXML-iOS-Prefix.pch";
+				INFOPLIST_FILE = "TBXML-Tests/Supporting Files/TBXMLTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.71Squared.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+		829FA0C014D5B52A00D18697 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				"ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		829FA0C114D5B52A00D18697 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				"ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		829FA0C314D5B52A00D18697 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TBXML-Support/TBXML-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		829FA0C414D5B52A00D18697 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TBXML-Support/TBXML-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		829FA0C614D5B52A00D18697 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TBXML-Support/TBXML-Prefix.pch";
+				INFOPLIST_FILE = "TBXML-Tests/Supporting Files/TBXMLTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.71Squared.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		829FA0C714D5B52A00D18697 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TBXML-Support/TBXML-Prefix.pch";
+				INFOPLIST_FILE = "TBXML-Tests/Supporting Files/TBXMLTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.71Squared.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8290354814D9F5B200ACF7E4 /* Build configuration list for PBXNativeTarget "TBXML-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8290354414D9F5B200ACF7E4 /* Debug */,
+				8290354514D9F5B200ACF7E4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8290354914D9F5B200ACF7E4 /* Build configuration list for PBXNativeTarget "TBXML-iOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8290354614D9F5B200ACF7E4 /* Debug */,
+				8290354714D9F5B200ACF7E4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		829FA09614D5B52A00D18697 /* Build configuration list for PBXProject "TBXML" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				829FA0C014D5B52A00D18697 /* Debug */,
+				829FA0C114D5B52A00D18697 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		829FA0C214D5B52A00D18697 /* Build configuration list for PBXNativeTarget "TBXML" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				829FA0C314D5B52A00D18697 /* Debug */,
+				829FA0C414D5B52A00D18697 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		829FA0C514D5B52A00D18697 /* Build configuration list for PBXNativeTarget "TBXMLTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				829FA0C614D5B52A00D18697 /* Debug */,
+				829FA0C714D5B52A00D18697 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 829FA09314D5B52A00D18697 /* Project object */;
+}

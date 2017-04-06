@@ -1,0 +1,1 @@
+Unfortunately due to new full time employment, I no longer have time to continue development on iSub, so I'm releasing the code as open source under the GPL3. All code, unless otherwise marked in the file, is GPL3. This is the latest shipping codebase for iSub Music Streamer in the iOS App Store.

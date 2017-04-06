@@ -1,0 +1,86 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "C89CD2C0054CCA944685E223F174A6C59B00D5B5",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "4862FA1173344F6A396F21D7284E96917CD5DAD4" : 0,
+    "EDDBE35C55B96EE65EED71066DE634B275D9D12C" : 0,
+    "8EDE57C2999432B02AF3774C49AC60A079783175" : 0,
+    "0CA27A43414FB33F98B16BE18013A983CABB105E" : 0,
+    "C89CD2C0054CCA944685E223F174A6C59B00D5B5" : 0,
+    "A7973AE81FD825536D76937743B598D9C1BC9353" : 0,
+    "71CFC0DE1DEFC877B0C5B9F98B971EBA2921D608" : 0,
+    "D33C95C0A843CCBB42C08B5806EBF028432E18CD" : 0,
+    "04101981B66E318109934C9516F88D824BB96459" : 0,
+    "AA3724F8AD565DB2089C5757B6B76FDB09E52E51" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "ABCCCEF7-502F-4707-998A-84A4A6E7259A",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "4862FA1173344F6A396F21D7284E96917CD5DAD4" : "iSub3\/Frameworks\/libSub\/Frameworks\/RaptureXML\/",
+    "EDDBE35C55B96EE65EED71066DE634B275D9D12C" : "iSub3\/Frameworks\/libSub\/",
+    "8EDE57C2999432B02AF3774C49AC60A079783175" : "iSub3\/Frameworks\/libSub\/Frameworks\/EX2Kit\/",
+    "0CA27A43414FB33F98B16BE18013A983CABB105E" : "iSub3\/Frameworks\/HockeySDK\/",
+    "C89CD2C0054CCA944685E223F174A6C59B00D5B5" : "iSub3\/",
+    "A7973AE81FD825536D76937743B598D9C1BC9353" : "iSub3\/Frameworks\/libSub\/Frameworks\/ZipKit\/",
+    "71CFC0DE1DEFC877B0C5B9F98B971EBA2921D608" : "iSub3\/Frameworks\/libSub\/Frameworks\/CocoaHTTPServer\/",
+    "D33C95C0A843CCBB42C08B5806EBF028432E18CD" : "iSub3\/Frameworks\/libSub\/Frameworks\/TBXML\/",
+    "04101981B66E318109934C9516F88D824BB96459" : "iSub3\/Frameworks\/libSub\/Frameworks\/FMDB\/",
+    "AA3724F8AD565DB2089C5757B6B76FDB09E52E51" : "iSub3\/Frameworks\/libSub\/Frameworks\/SBJson\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "iSub",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "iSub.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:einsteinx2\/fmdb.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "04101981B66E318109934C9516F88D824BB96459"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git:\/\/github.com\/bitstadium\/HockeySDK-iOS.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0CA27A43414FB33F98B16BE18013A983CABB105E"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:einsteinx2\/RaptureXML.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4862FA1173344F6A396F21D7284E96917CD5DAD4"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:einsteinx2\/CocoaHTTPServer.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "71CFC0DE1DEFC877B0C5B9F98B971EBA2921D608"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:einsteinx2\/EX2Kit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8EDE57C2999432B02AF3774C49AC60A079783175"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:einsteinx2\/ZipKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A7973AE81FD825536D76937743B598D9C1BC9353"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:einsteinx2\/json-framework.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "AA3724F8AD565DB2089C5757B6B76FDB09E52E51"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:einsteinx2\/iSub.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C89CD2C0054CCA944685E223F174A6C59B00D5B5"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:einsteinx2\/TBXML.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D33C95C0A843CCBB42C08B5806EBF028432E18CD"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:einsteinx2\/libSub.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "EDDBE35C55B96EE65EED71066DE634B275D9D12C"
+    }
+  ]
+}

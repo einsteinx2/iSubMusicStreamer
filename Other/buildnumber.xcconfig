@@ -1,0 +1,9 @@
+//
+//  buildnumber.xcconfig
+//  iSub
+//
+//  Created by Ben Baron on 6/4/11.
+//  Copyright 2011 Ben Baron. All rights reserved.
+//
+BUILD_NUMBER = 109
+BUILD_VERSION = 3.1.8
