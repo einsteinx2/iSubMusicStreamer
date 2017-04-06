@@ -87,7 +87,7 @@
 	
 	if (!IS_IPAD())
 	{
-		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+		if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
 		{
 			[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
 			albumArt.width = 480;

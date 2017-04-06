@@ -829,7 +829,7 @@
 	UITableView *tableView = (UITableView *)self.view.superview;
 	CGRect rect = CGRectMake(0, 500, 320, 5);
 	[tableView scrollRectToVisible:rect animated:NO];
-	rect = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? CGRectMake(0, 1600, 320, 5) : CGRectMake(0, 1455, 320, 5);
+	rect = UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]) ? CGRectMake(0, 1600, 320, 5) : CGRectMake(0, 1455, 320, 5);
 	[tableView scrollRectToVisible:rect animated:NO];
 }
 

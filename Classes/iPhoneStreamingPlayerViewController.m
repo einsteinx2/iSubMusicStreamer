@@ -105,7 +105,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	//coverArtImageView.delegate = self;
 
 	// Create the extra views not in the XIB file
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
+    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
     {
         [self showTallPlayerButtons];
         
@@ -129,10 +129,10 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	[self createLandscapeViews];
 	
 	// Setup the navigation controller buttons
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"player-overlay.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(songInfoToggle:)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"player-overlay.png"] style:UIBarButtonItemStylePlain target:self action:@selector(songInfoToggle:)];
 	if (!IS_IPAD())
     {
-		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(backAction:)];
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back.png"] style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
     }
     
 	// Initialize the song info
@@ -185,7 +185,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
     self.swipeDetector.delegate = self;
     
     // Fix starting in landscape on iPhone 5
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
     {
         NSArray *viewsToSkip = @[self.reflectionView, self.artistLabel, self.albumLabel, self.titleLabel];
         for(UIView *subview in self.view.subviews)
@@ -243,7 +243,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		self.view.backgroundColor = [UIColor blackColor]; 
 	}
 	
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]) || IS_IPAD())
 	{
 		[self createSongTitle];
 	}
@@ -459,7 +459,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
         [positions setObject:[NSValue valueWithCGRect:self.titleLabel.frame] forKey:@"titleLabel"];
 		self.originalViewFrames = [NSDictionary dictionaryWithDictionary:positions];
 		
-		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+		if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
 		{
 			self.coverArtHolderView.frame = CGRectMake(0, 0, 300, 270);
 			self.prevButton.origin = CGPointMake(315, 184);
@@ -680,7 +680,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
  
 - (void)createSongTitle
 {
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]) || IS_IPAD())
 	{
 		self.navigationItem.titleView = nil;
 		
@@ -740,7 +740,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 
 - (void)setSongTitle
 {
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]) || IS_IPAD())
 	{		
 		self.artistTitleLabel.text = self.currentSong.artist;
 		self.albumTitleLabel.text = self.currentSong.album;
@@ -999,7 +999,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	{
 		self.songInfoToggleButton.userInteractionEnabled = YES;
 		
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"player-overlay.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(songInfoToggle:)];
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"player-overlay.png"] style:UIBarButtonItemStylePlain target:self action:@selector(songInfoToggle:)];
 		
 		// Flip the album art horizontally
 		self.coverArtHolderView.transform = CGAffineTransformMakeScale(1, 1);
@@ -1123,7 +1123,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 
 - (void)extraButtonsToggleAnimated:(BOOL)animated saveState:(BOOL)saveState
 {
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
+    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
     {        
         if (self.isExtraButtonsShowing)
         {

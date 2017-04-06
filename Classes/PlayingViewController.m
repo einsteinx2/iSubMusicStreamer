@@ -44,7 +44,7 @@
 	self.tableView.separatorColor = [UIColor clearColor];
 	
 	self.title = @"Now Playing";
-	//self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"gear.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(settingsAction:)] autorelease];
+	//self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"gear.png"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsAction:)] autorelease];
 	
 	self.dataModel = [[SUSNowPlayingDAO alloc] initWithDelegate:self];
 	
@@ -67,7 +67,7 @@
 {
     if (appDelegateS.referringAppUrl && appDelegateS.mainTabBarController.selectedIndex != 4)
     {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:appDelegateS action:@selector(backToReferringApp)];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:appDelegateS action:@selector(backToReferringApp)];
     }
 }
 
@@ -82,7 +82,7 @@
 	{
 		UIImage *playingImage = [UIImage imageNamed:@"now-playing.png"];
 		UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithImage:playingImage
-																	   style:UIBarButtonItemStyleBordered 
+																	   style:UIBarButtonItemStylePlain 
 																	  target:self 
 																	  action:@selector(nowPlayingAction:)];
 		self.navigationItem.rightBarButtonItem = buttonItem;

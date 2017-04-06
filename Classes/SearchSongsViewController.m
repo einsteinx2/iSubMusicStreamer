@@ -50,7 +50,7 @@
 	
 	if(musicS.showPlayerIcon)
 	{
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(nowPlayingAction:)];
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 	}
 	else
 	{
@@ -193,7 +193,7 @@
 	{
 		cell.textLabel.text = @"Loading more results...";
 		UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-		CGFloat y = [self tableView:nil heightForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]] / 2.;
+		CGFloat y = [self tableView:self.tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]] / 2.;
 		indicator.center = CGPointMake(300, y);
 		indicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 		[cell addSubview:indicator];

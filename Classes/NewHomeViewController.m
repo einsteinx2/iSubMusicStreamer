@@ -281,7 +281,7 @@
 {
 	[super viewWillAppear:animated];
     
-	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
+	if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
 	{
 		if (!IS_IPAD())
 		{
@@ -305,7 +305,7 @@
             }
 		}
 	}
-	else if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+	else if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
 	{
 		if (!IS_IPAD())
 		{
@@ -335,7 +335,7 @@
     self.navigationItem.rightBarButtonItem = nil;
 	if(musicS.showPlayerIcon)
 	{
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(nowPlayingAction:)];
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 	}
 
 	/*if(musicS.showPlayerIcon)
@@ -375,7 +375,7 @@
 {
     if (appDelegateS.referringAppUrl && appDelegateS.mainTabBarController.selectedIndex != 4)
     {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:appDelegateS action:@selector(backToReferringApp)];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:appDelegateS action:@selector(backToReferringApp)];
     }
 }
 

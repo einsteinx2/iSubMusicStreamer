@@ -52,7 +52,7 @@
 	
 	self.title = @"Servers";
 	if(self != [[self.navigationController viewControllers] objectAtIndexSafe:0])
-		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:self action:@selector(saveAction:)];
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(saveAction:)];
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	
 	if (settingsS.serverList == nil || [settingsS.serverList count] == 0)
@@ -100,7 +100,7 @@
 		if(self == [[self.navigationController viewControllers] firstObjectSafe])
 			self.navigationItem.leftBarButtonItem = nil;
 		else
-			self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:self action:@selector(saveAction:)];
+			self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(saveAction:)];
 		
 	}
 }

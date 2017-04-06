@@ -184,7 +184,7 @@
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_8_0
   unsigned unitFlags = NSCalendarUnitYear | NSCalendarUnitMonth |  NSCalendarUnitDay;
 #else
-  unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit;
+  unsigned unitFlags = NSCalendarUnitYear | NSCalendarUnitMonth |  NSCalendarUnitDay;
 #endif
   
   NSDateComponents *dateComponent1 = [calendar components:unitFlags fromDate:date1];

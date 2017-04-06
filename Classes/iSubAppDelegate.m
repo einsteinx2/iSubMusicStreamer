@@ -1295,8 +1295,8 @@ LOG_LEVEL_ISUB_DEFAULT
 - (NSInteger) getHour
 {
 	// Get the time
-	NSCalendar *calendar= [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-	NSCalendarUnit unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
+	NSCalendar *calendar= [[NSCalendar alloc] initWithCalendarIdentifier: NSCalendarIdentifierGregorian];
+	NSCalendarUnit unitFlags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
 	NSDate *date = [NSDate date];
 	NSDateComponents *dateComponents = [calendar components:unitFlags fromDate:date];
 
