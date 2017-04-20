@@ -8,7 +8,6 @@
 
 #import "CurrentPlaylistViewController.h"
 #import "CurrentPlaylistSongSmallUITableViewCell.h"
-#import "StoreViewController.h"
 
 @implementation CurrentPlaylistViewController
 
@@ -50,114 +49,73 @@
 	//NSDate *start = [NSDate date];	
 	self.tableView.backgroundColor = [UIColor clearColor];
 	
-	if (settingsS.isPlaylistUnlocked)
-	{
-		[self registerForNotifications];
-		
-		viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
-		//viewObjectsS.multiDeleteList = nil; viewObjectsS.multiDeleteList = [[NSMutableArray alloc] init];
-		
-		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
-        
-        [self updateCurrentPlaylistCount];
+    [self registerForNotifications];
+    
+    viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
+    //viewObjectsS.multiDeleteList = nil; viewObjectsS.multiDeleteList = [[NSMutableArray alloc] init];
+    
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
+    
+    [self updateCurrentPlaylistCount];
 				
-		// Setup header view
-		self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
-		self.headerView.backgroundColor = [UIColor colorWithWhite:.3 alpha:1];
-		
-		self.savePlaylistLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 232, 34)];
-		self.savePlaylistLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-		self.savePlaylistLabel.backgroundColor = [UIColor clearColor];
-		self.savePlaylistLabel.textColor = [UIColor whiteColor];
-		self.savePlaylistLabel.textAlignment = NSTextAlignmentCenter;
-		self.savePlaylistLabel.font = ISMSBoldFont(22);
-		self.savePlaylistLabel.text = @"Save Playlist";
-		[self.headerView addSubview:self.savePlaylistLabel];
-		
-		self.playlistCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 33, 232, 14)];
-		self.playlistCountLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-		self.playlistCountLabel.backgroundColor = [UIColor clearColor];
-		self.playlistCountLabel.textColor = [UIColor whiteColor];
-		self.playlistCountLabel.textAlignment = NSTextAlignmentCenter;
-		self.playlistCountLabel.font = ISMSBoldFont(12);
-		[self.headerView addSubview:self.playlistCountLabel];
-		
-		self.savePlaylistButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.savePlaylistButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-		self.savePlaylistButton.frame = CGRectMake(0, 0, 232, 40);
-		[self.savePlaylistButton addTarget:self action:@selector(savePlaylistAction:) forControlEvents:UIControlEventTouchUpInside];
-		[self.headerView addSubview:self.savePlaylistButton];
-		
-		self.editPlaylistLabel = [[UILabel alloc] initWithFrame:CGRectMake(232, 0, 88, 50)];
-		self.editPlaylistLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
-		self.editPlaylistLabel.backgroundColor = [UIColor clearColor];
-		self.editPlaylistLabel.textColor = [UIColor whiteColor];
-		self.editPlaylistLabel.textAlignment = NSTextAlignmentCenter;
-		self.editPlaylistLabel.font = ISMSBoldFont(22);
-		self.editPlaylistLabel.text = @"Edit";
-		[self.headerView addSubview:self.editPlaylistLabel];
-		
-		UIButton *editPlaylistButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		editPlaylistButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
-		editPlaylistButton.frame = CGRectMake(232, 0, 88, 40);
-		[editPlaylistButton addTarget:self action:@selector(editPlaylistAction:) forControlEvents:UIControlEventTouchUpInside];
-		[self.headerView addSubview:editPlaylistButton];
-		
-		self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 232, 50)];
-		self.deleteSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-		self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
-		self.deleteSongsLabel.textColor = [UIColor whiteColor];
-		self.deleteSongsLabel.textAlignment = NSTextAlignmentCenter;
-		self.deleteSongsLabel.font = ISMSBoldFont(22);
-		self.deleteSongsLabel.adjustsFontSizeToFitWidth = YES;
-		self.deleteSongsLabel.minimumScaleFactor = 12.0 / self.deleteSongsLabel.font.pointSize;
-		self.deleteSongsLabel.text = @"Remove # Songs";
-		self.deleteSongsLabel.hidden = YES;
-		[self.headerView addSubview:self.deleteSongsLabel];
-		
-		self.tableView.tableHeaderView = self.headerView;
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideEditControls) name:@"hideEditControls" object:nil];
-	}
-	else
-	{
-		self.tableView.separatorColor = [UIColor clearColor];
-		
-		UIImageView *noPlaylistsScreen = [[UIImageView alloc] init];
-		noPlaylistsScreen.userInteractionEnabled = YES;
-		noPlaylistsScreen.frame = CGRectMake(40, 80, 240, 180);
-		noPlaylistsScreen.image = [UIImage imageNamed:@"loading-screen-image.png"];
-		
-		UILabel *textLabel = [[UILabel alloc] init];
-		textLabel.backgroundColor = [UIColor clearColor];
-		textLabel.textColor = [UIColor whiteColor];
-		textLabel.font = ISMSBoldFont(30);
-		textLabel.textAlignment = NSTextAlignmentCenter;
-		textLabel.numberOfLines = 0;
-		textLabel.text = @"Playlists\nLocked";
-		textLabel.frame = CGRectMake(20, 0, 200, 100);
-		[noPlaylistsScreen addSubview:textLabel];
-		
-		UILabel *textLabel2 = [[UILabel alloc] init];
-		textLabel2.backgroundColor = [UIColor clearColor];
-		textLabel2.textColor = [UIColor whiteColor];
-		textLabel2.font = ISMSBoldFont(14);
-		textLabel2.textAlignment = NSTextAlignmentCenter;
-		textLabel2.numberOfLines = 0;
-		textLabel2.text = @"Tap to purchase the ability to view, create, and manage playlists";
-		textLabel2.frame = CGRectMake(20, 100, 200, 60);
-		[noPlaylistsScreen addSubview:textLabel2];
-		
-		UIButton *storeLauncher = [UIButton buttonWithType:UIButtonTypeCustom];
-		storeLauncher.frame = CGRectMake(0, 0, noPlaylistsScreen.frame.size.width, noPlaylistsScreen.frame.size.height);
-		[storeLauncher addTarget:self action:@selector(showStore) forControlEvents:UIControlEventTouchUpInside];
-		[noPlaylistsScreen addSubview:storeLauncher];
-		
-		[self.view addSubview:noPlaylistsScreen];
-		
-	}
-	//DLog(@"end: %f", [[NSDate date] timeIntervalSinceDate:start]);
+    // Setup header view
+    self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
+    self.headerView.backgroundColor = [UIColor colorWithWhite:.3 alpha:1];
+    
+    self.savePlaylistLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 232, 34)];
+    self.savePlaylistLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+    self.savePlaylistLabel.backgroundColor = [UIColor clearColor];
+    self.savePlaylistLabel.textColor = [UIColor whiteColor];
+    self.savePlaylistLabel.textAlignment = NSTextAlignmentCenter;
+    self.savePlaylistLabel.font = ISMSBoldFont(22);
+    self.savePlaylistLabel.text = @"Save Playlist";
+    [self.headerView addSubview:self.savePlaylistLabel];
+    
+    self.playlistCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 33, 232, 14)];
+    self.playlistCountLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+    self.playlistCountLabel.backgroundColor = [UIColor clearColor];
+    self.playlistCountLabel.textColor = [UIColor whiteColor];
+    self.playlistCountLabel.textAlignment = NSTextAlignmentCenter;
+    self.playlistCountLabel.font = ISMSBoldFont(12);
+    [self.headerView addSubview:self.playlistCountLabel];
+    
+    self.savePlaylistButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.savePlaylistButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+    self.savePlaylistButton.frame = CGRectMake(0, 0, 232, 40);
+    [self.savePlaylistButton addTarget:self action:@selector(savePlaylistAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.headerView addSubview:self.savePlaylistButton];
+    
+    self.editPlaylistLabel = [[UILabel alloc] initWithFrame:CGRectMake(232, 0, 88, 50)];
+    self.editPlaylistLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
+    self.editPlaylistLabel.backgroundColor = [UIColor clearColor];
+    self.editPlaylistLabel.textColor = [UIColor whiteColor];
+    self.editPlaylistLabel.textAlignment = NSTextAlignmentCenter;
+    self.editPlaylistLabel.font = ISMSBoldFont(22);
+    self.editPlaylistLabel.text = @"Edit";
+    [self.headerView addSubview:self.editPlaylistLabel];
+    
+    UIButton *editPlaylistButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    editPlaylistButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
+    editPlaylistButton.frame = CGRectMake(232, 0, 88, 40);
+    [editPlaylistButton addTarget:self action:@selector(editPlaylistAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.headerView addSubview:editPlaylistButton];
+    
+    self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 232, 50)];
+    self.deleteSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+    self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
+    self.deleteSongsLabel.textColor = [UIColor whiteColor];
+    self.deleteSongsLabel.textAlignment = NSTextAlignmentCenter;
+    self.deleteSongsLabel.font = ISMSBoldFont(22);
+    self.deleteSongsLabel.adjustsFontSizeToFitWidth = YES;
+    self.deleteSongsLabel.minimumScaleFactor = 12.0 / self.deleteSongsLabel.font.pointSize;
+    self.deleteSongsLabel.text = @"Remove # Songs";
+    self.deleteSongsLabel.hidden = YES;
+    [self.headerView addSubview:self.deleteSongsLabel];
+    
+    self.tableView.tableHeaderView = self.headerView;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideEditControls) name:@"hideEditControls" object:nil];
 	
 	[self.tableView reloadData];
     
@@ -590,19 +548,6 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
-    /*// Return the number of rows in the section.
-	if (settingsS.isPlaylistUnlocked)
-	{
-		if (settingsS.isJukeboxEnabled)
-			currentPlaylistCount = [databaseS.currentPlaylistDb intForQuery:@"SELECT COUNT(*) FROM jukeboxCurrentPlaylist"];
-		else
-			currentPlaylistCount = [databaseS.currentPlaylistDb intForQuery:@"SELECT COUNT(*) FROM currentPlaylist"];
-	}
-	else
-	{
-		currentPlaylistCount = 0;
-	}*/
-	
 	return self.currentPlaylistCount;
 }
 

@@ -130,11 +130,6 @@
 		self.overlayView.downloadButton.alpha = .3;
 		self.overlayView.downloadButton.enabled = NO;
 	}
-    
-    if (!settingsS.isCacheUnlocked)
-    {
-        self.overlayView.downloadButton.enabled = NO;
-    }
 }
 
 - (void)downloadAction

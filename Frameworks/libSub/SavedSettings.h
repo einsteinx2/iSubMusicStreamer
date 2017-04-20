@@ -82,11 +82,6 @@ typedef enum
 @property (strong) NSDate *rootFoldersReloadTime;
 @property (strong) NSNumber *rootFoldersSelectedFolderId;
 
-// Lite Version Properties
-@property (readonly) BOOL isPlaylistUnlocked;
-@property (readonly) BOOL isCacheUnlocked;
-@property (readonly) BOOL isVideoUnlocked;
-
 @property BOOL isForceOfflineMode;
 @property NSInteger recoverSetting;
 @property NSInteger maxBitrateWifi;

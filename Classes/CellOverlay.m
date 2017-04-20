@@ -55,12 +55,6 @@
         downloadButton.layer.cornerRadius = 3.;
         downloadButton.layer.masksToBounds = YES;
 		[inputBlocker addSubview:downloadButton];
-        
-        // If the cache feature is not unlocked, don't allow the user to cache songs
-        if (!settingsS.isCacheUnlocked)
-        {
-            downloadButton.enabled = NO;
-        }
 		
 		queueButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		queueButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
@@ -76,12 +70,6 @@
         queueButton.layer.cornerRadius = 3.;
         queueButton.layer.masksToBounds = YES;
 		[inputBlocker addSubview:queueButton];
-        
-        // If the playlist feature is not unlocked, don't allow the user to queue songs
-        if (!settingsS.isPlaylistUnlocked)
-        {
-            queueButton.enabled = NO;
-        }
 	}
 	return self;
 }

@@ -152,22 +152,6 @@
 		default: break;
 	}
 	
-	// Handle In App Purchase settings
-	if (settingsS.isCacheUnlocked == NO)
-	{
-		// Caching is disabled, so disable the controls
-        self.enableBackupCacheSwitch.enabled = NO; self.enableBackupCacheLabel.alpha = 0.5;
-        self.enableManualCachingOnWWANSwitch.enabled = NO; self.enableManualCachingOnWWANLabel.alpha = 0.5;
-        self.enableSongCachingLabel.alpha = 0.5;
-		self.enableSongCachingSwitch.enabled = NO; self.enableSongCachingSwitch.alpha = 0.5;
-		self.enableNextSongCacheSwitch.enabled = NO; self.enableNextSongCacheSwitch.alpha = 0.5;
-		self.cachingTypeSegmentedControl.enabled = NO; self.cachingTypeSegmentedControl.alpha = 0.5;
-		self.cacheSpaceSlider.enabled = NO; self.cacheSpaceSlider.alpha = 0.5;
-		self.autoDeleteCacheSwitch.enabled = NO; self.autoDeleteCacheSwitch.alpha = 0.5;
-		self.autoDeleteCacheTypeSegmentedControl.enabled = NO; self.autoDeleteCacheTypeSegmentedControl.alpha = 0.5;
-		self.cacheSongCellColorSegmentedControl.enabled = NO; self.cacheSongCellColorSegmentedControl.alpha = 0.5;
-	}
-	
 	[self.cacheSpaceLabel2 addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     
     self.maxVideoBitrate3GSegmentedControl.selectedSegmentIndex = settingsS.maxVideoBitrate3G;

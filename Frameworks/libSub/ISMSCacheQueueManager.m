@@ -69,13 +69,7 @@ LOG_LEVEL_ISUB_DEBUG
 
 // Start downloading the file specified in the text field.
 - (void)startDownloadQueue
-{
-    // Final check to make sure the cache feature is unlocked, just in case items were queued somehow
-    if (!settingsS.isCacheUnlocked)
-    {
-        return;
-    }
-    
+{    
 	// Are we already downloading?  If so, stop it.
 	[self stopDownloadQueue];
 	

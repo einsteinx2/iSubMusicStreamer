@@ -12,7 +12,6 @@
 #import "ServerListViewController.h"
 #import "iPhoneStreamingPlayerViewController.h"
 #import "CacheArtistUITableViewCell.h"
-#import "StoreViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 
 @interface CacheViewController ()
@@ -224,18 +223,8 @@
 	[Flurry logEvent:@"CacheTab"];
 	
 	// Reload the data in case it changed
-	if (settingsS.isCacheUnlocked)
-	{
-		self.tableView.tableHeaderView.hidden = NO;
-		
-		//segmentedControl.selectedSegmentIndex = 0;
-		[self segmentAction:nil];
-	}
-	else
-	{
-		self.tableView.tableHeaderView.hidden = YES;
-		[self addNoSongsScreen];
-	}
+    self.tableView.tableHeaderView.hidden = NO;
+    [self segmentAction:nil];
 	
 	self.tableView.scrollEnabled = YES;
 	[self.jukeboxInputBlocker removeFromSuperview];
@@ -268,18 +257,8 @@
 	[super viewDidAppear:animated];
 	
 	// Must do this here as well or the no songs overlay will be off sometimes
-	if (settingsS.isCacheUnlocked)
-	{
-		self.tableView.tableHeaderView.hidden = NO;
-		
-		//segmentedControl.selectedSegmentIndex = 0;
-		[self segmentAction:nil];
-	}
-	else
-	{
-		self.tableView.tableHeaderView.hidden = YES;
-		[self addNoSongsScreen];
-	}
+    self.tableView.tableHeaderView.hidden = NO;
+    [self segmentAction:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -354,13 +333,6 @@
 }
 
 #pragma mark - Button Handling
-
-- (void)showStore
-{
-	StoreViewController *store = [[StoreViewController alloc] init];
-	//DLog(@"store: %@", store);
-	[self pushViewControllerCustom:store];
-}
 
 - (void)settingsAction:(id)sender 
 {
@@ -834,39 +806,12 @@
 		textLabel.font = ISMSBoldFont(30);
 		textLabel.textAlignment = NSTextAlignmentCenter;
 		textLabel.numberOfLines = 0;
-		if (settingsS.isCacheUnlocked)
-		{
-			if (self.segmentedControl.selectedSegmentIndex == 0)
-				[textLabel setText:@"No Cached\nSongs"];
-			else if (self.segmentedControl.selectedSegmentIndex == 1)
-				[textLabel setText:@"No Queued\nSongs"];
-			
-			textLabel.frame = CGRectMake(20, 20, 200, 140);
-		}
-		else
-		{
-			textLabel.text = @"Caching\nLocked";
-			textLabel.frame = CGRectMake(20, 0, 200, 100);
-		}
+        if (self.segmentedControl.selectedSegmentIndex == 0)
+            [textLabel setText:@"No Cached\nSongs"];
+        else if (self.segmentedControl.selectedSegmentIndex == 1)
+            [textLabel setText:@"No Queued\nSongs"];
+        textLabel.frame = CGRectMake(20, 20, 200, 140);
 		[self.noSongsScreen addSubview:textLabel];
-		
-		if (settingsS.isCacheUnlocked == NO)
-		{
-			UILabel *textLabel2 = [[UILabel alloc] init];
-			textLabel2.backgroundColor = [UIColor clearColor];
-			textLabel2.textColor = [UIColor whiteColor];
-			textLabel2.font = ISMSBoldFont(14);
-			textLabel2.textAlignment = NSTextAlignmentCenter;
-			textLabel2.numberOfLines = 0;
-			textLabel2.text = @"Tap to purchase the ability to cache songs for better streaming performance and offline playback";
-			textLabel2.frame = CGRectMake(20, 90, 200, 70);
-			[self.noSongsScreen addSubview:textLabel2];
-			
-			UIButton *storeLauncher = [UIButton buttonWithType:UIButtonTypeCustom];
-			storeLauncher.frame = CGRectMake(0, 0, self.noSongsScreen.frame.size.width, self.noSongsScreen.frame.size.height);
-			[storeLauncher addTarget:self action:@selector(showStore) forControlEvents:UIControlEventTouchUpInside];
-			[self.noSongsScreen addSubview:storeLauncher];
-		}
 		
 		[self.view addSubview:self.noSongsScreen];
 		
@@ -1186,7 +1131,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
 {
-	if (self.segmentedControl.selectedSegmentIndex == 0 && settingsS.isCacheUnlocked)
+	if (self.segmentedControl.selectedSegmentIndex == 0)
 	{
 		//DLog(@"sectionInfo count: %i", [self.sectionInfo count]);
 		return [self.sectionInfo count];
@@ -1198,7 +1143,7 @@
 // Following 2 methods handle the right side index
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView 
 {
-	if (self.segmentedControl.selectedSegmentIndex == 0 && settingsS.isCacheUnlocked && self.showIndex)
+	if (self.segmentedControl.selectedSegmentIndex == 0 && self.showIndex)
 	{
 		NSMutableArray *indexes = [[NSMutableArray alloc] init];
 		for (int i = 0; i < [self.sectionInfo count]; i++)
@@ -1213,7 +1158,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	
-	if (self.segmentedControl.selectedSegmentIndex == 0 && settingsS.isCacheUnlocked)
+	if (self.segmentedControl.selectedSegmentIndex == 0)
 	{
 		return [[self.sectionInfo objectAtIndexSafe:section] objectAtIndexSafe:0];
 	}
@@ -1261,21 +1206,16 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
-	if (settingsS.isCacheUnlocked)
-	{
-		// Return the number of rows in the section.
-		if (self.segmentedControl.selectedSegmentIndex == 0)
-		{
-			//return [listOfArtists count];
-			return [[self.listOfArtistsSections objectAtIndexSafe:section] count];
-		}
-		else if (self.segmentedControl.selectedSegmentIndex == 1)
-		{
-			return self.cacheQueueCount;
-		}
-	}
-	
-	return 0;
+    // Return the number of rows in the section.
+    if (self.segmentedControl.selectedSegmentIndex == 0)
+    {
+        //return [listOfArtists count];
+        return [[self.listOfArtistsSections objectAtIndexSafe:section] count];
+    }
+    else if (self.segmentedControl.selectedSegmentIndex == 1)
+    {
+        return self.cacheQueueCount;
+    }
 }
 
 

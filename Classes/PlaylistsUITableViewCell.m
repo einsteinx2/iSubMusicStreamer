@@ -70,11 +70,6 @@
 	
 	self.overlayView.downloadButton.alpha = (float)!settingsS.isOfflineMode;
 	self.overlayView.downloadButton.enabled = !settingsS.isOfflineMode;
-    
-    if (!settingsS.isCacheUnlocked)
-    {
-        self.overlayView.downloadButton.enabled = NO;
-    }
 }
 
 - (void)downloadAction

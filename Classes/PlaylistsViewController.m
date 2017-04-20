@@ -13,7 +13,6 @@
 #import "CurrentPlaylistSongUITableViewCell.h"
 #import "LocalPlaylistsUITableViewCell.h"
 #import "PlaylistSongsViewController.h"
-#import "StoreViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 
 @interface PlaylistsViewController (Private)
@@ -157,18 +156,9 @@
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 	}
 	
-	if (settingsS.isPlaylistUnlocked)
-	{
-		// Reload the data in case it changed
-		self.tableView.tableHeaderView.hidden = NO;
-		[self segmentAction:nil];
-	}
-	else
-	{
-		self.tableView.tableHeaderView.hidden = YES;
-		//[self performSelector:@selector(addNoPlaylistsScreen) withObject:nil afterDelay:0.1];
-		[self addNoPlaylistsScreen];
-	}
+    // Reload the data in case it changed
+    self.tableView.tableHeaderView.hidden = NO;
+    [self segmentAction:nil];
 	
 	[Flurry logEvent:@"PlaylistsTab"];
 
@@ -434,24 +424,16 @@
 	textLabel.font = ISMSBoldFont(30);
 	textLabel.textAlignment = NSTextAlignmentCenter;
 	textLabel.numberOfLines = 0;
-	if (settingsS.isPlaylistUnlocked)
-	{
-		if (self.segmentedControl.selectedSegmentIndex == 0)
-		{
-			textLabel.text = @"No Songs\nQueued";
-			textLabel.frame = CGRectMake(20, 0, 200, 100);
-		}
-		else if (self.segmentedControl.selectedSegmentIndex == 1 || self.segmentedControl.selectedSegmentIndex == 2)
-		{
-			textLabel.text = @"No Playlists\nFound";
-			textLabel.frame = CGRectMake(20, 20, 200, 140);
-		}
-	}
-	else
-	{
-		textLabel.text = @"Playlists\nLocked";
-		textLabel.frame = CGRectMake(20, 0, 200, 100);
-	}
+    if (self.segmentedControl.selectedSegmentIndex == 0)
+    {
+        textLabel.text = @"No Songs\nQueued";
+        textLabel.frame = CGRectMake(20, 0, 200, 100);
+    }
+    else if (self.segmentedControl.selectedSegmentIndex == 1 || self.segmentedControl.selectedSegmentIndex == 2)
+    {
+        textLabel.text = @"No Playlists\nFound";
+        textLabel.frame = CGRectMake(20, 20, 200, 140);
+    }
 	[self.noPlaylistsScreen addSubview:textLabel];
 	
 	UILabel *textLabel2 = [[UILabel alloc] init];
@@ -460,29 +442,13 @@
 	textLabel2.font = ISMSBoldFont(14);
 	textLabel2.textAlignment = NSTextAlignmentCenter;
 	textLabel2.numberOfLines = 0;
-	if (settingsS.isPlaylistUnlocked)
-	{
-		if (self.segmentedControl.selectedSegmentIndex == 0)
-		{
-			
-			textLabel2.text = @"Swipe to the right on any song, album, or artist to bring up the Queue button";
-			textLabel2.frame = CGRectMake(20, 100, 200, 60);
-		}
-	}
-	else
-	{
-		textLabel2.text = @"Tap to purchase the ability to view, create, and manage playlists";
-		textLabel2.frame = CGRectMake(20, 100, 200, 60);
-	}
+    if (self.segmentedControl.selectedSegmentIndex == 0)
+    {
+        
+        textLabel2.text = @"Swipe to the right on any song, album, or artist to bring up the Queue button";
+        textLabel2.frame = CGRectMake(20, 100, 200, 60);
+    }
 	[self.noPlaylistsScreen addSubview:textLabel2];
-	
-	if (!settingsS.isPlaylistUnlocked)
-	{
-		UIButton *storeLauncher = [UIButton buttonWithType:UIButtonTypeCustom];
-		storeLauncher.frame = CGRectMake(0, 0, self.noPlaylistsScreen.frame.size.width, self.noPlaylistsScreen.frame.size.height);
-		[storeLauncher addTarget:self action:@selector(showStore) forControlEvents:UIControlEventTouchUpInside];
-		[self.noPlaylistsScreen addSubview:storeLauncher];
-	}
 	
 	[self.view addSubview:self.noPlaylistsScreen];
 	
@@ -494,13 +460,6 @@
 			self.noPlaylistsScreen.transform = CGAffineTransformTranslate(self.noPlaylistsScreen.transform, 0.0, 23.0);
 		}
 	}
-}
-
-- (void)showStore
-{
-	StoreViewController *store = [[StoreViewController alloc] init];
-	[self pushViewControllerCustom:store];
-	//[self.navigationController pushViewController:store animated:YES];
 }
 
 - (void)segmentAction:(id)sender

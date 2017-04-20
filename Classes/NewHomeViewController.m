@@ -12,7 +12,6 @@
 #import "QuickAlbumsViewController.h"
 #import "ChatViewController.h"
 #import "SearchSongsViewController.h"
-#import "StoreViewController.h"
 #import "ShuffleFolderPickerViewController.h"
 #import "FolderPickerDialog.h"
 #import "SearchAllViewController.h"

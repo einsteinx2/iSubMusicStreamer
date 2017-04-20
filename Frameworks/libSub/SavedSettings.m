@@ -10,10 +10,6 @@
 #import "PlaylistSingleton.h"
 #import "BassGaplessPlayer.h"
 
-#ifdef IOS
-#import "MKStoreManager.h"
-#endif
-
 // Test server details
 #define DEFAULT_SERVER_TYPE SUBSONIC
 #define DEFAULT_URL @"http://isubapp.com:9001"
@@ -617,41 +613,6 @@
 	}
 }
 
-#pragma mark - Lite Version Properties
-
-// This is necessary because preprocessor macros set in the parent application are not picked up by subprojects during building
-- (BOOL)isLite
-{
-    return [[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.einsteinx2.isublite"];
-}
-
-- (BOOL)isPlaylistUnlocked
-{
-#ifdef IOS
-	return (![self isLite] || [MKStoreManager isFeaturePurchased:kFeaturePlaylistsId] || [MKStoreManager isFeaturePurchased:kFeatureAllId]);
-#else
-    return YES;
-#endif
-}
-
-- (BOOL)isCacheUnlocked
-{
-#ifdef IOS
-	return (![self isLite] || [MKStoreManager isFeaturePurchased:kFeatureCacheId] || [MKStoreManager isFeaturePurchased:kFeatureAllId]);
-#else
-    return YES;
-#endif
-}
-
-- (BOOL)isVideoUnlocked
-{
-#ifdef IOS
-	return (![self isLite] || [MKStoreManager isFeaturePurchased:kFeatureVideoId] || [MKStoreManager isFeaturePurchased:kFeatureAllId]);
-#else
-    return YES;
-#endif
-}
-
 #pragma mark - Other Settings
 
 - (BOOL)isForceOfflineMode
@@ -825,10 +786,7 @@
 {
 	@synchronized(self)
 	{
-		if (self.isCacheUnlocked)
-			return [_userDefaults boolForKey:@"enableSongCachingSetting"];
-		else
-			return NO;
+		return [_userDefaults boolForKey:@"enableSongCachingSetting"];
 	}
 }
 

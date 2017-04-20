@@ -15,14 +15,11 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #import "IntroViewController.h"
-#import "SFHFKeychainUtils.h"
 #import "iPadRootViewController.h"
 #import "MenuViewController.h"
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ISMSUpdateChecker.h"
-#import "MKStoreManager.h"
 #import <MediaPlayer/MediaPlayer.h>
-#import "StoreViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "HTTPServer.h"
 #import "HLSProxyConnection.h"
@@ -496,17 +493,9 @@ LOG_LEVEL_ISUB_DEFAULT
 {
 	BOOL isSessionStarted = NO;
 #if IS_RELEASE()
-    #if IS_LITE()
-        // Lite version key
-        [Flurry startSession:@"MQV1D5WQYUTCDAD6PFLU"];
-        isSessionStarted = YES;
-    #else
-        // Full version key
-        [Flurry startSession:@"3KK4KKD2PSEU5APF7PNX"];
-        isSessionStarted = YES;
-    #endif
+    [Flurry startSession:@"3KK4KKD2PSEU5APF7PNX"];
+    isSessionStarted = YES;
 #elif IS_BETA()
-    // Beta version key
     [Flurry startSession:@"KNN9DUXQEENZUG4Q12UA"];
     isSessionStarted = YES;
 #endif
@@ -532,17 +521,13 @@ LOG_LEVEL_ISUB_DEFAULT
     BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
     
 	// HockyApp Kits
-#if IS_BETA() && IS_ADHOC() && !IS_LITE()
+#if IS_BETA() && IS_ADHOC()
     [hockeyManager configureWithBetaIdentifier:@"ada15ac4ffe3befbc66f0a00ef3d96af" liveIdentifier:@"ada15ac4ffe3befbc66f0a00ef3d96af" delegate:self];
     hockeyManager.updateManager.alwaysShowUpdateReminder = NO;
     [hockeyManager startManager];
 #elif IS_RELEASE()
-    #if IS_LITE()
-        [hockeyManager configureWithBetaIdentifier:@"36cd77b2ee78707009f0a9eb9bbdbec7" liveIdentifier:@"36cd77b2ee78707009f0a9eb9bbdbec7" delegate:self];
-    #else
-        [hockeyManager configureWithBetaIdentifier:@"7c9cb46dad4165c9d3919390b651f6bb" liveIdentifier:@"7c9cb46dad4165c9d3919390b651f6bb" delegate:self];
-    #endif
-        [hockeyManager startManager];
+    [hockeyManager configureWithBetaIdentifier:@"7c9cb46dad4165c9d3919390b651f6bb" liveIdentifier:@"7c9cb46dad4165c9d3919390b651f6bb" delegate:self];
+    [hockeyManager startManager];
 #endif
     hockeyManager.crashManager.crashManagerStatus = BITCrashManagerStatusAutoSend;
 	
@@ -633,58 +618,6 @@ LOG_LEVEL_ISUB_DEFAULT
         return zipFilePath;
     }
     return nil;
-}
-
-/*- (void)loadCrittercism
-{
-	//if (IS_BETA() && IS_ADHOC() && !IS_LITE())
-	if (1)
-	{
-		[Crittercism initWithAppID:@"4f504545b093157173000017" 
-							andKey:@"4f504545b093157173000017lh4java7"
-						 andSecret:@"trzmcvolbfqgnphhisc8jdvunqy2es5b" 
-			 andMainViewController:nil];
-	}
-	else if (IS_RELEASE())
-	{
-		[Crittercism initWithAppID:@"4f1f9785b093150d5500008c" 
-							andKey:@"4f1f9785b093150d5500008cpu3zoqbu" 
-						 andSecret:@"2ayz0tlckhhu4jjsb8dzxuqmfnexcqkn"
-			 andMainViewController:nil];
-	}
-	[Crittercism sharedInstance].delegate = (id<CrittercismDelegate>)self;
-}
-
-- (void)crittercismDidCrashOnLastLoad
-{
-//DLog(@"App crashed on last load. Do something here.");
-	
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oh no! :(" message:@"It looks like iSub crashed recently!\n\nWell never fear, iSub support is happy to help. \n\nWould you like to send an email to support?" delegate:self cancelButtonTitle:@"No Thanks" otherButtonTitles:@"Yes Please", nil];
-	alert.tag = 7;
-	[alert show];
-	[alert release];
-}*/
-
-- (void)loadInAppPurchaseStore
-{
-#if IS_LITE()
-    [MKStoreManager sharedManager];
-    [MKStoreManager setDelegate:self];
-    
-    if (IS_DEBUG())
-    {
-        // Reset features
-        [SFHFKeychainUtils storeUsername:kFeaturePlaylistsId andPassword:@"NO" forServiceName:kServiceName updateExisting:YES error:nil];
-        [SFHFKeychainUtils storeUsername:kFeatureCacheId andPassword:@"NO" forServiceName:kServiceName updateExisting:YES error:nil];
-        [SFHFKeychainUtils storeUsername:kFeatureVideoId andPassword:@"NO" forServiceName:kServiceName updateExisting:YES error:nil];
-        [SFHFKeychainUtils storeUsername:kFeatureAllId andPassword:@"NO" forServiceName:kServiceName updateExisting:YES error:nil];
-        
-        //DLog(@"is kFeaturePlaylistsId enabled: %i", [MKStoreManager isFeaturePurchased:kFeaturePlaylistsId]);
-        //DLog(@"is kFeatureJukeboxId enabled: %i", [MKStoreManager isFeaturePurchased:kFeatureJukeboxId]);
-        //DLog(@"is kFeatureCacheId enabled: %i", [MKStoreManager isFeaturePurchased:kFeatureCacheId]);
-        //DLog(@"is kFeatureAllId enabled: %i", [MKStoreManager isFeaturePurchased:kFeatureAllId]);
-    }
-#endif
 }
 
 - (void)startRedirectingLogToFile
@@ -1405,44 +1338,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 }*/
 
-
-#pragma mark -
-#pragma mark Store Manager delegate
-#pragma mark -
-
-/*- (void)productFetchComplete
- {
- CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Store" message:@"Product fetch complete" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
- [alert show];
- [alert release];
- }*/
-
-- (void)productPurchased:(NSString *)productId
-{
-	NSString *message = nil;
-	if ([productId isEqualToString:kFeatureAllId])
-		message = @"You may now use all of the iSub features.";
-	else if ([productId isEqualToString:kFeaturePlaylistsId])
-		message = @"You may now use the playlist feature.";
-	else if ([productId isEqualToString:kFeatureCacheId])
-		message = @"You may now use the song caching feature.";
-	else if ([productId isEqualToString:kFeatureVideoId])
-		message = @"You may now stream videos.";
-	else
-		message = @"";
-	
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Purchase Successful!" message:message delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-	[alert show];
-	
-	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_StorePurchaseComplete];
-}
-
-- (void)transactionCanceled
-{
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Store" message:@"Transaction canceled. Try again." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-	[alert show];
-}
-
 #pragma mark - Movie Playing
 
 - (void)createMoviePlayer
@@ -1499,36 +1394,21 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)playVideo:(ISMSSong *)aSong
 {
-    if (settingsS.isVideoUnlocked)
+    NSString *serverType = settingsS.serverType;
+    if (!aSong.isVideo || (([serverType isEqualToString:SUBSONIC] || [serverType isEqualToString:UBUNTU_ONE]) && !settingsS.isVideoSupported))
+        return;
+    
+    if (IS_IPAD())
     {
-        NSString *serverType = settingsS.serverType;
-        if (!aSong.isVideo || (([serverType isEqualToString:SUBSONIC] || [serverType isEqualToString:UBUNTU_ONE]) && !settingsS.isVideoSupported))
-            return;
-        
-        if (IS_IPAD())
-        {
-            // Turn off repeat one so user doesn't get stuck
-            if (playlistS.repeatMode == ISMSRepeatMode_RepeatOne)
-                playlistS.repeatMode = ISMSRepeatMode_Normal;
-        }
-        
-        if ([serverType isEqualToString:SUBSONIC] || [serverType isEqualToString:UBUNTU_ONE])
-        {
-            [self playSubsonicVideo:aSong bitrates:settingsS.currentVideoBitrates];
-        }
+        // Turn off repeat one so user doesn't get stuck
+        if (playlistS.repeatMode == ISMSRepeatMode_RepeatOne)
+            playlistS.repeatMode = ISMSRepeatMode_Normal;
     }
-    else
-	{
-		StoreViewController *store = [[StoreViewController alloc] init];
-        if (IS_IPAD())
-        {
-            [store pushViewControllerCustom:store];
-        }
-        else
-        {
-            [self.currentTabBarController.selectedViewController pushViewControllerCustom:store];
-        }
-	}
+    
+    if ([serverType isEqualToString:SUBSONIC] || [serverType isEqualToString:UBUNTU_ONE])
+    {
+        [self playSubsonicVideo:aSong bitrates:settingsS.currentVideoBitrates];
+    }
 }
 
 - (void)playSubsonicVideo:(ISMSSong *)aSong bitrates:(NSArray *)bitrates

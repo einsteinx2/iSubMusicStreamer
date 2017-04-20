@@ -19,63 +19,17 @@
 	self.currentSongProgress = 0.;
 	self.nextSongProgress = 0.;
 		
-	if (settingsS.isCacheUnlocked)
-	{
-		// Cache the song objects
-		[self cacheSongObjects];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cacheSongObjects) 
-													 name:ISMSNotification_SongPlaybackStarted object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cacheSongObjects) 
-													 name:ISMSNotification_SongPlaybackEnded object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cacheSongObjects) 
-													 name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-		
-		// Set the fields
-		[self updateStats];
-	}
-	else
-	{
-		// Display the unlock cache feature screen
-		
-		for (UIView *subView in self.view.subviews)
-		{
-			subView.hidden = YES;
-		}
-		self.songInfoToggleButton.enabled = NO;
-		
-		UIImageView *noCacheScreen = [[UIImageView alloc] init];
-		noCacheScreen.userInteractionEnabled = YES;
-		noCacheScreen.frame = CGRectMake(40, 80, 240, 180);
-		noCacheScreen.image = [UIImage imageNamed:@"loading-screen-image.png"];
-		
-		UILabel *textLabel = [[UILabel alloc] init];
-		textLabel.backgroundColor = [UIColor clearColor];
-		textLabel.textColor = [UIColor whiteColor];
-		textLabel.font = ISMSBoldFont(30);
-		textLabel.textAlignment = NSTextAlignmentCenter;
-		textLabel.numberOfLines = 0;
-		textLabel.text = @"Caching\nLocked";
-		textLabel.frame = CGRectMake(20, 0, 200, 100);
-		[noCacheScreen addSubview:textLabel];
-		
-		UILabel *textLabel2 = [[UILabel alloc] init];
-		textLabel2.backgroundColor = [UIColor clearColor];
-		textLabel2.textColor = [UIColor whiteColor];
-		textLabel2.font = ISMSBoldFont(14);
-		textLabel2.textAlignment = NSTextAlignmentCenter;
-		textLabel2.numberOfLines = 0;
-		textLabel2.text = @"Tap to purchase the ability to cache songs for better streaming performance and offline playback";
-		textLabel2.frame = CGRectMake(20, 90, 200, 70);
-		[noCacheScreen addSubview:textLabel2];
-		
-		UIButton *storeLauncher = [UIButton buttonWithType:UIButtonTypeCustom];
-		storeLauncher.frame = CGRectMake(0, 0, noCacheScreen.frame.size.width, noCacheScreen.frame.size.height);
-		[storeLauncher addTarget:self action:@selector(showStore) forControlEvents:UIControlEventTouchUpInside];
-		[noCacheScreen addSubview:storeLauncher];
-		
-		[self.view addSubview:noCacheScreen];
-		
-	}
+    // Cache the song objects
+    [self cacheSongObjects];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cacheSongObjects)
+                                                 name:ISMSNotification_SongPlaybackStarted object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cacheSongObjects)
+                                                 name:ISMSNotification_SongPlaybackEnded object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cacheSongObjects)
+                                                 name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
+    
+    // Set the fields
+    [self updateStats];
 }
 
 - (void)showStore

@@ -14,7 +14,6 @@
 #import <QuartzCore/QuartzCore.h>
 #import "EqualizerViewController.h"
 #import "OBSlider.h"
-#import "StoreViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "ISMSStreamHandler.h"
 
@@ -57,16 +56,6 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		return [NSString stringWithFormat:@"%lus", (unsigned long)seconds];
 	else
 		return [NSString stringWithFormat:@"%lum", (long)(seconds / 60)];
-}
-
-- (void)showStore
-{	
-	if (self.isFlipped)
-		[self songInfoToggle:nil];
-	
-	StoreViewController *store = [[StoreViewController alloc] init];
-	//[self pushViewControllerCustom:store];
-	[self.navigationController pushViewController:store animated:YES];
 }
 
 - (void)viewDidLoad
