@@ -333,9 +333,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 												 name:@"hideSongInfo" object:nil];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(largeSongInfoWasToggled) name:ISMSNotification_LargeSongInfoToggle object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showStore) name:@"player show store" object:nil];
-	
+		
 	if (IS_IPAD())
 	{
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showPlayerOverlayTemp) 

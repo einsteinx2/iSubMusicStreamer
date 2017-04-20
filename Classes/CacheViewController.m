@@ -1216,6 +1216,8 @@
     {
         return self.cacheQueueCount;
     }
+    
+    return 0;
 }
 
 

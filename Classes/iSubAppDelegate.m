@@ -23,6 +23,8 @@
 #import "UIViewController+PushViewControllerCustom.h"
 #import "HTTPServer.h"
 #import "HLSProxyConnection.h"
+#import "DDFileLogger.h"
+#import "DDTTYLogger.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -158,10 +160,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	[self loadFlurryAnalytics];
 	[self loadHockeyApp];
-	//[self loadCrittercism];
-		
-	[self loadInAppPurchaseStore];
-			
+    
 	// Create and display UI
 	self.introController = nil;
 	if (IS_IPAD())

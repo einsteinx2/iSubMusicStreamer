@@ -76,15 +76,11 @@
 
 - (void)loadFlurryAnalytics;
 - (void)loadHockeyApp;
-//- (void)loadCrittercism;
-- (void)loadInAppPurchaseStore;
 
 - (void)reachabilityChanged:(NSNotification *)note;
 - (NSInteger)getHour;
 
 - (void)showSettings;
-
-//- (BOOL)isWifi;
 
 - (void)batteryStateChanged:(NSNotification *)notification;
 

@@ -958,20 +958,6 @@
 		53FE35901EA961540058B925 /* EX2RingBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE346E1EA961540058B925 /* EX2RingBuffer.m */; };
 		53FE35911EA961540058B925 /* EX2SimpleConnectionQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34701EA961540058B925 /* EX2SimpleConnectionQueue.m */; };
 		53FE35931EA961540058B925 /* EX2SimpleConnectionQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34701EA961540058B925 /* EX2SimpleConnectionQueue.m */; };
-		53FE35941EA961540058B925 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34751EA961540058B925 /* DDAbstractDatabaseLogger.m */; };
-		53FE35961EA961540058B925 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34751EA961540058B925 /* DDAbstractDatabaseLogger.m */; };
-		53FE35971EA961540058B925 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34771EA961540058B925 /* DDASLLogger.m */; };
-		53FE35991EA961540058B925 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34771EA961540058B925 /* DDASLLogger.m */; };
-		53FE359A1EA961540058B925 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34791EA961540058B925 /* DDFileLogger.m */; };
-		53FE359C1EA961540058B925 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34791EA961540058B925 /* DDFileLogger.m */; };
-		53FE359D1EA961540058B925 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE347B1EA961540058B925 /* DDLog.m */; };
-		53FE359F1EA961540058B925 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE347B1EA961540058B925 /* DDLog.m */; };
-		53FE35A01EA961540058B925 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE347D1EA961540058B925 /* DDTTYLogger.m */; };
-		53FE35A21EA961540058B925 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE347D1EA961540058B925 /* DDTTYLogger.m */; };
-		53FE35A31EA961540058B925 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34801EA961540058B925 /* ContextFilterLogFormatter.m */; };
-		53FE35A51EA961540058B925 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34801EA961540058B925 /* ContextFilterLogFormatter.m */; };
-		53FE35A61EA961540058B925 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34821EA961540058B925 /* DispatchQueueLogFormatter.m */; };
-		53FE35A81EA961540058B925 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34821EA961540058B925 /* DispatchQueueLogFormatter.m */; };
 		53FE35C41EA961540058B925 /* EX2Kit.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34971EA961540058B925 /* EX2Kit.m */; };
 		53FE35C61EA961540058B925 /* EX2Kit.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34971EA961540058B925 /* EX2Kit.m */; };
 		53FE35C71EA961540058B925 /* EX2Dispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE349C1EA961540058B925 /* EX2Dispatch.m */; };
@@ -1332,6 +1318,22 @@
 		53FE39971EA964F70058B925 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 53FE39911EA964F70058B925 /* HockeySDKResources.bundle */; };
 		53FE39A11EA968390058B925 /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A01EA968390058B925 /* DDSocialDialog.m */; };
 		53FE39A31EA968390058B925 /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A01EA968390058B925 /* DDSocialDialog.m */; };
+		53FE39AA1EA970220058B925 /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A51EA970220058B925 /* DDContextFilterLogFormatter.m */; };
+		53FE39AB1EA970220058B925 /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A51EA970220058B925 /* DDContextFilterLogFormatter.m */; };
+		53FE39AC1EA970220058B925 /* DDDispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A71EA970220058B925 /* DDDispatchQueueLogFormatter.m */; };
+		53FE39AD1EA970220058B925 /* DDDispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A71EA970220058B925 /* DDDispatchQueueLogFormatter.m */; };
+		53FE39AE1EA970220058B925 /* DDMultiFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A91EA970220058B925 /* DDMultiFormatter.m */; };
+		53FE39AF1EA970220058B925 /* DDMultiFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A91EA970220058B925 /* DDMultiFormatter.m */; };
+		53FE39BB1EA9703E0058B925 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B11EA9703E0058B925 /* DDAbstractDatabaseLogger.m */; };
+		53FE39BC1EA9703E0058B925 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B11EA9703E0058B925 /* DDAbstractDatabaseLogger.m */; };
+		53FE39BD1EA9703E0058B925 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B31EA9703E0058B925 /* DDASLLogger.m */; };
+		53FE39BE1EA9703E0058B925 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B31EA9703E0058B925 /* DDASLLogger.m */; };
+		53FE39BF1EA9703E0058B925 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B51EA9703E0058B925 /* DDFileLogger.m */; };
+		53FE39C01EA9703E0058B925 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B51EA9703E0058B925 /* DDFileLogger.m */; };
+		53FE39C11EA9703E0058B925 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B71EA9703E0058B925 /* DDLog.m */; };
+		53FE39C21EA9703E0058B925 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B71EA9703E0058B925 /* DDLog.m */; };
+		53FE39C31EA9703E0058B925 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39BA1EA9703E0058B925 /* DDTTYLogger.m */; };
+		53FE39C41EA9703E0058B925 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39BA1EA9703E0058B925 /* DDTTYLogger.m */; };
 		D0EA476219DE41510083CE05 /* ISMSPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476119DE41510083CE05 /* ISMSPlayerView.m */; };
 		D0EA476419DE41510083CE05 /* ISMSPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476119DE41510083CE05 /* ISMSPlayerView.m */; };
 		D0EA476719DE41E30083CE05 /* ISMSPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476619DE41E30083CE05 /* ISMSPlayerViewController.m */; };
@@ -2014,21 +2016,6 @@
 		53FE346E1EA961540058B925 /* EX2RingBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2RingBuffer.m; sourceTree = "<group>"; };
 		53FE346F1EA961540058B925 /* EX2SimpleConnectionQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2SimpleConnectionQueue.h; sourceTree = "<group>"; };
 		53FE34701EA961540058B925 /* EX2SimpleConnectionQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2SimpleConnectionQueue.m; sourceTree = "<group>"; };
-		53FE34731EA961540058B925 /* CocoaLumberjack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaLumberjack.h; sourceTree = "<group>"; };
-		53FE34741EA961540058B925 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
-		53FE34751EA961540058B925 /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
-		53FE34761EA961540058B925 /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
-		53FE34771EA961540058B925 /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDASLLogger.m; sourceTree = "<group>"; };
-		53FE34781EA961540058B925 /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDFileLogger.h; sourceTree = "<group>"; };
-		53FE34791EA961540058B925 /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDFileLogger.m; sourceTree = "<group>"; };
-		53FE347A1EA961540058B925 /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDLog.h; sourceTree = "<group>"; };
-		53FE347B1EA961540058B925 /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDLog.m; sourceTree = "<group>"; };
-		53FE347C1EA961540058B925 /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTTYLogger.h; sourceTree = "<group>"; };
-		53FE347D1EA961540058B925 /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTTYLogger.m; sourceTree = "<group>"; };
-		53FE347F1EA961540058B925 /* ContextFilterLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextFilterLogFormatter.h; sourceTree = "<group>"; };
-		53FE34801EA961540058B925 /* ContextFilterLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextFilterLogFormatter.m; sourceTree = "<group>"; };
-		53FE34811EA961540058B925 /* DispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchQueueLogFormatter.h; sourceTree = "<group>"; };
-		53FE34821EA961540058B925 /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchQueueLogFormatter.m; sourceTree = "<group>"; };
 		53FE34961EA961540058B925 /* EX2Kit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2Kit.h; sourceTree = "<group>"; };
 		53FE34971EA961540058B925 /* EX2Kit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2Kit.m; sourceTree = "<group>"; };
 		53FE34991EA961540058B925 /* EX2Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2Macros.h; sourceTree = "<group>"; };
@@ -2401,6 +2388,23 @@
 		53FE39911EA964F70058B925 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
 		53FE399F1EA968390058B925 /* DDSocialDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDSocialDialog.h; path = Classes/DDSocialDialog.h; sourceTree = SOURCE_ROOT; };
 		53FE39A01EA968390058B925 /* DDSocialDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDSocialDialog.m; path = Classes/DDSocialDialog.m; sourceTree = SOURCE_ROOT; };
+		53FE39A41EA970220058B925 /* DDContextFilterLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDContextFilterLogFormatter.h; sourceTree = "<group>"; };
+		53FE39A51EA970220058B925 /* DDContextFilterLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDContextFilterLogFormatter.m; sourceTree = "<group>"; };
+		53FE39A61EA970220058B925 /* DDDispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDDispatchQueueLogFormatter.h; sourceTree = "<group>"; };
+		53FE39A71EA970220058B925 /* DDDispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDDispatchQueueLogFormatter.m; sourceTree = "<group>"; };
+		53FE39A81EA970220058B925 /* DDMultiFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDMultiFormatter.h; sourceTree = "<group>"; };
+		53FE39A91EA970220058B925 /* DDMultiFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDMultiFormatter.m; sourceTree = "<group>"; };
+		53FE39B01EA9703E0058B925 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
+		53FE39B11EA9703E0058B925 /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
+		53FE39B21EA9703E0058B925 /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
+		53FE39B31EA9703E0058B925 /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDASLLogger.m; sourceTree = "<group>"; };
+		53FE39B41EA9703E0058B925 /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDFileLogger.h; sourceTree = "<group>"; };
+		53FE39B51EA9703E0058B925 /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDFileLogger.m; sourceTree = "<group>"; };
+		53FE39B61EA9703E0058B925 /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDLog.h; sourceTree = "<group>"; };
+		53FE39B71EA9703E0058B925 /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDLog.m; sourceTree = "<group>"; };
+		53FE39B81EA9703E0058B925 /* DDLog+LOGV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DDLog+LOGV.h"; sourceTree = "<group>"; };
+		53FE39B91EA9703E0058B925 /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTTYLogger.h; sourceTree = "<group>"; };
+		53FE39BA1EA9703E0058B925 /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTTYLogger.m; sourceTree = "<group>"; };
 		D0EA476019DE41510083CE05 /* ISMSPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSPlayerView.h; sourceTree = "<group>"; };
 		D0EA476119DE41510083CE05 /* ISMSPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSPlayerView.m; sourceTree = "<group>"; };
 		D0EA476519DE41E30083CE05 /* ISMSPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSPlayerViewController.h; sourceTree = "<group>"; };
@@ -3551,17 +3555,17 @@
 		53FE34721EA961540058B925 /* Lumberjack */ = {
 			isa = PBXGroup;
 			children = (
-				53FE34731EA961540058B925 /* CocoaLumberjack.h */,
-				53FE34741EA961540058B925 /* DDAbstractDatabaseLogger.h */,
-				53FE34751EA961540058B925 /* DDAbstractDatabaseLogger.m */,
-				53FE34761EA961540058B925 /* DDASLLogger.h */,
-				53FE34771EA961540058B925 /* DDASLLogger.m */,
-				53FE34781EA961540058B925 /* DDFileLogger.h */,
-				53FE34791EA961540058B925 /* DDFileLogger.m */,
-				53FE347A1EA961540058B925 /* DDLog.h */,
-				53FE347B1EA961540058B925 /* DDLog.m */,
-				53FE347C1EA961540058B925 /* DDTTYLogger.h */,
-				53FE347D1EA961540058B925 /* DDTTYLogger.m */,
+				53FE39B01EA9703E0058B925 /* DDAbstractDatabaseLogger.h */,
+				53FE39B11EA9703E0058B925 /* DDAbstractDatabaseLogger.m */,
+				53FE39B21EA9703E0058B925 /* DDASLLogger.h */,
+				53FE39B31EA9703E0058B925 /* DDASLLogger.m */,
+				53FE39B41EA9703E0058B925 /* DDFileLogger.h */,
+				53FE39B51EA9703E0058B925 /* DDFileLogger.m */,
+				53FE39B61EA9703E0058B925 /* DDLog.h */,
+				53FE39B71EA9703E0058B925 /* DDLog.m */,
+				53FE39B81EA9703E0058B925 /* DDLog+LOGV.h */,
+				53FE39B91EA9703E0058B925 /* DDTTYLogger.h */,
+				53FE39BA1EA9703E0058B925 /* DDTTYLogger.m */,
 				53FE347E1EA961540058B925 /* Extensions */,
 			);
 			path = Lumberjack;
@@ -3570,10 +3574,12 @@
 		53FE347E1EA961540058B925 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				53FE347F1EA961540058B925 /* ContextFilterLogFormatter.h */,
-				53FE34801EA961540058B925 /* ContextFilterLogFormatter.m */,
-				53FE34811EA961540058B925 /* DispatchQueueLogFormatter.h */,
-				53FE34821EA961540058B925 /* DispatchQueueLogFormatter.m */,
+				53FE39A41EA970220058B925 /* DDContextFilterLogFormatter.h */,
+				53FE39A51EA970220058B925 /* DDContextFilterLogFormatter.m */,
+				53FE39A61EA970220058B925 /* DDDispatchQueueLogFormatter.h */,
+				53FE39A71EA970220058B925 /* DDDispatchQueueLogFormatter.m */,
+				53FE39A81EA970220058B925 /* DDMultiFormatter.h */,
+				53FE39A91EA970220058B925 /* DDMultiFormatter.m */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -4898,6 +4904,7 @@
 				539797FA1162D3F100F41D8B /* AllAlbumsUITableViewCell.m in Sources */,
 				53614ACA116432DA0088ABC0 /* ServerListViewController.m in Sources */,
 				53FE393A1EA961ED0058B925 /* WebSocket.m in Sources */,
+				53FE39C31EA9703E0058B925 /* DDTTYLogger.m in Sources */,
 				53FE373A1EA961720058B925 /* ISMSServerShuffleLoader.m in Sources */,
 				530388A9116571920043292D /* AllSongsViewController.m in Sources */,
 				53FE354C1EA961540058B925 /* UIImage+Cropping.m in Sources */,
@@ -4914,7 +4921,6 @@
 				53ABE3591165C52D00197877 /* PlayingUITableViewCell.m in Sources */,
 				53ABE3631165C83900197877 /* PlayingViewController.m in Sources */,
 				53FE38301EA961A10058B925 /* SBJsonStreamParserState.m in Sources */,
-				53FE359A1EA961540058B925 /* DDFileLogger.m in Sources */,
 				53ABE54311665B6B00197877 /* PlaylistsViewController.m in Sources */,
 				53FE36EF1EA961720058B925 /* BassGaplessPlayer.m in Sources */,
 				53FE37161EA961720058B925 /* ISMSChatMessage.m in Sources */,
@@ -4935,11 +4941,11 @@
 				53FE34F51EA961540058B925 /* NSOrderedSet+Safe.m in Sources */,
 				53D8ACB3116C47E600E5C9CB /* PageControlViewController.m in Sources */,
 				53FE37881EA961720058B925 /* SavedSettings.m in Sources */,
-				53FE359D1EA961540058B925 /* DDLog.m in Sources */,
 				53FE371C1EA961720058B925 /* ISMSDropdownFolderLoader.m in Sources */,
 				53FE37401EA961720058B925 /* ISMSSong.m in Sources */,
 				53FE35161EA961540058B925 /* NSString+SHA1.m in Sources */,
 				53FE38331EA961A10058B925 /* SBJsonStreamWriter.m in Sources */,
+				53FE39AC1EA970220058B925 /* DDDispatchQueueLogFormatter.m in Sources */,
 				53F4A074116FF48400BB8411 /* DebugViewController.m in Sources */,
 				53FE382D1EA961A10058B925 /* SBJsonStreamParserAdapter.m in Sources */,
 				53FE37D61EA961720058B925 /* SUSSubFolderLoader.m in Sources */,
@@ -4992,18 +4998,19 @@
 				530CE7F2119B8E8C00728ED5 /* CurrentPlaylistSongSmallUITableViewCell.m in Sources */,
 				530CE844119B9D9100728ED5 /* SongInfoPlaylistCustomUITableView.m in Sources */,
 				53FE35761EA961540058B925 /* UIWebView+HideShadows.m in Sources */,
+				53FE39C11EA9703E0058B925 /* DDLog.m in Sources */,
 				53FE382A1EA961A10058B925 /* SBJsonStreamParserAccumulator.m in Sources */,
 				53B5298A11AD9B79005776B5 /* LoadingScreen.m in Sources */,
 				53FE372B1EA961720058B925 /* ISMSQueueAllLoader.m in Sources */,
 				53FE391F1EA961ED0058B925 /* HTTPServer.m in Sources */,
 				53FE37911EA961720058B925 /* sqlite3.c in Sources */,
-				53FE35A31EA961540058B925 /* ContextFilterLogFormatter.m in Sources */,
 				53FE38271EA961A10058B925 /* SBJsonStreamParser.m in Sources */,
 				53B52BA511ADE0A6005776B5 /* GenresViewController.m in Sources */,
 				530B417211B607A200743C09 /* CacheViewController.m in Sources */,
 				53FE352B1EA961540058B925 /* NSMutableOrderedSet+Safe.m in Sources */,
 				532862DB11C573AD00B40FF0 /* UAApplication.m in Sources */,
 				53FE37D91EA961720058B925 /* WBDatabaseLoader.m in Sources */,
+				53FE39BD1EA9703E0058B925 /* DDASLLogger.m in Sources */,
 				53FE34C51EA961540058B925 /* NSArray+Safe.m in Sources */,
 				53FE35221EA961540058B925 /* NSString+Validation.m in Sources */,
 				538229F611C98091003F1E23 /* CacheAlbumViewController.m in Sources */,
@@ -5022,7 +5029,6 @@
 				53523D8B11CD580D006AEA48 /* GenresArtistUITableViewCell.m in Sources */,
 				53523D8F11CD5889006AEA48 /* GenresAlbumViewController.m in Sources */,
 				53FE35281EA961540058B925 /* NSURL+SkipBackupAttribute.m in Sources */,
-				53FE35A01EA961540058B925 /* DDTTYLogger.m in Sources */,
 				53FE37BE1EA961720058B925 /* SUSRootFoldersLoader.m in Sources */,
 				53FE355E1EA961540058B925 /* UIImageView+Reflection.m in Sources */,
 				53523D9411CD61F7006AEA48 /* GenresArtistViewController.m in Sources */,
@@ -5058,6 +5064,7 @@
 				53DF310711D3EE26007552A4 /* GenresGenreUITableViewCell.m in Sources */,
 				53FE34CE1EA961540058B925 /* NSData+Base64.m in Sources */,
 				53FE397D1EA963180058B925 /* FMDatabase.m in Sources */,
+				53FE39BF1EA9703E0058B925 /* DDFileLogger.m in Sources */,
 				53FE35581EA961540058B925 /* UIImage+Tint.m in Sources */,
 				5398F26D11DA61DA00007870 /* SettingsTabViewController.m in Sources */,
 				53FE36E61EA961720058B925 /* BassEffectDAO.m in Sources */,
@@ -5070,7 +5077,9 @@
 				534050FB11E9966C004AEC41 /* LyricsViewController.m in Sources */,
 				53FE37851EA961720058B925 /* PMSSubFolderLoader.m in Sources */,
 				53FE34CB1EA961540058B925 /* NSData+AES128.m in Sources */,
+				53FE39AA1EA970220058B925 /* DDContextFilterLogFormatter.m in Sources */,
 				53FE37C11EA961720058B925 /* SUSScrobbleLoader.m in Sources */,
+				53FE39AE1EA970220058B925 /* DDMultiFormatter.m in Sources */,
 				53FE38A41EA961C80058B925 /* ZKCDHeader.m in Sources */,
 				53FE350D1EA961540058B925 /* NSString+hex.m in Sources */,
 				5379DC4F1219E48800F426CD /* ChatUITableViewCell.m in Sources */,
@@ -5080,6 +5089,7 @@
 				53BB7ECA121B8D8F00BEE7E8 /* CustomUITextView.m in Sources */,
 				53FE39341EA961ED0058B925 /* HTTPFileResponse.m in Sources */,
 				53FE38041EA961970058B925 /* RXMLElement.m in Sources */,
+				53FE39BB1EA9703E0058B925 /* DDAbstractDatabaseLogger.m in Sources */,
 				53FE37701EA961720058B925 /* NSMutableURLRequest+SUS.m in Sources */,
 				53FE34BC1EA961540058B925 /* NSArray+FirstObject.m in Sources */,
 				53FE39101EA961ED0058B925 /* DDNumber.m in Sources */,
@@ -5100,7 +5110,6 @@
 				53C22CCF128EE81C00FFBA67 /* ModalAlbumArtViewController.m in Sources */,
 				53FE352E1EA961540058B925 /* CALayer+ImageFromLayer.m in Sources */,
 				53FE34C21EA961540058B925 /* NSArray+Reverse.m in Sources */,
-				53FE35941EA961540058B925 /* DDAbstractDatabaseLogger.m in Sources */,
 				535CB23212E0027800389DA1 /* ServerTypeViewController.m in Sources */,
 				53FE38421EA961A10058B925 /* SBJsonWriter.m in Sources */,
 				535CB2A212E2348A00389DA1 /* UbuntuServerEditViewController.m in Sources */,
@@ -5117,7 +5126,6 @@
 				53FE39131EA961ED0058B925 /* DDRange.m in Sources */,
 				53FE39281EA961ED0058B925 /* MultipartMessageHeaderField.m in Sources */,
 				53FE35401EA961540058B925 /* UIColor+ColorWithInt.m in Sources */,
-				53FE35A61EA961540058B925 /* DispatchQueueLogFormatter.m in Sources */,
 				53FE35D01EA961540058B925 /* EX2InfinitePagingScrollView.m in Sources */,
 				53ADBBC013352DB40098FAE6 /* FolderDropdownControl.m in Sources */,
 				53FE38B01EA961C80058B925 /* ZKDataArchive.m in Sources */,
@@ -5126,7 +5134,6 @@
 				535B726A134CFB0E003E0E1C /* FolderPickerDialog.m in Sources */,
 				53FE34DA1EA961540058B925 /* NSFileHandle+Hash.m in Sources */,
 				53FE35C41EA961540058B925 /* EX2Kit.m in Sources */,
-				53FE35971EA961540058B925 /* DDASLLogger.m in Sources */,
 				53FE39801EA963180058B925 /* FMDatabaseAdditions.m in Sources */,
 				535B727E134D273B003E0E1C /* SearchAllViewController.m in Sources */,
 				53FE356D1EA961540058B925 /* UIView+Tools.m in Sources */,
@@ -5236,6 +5243,7 @@
 				53BC27AD139AF0DD00A825F1 /* AllAlbumsUITableViewCell.m in Sources */,
 				53BC27AE139AF0DD00A825F1 /* ServerListViewController.m in Sources */,
 				53FE393C1EA961ED0058B925 /* WebSocket.m in Sources */,
+				53FE39C41EA9703E0058B925 /* DDTTYLogger.m in Sources */,
 				53FE373C1EA961720058B925 /* ISMSServerShuffleLoader.m in Sources */,
 				53BC27B0139AF0DD00A825F1 /* AllSongsViewController.m in Sources */,
 				53FE354E1EA961540058B925 /* UIImage+Cropping.m in Sources */,
@@ -5252,7 +5260,6 @@
 				53BC27B2139AF0DD00A825F1 /* PlayingUITableViewCell.m in Sources */,
 				53BC27B3139AF0DD00A825F1 /* PlayingViewController.m in Sources */,
 				53FE38321EA961A10058B925 /* SBJsonStreamParserState.m in Sources */,
-				53FE359C1EA961540058B925 /* DDFileLogger.m in Sources */,
 				53BC27B6139AF0DD00A825F1 /* PlaylistsViewController.m in Sources */,
 				53FE36F11EA961720058B925 /* BassGaplessPlayer.m in Sources */,
 				53FE37181EA961720058B925 /* ISMSChatMessage.m in Sources */,
@@ -5273,11 +5280,11 @@
 				53FE34F71EA961540058B925 /* NSOrderedSet+Safe.m in Sources */,
 				53BC27B9139AF0DD00A825F1 /* PageControlViewController.m in Sources */,
 				53FE378A1EA961720058B925 /* SavedSettings.m in Sources */,
-				53FE359F1EA961540058B925 /* DDLog.m in Sources */,
 				53FE371E1EA961720058B925 /* ISMSDropdownFolderLoader.m in Sources */,
 				53FE37421EA961720058B925 /* ISMSSong.m in Sources */,
 				53FE35181EA961540058B925 /* NSString+SHA1.m in Sources */,
 				53FE38351EA961A10058B925 /* SBJsonStreamWriter.m in Sources */,
+				53FE39AD1EA970220058B925 /* DDDispatchQueueLogFormatter.m in Sources */,
 				53BC27BA139AF0DD00A825F1 /* DebugViewController.m in Sources */,
 				53FE382F1EA961A10058B925 /* SBJsonStreamParserAdapter.m in Sources */,
 				53FE37D81EA961720058B925 /* SUSSubFolderLoader.m in Sources */,
@@ -5330,18 +5337,19 @@
 				53BC27C6139AF0DD00A825F1 /* CurrentPlaylistSongSmallUITableViewCell.m in Sources */,
 				53BC27C7139AF0DD00A825F1 /* SongInfoPlaylistCustomUITableView.m in Sources */,
 				53FE35781EA961540058B925 /* UIWebView+HideShadows.m in Sources */,
+				53FE39C21EA9703E0058B925 /* DDLog.m in Sources */,
 				53FE382C1EA961A10058B925 /* SBJsonStreamParserAccumulator.m in Sources */,
 				53BC27CC139AF0DD00A825F1 /* LoadingScreen.m in Sources */,
 				53FE372D1EA961720058B925 /* ISMSQueueAllLoader.m in Sources */,
 				53FE39211EA961ED0058B925 /* HTTPServer.m in Sources */,
 				53FE37931EA961720058B925 /* sqlite3.c in Sources */,
-				53FE35A51EA961540058B925 /* ContextFilterLogFormatter.m in Sources */,
 				53FE38291EA961A10058B925 /* SBJsonStreamParser.m in Sources */,
 				53BC27CE139AF0DD00A825F1 /* GenresViewController.m in Sources */,
 				53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */,
 				53FE352D1EA961540058B925 /* NSMutableOrderedSet+Safe.m in Sources */,
 				53BC27D6139AF0DD00A825F1 /* UAApplication.m in Sources */,
 				53FE37DB1EA961720058B925 /* WBDatabaseLoader.m in Sources */,
+				53FE39BE1EA9703E0058B925 /* DDASLLogger.m in Sources */,
 				53FE34C71EA961540058B925 /* NSArray+Safe.m in Sources */,
 				53FE35241EA961540058B925 /* NSString+Validation.m in Sources */,
 				53BC27D7139AF0DD00A825F1 /* CacheAlbumViewController.m in Sources */,
@@ -5360,7 +5368,6 @@
 				53BC27DC139AF0DD00A825F1 /* GenresArtistUITableViewCell.m in Sources */,
 				53BC27DD139AF0DD00A825F1 /* GenresAlbumViewController.m in Sources */,
 				53FE352A1EA961540058B925 /* NSURL+SkipBackupAttribute.m in Sources */,
-				53FE35A21EA961540058B925 /* DDTTYLogger.m in Sources */,
 				53FE37C01EA961720058B925 /* SUSRootFoldersLoader.m in Sources */,
 				53FE35601EA961540058B925 /* UIImageView+Reflection.m in Sources */,
 				53BC27DE139AF0DD00A825F1 /* GenresArtistViewController.m in Sources */,
@@ -5396,6 +5403,7 @@
 				53BC27E1139AF0DD00A825F1 /* GenresGenreUITableViewCell.m in Sources */,
 				53FE34D01EA961540058B925 /* NSData+Base64.m in Sources */,
 				53FE397F1EA963180058B925 /* FMDatabase.m in Sources */,
+				53FE39C01EA9703E0058B925 /* DDFileLogger.m in Sources */,
 				53FE355A1EA961540058B925 /* UIImage+Tint.m in Sources */,
 				53BC27E2139AF0DD00A825F1 /* SettingsTabViewController.m in Sources */,
 				53FE36E81EA961720058B925 /* BassEffectDAO.m in Sources */,
@@ -5408,7 +5416,9 @@
 				53BC27E5139AF0DD00A825F1 /* LyricsViewController.m in Sources */,
 				53FE37871EA961720058B925 /* PMSSubFolderLoader.m in Sources */,
 				53FE34CD1EA961540058B925 /* NSData+AES128.m in Sources */,
+				53FE39AB1EA970220058B925 /* DDContextFilterLogFormatter.m in Sources */,
 				53FE37C31EA961720058B925 /* SUSScrobbleLoader.m in Sources */,
+				53FE39AF1EA970220058B925 /* DDMultiFormatter.m in Sources */,
 				53FE38A61EA961C80058B925 /* ZKCDHeader.m in Sources */,
 				53FE350F1EA961540058B925 /* NSString+hex.m in Sources */,
 				53BC27F8139AF0DD00A825F1 /* ChatUITableViewCell.m in Sources */,
@@ -5418,6 +5428,7 @@
 				53BC27FC139AF0DD00A825F1 /* CustomUITextView.m in Sources */,
 				53FE39361EA961ED0058B925 /* HTTPFileResponse.m in Sources */,
 				53FE38061EA961970058B925 /* RXMLElement.m in Sources */,
+				53FE39BC1EA9703E0058B925 /* DDAbstractDatabaseLogger.m in Sources */,
 				53FE37721EA961720058B925 /* NSMutableURLRequest+SUS.m in Sources */,
 				53FE34BE1EA961540058B925 /* NSArray+FirstObject.m in Sources */,
 				53FE39121EA961ED0058B925 /* DDNumber.m in Sources */,
@@ -5438,7 +5449,6 @@
 				53BC2815139AF0DD00A825F1 /* ModalAlbumArtViewController.m in Sources */,
 				53FE35301EA961540058B925 /* CALayer+ImageFromLayer.m in Sources */,
 				53FE34C41EA961540058B925 /* NSArray+Reverse.m in Sources */,
-				53FE35961EA961540058B925 /* DDAbstractDatabaseLogger.m in Sources */,
 				53BC2827139AF0DD00A825F1 /* ServerTypeViewController.m in Sources */,
 				53FE38441EA961A10058B925 /* SBJsonWriter.m in Sources */,
 				53BC2828139AF0DD00A825F1 /* UbuntuServerEditViewController.m in Sources */,
@@ -5455,7 +5465,6 @@
 				53FE39151EA961ED0058B925 /* DDRange.m in Sources */,
 				53FE392A1EA961ED0058B925 /* MultipartMessageHeaderField.m in Sources */,
 				53FE35421EA961540058B925 /* UIColor+ColorWithInt.m in Sources */,
-				53FE35A81EA961540058B925 /* DispatchQueueLogFormatter.m in Sources */,
 				53FE35D21EA961540058B925 /* EX2InfinitePagingScrollView.m in Sources */,
 				53BC282D139AF0DD00A825F1 /* FolderDropdownControl.m in Sources */,
 				53FE38B21EA961C80058B925 /* ZKDataArchive.m in Sources */,
@@ -5464,7 +5473,6 @@
 				53BC283C139AF0DD00A825F1 /* FolderPickerDialog.m in Sources */,
 				53FE34DC1EA961540058B925 /* NSFileHandle+Hash.m in Sources */,
 				53FE35C61EA961540058B925 /* EX2Kit.m in Sources */,
-				53FE35991EA961540058B925 /* DDASLLogger.m in Sources */,
 				53FE39821EA963180058B925 /* FMDatabaseAdditions.m in Sources */,
 				53BC283D139AF0DD00A825F1 /* SearchAllViewController.m in Sources */,
 				53FE356F1EA961540058B925 /* UIView+Tools.m in Sources */,
