@@ -14,7 +14,7 @@
 
 #import "ISMSLoaderDelegate.h"
 #import "EX2Reachability.h"
-#import "HockeySDK.h"
+#import <HockeySDK/HockeySDK.h>
 
 #define appDelegateS [iSubAppDelegate sharedInstance]
 

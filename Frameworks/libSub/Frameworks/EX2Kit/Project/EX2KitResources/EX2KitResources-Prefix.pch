@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the 'EX2KitResources' target in the 'EX2KitResources' project
-//
-
-#ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
-#endif

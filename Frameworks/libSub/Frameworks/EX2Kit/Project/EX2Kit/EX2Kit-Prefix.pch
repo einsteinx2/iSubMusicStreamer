@@ -1,8 +1,0 @@
-//
-// Prefix header for all source files of the 'EX2Kit' target in the 'EX2Kit' project
-//
-
-#ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-    #import "EX2Kit.h"
-#endif
