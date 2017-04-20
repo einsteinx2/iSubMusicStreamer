@@ -106,7 +106,7 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     }
     else
     {
-        status =  self.proxyStatusCode;
+        status =  (NSUInteger)self.proxyStatusCode;
     }
     DDLogVerbose(@"HLSProxyResponse asking status, replying with %li", (long)status);
     return status;

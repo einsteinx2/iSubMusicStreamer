@@ -88,12 +88,12 @@ LOG_LEVEL_ISUB_DEFAULT
 			NSString *maxBitRate = [[NSString alloc] initWithFormat:@"%ld", (long)self.maxBitrateSetting];
 			[parameters setObject:n2N(maxBitRate) forKey:@"maxBitRate"];
 		}
-		self.request = [NSMutableURLRequest requestWithSUSAction:@"stream" parameters:parameters byteOffset:self.byteOffset];
+		self.request = [NSMutableURLRequest requestWithSUSAction:@"stream" parameters:parameters byteOffset:(NSUInteger)self.byteOffset];
 	}
 	else if ([settingsS.serverType isEqualToString:WAVEBOX])
 	{
         NSDictionary *parameters = [NSDictionary dictionaryWithObject:self.mySong.songId forKey:@"id"];
-		self.request = [NSMutableURLRequest requestWithPMSAction:@"stream" parameters:parameters byteOffset:self.byteOffset];
+		self.request = [NSMutableURLRequest requestWithPMSAction:@"stream" parameters:parameters byteOffset:(NSUInteger)self.byteOffset];
 	}
     
 	if (!self.request)
@@ -251,7 +251,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		{
 			// This is a failure, cancel the connection and call the didFail delegate method
 			[self.connection cancel];
-			[self connection:self.connection didFailWithError:nil];
+			[self connection:self.connection didFailWithError:[NSError errorWithISMSCode:ISMSErrorCode_CouldNotReachServer]];
 		}
 		else
 		{
@@ -390,7 +390,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		{
 			// There is no file handle for some reason, cancel the connection
 			[self.connection cancel];
-			[self connection:self.connection didFailWithError:nil];
+			[self connection:self.connection didFailWithError:[NSError errorWithISMSCode:ISMSErrorCode_CouldNotReachServer]];
 		}
 	}
 	
@@ -509,7 +509,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	{
 		self.numberOfContentLengthFailures++;
 		// This is a failed connection that didn't call didFailInternal for some reason, so call didFailWithError
-		[self connection:theConnection didFailWithError:nil];
+		[self connection:theConnection didFailWithError:[NSError errorWithISMSCode:ISMSErrorCode_CouldNotReachServer]];
 	}
 	else 
 	{

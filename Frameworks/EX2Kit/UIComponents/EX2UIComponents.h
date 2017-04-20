@@ -17,6 +17,5 @@
 #import "EX2InfinitePagingScrollView.h"
 #import "EX2LargerTouchScrollView.h"
 #import "EX2GlowButton.h"
-#import "EX2FlatSegmentedControl.h"
 
 #endif

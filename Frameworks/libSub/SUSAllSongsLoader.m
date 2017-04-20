@@ -47,13 +47,6 @@ static BOOL isAllSongsLoading = NO;
 
 #pragma mark Data loading
 
-static NSInteger order (id a, id b, void* context)
-{
-    NSString* catA = [a lastObject];
-    NSString* catB = [b lastObject];
-    return [catA caseInsensitiveCompare:catB];
-}
-
 - (void)cancelLoad
 {
     if ([SUSAllSongsLoader isLoading])

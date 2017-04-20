@@ -71,7 +71,7 @@
     _sessionId = self.sessionId;
     _lastQueryId = [_userDefaults objectForKey:@"lastQueryId"];
 	
-	audioEngineS.startByteOffset = _byteOffset;
+	audioEngineS.startByteOffset = (NSUInteger)_byteOffset;
 	audioEngineS.startSecondsOffset = _secondsOffset;
     //DLog(@"startByteOffset: %llu  startSecondsOffset: %f", byteOffset, secondsOffset);
 }

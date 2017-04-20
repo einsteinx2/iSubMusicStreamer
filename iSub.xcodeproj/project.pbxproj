@@ -1882,9 +1882,6 @@
 		53FE35C71EA961540058B925 /* EX2Dispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE349C1EA961540058B925 /* EX2Dispatch.m */; };
 		53FE35C81EA961540058B925 /* EX2Dispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE349C1EA961540058B925 /* EX2Dispatch.m */; };
 		53FE35C91EA961540058B925 /* EX2Dispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE349C1EA961540058B925 /* EX2Dispatch.m */; };
-		53FE35CA1EA961540058B925 /* EX2FlatSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34A01EA961540058B925 /* EX2FlatSegmentedControl.m */; };
-		53FE35CB1EA961540058B925 /* EX2FlatSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34A01EA961540058B925 /* EX2FlatSegmentedControl.m */; };
-		53FE35CC1EA961540058B925 /* EX2FlatSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34A01EA961540058B925 /* EX2FlatSegmentedControl.m */; };
 		53FE35CD1EA961540058B925 /* EX2GlowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34A21EA961540058B925 /* EX2GlowButton.m */; };
 		53FE35CE1EA961540058B925 /* EX2GlowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34A21EA961540058B925 /* EX2GlowButton.m */; };
 		53FE35CF1EA961540058B925 /* EX2GlowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34A21EA961540058B925 /* EX2GlowButton.m */; };
@@ -2130,7 +2127,7 @@
 		53FE37901EA961720058B925 /* SocialSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A41EA961720058B925 /* SocialSingleton.m */; };
 		53FE37911EA961720058B925 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A51EA961720058B925 /* sqlite3.c */; };
 		53FE37921EA961720058B925 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A51EA961720058B925 /* sqlite3.c */; };
-		53FE37931EA961720058B925 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A51EA961720058B925 /* sqlite3.c */; };
+		53FE37931EA961720058B925 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A51EA961720058B925 /* sqlite3.c */; settings = {COMPILER_FLAGS = "-w"; }; };
 		53FE37941EA961720058B925 /* SUSAllAlbumsDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A81EA961720058B925 /* SUSAllAlbumsDAO.m */; };
 		53FE37951EA961720058B925 /* SUSAllAlbumsDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A81EA961720058B925 /* SUSAllAlbumsDAO.m */; };
 		53FE37961EA961720058B925 /* SUSAllAlbumsDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A81EA961720058B925 /* SUSAllAlbumsDAO.m */; };
@@ -3144,8 +3141,6 @@
 		53FE349B1EA961540058B925 /* EX2Dispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2Dispatch.h; sourceTree = "<group>"; };
 		53FE349C1EA961540058B925 /* EX2Dispatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2Dispatch.m; sourceTree = "<group>"; };
 		53FE349D1EA961540058B925 /* EX2Static.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2Static.h; sourceTree = "<group>"; };
-		53FE349F1EA961540058B925 /* EX2FlatSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2FlatSegmentedControl.h; sourceTree = "<group>"; };
-		53FE34A01EA961540058B925 /* EX2FlatSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2FlatSegmentedControl.m; sourceTree = "<group>"; };
 		53FE34A11EA961540058B925 /* EX2GlowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2GlowButton.h; sourceTree = "<group>"; };
 		53FE34A21EA961540058B925 /* EX2GlowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2GlowButton.m; sourceTree = "<group>"; };
 		53FE34A31EA961540058B925 /* EX2InfinitePagingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2InfinitePagingScrollView.h; sourceTree = "<group>"; };
@@ -4832,8 +4827,6 @@
 		53FE349E1EA961540058B925 /* UIComponents */ = {
 			isa = PBXGroup;
 			children = (
-				53FE349F1EA961540058B925 /* EX2FlatSegmentedControl.h */,
-				53FE34A01EA961540058B925 /* EX2FlatSegmentedControl.m */,
 				53FE34A11EA961540058B925 /* EX2GlowButton.h */,
 				53FE34A21EA961540058B925 /* EX2GlowButton.m */,
 				53FE34A31EA961540058B925 /* EX2InfinitePagingScrollView.h */,
@@ -7080,7 +7073,6 @@
 				53FE36E91EA961720058B925 /* BassEffectValue.m in Sources */,
 				53FE35D61EA961540058B925 /* EX2NavigationController.m in Sources */,
 				5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
-				53FE35CA1EA961540058B925 /* EX2FlatSegmentedControl.m in Sources */,
 				53FE37131EA961720058B925 /* ISMSCFNetworkStreamHandler.m in Sources */,
 				53FE371F1EA961720058B925 /* ISMSIndex.m in Sources */,
 				53FE384C1EA961A80058B925 /* TBXML+Compression.m in Sources */,
@@ -7531,7 +7523,6 @@
 				53FE36EB1EA961720058B925 /* BassEffectValue.m in Sources */,
 				53FE35D81EA961540058B925 /* EX2NavigationController.m in Sources */,
 				5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
-				53FE35CC1EA961540058B925 /* EX2FlatSegmentedControl.m in Sources */,
 				53FE37151EA961720058B925 /* ISMSCFNetworkStreamHandler.m in Sources */,
 				53FE37211EA961720058B925 /* ISMSIndex.m in Sources */,
 				53FE384E1EA961A80058B925 /* TBXML+Compression.m in Sources */,
@@ -7875,7 +7866,6 @@
 				53FE36EA1EA961720058B925 /* BassEffectValue.m in Sources */,
 				53FE35D71EA961540058B925 /* EX2NavigationController.m in Sources */,
 				5325910214EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
-				53FE35CB1EA961540058B925 /* EX2FlatSegmentedControl.m in Sources */,
 				53FE37141EA961720058B925 /* ISMSCFNetworkStreamHandler.m in Sources */,
 				53FE37201EA961720058B925 /* ISMSIndex.m in Sources */,
 				53FE384D1EA961A80058B925 /* TBXML+Compression.m in Sources */,

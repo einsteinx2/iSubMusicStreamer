@@ -836,7 +836,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 				 // Skip to the byte offset
 				 if (byteOffset)
 				 {
-					 self.startByteOffset = byteOffset.unsignedLongLongValue;
+					 self.startByteOffset = (NSInteger)byteOffset.unsignedLongLongValue;
                      self.ringBuffer.totalBytesDrained = byteOffset.unsignedLongLongValue;
 					 
 					 if (seconds)
@@ -1095,7 +1095,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 	{
 		if (BASS_Mixer_ChannelSetPosition(userInfo.stream, bytes, BASS_POS_BYTE))
 		{
-			self.startByteOffset = bytes;
+			self.startByteOffset = (NSUInteger)bytes;
 			
 			userInfo.neededSize = ULLONG_MAX;
 			if (userInfo.isWaiting)

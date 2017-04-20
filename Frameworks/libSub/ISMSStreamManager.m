@@ -571,7 +571,7 @@ LOG_LEVEL_ISUB_DEBUG
 			[EX2Dispatch timerInMainQueueAfterDelay:1.0 withName:@"temp song set byteOffset/seconds" repeats:NO performBlock:^
              {
                  //DLog(@"byteOffset: %llu   secondsOffset: %f", handler.byteOffset, handler.secondsOffset);
-                 audioEngineS.player.startByteOffset = handler.byteOffset;
+                 audioEngineS.player.startByteOffset = (NSUInteger)handler.byteOffset;
                  audioEngineS.player.startSecondsOffset = handler.secondsOffset;
              }];
 		}

@@ -747,7 +747,7 @@ static NSThread *bonjourThread;
 		
 		[NSTimer scheduledTimerWithTimeInterval:[[NSDate distantFuture] timeIntervalSinceNow]
 		                                 target:self
-		                               selector:@selector(donothingatall:)
+		                               selector:@selector(donothingatall)
 		                               userInfo:nil
 		                                repeats:YES];
 		
@@ -756,6 +756,9 @@ static NSThread *bonjourThread;
 		HTTPLogVerbose(@"%@: BonjourThread: Aborted", THIS_FILE);
 	
 	}
+}
+
+- (void)donothingatall {
 }
 
 + (void)executeBonjourBlock:(dispatch_block_t)block

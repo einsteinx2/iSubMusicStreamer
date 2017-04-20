@@ -225,7 +225,7 @@ double startSongSeconds = 0.0;
 	}
 	else
 	{
-		audioEngineS.startByteOffset = settingsS.byteOffset;
+		audioEngineS.startByteOffset = (NSUInteger)settingsS.byteOffset;
 		audioEngineS.startSecondsOffset = settingsS.seekTime;
 	}
 }

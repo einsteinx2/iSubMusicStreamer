@@ -378,7 +378,8 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 				{
 					[UIView beginAnimations:nil context:NULL];
 					[UIView setAnimationDuration:SLIDE_ANIMATION_DURATION];
-					[UIView setAnimationTransition:UIViewAnimationTransitionNone forView:nil cache:YES];
+					[UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
+                    [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtRight cache:YES];
 					[UIView setAnimationBeginsFromCurrentState:YES];
 					if (viewAtLeft.frame.origin.x < SLIDE_VIEWS_START_X_POS && viewAtRight != nil) 
 					{
@@ -444,7 +445,7 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 				{
 					[UIView beginAnimations:@"RIGHT-WITH-RIGHT" context:NULL];
 					[UIView setAnimationDuration:SLIDE_ANIMATION_DURATION];
-					[UIView setAnimationTransition:UIViewAnimationTransitionNone forView:nil cache:YES];
+					[UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtRight cache:YES];
 					[UIView setAnimationBeginsFromCurrentState:YES];
 					[viewAtRight setFrame:CGRectMake(self.view.frame.size.width - viewAtRight.frame.size.width, viewAtRight.frame.origin.y, viewAtRight.frame.size.width,viewAtRight.frame.size.height)];
 					[UIView setAnimationDelegate:self];
@@ -491,8 +492,8 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 				[UIView beginAnimations:nil context:NULL];
 				[UIView setAnimationDuration:SLIDE_ANIMATION_DURATION];
 				[UIView setAnimationBeginsFromCurrentState:YES];
-				[UIView setAnimationTransition:UIViewAnimationTransitionNone forView:nil cache:YES];
-				[viewAtLeft setFrame:CGRectMake(SLIDE_VIEWS_START_X_POS, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
+                [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
+                [viewAtLeft setFrame:CGRectMake(SLIDE_VIEWS_START_X_POS, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
 				[UIView commitAnimations];
 			}
 		}
@@ -505,7 +506,9 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 					[UIView beginAnimations:nil context:NULL];
 					[UIView setAnimationDuration:SLIDE_ANIMATION_DURATION];			
 					[UIView setAnimationBeginsFromCurrentState:YES];
-					[UIView setAnimationTransition:UIViewAnimationTransitionNone forView:nil cache:YES];
+					[UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
+                    [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtRight cache:YES];
+
 					if (viewAtLeft.frame.origin.x > SLIDE_VIEWS_MINUS_X_POSITION || viewAtRight == nil)
 					{
 						/*//Drop Card View Animation
@@ -561,7 +564,7 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 						[UIView beginAnimations:@"RIGHT-WITH-RIGHT" context:NULL];
 						[UIView setAnimationDuration:SLIDE_ANIMATION_DURATION];
 						[UIView setAnimationBeginsFromCurrentState:YES];
-						[UIView setAnimationTransition:UIViewAnimationTransitionNone forView:nil cache:YES];
+						[UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtRight cache:YES];
 						[viewAtRight setFrame:CGRectMake(SLIDE_VIEWS_MINUS_X_POSITION + viewAtLeft.frame.size.width, viewAtRight.frame.origin.y, viewAtRight.frame.size.width,viewAtRight.frame.size.height)];						
 						[UIView setAnimationDelegate:self];
 						[UIView setAnimationDidStopSelector:@selector(bounceBack:finished:context:)];
@@ -572,7 +575,8 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 						[UIView beginAnimations:@"RIGHT-WITH-LEFT" context:NULL];
 						[UIView setAnimationDuration:SLIDE_ANIMATION_DURATION];
 						[UIView setAnimationBeginsFromCurrentState:YES];
-						[UIView setAnimationTransition:UIViewAnimationTransitionNone forView:nil cache:YES];
+						[UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
+                        [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtRight cache:YES];
 						if([[slideViews subviews] indexOfObject:viewAtLeft] > 0)
 						{ 
 							if (positionOfViewAtRightAtTouchBegan.x  + viewAtRight.frame.size.width <= self.view.frame.size.width) 

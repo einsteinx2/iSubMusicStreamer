@@ -132,7 +132,7 @@ static const CFOptionFlags kNetworkEvents = kCFStreamEventOpenCompleted | kCFStr
 			NSString *maxBitRate = [[NSString alloc] initWithFormat:@"%ld", (long)self.maxBitrateSetting];
 			[parameters setObject:n2N(maxBitRate) forKey:@"maxBitRate"];
 		}
-		request = [NSMutableURLRequest requestWithSUSAction:@"stream" parameters:parameters byteOffset:self.byteOffset];
+		request = [NSMutableURLRequest requestWithSUSAction:@"stream" parameters:parameters byteOffset:(NSUInteger)self.byteOffset];
 	}
 	else if ([settingsS.serverType isEqualToString:WAVEBOX])
 	{
@@ -140,7 +140,7 @@ static const CFOptionFlags kNetworkEvents = kCFStreamEventOpenCompleted | kCFStr
         
         if (self.bitrate < self.maxBitrateSetting || self.maxBitrateSetting == 0)
         {
-            request = [NSMutableURLRequest requestWithPMSAction:@"stream" parameters:parameters byteOffset:self.byteOffset];
+            request = [NSMutableURLRequest requestWithPMSAction:@"stream" parameters:parameters byteOffset:(NSUInteger)self.byteOffset];
         }
         
         else
@@ -158,7 +158,7 @@ static const CFOptionFlags kNetworkEvents = kCFStreamEventOpenCompleted | kCFStr
             [parameters setObject:transQuality forKey:@"transQuality"];
             [parameters setObject:@"true" forKey:@"estimateContentLength"];
             
-            request = [NSMutableURLRequest requestWithPMSAction:@"transcode" parameters:parameters byteOffset:self.byteOffset];
+            request = [NSMutableURLRequest requestWithPMSAction:@"transcode" parameters:parameters byteOffset:(NSUInteger)self.byteOffset];
         }
 	}
     
