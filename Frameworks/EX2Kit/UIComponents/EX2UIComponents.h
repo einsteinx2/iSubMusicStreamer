@@ -10,9 +10,6 @@
 #define EX2Kit_EX2UIComponents_h
 
 #import "SnappySlider.h"
-#import "EX2NotificationBar.h"
-#import "EX2NavigationController.h"
-#import "EX2TabBarController.h"
 #import "EX2SlidingNotification.h"
 #import "EX2InfinitePagingScrollView.h"
 #import "EX2LargerTouchScrollView.h"

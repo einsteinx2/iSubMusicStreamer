@@ -968,20 +968,10 @@
 		53FE35D21EA961540058B925 /* EX2InfinitePagingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34A41EA961540058B925 /* EX2InfinitePagingScrollView.m */; };
 		53FE35D31EA961540058B925 /* EX2LargerTouchScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34A61EA961540058B925 /* EX2LargerTouchScrollView.m */; };
 		53FE35D51EA961540058B925 /* EX2LargerTouchScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34A61EA961540058B925 /* EX2LargerTouchScrollView.m */; };
-		53FE35D61EA961540058B925 /* EX2NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34A81EA961540058B925 /* EX2NavigationController.m */; };
-		53FE35D81EA961540058B925 /* EX2NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34A81EA961540058B925 /* EX2NavigationController.m */; };
-		53FE35D91EA961540058B925 /* EX2NotificationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34AA1EA961540058B925 /* EX2NotificationBar.m */; };
-		53FE35DB1EA961540058B925 /* EX2NotificationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34AA1EA961540058B925 /* EX2NotificationBar.m */; };
-		53FE35DC1EA961540058B925 /* EX2NotificationBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53FE34AB1EA961540058B925 /* EX2NotificationBar.xib */; };
-		53FE35DE1EA961540058B925 /* EX2NotificationBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53FE34AB1EA961540058B925 /* EX2NotificationBar.xib */; };
 		53FE35DF1EA961540058B925 /* EX2SlidingNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34AD1EA961540058B925 /* EX2SlidingNotification.m */; };
 		53FE35E11EA961540058B925 /* EX2SlidingNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34AD1EA961540058B925 /* EX2SlidingNotification.m */; };
 		53FE35E21EA961540058B925 /* EX2SlidingNotification.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53FE34AE1EA961540058B925 /* EX2SlidingNotification.xib */; };
 		53FE35E41EA961540058B925 /* EX2SlidingNotification.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53FE34AE1EA961540058B925 /* EX2SlidingNotification.xib */; };
-		53FE35E51EA961540058B925 /* EX2TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34B01EA961540058B925 /* EX2TabBarController.m */; };
-		53FE35E71EA961540058B925 /* EX2TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34B01EA961540058B925 /* EX2TabBarController.m */; };
-		53FE35E81EA961540058B925 /* EX2TabBarController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53FE34B11EA961540058B925 /* EX2TabBarController.xib */; };
-		53FE35EA1EA961540058B925 /* EX2TabBarController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53FE34B11EA961540058B925 /* EX2TabBarController.xib */; };
 		53FE35EB1EA961540058B925 /* SnappySlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34B41EA961540058B925 /* SnappySlider.m */; };
 		53FE35ED1EA961540058B925 /* SnappySlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34B41EA961540058B925 /* SnappySlider.m */; };
 		53FE35EE1EA961540058B925 /* table-fade-bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FE34B51EA961540058B925 /* table-fade-bottom.png */; };
@@ -2028,17 +2018,9 @@
 		53FE34A41EA961540058B925 /* EX2InfinitePagingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2InfinitePagingScrollView.m; sourceTree = "<group>"; };
 		53FE34A51EA961540058B925 /* EX2LargerTouchScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2LargerTouchScrollView.h; sourceTree = "<group>"; };
 		53FE34A61EA961540058B925 /* EX2LargerTouchScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2LargerTouchScrollView.m; sourceTree = "<group>"; };
-		53FE34A71EA961540058B925 /* EX2NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2NavigationController.h; sourceTree = "<group>"; };
-		53FE34A81EA961540058B925 /* EX2NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2NavigationController.m; sourceTree = "<group>"; };
-		53FE34A91EA961540058B925 /* EX2NotificationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2NotificationBar.h; sourceTree = "<group>"; };
-		53FE34AA1EA961540058B925 /* EX2NotificationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2NotificationBar.m; sourceTree = "<group>"; };
-		53FE34AB1EA961540058B925 /* EX2NotificationBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EX2NotificationBar.xib; sourceTree = "<group>"; };
 		53FE34AC1EA961540058B925 /* EX2SlidingNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2SlidingNotification.h; sourceTree = "<group>"; };
 		53FE34AD1EA961540058B925 /* EX2SlidingNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2SlidingNotification.m; sourceTree = "<group>"; };
 		53FE34AE1EA961540058B925 /* EX2SlidingNotification.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EX2SlidingNotification.xib; sourceTree = "<group>"; };
-		53FE34AF1EA961540058B925 /* EX2TabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2TabBarController.h; sourceTree = "<group>"; };
-		53FE34B01EA961540058B925 /* EX2TabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2TabBarController.m; sourceTree = "<group>"; };
-		53FE34B11EA961540058B925 /* EX2TabBarController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EX2TabBarController.xib; sourceTree = "<group>"; };
 		53FE34B21EA961540058B925 /* EX2UIComponents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2UIComponents.h; sourceTree = "<group>"; };
 		53FE34B31EA961540058B925 /* SnappySlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnappySlider.h; sourceTree = "<group>"; };
 		53FE34B41EA961540058B925 /* SnappySlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SnappySlider.m; sourceTree = "<group>"; };
@@ -3611,17 +3593,9 @@
 				53FE34A41EA961540058B925 /* EX2InfinitePagingScrollView.m */,
 				53FE34A51EA961540058B925 /* EX2LargerTouchScrollView.h */,
 				53FE34A61EA961540058B925 /* EX2LargerTouchScrollView.m */,
-				53FE34A71EA961540058B925 /* EX2NavigationController.h */,
-				53FE34A81EA961540058B925 /* EX2NavigationController.m */,
-				53FE34A91EA961540058B925 /* EX2NotificationBar.h */,
-				53FE34AA1EA961540058B925 /* EX2NotificationBar.m */,
-				53FE34AB1EA961540058B925 /* EX2NotificationBar.xib */,
 				53FE34AC1EA961540058B925 /* EX2SlidingNotification.h */,
 				53FE34AD1EA961540058B925 /* EX2SlidingNotification.m */,
 				53FE34AE1EA961540058B925 /* EX2SlidingNotification.xib */,
-				53FE34AF1EA961540058B925 /* EX2TabBarController.h */,
-				53FE34B01EA961540058B925 /* EX2TabBarController.m */,
-				53FE34B11EA961540058B925 /* EX2TabBarController.xib */,
 				53FE34B21EA961540058B925 /* EX2UIComponents.h */,
 				53FE34B31EA961540058B925 /* SnappySlider.h */,
 				53FE34B41EA961540058B925 /* SnappySlider.m */,
@@ -4340,7 +4314,6 @@
 				53BB7FB5121B97BA00BEE7E8 /* chat-tabbaricon.png in Resources */,
 				53BB7FB6121B97BA00BEE7E8 /* chat-tabbaricon@2x.png in Resources */,
 				53BB800B121B9CA200BEE7E8 /* comment-write-pressed@2x.png in Resources */,
-				53FE35E81EA961540058B925 /* EX2TabBarController.xib in Resources */,
 				53BB800C121B9CA200BEE7E8 /* comment-write@2x.png in Resources */,
 				533C658A15ABB9A9003EAF29 /* HomeAlbumViewController.xib in Resources */,
 				5314B4EE126FD20300CDB511 /* home-tabbaricon.png in Resources */,
@@ -4521,7 +4494,6 @@
 				53493EF715FC69560059492E /* player-songinfo@2x.png in Resources */,
 				53493EFB15FC699A0059492E /* ipad-menu-selected-background.png in Resources */,
 				53493EFF15FC69C90059492E /* chat-page.png in Resources */,
-				53FE35DC1EA961540058B925 /* EX2NotificationBar.xib in Resources */,
 				53493F1415FC6A3A0059492E /* shuffle-small.png in Resources */,
 				53493F1715FC6A3A0059492E /* shuffle-small@2x.png in Resources */,
 				53493F3015FC6BD90059492E /* KeychainAccessGroups.plist in Resources */,
@@ -4624,7 +4596,6 @@
 				53BC26F6139AF0DD00A825F1 /* settings-page@2x.png in Resources */,
 				53BC26F7139AF0DD00A825F1 /* controller-next@2x.png in Resources */,
 				53BC26F8139AF0DD00A825F1 /* controller-pause@2x.png in Resources */,
-				53FE35EA1EA961540058B925 /* EX2TabBarController.xib in Resources */,
 				53BC26F9139AF0DD00A825F1 /* controller-play@2x.png in Resources */,
 				53BC26FA139AF0DD00A825F1 /* controller-previous@2x.png in Resources */,
 				53BC26FB139AF0DD00A825F1 /* controller-repeat-all@2x.png in Resources */,
@@ -4687,7 +4658,6 @@
 				53649DD4184DA99B00E600EC /* Icon-76.png in Resources */,
 				53BC274A139AF0DD00A825F1 /* home-quick-newest@2x.png in Resources */,
 				53BC274B139AF0DD00A825F1 /* home-quick-newest.png in Resources */,
-				53FE35DE1EA961540058B925 /* EX2NotificationBar.xib in Resources */,
 				53BC274C139AF0DD00A825F1 /* home-quick-frequent@2x.png in Resources */,
 				53BC274D139AF0DD00A825F1 /* home-quick-frequent.png in Resources */,
 				53BC274E139AF0DD00A825F1 /* home-quick-cancel@2x.png in Resources */,
@@ -5100,7 +5070,6 @@
 				53B9D0B81279FB6B00CAB0E0 /* SearchSongUITableViewCell.m in Sources */,
 				53FE38361EA961A10058B925 /* SBJsonStreamWriterAccumulator.m in Sources */,
 				53FE35CD1EA961540058B925 /* EX2GlowButton.m in Sources */,
-				53FE35D91EA961540058B925 /* EX2NotificationBar.m in Sources */,
 				53260B83127D012300B745B4 /* EGORefreshTableHeaderView.m in Sources */,
 				53FE34F81EA961540058B925 /* GTMNSString+HTML.m in Sources */,
 				53BA49431285BD7A0010B380 /* NewHomeViewController.m in Sources */,
@@ -5169,9 +5138,7 @@
 				53FE39521EA961ED0058B925 /* GCDAsyncSocket.m in Sources */,
 				5306236D14D3295300D320A8 /* EqualizerPathView.m in Sources */,
 				53FE35101EA961540058B925 /* NSString+md5.m in Sources */,
-				53FE35E51EA961540058B925 /* EX2TabBarController.m in Sources */,
 				53FE36E91EA961720058B925 /* BassEffectValue.m in Sources */,
-				53FE35D61EA961540058B925 /* EX2NavigationController.m in Sources */,
 				5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
 				53FE37131EA961720058B925 /* ISMSCFNetworkStreamHandler.m in Sources */,
 				53FE371F1EA961720058B925 /* ISMSIndex.m in Sources */,
@@ -5439,7 +5406,6 @@
 				53BC280B139AF0DD00A825F1 /* SearchSongUITableViewCell.m in Sources */,
 				53FE38381EA961A10058B925 /* SBJsonStreamWriterAccumulator.m in Sources */,
 				53FE35CF1EA961540058B925 /* EX2GlowButton.m in Sources */,
-				53FE35DB1EA961540058B925 /* EX2NotificationBar.m in Sources */,
 				53BC280D139AF0DD00A825F1 /* EGORefreshTableHeaderView.m in Sources */,
 				53FE34FA1EA961540058B925 /* GTMNSString+HTML.m in Sources */,
 				53BC280F139AF0DD00A825F1 /* NewHomeViewController.m in Sources */,
@@ -5508,9 +5474,7 @@
 				53FE39541EA961ED0058B925 /* GCDAsyncSocket.m in Sources */,
 				5306236F14D3295300D320A8 /* EqualizerPathView.m in Sources */,
 				53FE35121EA961540058B925 /* NSString+md5.m in Sources */,
-				53FE35E71EA961540058B925 /* EX2TabBarController.m in Sources */,
 				53FE36EB1EA961720058B925 /* BassEffectValue.m in Sources */,
-				53FE35D81EA961540058B925 /* EX2NavigationController.m in Sources */,
 				5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
 				53FE37151EA961720058B925 /* ISMSCFNetworkStreamHandler.m in Sources */,
 				53FE37211EA961720058B925 /* ISMSIndex.m in Sources */,

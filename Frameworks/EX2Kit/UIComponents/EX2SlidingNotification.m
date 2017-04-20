@@ -230,7 +230,7 @@ static BOOL _isThrottlingEnabled = YES;
 {
     [self.class hidingMessage:self.message];
     
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hide) object:nil];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideSlidingNotification) object:nil];
 	
 	[UIView animateWithDuration:ANIMATION_DELAY animations:^(void)
      {
