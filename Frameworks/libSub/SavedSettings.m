@@ -60,8 +60,6 @@
 	_shufflePlaylistIndex = [_userDefaults integerForKey:@"shufflePlaylistIndex"];
 	playlistS.shuffleIndex = _shufflePlaylistIndex;
     
-    _currentTwitterAccount = [_userDefaults objectForKey:@"currentTwitterAccount"];
-	
 	_repeatMode = (ISMSRepeatMode)[_userDefaults integerForKey:@"repeatMode"];
 	playlistS.repeatMode = _repeatMode;
 	
@@ -220,7 +218,7 @@
 	NSDictionary *settingsDictionary = [_userDefaults objectForKey:@"settingsDictionary"];
 	if (settingsDictionary != nil)
 	{
-		NSArray *boolKeys = @[@"manualOfflineModeSetting" , @"enableSongCachingSetting" , @"enableNextSongCacheSetting", @"autoDeleteCacheSetting", @"twitterEnabledSetting", @"lyricsEnabledSetting", @"enableSongsTabSetting", @"autoPlayerInfoSetting", @"autoReloadArtistsSetting", @"enableScrobblingSetting", @"lockRotationSetting", @"checkUpdatesSetting"];
+		NSArray *boolKeys = @[@"manualOfflineModeSetting" , @"enableSongCachingSetting" , @"enableNextSongCacheSetting", @"autoDeleteCacheSetting", @"lyricsEnabledSetting", @"enableSongsTabSetting", @"autoPlayerInfoSetting", @"autoReloadArtistsSetting", @"enableScrobblingSetting", @"lockRotationSetting", @"checkUpdatesSetting"];
 		NSArray *intKeys = @[@"recoverSetting", @"maxBitrateWifiSetting", @"maxBitrate3GSetting", @"cachingTypeSetting", @"autoDeleteCacheTypeSetting", @"cacheSongCellColorSetting"];
 		NSArray *objKeys = @[@"maxCacheSize", @"minFreeSpace"];
 		NSArray *floatKeys = @[@"scrobblePercentSetting"];
@@ -305,7 +303,6 @@
 		[_userDefaults setBool:YES forKey:@"autoDeleteCacheSetting"];
 		[_userDefaults setInteger:0 forKey:@"autoDeleteCacheTypeSetting"];
 		[_userDefaults setInteger:3 forKey:@"cacheSongCellColorSetting"];
-		[_userDefaults setBool:NO forKey:@"twitterEnabledSetting"];
 		[_userDefaults setBool:NO forKey:@"lyricsEnabledSetting"];
 		[_userDefaults setBool:NO forKey:@"enableSongsTabSetting"];
 		[_userDefaults setBool:NO forKey:@"autoPlayerInfoSetting"];
@@ -532,26 +529,6 @@
         
         NSString *key = [NSString stringWithFormat:@"sessionId%@", self.urlString.md5];
 		[_userDefaults setObject:_sessionId forKey:key];
-		[_userDefaults synchronize];
-	}
-}
-
-- (NSString *)currentTwitterAccount
-{
-	@synchronized(self)
-	{
-		return _currentTwitterAccount;
-	}
-}
-
-- (void)setCurrentTwitterAccount:(NSString *)identifier
-{
-	@synchronized(self)
-	{
-		_currentTwitterAccount = [identifier copy];
-        
-        NSString *key = @"currentTwitterAccount";
-		[_userDefaults setObject:_currentTwitterAccount forKey:key];
 		[_userDefaults synchronize];
 	}
 }
@@ -1041,23 +1018,6 @@
 	@synchronized(self)
 	{
 		[_userDefaults setInteger:cachedSongCellColorType forKey:@"cacheSongCellColorSetting"];
-		[_userDefaults synchronize];
-	}
-}
-
-- (BOOL)isTwitterEnabled
-{
-	@synchronized(self)
-	{
-		return [_userDefaults boolForKey:@"twitterEnabledSetting"];
-	}
-}
-
-- (void)setIsTwitterEnabled:(BOOL)isTwitterEnabled
-{
-	@synchronized(self)
-	{
-		[_userDefaults setBool:isTwitterEnabled forKey:@"twitterEnabledSetting"];
 		[_userDefaults synchronize];
 	}
 }

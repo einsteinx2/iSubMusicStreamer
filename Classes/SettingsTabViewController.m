@@ -15,7 +15,6 @@
 #import "StackScrollViewController.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
-#import "IDTwitterAccountChooserViewController.h"
 
 @implementation SettingsTabViewController
 
@@ -35,9 +34,7 @@
 	// Fix for UISwitch/UISegment bug in iOS 4.3 beta 1 and 2
 	//
 	self.loadedTime = [NSDate date];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTwitterUIElements) name:@"twitterAuthenticated" object:nil];
-	
+		
 	// Set version label
 	NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleVersionKey];
 #if DEBUG
@@ -155,31 +152,6 @@
 		default: break;
 	}
 	
-	// Twitter settings
-	if (settingsS.currentTwitterAccount)
-	{
-        ACAccountStore *store = [[ACAccountStore alloc] init];
-        ACAccount *account = [store accountWithIdentifier:settingsS.currentTwitterAccount];
-		self.twitterEnabledSwitch.enabled = YES;
-		if (settingsS.isTwitterEnabled)
-			self.twitterEnabledSwitch.on = YES;
-		else
-			self.twitterEnabledSwitch.on = NO;
-		
-		self.twitterSigninButton.imageView.image = [UIImage imageNamed:@"twitter-signout.png"];
-		
-		self.twitterStatusLabel.text = [NSString stringWithFormat:@"%@ signed in", [account username]];
-	}
-	else
-	{
-		self.twitterEnabledSwitch.on = NO;
-		self.twitterEnabledSwitch.enabled = NO;
-		
-		self.twitterSigninButton.imageView.image = [UIImage imageNamed:@"twitter-signin.png"];
-		
-		self.twitterStatusLabel.text = @"Signed out";
-	}
-	
 	// Handle In App Purchase settings
 	if (settingsS.isCacheUnlocked == NO)
 	{
@@ -210,43 +182,6 @@
         }
         
         self.autoDeleteCacheSwitch.x -= 10.;
-    }
-}
-
-- (void)reloadTwitterUIElements
-{
-    void (^enableTwitterUI)(ACAccount*) = ^(ACAccount *acct)
-    {
-        // Get account and communicate with Twitter API
-        self.twitterEnabledSwitch.enabled = YES;
-        if (settingsS.isTwitterEnabled)
-            self.twitterEnabledSwitch.on = YES;
-        else
-            self.twitterEnabledSwitch.on = NO;
-        
-        [self.twitterSigninButton setImage:[UIImage imageNamed:@"twitter-signout.png"] forState:UIControlStateNormal];
-        
-        self.twitterStatusLabel.text = [NSString stringWithFormat:@"%@ signed in", [acct username]];
-    };
-    
-    void (^disableTwitterUI)(void) = ^()
-    {
-        self.twitterEnabledSwitch.on = NO;
-		self.twitterEnabledSwitch.enabled = NO;
-		
-        [self.twitterSigninButton setImage:[UIImage imageNamed:@"twitter-signin.png"] forState:UIControlStateNormal];
-                
-		self.twitterStatusLabel.text = @"Signed out";
-    };
-    
-    if (settingsS.currentTwitterAccount)
-    {
-        ACAccount *account = [[[ACAccountStore alloc] init] accountWithIdentifier:settingsS.currentTwitterAccount];
-        enableTwitterUI(account);
-    }
-    else
-    {
-        disableTwitterUI();
     }
 }
 
@@ -465,10 +400,6 @@
 		else if (sender == self.autoDeleteCacheSwitch)
 		{
 			settingsS.isAutoDeleteCacheEnabled = self.autoDeleteCacheSwitch.on;
-		}
-		else if (sender == self.twitterEnabledSwitch)
-		{
-			settingsS.isTwitterEnabled = self.twitterEnabledSwitch.on;
 		}
 		else if (sender == self.checkUpdatesSwitch)
 		{
@@ -730,75 +661,6 @@
 	self.cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.minFreeSpace];
 	self.cacheSpaceSlider.value = (float)settingsS.minFreeSpace / self.totalSpace;
 }
-
-- (IBAction)twitterButtonAction
-{
-    ACAccountStore *account = [[ACAccountStore alloc] init];
-    ACAccountType *accountType = [account accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
-    
-    if (settingsS.currentTwitterAccount)
-    {
-        settingsS.currentTwitterAccount = nil;
-        [self reloadTwitterUIElements];
-    }
-    else
-    {
-        [account requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error)
-        {
-            if (granted == YES)
-            {
-                [EX2Dispatch runInMainThreadAsync:^
-                 {
-                     if ([[account accounts] count] == 1)
-                     {
-                         settingsS.currentTwitterAccount = [[[account accounts] firstObjectSafe] identifier];
-                         [self reloadTwitterUIElements];
-                     }
-                     else if ([[account accounts] count] > 1)
-                     {
-                         // more than one account, use Chooser
-                         IDTwitterAccountChooserViewController *chooser = [[IDTwitterAccountChooserViewController alloc] initWithRootViewController:nil];
-                         [chooser setTwitterAccounts:[account accounts]];
-                         [chooser setCompletionHandler:^(ACAccount *account)
-                          {
-                              if (account)
-                              {
-                                  settingsS.currentTwitterAccount = [account identifier];
-                                  [self reloadTwitterUIElements];
-                              }
-                          }];
-                         [self.parentController.navigationController presentViewController:chooser animated:YES completion:nil];
-                     }
-                     else
-                     {
-                         [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"To use this feature, please add a Twitter account in the iOS Settings app.", @"No twitter accounts alert") delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-                     }
-                 }];
-            }
-        }];
-    }
-}
-
-//	if (socialS.twitterEngine.isAuthorized)
-//	{
-//		[socialS destroyTwitterEngine];
-//		[self reloadTwitterUIElements];
-//	}
-//	else
-//	{
-//		if (!socialS.twitterEngine)
-//			[socialS createTwitterEngine];
-//		
-//		UIViewController *controller = [SA_OAuthTwitterController controllerToEnterCredentialsWithTwitterEngine:socialS.twitterEngine delegate:(id)socialS];
-//		if (controller) 
-//		{
-//			if (IS_IPAD())
-//				[appDelegateS.ipadRootViewController presentModalViewController:controller animated:YES];
-//			else
-//				[self.parentController presentModalViewController:controller animated:YES];
-//		}
-//	}
-//}
 
 - (IBAction)updateScrobblePercentLabel
 {

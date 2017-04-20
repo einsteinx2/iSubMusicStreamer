@@ -53,9 +53,6 @@
 @property (nonatomic, strong) IBOutlet UISwitch *autoDeleteCacheSwitch;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *autoDeleteCacheTypeSegmentedControl;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *cacheSongCellColorSegmentedControl;
-@property (nonatomic, strong) IBOutlet UIButton *twitterSigninButton;
-@property (nonatomic, strong) IBOutlet UILabel *twitterStatusLabel;
-@property (nonatomic, strong) IBOutlet UISwitch *twitterEnabledSwitch;
 @property (nonatomic, strong) IBOutlet UISwitch *enableScrobblingSwitch;
 @property (nonatomic, strong) IBOutlet UILabel *scrobblePercentLabel;
 @property (nonatomic, strong) IBOutlet UISlider *scrobblePercentSlider;
@@ -80,7 +77,6 @@
 - (IBAction)updateMinFreeSpaceLabel;
 - (IBAction)updateMinFreeSpaceSetting;
 - (IBAction)revertMinFreeSpaceSlider;
-- (IBAction)twitterButtonAction;
 - (IBAction)updateScrobblePercentLabel;
 - (IBAction)updateScrobblePercentSetting;
 - (IBAction)resetAlbumArtCacheAction;

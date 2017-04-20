@@ -10,13 +10,8 @@
 #import "BassGaplessPlayer.h"
 #import "PlaylistSingleton.h"
 #import "ISMSStreamManager.h"
-#import <Twitter/Twitter.h>
 #import "NSMutableURLRequest+SUS.h"
 #import "NSMutableURLRequest+PMS.h"
-
-// Twitter secret keys
-#define kOAuthConsumerKey				@"nYKAEcLstFYnI9EEnv6g"
-#define kOAuthConsumerSecret			@"wXSWVvY7GN1e8Z2KFaR9A5skZKtHzpchvMS7Elpu0"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -27,7 +22,6 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)playerClearSocial
 {
-	self.playerHasTweeted = NO;
 	self.playerHasScrobbled = NO;
     self.playerHasSubmittedNowPlaying = NO;
     self.playerHasNotifiedSubsonic = NO;
@@ -47,15 +41,6 @@ LOG_LEVEL_ISUB_DEFAULT
         self.playerHasNotifiedSubsonic = YES;
     }
     
-	if (!self.playerHasTweeted && audioEngineS.player.progress >= socialS.tweetDelay)
-	{
-		self.playerHasTweeted = YES;
-		
-		[EX2Dispatch runInMainThreadAsync:^{
-			[self tweetSong];
-		}];
-	}
-	
 	if (!self.playerHasScrobbled && audioEngineS.player.progress >= socialS.scrobbleDelay)
 	{
 		self.playerHasScrobbled = YES;
@@ -91,11 +76,6 @@ LOG_LEVEL_ISUB_DEFAULT
 - (NSTimeInterval)subsonicDelay
 {
 	return 10.0;
-}
-
-- (NSTimeInterval)tweetDelay
-{
-	return 30.0;
 }
 
 - (void)notifySubsonic
@@ -201,59 +181,6 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)theConnection 
 {
-}
-
-#pragma mark - Twitter -
-
-- (void)tweetSong
-{
-#ifdef IOS
-	ISMSSong *currentSong = playlistS.currentSong;
-	
-    //DLog(@"Asked to tweet %@", currentSong.title);
-	
-	if (settingsS.currentTwitterAccount && settingsS.isTwitterEnabled && !settingsS.isOfflineMode)
-	{
-		if (currentSong.artist && currentSong.title)
-		{
-			//DLog(@"------------- tweeting song --------------");
-			NSString *tweet = [NSString stringWithFormat:@"is listening to \"%@\" by %@ #isubapp", currentSong.title, currentSong.artist];
-            if (tweet.length > 140)
-                tweet = [tweet substringToIndex:140];
-            
-            NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1.1/statuses/update.json"];
-
-            TWRequest *request = [[TWRequest alloc] initWithURL:url parameters:@{@"status": tweet} requestMethod:TWRequestMethodPOST];
-                        
-            ACAccountStore *store = [[ACAccountStore alloc] init];
-            ACAccount *account = [store accountWithIdentifier: settingsS.currentTwitterAccount];
-            
-            if (account)
-            {
-                request.account = account;
-                [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error)
-                {
-                    if (error)
-                    {
-                        ALog(@"Twitter error: %@", error);
-                    }
-                    else
-                    {
-                        ALog(@"Successfully tweeted: %@", tweet);
-                    }
-                }];
-            }
-		}
-		else 
-		{
-			//DLog(@"------------- not tweeting song because either no artist or no title --------------");
-		}
-	}
-	else 
-	{
-		//DLog(@"------------- not tweeting song because no engine or not enabled --------------");
-	}
-#endif
 }
 
 #pragma mark - Memory management

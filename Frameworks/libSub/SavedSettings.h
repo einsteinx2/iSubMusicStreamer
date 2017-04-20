@@ -61,7 +61,6 @@ typedef enum
 	double _secondsOffset;
 	BOOL _isRecover;
 	NSInteger _recoverSetting;
-    NSString *_currentTwitterAccount;
 }
 
 @property BOOL isCancelLoading;
@@ -106,7 +105,6 @@ typedef enum
 @property BOOL isAutoDeleteCacheEnabled;
 @property NSInteger autoDeleteCacheType;
 @property NSInteger cachedSongCellColorType;
-@property BOOL isTwitterEnabled;
 @property BOOL isLyricsEnabled;
 @property BOOL isCacheStatusEnabled;
 @property BOOL isSongsTabEnabled;
@@ -144,7 +142,6 @@ typedef enum
 @property NSUInteger oneTimeRunIncrementor;
 
 @property BOOL isDisableUsageOver3G;
-@property (strong) NSString *currentTwitterAccount;
 
 @property BOOL isCacheSizeTableFinished;
 
