@@ -5681,7 +5681,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isub;
 				PRODUCT_NAME = iSub;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
@@ -5723,7 +5722,6 @@
 				PRODUCT_NAME = iSub;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
 			};
 			name = Release;
 		};
@@ -5732,7 +5730,6 @@
 			baseConfigurationReference = 53F1412015FD550C004D00D5 /* buildnumber.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphonesimulator*]" = i386;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -5830,7 +5827,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isub;
 				PRODUCT_NAME = iSub;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
 			};
 			name = AdHoc;
 		};
@@ -5876,7 +5872,6 @@
 				PRODUCT_NAME = "iSub Beta";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
@@ -5924,7 +5919,6 @@
 				PRODUCT_NAME = "iSub Beta";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = AdHoc;
@@ -5969,7 +5963,6 @@
 				PRODUCT_NAME = "iSub Beta";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;
@@ -5979,7 +5972,6 @@
 			baseConfigurationReference = 53F1412015FD550C004D00D5 /* buildnumber.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphonesimulator*]" = i386;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -6044,7 +6036,6 @@
 			baseConfigurationReference = 53F1412015FD550C004D00D5 /* buildnumber.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphonesimulator*]" = i386;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;

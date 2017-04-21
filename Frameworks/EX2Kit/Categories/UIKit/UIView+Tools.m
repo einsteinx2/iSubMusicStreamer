@@ -115,7 +115,11 @@
 
 - (void)removeBottomShadow
 {
-	[[self.layer sublayerWithName:ISMSBottomShadowName] removeFromSuperlayer];
+	[self.bottomShadow removeFromSuperlayer];
+}
+
+- (CALayer *)bottomShadow {
+    return [self.layer sublayerWithName:ISMSBottomShadowName];
 }
 
 - (void)addTopShadowWithWidth:(CGFloat)shadowWidth alpha:(CGFloat)shadowAlpha

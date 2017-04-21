@@ -139,10 +139,6 @@ static BOOL _isThrottlingEnabled = YES;
 	
 	self.imageView.image = self.image;
 	self.messageLabel.text = self.message;
-	
-	[self.view addBottomShadow];
-	CALayer *shadow = [[self.view.layer sublayers] objectAtIndexSafe:0];
-    shadow.frame = CGRectMake(shadow.frame.origin.x, shadow.frame.origin.y, 1024., shadow.frame.size.height);
     
     [self sizeToFit];
 }
@@ -157,21 +153,27 @@ static BOOL _isThrottlingEnabled = YES;
 - (void)sizeToFit
 {
 	CGSize maximumLabelSize = CGSizeMake(self.messageLabel.width, 300.);
-	CGSize expectedLabelSize = [self.message sizeWithFont:self.messageLabel.font constrainedToSize:maximumLabelSize lineBreakMode:self.messageLabel.lineBreakMode];
+	//CGSize expectedLabelSize = [self.message sizeWithFont:self.messageLabel.font constrainedToSize:maximumLabelSize lineBreakMode:self.messageLabel.lineBreakMode];
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineBreakMode = self.messageLabel.lineBreakMode;
+    NSDictionary *attributes = @{NSFontAttributeName: self.messageLabel.font, NSParagraphStyleAttributeName: paragraphStyle};
+    CGSize expectedLabelSize = [self.message boundingRectWithSize:maximumLabelSize
+                                                          options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin
+                                                       attributes:attributes context:nil].size;
+    
 	if (expectedLabelSize.height >= 25.)
 	{
 		self.messageLabel.size = expectedLabelSize;
 		self.view.height = self.messageLabel.height + 6.;
-		
-		[[[self.view.layer sublayers] objectAtIndexSafe:0] removeFromSuperlayer];
-		[self.view addBottomShadow];
-		CALayer *shadow = [[self.view.layer sublayers] objectAtIndexSafe:0];
-		shadow.frame = CGRectMake(shadow.frame.origin.x, shadow.frame.origin.y, 1024., shadow.frame.size.height);
 	}
     
     // Add 20 points for the status bar if we're on iOS 7.
     if (IS_IOS7())
         self.view.height += 20.;
+    
+    [self.view addBottomShadow];
+    CALayer *shadow = [self.view bottomShadow];
+    shadow.frame = CGRectMake(shadow.frame.origin.x, shadow.frame.origin.y, 1024., shadow.frame.size.height);
 }
 
 - (BOOL)showAndHideSlidingNotification

@@ -39,6 +39,7 @@
 - (void)addBottomShadowWithWidth:(CGFloat)shadowWidth alpha:(CGFloat)shadowAlpha;
 - (void)addBottomShadow;
 - (void)removeBottomShadow;
+- (CALayer *)bottomShadow;
 
 - (CGPoint)centerOfBounds;
 
