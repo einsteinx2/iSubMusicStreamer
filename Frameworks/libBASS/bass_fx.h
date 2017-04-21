@@ -8,7 +8,7 @@
         e-mail : bass_fx@jobnik.org
      --------------------------------------------------
 
- NOTE: This header will work only with BASS_FX version 2.4.11.0
+ NOTE: This header will work only with BASS_FX version 2.4.11.1
        Check www.un4seen.com or www.jobnik.org for any later versions.
 
  * Requires BASS 2.4 (available at http://www.un4seen.com)

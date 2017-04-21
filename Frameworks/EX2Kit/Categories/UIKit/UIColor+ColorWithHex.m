@@ -227,19 +227,19 @@
 		{
 			case 0 :
 			{
-				const int value = [[hexConverted objectAtIndex: x] integerValue];
+				const NSInteger value = [[hexConverted objectAtIndex: x] integerValue];
 				red = value * 16 + [[hexConverted objectAtIndex: x + 1] integerValue];
 				break;
 			}
 			case 2 :
 			{
-				const int value = [[hexConverted objectAtIndex: x] integerValue];
+				const NSInteger value = [[hexConverted objectAtIndex: x] integerValue];
 				green = value * 16 + [[hexConverted objectAtIndex: x + 1] integerValue];
 				break;
 			}
 			case 4 :
 			{
-				const int value = [[hexConverted objectAtIndex: x] integerValue];
+				const NSInteger value = [[hexConverted objectAtIndex: x] integerValue];
 				blue = value * 16 + [[hexConverted objectAtIndex: x + 1] integerValue];
 				break;
 			}

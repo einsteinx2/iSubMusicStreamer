@@ -124,7 +124,7 @@ typedef struct {
 }
 
 - (BOOL)addEntriesFromAppleDoubleData:(NSData *)data {
-  const int len = [data length];
+  const int len = (int)[data length];
   DoubleHeader header;
   if (len < sizeof(header)) {
     return NO;  // To small to even fit our header.
@@ -166,7 +166,7 @@ typedef struct {
   NSMutableData* entryListData = [NSMutableData data];
   NSMutableData* entryData = [NSMutableData data];
   int dataStartOffset = 
-    sizeof(DoubleHeader) + [entries_ count] * sizeof(DoubleEntryHeader);
+    (int)(sizeof(DoubleHeader) + [entries_ count] * sizeof(DoubleEntryHeader));
   for (int i = 0; i < [entries_ count]; ++i) {
     GMAppleDoubleEntry* entry = [entries_ objectAtIndex:i];
 

@@ -1,6 +1,6 @@
 /*
 	BASSFLAC 2.4 C/C++ header file
-	Copyright (c) 2004-2009 Un4seen Developments Ltd.
+	Copyright (c) 2004-2013 Un4seen Developments Ltd.
 
 	See the BASSFLAC.CHM file for more detailed documentation
 */
@@ -74,6 +74,18 @@ HSTREAM BASSFLACDEF(BASS_FLAC_StreamCreateFileUser)(DWORD system, DWORD flags, c
 
 #ifdef __cplusplus
 }
+
+#ifdef _WIN32
+static inline HSTREAM BASS_FLAC_StreamCreateFile(BOOL mem, const WCHAR *file, QWORD offset, QWORD length, DWORD flags)
+{
+	return BASS_FLAC_StreamCreateFile(mem, (const void*)file, offset, length, flags|BASS_UNICODE);
+}
+
+static inline HSTREAM BASS_FLAC_StreamCreateURL(const WCHAR *url, DWORD offset, DWORD flags, DOWNLOADPROC *proc, void *user)
+{
+	return BASS_FLAC_StreamCreateURL((const char*)url, offset, flags|BASS_UNICODE, proc, user);
+}
+#endif
 #endif
 
 #endif
