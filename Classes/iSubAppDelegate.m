@@ -521,7 +521,7 @@ LOG_LEVEL_ISUB_DEFAULT
     
 	// HockyApp Kits
 #if IS_BETA() && IS_ADHOC()
-    [hockeyManager configureWithBetaIdentifier:@"ada15ac4ffe3befbc66f0a00ef3d96af" liveIdentifier:@"ada15ac4ffe3befbc66f0a00ef3d96af" delegate:self];
+    [hockeyManager configureWithBetaIdentifier:@"ccd660dbaeab42a2b3846159f9489ff4" liveIdentifier:@"ccd660dbaeab42a2b3846159f9489ff4" delegate:self];
     hockeyManager.updateManager.alwaysShowUpdateReminder = NO;
     [hockeyManager startManager];
 #elif IS_RELEASE()
@@ -530,12 +530,12 @@ LOG_LEVEL_ISUB_DEFAULT
 #endif
     hockeyManager.crashManager.crashManagerStatus = BITCrashManagerStatusAutoSend;
 	
-    if (hockeyManager.crashManager.didCrashInLastSession)
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oh no! iSub crashed!" message:@"iSub support has received your anonymous crash logs and they will be investigated. \n\nWould you also like to send an email to support with more details?" delegate:self cancelButtonTitle:@"No Thanks" otherButtonTitles:@"Send Email", @"Visit iSub Forum", nil];
-		alert.tag = 7;
-		[alert performSelector:@selector(show) withObject:nil afterDelay:2.];
-	}
+//    if (hockeyManager.crashManager.didCrashInLastSession)
+//	{
+//		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oh no! iSub crashed!" message:@"iSub support has received your anonymous crash logs and they will be investigated. \n\nWould you also like to send an email to support with more details?" delegate:self cancelButtonTitle:@"No Thanks" otherButtonTitles:@"Send Email", @"Visit iSub Forum", nil];
+//		alert.tag = 7;
+//		[alert performSelector:@selector(show) withObject:nil afterDelay:2.];
+//	}
 }
 
 /*
