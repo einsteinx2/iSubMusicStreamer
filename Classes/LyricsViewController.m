@@ -16,8 +16,7 @@
 {
     if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) 
 	{
-        //dataModel = [[SUSLyricsDAO alloc] initWithDelegate:self];
-		_dataModel = [[SUSLyricsDAO alloc] init];
+        _dataModel = [[SUSLyricsDAO alloc] init];
 		
         // Custom initialization
 		self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 300)];
@@ -30,25 +29,6 @@
 		_textView.font = ISMSRegularFont(16.5);
 		_textView.editable = NO;
         
-		/*ISMSSong *currentSong = [SUSCurrentPlaylistDAO dataModel].currentSong;
-        NSString *lyrics = [dataModel lyricsForArtist:currentSong.artist andTitle:currentSong.title];
-                
-		if (lyrics)
-		{
-			textView.text = lyrics;
-		}
-		else
-		{
-			if (settingsS.isOfflineMode)
-			{
-				textView.text = @"\n\nNo lyrics found";
-			}
-			else
-			{
-				[dataModel loadLyricsForArtist:currentSong.artist andTitle:currentSong.title];
-				textView.text = @"\n\nLoading Lyrics...";
-			}
-		}*/
 		[self updateLyricsLabel];
 		[self.view addSubview:_textView];
 		
@@ -102,26 +82,12 @@
 
 - (void)updateLyricsLabel
 {	
-	ISMSSong *currentSong = playlistS.currentSong;
-	NSString *lyrics = [self.dataModel loadLyricsForArtist:currentSong.artist andTitle:currentSong.title];
-	//DLog(@"lyrics = %@", lyrics);
-	if (!lyrics)
-		lyrics = @"\n\nNo lyrics found";
-	
-	self.textView.text = lyrics;
+    ISMSSong *currentSong = playlistS.currentSong;
+    NSString *lyrics = [self.dataModel lyricsForArtist:currentSong.artist andTitle:currentSong.title];
+    if (!lyrics.hasValue)
+        lyrics = @"\n\nNo lyrics found";
+    
+    self.textView.text = lyrics;
 }
-
-/*#pragma mark - ISMSLoader delegate
-
-- (void)loadingFailed:(ISMSLoader*)theLoader withError:(NSError *)error
-{
-    textView.text = @"\n\nNo lyrics found";
-}
-
-- (void)loadingFinished:(ISMSLoader*)theLoader
-{
-	ISMSSong *currentSong = [SUSCurrentPlaylistDAO dataModel].currentSong;
-    textView.text = [dataModel lyricsForArtist:currentSong.artist andTitle:currentSong.title];
-}*/
 
 @end

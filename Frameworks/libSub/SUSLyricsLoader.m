@@ -66,16 +66,16 @@
                 self.loadedLyrics = [lyrics text];
                 if ([self.loadedLyrics hasValue])
                 {
-                    self.loadedLyrics = nil;
-                    NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NoLyricsFound];
-                    [self informDelegateLoadingFailed:error];
-                }
-                else
-                {
                     [self insertLyricsIntoDb];
                     [self informDelegateLoadingFinished];
                     
                     [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_LyricsDownloaded];
+                }
+                else
+                {
+                    self.loadedLyrics = nil;
+                    NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NoLyricsFound];
+                    [self informDelegateLoadingFailed:error];
                 }
             }
             else

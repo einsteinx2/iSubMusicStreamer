@@ -19,6 +19,8 @@
 @property (strong) ISMSStreamHandler *currentStreamHandler;
 @property (weak, readonly) ISMSSong *currentQueuedSongInDb;
 
+@property (strong) SUSLyricsDAO *lyricsDAO;
+
 
 /*@property NSUInteger downloadLength;
 

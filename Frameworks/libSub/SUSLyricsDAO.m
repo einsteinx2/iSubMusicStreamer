@@ -55,13 +55,9 @@
         self.loader.artist = artist;
         self.loader.title = title;
         [self.loader startLoad];
+        
+        return @"\n\nLoading lyrics";
     }
-//	else
-//	{
-//		return @"No lyrics saved for this song";
-//	}
-    
-    return nil;
 }
 
 #pragma mark - ISMSLoader manager

@@ -13,6 +13,7 @@
 #import "ISMSCoverArtLoader.h"
 #import "ISMSStreamManager.h"
 #import "ISMSStreamHandler.h"
+#import "SUSLyricsDAO.h"
 
 #import "ISMSURLConnectionStreamHandler.h"
 #import "ISMSCFNetworkStreamHandler.h"
@@ -137,11 +138,7 @@ LOG_LEVEL_ISUB_DEBUG
 	// Grab the lyrics
 	if (self.currentQueuedSong.artist && self.currentQueuedSong.title)
 	{
-        SUSLyricsLoader *lyricsLoader = [[SUSLyricsLoader alloc] initWithDelegate:self];
-		//DLog(@"lyricsLoader: %@", lyricsLoader);
-        lyricsLoader.artist = self.currentQueuedSong.artist;
-        lyricsLoader.title = self.currentQueuedSong.title;
-        [lyricsLoader startLoad];        
+        [self.lyricsDAO loadLyricsForArtist:self.currentQueuedSong.artist andTitle:self.currentQueuedSong.title];    
 	}
 	
 	// Download the art
@@ -344,6 +341,8 @@ LOG_LEVEL_ISUB_DEBUG
 - (void)setup
 {
 	//self.contentLength = ULLONG_MAX;
+    
+    self.lyricsDAO = [[SUSLyricsDAO alloc] init];
 	
 #ifdef IOS
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
