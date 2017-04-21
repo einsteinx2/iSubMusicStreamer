@@ -292,24 +292,4 @@ static NSUInteger _bassOutputBufferLengthMillis = 0;
 	return bitrate;
 }
 
-#ifdef IOS
-+ (NSInteger)audioSessionSampleRate
-{
-	Float64 sampleRate;
-	UInt32 size = sizeof(Float64);
-	AudioSessionGetProperty(kAudioSessionProperty_CurrentHardwareSampleRate, &size, &sampleRate);
-	
-	return (NSUInteger)sampleRate;
-}
-
-+ (void)setAudioSessionSampleRate:(NSInteger)audioSessionSampleRate
-{
-	Float64 sampleRateFloat = (Float64)audioSessionSampleRate;
-	AudioSessionSetProperty(kAudioSessionProperty_PreferredHardwareSampleRate, 
-							sizeof(sampleRateFloat), 
-							&sampleRateFloat);
-}
-
-#endif
-
 @end

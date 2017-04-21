@@ -491,7 +491,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		}
 	}];
 	
-    [self setCurrentMetadataDatabase];
+    //[self setCurrentMetadataDatabase];
 	[self updateTableDefinitions];
 }
 

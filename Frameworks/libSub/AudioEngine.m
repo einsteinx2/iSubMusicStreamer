@@ -23,75 +23,38 @@ LOG_LEVEL_ISUB_DEFAULT
 // Singleton object
 static AudioEngine *sharedInstance = nil;
 
-#ifdef IOS
-
-- (void)beginInterruption
-{
-    DDLogCVerbose(@"[AudioEngine] audio session begin interruption");
-    if (self.player.isPlaying)
-    {
-        self.shouldResumeFromInterruption = YES;
-        [sharedInstance.player pause];
-    }
-    else
-    {
+- (void)handleInterruption:(NSNotification *)notification {
+    AVAudioSessionInterruptionType interruptionType = [[[notification userInfo] objectForKey:AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
+    if (interruptionType == AVAudioSessionInterruptionTypeBegan) {
+        DDLogCVerbose(@"[AudioEngine] audio session begin interruption");
+        if (self.player.isPlaying) {
+            self.shouldResumeFromInterruption = YES;
+            [sharedInstance.player pause];
+        } else {
+            self.shouldResumeFromInterruption = NO;
+        }
+    } else if (interruptionType == AVAudioSessionInterruptionTypeEnded) {
+        DDLogCVerbose(@"[AudioEngine] audio session interruption ended, isPlaying: %@   isMainThread: %@", NSStringFromBOOL(sharedInstance.player.isPlaying), NSStringFromBOOL([NSThread isMainThread]));
+        AVAudioSessionInterruptionOptions interruptionOptions = [[[notification userInfo] objectForKey:AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
+        if (self.shouldResumeFromInterruption && interruptionOptions == AVAudioSessionInterruptionOptionShouldResume) {
+            [self.player playPause];
+        }
+        
+        // Reset the shouldResumeFromInterruption value
         self.shouldResumeFromInterruption = NO;
     }
 }
 
-- (void)endInterruptionWithFlags:(NSUInteger)flags
-{
-    DDLogCVerbose(@"[AudioEngine] audio session interruption ended, isPlaying: %@   isMainThread: %@", NSStringFromBOOL(sharedInstance.player.isPlaying), NSStringFromBOOL([NSThread isMainThread]));
-    if (self.shouldResumeFromInterruption && flags == AVAudioSessionInterruptionFlags_ShouldResume)
-    {
-        [self.player playPause];
-    }
+- (void)handleRouteChange:(NSNotification *)notification {
+//    if notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt == AVAudioSessionRouteChangeReason.oldDeviceUnavailable.rawValue {
+//        pause()
+//    }
     
-    // Reset the shouldResumeFromInterruption value
-    self.shouldResumeFromInterruption = NO;
-}
-
-void audioRouteChangeListenerCallback(void *inUserData, AudioSessionPropertyID inPropertyID, UInt32 inPropertyValueSize, const void *inPropertyValue) 
-{			
-	DDLogCInfo(@"[AudioEngine] audioRouteChangeListenerCallback called, propertyId: %lu  isMainThread: %@", (unsigned long)inPropertyID, NSStringFromBOOL([NSThread isMainThread]));
-	
-    // ensure that this callback was invoked for a route change
-    if (inPropertyID != kAudioSessionProperty_AudioRouteChange) 
-		return;
-	
-	if (sharedInstance.player.isPlaying)
-	{
-		// Determines the reason for the route change, to ensure that it is not
-		// because of a category change.
-		CFDictionaryRef routeChangeDictionary = inPropertyValue;
-		CFNumberRef routeChangeReasonRef = CFDictionaryGetValue (routeChangeDictionary, CFSTR (kAudioSession_AudioRouteChangeKey_Reason));
-		SInt32 routeChangeReason;
-		CFNumberGetValue (routeChangeReasonRef, kCFNumberSInt32Type, &routeChangeReason);
-		
-		DDLogCInfo(@"[AudioEngine] route change reason: %li", (long)routeChangeReason);
-		
-        // "Old device unavailable" indicates that a headset was unplugged, or that the
-        // device was removed from a dock connector that supports audio output. This is
-        // the recommended test for when to pause audio.
-        if (routeChangeReason == kAudioSessionRouteChangeReason_OldDeviceUnavailable) 
-		{
-			[sharedInstance.player playPause];
-			
-            DDLogCInfo(@"[AudioEngine] Output device removed, so application audio was paused.");
-        }
-		else 
-		{
-            DDLogCInfo(@"[AudioEngine] A route change occurred that does not require pausing of application audio.");
-        }
-    }
-	else 
-	{	
-        DDLogCInfo(@"[AudioEngine] Audio route change while application audio is stopped.");
-        return;
+    AVAudioSessionRouteChangeReason reason = [[[notification userInfo] objectForKey:AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
+    if (reason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {
+        [self.player pause];
     }
 }
-
-#endif
 
 - (void)startSong:(ISMSSong *)aSong atIndex:(NSUInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds
 {
@@ -139,16 +102,12 @@ void audioRouteChangeListenerCallback(void *inUserData, AudioSessionPropertyID i
 
 - (void)setup
 {
-#ifdef IOS
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 	
-	AudioSessionInitialize(NULL, NULL, NULL, NULL);
-    
-    [[AVAudioSession sharedInstance] setDelegate:self];
+	[[AVAudioSession sharedInstance] setActive:YES error:nil];
 	
-	// Add the callbacks for headphone removal and other audio takeover
-	AudioSessionAddPropertyListener(kAudioSessionProperty_AudioRouteChange, audioRouteChangeListenerCallback, NULL);
-#endif
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(handleInterruption:) name:AVAudioSessionInterruptionNotification object:[AVAudioSession sharedInstance]];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(handleRouteChange:) name:AVAudioSessionRouteChangeNotification object:[AVAudioSession sharedInstance]];
     
     _delegate = [[iSubBassGaplessPlayerDelegate alloc] init];
     
