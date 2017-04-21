@@ -100,8 +100,6 @@ typedef enum
 @property BOOL isAutoDeleteCacheEnabled;
 @property NSInteger autoDeleteCacheType;
 @property NSInteger cachedSongCellColorType;
-@property BOOL isLyricsEnabled;
-@property BOOL isCacheStatusEnabled;
 @property BOOL isSongsTabEnabled;
 @property BOOL isAutoReloadArtistsEnabled;
 @property float scrobblePercent;

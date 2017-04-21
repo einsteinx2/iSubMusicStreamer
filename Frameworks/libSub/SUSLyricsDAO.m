@@ -49,17 +49,17 @@
 	{
 		return lyrics;
 	}
-    else if (settingsS.isLyricsEnabled) 
+    else
     {
 		self.loader = [[SUSLyricsLoader alloc] initWithDelegate:self];
         self.loader.artist = artist;
         self.loader.title = title;
         [self.loader startLoad];
     }
-	else
-	{
-		return @"No lyrics saved for this song";
-	}
+//	else
+//	{
+//		return @"No lyrics saved for this song";
+//	}
     
     return nil;
 }

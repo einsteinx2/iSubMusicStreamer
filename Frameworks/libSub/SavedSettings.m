@@ -980,40 +980,6 @@
 	}
 }
 
-- (BOOL)isLyricsEnabled
-{
-	@synchronized(self)
-	{
-		return [_userDefaults boolForKey:@"lyricsEnabledSetting"];
-	}
-}
-
-- (void)setIsLyricsEnabled:(BOOL)isLyricsEnabled
-{
-	@synchronized(self)
-	{
-		[_userDefaults setBool:isLyricsEnabled forKey:@"lyricsEnabledSetting"];
-		[_userDefaults synchronize];
-	}
-}
-
-- (BOOL)isCacheStatusEnabled
-{
-	@synchronized(self)
-	{
-		return [_userDefaults boolForKey:@"isCacheStatusEnabled"];
-	}
-}
-
-- (void)setIsCacheStatusEnabled:(BOOL)isCacheStatusEnabled
-{
-	@synchronized(self)
-	{
-		[_userDefaults setBool:isCacheStatusEnabled forKey:@"isCacheStatusEnabled"];
-		[_userDefaults synchronize];
-	}
-}
-
 - (BOOL)isSongsTabEnabled
 {
 	@synchronized(self)

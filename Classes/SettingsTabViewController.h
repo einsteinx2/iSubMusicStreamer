@@ -24,8 +24,6 @@
 @property (nonatomic, strong) IBOutlet UISegmentedControl *recoverSegmentedControl;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *maxBitrateWifiSegmentedControl;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *maxBitrate3GSegmentedControl;
-@property (nonatomic, strong) IBOutlet UISwitch *enableLyricsSwitch;
-@property (nonatomic, strong) IBOutlet UISwitch *enableCacheStatusSwitch;
 @property (nonatomic, strong) IBOutlet UISwitch *autoPlayerInfoSwitch;
 @property (nonatomic, strong) IBOutlet UISwitch *enableSwipeSwitch;
 @property (nonatomic, strong) IBOutlet UISwitch *enableTapAndHoldSwitch;

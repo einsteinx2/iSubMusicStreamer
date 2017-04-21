@@ -57,17 +57,6 @@
 			if (view.y > y+10.) view.y -= 70.;
 		}
 	}
-	if (![NSClassFromString(@"MPNowPlayingInfoCenter") class])
-	{
-		self.enableLockArtLabel.hidden = self.enableLockScreenArt.hidden = YES;
-		self.enableLockScreenArt.enabled = NO;
-		
-		CGFloat y = self.enableCacheStatusSwitch.y;
-		for (UIView *view in self.view.subviews)
-		{
-			if (view.y > y+10.) view.y -= 35.;
-		}
-	}
 	
 	// Main Settings
 	self.enableScrobblingSwitch.on = settingsS.isScrobbleEnabled;
@@ -104,8 +93,6 @@
 	self.enableTapAndHoldSwitch.on = settingsS.isTapAndHoldEnabled;
 	
 	self.showLargeSongInfoSwitch.on = settingsS.isShowLargeSongInfoInPlayer;
-	self.enableLyricsSwitch.on = settingsS.isLyricsEnabled;
-	self.enableCacheStatusSwitch.on = settingsS.isCacheStatusEnabled;
 	self.enableLockScreenArt.on = settingsS.isLockScreenArtEnabled;
 	
 	// Cache Settings
@@ -393,14 +380,6 @@
 		{
 			settingsS.isShowLargeSongInfoInPlayer = self.showLargeSongInfoSwitch.on;
 			[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_LargeSongInfoToggle];
-		}
-		else if (sender == self.enableLyricsSwitch)
-		{
-			settingsS.isLyricsEnabled = self.enableLyricsSwitch.on;
-		}
-		else if (sender == self.enableCacheStatusSwitch)
-		{
-			settingsS.isCacheStatusEnabled = self.enableCacheStatusSwitch.on;
 		}
 		else if (sender == self.enableSwipeSwitch)
 		{

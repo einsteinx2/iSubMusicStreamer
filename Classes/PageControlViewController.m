@@ -30,9 +30,7 @@
     //[super viewWillAppear:animated];
 	[super viewDidLoad];
 	
-	self.numberOfPages = 1;
-	if (settingsS.isLyricsEnabled) self.numberOfPages++;
-	if (settingsS.isCacheStatusEnabled) self.numberOfPages++;
+	self.numberOfPages = 3;
 	
 	// view controllers are created lazily
     // in the meantime, load the array with placeholders which will be replaced on demand
@@ -90,10 +88,14 @@
 	self.swipeDetector.delegate = (id<UIGestureRecognizerDelegate>)self;
 	self.swipeDetector.direction = UISwipeGestureRecognizerDirectionRight;
 	[self.scrollView addGestureRecognizer:self.swipeDetector];
+    [self.scrollView.panGestureRecognizer requireGestureRecognizerToFail:self.swipeDetector];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
+    if (gestureRecognizer == self.swipeDetector && self.pageControl.currentPage > 0) {
+        return NO;
+    }
 	return YES;
 }
 
@@ -124,10 +126,7 @@
 			controller = [[CurrentPlaylistBackgroundViewController alloc] initWithNibName:@"CurrentPlaylistBackgroundViewController" bundle:nil];
 			break;
 		case 1:
-			if (settingsS.isLyricsEnabled)
-				controller = [[LyricsViewController alloc] initWithNibName:nil bundle:nil];
-			else if (settingsS.isCacheStatusEnabled)
-				controller = [[DebugViewController alloc] initWithNibName:@"DebugViewController" bundle:nil];
+			controller = [[LyricsViewController alloc] initWithNibName:nil bundle:nil];
 			break;
 		case 2:
 			controller = [[DebugViewController alloc] initWithNibName:@"DebugViewController" bundle:nil];
