@@ -91,8 +91,6 @@
 
 - (NSString *)zipAllLogFiles;
 
-- (void)checkWaveBoxRelease;
-
 
 @end
 
