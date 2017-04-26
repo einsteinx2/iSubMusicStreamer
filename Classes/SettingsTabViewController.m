@@ -39,9 +39,9 @@
 	NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleVersionKey];
 #if DEBUG
 	NSString *build = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-	self.versionLabel.text = [NSString stringWithFormat:@"iSub version %@ build %@", build, version];
+	self.versionLabel.text = [NSString stringWithFormat:@"iSub 3 version %@ build %@", build, version];
 #else
-	self.versionLabel.text = [NSString stringWithFormat:@"iSub version %@", version];
+	self.versionLabel.text = [NSString stringWithFormat:@"iSub 3 version %@", version];
 #endif
 	
 	// Hide elements
