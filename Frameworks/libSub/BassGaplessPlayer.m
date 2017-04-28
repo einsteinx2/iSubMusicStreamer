@@ -10,7 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 @interface BassGaplessPlayer ()
-@property (strong) dispatch_block_t retryBlock;
+@property (strong) NSOperation *retrySongOperation;
 - (NSUInteger)nextIndex;
 - (ISMSSong *)nextSong;
 @end
@@ -61,7 +61,7 @@ LOG_LEVEL_ISUB_DEBUG
 
 - (void)dealloc
 {
-    [self cancelRetryBlock];
+    [self cancelRetrySongOperation];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -643,7 +643,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
     
 	@synchronized(self.visualizer)
 	{
-        [self cancelRetryBlock];
+        [self cancelRetrySongOperation];
         
 		[self.ringBufferFillThread cancel];
 		
@@ -900,12 +900,19 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 					 // Failed to create the stream, retrying
 					 DDLogError(@"[BassGaplessPlayer] ------failed to create stream, retrying in 2 seconds------");
 					 
-                     [self cancelRetryBlock];
+                     [self cancelRetrySongOperation];
+                     
                      __weak BassGaplessPlayer *weakSelf = self;
-                     self.retryBlock = ^{
+                     self.retrySongOperation = [NSBlockOperation blockOperationWithBlock:^{
                          [weakSelf startSong:aSong atIndex:index withOffsetInBytes:byteOffset orSeconds:seconds];
-                     };
-                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(ISMS_BassStreamRetryDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), self.retryBlock);
+                     }];
+                     
+                     __weak NSOperation *weakOperation = self.retrySongOperation;
+                     [EX2Dispatch runInMainThreadAfterDelay:ISMS_BassStreamRetryDelay block:^{
+                         if (weakOperation && !weakOperation.isFinished && !weakOperation.isCancelled) {
+                             [[NSOperationQueue mainQueue] addOperation:weakOperation];
+                         }
+                     }];
 				 }
 			 }
 			 else
@@ -918,11 +925,9 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 	 }];
 }
 
-- (void)cancelRetryBlock {
-    if (self.retryBlock) {
-        dispatch_block_cancel(self.retryBlock);
-        self.retryBlock = nil;
-    }
+- (void)cancelRetrySongOperation {
+    [self.retrySongOperation cancel];
+    self.retrySongOperation = nil;
 }
 
 - (NSUInteger)nextIndex
