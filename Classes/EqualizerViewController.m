@@ -14,9 +14,6 @@
 
 @implementation EqualizerViewController
 
-#define hidePickerTimer @"EqualizerViewController hide picker timer"
-#define hidePickerTimerDelay 5.
-
 - (BOOL)prefersStatusBarHidden
 {
     return YES;
@@ -119,10 +116,6 @@
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[EX2Dispatch cancelTimerBlockWithName:hidePickerTimer];
-	//[hidePickerTimer release]; hidePickerTimer = nil;
-	
-	
 }
 
 #pragma mark - View lifecycle
@@ -340,8 +333,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	[EX2Dispatch cancelTimerBlockWithName:hidePickerTimer];
-	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_BassEffectPresetLoaded object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hidePresetPicker" object:nil];
 	
@@ -764,17 +755,11 @@
     } completion:nil];
     
 	self.isPresetPickerShowing = YES;
-    
-    /*[EX2Dispatch timerInMainQueueAfterDelay:hidePickerTimerDelay withName:hidePickerTimer repeats:NO performBlock:^{
-        [self dismissPicker];
-    }];*/
 }
 
 - (void)dismissPicker
 {
 	[self.presetPicker resignFirstResponder];
-	
-	[EX2Dispatch cancelTimerBlockWithName:hidePickerTimer];
     
     if (self.overlay)
 	{
@@ -812,11 +797,6 @@
 	{
 		[self hideDeletePresetButton:YES];
 	}
-    
-    [EX2Dispatch cancelTimerBlockWithName:hidePickerTimer];
-    /*[EX2Dispatch timerInMainQueueAfterDelay:hidePickerTimerDelay withName:hidePickerTimer repeats:NO performBlock:^{
-        [self dismissPicker];
-    }];*/
     
     [self updatePresetPicker];
 }

@@ -1,6 +1,6 @@
 //
 //  BassEqualizer.h
-//  Anghami
+//  iSub
 //
 //  Created by Ben Baron on 6/29/12.
 //  Copyright (c) 2012 Ben Baron. All rights reserved.

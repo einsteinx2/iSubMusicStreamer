@@ -1,6 +1,6 @@
 //
 //  BassWrapper.h
-//  Anghami
+//  iSub
 //
 //  Created by Ben Baron on 6/27/12.
 //  Copyright (c) 2012 Ben Baron. All rights reserved.

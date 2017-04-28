@@ -1471,7 +1471,6 @@
 		53493F1215FC6A3A0059492E /* shuffle-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shuffle-small.png"; path = "Images/Other/shuffle-small.png"; sourceTree = "<group>"; };
 		53493F1315FC6A3A0059492E /* shuffle-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shuffle-small@2x.png"; path = "Images/Other/shuffle-small@2x.png"; sourceTree = "<group>"; };
 		53493F1A15FC6AA60059492E /* iSub-Info-Beta.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "iSub-Info-Beta.plist"; path = "Other/iSub-Info-Beta.plist"; sourceTree = "<group>"; };
-		53493F1B15FC6AA60059492E /* iSub-Info-Lite.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "iSub-Info-Lite.plist"; path = "Other/iSub-Info-Lite.plist"; sourceTree = "<group>"; };
 		53493F1C15FC6AA60059492E /* iSub-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "iSub-Info.plist"; path = "Other/iSub-Info.plist"; sourceTree = "<group>"; };
 		53493F2615FC6AC40059492E /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Other/main.m; sourceTree = "<group>"; };
 		53493F2A15FC6AD20059492E /* iSub_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iSub_Prefix.pch; path = Other/iSub_Prefix.pch; sourceTree = "<group>"; };
@@ -2516,7 +2515,6 @@
 				53649DD0184DA99B00E600EC /* Icon-76.png */,
 				53649DD1184DA99B00E600EC /* Icon-76@2x.png */,
 				53493F1A15FC6AA60059492E /* iSub-Info-Beta.plist */,
-				53493F1B15FC6AA60059492E /* iSub-Info-Lite.plist */,
 				53493F1C15FC6AA60059492E /* iSub-Info.plist */,
 				53493F3715FC6C3A0059492E /* BassEffectDefaultPresets.plist */,
 				53F1412015FD550C004D00D5 /* buildnumber.xcconfig */,

@@ -1,6 +1,6 @@
 //
 //  UIView+AutoLayout.h
-//  Anghami
+//  iSub
 //
 //  Created by Justin Hill on 4/15/14.
 //  Copyright (c) 2014 Ben Baron. All rights reserved.

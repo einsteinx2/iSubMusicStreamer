@@ -1,6 +1,6 @@
 //
 //  SUSStreamHandlerDelegate.h
-//  Anghami
+//  iSub
 //
 //  Created by Ben Baron on 11/13/11.
 //  Copyright (c) 2011 Ben Baron. All rights reserved.

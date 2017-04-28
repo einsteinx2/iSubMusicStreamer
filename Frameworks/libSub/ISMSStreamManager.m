@@ -568,12 +568,11 @@ LOG_LEVEL_ISUB_DEBUG
 		if (handler.isTempCache)
 		{
 			// TODO: get rid of this ugly hack
-			[EX2Dispatch timerInMainQueueAfterDelay:1.0 withName:@"temp song set byteOffset/seconds" repeats:NO performBlock:^
-             {
-                 //DLog(@"byteOffset: %llu   secondsOffset: %f", handler.byteOffset, handler.secondsOffset);
-                 audioEngineS.player.startByteOffset = (NSUInteger)handler.byteOffset;
-                 audioEngineS.player.startSecondsOffset = handler.secondsOffset;
-             }];
+            [EX2Dispatch runInMainThreadAfterDelay:1.0 block:^{
+                //DLog(@"byteOffset: %llu   secondsOffset: %f", handler.byteOffset, handler.secondsOffset);
+                audioEngineS.player.startByteOffset = (NSUInteger)handler.byteOffset;
+                audioEngineS.player.startSecondsOffset = handler.secondsOffset;
+            }];
 		}
 	}
 	

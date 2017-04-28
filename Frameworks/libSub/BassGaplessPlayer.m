@@ -1,6 +1,6 @@
 //
 //  BassGaplessPlayer.m
-//  Anghami
+//  iSub
 //
 //  Created by Ben Baron on 6/29/12.
 //  Copyright (c) 2012 Ben Baron. All rights reserved.
@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 @interface BassGaplessPlayer ()
+@property (strong) dispatch_block_t retryBlock;
 - (NSUInteger)nextIndex;
 - (ISMSSong *)nextSong;
 @end
@@ -28,14 +29,13 @@ LOG_LEVEL_ISUB_DEBUG
 #define ISMS_BassStreamMinFilesizeToFail BytesFromMiB(15) //(3) // 3MB is no longer enough with super high resolution artwork
 
 #define startSongRetryTimer @"startSong"
-#define nextSongRetryTimer @"nextSong"
 
 - (id)init
 {
 	if ((self = [super init]))
 	{
 		_streamQueue = [NSMutableArray arrayWithCapacity:5];
-		_streamGcdQueue = dispatch_queue_create("com.anghami.BassStreamQueue", NULL);
+		_streamGcdQueue = dispatch_queue_create("com.isubapp.BassStreamQueue", NULL);
 		_ringBuffer = [EX2RingBuffer ringBufferWithLength:BytesFromKiB(640)];
         
         _equalizer = [[BassEqualizer alloc] init];
@@ -61,6 +61,7 @@ LOG_LEVEL_ISUB_DEBUG
 
 - (void)dealloc
 {
+    [self cancelRetryBlock];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -642,9 +643,8 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
     
 	@synchronized(self.visualizer)
 	{
-		[EX2Dispatch cancelTimerBlockWithName:startSongRetryTimer];
-		[EX2Dispatch cancelTimerBlockWithName:nextSongRetryTimer];
-		
+        [self cancelRetryBlock];
+        
 		[self.ringBufferFillThread cancel];
 		
         @synchronized(self.streamQueue)
@@ -900,10 +900,12 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 					 // Failed to create the stream, retrying
 					 DDLogError(@"[BassGaplessPlayer] ------failed to create stream, retrying in 2 seconds------");
 					 
-					 [EX2Dispatch timerInMainQueueAfterDelay:ISMS_BassStreamRetryDelay 
-												   withName:startSongRetryTimer
-                                                    repeats:NO
-                                                performBlock:^{ [self startSong:aSong atIndex:index withOffsetInBytes:byteOffset orSeconds:seconds]; }];
+                     [self cancelRetryBlock];
+                     __weak BassGaplessPlayer *weakSelf = self;
+                     self.retryBlock = ^{
+                         [weakSelf startSong:aSong atIndex:index withOffsetInBytes:byteOffset orSeconds:seconds];
+                     };
+                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(ISMS_BassStreamRetryDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), self.retryBlock);
 				 }
 			 }
 			 else
@@ -914,6 +916,13 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 			 }
 		 }
 	 }];
+}
+
+- (void)cancelRetryBlock {
+    if (self.retryBlock) {
+        dispatch_block_cancel(self.retryBlock);
+        self.retryBlock = nil;
+    }
 }
 
 - (NSUInteger)nextIndex

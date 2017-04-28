@@ -1,6 +1,6 @@
 //
 //  NSString+SHA1.m
-//  Anghami
+//  iSub
 //
 //  Created by Ben Baron on 7/20/12.
 //  Copyright (c) 2012 Ben Baron. All rights reserved.

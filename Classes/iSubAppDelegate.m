@@ -875,8 +875,10 @@ LOG_LEVEL_ISUB_DEFAULT
 	[musicS updateLockScreenInfo];
 }
 
-- (void)reachabilityChangedInternal:(EX2Reachability *)curReach
-{	
+- (void)reachabilityChangedInternal
+{
+    EX2Reachability *curReach = self.wifiReach;
+    
 	if ([curReach currentReachabilityStatus] == NotReachable)
 	{
 		//Change over to offline mode
@@ -920,25 +922,20 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 }
 
-
-- (void)reachabilityChanged: (NSNotification *)note
+- (void)reachabilityChanged:(NSNotification *)note
 {
 	if (settingsS.isForceOfflineMode)
 		return;
-	
-	if ([note.object isKindOfClass:[EX2Reachability class]])
-	{
-		// Cancel any previous requests
-		[EX2Dispatch cancelTimerBlockWithName:@"Reachability Changed"];
-		
-		// Perform the actual check in two seconds to make sure it's the last message received
-		// this prevents a bug where the status changes from wifi to not reachable, but first it receives
-		// some messages saying it's still on wifi, then gets the not reachable messages
-		[EX2Dispatch timerInMainQueueAfterDelay:6.0 withName:@"Reachability Changed" repeats:NO performBlock:
-		 ^{
-			 [self reachabilityChangedInternal:note.object];
-		 }];
-	}
+    
+    [EX2Dispatch runInMainThreadAsync:^{
+        // Cancel any previous requests
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(reachabilityChangedInternal) object:nil];
+        
+        // Perform the actual check after a few seconds to make sure it's the last message received
+        // this prevents a bug where the status changes from wifi to not reachable, but first it receives
+        // some messages saying it's still on wifi, then gets the not reachable messages
+        [self performSelector:@selector(reachabilityChangedInternal) withObject:nil afterDelay:6.0];
+    }];
 }
 
 - (BOOL)isWifi

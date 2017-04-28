@@ -1,6 +1,6 @@
 //
 //  NSString+Gzip.h
-//  Anghami
+//  iSub
 //
 //  Created by Ben Baron on 9/6/12.
 //  Copyright (c) 2012 Ben Baron. All rights reserved.

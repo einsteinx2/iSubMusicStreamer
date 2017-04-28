@@ -182,7 +182,6 @@ LOG_LEVEL_ISUB_DEFAULT
 // Cancel the download and stop the run loop in loadingThread
 - (void)cancel
 {
-	//[EX2Dispatch cancelTimerBlockWithName:ISMSDownloadTimeoutTimer];
 	[self performSelectorOnMainThread:@selector(stopTimeOutTimer) withObject:nil waitUntilDone:NO];
 	
 #ifdef IOS
@@ -272,7 +271,6 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData 
 {	
-	//[EX2Dispatch cancelTimerBlockWithName:ISMSDownloadTimeoutTimer];
 	[self performSelectorOnMainThread:@selector(stopTimeOutTimer) withObject:nil waitUntilDone:NO];
 		
 	if (self.isCanceled)
@@ -459,7 +457,6 @@ LOG_LEVEL_ISUB_DEFAULT
 // loadingThread
 - (void)connection:(NSURLConnection *)theConnection didFailWithError:(NSError *)error
 {
-	//[EX2Dispatch cancelTimerBlockWithName:ISMSDownloadTimeoutTimer];
 	[self performSelectorOnMainThread:@selector(stopTimeOutTimer) withObject:nil waitUntilDone:NO];
 	
 	DDLogError(@"[ISMSURLConnectionStreamHandler] Connection Failed for %@", self.mySong.title);
@@ -477,7 +474,6 @@ LOG_LEVEL_ISUB_DEFAULT
 {
 	DDLogVerbose(@"[ISMSURLConnectionStreamHandler] Stream handler didFailInternal for %@", self.mySong);
 
-	//[EX2Dispatch cancelTimerBlockWithName:ISMSDownloadTimeoutTimer];
 	[self performSelectorOnMainThread:@selector(stopTimeOutTimer) withObject:nil waitUntilDone:NO];
 	
 	self.isDownloading = NO;
@@ -499,7 +495,6 @@ LOG_LEVEL_ISUB_DEFAULT
 // loadingThread
 - (void)connectionDidFinishLoading:(NSURLConnection *)theConnection 
 {		
-	//[EX2Dispatch cancelTimerBlockWithName:ISMSDownloadTimeoutTimer];
 	[self performSelectorOnMainThread:@selector(stopTimeOutTimer) withObject:nil waitUntilDone:NO];
 	
 	//DLog(@"localSize: %llu   contentLength: %llu", mySong.localFileSize, self.contentLength);
@@ -531,7 +526,6 @@ LOG_LEVEL_ISUB_DEFAULT
 // Main Thread
 - (void)didFinishLoadingInternal
 {
-	//[EX2Dispatch cancelTimerBlockWithName:ISMSDownloadTimeoutTimer];
 	[self performSelectorOnMainThread:@selector(stopTimeOutTimer) withObject:nil waitUntilDone:NO];
 	
 	self.isDownloading = NO;

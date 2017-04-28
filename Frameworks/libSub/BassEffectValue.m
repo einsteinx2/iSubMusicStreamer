@@ -1,6 +1,6 @@
 //
 //  BassEffectValue.m
-//  Anghami
+//  iSub
 //
 //  Created by Benjamin Baron on 12/4/11.
 //  Copyright (c) 2011 Ben Baron. All rights reserved.

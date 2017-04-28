@@ -58,34 +58,4 @@
 /// @param block The block to run
 + (void)runInMainThreadAsync:(void (^)(void))block;
 
-/// @name Timers (cancelable delayed blocks)
-
-/// Runs a block after a delay that can be canceled by name and optionaly repeated
-/// @param queue The GCD queue to place the block
-/// @param delay The delay in seconds before the block
-/// @param name The name to identify the block by. This is used to cancel the block later if needed.
-/// @param repeats Whether to continue performing the block after delay intervals
-/// @param block The block to run
-+ (BOOL)timerInQueue:(dispatch_queue_t)queue
-          afterDelay:(NSTimeInterval)delay
-            withName:(NSString *)name
-             repeats:(BOOL)repeats
-        performBlock:(void (^)(void))block;
-
-/// Runs a block after a delay in the main thread queue that can be canceled by name and optionaly repeated
-/// @param delay The delay in seconds before the block
-/// @param name The name to identify the block by. This is used to cancel the block later if needed.
-/// @param repeats Whether to continue performing the block after delay intervals
-/// @param block The block to run
-+ (BOOL)timerInMainQueueAfterDelay:(NSTimeInterval)delay
-                          withName:(NSString *)name
-                           repeats:(BOOL)repeats
-                      performBlock:(void (^)(void))block;
-
-/// Cancel a previously scheduled timer by name
-+ (void)cancelTimerBlockWithName:(NSString *)name;
-
-/// Cancel all previously scheduled timers
-+ (void)cancelAllTimerBlocks;
-
 @end
