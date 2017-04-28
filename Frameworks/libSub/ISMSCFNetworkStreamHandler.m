@@ -249,9 +249,7 @@ static const CFOptionFlags kNetworkEvents = kCFStreamEventOpenCompleted | kCFStr
 	
 	self.isDownloading = YES;
     
-#ifdef IOS
 	[EX2NetworkIndicator usingNetwork];
-#endif
     
 	// Start the HTTP connection
 	if (CFReadStreamOpen(_readStreamRef) == false)
@@ -281,7 +279,8 @@ static const CFOptionFlags kNetworkEvents = kCFStreamEventOpenCompleted | kCFStr
     
     if (!self.isDownloading)
         return;
-    
+  
+    [EX2NetworkIndicator doneUsingNetwork];
 	self.isDownloading = NO;
 	
 	// Close the file handle
@@ -305,13 +304,12 @@ static const CFOptionFlags kNetworkEvents = kCFStreamEventOpenCompleted | kCFStr
 	[EX2Dispatch runInMainThreadAndWaitUntilDone:YES block:^
 	 {
          [self stopTimeOutTimer];
-         
-#ifdef IOS
-		 if (self.isDownloading)
-			 [EX2NetworkIndicator doneUsingNetwork];
-#endif
 		 
-		 self.isDownloading = NO;
+         if (self.isDownloading)
+         {
+             [EX2NetworkIndicator doneUsingNetwork];
+             self.isDownloading = NO;
+         }
 		 
 		 if (_readStreamRef == NULL)
 		 {
@@ -482,7 +480,7 @@ static void ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType t
                     
 #if isSpeedLoggingEnabled
                     double speedInKbytes = speedInBytes / 1024.;
-                    DDLogInfo(@"[ISMSURLConnectionStreamHandler] rate: %f  speedInterval: %f  transferredSinceLastCheck: %llu  song: %@", speedInKbytes, speedInteval, transferredSinceLastCheck, self.mySong);
+                    DDLogInfo(@"[ISMSCFNetworkConnectionStreamHandler] rate: %f  speedInterval: %f  transferredSinceLastCheck: %llu  song: %@", speedInKbytes, speedInteval, transferredSinceLastCheck, self.mySong);
 #endif
                     
                     self.speedLoggingLastSize = self.totalBytesTransferred;
@@ -552,6 +550,7 @@ static void ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType t
 
 - (void)downloadFailed
 {
+    [EX2NetworkIndicator doneUsingNetwork];
 	self.isDownloading = NO;
 	
 	// Close the file handle
@@ -600,6 +599,7 @@ static void ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType t
     			  
 	DDLogCInfo(@"[ISMSCFNetworkStreamHandler] Connection Finished for %@  file size: %llu   contentLength: %llu", self.mySong.title, self.mySong.localFileSize, self.contentLength);
 	
+    [EX2NetworkIndicator doneUsingNetwork];
 	self.isDownloading = NO;
     
     // Close the file handle in a background thread to prevent blocking the main thread

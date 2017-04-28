@@ -15,7 +15,6 @@
 #import "ISMSStreamHandler.h"
 #import "SUSLyricsDAO.h"
 
-#import "ISMSURLConnectionStreamHandler.h"
 #import "ISMSCFNetworkStreamHandler.h"
 
 //LOG_LEVEL_ISUB_DEFAULT
@@ -221,7 +220,7 @@ LOG_LEVEL_ISUB_DEBUG
 	handler.partialPrecacheSleep = NO;
 }
 
-- (void)ISMSStreamHandlerStartPlayback:(ISMSURLConnectionStreamHandler *)handler
+- (void)ISMSStreamHandlerStartPlayback:(ISMSStreamHandler *)handler
 {
 	[streamManagerS ISMSStreamHandlerStartPlayback:handler];
 }
