@@ -37,12 +37,8 @@
 		
 	// Set version label
 	NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleVersionKey];
-#if DEBUG
 	NSString *build = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-	self.versionLabel.text = [NSString stringWithFormat:@"iSub 3 version %@ build %@", build, version];
-#else
-	self.versionLabel.text = [NSString stringWithFormat:@"iSub 3 version %@", version];
-#endif
+	self.versionLabel.text = [NSString stringWithFormat:@"iSub %@ build %@", build, version];
 	
 	// Hide elements
 	if (IS_IPAD())
