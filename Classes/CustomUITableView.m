@@ -128,6 +128,12 @@
 	self.allowsSelection = YES;
 }
 
+- (CGFloat)moveDistance:(UITouch *)touch {
+    CGPoint currentTouchPosition = [touch locationInView:self];
+    CGFloat distance = hypotf(startTouchPosition.x - currentTouchPosition.x, startTouchPosition.y - currentTouchPosition.y);
+    return distance;
+}
+
 - (BOOL)isTouchHorizontal:(UITouch *)touch 
 {
     CGPoint currentTouchPosition = [touch locationInView:self];
@@ -223,12 +229,15 @@
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event 
-{	
+{
 	// Cancel the tap and hold if user moves finger
-	[self cancelTapAndHold];
+    CGFloat distance = [self moveDistance:[touches anyObject]];
+    if (distance >= 1.0) {
+        [self cancelTapAndHold];
+    }
 	
 	// Check for swipe
-	if ([self isTouchHorizontal:[touches anyObject]]) 
+	if ([self isTouchHorizontal:[touches anyObject]])
 	{
 		[self lookForSwipeGestureInTouches:(NSSet *)touches withEvent:(UIEvent *)event];
 	} 
