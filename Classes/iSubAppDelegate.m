@@ -79,13 +79,13 @@ LOG_LEVEL_ISUB_DEFAULT
 
     // Adjust the window to the correct size before anything else loads to prevent
     // various sizing/positioning issues
-    /*if (!IS_IPAD())
+    if (!IS_IPAD())
     {
         CGSize screenSize = [[UIScreen mainScreen] preferredMode].size;
         CGFloat screenScale = [UIScreen mainScreen].scale;
         screenScale = screenScale == 0. ? 1. : screenScale;
         self.window.size = CGSizeMake(screenSize.width / screenScale, screenSize.height / screenScale);
-    }*/
+    }
 	
 #if !IS_ADHOC() && !IS_RELEASE()
     // Don't turn on console logging for adhoc or release builds
