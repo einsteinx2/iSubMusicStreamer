@@ -47,6 +47,8 @@
 		5306239614D4BCAD00D320A8 /* eqView.png in Resources */ = {isa = PBXBuildFile; fileRef = 5306239214D4BCAD00D320A8 /* eqView.png */; };
 		5306239714D4BCAD00D320A8 /* eqView@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5306239314D4BCAD00D320A8 /* eqView@2x.png */; };
 		5306239914D4BCAD00D320A8 /* eqView@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5306239314D4BCAD00D320A8 /* eqView@2x.png */; };
+		530738F41FAF6A72005C2650 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 530738F31FAF6A72005C2650 /* Media.xcassets */; };
+		530738F51FAF6A72005C2650 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 530738F31FAF6A72005C2650 /* Media.xcassets */; };
 		530A5F851516703F0081A83A /* playing-cell-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 530A5F831516703F0081A83A /* playing-cell-icon.png */; };
 		530A5F871516703F0081A83A /* playing-cell-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 530A5F831516703F0081A83A /* playing-cell-icon.png */; };
 		530A5F881516703F0081A83A /* playing-cell-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 530A5F841516703F0081A83A /* playing-cell-icon@2x.png */; };
@@ -1358,6 +1360,7 @@
 		5306238B14D4BB7E00D320A8 /* controller-equalizer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-equalizer@2x.png"; path = "Images/Player Icons/controller-equalizer@2x.png"; sourceTree = "<group>"; };
 		5306239214D4BCAD00D320A8 /* eqView.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = eqView.png; path = "Images/Player Icons/eqView.png"; sourceTree = "<group>"; };
 		5306239314D4BCAD00D320A8 /* eqView@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "eqView@2x.png"; path = "Images/Player Icons/eqView@2x.png"; sourceTree = "<group>"; };
+		530738F31FAF6A72005C2650 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		530A5F831516703F0081A83A /* playing-cell-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "playing-cell-icon.png"; path = "Images/Other/playing-cell-icon.png"; sourceTree = "<group>"; };
 		530A5F841516703F0081A83A /* playing-cell-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "playing-cell-icon@2x.png"; path = "Images/Other/playing-cell-icon@2x.png"; sourceTree = "<group>"; };
 		530A5F8B15167CBA0081A83A /* playing-cell-icon-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "playing-cell-icon-white.png"; path = "Images/Other/playing-cell-icon-white.png"; sourceTree = "<group>"; };
@@ -2519,6 +2522,7 @@
 				53493F3715FC6C3A0059492E /* BassEffectDefaultPresets.plist */,
 				53F1412015FD550C004D00D5 /* buildnumber.xcconfig */,
 				539797F41162CEB100F41D8B /* Images */,
+				530738F31FAF6A72005C2650 /* Media.xcassets */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -4292,6 +4296,7 @@
 				53F8CC7A1297949A007BDC0E /* home-background@2x.png in Resources */,
 				53F8CC7B1297949A007BDC0E /* home-jukebox-off-ipad.png in Resources */,
 				53F8CC7C1297949A007BDC0E /* home-jukebox-off.png in Resources */,
+				530738F41FAF6A72005C2650 /* Media.xcassets in Resources */,
 				53F8CC7D1297949A007BDC0E /* home-jukebox-off@2x.png in Resources */,
 				53F8CC7E1297949A007BDC0E /* home-jukebox-on-ipad.png in Resources */,
 				53F8CC7F1297949A007BDC0E /* home-jukebox-on.png in Resources */,
@@ -4484,6 +4489,7 @@
 				53BC26AF139AF0DD00A825F1 /* controller-shuffle-on.png in Resources */,
 				53BC26B0139AF0DD00A825F1 /* controller-shuffle.png in Resources */,
 				53BC26B1139AF0DD00A825F1 /* Icon.png in Resources */,
+				530738F51FAF6A72005C2650 /* Media.xcassets in Resources */,
 				53FE35F31EA961540058B925 /* table-fade-bottom@2x.png in Resources */,
 				53BC26B2139AF0DD00A825F1 /* background.png in Resources */,
 				53BC26B3139AF0DD00A825F1 /* default-album-art-small.png in Resources */,
@@ -5606,6 +5612,7 @@
 			baseConfigurationReference = 53F1412015FD550C004D00D5 /* buildnumber.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_OBJC_UNUSED_IVARS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5644,6 +5651,7 @@
 			baseConfigurationReference = 53F1412015FD550C004D00D5 /* buildnumber.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_OBJC_UNUSED_IVARS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5741,6 +5749,7 @@
 			baseConfigurationReference = 53F1412015FD550C004D00D5 /* buildnumber.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_OBJC_UNUSED_IVARS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5797,7 +5806,6 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Other/iSub-Info-Beta.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/libBASS",
@@ -5812,7 +5820,6 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isubbetanew;
 				PRODUCT_NAME = "iSub Beta";
-				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
@@ -5839,7 +5846,6 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Other/iSub-Info-Beta.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/libBASS",
@@ -5854,7 +5860,6 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isubbetanew;
 				PRODUCT_NAME = "iSub Beta";
-				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = AdHoc;
 		};
@@ -5879,7 +5884,6 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Other/iSub-Info-Beta.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/libBASS",
@@ -5894,7 +5898,6 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isubbetanew;
 				PRODUCT_NAME = "iSub Beta";
-				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;
 		};
