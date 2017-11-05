@@ -673,7 +673,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
-	if ([[UIApplication sharedApplication] respondsToSelector:@selector(beginBackgroundTaskWithExpirationHandler:)])
+	if (cacheQueueManagerS.isQueueDownloading)
     {
 		self.backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:
 						  ^{
@@ -682,58 +682,59 @@ LOG_LEVEL_ISUB_DEFAULT
 								  [cacheQueueManagerS stopDownloadQueue];
 							  
 							  // Make sure to end the background so we don't get killed by the OS
-							  [application endBackgroundTask:self.backgroundTask];
-							  self.backgroundTask = UIBackgroundTaskInvalid;
+                              [self cancelBackgroundTask];
                               
                               // Cancel the next server check otherwise it will fire immediately on launch
                               [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(checkServer) object:nil];
 						  }];
-		
-		// Check the remaining background time and alert the user if necessary
-		dispatch_queue_t queue = dispatch_queue_create("isub.backgroundqueue", 0);
-		dispatch_async(queue, 
-		^{
-			self.isInBackground = YES;
-			UIApplication *application = [UIApplication sharedApplication];
-			while ([application backgroundTimeRemaining] > 1.0 && self.isInBackground) 
-			{
-				@autoreleasepool 
-				{
-					//DLog(@"backgroundTimeRemaining: %f", [application backgroundTimeRemaining]);
-					
-					// Sleep early is nothing is happening after 500 seconds
-					if ([application backgroundTimeRemaining] < 200.0 && !cacheQueueManagerS.isQueueDownloading)
-					{
-                        //DLog("Sleeping early, isQueueListDownloading: %i", cacheQueueManagerS.isQueueDownloading);
-						[application endBackgroundTask:self.backgroundTask];
-						self.backgroundTask = UIBackgroundTaskInvalid;
-                        
-                        // Cancel the next server check otherwise it will fire immediately on launch
-                        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(checkServer) object:nil];
-						break;
-					}
-					
-					// Warn at 2 minute mark if cache queue is downloading
-					if ([application backgroundTimeRemaining] < 120.0 && cacheQueueManagerS.isQueueDownloading)
-					{
-						UILocalNotification *localNotif = [[UILocalNotification alloc] init];
-						if (localNotif) 
-						{
-							localNotif.alertBody = NSLocalizedString(@"Songs are still caching. Please return to iSub within 2 minutes, or it will be put to sleep and your song caching will be paused.", nil);
-							localNotif.alertAction = NSLocalizedString(@"Open iSub", nil);
-							[application presentLocalNotificationNow:localNotif];
-							break;
-						}
-					}
-					
-					// Sleep for a second to avoid a fast loop eating all cpu cycles
-					sleep(1);
-				}
-			}
-		});
+        
+        self.isInBackground = YES;
+		[self performSelector:@selector(checkRemainingBackgroundTime) withObject:nil afterDelay:1.0];
 	}
 }
 
+- (void)checkRemainingBackgroundTime
+{
+    NSLog(@"checking remaining background time: %f", [[UIApplication sharedApplication] backgroundTimeRemaining]);
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(checkRemainingBackgroundTime) object:nil];
+    if (!self.isInBackground)
+    {
+        return;
+    }
+    
+    UIApplication *application = [UIApplication sharedApplication];
+    if ([application backgroundTimeRemaining] < 30.0 && cacheQueueManagerS.isQueueDownloading)
+    {
+        // Warn at 2 minute mark if cache queue is downloading
+        UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+        if (localNotif)
+        {
+            localNotif.alertBody = NSLocalizedString(@"Songs are still caching. Please return to iSub within 30 seconds, or it will be put to sleep and your song caching will be paused.", nil);
+            localNotif.alertAction = NSLocalizedString(@"Open iSub", nil);
+            [application presentLocalNotificationNow:localNotif];
+        }
+    }
+    else if (!cacheQueueManagerS.isQueueDownloading)
+    {
+        // Cancel the next server check otherwise it will fire immediately on launch
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(checkServer) object:nil];
+        [self cancelBackgroundTask];
+    }
+    else
+    {
+        [self performSelector:@selector(checkRemainingBackgroundTime) withObject:nil afterDelay:1.0];
+    }
+}
+
+- (void)cancelBackgroundTask
+{
+    if (self.backgroundTask != UIBackgroundTaskInvalid)
+    {
+        [[UIApplication sharedApplication] endBackgroundTask:self.backgroundTask];
+        self.backgroundTask = UIBackgroundTaskInvalid;
+    }
+}
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
@@ -742,11 +743,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	if ([[UIApplication sharedApplication] respondsToSelector:@selector(endBackgroundTask:)])
     {
 		self.isInBackground = NO;
-		if (self.backgroundTask != UIBackgroundTaskInvalid)
-		{
-			[[UIApplication sharedApplication] endBackgroundTask:self.backgroundTask];
-			self.backgroundTask = UIBackgroundTaskInvalid;
-		}
+        [self cancelBackgroundTask];
 	}
 
 	// Update the lock screen art in case were were using another app
