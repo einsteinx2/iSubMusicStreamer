@@ -1414,7 +1414,6 @@
 		5327F1BF12B8243C00735119 /* controller-stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-stop@2x.png"; path = "Images/Player Icons/controller-stop@2x.png"; sourceTree = "<group>"; };
 		532862D911C573AD00B40FF0 /* UAApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAApplication.h; sourceTree = "<group>"; };
 		532862DA11C573AD00B40FF0 /* UAApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UAApplication.m; sourceTree = "<group>"; };
-		532B227A156F762100C72D1B /* GHUnitIOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GHUnitIOS.framework; path = Frameworks/GHUnitIOS.framework; sourceTree = "<group>"; };
 		532B552614D641C500B8AA67 /* ModalAlbumArtViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ModalAlbumArtViewController.xib; sourceTree = "<group>"; };
 		532D9B41131AE19700FD8CA7 /* CustomUIAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomUIAlertView.h; sourceTree = "<group>"; };
 		532D9B42131AE19700FD8CA7 /* CustomUIAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUIAlertView.m; sourceTree = "<group>"; };
@@ -1482,14 +1481,6 @@
 		53493F3715FC6C3A0059492E /* BassEffectDefaultPresets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = BassEffectDefaultPresets.plist; path = Other/BassEffectDefaultPresets.plist; sourceTree = "<group>"; };
 		53493F3F15FC6CAE0059492E /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "Other/MainWindow-iPad.xib"; sourceTree = SOURCE_ROOT; };
 		53493F4015FC6CAE0059492E /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindow.xib; path = Other/MainWindow.xib; sourceTree = SOURCE_ROOT; };
-		53493F4715FC6CE30059492E /* iSub-Unit-Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "iSub-Unit-Tests-Info.plist"; path = "Testing/GHUnit_Tests/iSub-Unit-Tests-Info.plist"; sourceTree = "<group>"; };
-		53493F4815FC6D200059492E /* iSubTestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iSubTestController.h; path = Testing/KIF_Integration_Tests/iSubTestController.h; sourceTree = "<group>"; };
-		53493F4915FC6D200059492E /* iSubTestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iSubTestController.m; path = Testing/KIF_Integration_Tests/iSubTestController.m; sourceTree = "<group>"; };
-		53493F4A15FC6D200059492E /* KIFTestScenario+CacheTab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "KIFTestScenario+CacheTab.h"; path = "Testing/KIF_Integration_Tests/KIFTestScenario+CacheTab.h"; sourceTree = "<group>"; };
-		53493F4B15FC6D200059492E /* KIFTestScenario+CacheTab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "KIFTestScenario+CacheTab.m"; path = "Testing/KIF_Integration_Tests/KIFTestScenario+CacheTab.m"; sourceTree = "<group>"; };
-		53493F4C15FC6D210059492E /* KIFTestScenario+FoldersTab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "KIFTestScenario+FoldersTab.h"; path = "Testing/KIF_Integration_Tests/KIFTestScenario+FoldersTab.h"; sourceTree = "<group>"; };
-		53493F4D15FC6D210059492E /* KIFTestScenario+FoldersTab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "KIFTestScenario+FoldersTab.m"; path = "Testing/KIF_Integration_Tests/KIFTestScenario+FoldersTab.m"; sourceTree = "<group>"; };
-		53493F5115FC6D280059492E /* iSub-Integration-Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "iSub-Integration-Tests-Info.plist"; path = "Testing/KIF_Integration_Tests/iSub-Integration-Tests-Info.plist"; sourceTree = "<group>"; };
 		5349AD031613724D003603AF /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Images/Other/Default-568h@2x.png"; sourceTree = "<group>"; };
 		534E43B51155659A000B4134 /* AlbumUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AlbumUITableViewCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		534E43B61155659A000B4134 /* AlbumUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumUITableViewCell.m; sourceTree = "<group>"; };
@@ -1583,7 +1574,6 @@
 		53703BD21588390800B1FB33 /* PMSServerEditViewControllerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMSServerEditViewControllerViewController.h; sourceTree = "<group>"; };
 		53703BD31588390900B1FB33 /* PMSServerEditViewControllerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSServerEditViewControllerViewController.m; sourceTree = "<group>"; };
 		53733C6414F88D62001D8104 /* AsynchronousImageViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsynchronousImageViewDelegate.h; sourceTree = "<group>"; };
-		5377429915AA4DC700DD547D /* kif.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = kif.framework; path = Frameworks/kif.framework; sourceTree = "<group>"; };
 		5379DC481219E48800F426CD /* ChatUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatUITableViewCell.h; sourceTree = "<group>"; };
 		5379DC491219E48800F426CD /* ChatUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatUITableViewCell.m; sourceTree = "<group>"; };
 		5379DC4A1219E48800F426CD /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
@@ -2480,8 +2470,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				53159F89156F6F6E001B0268 /* GHUnit Tests */,
-				53159F77156F6DC6001B0268 /* KIF Integration Tests */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -2588,30 +2576,6 @@
 				537E9A5414F4CE41006CB0BC /* underPageBackgroundDark@2x.png */,
 			);
 			name = iPad;
-			sourceTree = "<group>";
-		};
-		53159F77156F6DC6001B0268 /* KIF Integration Tests */ = {
-			isa = PBXGroup;
-			children = (
-				5377429915AA4DC700DD547D /* kif.framework */,
-				53493F5115FC6D280059492E /* iSub-Integration-Tests-Info.plist */,
-				53493F4815FC6D200059492E /* iSubTestController.h */,
-				53493F4915FC6D200059492E /* iSubTestController.m */,
-				53493F4A15FC6D200059492E /* KIFTestScenario+CacheTab.h */,
-				53493F4B15FC6D200059492E /* KIFTestScenario+CacheTab.m */,
-				53493F4C15FC6D210059492E /* KIFTestScenario+FoldersTab.h */,
-				53493F4D15FC6D210059492E /* KIFTestScenario+FoldersTab.m */,
-			);
-			name = "KIF Integration Tests";
-			sourceTree = "<group>";
-		};
-		53159F89156F6F6E001B0268 /* GHUnit Tests */ = {
-			isa = PBXGroup;
-			children = (
-				532B227A156F762100C72D1B /* GHUnitIOS.framework */,
-				53493F4715FC6CE30059492E /* iSub-Unit-Tests-Info.plist */,
-			);
-			name = "GHUnit Tests";
 			sourceTree = "<group>";
 		};
 		53260B71127D012300B745B4 /* EGOTableViewPullRefresh */ = {
@@ -4126,7 +4090,6 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = "Ben Baron";
 				TargetAttributes = {
