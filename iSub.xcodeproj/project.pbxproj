@@ -1430,23 +1430,6 @@
 		533A2D80113C963300B3A376 /* controller-pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-pause.png"; path = "Images/Player Icons/controller-pause.png"; sourceTree = "<group>"; };
 		533A2D81113C963300B3A376 /* controller-play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-play.png"; path = "Images/Player Icons/controller-play.png"; sourceTree = "<group>"; };
 		533A2D82113C963300B3A376 /* controller-previous.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-previous.png"; path = "Images/Player Icons/controller-previous.png"; sourceTree = "<group>"; };
-		533C657A15ABB952003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/NewHomeViewController.xib; sourceTree = "<group>"; };
-		533C658115ABB975003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/NewHomeViewController-iPad.xib"; sourceTree = "<group>"; };
-		533C658815ABB9A2003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/QuickAlbumsViewController.xib; sourceTree = "<group>"; };
-		533C658F15ABB9A9003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/HomeAlbumViewController.xib; sourceTree = "<group>"; };
-		533C659615ABB9AD003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SearchSongsViewController.xib; sourceTree = "<group>"; };
-		533C659D15ABB9B0003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ShuffleFolderPickerViewController.xib; sourceTree = "<group>"; };
-		533C65A415ABB9B3003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SearchAllViewController.xib; sourceTree = "<group>"; };
-		533C65AB15ABB9BD003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/IntroViewController.xib; sourceTree = "<group>"; };
-		533C65B215ABB9C6003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ServerListViewController.xib; sourceTree = "<group>"; };
-		533C65B915ABB9C9003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ServerTypeViewController.xib; sourceTree = "<group>"; };
-		533C65C015ABB9CC003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SubsonicServerEditViewController.xib; sourceTree = "<group>"; };
-		533C65C715ABB9D0003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/UbuntuServerEditViewController.xib; sourceTree = "<group>"; };
-		533C65CC15ABB9D3003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PMSServerEditViewControllerViewController.xib; sourceTree = "<group>"; };
-		533C65D315ABB9D6003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SettingsTabViewController.xib; sourceTree = "<group>"; };
-		533C65DA15ABB9F0003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DebugViewController.xib; sourceTree = "<group>"; };
-		533C65E115ABB9F5003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/EqualizerViewController.xib; sourceTree = "<group>"; };
-		533C65E815ABBA09003EAF29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/AlbumViewController.xib; sourceTree = "<group>"; };
 		533F651C160533F4000098E1 /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Other/Defines.h; sourceTree = "<group>"; };
 		533F65201605429E000098E1 /* ISMSCustomUIObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSCustomUIObjects.h; sourceTree = "<group>"; };
 		53404FE011E9487C004AEC41 /* controller-next@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-next@2x.png"; path = "Images/Player Icons/controller-next@2x.png"; sourceTree = "<group>"; };
@@ -1616,6 +1599,23 @@
 		5388A42B1198AD840049BA9E /* unselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = unselected.png; path = Images/Other/unselected.png; sourceTree = "<group>"; };
 		538C01AE12C3DCC40061545B /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = back.png; path = Images/Other/back.png; sourceTree = "<group>"; };
 		538C01AF12C3DCC40061545B /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "back@2x.png"; path = "Images/Other/back@2x.png"; sourceTree = "<group>"; };
+		539148A62559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/DebugViewController.xib; sourceTree = "<group>"; };
+		539148A72559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/EqualizerViewController.xib; sourceTree = "<group>"; };
+		539148A82559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SettingsTabViewController.xib; sourceTree = "<group>"; };
+		539148A92559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ServerListViewController.xib; sourceTree = "<group>"; };
+		539148AA2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ServerTypeViewController.xib; sourceTree = "<group>"; };
+		539148AB2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SubsonicServerEditViewController.xib; sourceTree = "<group>"; };
+		539148AC2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/UbuntuServerEditViewController.xib; sourceTree = "<group>"; };
+		539148AD2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PMSServerEditViewControllerViewController.xib; sourceTree = "<group>"; };
+		539148AE2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/IntroViewController.xib; sourceTree = "<group>"; };
+		539148AF2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = "Base.lproj/NewHomeViewController-iPad.xib"; sourceTree = "<group>"; };
+		539148B02559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/NewHomeViewController.xib; sourceTree = "<group>"; };
+		539148B12559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/QuickAlbumsViewController.xib; sourceTree = "<group>"; };
+		539148B22559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/HomeAlbumViewController.xib; sourceTree = "<group>"; };
+		539148B32559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SearchSongsViewController.xib; sourceTree = "<group>"; };
+		539148B42559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ShuffleFolderPickerViewController.xib; sourceTree = "<group>"; };
+		539148B52559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SearchAllViewController.xib; sourceTree = "<group>"; };
+		539148B62559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AlbumViewController.xib; sourceTree = "<group>"; };
 		539796E21162B68800F41D8B /* AllAlbumsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllAlbumsViewController.h; sourceTree = "<group>"; };
 		539796E31162B68800F41D8B /* AllAlbumsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AllAlbumsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		539797F81162D3F100F41D8B /* AllAlbumsUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AllAlbumsUITableViewCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -4090,7 +4090,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 1210;
 				ORGANIZATIONNAME = "Ben Baron";
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
@@ -4105,14 +4105,11 @@
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iSub" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
 				en,
+				Base,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -5434,7 +5431,7 @@
 		533C657B15ABB952003EAF29 /* NewHomeViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C657A15ABB952003EAF29 /* en */,
+				539148B02559CBDF004AAC3F /* Base */,
 			);
 			name = NewHomeViewController.xib;
 			sourceTree = "<group>";
@@ -5442,7 +5439,7 @@
 		533C658215ABB975003EAF29 /* NewHomeViewController-iPad.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C658115ABB975003EAF29 /* en */,
+				539148AF2559CBDF004AAC3F /* Base */,
 			);
 			name = "NewHomeViewController-iPad.xib";
 			sourceTree = "<group>";
@@ -5450,7 +5447,7 @@
 		533C658915ABB9A2003EAF29 /* QuickAlbumsViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C658815ABB9A2003EAF29 /* en */,
+				539148B12559CBDF004AAC3F /* Base */,
 			);
 			name = QuickAlbumsViewController.xib;
 			sourceTree = "<group>";
@@ -5458,7 +5455,7 @@
 		533C659015ABB9A9003EAF29 /* HomeAlbumViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C658F15ABB9A9003EAF29 /* en */,
+				539148B22559CBE0004AAC3F /* Base */,
 			);
 			name = HomeAlbumViewController.xib;
 			sourceTree = "<group>";
@@ -5466,7 +5463,7 @@
 		533C659715ABB9AD003EAF29 /* SearchSongsViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C659615ABB9AD003EAF29 /* en */,
+				539148B32559CBE0004AAC3F /* Base */,
 			);
 			name = SearchSongsViewController.xib;
 			sourceTree = "<group>";
@@ -5474,7 +5471,7 @@
 		533C659E15ABB9B0003EAF29 /* ShuffleFolderPickerViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C659D15ABB9B0003EAF29 /* en */,
+				539148B42559CBE0004AAC3F /* Base */,
 			);
 			name = ShuffleFolderPickerViewController.xib;
 			sourceTree = "<group>";
@@ -5482,7 +5479,7 @@
 		533C65A515ABB9B3003EAF29 /* SearchAllViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C65A415ABB9B3003EAF29 /* en */,
+				539148B52559CBE0004AAC3F /* Base */,
 			);
 			name = SearchAllViewController.xib;
 			sourceTree = "<group>";
@@ -5490,7 +5487,7 @@
 		533C65AC15ABB9BD003EAF29 /* IntroViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C65AB15ABB9BD003EAF29 /* en */,
+				539148AE2559CBDF004AAC3F /* Base */,
 			);
 			name = IntroViewController.xib;
 			sourceTree = "<group>";
@@ -5498,7 +5495,7 @@
 		533C65B315ABB9C6003EAF29 /* ServerListViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C65B215ABB9C6003EAF29 /* en */,
+				539148A92559CBDF004AAC3F /* Base */,
 			);
 			name = ServerListViewController.xib;
 			sourceTree = "<group>";
@@ -5506,7 +5503,7 @@
 		533C65BA15ABB9C9003EAF29 /* ServerTypeViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C65B915ABB9C9003EAF29 /* en */,
+				539148AA2559CBDF004AAC3F /* Base */,
 			);
 			name = ServerTypeViewController.xib;
 			sourceTree = "<group>";
@@ -5514,7 +5511,7 @@
 		533C65C115ABB9CC003EAF29 /* SubsonicServerEditViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C65C015ABB9CC003EAF29 /* en */,
+				539148AB2559CBDF004AAC3F /* Base */,
 			);
 			name = SubsonicServerEditViewController.xib;
 			sourceTree = "<group>";
@@ -5522,7 +5519,7 @@
 		533C65C815ABB9D0003EAF29 /* UbuntuServerEditViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C65C715ABB9D0003EAF29 /* en */,
+				539148AC2559CBDF004AAC3F /* Base */,
 			);
 			name = UbuntuServerEditViewController.xib;
 			sourceTree = "<group>";
@@ -5530,7 +5527,7 @@
 		533C65CD15ABB9D3003EAF29 /* PMSServerEditViewControllerViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C65CC15ABB9D3003EAF29 /* en */,
+				539148AD2559CBDF004AAC3F /* Base */,
 			);
 			name = PMSServerEditViewControllerViewController.xib;
 			sourceTree = "<group>";
@@ -5538,7 +5535,7 @@
 		533C65D415ABB9D6003EAF29 /* SettingsTabViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C65D315ABB9D6003EAF29 /* en */,
+				539148A82559CBDF004AAC3F /* Base */,
 			);
 			name = SettingsTabViewController.xib;
 			sourceTree = "<group>";
@@ -5546,7 +5543,7 @@
 		533C65DB15ABB9F0003EAF29 /* DebugViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C65DA15ABB9F0003EAF29 /* en */,
+				539148A62559CBDF004AAC3F /* Base */,
 			);
 			name = DebugViewController.xib;
 			sourceTree = "<group>";
@@ -5554,7 +5551,7 @@
 		533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C65E115ABB9F5003EAF29 /* en */,
+				539148A72559CBDF004AAC3F /* Base */,
 			);
 			name = EqualizerViewController.xib;
 			sourceTree = "<group>";
@@ -5562,7 +5559,7 @@
 		533C65E915ABBA09003EAF29 /* AlbumViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				533C65E815ABBA09003EAF29 /* en */,
+				539148B62559CBE0004AAC3F /* Base */,
 			);
 			name = AlbumViewController.xib;
 			sourceTree = "<group>";
@@ -5652,12 +5649,21 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -5690,7 +5696,7 @@
 					"\"$(SRCROOT)/Frameworks/libSub/Frameworks\"/**",
 					/usr/include/libxml2,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Classes\"",
 					"\"$(SRCROOT)\"",
@@ -5870,12 +5876,21 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -5908,7 +5923,7 @@
 					"\"$(SRCROOT)/Frameworks/libSub/Frameworks\"/**",
 					/usr/include/libxml2,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Classes\"",
 					"\"$(SRCROOT)\"",
@@ -5931,12 +5946,21 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -5967,7 +5991,7 @@
 					"\"$(SRCROOT)/Frameworks/libSub/Frameworks\"/**",
 					/usr/include/libxml2,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Classes\"",
 					"\"$(SRCROOT)\"",
