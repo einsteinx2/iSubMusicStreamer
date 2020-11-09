@@ -26,7 +26,6 @@
 #import "NSObject+UserInfo.h"
 #import "NSOrderedSet+Safe.h"
 #import "NSMutableOrderedSet+Safe.h"
-#import "NSOrderedSet+FirstObject.h"
 #import "NSOrderedSet+FilterBlock.h"
 
 #ifdef IOS

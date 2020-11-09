@@ -500,13 +500,7 @@ LOG_LEVEL_ISUB_DEFAULT
 #endif
 	
 	if (isSessionStarted)
-	{
-		[Flurry setSecureTransportEnabled:YES];
-		
-		// These set to no as per Flurry support instructions to prevent crashes
-		[Flurry setSessionReportsOnPauseEnabled:NO];
-		[Flurry setSessionReportsOnCloseEnabled:NO];
-		
+	{		
 		// Send the firmware version
 		UIDevice *device = [UIDevice currentDevice];
 		NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:[device completeVersionString], @"FirmwareVersion", 
