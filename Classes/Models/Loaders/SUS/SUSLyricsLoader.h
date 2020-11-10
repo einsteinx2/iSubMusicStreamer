@@ -6,9 +6,9 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-#import "ISMSLoaderNew.h"
+#import "SUSLoader.h"
 
-@interface SUSLyricsLoader : ISMSLoaderNew
+@interface SUSLyricsLoader : SUSLoader
 
 @property (copy) NSString *artist;
 @property (copy) NSString *title;

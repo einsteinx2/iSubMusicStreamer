@@ -1,5 +1,5 @@
 //
-//  ISMSLoaderNew.h
+//  SUSLoader.h
 //  iSub
 //
 //  Created by Benjamin Baron on 11/10/20.
@@ -7,17 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ISMSLoaderDelegateNew.h"
+#import "SUSLoaderDelegate.h"
 
-@class ISMSLoaderNew;
+@class SUSLoader;
 
 // Loader callback block, make sure to always check success bool, not error, as error can be nil when success is NO
-typedef void (^LoaderCallbackNew)(BOOL success, NSError *error, ISMSLoaderNew *loader);
+typedef void (^SUSLoaderCallback)(BOOL success, NSError *error, SUSLoader *loader);
 
-@interface ISMSLoaderNew : NSObject
+@interface SUSLoader : NSObject
 
-@property (weak) NSObject<ISMSLoaderDelegateNew> *delegate;
-@property (copy) LoaderCallbackNew callbackBlock;
+@property (weak) NSObject<SUSLoaderDelegate> *delegate;
+@property (copy) SUSLoaderCallback callbackBlock;
 
 @property (readonly) ISMSLoaderType type;
 
@@ -26,7 +26,7 @@ typedef void (^LoaderCallbackNew)(BOOL success, NSError *error, ISMSLoaderNew *l
 + (NSURLSession *)sharedSession;
 
 - (void)setup; // Override this
-- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegateNew> *)theDelegate;
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate;
 - (instancetype)initWithCallbackBlock:(LoaderCallback)theBlock;
 
 - (void)startLoad;

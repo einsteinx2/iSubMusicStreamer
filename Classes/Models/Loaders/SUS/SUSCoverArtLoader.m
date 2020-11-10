@@ -25,7 +25,7 @@ static void initialize_navigationBarImages() {
 
 #pragma mark - Lifecycle
 
-- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegateNew>*)delegate coverArtId:(NSString *)artId isLarge:(BOOL)large {
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate>*)delegate coverArtId:(NSString *)artId isLarge:(BOOL)large {
 	if ((self = [super initWithDelegate:delegate])) {
 		_isLarge = large;
 		_coverArtId = [artId copy];

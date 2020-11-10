@@ -81,8 +81,8 @@
 		531D3A04255AB5F6000CB0DF /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 531D3A00255AB5F6000CB0DF /* MainWindow-iPad.xib */; };
 		531D3A16255ABA20000CB0DF /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A15255ABA20000CB0DF /* DDSocialDialog.m */; };
 		531D3A17255ABA20000CB0DF /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A15255ABA20000CB0DF /* DDSocialDialog.m */; };
-		531D3A1F255ABAAC000CB0DF /* ISMSLoaderNew.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A1E255ABAAC000CB0DF /* ISMSLoaderNew.m */; };
-		531D3A20255ABAAC000CB0DF /* ISMSLoaderNew.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A1E255ABAAC000CB0DF /* ISMSLoaderNew.m */; };
+		531D3A1F255ABAAC000CB0DF /* SUSLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A1E255ABAAC000CB0DF /* SUSLoader.m */; };
+		531D3A20255ABAAC000CB0DF /* SUSLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A1E255ABAAC000CB0DF /* SUSLoader.m */; };
 		531D3A25255ABC9C000CB0DF /* ISMSURLSessionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A24255ABC9C000CB0DF /* ISMSURLSessionDelegate.m */; };
 		531D3A26255ABC9C000CB0DF /* ISMSURLSessionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A24255ABC9C000CB0DF /* ISMSURLSessionDelegate.m */; };
 		531F166E126FA2E600F524BD /* HomeAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 531F166D126FA2E600F524BD /* HomeAlbumViewController.m */; };
@@ -1361,8 +1361,8 @@
 		531D3A00255AB5F6000CB0DF /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		531D3A14255ABA20000CB0DF /* DDSocialDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDSocialDialog.h; sourceTree = "<group>"; };
 		531D3A15255ABA20000CB0DF /* DDSocialDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDSocialDialog.m; sourceTree = "<group>"; };
-		531D3A1D255ABAAC000CB0DF /* ISMSLoaderNew.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSLoaderNew.h; sourceTree = "<group>"; };
-		531D3A1E255ABAAC000CB0DF /* ISMSLoaderNew.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ISMSLoaderNew.m; sourceTree = "<group>"; };
+		531D3A1D255ABAAC000CB0DF /* SUSLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SUSLoader.h; sourceTree = "<group>"; };
+		531D3A1E255ABAAC000CB0DF /* SUSLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SUSLoader.m; sourceTree = "<group>"; };
 		531D3A23255ABC9C000CB0DF /* ISMSURLSessionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSURLSessionDelegate.h; sourceTree = "<group>"; };
 		531D3A24255ABC9C000CB0DF /* ISMSURLSessionDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ISMSURLSessionDelegate.m; sourceTree = "<group>"; };
 		531F166C126FA2E600F524BD /* HomeAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeAlbumViewController.h; sourceTree = "<group>"; };
@@ -1527,7 +1527,7 @@
 		536F9F3B1197B0B9002E526A /* CurrentPlaylistSongUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentPlaylistSongUITableViewCell.h; sourceTree = "<group>"; };
 		536F9F3C1197B0B9002E526A /* CurrentPlaylistSongUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentPlaylistSongUITableViewCell.m; sourceTree = "<group>"; };
 		53733C6414F88D62001D8104 /* AsynchronousImageViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsynchronousImageViewDelegate.h; sourceTree = "<group>"; };
-		53746678255AD19300DB9193 /* ISMSLoaderDelegateNew.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSLoaderDelegateNew.h; sourceTree = "<group>"; };
+		53746678255AD19300DB9193 /* SUSLoaderDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SUSLoaderDelegate.h; sourceTree = "<group>"; };
 		5379DC481219E48800F426CD /* ChatUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatUITableViewCell.h; sourceTree = "<group>"; };
 		5379DC491219E48800F426CD /* ChatUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatUITableViewCell.m; sourceTree = "<group>"; };
 		5379DC4A1219E48800F426CD /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
@@ -3080,9 +3080,6 @@
 			isa = PBXGroup;
 			children = (
 				53FE36561EA961720058B925 /* ISMSLoaders.h */,
-				531D3A1D255ABAAC000CB0DF /* ISMSLoaderNew.h */,
-				531D3A1E255ABAAC000CB0DF /* ISMSLoaderNew.m */,
-				53746678255AD19300DB9193 /* ISMSLoaderDelegateNew.h */,
 				531D3A23255ABC9C000CB0DF /* ISMSURLSessionDelegate.h */,
 				531D3A24255ABC9C000CB0DF /* ISMSURLSessionDelegate.m */,
 				53FE36521EA961720058B925 /* ISMSLoader.h */,
@@ -3112,6 +3109,9 @@
 		531D3A0F255AB7C6000CB0DF /* SUS */ = {
 			isa = PBXGroup;
 			children = (
+				531D3A1D255ABAAC000CB0DF /* SUSLoader.h */,
+				531D3A1E255ABAAC000CB0DF /* SUSLoader.m */,
+				53746678255AD19300DB9193 /* SUSLoaderDelegate.h */,
 				53FE36AF1EA961720058B925 /* SUSChatLoader.h */,
 				53FE36B01EA961720058B925 /* SUSChatLoader.m */,
 				53FE36B31EA961720058B925 /* SUSDropdownFolderLoader.h */,
@@ -4819,7 +4819,7 @@
 				53FE37191EA961720058B925 /* SUSCoverArtLoader.m in Sources */,
 				53FE36FB1EA961720058B925 /* BassWrapper.m in Sources */,
 				53FE39401EA961ED0058B925 /* DAVResponse.m in Sources */,
-				531D3A1F255ABAAC000CB0DF /* ISMSLoaderNew.m in Sources */,
+				531D3A1F255ABAAC000CB0DF /* SUSLoader.m in Sources */,
 				53FE35521EA961540058B925 /* UIImage+Reflection.m in Sources */,
 				53FE37C71EA961720058B925 /* SUSServerPlaylistsDAO.m in Sources */,
 				53FE37B51EA961720058B925 /* SUSQueueAllLoader.m in Sources */,
@@ -5142,7 +5142,7 @@
 				53FE371B1EA961720058B925 /* SUSCoverArtLoader.m in Sources */,
 				53FE36FD1EA961720058B925 /* BassWrapper.m in Sources */,
 				53FE39421EA961ED0058B925 /* DAVResponse.m in Sources */,
-				531D3A20255ABAAC000CB0DF /* ISMSLoaderNew.m in Sources */,
+				531D3A20255ABAAC000CB0DF /* SUSLoader.m in Sources */,
 				53FE35541EA961540058B925 /* UIImage+Reflection.m in Sources */,
 				53FE37C91EA961720058B925 /* SUSServerPlaylistsDAO.m in Sources */,
 				53FE37B71EA961720058B925 /* SUSQueueAllLoader.m in Sources */,

@@ -40,7 +40,7 @@
     return self;
 }
 
-- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegateNew> *)theDelegate {
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate {
     if ((self = [super init])) {
 		self.delegate = theDelegate;
 		[self setup];
@@ -48,7 +48,7 @@
     return self;
 }
 
-- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegateNew> *)theDelegate andId:(NSString *)folderId andArtist:(ISMSArtist *)anArtist {
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate andId:(NSString *)folderId andArtist:(ISMSArtist *)anArtist {
 	if ((self = [super init])) {
 		self.delegate = theDelegate;
         self.myId = folderId;

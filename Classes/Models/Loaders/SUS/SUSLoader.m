@@ -1,21 +1,21 @@
 //
-//  ISMSLoaderNew.m
+//  SUSLoader.m
 //  iSub
 //
 //  Created by Benjamin Baron on 11/10/20.
 //  Copyright © 2020 Ben Baron. All rights reserved.
 //
 
-#import "ISMSLoaderNew.h"
+#import "SUSLoader.h"
 #import "ISMSURLSessionDelegate.h"
 
-@interface ISMSLoaderNew()
+@interface SUSLoader()
 @property (strong) NSData *receivedData;
-@property (nonatomic, strong) ISMSLoaderNew *selfRef;
+@property (nonatomic, strong) SUSLoader *selfRef;
 @property (nonatomic, strong) NSURLSessionDataTask *dataTask;
 @end
 
-@implementation ISMSLoaderNew
+@implementation SUSLoader
 
 static NSURLSession *_sharedSession = nil;
 static ISMSURLSessionDelegate *_sharedSessionDelegate = nil;
@@ -33,7 +33,7 @@ static dispatch_once_t _sharedSessionDispatchOnce = 0;
     // Optionally override in subclass
 }
 
-- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegateNew> *)theDelegate {
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate {
     if (self = [super init]) {
         [self setup];
         _delegate = theDelegate;

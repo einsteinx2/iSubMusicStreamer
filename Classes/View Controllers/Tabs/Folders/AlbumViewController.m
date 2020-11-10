@@ -420,7 +420,7 @@
 
 #pragma mark - ISMSLoader delegate
 
-- (void)loadingFailed:(ISMSLoaderNew *)theLoader withError:(NSError *)error
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
 {
     // Inform the user that the connection failed.
 	NSString *message = [NSString stringWithFormat:@"There was an error loading the album.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
@@ -435,7 +435,7 @@
 		[self.tableView removeBottomShadow];
 }
 
-- (void)loadingFinished:(ISMSLoaderNew *)theLoader
+- (void)loadingFinished:(SUSLoader *)theLoader
 {
     [viewObjectsS hideLoadingScreen];
 	

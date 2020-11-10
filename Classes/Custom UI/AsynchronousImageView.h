@@ -8,7 +8,7 @@
 
 @protocol AsynchronousImageViewDelegate;
 @class SUSCoverArtDAO;
-@interface AsynchronousImageView : UIImageView <ISMSLoaderDelegateNew>
+@interface AsynchronousImageView : UIImageView <SUSLoaderDelegate>
 
 @property (weak) IBOutlet NSObject<AsynchronousImageViewDelegate> *delegate;
 @property (copy) NSString *coverArtId;

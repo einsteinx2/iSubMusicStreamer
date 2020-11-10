@@ -7,18 +7,18 @@
 //
 
 #import "ISMSLoaderManager.h"
-#import "ISMSLoaderDelegateNew.h"
+#import "SUSLoaderDelegate.h"
 
 @class FMDatabase, ISMSArtist, ISMSAlbum, ISMSSong, SUSSubFolderLoader;
 
-@interface SUSSubFolderDAO : NSObject <ISMSLoaderDelegateNew, ISMSLoaderManager>
+@interface SUSSubFolderDAO : NSObject <SUSLoaderDelegate, ISMSLoaderManager>
 
 @property NSUInteger albumStartRow;
 @property NSUInteger songStartRow;
 @property NSUInteger albumsCount;
 @property NSUInteger songsCount;
 
-@property (weak) NSObject<ISMSLoaderDelegateNew> *delegate;
+@property (weak) NSObject<SUSLoaderDelegate> *delegate;
 @property (strong) SUSSubFolderLoader *loader;
 
 @property (copy) NSString *myId;
@@ -30,8 +30,8 @@
 
 - (NSArray *)sectionInfo;
 
-- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegateNew> *)theDelegate;
-- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegateNew> *)theDelegate andId:(NSString *)folderId andArtist:(ISMSArtist *)anArtist;
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate;
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate andId:(NSString *)folderId andArtist:(ISMSArtist *)anArtist;
 
 - (ISMSAlbum *)albumForTableViewRow:(NSUInteger)row;
 - (ISMSSong *)songForTableViewRow:(NSUInteger)row;

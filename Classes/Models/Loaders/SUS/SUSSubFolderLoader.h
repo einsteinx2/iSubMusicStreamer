@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 Ben Baron. All rights reserved.
 //
 
-#import "ISMSLoaderNew.h"
+#import "SUSLoader.h"
 
 @class ISMSArtist;
-@interface SUSSubFolderLoader : ISMSLoaderNew
+@interface SUSSubFolderLoader : SUSLoader
 
 @property (nonatomic) NSUInteger albumsCount;
 @property (nonatomic) NSUInteger songsCount;
