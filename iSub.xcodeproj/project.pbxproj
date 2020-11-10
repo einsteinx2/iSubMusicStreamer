@@ -75,6 +75,12 @@
 		5314B4EF126FD20300CDB511 /* home-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5314B4ED126FD20300CDB511 /* home-tabbaricon@2x.png */; };
 		5314C7B411D4157D000CA726 /* delete-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 5314C7B311D4157D000CA726 /* delete-button.png */; };
 		53191DF01167CFDC00E1C08A /* current-server.png in Resources */ = {isa = PBXBuildFile; fileRef = 53191DEF1167CFDC00E1C08A /* current-server.png */; };
+		531D3A01255AB5F6000CB0DF /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 531D39FF255AB5F6000CB0DF /* MainWindow.xib */; };
+		531D3A02255AB5F6000CB0DF /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 531D39FF255AB5F6000CB0DF /* MainWindow.xib */; };
+		531D3A03255AB5F6000CB0DF /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 531D3A00255AB5F6000CB0DF /* MainWindow-iPad.xib */; };
+		531D3A04255AB5F6000CB0DF /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 531D3A00255AB5F6000CB0DF /* MainWindow-iPad.xib */; };
+		531D3A16255ABA20000CB0DF /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A15255ABA20000CB0DF /* DDSocialDialog.m */; };
+		531D3A17255ABA20000CB0DF /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A15255ABA20000CB0DF /* DDSocialDialog.m */; };
 		531F166E126FA2E600F524BD /* HomeAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 531F166D126FA2E600F524BD /* HomeAlbumViewController.m */; };
 		5324C6C613345D75004E6C79 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5324C6C513345D75004E6C79 /* OBSlider.m */; };
 		5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
@@ -194,10 +200,6 @@
 		53493F3215FC6BD90059492E /* KeychainAccessGroups.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53493F2C15FC6BD90059492E /* KeychainAccessGroups.plist */; };
 		53493F3815FC6C3A0059492E /* BassEffectDefaultPresets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53493F3715FC6C3A0059492E /* BassEffectDefaultPresets.plist */; };
 		53493F3A15FC6C3B0059492E /* BassEffectDefaultPresets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53493F3715FC6C3A0059492E /* BassEffectDefaultPresets.plist */; };
-		53493F4115FC6CAE0059492E /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53493F3F15FC6CAE0059492E /* MainWindow-iPad.xib */; };
-		53493F4315FC6CAE0059492E /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53493F3F15FC6CAE0059492E /* MainWindow-iPad.xib */; };
-		53493F4415FC6CAE0059492E /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53493F4015FC6CAE0059492E /* MainWindow.xib */; };
-		53493F4615FC6CAE0059492E /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53493F4015FC6CAE0059492E /* MainWindow.xib */; };
 		5349AD041613724D003603AF /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5349AD031613724D003603AF /* Default-568h@2x.png */; };
 		5349AD061613724D003603AF /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5349AD031613724D003603AF /* Default-568h@2x.png */; };
 		5349DF87161E408A0044A781 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D44F8415AA621A00CDD3B8 /* Accelerate.framework */; };
@@ -1302,8 +1304,6 @@
 		53FE39941EA964F70058B925 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE39901EA964F70058B925 /* HockeySDK.framework */; };
 		53FE39951EA964F70058B925 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 53FE39911EA964F70058B925 /* HockeySDKResources.bundle */; };
 		53FE39971EA964F70058B925 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 53FE39911EA964F70058B925 /* HockeySDKResources.bundle */; };
-		53FE39A11EA968390058B925 /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A01EA968390058B925 /* DDSocialDialog.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
-		53FE39A31EA968390058B925 /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A01EA968390058B925 /* DDSocialDialog.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
 		53FE39AA1EA970220058B925 /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A51EA970220058B925 /* DDContextFilterLogFormatter.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
 		53FE39AB1EA970220058B925 /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A51EA970220058B925 /* DDContextFilterLogFormatter.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
 		53FE39AC1EA970220058B925 /* DDDispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A71EA970220058B925 /* DDDispatchQueueLogFormatter.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
@@ -1393,12 +1393,16 @@
 		5314B4ED126FD20300CDB511 /* home-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/home-tabbaricon@2x.png"; sourceTree = "<group>"; };
 		5314C7B311D4157D000CA726 /* delete-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "delete-button.png"; path = "Images/Other/delete-button.png"; sourceTree = "<group>"; };
 		53191DEF1167CFDC00E1C08A /* current-server.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "current-server.png"; path = "Images/Other/current-server.png"; sourceTree = "<group>"; };
+		531D39FF255AB5F6000CB0DF /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		531D3A00255AB5F6000CB0DF /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		531D3A14255ABA20000CB0DF /* DDSocialDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDSocialDialog.h; sourceTree = "<group>"; };
+		531D3A15255ABA20000CB0DF /* DDSocialDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDSocialDialog.m; sourceTree = "<group>"; };
 		531F166C126FA2E600F524BD /* HomeAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeAlbumViewController.h; sourceTree = "<group>"; };
 		531F166D126FA2E600F524BD /* HomeAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeAlbumViewController.m; sourceTree = "<group>"; };
-		5324C6C413345D75004E6C79 /* OBSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OBSlider.h; path = Classes/OBSlider.h; sourceTree = "<group>"; };
-		5324C6C513345D75004E6C79 /* OBSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OBSlider.m; path = Classes/OBSlider.m; sourceTree = "<group>"; };
-		532590FF14EE22C100DF4BDB /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = Classes/MBProgressHUD.h; sourceTree = "<group>"; };
-		5325910014EE22C400DF4BDB /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = Classes/MBProgressHUD.m; sourceTree = "<group>"; };
+		5324C6C413345D75004E6C79 /* OBSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBSlider.h; sourceTree = "<group>"; };
+		5324C6C513345D75004E6C79 /* OBSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBSlider.m; sourceTree = "<group>"; };
+		532590FF14EE22C100DF4BDB /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		5325910014EE22C400DF4BDB /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		53260B77127D012300B745B4 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EGORefreshTableHeaderView.h; path = Classes/View/EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		53260B78127D012300B745B4 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EGORefreshTableHeaderView.m; path = Classes/View/EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
 		53260B7A127D012300B745B4 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
@@ -1468,8 +1472,6 @@
 		53493F2C15FC6BD90059492E /* KeychainAccessGroups.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = KeychainAccessGroups.plist; path = Other/KeychainAccessGroups.plist; sourceTree = "<group>"; };
 		53493F3315FC6BF10059492E /* Imports.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Imports.h; path = Other/Imports.h; sourceTree = "<group>"; };
 		53493F3715FC6C3A0059492E /* BassEffectDefaultPresets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = BassEffectDefaultPresets.plist; path = Other/BassEffectDefaultPresets.plist; sourceTree = "<group>"; };
-		53493F3F15FC6CAE0059492E /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "Other/MainWindow-iPad.xib"; sourceTree = SOURCE_ROOT; };
-		53493F4015FC6CAE0059492E /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindow.xib; path = Other/MainWindow.xib; sourceTree = SOURCE_ROOT; };
 		5349AD031613724D003603AF /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Images/Other/Default-568h@2x.png"; sourceTree = "<group>"; };
 		534E43B51155659A000B4134 /* AlbumUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AlbumUITableViewCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		534E43B61155659A000B4134 /* AlbumUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumUITableViewCell.m; sourceTree = "<group>"; };
@@ -2129,7 +2131,6 @@
 		53FE36801EA961720058B925 /* JukeboxSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JukeboxSingleton.m; sourceTree = "<group>"; };
 		53FE36811EA961720058B925 /* JukeboxXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JukeboxXMLParser.h; sourceTree = "<group>"; };
 		53FE36821EA961720058B925 /* JukeboxXMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JukeboxXMLParser.m; sourceTree = "<group>"; };
-		53FE36831EA961720058B925 /* libSub-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "libSub-Prefix.pch"; sourceTree = "<group>"; };
 		53FE36841EA961720058B925 /* LibSub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibSub.h; sourceTree = "<group>"; };
 		53FE36851EA961720058B925 /* LibSub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibSub.m; sourceTree = "<group>"; };
 		53FE36861EA961720058B925 /* libSubDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libSubDefines.h; sourceTree = "<group>"; };
@@ -2356,8 +2357,6 @@
 		53FE397C1EA963180058B925 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
 		53FE39901EA964F70058B925 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
 		53FE39911EA964F70058B925 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
-		53FE399F1EA968390058B925 /* DDSocialDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDSocialDialog.h; path = Classes/DDSocialDialog.h; sourceTree = SOURCE_ROOT; };
-		53FE39A01EA968390058B925 /* DDSocialDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDSocialDialog.m; path = Classes/DDSocialDialog.m; sourceTree = SOURCE_ROOT; };
 		53FE39A41EA970220058B925 /* DDContextFilterLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDContextFilterLogFormatter.h; sourceTree = "<group>"; };
 		53FE39A51EA970220058B925 /* DDContextFilterLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDContextFilterLogFormatter.m; sourceTree = "<group>"; };
 		53FE39A61EA970220058B925 /* DDDispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDDispatchQueueLogFormatter.h; sourceTree = "<group>"; };
@@ -2463,17 +2462,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		080E96DDFE201D6D7F000001 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				536F9D7D119783D4002E526A /* Main */,
-				539797F01162CE4B00F41D8B /* View Controllers */,
-				533F651F16054282000098E1 /* Custom UI Objects */,
-				536C97A416619845005A73C6 /* 3rd Party UI Components */,
-			);
-			path = Classes;
-			sourceTree = "<group>";
-		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -2486,7 +2474,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				080E96DDFE201D6D7F000001 /* Classes */,
+				531D39DD255AB1D4000CB0DF /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -2544,9 +2532,9 @@
 				53FE38071EA961A10058B925 /* SBJson */,
 				53FE38011EA961970058B925 /* RaptureXML */,
 				53FE37EB1EA961780058B925 /* Flurry */,
-				53FE36231EA961710058B925 /* libSub */,
 				53FE35FA1EA961670058B925 /* libBASS */,
 				53FE33CE1EA961540058B925 /* EX2Kit */,
+				531D3A0C255AB725000CB0DF /* SQLite */,
 				5367C6D61EA92D3000B1C242 /* libSystem.tbd */,
 				5367C6D41EA92D2400B1C242 /* libz.tbd */,
 				5367C6D21EA92D1A00B1C242 /* libxml2.tbd */,
@@ -2571,7 +2559,55 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		530AB2C512713F4B002981DB /* iPad */ = {
+		531D39DD255AB1D4000CB0DF /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				531D39F1255AB37E000CB0DF /* Main */,
+				531D39F9255AB53C000CB0DF /* Audio Engine */,
+				531D39F8255AB50E000CB0DF /* Models */,
+				531D39DE255AB1EA000CB0DF /* View Controllers */,
+				531D39F2255AB391000CB0DF /* Custom UI */,
+				531D39F3255AB3B0000CB0DF /* 3rd Party UI Components */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		531D39DE255AB1EA000CB0DF /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				531D39E8255AB2C1000CB0DF /* Tabs */,
+				531D39E5255AB298000CB0DF /* Intro */,
+				531D39E4255AB284000CB0DF /* Settings */,
+				531D39E3255AB26B000CB0DF /* Player */,
+				531D39E2255AB252000CB0DF /* Table Cells */,
+				531D39DF255AB20D000CB0DF /* New Player */,
+				531D39E1255AB23F000CB0DF /* iPad */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		531D39DF255AB20D000CB0DF /* New Player */ = {
+			isa = PBXGroup;
+			children = (
+				531D39E0255AB216000CB0DF /* Scrubber */,
+				D0EA476519DE41E30083CE05 /* ISMSPlayerViewController.h */,
+				D0EA476619DE41E30083CE05 /* ISMSPlayerViewController.m */,
+				D0EA476019DE41510083CE05 /* ISMSPlayerView.h */,
+				D0EA476119DE41510083CE05 /* ISMSPlayerView.m */,
+			);
+			path = "New Player";
+			sourceTree = "<group>";
+		};
+		531D39E0255AB216000CB0DF /* Scrubber */ = {
+			isa = PBXGroup;
+			children = (
+				D0F7918919DE4DFC008032A3 /* ISMSScrubberView.h */,
+				D0F7918A19DE4DFC008032A3 /* ISMSScrubberView.m */,
+			);
+			path = Scrubber;
+			sourceTree = "<group>";
+		};
+		531D39E1255AB23F000CB0DF /* iPad */ = {
 			isa = PBXGroup;
 			children = (
 				5304FC1B14F2F0D100A2AD42 /* iPadRootViewController.h */,
@@ -2593,64 +2629,10 @@
 				537E9A5314F4CE3F006CB0BC /* underPageBackgroundDark.png */,
 				537E9A5414F4CE41006CB0BC /* underPageBackgroundDark@2x.png */,
 			);
-			name = iPad;
+			path = iPad;
 			sourceTree = "<group>";
 		};
-		53260B71127D012300B745B4 /* EGOTableViewPullRefresh */ = {
-			isa = PBXGroup;
-			children = (
-				53260B77127D012300B745B4 /* EGORefreshTableHeaderView.h */,
-				53260B78127D012300B745B4 /* EGORefreshTableHeaderView.m */,
-				53260B79127D012300B745B4 /* Resources */,
-			);
-			name = EGOTableViewPullRefresh;
-			path = Classes/EGOTableViewPullRefresh;
-			sourceTree = "<group>";
-		};
-		53260B79127D012300B745B4 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				53260B7A127D012300B745B4 /* blackArrow.png */,
-				53260B7B127D012300B745B4 /* blackArrow@2x.png */,
-				53260B7C127D012300B745B4 /* blueArrow.png */,
-				53260B7D127D012300B745B4 /* blueArrow@2x.png */,
-				53260B7E127D012300B745B4 /* grayArrow.png */,
-				53260B7F127D012300B745B4 /* grayArrow@2x.png */,
-				53260B80127D012300B745B4 /* whiteArrow.png */,
-				53260B81127D012300B745B4 /* whiteArrow@2x.png */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		532E6FD311AB31CF000A0E3B /* Settings view */ = {
-			isa = PBXGroup;
-			children = (
-				5398F26A11DA61DA00007870 /* SettingsTabViewController.h */,
-				5398F26B11DA61DA00007870 /* SettingsTabViewController.m */,
-				533C65D415ABB9D6003EAF29 /* SettingsTabViewController.xib */,
-				53614AC7116432DA0088ABC0 /* ServerListViewController.h */,
-				53614AC8116432DA0088ABC0 /* ServerListViewController.m */,
-				533C65B315ABB9C6003EAF29 /* ServerListViewController.xib */,
-				535CB22F12E0027800389DA1 /* ServerTypeViewController.h */,
-				535CB23012E0027800389DA1 /* ServerTypeViewController.m */,
-				533C65BA15ABB9C9003EAF29 /* ServerTypeViewController.xib */,
-				53CED25C113E2FF100B09699 /* SubsonicServerEditViewController.h */,
-				53CED25D113E2FF100B09699 /* SubsonicServerEditViewController.m */,
-				533C65C115ABB9CC003EAF29 /* SubsonicServerEditViewController.xib */,
-				535CB29F12E2348A00389DA1 /* UbuntuServerEditViewController.h */,
-				535CB2A012E2348A00389DA1 /* UbuntuServerEditViewController.m */,
-				533C65C815ABB9D0003EAF29 /* UbuntuServerEditViewController.xib */,
-				53703BD21588390800B1FB33 /* PMSServerEditViewControllerViewController.h */,
-				53703BD31588390900B1FB33 /* PMSServerEditViewControllerViewController.m */,
-				533C65CD15ABB9D3003EAF29 /* PMSServerEditViewControllerViewController.xib */,
-				5398F27511DA627500007870 /* HelpTabViewController.h */,
-				5398F27611DA627500007870 /* HelpTabViewController.m */,
-				5398F27711DA627500007870 /* HelpTabViewController.xib */,
-			);
-			name = "Settings view";
-			sourceTree = "<group>";
-		};
-		533A207B12887EA300539BAE /* Table Cells */ = {
+		531D39E2255AB252000CB0DF /* Table Cells */ = {
 			isa = PBXGroup;
 			children = (
 				53500EBF18064EED00D0A490 /* CustomUITableViewController.h */,
@@ -2708,134 +2690,87 @@
 				534E446F1155B106000B4134 /* SongUITableViewCell.h */,
 				534E44701155B106000B4134 /* SongUITableViewCell.m */,
 			);
-			name = "Table Cells";
+			path = "Table Cells";
 			sourceTree = "<group>";
 		};
-		533F651F16054282000098E1 /* Custom UI Objects */ = {
+		531D39E3255AB26B000CB0DF /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				533F65201605429E000098E1 /* ISMSCustomUIObjects.h */,
-				532D9B41131AE19700FD8CA7 /* CustomUIAlertView.h */,
-				532D9B42131AE19700FD8CA7 /* CustomUIAlertView.m */,
-				53BB7EC8121B8D8F00BEE7E8 /* CustomUITextView.h */,
-				53BB7EC9121B8D8F00BEE7E8 /* CustomUITextView.m */,
-				53733C6414F88D62001D8104 /* AsynchronousImageViewDelegate.h */,
-				533A2D05113C61C900B3A376 /* AsynchronousImageView.h */,
-				533A2D06113C61CA00B3A376 /* AsynchronousImageView.m */,
-				53B5298811AD9B79005776B5 /* LoadingScreen.h */,
-				53B5298911AD9B79005776B5 /* LoadingScreen.m */,
-				536B5D5D11C8183D00CC1D69 /* LoadingScreen.xib */,
-				537E6C1C181208A200127E29 /* CustomUITabBarController.h */,
-				537E6C1D181208A200127E29 /* CustomUITabBarController.m */,
-				53BCC519181387B300442E86 /* CustomUINavigationController.h */,
-				53BCC51A181387B300442E86 /* CustomUINavigationController.m */,
+				53F675AD113B048600822059 /* iPhoneStreamingPlayerViewController.h */,
+				53F675AE113B048600822059 /* iPhoneStreamingPlayerViewController.m */,
+				5398F2B511DA8B1000007870 /* iPhoneStreamingPlayerViewController.xib */,
+				53D8ACB0116C47E600E5C9CB /* PageControlViewController.h */,
+				53D8ACB1116C47E600E5C9CB /* PageControlViewController.m */,
+				53D8ACB2116C47E600E5C9CB /* PageControlViewController.xib */,
+				530CE842119B9D9100728ED5 /* SongInfoPlaylistCustomUITableView.h */,
+				530CE843119B9D9100728ED5 /* SongInfoPlaylistCustomUITableView.m */,
+				53F4A226117011B900BB8411 /* CurrentPlaylistBackgroundViewController.h */,
+				53F4A227117011B900BB8411 /* CurrentPlaylistBackgroundViewController.m */,
+				53F4A228117011B900BB8411 /* CurrentPlaylistBackgroundViewController.xib */,
+				53F4A07A116FF7EE00BB8411 /* CurrentPlaylistViewController.h */,
+				53F4A07B116FF7EE00BB8411 /* CurrentPlaylistViewController.m */,
+				53F4A07C116FF7EE00BB8411 /* CurrentPlaylistViewController.xib */,
+				534050F811E9966C004AEC41 /* LyricsViewController.h */,
+				534050F911E9966C004AEC41 /* LyricsViewController.m */,
+				53F4A071116FF48400BB8411 /* DebugViewController.h */,
+				53F4A072116FF48400BB8411 /* DebugViewController.m */,
+				533C65DB15ABB9F0003EAF29 /* DebugViewController.xib */,
+				5353B837134D4D6C005C589E /* PagingScrollView.h */,
+				5353B838134D4D6C005C589E /* PagingScrollView.m */,
+				5365857E1478920B00FE57A5 /* EqualizerViewController.h */,
+				5365857F1478920B00FE57A5 /* EqualizerViewController.m */,
+				533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */,
+				53BBDB3B1491DD6600032114 /* OpenGLCommon.h */,
+				53BBDB3C1491DE5600032114 /* ConstantsAndMacros.h */,
+				5365859114789AD800FE57A5 /* EqualizerView.h */,
+				5365859214789AD900FE57A5 /* EqualizerView.m */,
+				53A2BE22147DF09800E44822 /* EqualizerPointView.h */,
+				53A2BE23147DF09800E44822 /* EqualizerPointView.m */,
+				5306236B14D3295300D320A8 /* EqualizerPathView.h */,
+				5306236C14D3295300D320A8 /* EqualizerPathView.m */,
 			);
-			name = "Custom UI Objects";
+			path = Player;
 			sourceTree = "<group>";
 		};
-		535696501810DA8700997C7B /* FXBlurView */ = {
+		531D39E4255AB284000CB0DF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				535696511810DA8700997C7B /* FXBlurView.h */,
-				535696521810DA8700997C7B /* FXBlurView.m */,
+				5398F26A11DA61DA00007870 /* SettingsTabViewController.h */,
+				5398F26B11DA61DA00007870 /* SettingsTabViewController.m */,
+				533C65D415ABB9D6003EAF29 /* SettingsTabViewController.xib */,
+				53614AC7116432DA0088ABC0 /* ServerListViewController.h */,
+				53614AC8116432DA0088ABC0 /* ServerListViewController.m */,
+				533C65B315ABB9C6003EAF29 /* ServerListViewController.xib */,
+				535CB22F12E0027800389DA1 /* ServerTypeViewController.h */,
+				535CB23012E0027800389DA1 /* ServerTypeViewController.m */,
+				533C65BA15ABB9C9003EAF29 /* ServerTypeViewController.xib */,
+				53CED25C113E2FF100B09699 /* SubsonicServerEditViewController.h */,
+				53CED25D113E2FF100B09699 /* SubsonicServerEditViewController.m */,
+				533C65C115ABB9CC003EAF29 /* SubsonicServerEditViewController.xib */,
+				535CB29F12E2348A00389DA1 /* UbuntuServerEditViewController.h */,
+				535CB2A012E2348A00389DA1 /* UbuntuServerEditViewController.m */,
+				533C65C815ABB9D0003EAF29 /* UbuntuServerEditViewController.xib */,
+				53703BD21588390800B1FB33 /* PMSServerEditViewControllerViewController.h */,
+				53703BD31588390900B1FB33 /* PMSServerEditViewControllerViewController.m */,
+				533C65CD15ABB9D3003EAF29 /* PMSServerEditViewControllerViewController.xib */,
+				5398F27511DA627500007870 /* HelpTabViewController.h */,
+				5398F27611DA627500007870 /* HelpTabViewController.m */,
+				5398F27711DA627500007870 /* HelpTabViewController.xib */,
 			);
-			name = FXBlurView;
-			path = Classes/FXBlurView;
+			path = Settings;
 			sourceTree = "<group>";
 		};
-		536C97A416619845005A73C6 /* 3rd Party UI Components */ = {
+		531D39E5255AB298000CB0DF /* Intro */ = {
 			isa = PBXGroup;
 			children = (
-				53260B71127D012300B745B4 /* EGOTableViewPullRefresh */,
-				535696501810DA8700997C7B /* FXBlurView */,
-				53FE399F1EA968390058B925 /* DDSocialDialog.h */,
-				53FE39A01EA968390058B925 /* DDSocialDialog.m */,
-				5324C6C413345D75004E6C79 /* OBSlider.h */,
-				5324C6C513345D75004E6C79 /* OBSlider.m */,
-				532590FF14EE22C100DF4BDB /* MBProgressHUD.h */,
-				5325910014EE22C400DF4BDB /* MBProgressHUD.m */,
-				D0EA476A19DE449A0083CE05 /* UIView+AutoLayout.h */,
-				D0EA476B19DE449A0083CE05 /* UIView+AutoLayout.m */,
+				53C6052B12F1F01E003C6895 /* IntroViewController.h */,
+				53C6052C12F1F01E003C6895 /* IntroViewController.m */,
+				533C65AC15ABB9BD003EAF29 /* IntroViewController.xib */,
 			);
-			name = "3rd Party UI Components";
-			path = ..;
+			path = Intro;
 			sourceTree = "<group>";
 		};
-		536F9D7D119783D4002E526A /* Main */ = {
-			isa = PBXGroup;
-			children = (
-				53493F3F15FC6CAE0059492E /* MainWindow-iPad.xib */,
-				53493F4015FC6CAE0059492E /* MainWindow.xib */,
-				1D3623240D0F684500981E51 /* iSubAppDelegate.h */,
-				1D3623250D0F684500981E51 /* iSubAppDelegate.m */,
-				532862D911C573AD00B40FF0 /* UAApplication.h */,
-				532862DA11C573AD00B40FF0 /* UAApplication.m */,
-				536C994C16619F5D005A73C6 /* ViewObjectsSingleton.h */,
-				536C994B16619F5D005A73C6 /* ViewObjectsSingleton.m */,
-			);
-			name = Main;
-			sourceTree = "<group>";
-		};
-		5373A71A1164F6FE000E3FD8 /* Folders Tab */ = {
-			isa = PBXGroup;
-			children = (
-				28C286DF0D94DF7D0034E888 /* FoldersViewController.h */,
-				28C286E00D94DF7D0034E888 /* FoldersViewController.m */,
-				28F335F01007B36200424DE2 /* FoldersViewController.xib */,
-				53E82A951406D47F0051D44B /* FolderDropdownDelegate.h */,
-				53ADBBBE13352DB40098FAE6 /* FolderDropdownControl.h */,
-				53ADBBBF13352DB40098FAE6 /* FolderDropdownControl.m */,
-				53F2D3EB113A338500107D63 /* AlbumViewController.h */,
-				53F2D3EC113A338500107D63 /* AlbumViewController.m */,
-				533C65E915ABBA09003EAF29 /* AlbumViewController.xib */,
-				53C22CCD128EE81C00FFBA67 /* ModalAlbumArtViewController.h */,
-				53C22CCE128EE81C00FFBA67 /* ModalAlbumArtViewController.m */,
-				532B552614D641C500B8AA67 /* ModalAlbumArtViewController.xib */,
-			);
-			name = "Folders Tab";
-			sourceTree = "<group>";
-		};
-		5373A71B1164F70E000E3FD8 /* All Albums Tab */ = {
-			isa = PBXGroup;
-			children = (
-				539796E21162B68800F41D8B /* AllAlbumsViewController.h */,
-				539796E31162B68800F41D8B /* AllAlbumsViewController.m */,
-				539797FD1162D4D200F41D8B /* AllAlbumsViewController.xib */,
-			);
-			name = "All Albums Tab";
-			sourceTree = "<group>";
-		};
-		5373A71C1164F729000E3FD8 /* All Songs Tab */ = {
-			isa = PBXGroup;
-			children = (
-				530388A7116571920043292D /* AllSongsViewController.h */,
-				530388A8116571920043292D /* AllSongsViewController.m */,
-				53614BD7116467420088ABC0 /* AllSongsViewController.xib */,
-			);
-			name = "All Songs Tab";
-			sourceTree = "<group>";
-		};
-		5379DC431219E36C00F426CD /* Chat Tab */ = {
-			isa = PBXGroup;
-			children = (
-				5379DC4A1219E48800F426CD /* ChatViewController.h */,
-				5379DC4B1219E48800F426CD /* ChatViewController.m */,
-				5379DC4C1219E48800F426CD /* ChatViewController.xib */,
-			);
-			name = "Chat Tab";
-			sourceTree = "<group>";
-		};
-		5388A3A2119898EC0049BA9E /* Bookmarks Tab */ = {
-			isa = PBXGroup;
-			children = (
-				5388A3B1119899260049BA9E /* BookmarksViewController.h */,
-				5388A3B2119899260049BA9E /* BookmarksViewController.m */,
-				5388A3B3119899260049BA9E /* BookmarksViewController.xib */,
-			);
-			name = "Bookmarks Tab";
-			sourceTree = "<group>";
-		};
-		538A28B41264D25B00DBFC96 /* Home Tab */ = {
+		531D39E6255AB2A5000CB0DF /* Home */ = {
 			isa = PBXGroup;
 			children = (
 				53BA49401285BD7A0010B380 /* NewHomeViewController.h */,
@@ -2860,30 +2795,506 @@
 				535B727C134D26E2003E0E1C /* SearchAllViewController.m */,
 				533C65A515ABB9B3003EAF29 /* SearchAllViewController.xib */,
 			);
-			name = "Home Tab";
+			path = Home;
 			sourceTree = "<group>";
 		};
-		539797F01162CE4B00F41D8B /* View Controllers */ = {
+		531D39E7255AB2B6000CB0DF /* Folders */ = {
 			isa = PBXGroup;
 			children = (
-				D0EA475919DE412C0083CE05 /* New player */,
-				530AB2C512713F4B002981DB /* iPad */,
-				533A207B12887EA300539BAE /* Table Cells */,
-				53F4A070116FF44400BB8411 /* Player */,
-				532E6FD311AB31CF000A0E3B /* Settings view */,
-				53C6052A12F1F006003C6895 /* Intro Screen */,
-				538A28B41264D25B00DBFC96 /* Home Tab */,
-				5373A71A1164F6FE000E3FD8 /* Folders Tab */,
-				5373A71B1164F70E000E3FD8 /* All Albums Tab */,
-				5373A71C1164F729000E3FD8 /* All Songs Tab */,
-				53ABE35F1165C80900197877 /* Playlists Tab */,
-				53ABE35E1165C7F900197877 /* Playing Tab */,
-				5388A3A2119898EC0049BA9E /* Bookmarks Tab */,
-				53B52BA111ADE085005776B5 /* Genre Tab */,
-				53C0D5FC11B586B600267C27 /* Cache Tab */,
-				5379DC431219E36C00F426CD /* Chat Tab */,
+				28C286DF0D94DF7D0034E888 /* FoldersViewController.h */,
+				28C286E00D94DF7D0034E888 /* FoldersViewController.m */,
+				28F335F01007B36200424DE2 /* FoldersViewController.xib */,
+				53E82A951406D47F0051D44B /* FolderDropdownDelegate.h */,
+				53ADBBBE13352DB40098FAE6 /* FolderDropdownControl.h */,
+				53ADBBBF13352DB40098FAE6 /* FolderDropdownControl.m */,
+				53F2D3EB113A338500107D63 /* AlbumViewController.h */,
+				53F2D3EC113A338500107D63 /* AlbumViewController.m */,
+				533C65E915ABBA09003EAF29 /* AlbumViewController.xib */,
+				53C22CCD128EE81C00FFBA67 /* ModalAlbumArtViewController.h */,
+				53C22CCE128EE81C00FFBA67 /* ModalAlbumArtViewController.m */,
+				532B552614D641C500B8AA67 /* ModalAlbumArtViewController.xib */,
 			);
-			name = "View Controllers";
+			path = Folders;
+			sourceTree = "<group>";
+		};
+		531D39E8255AB2C1000CB0DF /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				531D39E6255AB2A5000CB0DF /* Home */,
+				531D39E7255AB2B6000CB0DF /* Folders */,
+				531D39EB255AB300000CB0DF /* Playlists */,
+				531D39EF255AB344000CB0DF /* Cache */,
+				531D39E9255AB2E0000CB0DF /* Albums */,
+				531D39EA255AB2ED000CB0DF /* Songs */,
+				531D39EE255AB331000CB0DF /* Genre */,
+				531D39EC255AB314000CB0DF /* Playing */,
+				531D39ED255AB323000CB0DF /* Bookmarks */,
+				531D39F0255AB365000CB0DF /* Chat */,
+			);
+			path = Tabs;
+			sourceTree = "<group>";
+		};
+		531D39E9255AB2E0000CB0DF /* Albums */ = {
+			isa = PBXGroup;
+			children = (
+				539796E21162B68800F41D8B /* AllAlbumsViewController.h */,
+				539796E31162B68800F41D8B /* AllAlbumsViewController.m */,
+				539797FD1162D4D200F41D8B /* AllAlbumsViewController.xib */,
+			);
+			path = Albums;
+			sourceTree = "<group>";
+		};
+		531D39EA255AB2ED000CB0DF /* Songs */ = {
+			isa = PBXGroup;
+			children = (
+				530388A8116571920043292D /* AllSongsViewController.m */,
+				53614BD7116467420088ABC0 /* AllSongsViewController.xib */,
+				530388A7116571920043292D /* AllSongsViewController.h */,
+			);
+			path = Songs;
+			sourceTree = "<group>";
+		};
+		531D39EB255AB300000CB0DF /* Playlists */ = {
+			isa = PBXGroup;
+			children = (
+				53ABE54011665B6B00197877 /* PlaylistsViewController.h */,
+				53ABE54111665B6B00197877 /* PlaylistsViewController.m */,
+				53ABE54211665B6B00197877 /* PlaylistsViewController.xib */,
+				53ABE54511665B8500197877 /* PlaylistSongsViewController.h */,
+				536AB80F1353DCF700DABD83 /* PlaylistSongsViewController.m */,
+				536AB8101353DCF700DABD83 /* PlaylistSongsViewController.xib */,
+			);
+			path = Playlists;
+			sourceTree = "<group>";
+		};
+		531D39EC255AB314000CB0DF /* Playing */ = {
+			isa = PBXGroup;
+			children = (
+				53ABE3601165C83900197877 /* PlayingViewController.h */,
+				53ABE3611165C83900197877 /* PlayingViewController.m */,
+				53ABE3621165C83900197877 /* PlayingViewController.xib */,
+			);
+			path = Playing;
+			sourceTree = "<group>";
+		};
+		531D39ED255AB323000CB0DF /* Bookmarks */ = {
+			isa = PBXGroup;
+			children = (
+				5388A3B1119899260049BA9E /* BookmarksViewController.h */,
+				5388A3B2119899260049BA9E /* BookmarksViewController.m */,
+				5388A3B3119899260049BA9E /* BookmarksViewController.xib */,
+			);
+			path = Bookmarks;
+			sourceTree = "<group>";
+		};
+		531D39EE255AB331000CB0DF /* Genre */ = {
+			isa = PBXGroup;
+			children = (
+				53B52BA211ADE0A6005776B5 /* GenresViewController.h */,
+				53B52BA311ADE0A6005776B5 /* GenresViewController.m */,
+				53B52BA411ADE0A6005776B5 /* GenresViewController.xib */,
+				53523D9111CD61F7006AEA48 /* GenresArtistViewController.h */,
+				53523D9211CD61F7006AEA48 /* GenresArtistViewController.m */,
+				53523D9311CD61F7006AEA48 /* GenresArtistViewController.xib */,
+				53523D8C11CD5889006AEA48 /* GenresAlbumViewController.h */,
+				53523D8D11CD5889006AEA48 /* GenresAlbumViewController.m */,
+				53523D8E11CD5889006AEA48 /* GenresAlbumViewController.xib */,
+			);
+			path = Genre;
+			sourceTree = "<group>";
+		};
+		531D39EF255AB344000CB0DF /* Cache */ = {
+			isa = PBXGroup;
+			children = (
+				530B416F11B607A200743C09 /* CacheViewController.h */,
+				530B417011B607A200743C09 /* CacheViewController.m */,
+				530B417111B607A200743C09 /* CacheViewController.xib */,
+				538229F311C98091003F1E23 /* CacheAlbumViewController.h */,
+				538229F411C98091003F1E23 /* CacheAlbumViewController.m */,
+				538229F511C98091003F1E23 /* CacheAlbumViewController.xib */,
+			);
+			path = Cache;
+			sourceTree = "<group>";
+		};
+		531D39F0255AB365000CB0DF /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				5379DC4A1219E48800F426CD /* ChatViewController.h */,
+				5379DC4B1219E48800F426CD /* ChatViewController.m */,
+				5379DC4C1219E48800F426CD /* ChatViewController.xib */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		531D39F1255AB37E000CB0DF /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				531D3A00255AB5F6000CB0DF /* MainWindow-iPad.xib */,
+				531D39FF255AB5F6000CB0DF /* MainWindow.xib */,
+				1D3623240D0F684500981E51 /* iSubAppDelegate.h */,
+				1D3623250D0F684500981E51 /* iSubAppDelegate.m */,
+				532862D911C573AD00B40FF0 /* UAApplication.h */,
+				532862DA11C573AD00B40FF0 /* UAApplication.m */,
+				536C994C16619F5D005A73C6 /* ViewObjectsSingleton.h */,
+				536C994B16619F5D005A73C6 /* ViewObjectsSingleton.m */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		531D39F2255AB391000CB0DF /* Custom UI */ = {
+			isa = PBXGroup;
+			children = (
+				533F65201605429E000098E1 /* ISMSCustomUIObjects.h */,
+				532D9B41131AE19700FD8CA7 /* CustomUIAlertView.h */,
+				532D9B42131AE19700FD8CA7 /* CustomUIAlertView.m */,
+				53BB7EC8121B8D8F00BEE7E8 /* CustomUITextView.h */,
+				53BB7EC9121B8D8F00BEE7E8 /* CustomUITextView.m */,
+				53733C6414F88D62001D8104 /* AsynchronousImageViewDelegate.h */,
+				533A2D05113C61C900B3A376 /* AsynchronousImageView.h */,
+				533A2D06113C61CA00B3A376 /* AsynchronousImageView.m */,
+				53B5298811AD9B79005776B5 /* LoadingScreen.h */,
+				53B5298911AD9B79005776B5 /* LoadingScreen.m */,
+				536B5D5D11C8183D00CC1D69 /* LoadingScreen.xib */,
+				537E6C1C181208A200127E29 /* CustomUITabBarController.h */,
+				537E6C1D181208A200127E29 /* CustomUITabBarController.m */,
+				53BCC519181387B300442E86 /* CustomUINavigationController.h */,
+				53BCC51A181387B300442E86 /* CustomUINavigationController.m */,
+			);
+			path = "Custom UI";
+			sourceTree = "<group>";
+		};
+		531D39F3255AB3B0000CB0DF /* 3rd Party UI Components */ = {
+			isa = PBXGroup;
+			children = (
+				53260B71127D012300B745B4 /* EGOTableViewPullRefresh */,
+				535696501810DA8700997C7B /* FXBlurView */,
+				531D3A14255ABA20000CB0DF /* DDSocialDialog.h */,
+				531D3A15255ABA20000CB0DF /* DDSocialDialog.m */,
+				5324C6C413345D75004E6C79 /* OBSlider.h */,
+				5324C6C513345D75004E6C79 /* OBSlider.m */,
+				532590FF14EE22C100DF4BDB /* MBProgressHUD.h */,
+				5325910014EE22C400DF4BDB /* MBProgressHUD.m */,
+				D0EA476A19DE449A0083CE05 /* UIView+AutoLayout.h */,
+				D0EA476B19DE449A0083CE05 /* UIView+AutoLayout.m */,
+			);
+			path = "3rd Party UI Components";
+			sourceTree = "<group>";
+		};
+		531D39F8255AB50E000CB0DF /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				531D3A0D255AB755000CB0DF /* Stream Handlers */,
+				531D3A0B255AB642000CB0DF /* DAOs */,
+				531D39FE255AB5B8000CB0DF /* Loaders */,
+				531D39FB255AB575000CB0DF /* API Models */,
+				531D39FA255AB554000CB0DF /* Singletons */,
+				53FE36431EA961720058B925 /* ISMSCacheQueueManager.h */,
+				53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */,
+				53FE364B1EA961720058B925 /* ISMSDataAccessObjects.h */,
+				53FE364C1EA961720058B925 /* ISMSDataModelObjects.h */,
+				53FE36581EA961720058B925 /* ISMSNotificationNames.h */,
+				53FE36591EA961720058B925 /* ISMSNotificationNames.m */,
+				53FE365A1EA961720058B925 /* ISMSOldDataModelDecoders.h */,
+				53FE365B1EA961720058B925 /* ISMSOldDataModelDecoders.m */,
+				53FE36751EA961720058B925 /* ISMSUpdateChecker.h */,
+				53FE36761EA961720058B925 /* ISMSUpdateChecker.m */,
+				53FE367D1EA961720058B925 /* JukeboxConnectionDelegate.h */,
+				53FE367E1EA961720058B925 /* JukeboxConnectionDelegate.m */,
+				53FE36811EA961720058B925 /* JukeboxXMLParser.h */,
+				53FE36821EA961720058B925 /* JukeboxXMLParser.m */,
+				53FE36841EA961720058B925 /* LibSub.h */,
+				53FE36851EA961720058B925 /* LibSub.m */,
+				53FE36861EA961720058B925 /* libSubDefines.h */,
+				53FE36871EA961720058B925 /* libSubImports.h */,
+				53FE36901EA961720058B925 /* NSString+cleanCredentialsForLog.h */,
+				53FE36911EA961720058B925 /* NSString+cleanCredentialsForLog.m */,
+				53FE36A11EA961720058B925 /* SearchXMLParser.h */,
+				53FE36A21EA961720058B925 /* SearchXMLParser.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		531D39F9255AB53C000CB0DF /* Audio Engine */ = {
+			isa = PBXGroup;
+			children = (
+				53FE36241EA961710058B925 /* AudioEngine.h */,
+				53FE36251EA961710058B925 /* AudioEngine.m */,
+				53FE367B1EA961720058B925 /* iSubBassGaplessPlayerDelegate.h */,
+				53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */,
+				53FE36261EA961710058B925 /* BassEffectDAO.h */,
+				53FE36271EA961710058B925 /* BassEffectDAO.m */,
+				53FE36281EA961710058B925 /* BassEffectValue.h */,
+				53FE36291EA961710058B925 /* BassEffectValue.m */,
+				53FE362A1EA961710058B925 /* BassEqualizer.h */,
+				53FE362B1EA961710058B925 /* BassEqualizer.m */,
+				53FE362C1EA961710058B925 /* BassGaplessPlayer.h */,
+				53FE362D1EA961710058B925 /* BassGaplessPlayer.m */,
+				53FE362E1EA961710058B925 /* BassGaplessPlayerDelegate.h */,
+				53FE362F1EA961710058B925 /* BassParamEqValue.h */,
+				53FE36301EA961710058B925 /* BassParamEqValue.m */,
+				53FE36311EA961710058B925 /* BassStream.h */,
+				53FE36321EA961710058B925 /* BassStream.m */,
+				53FE36331EA961710058B925 /* BassVisualizer.h */,
+				53FE36341EA961710058B925 /* BassVisualizer.m */,
+				53FE36351EA961710058B925 /* BassWrapper.h */,
+				53FE36361EA961710058B925 /* BassWrapper.m */,
+			);
+			path = "Audio Engine";
+			sourceTree = "<group>";
+		};
+		531D39FA255AB554000CB0DF /* Singletons */ = {
+			isa = PBXGroup;
+			children = (
+				53FE367F1EA961720058B925 /* JukeboxSingleton.h */,
+				53FE36801EA961720058B925 /* JukeboxSingleton.m */,
+				53FE36921EA961720058B925 /* PlaylistSingleton.h */,
+				53FE36931EA961720058B925 /* PlaylistSingleton.m */,
+				53FE369F1EA961720058B925 /* SavedSettings.h */,
+				53FE36A01EA961720058B925 /* SavedSettings.m */,
+				53FE36A31EA961720058B925 /* SocialSingleton.h */,
+				53FE36A41EA961720058B925 /* SocialSingleton.m */,
+				53FE36371EA961710058B925 /* CacheSingleton.h */,
+				53FE36381EA961710058B925 /* CacheSingleton.m */,
+				53FE36391EA961710058B925 /* DatabaseSingleton.h */,
+				53FE363A1EA961710058B925 /* DatabaseSingleton.m */,
+				53FE36881EA961720058B925 /* MusicSingleton.h */,
+				53FE36891EA961720058B925 /* MusicSingleton.m */,
+			);
+			path = Singletons;
+			sourceTree = "<group>";
+		};
+		531D39FB255AB575000CB0DF /* API Models */ = {
+			isa = PBXGroup;
+			children = (
+				53FE368A1EA961720058B925 /* NSError+ISMSError.h */,
+				53FE368B1EA961720058B925 /* NSError+ISMSError.m */,
+				53FE36791EA961720058B925 /* ISMSVideo.h */,
+				53FE367A1EA961720058B925 /* ISMSVideo.m */,
+				53FE36B51EA961720058B925 /* SUSErrorDomain.h */,
+				53FE36C91EA961720058B925 /* SUSServerPlaylist.h */,
+				53FE36CA1EA961720058B925 /* SUSServerPlaylist.m */,
+				53FE364F1EA961720058B925 /* ISMSErrorDomain.h */,
+				53FE36471EA961720058B925 /* ISMSChatMessage.h */,
+				53FE36481EA961720058B925 /* ISMSChatMessage.m */,
+				53FE36571EA961720058B925 /* ISMSMediaItem.h */,
+				53FE36411EA961720058B925 /* ISMSArtist.h */,
+				53FE36421EA961720058B925 /* ISMSArtist.m */,
+				53FE363F1EA961720058B925 /* ISMSAlbum.h */,
+				53FE36401EA961720058B925 /* ISMSAlbum.m */,
+				53FE36501EA961720058B925 /* ISMSIndex.h */,
+				53FE36511EA961720058B925 /* ISMSIndex.m */,
+				53FE36641EA961720058B925 /* ISMSServer.h */,
+				53FE36651EA961720058B925 /* ISMSServer.m */,
+				53FE366A1EA961720058B925 /* ISMSSong.h */,
+				53FE366B1EA961720058B925 /* ISMSSong.m */,
+			);
+			path = "API Models";
+			sourceTree = "<group>";
+		};
+		531D39FE255AB5B8000CB0DF /* Loaders */ = {
+			isa = PBXGroup;
+			children = (
+				531D3A0E255AB7BB000CB0DF /* ISMS */,
+				531D3A0F255AB7C6000CB0DF /* SUS */,
+				531D3A10255AB7D4000CB0DF /* PMS */,
+				531D3A11255AB7DC000CB0DF /* WB */,
+			);
+			path = Loaders;
+			sourceTree = "<group>";
+		};
+		531D3A0B255AB642000CB0DF /* DAOs */ = {
+			isa = PBXGroup;
+			children = (
+				53FE36B71EA961720058B925 /* SUSLyricsDAO.h */,
+				53FE36B81EA961720058B925 /* SUSLyricsDAO.m */,
+				53FE36681EA961720058B925 /* ISMSSong+DAO.h */,
+				53FE36691EA961720058B925 /* ISMSSong+DAO.m */,
+				53FE36A71EA961720058B925 /* SUSAllAlbumsDAO.h */,
+				53FE36A81EA961720058B925 /* SUSAllAlbumsDAO.m */,
+				53FE36A91EA961720058B925 /* SUSAllSongsDAO.h */,
+				53FE36AA1EA961720058B925 /* SUSAllSongsDAO.m */,
+				53FE36AD1EA961720058B925 /* SUSChatDAO.h */,
+				53FE36AE1EA961720058B925 /* SUSChatDAO.m */,
+				53FE36B11EA961720058B925 /* SUSCoverArtDAO.h */,
+				53FE36B21EA961720058B925 /* SUSCoverArtDAO.m */,
+				53FE36BB1EA961720058B925 /* SUSNowPlayingDAO.h */,
+				53FE36BC1EA961720058B925 /* SUSNowPlayingDAO.m */,
+				53FE36C31EA961720058B925 /* SUSRootFoldersDAO.h */,
+				53FE36C41EA961720058B925 /* SUSRootFoldersDAO.m */,
+				53FE36CB1EA961720058B925 /* SUSServerPlaylistsDAO.h */,
+				53FE36CC1EA961720058B925 /* SUSServerPlaylistsDAO.m */,
+				53FE36D31EA961720058B925 /* SUSSubFolderDAO.h */,
+				53FE36D41EA961720058B925 /* SUSSubFolderDAO.m */,
+			);
+			path = DAOs;
+			sourceTree = "<group>";
+		};
+		531D3A0C255AB725000CB0DF /* SQLite */ = {
+			isa = PBXGroup;
+			children = (
+				53FE36A61EA961720058B925 /* sqlite3.h */,
+				53FE36A51EA961720058B925 /* sqlite3.c */,
+			);
+			path = SQLite;
+			sourceTree = "<group>";
+		};
+		531D3A0D255AB755000CB0DF /* Stream Handlers */ = {
+			isa = PBXGroup;
+			children = (
+				53FE366E1EA961720058B925 /* ISMSStreamHandler.h */,
+				53FE366F1EA961720058B925 /* ISMSStreamHandler.m */,
+				53FE36701EA961720058B925 /* ISMSStreamHandlerDelegate.h */,
+				53FE36711EA961720058B925 /* ISMSStreamManager.h */,
+				53FE36721EA961720058B925 /* ISMSStreamManager.m */,
+				53FE36451EA961720058B925 /* ISMSCFNetworkStreamHandler.h */,
+				53FE36461EA961720058B925 /* ISMSCFNetworkStreamHandler.m */,
+				53FE36771EA961720058B925 /* ISMSURLConnectionStreamHandler.h */,
+				53FE36781EA961720058B925 /* ISMSURLConnectionStreamHandler.m */,
+				53FE363C1EA961710058B925 /* HLSProxyConnection.m */,
+				53FE363B1EA961710058B925 /* HLSProxyConnection.h */,
+				53FE363D1EA961710058B925 /* HLSProxyResponse.h */,
+				53FE363E1EA961720058B925 /* HLSProxyResponse.m */,
+			);
+			path = "Stream Handlers";
+			sourceTree = "<group>";
+		};
+		531D3A0E255AB7BB000CB0DF /* ISMS */ = {
+			isa = PBXGroup;
+			children = (
+				53FE36561EA961720058B925 /* ISMSLoaders.h */,
+				53FE36521EA961720058B925 /* ISMSLoader.h */,
+				53FE36531EA961720058B925 /* ISMSLoader.m */,
+				53FE36541EA961720058B925 /* ISMSLoaderDelegate.h */,
+				53FE36551EA961720058B925 /* ISMSLoaderManager.h */,
+				53FE368C1EA961720058B925 /* NSMutableURLRequest+PMS.h */,
+				53FE368D1EA961720058B925 /* NSMutableURLRequest+PMS.m */,
+				53FE368E1EA961720058B925 /* NSMutableURLRequest+SUS.h */,
+				53FE368F1EA961720058B925 /* NSMutableURLRequest+SUS.m */,
+				53FE36491EA961720058B925 /* ISMSCoverArtLoader.h */,
+				53FE364A1EA961720058B925 /* ISMSCoverArtLoader.m */,
+				53FE365C1EA961720058B925 /* ISMSQueueAllLoader.h */,
+				53FE365D1EA961720058B925 /* ISMSQueueAllLoader.m */,
+				53FE365E1EA961720058B925 /* ISMSQuickAlbumsLoader.h */,
+				53FE365F1EA961720058B925 /* ISMSQuickAlbumsLoader.m */,
+				53FE36601EA961720058B925 /* ISMSRootFoldersLoader.h */,
+				53FE36611EA961720058B925 /* ISMSRootFoldersLoader.m */,
+				53FE36621EA961720058B925 /* ISMSScrobbleLoader.h */,
+				53FE36631EA961720058B925 /* ISMSScrobbleLoader.m */,
+				53FE36661EA961720058B925 /* ISMSServerShuffleLoader.h */,
+				53FE36671EA961720058B925 /* ISMSServerShuffleLoader.m */,
+				53FE366C1EA961720058B925 /* ISMSStatusLoader.h */,
+				53FE366D1EA961720058B925 /* ISMSStatusLoader.m */,
+				53FE36731EA961720058B925 /* ISMSSubFolderLoader.h */,
+				53FE36741EA961720058B925 /* ISMSSubFolderLoader.m */,
+				53FE364D1EA961720058B925 /* ISMSDropdownFolderLoader.h */,
+				53FE364E1EA961720058B925 /* ISMSDropdownFolderLoader.m */,
+			);
+			path = ISMS;
+			sourceTree = "<group>";
+		};
+		531D3A0F255AB7C6000CB0DF /* SUS */ = {
+			isa = PBXGroup;
+			children = (
+				53FE36AF1EA961720058B925 /* SUSChatLoader.h */,
+				53FE36B01EA961720058B925 /* SUSChatLoader.m */,
+				53FE36B31EA961720058B925 /* SUSDropdownFolderLoader.h */,
+				53FE36B41EA961720058B925 /* SUSDropdownFolderLoader.m */,
+				53FE36AB1EA961720058B925 /* SUSAllSongsLoader.h */,
+				53FE36AC1EA961720058B925 /* SUSAllSongsLoader.m */,
+				53FE36B61EA961720058B925 /* SUSLoaders.h */,
+				53FE36B91EA961720058B925 /* SUSLyricsLoader.h */,
+				53FE36BA1EA961720058B925 /* SUSLyricsLoader.m */,
+				53FE36D51EA961720058B925 /* SUSSubFolderLoader.h */,
+				53FE36D61EA961720058B925 /* SUSSubFolderLoader.m */,
+				53FE36CD1EA961720058B925 /* SUSServerPlaylistsLoader.h */,
+				53FE36CE1EA961720058B925 /* SUSServerPlaylistsLoader.m */,
+				53FE36CF1EA961720058B925 /* SUSServerShuffleLoader.h */,
+				53FE36D01EA961720058B925 /* SUSServerShuffleLoader.m */,
+				53FE36D11EA961720058B925 /* SUSStatusLoader.h */,
+				53FE36D21EA961720058B925 /* SUSStatusLoader.m */,
+				53FE36BD1EA961720058B925 /* SUSNowPlayingLoader.h */,
+				53FE36BE1EA961720058B925 /* SUSNowPlayingLoader.m */,
+				53FE36BF1EA961720058B925 /* SUSQueueAllLoader.h */,
+				53FE36C01EA961720058B925 /* SUSQueueAllLoader.m */,
+				53FE36C11EA961720058B925 /* SUSQuickAlbumsLoader.h */,
+				53FE36C21EA961720058B925 /* SUSQuickAlbumsLoader.m */,
+				53FE36C51EA961720058B925 /* SUSRootFoldersLoader.h */,
+				53FE36C61EA961720058B925 /* SUSRootFoldersLoader.m */,
+				53FE36C71EA961720058B925 /* SUSScrobbleLoader.h */,
+				53FE36C81EA961720058B925 /* SUSScrobbleLoader.m */,
+			);
+			path = SUS;
+			sourceTree = "<group>";
+		};
+		531D3A10255AB7D4000CB0DF /* PMS */ = {
+			isa = PBXGroup;
+			children = (
+				53FE36941EA961720058B925 /* PMSLoaders.h */,
+				53FE36951EA961720058B925 /* PMSLoginLoader.h */,
+				53FE36961EA961720058B925 /* PMSLoginLoader.m */,
+				53FE36971EA961720058B925 /* PMSQueueAllLoader.h */,
+				53FE36981EA961720058B925 /* PMSQueueAllLoader.m */,
+				53FE36991EA961720058B925 /* PMSRootFoldersLoader.h */,
+				53FE369A1EA961720058B925 /* PMSRootFoldersLoader.m */,
+				53FE369B1EA961720058B925 /* PMSStatusLoader.h */,
+				53FE369C1EA961720058B925 /* PMSStatusLoader.m */,
+				53FE369D1EA961720058B925 /* PMSSubFolderLoader.h */,
+				53FE369E1EA961720058B925 /* PMSSubFolderLoader.m */,
+			);
+			path = PMS;
+			sourceTree = "<group>";
+		};
+		531D3A11255AB7DC000CB0DF /* WB */ = {
+			isa = PBXGroup;
+			children = (
+				53FE36D71EA961720058B925 /* WBDatabaseLoader.h */,
+				53FE36D81EA961720058B925 /* WBDatabaseLoader.m */,
+				53FE36D91EA961720058B925 /* WBDatabaseUpdateLoader.h */,
+				53FE36DA1EA961720058B925 /* WBDatabaseUpdateLoader.m */,
+				53FE36DB1EA961720058B925 /* WBDropdownFolderLoader.h */,
+				53FE36DC1EA961720058B925 /* WBDropdownFolderLoader.m */,
+				53FE36DD1EA961720058B925 /* WBQuickAlbumsLoader.h */,
+				53FE36DE1EA961720058B925 /* WBQuickAlbumsLoader.m */,
+				53FE36DF1EA961720058B925 /* WBScrobbleLoader.h */,
+				53FE36E01EA961720058B925 /* WBScrobbleLoader.m */,
+				53FE36E11EA961720058B925 /* WBServerShuffleLoader.h */,
+				53FE36E21EA961720058B925 /* WBServerShuffleLoader.m */,
+			);
+			path = WB;
+			sourceTree = "<group>";
+		};
+		53260B71127D012300B745B4 /* EGOTableViewPullRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				53260B77127D012300B745B4 /* EGORefreshTableHeaderView.h */,
+				53260B78127D012300B745B4 /* EGORefreshTableHeaderView.m */,
+				53260B79127D012300B745B4 /* Resources */,
+			);
+			path = EGOTableViewPullRefresh;
+			sourceTree = "<group>";
+		};
+		53260B79127D012300B745B4 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				53260B7A127D012300B745B4 /* blackArrow.png */,
+				53260B7B127D012300B745B4 /* blackArrow@2x.png */,
+				53260B7C127D012300B745B4 /* blueArrow.png */,
+				53260B7D127D012300B745B4 /* blueArrow@2x.png */,
+				53260B7E127D012300B745B4 /* grayArrow.png */,
+				53260B7F127D012300B745B4 /* grayArrow@2x.png */,
+				53260B80127D012300B745B4 /* whiteArrow.png */,
+				53260B81127D012300B745B4 /* whiteArrow@2x.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		535696501810DA8700997C7B /* FXBlurView */ = {
+			isa = PBXGroup;
+			children = (
+				535696511810DA8700997C7B /* FXBlurView.h */,
+				535696521810DA8700997C7B /* FXBlurView.m */,
+			);
+			path = FXBlurView;
 			sourceTree = "<group>";
 		};
 		539797F41162CEB100F41D8B /* Images */ = {
@@ -3073,58 +3484,6 @@
 			name = "Player Icons";
 			sourceTree = "<group>";
 		};
-		53ABE35E1165C7F900197877 /* Playing Tab */ = {
-			isa = PBXGroup;
-			children = (
-				53ABE3601165C83900197877 /* PlayingViewController.h */,
-				53ABE3611165C83900197877 /* PlayingViewController.m */,
-				53ABE3621165C83900197877 /* PlayingViewController.xib */,
-			);
-			name = "Playing Tab";
-			sourceTree = "<group>";
-		};
-		53ABE35F1165C80900197877 /* Playlists Tab */ = {
-			isa = PBXGroup;
-			children = (
-				53ABE54011665B6B00197877 /* PlaylistsViewController.h */,
-				53ABE54111665B6B00197877 /* PlaylistsViewController.m */,
-				53ABE54211665B6B00197877 /* PlaylistsViewController.xib */,
-				53ABE54511665B8500197877 /* PlaylistSongsViewController.h */,
-				536AB80F1353DCF700DABD83 /* PlaylistSongsViewController.m */,
-				536AB8101353DCF700DABD83 /* PlaylistSongsViewController.xib */,
-			);
-			name = "Playlists Tab";
-			sourceTree = "<group>";
-		};
-		53B52BA111ADE085005776B5 /* Genre Tab */ = {
-			isa = PBXGroup;
-			children = (
-				53B52BA211ADE0A6005776B5 /* GenresViewController.h */,
-				53B52BA311ADE0A6005776B5 /* GenresViewController.m */,
-				53B52BA411ADE0A6005776B5 /* GenresViewController.xib */,
-				53523D9111CD61F7006AEA48 /* GenresArtistViewController.h */,
-				53523D9211CD61F7006AEA48 /* GenresArtistViewController.m */,
-				53523D9311CD61F7006AEA48 /* GenresArtistViewController.xib */,
-				53523D8C11CD5889006AEA48 /* GenresAlbumViewController.h */,
-				53523D8D11CD5889006AEA48 /* GenresAlbumViewController.m */,
-				53523D8E11CD5889006AEA48 /* GenresAlbumViewController.xib */,
-			);
-			name = "Genre Tab";
-			sourceTree = "<group>";
-		};
-		53C0D5FC11B586B600267C27 /* Cache Tab */ = {
-			isa = PBXGroup;
-			children = (
-				530B416F11B607A200743C09 /* CacheViewController.h */,
-				530B417011B607A200743C09 /* CacheViewController.m */,
-				530B417111B607A200743C09 /* CacheViewController.xib */,
-				538229F311C98091003F1E23 /* CacheAlbumViewController.h */,
-				538229F411C98091003F1E23 /* CacheAlbumViewController.m */,
-				538229F511C98091003F1E23 /* CacheAlbumViewController.xib */,
-			);
-			name = "Cache Tab";
-			sourceTree = "<group>";
-		};
 		53C6050812F1EF98003C6895 /* Intro screen */ = {
 			isa = PBXGroup;
 			children = (
@@ -3150,55 +3509,6 @@
 				53C6054A12F1FB4B003C6895 /* intro-sunkenlogo@2x.png */,
 			);
 			name = "Intro screen";
-			sourceTree = "<group>";
-		};
-		53C6052A12F1F006003C6895 /* Intro Screen */ = {
-			isa = PBXGroup;
-			children = (
-				53C6052B12F1F01E003C6895 /* IntroViewController.h */,
-				53C6052C12F1F01E003C6895 /* IntroViewController.m */,
-				533C65AC15ABB9BD003EAF29 /* IntroViewController.xib */,
-			);
-			name = "Intro Screen";
-			sourceTree = "<group>";
-		};
-		53F4A070116FF44400BB8411 /* Player */ = {
-			isa = PBXGroup;
-			children = (
-				53F675AD113B048600822059 /* iPhoneStreamingPlayerViewController.h */,
-				53F675AE113B048600822059 /* iPhoneStreamingPlayerViewController.m */,
-				5398F2B511DA8B1000007870 /* iPhoneStreamingPlayerViewController.xib */,
-				53D8ACB0116C47E600E5C9CB /* PageControlViewController.h */,
-				53D8ACB1116C47E600E5C9CB /* PageControlViewController.m */,
-				53D8ACB2116C47E600E5C9CB /* PageControlViewController.xib */,
-				530CE842119B9D9100728ED5 /* SongInfoPlaylistCustomUITableView.h */,
-				530CE843119B9D9100728ED5 /* SongInfoPlaylistCustomUITableView.m */,
-				53F4A226117011B900BB8411 /* CurrentPlaylistBackgroundViewController.h */,
-				53F4A227117011B900BB8411 /* CurrentPlaylistBackgroundViewController.m */,
-				53F4A228117011B900BB8411 /* CurrentPlaylistBackgroundViewController.xib */,
-				53F4A07A116FF7EE00BB8411 /* CurrentPlaylistViewController.h */,
-				53F4A07B116FF7EE00BB8411 /* CurrentPlaylistViewController.m */,
-				53F4A07C116FF7EE00BB8411 /* CurrentPlaylistViewController.xib */,
-				534050F811E9966C004AEC41 /* LyricsViewController.h */,
-				534050F911E9966C004AEC41 /* LyricsViewController.m */,
-				53F4A071116FF48400BB8411 /* DebugViewController.h */,
-				53F4A072116FF48400BB8411 /* DebugViewController.m */,
-				533C65DB15ABB9F0003EAF29 /* DebugViewController.xib */,
-				5353B837134D4D6C005C589E /* PagingScrollView.h */,
-				5353B838134D4D6C005C589E /* PagingScrollView.m */,
-				5365857E1478920B00FE57A5 /* EqualizerViewController.h */,
-				5365857F1478920B00FE57A5 /* EqualizerViewController.m */,
-				533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */,
-				53BBDB3B1491DD6600032114 /* OpenGLCommon.h */,
-				53BBDB3C1491DE5600032114 /* ConstantsAndMacros.h */,
-				5365859114789AD800FE57A5 /* EqualizerView.h */,
-				5365859214789AD900FE57A5 /* EqualizerView.m */,
-				53A2BE22147DF09800E44822 /* EqualizerPointView.h */,
-				53A2BE23147DF09800E44822 /* EqualizerPointView.m */,
-				5306236B14D3295300D320A8 /* EqualizerPathView.h */,
-				5306236C14D3295300D320A8 /* EqualizerPathView.m */,
-			);
-			name = Player;
 			sourceTree = "<group>";
 		};
 		53F8C76012971572007BDC0E /* Home tab */ = {
@@ -3577,205 +3887,6 @@
 			path = Frameworks/libBASS;
 			sourceTree = "<group>";
 		};
-		53FE36231EA961710058B925 /* libSub */ = {
-			isa = PBXGroup;
-			children = (
-				53FE36241EA961710058B925 /* AudioEngine.h */,
-				53FE36251EA961710058B925 /* AudioEngine.m */,
-				53FE36261EA961710058B925 /* BassEffectDAO.h */,
-				53FE36271EA961710058B925 /* BassEffectDAO.m */,
-				53FE36281EA961710058B925 /* BassEffectValue.h */,
-				53FE36291EA961710058B925 /* BassEffectValue.m */,
-				53FE362A1EA961710058B925 /* BassEqualizer.h */,
-				53FE362B1EA961710058B925 /* BassEqualizer.m */,
-				53FE362C1EA961710058B925 /* BassGaplessPlayer.h */,
-				53FE362D1EA961710058B925 /* BassGaplessPlayer.m */,
-				53FE362E1EA961710058B925 /* BassGaplessPlayerDelegate.h */,
-				53FE362F1EA961710058B925 /* BassParamEqValue.h */,
-				53FE36301EA961710058B925 /* BassParamEqValue.m */,
-				53FE36311EA961710058B925 /* BassStream.h */,
-				53FE36321EA961710058B925 /* BassStream.m */,
-				53FE36331EA961710058B925 /* BassVisualizer.h */,
-				53FE36341EA961710058B925 /* BassVisualizer.m */,
-				53FE36351EA961710058B925 /* BassWrapper.h */,
-				53FE36361EA961710058B925 /* BassWrapper.m */,
-				53FE36371EA961710058B925 /* CacheSingleton.h */,
-				53FE36381EA961710058B925 /* CacheSingleton.m */,
-				53FE36391EA961710058B925 /* DatabaseSingleton.h */,
-				53FE363A1EA961710058B925 /* DatabaseSingleton.m */,
-				53FE363B1EA961710058B925 /* HLSProxyConnection.h */,
-				53FE363C1EA961710058B925 /* HLSProxyConnection.m */,
-				53FE363D1EA961710058B925 /* HLSProxyResponse.h */,
-				53FE363E1EA961720058B925 /* HLSProxyResponse.m */,
-				53FE363F1EA961720058B925 /* ISMSAlbum.h */,
-				53FE36401EA961720058B925 /* ISMSAlbum.m */,
-				53FE36411EA961720058B925 /* ISMSArtist.h */,
-				53FE36421EA961720058B925 /* ISMSArtist.m */,
-				53FE36431EA961720058B925 /* ISMSCacheQueueManager.h */,
-				53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */,
-				53FE36451EA961720058B925 /* ISMSCFNetworkStreamHandler.h */,
-				53FE36461EA961720058B925 /* ISMSCFNetworkStreamHandler.m */,
-				53FE36471EA961720058B925 /* ISMSChatMessage.h */,
-				53FE36481EA961720058B925 /* ISMSChatMessage.m */,
-				53FE36491EA961720058B925 /* ISMSCoverArtLoader.h */,
-				53FE364A1EA961720058B925 /* ISMSCoverArtLoader.m */,
-				53FE364B1EA961720058B925 /* ISMSDataAccessObjects.h */,
-				53FE364C1EA961720058B925 /* ISMSDataModelObjects.h */,
-				53FE364D1EA961720058B925 /* ISMSDropdownFolderLoader.h */,
-				53FE364E1EA961720058B925 /* ISMSDropdownFolderLoader.m */,
-				53FE364F1EA961720058B925 /* ISMSErrorDomain.h */,
-				53FE36501EA961720058B925 /* ISMSIndex.h */,
-				53FE36511EA961720058B925 /* ISMSIndex.m */,
-				53FE36521EA961720058B925 /* ISMSLoader.h */,
-				53FE36531EA961720058B925 /* ISMSLoader.m */,
-				53FE36541EA961720058B925 /* ISMSLoaderDelegate.h */,
-				53FE36551EA961720058B925 /* ISMSLoaderManager.h */,
-				53FE36561EA961720058B925 /* ISMSLoaders.h */,
-				53FE36571EA961720058B925 /* ISMSMediaItem.h */,
-				53FE36581EA961720058B925 /* ISMSNotificationNames.h */,
-				53FE36591EA961720058B925 /* ISMSNotificationNames.m */,
-				53FE365A1EA961720058B925 /* ISMSOldDataModelDecoders.h */,
-				53FE365B1EA961720058B925 /* ISMSOldDataModelDecoders.m */,
-				53FE365C1EA961720058B925 /* ISMSQueueAllLoader.h */,
-				53FE365D1EA961720058B925 /* ISMSQueueAllLoader.m */,
-				53FE365E1EA961720058B925 /* ISMSQuickAlbumsLoader.h */,
-				53FE365F1EA961720058B925 /* ISMSQuickAlbumsLoader.m */,
-				53FE36601EA961720058B925 /* ISMSRootFoldersLoader.h */,
-				53FE36611EA961720058B925 /* ISMSRootFoldersLoader.m */,
-				53FE36621EA961720058B925 /* ISMSScrobbleLoader.h */,
-				53FE36631EA961720058B925 /* ISMSScrobbleLoader.m */,
-				53FE36641EA961720058B925 /* ISMSServer.h */,
-				53FE36651EA961720058B925 /* ISMSServer.m */,
-				53FE36661EA961720058B925 /* ISMSServerShuffleLoader.h */,
-				53FE36671EA961720058B925 /* ISMSServerShuffleLoader.m */,
-				53FE36681EA961720058B925 /* ISMSSong+DAO.h */,
-				53FE36691EA961720058B925 /* ISMSSong+DAO.m */,
-				53FE366A1EA961720058B925 /* ISMSSong.h */,
-				53FE366B1EA961720058B925 /* ISMSSong.m */,
-				53FE366C1EA961720058B925 /* ISMSStatusLoader.h */,
-				53FE366D1EA961720058B925 /* ISMSStatusLoader.m */,
-				53FE366E1EA961720058B925 /* ISMSStreamHandler.h */,
-				53FE366F1EA961720058B925 /* ISMSStreamHandler.m */,
-				53FE36701EA961720058B925 /* ISMSStreamHandlerDelegate.h */,
-				53FE36711EA961720058B925 /* ISMSStreamManager.h */,
-				53FE36721EA961720058B925 /* ISMSStreamManager.m */,
-				53FE36731EA961720058B925 /* ISMSSubFolderLoader.h */,
-				53FE36741EA961720058B925 /* ISMSSubFolderLoader.m */,
-				53FE36751EA961720058B925 /* ISMSUpdateChecker.h */,
-				53FE36761EA961720058B925 /* ISMSUpdateChecker.m */,
-				53FE36771EA961720058B925 /* ISMSURLConnectionStreamHandler.h */,
-				53FE36781EA961720058B925 /* ISMSURLConnectionStreamHandler.m */,
-				53FE36791EA961720058B925 /* ISMSVideo.h */,
-				53FE367A1EA961720058B925 /* ISMSVideo.m */,
-				53FE367B1EA961720058B925 /* iSubBassGaplessPlayerDelegate.h */,
-				53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */,
-				53FE367D1EA961720058B925 /* JukeboxConnectionDelegate.h */,
-				53FE367E1EA961720058B925 /* JukeboxConnectionDelegate.m */,
-				53FE367F1EA961720058B925 /* JukeboxSingleton.h */,
-				53FE36801EA961720058B925 /* JukeboxSingleton.m */,
-				53FE36811EA961720058B925 /* JukeboxXMLParser.h */,
-				53FE36821EA961720058B925 /* JukeboxXMLParser.m */,
-				53FE36831EA961720058B925 /* libSub-Prefix.pch */,
-				53FE36841EA961720058B925 /* LibSub.h */,
-				53FE36851EA961720058B925 /* LibSub.m */,
-				53FE36861EA961720058B925 /* libSubDefines.h */,
-				53FE36871EA961720058B925 /* libSubImports.h */,
-				53FE36881EA961720058B925 /* MusicSingleton.h */,
-				53FE36891EA961720058B925 /* MusicSingleton.m */,
-				53FE368A1EA961720058B925 /* NSError+ISMSError.h */,
-				53FE368B1EA961720058B925 /* NSError+ISMSError.m */,
-				53FE368C1EA961720058B925 /* NSMutableURLRequest+PMS.h */,
-				53FE368D1EA961720058B925 /* NSMutableURLRequest+PMS.m */,
-				53FE368E1EA961720058B925 /* NSMutableURLRequest+SUS.h */,
-				53FE368F1EA961720058B925 /* NSMutableURLRequest+SUS.m */,
-				53FE36901EA961720058B925 /* NSString+cleanCredentialsForLog.h */,
-				53FE36911EA961720058B925 /* NSString+cleanCredentialsForLog.m */,
-				53FE36921EA961720058B925 /* PlaylistSingleton.h */,
-				53FE36931EA961720058B925 /* PlaylistSingleton.m */,
-				53FE36941EA961720058B925 /* PMSLoaders.h */,
-				53FE36951EA961720058B925 /* PMSLoginLoader.h */,
-				53FE36961EA961720058B925 /* PMSLoginLoader.m */,
-				53FE36971EA961720058B925 /* PMSQueueAllLoader.h */,
-				53FE36981EA961720058B925 /* PMSQueueAllLoader.m */,
-				53FE36991EA961720058B925 /* PMSRootFoldersLoader.h */,
-				53FE369A1EA961720058B925 /* PMSRootFoldersLoader.m */,
-				53FE369B1EA961720058B925 /* PMSStatusLoader.h */,
-				53FE369C1EA961720058B925 /* PMSStatusLoader.m */,
-				53FE369D1EA961720058B925 /* PMSSubFolderLoader.h */,
-				53FE369E1EA961720058B925 /* PMSSubFolderLoader.m */,
-				53FE369F1EA961720058B925 /* SavedSettings.h */,
-				53FE36A01EA961720058B925 /* SavedSettings.m */,
-				53FE36A11EA961720058B925 /* SearchXMLParser.h */,
-				53FE36A21EA961720058B925 /* SearchXMLParser.m */,
-				53FE36A31EA961720058B925 /* SocialSingleton.h */,
-				53FE36A41EA961720058B925 /* SocialSingleton.m */,
-				53FE36A51EA961720058B925 /* sqlite3.c */,
-				53FE36A61EA961720058B925 /* sqlite3.h */,
-				53FE36A71EA961720058B925 /* SUSAllAlbumsDAO.h */,
-				53FE36A81EA961720058B925 /* SUSAllAlbumsDAO.m */,
-				53FE36A91EA961720058B925 /* SUSAllSongsDAO.h */,
-				53FE36AA1EA961720058B925 /* SUSAllSongsDAO.m */,
-				53FE36AB1EA961720058B925 /* SUSAllSongsLoader.h */,
-				53FE36AC1EA961720058B925 /* SUSAllSongsLoader.m */,
-				53FE36AD1EA961720058B925 /* SUSChatDAO.h */,
-				53FE36AE1EA961720058B925 /* SUSChatDAO.m */,
-				53FE36AF1EA961720058B925 /* SUSChatLoader.h */,
-				53FE36B01EA961720058B925 /* SUSChatLoader.m */,
-				53FE36B11EA961720058B925 /* SUSCoverArtDAO.h */,
-				53FE36B21EA961720058B925 /* SUSCoverArtDAO.m */,
-				53FE36B31EA961720058B925 /* SUSDropdownFolderLoader.h */,
-				53FE36B41EA961720058B925 /* SUSDropdownFolderLoader.m */,
-				53FE36B51EA961720058B925 /* SUSErrorDomain.h */,
-				53FE36B61EA961720058B925 /* SUSLoaders.h */,
-				53FE36B71EA961720058B925 /* SUSLyricsDAO.h */,
-				53FE36B81EA961720058B925 /* SUSLyricsDAO.m */,
-				53FE36B91EA961720058B925 /* SUSLyricsLoader.h */,
-				53FE36BA1EA961720058B925 /* SUSLyricsLoader.m */,
-				53FE36BB1EA961720058B925 /* SUSNowPlayingDAO.h */,
-				53FE36BC1EA961720058B925 /* SUSNowPlayingDAO.m */,
-				53FE36BD1EA961720058B925 /* SUSNowPlayingLoader.h */,
-				53FE36BE1EA961720058B925 /* SUSNowPlayingLoader.m */,
-				53FE36BF1EA961720058B925 /* SUSQueueAllLoader.h */,
-				53FE36C01EA961720058B925 /* SUSQueueAllLoader.m */,
-				53FE36C11EA961720058B925 /* SUSQuickAlbumsLoader.h */,
-				53FE36C21EA961720058B925 /* SUSQuickAlbumsLoader.m */,
-				53FE36C31EA961720058B925 /* SUSRootFoldersDAO.h */,
-				53FE36C41EA961720058B925 /* SUSRootFoldersDAO.m */,
-				53FE36C51EA961720058B925 /* SUSRootFoldersLoader.h */,
-				53FE36C61EA961720058B925 /* SUSRootFoldersLoader.m */,
-				53FE36C71EA961720058B925 /* SUSScrobbleLoader.h */,
-				53FE36C81EA961720058B925 /* SUSScrobbleLoader.m */,
-				53FE36C91EA961720058B925 /* SUSServerPlaylist.h */,
-				53FE36CA1EA961720058B925 /* SUSServerPlaylist.m */,
-				53FE36CB1EA961720058B925 /* SUSServerPlaylistsDAO.h */,
-				53FE36CC1EA961720058B925 /* SUSServerPlaylistsDAO.m */,
-				53FE36CD1EA961720058B925 /* SUSServerPlaylistsLoader.h */,
-				53FE36CE1EA961720058B925 /* SUSServerPlaylistsLoader.m */,
-				53FE36CF1EA961720058B925 /* SUSServerShuffleLoader.h */,
-				53FE36D01EA961720058B925 /* SUSServerShuffleLoader.m */,
-				53FE36D11EA961720058B925 /* SUSStatusLoader.h */,
-				53FE36D21EA961720058B925 /* SUSStatusLoader.m */,
-				53FE36D31EA961720058B925 /* SUSSubFolderDAO.h */,
-				53FE36D41EA961720058B925 /* SUSSubFolderDAO.m */,
-				53FE36D51EA961720058B925 /* SUSSubFolderLoader.h */,
-				53FE36D61EA961720058B925 /* SUSSubFolderLoader.m */,
-				53FE36D71EA961720058B925 /* WBDatabaseLoader.h */,
-				53FE36D81EA961720058B925 /* WBDatabaseLoader.m */,
-				53FE36D91EA961720058B925 /* WBDatabaseUpdateLoader.h */,
-				53FE36DA1EA961720058B925 /* WBDatabaseUpdateLoader.m */,
-				53FE36DB1EA961720058B925 /* WBDropdownFolderLoader.h */,
-				53FE36DC1EA961720058B925 /* WBDropdownFolderLoader.m */,
-				53FE36DD1EA961720058B925 /* WBQuickAlbumsLoader.h */,
-				53FE36DE1EA961720058B925 /* WBQuickAlbumsLoader.m */,
-				53FE36DF1EA961720058B925 /* WBScrobbleLoader.h */,
-				53FE36E01EA961720058B925 /* WBScrobbleLoader.m */,
-				53FE36E11EA961720058B925 /* WBServerShuffleLoader.h */,
-				53FE36E21EA961720058B925 /* WBServerShuffleLoader.m */,
-			);
-			name = libSub;
-			path = Frameworks/libSub;
-			sourceTree = "<group>";
-		};
 		53FE37EB1EA961780058B925 /* Flurry */ = {
 			isa = PBXGroup;
 			children = (
@@ -4051,27 +4162,6 @@
 			path = Frameworks/HockeySDK;
 			sourceTree = "<group>";
 		};
-		D0EA475919DE412C0083CE05 /* New player */ = {
-			isa = PBXGroup;
-			children = (
-				D0F7919419DE4E04008032A3 /* Scrubber */,
-				D0EA476019DE41510083CE05 /* ISMSPlayerView.h */,
-				D0EA476119DE41510083CE05 /* ISMSPlayerView.m */,
-				D0EA476519DE41E30083CE05 /* ISMSPlayerViewController.h */,
-				D0EA476619DE41E30083CE05 /* ISMSPlayerViewController.m */,
-			);
-			name = "New player";
-			sourceTree = "<group>";
-		};
-		D0F7919419DE4E04008032A3 /* Scrubber */ = {
-			isa = PBXGroup;
-			children = (
-				D0F7918919DE4DFC008032A3 /* ISMSScrubberView.h */,
-				D0F7918A19DE4DFC008032A3 /* ISMSScrubberView.m */,
-			);
-			name = Scrubber;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -4201,6 +4291,7 @@
 				53B52BA611ADE0A6005776B5 /* GenresViewController.xib in Resources */,
 				530B417311B607A200743C09 /* CacheViewController.xib in Resources */,
 				5312E1AF11B8C23100AFC08D /* bookmarks-tabbaricon.png in Resources */,
+				531D3A03255AB5F6000CB0DF /* MainWindow-iPad.xib in Resources */,
 				5312E1B011B8C23100AFC08D /* genres-tabbaricon.png in Resources */,
 				5312E1B411B8C31E00AFC08D /* cache-tabbaricon.png in Resources */,
 				536B5D5E11C8183D00CC1D69 /* LoadingScreen.xib in Resources */,
@@ -4284,6 +4375,7 @@
 				53F8CC7C1297949A007BDC0E /* home-jukebox-off.png in Resources */,
 				530738F41FAF6A72005C2650 /* Media.xcassets in Resources */,
 				53F8CC7D1297949A007BDC0E /* home-jukebox-off@2x.png in Resources */,
+				531D3A01255AB5F6000CB0DF /* MainWindow.xib in Resources */,
 				53F8CC7E1297949A007BDC0E /* home-jukebox-on-ipad.png in Resources */,
 				53F8CC7F1297949A007BDC0E /* home-jukebox-on.png in Resources */,
 				53F8CC801297949A007BDC0E /* home-jukebox-on@2x.png in Resources */,
@@ -4448,8 +4540,6 @@
 				539148E02559FEFD004AAC3F /* Launch Screen.storyboard in Resources */,
 				53493F3015FC6BD90059492E /* KeychainAccessGroups.plist in Resources */,
 				53493F3815FC6C3A0059492E /* BassEffectDefaultPresets.plist in Resources */,
-				53493F4115FC6CAE0059492E /* MainWindow-iPad.xib in Resources */,
-				53493F4415FC6CAE0059492E /* MainWindow.xib in Resources */,
 				5349AD041613724D003603AF /* Default-568h@2x.png in Resources */,
 				53B65ABB16533E4800472DBF /* back-tabbaricon.png in Resources */,
 				53B65ABF16533E4800472DBF /* back-tabbaricon@2x.png in Resources */,
@@ -4556,6 +4646,7 @@
 				53BC26FF139AF0DD00A825F1 /* controller-shuffle@2x.png in Resources */,
 				53BC2700139AF0DD00A825F1 /* controller-bookmark-on.png in Resources */,
 				53BC2701139AF0DD00A825F1 /* controller-bookmark-on@2x.png in Resources */,
+				531D3A02255AB5F6000CB0DF /* MainWindow.xib in Resources */,
 				53BC2702139AF0DD00A825F1 /* controller-bookmark.png in Resources */,
 				53BC2703139AF0DD00A825F1 /* controller-bookmark@2x.png in Resources */,
 				53BC270B139AF0DD00A825F1 /* ChatViewController.xib in Resources */,
@@ -4619,6 +4710,7 @@
 				53BC2752139AF0DD00A825F1 /* home-chat-ipad.png in Resources */,
 				53BC2753139AF0DD00A825F1 /* home-chat.png in Resources */,
 				53BC2754139AF0DD00A825F1 /* home-chat@2x.png in Resources */,
+				531D3A04255AB5F6000CB0DF /* MainWindow-iPad.xib in Resources */,
 				53BC2759139AF0DD00A825F1 /* back.png in Resources */,
 				53BC275A139AF0DD00A825F1 /* back@2x.png in Resources */,
 				53BC275B139AF0DD00A825F1 /* Default-Portrait.png in Resources */,
@@ -4752,9 +4844,7 @@
 				53493F1915FC6A3A0059492E /* shuffle-small@2x.png in Resources */,
 				53493F3215FC6BD90059492E /* KeychainAccessGroups.plist in Resources */,
 				53493F3A15FC6C3B0059492E /* BassEffectDefaultPresets.plist in Resources */,
-				53493F4315FC6CAE0059492E /* MainWindow-iPad.xib in Resources */,
 				53649DD7184DA99B00E600EC /* Icon-76@2x.png in Resources */,
-				53493F4615FC6CAE0059492E /* MainWindow.xib in Resources */,
 				5349AD061613724D003603AF /* Default-568h@2x.png in Resources */,
 				53B65ABD16533E4800472DBF /* back-tabbaricon.png in Resources */,
 				53B65AC116533E4800472DBF /* back-tabbaricon@2x.png in Resources */,
@@ -4913,7 +5003,6 @@
 				53FE38A11EA961C80058B925 /* ZKArchive.m in Sources */,
 				53FE38241EA961A10058B925 /* SBJsonParser.m in Sources */,
 				537E6C1E181208A200127E29 /* CustomUITabBarController.m in Sources */,
-				53FE39A11EA968390058B925 /* DDSocialDialog.m in Sources */,
 				53FE388F1EA961C80058B925 /* NSData+ZKAdditions.m in Sources */,
 				53FE37AC1EA961720058B925 /* SUSLyricsLoader.m in Sources */,
 				530CE7F2119B8E8C00728ED5 /* CurrentPlaylistSongSmallUITableViewCell.m in Sources */,
@@ -5023,6 +5112,7 @@
 				53B9D0B81279FB6B00CAB0E0 /* SearchSongUITableViewCell.m in Sources */,
 				53FE38361EA961A10058B925 /* SBJsonStreamWriterAccumulator.m in Sources */,
 				53FE35CD1EA961540058B925 /* EX2GlowButton.m in Sources */,
+				531D3A16255ABA20000CB0DF /* DDSocialDialog.m in Sources */,
 				53260B83127D012300B745B4 /* EGORefreshTableHeaderView.m in Sources */,
 				53FE34F81EA961540058B925 /* GTMNSString+HTML.m in Sources */,
 				53BA49431285BD7A0010B380 /* NewHomeViewController.m in Sources */,
@@ -5251,7 +5341,6 @@
 				53FE38A31EA961C80058B925 /* ZKArchive.m in Sources */,
 				53FE38261EA961A10058B925 /* SBJsonParser.m in Sources */,
 				537E6C20181208A200127E29 /* CustomUITabBarController.m in Sources */,
-				53FE39A31EA968390058B925 /* DDSocialDialog.m in Sources */,
 				53FE38911EA961C80058B925 /* NSData+ZKAdditions.m in Sources */,
 				53FE37AE1EA961720058B925 /* SUSLyricsLoader.m in Sources */,
 				53BC27C6139AF0DD00A825F1 /* CurrentPlaylistSongSmallUITableViewCell.m in Sources */,
@@ -5361,6 +5450,7 @@
 				53BC280B139AF0DD00A825F1 /* SearchSongUITableViewCell.m in Sources */,
 				53FE38381EA961A10058B925 /* SBJsonStreamWriterAccumulator.m in Sources */,
 				53FE35CF1EA961540058B925 /* EX2GlowButton.m in Sources */,
+				531D3A17255ABA20000CB0DF /* DDSocialDialog.m in Sources */,
 				53BC280D139AF0DD00A825F1 /* EGORefreshTableHeaderView.m in Sources */,
 				53FE34FA1EA961540058B925 /* GTMNSString+HTML.m in Sources */,
 				53BC280F139AF0DD00A825F1 /* NewHomeViewController.m in Sources */,
