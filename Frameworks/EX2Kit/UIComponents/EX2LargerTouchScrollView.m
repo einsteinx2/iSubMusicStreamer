@@ -18,7 +18,7 @@
 - (void)setup
 {
     _touchAreaPadding = UIEdgeInsetsZero;
-    _touchFrameInWindow = [self convertRect:self.frame toView:[[UIApplication sharedApplication] keyWindow]];
+    _touchFrameInWindow = [self convertRect:self.frame toView:[UIApplication keyWindow]];
     self.scrollsToTop = NO;
 }
 
@@ -43,7 +43,7 @@
 - (void)setTouchAreaPadding:(UIEdgeInsets)touchAreaPadding
 {
     // Calculate the new touch frame
-    CGRect rectInWindow = [self convertRect:self.frame toView:[[UIApplication sharedApplication] keyWindow]];
+    CGRect rectInWindow = [self convertRect:self.frame toView:[UIApplication keyWindow]];
     
     rectInWindow.origin.y -= touchAreaPadding.top;
     rectInWindow.size.height += touchAreaPadding.top;
@@ -73,7 +73,7 @@
 	else
     {
         // Make the touch area equal our frame plus the padding (not tested yet)
-        CGPoint windowLocation = [self convertPoint:point toView:[[UIApplication sharedApplication] keyWindow]];
+        CGPoint windowLocation = [self convertPoint:point toView:[UIApplication keyWindow]];
         return CGRectContainsPoint(self.touchFrameInWindow, windowLocation);
     }
 }

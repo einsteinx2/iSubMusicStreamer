@@ -11,5 +11,6 @@
 @interface UIApplication (Orientiation)
 
 + (UIInterfaceOrientation)orientation;
++ (UIWindow *)keyWindow;
 
 @end

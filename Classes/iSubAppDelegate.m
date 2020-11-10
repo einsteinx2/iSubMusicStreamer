@@ -1373,7 +1373,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)moviePlayerExitedFullscreen:(NSNotification *)notification
 {
     // Hack to fix broken navigation bar positioning
-    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    UIWindow *window = [UIApplication keyWindow];
     UIView *view = [window.subviews lastObject];
     if (view)
     {

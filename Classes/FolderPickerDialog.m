@@ -170,7 +170,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 									innerWidth,
 									self.frame.size.height - (titleLabel_.frame.size.height + 1 + kDDSocialDialogBorderWidth*2));
 	
-	UIWindow* window = [UIApplication sharedApplication].keyWindow;
+	UIWindow* window = [UIApplication keyWindow];
 	if (!window) {
 		window = [[UIApplication sharedApplication].windows objectAtIndexSafe:0];
 	}

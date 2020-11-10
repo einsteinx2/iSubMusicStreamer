@@ -30,7 +30,7 @@ static __strong UIWindow *_mainWindow = nil;
 
 + (UIWindow *)mainWindow
 {
-    return _mainWindow ? _mainWindow : [[UIApplication sharedApplication] keyWindow];
+    return _mainWindow ? _mainWindow : [UIApplication keyWindow];
 }
 
 static __strong NSMutableArray *_activeMessages = nil;
