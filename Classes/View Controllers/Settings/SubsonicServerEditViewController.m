@@ -193,7 +193,8 @@
 		[defaults setObject:theServer.url forKey:@"url"];
 		[defaults setObject:theServer.username forKey:@"username"];
 		[defaults setObject:theServer.password forKey:@"password"];
-		[defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList] forKey:@"servers"];
+        NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:NO error:nil];
+		[defaults setObject:archivedServerList forKey:@"servers"];
 		[defaults synchronize];
 		
 		[NSNotificationCenter postNotificationToMainThreadWithName:@"reloadServerList"];
@@ -220,7 +221,8 @@
 		[defaults setObject:self.urlField.text forKey:@"url"];
 		[defaults setObject:self.usernameField.text forKey:@"username"];
 		[defaults setObject:self.passwordField.text forKey:@"password"];
-		[defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList] forKey:@"servers"];
+        NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:NO error:nil];
+		[defaults setObject:archivedServerList forKey:@"servers"];
 		[defaults synchronize];
 		
 		[NSNotificationCenter postNotificationToMainThreadWithName:@"reloadServerList"];

@@ -208,14 +208,16 @@
 				
 				self.serverList = newServerList;
 				
-				[_userDefaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_serverList] forKey:@"servers"];
+                NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:_serverList requiringSecureCoding:NO error:nil];
+				[_userDefaults setObject:archivedServerList forKey:@"servers"];
 			}
 		}
 	}
 	else
 	{
-		if (servers != nil)
-			self.serverList = [NSKeyedUnarchiver unarchiveObjectWithData:servers];
+        if (servers != nil) {
+            self.serverList = [NSKeyedUnarchiver unarchivedObjectOfClass:NSMutableArray.class fromData:servers error:nil];
+        }
 	}
 	
 	// Convert the old settings format over
@@ -1599,7 +1601,7 @@
 		NSData *servers = [_userDefaults objectForKey:@"servers"];
 		if (servers)
 		{
-			self.serverList = [NSKeyedUnarchiver unarchiveObjectWithData:servers];
+            self.serverList = [NSKeyedUnarchiver unarchivedObjectOfClass:NSMutableArray.class fromData:servers error:nil];
 		}
 	}
 		

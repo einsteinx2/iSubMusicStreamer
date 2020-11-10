@@ -11,18 +11,15 @@
 
 @implementation NSString (Clean)
 
-- (NSString *)cleanString
-{
+- (NSString *)cleanString {
 	NSString *clean = [self gtm_stringByUnescapingFromHTML];
-	if (clean)
-		clean = [clean stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-	
+    if (clean) {
+        clean = [clean stringByRemovingPercentEncoding];
+    }
 	return clean ? clean : self;
-	//return [[self gtm_stringByUnescapingFromHTML] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }
 
-- (NSString *)trimString
-{
+- (NSString *)trimString {
     return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 

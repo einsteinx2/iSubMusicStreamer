@@ -176,7 +176,7 @@
 		if (self.isMoreAlbums)
 		{
 			cell.textLabel.text = @"Loading more results...";
-			UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
 			indicator.center = CGPointMake(300, 30);
 			[cell addSubview:indicator];
 			[indicator startAnimating];

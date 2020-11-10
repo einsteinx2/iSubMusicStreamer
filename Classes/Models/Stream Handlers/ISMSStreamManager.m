@@ -388,7 +388,7 @@ LOG_LEVEL_ISUB_DEBUG
 
 - (void)saveHandlerStack
 {
-	NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.handlerStack];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.handlerStack requiringSecureCoding:NO error:nil];
 	if (data)
 	{
 		[[NSUserDefaults standardUserDefaults] setObject:data forKey:@"handlerStack"];
@@ -399,8 +399,9 @@ LOG_LEVEL_ISUB_DEBUG
 - (void)loadHandlerStack
 {	
 	NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"handlerStack"];
-	if (data) 
-		self.handlerStack = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    if (data) {
+        self.handlerStack = [NSKeyedUnarchiver unarchivedObjectOfClass:NSMutableArray.class fromData:data error:nil];
+    }
 
 	for (ISMSStreamHandler *handler in self.handlerStack)
 	{

@@ -75,7 +75,7 @@ LOG_LEVEL_ISUB_DEBUG
 			
 			if (_coverArtId && self.isLarge)
 			{
-				self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+                self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
 				self.activityIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 				self.activityIndicator.center = CGPointMake(self.width/2, self.height/2);
 				[self addSubview:self.activityIndicator];

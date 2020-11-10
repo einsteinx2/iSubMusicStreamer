@@ -13,40 +13,29 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 @implementation NSArray (Plist)
 
-- (BOOL)writeToPlist:(NSString *)path
-{
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self];
-    if (data)
-    {
+- (BOOL)writeToPlist:(NSString *)path {
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self requiringSecureCoding:NO error:nil];
+    if (data) {
         return [data writeToFile:path atomically:YES];;
-    }
-    else
-    {
+    } else {
         NSError *error;
         [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
-        if (error)
-        {
+        if (error) {
             DDLogError(@"[NSArray] error writing plist to path: %@  error: %@", path, error);
         }
     }
     return NO;
 }
 
-+ (id)readFromPlist:(NSString *)path
-{
++ (id)readFromPlist:(NSString *)path {
     NSData *data = [NSData dataWithContentsOfFile:path];
-    if (data)
-    {
-        NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        if ([array isKindOfClass:[NSArray class]])
-        {
-            if (self == [NSMutableArray class])
-            {
+    if (data) {
+        NSArray *array = [NSKeyedUnarchiver unarchivedObjectOfClass:NSArray.class fromData:data error:nil];
+        if ([array isKindOfClass:[NSArray class]]) {
+            if (self == [NSMutableArray class]) {
                 // We're calling this method on NSMutableArray, so return a mutable array
                 return [array mutableCopy];
-            }
-            else
-            {
+            } else {
                 // Just return the array
                 return array;
             }

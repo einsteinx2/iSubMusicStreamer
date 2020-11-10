@@ -201,7 +201,7 @@
 	if (isMoreResults)
 	{
 		cell.textLabel.text = @"Loading more results...";
-		UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
 		CGFloat y = [self tableView:self.tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]] / 2.;
 		indicator.center = CGPointMake(300, y);
 		indicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
