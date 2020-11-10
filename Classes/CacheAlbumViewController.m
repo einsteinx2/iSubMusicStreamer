@@ -181,7 +181,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 	
 	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
 	{
-		FMResultSet *result = [db executeQuery:query withArgumentsInArray:segments];
+		FMResultSet *result = [db executeQuery:query withArgumentsInArray:self.segments];
 		while ([result next])
 		{
 			@autoreleasepool 
@@ -299,7 +299,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 	NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:50];
 	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
 	{
-		FMResultSet *result = [db executeQuery:query withArgumentsInArray:segments];
+        FMResultSet *result = [db executeQuery:query withArgumentsInArray:self.segments];
 		while ([result next])
 		{
 			@autoreleasepool 

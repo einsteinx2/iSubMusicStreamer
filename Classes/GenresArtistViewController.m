@@ -337,7 +337,7 @@
 		
 		[dbQueue inDatabase:^(FMDatabase *db)
 		{
-			FMResultSet *result = [db executeQuery:query, [listOfArtists objectAtIndexSafe:indexPath.row], self.title];
+			FMResultSet *result = [db executeQuery:query, [self.listOfArtists objectAtIndexSafe:indexPath.row], self.title];
 			while ([result next])
 			{
 				@autoreleasepool 

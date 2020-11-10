@@ -311,7 +311,7 @@ static const CFOptionFlags kNetworkEvents = kCFStreamEventOpenCompleted | kCFStr
              self.isDownloading = NO;
          }
 		 
-		 if (_readStreamRef == NULL)
+        if (self->_readStreamRef == NULL)
 		 {
 			 //DLog(@"------------------------------ stream is nil so returning");
 			 return;
@@ -322,12 +322,12 @@ static const CFOptionFlags kNetworkEvents = kCFStreamEventOpenCompleted | kCFStr
 		 //	otherwise your notifier may be called after you released the stream leaving you with a 
 		 //	bogus stream within your notifier.
 		 //DLog(@"canceling stream: %@", readStreamRef);
-		 CFReadStreamSetClient(_readStreamRef, kCFStreamEventNone, NULL, NULL);
-		 CFReadStreamUnscheduleFromRunLoop(_readStreamRef, CFRunLoopGetMain(), kCFRunLoopCommonModes);
-		 CFReadStreamClose(_readStreamRef);
-		 CFRelease(_readStreamRef);
+        CFReadStreamSetClient(self->_readStreamRef, kCFStreamEventNone, NULL, NULL);
+        CFReadStreamUnscheduleFromRunLoop(self->_readStreamRef, CFRunLoopGetMain(), kCFRunLoopCommonModes);
+        CFReadStreamClose(self->_readStreamRef);
+        CFRelease(self->_readStreamRef);
 		 
-		 _readStreamRef = NULL;
+        self->_readStreamRef = NULL;
          
          self.selfRef = nil;
 	 }];

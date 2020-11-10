@@ -449,7 +449,7 @@
 					// Cover up for blank insert problem
 					NSString *artist = [result stringForColumnIndex:0];
 					if (artist.length > 0)
-						[listOfArtists addObject:[artist copy]];
+						[self.listOfArtists addObject:[artist copy]];
 				}
 			}
 			[result close];

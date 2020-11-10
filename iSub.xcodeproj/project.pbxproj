@@ -1250,20 +1250,20 @@
 		53FE39151EA961ED0058B925 /* DDRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38C81EA961ED0058B925 /* DDRange.m */; };
 		53FE39161EA961ED0058B925 /* HTTPAuthenticationRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38CA1EA961ED0058B925 /* HTTPAuthenticationRequest.m */; };
 		53FE39181EA961ED0058B925 /* HTTPAuthenticationRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38CA1EA961ED0058B925 /* HTTPAuthenticationRequest.m */; };
-		53FE39191EA961ED0058B925 /* HTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38CC1EA961ED0058B925 /* HTTPConnection.m */; };
-		53FE391B1EA961ED0058B925 /* HTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38CC1EA961ED0058B925 /* HTTPConnection.m */; };
+		53FE39191EA961ED0058B925 /* HTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38CC1EA961ED0058B925 /* HTTPConnection.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE391B1EA961ED0058B925 /* HTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38CC1EA961ED0058B925 /* HTTPConnection.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
 		53FE391C1EA961ED0058B925 /* HTTPMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38CF1EA961ED0058B925 /* HTTPMessage.m */; };
 		53FE391E1EA961ED0058B925 /* HTTPMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38CF1EA961ED0058B925 /* HTTPMessage.m */; };
-		53FE391F1EA961ED0058B925 /* HTTPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38D21EA961ED0058B925 /* HTTPServer.m */; };
-		53FE39211EA961ED0058B925 /* HTTPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38D21EA961ED0058B925 /* HTTPServer.m */; };
+		53FE391F1EA961ED0058B925 /* HTTPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38D21EA961ED0058B925 /* HTTPServer.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE39211EA961ED0058B925 /* HTTPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38D21EA961ED0058B925 /* HTTPServer.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
 		53FE39221EA961ED0058B925 /* MultipartFormDataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38D51EA961ED0058B925 /* MultipartFormDataParser.m */; };
 		53FE39241EA961ED0058B925 /* MultipartFormDataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38D51EA961ED0058B925 /* MultipartFormDataParser.m */; };
 		53FE39251EA961ED0058B925 /* MultipartMessageHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38D71EA961ED0058B925 /* MultipartMessageHeader.m */; };
 		53FE39271EA961ED0058B925 /* MultipartMessageHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38D71EA961ED0058B925 /* MultipartMessageHeader.m */; };
 		53FE39281EA961ED0058B925 /* MultipartMessageHeaderField.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38D91EA961ED0058B925 /* MultipartMessageHeaderField.m */; };
 		53FE392A1EA961ED0058B925 /* MultipartMessageHeaderField.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38D91EA961ED0058B925 /* MultipartMessageHeaderField.m */; };
-		53FE392B1EA961ED0058B925 /* HTTPAsyncFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38DC1EA961ED0058B925 /* HTTPAsyncFileResponse.m */; };
-		53FE392D1EA961ED0058B925 /* HTTPAsyncFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38DC1EA961ED0058B925 /* HTTPAsyncFileResponse.m */; };
+		53FE392B1EA961ED0058B925 /* HTTPAsyncFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38DC1EA961ED0058B925 /* HTTPAsyncFileResponse.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE392D1EA961ED0058B925 /* HTTPAsyncFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38DC1EA961ED0058B925 /* HTTPAsyncFileResponse.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
 		53FE392E1EA961ED0058B925 /* HTTPDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38DE1EA961ED0058B925 /* HTTPDataResponse.m */; };
 		53FE39301EA961ED0058B925 /* HTTPDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38DE1EA961ED0058B925 /* HTTPDataResponse.m */; };
 		53FE39311EA961ED0058B925 /* HTTPDynamicFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38E01EA961ED0058B925 /* HTTPDynamicFileResponse.m */; };
@@ -1272,8 +1272,8 @@
 		53FE39361EA961ED0058B925 /* HTTPFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38E21EA961ED0058B925 /* HTTPFileResponse.m */; };
 		53FE39371EA961ED0058B925 /* HTTPRedirectResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38E41EA961ED0058B925 /* HTTPRedirectResponse.m */; };
 		53FE39391EA961ED0058B925 /* HTTPRedirectResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38E41EA961ED0058B925 /* HTTPRedirectResponse.m */; };
-		53FE393A1EA961ED0058B925 /* WebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38E61EA961ED0058B925 /* WebSocket.m */; };
-		53FE393C1EA961ED0058B925 /* WebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38E61EA961ED0058B925 /* WebSocket.m */; };
+		53FE393A1EA961ED0058B925 /* WebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38E61EA961ED0058B925 /* WebSocket.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE393C1EA961ED0058B925 /* WebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38E61EA961ED0058B925 /* WebSocket.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
 		53FE393D1EA961ED0058B925 /* DAVConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38EA1EA961ED0058B925 /* DAVConnection.m */; };
 		53FE393F1EA961ED0058B925 /* DAVConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38EA1EA961ED0058B925 /* DAVConnection.m */; };
 		53FE39401EA961ED0058B925 /* DAVResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38EC1EA961ED0058B925 /* DAVResponse.m */; };
@@ -1282,14 +1282,14 @@
 		53FE39451EA961ED0058B925 /* DELETEResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38EE1EA961ED0058B925 /* DELETEResponse.m */; };
 		53FE39461EA961ED0058B925 /* PUTResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38F01EA961ED0058B925 /* PUTResponse.m */; };
 		53FE39481EA961ED0058B925 /* PUTResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38F01EA961ED0058B925 /* PUTResponse.m */; };
-		53FE39521EA961ED0058B925 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38F71EA961ED0058B925 /* GCDAsyncSocket.m */; };
-		53FE39541EA961ED0058B925 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38F71EA961ED0058B925 /* GCDAsyncSocket.m */; };
+		53FE39521EA961ED0058B925 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38F71EA961ED0058B925 /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE39541EA961ED0058B925 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38F71EA961ED0058B925 /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
 		53FE397D1EA963180058B925 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39721EA963180058B925 /* FMDatabase.m */; };
 		53FE397F1EA963180058B925 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39721EA963180058B925 /* FMDatabase.m */; };
 		53FE39801EA963180058B925 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39741EA963180058B925 /* FMDatabaseAdditions.m */; };
 		53FE39821EA963180058B925 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39741EA963180058B925 /* FMDatabaseAdditions.m */; };
-		53FE39831EA963180058B925 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39761EA963180058B925 /* FMDatabasePool.m */; };
-		53FE39851EA963180058B925 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39761EA963180058B925 /* FMDatabasePool.m */; };
+		53FE39831EA963180058B925 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39761EA963180058B925 /* FMDatabasePool.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE39851EA963180058B925 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39761EA963180058B925 /* FMDatabasePool.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
 		53FE39861EA963180058B925 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39781EA963180058B925 /* FMDatabaseQueue.m */; };
 		53FE39881EA963180058B925 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39781EA963180058B925 /* FMDatabaseQueue.m */; };
 		53FE39891EA963180058B925 /* FMDatabaseQueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE397A1EA963180058B925 /* FMDatabaseQueueAdditions.m */; };
@@ -1306,18 +1306,18 @@
 		53FE39AB1EA970220058B925 /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A51EA970220058B925 /* DDContextFilterLogFormatter.m */; };
 		53FE39AC1EA970220058B925 /* DDDispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A71EA970220058B925 /* DDDispatchQueueLogFormatter.m */; };
 		53FE39AD1EA970220058B925 /* DDDispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A71EA970220058B925 /* DDDispatchQueueLogFormatter.m */; };
-		53FE39AE1EA970220058B925 /* DDMultiFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A91EA970220058B925 /* DDMultiFormatter.m */; };
-		53FE39AF1EA970220058B925 /* DDMultiFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A91EA970220058B925 /* DDMultiFormatter.m */; };
-		53FE39BB1EA9703E0058B925 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B11EA9703E0058B925 /* DDAbstractDatabaseLogger.m */; };
-		53FE39BC1EA9703E0058B925 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B11EA9703E0058B925 /* DDAbstractDatabaseLogger.m */; };
+		53FE39AE1EA970220058B925 /* DDMultiFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A91EA970220058B925 /* DDMultiFormatter.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE39AF1EA970220058B925 /* DDMultiFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A91EA970220058B925 /* DDMultiFormatter.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE39BB1EA9703E0058B925 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B11EA9703E0058B925 /* DDAbstractDatabaseLogger.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE39BC1EA9703E0058B925 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B11EA9703E0058B925 /* DDAbstractDatabaseLogger.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
 		53FE39BD1EA9703E0058B925 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B31EA9703E0058B925 /* DDASLLogger.m */; };
 		53FE39BE1EA9703E0058B925 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B31EA9703E0058B925 /* DDASLLogger.m */; };
-		53FE39BF1EA9703E0058B925 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B51EA9703E0058B925 /* DDFileLogger.m */; };
-		53FE39C01EA9703E0058B925 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B51EA9703E0058B925 /* DDFileLogger.m */; };
-		53FE39C11EA9703E0058B925 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B71EA9703E0058B925 /* DDLog.m */; };
-		53FE39C21EA9703E0058B925 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B71EA9703E0058B925 /* DDLog.m */; };
-		53FE39C31EA9703E0058B925 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39BA1EA9703E0058B925 /* DDTTYLogger.m */; };
-		53FE39C41EA9703E0058B925 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39BA1EA9703E0058B925 /* DDTTYLogger.m */; };
+		53FE39BF1EA9703E0058B925 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B51EA9703E0058B925 /* DDFileLogger.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE39C01EA9703E0058B925 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B51EA9703E0058B925 /* DDFileLogger.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE39C11EA9703E0058B925 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B71EA9703E0058B925 /* DDLog.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE39C21EA9703E0058B925 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39B71EA9703E0058B925 /* DDLog.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE39C31EA9703E0058B925 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39BA1EA9703E0058B925 /* DDTTYLogger.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
+		53FE39C41EA9703E0058B925 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39BA1EA9703E0058B925 /* DDTTYLogger.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
 		D0EA476219DE41510083CE05 /* ISMSPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476119DE41510083CE05 /* ISMSPlayerView.m */; };
 		D0EA476419DE41510083CE05 /* ISMSPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476119DE41510083CE05 /* ISMSPlayerView.m */; };
 		D0EA476719DE41E30083CE05 /* ISMSPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476619DE41E30083CE05 /* ISMSPlayerViewController.m */; };
@@ -5704,6 +5704,7 @@
 					"ADHOC=1",
 					"CONFIGURATION_$(CONFIGURATION)",
 					"IOS=1",
+					"GLES_SILENCE_DEPRECATION=1",
 				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -5932,6 +5933,7 @@
 					"DEBUG=1",
 					"CONFIGURATION_$(CONFIGURATION)",
 					"IOS=1",
+					"GLES_SILENCE_DEPRECATION=1",
 				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -6001,6 +6003,7 @@
 					"RELEASE=1",
 					"CONFIGURATION_$(CONFIGURATION)",
 					"IOS=1",
+					"GLES_SILENCE_DEPRECATION=1",
 				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;

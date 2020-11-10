@@ -103,7 +103,7 @@
 	NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
 	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
 	{
-		FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ", artistNameLabel.text];
+		FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ", self.artistNameLabel.text];
 		while ([result next])
 		{
 			@autoreleasepool 
@@ -149,7 +149,7 @@
 	NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
 	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
 	{
-		FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ORDER BY seg2 COLLATE NOCASE", artistNameLabel.text];
+		FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ORDER BY seg2 COLLATE NOCASE", self.artistNameLabel.text];
 		while ([result next])
 		{
 			@autoreleasepool 

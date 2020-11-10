@@ -161,7 +161,7 @@
 	NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
 	[dbQueue inDatabase:^(FMDatabase *db)
 	{
-		FMResultSet *result = [db executeQuery:query, seg1, self.title, genre];
+		FMResultSet *result = [db executeQuery:query, self.seg1, self.title, self.genre];
 		while ([result next])
 		{		
 			@autoreleasepool 
@@ -227,7 +227,7 @@
 	NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
 	[dbQueue inDatabase:^(FMDatabase *db)
 	{
-		FMResultSet *result = [db executeQuery:query, seg1, self.title, genre];
+		FMResultSet *result = [db executeQuery:query, self.seg1, self.title, self.genre];
 		while ([result next])
 		{
 			@autoreleasepool 
@@ -413,7 +413,7 @@
 			
 			[dbQueue inDatabase:^(FMDatabase *db)
 			{
-				FMResultSet *result = [db executeQuery:query, seg1, [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1], genre];
+				FMResultSet *result = [db executeQuery:query, self.seg1, [[self.listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1], self.genre];
 				while ([result next])
 				{
 					@autoreleasepool 
@@ -422,7 +422,7 @@
 						NSInteger segs = [result intForColumnIndex:1];
 						NSString *seg = [result stringForColumnIndex:2];
 						
-						if (segs > (segment + 1))
+						if (segs > (self.segment + 1))
 						{
 							if (md5 && seg)
 								[genresAlbumViewController.listOfAlbums addObject:@[md5, seg]];

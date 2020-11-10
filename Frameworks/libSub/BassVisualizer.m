@@ -70,16 +70,16 @@
 	dispatch_async(queue, ^{
 		@synchronized(self)
 		{
-			if (!_channel)
+			if (!self.channel)
 				return;
 			
 			// Get the FFT data for visualizer
 			if (self.type == BassVisualizerTypeFFT)
-				BASS_ChannelGetData(self.channel, _fftData, BASS_DATA_FFT2048);
+                BASS_ChannelGetData(self.channel, self->_fftData, BASS_DATA_FFT2048);
 			
 			// Get the data for line spec visualizer
 			if (self.type == BassVisualizerTypeLine)
-				BASS_ChannelGetData(self.channel, _lineSpecBuf, _lineSpecBufSize);
+				BASS_ChannelGetData(self.channel, self->_lineSpecBuf, self->_lineSpecBufSize);
 		}
 	});
 }

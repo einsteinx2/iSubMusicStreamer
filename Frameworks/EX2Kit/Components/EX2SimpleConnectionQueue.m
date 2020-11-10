@@ -103,7 +103,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     // Make sure this is always the main thread
     [EX2Dispatch runInMainThreadAndWaitUntilDone:YES block:^
      {
-         _numberOfCompletedConnections++;
+         self->_numberOfCompletedConnections++;
          
          [self.activeConnectionStack removeObjectSafe:connection];
          
@@ -111,8 +111,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
          
          if (self.activeConnectionStack.count + self.waitingConnectionStack.count == 0)
          {
-             _isRunning = NO;
-             _numberOfCompletedConnections = 0;
+             self->_isRunning = NO;
+             self->_numberOfCompletedConnections = 0;
              [self.delegate connectionQueueDidFinish:self];
              
              [NSNotificationCenter postNotificationToMainThreadWithName:EX2SimpleConnectionQueueDidStop object:self];

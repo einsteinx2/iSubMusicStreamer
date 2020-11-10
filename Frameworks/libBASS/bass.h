@@ -888,8 +888,8 @@ BOOL BASSDEF(BASS_SetConfig)(DWORD option, DWORD value);
 DWORD BASSDEF(BASS_GetConfig)(DWORD option);
 BOOL BASSDEF(BASS_SetConfigPtr)(DWORD option, const void *value);
 void *BASSDEF(BASS_GetConfigPtr)(DWORD option);
-DWORD BASSDEF(BASS_GetVersion)();
-int BASSDEF(BASS_ErrorGetCode)();
+DWORD BASSDEF(BASS_GetVersion)(void);
+int BASSDEF(BASS_ErrorGetCode)(void);
 BOOL BASSDEF(BASS_GetDeviceInfo)(DWORD device, BASS_DEVICEINFO *info);
 #if defined(_WIN32) && !defined(_WIN32_WCE) && !(WINAPI_FAMILY && WINAPI_FAMILY!=WINAPI_FAMILY_DESKTOP_APP)
 BOOL BASSDEF(BASS_Init)(int device, DWORD freq, DWORD flags, HWND win, const GUID *dsguid);
@@ -897,19 +897,19 @@ BOOL BASSDEF(BASS_Init)(int device, DWORD freq, DWORD flags, HWND win, const GUI
 BOOL BASSDEF(BASS_Init)(int device, DWORD freq, DWORD flags, void *win, void *dsguid);
 #endif
 BOOL BASSDEF(BASS_SetDevice)(DWORD device);
-DWORD BASSDEF(BASS_GetDevice)();
-BOOL BASSDEF(BASS_Free)();
+DWORD BASSDEF(BASS_GetDevice)(void);
+BOOL BASSDEF(BASS_Free)(void);
 #if defined(_WIN32) && !defined(_WIN32_WCE) && !(WINAPI_FAMILY && WINAPI_FAMILY!=WINAPI_FAMILY_DESKTOP_APP)
 void *BASSDEF(BASS_GetDSoundObject)(DWORD object);
 #endif
 BOOL BASSDEF(BASS_GetInfo)(BASS_INFO *info);
 BOOL BASSDEF(BASS_Update)(DWORD length);
-float BASSDEF(BASS_GetCPU)();
-BOOL BASSDEF(BASS_Start)();
-BOOL BASSDEF(BASS_Stop)();
-BOOL BASSDEF(BASS_Pause)();
+float BASSDEF(BASS_GetCPU)(void);
+BOOL BASSDEF(BASS_Start)(void);
+BOOL BASSDEF(BASS_Stop)(void);
+BOOL BASSDEF(BASS_Pause)(void);
 BOOL BASSDEF(BASS_SetVolume)(float volume);
-float BASSDEF(BASS_GetVolume)();
+float BASSDEF(BASS_GetVolume)(void);
 
 HPLUGIN BASSDEF(BASS_PluginLoad)(const char *file, DWORD flags);
 BOOL BASSDEF(BASS_PluginFree)(HPLUGIN handle);
@@ -919,7 +919,7 @@ BOOL BASSDEF(BASS_Set3DFactors)(float distf, float rollf, float doppf);
 BOOL BASSDEF(BASS_Get3DFactors)(float *distf, float *rollf, float *doppf);
 BOOL BASSDEF(BASS_Set3DPosition)(const BASS_3DVECTOR *pos, const BASS_3DVECTOR *vel, const BASS_3DVECTOR *front, const BASS_3DVECTOR *top);
 BOOL BASSDEF(BASS_Get3DPosition)(BASS_3DVECTOR *pos, BASS_3DVECTOR *vel, BASS_3DVECTOR *front, BASS_3DVECTOR *top);
-void BASSDEF(BASS_Apply3D)();
+void BASSDEF(BASS_Apply3D)(void);
 #if defined(_WIN32) && !defined(_WIN32_WCE) && !(WINAPI_FAMILY && WINAPI_FAMILY!=WINAPI_FAMILY_DESKTOP_APP)
 BOOL BASSDEF(BASS_SetEAXParameters)(int env, float vol, float decay, float damp);
 BOOL BASSDEF(BASS_GetEAXParameters)(DWORD *env, float *vol, float *decay, float *damp);
@@ -951,8 +951,8 @@ DWORD BASSDEF(BASS_StreamPutFileData)(HSTREAM handle, const void *buffer, DWORD 
 BOOL BASSDEF(BASS_RecordGetDeviceInfo)(DWORD device, BASS_DEVICEINFO *info);
 BOOL BASSDEF(BASS_RecordInit)(int device);
 BOOL BASSDEF(BASS_RecordSetDevice)(DWORD device);
-DWORD BASSDEF(BASS_RecordGetDevice)();
-BOOL BASSDEF(BASS_RecordFree)();
+DWORD BASSDEF(BASS_RecordGetDevice)(void);
+BOOL BASSDEF(BASS_RecordFree)(void);
 BOOL BASSDEF(BASS_RecordGetInfo)(BASS_RECORDINFO *info);
 const char *BASSDEF(BASS_RecordGetInputName)(int input);
 BOOL BASSDEF(BASS_RecordSetInput)(int input, DWORD flags, float volume);

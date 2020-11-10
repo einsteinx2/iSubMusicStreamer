@@ -217,7 +217,7 @@
                 [root iterate:@"playlist.entry" usingBlock:^(RXMLElement *e) {
                     ISMSSong *aSong = [[ISMSSong alloc] initWithRXMLElement:e];
                     [aSong insertIntoServerPlaylistWithPlaylistId:md5];
-                    if (isDownload)
+                    if (self.isDownload)
                     {
                         [aSong addToCacheQueueDbQueue];
                     }

@@ -142,7 +142,7 @@ LOG_LEVEL_ISUB_DEFAULT
         }
         
         ALog(@"Total cache size was found to be: %llu", size);
-        _cacheSize = size;
+        self->_cacheSize = size;
         
     }];
 //	unsigned long long size = 0;

@@ -33,7 +33,7 @@
 #define BASS_FX_FREESOURCE			0x10000	// Free the source handle as well?
 
 // BASS_FX Version
-DWORD BASS_FXDEF(BASS_FX_GetVersion)();
+DWORD BASS_FXDEF(BASS_FX_GetVersion)(void);
 
 /*===========================================================================
 	DSP (Digital Signal Processing)

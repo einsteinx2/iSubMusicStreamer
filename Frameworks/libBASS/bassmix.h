@@ -67,7 +67,7 @@ typedef struct {
 #define BASS_CTYPE_STREAM_MIXER	0x10800
 #define BASS_CTYPE_STREAM_SPLIT	0x10801
 
-DWORD BASSMIXDEF(BASS_Mixer_GetVersion)();
+DWORD BASSMIXDEF(BASS_Mixer_GetVersion)(void);
 
 HSTREAM BASSMIXDEF(BASS_Mixer_StreamCreate)(DWORD freq, DWORD chans, DWORD flags);
 BOOL BASSMIXDEF(BASS_Mixer_StreamAddChannel)(HSTREAM handle, DWORD channel, DWORD flags);

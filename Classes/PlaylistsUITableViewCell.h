@@ -10,7 +10,7 @@
 
 @class SUSServerPlaylist;
 
-@interface PlaylistsUITableViewCell : CustomUITableViewCell 
+@interface PlaylistsUITableViewCell : CustomUITableViewCell
 
 @property (strong) UIScrollView *playlistNameScrollView;
 @property (strong) UILabel *playlistNameLabel;
