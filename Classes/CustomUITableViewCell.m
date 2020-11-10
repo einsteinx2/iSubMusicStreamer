@@ -54,10 +54,9 @@
 		self.overlayView = [CellOverlay cellOverlayWithTableCell:self];
 		[self.contentView addSubview:self.overlayView];
 		
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:.25];
-		self.overlayView.alpha = 1.0;
-		[UIView commitAnimations];		
+        [UIView animateWithDuration:0.25 animations:^{
+            self.overlayView.alpha = 1.0;
+        }];
 		
 		self.isOverlayShowing = YES;
 	}
@@ -67,24 +66,17 @@
 {
 	if (self.overlayView)
 	{
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:.25];
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationDidStopSelector:@selector(overlayHidden)];
-		self.overlayView.alpha = 0.0;
-		[UIView commitAnimations];
-		
+        [UIView animateWithDuration:0.25 animations:^{
+            self.overlayView.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            if (!self.isOverlayShowing) {
+                [self.overlayView removeFromSuperview];
+                self.overlayView = nil;
+            }
+        }];
+        
 		self.isOverlayShowing = NO;
 	}
-}
-
-- (void)overlayHidden
-{
-	if (!self.isOverlayShowing)
-	{
-		[self.overlayView removeFromSuperview];
-		self.overlayView = nil;
-	}	
 }
 
 - (void)downloadAction

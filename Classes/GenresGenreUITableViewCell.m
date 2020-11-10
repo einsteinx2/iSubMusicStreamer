@@ -178,21 +178,14 @@
 {
 	if (self.genreNameLabel.frame.size.width > self.genreNameScrollView.frame.size.width)
 	{
-		[UIView beginAnimations:@"scroll" context:nil];
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationDidStopSelector:@selector(textScrollingStopped)];
-		[UIView setAnimationDuration:self.genreNameLabel.frame.size.width/(float)150];
-		self.genreNameScrollView.contentOffset = CGPointMake(self.genreNameLabel.frame.size.width - self.genreNameScrollView.frame.size.width + 10, 0);
-		[UIView commitAnimations];
+        [UIView animateWithDuration:self.genreNameLabel.frame.size.width/150. animations:^{
+            self.genreNameScrollView.contentOffset = CGPointMake(self.genreNameLabel.frame.size.width - self.genreNameScrollView.frame.size.width + 10, 0);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:self.genreNameLabel.frame.size.width/150. animations:^{
+                self.genreNameScrollView.contentOffset = CGPointZero;
+            }];
+        }];
 	}
-}
-
-- (void)textScrollingStopped
-{
-	[UIView beginAnimations:@"scroll" context:nil];
-	[UIView setAnimationDuration:self.genreNameLabel.frame.size.width/(float)150];
-	self.genreNameScrollView.contentOffset = CGPointZero;
-	[UIView commitAnimations];
 }
 
 @end

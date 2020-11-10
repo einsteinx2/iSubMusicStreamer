@@ -180,21 +180,14 @@
 {
 	if (self.artistNameLabel.frame.size.width > self.artistNameScrollView.frame.size.width)
 	{
-		[UIView beginAnimations:@"scroll" context:nil];
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationDidStopSelector:@selector(textScrollingStopped)];
-		[UIView setAnimationDuration:self.artistNameLabel.frame.size.width/(float)150];
-		self.artistNameScrollView.contentOffset = CGPointMake(self.artistNameLabel.frame.size.width - self.artistNameScrollView.frame.size.width + 10, 0);
-		[UIView commitAnimations];
+        [UIView animateWithDuration:self.artistNameLabel.frame.size.width/150. animations:^{
+            self.artistNameScrollView.contentOffset = CGPointMake(self.artistNameLabel.frame.size.width - self.artistNameScrollView.frame.size.width + 10, 0);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:self.artistNameLabel.frame.size.width/150. animations:^{
+                self.artistNameScrollView.contentOffset = CGPointZero;
+            }];
+        }];
 	}
-}
-
-- (void)textScrollingStopped
-{
-	[UIView beginAnimations:@"scroll" context:nil];
-	[UIView setAnimationDuration:self.artistNameLabel.frame.size.width/(float)150];
-	self.artistNameScrollView.contentOffset = CGPointZero;
-	[UIView commitAnimations];
 }
 
 @end

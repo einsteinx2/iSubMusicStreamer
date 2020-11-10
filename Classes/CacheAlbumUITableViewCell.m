@@ -190,21 +190,14 @@
 {
 	if (self.albumNameLabel.frame.size.width > self.albumNameScrollView.frame.size.width)
 	{
-		[UIView beginAnimations:@"scroll" context:nil];
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationDidStopSelector:@selector(textScrollingStopped)];
-		[UIView setAnimationDuration:self.albumNameLabel.frame.size.width/150.];
-		self.albumNameScrollView.contentOffset = CGPointMake(self.albumNameLabel.frame.size.width - self.albumNameScrollView.frame.size.width + 10, 0);
-		[UIView commitAnimations];
+        [UIView animateWithDuration:self.albumNameLabel.frame.size.width/150. animations:^{
+            self.albumNameScrollView.contentOffset = CGPointMake(self.albumNameLabel.frame.size.width - self.albumNameScrollView.frame.size.width + 10, 0);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:self.albumNameLabel.frame.size.width/150. animations:^{
+                self.albumNameScrollView.contentOffset = CGPointZero;
+            }];
+        }];
 	}
-}
-
-- (void)textScrollingStopped
-{
-	[UIView beginAnimations:@"scroll" context:nil];
-	[UIView setAnimationDuration:self.albumNameLabel.frame.size.width/150.];
-	self.albumNameScrollView.contentOffset = CGPointZero;
-	[UIView commitAnimations];
 }
 
 @end

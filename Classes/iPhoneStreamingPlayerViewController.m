@@ -940,6 +940,8 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	[aView addSubview:action];
 	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:aView];
+    
+    UIGraphicsEndImageContext();
 }
 
 - (void)playlistToggleAnimated:(BOOL)animated saveState:(BOOL)saveState
@@ -956,32 +958,23 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		
 		// Set the icon in the top right
 		[self updateBarButtonImage];
-		
-		// Flip the album art horizontally
-		self.coverArtHolderView.transform = CGAffineTransformMakeScale(-1, 1);
-		self.pageControlViewController.view.transform = CGAffineTransformMakeScale(-1, 1);
-		
-		if (animated)
-		{
-			[UIView beginAnimations:nil context:NULL];
-			[UIView setAnimationDuration:0.40];
-			[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.coverArtHolderView cache:YES];
-		}
-		
-		//[pageControlViewController resetScrollView];
-		[self.coverArtHolderView addSubview:self.pageControlViewController.view];
-		self.reflectionView.alpha = 0.0;
-		
-		self.extraButtonsButton.alpha = 0.0;
-		self.extraButtonsButton.enabled = NO;
-		//extraButtons.alpha = 0.0;
-		//songInfoView.alpha = 0.0;
-		
-		if (animated)
-			[UIView commitAnimations];
-		
-		//[pageControlViewController viewWillAppear:NO];
-	}
+        
+        // Flip the album art horizontally
+        self.pageControlViewController.view.transform = CGAffineTransformMakeScale(-1, 1);
+        self.coverArtHolderView.transform = CGAffineTransformMakeScale(-1, 1);
+        self.extraButtonsButton.enabled = NO;
+        if (animated) {
+            [UIView transitionWithView:self.coverArtHolderView duration:0.40 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+                self.reflectionView.alpha = 0.0;
+                self.extraButtonsButton.alpha = 0.5;
+                [self.coverArtHolderView addSubview:self.pageControlViewController.view];
+            } completion:nil];
+        } else {
+            self.reflectionView.alpha = 0.0;
+            self.extraButtonsButton.alpha = 0.5;
+            [self.coverArtHolderView addSubview:self.pageControlViewController.view];
+        }
+    }
 	else
 	{
 		self.songInfoToggleButton.userInteractionEnabled = YES;
@@ -990,33 +983,24 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		
 		// Flip the album art horizontally
 		self.coverArtHolderView.transform = CGAffineTransformMakeScale(1, 1);
-		
+        self.extraButtonsButton.enabled = YES;
 		if (animated)
 		{
-			[UIView beginAnimations:nil context:NULL];
-			[UIView setAnimationDuration:0.4];
-			[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.coverArtHolderView cache:YES];
-			//[UIView setAnimationDelegate:self];
-			//[UIView setAnimationDidStopSelector:@selector(releaseSongInfo:finished:context:)];
-		}
-		
-		//[[[coverArtImageView subviews] lastObject] removeFromSuperview];
-		[self.pageControlViewController.view removeFromSuperview];
-		self.reflectionView.alpha = kDefaultReflectionOpacity;
-		
-		self.extraButtonsButton.alpha = 1.0;
-		self.extraButtonsButton.enabled = YES;
-		//extraButtons.alpha = 1.0;
-		//songInfoView.alpha = 1.0;
-		
-		UIGraphicsEndImageContext();
-		
-		if (animated)
-			[UIView commitAnimations];
-		
-		//[pageControlViewController resetScrollView];
-		
-		self.pageControlViewController = nil;
+            [UIView transitionWithView:self.coverArtHolderView duration:0.40 options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
+                self.reflectionView.alpha = kDefaultReflectionOpacity;
+                self.extraButtonsButton.alpha = 1.0;
+                [self.pageControlViewController.view removeFromSuperview];
+            } completion:^(BOOL finished) {
+                self.pageControlViewController = nil;
+            }];
+        }
+        else
+        {
+            self.reflectionView.alpha = kDefaultReflectionOpacity;
+            self.extraButtonsButton.alpha = 1.0;
+            [self.pageControlViewController.view removeFromSuperview];
+            self.pageControlViewController = nil;
+        }
 	}
 	
 	self.isFlipped = !self.isFlipped;
@@ -1085,24 +1069,6 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	[self initSongInfo];
 }
 
-/*- (void)showExtraButtonsTemporarilyAnimated
-{
-	if (!isExtraButtonsShowing)
-	{
-		[self extraButtonsToggleAnimated:YES saveState:NO];
-		[self performSelector:@selector(hideExtraButtons) withObject:nil afterDelay:5.0];
-	}
-}
-
-- (void)showExtraButtonsTemporarily
-{
-	if (!isExtraButtonsShowing)
-	{
-		[self extraButtonsToggleAnimated:NO saveState:NO];
-		[self performSelector:@selector(hideExtraButtons) withObject:nil afterDelay:5.0];
-	}
-}*/
-
 - (void)hideExtraButtons
 {
 	[self extraButtonsToggleAnimated:YES saveState:NO];
@@ -1110,47 +1076,46 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 
 - (void)extraButtonsToggleAnimated:(BOOL)animated saveState:(BOOL)saveState
 {
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
-    {        
-        if (self.isExtraButtonsShowing)
-        {
-            [self.extraButtonsButton setImage:self.extraButtonsButtonOffImage forState:UIControlStateNormal];
-            
-            self.largeOverlayView.alpha = 0.0;
-            
-            if (animated)
-            {
-                [UIView commitAnimations];
-            }
-            else
-            {
-                [self.largeOverlayView removeFromSuperview];
-            }
-        }
-        else
-        {
-            [self.extraButtonsButton setImage:self.extraButtonsButtonOnImage forState:UIControlStateNormal];
-
-            if (settingsS.isShowLargeSongInfoInPlayer)
-            {
-                //largeOverlayView.origin = CGPointMake(0, extraButtons.height);
-                //largeOverlayView.width = coverArtImageView.width;
-                self.largeOverlayView.frame = self.coverArtImageView.bounds;//CGRectMake(0, self.extraButtons.height, self.coverArtImageView.width, self.coverArtImageView.height - self.extraButtons.height - self.songInfoView.height);
-                self.largeOverlayView.alpha = 0.0;
-                [self.coverArtImageView addSubview:self.largeOverlayView];
-            }
-            self.largeOverlayView.alpha = 1.0;
-            
-            if (animated)
-                [UIView commitAnimations];
-        }
-        
-        self.isExtraButtonsShowing = !self.isExtraButtonsShowing;
-        
-        if (saveState)
-            settingsS.isExtraPlayerControlsShowing = self.isExtraButtonsShowing;
+    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation])) {
         return;
     }
+    
+//    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
+//    {        
+//        if (self.isExtraButtonsShowing)
+//        {
+//            [self.extraButtonsButton setImage:self.extraButtonsButtonOffImage forState:UIControlStateNormal];
+//            
+//            self.largeOverlayView.alpha = 0.0;
+//            
+//            if (animated)
+//            {
+//                [UIView commitAnimations];
+//            }
+//            else
+//            {
+//                [self.largeOverlayView removeFromSuperview];
+//            }
+//        }
+//        else
+//        {
+//            [self.extraButtonsButton setImage:self.extraButtonsButtonOnImage forState:UIControlStateNormal];
+//
+//            if (settingsS.isShowLargeSongInfoInPlayer)
+//            {
+//                self.largeOverlayView.frame = self.coverArtImageView.bounds;//CGRectMake(0, self.extraButtons.height, self.coverArtImageView.width, self.coverArtImageView.height - self.extraButtons.height - self.songInfoView.height);
+//                self.largeOverlayView.alpha = 0.0;
+//                [self.coverArtImageView addSubview:self.largeOverlayView];
+//            }
+//            self.largeOverlayView.alpha = 1.0;
+//        }
+//        
+//        self.isExtraButtonsShowing = !self.isExtraButtonsShowing;
+//        
+//        if (saveState)
+//            settingsS.isExtraPlayerControlsShowing = self.isExtraButtonsShowing;
+//        return;
+//    }
     
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideExtraButtons) object:nil];
 	
@@ -1166,30 +1131,27 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	if (self.isExtraButtonsShowing)
 	{
 		[self.extraButtonsButton setImage:self.extraButtonsButtonOffImage forState:UIControlStateNormal];
-		
-		if (animated)
-		{
-			[UIView beginAnimations:nil context:nil];
-			[UIView setAnimationDelegate:self];
-			[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-			[UIView setAnimationDidStopSelector:@selector(toggleExtraButtonsAnimationDone)];
-			[UIView setAnimationDuration:0.2];
-		}
-		
-		self.extraButtons.origin = extraButtonsHidden;
-		self.songInfoView.origin = songInfoViewHidden;
-		self.largeOverlayView.alpha = 0.0;
-
-		if (animated)
-		{
-			[UIView commitAnimations];
-		}
-		else
-		{
-			[self.extraButtons removeFromSuperview];
-			[self.songInfoView removeFromSuperview];
-			[self.largeOverlayView removeFromSuperview];
-		}
+        
+        if (animated) {
+            [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+                self.extraButtons.origin = extraButtonsHidden;
+                self.songInfoView.origin = songInfoViewHidden;
+                self.largeOverlayView.alpha = 0.0;
+            } completion:^(BOOL finished) {
+                if (!self.isExtraButtonsShowing) {
+                    [self.extraButtons removeFromSuperview];
+                    [self.songInfoView removeFromSuperview];
+                    [self.largeOverlayView removeFromSuperview];
+                }
+            }];
+        } else {
+            self.extraButtons.origin = extraButtonsHidden;
+            self.songInfoView.origin = songInfoViewHidden;
+            self.largeOverlayView.alpha = 0.0;
+            [self.extraButtons removeFromSuperview];
+            [self.songInfoView removeFromSuperview];
+            [self.largeOverlayView removeFromSuperview];
+        }
 	}
 	else
 	{
@@ -1201,8 +1163,6 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		self.songInfoView.width = self.coverArtHolderView.width;
 		if (settingsS.isShowLargeSongInfoInPlayer)
 		{
-			//largeOverlayView.origin = CGPointMake(0, extraButtons.height);
-			//largeOverlayView.width = coverArtImageView.width;
 			self.largeOverlayView.frame = CGRectMake(0, self.extraButtons.height, self.coverArtImageView.width, self.coverArtImageView.height - self.extraButtons.height - self.songInfoView.height);
 			self.largeOverlayView.alpha = 0.0;
 			[self.coverArtImageView addSubview:self.largeOverlayView];
@@ -1214,22 +1174,18 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 			[self.coverArtHolderView bringSubviewToFront:self.pageControlViewController.view];
 		
 		[self updateFormatLabel];
-		
-		if (animated)
-		{
-			[UIView beginAnimations:nil context:nil];
-			[UIView setAnimationDelegate:self];
-			[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-			[UIView setAnimationDidStopSelector:@selector(toggleExtraButtonsAnimationDone)];
-			[UIView setAnimationDuration:0.2];
-		}
-		
-		self.extraButtons.origin = extraButtonsVisible;
-		self.songInfoView.origin = songInfoViewVisible;
-		self.largeOverlayView.alpha = 1.0;
-		
-		if (animated)
-			[UIView commitAnimations];
+        
+        if (animated) {
+            [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+                self.extraButtons.origin = extraButtonsVisible;
+                self.songInfoView.origin = songInfoViewVisible;
+                self.largeOverlayView.alpha = 1.0;
+            } completion:nil];
+        } else {
+            self.extraButtons.origin = extraButtonsVisible;
+            self.songInfoView.origin = songInfoViewVisible;
+            self.largeOverlayView.alpha = 1.0;
+        }
 	}
 	
 	self.isExtraButtonsShowing = !self.isExtraButtonsShowing;
@@ -1238,92 +1194,10 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		settingsS.isExtraPlayerControlsShowing = self.isExtraButtonsShowing;
 }
 
-- (void)toggleExtraButtonsAnimationDone
-{
-	if (!self.isExtraButtonsShowing)
-	{
-		[self.extraButtons removeFromSuperview];
-		[self.songInfoView removeFromSuperview];
-		[self.largeOverlayView removeFromSuperview];
-	}
-}
-
 - (IBAction)toggleExtraButtons:(id)sender
 {	
 	[self extraButtonsToggleAnimated:YES saveState:YES];
 }
-/*- (IBAction)toggleExtraButtons:(id)sender
-{	
-	CGFloat height = extraButtons.height;
-	CGFloat width = 250.;
-	CGFloat y = extraButtonsButton.y - ((height - extraButtonsButton.height) / 2);
-	
-	if (isExtraButtonsShowing)
-	{
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-		[UIView setAnimationDidStopSelector:@selector(toggleExtraButtonsAnimationDone)];
-		[UIView setAnimationDuration:0.3];
-		
-		CGRect frame = CGRectMake(extraButtonsButton.x + extraButtonsButton.width, y, 0, height);
-		extraButtons.frame = frame;
-		extraButtonsBackground.width = 0.;
-		
-		extraButtons.alpha = 0.;
-		for (UIView *subView in extraButtons.subviews)
-		{			
-			if (subView.tag)
-				subView.alpha = 0.;
-		}
-		
-		[UIView commitAnimations];
-	}
-	else
-	{ 
-		[self.view addSubview:extraButtons];
-		CGRect frame = CGRectMake(extraButtonsButton.x + 40., y, 0, height);
-		extraButtons.frame = frame;
-		extraButtons.alpha = 0.;
-		extraButtonsBackground.width = 0.;
-		
-		[self.view bringSubviewToFront:extraButtonsButton];
-		
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-		[UIView setAnimationDidStopSelector:@selector(toggleExtraButtonsAnimationDone)];
-		[UIView setAnimationDuration:0.3];
-		
-		frame = CGRectMake(extraButtonsButton.x - width + extraButtonsButton.width, y, width, height);
-		extraButtons.frame = frame;
-		extraButtonsBackground.width = width;
-		
-		extraButtons.alpha = 1.;
-		for (UIView *subView in extraButtons.subviews)
-		{			
-			if (subView.tag)
-				subView.alpha = 1.;
-		}
-		
-		[UIView commitAnimations];
-	}
-	
-	isExtraButtonsShowing = !isExtraButtonsShowing;
-}
-
-- (void)toggleExtraButtonsAnimationDone
-{
-	if (isExtraButtonsShowing)
-	{
-		
-	}
-	else
-	{
-		[extraButtons removeFromSuperview];
-	}
-}*/
-
 
 - (IBAction)touchedSlider:(id)sender
 {
@@ -1366,11 +1240,9 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	NSString *text = [NSString stringWithFormat:@"%@  x%.1f", [NSString formatTime:self.progressSlider.value], slider.scrubbingSpeed];
 	self.sliderMultipleLabel.text = text;
 	
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:0.2];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-	self.sliderMultipleLabel.alpha = 1.0;
-	[UIView commitAnimations];	
+    [UIView animateWithDuration:0.2 animations:^{
+        self.sliderMultipleLabel.alpha = 1.0;
+    }];
 }
 
 
@@ -1437,11 +1309,9 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		}
 	}
 	
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:0.2];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-	self.sliderMultipleLabel.alpha = 0.0;
-	[UIView commitAnimations];	
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        self.sliderMultipleLabel.alpha = 0.0;
+    } completion:nil];
 }
 
 - (IBAction)skipBack30:(id)sender

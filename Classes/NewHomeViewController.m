@@ -433,10 +433,6 @@
 {	
 	NSDictionary *folders = [SUSRootFoldersDAO folderDropdownFolders];
 	
-	/*NSString *key = [NSString stringWithFormat:@"folderDropdownCache%@", [appDelegateS.defaultUrl md5]];
-	NSData *archivedData = [appDelegateS.settingsDictionary objectForKey:key];
-	NSDictionary *folders = [NSKeyedUnarchiver unarchiveObjectWithData:archivedData];*/
-	
 	if (folders == nil || [folders count] == 2)
 	{
 		[self performServerShuffle:nil];
@@ -638,38 +634,31 @@
 	[self.searchOverlay addSubview:self.dismissButton];
 	
 	// Animate the segmented control on screen
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:.3];
-	[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-	//if ([[appDelegateS.settingsDictionary objectForKey:key] isEqualToString:@"YES"])
-	if (settingsS.isNewSearchAPI)
-	{
-		self.searchSegment.enabled = YES;
-		self.searchSegment.alpha = 1;
-		self.searchSegmentBackground.alpha = 1;
-	}
-	self.searchOverlay.alpha = 1;
-	self.dismissButton.enabled = YES;
-	[UIView commitAnimations];
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        if (settingsS.isNewSearchAPI)
+        {
+            self.searchSegment.enabled = YES;
+            self.searchSegment.alpha = 1;
+            self.searchSegmentBackground.alpha = 1;
+        }
+        self.searchOverlay.alpha = 1;
+        self.dismissButton.enabled = YES;
+    } completion:nil];
 }
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)theSearchBar
 {
 	// Animate the segmented control off screen
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:.3];
-	[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-	//NSString *key = [NSString stringWithFormat:@"isNewSearchAPI%@", [appDelegateS.defaultUrl md5]];
-	//if ([[appDelegateS.settingsDictionary objectForKey:key] isEqualToString:@"YES"])
-	if (settingsS.isNewSearchAPI)
-	{
-		self.searchSegment.alpha = 0;
-		self.searchSegment.enabled = NO;
-		self.searchSegmentBackground.alpha = 0;
-	}
-	self.searchOverlay.alpha = 0;
-	self.dismissButton.enabled = NO;
-	[UIView commitAnimations];
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        if (settingsS.isNewSearchAPI)
+        {
+            self.searchSegment.alpha = 0;
+            self.searchSegment.enabled = NO;
+            self.searchSegmentBackground.alpha = 0;
+        }
+        self.searchOverlay.alpha = 0;
+        self.dismissButton.enabled = NO;
+    } completion:nil];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)theSearchBar

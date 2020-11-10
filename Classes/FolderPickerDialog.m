@@ -57,8 +57,8 @@ static CGFloat kDDSocialDialogPadding = 10;
 - (void)drawRect:(CGRect)rect fill:(CGColorRef)fillColor radius:(CGFloat)radius;
 - (void)strokeLines:(CGRect)rect stroke:(CGColorRef)strokeColor;
 
-- (void)bounce1AnimationStopped;
-- (void)bounce2AnimationStopped;
+//- (void)bounce1AnimationStopped;
+//- (void)bounce2AnimationStopped;
 - (CGAffineTransform)transformForOrientation;
 - (void)sizeToFitOrientation:(BOOL)transform;
 - (BOOL)shouldRotateToOrientation:(UIDeviceOrientation)orientation;
@@ -96,7 +96,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 		closeButton_.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
 		[self addSubview:closeButton_];
 		
-		CGFloat titleLabelFontSize = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 18 : 14;
+		CGFloat titleLabelFontSize = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) ? 18 : 14;
 		titleLabel_ = [[UILabel alloc] initWithFrame:CGRectZero];
 		titleLabel_.text = NSStringFromClass([self class]);
 		titleLabel_.backgroundColor = [UIColor clearColor];
@@ -181,14 +181,17 @@ static CGFloat kDDSocialDialogPadding = 10;
 	[window addSubview:touchInterceptingControl_];
 	
 	[window addSubview:self];
-	
-	self.transform = CGAffineTransformScale([self transformForOrientation], 0.001, 0.001);
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:kDDSocialDialogTransitionDuration/1.5];
-	[UIView setAnimationDelegate:self];
-	[UIView setAnimationDidStopSelector:@selector(bounce1AnimationStopped)];
-	self.transform = CGAffineTransformScale([self transformForOrientation], 1.1, 1.1);
-	[UIView commitAnimations];
+    
+    self.transform = CGAffineTransformScale([self transformForOrientation], 0.1, 0.1);
+    self.alpha = 0.0;
+    [UIView animateWithDuration:kDDSocialDialogTransitionDuration/1.5 animations:^{
+        self.transform = CGAffineTransformScale([self transformForOrientation], 1.1, 1.1);
+        self.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:kDDSocialDialogTransitionDuration/1.5 animations:^{
+            self.transform = [self transformForOrientation];
+        }];
+    }];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(deviceOrientationDidChange:)
@@ -205,14 +208,13 @@ static CGFloat kDDSocialDialogPadding = 10;
 }
 
 - (void)dismiss:(BOOL)animated {
-	
 	if (animated) {
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:kDDSocialDialogTransitionDuration];
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationDidStopSelector:@selector(postDismissCleanup)];
-		self.alpha = 0;
-		[UIView commitAnimations];
+        [UIView animateWithDuration:kDDSocialDialogTransitionDuration/1.5 animations:^{
+            self.transform = CGAffineTransformScale([self transformForOrientation], 0.1, 0.1);
+            self.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            [self postDismissCleanup];
+        }];
 	} else {
 		[self postDismissCleanup];
 	}
@@ -315,25 +317,25 @@ static CGFloat kDDSocialDialogPadding = 10;
 	CGColorSpaceRelease(space);
 }
 
-#pragma mark Animation
-
-- (void)bounce1AnimationStopped {
-	
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:kDDSocialDialogTransitionDuration/2];
-	[UIView setAnimationDelegate:self];
-	[UIView setAnimationDidStopSelector:@selector(bounce2AnimationStopped)];
-	self.transform = CGAffineTransformScale([self transformForOrientation], 0.9, 0.9);
-	[UIView commitAnimations];
-}
-
-- (void)bounce2AnimationStopped {
-	
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:kDDSocialDialogTransitionDuration/2];
-	self.transform = [self transformForOrientation];
-	[UIView commitAnimations];
-}
+//#pragma mark Animation
+//
+//- (void)bounce1AnimationStopped {
+//
+//	[UIView beginAnimations:nil context:nil];
+//	[UIView setAnimationDuration:kDDSocialDialogTransitionDuration/2];
+//	[UIView setAnimationDelegate:self];
+//	[UIView setAnimationDidStopSelector:@selector(bounce2AnimationStopped)];
+//	self.transform = CGAffineTransformScale([self transformForOrientation], 0.9, 0.9);
+//	[UIView commitAnimations];
+//}
+//
+//- (void)bounce2AnimationStopped {
+//
+//	[UIView beginAnimations:nil context:nil];
+//	[UIView setAnimationDuration:kDDSocialDialogTransitionDuration/2];
+//	self.transform = [self transformForOrientation];
+//	[UIView commitAnimations];
+//}
 
 #pragma mark Rotation
 
@@ -407,10 +409,9 @@ static CGFloat kDDSocialDialogPadding = 10;
 		} 
 		
 		CGFloat duration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:duration];
-		[self sizeToFitOrientation:YES];
-		[UIView commitAnimations];		
+        [UIView animateWithDuration:duration animations:^{
+            [self sizeToFitOrientation:YES];
+        }];
 	}	
 }
 
@@ -428,25 +429,24 @@ static CGFloat kDDSocialDialogPadding = 10;
 	CGSize keyboardSize = [self convertRect:[[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue] toView:nil].size;
 	
 	CGFloat duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:duration];
-	switch (orientation) {
-		case UIInterfaceOrientationPortrait:
-			self.center = CGPointMake(self.center.x, ceil((screenSize.height - keyboardSize.height)/2) + 10.);
-			break;
-		case UIInterfaceOrientationPortraitUpsideDown:
-			self.center = CGPointMake(self.center.x, screenSize.height - (ceil((screenSize.height - keyboardSize.height)/2) + 10.));
-			break;
-		case UIInterfaceOrientationLandscapeLeft:
-			self.center = CGPointMake(ceil((screenSize.width - keyboardSize.height)/2), self.center.y);
-			break;
-		case UIInterfaceOrientationLandscapeRight:
-			self.center = CGPointMake(screenSize.width - (ceil((screenSize.width - keyboardSize.height)/2)), self.center.y);
-			break;
-        case UIInterfaceOrientationUnknown:
-            break;
-	}	
-	[UIView commitAnimations];
+    [UIView animateWithDuration:duration animations:^{
+        switch (orientation) {
+            case UIInterfaceOrientationPortrait:
+                self.center = CGPointMake(self.center.x, ceil((screenSize.height - keyboardSize.height)/2) + 10.);
+                break;
+            case UIInterfaceOrientationPortraitUpsideDown:
+                self.center = CGPointMake(self.center.x, screenSize.height - (ceil((screenSize.height - keyboardSize.height)/2) + 10.));
+                break;
+            case UIInterfaceOrientationLandscapeLeft:
+                self.center = CGPointMake(ceil((screenSize.width - keyboardSize.height)/2), self.center.y);
+                break;
+            case UIInterfaceOrientationLandscapeRight:
+                self.center = CGPointMake(screenSize.width - (ceil((screenSize.width - keyboardSize.height)/2)), self.center.y);
+                break;
+            case UIInterfaceOrientationUnknown:
+                break;
+        }
+    }];
 	
 	showingKeyboard_ = YES;
 }
@@ -455,17 +455,16 @@ static CGFloat kDDSocialDialogPadding = 10;
 
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;	
 	
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && UIInterfaceOrientationIsPortrait(orientation)) {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && UIInterfaceOrientationIsPortrait(orientation)) {
 		return;
 	}
 	
 	CGSize screenSize = [UIScreen mainScreen].bounds.size;
 	
 	CGFloat duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:duration];
-	self.center = CGPointMake(ceil(screenSize.width/2), ceil(screenSize.height/2));
-	[UIView commitAnimations];
+    [UIView animateWithDuration:duration animations:^{
+        self.center = CGPointMake(ceil(screenSize.width/2), ceil(screenSize.height/2));
+    }];
 	
 	showingKeyboard_ = NO;
 }

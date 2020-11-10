@@ -470,10 +470,10 @@
 		[viewObjectsS showAlbumLoadingScreen:self.view sender:self];
 		[self.dataModel startLoad];
 		[self.refreshHeaderView setState:EGOOPullRefreshLoading];
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:0.2];
-		self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
-		[UIView commitAnimations];
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
+        }];
 	}
 }
 
@@ -481,11 +481,10 @@
 {
 	self.isReloading = NO;
 	
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:.3];
-	[self.tableView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
-	[UIView commitAnimations];
-	
+    [UIView animateWithDuration:0.3 animations:^{
+        [self.tableView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
+    }];
+
 	[refreshHeaderView setState:EGOOPullRefreshNormal];
 }
 

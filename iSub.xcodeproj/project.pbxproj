@@ -24,8 +24,8 @@
 		5304FC2F14F2F0D100A2AD42 /* iPadRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC1C14F2F0D100A2AD42 /* iPadRootViewController.m */; };
 		5304FC3014F2F0D100A2AD42 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC1E14F2F0D100A2AD42 /* MenuViewController.m */; };
 		5304FC3214F2F0D100A2AD42 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC1E14F2F0D100A2AD42 /* MenuViewController.m */; };
-		5304FC3614F2F0D100A2AD42 /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC2214F2F0D100A2AD42 /* StackScrollViewController.m */; };
-		5304FC3814F2F0D100A2AD42 /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC2214F2F0D100A2AD42 /* StackScrollViewController.m */; };
+		5304FC3614F2F0D100A2AD42 /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC2214F2F0D100A2AD42 /* StackScrollViewController.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
+		5304FC3814F2F0D100A2AD42 /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC2214F2F0D100A2AD42 /* StackScrollViewController.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
 		5304FC3C14F2F0D100A2AD42 /* MenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC2614F2F0D100A2AD42 /* MenuTableViewCell.m */; };
 		5304FC3E14F2F0D100A2AD42 /* MenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC2614F2F0D100A2AD42 /* MenuTableViewCell.m */; };
 		5304FC5214F2F59400A2AD42 /* glow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5304FC4A14F2F59400A2AD42 /* glow.png */; };
@@ -77,8 +77,8 @@
 		53191DF01167CFDC00E1C08A /* current-server.png in Resources */ = {isa = PBXBuildFile; fileRef = 53191DEF1167CFDC00E1C08A /* current-server.png */; };
 		531F166E126FA2E600F524BD /* HomeAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 531F166D126FA2E600F524BD /* HomeAlbumViewController.m */; };
 		5324C6C613345D75004E6C79 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5324C6C513345D75004E6C79 /* OBSlider.m */; };
-		5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; };
-		5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; };
+		5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
+		5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
 		53260B83127D012300B745B4 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53260B78127D012300B745B4 /* EGORefreshTableHeaderView.m */; };
 		53260B84127D012300B745B4 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7A127D012300B745B4 /* blackArrow.png */; };
 		53260B85127D012300B745B4 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7B127D012300B745B4 /* blackArrow@2x.png */; };
@@ -1300,8 +1300,8 @@
 		53FE39941EA964F70058B925 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE39901EA964F70058B925 /* HockeySDK.framework */; };
 		53FE39951EA964F70058B925 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 53FE39911EA964F70058B925 /* HockeySDKResources.bundle */; };
 		53FE39971EA964F70058B925 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 53FE39911EA964F70058B925 /* HockeySDKResources.bundle */; };
-		53FE39A11EA968390058B925 /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A01EA968390058B925 /* DDSocialDialog.m */; };
-		53FE39A31EA968390058B925 /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A01EA968390058B925 /* DDSocialDialog.m */; };
+		53FE39A11EA968390058B925 /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A01EA968390058B925 /* DDSocialDialog.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
+		53FE39A31EA968390058B925 /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A01EA968390058B925 /* DDSocialDialog.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
 		53FE39AA1EA970220058B925 /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A51EA970220058B925 /* DDContextFilterLogFormatter.m */; };
 		53FE39AB1EA970220058B925 /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A51EA970220058B925 /* DDContextFilterLogFormatter.m */; };
 		53FE39AC1EA970220058B925 /* DDDispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A71EA970220058B925 /* DDDispatchQueueLogFormatter.m */; };

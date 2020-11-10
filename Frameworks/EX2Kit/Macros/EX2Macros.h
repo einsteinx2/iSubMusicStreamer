@@ -21,7 +21,7 @@
 #define IS_IPAD_HW() ([[[UIDevice currentDevice] model] hasPrefix:@"iPad"])
 
 // iPad app type detection (will detect as iPhone if running an iPhone only app on an iPad)
-#define IS_IPAD() (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#define IS_IPAD() ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
 // Beta version build switch
 #ifdef BETA
@@ -110,7 +110,8 @@
 #endif
 
 // Temporary hack, need a proper solution
-#define IS_TALL_SCREEN() (CGSizeEqualToSize([[UIScreen mainScreen] preferredMode].size, CGSizeMake(640, 1136)))
+//#define IS_TALL_SCREEN() (CGSizeEqualToSize([[UIScreen mainScreen] preferredMode].size, CGSizeMake(640, 1136)))
+#define IS_TALL_SCREEN() (YES)
 
 #define NSIndexPathMake(section, row) ([NSIndexPath indexPathForRow:row inSection:section])
 

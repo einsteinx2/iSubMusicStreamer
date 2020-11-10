@@ -131,21 +131,14 @@
 {
 	if (self.playlistNameLabel.frame.size.width > self.playlistNameScrollView.frame.size.width)
 	{
-		[UIView beginAnimations:@"scroll" context:nil];
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationDidStopSelector:@selector(textScrollingStopped)];
-		[UIView setAnimationDuration:self.playlistNameLabel.frame.size.width/(float)150];
-		self.playlistNameScrollView.contentOffset = CGPointMake(self.playlistNameLabel.frame.size.width - self.playlistNameScrollView.frame.size.width + 10, 0);
-		[UIView commitAnimations];
+        [UIView animateWithDuration:self.playlistNameLabel.frame.size.width/150. animations:^{
+            self.playlistNameScrollView.contentOffset = CGPointMake(self.playlistNameLabel.frame.size.width - self.playlistNameScrollView.frame.size.width + 10, 0);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:self.playlistNameLabel.frame.size.width/150. animations:^{
+                self.playlistNameScrollView.contentOffset = CGPointZero;
+            }];
+        }];
 	}
-}
-
-- (void)textScrollingStopped
-{
-	[UIView beginAnimations:@"scroll" context:nil];
-	[UIView setAnimationDuration:self.playlistNameLabel.frame.size.width/(float)150];
-	self.playlistNameScrollView.contentOffset = CGPointZero;
-	[UIView commitAnimations];
 }
 
 #pragma mark - Connection Delegate

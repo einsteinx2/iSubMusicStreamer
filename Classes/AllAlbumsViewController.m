@@ -276,12 +276,10 @@
 	[self.searchOverlay addSubview:self.dismissButton];
 	
 	// Animate the search overlay on screen
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:.3];
-	[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-	self.searchOverlay.alpha = 1;
-	self.dismissButton.enabled = YES;
-	[UIView commitAnimations];
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.searchOverlay.alpha = 1;
+        self.dismissButton.enabled = YES;
+    } completion:nil];
 }
 
 - (void)hideSearchOverlay
@@ -289,23 +287,15 @@
 	if (searchOverlay)
 	{
 		// Animate the search overlay off screen
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:.3];
-		[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationDidStopSelector:@selector(removeSearchOverlay)];
-		self.searchOverlay.alpha = 0;
-		self.dismissButton.enabled = NO;
-		[UIView commitAnimations];
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            self.searchOverlay.alpha = 0;
+            self.dismissButton.enabled = NO;
+        } completion:^(BOOL finished) {
+            [self.searchOverlay removeFromSuperview];
+            self.searchOverlay = nil;
+            if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
+        }];
 	}
-}
-
-- (void)removeSearchOverlay
-{
-	[self.searchOverlay removeFromSuperview];
-	self.searchOverlay = nil;
-	
-	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar 
@@ -678,10 +668,10 @@
 		self.isReloading = YES;
 		[self reloadAction:nil];
 		[refreshHeaderView setState:EGOOPullRefreshLoading];
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:0.2];
-		self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
-		[UIView commitAnimations];
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
+        }];
 	}
 }
 
@@ -689,10 +679,9 @@
 {
 	self.isReloading = NO;
 	
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:.3];
-	[self.tableView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
-	[UIView commitAnimations];
+    [UIView animateWithDuration:0.3 animations:^{
+        self.tableView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+    }];
 	
 	[self.refreshHeaderView setState:EGOOPullRefreshNormal];
 }

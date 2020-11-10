@@ -359,20 +359,16 @@
 - (void)hideSavePresetButton:(BOOL)animated
 {	
 	self.isSavePresetButtonShowing = NO;
-	
-	if (animated)
-	{
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:.5];
-	}
-	
-	self.presetLabel.superview.width = 300.;
-	self.savePresetButton.alpha = 0.;
-	
-	if (animated)
-	{
-		[UIView commitAnimations];
-	}
+    
+    if (animated) {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.presetLabel.superview.width = 300.;
+            self.savePresetButton.alpha = 0.;
+        }];
+    } else {
+        self.presetLabel.superview.width = 300.;
+        self.savePresetButton.alpha = 0.;
+    }
 	
 	self.savePresetButton.enabled = NO;
 }
@@ -384,40 +380,32 @@
 	self.isSavePresetButtonShowing = YES;
 	
 	self.savePresetButton.enabled = YES;
-	
-	if (animated)
-	{
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:.5];
-	}
-	
-	self.presetLabel.superview.width = 300. - 70.;
-	self.savePresetButton.alpha = 1.;
-	
-	if (animated)
-	{
-		[UIView commitAnimations];
-	}
+    
+    if (animated) {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.presetLabel.superview.width = 300. - 70.;
+            self.savePresetButton.alpha = 1.;
+        }];
+    } else {
+        self.presetLabel.superview.width = 300. - 70.;
+        self.savePresetButton.alpha = 1.;
+    }
 }
 
 - (void)hideDeletePresetButton:(BOOL)animated
 {	
 	self.isDeletePresetButtonShowing = NO;
-	
-	if (animated)
-	{
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:.5];
-	}
-	
-	self.presetLabel.superview.width = 300.;
-	self.deletePresetButton.alpha = 0.;
-	
-	if (animated)
-	{
-		[UIView commitAnimations];
-	}
-	
+    
+    if (animated) {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.presetLabel.superview.width = 300.;
+            self.deletePresetButton.alpha = 0.;
+        }];
+    } else {
+        self.presetLabel.superview.width = 300.;
+        self.deletePresetButton.alpha = 0.;
+    }
+    
 	self.deletePresetButton.enabled = NO;
 }
 
@@ -428,20 +416,16 @@
 	self.isDeletePresetButtonShowing = YES;
 	
 	self.deletePresetButton.enabled = YES;
-	
-	if (animated)
-	{
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:.5];
-	}
-	
-	self.presetLabel.superview.width = 300. - 70.;
-	self.deletePresetButton.alpha = 1.;
-	
-	if (animated)
-	{
-		[UIView commitAnimations];
-	}
+    
+    if (animated) {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.presetLabel.superview.width = 300. - 70.;
+            self.deletePresetButton.alpha = 1.;
+        }];
+    } else {
+        self.presetLabel.superview.width = 300. - 70.;
+        self.deletePresetButton.alpha = 1.;
+    }
 }
 
 - (NSArray *)serializedEqPoints

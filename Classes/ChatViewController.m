@@ -267,14 +267,11 @@
 	[self.chatMessageOverlay addSubview:self.dismissButton];
 	
 	// Animate the segmented control on screen
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:.5];
-	[UIView setAnimationCurve:UIViewAnimationCurveLinear];
-	self.chatMessageOverlay.alpha = 1;
-	self.dismissButton.enabled = YES;
-	[UIView commitAnimations];
-	
-	
+    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.chatMessageOverlay.alpha = 1;
+        self.dismissButton.enabled = YES;
+    } completion:nil];
+    
 	//Add the done button.
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneSearching_Clicked:)];
 }
@@ -282,12 +279,10 @@
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
 	// Animate the segmented control off screen
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:.3];
-	[UIView setAnimationCurve:UIViewAnimationCurveLinear];
-	self.chatMessageOverlay.alpha = 0;
-	self.dismissButton.enabled = NO;
-	[UIView commitAnimations];
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.chatMessageOverlay.alpha = 0;
+        self.dismissButton.enabled = NO;
+    } completion:nil];
 }
 
 
@@ -416,10 +411,10 @@
 		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
 		[self loadData];
 		[self.refreshHeaderView setState:EGOOPullRefreshLoading];
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:0.2];
-		self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
-		[UIView commitAnimations];
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
+        }];
 	}
 }
 
@@ -427,10 +422,9 @@
 {
 	self.isReloading = NO;
 	
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:.3];
-	[self.tableView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
-	[UIView commitAnimations];
+    [UIView animateWithDuration:0.3 animations:^{
+        self.tableView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+    }];
 	
 	[self.refreshHeaderView setState:EGOOPullRefreshNormal];
 }

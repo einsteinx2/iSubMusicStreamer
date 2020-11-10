@@ -531,10 +531,10 @@ static NSString *kName_Error = @"error";
 		//[self reloadAction:nil];
 		[self loadData];
 		[self.refreshHeaderView setState:EGOOPullRefreshLoading];
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:0.2];
-		self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
-		[UIView commitAnimations];
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
+        }];
 	}
 }
 
@@ -542,10 +542,9 @@ static NSString *kName_Error = @"error";
 {
 	self.reloading = NO;
 	
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:.3];
-	[self.tableView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
-	[UIView commitAnimations];
+    [UIView animateWithDuration:0.3 animations:^{
+        self.tableView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+    }];
 	
 	[self.refreshHeaderView setState:EGOOPullRefreshNormal];
 }
