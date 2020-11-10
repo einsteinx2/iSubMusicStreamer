@@ -75,8 +75,8 @@ LOG_LEVEL_ISUB_DEBUG
 				self.activityIndicator.center = CGPointMake(self.width/2, self.height/2);
 				[self addSubview:self.activityIndicator];
 				[self.activityIndicator startAnimating];
-                [self.coverArtDAO startLoad];
 			}
+            [self.coverArtDAO startLoad];
 		}
 	}
 }
