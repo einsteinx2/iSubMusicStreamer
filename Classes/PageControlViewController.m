@@ -44,7 +44,7 @@
     self.scrollView.pagingEnabled = YES;
 	CGSize contentSize;
 	CGFloat height;
-	if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait([UIApplication orientation]) || IS_IPAD())
 	{
 		contentSize = CGSizeMake(320 * self.numberOfPages, self.numberOfPages == 1 ? 320 : 300);
 		height = self.numberOfPages == 1 ? 320 : 300;

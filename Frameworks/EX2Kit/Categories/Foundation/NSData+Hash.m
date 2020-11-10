@@ -28,6 +28,8 @@
 	return output;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (NSString *)md5
 {
     if (self.length == 0)
@@ -44,5 +46,6 @@
 	
 	return output;
 }
+#pragma clang diagnostic pop
 
 @end

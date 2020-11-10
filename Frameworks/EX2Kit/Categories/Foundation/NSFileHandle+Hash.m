@@ -55,6 +55,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (NSString *)md5
 {
     @try
@@ -96,6 +98,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         return nil;
     }
 }
+#pragma clang diagnostic pop
 
 - (NSString *)crc32
 {

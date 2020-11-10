@@ -12,6 +12,8 @@
 
 @implementation NSString (md5)
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (NSString *) md5:(NSString *)str 
 {
 	if ([str length] > 0)
@@ -30,6 +32,7 @@
 	
 	return @"";
 }
+#pragma clang diagnostic pop
 
 - (NSString *) md5
 {
