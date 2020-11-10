@@ -171,11 +171,8 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 		
     self.introController = nil;
-	
-	//DLog(@"md5: %@", [settings.urlString md5]);
-	
+		
 	[self loadFlurryAnalytics];
-	[self loadHockeyApp];
     
 	// Create and display UI
 	self.introController = nil;
@@ -459,13 +456,14 @@ LOG_LEVEL_ISUB_DEFAULT
         if (!IS_IPAD() && !settingsS.isOfflineMode)
             [viewObjectsS orderMainTabBarController];
         
-        // Since the download queue has been a frequent source of crashes in the past, and we start this on launch automatically
-        // potentially resulting in a crash loop, do NOT start the download queue automatically if the app crashed on last launch.
-        if (![BITHockeyManager sharedHockeyManager].crashManager.didCrashInLastSession)
-        {
-            // Start the queued downloads if Wifi is available
-            [cacheQueueManagerS startDownloadQueue];
-        }
+        // TODO: Find another way to detect crashes without using HockeyApp
+//        // Since the download queue has been a frequent source of crashes in the past, and we start this on launch automatically
+//        // potentially resulting in a crash loop, do NOT start the download queue automatically if the app crashed on last launch.
+//        if (![BITHockeyManager sharedHockeyManager].crashManager.didCrashInLastSession)
+//        {
+//            // Start the queued downloads if Wifi is available
+//            [cacheQueueManagerS startDownloadQueue];
+//        }
     }
 }
 
@@ -490,29 +488,6 @@ LOG_LEVEL_ISUB_DEFAULT
 																		  [device platform], @"HardwareVersion", nil];
 		[Flurry logEvent:@"DeviceInfo" withParameters:params];
 	}
-}
-
-- (void)loadHockeyApp
-{
-    BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
-    
-	// HockyApp Kits
-#if IS_BETA() && IS_ADHOC()
-    [hockeyManager configureWithBetaIdentifier:@"ccd660dbaeab42a2b3846159f9489ff4" liveIdentifier:@"ccd660dbaeab42a2b3846159f9489ff4" delegate:self];
-    hockeyManager.updateManager.alwaysShowUpdateReminder = NO;
-    [hockeyManager startManager];
-#elif IS_RELEASE()
-    [hockeyManager configureWithBetaIdentifier:@"7c9cb46dad4165c9d3919390b651f6bb" liveIdentifier:@"7c9cb46dad4165c9d3919390b651f6bb" delegate:self];
-    [hockeyManager startManager];
-#endif
-    hockeyManager.crashManager.crashManagerStatus = BITCrashManagerStatusAutoSend;
-	
-//    if (hockeyManager.crashManager.didCrashInLastSession)
-//	{
-//		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oh no! iSub crashed!" message:@"iSub support has received your anonymous crash logs and they will be investigated. \n\nWould you also like to send an email to support with more details?" delegate:self cancelButtonTitle:@"No Thanks" otherButtonTitles:@"Send Email", @"Visit iSub Forum", nil];
-//		alert.tag = 7;
-//		[alert performSelector:@selector(show) withObject:nil afterDelay:2.];
-//	}
 }
 
 /*
@@ -561,21 +536,21 @@ LOG_LEVEL_ISUB_DEFAULT
     return fileNameToUse;
 }
 
-- (NSString *)applicationLogForCrashManager:(BITCrashManager *)crashManager
-{
-    NSString *logsFolder = [settingsS.cachesPath stringByAppendingPathComponent:@"Logs"];
-	NSString *fileNameToUse = [self latestLogFileName];
-	
-	if (fileNameToUse)
-	{
-		NSString *logPath = [logsFolder stringByAppendingPathComponent:fileNameToUse];
-		NSString *contents = [[NSString alloc] initWithContentsOfFile:logPath encoding:NSUTF8StringEncoding error:nil];
-		//DLog(@"Sending contents with length %u from path %@", contents.length, logPath);
-		return contents;
-	}
-	
-	return nil;
-}
+//- (NSString *)applicationLogForCrashManager:(BITCrashManager *)crashManager
+//{
+//    NSString *logsFolder = [settingsS.cachesPath stringByAppendingPathComponent:@"Logs"];
+//	NSString *fileNameToUse = [self latestLogFileName];
+//	
+//	if (fileNameToUse)
+//	{
+//		NSString *logPath = [logsFolder stringByAppendingPathComponent:fileNameToUse];
+//		NSString *contents = [[NSString alloc] initWithContentsOfFile:logPath encoding:NSUTF8StringEncoding error:nil];
+//		//DLog(@"Sending contents with length %u from path %@", contents.length, logPath);
+//		return contents;
+//	}
+//	
+//	return nil;
+//}
 
 - (NSString *)zipAllLogFiles
 {    
@@ -1054,69 +1029,6 @@ LOG_LEVEL_ISUB_DEFAULT
 			settingsS.isUpdateCheckQuestionAsked = YES;
 			
 			break;
-		}
-		case 7:
-		{
-			// Title: Oh no! :(
-			if (buttonIndex == 1)
-			{
-				if ([MFMailComposeViewController canSendMail])
-				{
-					MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
-					[mailer setMailComposeDelegate:self];
-					[mailer setToRecipients:@[@"support@isubapp.com"]];
-					
-					if ([[[BITHockeyManager sharedHockeyManager] crashManager] didCrashInLastSession])
-					{
-						// Set version label
-						NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleVersionKey];
-						NSString *formattedVersion = nil;
-                        #if IS_RELEASE()
-                            formattedVersion = version;
-                        #else
-							NSString *build = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-							formattedVersion = [NSString stringWithFormat:@"%@ build %@", build, version];
-                        #endif
-						
-						NSString *subject = [NSString stringWithFormat:@"I had a crash in iSub %@ :(", formattedVersion];
-						[mailer setSubject:subject];
-						
-						[mailer setMessageBody:@"Here's what I was doing when iSub crashed..." isHTML:NO];
-					}
-					else 
-					{
-						[mailer setSubject:@"I need some help with iSub :)"];
-					}
-                    
-                    NSString *zippedLogs = [self zipAllLogFiles];
-                    if (zippedLogs)
-                    {
-                        NSError *fileError;
-                        NSData *zipData = [NSData dataWithContentsOfFile:zippedLogs options:NSDataReadingMappedIfSafe error:&fileError];
-                        if (!fileError)
-                        {
-                            [mailer addAttachmentData:zipData mimeType:@"application/x-zip-compressed" fileName:[zippedLogs lastPathComponent]];
-                        }
-                    }
-					
-					if (IS_IPAD())
-						[self.ipadRootViewController presentViewController:mailer animated:YES completion:nil];
-					else
-						[self.currentTabBarController presentViewController:mailer animated:YES completion:nil];
-					
-				}
-				else
-				{
-					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Uh Oh!" message:@"It looks like you don't have an email account set up, but you can reach support from your computer by emailing support@isubapp.com" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-					[alert show];
-				}
-			}
-			else if (buttonIndex == 2)
-			{
-				NSString *urlString = IS_IPAD() ? @"http://isubapp.com/forum" : @"http://isubapp.com/vanilla";
-				NSURL *url = [NSURL URLWithString:urlString];
-				[[UIApplication sharedApplication] openURL:url];
-			}
 		}
 	}
 }

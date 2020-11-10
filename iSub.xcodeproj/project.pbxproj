@@ -1220,10 +1220,6 @@
 		53FE398B1EA963180058B925 /* FMDatabaseQueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE397A1EA963180058B925 /* FMDatabaseQueueAdditions.m */; };
 		53FE398C1EA963180058B925 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE397C1EA963180058B925 /* FMResultSet.m */; };
 		53FE398E1EA963180058B925 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE397C1EA963180058B925 /* FMResultSet.m */; };
-		53FE39921EA964F70058B925 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE39901EA964F70058B925 /* HockeySDK.framework */; };
-		53FE39941EA964F70058B925 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE39901EA964F70058B925 /* HockeySDK.framework */; };
-		53FE39951EA964F70058B925 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 53FE39911EA964F70058B925 /* HockeySDKResources.bundle */; };
-		53FE39971EA964F70058B925 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 53FE39911EA964F70058B925 /* HockeySDKResources.bundle */; };
 		53FE39AA1EA970220058B925 /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A51EA970220058B925 /* DDContextFilterLogFormatter.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
 		53FE39AB1EA970220058B925 /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A51EA970220058B925 /* DDContextFilterLogFormatter.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
 		53FE39AC1EA970220058B925 /* DDDispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE39A71EA970220058B925 /* DDDispatchQueueLogFormatter.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
@@ -2189,8 +2185,6 @@
 		53FE397A1EA963180058B925 /* FMDatabaseQueueAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueueAdditions.m; sourceTree = "<group>"; };
 		53FE397B1EA963180058B925 /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
 		53FE397C1EA963180058B925 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
-		53FE39901EA964F70058B925 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
-		53FE39911EA964F70058B925 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
 		53FE39A41EA970220058B925 /* DDContextFilterLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDContextFilterLogFormatter.h; sourceTree = "<group>"; };
 		53FE39A51EA970220058B925 /* DDContextFilterLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDContextFilterLogFormatter.m; sourceTree = "<group>"; };
 		53FE39A61EA970220058B925 /* DDDispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDDispatchQueueLogFormatter.h; sourceTree = "<group>"; };
@@ -2231,7 +2225,6 @@
 				53FE360E1EA961670058B925 /* libbass_ape.a in Frameworks */,
 				53FE36141EA961670058B925 /* libbass_mpc.a in Frameworks */,
 				53FE36201EA961670058B925 /* libbasswv.a in Frameworks */,
-				53FE39921EA964F70058B925 /* HockeySDK.framework in Frameworks */,
 				53F8917B1EB1351D00B3F131 /* libSystem.tbd in Frameworks */,
 				53F8917A1EB1351400B3F131 /* libxml2.tbd in Frameworks */,
 				53F8917C1EB1352300B3F131 /* libz.tbd in Frameworks */,
@@ -2268,7 +2261,6 @@
 				53FE36101EA961670058B925 /* libbass_ape.a in Frameworks */,
 				53FE36161EA961670058B925 /* libbass_mpc.a in Frameworks */,
 				53FE36221EA961680058B925 /* libbasswv.a in Frameworks */,
-				53FE39941EA964F70058B925 /* HockeySDK.framework in Frameworks */,
 				5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */,
 				5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */,
 				5367C6D51EA92D2400B1C242 /* libz.tbd in Frameworks */,
@@ -2357,7 +2349,6 @@
 			isa = PBXGroup;
 			children = (
 				539148B92559E597004AAC3F /* CoreServices.framework */,
-				53FE398F1EA964F70058B925 /* HockeySDK */,
 				53FE39701EA963180058B925 /* FMDB */,
 				53FE38BF1EA961ED0058B925 /* CocoaHTTPServer */,
 				53FE38551EA961C80058B925 /* ZipKit */,
@@ -3859,16 +3850,6 @@
 			path = Frameworks/FMDB;
 			sourceTree = "<group>";
 		};
-		53FE398F1EA964F70058B925 /* HockeySDK */ = {
-			isa = PBXGroup;
-			children = (
-				53FE39901EA964F70058B925 /* HockeySDK.framework */,
-				53FE39911EA964F70058B925 /* HockeySDKResources.bundle */,
-			);
-			name = HockeySDK;
-			path = Frameworks/HockeySDK;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -4182,7 +4163,6 @@
 				5306239714D4BCAD00D320A8 /* eqView@2x.png in Resources */,
 				532B552714D641C500B8AA67 /* ModalAlbumArtViewController.xib in Resources */,
 				5332468014D7BDFA008B35F6 /* controller-equalizer-ipad.png in Resources */,
-				53FE39951EA964F70058B925 /* HockeySDKResources.bundle in Resources */,
 				5332468314D7BDFA008B35F6 /* controller-next-ipad.png in Resources */,
 				5332468614D7BDFA008B35F6 /* controller-pause-ipad.png in Resources */,
 				5332468914D7BDFA008B35F6 /* controller-play-ipad.png in Resources */,
@@ -4456,7 +4436,6 @@
 				53BC2781139AF0DD00A825F1 /* intro-sunkenlogo.png in Resources */,
 				53BC2782139AF0DD00A825F1 /* intro-sunkenlogo@2x.png in Resources */,
 				53BC2783139AF0DD00A825F1 /* intro-icon-ownserver.png in Resources */,
-				53FE39971EA964F70058B925 /* HockeySDKResources.bundle in Resources */,
 				53BC2784139AF0DD00A825F1 /* intro-icon-ownserver@2x.png in Resources */,
 				53BC2785139AF0DD00A825F1 /* iTunesArtwork in Resources */,
 				53BC2788139AF0DD00A825F1 /* folder-dropdown-arrow.png in Resources */,

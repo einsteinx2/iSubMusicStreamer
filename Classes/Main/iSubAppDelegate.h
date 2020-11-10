@@ -14,13 +14,12 @@
 
 #import "SUSLoaderDelegate.h"
 #import "EX2Reachability.h"
-#import <HockeySDK/HockeySDK.h>
 
 #define appDelegateS [iSubAppDelegate sharedInstance]
 
 @class BBSplitViewController, iPadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, iPhoneStreamingPlayerViewController, SettingsViewController, FoldersViewController, AudioStreamer, IntroViewController, SUSStatusLoader, MPMoviePlayerController, HTTPServer, ServerListViewController;
 
-@interface iSubAppDelegate : NSObject <UIApplicationDelegate, MFMailComposeViewControllerDelegate, BITHockeyManagerDelegate, BITCrashManagerDelegate, SUSLoaderDelegate>
+@interface iSubAppDelegate : NSObject <UIApplicationDelegate, MFMailComposeViewControllerDelegate, SUSLoaderDelegate>
 
 @property (strong) HTTPServer *hlsProxyServer;
 
@@ -75,7 +74,6 @@
 - (void)enterOfflineModeForce;
 
 - (void)loadFlurryAnalytics;
-- (void)loadHockeyApp;
 
 - (void)reachabilityChanged:(NSNotification *)note;
 - (NSInteger)getHour;
