@@ -17,9 +17,8 @@
 {
 	//DLog(@"Starting load");
     NSDictionary *parameters = nil;
-	if (self.selectedFolderId != nil && [self.selectedFolderId intValue] != -1)
-	{
-        parameters = [NSDictionary dictionaryWithObject:n2N([self.selectedFolderId stringValue]) forKey:@"musicFolderId"];
+	if (self.selectedFolderId != nil && [self.selectedFolderId intValue] != -1) {
+        parameters = @{@"musicFolderId": n2N([self.selectedFolderId stringValue])};
 	}
     
     return [NSMutableURLRequest requestWithSUSAction:@"getIndexes" parameters:parameters];

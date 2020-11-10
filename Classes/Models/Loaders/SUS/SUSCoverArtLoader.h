@@ -6,16 +6,15 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-#import "ISMSLoader.h"
+#import "ISMSLoaderNew.h"
 
-@class FMDatabase;
-@interface ISMSCoverArtLoader : ISMSLoader
+@interface SUSCoverArtLoader : ISMSLoaderNew
 
 @property (copy) NSString *coverArtId;
 @property (readonly) BOOL isCoverArtCached;
 @property BOOL isLarge;
 
-- (id)initWithDelegate:(NSObject<ISMSLoaderDelegate>*)delegate coverArtId:(NSString *)artId isLarge:(BOOL)large;
+- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegateNew> *)delegate coverArtId:(NSString *)artId isLarge:(BOOL)large;
 - (BOOL)downloadArtIfNotExists;
 
 @end

@@ -75,8 +75,8 @@ LOG_LEVEL_ISUB_DEBUG
 				self.activityIndicator.center = CGPointMake(self.width/2, self.height/2);
 				[self addSubview:self.activityIndicator];
 				[self.activityIndicator startAnimating];
+                [self.coverArtDAO startLoad];
 			}
-			[self.coverArtDAO startLoad];
 		}
 	}
 }
@@ -147,7 +147,7 @@ LOG_LEVEL_ISUB_DEBUG
 	}
 }
 
-- (void)loadingFailed:(ISMSLoader*)theLoader withError:(NSError *)error
+- (void)loadingFailed:(ISMSLoaderNew*)theLoader withError:(NSError *)error
 {
     DDLogVerbose(@"[AsynchronousImageView] async cover art loading failed");
     
@@ -161,7 +161,7 @@ LOG_LEVEL_ISUB_DEBUG
 	}
 }
 
-- (void)loadingFinished:(ISMSLoader*)theLoader
+- (void)loadingFinished:(ISMSLoaderNew*)theLoader
 {
     DLog(@"[AsynchronousImageView] async cover art loading finished for: %@", self.coverArtId);
     

@@ -34,8 +34,6 @@ typedef void (^LoaderCallbackNew)(BOOL success, NSError *error, ISMSLoaderNew *l
 - (NSURLRequest *)createRequest; // Override this
 - (void)processResponse; // Override this
 
-- (void)subsonicErrorCode:(NSInteger)errorCode message:(NSString *)message;
-
 - (void)informDelegateLoadingFailed:(NSError *)error;
 - (void)informDelegateLoadingFinished;
 

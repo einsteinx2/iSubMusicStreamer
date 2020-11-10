@@ -6,10 +6,9 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-#import "ISMSLoader.h"
+#import "ISMSLoaderNew.h"
 
-@class FMDatabase;
-@interface SUSLyricsLoader : ISMSLoader
+@interface SUSLyricsLoader : ISMSLoaderNew
 
 @property (copy) NSString *artist;
 @property (copy) NSString *title;

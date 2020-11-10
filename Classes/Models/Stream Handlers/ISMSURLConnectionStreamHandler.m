@@ -165,7 +165,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)startConnectionInternalFailure
 {
 	DDLogVerbose(@"[ISMSURLConnectionStreamHandler] start connection failed");
-	NSError *error = [[NSError alloc] initWithISMSCode:ISMSErrorCode_CouldNotCreateConnection];
+	NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_CouldNotCreateConnection];
 	if ([self.delegate respondsToSelector:@selector(ISMSStreamHandlerConnectionFailed:withError:)])
 		[self.delegate ISMSStreamHandlerConnectionFailed:self withError:error];
 }

@@ -6,9 +6,9 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-#import "ISMSLoader.h"
+#import "ISMSLoaderNew.h"
 
-@interface SUSServerPlaylistsLoader : ISMSLoader
+@interface SUSServerPlaylistsLoader : ISMSLoaderNew
 
 @property (strong) NSArray *serverPlaylists;
 

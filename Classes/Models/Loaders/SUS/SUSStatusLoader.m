@@ -19,6 +19,16 @@
     return [NSMutableURLRequest requestWithSUSAction:@"ping" urlString:self.urlString username:self.username password:self.password parameters:nil];
 }
 
+- (void)startLoad {
+    if (![self createRequest]) {
+        NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_CouldNotCreateConnection];
+        [self informDelegateLoadingFailed:error];
+        return;
+    }
+    
+    [super startLoad];
+}
+
 - (void)processResponse
 {
     DLog(@"SUSStatusLoader: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);

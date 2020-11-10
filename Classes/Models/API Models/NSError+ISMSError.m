@@ -10,93 +10,28 @@
 
 @implementation NSError (ISMSError)
 
-+ (NSString *)descriptionFromISMSCode:(NSUInteger)code
-{
-    NSString *description = nil;
-    
-    switch (code) 
-    {
-        case ISMSErrorCode_NotASubsonicServer:
-            description = ISMSErrorDesc_NotASubsonicServer;
-            break;
-        case ISMSErrorCode_NotXML:
-            description = ISMSErrorDesc_NotXML;
-            break;
-        case ISMSErrorCode_CouldNotCreateConnection:
-            description = ISMSErrorDesc_CouldNotCreateConnection;
-        default:
-            break;
++ (NSString *)descriptionFromISMSCode:(NSUInteger)code {
+    switch (code) {
+        case ISMSErrorCode_NotASubsonicServer: return ISMSErrorDesc_NotASubsonicServer;
+        case ISMSErrorCode_NotXML: return ISMSErrorDesc_NotXML;
+        case ISMSErrorCode_CouldNotCreateConnection: return ISMSErrorDesc_CouldNotCreateConnection;
+        default: return nil;
     }
-    
-    return description;
 }
 
-- (id)initWithISMSCode:(NSInteger)code
-{
-    NSString *description = [NSError descriptionFromISMSCode:code];
-    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:description, NSLocalizedDescriptionKey, nil];
-    
-    self = [self initWithDomain:ISMSErrorDomain code:code userInfo:dict];
-    
-    return self;
++ (NSError *)errorWithISMSCode:(NSInteger)code {
+    NSString *description = [self descriptionFromISMSCode:code];
+    return [NSError errorWithDomain:ISMSErrorDomain code:code userInfo:@{NSLocalizedDescriptionKey: description}];
 }
 
-- (id)initWithISMSCode:(NSInteger)code withExtraAttributes:(NSDictionary *)attributes
-{
-    NSString *description = [NSError descriptionFromISMSCode:code];
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:description, NSLocalizedDescriptionKey, nil];
-    [dict addEntriesFromDictionary:attributes];
-    
-    self = [self initWithDomain:ISMSErrorDomain code:code userInfo:dict];
-    
-    return self;
++ (NSError *)errorWithISMSCode:(NSInteger)code extraAttributes:(NSDictionary *)attributes {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:attributes];
+    dict[NSLocalizedDescriptionKey] = [self descriptionFromISMSCode:code];
+    return [self errorWithDomain:ISMSErrorDomain code:code userInfo:dict];
 }
 
-+ (NSError *)errorWithISMSCode:(NSInteger)code
-{
-    return [[NSError alloc] initWithISMSCode:code];
++ (NSError *)errorWithISMSCode:(NSInteger)code message:(NSString *)message {
+    return [self errorWithDomain:SUSErrorDomain code:code userInfo:@{NSLocalizedDescriptionKey: message}];
 }
-
-+ (NSError *)errorWithISMSCode:(NSInteger)code withExtraAttributes:(NSDictionary *)attributes
-{
-    return [[NSError alloc] initWithISMSCode:code withExtraAttributes:attributes];
-}
-
-/*+ (NSError *)errorWithISMSCode:(NSInteger)code
-{
-    NSString *description = nil;
-    
-    switch (code) 
-    {
-        case ISMSErrorCode_NotASubsonicServer:
-            description = ISMSErrorDesc_NotASubsonicServer;
-            break;
-        case ISMSErrorCode_NotXML:
-            description = ISMSErrorDesc_NotXML;
-            break;
-        case ISMSErrorCode_CouldNotCreateConnection:
-            description = ISMSErrorDesc_CouldNotCreateConnection;
-        default:
-            break;
-    }
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObject:description forKey:NSLocalizedDescriptionKey];
-    
-    return [NSError errorWithDomain:ISMSErrorDomain code:code userInfo:dict];
-}
-
-+ (NSError *)errorWithISMSCode:(NSInteger)code withExtraAttributes:(NSDictionary *)attributes
-{
-	NSError *error = [NSError errorWithISMSCode:code];
-	
-	NSMutableDictionary *newDict = [NSMutableDictionary dictionaryWithCapacity:0];
-	[newDict addEntriesFromDictionary:[error userInfo]];
-	[newDict addEntriesFromDictionary:attributes];
-	
-	NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:newDict];
-	NSError *newError = [NSError errorWithDomain:[error domain] code:[error code] userInfo:userInfo];
-	
-	return newError;
-}*/
 
 @end

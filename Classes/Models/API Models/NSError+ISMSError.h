@@ -8,10 +8,10 @@
 
 @interface NSError (ISMSError)
 
-- (id)initWithISMSCode:(NSInteger)code;
-- (id)initWithISMSCode:(NSInteger)code withExtraAttributes:(NSDictionary *)attributes;
-+ (NSError *)errorWithISMSCode:(NSInteger)code;
-+ (NSError *)errorWithISMSCode:(NSInteger)code withExtraAttributes:(NSDictionary *)attributes;
 + (NSString *)descriptionFromISMSCode:(NSUInteger)code;
+
++ (NSError *)errorWithISMSCode:(NSInteger)code;
++ (NSError *)errorWithISMSCode:(NSInteger)code extraAttributes:(NSDictionary *)attributes;
++ (NSError *)errorWithISMSCode:(NSInteger)code message:(NSString *)message;
 
 @end

@@ -15,7 +15,7 @@
 #define ISMSNumberOfStreamsToQueue 2
 
 @class ISMSSong, ISMSStreamHandler, SUSLyricsDAO;
-@interface ISMSStreamManager : NSObject <ISMSStreamHandlerDelegate, ISMSLoaderDelegate>
+@interface ISMSStreamManager : NSObject <ISMSStreamHandlerDelegate>
 
 @property (strong) NSMutableArray *handlerStack;
 @property (strong) SUSLyricsDAO *lyricsDAO;

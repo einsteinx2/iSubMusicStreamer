@@ -10,7 +10,7 @@
 #import "ISMSLoader.h"
 #import "DatabaseSingleton.h"
 #import "SUSLyricsLoader.h"
-#import "ISMSCoverArtLoader.h"
+#import "SUSCoverArtLoader.h"
 #import "ISMSStreamManager.h"
 #import "ISMSStreamHandler.h"
 #import "SUSLyricsDAO.h"
@@ -23,20 +23,6 @@ LOG_LEVEL_ISUB_DEBUG
 #define maxNumOfReconnects 5
 
 @implementation ISMSCacheQueueManager
-
-#pragma mark - Lyric Loader Delegate
-
-- (void)loadingFailed:(ISMSLoader *)theLoader withError:(NSError *)error
-{
-	//DLog(@"theLoader: %@", theLoader);
-	theLoader.delegate = nil;
-}
-
-- (void)loadingFinished:(ISMSLoader *)theLoader
-{
-	//DLog(@"theLoader: %@", theLoader);
-	theLoader.delegate = nil;
-}
 
 #pragma mark Download Methods
 
@@ -144,14 +130,10 @@ LOG_LEVEL_ISUB_DEBUG
 	if (self.currentQueuedSong.coverArtId)
 	{
 		NSString *coverArtId = self.currentQueuedSong.coverArtId;
-		ISMSCoverArtLoader *playerArt = [[ISMSCoverArtLoader alloc] initWithDelegate:self 
-																		coverArtId:coverArtId
-																		   isLarge:YES];
+		SUSCoverArtLoader *playerArt = [[SUSCoverArtLoader alloc] initWithDelegate:nil coverArtId:coverArtId isLarge:YES];
 		[playerArt downloadArtIfNotExists];
 		
-		ISMSCoverArtLoader *tableArt = [[ISMSCoverArtLoader alloc] initWithDelegate:self
-																	   coverArtId:coverArtId 
-																		  isLarge:NO];
+		SUSCoverArtLoader *tableArt = [[SUSCoverArtLoader alloc] initWithDelegate:nil coverArtId:coverArtId isLarge:NO];
 		[tableArt downloadArtIfNotExists];
 	}
 	

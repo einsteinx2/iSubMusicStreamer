@@ -33,9 +33,9 @@
     } else {
         RXMLElement *error = [root child:@"error"];
         if ([error isValid]) {
-            NSString *code = [error attribute:@"code"];
+            NSInteger code = [[error attribute:@"code"] integerValue];
             NSString *message = [error attribute:@"message"];
-            [self subsonicErrorCode:[code intValue] message:message];
+            [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
         } else {
             [self resetDb];
             self.albumsCount = 0;

@@ -45,7 +45,7 @@
 	else 
 	{
 		NSDictionary *dict = [NSDictionary dictionaryWithObject:message forKey:@"message"];
-		NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_CouldNotSendChatMessage withExtraAttributes:dict];
+		NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_CouldNotSendChatMessage extraAttributes:dict];
 		[self.delegate loadingFailed:nil withError:error]; 
 	}
 }

@@ -7,12 +7,11 @@
 //
 
 #import "ISMSStreamHandlerDelegate.h"
-#import "ISMSLoaderDelegate.h"
 
 #define cacheQueueManagerS ((ISMSCacheQueueManager *)[ISMSCacheQueueManager sharedInstance])
 
 @class ISMSSong, ISMSStreamHandler;
-@interface ISMSCacheQueueManager : NSObject <ISMSLoaderDelegate, ISMSStreamHandlerDelegate>
+@interface ISMSCacheQueueManager : NSObject <ISMSStreamHandlerDelegate>
 
 @property BOOL isQueueDownloading;
 @property (copy) ISMSSong *currentQueuedSong;
@@ -20,15 +19,6 @@
 @property (weak, readonly) ISMSSong *currentQueuedSongInDb;
 
 @property (strong) SUSLyricsDAO *lyricsDAO;
-
-
-/*@property NSUInteger downloadLength;
-
-@property (strong) NSFileHandle *fileHandle;
-@property (strong) NSURLConnection *connection;
-
-@property unsigned long long contentLength;
-@property NSUInteger numberOfContentLengthFailures;*/
 
 + (id)sharedInstance;
 

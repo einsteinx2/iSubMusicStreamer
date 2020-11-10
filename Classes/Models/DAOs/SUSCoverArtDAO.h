@@ -8,11 +8,11 @@
 
 #import "ISMSLoaderManager.h"
 
-@class FMDatabase, ISMSCoverArtLoader;
-@interface SUSCoverArtDAO : NSObject <ISMSLoaderDelegate, ISMSLoaderManager>
+@class FMDatabase, SUSCoverArtLoader;
+@interface SUSCoverArtDAO : NSObject <ISMSLoaderDelegateNew, ISMSLoaderManager>
 
 @property (weak) NSObject<ISMSLoaderDelegate> *delegate;
-@property (strong) ISMSCoverArtLoader *loader;
+@property (strong) SUSCoverArtLoader *loader;
 
 @property (copy) NSString *coverArtId;
 @property BOOL isLarge;
@@ -26,8 +26,8 @@
 #endif
 @property (readonly) BOOL isCoverArtCached;
 
-- (id)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate;
-- (id)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)delegate coverArtId:(NSString *)artId isLarge:(BOOL)large;
+- (id)initWithDelegate:(NSObject<ISMSLoaderDelegateNew> *)theDelegate;
+- (id)initWithDelegate:(NSObject<ISMSLoaderDelegateNew> *)delegate coverArtId:(NSString *)artId isLarge:(BOOL)large;
 
 - (void)downloadArtIfNotExists;
 

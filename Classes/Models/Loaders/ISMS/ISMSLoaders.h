@@ -11,7 +11,7 @@
 
 #import "ISMSStatusLoader.h"
 #import "SUSServerPlaylistsLoader.h"
-#import "ISMSCoverArtLoader.h"
+#import "SUSCoverArtLoader.h"
 #import "ISMSRootFoldersLoader.h"
 #import "ISMSQueueAllLoader.h"
 #import "ISMSServerShuffleLoader.h"

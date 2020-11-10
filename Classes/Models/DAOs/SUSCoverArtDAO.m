@@ -7,24 +7,19 @@
 //
 
 #import "SUSCoverArtDAO.h"
-
-#import "ISMSCoverArtLoader.h"
+#import "SUSCoverArtLoader.h"
 
 @implementation SUSCoverArtDAO
 
-- (id)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate
-{
-	if ((self = [super init]))
-	{
+- (id)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate {
+	if ((self = [super init])) {
 		_delegate = theDelegate;
 	}
 	return self;
 }
 
-- (id)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate coverArtId:(NSString *)artId isLarge:(BOOL)large
-{
-	if ((self = [super init]))
-	{
+- (id)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate coverArtId:(NSString *)artId isLarge:(BOOL)large {
+	if ((self = [super init])) {
 		_delegate = theDelegate;
 		_isLarge = large;
 		_coverArtId = [artId copy];
@@ -32,8 +27,7 @@
 	return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
 	[_loader cancelLoad];
 	_loader.delegate = nil;
 }
@@ -50,74 +44,44 @@
 
 #pragma mark - Public DAO methods
 
-#ifdef IOS
-
-- (UIImage *)coverArtImage
-{
+- (UIImage *)coverArtImage {
     NSData *imageData = [self.dbQueue dataForQuery:@"SELECT data FROM coverArtCache WHERE id = ?", [self.coverArtId md5]];
     return imageData ? [UIImage imageWithData:imageData] : self.defaultCoverArtImage;
 }
 
-- (UIImage *)defaultCoverArtImage
-{	
-	if (self.isLarge)
+- (UIImage *)defaultCoverArtImage {
+    if (self.isLarge) {
 		return IS_IPAD() ? [UIImage imageNamed:@"default-album-art-ipad"] : [UIImage imageNamed:@"default-album-art"];
-	else
+    } else {
 		return [UIImage imageNamed:@"default-album-art-small"];
+    }
 }
 
-#else
-
-- (NSImage *)coverArtImage
-{
-    NSData *imageData = [self.dbQueue dataForQuery:@"SELECT data FROM coverArtCache WHERE id = ?", [self.coverArtId md5]];
-    return imageData ? [[NSImage alloc] initWithData:imageData] : self.defaultCoverArtImage;
-}
-
-- (NSImage *)defaultCoverArtImage
-{
-	if (self.isLarge)
-		return IS_IPAD() ? [NSImage imageNamed:@"default-album-art-ipad"] : [NSImage imageNamed:@"default-album-art"];
-	else
-		return [NSImage imageNamed:@"default-album-art-small"];
-}
-
-#endif
-
-- (BOOL)isCoverArtCached
-{
-	if (!self.coverArtId) 
-		return NO;
-	
+- (BOOL)isCoverArtCached {
+	if (!self.coverArtId) return NO;
     return [self.dbQueue stringForQuery:@"SELECT id FROM coverArtCache WHERE id = ?", [self.coverArtId md5]] ? YES : NO;
 }
 
-- (void)downloadArtIfNotExists
-{
-	if (self.coverArtId)
-	{
-		if (!self.isCoverArtCached)
-			[self startLoad];
+- (void)downloadArtIfNotExists {
+	if (self.coverArtId) {
+		if (!self.isCoverArtCached) [self startLoad];
 	}
 }
 
 #pragma mark - Loader Manager Methods
 
-- (void)restartLoad
-{
+- (void)restartLoad {
 	[self cancelLoad];
     [self startLoad];
 }
 
-- (void)startLoad
-{
+- (void)startLoad {
     [self cancelLoad];
-    self.loader = [[ISMSCoverArtLoader alloc] initWithDelegate:self coverArtId:self.coverArtId isLarge:self.isLarge];
+    self.loader = [[SUSCoverArtLoader alloc] initWithDelegate:self coverArtId:self.coverArtId isLarge:self.isLarge];
     [self.loader startLoad];
 }
 
-- (void)cancelLoad
-{
+- (void)cancelLoad {
     [self.loader cancelLoad];
 	self.loader.delegate = nil;
     self.loader = nil;
@@ -125,27 +89,22 @@
 
 #pragma mark - Loader Delegate Methods
 
-- (void)loadingFailed:(ISMSLoader*)theLoader withError:(NSError *)error
-{
+- (void)loadingFailed:(ISMSLoader*)theLoader withError:(NSError *)error {
 	self.loader.delegate = nil;
 	self.loader = nil;
 	
-	if ([self.delegate respondsToSelector:@selector(loadingFailed:withError:)])
-	{
+	if ([self.delegate respondsToSelector:@selector(loadingFailed:withError:)]) {
 		[self.delegate loadingFailed:nil withError:error];
 	}
 }
 
-- (void)loadingFinished:(ISMSLoader*)theLoader
-{
+- (void)loadingFinished:(ISMSLoader*)theLoader {
 	self.loader.delegate = nil;
 	self.loader = nil;
     
-	if ([self.delegate respondsToSelector:@selector(loadingFinished:)])
-	{
+	if ([self.delegate respondsToSelector:@selector(loadingFinished:)]) {
 		[self.delegate loadingFinished:nil];
 	}
 }
-
 
 @end

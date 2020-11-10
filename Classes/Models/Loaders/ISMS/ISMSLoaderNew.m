@@ -57,12 +57,7 @@ static dispatch_once_t _sharedSessionDispatchOnce = 0;
 
 - (void)startLoad {
     NSURLRequest *request = [self createRequest];
-    if (!request) {
-        // Inform the delegate that the loading failed.
-        NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_CouldNotCreateConnection];
-        [self informDelegateLoadingFailed:error];
-        return;
-    }
+    if (!request) return;
     
     // Cancel any existing request
     [self cancelLoad];
@@ -106,12 +101,6 @@ static dispatch_once_t _sharedSessionDispatchOnce = 0;
 
 - (void)processResponse {
     [NSException raise:NSInternalInconsistencyException format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
-}
-
-- (void)subsonicErrorCode:(NSInteger)errorCode message:(NSString *)message {
-    NSDictionary *dict = [NSDictionary dictionaryWithObject:message forKey:NSLocalizedDescriptionKey];
-    NSError *error = [NSError errorWithDomain:SUSErrorDomain code:errorCode userInfo:dict];
-    [self informDelegateLoadingFailed:error];
 }
 
 - (void)informDelegateLoadingFailed:(NSError *)error {

@@ -10,7 +10,7 @@
 #import "ISMSStreamHandler.h"
 #import "ISMSCFNetworkStreamHandler.h"
 #import "PlaylistSingleton.h"
-#import "ISMSCoverArtLoader.h"
+#import "SUSCoverArtLoader.h"
 #import "SUSLyricsDAO.h"
 #import "ISMSCacheQueueManager.h"
 
@@ -424,27 +424,21 @@ LOG_LEVEL_ISUB_DEBUG
 		return;
 	
 	ISMSStreamHandler *handler = [[ISMSCFNetworkStreamHandler alloc] initWithSong:song byteOffset:byteOffset secondsOffset:secondsOffset isTemp:isTemp delegate:self];
-	if (![self.handlerStack containsObject:handler])
-	{
+	if (![self.handlerStack containsObject:handler]) {
 		[self.handlerStack insertObject:handler atIndex:index];
 		
-		if ([self.handlerStack count] == 1 && isStartDownload)
-		{
+		if ([self.handlerStack count] == 1 && isStartDownload) {
 			[self startHandler:handler];
 		}
 		
 		// Also download the album art
 		if (song.coverArtId)
 		{
-			ISMSCoverArtLoader *playerArt = [[ISMSCoverArtLoader alloc] initWithDelegate:self coverArtId:song.coverArtId isLarge:YES];
+            SUSCoverArtLoader *playerArt = [[SUSCoverArtLoader alloc] initWithDelegate:nil coverArtId:song.coverArtId isLarge:YES];
 			[playerArt downloadArtIfNotExists];
-			//if (![playerArt downloadArtIfNotExists])
-			//	;
 			
-			ISMSCoverArtLoader *tableArt = [[ISMSCoverArtLoader alloc] initWithDelegate:self coverArtId:song.coverArtId isLarge:NO];
+			SUSCoverArtLoader *tableArt = [[SUSCoverArtLoader alloc] initWithDelegate:nil coverArtId:song.coverArtId isLarge:NO];
 			[tableArt downloadArtIfNotExists];
-			//if (![tableArt downloadArtIfNotExists])
-			//	;
 		}
 	}
 	
@@ -689,18 +683,6 @@ LOG_LEVEL_ISUB_DEBUG
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_StreamHandlerSongDownloaded 
 													  userInfo:userInfo];
 	}
-}
-
-#pragma mark - ISMSLoader handler
-
-- (void)loadingFailed:(ISMSLoader *)theLoader withError:(NSError *)error
-{
-	theLoader.delegate = nil;
-}
-
-- (void)loadingFinished:(ISMSLoader *)theLoader
-{
-	theLoader.delegate = nil;
 }
 
 #pragma mark - Memory management
