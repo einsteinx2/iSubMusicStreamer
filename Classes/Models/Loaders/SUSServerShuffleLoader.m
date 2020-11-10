@@ -9,6 +9,12 @@
 #import "SUSServerShuffleLoader.h"
 #import "SearchXMLParser.h"
 #import "NSMutableURLRequest+SUS.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "DatabaseSingleton.h"
+#import "JukeboxSingleton.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation SUSServerShuffleLoader
 

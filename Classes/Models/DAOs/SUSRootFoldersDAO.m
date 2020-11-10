@@ -8,6 +8,11 @@
 
 #import "SUSRootFoldersDAO.h"
 #import "SUSRootFoldersLoader.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "DatabaseSingleton.h"
+#import "ISMSArtist.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @interface SUSRootFoldersDAO ()
 {

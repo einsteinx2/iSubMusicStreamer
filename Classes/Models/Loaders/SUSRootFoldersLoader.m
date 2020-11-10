@@ -8,6 +8,12 @@
 
 #import "SUSRootFoldersLoader.h"
 #import "NSMutableURLRequest+SUS.h"
+#import "RXMLElement.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "SavedSettings.h"
+#import "DatabaseSingleton.h"
+#import "NSError+ISMSError.h"
+#import "EX2Kit.h"
 
 #define TEMP_FLUSH_AMOUNT 400
 

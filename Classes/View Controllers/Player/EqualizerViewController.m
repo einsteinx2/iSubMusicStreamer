@@ -11,6 +11,10 @@
 #import "EqualizerPointView.h"
 #import "EqualizerPathView.h"
 #import "FXBlurView.h"
+#import "Flurry.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "EX2Kit.h"
 
 @implementation EqualizerViewController
 

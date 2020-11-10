@@ -7,6 +7,8 @@
 //
 
 #import "EqualizerPathView.h"
+#import "BassParamEqValue.h"
+#import "SavedSettings.h"
 
 static CGColorRef strokeColor;
 static CGColorRef fillColorOff;

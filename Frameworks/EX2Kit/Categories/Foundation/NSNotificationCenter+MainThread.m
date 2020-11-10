@@ -7,6 +7,7 @@
 //
 
 #import "NSNotificationCenter+MainThread.h"
+#import "EX2Dispatch.h"
 
 @implementation NSNotificationCenter (MainThread)
 

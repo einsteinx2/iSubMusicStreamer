@@ -7,6 +7,8 @@
 //
 
 #import "NSError+ISMSError.h"
+#import "SUSErrorDomain.h"
+#import "EX2Kit.h"
 
 @implementation NSError (ISMSError)
 

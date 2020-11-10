@@ -6,6 +6,9 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import "ISMSErrorDomain.h"
+
 @interface NSError (ISMSError)
 
 + (NSString *)descriptionFromISMSCode:(NSUInteger)code;

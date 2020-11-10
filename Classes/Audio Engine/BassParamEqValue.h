@@ -6,7 +6,7 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "bass.h"
 
 #define MIN_FREQUENCY 32

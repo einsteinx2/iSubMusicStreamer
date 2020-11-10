@@ -125,7 +125,7 @@ static BOOL _isThrottlingEnabled = YES;
 
 + (id)slidingNotificationOnTopViewWithMessage:(NSString *)theMessage image:(UIImage*)theImage
 {
-	return [[self alloc] initOnView:[self mainWindow].subviews.firstObjectSafe message:theMessage image:theImage];
+	return [[self alloc] initOnView:[self mainWindow].subviews.firstObject message:theMessage image:theImage];
 }
 
 + (id)slidingNotificationOnView:(UIView *)theParentView message:(NSString *)theMessage image:(UIImage*)theImage

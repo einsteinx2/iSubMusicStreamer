@@ -810,8 +810,6 @@
 		53FDEE6D11E82D7700FE3ECD /* delete-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FDEE6C11E82D7700FE3ECD /* delete-button@2x.png */; };
 		53FE34B91EA961540058B925 /* NSArray+FilterBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33D61EA961540058B925 /* NSArray+FilterBlock.m */; };
 		53FE34BB1EA961540058B925 /* NSArray+FilterBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33D61EA961540058B925 /* NSArray+FilterBlock.m */; };
-		53FE34BC1EA961540058B925 /* NSArray+FirstObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33D81EA961540058B925 /* NSArray+FirstObject.m */; };
-		53FE34BE1EA961540058B925 /* NSArray+FirstObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33D81EA961540058B925 /* NSArray+FirstObject.m */; };
 		53FE34BF1EA961540058B925 /* NSArray+Plist.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33DA1EA961540058B925 /* NSArray+Plist.m */; };
 		53FE34C11EA961540058B925 /* NSArray+Plist.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33DA1EA961540058B925 /* NSArray+Plist.m */; };
 		53FE34C21EA961540058B925 /* NSArray+Reverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33DC1EA961540058B925 /* NSArray+Reverse.m */; };
@@ -1122,30 +1120,6 @@
 		53FE37D81EA961720058B925 /* SUSSubFolderLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36D61EA961720058B925 /* SUSSubFolderLoader.m */; };
 		53FE38041EA961970058B925 /* RXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38031EA961970058B925 /* RXMLElement.m */; };
 		53FE38061EA961970058B925 /* RXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38031EA961970058B925 /* RXMLElement.m */; };
-		53FE38211EA961A10058B925 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38091EA961A10058B925 /* NSObject+SBJson.m */; };
-		53FE38231EA961A10058B925 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38091EA961A10058B925 /* NSObject+SBJson.m */; };
-		53FE38241EA961A10058B925 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE380C1EA961A10058B925 /* SBJsonParser.m */; };
-		53FE38261EA961A10058B925 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE380C1EA961A10058B925 /* SBJsonParser.m */; };
-		53FE38271EA961A10058B925 /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE380E1EA961A10058B925 /* SBJsonStreamParser.m */; };
-		53FE38291EA961A10058B925 /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE380E1EA961A10058B925 /* SBJsonStreamParser.m */; };
-		53FE382A1EA961A10058B925 /* SBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38101EA961A10058B925 /* SBJsonStreamParserAccumulator.m */; };
-		53FE382C1EA961A10058B925 /* SBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38101EA961A10058B925 /* SBJsonStreamParserAccumulator.m */; };
-		53FE382D1EA961A10058B925 /* SBJsonStreamParserAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38121EA961A10058B925 /* SBJsonStreamParserAdapter.m */; };
-		53FE382F1EA961A10058B925 /* SBJsonStreamParserAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38121EA961A10058B925 /* SBJsonStreamParserAdapter.m */; };
-		53FE38301EA961A10058B925 /* SBJsonStreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38141EA961A10058B925 /* SBJsonStreamParserState.m */; };
-		53FE38321EA961A10058B925 /* SBJsonStreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38141EA961A10058B925 /* SBJsonStreamParserState.m */; };
-		53FE38331EA961A10058B925 /* SBJsonStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38161EA961A10058B925 /* SBJsonStreamWriter.m */; };
-		53FE38351EA961A10058B925 /* SBJsonStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38161EA961A10058B925 /* SBJsonStreamWriter.m */; };
-		53FE38361EA961A10058B925 /* SBJsonStreamWriterAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38181EA961A10058B925 /* SBJsonStreamWriterAccumulator.m */; };
-		53FE38381EA961A10058B925 /* SBJsonStreamWriterAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38181EA961A10058B925 /* SBJsonStreamWriterAccumulator.m */; };
-		53FE38391EA961A10058B925 /* SBJsonStreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE381A1EA961A10058B925 /* SBJsonStreamWriterState.m */; };
-		53FE383B1EA961A10058B925 /* SBJsonStreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE381A1EA961A10058B925 /* SBJsonStreamWriterState.m */; };
-		53FE383C1EA961A10058B925 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE381C1EA961A10058B925 /* SBJsonTokeniser.m */; };
-		53FE383E1EA961A10058B925 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE381C1EA961A10058B925 /* SBJsonTokeniser.m */; };
-		53FE383F1EA961A10058B925 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE381E1EA961A10058B925 /* SBJsonUTF8Stream.m */; };
-		53FE38411EA961A10058B925 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE381E1EA961A10058B925 /* SBJsonUTF8Stream.m */; };
-		53FE38421EA961A10058B925 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38201EA961A10058B925 /* SBJsonWriter.m */; };
-		53FE38441EA961A10058B925 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38201EA961A10058B925 /* SBJsonWriter.m */; };
 		53FE384C1EA961A80058B925 /* TBXML+Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38471EA961A80058B925 /* TBXML+Compression.m */; };
 		53FE384E1EA961A80058B925 /* TBXML+Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38471EA961A80058B925 /* TBXML+Compression.m */; };
 		53FE384F1EA961A80058B925 /* TBXML+HTTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38491EA961A80058B925 /* TBXML+HTTP.m */; };
@@ -1416,7 +1390,6 @@
 		53493F1A15FC6AA60059492E /* iSub-Info-Beta.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "iSub-Info-Beta.plist"; path = "Other/iSub-Info-Beta.plist"; sourceTree = "<group>"; };
 		53493F1C15FC6AA60059492E /* iSub-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "iSub-Info.plist"; path = "Other/iSub-Info.plist"; sourceTree = "<group>"; };
 		53493F2615FC6AC40059492E /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Other/main.m; sourceTree = "<group>"; };
-		53493F2A15FC6AD20059492E /* iSub_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iSub_Prefix.pch; path = Other/iSub_Prefix.pch; sourceTree = "<group>"; };
 		53493F2C15FC6BD90059492E /* KeychainAccessGroups.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = KeychainAccessGroups.plist; path = Other/KeychainAccessGroups.plist; sourceTree = "<group>"; };
 		53493F3315FC6BF10059492E /* Imports.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Imports.h; path = Other/Imports.h; sourceTree = "<group>"; };
 		53493F3715FC6C3A0059492E /* BassEffectDefaultPresets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = BassEffectDefaultPresets.plist; path = Other/BassEffectDefaultPresets.plist; sourceTree = "<group>"; };
@@ -1794,8 +1767,6 @@
 		53FE33D41EA961540058B925 /* NSArray+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Additions.h"; sourceTree = "<group>"; };
 		53FE33D51EA961540058B925 /* NSArray+FilterBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+FilterBlock.h"; sourceTree = "<group>"; };
 		53FE33D61EA961540058B925 /* NSArray+FilterBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+FilterBlock.m"; sourceTree = "<group>"; };
-		53FE33D71EA961540058B925 /* NSArray+FirstObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+FirstObject.h"; sourceTree = "<group>"; };
-		53FE33D81EA961540058B925 /* NSArray+FirstObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+FirstObject.m"; sourceTree = "<group>"; };
 		53FE33D91EA961540058B925 /* NSArray+Plist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Plist.h"; sourceTree = "<group>"; };
 		53FE33DA1EA961540058B925 /* NSArray+Plist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Plist.m"; sourceTree = "<group>"; };
 		53FE33DB1EA961540058B925 /* NSArray+Reverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Reverse.h"; sourceTree = "<group>"; };
@@ -2015,8 +1986,6 @@
 		53FE36481EA961720058B925 /* ISMSChatMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSChatMessage.m; sourceTree = "<group>"; };
 		53FE36491EA961720058B925 /* SUSCoverArtLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSCoverArtLoader.h; sourceTree = "<group>"; };
 		53FE364A1EA961720058B925 /* SUSCoverArtLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUSCoverArtLoader.m; sourceTree = "<group>"; };
-		53FE364B1EA961720058B925 /* ISMSDataAccessObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSDataAccessObjects.h; sourceTree = "<group>"; };
-		53FE364C1EA961720058B925 /* ISMSDataModelObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSDataModelObjects.h; sourceTree = "<group>"; };
 		53FE364F1EA961720058B925 /* ISMSErrorDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSErrorDomain.h; sourceTree = "<group>"; };
 		53FE36501EA961720058B925 /* ISMSIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSIndex.h; sourceTree = "<group>"; };
 		53FE36511EA961720058B925 /* ISMSIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSIndex.m; sourceTree = "<group>"; };
@@ -2051,8 +2020,6 @@
 		53FE36821EA961720058B925 /* JukeboxXMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JukeboxXMLParser.m; sourceTree = "<group>"; };
 		53FE36841EA961720058B925 /* LibSub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibSub.h; sourceTree = "<group>"; };
 		53FE36851EA961720058B925 /* LibSub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibSub.m; sourceTree = "<group>"; };
-		53FE36861EA961720058B925 /* libSubDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libSubDefines.h; sourceTree = "<group>"; };
-		53FE36871EA961720058B925 /* libSubImports.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libSubImports.h; sourceTree = "<group>"; };
 		53FE36881EA961720058B925 /* MusicSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicSingleton.h; sourceTree = "<group>"; };
 		53FE36891EA961720058B925 /* MusicSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MusicSingleton.m; sourceTree = "<group>"; };
 		53FE368A1EA961720058B925 /* NSError+ISMSError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+ISMSError.h"; sourceTree = "<group>"; };
@@ -2120,31 +2087,6 @@
 		53FE36D61EA961720058B925 /* SUSSubFolderLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUSSubFolderLoader.m; sourceTree = "<group>"; };
 		53FE38021EA961970058B925 /* RXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXMLElement.h; sourceTree = "<group>"; };
 		53FE38031EA961970058B925 /* RXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXMLElement.m; sourceTree = "<group>"; };
-		53FE38081EA961A10058B925 /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJson.h"; sourceTree = "<group>"; };
-		53FE38091EA961A10058B925 /* NSObject+SBJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJson.m"; sourceTree = "<group>"; };
-		53FE380A1EA961A10058B925 /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson.h; sourceTree = "<group>"; };
-		53FE380B1EA961A10058B925 /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
-		53FE380C1EA961A10058B925 /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
-		53FE380D1EA961A10058B925 /* SBJsonStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParser.h; sourceTree = "<group>"; };
-		53FE380E1EA961A10058B925 /* SBJsonStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParser.m; sourceTree = "<group>"; };
-		53FE380F1EA961A10058B925 /* SBJsonStreamParserAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserAccumulator.h; sourceTree = "<group>"; };
-		53FE38101EA961A10058B925 /* SBJsonStreamParserAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParserAccumulator.m; sourceTree = "<group>"; };
-		53FE38111EA961A10058B925 /* SBJsonStreamParserAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserAdapter.h; sourceTree = "<group>"; };
-		53FE38121EA961A10058B925 /* SBJsonStreamParserAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParserAdapter.m; sourceTree = "<group>"; };
-		53FE38131EA961A10058B925 /* SBJsonStreamParserState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserState.h; sourceTree = "<group>"; };
-		53FE38141EA961A10058B925 /* SBJsonStreamParserState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParserState.m; sourceTree = "<group>"; };
-		53FE38151EA961A10058B925 /* SBJsonStreamWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamWriter.h; sourceTree = "<group>"; };
-		53FE38161EA961A10058B925 /* SBJsonStreamWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamWriter.m; sourceTree = "<group>"; };
-		53FE38171EA961A10058B925 /* SBJsonStreamWriterAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamWriterAccumulator.h; sourceTree = "<group>"; };
-		53FE38181EA961A10058B925 /* SBJsonStreamWriterAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamWriterAccumulator.m; sourceTree = "<group>"; };
-		53FE38191EA961A10058B925 /* SBJsonStreamWriterState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamWriterState.h; sourceTree = "<group>"; };
-		53FE381A1EA961A10058B925 /* SBJsonStreamWriterState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamWriterState.m; sourceTree = "<group>"; };
-		53FE381B1EA961A10058B925 /* SBJsonTokeniser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonTokeniser.h; sourceTree = "<group>"; };
-		53FE381C1EA961A10058B925 /* SBJsonTokeniser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonTokeniser.m; sourceTree = "<group>"; };
-		53FE381D1EA961A10058B925 /* SBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonUTF8Stream.h; sourceTree = "<group>"; };
-		53FE381E1EA961A10058B925 /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
-		53FE381F1EA961A10058B925 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
-		53FE38201EA961A10058B925 /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
 		53FE38461EA961A80058B925 /* TBXML+Compression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TBXML+Compression.h"; sourceTree = "<group>"; };
 		53FE38471EA961A80058B925 /* TBXML+Compression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TBXML+Compression.m"; sourceTree = "<group>"; };
 		53FE38481EA961A80058B925 /* TBXML+HTTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TBXML+HTTP.h"; sourceTree = "<group>"; };
@@ -2378,7 +2320,6 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				53493F2A15FC6AD20059492E /* iSub_Prefix.pch */,
 				53493F2615FC6AC40059492E /* main.m */,
 				533F651C160533F4000098E1 /* Defines.h */,
 				53493F3315FC6BF10059492E /* Imports.h */,
@@ -2421,7 +2362,6 @@
 				53FE38BF1EA961ED0058B925 /* CocoaHTTPServer */,
 				53FE38551EA961C80058B925 /* ZipKit */,
 				53FE38451EA961A80058B925 /* TBXML */,
-				53FE38071EA961A10058B925 /* SBJson */,
 				53FE38011EA961970058B925 /* RaptureXML */,
 				53FE37EB1EA961780058B925 /* Flurry */,
 				53FE35FA1EA961670058B925 /* libBASS */,
@@ -2873,8 +2813,6 @@
 				531D39FA255AB554000CB0DF /* Singletons */,
 				53FE36431EA961720058B925 /* ISMSCacheQueueManager.h */,
 				53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */,
-				53FE364B1EA961720058B925 /* ISMSDataAccessObjects.h */,
-				53FE364C1EA961720058B925 /* ISMSDataModelObjects.h */,
 				53FE36581EA961720058B925 /* ISMSNotificationNames.h */,
 				53FE36591EA961720058B925 /* ISMSNotificationNames.m */,
 				53FE36751EA961720058B925 /* ISMSUpdateChecker.h */,
@@ -2885,8 +2823,6 @@
 				53FE36821EA961720058B925 /* JukeboxXMLParser.m */,
 				53FE36841EA961720058B925 /* LibSub.h */,
 				53FE36851EA961720058B925 /* LibSub.m */,
-				53FE36861EA961720058B925 /* libSubDefines.h */,
-				53FE36871EA961720058B925 /* libSubImports.h */,
 				53FE36901EA961720058B925 /* NSString+cleanCredentialsForLog.h */,
 				53FE36911EA961720058B925 /* NSString+cleanCredentialsForLog.m */,
 				53FE36A11EA961720058B925 /* SearchXMLParser.h */,
@@ -3370,11 +3306,11 @@
 		53FE33CE1EA961540058B925 /* EX2Kit */ = {
 			isa = PBXGroup;
 			children = (
+				53FE34961EA961540058B925 /* EX2Kit.h */,
+				53FE34971EA961540058B925 /* EX2Kit.m */,
 				53FE33CF1EA961540058B925 /* Categories */,
 				53FE345C1EA961540058B925 /* Components */,
 				53FE34711EA961540058B925 /* Dependencies */,
-				53FE34961EA961540058B925 /* EX2Kit.h */,
-				53FE34971EA961540058B925 /* EX2Kit.m */,
 				53FE34981EA961540058B925 /* Macros */,
 				53FE349A1EA961540058B925 /* Static */,
 				53FE349E1EA961540058B925 /* UIComponents */,
@@ -3444,8 +3380,6 @@
 				53FE33D41EA961540058B925 /* NSArray+Additions.h */,
 				53FE33D51EA961540058B925 /* NSArray+FilterBlock.h */,
 				53FE33D61EA961540058B925 /* NSArray+FilterBlock.m */,
-				53FE33D71EA961540058B925 /* NSArray+FirstObject.h */,
-				53FE33D81EA961540058B925 /* NSArray+FirstObject.m */,
 				53FE33D91EA961540058B925 /* NSArray+Plist.h */,
 				53FE33DA1EA961540058B925 /* NSArray+Plist.m */,
 				53FE33DB1EA961540058B925 /* NSArray+Reverse.h */,
@@ -3717,39 +3651,6 @@
 			);
 			name = RaptureXML;
 			path = Frameworks/RaptureXML;
-			sourceTree = "<group>";
-		};
-		53FE38071EA961A10058B925 /* SBJson */ = {
-			isa = PBXGroup;
-			children = (
-				53FE38081EA961A10058B925 /* NSObject+SBJson.h */,
-				53FE38091EA961A10058B925 /* NSObject+SBJson.m */,
-				53FE380A1EA961A10058B925 /* SBJson.h */,
-				53FE380B1EA961A10058B925 /* SBJsonParser.h */,
-				53FE380C1EA961A10058B925 /* SBJsonParser.m */,
-				53FE380D1EA961A10058B925 /* SBJsonStreamParser.h */,
-				53FE380E1EA961A10058B925 /* SBJsonStreamParser.m */,
-				53FE380F1EA961A10058B925 /* SBJsonStreamParserAccumulator.h */,
-				53FE38101EA961A10058B925 /* SBJsonStreamParserAccumulator.m */,
-				53FE38111EA961A10058B925 /* SBJsonStreamParserAdapter.h */,
-				53FE38121EA961A10058B925 /* SBJsonStreamParserAdapter.m */,
-				53FE38131EA961A10058B925 /* SBJsonStreamParserState.h */,
-				53FE38141EA961A10058B925 /* SBJsonStreamParserState.m */,
-				53FE38151EA961A10058B925 /* SBJsonStreamWriter.h */,
-				53FE38161EA961A10058B925 /* SBJsonStreamWriter.m */,
-				53FE38171EA961A10058B925 /* SBJsonStreamWriterAccumulator.h */,
-				53FE38181EA961A10058B925 /* SBJsonStreamWriterAccumulator.m */,
-				53FE38191EA961A10058B925 /* SBJsonStreamWriterState.h */,
-				53FE381A1EA961A10058B925 /* SBJsonStreamWriterState.m */,
-				53FE381B1EA961A10058B925 /* SBJsonTokeniser.h */,
-				53FE381C1EA961A10058B925 /* SBJsonTokeniser.m */,
-				53FE381D1EA961A10058B925 /* SBJsonUTF8Stream.h */,
-				53FE381E1EA961A10058B925 /* SBJsonUTF8Stream.m */,
-				53FE381F1EA961A10058B925 /* SBJsonWriter.h */,
-				53FE38201EA961A10058B925 /* SBJsonWriter.m */,
-			);
-			name = SBJson;
-			path = Frameworks/SBJson;
 			sourceTree = "<group>";
 		};
 		53FE38451EA961A80058B925 /* TBXML */ = {
@@ -4697,7 +4598,6 @@
 				53FE36F21EA961720058B925 /* BassParamEqValue.m in Sources */,
 				534E43B71155659A000B4134 /* AlbumUITableViewCell.m in Sources */,
 				534E44711155B106000B4134 /* SongUITableViewCell.m in Sources */,
-				53FE383F1EA961A10058B925 /* SBJsonUTF8Stream.m in Sources */,
 				53FE39191EA961ED0058B925 /* HTTPConnection.m in Sources */,
 				53FE351F1EA961540058B925 /* NSString+URLEncode.m in Sources */,
 				53FE38521EA961A80058B925 /* TBXML.m in Sources */,
@@ -4727,11 +4627,9 @@
 				53FE39831EA963180058B925 /* FMDatabasePool.m in Sources */,
 				53ABE3591165C52D00197877 /* PlayingUITableViewCell.m in Sources */,
 				53ABE3631165C83900197877 /* PlayingViewController.m in Sources */,
-				53FE38301EA961A10058B925 /* SBJsonStreamParserState.m in Sources */,
 				53ABE54311665B6B00197877 /* PlaylistsViewController.m in Sources */,
 				53FE36EF1EA961720058B925 /* BassGaplessPlayer.m in Sources */,
 				53FE37161EA961720058B925 /* ISMSChatMessage.m in Sources */,
-				53FE383C1EA961A10058B925 /* SBJsonTokeniser.m in Sources */,
 				53FE38BC1EA961C80058B925 /* ZKLog.m in Sources */,
 				53ABE54C11665C3800197877 /* PlaylistsUITableViewCell.m in Sources */,
 				53FE358E1EA961540058B925 /* EX2RingBuffer.m in Sources */,
@@ -4751,10 +4649,8 @@
 				53FE37881EA961720058B925 /* SavedSettings.m in Sources */,
 				53FE37401EA961720058B925 /* ISMSSong.m in Sources */,
 				53FE35161EA961540058B925 /* NSString+SHA1.m in Sources */,
-				53FE38331EA961A10058B925 /* SBJsonStreamWriter.m in Sources */,
 				53FE39AC1EA970220058B925 /* DDDispatchQueueLogFormatter.m in Sources */,
 				53F4A074116FF48400BB8411 /* DebugViewController.m in Sources */,
-				53FE382D1EA961A10058B925 /* SBJsonStreamParserAdapter.m in Sources */,
 				53FE37D61EA961720058B925 /* SUSSubFolderLoader.m in Sources */,
 				53FE35251EA961540058B925 /* NSURL+QueryParameterDictionary.m in Sources */,
 				53FE35641EA961540058B925 /* UITableViewCell+TableView.m in Sources */,
@@ -4791,7 +4687,6 @@
 				53FE38B31EA961C80058B925 /* ZKDefs.m in Sources */,
 				5388A3B81198997B0049BA9E /* BookmarkUITableViewCell.m in Sources */,
 				53FE38A11EA961C80058B925 /* ZKArchive.m in Sources */,
-				53FE38241EA961A10058B925 /* SBJsonParser.m in Sources */,
 				537E6C1E181208A200127E29 /* CustomUITabBarController.m in Sources */,
 				53FE388F1EA961C80058B925 /* NSData+ZKAdditions.m in Sources */,
 				53FE37AC1EA961720058B925 /* SUSLyricsLoader.m in Sources */,
@@ -4799,11 +4694,9 @@
 				530CE844119B9D9100728ED5 /* SongInfoPlaylistCustomUITableView.m in Sources */,
 				53FE35761EA961540058B925 /* UIWebView+HideShadows.m in Sources */,
 				53FE39C11EA9703E0058B925 /* DDLog.m in Sources */,
-				53FE382A1EA961A10058B925 /* SBJsonStreamParserAccumulator.m in Sources */,
 				53B5298A11AD9B79005776B5 /* LoadingScreen.m in Sources */,
 				53FE391F1EA961ED0058B925 /* HTTPServer.m in Sources */,
 				53FE37911EA961720058B925 /* sqlite3.c in Sources */,
-				53FE38271EA961A10058B925 /* SBJsonStreamParser.m in Sources */,
 				53B52BA511ADE0A6005776B5 /* GenresViewController.m in Sources */,
 				530B417211B607A200743C09 /* CacheViewController.m in Sources */,
 				53FE352B1EA961540058B925 /* NSMutableOrderedSet+Safe.m in Sources */,
@@ -4886,14 +4779,12 @@
 				53FE38041EA961970058B925 /* RXMLElement.m in Sources */,
 				53FE39BB1EA9703E0058B925 /* DDAbstractDatabaseLogger.m in Sources */,
 				53FE37701EA961720058B925 /* NSMutableURLRequest+SUS.m in Sources */,
-				53FE34BC1EA961540058B925 /* NSArray+FirstObject.m in Sources */,
 				53FE39101EA961ED0058B925 /* DDNumber.m in Sources */,
 				53FE35491EA961540058B925 /* UIImage+Color.m in Sources */,
 				53FE39891EA963180058B925 /* FMDatabaseQueueAdditions.m in Sources */,
 				531F166E126FA2E600F524BD /* HomeAlbumViewController.m in Sources */,
 				53B9D0B41279FAEF00CAB0E0 /* SearchSongsViewController.m in Sources */,
 				53B9D0B81279FB6B00CAB0E0 /* SearchSongUITableViewCell.m in Sources */,
-				53FE38361EA961A10058B925 /* SBJsonStreamWriterAccumulator.m in Sources */,
 				53FE35CD1EA961540058B925 /* EX2GlowButton.m in Sources */,
 				531D3A16255ABA20000CB0DF /* DDSocialDialog.m in Sources */,
 				53260B83127D012300B745B4 /* EGORefreshTableHeaderView.m in Sources */,
@@ -4905,7 +4796,6 @@
 				53C22CCF128EE81C00FFBA67 /* ModalAlbumArtViewController.m in Sources */,
 				53FE352E1EA961540058B925 /* CALayer+ImageFromLayer.m in Sources */,
 				53FE34C21EA961540058B925 /* NSArray+Reverse.m in Sources */,
-				53FE38421EA961A10058B925 /* SBJsonWriter.m in Sources */,
 				53C6052E12F1F01E003C6895 /* IntroViewController.m in Sources */,
 				53FE37761EA961720058B925 /* PlaylistSingleton.m in Sources */,
 				532D9B43131AE19700FD8CA7 /* CustomUIAlertView.m in Sources */,
@@ -4922,7 +4812,6 @@
 				53FE35D01EA961540058B925 /* EX2InfinitePagingScrollView.m in Sources */,
 				53ADBBC013352DB40098FAE6 /* FolderDropdownControl.m in Sources */,
 				53FE38B01EA961C80058B925 /* ZKDataArchive.m in Sources */,
-				53FE38211EA961A10058B925 /* NSObject+SBJson.m in Sources */,
 				53FE38921EA961C80058B925 /* NSDate+ZKAdditions.m in Sources */,
 				535B726A134CFB0E003E0E1C /* FolderPickerDialog.m in Sources */,
 				53FE34DA1EA961540058B925 /* NSFileHandle+Hash.m in Sources */,
@@ -4981,7 +4870,6 @@
 				D0EA476719DE41E30083CE05 /* ISMSPlayerViewController.m in Sources */,
 				536C994D16619F5D005A73C6 /* ViewObjectsSingleton.m in Sources */,
 				53FE37581EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */,
-				53FE38391EA961A10058B925 /* SBJsonStreamWriterState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5011,7 +4899,6 @@
 				53FE36F41EA961720058B925 /* BassParamEqValue.m in Sources */,
 				53BC27A8139AF0DD00A825F1 /* AlbumUITableViewCell.m in Sources */,
 				53BC27AA139AF0DD00A825F1 /* SongUITableViewCell.m in Sources */,
-				53FE38411EA961A10058B925 /* SBJsonUTF8Stream.m in Sources */,
 				53FE391B1EA961ED0058B925 /* HTTPConnection.m in Sources */,
 				53FE35211EA961540058B925 /* NSString+URLEncode.m in Sources */,
 				53FE38541EA961A80058B925 /* TBXML.m in Sources */,
@@ -5041,11 +4928,9 @@
 				53FE39851EA963180058B925 /* FMDatabasePool.m in Sources */,
 				53BC27B2139AF0DD00A825F1 /* PlayingUITableViewCell.m in Sources */,
 				53BC27B3139AF0DD00A825F1 /* PlayingViewController.m in Sources */,
-				53FE38321EA961A10058B925 /* SBJsonStreamParserState.m in Sources */,
 				53BC27B6139AF0DD00A825F1 /* PlaylistsViewController.m in Sources */,
 				53FE36F11EA961720058B925 /* BassGaplessPlayer.m in Sources */,
 				53FE37181EA961720058B925 /* ISMSChatMessage.m in Sources */,
-				53FE383E1EA961A10058B925 /* SBJsonTokeniser.m in Sources */,
 				53FE38BE1EA961C80058B925 /* ZKLog.m in Sources */,
 				53BC27B7139AF0DD00A825F1 /* PlaylistsUITableViewCell.m in Sources */,
 				53FE35901EA961540058B925 /* EX2RingBuffer.m in Sources */,
@@ -5065,10 +4950,8 @@
 				53FE378A1EA961720058B925 /* SavedSettings.m in Sources */,
 				53FE37421EA961720058B925 /* ISMSSong.m in Sources */,
 				53FE35181EA961540058B925 /* NSString+SHA1.m in Sources */,
-				53FE38351EA961A10058B925 /* SBJsonStreamWriter.m in Sources */,
 				53FE39AD1EA970220058B925 /* DDDispatchQueueLogFormatter.m in Sources */,
 				53BC27BA139AF0DD00A825F1 /* DebugViewController.m in Sources */,
-				53FE382F1EA961A10058B925 /* SBJsonStreamParserAdapter.m in Sources */,
 				53FE37D81EA961720058B925 /* SUSSubFolderLoader.m in Sources */,
 				53FE35271EA961540058B925 /* NSURL+QueryParameterDictionary.m in Sources */,
 				53FE35661EA961540058B925 /* UITableViewCell+TableView.m in Sources */,
@@ -5105,7 +4988,6 @@
 				53FE38B51EA961C80058B925 /* ZKDefs.m in Sources */,
 				53BC27C5139AF0DD00A825F1 /* BookmarkUITableViewCell.m in Sources */,
 				53FE38A31EA961C80058B925 /* ZKArchive.m in Sources */,
-				53FE38261EA961A10058B925 /* SBJsonParser.m in Sources */,
 				537E6C20181208A200127E29 /* CustomUITabBarController.m in Sources */,
 				53FE38911EA961C80058B925 /* NSData+ZKAdditions.m in Sources */,
 				53FE37AE1EA961720058B925 /* SUSLyricsLoader.m in Sources */,
@@ -5113,11 +4995,9 @@
 				53BC27C7139AF0DD00A825F1 /* SongInfoPlaylistCustomUITableView.m in Sources */,
 				53FE35781EA961540058B925 /* UIWebView+HideShadows.m in Sources */,
 				53FE39C21EA9703E0058B925 /* DDLog.m in Sources */,
-				53FE382C1EA961A10058B925 /* SBJsonStreamParserAccumulator.m in Sources */,
 				53BC27CC139AF0DD00A825F1 /* LoadingScreen.m in Sources */,
 				53FE39211EA961ED0058B925 /* HTTPServer.m in Sources */,
 				53FE37931EA961720058B925 /* sqlite3.c in Sources */,
-				53FE38291EA961A10058B925 /* SBJsonStreamParser.m in Sources */,
 				53BC27CE139AF0DD00A825F1 /* GenresViewController.m in Sources */,
 				53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */,
 				53FE352D1EA961540058B925 /* NSMutableOrderedSet+Safe.m in Sources */,
@@ -5200,14 +5080,12 @@
 				53FE38061EA961970058B925 /* RXMLElement.m in Sources */,
 				53FE39BC1EA9703E0058B925 /* DDAbstractDatabaseLogger.m in Sources */,
 				53FE37721EA961720058B925 /* NSMutableURLRequest+SUS.m in Sources */,
-				53FE34BE1EA961540058B925 /* NSArray+FirstObject.m in Sources */,
 				53FE39121EA961ED0058B925 /* DDNumber.m in Sources */,
 				53FE354B1EA961540058B925 /* UIImage+Color.m in Sources */,
 				53FE398B1EA963180058B925 /* FMDatabaseQueueAdditions.m in Sources */,
 				53BC2803139AF0DD00A825F1 /* HomeAlbumViewController.m in Sources */,
 				53BC280A139AF0DD00A825F1 /* SearchSongsViewController.m in Sources */,
 				53BC280B139AF0DD00A825F1 /* SearchSongUITableViewCell.m in Sources */,
-				53FE38381EA961A10058B925 /* SBJsonStreamWriterAccumulator.m in Sources */,
 				53FE35CF1EA961540058B925 /* EX2GlowButton.m in Sources */,
 				531D3A17255ABA20000CB0DF /* DDSocialDialog.m in Sources */,
 				53BC280D139AF0DD00A825F1 /* EGORefreshTableHeaderView.m in Sources */,
@@ -5219,7 +5097,6 @@
 				53BC2815139AF0DD00A825F1 /* ModalAlbumArtViewController.m in Sources */,
 				53FE35301EA961540058B925 /* CALayer+ImageFromLayer.m in Sources */,
 				53FE34C41EA961540058B925 /* NSArray+Reverse.m in Sources */,
-				53FE38441EA961A10058B925 /* SBJsonWriter.m in Sources */,
 				53BC282A139AF0DD00A825F1 /* IntroViewController.m in Sources */,
 				53FE37781EA961720058B925 /* PlaylistSingleton.m in Sources */,
 				53BC282B139AF0DD00A825F1 /* CustomUIAlertView.m in Sources */,
@@ -5236,7 +5113,6 @@
 				53FE35D21EA961540058B925 /* EX2InfinitePagingScrollView.m in Sources */,
 				53BC282D139AF0DD00A825F1 /* FolderDropdownControl.m in Sources */,
 				53FE38B21EA961C80058B925 /* ZKDataArchive.m in Sources */,
-				53FE38231EA961A10058B925 /* NSObject+SBJson.m in Sources */,
 				53FE38941EA961C80058B925 /* NSDate+ZKAdditions.m in Sources */,
 				53BC283C139AF0DD00A825F1 /* FolderPickerDialog.m in Sources */,
 				53FE34DC1EA961540058B925 /* NSFileHandle+Hash.m in Sources */,
@@ -5295,7 +5171,6 @@
 				D0EA476919DE41E30083CE05 /* ISMSPlayerViewController.m in Sources */,
 				536C994F16619F5D005A73C6 /* ViewObjectsSingleton.m in Sources */,
 				53FE375A1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */,
-				53FE383B1EA961A10058B925 /* SBJsonStreamWriterState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5431,8 +5306,6 @@
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Other/iSub_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -5468,8 +5341,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/HockeySDK",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Other/iSub_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -5558,7 +5429,6 @@
 					"-all_load",
 					"-ObjC",
 				);
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				SDKROOT = iphoneos;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -5579,8 +5449,6 @@
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Other/iSub_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -5616,8 +5484,6 @@
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Other/iSub_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"BETA=1",
@@ -5632,6 +5498,7 @@
 					"$(PROJECT_DIR)/Frameworks/libBASS",
 					"$(PROJECT_DIR)/Frameworks/Flurry",
 				);
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-all_load",
 					"-ObjC",
@@ -5656,8 +5523,6 @@
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Other/iSub_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"BETA=1",
@@ -5672,6 +5537,7 @@
 					"$(PROJECT_DIR)/Frameworks/libBASS",
 					"$(PROJECT_DIR)/Frameworks/Flurry",
 				);
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-all_load",
 					"-ObjC",
@@ -5694,8 +5560,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/HockeySDK",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Other/iSub_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"BETA=1",
@@ -5710,6 +5574,7 @@
 					"$(PROJECT_DIR)/Frameworks/libBASS",
 					"$(PROJECT_DIR)/Frameworks/Flurry",
 				);
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-all_load",
 					"-ObjC",
@@ -5787,7 +5652,6 @@
 					"-all_load",
 					"-ObjC",
 				);
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				SDKROOT = iphoneos;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -5857,7 +5721,6 @@
 					"-all_load",
 					"-ObjC",
 				);
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				SDKROOT = iphoneos;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";

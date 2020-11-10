@@ -10,6 +10,12 @@
 #import "NSError+ISMSError.h"
 #import "DatabaseSingleton.h"
 #import "NSMutableURLRequest+SUS.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "CacheSingleton.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
+#import "LibSub.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 

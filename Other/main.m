@@ -6,12 +6,12 @@
 //  Copyright __MyCompanyName__ 2010. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+#import "UAApplication.h"
+#import "iSubAppDelegate.h"
 
-int main(int argc, char *argv[]) 
-{
-    
+int main(int argc, char *argv[]) {
     @autoreleasepool {
-        int retVal = UIApplicationMain(argc, argv, @"UAApplication", nil);
-        return retVal;
+        return UIApplicationMain(argc, argv, NSStringFromClass(UAApplication.class), NSStringFromClass(iSubAppDelegate.class));
     }
 }

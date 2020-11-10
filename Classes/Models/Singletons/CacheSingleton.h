@@ -9,6 +9,8 @@
 #ifndef iSub_CacheSingleton_h
 #define iSub_CacheSingleton_h
 
+#import <Foundation/Foundation.h>
+
 #define cacheS ((CacheSingleton *)[CacheSingleton sharedInstance])
 
 @interface CacheSingleton : NSObject

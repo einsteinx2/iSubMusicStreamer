@@ -23,6 +23,11 @@
 #import "iPhoneStreamingPlayerViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "ServerListViewController.h"
+#import "CustomUINavigationController.h"
+#import "iSubAppDelegate.h"
+#import "Defines.h"
+#import "SavedSettings.h"
+#import "EX2Kit.h"
 
 @interface MenuTableItem : NSObject
 @property (nonatomic, strong) UIImage *image;

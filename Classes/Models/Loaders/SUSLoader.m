@@ -7,6 +7,7 @@
 //
 
 #import "SUSLoader.h"
+#import "EX2Kit.h"
 
 @interface SUSLoaderURLSessionDelegate : NSObject <NSURLSessionDelegate>
 @end

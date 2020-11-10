@@ -7,6 +7,11 @@
 //
 
 #import "DebugViewController.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "CacheSingleton.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation DebugViewController
 

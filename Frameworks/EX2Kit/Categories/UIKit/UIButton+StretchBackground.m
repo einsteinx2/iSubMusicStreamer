@@ -7,6 +7,7 @@
 //
 
 #import "UIButton+StretchBackground.h"
+#import "UIImage+CustomStretch.h"
 
 @implementation UIButton (StretchBackground)
 

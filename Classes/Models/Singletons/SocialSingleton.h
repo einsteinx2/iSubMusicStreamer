@@ -9,9 +9,11 @@
 #ifndef iSub_SocialSingleton_h
 #define iSub_SocialSingleton_h
 
+#import <Foundation/Foundation.h>
+
 #define socialS ((SocialSingleton *)[SocialSingleton sharedInstance])
 
-@class Song;
+@class ISMSSong;
 
 @interface SocialSingleton : NSObject
 

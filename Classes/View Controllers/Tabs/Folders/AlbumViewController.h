@@ -6,6 +6,9 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import "CustomUITableViewController.h"
+#import "AsynchronousImageView.h"
+
 @class ISMSArtist, ISMSAlbum, EGORefreshTableHeaderView, SUSSubFolderDAO, AsynchronousImageView;
 
 @interface AlbumViewController : CustomUITableViewController <SUSLoaderDelegate, AsynchronousImageViewDelegate>

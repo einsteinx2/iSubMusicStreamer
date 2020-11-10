@@ -13,6 +13,17 @@
 #import "UIViewController+PushViewControllerCustom.h"
 #import "iPadRootViewController.h"
 #import "StackScrollViewController.h"
+#import "iSubAppDelegate.h"
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "MusicSingleton.h"
+#import "DatabaseSingleton.h"
+#import "JukeboxSingleton.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation CacheAlbumViewController
 

@@ -7,12 +7,19 @@
 //
 
 #import "ISMSSong+DAO.h"
-#import "FMDatabaseQueue.h"
-
+#import "FMDatabaseQueueAdditions.h"
 #import "PlaylistSingleton.h"
 #import "ISMSCacheQueueManager.h"
 #import "ISMSStreamManager.h"
 #import "BassGaplessPlayer.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "DatabaseSingleton.h"
+#import "JukeboxSingleton.h"
+#import "ISMSStreamManager.h"
+#import "ISMSCacheQueueManager.h"
+#import "EX2Kit.h"
 
 @implementation ISMSSong (DAO)
 

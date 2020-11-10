@@ -6,6 +6,8 @@
 //  Copyright Ben Baron 2010. All rights reserved.
 //
 
+#import "CustomUITableViewController.h"
+#import "SUSLoader.h"
 
 @class ISMSSong, ISMSAlbum, SUSAllSongsDAO, LoadingScreen, EGORefreshTableHeaderView;
 

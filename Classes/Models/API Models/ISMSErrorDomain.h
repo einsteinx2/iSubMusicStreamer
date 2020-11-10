@@ -1,15 +1,13 @@
 //
-//  ISMSErrorCodes.h
+//  ISMSErrorDomain.h
 //  iSub
 //
 //  Created by Benjamin Baron on 10/29/11.
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-#pragma no_pch
-
-#ifndef iSub_ISMSErrorCodes_h
-#define iSub_ISMSErrorCodes_h
+#ifndef iSub_ISMSErrorDomain_h
+#define iSub_ISMSErrorDomain_h
 
 #define ISMSErrorDomain @"iSub Error Domain"
 

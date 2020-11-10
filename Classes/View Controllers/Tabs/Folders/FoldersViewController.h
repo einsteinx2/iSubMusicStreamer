@@ -6,7 +6,9 @@
 //  Copyright Ben Baron 2010. All rights reserved.
 //
 
+#import "CustomUITableViewController.h"
 #import "FolderDropdownDelegate.h"
+#import "SUSLoader.h"
 
 @class ISMSArtist, EGORefreshTableHeaderView, FolderDropdownControl, SUSRootFoldersDAO;
 

@@ -15,6 +15,19 @@
 #import "AlbumViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "SearchXMLParser.h"
+#import "CustomUIAlertView.h"
+#import "NSMutableURLRequest+SUS.h"
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "MusicSingleton.h"
+#import "DatabaseSingleton.h"
+#import "JukeboxSingleton.h"
+#import "ISMSArtist.h"
+#import "ISMSAlbum.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation SearchSongsViewController
 

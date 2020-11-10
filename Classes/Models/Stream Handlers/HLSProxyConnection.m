@@ -6,10 +6,12 @@
 //  Copyright (c) 2013 Einstein Times Two Software. All rights reserved.
 //
 
-static const int ddLogLevel = LOG_LEVEL_ERROR;
-
 #import "HLSProxyConnection.h"
 #import "HLSProxyResponse.h"
+#import "SavedSettings.h"
+#import "EX2Kit.h"
+
+static const int ddLogLevel = LOG_LEVEL_ERROR;
 
 @implementation HLSProxyConnection
 

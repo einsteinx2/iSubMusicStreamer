@@ -8,6 +8,8 @@
 #ifndef BASS_H
 #define BASS_H
 
+#import <Foundation/Foundation.h>
+
 #ifdef _WIN32
 #include <wtypes.h>
 typedef unsigned __int64 QWORD;

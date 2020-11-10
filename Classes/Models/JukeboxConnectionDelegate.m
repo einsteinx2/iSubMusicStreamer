@@ -8,6 +8,10 @@
 
 #import "JukeboxConnectionDelegate.h"
 #import "JukeboxXMLParser.h"
+#import "PlaylistSingleton.h"
+#import "JukeboxSingleton.h"
+#import "Defines.h"
+#import "EX2Kit.h"
 
 @implementation JukeboxConnectionDelegate
 

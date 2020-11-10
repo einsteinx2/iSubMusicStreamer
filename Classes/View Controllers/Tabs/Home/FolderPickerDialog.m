@@ -43,6 +43,8 @@
 
 #import "FolderPickerDialog.h"
 #import "ShuffleFolderPickerViewController.h"
+#import "Defines.h"
+#import "EX2Kit.h"
 
 static CGFloat kDDSocialDialogBorderWidth = 10;
 static CGFloat kDDSocialDialogTransitionDuration = 0.3;

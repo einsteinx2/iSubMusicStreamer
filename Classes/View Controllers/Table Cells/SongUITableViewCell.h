@@ -9,7 +9,7 @@
 #import "CustomUITableViewCell.h"
 #import "CellCachedIndicatorView.h"
 
-@class Song;
+@class ISMSSong;
 
 @interface SongUITableViewCell : CustomUITableViewCell 
 

@@ -7,6 +7,10 @@
 //
 
 #import "CacheQueueSongUITableViewCell.h"
+#import "AsynchronousImageView.h"
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "EX2Kit.h"
 
 @implementation CacheQueueSongUITableViewCell
 

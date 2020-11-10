@@ -6,6 +6,8 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import "CustomUITableViewController.h"
+
 @interface GenresAlbumViewController : CustomUITableViewController 
 
 @property (strong) NSMutableArray *listOfAlbums;

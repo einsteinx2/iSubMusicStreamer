@@ -7,6 +7,9 @@
 //
 
 #import "ISMSAlbum.h"
+#import "RXMLElement.h"
+#import "ISMSArtist.h"
+#import "EX2Kit.h"
 
 @implementation ISMSAlbum
 

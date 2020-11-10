@@ -7,6 +7,10 @@
 //
 
 #import "ViewObjectsSingleton.h"
+#import "iSubAppDelegate.h"
+#import "Defines.h"
+#import "SavedSettings.h"
+#import "EX2Kit.h"
 
 @implementation ViewObjectsSingleton
 

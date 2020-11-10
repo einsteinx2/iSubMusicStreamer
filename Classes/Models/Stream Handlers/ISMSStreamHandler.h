@@ -24,7 +24,7 @@
 
 #define ISMSMaxContentLengthFailures 25
 
-@class Song;
+@class ISMSSong;
 @interface ISMSStreamHandler : NSObject <NSCoding>
 
 - (instancetype)initWithSong:(ISMSSong *)song byteOffset:(unsigned long long)bOffset secondsOffset:(double)sOffset isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate;

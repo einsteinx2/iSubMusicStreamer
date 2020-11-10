@@ -8,6 +8,11 @@
 
 #import "SUSAllSongsDAO.h"
 #import "SUSAllSongsLoader.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "DatabaseSingleton.h"
+#import "ISMSSong+DAO.h"
+#import "ISMSIndex.h"
+#import "EX2Kit.h"
 
 @implementation SUSAllSongsDAO
 

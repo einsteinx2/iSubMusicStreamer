@@ -9,6 +9,8 @@
 #import "CustomUITableView.h"
 #import "CustomUITableViewCell.h"
 #import "CellOverlay.h"
+#import "SavedSettings.h"
+#import "EX2Kit.h"
 
 #define ISMSHorizSwipeDragMin 3
 #define ISMSVertSwipeDragMax 80

@@ -8,6 +8,8 @@
 
 #import "SUSServerPlaylistsDAO.h"
 #import "SUSServerPlaylistsLoader.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "DatabaseSingleton.h"
 
 @implementation SUSServerPlaylistsDAO
 

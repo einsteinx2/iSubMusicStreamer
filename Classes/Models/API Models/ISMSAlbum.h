@@ -6,7 +6,9 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-@class ISMSArtist;
+#import "TBXML.h"
+
+@class ISMSArtist, RXMLElement;
 
 @interface ISMSAlbum : NSObject <NSCoding, NSCopying> 
 

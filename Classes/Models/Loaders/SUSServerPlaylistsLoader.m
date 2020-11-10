@@ -9,6 +9,8 @@
 #import "SUSServerPlaylistsLoader.h"
 #import "SUSServerPlaylist.h"
 #import "NSMutableURLRequest+SUS.h"
+#import "RXMLElement.h"
+#import "NSError+ISMSError.h"
 
 @implementation SUSServerPlaylistsLoader
 

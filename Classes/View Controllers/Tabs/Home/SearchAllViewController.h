@@ -6,7 +6,7 @@
 //  Copyright 2011 Ben Baron. All rights reserved.
 //
 
-
+#import "CustomUITableViewController.h"
 
 @interface SearchAllViewController : CustomUITableViewController 
 

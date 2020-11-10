@@ -8,10 +8,10 @@
 
 #import "iPadRootViewController.h"
 #import "CustomUITableView.h"
-
 #import "MenuViewController.h"
 #import "StackScrollViewController.h"
-
+#import "SavedSettings.h"
+#import "EX2Kit.h"
 
 @interface UIViewExt : UIView
 @end

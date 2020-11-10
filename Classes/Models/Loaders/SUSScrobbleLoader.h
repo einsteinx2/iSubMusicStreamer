@@ -8,6 +8,7 @@
 
 #import "SUSLoader.h"
 
+@class ISMSSong;
 @interface SUSScrobbleLoader : SUSLoader
 
 @property (nonatomic, strong) ISMSSong *aSong;

@@ -8,6 +8,10 @@
 
 #import "CacheSongUITableViewCell.h"
 #import "CellOverlay.h"
+#import "Defines.h"
+#import "CacheSingleton.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation CacheSongUITableViewCell
 

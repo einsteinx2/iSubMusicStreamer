@@ -6,7 +6,9 @@
 //  Copyright (c) 2012 Ben Baron. All rights reserved.
 //
 
-@class Song, BassGaplessPlayer;
+#import <Foundation/Foundation.h>
+
+@class ISMSSong, BassGaplessPlayer;
 @protocol BassGaplessPlayerDelegate <NSObject>
 
 @optional

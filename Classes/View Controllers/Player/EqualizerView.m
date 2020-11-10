@@ -10,8 +10,10 @@
 #import <OpenGLES/EAGLDrawable.h>
 #import "OpenGLCommon.h"
 #import "ConstantsAndMacros.h"
-
 #import "EqualizerView.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "EX2Kit.h"
 
 //CLASS IMPLEMENTATIONS:
 

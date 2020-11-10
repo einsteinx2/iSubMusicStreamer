@@ -6,6 +6,9 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+#import "SUSLoaderDelegate.h"
+
 @interface SubsonicServerEditViewController : UIViewController <SUSLoaderDelegate>
 
 @property (nonatomic, strong) IBOutlet UITextField *urlField;

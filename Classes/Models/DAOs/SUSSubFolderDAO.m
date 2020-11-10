@@ -9,6 +9,15 @@
 #import "SUSSubFolderDAO.h"
 #import "SUSSubFolderLoader.h"
 #import "MusicSingleton.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "MusicSingleton.h"
+#import "DatabaseSingleton.h"
+#import "JukeboxSingleton.h"
+#import "ISMSAlbum.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @interface SUSSubFolderDAO (Private) 
 - (NSUInteger)findFirstAlbumRow;

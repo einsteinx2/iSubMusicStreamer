@@ -7,7 +7,6 @@
 //
 
 #import "SUSLoaderManager.h"
-#import "SUSLoaderDelegate.h"
 
 @class FMDatabase, ISMSArtist, ISMSAlbum, ISMSSong, SUSSubFolderLoader;
 

@@ -10,8 +10,7 @@
 
 @class FMDatabase, ISMSSong, SUSAllSongsLoader;
 
-@interface SUSAllSongsDAO : NSObject <SUSLoaderManager, SUSLoaderDelegate>
-{
+@interface SUSAllSongsDAO : NSObject <SUSLoaderManager, SUSLoaderDelegate> {
 	__strong NSArray *index;
 }
 

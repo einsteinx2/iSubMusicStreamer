@@ -6,6 +6,8 @@
 //  Copyright 2011 Ben Baron. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
 @class FMDatabase, ISMSAlbum;
 
 @interface SUSAllAlbumsDAO : NSObject

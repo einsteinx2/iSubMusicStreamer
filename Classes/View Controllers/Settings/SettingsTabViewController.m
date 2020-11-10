@@ -13,6 +13,14 @@
 #import "iPhoneStreamingPlayerViewController.h"
 #import "iPadRootViewController.h"
 #import "StackScrollViewController.h"
+#import "iSubAppDelegate.h"
+#import "ViewObjectsSingleton.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "SavedSettings.h"
+#import "CacheSingleton.h"
+#import "DatabaseSingleton.h"
+#import "EX2Kit.h"
+#import "LibSub.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
 

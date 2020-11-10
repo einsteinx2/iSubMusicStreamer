@@ -12,6 +12,16 @@
 #import "GenresSongUITableViewCell.h"
 #import "AllSongsUITableViewCell.h"
 #import "UIViewController+PushViewControllerCustom.h"
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "MusicSingleton.h"
+#import "DatabaseSingleton.h"
+#import "JukeboxSingleton.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation GenresAlbumViewController
 

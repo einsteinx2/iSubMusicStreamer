@@ -7,6 +7,8 @@
 //
 
 #import "ISMSChatMessage.h"
+#import "RXMLElement.h"
+#import "EX2Kit.h"
 
 @implementation ISMSChatMessage
 

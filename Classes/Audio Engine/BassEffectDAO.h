@@ -6,6 +6,8 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
 #define BassEffectTempCustomPresetId 1000000
 #define BassEffectUserPresetStartId 1000
 

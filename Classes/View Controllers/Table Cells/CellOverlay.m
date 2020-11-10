@@ -7,6 +7,8 @@
 //
 
 #import "CellOverlay.h"
+#import "Defines.h"
+#import "EX2Kit.h"
 
 @implementation CellOverlay
 

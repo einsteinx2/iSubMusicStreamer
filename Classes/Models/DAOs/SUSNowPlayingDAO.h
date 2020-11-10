@@ -8,7 +8,7 @@
 
 #import "SUSLoaderManager.h"
 
-@class SUSNowPlayingLoader, Song;
+@class SUSNowPlayingLoader, ISMSSong;
 @interface SUSNowPlayingDAO : NSObject <SUSLoaderDelegate, SUSLoaderManager>
 
 @property (weak) id<SUSLoaderDelegate> delegate;

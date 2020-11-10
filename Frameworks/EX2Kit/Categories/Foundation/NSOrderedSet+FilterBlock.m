@@ -7,6 +7,7 @@
 //
 
 #import "NSOrderedSet+FilterBlock.h"
+#import "NSOrderedSet+Safe.h"
 
 @implementation NSOrderedSet (FilterBlock)
 

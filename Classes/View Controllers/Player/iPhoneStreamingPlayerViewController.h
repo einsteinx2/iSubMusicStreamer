@@ -6,7 +6,9 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-@class PageControlViewController, MPVolumeView, OBSlider, Song;
+#import "AsynchronousImageView.h"
+
+@class PageControlViewController, MPVolumeView, OBSlider, ISMSSong;
 
 @interface iPhoneStreamingPlayerViewController : UIViewController <AsynchronousImageViewDelegate, UIGestureRecognizerDelegate>
 

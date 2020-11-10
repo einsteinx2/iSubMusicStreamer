@@ -7,6 +7,8 @@
 //
 
 #import "CustomUITableViewController.h"
+#import "ViewObjectsSingleton.h"
+#import "SavedSettings.h"
 
 @implementation CustomUITableViewController
 

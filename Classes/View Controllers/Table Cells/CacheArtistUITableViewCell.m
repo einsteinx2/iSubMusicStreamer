@@ -8,6 +8,14 @@
 
 #import "CacheArtistUITableViewCell.h"
 #import "CellOverlay.h"
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "DatabaseSingleton.h"
+#import "CacheSingleton.h"
+#import "ISMSCacheQueueManager.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation CacheArtistUITableViewCell
 

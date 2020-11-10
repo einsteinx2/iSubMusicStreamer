@@ -15,6 +15,17 @@
 #import "ModalAlbumArtViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "iPadRootViewController.h"
+#import "CustomUIAlertView.h"
+#import "iSubAppDelegate.h"
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "SavedSettings.h"
+#import "MusicSingleton.h"
+#import "DatabaseSingleton.h"
+#import "SUSSubFolderDAO.h"
+#import "ISMSArtist.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 #import <MediaPlayer/MediaPlayer.h>
 
 @interface AlbumViewController (Private)

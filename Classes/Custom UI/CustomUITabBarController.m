@@ -7,6 +7,7 @@
 //
 
 #import "CustomUITabBarController.h"
+#import "SavedSettings.h"
 
 @interface CustomUITabBarController ()
 

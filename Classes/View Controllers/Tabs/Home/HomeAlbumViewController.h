@@ -6,6 +6,9 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import "CustomUITableViewController.h"
+#import "SUSLoaderDelegate.h"
+
 @class ISMSArtist, ISMSAlbum, SUSQuickAlbumsLoader;
 
 @interface HomeAlbumViewController : CustomUITableViewController <SUSLoaderDelegate>

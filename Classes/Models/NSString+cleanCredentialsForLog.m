@@ -7,6 +7,7 @@
 //
 
 #import "NSString+cleanCredentialsForLog.h"
+#import "SavedSettings.h"
 
 @implementation NSString (cleanCredentialsForLog)
 

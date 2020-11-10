@@ -7,6 +7,7 @@
 //
 
 #import "EX2LargerTouchScrollView.h"
+#import "UIApplication+Orientiation.h"
 
 @interface EX2LargerTouchScrollView()
 // Only used with touchAreaPadding

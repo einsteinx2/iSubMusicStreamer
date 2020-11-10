@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 Einstein Times Two Software. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
 #define EX2LocalizedString(key, alt) [EX2Language get:key alter:@""]
 
 @interface EX2Language : NSObject

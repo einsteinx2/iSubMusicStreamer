@@ -7,6 +7,7 @@
 //
 
 #import "MenuTableViewCell.h"
+#import "Defines.h"
 
 @implementation MenuTableViewCell
 @synthesize glowView;

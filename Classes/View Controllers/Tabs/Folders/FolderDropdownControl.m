@@ -9,6 +9,9 @@
 #import "FolderDropdownControl.h"
 #import "SUSDropdownFolderLoader.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Defines.h"
+#import "SUSRootFoldersDAO.h"
+#import "EX2Kit.h"
 
 @interface FolderDropdownControl() {
     __strong NSDictionary *_folders;

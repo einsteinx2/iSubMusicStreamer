@@ -6,8 +6,9 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 
-@class Song;
+@class ISMSSong;
 
 @interface DebugViewController : UIViewController 
 

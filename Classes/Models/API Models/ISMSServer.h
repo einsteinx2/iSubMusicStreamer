@@ -6,6 +6,8 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
 #define SUBSONIC @"Subsonic"
 
 @interface ISMSServer : NSObject <NSCoding>

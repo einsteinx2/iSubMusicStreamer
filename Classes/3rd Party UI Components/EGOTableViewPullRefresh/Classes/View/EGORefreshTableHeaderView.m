@@ -25,7 +25,7 @@
 //
 
 #import "EGORefreshTableHeaderView.h"
-
+#import "Defines.h"
 
 #define TEXT_COLOR	 [UIColor colorWithRed:176.0/255.0 green:181.0/255.0 blue:188.0/255.0 alpha:1]
 #define BORDER_COLOR [UIColor clearColor]

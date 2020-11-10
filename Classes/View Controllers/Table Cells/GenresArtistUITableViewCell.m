@@ -8,7 +8,13 @@
 
 #import "GenresArtistUITableViewCell.h"
 #import "CellOverlay.h"
-
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "SavedSettings.h"
+#import "DatabaseSingleton.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation GenresArtistUITableViewCell
 

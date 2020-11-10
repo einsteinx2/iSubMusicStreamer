@@ -6,10 +6,9 @@
 //  Copyright (c) 2012 Ben Baron. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface EqualizerPathView : UIView
-{
+@interface EqualizerPathView : UIView {
 	CGPoint *points;
 	NSUInteger length;
 }

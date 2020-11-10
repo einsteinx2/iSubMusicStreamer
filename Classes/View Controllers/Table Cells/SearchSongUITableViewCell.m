@@ -8,6 +8,11 @@
 
 #import "SearchSongUITableViewCell.h"
 #import "CellOverlay.h"
+#import "AsynchronousImageView.h"
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "SavedSettings.h"
+#import "ISMSSong+DAO.h"
 
 @implementation SearchSongUITableViewCell
 

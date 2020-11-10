@@ -8,6 +8,9 @@
 
 #import "SUSCoverArtDAO.h"
 #import "SUSCoverArtLoader.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "DatabaseSingleton.h"
+#import "EX2Kit.h"
 
 @implementation SUSCoverArtDAO
 

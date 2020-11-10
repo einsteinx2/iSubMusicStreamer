@@ -10,6 +10,9 @@
 #import "iPadRootViewController.h"
 #import "StackScrollViewController.h"
 #import "iPhoneStreamingPlayerViewController.h"
+#import "iSubAppDelegate.h"
+#import "Defines.h"
+#import "EX2Kit.h"
 
 @implementation UIViewController (PushViewControllerCustom)
 

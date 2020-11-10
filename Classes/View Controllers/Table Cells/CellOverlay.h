@@ -6,6 +6,8 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+
 @interface CellOverlay : UIView 
 
 @property (strong) UIButton *inputBlocker;

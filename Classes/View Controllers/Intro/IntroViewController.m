@@ -7,6 +7,9 @@
 //
 
 #import "IntroViewController.h"
+#import "iSubAppDelegate.h"
+#import "SavedSettings.h"
+#import "EX2Kit.h"
 #import <MediaPlayer/MediaPlayer.h>
 
 @implementation IntroViewController

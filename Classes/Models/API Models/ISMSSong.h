@@ -7,7 +7,9 @@
 //
 
 #import "ISMSMediaItem.h"
+#import "TBXML.h"
 
+@class RXMLElement;
 @interface ISMSSong : NSObject <NSCoding, NSCopying, ISMSMediaItem>
 
 @property (copy) NSString *title;

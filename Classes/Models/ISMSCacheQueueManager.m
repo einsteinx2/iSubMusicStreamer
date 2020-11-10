@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Ben Baron. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import "ISMSCacheQueueManager.h"
 #import "DatabaseSingleton.h"
 #import "SUSLyricsLoader.h"
@@ -13,8 +14,16 @@
 #import "ISMSStreamManager.h"
 #import "ISMSStreamHandler.h"
 #import "SUSLyricsDAO.h"
-
+#import "TBXML.h"
 #import "ISMSCFNetworkStreamHandler.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "SavedSettings.h"
+#import "CacheSingleton.h"
+#import "DatabaseSingleton.h"
+#import "ISMSStreamManager.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
+#import "LibSub.h"
 
 //LOG_LEVEL_ISUB_DEFAULT
 LOG_LEVEL_ISUB_DEBUG

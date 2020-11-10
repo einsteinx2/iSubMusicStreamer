@@ -7,6 +7,7 @@
 //
 
 #import "EqualizerPointView.h"
+#import "BassParamEqValue.h"
 
 #define myWidth 30
 #define myHeight 30

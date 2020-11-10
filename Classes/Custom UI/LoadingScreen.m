@@ -7,6 +7,7 @@
 //
 
 #import "LoadingScreen.h"
+#import "EX2Kit.h"
 
 @implementation LoadingScreen
 

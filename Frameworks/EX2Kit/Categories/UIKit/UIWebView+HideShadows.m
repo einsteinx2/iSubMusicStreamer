@@ -12,7 +12,7 @@
 
 - (void)hideOrShowShadows:(BOOL)hidden
 {
-    for (UIView *wview in [[[self subviews] objectAtIndexSafe:0] subviews])
+    for (UIView *wview in [[[self subviews] firstObject] subviews])
     {
         // Assume that the image views are the shadows
         if ([wview isKindOfClass:[UIImageView class]])

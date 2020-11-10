@@ -7,6 +7,7 @@
 //
 
 #import "CustomUIAlertView.h"
+#import "SavedSettings.h"
 
 @implementation CustomUIAlertView
 

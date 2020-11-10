@@ -7,6 +7,7 @@
 //
 
 #import "CellCachedIndicatorView.h"
+#import "ViewObjectsSingleton.h"
 
 @implementation CellCachedIndicatorView
 

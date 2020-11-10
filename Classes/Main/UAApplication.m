@@ -7,6 +7,12 @@
 //
 
 #import "UAApplication.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "MusicSingleton.h"
+#import "JukeboxSingleton.h"
+#import "DDLog.h"
 
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 

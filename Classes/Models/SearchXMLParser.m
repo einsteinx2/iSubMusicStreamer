@@ -7,6 +7,10 @@
 //
 
 #import "SearchXMLParser.h"
+#import "iSubAppDelegate.h"
+#import "ISMSArtist.h"
+#import "ISMSAlbum.h"
+#import "ISMSSong+DAO.h"
 
 @implementation SearchXMLParser
 

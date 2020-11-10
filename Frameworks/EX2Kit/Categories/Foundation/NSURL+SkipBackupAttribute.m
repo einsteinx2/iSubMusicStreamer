@@ -7,6 +7,8 @@
 //
 
 #import "NSURL+SkipBackupAttribute.h"
+#import "DDLog.h"
+#import "EX2Macros.h"
 #import <sys/xattr.h>
 
 static const int ddLogLevel = LOG_LEVEL_ERROR;

@@ -8,6 +8,17 @@
 
 #import "PlaylistsUITableViewCell.h"
 #import "CellOverlay.h"
+#import "NSMutableURLRequest+SUS.h"
+#import "iSubAppDelegate.h"
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "RXMLElement.h"
+#import "SavedSettings.h"
+#import "DatabaseSingleton.h"
+#import "NSError+ISMSError.h"
+#import "ISMSSong+DAO.h"
+#import "SUSServerPlaylist.h"
+#import "EX2Kit.h"
 
 @implementation PlaylistsUITableViewCell
 

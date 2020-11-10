@@ -7,6 +7,7 @@
 //
 
 #import "StackContainerView.h"
+#import "EX2Kit.h"
 
 @implementation StackContainerView
 
@@ -47,7 +48,7 @@
 
 - (UIView *)insideView
 {
-	return [self.subviews firstObjectSafe];
+	return [self.subviews firstObject];
 }
 
 /* 

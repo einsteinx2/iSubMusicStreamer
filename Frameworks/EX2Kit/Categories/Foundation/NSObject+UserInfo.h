@@ -7,6 +7,8 @@
 //  Used to attach arbitrary user info to any object
 //
 
+#import <Foundation/Foundation.h>
+
 @interface NSObject (UserInfo)
 
 @property (nonatomic, strong) NSMutableDictionary *ex2UserInfo;

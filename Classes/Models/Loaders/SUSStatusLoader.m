@@ -8,6 +8,10 @@
 
 #import "SUSStatusLoader.h"
 #import "NSMutableURLRequest+SUS.h"
+#import "RXMLElement.h"
+#import "NSError+ISMSError.h"
+#import "Defines.h"
+#import "EX2Kit.h"
 
 @implementation SUSStatusLoader
 

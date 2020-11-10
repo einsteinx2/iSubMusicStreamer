@@ -8,6 +8,21 @@
 
 #import "CurrentPlaylistViewController.h"
 #import "CurrentPlaylistSongSmallUITableViewCell.h"
+#import "CustomUIAlertView.h"
+#import "NSMutableURLRequest+SUS.h"
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "RXMLElement.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "MusicSingleton.h"
+#import "DatabaseSingleton.h"
+#import "JukeboxSingleton.h"
+#import "NSError+ISMSError.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation CurrentPlaylistViewController
 

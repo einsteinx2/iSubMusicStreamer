@@ -11,6 +11,17 @@
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
 #import "EGORefreshTableHeaderView.h"
+#import "CustomUITextView.h"
+#import "iSubAppDelegate.h"
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "Flurry.h"
+#import "SavedSettings.h"
+#import "MusicSingleton.h"
+#import "ISMSErrorDomain.h"
+#import "SUSChatDAO.h"
+#import "ISMSChatMessage.h"
+#import "EX2Kit.h"
 
 @interface ChatViewController (Private)
 - (void)dataSourceDidFinishLoadingNewData;

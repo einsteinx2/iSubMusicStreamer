@@ -7,6 +7,8 @@
 //
 
 #import "ISMSPlayerView.h"
+#import "UIView+AutoLayout.h"
+#import "EX2Kit.h"
 
 @interface ISMSPlayerView ()
 

@@ -9,6 +9,8 @@
 #import "StackScrollViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "StackContainerView.h"
+#import "SavedSettings.h"
+#import "EX2Kit.h"
 
 const NSInteger SLIDE_VIEWS_MINUS_X_POSITION = 0;//-190;//-130;
 const NSInteger SLIDE_VIEWS_START_X_POS = 0;
@@ -99,7 +101,7 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 		if (subView.x < 0.)
 			subView.x = 0.;
 	}
-	//if (((UIView *)[slideViews.subviews firstObjectSafe]).x < 0.)
+	//if (((UIView *)[slideViews.subviews firstObject]).x < 0.)
 	{
 		
 	}
@@ -752,7 +754,7 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 	UIView *viewToRemove = [self slideViewAtIndex:index];
 	[viewToRemove removeFromSuperview];
 	[viewControllersStack removeObjectAtIndex:index];
-	viewXPosition = self.view.frame.size.width - [[viewControllersStack firstObjectSafe] view].frame.size.width;
+	viewXPosition = self.view.frame.size.width - [[viewControllersStack firstObject] view].frame.size.width;
 }
 
 - (void)popToRootViewController
@@ -763,7 +765,7 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 		UIView *viewToRemove = [self slideViewAtIndex:i];
 		[viewToRemove removeFromSuperview];
 		[viewControllersStack removeObjectAtIndex:i];
-		viewXPosition = self.view.frame.size.width - [[viewControllersStack firstObjectSafe] view].frame.size.width;
+		viewXPosition = self.view.frame.size.width - [[viewControllersStack firstObject] view].frame.size.width;
 	}
 }*/
 

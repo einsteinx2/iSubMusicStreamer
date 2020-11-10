@@ -7,6 +7,8 @@
 //
 
 #import "SUSServerPlaylist.h"
+#import "RXMLElement.h"
+#import "EX2Kit.h"
 
 @implementation SUSServerPlaylist
 

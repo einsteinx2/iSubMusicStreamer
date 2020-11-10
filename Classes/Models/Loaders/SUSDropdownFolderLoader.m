@@ -8,6 +8,8 @@
 
 #import "SUSDropdownFolderLoader.h"
 #import "NSMutableURLRequest+SUS.h"
+#import "RXMLElement.h"
+#import "NSError+ISMSError.h"
 
 @implementation SUSDropdownFolderLoader
 

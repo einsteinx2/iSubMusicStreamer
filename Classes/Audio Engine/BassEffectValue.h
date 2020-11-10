@@ -6,6 +6,7 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import "BassEffectDAO.h"
 
 @interface BassEffectValue : NSObject

@@ -6,9 +6,9 @@
 //  Copyright 2011 Ben Baron. All rights reserved.
 //
 
+#import "CustomUITableViewController.h"
 #import "FolderPickerDialog.h"
 #import "NewHomeViewController.h"
-
 
 @interface ShuffleFolderPickerViewController : CustomUITableViewController 
 

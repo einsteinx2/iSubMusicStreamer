@@ -8,6 +8,10 @@
 
 #import "ArtistUITableViewCell.h"
 #import "CellOverlay.h"
+#import "Defines.h"
+#import "SavedSettings.h"
+#import "DatabaseSingleton.h"
+#import "ISMSArtist.h"
 
 @implementation ArtistUITableViewCell
 

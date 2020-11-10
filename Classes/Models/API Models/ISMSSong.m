@@ -7,11 +7,11 @@
 //
 
 #import "ISMSSong.h"
+#import "RXMLElement.h"
+#import "SavedSettings.h"
+#import "EX2Kit.h"
 #import <sys/stat.h>
-
-#ifdef IOS
 #import <MediaPlayer/MediaPlayer.h>
-#endif
 
 @implementation ISMSSong
 

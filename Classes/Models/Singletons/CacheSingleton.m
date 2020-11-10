@@ -7,9 +7,15 @@
 //
 
 #import "CacheSingleton.h"
-
+#import "FMDatabaseQueueAdditions.h"
 #import "ISMSStreamManager.h"
 #import "ISMSCacheQueueManager.h"
+#import "SavedSettings.h"
+#import "DatabaseSingleton.h"
+#import "ISMSStreamManager.h"
+#import "ISMSCacheQueueManager.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -301,7 +307,7 @@ LOG_LEVEL_ISUB_DEFAULT
         NSRange range = [filename rangeOfString:@"."];
         if (range.location != NSNotFound)
         {
-            NSString *filenameNew = [[filename componentsSeparatedByString:@"."] firstObjectSafe];
+            NSString *filenameNew = [[filename componentsSeparatedByString:@"."] firstObject];
             DDLogVerbose(@"[CacheSingleton] Moving filename: %@ to new filename: %@", filename, filenameNew);
             if (filenameNew)
             {

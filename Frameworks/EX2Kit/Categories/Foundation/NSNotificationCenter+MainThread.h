@@ -6,6 +6,8 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
 @interface NSNotificationCenter (MainThread)
 
 + (void)postNotificationToMainThreadWithName:(NSString *)name;

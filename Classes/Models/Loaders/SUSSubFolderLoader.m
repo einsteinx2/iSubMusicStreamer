@@ -8,6 +8,15 @@
 
 #import "SUSSubFolderLoader.h"
 #import "NSMutableURLRequest+SUS.h"
+#import "RXMLElement.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "SavedSettings.h"
+#import "DatabaseSingleton.h"
+#import "NSError+ISMSError.h"
+#import "ISMSArtist.h"
+#import "ISMSAlbum.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation SUSSubFolderLoader
 

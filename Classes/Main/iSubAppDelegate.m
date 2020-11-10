@@ -26,6 +26,21 @@
 #import "DDFileLogger.h"
 #import "DDTTYLogger.h"
 #import "SUSStatusLoader.h"
+#import "CustomUIAlertView.h"
+#import "NSMutableURLRequest+SUS.h"
+#import "ViewObjectsSingleton.h"
+#import "ZipKit.h"
+#import "Flurry.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "MusicSingleton.h"
+#import "DatabaseSingleton.h"
+#import "CacheSingleton.h"
+#import "ISMSStreamManager.h"
+#import "ISMSCacheQueueManager.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -261,9 +276,9 @@ LOG_LEVEL_ISUB_DEFAULT
 {
     // Change the background color when jukebox is on
     if (settingsS.isJukeboxEnabled)
-        appDelegateS.window.backgroundColor = viewObjectsS.jukeboxColor;
+        self.window.backgroundColor = viewObjectsS.jukeboxColor;
     else
-        appDelegateS.window.backgroundColor = viewObjectsS.windowColor;
+        self.window.backgroundColor = viewObjectsS.windowColor;
 }
 
 - (void)oneTimeRun
@@ -766,7 +781,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_EnteringOfflineMode];
 	
     settingsS.isJukeboxEnabled = NO;
-    appDelegateS.window.backgroundColor = viewObjectsS.windowColor;
+    self.window.backgroundColor = viewObjectsS.windowColor;
     [Flurry logEvent:@"JukeboxDisabled"];
     
 	settingsS.isOfflineMode = YES;
@@ -1259,12 +1274,12 @@ LOG_LEVEL_ISUB_DEFAULT
         
         if (IS_IPAD())
         {
-            [appDelegateS.ipadRootViewController.menuViewController.playerHolder addSubview:self.moviePlayer.view];
+            [self.ipadRootViewController.menuViewController.playerHolder addSubview:self.moviePlayer.view];
             self.moviePlayer.view.frame = self.moviePlayer.view.superview.bounds;
         }
         else
         {
-            [appDelegateS.mainTabBarController.view addSubview:self.moviePlayer.view];
+            [self.mainTabBarController.view addSubview:self.moviePlayer.view];
             self.moviePlayer.view.frame = CGRectZero;
         }
         

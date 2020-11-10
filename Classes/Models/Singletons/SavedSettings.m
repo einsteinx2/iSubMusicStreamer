@@ -9,6 +9,14 @@
 #import "SavedSettings.h"
 #import "PlaylistSingleton.h"
 #import "BassGaplessPlayer.h"
+#import "AudioEngine.h"
+#import "PlaylistSingleton.h"
+#import "DatabaseSingleton.h"
+#import "CacheSingleton.h"
+#import "ISMSCacheQueueManager.h"
+#import "ISMSServer.h"
+#import "EX2Kit.h"
+#import "LibSub.h"
 
 // Test server details
 #define DEFAULT_SERVER_TYPE SUBSONIC

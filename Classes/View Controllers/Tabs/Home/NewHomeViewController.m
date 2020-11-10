@@ -22,6 +22,20 @@
 #import "SearchXMLParser.h"
 #import "SUSServerShuffleLoader.h"
 #import "ISMSPlayerViewController.h"
+#import "CustomUIAlertView.h"
+#import "NSMutableURLRequest+SUS.h"
+#import "iSubAppDelegate.h"
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "Flurry.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "MusicSingleton.h"
+#import "JukeboxSingleton.h"
+#import "SUSRootFoldersDAO.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation NewHomeViewController
 
@@ -140,7 +154,7 @@
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    DLog(@"y: %@", self.bottomRowLabels.firstObjectSafe);
+    DLog(@"y: %@", self.bottomRowLabels.firstObject);
         
     // Since the values in viewWillRotate would have to be rounded, we need to fix them here
     if (IS_TALL_SCREEN())

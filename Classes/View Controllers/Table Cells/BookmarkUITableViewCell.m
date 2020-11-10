@@ -7,6 +7,8 @@
 //
 
 #import "BookmarkUITableViewCell.h"
+#import "AsynchronousImageView.h"
+#import "Defines.h"
 
 @implementation BookmarkUITableViewCell
 

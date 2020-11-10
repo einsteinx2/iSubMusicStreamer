@@ -12,6 +12,11 @@
 #import "StackScrollViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "SUSQuickAlbumsLoader.h"
+#import "CustomUIAlertView.h"
+#import "iSubAppDelegate.h"
+#import "ViewObjectsSingleton.h"
+#import "SavedSettings.h"
+#import "EX2Kit.h"
 
 @interface QuickAlbumsViewController (Private)
 - (void)albumLoad:(NSString*)modifier;

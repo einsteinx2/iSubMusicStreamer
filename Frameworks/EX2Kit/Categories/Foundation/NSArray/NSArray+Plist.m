@@ -6,9 +6,10 @@
 //
 //
 
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
-
 #import "NSArray+Plist.h"
+#import "DDLog.h"
+
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 @implementation NSArray (Plist)
 

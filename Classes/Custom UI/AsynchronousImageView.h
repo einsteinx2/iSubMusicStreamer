@@ -6,7 +6,10 @@
 //  Copyright 2009 Slava Bushtruk. All rights reserved.
 //
 
-@protocol AsynchronousImageViewDelegate;
+#import <UIKit/UIKit.h>
+#import "AsynchronousImageViewDelegate.h"
+#import "SUSLoaderDelegate.h"
+
 @class SUSCoverArtDAO;
 @interface AsynchronousImageView : UIImageView <SUSLoaderDelegate>
 

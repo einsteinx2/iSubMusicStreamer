@@ -9,6 +9,9 @@
 #import "AllAlbumsUITableViewCell.h"
 #import "CellOverlay.h"
 #import "AsynchronousImageView.h"
+#import "Defines.h"
+#import "SavedSettings.h"
+#import "DatabaseSingleton.h"
 
 @implementation AllAlbumsUITableViewCell
 

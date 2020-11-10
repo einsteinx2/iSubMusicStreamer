@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Ben Baron. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 
 @interface NSMutableArray (Safe)
 

@@ -7,6 +7,11 @@
 //
 
 #import "LyricsViewController.h"
+#import "Defines.h"
+#import "PlaylistSingleton.h"
+#import "SUSLyricsDAO.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation LyricsViewController
 

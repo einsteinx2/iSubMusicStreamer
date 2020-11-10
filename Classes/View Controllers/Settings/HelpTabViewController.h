@@ -6,6 +6,8 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+
 @interface HelpTabViewController : UIViewController <UIWebViewDelegate>
 
 @property (strong) IBOutlet UIWebView *helpWebView;

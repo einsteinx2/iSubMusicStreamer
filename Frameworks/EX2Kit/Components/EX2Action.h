@@ -6,10 +6,9 @@
 //
 //
 
-#import "EX2ActionQueue.h"
+#import <Foundation/Foundation.h>
 
-typedef enum
-{
+typedef enum {
     EX2ActionState_NotQueued,
     EX2ActionState_Waiting,
     EX2ActionState_Running,

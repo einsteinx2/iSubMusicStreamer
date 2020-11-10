@@ -7,6 +7,7 @@
 //
 
 #import "CurrentPlaylistSongSmallUITableViewCell.h"
+#import "Defines.h"
 
 @implementation CurrentPlaylistSongSmallUITableViewCell
 

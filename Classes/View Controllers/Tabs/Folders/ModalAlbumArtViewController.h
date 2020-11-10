@@ -6,6 +6,10 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+#import "AsynchronousImageView.h"
+#import "ISMSAlbum.h"
+
 @interface ModalAlbumArtViewController : UIViewController <AsynchronousImageViewDelegate>
 
 @property (nonatomic, strong) IBOutlet AsynchronousImageView *albumArt;

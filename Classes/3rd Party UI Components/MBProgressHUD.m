@@ -5,6 +5,8 @@
 //
 
 #import "MBProgressHUD.h"
+#import "Defines.h"
+#import "EX2Kit.h"
 
 @interface MBProgressHUD ()
 

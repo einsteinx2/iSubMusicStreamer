@@ -9,8 +9,9 @@
 #ifndef iSub_MusicSingleton_h
 #define iSub_MusicSingleton_h
 
-#define musicS ((MusicSingleton *)[MusicSingleton sharedInstance])
+#import <Foundation/Foundation.h>
 
+#define musicS ((MusicSingleton *)[MusicSingleton sharedInstance])
 
 @class ISMSSong;
 @interface MusicSingleton : NSObject

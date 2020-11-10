@@ -15,6 +15,17 @@
 #import "MenuViewController.h"
 #import "SUSStatusLoader.h"
 #import "SUSAllSongsLoader.h"
+#import "CustomUIAlertView.h"
+#import "iSubAppDelegate.h"
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "DatabaseSingleton.h"
+#import "ISMSStreamManager.h"
+#import "ISMSErrorDomain.h"
+#import "ISMSServer.h"
+#import "EX2Kit.h"
 
 @implementation ServerListViewController
 
@@ -93,7 +104,7 @@
 {
 	if(!self.isEditing)
 	{
-		if(self == [[self.navigationController viewControllers] firstObjectSafe])
+		if(self == [[self.navigationController viewControllers] firstObject])
 			self.navigationItem.leftBarButtonItem = nil;
 		else
 			self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(saveAction:)];

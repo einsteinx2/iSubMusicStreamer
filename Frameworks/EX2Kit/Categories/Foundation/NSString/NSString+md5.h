@@ -6,11 +6,12 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 
 @interface NSString (md5) 
 
-+ (NSString *) md5:(NSString *)str;
++ (NSString *)md5:(NSString *)str;
 
-- (NSString *) md5;
+- (NSString *)md5;
 
 @end

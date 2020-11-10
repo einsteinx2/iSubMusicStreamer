@@ -7,7 +7,6 @@
 //
 
 #import "SUSLoaderManager.h"
-#import "SUSLoaderDelegate.h"
 
 @class SUSLyricsLoader, FMDatabase;
 @interface SUSLyricsDAO : NSObject <SUSLoaderDelegate, SUSLoaderManager>

@@ -13,6 +13,13 @@
 #import "SUSCoverArtLoader.h"
 #import "SUSLyricsDAO.h"
 #import "ISMSCacheQueueManager.h"
+#import "TBXML.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "ISMSCacheQueueManager.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 LOG_LEVEL_ISUB_DEBUG
 #define maxNumOfReconnects 5
@@ -24,7 +31,7 @@ LOG_LEVEL_ISUB_DEBUG
 	if (!self.isQueueDownloading)
 		return nil;
 	
-	ISMSStreamHandler *handler = [self.handlerStack firstObjectSafe];
+	ISMSStreamHandler *handler = [self.handlerStack firstObject];
 	return handler.mySong;
 }
 
@@ -49,7 +56,7 @@ LOG_LEVEL_ISUB_DEBUG
 	if (!aSong)
 		return NO;
 	
-	ISMSStreamHandler *firstHandler = [self.handlerStack firstObjectSafe];
+	ISMSStreamHandler *firstHandler = [self.handlerStack firstObject];
 	return [aSong isEqualToSong:firstHandler.mySong];
 }
 
@@ -309,7 +316,7 @@ LOG_LEVEL_ISUB_DEBUG
 
 - (void)resumeQueue
 {
-	[self resumeHandler:[self.handlerStack firstObjectSafe]];
+	[self resumeHandler:[self.handlerStack firstObject]];
 }
 
 - (void)resumeHandler:(ISMSStreamHandler *)handler
@@ -331,7 +338,7 @@ LOG_LEVEL_ISUB_DEBUG
 			// Start the next handler which is now the first object
 			if ([self.handlerStack count] > 0)
 			{
-				ISMSStreamHandler *handler = [self.handlerStack firstObjectSafe];
+				ISMSStreamHandler *handler = [self.handlerStack firstObject];
 				[self startHandler:handler];
 			}
 		}
@@ -358,7 +365,7 @@ LOG_LEVEL_ISUB_DEBUG
 		// Start the next handler which is now the first object
 		if ([self.handlerStack count] > 0)
 		{
-			ISMSStreamHandler *handler = [self.handlerStack firstObjectSafe];
+			ISMSStreamHandler *handler = [self.handlerStack firstObject];
 			[self startHandler:handler];
 		}
 	}
@@ -673,7 +680,7 @@ LOG_LEVEL_ISUB_DEBUG
 		// Start the next handler which is now the first object
 		if ([self.handlerStack count] > 0)
 		{
-			ISMSStreamHandler *handler = [self.handlerStack firstObjectSafe];
+			ISMSStreamHandler *handler = [self.handlerStack firstObject];
 			[self startHandler:handler];
 		}
 		

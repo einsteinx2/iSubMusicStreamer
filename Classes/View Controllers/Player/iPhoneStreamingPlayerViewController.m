@@ -16,6 +16,19 @@
 #import "OBSlider.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "ISMSStreamHandler.h"
+#import "ViewObjectsSingleton.h"
+#import "Defines.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "Flurry.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "MusicSingleton.h"
+#import "DatabaseSingleton.h"
+#import "JukeboxSingleton.h"
+#import "ISMSStreamManager.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 #define downloadProgressBorder 4.
 #define downloadProgressWidth (self.progressSlider.frame.size.width - (downloadProgressBorder * 2))
@@ -1286,7 +1299,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 			[streamManagerS queueStreamForSong:self.currentSong byteOffset:self.byteOffset secondsOffset:self.progressSlider.value atIndex:0 isTempCache:YES isStartDownload:YES];
 			if ([streamManagerS.handlerStack count] > 1)
 			{
-				ISMSStreamHandler *handler = [streamManagerS.handlerStack firstObjectSafe];
+				ISMSStreamHandler *handler = [streamManagerS.handlerStack firstObject];
 				[handler start];
 			}
 			
@@ -1430,7 +1443,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 			[streamManagerS queueStreamForSong:self.currentSong byteOffset:self.byteOffset secondsOffset:self.progressSlider.value atIndex:0 isTempCache:YES isStartDownload:YES];
 			if ([streamManagerS.handlerStack count] > 1)
 			{
-				ISMSStreamHandler *handler = [streamManagerS.handlerStack firstObjectSafe];
+				ISMSStreamHandler *handler = [streamManagerS.handlerStack firstObject];
 				[handler start];
 			}
 			self.pauseSlider = NO;

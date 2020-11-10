@@ -6,10 +6,8 @@
 //  Copyright 2011 Ben Baron. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 
-@interface CustomUIAlertView : UIAlertView 
-{
-
-}
+@interface CustomUIAlertView : UIAlertView
 
 @end

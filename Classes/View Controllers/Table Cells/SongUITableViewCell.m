@@ -8,6 +8,10 @@
 
 #import "SongUITableViewCell.h"
 #import "CellOverlay.h"
+#import "Defines.h"
+#import "SavedSettings.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation SongUITableViewCell
 

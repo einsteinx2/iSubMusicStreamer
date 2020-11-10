@@ -9,6 +9,8 @@
 #ifndef iSub_PlaylistSingleton_h
 #define iSub_PlaylistSingleton_h
 
+#import <Foundation/Foundation.h>
+
 #define playlistS ((PlaylistSingleton *)[PlaylistSingleton sharedInstance])
 
 typedef enum

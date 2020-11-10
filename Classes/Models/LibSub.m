@@ -7,6 +7,7 @@
 //
 
 #import "LibSub.h"
+#import "EX2Reachability.h"
 
 @implementation LibSub
 

@@ -7,8 +7,9 @@
 //
 
 #import "SUSLyricsDAO.h"
-
 #import "SUSLyricsLoader.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "DatabaseSingleton.h"
 #import <QuartzCore/QuartzCore.h>
 
 @implementation SUSLyricsDAO

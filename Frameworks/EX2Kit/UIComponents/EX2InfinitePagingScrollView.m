@@ -7,6 +7,8 @@
 //
 
 #import "EX2InfinitePagingScrollView.h"
+#import "EX2Dispatch.h"
+#import "UIView+Tools.h"
 
 #define CENTER_OFFSET CGPointMake(self.frame.size.width * 2., 0.)
 

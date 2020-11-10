@@ -7,7 +7,14 @@
 //
 
 #import "PlaylistSingleton.h"
-
+#import "FMDatabaseQueueAdditions.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "MusicSingleton.h"
+#import "DatabaseSingleton.h"
+#import "JukeboxSingleton.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation PlaylistSingleton
 

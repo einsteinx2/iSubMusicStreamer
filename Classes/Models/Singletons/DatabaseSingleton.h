@@ -9,6 +9,8 @@
 #ifndef iSub_DatabaseSingleton_h
 #define iSub_DatabaseSingleton_h
 
+#import <Foundation/Foundation.h>
+
 #define databaseS ((DatabaseSingleton *)[DatabaseSingleton sharedInstance])
 
 @class FMDatabase, FMDatabaseQueue, ISMSArtist, ISMSAlbum, ISMSSong, SUSQueueAllLoader;

@@ -6,6 +6,9 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+#import "SUSLoaderDelegate.h"
+
 @interface QuickAlbumsViewController : UIViewController <SUSLoaderDelegate>
 
 @property (nonatomic, weak) UIViewController *parent;

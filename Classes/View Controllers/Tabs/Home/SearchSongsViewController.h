@@ -13,6 +13,8 @@
 //	2 = song
 //
 
+#import "CustomUITableViewController.h"
+
 typedef enum {
 	ISMSSearchSongsSearchType_Artists = 0,
 	ISMSSearchSongsSearchType_Albums,

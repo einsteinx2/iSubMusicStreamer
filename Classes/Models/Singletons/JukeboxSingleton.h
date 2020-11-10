@@ -10,6 +10,7 @@
 #define iSub_JukeboxSingleton_h
 
 #import <Foundation/Foundation.h>
+#import "EX2SimpleConnectionQueue.h"
 
 #define jukeboxS ((JukeboxSingleton *)[JukeboxSingleton sharedInstance])
 

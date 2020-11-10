@@ -45,7 +45,7 @@
 //	}
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 // Notifications
 #define EX2SimpleConnectionQueueDidStart @"EX2SimpleConnectionQueueDidStart"

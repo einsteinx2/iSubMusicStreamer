@@ -12,6 +12,11 @@
 #import "AsynchronousImageView.h"
 #import "PageControlViewController.h"
 #import "AsynchronousImageViewDelegate.h"
+#import "iSubAppDelegate.h"
+#import "MusicSingleton.h"
+#import "SUSCoverArtDAO.h"
+#import "Defines.h"
+#import "EX2Kit.h"
 
 LOG_LEVEL_ISUB_DEBUG
 

@@ -7,6 +7,8 @@
 //
 
 #import "ModalAlbumArtViewController.h"
+#import "SavedSettings.h"
+#import "EX2Kit.h"
  
 @implementation ModalAlbumArtViewController
 @synthesize albumArt, artistLabel, albumLabel, myAlbum, numberOfTracks, albumLength, durationLabel, trackCountLabel, labelHolderView, albumArtReflection;

@@ -7,6 +7,10 @@
 //
 
 #import "ShuffleFolderPickerViewController.h"
+#import "iSubAppDelegate.h"
+#import "SavedSettings.h"
+#import "SUSRootFoldersDAO.h"
+#import "EX2Kit.h"
 
 @implementation ShuffleFolderPickerViewController
 

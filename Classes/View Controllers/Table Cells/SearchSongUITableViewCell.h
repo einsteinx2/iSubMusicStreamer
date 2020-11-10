@@ -8,7 +8,7 @@
 
 #import "CustomUITableViewCell.h"
 
-@class AsynchronousImageView, Song;
+@class AsynchronousImageView, ISMSSong;
 
 @interface SearchSongUITableViewCell : CustomUITableViewCell 
 

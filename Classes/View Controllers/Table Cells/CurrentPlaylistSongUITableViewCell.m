@@ -8,6 +8,12 @@
 
 #import "CurrentPlaylistSongUITableViewCell.h"
 #import "CellOverlay.h"
+#import "AsynchronousImageView.h"
+#import "Defines.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation CurrentPlaylistSongUITableViewCell
 

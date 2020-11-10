@@ -9,6 +9,9 @@
 #import "BassEffectDAO.h"
 #import "BassEffectValue.h"
 #import "BassParamEqValue.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "EX2Kit.h"
 
 @implementation BassEffectDAO
 

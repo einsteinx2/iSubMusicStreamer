@@ -6,6 +6,8 @@
 //  Copyright 2011 Ben Baron. All rights reserved.
 //
 
+#import "SUSLoaderDelegate.h"
+
 @protocol SUSLoaderManager <NSObject>
 
 @required

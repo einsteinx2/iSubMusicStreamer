@@ -8,6 +8,9 @@
 
 #import "SUSChatLoader.h"
 #import "NSMutableURLRequest+SUS.h"
+#import "RXMLElement.h"
+#import "NSError+ISMSError.h"
+#import "ISMSChatMessage.h"
 
 @implementation SUSChatLoader
 

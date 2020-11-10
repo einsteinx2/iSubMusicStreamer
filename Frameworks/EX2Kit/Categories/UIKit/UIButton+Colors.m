@@ -7,6 +7,7 @@
 //
 
 #import "UIButton+Colors.h"
+#import "UIImage+Color.h"
 
 @implementation UIButton (Colors)
 

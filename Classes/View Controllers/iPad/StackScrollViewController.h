@@ -6,7 +6,7 @@
 //  Copyright 2011 raw engineering. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 typedef enum
 {

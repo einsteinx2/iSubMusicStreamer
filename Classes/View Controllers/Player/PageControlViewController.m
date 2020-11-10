@@ -12,6 +12,7 @@
 #import "DebugViewController.h"
 #import "EqualizerViewController.h"
 #import "PagingScrollView.h"
+#import "EX2Kit.h"
 
 @interface PageControlViewController (PrivateMethods)
 

@@ -6,6 +6,8 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
 extern NSString * const ISMSNotification_SongPlaybackStarted;
 extern NSString * const ISMSNotification_SongPlaybackPaused;
 extern NSString * const ISMSNotification_SongPlaybackEnded;

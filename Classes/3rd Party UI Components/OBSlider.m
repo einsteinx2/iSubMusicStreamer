@@ -6,7 +6,7 @@
 //
 
 #import "OBSlider.h"
-
+#import "EX2Macros.h"
 
 @interface OBSlider ()
 

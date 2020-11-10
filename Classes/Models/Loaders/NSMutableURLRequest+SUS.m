@@ -7,6 +7,8 @@
 //
 
 #import "NSString+URLEncode.h"
+#import "TBXML+Compression.h"
+#import "SavedSettings.h"
 
 @implementation NSMutableURLRequest (SUS)
 

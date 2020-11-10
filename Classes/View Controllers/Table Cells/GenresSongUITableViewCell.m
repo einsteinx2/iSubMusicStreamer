@@ -8,6 +8,12 @@
 
 #import "GenresSongUITableViewCell.h"
 #import "CellOverlay.h"
+#import "Defines.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "SavedSettings.h"
+#import "DatabaseSingleton.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation GenresSongUITableViewCell
 

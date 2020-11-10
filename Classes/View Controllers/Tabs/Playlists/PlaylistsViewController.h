@@ -6,8 +6,11 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import "CustomUITableViewController.h"
+#import "SUSLoaderDelegate.h"
+#import "EX2SimpleConnectionQueue.h"
 
-@class BBSimpleConnectionQueue, SUSServerPlaylistsDAO;
+@class SUSServerPlaylistsDAO;
 
 @interface PlaylistsViewController : CustomUITableViewController <EX2SimpleConnectionQueueDelegate, SUSLoaderDelegate>
 

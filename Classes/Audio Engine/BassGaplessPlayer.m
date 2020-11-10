@@ -7,6 +7,12 @@
 //
 
 #import "BassGaplessPlayer.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "ISMSStreamManager.h"
+#import "ISMSCacheQueueManager.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 #import <AVFoundation/AVFoundation.h>
 
 @interface BassGaplessPlayer ()
@@ -1001,7 +1007,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 {
     @synchronized(self.streamQueue)
     {
-        return [self.streamQueue firstObjectSafe];
+        return [self.streamQueue firstObject];
     }
 }
 

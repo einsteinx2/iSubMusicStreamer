@@ -7,6 +7,7 @@
 //
 
 #import "ChatUITableViewCell.h"
+#import "Defines.h"
 
 @implementation ChatUITableViewCell
 

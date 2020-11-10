@@ -11,6 +11,14 @@
 #import "PlaylistSingleton.h"
 #import "ISMSStreamManager.h"
 #import "JukeboxSingleton.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "AudioEngine.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "JukeboxSingleton.h"
+#import "ISMSStreamManager.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 

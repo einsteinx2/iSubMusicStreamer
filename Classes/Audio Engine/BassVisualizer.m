@@ -6,7 +6,9 @@
 //  Copyright (c) 2012 Ben Baron. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import "BassVisualizer.h"
+#import "EX2Kit.h"
 
 @interface BassVisualizer()
 {

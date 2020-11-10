@@ -8,6 +8,13 @@
 
 #import "SUSNowPlayingDAO.h"
 #import "SUSNowPlayingLoader.h"
+#import "SavedSettings.h"
+#import "PlaylistSingleton.h"
+#import "MusicSingleton.h"
+#import "DatabaseSingleton.h"
+#import "JukeboxSingleton.h"
+#import "ISMSSong+DAO.h"
+#import "EX2Kit.h"
 
 @implementation SUSNowPlayingDAO
 

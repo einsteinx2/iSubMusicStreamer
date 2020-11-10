@@ -8,6 +8,8 @@
 
 #import "CustomUITableViewCell.h"
 #import "CellOverlay.h"
+#import "ViewObjectsSingleton.h"
+#import "EX2Kit.h"
 
 @implementation CustomUITableViewCell
 @synthesize isOverlayShowing, overlayView, isIndexShowing, indexPath, isSearching, deleteToggleImage, isDelete;

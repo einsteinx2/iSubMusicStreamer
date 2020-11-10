@@ -9,6 +9,11 @@
 #import "AllSongsUITableViewCell.h"
 #import "CellOverlay.h"
 #import "AsynchronousImageView.h"
+#import "Defines.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "SavedSettings.h"
+#import "DatabaseSingleton.h"
+#import "ISMSSong+DAO.h"
 
 @implementation AllSongsUITableViewCell
 

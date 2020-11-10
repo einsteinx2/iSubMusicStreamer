@@ -14,7 +14,7 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-+ (NSString *) md5:(NSString *)str 
++ (NSString *)md5:(NSString *)str
 {
 	if ([str length] > 0)
 	{
@@ -34,7 +34,7 @@
 }
 #pragma clang diagnostic pop
 
-- (NSString *) md5
+- (NSString *)md5
 {
 	return [NSString md5:self];
 }

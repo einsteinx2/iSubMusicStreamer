@@ -7,6 +7,7 @@
 //
 
 #import "SUSLoader.h"
+#import "ISMSAlbum.h"
 
 @interface SUSQueueAllLoader : SUSLoader
 

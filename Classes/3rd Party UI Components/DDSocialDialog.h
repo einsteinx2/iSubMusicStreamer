@@ -41,6 +41,7 @@
  * limitations under the License.
  */
 
+#import <UIKit/UIKit.h>
 
 typedef enum{
 	DDSocialDialogThemeTwitter = 0,

@@ -6,13 +6,14 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 
 @interface NSString (hex) 
 
-+ (NSString *) stringFromHex:(NSString *)str;
-+ (NSString *) stringToHex:(NSString *)str;
++ (NSString *)stringFromHex:(NSString *)str;
++ (NSString *)stringToHex:(NSString *)str;
 
-- (NSString *) fromHex;
-- (NSString *) toHex;
+- (NSString *)fromHex;
+- (NSString *)toHex;
 
 @end
