@@ -419,7 +419,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;	
 
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && UIInterfaceOrientationIsPortrait(orientation)) {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && UIInterfaceOrientationIsPortrait(orientation)) {
 		// On the iPad the screen is large enough that we don't need to 
 		// resize the dialog to accomodate the keyboard popping up
 		return;
@@ -451,8 +451,8 @@ static CGFloat kDDSocialDialogPadding = 10;
 	showingKeyboard_ = YES;
 }
 
-- (void)keyboardWillHide:(NSNotification*)notification {
-
+- (void)keyboardWillHide:(NSNotification*)notification
+{    
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;	
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && UIInterfaceOrientationIsPortrait(orientation)) {

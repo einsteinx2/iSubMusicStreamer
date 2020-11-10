@@ -97,7 +97,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 		closeButton_.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
 		[self addSubview:closeButton_];
 		
-		CGFloat titleLabelFontSize = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 18 : 14;
+		CGFloat titleLabelFontSize = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) ? 18 : 14;
 		titleLabel_ = [[UILabel alloc] initWithFrame:CGRectZero];
 		titleLabel_.text = NSStringFromClass([self class]);
 		titleLabel_.backgroundColor = [UIColor clearColor];
@@ -438,7 +438,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;	
 
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && UIInterfaceOrientationIsPortrait(orientation)) {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && UIInterfaceOrientationIsPortrait(orientation)) {
 		// On the iPad the screen is large enough that we don't need to 
 		// resize the dialog to accomodate the keyboard popping up
 		return;
@@ -475,7 +475,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;	
 	
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && UIInterfaceOrientationIsPortrait(orientation)) {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && UIInterfaceOrientationIsPortrait(orientation)) {
 		return;
 	}
 	

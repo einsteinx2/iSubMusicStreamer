@@ -194,7 +194,7 @@
 		
 		if (!IS_IPAD())
 		{
-			if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+			if (UIInterfaceOrientationIsLandscape([UIApplication orientation]))
 			{
 				CGAffineTransform translate = CGAffineTransformMakeTranslation(0.0, 42.0);
 				CGAffineTransform scale = CGAffineTransformMakeScale(0.75, 0.75);

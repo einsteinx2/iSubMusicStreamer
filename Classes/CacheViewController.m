@@ -818,7 +818,7 @@
 		
 		if (!IS_IPAD())
 		{
-			if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+			if (UIInterfaceOrientationIsLandscape([UIApplication orientation]))
 			{
 				self.noSongsScreen.transform = CGAffineTransformTranslate(self.noSongsScreen.transform, 0.0, 23.0);
 			}

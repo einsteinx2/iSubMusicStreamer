@@ -454,7 +454,7 @@
 	
 	if (!IS_IPAD())
 	{
-		if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+		if (UIInterfaceOrientationIsLandscape([UIApplication orientation]))
 		{
 			//noPlaylistsScreen.transform = CGAffineTransformScale(noPlaylistsScreen.transform, 0.75, 0.75);
 			self.noPlaylistsScreen.transform = CGAffineTransformTranslate(self.noPlaylistsScreen.transform, 0.0, 23.0);
@@ -488,7 +488,7 @@
 		
 		// TODO: do this for iPad as well, different minScrollRow values
 		NSUInteger minScrollRow = 5;
-		if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+		if (UIInterfaceOrientationIsLandscape([UIApplication orientation]))
 			minScrollRow = 2;
 		
 		UITableViewScrollPosition scrollPosition = UITableViewScrollPositionNone;

@@ -65,7 +65,7 @@
 {
 	[super viewDidLoad];
 	
-	if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+	if (UIInterfaceOrientationIsLandscape([UIApplication orientation]))
 	{
 		self.randomButton.y += 16.;
 		self.frequentButton.y += 16.;

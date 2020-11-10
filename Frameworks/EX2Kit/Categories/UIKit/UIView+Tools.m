@@ -8,6 +8,7 @@
 
 #import "UIView+Tools.h"
 #import "CALayer+SublayerWithName.h"
+#import "UIApplication+Orientiation.h"
 
 @implementation UIView (Tools)
 
@@ -301,7 +302,7 @@
 
 - (CGSize)realSizeDidRotate
 {
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    UIInterfaceOrientation orientation = [UIApplication orientation];
     
     CGSize size = self.frame.size;
     if ((UIInterfaceOrientationIsLandscape(orientation) && size.width < size.height) ||

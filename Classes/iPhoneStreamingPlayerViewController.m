@@ -94,7 +94,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	//coverArtImageView.delegate = self;
 
 	// Create the extra views not in the XIB file
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
+    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([UIApplication orientation]))
     {
         [self showTallPlayerButtons];
         
@@ -174,7 +174,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
     self.swipeDetector.delegate = self;
     
     // Fix starting in landscape on iPhone 5
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsLandscape([UIApplication orientation]))
     {
         NSArray *viewsToSkip = @[self.reflectionView, self.artistLabel, self.albumLabel, self.titleLabel];
         for(UIView *subview in self.view.subviews)
@@ -232,7 +232,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		self.view.backgroundColor = [UIColor blackColor]; 
 	}
 	
-	if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait([UIApplication orientation]) || IS_IPAD())
 	{
 		[self createSongTitle];
 	}
@@ -446,7 +446,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
         [positions setObject:[NSValue valueWithCGRect:self.titleLabel.frame] forKey:@"titleLabel"];
 		self.originalViewFrames = [NSDictionary dictionaryWithDictionary:positions];
 		
-		if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+		if (UIInterfaceOrientationIsLandscape([UIApplication orientation]))
 		{
 			self.coverArtHolderView.frame = CGRectMake(0, 0, 300, 270);
 			self.prevButton.origin = CGPointMake(315, 184);
@@ -667,7 +667,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
  
 - (void)createSongTitle
 {
-	if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait([UIApplication orientation]) || IS_IPAD())
 	{
 		self.navigationItem.titleView = nil;
 		
@@ -727,7 +727,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 
 - (void)setSongTitle
 {
-	if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait([UIApplication orientation]) || IS_IPAD())
 	{		
 		self.artistTitleLabel.text = self.currentSong.artist;
 		self.albumTitleLabel.text = self.currentSong.album;
@@ -1076,11 +1076,11 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 
 - (void)extraButtonsToggleAnimated:(BOOL)animated saveState:(BOOL)saveState
 {
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation])) {
+    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([UIApplication orientation])) {
         return;
     }
     
-//    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
+//    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([UIApplication orientation]))
 //    {        
 //        if (self.isExtraButtonsShowing)
 //        {

@@ -320,6 +320,8 @@
 		5388A42D1198AD840049BA9E /* unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = 5388A42B1198AD840049BA9E /* unselected.png */; };
 		538C01B012C3DCC40061545B /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 538C01AE12C3DCC40061545B /* back.png */; };
 		538C01B112C3DCC40061545B /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 538C01AF12C3DCC40061545B /* back@2x.png */; };
+		538E5255255A31F2000DF682 /* UIApplication+Orientiation.m in Sources */ = {isa = PBXBuildFile; fileRef = 538E5254255A31F2000DF682 /* UIApplication+Orientiation.m */; };
+		538E5256255A31F2000DF682 /* UIApplication+Orientiation.m in Sources */ = {isa = PBXBuildFile; fileRef = 538E5254255A31F2000DF682 /* UIApplication+Orientiation.m */; };
 		539148BA2559E597004AAC3F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148B92559E597004AAC3F /* CoreServices.framework */; };
 		539148C52559EAAF004AAC3F /* libFlurry_11.1.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148C42559EAAF004AAC3F /* libFlurry_11.1.1.a */; };
 		539148C62559EAAF004AAC3F /* libFlurry_11.1.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148C42559EAAF004AAC3F /* libFlurry_11.1.1.a */; };
@@ -1603,6 +1605,8 @@
 		5388A42B1198AD840049BA9E /* unselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = unselected.png; path = Images/Other/unselected.png; sourceTree = "<group>"; };
 		538C01AE12C3DCC40061545B /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = back.png; path = Images/Other/back.png; sourceTree = "<group>"; };
 		538C01AF12C3DCC40061545B /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "back@2x.png"; path = "Images/Other/back@2x.png"; sourceTree = "<group>"; };
+		538E5253255A31F2000DF682 /* UIApplication+Orientiation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Orientiation.h"; sourceTree = "<group>"; };
+		538E5254255A31F2000DF682 /* UIApplication+Orientiation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Orientiation.m"; sourceTree = "<group>"; };
 		539148A62559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/DebugViewController.xib; sourceTree = "<group>"; };
 		539148A72559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/EqualizerViewController.xib; sourceTree = "<group>"; };
 		539148A82559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SettingsTabViewController.xib; sourceTree = "<group>"; };
@@ -3393,6 +3397,8 @@
 			isa = PBXGroup;
 			children = (
 				53FE342D1EA961540058B925 /* EX2UIKitCategories.h */,
+				538E5253255A31F2000DF682 /* UIApplication+Orientiation.h */,
+				538E5254255A31F2000DF682 /* UIApplication+Orientiation.m */,
 				53FE342E1EA961540058B925 /* UIBezierPath+Smoothing.h */,
 				53FE342F1EA961540058B925 /* UIBezierPath+Smoothing.m */,
 				53FE34301EA961540058B925 /* UIButton+Colors.h */,
@@ -5036,6 +5042,7 @@
 				53FE39161EA961ED0058B925 /* HTTPAuthenticationRequest.m in Sources */,
 				53FE38861EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */,
 				53FE355B1EA961540058B925 /* UIImageView+ImageAnimated.m in Sources */,
+				538E5255255A31F2000DF682 /* UIApplication+Orientiation.m in Sources */,
 				53FE35551EA961540058B925 /* UIImage+RoundedImage.m in Sources */,
 				53FE37DF1EA961720058B925 /* WBDropdownFolderLoader.m in Sources */,
 				53FE37611EA961720058B925 /* JukeboxXMLParser.m in Sources */,
@@ -5373,6 +5380,7 @@
 				53FE39181EA961ED0058B925 /* HTTPAuthenticationRequest.m in Sources */,
 				53FE38881EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */,
 				53FE355D1EA961540058B925 /* UIImageView+ImageAnimated.m in Sources */,
+				538E5256255A31F2000DF682 /* UIApplication+Orientiation.m in Sources */,
 				53FE35571EA961540058B925 /* UIImage+RoundedImage.m in Sources */,
 				53FE37E11EA961720058B925 /* WBDropdownFolderLoader.m in Sources */,
 				53FE37631EA961720058B925 /* JukeboxXMLParser.m in Sources */,

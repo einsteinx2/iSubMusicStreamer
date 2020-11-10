@@ -280,7 +280,7 @@
 {
 	[super viewWillAppear:animated];
     
-	if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
+	if (UIInterfaceOrientationIsPortrait([UIApplication orientation]))
 	{
 		if (!IS_IPAD())
 		{
@@ -304,7 +304,7 @@
             }
 		}
 	}
-	else if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+	else if (UIInterfaceOrientationIsLandscape([UIApplication orientation]))
 	{
 		if (!IS_IPAD())
 		{
