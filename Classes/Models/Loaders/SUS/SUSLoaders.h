@@ -14,5 +14,7 @@
 #import "SUSLyricsLoader.h"
 #import "SUSNowPlayingLoader.h"
 #import "SUSQuickAlbumsLoader.h"
+#import "SUSServerShuffleLoader.h"
+#import "SUSStatusLoader.h"
 
 #endif

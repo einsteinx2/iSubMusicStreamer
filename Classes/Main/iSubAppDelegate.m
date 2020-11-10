@@ -379,14 +379,10 @@ LOG_LEVEL_ISUB_DEFAULT
 	// have internet access or if the host url entered was wrong.
     if (!settingsS.isOfflineMode) 
 	{
-        self.statusLoader = [ISMSStatusLoader loaderWithDelegate:self];
-        if ([settingsS.serverType isEqualToString:SUBSONIC])
-        {
-            SUSStatusLoader *subsonicLoader = (SUSStatusLoader *)self.statusLoader;
-            subsonicLoader.urlString = settingsS.urlString;
-            subsonicLoader.username = settingsS.username;
-            subsonicLoader.password = settingsS.password;
-        }
+        self.statusLoader = [[SUSStatusLoader alloc] initWithDelegate:self];
+        self.statusLoader.urlString = settingsS.urlString;
+        self.statusLoader.username = settingsS.username;
+        self.statusLoader.password = settingsS.password;
         [self.statusLoader startLoad];
     }
 	
@@ -396,34 +392,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self performSelector:@selector(checkServer) withObject:nil afterDelay:delay];
 }
 
-#pragma mark - ISMS Loader Delegate
+#pragma mark - SUS Loader Delegate
 
-- (void)loadingRedirected:(ISMSLoader *)theLoader redirectUrl:(NSURL *)url
-{
-    NSMutableString *redirectUrlString = [NSMutableString stringWithFormat:@"%@://%@", url.scheme, url.host];
-	if (url.port)
-		[redirectUrlString appendFormat:@":%@", url.port];
-	
-	if ([url.pathComponents count] > 3)
-	{
-		for (NSString *component in url.pathComponents)
-		{
-			if ([component isEqualToString:@"api"] || [component isEqualToString:@"rest"])
-				break;
-			
-			if (![component isEqualToString:@"/"])
-			{
-				[redirectUrlString appendFormat:@"/%@", component];
-			}
-		}
-	}
-	
-    DLog(@"redirectUrlString: %@", redirectUrlString);
-	
-	settingsS.redirectUrlString = [NSString stringWithString:redirectUrlString];
-}
-
-- (void)loadingFailed:(ISMSLoader *)theLoader withError:(NSError *)error
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
 {
     if (theLoader.type == ISMSLoaderType_Status)
     {
@@ -443,17 +414,17 @@ LOG_LEVEL_ISUB_DEFAULT
             [self enterOfflineMode];
         }
         
-        self.statusLoader = nil;
-        
         if ([theLoader isKindOfClass:[SUSStatusLoader class]])
         {
             settingsS.isNewSearchAPI = ((SUSStatusLoader *)theLoader).isNewSearchAPI;
             settingsS.isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
         }
+        
+        self.statusLoader = nil;
     }
 }
 
-- (void)loadingFinished:(ISMSLoader *)theLoader
+- (void)loadingFinished:(SUSLoader *)theLoader
 {
     // This happens right on app launch
     if (theLoader.type == ISMSLoaderType_Status)

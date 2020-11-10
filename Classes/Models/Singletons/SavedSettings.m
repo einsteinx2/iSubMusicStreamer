@@ -1583,14 +1583,8 @@
 	_userDefaults = [NSUserDefaults standardUserDefaults];
 	_serverList = nil;
 	
-	_redirectUrlString = nil;
-	
-    //DLog(@"urlString: %@", urlString);
-	
 	[self createInitialSettings];
-	
-    //DLog(@"urlString: %@", urlString);
-    
+	    
 	// If the settings are not set up, convert them
 	if ([_userDefaults boolForKey:@"areSettingsSetup"])
 	{
@@ -1600,13 +1594,9 @@
 			self.serverList = [NSKeyedUnarchiver unarchiveObjectWithData:servers];
 		}
 	}
-	
-//DLog(@"urlString: %@", urlString);
-	
+		
 	// Cache certain settings to memory for speed
 	[self memCacheDefaults];
-	
-//DLog(@"urlString: %@", urlString);
 }
 
 + (instancetype)sharedInstance

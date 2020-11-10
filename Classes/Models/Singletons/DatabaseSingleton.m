@@ -67,7 +67,6 @@ LOG_LEVEL_ISUB_DEFAULT
 		[db executeUpdate:@"PRAGMA cache_size = 1"];
 		
         // Create these tables if they don't already exist.
-        ALog(@"This is not a WaveBox server.  Checking for folder cache tables and creating as necessary...");
         if (![db tableExists:@"albumListCache"])
         {
             [db executeUpdate:@"CREATE TABLE albumListCache (id TEXT PRIMARY KEY, data BLOB)"];

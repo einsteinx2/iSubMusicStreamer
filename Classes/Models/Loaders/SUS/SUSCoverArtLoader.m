@@ -36,7 +36,7 @@ static void initialize_navigationBarImages() {
 	return self;
 }
 
-- (instancetype)initWithCallbackBlock:(LoaderCallback)theBlock coverArtId:(NSString *)artId isLarge:(BOOL)large {
+- (instancetype)initWithCallbackBlock:(SUSLoaderCallback)theBlock coverArtId:(NSString *)artId isLarge:(BOOL)large {
 	if ((self = [super initWithCallbackBlock:theBlock])) {
 		_isLarge = large;
 		_coverArtId = [artId copy];

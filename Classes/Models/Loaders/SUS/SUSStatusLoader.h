@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Ben Baron. All rights reserved.
 //
 
-#import "ISMSStatusLoader.h"
+#import "SUSLoader.h"
 
-@interface SUSStatusLoader : ISMSStatusLoader
+@interface SUSStatusLoader : SUSLoader
 
 @property (strong) NSString *urlString;
 @property (strong) NSString *username;

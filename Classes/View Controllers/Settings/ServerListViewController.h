@@ -8,12 +8,12 @@
 
 @class SettingsTabViewController, HelpTabViewController;
 
-@interface ServerListViewController : CustomUITableViewController <ISMSLoaderDelegate>
+@interface ServerListViewController : CustomUITableViewController <SUSLoaderDelegate>
 
 @property (nonatomic) BOOL isEditing;
 @property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
-@property (nonatomic, copy) NSString *theNewRedirectionUrl;
+//@property (nonatomic, copy) NSString *theNewRedirectionUrl;
 @property (nonatomic, strong) SettingsTabViewController *settingsTabViewController;
 @property (nonatomic, strong) HelpTabViewController *helpTabViewController;
 

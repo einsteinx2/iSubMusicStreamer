@@ -34,8 +34,7 @@ static NSSet *setOfVersions = nil;
 
 + (NSMutableURLRequest *)requestWithSUSAction:(NSString *)action urlString:(NSString *)url username:(NSString *)user password:(NSString *)pass parameters:(NSDictionary *)parameters byteOffset:(NSUInteger)offset
 {
-    NSMutableString *urlString = [url isEqualToString:@"https://one.ubuntu.com/music"] ? [NSMutableString stringWithFormat:@"%@/api/1.0/%@.view", url, action] :
-                                                                                         [NSMutableString stringWithFormat:@"%@/rest/%@.view", url, action];
+    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@/rest/%@.view", url, action];
     if ([action isEqualToString:@"hls"])
         urlString = [NSMutableString stringWithFormat:@"%@/rest/%@.m3u8", url, action];
 	NSString *username = [user URLEncodeString];
@@ -117,16 +116,9 @@ static NSSet *setOfVersions = nil;
 									  cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData 
 								  timeoutInterval:loadingTimeout];
 	
-	if ([url isEqualToString:@"https://one.ubuntu.com/music"])
-	{
-		[request setHTTPMethod:@"GET"]; 
-	}
-	else
-	{
-		[request setHTTPMethod:@"POST"]; 
-		[request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-	}
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
 	
 	// Set the HTTP Basic Auth
 	if (settingsS.isBasicAuthEnabled)
@@ -159,21 +151,7 @@ static NSSet *setOfVersions = nil;
 
 + (NSMutableURLRequest *)requestWithSUSAction:(NSString *)action parameters:(NSDictionary *)parameters byteOffset:(NSUInteger)offset
 {
-	NSString *urlString = settingsS.urlString;
-	if (settingsS.redirectUrlString)
-	{
-		// The redirect URL has been found, so use it
-		urlString = settingsS.redirectUrlString;
-	}
-	
-//DLog(@"username: %@   password: %@", settingsS.username, settingsS.password);
-	
-	return [NSMutableURLRequest requestWithSUSAction:action 
-										urlString:urlString 
-											username:settingsS.username
-											password:settingsS.password 
-									   parameters:parameters 
-										  byteOffset:offset];
+    return [NSMutableURLRequest requestWithSUSAction:action urlString:settingsS.urlString username:settingsS.username password:settingsS.password parameters:parameters byteOffset:offset];
 }
 
 + (NSMutableURLRequest *)requestWithSUSAction:(NSString *)action parameters:(NSDictionary *)parameters

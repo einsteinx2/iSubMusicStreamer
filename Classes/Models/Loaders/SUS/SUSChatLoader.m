@@ -13,39 +13,28 @@
 
 #pragma mark - Lifecycle
 
-- (ISMSLoaderType)type
-{
+- (ISMSLoaderType)type {
     return ISMSLoaderType_Chat;
 }
 
 #pragma mark - Loader Methods
 
-- (NSURLRequest *)createRequest
-{
+- (NSURLRequest *)createRequest {
     return [NSMutableURLRequest requestWithSUSAction:@"getChatMessages" parameters:nil];
 }
 
-- (void)processResponse 
-{	
-    // Parse the data
-    //
+- (void)processResponse {
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-    if (![root isValid])
-    {
+    if (![root isValid]) {
         NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
         [self informDelegateLoadingFailed:error];
-    }
-    else
-    {
+    } else {
         RXMLElement *error = [root child:@"error"];
-        if ([error isValid])
-        {
+        if ([error isValid]) {
             NSString *code = [error attribute:@"code"];
             NSString *message = [error attribute:@"message"];
             [self subsonicErrorCode:[code intValue] message:message];
-        }
-        else
-        {
+        } else {
             self.chatMessages = [NSMutableArray arrayWithCapacity:0];
             
             [root iterate:@"chatMessages.chatMessage" usingBlock:^(RXMLElement *e) {

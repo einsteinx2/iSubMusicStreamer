@@ -14,33 +14,36 @@ static NSUInteger networkUseCount = 0;
 
 + (void)usingNetwork
 {
-	@synchronized(self)
-	{
+	@synchronized(self) {
 		networkUseCount++;
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+        [EX2Dispatch runInMainThreadAndWaitUntilDone:YES block:^{
+            UIApplication.sharedApplication.networkActivityIndicatorVisible = YES;
+        }];
 	}
 }
 
 + (void)doneUsingNetwork
 {
-	@synchronized(self)
-	{
-		if (networkUseCount > 0)
-		{
+	@synchronized(self) {
+		if (networkUseCount > 0) {
 			networkUseCount--;
 			
-			if (networkUseCount == 0)
-				[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+            if (networkUseCount == 0) {
+                [EX2Dispatch runInMainThreadAndWaitUntilDone:YES block:^{
+                    UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
+                }];
+            }
 		}
 	}
 }
 
 + (void)goingOffline
 {
-	@synchronized(self)
-	{
+	@synchronized(self) {
 		networkUseCount = 0;
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        [EX2Dispatch runInMainThreadAndWaitUntilDone:YES block:^{
+            UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
+        }];
 	}
 }
 

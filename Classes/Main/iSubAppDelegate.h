@@ -12,19 +12,19 @@
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 
-#import "ISMSLoaderDelegate.h"
+#import "SUSLoaderDelegate.h"
 #import "EX2Reachability.h"
 #import <HockeySDK/HockeySDK.h>
 
 #define appDelegateS [iSubAppDelegate sharedInstance]
 
-@class BBSplitViewController, iPadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, iPhoneStreamingPlayerViewController, SettingsViewController, FoldersViewController, AudioStreamer, IntroViewController, ISMSStatusLoader, MPMoviePlayerController, HTTPServer, ServerListViewController;
+@class BBSplitViewController, iPadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, iPhoneStreamingPlayerViewController, SettingsViewController, FoldersViewController, AudioStreamer, IntroViewController, SUSStatusLoader, MPMoviePlayerController, HTTPServer, ServerListViewController;
 
-@interface iSubAppDelegate : NSObject <UIApplicationDelegate, MFMailComposeViewControllerDelegate, BITHockeyManagerDelegate, BITCrashManagerDelegate, ISMSLoaderDelegate>
+@interface iSubAppDelegate : NSObject <UIApplicationDelegate, MFMailComposeViewControllerDelegate, BITHockeyManagerDelegate, BITCrashManagerDelegate, SUSLoaderDelegate>
 
 @property (strong) HTTPServer *hlsProxyServer;
 
-@property (strong) ISMSStatusLoader *statusLoader;
+@property (strong) SUSStatusLoader *statusLoader;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 

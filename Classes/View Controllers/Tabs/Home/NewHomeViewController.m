@@ -453,8 +453,7 @@
 
 - (void)performServerShuffle:(NSNotification*)notification 
 {
-    ISMSServerShuffleLoader *loader = [ISMSServerShuffleLoader loaderWithCallbackBlock:^(BOOL success, NSError *error, ISMSLoader *loader)
-    {
+    SUSServerShuffleLoader *loader = [[SUSServerShuffleLoader alloc] initWithCallbackBlock:^(BOOL success, NSError *error, SUSLoader *loader) {
         [viewObjectsS hideLoadingScreen];
         
         if (success)
@@ -470,7 +469,7 @@
     }];
     // Display the loading screen
     [viewObjectsS showAlbumLoadingScreen:appDelegateS.window sender:self];
-    loader.notification = notification;
+    loader.folderId = [[notification userInfo] objectForKey:@"folderId"];
     [loader startLoad];
     
 

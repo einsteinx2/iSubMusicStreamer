@@ -6,8 +6,10 @@
 //  Copyright (c) 2013 Einstein Times Two Software. All rights reserved.
 //
 
-#import "ISMSServerShuffleLoader.h"
+#import "SUSLoader.h"
 
-@interface SUSServerShuffleLoader : ISMSServerShuffleLoader
+@interface SUSServerShuffleLoader : SUSLoader
+
+@property (strong) NSNumber *folderId;
 
 @end

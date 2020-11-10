@@ -16,7 +16,7 @@
 
 @implementation ServerListViewController
 
-@synthesize theNewRedirectionUrl, settingsTabViewController, helpTabViewController;
+@synthesize settingsTabViewController, helpTabViewController;
 @synthesize isEditing, headerView, segmentedControl;
 
 - (BOOL)shouldAutorotate
@@ -36,7 +36,7 @@
 {
     [super viewDidLoad];
     
-	self.theNewRedirectionUrl = nil;
+//	self.theNewRedirectionUrl = nil;
 	
 	self.tableView.allowsSelectionDuringEditing = YES;
 	
@@ -205,7 +205,6 @@
 
 	if (notification.userInfo)
 	{
-		self.theNewRedirectionUrl = [notification.userInfo objectForKey:@"theNewRedirectUrl"];
         settingsS.isVideoSupported = [notification.userInfo[@"isVideoSupported"] boolValue];
         settingsS.isNewSearchAPI = [notification.userInfo[@"isNewSearchAPI"] boolValue];
 	}
@@ -224,10 +223,7 @@
 	settingsS.password = viewObjectsS.serverToEdit.password;
     settingsS.uuid = viewObjectsS.serverToEdit.uuid;
     settingsS.lastQueryId = viewObjectsS.serverToEdit.lastQueryId;
-    settingsS.redirectUrlString = self.theNewRedirectionUrl;
-    
-//DLog(@" settingsS.urlString: %@   settingsS.redirectUrlString: %@", settingsS.urlString, settingsS.redirectUrlString);
-		
+    		
 	if (self == [[self.navigationController viewControllers] objectAtIndexSafe:0] && !IS_IPAD())
 	{
 		[self.navigationController.view removeFromSuperview];
@@ -381,7 +377,7 @@
 	}
 	else
 	{
-		self.theNewRedirectionUrl = nil;
+//		self.theNewRedirectionUrl = nil;
 		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Checking Server"];
         
         SUSStatusLoader *statusLoader = [[SUSStatusLoader alloc] initWithDelegate:self];
@@ -449,33 +445,6 @@
     }   
 }
 
-- (void)loadingRedirected:(ISMSLoader *)theLoader redirectUrl:(NSURL *)url
-{
-    NSMutableString *redirectUrlString = [NSMutableString stringWithFormat:@"%@://%@", url.scheme, url.host];
-	if (url.port)
-		[redirectUrlString appendFormat:@":%@", url.port];
-	
-	if ([url.pathComponents count] > 3)
-	{
-		for (NSString *component in url.pathComponents)
-		{
-			if ([component isEqualToString:@"api"] || [component isEqualToString:@"rest"])
-				break;
-			
-			if (![component isEqualToString:@"/"])
-			{
-				[redirectUrlString appendFormat:@"/%@", component];
-			}
-		}
-	}
-	
-    DLog(@"redirectUrlString: %@", redirectUrlString);
-	
-	self.theNewRedirectionUrl = [NSString stringWithString:redirectUrlString];
-    
-    //self.theNewRedirectionUrl = [NSString stringWithFormat:@"%@://%@:%@", url.scheme, url.host, url.port];
-}
-
 - (void)loadingFailed:(ISMSLoader *)theLoader withError:(NSError *)error
 {
     UIAlertView *alert = nil;
@@ -500,7 +469,6 @@
 	settingsS.urlString = viewObjectsS.serverToEdit.url;
 	settingsS.username = viewObjectsS.serverToEdit.username;
 	settingsS.password = viewObjectsS.serverToEdit.password;
-    settingsS.redirectUrlString = self.theNewRedirectionUrl;
     
     if (theLoader.type == ISMSLoaderType_Status)
     {

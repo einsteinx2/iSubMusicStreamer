@@ -9,12 +9,10 @@
 #ifndef iSub_ISMSLoaders_h
 #define iSub_ISMSLoaders_h
 
-#import "ISMSStatusLoader.h"
 #import "SUSServerPlaylistsLoader.h"
 #import "SUSCoverArtLoader.h"
 #import "ISMSRootFoldersLoader.h"
 #import "ISMSQueueAllLoader.h"
-#import "ISMSServerShuffleLoader.h"
 #import "ISMSDropdownFolderLoader.h"
 #import "ISMSScrobbleLoader.h"
 

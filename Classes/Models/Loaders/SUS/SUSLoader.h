@@ -27,7 +27,7 @@ typedef void (^SUSLoaderCallback)(BOOL success, NSError *error, SUSLoader *loade
 
 - (void)setup; // Override this
 - (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate;
-- (instancetype)initWithCallbackBlock:(LoaderCallback)theBlock;
+- (instancetype)initWithCallbackBlock:(SUSLoaderCallback)theBlock;
 
 - (void)startLoad;
 - (void)cancelLoad;

@@ -76,8 +76,6 @@ typedef enum
 @property (copy) NSString *lastQueryId;
 @property (copy) NSString *sessionId;
 
-@property (copy) NSString *redirectUrlString;
-
 // Root Folders Settings
 @property (strong) NSDate *rootFoldersReloadTime;
 @property (strong) NSNumber *rootFoldersSelectedFolderId;

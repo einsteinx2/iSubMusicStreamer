@@ -11,6 +11,10 @@
 
 @implementation SUSDropdownFolderLoader
 
+- (ISMSLoaderType)type {
+    return ISMSLoaderType_DropdownFolder;
+}
+
 - (NSURLRequest *)createRequest
 {
     return [NSMutableURLRequest requestWithSUSAction:@"getMusicFolders" parameters:nil];

@@ -20,7 +20,9 @@ typedef enum
     ISMSLoaderType_Status,
     ISMSLoaderType_Login,
     ISMSLoaderType_HLS,
-    ISMSLoaderType_QuickAlbums
+    ISMSLoaderType_QuickAlbums,
+    ISMSLoaderType_DropdownFolder,
+    ISMSLoaderType_ServerShuffle
 } ISMSLoaderType;
 
 @class ISMSLoader;

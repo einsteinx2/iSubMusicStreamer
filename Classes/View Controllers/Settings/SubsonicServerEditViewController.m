@@ -28,9 +28,7 @@
 - (void)viewDidLoad 
 {
     [super viewDidLoad];
-	
-	self.theNewRedirectUrl = nil;
-	
+		
 	if (viewObjectsS.serverToEdit)
 	{
 		self.urlField.text = viewObjectsS.serverToEdit.url;
@@ -147,31 +145,6 @@
 
 #pragma mark - Server URL Checker delegate
 
-- (void)loadingRedirected:(ISMSLoader *)theLoader redirectUrl:(NSURL *)url
-{
-	NSMutableString *redirectUrlString = [NSMutableString stringWithFormat:@"%@://%@", url.scheme, url.host];
-	if (url.port)
-		[redirectUrlString appendFormat:@":%@", url.port];
-	
-	if ([url.pathComponents count] > 3)
-	{
-		for (NSString *component in url.pathComponents)
-		{
-			if ([component isEqualToString:@"rest"])
-				break;
-			
-			if (![component isEqualToString:@"/"])
-			{
-				[redirectUrlString appendFormat:@"/%@", component];
-			}
-		}
-	}
-	
-	//DLog(@"redirectUrlString: %@", redirectUrlString);
-	
-	self.theNewRedirectUrl = [NSString stringWithString:redirectUrlString];
-}
-
 - (void)loadingFailed:(ISMSLoader *)theLoader withError:(NSError *)error
 {
 	[viewObjectsS hideLoadingScreen];
@@ -222,15 +195,8 @@
 		[self dismissViewControllerAnimated:YES completion:nil];
 		
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:0];
-		if (self.theNewRedirectUrl)
-		{
-			userInfo[@"theNewRedirectUrl"] = self.theNewRedirectUrl;
-		}
         userInfo[@"isVideoSupported"] = @(((SUSStatusLoader *)theLoader).isVideoSupported);
         userInfo[@"isNewSearchAPI"] = @(((SUSStatusLoader *)theLoader).isNewSearchAPI);
-        if (self.theNewRedirectUrl)
-            userInfo[@"theNewRedirectUrl"] = self.theNewRedirectUrl;
-        
 		[NSNotificationCenter postNotificationToMainThreadWithName:@"switchServer" userInfo:userInfo];
 	}
 	else
@@ -259,15 +225,9 @@
 			[appDelegateS.ipadRootViewController.menuViewController showHome];
 				
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:0];
-		if (self.theNewRedirectUrl)
-		{
-			userInfo[@"theNewRedirectUrl"] = self.theNewRedirectUrl;
-		}
         userInfo[@"isVideoSupported"] = @(((SUSStatusLoader *)theLoader).isVideoSupported);
         userInfo[@"isNewSearchAPI"] = @(((SUSStatusLoader *)theLoader).isNewSearchAPI);
-        if (self.theNewRedirectUrl)
-            userInfo[@"theNewRedirectUrl"] = self.theNewRedirectUrl;
-        
+
 		[NSNotificationCenter postNotificationToMainThreadWithName:@"switchServer" userInfo:userInfo];
 	}
 	
