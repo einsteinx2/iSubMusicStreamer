@@ -388,7 +388,7 @@ LOG_LEVEL_ISUB_DEBUG
 
 - (void)saveHandlerStack
 {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.handlerStack requiringSecureCoding:NO error:nil];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.handlerStack requiringSecureCoding:YES error:nil];
 	if (data)
 	{
 		[[NSUserDefaults standardUserDefaults] setObject:data forKey:@"handlerStack"];
@@ -400,7 +400,7 @@ LOG_LEVEL_ISUB_DEBUG
 {	
 	NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"handlerStack"];
     if (data) {
-        self.handlerStack = [NSKeyedUnarchiver unarchivedObjectOfClass:NSMutableArray.class fromData:data error:nil];
+        self.handlerStack = [[NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSArray.class, ISMSStreamHandler.class]] fromData:data error:nil] mutableCopy];
     }
 
 	for (ISMSStreamHandler *handler in self.handlerStack)
@@ -609,11 +609,14 @@ LOG_LEVEL_ISUB_DEBUG
 
 	if (handler.totalBytesTransferred == 0)
 	{
-#ifdef IOS
 		// Not a trial issue, but no data was returned at all
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Uh oh!" message:@"We asked for a song, but the server didn't send anything!\n\nIt's likely that Subsonic's transcoding failed.\n\nIf you need help, please tap the Support button on the Home tab." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-		[alert show];
-#endif
+        NSString *message = @"We asked for a song, but the server didn't send anything!\n\nIt's likely that Subsonic's transcoding failed.";
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Uh oh!"
+                                                                       message:message
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [UIApplication.keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+
 		[[NSFileManager defaultManager] removeItemAtPath:handler.filePath error:NULL];
 		isSuccess = NO;
 	}
@@ -642,11 +645,14 @@ LOG_LEVEL_ISUB_DEBUG
 		
 		if (isLicenseIssue)
 		{
-#ifdef IOS
 			// This is a trial period message, alert the user and stop streaming
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Subsonic API Trial Expired" message:@"You can purchase a license for Subsonic by logging in to the web interface and clicking the red Donate link on the top right.\n\nPlease remember, iSub is a 3rd party client for Subsonic, and this license and trial is for Subsonic and not iSub.\n\nIf you didn't know about the Subsonic license requirement, and do not wish to purchase it, please tap the Support button on the Home tab and contact iSub support for a refund." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-			[alert show];
-#endif
+            NSString *message = @"You can purchase a license for Subsonic by logging in to the web interface and clicking the red Donate link on the top right.\n\nPlease remember, iSub is a 3rd party client for Subsonic, and this license and trial is for Subsonic and not iSub.";
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Subsonic API Trial Expired"
+                                                                           message:message
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+            [UIApplication.keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+            
 			[[NSFileManager defaultManager] removeItemAtPath:handler.filePath error:NULL];
 			isSuccess = NO;
 		}	
@@ -741,7 +747,7 @@ LOG_LEVEL_ISUB_DEBUG
 	}
 	
 	self.lastCachedSong = nil;
-	self.lyricsDAO = [[SUSLyricsDAO alloc] initWithDelegate:self]; 
+	self.lyricsDAO = [[SUSLyricsDAO alloc] initWithDelegate:nil]; 
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songCachingToggled) name:ISMSNotification_SongCachingEnabled object:nil];
 	

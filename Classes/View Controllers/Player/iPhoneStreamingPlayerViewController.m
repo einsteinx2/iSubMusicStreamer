@@ -1316,8 +1316,30 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 			}
 			else
 			{
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Past Cache Point" message:@"You are trying to skip further than the song has cached. You can do this, but the song won't be cached. Or you can wait a little bit for the cache to catch up." delegate:self cancelButtonTitle:@"Wait" otherButtonTitles:@"OK", nil];
-				[alert show];
+                NSString *message = @"You are trying to skip further than the song has cached. You can do this, but the song won't be cached. Or you can wait a little bit for the cache to catch up.";
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Past Cache Point"
+                                                                               message:message
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [audioEngineS.player stop];
+                    audioEngineS.startByteOffset = self.byteOffset;
+                    audioEngineS.startSecondsOffset = self.progressSlider.value;
+                    
+                    [streamManagerS removeStreamAtIndex:0];
+                    [streamManagerS queueStreamForSong:self.currentSong byteOffset:self.byteOffset secondsOffset:self.progressSlider.value atIndex:0 isTempCache:YES isStartDownload:YES];
+                    if ([streamManagerS.handlerStack count] > 1)
+                    {
+                        ISMSStreamHandler *handler = [streamManagerS.handlerStack firstObject];
+                        [handler start];
+                    }
+                    self.pauseSlider = NO;
+                    self.hasMoved = NO;
+                }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Wait" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    self.pauseSlider = NO;
+                    self.hasMoved = NO;
+                }]];
+                [self presentViewController:alert animated:YES completion:nil];
 			}
 		}
 	}
@@ -1374,10 +1396,17 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 {
 	self.bookmarkPosition = (int)self.progressSlider.value;
 	self.bookmarkBytePosition = audioEngineS.player.currentByteOffset;
-	
-	UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Bookmark Name:" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Save", nil];
-    myAlertView.alertViewStyle = UIAlertViewStylePlainTextInput;
-	[myAlertView show];
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Create Bookmark" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"Bookmark name";
+    }];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *name = [[[alert textFields] firstObject] text];
+        [self saveBookmark:name];
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)saveBookmark:(NSString *)name
@@ -1416,48 +1445,6 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	}];
 	
 	self.bookmarkButton.imageView.image = [UIImage imageNamed:@"controller-bookmark-on.png"];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{	
-	if ([alertView.title isEqualToString:@"Sorry"])
-	{
-		self.hasMoved = NO;
-	}
-	if ([alertView.title isEqualToString:@"Past Cache Point"])
-	{
-		if (buttonIndex == 0)
-		{
-			self.pauseSlider = NO;
-			self.hasMoved = NO;
-		}
-		else if(buttonIndex == 1)
-		{
-            [audioEngineS.player stop];
-			audioEngineS.startByteOffset = self.byteOffset;
-			audioEngineS.startSecondsOffset = self.progressSlider.value;
-			
-			[streamManagerS removeStreamAtIndex:0];
-            //DLog(@"byteOffset: %i", byteOffset);
-			//DLog(@"starting temp stream");
-			[streamManagerS queueStreamForSong:self.currentSong byteOffset:self.byteOffset secondsOffset:self.progressSlider.value atIndex:0 isTempCache:YES isStartDownload:YES];
-			if ([streamManagerS.handlerStack count] > 1)
-			{
-				ISMSStreamHandler *handler = [streamManagerS.handlerStack firstObject];
-				[handler start];
-			}
-			self.pauseSlider = NO;
-			self.hasMoved = NO;
-		}
-	}
-	else if([alertView.title isEqualToString:@"Bookmark Name:"])
-	{
-        NSString *text = [alertView textFieldAtIndex:0].text;
-		if(buttonIndex == 1)
-		{
-			[self saveBookmark:text];
-		}
-	}
 }
 
 - (IBAction)shuffleButtonToggle:(id)sender

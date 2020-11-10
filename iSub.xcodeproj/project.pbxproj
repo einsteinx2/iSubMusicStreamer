@@ -810,8 +810,6 @@
 		53FDEE6D11E82D7700FE3ECD /* delete-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FDEE6C11E82D7700FE3ECD /* delete-button@2x.png */; };
 		53FE34B91EA961540058B925 /* NSArray+FilterBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33D61EA961540058B925 /* NSArray+FilterBlock.m */; };
 		53FE34BB1EA961540058B925 /* NSArray+FilterBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33D61EA961540058B925 /* NSArray+FilterBlock.m */; };
-		53FE34BF1EA961540058B925 /* NSArray+Plist.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33DA1EA961540058B925 /* NSArray+Plist.m */; };
-		53FE34C11EA961540058B925 /* NSArray+Plist.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33DA1EA961540058B925 /* NSArray+Plist.m */; };
 		53FE34C21EA961540058B925 /* NSArray+Reverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33DC1EA961540058B925 /* NSArray+Reverse.m */; };
 		53FE34C41EA961540058B925 /* NSArray+Reverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33DC1EA961540058B925 /* NSArray+Reverse.m */; };
 		53FE34C51EA961540058B925 /* NSArray+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33DE1EA961540058B925 /* NSArray+Safe.m */; };
@@ -1763,8 +1761,6 @@
 		53FE33D41EA961540058B925 /* NSArray+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Additions.h"; sourceTree = "<group>"; };
 		53FE33D51EA961540058B925 /* NSArray+FilterBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+FilterBlock.h"; sourceTree = "<group>"; };
 		53FE33D61EA961540058B925 /* NSArray+FilterBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+FilterBlock.m"; sourceTree = "<group>"; };
-		53FE33D91EA961540058B925 /* NSArray+Plist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Plist.h"; sourceTree = "<group>"; };
-		53FE33DA1EA961540058B925 /* NSArray+Plist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Plist.m"; sourceTree = "<group>"; };
 		53FE33DB1EA961540058B925 /* NSArray+Reverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Reverse.h"; sourceTree = "<group>"; };
 		53FE33DC1EA961540058B925 /* NSArray+Reverse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Reverse.m"; sourceTree = "<group>"; };
 		53FE33DD1EA961540058B925 /* NSArray+Safe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Safe.h"; sourceTree = "<group>"; };
@@ -3371,8 +3367,6 @@
 				53FE33D41EA961540058B925 /* NSArray+Additions.h */,
 				53FE33D51EA961540058B925 /* NSArray+FilterBlock.h */,
 				53FE33D61EA961540058B925 /* NSArray+FilterBlock.m */,
-				53FE33D91EA961540058B925 /* NSArray+Plist.h */,
-				53FE33DA1EA961540058B925 /* NSArray+Plist.m */,
 				53FE33DB1EA961540058B925 /* NSArray+Reverse.h */,
 				53FE33DC1EA961540058B925 /* NSArray+Reverse.m */,
 				53FE33DD1EA961540058B925 /* NSArray+Safe.h */,
@@ -4652,7 +4646,6 @@
 				53500EC118064EED00D0A490 /* CustomUITableViewController.m in Sources */,
 				53FE39461EA961ED0058B925 /* PUTResponse.m in Sources */,
 				53FE37551EA961720058B925 /* ISMSVideo.m in Sources */,
-				53FE34BF1EA961540058B925 /* NSArray+Plist.m in Sources */,
 				53FE37491EA961720058B925 /* ISMSStreamManager.m in Sources */,
 				53FE388C1EA961C80058B925 /* GMAppleDouble.m in Sources */,
 				53FE34B91EA961540058B925 /* NSArray+FilterBlock.m in Sources */,
@@ -4953,7 +4946,6 @@
 				53500EC318064EED00D0A490 /* CustomUITableViewController.m in Sources */,
 				53FE39481EA961ED0058B925 /* PUTResponse.m in Sources */,
 				53FE37571EA961720058B925 /* ISMSVideo.m in Sources */,
-				53FE34C11EA961540058B925 /* NSArray+Plist.m in Sources */,
 				53FE374B1EA961720058B925 /* ISMSStreamManager.m in Sources */,
 				53FE388E1EA961C80058B925 /* GMAppleDouble.m in Sources */,
 				53FE34BB1EA961540058B925 /* NSArray+FilterBlock.m in Sources */,

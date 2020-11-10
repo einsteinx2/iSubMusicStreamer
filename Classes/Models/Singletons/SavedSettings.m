@@ -208,7 +208,7 @@
 				
 				self.serverList = newServerList;
 				
-                NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:_serverList requiringSecureCoding:NO error:nil];
+                NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:_serverList requiringSecureCoding:YES error:nil];
 				[_userDefaults setObject:archivedServerList forKey:@"servers"];
 			}
 		}
@@ -216,7 +216,7 @@
 	else
 	{
         if (servers != nil) {
-            self.serverList = [NSKeyedUnarchiver unarchivedObjectOfClass:NSMutableArray.class fromData:servers error:nil];
+            self.serverList = [[NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSArray.class, ISMSServer.class]] fromData:servers error:nil] mutableCopy];
         }
 	}
 	
@@ -1601,7 +1601,7 @@
 		NSData *servers = [_userDefaults objectForKey:@"servers"];
 		if (servers)
 		{
-            self.serverList = [NSKeyedUnarchiver unarchivedObjectOfClass:NSMutableArray.class fromData:servers error:nil];
+            self.serverList = [[NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSArray.class, ISMSServer.class]] fromData:servers error:nil] mutableCopy];
 		}
 	}
 		

@@ -10,7 +10,7 @@
 
 #define SUBSONIC @"Subsonic"
 
-@interface ISMSServer : NSObject <NSCoding>
+@interface ISMSServer : NSObject <NSSecureCoding>
 
 @property (copy) NSString *url;
 @property (copy) NSString *username;

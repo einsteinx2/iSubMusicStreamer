@@ -227,7 +227,7 @@
 	[defaults setObject:viewObjectsS.serverToEdit.url forKey:@"url"];
 	[defaults setObject:viewObjectsS.serverToEdit.username forKey:@"username"];
 	[defaults setObject:viewObjectsS.serverToEdit.password forKey:@"password"];
-    NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:NO error:nil];
+    NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:YES error:nil];
 	[defaults setObject:archivedServerList forKey:@"servers"];
 	[defaults synchronize];
 	
@@ -418,7 +418,7 @@
 	NSArray *server = [ settingsS.serverList objectAtIndexSafe:fromIndexPath.row];
 	[settingsS.serverList removeObjectAtIndex:fromIndexPath.row];
 	[settingsS.serverList insertObject:server atIndex:toIndexPath.row];
-    NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:NO error:nil];
+    NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:YES error:nil];
 	[[NSUserDefaults standardUserDefaults] setObject:archivedServerList forKey:@"servers"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
@@ -455,7 +455,7 @@
 		
 		// Save the plist values
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:NO error:nil];
+        NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:YES error:nil];
 		[defaults setObject:archivedServerList forKey:@"servers"];
 		[defaults synchronize];
     }   

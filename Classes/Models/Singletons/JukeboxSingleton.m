@@ -38,10 +38,7 @@
 	else 
 	{
 		// Inform the user that the connection failed.
-#ifdef IOS
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was an error controlling the Jukebox.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-#endif
+        [self showConnectionErrorAlert];
 	}
 	
 }
@@ -63,10 +60,7 @@
 	else
 	{
 		// Inform the user that the connection failed.
-#ifdef IOS
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was an error controlling the Jukebox.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-#endif
+        [self showConnectionErrorAlert];
 	}
 	
 	
@@ -90,10 +84,7 @@
 	else
 	{
 		// Inform the user that the connection failed.
-#ifdef IOS
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was an error controlling the Jukebox.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-#endif
+        [self showConnectionErrorAlert];
 	}
 	
 	self.jukeboxIsPlaying = NO;
@@ -146,10 +137,7 @@
 	else
 	{
 		// Inform the user that the connection failed.
-#ifdef IOS
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was an error controlling the Jukebox.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-#endif
+        [self showConnectionErrorAlert];
 	}
 	
 }
@@ -170,10 +158,7 @@
 	else
 	{
 		// Inform the user that the connection failed.
-#ifdef IOS
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was an error controlling the Jukebox.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-#endif
+        [self showConnectionErrorAlert];
 	}
 	
 }
@@ -198,10 +183,7 @@
 		else
 		{
 			// Inform the user that the connection failed.
-#ifdef IOS
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was an error controlling the Jukebox.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-			[alert show];
-#endif
+            [self showConnectionErrorAlert];
 		}
 		
 	}
@@ -252,10 +234,7 @@
 	else
 	{
 		// Inform the user that the connection failed.
-#ifdef IOS
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was an error controlling the Jukebox.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-#endif
+        [self showConnectionErrorAlert];
 	}
 	
 }
@@ -278,10 +257,7 @@
 	else
 	{
 		// Inform the user that the connection failed.
-#ifdef IOS
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was an error controlling the Jukebox.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-#endif
+        [self showConnectionErrorAlert];
 	}
 	
 }
@@ -302,10 +278,7 @@
 	else
 	{
 		// Inform the user that the connection failed.
-#ifdef IOS
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was an error controlling the Jukebox.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-#endif
+        [self showConnectionErrorAlert];
 	}
 	
 }
@@ -328,10 +301,7 @@
 	else
 	{
 		// Inform the user that the connection failed.
-#ifdef IOS
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was an error controlling the Jukebox.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-#endif
+        [self showConnectionErrorAlert];
 	}
 	
 }
@@ -361,10 +331,7 @@
 	else
 	{
 		// Inform the user that the connection failed.
-#ifdef IOS
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was an error controlling the Jukebox.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-#endif
+        [self showConnectionErrorAlert];
 	}
 	
 	// Keep reloading every 30 seconds if there is no activity so that the player stays updated if visible
@@ -377,6 +344,15 @@
 	// Make sure this doesn't run a bunch of times in a row
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(jukeboxGetInfoInternal) object:nil];
 	[self performSelector:@selector(jukeboxGetInfoInternal) withObject:nil afterDelay:0.5];
+}
+
+- (void)showConnectionErrorAlert {
+    NSString *message = @"There was an error controlling the Jukebox.\n\nCould not create the network request.";
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [UIApplication.keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark - Memory management

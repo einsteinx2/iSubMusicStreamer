@@ -57,10 +57,12 @@
 {
 	[jukeboxS.connectionQueue connectionFinished:theConnection];
 	
-#ifdef IOS
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[NSString stringWithFormat:@"There was an error controlling the Jukebox.\n\nError %li: %@", (long)[error code], [error localizedDescription]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	[alert show];
-#endif
+    NSString *message = [NSString stringWithFormat:@"There was an error controlling the Jukebox.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [UIApplication.keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
     
 	self.receivedData = nil;
 }

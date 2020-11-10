@@ -175,15 +175,48 @@
 
 			if ([[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@isAllSongsLoading", settingsS.urlString]] isEqualToString:@"YES"])
 			{
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Resume Load?" message:@"If you've reloaded the albums tab since this load started you should choose 'Restart Load'.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Restart Load", @"Resume Load", nil];
-				alert.tag = 1;
-				[alert show];
+                NSString *message = @"If you've reloaded the albums tab since this load started you should choose 'Restart Load'.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.";
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Resume Load?"
+                                                                               message:message
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Restart Load" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                    [self showLoadingScreen];
+                    
+                    [self.allSongsDataModel restartLoad];
+                    self.tableView.tableHeaderView = nil;
+                    [self.tableView reloadData];
+                    
+                    [self dataSourceDidFinishLoadingNewData];
+                }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Resume Load" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                    [self showLoadingScreen];
+                    
+                    [self.allSongsDataModel startLoad];
+                    self.tableView.tableHeaderView = nil;
+                    [self.tableView reloadData];
+                    
+                    [self dataSourceDidFinishLoadingNewData];
+                }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+                [self presentViewController:alert animated:YES completion:nil];
 			}
 			else
 			{
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Load?" message:@"This could take a while if you have a big collection.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.\n\nNote: If you've added new artists, you should reload the Folders first." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-				alert.tag = 1;
-				[alert show];
+                NSString *message = @"This could take a while if you have a big collection.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.\n\nNote: If you've added new artists, you should reload the Folders first.";
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Load?"
+                                                                               message:message
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                    [self showLoadingScreen];
+                    
+                    [self.allSongsDataModel restartLoad];
+                    self.tableView.tableHeaderView = nil;
+                    [self.tableView reloadData];
+                    
+                    [self dataSourceDidFinishLoadingNewData];
+                }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+                [self presentViewController:alert animated:YES completion:nil];
 			}
 		}
 	}
@@ -229,31 +262,6 @@
 		[alert show];
 		[self dataSourceDidFinishLoadingNewData];
 	}	
-}
-
-- (void)alertView:(CustomUIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	if (alertView.tag == 1)
-	{
-		if (buttonIndex == 1)
-		{
-			[self showLoadingScreen];//:@[@"Processing Artist:", @"", @"Processing Album:", @""];
-			
-			[self.allSongsDataModel restartLoad];
-			self.tableView.tableHeaderView = nil;
-			[self.tableView reloadData];
-		}
-		else if (buttonIndex == 2)
-		{
-			[self showLoadingScreen];//:@[@"Processing Album:", @"", @"Processing Song:", @""]];
-			
-			[self.allSongsDataModel startLoad];
-			self.tableView.tableHeaderView = nil;
-			[self.tableView reloadData];
-		}	
-		
-		[self dataSourceDidFinishLoadingNewData];
-	}
 }
 
 - (void) settingsAction:(id)sender 

@@ -205,7 +205,11 @@
 	return [self isEqualToISMSStreamHandler:other];
 }
 
-#pragma mark - NSCoding
+#pragma mark - NSSecureCoding
+
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {

@@ -325,9 +325,18 @@
             if (self.enableManualCachingOnWWANSwitch.on)
             {
                 // Prompt the warning
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"This feature can use a large amount of data. Please be sure to monitor your data plan usage to avoid overage charges from your wireless provider." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-                alert.tag = 2;
-                [alert show];
+                NSString *message = @"This feature can use a large amount of data. Please be sure to monitor your data plan usage to avoid overage charges from your wireless provider.";
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning"
+                                                                               message:message
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                    settingsS.isManualCachingOnWWANEnabled = YES;
+                }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    // They canceled, turn off the switch
+                    [self.enableManualCachingOnWWANSwitch setOn:NO animated:YES];
+                }]];
+                [self presentViewController:alert animated:YES completion:nil];
             }
             else
             {
@@ -349,9 +358,18 @@
             if (self.enableNextSongPartialCacheSwitch.on)
             {
                 // Prompt the warning
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"Due to changes in Subsonic, this will cause audio corruption if transcoding is enabled.\n\nIf you're not sure what that means, choose cancel." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-                alert.tag = 3;
-                [alert show];
+                NSString *message = @"Due to changes in Subsonic, this will cause audio corruption if transcoding is enabled.\n\nIf you're not sure what that means, choose cancel.";
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning"
+                                                                               message:message
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                    settingsS.isPartialCacheNextSong = YES;
+                }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    // They canceled, turn off the switch
+                    [self.enableNextSongPartialCacheSwitch setOn:NO animated:YES];
+                }]];
+                [self presentViewController:alert animated:YES completion:nil];
             }
             else
             {
@@ -363,9 +381,18 @@
             if (self.enableBackupCacheSwitch.on)
             {
                 // Prompt the warning
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"This setting can take up a large amount of space on your computer or iCloud storage. Are you sure you want to backup your cached songs?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-                alert.tag = 4;
-                [alert show];
+                NSString *message = @"This setting can take up a large amount of space on your computer or iCloud storage. Are you sure you want to backup your cached songs?";
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning"
+                                                                               message:message
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                    settingsS.isBackupCacheEnabled = YES;
+                }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    // They canceled, turn off the switch
+                    [self.enableBackupCacheSwitch setOn:NO animated:YES];
+                }]];
+                [self presentViewController:alert animated:YES completion:nil];
             }
             else
             {
@@ -494,9 +521,16 @@
 
 - (IBAction)resetAlbumArtCacheAction
 {
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reset Album Art Cache" message:@"Are you sure you want to do this? This will clear all saved album art." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-	alert.tag = 1;
-	[alert show];
+    NSString *message = @"Are you sure you want to do this? This will clear all saved album art.";
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Reset Album Art Cache"
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Processing"];
+        [self performSelector:@selector(resetAlbumArtCache) withObject:nil afterDelay:0.05];
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)resetFolderCache
@@ -519,54 +553,6 @@
 		[appDelegateS.artistsNavigationController popToRootViewControllerAnimated:NO];
 	else
 		[appDelegateS.rootViewController.navigationController popToRootViewControllerAnimated:NO];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	if (alertView.tag == 0 && buttonIndex == 1)
-	{
-		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Processing"];
-		[self performSelector:@selector(resetFolderCache) withObject:nil afterDelay:0.05];
-	}
-	else if (alertView.tag == 1 && buttonIndex == 1)
-	{
-		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Processing"];
-		[self performSelector:@selector(resetAlbumArtCache) withObject:nil afterDelay:0.05];
-	}
-    else if (alertView.tag == 2)
-    {
-        if (buttonIndex == 0)
-        {
-            // They canceled, turn off the switch
-            [self.enableManualCachingOnWWANSwitch setOn:NO animated:YES];
-        }
-        else
-        {
-            settingsS.isManualCachingOnWWANEnabled = YES;
-        }
-    }
-    else if (alertView.tag == 3)
-    {
-        if (buttonIndex == 0)
-        {
-            [self.enableNextSongPartialCacheSwitch setOn:NO animated:YES];
-        }
-        else
-        {
-            settingsS.isPartialCacheNextSong = YES;
-        }
-    }
-    else if (alertView.tag == 4)
-    {
-        if (buttonIndex == 0)
-        {
-            [self.enableBackupCacheSwitch setOn:NO animated:YES];
-        }
-        else
-        {
-            settingsS.isBackupCacheEnabled = YES;
-        }
-    }
 }
 
 - (void)updateCacheSpaceSlider

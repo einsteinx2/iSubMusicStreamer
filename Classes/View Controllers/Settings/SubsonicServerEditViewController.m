@@ -122,20 +122,30 @@
 {
 	if (![self checkUrl:self.urlField.text])
 	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The URL must be in the format: http://mywebsite.com:port/folder\n\nBoth the :port and /folder are optional" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-		[alert show];
+        NSString *message = @"The URL must be in the format: http://mywebsite.com:port/folder\n\nBoth the :port and /folder are optional";
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                       message:message
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
 	}
 	
 	if (![self checkUsername:self.usernameField.text])
 	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enter a username" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-		[alert show];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                       message:@"Please enter a username"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
 	}
 	
 	if (![self checkPassword:self.passwordField.text])
 	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enter a password" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-		[alert show];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                       message:@"Please enter a password"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
 	}
 	
 	if ([self checkUrl:self.urlField.text] && [self checkUsername:self.usernameField.text] && [self checkPassword:self.passwordField.text])
@@ -156,13 +166,15 @@
 {
 	[viewObjectsS hideLoadingScreen];
 	
-	NSString *message = @"";
-	if (error.code == ISMSErrorCode_IncorrectCredentials)
-		message = @"Either your username or password is incorrect. Please try again";
-	else
+	NSString *message = @"Either your username or password is incorrect. Please try again";
+    if (error.code != ISMSErrorCode_IncorrectCredentials) {
 		message = [NSString stringWithFormat:@"Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\nError code %li:\n%@", (long)[error code], [error localizedDescription]];
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	[alert show];
+    }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }	
 	
 - (void)loadingFinished:(SUSLoader *)theLoader
@@ -193,7 +205,7 @@
 		[defaults setObject:theServer.url forKey:@"url"];
 		[defaults setObject:theServer.username forKey:@"username"];
 		[defaults setObject:theServer.password forKey:@"password"];
-        NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:NO error:nil];
+        NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:YES error:nil];
 		[defaults setObject:archivedServerList forKey:@"servers"];
 		[defaults synchronize];
 		
@@ -221,7 +233,7 @@
 		[defaults setObject:self.urlField.text forKey:@"url"];
 		[defaults setObject:self.usernameField.text forKey:@"username"];
 		[defaults setObject:self.passwordField.text forKey:@"password"];
-        NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:NO error:nil];
+        NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:YES error:nil];
 		[defaults setObject:archivedServerList forKey:@"servers"];
 		[defaults synchronize];
 		

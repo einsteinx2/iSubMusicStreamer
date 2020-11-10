@@ -10,8 +10,11 @@
 
 @implementation ISMSServer
 
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
 	[encoder encodeObject:self.url];
 	[encoder encodeObject:self.username];
 	[encoder encodeObject:self.password];
@@ -21,23 +24,20 @@
 }
 
 
-- (instancetype)initWithCoder:(NSCoder *)decoder
-{
-	if ((self = [super init]))
-	{
-		_url = [[decoder decodeObject] copy];
-		_username = [[decoder decodeObject] copy];
-		_password = [[decoder decodeObject] copy];
-		_type = [[decoder decodeObject] copy];
-        _lastQueryId = [[decoder decodeObject] copy];
-        _uuid = [[decoder decodeObject] copy];
+- (instancetype)initWithCoder:(NSCoder *)decoder {
+	if ((self = [super init])) {
+		_url = [decoder decodeObject];
+		_username = [decoder decodeObject];
+		_password = [decoder decodeObject];
+		_type = [decoder decodeObject];
+        _lastQueryId = [decoder decodeObject];
+        _uuid = [decoder decodeObject];
 	}
 	
 	return self;
 }
 
-- (NSString *)description
-{
+- (NSString *)description {
 	return [NSString stringWithFormat:@"%@  type: %@", [super description], self.type];
 }
 

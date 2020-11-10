@@ -279,8 +279,11 @@
 	[self dataSourceDidFinishLoadingNewData];
 	
 	// Inform the user that the connection failed.
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Subsonic Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-    [alert show];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Subsonic Error"
+                                                                   message:error.localizedDescription
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)loadingFinished:(SUSLoader *)theLoader

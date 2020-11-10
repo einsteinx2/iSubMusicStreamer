@@ -327,9 +327,21 @@
 {
 	if (!viewObjectsS.isArtistsLoading)
 	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reload?" message:@"This could take a while if you have a big collection.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.\n\nNote: If you've added new artists or albums, you should reload the Folders and Albums tabs first." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-		alert.tag = 1;
-		[alert show];
+        NSString *message = @"This could take a while if you have a big collection.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.\n\nNote: If you've added new artists or albums, you should reload the Folders and Albums tabs first.";
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Reload?"
+                                                                       message:message
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [self showLoadingScreen];
+            
+            [self.dataModel restartLoad];
+            self.tableView.tableHeaderView = nil;
+            [self.tableView reloadData];
+            
+            [self dataSourceDidFinishLoadingNewData];
+        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
 	}
 	else
 	{
@@ -352,33 +364,6 @@
 	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
 	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
-}
-
-#pragma mark - UIAlertView delegate
-
-- (void)alertView:(CustomUIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	if (alertView.tag == 1)
-	{
-		if (buttonIndex == 1)
-		{
-			[self showLoadingScreen];
-			
-			[self.dataModel restartLoad];
-			self.tableView.tableHeaderView = nil;
-			[self.tableView reloadData];
-		}
-		else if (buttonIndex == 2)
-		{
-			[self showLoadingScreen];
-			
-			[self.dataModel startLoad];
-			self.tableView.tableHeaderView = nil;
-			[self.tableView reloadData];
-		}	
-		
-		[self dataSourceDidFinishLoadingNewData];
-	}
 }
 
 #pragma mark - UISearchBar delegate
