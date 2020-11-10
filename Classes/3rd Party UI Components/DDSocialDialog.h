@@ -71,7 +71,7 @@ typedef enum{
 @property (nonatomic) UIView *contentView;
 @property (nonatomic, weak) id <DDSocialDialogDelegate> dialogDelegate;
 
-- (id)initWithFrame:(CGRect)frame theme:(DDSocialDialogTheme)theme;
+- (instancetype)initWithFrame:(CGRect)frame theme:(DDSocialDialogTheme)theme;
 - (void)dismiss:(BOOL)animated;
 - (void)show;
 - (void)cancel;

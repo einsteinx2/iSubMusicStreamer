@@ -13,8 +13,8 @@
 @property (copy) NSString *user;
 @property (copy) NSString *message;
 
-- (id)initWithTBXMLElement:(TBXMLElement *)element;
-- (id)initWithRXMLElement:(RXMLElement *)element;
-- (id)copyWithZone:(NSZone *)zone;
+- (instancetype)initWithTBXMLElement:(TBXMLElement *)element;
+- (instancetype)initWithRXMLElement:(RXMLElement *)element;
+- (instancetype)copyWithZone:(NSZone *)zone;
 
 @end

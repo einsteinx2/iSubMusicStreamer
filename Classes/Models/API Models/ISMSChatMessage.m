@@ -10,7 +10,7 @@
 
 @implementation ISMSChatMessage
 
-- (id)initWithTBXMLElement:(TBXMLElement *)element
+- (instancetype)initWithTBXMLElement:(TBXMLElement *)element
 {
 	if ((self = [super init]))
 	{
@@ -27,7 +27,7 @@
 	return self;
 }
 
-- (id)initWithRXMLElement:(RXMLElement *)element
+- (instancetype)initWithRXMLElement:(RXMLElement *)element
 {
     if ((self = [super init]))
     {
@@ -44,7 +44,7 @@
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone
+- (instancetype)copyWithZone:(NSZone *)zone
 {
 	ISMSChatMessage *newChatMessage = [[ISMSChatMessage alloc] init];
 	newChatMessage.timestamp = self.timestamp;

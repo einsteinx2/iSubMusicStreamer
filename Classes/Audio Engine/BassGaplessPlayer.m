@@ -30,7 +30,7 @@ LOG_LEVEL_ISUB_DEBUG
 
 #define startSongRetryTimer @"startSong"
 
-- (id)init
+- (instancetype)init
 {
 	if ((self = [super init]))
 	{
@@ -50,7 +50,7 @@ LOG_LEVEL_ISUB_DEBUG
     return self;
 }
 
-- (id)initWithDelegate:(id<BassGaplessPlayerDelegate>)theDelegate
+- (instancetype)initWithDelegate:(id<BassGaplessPlayerDelegate>)theDelegate
 {
     if (([self init]))
     {

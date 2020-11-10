@@ -51,7 +51,7 @@
 	[UIView commitAnimations];
 }
 
-- (id)init
+- (instancetype)init
 {	
 	if ((self = [super initWithNibName:@"QuickAlbumsViewController" bundle:nil]))
     {

@@ -27,8 +27,8 @@
 @class Song;
 @interface ISMSStreamHandler : NSObject <NSCoding>
 
-- (id)initWithSong:(ISMSSong *)song byteOffset:(unsigned long long)bOffset secondsOffset:(double)sOffset isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate;
-- (id)initWithSong:(ISMSSong *)song isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate;
+- (instancetype)initWithSong:(ISMSSong *)song byteOffset:(unsigned long long)bOffset secondsOffset:(double)sOffset isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate;
+- (instancetype)initWithSong:(ISMSSong *)song isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate;
 
 @property (weak) NSObject<ISMSStreamHandlerDelegate> *delegate;
 @property (copy) ISMSSong *mySong;

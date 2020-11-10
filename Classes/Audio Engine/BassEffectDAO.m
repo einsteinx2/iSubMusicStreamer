@@ -14,7 +14,7 @@
 
 #pragma mark - Lifecycle
 
-- (id)initWithType:(BassEffectType)effectType
+- (instancetype)initWithType:(BassEffectType)effectType
 {
 	if ((self = [super init]))
 	{

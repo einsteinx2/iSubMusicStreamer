@@ -25,7 +25,7 @@
 
 - (NSArray *)index;
 
-- (id)initWithDelegate:(NSObject <ISMSLoaderDelegate> *)theDelegate;
+- (instancetype)initWithDelegate:(NSObject <ISMSLoaderDelegate> *)theDelegate;
 - (void)restartLoad;
 - (void)startLoad;
 - (void)cancelLoad;

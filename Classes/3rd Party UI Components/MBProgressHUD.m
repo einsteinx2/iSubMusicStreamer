@@ -246,11 +246,11 @@
 #pragma mark -
 #pragma mark Lifecycle methods
 
-- (id)initWithWindow:(UIWindow *)window {
+- (instancetype)initWithWindow:(UIWindow *)window {
     return [self initWithView:window];
 }
 
-- (id)initWithView:(UIView *)view {
+- (instancetype)initWithView:(UIView *)view {
 	// Let's check if the view is nil (this is a common error when using the windw initializer above)
 	if (!view) {
 		[NSException raise:@"MBProgressHUDViewIsNillException" 
@@ -276,7 +276,7 @@
 }
 
 
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
 	if (self) {
         // Set default values for properties
@@ -753,11 +753,11 @@
 #pragma mark -
 #pragma mark Lifecycle
 
-- (id)init {
+- (instancetype)init {
     return [self initWithFrame:CGRectMake(0.0f, 0.0f, 37.0f, 37.0f)];
 }
 
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor colorWithWhite:0. alpha:.2]; //[UIColor clearColor];

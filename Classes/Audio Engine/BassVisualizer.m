@@ -18,7 +18,7 @@
 
 @implementation BassVisualizer
 
-- (id)init
+- (instancetype)init
 {
 	if ((self = [super init]))
 	{		
@@ -33,7 +33,7 @@
 	return self;
 }
 
-- (id)initWithChannel:(HCHANNEL)theChannel
+- (instancetype)initWithChannel:(HCHANNEL)theChannel
 {
 	if ((self = [self init]))
 	{

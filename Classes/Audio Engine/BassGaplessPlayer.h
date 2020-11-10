@@ -49,7 +49,7 @@
 
 @property NSUInteger currentPlaylistIndex;
         
-- (id)initWithDelegate:(id<BassGaplessPlayerDelegate>)theDelegate;
+- (instancetype)initWithDelegate:(id<BassGaplessPlayerDelegate>)theDelegate;
 
 // BASS methods
 //

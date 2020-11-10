@@ -19,7 +19,7 @@
 @property (nonatomic) BOOL isFirstLoad;
 @property (nonatomic) NSUInteger lastSelectedRow;
 
-- (id)initWithFrame:(CGRect)frame;
+- (instancetype)initWithFrame:(CGRect)frame;
 - (void)loadCellContents;
 - (UIView *)createHeaderView:(BOOL)withImage;
 - (UIView *)createFooterView;

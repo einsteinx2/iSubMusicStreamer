@@ -21,7 +21,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playlistIndexChanged) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
 }
 
-- (id)init
+- (instancetype)init
 {
 	if ((self = [super init]))
 	{
@@ -30,7 +30,7 @@
 	return self;
 }
 
-- (id)initWithSong:(ISMSSong *)song byteOffset:(unsigned long long)bOffset secondsOffset:(double)sOffset isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate
+- (instancetype)initWithSong:(ISMSSong *)song byteOffset:(unsigned long long)bOffset secondsOffset:(double)sOffset isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate
 {
 	if ((self = [self init]))
 	{
@@ -48,7 +48,7 @@
 	return self;
 }
 
-- (id)initWithSong:(ISMSSong *)song isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate
+- (instancetype)initWithSong:(ISMSSong *)song isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate
 {
 	return [self initWithSong:song byteOffset:0 secondsOffset:0.0 isTemp:isTemp delegate:theDelegate];
 }
@@ -217,7 +217,7 @@
     [encoder encodeBool:self.isEnableRateLimiting forKey:@"isEnableRateLimiting"];
 }
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
 	if ((self = [super init]))
 	{		

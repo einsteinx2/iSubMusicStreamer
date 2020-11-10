@@ -121,7 +121,7 @@ static void SetupDrawBitmap()
 	return [CAEAGLLayer class];
 }
 
-- (id)setup
+- (instancetype)setup
 {
     SetupArrays();
     SetupDrawEQPalette();
@@ -178,7 +178,7 @@ static void SetupDrawBitmap()
 }
 
 // The GL view is stored in the nib file. When it's unarchived it's sent -initWithCoder:
-- (id)initWithCoder:(NSCoder*)coder 
+- (instancetype)initWithCoder:(NSCoder*)coder 
 {
     if ((self = [super initWithCoder:coder]))
 	{
@@ -188,7 +188,7 @@ static void SetupDrawBitmap()
 	return self;
 }
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame]))
 	{

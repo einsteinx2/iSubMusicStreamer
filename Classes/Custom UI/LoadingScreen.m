@@ -10,7 +10,7 @@
 
 @implementation LoadingScreen
 
-- (id)initOnView:(UIView *)superView withMessage:(NSArray *)message blockInput:(BOOL)blockInput mainWindow:(BOOL)mainWindow
+- (instancetype)initOnView:(UIView *)superView withMessage:(NSArray *)message blockInput:(BOOL)blockInput mainWindow:(BOOL)mainWindow
 {
 	//[self showLoadingScreen:view withMessage:message blockInput:blockInput mainWindow:mainWindow];
 	

@@ -11,6 +11,10 @@
 
 @implementation SUSScrobbleLoader
 
+- (ISMSLoaderType)type {
+    return ISMSLoaderType_Scrobble;
+}
+
 - (NSURLRequest *)createRequest {
     NSString *isSubmissionString = [NSString stringWithFormat:@"%i", self.isSubmission];
     NSDictionary *parameters = @{@"id": n2N(self.aSong.songId), @"submission": n2N(isSubmissionString)};

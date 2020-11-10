@@ -12,7 +12,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 @implementation UAApplication
 
-- (id)init 
+- (instancetype)init 
 {
 	if ((self = [super init]))
 	{

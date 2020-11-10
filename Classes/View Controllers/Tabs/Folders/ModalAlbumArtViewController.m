@@ -41,7 +41,7 @@
 	}
 }
 
-- (id)initWithAlbum:(ISMSAlbum *)theAlbum numberOfTracks:(NSUInteger)tracks albumLength:(NSUInteger)length
+- (instancetype)initWithAlbum:(ISMSAlbum *)theAlbum numberOfTracks:(NSUInteger)tracks albumLength:(NSUInteger)length
 {
 	if ((self = [super initWithNibName:@"ModalAlbumArtViewController" bundle:nil]))
 	{

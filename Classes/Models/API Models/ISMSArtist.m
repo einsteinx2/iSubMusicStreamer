@@ -19,7 +19,7 @@
 	return anArtist;
 }
 
-- (id)initWithAttributeDict:(NSDictionary *)attributeDict
+- (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict
 {
 	if ((self = [super init]))
 	{
@@ -30,7 +30,7 @@
 	return self;
 }
 
-- (id)initWithTBXMLElement:(TBXMLElement *)element
+- (instancetype)initWithTBXMLElement:(TBXMLElement *)element
 {
 	if ((self = [super init]))
 	{
@@ -41,7 +41,7 @@
 	return self;
 }
 
-- (id)initWithRXMLElement:(RXMLElement *)element
+- (instancetype)initWithRXMLElement:(RXMLElement *)element
 {
     if ((self = [super init]))
     {
@@ -58,7 +58,7 @@
 	[encoder encodeObject:self.artistId];
 }
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
 	if ((self = [super init]))
 	{
@@ -69,7 +69,7 @@
 	return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone
+- (instancetype)copyWithZone:(NSZone *)zone
 {
 	ISMSArtist *anArtist = [[ISMSArtist alloc] init];
 	

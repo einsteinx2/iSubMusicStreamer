@@ -23,7 +23,7 @@ LOG_LEVEL_ISUB_DEBUG
 
 @implementation AsynchronousImageView
 
-- (id)initWithFrame:(CGRect)frame coverArtId:(NSString *)artId isLarge:(BOOL)large delegate:(NSObject<AsynchronousImageViewDelegate> *)theDelegate
+- (instancetype)initWithFrame:(CGRect)frame coverArtId:(NSString *)artId isLarge:(BOOL)large delegate:(NSObject<AsynchronousImageViewDelegate> *)theDelegate
 {
 	if ((self = [super initWithFrame:frame]))
 	{

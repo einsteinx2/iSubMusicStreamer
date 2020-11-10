@@ -33,7 +33,7 @@ typedef enum
 @property (weak, readonly) NSDictionary *selectedPreset;
 @property (weak, readonly) NSArray *selectedPresetValues;
 
-- (id)initWithType:(BassEffectType)effectType;
+- (instancetype)initWithType:(BassEffectType)effectType;
 - (void)setup;
 
 - (BassEffectValue *)valueForIndex:(NSInteger)index;

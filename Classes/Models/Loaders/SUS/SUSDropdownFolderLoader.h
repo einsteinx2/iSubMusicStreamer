@@ -6,8 +6,10 @@
 //  Copyright (c) 2013 Einstein Times Two Software. All rights reserved.
 //
 
-#import "ISMSDropdownFolderLoader.h"
+#import "SUSLoader.h"
 
-@interface SUSDropdownFolderLoader : ISMSDropdownFolderLoader<NSXMLParserDelegate>
+@interface SUSDropdownFolderLoader : SUSLoader
+
+@property (nonatomic, strong) NSDictionary *updatedfolders;
 
 @end

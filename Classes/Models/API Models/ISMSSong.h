@@ -37,14 +37,14 @@
 @property (readonly) NSUInteger estimatedBitrate;
 
 - (void)encodeWithCoder:(NSCoder *)encoder;
-- (id)initWithCoder:(NSCoder *)decoder;
+- (instancetype)initWithCoder:(NSCoder *)decoder;
 
-- (id)copyWithZone:(NSZone *)zone;
+- (instancetype)copyWithZone:(NSZone *)zone;
 
-- (id)initWithPMSDictionary:(NSDictionary *)dictionary;
-- (id)initWithTBXMLElement:(TBXMLElement *)element;
-- (id)initWithRXMLElement:(RXMLElement *)element;
-- (id)initWithAttributeDict:(NSDictionary *)attributeDict;
+- (instancetype)initWithPMSDictionary:(NSDictionary *)dictionary;
+- (instancetype)initWithTBXMLElement:(TBXMLElement *)element;
+- (instancetype)initWithRXMLElement:(RXMLElement *)element;
+- (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict;
 
 - (BOOL)isEqualToSong:(ISMSSong	*)otherSong;
 

@@ -73,7 +73,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 @synthesize titleLabel = titleLabel_;
 @synthesize folderPicker = folderPicker_;
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:CGRectZero])) 
 	{

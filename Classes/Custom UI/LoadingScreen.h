@@ -20,7 +20,7 @@
 @property (strong) UIActivityIndicatorView *activityIndicator;
 
 
-- (id)initOnView:(UIView *)view withMessage:(NSArray *)message blockInput:(BOOL)blockInput mainWindow:(BOOL)mainWindow; 
+- (instancetype)initOnView:(UIView *)view withMessage:(NSArray *)message blockInput:(BOOL)blockInput mainWindow:(BOOL)mainWindow; 
 //- (void)showLoadingScreen:(UIView *)view withMessage:(NSString *)message blockInput:(BOOL)blockInput mainWindow:(BOOL)mainWindow;
 - (void)setAllMessagesText:(NSArray *)messages;
 - (void)setMessage1Text:(NSString *)message;

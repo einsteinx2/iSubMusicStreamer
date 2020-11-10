@@ -16,5 +16,7 @@
 #import "SUSQuickAlbumsLoader.h"
 #import "SUSServerShuffleLoader.h"
 #import "SUSStatusLoader.h"
+#import "SUSScrobbleLoader.h"
+#import "SUSDropdownFolderLoader.h"
 
 #endif

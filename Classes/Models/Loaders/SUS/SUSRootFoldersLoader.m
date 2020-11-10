@@ -9,13 +9,18 @@
 #import "SUSRootFoldersLoader.h"
 #import "NSMutableURLRequest+SUS.h"
 
+#define TEMP_FLUSH_AMOUNT 400
+
 @implementation SUSRootFoldersLoader
+
+- (ISMSLoaderType)type
+{
+    return ISMSLoaderType_RootFolders;
+}
 
 #pragma mark Data loading
 
-- (NSURLRequest *)createRequest
-{
-	//DLog(@"Starting load");
+- (NSURLRequest *)createRequest {
     NSDictionary *parameters = nil;
 	if (self.selectedFolderId != nil && [self.selectedFolderId intValue] != -1) {
         parameters = @{@"musicFolderId": n2N([self.selectedFolderId stringValue])};
@@ -24,8 +29,7 @@
     return [NSMutableURLRequest requestWithSUSAction:@"getIndexes" parameters:parameters];
 }
 
-- (void)processResponse
-{			
+- (void)processResponse {
 	// Clear the database
 	[self resetRootFolderCache];
 	
@@ -33,22 +37,16 @@
 	[self resetRootFolderTempTable];
 	
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-    if (![root isValid])
-    {
+    if (![root isValid]) {
         NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
         [self informDelegateLoadingFailed:error];
-    }
-	else
-	{
+    } else {
         RXMLElement *error = [root child:@"error"];
-        if ([error isValid])
-        {
-            NSString *code = [error attribute:@"code"];
+        if ([error isValid]) {
+            NSInteger code = [[error attribute:@"code"] integerValue];
             NSString *message = [error attribute:@"message"];
-            [self subsonicErrorCode:[code intValue] message:message];
-        }
-        else
-        {
+            [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
+        } else {
             __block NSUInteger rowCount = 0;
             __block NSUInteger sectionCount = 0;
             __block NSUInteger rowIndex = 0;
@@ -66,8 +64,7 @@
                 [self addRootFolderToTempCache:folderId name:name];
             }];
             
-            if (rowIndex > 0)
-            {
+            if (rowIndex > 0) {
                 [self addRootFolderIndexToCache:rowIndex count:sectionCount name:@"★"];
                 //DLog(@"Adding shortcut to index table, count %i", sectionCount);
             }
@@ -77,15 +74,13 @@
                 sectionCount = 0;
                 rowIndex = rowCount + 1;
                 
-                for (RXMLElement *artist in [e children:@"artist"])
-                {
+                for (RXMLElement *artist in [e children:@"artist"]) {
                     rowCount++;
                     sectionCount++;
                     
                     // Create the artist object and add it to the
                     // array for this section if not named .AppleDouble
-                    if (![[artist attribute:@"name"] isEqualToString:@".AppleDouble"])
-                    {
+                    if (![[artist attribute:@"name"] isEqualToString:@".AppleDouble"]) {
                         // Parse the top level folder
                         NSString *folderId = [artist attribute:@"id"];
                         NSString *name = [[artist attribute:@"name"] cleanString];
@@ -115,6 +110,137 @@
             [self informDelegateLoadingFinished];
         }
 	}
+}
+
+#pragma mark - Database Methods
+
+- (FMDatabaseQueue *)dbQueue {
+    return databaseS.albumListCacheDbQueue;
+}
+
+- (NSString *)tableModifier {
+    NSString *tableModifier = @"_all";
+    
+    if (self.selectedFolderId != nil && [self.selectedFolderId intValue] != -1) {
+        tableModifier = [NSString stringWithFormat:@"_%@", [self.selectedFolderId stringValue]];
+    }
+    
+    return tableModifier;
+}
+
+- (void)resetRootFolderTempTable {
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+         [db executeUpdate:@"DROP TABLE IF EXISTS rootFolderNameCacheTemp"];
+         [db executeUpdate:@"CREATE TEMPORARY TABLE rootFolderNameCacheTemp (id TEXT, name TEXT)"];
+     }];
+    
+    self.tempRecordCount = 0;
+}
+
+- (BOOL)clearRootFolderTempTable {
+    __block BOOL hadError;
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+         [db executeUpdate:@"DELETE FROM rootFolderNameCacheTemp"];
+         hadError = [db hadError];
+     }];
+    return !hadError;
+}
+
+- (NSUInteger)rootFolderUpdateCount {
+    __block NSNumber *folderCount = nil;
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+         NSString *query = [NSString stringWithFormat:@"DELETE FROM rootFolderCount%@", self.tableModifier];
+         [db executeUpdate:query];
+         
+         query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM rootFolderNameCache%@", self.tableModifier];
+         folderCount = @([db intForQuery:query]);
+         
+         query = [NSString stringWithFormat:@"INSERT INTO rootFolderCount%@ VALUES (?)", self.tableModifier];
+         [db executeUpdate:query, folderCount];
+         
+     }];
+    return [folderCount intValue];
+}
+
+- (BOOL)moveRootFolderTempTableRecordsToMainCache {
+    __block BOOL hadError;
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+         NSString *query = @"INSERT INTO rootFolderNameCache%@ SELECT * FROM rootFolderNameCacheTemp";
+         [db executeUpdate:[NSString stringWithFormat:query, self.tableModifier]];
+         hadError = [db hadError];
+     }];
+    
+    return !hadError;
+}
+
+- (void)resetRootFolderCache {
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+         // Delete the old tables
+         [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS rootFolderIndexCache%@", self.tableModifier]];
+         [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS rootFolderNameCache%@", self.tableModifier]];
+         [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS rootFolderCount%@", self.tableModifier]];
+         
+         // Create the new tables
+         NSString *query;
+         query = @"CREATE TABLE rootFolderIndexCache%@ (name TEXT PRIMARY KEY, position INTEGER, count INTEGER)";
+         [db executeUpdate:[NSString stringWithFormat:query, self.tableModifier]];
+         query = @"CREATE VIRTUAL TABLE rootFolderNameCache%@ USING FTS3 (id TEXT PRIMARY KEY, name TEXT, tokenize=porter)";
+         [db executeUpdate:[NSString stringWithFormat:query, self.tableModifier]];
+         query = @"CREATE INDEX name ON rootFolderNameCache%@ (name ASC)";
+         [db executeUpdate:[NSString stringWithFormat:query, self.tableModifier]];
+         query = @"CREATE TABLE rootFolderCount%@ (count INTEGER)";
+         [db executeUpdate:[NSString stringWithFormat:query, self.tableModifier]];
+     }];
+}
+
+- (BOOL)addRootFolderIndexToCache:(NSUInteger)position count:(NSUInteger)folderCount name:(NSString*)name {
+    __block BOOL hadError;
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+         NSString *query = [NSString stringWithFormat:@"INSERT INTO rootFolderIndexCache%@ VALUES (?, ?, ?)", self.tableModifier];
+         [db executeUpdate:query, name, @(position), @(folderCount)];
+         hadError = [db hadError];
+     }];
+    return !hadError;
+}
+
+- (BOOL)addRootFolderToTempCache:(NSString*)folderId name:(NSString*)name {
+    __block BOOL hadError = NO;
+    // Add the shortcut to the DB
+    if (folderId != nil && name != nil) {
+        [self.dbQueue inDatabase:^(FMDatabase *db) {
+             NSString *query = @"INSERT INTO rootFolderNameCacheTemp VALUES (?, ?)";
+             [db executeUpdate:query, folderId, name];
+             hadError = [db hadError];
+             self.tempRecordCount++;
+         }];
+    }
+    
+    // Flush temp records to main cache if necessary
+    if (self.tempRecordCount == TEMP_FLUSH_AMOUNT) {
+        if (![self moveRootFolderTempTableRecordsToMainCache]) {
+            hadError = YES;
+        }
+        
+        [self resetRootFolderTempTable];
+        
+        self.tempRecordCount = 0;
+    }
+    
+    return !hadError;
+}
+
+- (BOOL)addRootFolderToMainCache:(NSString*)folderId name:(NSString*)name {
+    __block BOOL hadError = NO;
+    // Add the shortcut to the DB
+    if (folderId != nil && name != nil) {
+        [self.dbQueue inDatabase:^(FMDatabase *db) {
+             NSString *query = [NSString stringWithFormat:@"INSERT INTO rootFolderNameCache%@ VALUES (?, ?)", self.tableModifier];
+             [db executeUpdate:query, folderId, name];
+             hadError = [db hadError];
+         }];
+    }
+    
+    return !hadError;
 }
 
 @end

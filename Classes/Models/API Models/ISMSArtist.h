@@ -14,11 +14,11 @@
 + (ISMSArtist *) artistWithName:(NSString *)theName andArtistId:(NSString *)theId;
 
 - (void)encodeWithCoder:(NSCoder *)encoder;
-- (id)initWithCoder:(NSCoder *)decoder;
+- (instancetype)initWithCoder:(NSCoder *)decoder;
 
-- (id)initWithAttributeDict:(NSDictionary *)attributeDict;
+- (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict;
 
-- (id)initWithTBXMLElement:(TBXMLElement *)element;
-- (id)initWithRXMLElement:(RXMLElement *)element;
+- (instancetype)initWithTBXMLElement:(TBXMLElement *)element;
+- (instancetype)initWithRXMLElement:(RXMLElement *)element;
 
 @end

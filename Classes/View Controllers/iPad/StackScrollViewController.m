@@ -21,7 +21,7 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 
 @synthesize slideViews, borderViews, viewControllersStack, slideStartPosition, viewAtLeft, viewAtLeft2, viewAtRight, viewAtRight2, viewAtLeftAtTouchBegan, viewAtRightAtTouchBegan, dragDirection, viewXPosition, displacementPosition, lastTouchPoint, positionOfViewAtLeftAtTouchBegan, positionOfViewAtRightAtTouchBegan, isSlidingEnabled;
 
-- (id)init
+- (instancetype)init
 {
 	if((self = [super init])) 
 	{

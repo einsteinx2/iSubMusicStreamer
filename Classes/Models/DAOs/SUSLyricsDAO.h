@@ -14,7 +14,7 @@
 @property (weak) NSObject <ISMSLoaderDelegate> *delegate;
 @property (strong) SUSLyricsLoader *loader;
 
-- (id)initWithDelegate:(NSObject <ISMSLoaderDelegate> *)theDelegate;
+- (instancetype)initWithDelegate:(NSObject <ISMSLoaderDelegate> *)theDelegate;
 - (NSString *)loadLyricsForArtist:(NSString *)artist andTitle:(NSString *)title;
 
 #pragma mark - Public DAO Methods

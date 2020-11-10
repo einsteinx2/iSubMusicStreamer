@@ -10,7 +10,7 @@
 
 @implementation BassParamEqValue
 
-- (id)initWithParameters:(BASS_DX8_PARAMEQ)params handle:(HFX)theHandle arrayIndex:(NSUInteger)index
+- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)params handle:(HFX)theHandle arrayIndex:(NSUInteger)index
 {
 	if ((self = [super init]))
 	{
@@ -27,7 +27,7 @@
 	return [[BassParamEqValue alloc] initWithParameters:params handle:theHandle arrayIndex:index];
 }
 
-- (id)initWithParameters:(BASS_DX8_PARAMEQ)params
+- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)params
 {
 	return [self initWithParameters:params handle:0 arrayIndex:NSUIntegerMax];
 }
@@ -37,7 +37,7 @@
 	return [[BassParamEqValue alloc] initWithParameters:params handle:0 arrayIndex:NSUIntegerMax];
 }
 
-- (id)initWithParameters:(BASS_DX8_PARAMEQ)params arrayIndex:(NSUInteger)index
+- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)params arrayIndex:(NSUInteger)index
 {
 	return [self initWithParameters:params handle:0 arrayIndex:index];
 }

@@ -20,7 +20,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
 
-- (id)initWithTableCell:(UITableViewCell*)cell
+- (instancetype)initWithTableCell:(UITableViewCell*)cell
 {
 	CGRect newFrame = cell.frame;
 	newFrame.origin.x = 0;

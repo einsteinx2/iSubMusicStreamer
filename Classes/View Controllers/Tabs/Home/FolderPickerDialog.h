@@ -62,7 +62,7 @@
 @property (readonly) UILabel *titleLabel;
 @property (readonly) ShuffleFolderPickerViewController *folderPicker;
 
-- (id)initWithFrame:(CGRect)frame;
+- (instancetype)initWithFrame:(CGRect)frame;
 - (void)dismiss:(BOOL)animated;
 - (void)show;
 @end

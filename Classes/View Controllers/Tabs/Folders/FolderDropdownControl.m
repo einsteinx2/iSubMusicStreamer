@@ -9,19 +9,15 @@
 #import "FolderDropdownControl.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface FolderDropdownControl ()
-{
+@interface FolderDropdownControl() {
     __strong NSDictionary *_folders;
 }
 @end
 
 @implementation FolderDropdownControl
 
-- (id)initWithFrame:(CGRect)frame 
-{
-    self = [super initWithFrame:frame];
-    if (self) 
-	{
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
 		_selectedFolderId = @-1;
 		_folders = [SUSRootFoldersDAO folderDropdownFolders];
 		_labels = [[NSMutableArray alloc] init];
@@ -67,43 +63,26 @@
 		[self addSubview:_dropdownButton];
 		
 		[self updateFolders];
-		
-		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFolders) name:ISMSNotification_ServerCheckPassed object:nil];
-		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serverSwitched) name:ISMSNotification_ServerSwitched object:nil];
     }
     return self;
 }
 
-/*- (void)serverSwitched
-{
-	[self selectFolderWithId:@-1];
-}
-
-- (void)dealloc
-{
-	[[NSNotificationCenter defaultCenter] removeObserver:self];	
-}*/
-
-NSInteger folderSort2(id keyVal1, id keyVal2, void *context)
-{
+NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
     NSString *folder1 = [(NSArray*)keyVal1 objectAtIndexSafe:1];
 	NSString *folder2 = [(NSArray*)keyVal2 objectAtIndexSafe:1];
 	return [folder1 caseInsensitiveCompare:folder2];
 }
 
-- (NSDictionary *)folders
-{
+- (NSDictionary *)folders {
 	return _folders;
 }
 
-- (void)setFolders:(NSDictionary *)namesAndIds
-{
+- (void)setFolders:(NSDictionary *)namesAndIds {
 	// Set the property
 	_folders = namesAndIds;
 	
 	// Remove old labels
-	for (UILabel *label in self.labels)
-	{
+	for (UILabel *label in self.labels) {
 		[label removeFromSuperview];
 	}
 	[self.labels removeAllObjects];
@@ -111,21 +90,12 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context)
 	self.sizeIncrease = _folders.count * 30.0f;
 	
 	NSMutableArray *sortedValues = [NSMutableArray arrayWithCapacity:_folders.count];
-	for (NSNumber *key in _folders.allKeys)
-	{
-		if ([key intValue] != -1)
-		{
+	for (NSNumber *key in _folders.allKeys) {
+		if ([key intValue] != -1) {
 			NSArray *keyValuePair = @[ key, _folders[key] ];
 			[sortedValues addObject:keyValuePair];
 		}
 	}
-	
-	/*// Sort by folder name - iOS 4.0+ only
-	 [sortedValues sortUsingComparator: ^NSComparisonResult(id keyVal1, id keyVal2) {
-	 NSString *folder1 = [(NSArray*)keyVal1 objectAtIndexSafe:1];
-	 NSString *folder2 = [(NSArray*)keyVal2 objectAtIndexSafe:1];
-	 return [folder1 caseInsensitiveCompare:folder2];
-	 }];*/
 	
 	// Sort by folder name
 	[sortedValues sortUsingFunction:folderSort2 context:NULL];
@@ -134,13 +104,8 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context)
 	NSArray *keyValuePair = @[@"-1", @"All Folders"];
 	[sortedValues insertObject:keyValuePair atIndex:0];
 	
-	//DLog(@"keys: %@", [folders allKeys]);
-	//NSMutableArray *keys = [NSMutableArray arrayWithArray:[[folders allKeys] sortedArrayUsingSelector:@selector(compare:)]];
-	//DLog(@"sorted keys: %@", keys);
-	
 	// Process the names and create the labels/buttons
-	for (int i = 0; i < [sortedValues count]; i++)
-	{
+	for (int i = 0; i < [sortedValues count]; i++) {
 		NSString *folder   = [[sortedValues objectAtIndexSafe:i] objectAtIndexSafe:1];
 		NSUInteger tag     = [[[sortedValues objectAtIndexSafe:i] objectAtIndexSafe:0] intValue];
 		CGRect labelFrame  = CGRectMake(0, (i + 1) * 30, self.frame.size.width, 30);
@@ -173,18 +138,13 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context)
 	}
 }
 
-- (void)toggleDropdown:(id)sender
-{
-	if (self.isOpen)
-	{
+- (void)toggleDropdown:(id)sender {
+	if (self.isOpen) {
         // Close it
-        [UIView animateWithDuration:.25 animations:^
-         {
+        [UIView animateWithDuration:.25 animations:^{
              self.height -= self.sizeIncrease;
              [self.delegate folderDropdownMoveViewsY:-self.sizeIncrease];
-         }
-        completion:^(BOOL finished)
-         {
+         } completion:^(BOOL finished) {
              [self.delegate folderDropdownViewsFinishedMoving];
          }];
 		
@@ -192,17 +152,12 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context)
 		[CATransaction setAnimationDuration:.25];
 		self.arrowImage.transform = CATransform3DMakeRotation((M_PI / 180.0) * 0.0f, 0.0f, 0.0f, 1.0f);
 		[CATransaction commit];
-    }
-    else
-    {
+    } else {
         // Open it
-		[UIView animateWithDuration:.25 animations:^
-		{
+		[UIView animateWithDuration:.25 animations:^{
 			self.height += self.sizeIncrease;
 			[self.delegate folderDropdownMoveViewsY:self.sizeIncrease];
-		} 
-		completion:^(BOOL finished)
-		{
+		} completion:^(BOOL finished) {
 			[self.delegate folderDropdownViewsFinishedMoving];
 		}];
 				
@@ -215,12 +170,9 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context)
 	self.isOpen = !self.isOpen;
     
     // Remove accessibility when not visible
-    for (UILabel *label in self.labels)
-    {
-        for (UIView *subview in label.subviews)
-        {
-            if ([subview isKindOfClass:[UIButton class]])
-            {
+    for (UILabel *label in self.labels) {
+        for (UIView *subview in label.subviews) {
+            if ([subview isKindOfClass:[UIButton class]]) {
                 subview.isAccessibilityElement = self.isOpen;
             }
         }
@@ -229,18 +181,14 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context)
     UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, nil);
 }
 
-- (void)closeDropdown
-{
-	if (self.isOpen)
-	{
+- (void)closeDropdown {
+	if (self.isOpen) {
 		[self toggleDropdown:nil];
 	}
 }
 
-- (void)closeDropdownFast
-{
-	if (self.isOpen)
-	{
+- (void)closeDropdownFast {
+	if (self.isOpen) {
 		self.isOpen = NO;
 		
 		self.height -= self.sizeIncrease;
@@ -252,8 +200,7 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context)
 	}
 }
 
-- (void)selectFolder:(id)sender
-{
+- (void)selectFolder:(id)sender {
 	UIButton *button = (UIButton *)sender;
 	UILabel  *label  = (UILabel *)button.superview;
 	
@@ -269,30 +216,22 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context)
 	[self.delegate folderDropdownSelectFolder:self.selectedFolderId];	
 }
 
-- (void)selectFolderWithId:(NSNumber *)folderId
-{
+- (void)selectFolderWithId:(NSNumber *)folderId {
 	self.selectedFolderId = folderId;
 	self.selectedFolderLabel.text = [self.folders objectForKey:self.selectedFolderId];
     self.dropdownButton.accessibilityLabel = self.selectedFolderLabel.text;
 }
 
-- (void)updateFolders
-{    
-	//[self.connection cancel];
-	//self.connection = nil;
-    
-    ISMSDropdownFolderLoader *loader = [ISMSDropdownFolderLoader loaderWithCallbackBlock:^(BOOL success, NSError *error, ISMSLoader *loader)
-    {
-        ISMSDropdownFolderLoader *theLoader = (ISMSDropdownFolderLoader *)loader;
-        if (success)
-        {
+- (void)updateFolders {
+    SUSDropdownFolderLoader *loader = [[SUSDropdownFolderLoader alloc] initWithCallbackBlock:^(BOOL success, NSError *error, SUSLoader *loader) {
+        SUSDropdownFolderLoader *theLoader = (SUSDropdownFolderLoader *)loader;
+        if (success) {
             self.folders = theLoader.updatedfolders;
             ALog(@"%@", self.folders);
             ALog(@"%@", theLoader.updatedfolders);
             [SUSRootFoldersDAO setFolderDropdownFolders:self.folders];
-        }
-        else
-        {
+        } else {
+            // TODO: Handle error
             // failed.  how to report this to the user?
         }
     }];

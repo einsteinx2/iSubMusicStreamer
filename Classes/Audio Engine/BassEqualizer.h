@@ -17,7 +17,7 @@
 @property (nonatomic) HCHANNEL channel;
 @property (nonatomic) float gain;
 
-- (id)initWithChannel:(HCHANNEL)theChannel;
+- (instancetype)initWithChannel:(HCHANNEL)theChannel;
 
 - (void)clearEqualizerValues;
 - (void)applyEqualizerValues;

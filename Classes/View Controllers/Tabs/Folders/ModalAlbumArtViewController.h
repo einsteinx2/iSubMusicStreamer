@@ -19,7 +19,7 @@
 @property (nonatomic) NSUInteger numberOfTracks;
 @property (nonatomic) NSUInteger albumLength;
 
-- (id)initWithAlbum:(ISMSAlbum *)theAlbum numberOfTracks:(NSUInteger)numTracks albumLength:(NSUInteger)length;
+- (instancetype)initWithAlbum:(ISMSAlbum *)theAlbum numberOfTracks:(NSUInteger)numTracks albumLength:(NSUInteger)length;
 - (IBAction)dismiss:(id)sender;
 
 @end

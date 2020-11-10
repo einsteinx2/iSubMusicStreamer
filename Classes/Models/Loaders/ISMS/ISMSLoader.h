@@ -27,8 +27,8 @@ typedef void (^LoaderCallback)(BOOL success, NSError *error, ISMSLoader *loader)
 + (id)loaderWithCallbackBlock:(LoaderCallback)theBlock;
 
 - (void)setup; // Override this
-- (id)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate;
-- (id)initWithCallbackBlock:(LoaderCallback)theBlock;
+- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate;
+- (instancetype)initWithCallbackBlock:(LoaderCallback)theBlock;
 
 - (void)startLoad;
 - (void)cancelLoad;

@@ -11,7 +11,7 @@
 
 @implementation SUSServerPlaylistsDAO
 
-- (id)initWithDelegate:(NSObject <ISMSLoaderDelegate> *)theDelegate
+- (instancetype)initWithDelegate:(NSObject <ISMSLoaderDelegate> *)theDelegate
 {
     if ((self = [super init]))
     {

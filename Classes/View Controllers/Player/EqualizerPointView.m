@@ -15,7 +15,7 @@
 @synthesize parentSize;
 @synthesize position, handle, eqValue;
 
-- (id)initWithCGPoint:(CGPoint)point parentSize:(CGSize)size
+- (instancetype)initWithCGPoint:(CGPoint)point parentSize:(CGSize)size
 {	
 	self = [super initWithFrame:CGRectMake(0, 0, myWidth, myHeight)];
     if (self) 
@@ -47,7 +47,7 @@
 	return .5 - (gain / (CGFloat)(MAX_GAIN * 2));
 }
 
-- (id)initWithEqValue:(BassParamEqValue *)value parentSize:(CGSize)size
+- (instancetype)initWithEqValue:(BassParamEqValue *)value parentSize:(CGSize)size
 {
 	self = [super initWithFrame:CGRectMake(0, 0, myWidth, myHeight)];
     if (self)

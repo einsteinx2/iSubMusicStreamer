@@ -10,7 +10,7 @@
 
 @implementation ISMSAlbum
 
-- (id)initWithPMSDictionary:(NSDictionary *)dictionary
+- (instancetype)initWithPMSDictionary:(NSDictionary *)dictionary
 {
 	if ((self = [super init]))
 	{
@@ -33,7 +33,7 @@
 	return self;
 }
 
-- (id)initWithTBXMLElement:(TBXMLElement *)element
+- (instancetype)initWithTBXMLElement:(TBXMLElement *)element
 {
     NSString *artistId = [[TBXML valueOfAttributeNamed:@"parent" forElement:element] cleanString];
     NSString *artistName = [[TBXML valueOfAttributeNamed:@"artist" forElement:element] cleanString];
@@ -41,7 +41,7 @@
 	return [self initWithTBXMLElement:element artistId:artistId artistName:artistName];
 }
 
-- (id)initWithTBXMLElement:(TBXMLElement *)element artistId:(NSString *)artistIdToSet artistName:(NSString *)artistNameToSet
+- (instancetype)initWithTBXMLElement:(TBXMLElement *)element artistId:(NSString *)artistIdToSet artistName:(NSString *)artistNameToSet
 {
 	if ((self = [super init]))
 	{
@@ -55,7 +55,7 @@
 	return self;
 }
 
-- (id)initWithRXMLElement:(RXMLElement *)element
+- (instancetype)initWithRXMLElement:(RXMLElement *)element
 {
     NSString *artistId = [[element attribute:@"parent"] cleanString];
     NSString *artistName = [[element attribute:@"artist"] cleanString];
@@ -63,7 +63,7 @@
     return [self initWithRXMLElement:element artistId:artistId artistName:artistName];
 }
 
-- (id)initWithRXMLElement:(RXMLElement *)element artistId:(NSString *)artistIdToSet artistName:(NSString *)artistNameToSet
+- (instancetype)initWithRXMLElement:(RXMLElement *)element artistId:(NSString *)artistIdToSet artistName:(NSString *)artistNameToSet
 {
     if ((self = [super init]))
     {
@@ -77,7 +77,7 @@
     return self;
 }
 
-- (id)initWithAttributeDict:(NSDictionary *)attributeDict
+- (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict
 {
 	if ((self = [super init]))
 	{
@@ -92,7 +92,7 @@
 }
 
 
-- (id)initWithAttributeDict:(NSDictionary *)attributeDict artist:(ISMSArtist *)myArtist
+- (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict artist:(ISMSArtist *)myArtist
 {
 	if ((self = [super init]))
 	{
@@ -120,7 +120,7 @@
 }
 
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
 	if ((self = [super init]))
 	{
@@ -135,7 +135,7 @@
 }
 
 
-- (id)copyWithZone:(NSZone *)zone
+- (instancetype)copyWithZone:(NSZone *)zone
 {
 	ISMSAlbum *anAlbum = [[ISMSAlbum alloc] init];
 	

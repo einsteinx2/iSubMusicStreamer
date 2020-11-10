@@ -17,16 +17,16 @@
 @property (copy) NSString *artistId;
 
 - (void)encodeWithCoder:(NSCoder *)encoder;
-- (id)initWithCoder:(NSCoder *)decoder;
+- (instancetype)initWithCoder:(NSCoder *)decoder;
 
-- (id)copyWithZone:(NSZone *)zone;
+- (instancetype)copyWithZone:(NSZone *)zone;
 
-- (id)initWithPMSDictionary:(NSDictionary *)dictionary;
+- (instancetype)initWithPMSDictionary:(NSDictionary *)dictionary;
 
-- (id)initWithAttributeDict:(NSDictionary *)attributeDict;
-- (id)initWithAttributeDict:(NSDictionary *)attributeDict artist:(ISMSArtist *)myArtist;
-- (id)initWithTBXMLElement:(TBXMLElement *)element;
-- (id)initWithTBXMLElement:(TBXMLElement *)element artistId:(NSString *)artistIdToSet artistName:(NSString *)artistNameToSet;
-- (id)initWithRXMLElement:(RXMLElement *)element;
-- (id)initWithRXMLElement:(RXMLElement *)element artistId:(NSString *)artistIdToSet artistName:(NSString *)artistNameToSet;
+- (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict;
+- (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict artist:(ISMSArtist *)myArtist;
+- (instancetype)initWithTBXMLElement:(TBXMLElement *)element;
+- (instancetype)initWithTBXMLElement:(TBXMLElement *)element artistId:(NSString *)artistIdToSet artistName:(NSString *)artistNameToSet;
+- (instancetype)initWithRXMLElement:(RXMLElement *)element;
+- (instancetype)initWithRXMLElement:(RXMLElement *)element artistId:(NSString *)artistIdToSet artistName:(NSString *)artistNameToSet;
 @end

@@ -6,8 +6,12 @@
 //  Copyright (c) 2013 Einstein Times Two Software. All rights reserved.
 //
 
-#import "ISMSScrobbleLoader.h"
+#import "SUSLoader.h"
 
-@interface SUSScrobbleLoader : ISMSScrobbleLoader
+@interface SUSScrobbleLoader : SUSLoader
+
+@property (nonatomic, strong) ISMSSong *aSong;
+@property BOOL isSubmission;
+@property (nonatomic, strong) NSString *lfmAuthUrl;
 
 @end

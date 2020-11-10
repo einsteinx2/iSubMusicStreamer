@@ -74,7 +74,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 @synthesize contentView = contentView_;
 @synthesize dialogDelegate = dialogDelegate_;
 
-- (id)initWithFrame:(CGRect)frame theme:(DDSocialDialogTheme)theme {
+- (instancetype)initWithFrame:(CGRect)frame theme:(DDSocialDialogTheme)theme {
 	
     if ((self = [super initWithFrame:CGRectZero])) {
         // Initialization code

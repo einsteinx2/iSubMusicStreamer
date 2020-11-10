@@ -22,7 +22,8 @@ typedef enum
     ISMSLoaderType_HLS,
     ISMSLoaderType_QuickAlbums,
     ISMSLoaderType_DropdownFolder,
-    ISMSLoaderType_ServerShuffle
+    ISMSLoaderType_ServerShuffle,
+    ISMSLoaderType_Scrobble
 } ISMSLoaderType;
 
 @class ISMSLoader;

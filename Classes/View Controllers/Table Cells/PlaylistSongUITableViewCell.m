@@ -13,7 +13,7 @@
 
 @synthesize coverArtView, cachedIndicatorView, numberLabel, nameScrollView, songNameLabel, artistNameLabel, mySong;
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier 
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier 
 {
     if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) 
 	{		

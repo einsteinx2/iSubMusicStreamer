@@ -16,8 +16,8 @@
 @property CGPoint position;
 @property CGSize parentSize;
 
-- (id)initWithCGPoint:(CGPoint)point parentSize:(CGSize)size;
-- (id)initWithEqValue:(BassParamEqValue *)value parentSize:(CGSize)size;
+- (instancetype)initWithCGPoint:(CGPoint)point parentSize:(CGSize)size;
+- (instancetype)initWithEqValue:(BassParamEqValue *)value parentSize:(CGSize)size;
 
 - (CGFloat)percentXFromFrequency:(NSUInteger)frequency;
 - (CGFloat)percentYFromGain:(CGFloat)gain;

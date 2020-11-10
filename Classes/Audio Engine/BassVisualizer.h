@@ -20,7 +20,7 @@ typedef enum
 @property BassVisualizerType type;
 @property HSTREAM channel;
 
-- (id)initWithChannel:(HCHANNEL)theChannel;
+- (instancetype)initWithChannel:(HCHANNEL)theChannel;
 
 - (void)readAudioData;
 - (short)lineSpecData:(NSUInteger)index;

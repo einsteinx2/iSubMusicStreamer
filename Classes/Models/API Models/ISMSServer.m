@@ -21,7 +21,7 @@
 }
 
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
 	if ((self = [super init]))
 	{

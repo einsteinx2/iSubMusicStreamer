@@ -26,8 +26,8 @@
 #endif
 @property (readonly) BOOL isCoverArtCached;
 
-- (id)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate;
-- (id)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate coverArtId:(NSString *)artId isLarge:(BOOL)large;
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate;
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate coverArtId:(NSString *)artId isLarge:(BOOL)large;
 
 - (void)downloadArtIfNotExists;
 

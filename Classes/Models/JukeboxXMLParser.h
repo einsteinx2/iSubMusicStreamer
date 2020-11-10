@@ -14,6 +14,6 @@
 
 @property (strong) NSMutableArray *listOfSongs;
 
-- (id) initXMLParser;
+- (instancetype) initXMLParser;
 
 @end

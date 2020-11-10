@@ -12,7 +12,7 @@
 @property (copy) NSString *playlistId;
 @property (copy) NSString *playlistName;
 
-- (id)initWithTBXMLElement:(TBXMLElement *)element;
-- (id)initWithRXMLElement:(RXMLElement *)element;
+- (instancetype)initWithTBXMLElement:(TBXMLElement *)element;
+- (instancetype)initWithRXMLElement:(RXMLElement *)element;
 
 @end

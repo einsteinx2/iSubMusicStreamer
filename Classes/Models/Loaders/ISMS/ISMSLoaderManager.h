@@ -9,7 +9,7 @@
 @protocol ISMSLoaderManager <NSObject>
 
 @required
-- (id)initWithDelegate:(NSObject <ISMSLoaderDelegate> *)theDelegate;
+- (instancetype)initWithDelegate:(NSObject <ISMSLoaderDelegate> *)theDelegate;
 - (void)startLoad;
 - (void)cancelLoad;
 

@@ -24,7 +24,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 @implementation BassEqualizer
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init]))
 	{
@@ -34,7 +34,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	return self;
 }
 
-- (id)initWithChannel:(HCHANNEL)theChannel
+- (instancetype)initWithChannel:(HCHANNEL)theChannel
 {
 	if ((self = [self init]))
 	{

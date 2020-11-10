@@ -47,7 +47,7 @@
     
 }
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self) 
@@ -58,7 +58,7 @@
     return self;
 }
 
-- (id)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate
+- (instancetype)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate
 {
 	self = [super init];
     if (self) 
@@ -70,7 +70,7 @@
 	return self;
 }
 
-- (id)initWithCallbackBlock:(LoaderCallback)theBlock
+- (instancetype)initWithCallbackBlock:(LoaderCallback)theBlock
 {
 	self = [super init];
     if (self)

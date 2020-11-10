@@ -13,7 +13,7 @@
 
 @property (nonatomic, strong) HTTPConnection *serverConnection;
 
-- (id)initWithConnection:(HTTPConnection *)serverConnection;
+- (instancetype)initWithConnection:(HTTPConnection *)serverConnection;
 - (void)startProxyDownload:(NSURL *)url;
 
 @end

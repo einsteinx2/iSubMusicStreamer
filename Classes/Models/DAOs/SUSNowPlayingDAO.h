@@ -18,7 +18,7 @@
 
 @property (readonly) NSUInteger count;
 
-- (id)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate;
+- (instancetype)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate;
 
 - (ISMSSong *)songForIndex:(NSUInteger)index;
 - (NSString *)playTimeForIndex:(NSUInteger)index;

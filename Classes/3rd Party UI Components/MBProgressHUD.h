@@ -156,7 +156,7 @@ typedef enum {
  * @param window The window instance that will provide the bounds for the HUD. Should probably be the same instance as
  * the HUD's superview (i.e., the window that the HUD will be added to).
  */
-- (id)initWithWindow:(UIWindow *)window;
+- (instancetype)initWithWindow:(UIWindow *)window;
 
 /**
  * A convenience constructor that initializes the HUD with the view's bounds. Calls the designated constructor with
@@ -165,7 +165,7 @@ typedef enum {
  * @param view The view instance that will provide the bounds for the HUD. Should probably be the same instance as
  * the HUD's superview (i.e., the view that the HUD will be added to).
  */
-- (id)initWithView:(UIView *)view;
+- (instancetype)initWithView:(UIView *)view;
 
 /**
  * The UIView (i.g., a UIIMageView) to be shown when the HUD is in MBProgressHUDModeCustomView.

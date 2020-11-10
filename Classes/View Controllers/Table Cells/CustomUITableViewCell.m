@@ -12,7 +12,7 @@
 @implementation CustomUITableViewCell
 @synthesize isOverlayShowing, overlayView, isIndexShowing, indexPath, isSearching, deleteToggleImage, isDelete;
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) 

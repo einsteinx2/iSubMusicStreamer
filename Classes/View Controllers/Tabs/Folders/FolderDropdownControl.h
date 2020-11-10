@@ -8,7 +8,7 @@
 
 #import "FolderDropdownDelegate.h"
 
-@interface FolderDropdownControl : UIView <NSXMLParserDelegate>
+@interface FolderDropdownControl : UIView
 
 @property (nonatomic, strong) CALayer *arrowImage;
 @property (nonatomic) CGFloat sizeIncrease;

@@ -11,7 +11,7 @@
 
 @implementation JukeboxXMLParser
 
-- (id)initXMLParser 
+- (instancetype)initXMLParser 
 {	
 	if ((self = [super init]))
 	{

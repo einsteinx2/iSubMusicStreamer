@@ -11,14 +11,14 @@
 
 @implementation SUSCoverArtDAO
 
-- (id)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate {
+- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate {
 	if ((self = [super init])) {
 		_delegate = theDelegate;
 	}
 	return self;
 }
 
-- (id)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate coverArtId:(NSString *)artId isLarge:(BOOL)large {
+- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate coverArtId:(NSString *)artId isLarge:(BOOL)large {
 	if ((self = [super init])) {
 		_delegate = theDelegate;
 		_isLarge = large;

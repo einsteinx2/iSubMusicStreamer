@@ -28,13 +28,13 @@
 @property float gain;
 @property float bandwidth;
 
-- (id)initWithParameters:(BASS_DX8_PARAMEQ)params handle:(HFX)theHandle arrayIndex:(NSUInteger)index;
+- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)params handle:(HFX)theHandle arrayIndex:(NSUInteger)index;
 + (BassParamEqValue *)valueWithParams:(BASS_DX8_PARAMEQ)params handle:(HFX)theHandle arrayIndex:(NSUInteger)index;
 
-- (id)initWithParameters:(BASS_DX8_PARAMEQ)parameters;
+- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)parameters;
 + (BassParamEqValue *)valueWithParams:(BASS_DX8_PARAMEQ)parameters;
 
-- (id)initWithParameters:(BASS_DX8_PARAMEQ)parameters arrayIndex:(NSUInteger)index;
+- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)parameters arrayIndex:(NSUInteger)index;
 + (BassParamEqValue *)valueWithParams:(BASS_DX8_PARAMEQ)parameters arrayIndex:(NSUInteger)index;
 
 BASS_DX8_PARAMEQ BASS_DX8_PARAMEQMake(float center, float gain, float bandwidth);

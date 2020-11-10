@@ -6,8 +6,11 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-#import "ISMSRootFoldersLoader.h"
+#import "SUSLoader.h"
 
-@interface SUSRootFoldersLoader : ISMSRootFoldersLoader
+@interface SUSRootFoldersLoader : SUSLoader
+
+@property NSUInteger tempRecordCount;
+@property (strong) NSNumber *selectedFolderId;
 
 @end

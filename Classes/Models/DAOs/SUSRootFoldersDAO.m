@@ -7,7 +7,7 @@
 //
 
 #import "SUSRootFoldersDAO.h"
-#import "ISMSRootFoldersLoader.h"
+#import "SUSRootFoldersLoader.h"
 
 @interface SUSRootFoldersDAO ()
 {
@@ -19,7 +19,7 @@
 
 #pragma mark - Lifecycle
 
-- (id)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate
+- (instancetype)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate
 {
     if ((self = [super init]))
 	{
@@ -360,7 +360,7 @@
 
 - (void)startLoad
 {
-    self.loader = [ISMSRootFoldersLoader loaderWithDelegate:self];
+    self.loader = [[SUSRootFoldersLoader alloc] initWithDelegate:self];
     self.loader.selectedFolderId = self.selectedFolderId;
     [self.loader startLoad];
 }

@@ -15,7 +15,7 @@
 
 #pragma mark - Lifecycle
 
-- (id)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate
+- (instancetype)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate
 {
     if ((self = [super init])) 
 	{

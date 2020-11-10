@@ -31,7 +31,7 @@
 
 
 
-- (id) initWithFrame:(CGRect)frame
+- (instancetype) initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self != nil)
@@ -61,7 +61,7 @@
 #pragma mark -
 #pragma mark NSCoding
 
-- (id) initWithCoder:(NSCoder *)decoder
+- (instancetype) initWithCoder:(NSCoder *)decoder
 {
     self = [super initWithCoder:decoder];
     if (self != nil) 

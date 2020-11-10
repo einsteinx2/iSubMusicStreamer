@@ -15,48 +15,30 @@
     return ISMSLoaderType_DropdownFolder;
 }
 
-- (NSURLRequest *)createRequest
-{
+- (NSURLRequest *)createRequest {
     return [NSMutableURLRequest requestWithSUSAction:@"getMusicFolders" parameters:nil];
 }
 
-- (void)processResponse
-{
-    // TODO: Refactor with RaptureXML
-    NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:self.receivedData];
-    [xmlParser setDelegate:self];
-    [xmlParser parse];
-}
-
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
-  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName
-	attributes:(NSDictionary *)attributeDict
-{
-	if([elementName isEqualToString:@"musicFolders"])
-	{
-		self.updatedfolders = [[NSMutableDictionary alloc] init];
-		
-		[self.updatedfolders setObject:@"All Folders" forKey:@-1];
-	}
-	else if ([elementName isEqualToString:@"musicFolder"])
-	{
-		NSNumber *folderId = @([[attributeDict objectForKey:@"id"] intValue]);
-		NSString *folderName = [attributeDict objectForKey:@"name"];
-		
-		[self.updatedfolders setObject:folderName forKey:folderId];
-	}
-}
-
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
-  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
-{
-	if([elementName isEqualToString:@"musicFolders"])
-	{
-        [self informDelegateLoadingFinished];
-	}
-    else
-    {
-        [self informDelegateLoadingFailed:nil];
+- (void)processResponse {
+    RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
+    if (![root isValid]) {
+        NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
+        [self informDelegateLoadingFailed:error];
+    } else {
+        RXMLElement *error = [root child:@"error"];
+        if ([error isValid]) {
+            NSInteger code = [[error attribute:@"code"] integerValue];
+            NSString *message = [error attribute:@"message"];
+            [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
+        } else {
+            NSMutableDictionary *musicFolders = [@{@-1: @"All Folders"} mutableCopy];
+            [root iterate:@"musicFolders.musicFolder" usingBlock:^(RXMLElement *e) {
+                NSNumber *folderId = @([[e attribute:@"id"] intValue]);
+                musicFolders[folderId] = [e attribute:@"name"];
+            }];
+            self.updatedfolders = musicFolders;
+            [self informDelegateLoadingFinished];
+        }
     }
 }
 

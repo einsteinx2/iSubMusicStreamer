@@ -21,6 +21,6 @@
 
 - (void)sendChatMessage:(NSString *)message;
 
-- (id)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate;
+- (instancetype)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate;
 
 @end

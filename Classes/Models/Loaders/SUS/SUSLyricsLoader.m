@@ -19,10 +19,7 @@
     return [NSMutableURLRequest requestWithSUSAction:@"getLyrics" parameters:@{@"artist": n2N(self.artist), @"title": n2N(self.title)}];
 }
 
-- (void)processResponse
-{
-    // Parse the data
-    //
+- (void)processResponse {
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
     if (![root isValid]) {
         NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];

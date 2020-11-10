@@ -31,7 +31,7 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 
 #pragma mark - Lifecycle
 
-- (id)initWithConnection:(HTTPConnection *)serverConnection
+- (instancetype)initWithConnection:(HTTPConnection *)serverConnection
 {
     if ((self = [super init]))
     {

@@ -13,7 +13,7 @@
 @property (strong) UIButton *queueButton;
 
 + (CellOverlay*)cellOverlayWithTableCell:(UITableViewCell*)cell;
-- (id)initWithTableCell:(UITableViewCell*)cell;
+- (instancetype)initWithTableCell:(UITableViewCell*)cell;
 
 - (void)enableButtons;
 

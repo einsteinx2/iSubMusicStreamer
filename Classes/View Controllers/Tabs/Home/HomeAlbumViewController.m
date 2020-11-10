@@ -24,7 +24,7 @@
     return YES;
 }
 
-- (id)initWithNibName:(NSString *)n bundle:(NSBundle *)b;
+- (instancetype)initWithNibName:(NSString *)n bundle:(NSBundle *)b;
 {
     self = [super initWithNibName:n bundle:b];
 	

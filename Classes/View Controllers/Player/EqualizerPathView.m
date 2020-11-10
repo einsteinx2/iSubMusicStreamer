@@ -22,7 +22,7 @@ static CGColorRef fillColorOn;
 	fillColorOn  = CGColorRetain([[UIColor alloc] initWithRed:98./255. green:180./255. blue:223./255. alpha:.50].CGColor);
 }
 
-- (id)init
+- (instancetype)init
 {
 	if ((self = [super init]))
 	{
@@ -31,7 +31,7 @@ static CGColorRef fillColorOn;
 	return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
 	if ((self = [super initWithCoder:aDecoder]))
 	{
@@ -40,7 +40,7 @@ static CGColorRef fillColorOn;
 	return self;
 }
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame]))
 	{
