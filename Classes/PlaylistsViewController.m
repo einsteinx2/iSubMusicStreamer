@@ -1550,15 +1550,7 @@ static NSString *kName_Error = @"error";
 		else
 			cell.artistNameLabel.text = aSong.artist;
 		
-        if (aSong.isFullyCached)
-        {
-            cell.backgroundView = [[UIView alloc] init];
-            cell.backgroundView.backgroundColor = [viewObjectsS currentLightColor];
-        }
-        else
-        {
-            cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-        }
+        cell.cachedIndicatorView.hidden = !aSong.isFullyCached;
 		
 		return cell;
 	}
@@ -1592,7 +1584,6 @@ static NSString *kName_Error = @"error";
 		{
 			cell.playlistCountLabel.text = [NSString stringWithFormat:@"%li songs", (long)cell.playlistCount];
 		}
-		cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		
 		return cell;
@@ -1619,7 +1610,6 @@ static NSString *kName_Error = @"error";
 		cell.playlistNameLabel.backgroundColor = [UIColor clearColor];
         SUSServerPlaylist *playlist = [self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:indexPath.row];        
         cell.playlistNameLabel.text = playlist.playlistName;
-		cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];		
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		
 		return cell;		

@@ -6,10 +6,10 @@
 
 // Thanks to Emanuele Vulcano, Kevin Ballard/Eridius, Ryandjohnson, Matt Brown, etc.
 
-#include <sys/socket.h> // Per msqr
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
+#import <sys/socket.h> // Per msqr
+#import <sys/sysctl.h>
+#import <net/if.h>
+#import <net/if_dl.h>
 
 #import "UIDevice+Hardware.h"
 

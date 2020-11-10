@@ -329,9 +329,7 @@
 	//DLog(@"name: %@", name);
 		
 		cell.coverArtView.coverArtId = coverArtId;
-		
-		cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-		
+				
 		return cell;
 	}
 	else
@@ -372,19 +370,11 @@
 		
 		if (settingsS.isOfflineMode)
 		{
-			cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
+            cell.backgroundView = [[UIView alloc] init];
 		}
 		else
 		{
-			if (aSong.isFullyCached)
-            {
-                cell.backgroundView = [[UIView alloc] init];
-                cell.backgroundView.backgroundColor = [viewObjectsS currentLightColor];
-            }
-            else
-            {
-                cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-            }
+            cell.cachedIndicatorView.hidden = !aSong.isFullyCached;
 		}
 		
 		return cell;

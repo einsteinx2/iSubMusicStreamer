@@ -302,9 +302,7 @@
 	NSString *name = [listOfArtists objectAtIndexSafe:indexPath.row];
 	
 	[cell.artistNameLabel setText:name];
-    
-    cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-    
+        
 	return cell;
 }
 

@@ -419,15 +419,7 @@ static NSString *kName_Error = @"error";
 	
 	cell.coverArtView.coverArtId = aSong.coverArtId;
 	
-    if (aSong.isFullyCached)
-    {
-        cell.backgroundView = [[UIView alloc] init];
-        cell.backgroundView.backgroundColor = [viewObjectsS currentLightColor];
-    }
-    else
-    {
-        cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-    }
+    cell.cachedIndicatorView.hidden = !aSong.isFullyCached;
 	
 	[cell.numberLabel setText:[NSString stringWithFormat:@"%li", (long)(indexPath.row + 1)]];
 	[cell.songNameLabel setText:aSong.title];

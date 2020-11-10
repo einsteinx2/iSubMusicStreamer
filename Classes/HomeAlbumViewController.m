@@ -156,9 +156,6 @@
 		[cell.albumNameLabel setText:anAlbum.title];
 		[cell.artistNameLabel setText:anAlbum.artistName];
 		
-		// Setup cell backgrond color
-		cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-		
 		return cell;
 	}
 	else if (indexPath.row == self.listOfAlbums.count)
@@ -167,10 +164,6 @@
 		static NSString *cellIdentifier = @"HomeAlbumLoadCell";
 		UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 
-		// Set background color
-		cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-		cell.textLabel.backgroundColor = cell.backgroundView.backgroundColor;
-		
 		if (self.isMoreAlbums)
 		{
 			cell.textLabel.text = @"Loading more results...";

@@ -476,7 +476,6 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 		}
 		
 		[cell.albumNameLabel setText:name];
-		cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
         
 		return cell;
 	}
@@ -515,9 +514,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 			cell.songDurationLabel.text = [NSString formatTime:[aSong.duration floatValue]];
 		else
 			cell.songDurationLabel.text = @"";
-		
-		cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];	
-		
+				
 		return cell;
 	}
 }

@@ -328,9 +328,6 @@
 		
 		[cell.albumNameLabel setText:anAlbum.title];
         
-		// Setup cell backgrond color
-        cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-		
 		return cell;
 	}
 	else
@@ -378,15 +375,7 @@
 		else
 			cell.songDurationLabel.text = @"";
 		
-        if (aSong.isFullyCached)
-        {
-            cell.backgroundView = [[UIView alloc] init];
-            cell.backgroundView.backgroundColor = [viewObjectsS currentLightColor];
-        }
-        else
-        {
-            cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-        }
+        cell.cachedIndicatorView.hidden = !aSong.isFullyCached;
 		
 		return cell;
 	}

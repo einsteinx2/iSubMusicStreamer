@@ -392,9 +392,7 @@
 		detailsLabel.frame = CGRectMake(5, 27, 266, 18);
 	}
 	serverType.frame = CGRectMake(271, 3, 44, 44);
-	
-	cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-	
+		
 	return cell;
 }
 

@@ -11,14 +11,14 @@
 
 @implementation SongUITableViewCell
 
-@synthesize mySong, trackNumberLabel, songNameScrollView, songNameLabel, artistNameLabel, songDurationLabel, nowPlayingImageView;
+@synthesize mySong, cachedIndicatorView, trackNumberLabel, songNameScrollView, songNameLabel, artistNameLabel, songDurationLabel, nowPlayingImageView;
 
 #pragma mark - Lifecycle
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier 
 {
     if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) 
-	{		
+	{
 		trackNumberLabel = [[UILabel alloc] init];
 		trackNumberLabel.frame = CGRectMake(0, 4, 30, 41);
 		trackNumberLabel.backgroundColor = [UIColor clearColor];
@@ -27,6 +27,9 @@
 		trackNumberLabel.adjustsFontSizeToFitWidth = YES;
 		trackNumberLabel.minimumScaleFactor = 16.0 / trackNumberLabel.font.pointSize;
 		[self.contentView addSubview:trackNumberLabel];
+        
+        cachedIndicatorView = [[CellCachedIndicatorView alloc] initWithSize:15];
+        [self.contentView addSubview:cachedIndicatorView];
 		
 		nowPlayingImageView = [[UIImageView alloc] initWithImage:self.nowPlayingImageBlack];
 		nowPlayingImageView.center = trackNumberLabel.center;

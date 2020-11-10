@@ -71,7 +71,7 @@
 		
 	// Add the pull to refresh view
 	self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
-	self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
+//	self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
 	[self.tableView addSubview:self.refreshHeaderView];
 	
 	if (IS_IPAD())
@@ -599,7 +599,6 @@
 	cell.myArtist = anArtist;
 	
 	[cell.artistNameLabel setText:anArtist.name];
-	cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
 		
 	return cell;
 }

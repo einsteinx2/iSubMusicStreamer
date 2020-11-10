@@ -85,8 +85,6 @@
     }
 	
 	cell.textLabel.text = [cellNames objectAtIndexSafe:indexPath.row];
-	cell.textLabel.backgroundColor = [UIColor clearColor];
-	cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
     
     return cell;
 }

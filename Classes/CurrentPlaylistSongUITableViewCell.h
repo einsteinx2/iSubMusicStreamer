@@ -7,10 +7,13 @@
 //
 
 #import "CustomUITableViewCell.h"
+#import "CellCachedIndicatorView.h"
 
-@class AsynchronousImageView;
+@class AsynchronousImageView, CellCachedIndicatorView;
+
 @interface CurrentPlaylistSongUITableViewCell : CustomUITableViewCell 
 
+@property (strong) CellCachedIndicatorView *cachedIndicatorView;
 @property (strong) AsynchronousImageView *coverArtView;
 @property (strong) UILabel *numberLabel;
 @property (strong) UIScrollView *nameScrollView;

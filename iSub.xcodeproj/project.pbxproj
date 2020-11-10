@@ -327,6 +327,8 @@
 		539148D12559EB1D004AAC3F /* FlurryEmpty.m in Sources */ = {isa = PBXBuildFile; fileRef = 539148CE2559EB1D004AAC3F /* FlurryEmpty.m */; };
 		539148E02559FEFD004AAC3F /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 539148DF2559FEFD004AAC3F /* Launch Screen.storyboard */; };
 		539148E12559FEFD004AAC3F /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 539148DF2559FEFD004AAC3F /* Launch Screen.storyboard */; };
+		539148F0255A0D56004AAC3F /* CellCachedIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 539148EF255A0D56004AAC3F /* CellCachedIndicatorView.m */; };
+		539148F1255A0D56004AAC3F /* CellCachedIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 539148EF255A0D56004AAC3F /* CellCachedIndicatorView.m */; };
 		539796E41162B68800F41D8B /* AllAlbumsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 539796E31162B68800F41D8B /* AllAlbumsViewController.m */; };
 		539797FA1162D3F100F41D8B /* AllAlbumsUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 539797F91162D3F100F41D8B /* AllAlbumsUITableViewCell.m */; };
 		539797FE1162D4D200F41D8B /* AllAlbumsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 539797FD1162D4D200F41D8B /* AllAlbumsViewController.xib */; };
@@ -1628,6 +1630,8 @@
 		539148CE2559EB1D004AAC3F /* FlurryEmpty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlurryEmpty.m; sourceTree = "<group>"; };
 		539148CF2559EB1D004AAC3F /* FlurryCCPA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryCCPA.h; sourceTree = "<group>"; };
 		539148DF2559FEFD004AAC3F /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		539148EE255A0D56004AAC3F /* CellCachedIndicatorView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CellCachedIndicatorView.h; sourceTree = "<group>"; };
+		539148EF255A0D56004AAC3F /* CellCachedIndicatorView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CellCachedIndicatorView.m; sourceTree = "<group>"; };
 		539796E21162B68800F41D8B /* AllAlbumsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllAlbumsViewController.h; sourceTree = "<group>"; };
 		539796E31162B68800F41D8B /* AllAlbumsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AllAlbumsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		539797F81162D3F100F41D8B /* AllAlbumsUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AllAlbumsUITableViewCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -2653,6 +2657,8 @@
 				5398FA4314A44590002808E1 /* CustomUITableViewCell.m */,
 				53A77FCB128E38E7005D2D65 /* CellOverlay.h */,
 				53A77FCC128E38E7005D2D65 /* CellOverlay.m */,
+				539148EE255A0D56004AAC3F /* CellCachedIndicatorView.h */,
+				539148EF255A0D56004AAC3F /* CellCachedIndicatorView.m */,
 				534E43B51155659A000B4134 /* AlbumUITableViewCell.h */,
 				534E43B61155659A000B4134 /* AlbumUITableViewCell.m */,
 				539797F81162D3F100F41D8B /* AllAlbumsUITableViewCell.h */,
@@ -4943,6 +4949,7 @@
 				53FE355E1EA961540058B925 /* UIImageView+Reflection.m in Sources */,
 				53523D9411CD61F7006AEA48 /* GenresArtistViewController.m in Sources */,
 				53FE358B1EA961540058B925 /* EX2Reachability.m in Sources */,
+				539148F0255A0D56004AAC3F /* CellCachedIndicatorView.m in Sources */,
 				53FE37341EA961720058B925 /* ISMSScrobbleLoader.m in Sources */,
 				53FE39311EA961ED0058B925 /* HTTPDynamicFileResponse.m in Sources */,
 				53FE38AA1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
@@ -5279,6 +5286,7 @@
 				53FE35601EA961540058B925 /* UIImageView+Reflection.m in Sources */,
 				53BC27DE139AF0DD00A825F1 /* GenresArtistViewController.m in Sources */,
 				53FE358D1EA961540058B925 /* EX2Reachability.m in Sources */,
+				539148F1255A0D56004AAC3F /* CellCachedIndicatorView.m in Sources */,
 				53FE37361EA961720058B925 /* ISMSScrobbleLoader.m in Sources */,
 				53FE39331EA961ED0058B925 /* HTTPDynamicFileResponse.m in Sources */,
 				53FE38AC1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
@@ -5713,7 +5721,7 @@
 					"\"$(SRCROOT)/Frameworks/Frameworks\"",
 					/usr/include/libxml2,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Classes\"",
 					"\"$(SRCROOT)\"",
@@ -5941,7 +5949,7 @@
 					"\"$(SRCROOT)/Frameworks/Frameworks\"",
 					/usr/include/libxml2,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Classes\"",
 					"\"$(SRCROOT)\"",
@@ -6010,7 +6018,7 @@
 					"\"$(SRCROOT)/Frameworks/Frameworks\"",
 					/usr/include/libxml2,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Classes\"",
 					"\"$(SRCROOT)\"",

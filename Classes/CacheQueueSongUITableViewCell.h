@@ -6,7 +6,7 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#include "CustomUITableViewCell.h"
+#import "CustomUITableViewCell.h"
 
 @class AsynchronousImageView;
 

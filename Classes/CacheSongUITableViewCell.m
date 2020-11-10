@@ -27,6 +27,7 @@
 		trackNumberLabel.font = ISMSBoldFont(22);
 		trackNumberLabel.adjustsFontSizeToFitWidth = YES;
 		trackNumberLabel.minimumScaleFactor = 16.0 / trackNumberLabel.font.pointSize;
+        trackNumberLabel.textColor = [UIColor labelColor];
 		[self.contentView addSubview:trackNumberLabel];
 		
 		songNameScrollView = [[UIScrollView alloc] init];
@@ -42,13 +43,14 @@
 		songNameLabel.backgroundColor = [UIColor clearColor];
 		songNameLabel.textAlignment = NSTextAlignmentLeft;
 		songNameLabel.font = ISMSSongFont;
+        songNameLabel.textColor = [UIColor labelColor];
 		[songNameScrollView addSubview:songNameLabel];
 		
 		artistNameLabel = [[UILabel alloc] init];
 		artistNameLabel.backgroundColor = [UIColor clearColor];
 		artistNameLabel.textAlignment = NSTextAlignmentLeft;
 		artistNameLabel.font = ISMSRegularFont(13);
-		artistNameLabel.textColor = [UIColor colorWithWhite:.4 alpha:1];
+        artistNameLabel.textColor = [UIColor labelColor];
 		[songNameScrollView addSubview:artistNameLabel];
 		
 		songDurationLabel = [[UILabel alloc] init];
@@ -59,7 +61,7 @@
 		songDurationLabel.font = ISMSRegularFont(16);
 		songDurationLabel.adjustsFontSizeToFitWidth = YES;
 		songDurationLabel.minimumScaleFactor = 12.0 / songDurationLabel.font.pointSize;
-		songDurationLabel.textColor = [UIColor grayColor];
+        songDurationLabel.textColor = [UIColor systemGrayColor];
 		[self.contentView addSubview:songDurationLabel];
 	}
 	

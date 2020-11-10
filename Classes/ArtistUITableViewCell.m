@@ -29,9 +29,9 @@
 		[self.contentView addSubview:artistNameScrollView];
 		
 		artistNameLabel = [[UILabel alloc] init];
-		artistNameLabel.backgroundColor = [UIColor clearColor];
 		artistNameLabel.textAlignment = NSTextAlignmentLeft; // default
 		artistNameLabel.font = ISMSArtistFont;
+        artistNameLabel.textColor = [UIColor labelColor];
 		[artistNameScrollView addSubview:artistNameLabel];
 	}
 	

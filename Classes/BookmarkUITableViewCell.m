@@ -27,7 +27,7 @@
 		_bookmarkNameLabel.backgroundColor = [UIColor blackColor];
 		_bookmarkNameLabel.alpha = .65;
 		_bookmarkNameLabel.font = ISMSBoldFont(10);
-		_bookmarkNameLabel.textColor = [UIColor whiteColor];
+		_bookmarkNameLabel.textColor = [UIColor labelColor];
 		[self.contentView addSubview:_bookmarkNameLabel];
 		
 		_nameScrollView = [[UIScrollView alloc] init];
@@ -44,12 +44,14 @@
 		_songNameLabel.backgroundColor = [UIColor clearColor];
 		_songNameLabel.textAlignment = NSTextAlignmentLeft; // default
 		_songNameLabel.font = ISMSBoldFont(20);
+        _songNameLabel.textColor = [UIColor labelColor];
 		[_nameScrollView addSubview:_songNameLabel];
 		
 		_artistNameLabel = [[UILabel alloc] init];
 		_artistNameLabel.backgroundColor = [UIColor clearColor];
 		_artistNameLabel.textAlignment = NSTextAlignmentLeft; // default
 		_artistNameLabel.font = ISMSRegularFont(15);
+        _artistNameLabel.textColor = [UIColor labelColor];
 		[_nameScrollView addSubview:_artistNameLabel];
 	}
 	

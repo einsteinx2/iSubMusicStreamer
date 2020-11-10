@@ -98,8 +98,6 @@
 
 - (void)enableCells;
 
-- (UIView *)createCellBackground:(NSUInteger)row;
-
 @end
 
 #endif

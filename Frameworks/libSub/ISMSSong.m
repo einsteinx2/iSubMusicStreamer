@@ -7,7 +7,7 @@
 //
 
 #import "ISMSSong.h"
-#include <sys/stat.h>
+#import <sys/stat.h>
 
 #ifdef IOS
 #import <MediaPlayer/MediaPlayer.h>

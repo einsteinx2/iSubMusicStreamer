@@ -182,9 +182,6 @@
 		cell = [[GenresGenreUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 	}
 
-    // Configure the cell...
-    cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-	
 	if (settingsS.isOfflineMode)
 	{
 		cell.genreNameLabel.text = [databaseS.songCacheDbQueue stringForQuery:@"SELECT genre FROM genres WHERE ROWID = ?", @(indexPath.row + 1)];

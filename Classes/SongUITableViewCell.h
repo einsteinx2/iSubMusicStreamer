@@ -7,6 +7,7 @@
 //
 
 #import "CustomUITableViewCell.h"
+#import "CellCachedIndicatorView.h"
 
 @class Song;
 
@@ -14,6 +15,7 @@
 
 @property (copy) ISMSSong *mySong;
 
+@property (strong) CellCachedIndicatorView *cachedIndicatorView;
 @property (strong) UILabel *trackNumberLabel;
 @property (strong) UIScrollView *songNameScrollView;
 @property (strong) UILabel *songNameLabel;

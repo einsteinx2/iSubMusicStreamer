@@ -1,5 +1,5 @@
 //
-//  AllAlbumsUITableViewCell.m
+//  AllSongsUITableViewCell.m
 //  iSub
 //
 //  Created by Ben Baron on 3/30/10.
@@ -12,7 +12,7 @@
 
 @implementation AllSongsUITableViewCell
 
-@synthesize md5, coverArtView, songNameScrollView, songNameLabel, artistNameLabel;
+@synthesize md5, cachedIndicatorView, coverArtView, songNameScrollView, songNameLabel, artistNameLabel;
 
 #pragma mark - Lifecycle
 
@@ -26,6 +26,9 @@
 		coverArtView = [[AsynchronousImageView alloc] init];
 		coverArtView.isLarge = NO;
 		[self.contentView addSubview:coverArtView];
+        
+        cachedIndicatorView = [[CellCachedIndicatorView alloc] initWithSize:20];
+        [self.contentView addSubview:cachedIndicatorView];
 		
 		songNameScrollView = [[UIScrollView alloc] init];
 		songNameScrollView.frame = CGRectMake(65, 0, 255, 60);
@@ -40,12 +43,14 @@
 		songNameLabel.backgroundColor = [UIColor clearColor];
 		songNameLabel.textAlignment = NSTextAlignmentLeft; // default
 		songNameLabel.font = ISMSSongFont;
+        songNameLabel.textColor = [UIColor labelColor];
 		[songNameScrollView addSubview:songNameLabel];
 		
 		artistNameLabel = [[UILabel alloc] init];
 		artistNameLabel.backgroundColor = [UIColor clearColor];
 		artistNameLabel.textAlignment = NSTextAlignmentLeft; // default
 		artistNameLabel.font = ISMSRegularFont(15);
+        artistNameLabel.textColor = [UIColor labelColor];
 		[songNameScrollView addSubview:artistNameLabel];
 	}
 	

@@ -504,9 +504,7 @@
 	}];
 		
 	cell.coverArtView.coverArtId = aSong.coverArtId;
-    
-    cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-	
+    	
 	[cell.bookmarkNameLabel setText:[NSString stringWithFormat:@"%@ - %@", name, [NSString formatTime:(float)position]]];
 	
 	[cell.songNameLabel setText:aSong.title];

@@ -11,7 +11,7 @@
 
 @implementation CurrentPlaylistSongUITableViewCell
 
-@synthesize coverArtView, numberLabel, nameScrollView, songNameLabel, artistNameLabel, nowPlayingImageView;
+@synthesize cachedIndicatorView, coverArtView, numberLabel, nameScrollView, songNameLabel, artistNameLabel, nowPlayingImageView;
 
 #pragma mark - Lifecycle
 
@@ -23,6 +23,9 @@
 		coverArtView.frame = CGRectMake(0, 0, 60, 60);
 		coverArtView.isLarge = NO;
 		[self.contentView addSubview:coverArtView];
+        
+        cachedIndicatorView = [[CellCachedIndicatorView alloc] initWithSize:20];
+        [self.contentView addSubview:cachedIndicatorView];
 		
 		numberLabel = [[UILabel alloc] init];
 		numberLabel.frame = CGRectMake(62, 0, 40, 60);

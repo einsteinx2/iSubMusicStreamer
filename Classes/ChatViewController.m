@@ -363,9 +363,7 @@
 	ISMSChatMessage *aChatMessage = [dataModel.chatMessages objectAtIndexSafe:indexPath.row];
 	cell.userNameLabel.text = [NSString stringWithFormat:@"%@ - %@", aChatMessage.user, [self formatDate:aChatMessage.timestamp]];
 	cell.messageLabel.text = aChatMessage.message;
-	
-	cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-	
+		
     return cell;
 }
 

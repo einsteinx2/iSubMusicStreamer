@@ -11,9 +11,9 @@
 #import "FoldersViewController.h"
 #import <CoreFoundation/CoreFoundation.h>
 #import <SystemConfiguration/SCNetworkReachability.h>
-#include <netinet/in.h> 
-#include <netdb.h>
-#include <arpa/inet.h>
+#import <netinet/in.h>
+#import <netdb.h>
+#import <arpa/inet.h>
 #import "IntroViewController.h"
 #import "iPadRootViewController.h"
 #import "MenuViewController.h"

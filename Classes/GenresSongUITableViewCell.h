@@ -7,11 +7,13 @@
 //
 
 #import "CustomUITableViewCell.h"
+#import "CellCachedIndicatorView.h"
 
 @interface GenresSongUITableViewCell : CustomUITableViewCell 
 
 @property (copy) NSString *md5;
 
+@property (strong) CellCachedIndicatorView *cachedIndicatorView;
 @property (strong) UILabel *trackNumberLabel;
 @property (strong) UIScrollView *songNameScrollView;
 @property (strong) UILabel *songNameLabel;

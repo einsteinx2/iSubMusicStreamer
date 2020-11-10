@@ -247,20 +247,6 @@
 	appDelegateS.mainTabBarController.moreNavigationController.delegate = self;
 }
 
-- (UIView *)createCellBackground:(NSUInteger)row
-{
-    if (IS_IOS7())
-    {
-        return [[UIView alloc] init];
-    }
-    else
-    {
-        UIView *backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = self.lightNormal;
-        return backgroundView;
-    }
-}
-
 #pragma mark - Memory management
 
 - (void)didReceiveMemoryWarning

@@ -11,7 +11,7 @@
 
 @implementation PlaylistSongUITableViewCell
 
-@synthesize coverArtView, numberLabel, nameScrollView, songNameLabel, artistNameLabel, mySong;
+@synthesize coverArtView, cachedIndicatorView, numberLabel, nameScrollView, songNameLabel, artistNameLabel, mySong;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier 
 {
@@ -20,6 +20,9 @@
 		coverArtView = [[AsynchronousImageView alloc] init];
 		coverArtView.isLarge = NO;
 		[self.contentView addSubview:coverArtView];
+        
+        cachedIndicatorView = [[CellCachedIndicatorView alloc] initWithSize:20];
+        [self.contentView addSubview:cachedIndicatorView];
 		
 		numberLabel = [[UILabel alloc] init];
 		numberLabel.backgroundColor = [UIColor clearColor];

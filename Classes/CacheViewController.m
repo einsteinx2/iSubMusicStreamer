@@ -1247,9 +1247,7 @@
 		
 		// Set up the cell...
 		[cell.artistNameLabel setText:name];
-		
-		cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-		
+				
 		return cell;
 	}
 	else
@@ -1282,9 +1280,7 @@
 		}
 		
 		cell.coverArtView.coverArtId = aSong.coverArtId;
-		
-		cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-		
+				
 		if (indexPath.row == 0)
 		{
 			if ([aSong isEqualToSong:cacheQueueManagerS.currentQueuedSong] && cacheQueueManagerS.isQueueDownloading)

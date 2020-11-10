@@ -7,6 +7,7 @@
 //
 
 #import "CustomUITableViewCell.h"
+#import "CellCachedIndicatorView.h"
 
 @class AsynchronousImageView, Song;
 
@@ -14,6 +15,7 @@
 
 @property (strong) ISMSSong *mySong;
 
+@property (strong) CellCachedIndicatorView *cachedIndicatorView;
 @property (strong) AsynchronousImageView *coverArtView;
 @property (strong) UILabel *numberLabel;
 @property (strong) UIScrollView *nameScrollView;

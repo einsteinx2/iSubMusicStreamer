@@ -11,7 +11,7 @@
 
 @implementation GenresSongUITableViewCell
 
-@synthesize md5, trackNumberLabel, songNameScrollView, songNameLabel, artistNameLabel, songDurationLabel;
+@synthesize md5, cachedIndicatorView, trackNumberLabel, songNameScrollView, songNameLabel, artistNameLabel, songDurationLabel;
 
 #pragma mark - Lifecycle
 
@@ -28,6 +28,9 @@
 		trackNumberLabel.minimumScaleFactor = 16.0 / trackNumberLabel.font.pointSize;
 		[self.contentView addSubview:trackNumberLabel];
 		
+        cachedIndicatorView = [[CellCachedIndicatorView alloc] initWithSize:15];
+        [self.contentView addSubview:cachedIndicatorView];
+        
 		songNameScrollView = [[UIScrollView alloc] init];
 		songNameScrollView.frame = CGRectMake(35, 0, 235, 50);
 		songNameScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;

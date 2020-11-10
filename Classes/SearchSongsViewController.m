@@ -184,11 +184,7 @@
 {
 	// This is the last cell and there could be more results, load the next 20 results;
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"NoReuse"];
-	
-	// Set background color
-	cell.backgroundView = [viewObjectsS createCellBackground:row];
-	cell.textLabel.backgroundColor = cell.backgroundView.backgroundColor;
-	
+		
 	if (isMoreResults)
 	{
 		cell.textLabel.text = @"Loading more results...";
@@ -234,7 +230,6 @@
 			cell.myArtist = anArtist;
 			
 			[cell.artistNameLabel setText:anArtist.name];
-			cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
 			
 			return cell;
 		}
@@ -263,10 +258,6 @@
 			cell.coverArtView.coverArtId = anAlbum.coverArtId;
 			
 			[cell.albumNameLabel setText:anAlbum.title];
-			
-			
-			// Setup cell backgrond color
-			cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
 			
 			return cell;
 		}

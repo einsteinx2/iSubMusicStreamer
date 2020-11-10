@@ -613,15 +613,7 @@
 	
 	cell.coverArtView.coverArtId = aSong.coverArtId;
     
-    if (aSong.isFullyCached)
-    {
-        cell.backgroundView = [[UIView alloc] init];
-        cell.backgroundView.backgroundColor = [viewObjectsS currentLightColor];
-    }
-    else
-    {
-        cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-    }
+    cell.cachedIndicatorView.hidden = !aSong.isFullyCached;
 	
 	[cell.songNameLabel setText:aSong.title];
 	if (aSong.album)

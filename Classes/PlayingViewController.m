@@ -172,9 +172,6 @@
 	// Set the cover art
 	cell.coverArtView.coverArtId = aSong.coverArtId;
 	
-	// Create the background view
-	cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-	
 	// Set the title label
 	NSString *playTime = [self.dataModel playTimeForIndex:indexPath.row];
 	NSString *username = [self.dataModel usernameForIndex:indexPath.row];

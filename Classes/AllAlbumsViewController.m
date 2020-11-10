@@ -503,9 +503,7 @@
 	cell.myArtist = [ISMSArtist artistWithName:anAlbum.artistName andArtistId:anAlbum.artistId];
 	
 	cell.coverArtView.coverArtId = anAlbum.coverArtId;
-	
-	cell.backgroundView = [viewObjectsS createCellBackground:indexPath.row];
-		
+			
 	[cell.albumNameLabel setText:anAlbum.title];
 	[cell.artistNameLabel setText:anAlbum.artistName];
 	
