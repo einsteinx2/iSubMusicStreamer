@@ -12,28 +12,12 @@
 
 + (id)loaderWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate
 {
-	if ([settingsS.serverType isEqualToString:SUBSONIC] || [settingsS.serverType isEqualToString:UBUNTU_ONE])
-	{
-		return [[SUSDropdownFolderLoader alloc] initWithDelegate:theDelegate];
-	}
-	else if ([settingsS.serverType isEqualToString:WAVEBOX])
-	{
-		return [[WBDropdownFolderLoader alloc] initWithDelegate:theDelegate];
-	}
-	return nil;
+    return [[SUSDropdownFolderLoader alloc] initWithDelegate:theDelegate];
 }
 
 + (id)loaderWithCallbackBlock:(LoaderCallback)theBlock
 {
-	if ([settingsS.serverType isEqualToString:SUBSONIC] || [settingsS.serverType isEqualToString:UBUNTU_ONE])
-	{
-		return [[SUSDropdownFolderLoader alloc] initWithCallbackBlock:theBlock];
-	}
-	else if ([settingsS.serverType isEqualToString:WAVEBOX])
-	{
-		return [[WBDropdownFolderLoader alloc] initWithCallbackBlock:theBlock];
-	}
-	return nil;
+    return [[SUSDropdownFolderLoader alloc] initWithCallbackBlock:theBlock];
 }
 
 

@@ -66,58 +66,43 @@ LOG_LEVEL_ISUB_DEFAULT
 	{
 		[db executeUpdate:@"PRAGMA cache_size = 1"];
 		
-        // If this is a WaveBox server, simply let the reset method take care of all this.
-        if ([settingsS.serverType isEqualToString:WAVEBOX])
+        // Create these tables if they don't already exist.
+        ALog(@"This is not a WaveBox server.  Checking for folder cache tables and creating as necessary...");
+        if (![db tableExists:@"albumListCache"])
         {
-            ALog(@"This is a WaveBox server.  Creating temporary tables for folder caches.");
-            [db executeUpdate:@"CREATE TEMPORARY TABLE albumListCache (id TEXT PRIMARY KEY, data BLOB)"];
-            [db executeUpdate:@"CREATE TEMPORARY TABLE albumsCache (folderId TEXT, title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
-            [db executeUpdate:[NSString stringWithFormat:@"CREATE TEMPORARY TABLE songsCache (folderId TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
-            [db executeUpdate:@"CREATE TEMPORARY TABLE albumsCacheCount (folderId TEXT, count INTEGER)"];
-            [db executeUpdate:@"CREATE TEMPORARY TABLE songsCacheCount (folderId TEXT, count INTEGER)"];
-            [db executeUpdate:@"CREATE TEMPORARY TABLE folderLength (folderId TEXT, length INTEGER)"];
+            [db executeUpdate:@"CREATE TABLE albumListCache (id TEXT PRIMARY KEY, data BLOB)"];
+        }
+        if (![db tableExists:@"albumsCache"])
+        {
+            [db executeUpdate:@"CREATE TABLE albumsCache (folderId TEXT, title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
+            [db executeUpdate:@"CREATE INDEX albumsFolderId ON albumsCache (folderId)"];
         }
         
-        // Otherwise, we should create these tables if they don't already exist.
-        else
+        if (![db tableExists:@"songsCache"])
         {
-            ALog(@"This is not a WaveBox server.  Checking for folder cache tables and creating as necessary...");
-            if (![db tableExists:@"albumListCache"])
-            {
-                [db executeUpdate:@"CREATE TABLE albumListCache (id TEXT PRIMARY KEY, data BLOB)"];
-            }
-            if (![db tableExists:@"albumsCache"]) 
-            {
-                [db executeUpdate:@"CREATE TABLE albumsCache (folderId TEXT, title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
-                [db executeUpdate:@"CREATE INDEX albumsFolderId ON albumsCache (folderId)"];
-            }
-            
-            if (![db tableExists:@"songsCache"]) 
-            {
-                [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE songsCache (folderId TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
-                [db executeUpdate:@"CREATE INDEX songsFolderId ON songsCache (folderId)"];
-            }
-            else if(![db columnExists:@"discNumber" inTableWithName:@"songsCache"])
-            {
-                BOOL success = [db executeUpdate:@"ALTER TABLE songsCache ADD COLUMN discNumber INTEGER"];
-                ALog(@"songsCache has no discNumber and add worked: %d", success);
-            }
-            
-            if (![db tableExists:@"albumsCacheCount"])
-            {
-                [db executeUpdate:@"CREATE TABLE albumsCacheCount (folderId TEXT, count INTEGER)"];
-                [db executeUpdate:@"CREATE INDEX albumsCacheCountFolderId ON albumsCacheCount (folderId)"];
-            }
-            if (![db tableExists:@"songsCacheCount"])
-            {
-                [db executeUpdate:@"CREATE TABLE songsCacheCount (folderId TEXT, count INTEGER)"];
-                [db executeUpdate:@"CREATE INDEX songsCacheCountFolderId ON songsCacheCount (folderId)"];
-            }
-            if (![db tableExists:@"folderLength"])
-            {
-                [db executeUpdate:@"CREATE TABLE folderLength (folderId TEXT, length INTEGER)"];
-                [db executeUpdate:@"CREATE INDEX folderLengthFolderId ON folderLength (folderId)"];
-            }
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE songsCache (folderId TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
+            [db executeUpdate:@"CREATE INDEX songsFolderId ON songsCache (folderId)"];
+        }
+        else if(![db columnExists:@"discNumber" inTableWithName:@"songsCache"])
+        {
+            BOOL success = [db executeUpdate:@"ALTER TABLE songsCache ADD COLUMN discNumber INTEGER"];
+            ALog(@"songsCache has no discNumber and add worked: %d", success);
+        }
+        
+        if (![db tableExists:@"albumsCacheCount"])
+        {
+            [db executeUpdate:@"CREATE TABLE albumsCacheCount (folderId TEXT, count INTEGER)"];
+            [db executeUpdate:@"CREATE INDEX albumsCacheCountFolderId ON albumsCacheCount (folderId)"];
+        }
+        if (![db tableExists:@"songsCacheCount"])
+        {
+            [db executeUpdate:@"CREATE TABLE songsCacheCount (folderId TEXT, count INTEGER)"];
+            [db executeUpdate:@"CREATE INDEX songsCacheCountFolderId ON songsCacheCount (folderId)"];
+        }
+        if (![db tableExists:@"folderLength"])
+        {
+            [db executeUpdate:@"CREATE TABLE folderLength (folderId TEXT, length INTEGER)"];
+            [db executeUpdate:@"CREATE INDEX folderLengthFolderId ON folderLength (folderId)"];
         }
 	}];
 	
@@ -679,34 +664,13 @@ LOG_LEVEL_ISUB_DEFAULT
             [db executeUpdate:@"DROP TABLE folderLength"];
         }
         
-        NSString *tableCreateType = @"CREATE TABLE";
-        
-        if ([settingsS.serverType isEqualToString:WAVEBOX])
-        {
-            tableCreateType = @"CREATE TEMPORARY TABLE";
-        }
-		
-        ALog(@"AlbumListCache table type is: %@", tableCreateType);
-        
 		// Create the tables and indexes
-        [db executeUpdate:[NSString stringWithFormat:@"%@ albumListCache (id TEXT PRIMARY KEY, data BLOB)", tableCreateType]];
-        [db executeUpdate:[NSString stringWithFormat:@"%@ albumsCache (folderId TEXT, title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)", tableCreateType]];
-        [db executeUpdate:[NSString stringWithFormat:@"%@ songsCache (folderId TEXT, %@)", tableCreateType, [ISMSSong standardSongColumnSchema]]];
-        [db executeUpdate:[NSString stringWithFormat:@"%@ albumsCacheCount (folderId TEXT, count INTEGER)", tableCreateType]];
-        [db executeUpdate:[NSString stringWithFormat:@"%@ songsCacheCount (folderId TEXT, count INTEGER)", tableCreateType]];
-        [db executeUpdate:[NSString stringWithFormat:@"%@ folderLength (folderId TEXT, length INTEGER)", tableCreateType]];
-        
-        
-        // Since we're using temporary tables for WaveBox, we really don't care about creating indexes for those tables and this can potentially affect the speed of our inserts.
-        
-        if (![settingsS.serverType isEqualToString:WAVEBOX])
-        {
-            [db executeUpdate:@"CREATE INDEX albumsFolderId ON albumsCache (folderId)"];
-            [db executeUpdate:@"CREATE INDEX songsFolderId ON songsCache (folderId)"];
-            [db executeUpdate:@"CREATE INDEX albumsCacheCountFolderId ON albumsCacheCount (folderId)"];
-            [db executeUpdate:@"CREATE INDEX songsCacheCountFolderId ON songsCacheCount (folderId)"];
-            [db executeUpdate:@"CREATE INDEX folderLengthFolderId ON folderLength (folderId)"];
-        }
+        [db executeUpdate:@"CREATE TABLE albumListCache (id TEXT PRIMARY KEY, data BLOB)"];
+        [db executeUpdate:@"CREATE TABLE albumsCache (folderId TEXT, title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
+        [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE songsCache (folderId TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
+        [db executeUpdate:@"CREATE TABLE albumsCacheCount (folderId TEXT, count INTEGER)"];
+        [db executeUpdate:@"CREATE TABLE songsCacheCount (folderId TEXT, count INTEGER)"];
+        [db executeUpdate:@"CREATE TABLE folderLength (folderId TEXT, length INTEGER)"];
 	}];
 }
 

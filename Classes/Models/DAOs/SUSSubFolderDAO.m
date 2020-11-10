@@ -7,7 +7,7 @@
 //
 
 #import "SUSSubFolderDAO.h"
-#import "ISMSSubFolderLoader.h"
+#import "SUSSubFolderLoader.h"
 #import "MusicSingleton.h"
 
 @interface SUSSubFolderDAO (Private) 
@@ -22,8 +22,7 @@
 
 #pragma mark - Lifecycle
 
-- (void)setup
-{
+- (void)setup {
     _albumStartRow = [self findFirstAlbumRow];
     _songStartRow = [self findFirstSongRow];
     _albumsCount = [self findAlbumsCount];
@@ -35,27 +34,22 @@
 
 - (id)init
 {
-    if ((self = [super init])) 
-	{
+    if ((self = [super init])) {
 		[self setup];
     }
     return self;
 }
 
-- (id)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate
-{
-    if ((self = [super init])) 
-	{
+- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegateNew> *)theDelegate {
+    if ((self = [super init])) {
 		self.delegate = theDelegate;
 		[self setup];
     }
     return self;
 }
 
-- (id)initWithDelegate:(id<ISMSLoaderDelegate>)theDelegate andId:(NSString *)folderId andArtist:(ISMSArtist *)anArtist
-{
-	if ((self = [super init])) 
-	{
+- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegateNew> *)theDelegate andId:(NSString *)folderId andArtist:(ISMSArtist *)anArtist {
+	if ((self = [super init])) {
 		self.delegate = theDelegate;
         self.myId = folderId;
 		self.myArtist = anArtist;
@@ -64,41 +58,34 @@
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
 	[_loader cancelLoad];
 	_loader.delegate = nil;
 }
 
-- (FMDatabaseQueue *)dbQueue
-{
+- (FMDatabaseQueue *)dbQueue {
 	return databaseS.albumListCacheDbQueue;
 }
 
 #pragma mark - Private DB Methods
 
-- (NSUInteger)findFirstAlbumRow
-{
+- (NSUInteger)findFirstAlbumRow {
     return [self.dbQueue intForQuery:@"SELECT rowid FROM albumsCache WHERE folderId = ? LIMIT 1", [self.myId md5]];
 }
 
-- (NSUInteger)findFirstSongRow
-{
+- (NSUInteger)findFirstSongRow {
     return [self.dbQueue intForQuery:@"SELECT rowid FROM songsCache WHERE folderId = ? LIMIT 1", [self.myId md5]];
 }
 
-- (NSUInteger)findAlbumsCount
-{
+- (NSUInteger)findAlbumsCount {
     return [self.dbQueue intForQuery:@"SELECT count FROM albumsCacheCount WHERE folderId = ?", [self.myId md5]];
 }
 
-- (NSUInteger)findSongsCount
-{
+- (NSUInteger)findSongsCount {
     return [self.dbQueue intForQuery:@"SELECT count FROM songsCacheCount WHERE folderId = ?", [self.myId md5]];
 }
 
-- (NSUInteger)findFolderLength
-{
+- (NSUInteger)findFolderLength {
     return [self.dbQueue intForQuery:@"SELECT length FROM folderLength WHERE folderId = ?", [self.myId md5]];
 }
 
@@ -106,16 +93,13 @@
 {
     __block ISMSAlbum *anAlbum = nil;
 	
-	[self.dbQueue inDatabase:^(FMDatabase *db)
-	{
+	[self.dbQueue inDatabase:^(FMDatabase *db) {
 		FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM albumsCache WHERE ROWID = %lu", (unsigned long)row]];
 		[result next];
-		if ([db hadError]) 
-		{
-		//DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-		}
-		else
-		{
+		if ([db hadError]) {
+            // TODO: Handle error
+            //DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+		} else {
 			anAlbum = [[ISMSAlbum alloc] init];
 			anAlbum.title = [result stringForColumn:@"title"];
 			anAlbum.albumId = [result stringForColumn:@"albumId"];
@@ -129,29 +113,22 @@
 	return anAlbum;
 }
 
-- (ISMSSong *)findSongForDbRow:(NSUInteger)row
-{ 
+- (ISMSSong *)findSongForDbRow:(NSUInteger)row {
 	return [ISMSSong songFromDbRow:row-1 inTable:@"songsCache" inDatabaseQueue:self.dbQueue];
 }
 
-- (ISMSSong *)playSongAtDbRow:(NSUInteger)row
-{
+- (ISMSSong *)playSongAtDbRow:(NSUInteger)row {
 	// Clear the current playlist
-	if (settingsS.isJukeboxEnabled)
-	{
+	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
 		[jukeboxS jukeboxClearRemotePlaylist];
-	}
-	else
-	{
+	} else {
 		[databaseS resetCurrentPlaylistDb];
 	}
 	
 	// Add the songs to the playlist
-	for (NSInteger i = self.albumsCount; i < self.totalCount; i++)
-	{
-		@autoreleasepool 
-		{
+	for (NSInteger i = self.albumsCount; i < self.totalCount; i++) {
+		@autoreleasepool  {
 			ISMSSong *aSong = [self songForTableViewRow:i];
 			//DLog(@"song parentId: %@", aSong.parentId);
 			//DLog(@"adding song to playlist: %@", aSong);
@@ -170,47 +147,39 @@
 
 #pragma mark - Public DAO Methods
 
-- (BOOL)hasLoaded
-{
+- (BOOL)hasLoaded {
     if (self.albumsCount > 0 || self.songsCount > 0)
         return YES;
     
     return NO;
 }
 
-- (NSUInteger)totalCount
-{
+- (NSUInteger)totalCount {
     return self.albumsCount + self.songsCount;
 }
 
-- (ISMSAlbum *)albumForTableViewRow:(NSUInteger)row
-{
+- (ISMSAlbum *)albumForTableViewRow:(NSUInteger)row {
     NSUInteger dbRow = self.albumStartRow + row;
     
     return [self findAlbumForDbRow:dbRow];
 }
 
-- (ISMSSong *)songForTableViewRow:(NSUInteger)row
-{
+- (ISMSSong *)songForTableViewRow:(NSUInteger)row {
     NSUInteger dbRow = self.songStartRow + (row - self.albumsCount);
     
     return [self findSongForDbRow:dbRow];
 }
 
-- (ISMSSong *)playSongAtTableViewRow:(NSUInteger)row
-{
+- (ISMSSong *)playSongAtTableViewRow:(NSUInteger)row {
 	NSUInteger dbRow = self.songStartRow + (row - self.albumsCount);
 	return [self playSongAtDbRow:dbRow];
 }
 
-- (NSArray *)sectionInfo
-{
+- (NSArray *)sectionInfo {
 	// Create the section index
-	if (self.albumsCount > 10)
-	{
+	if (self.albumsCount > 10) {
 		__block NSArray *sectionInfo;
-		[self.dbQueue inDatabase:^(FMDatabase *db)
-		{
+		[self.dbQueue inDatabase:^(FMDatabase *db) {
 			[db executeUpdate:@"DROP TABLE IF EXISTS albumIndex"];
 			[db executeUpdate:@"CREATE TEMPORARY TABLE albumIndex (title TEXT)"];
 			
@@ -229,21 +198,18 @@
 
 #pragma mark - Loader Manager Methods
 
-- (void)restartLoad
-{
+- (void)restartLoad {
     [self startLoad];
 }
 
-- (void)startLoad
-{	
-    self.loader = [ISMSSubFolderLoader loaderWithDelegate:self];
+- (void)startLoad {
+    self.loader = [[SUSSubFolderLoader alloc] initWithDelegate:self];
     self.loader.myId = self.myId;
     self.loader.myArtist = self.myArtist;
     [self.loader startLoad];
 }
 
-- (void)cancelLoad
-{
+- (void)cancelLoad {
     [self.loader cancelLoad];
 	self.loader.delegate = nil;
     self.loader = nil;
@@ -251,26 +217,22 @@
 
 #pragma mark - Loader Delegate Methods
 
-- (void)loadingFailed:(ISMSLoader*)theLoader withError:(NSError *)error
-{
+- (void)loadingFailed:(ISMSLoader*)theLoader withError:(NSError *)error {
 	self.loader.delegate = nil;
 	self.loader = nil;
 	
-	if ([self.delegate respondsToSelector:@selector(loadingFailed:withError:)])
-	{
+	if ([self.delegate respondsToSelector:@selector(loadingFailed:withError:)]) {
 		[self.delegate loadingFailed:nil withError:error];
 	}
 }
 
-- (void)loadingFinished:(ISMSLoader*)theLoader
-{
+- (void)loadingFinished:(ISMSLoader*)theLoader {
 	self.loader.delegate = nil;
 	self.loader = nil;
 	
     [self setup];
 	
-	if ([self.delegate respondsToSelector:@selector(loadingFinished:)])
-	{
+	if ([self.delegate respondsToSelector:@selector(loadingFinished:)]) {
 		[self.delegate loadingFinished:nil];
 	}
 }

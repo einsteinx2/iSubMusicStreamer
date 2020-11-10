@@ -10,7 +10,6 @@
 #import "NSError+ISMSError.h"
 #import "DatabaseSingleton.h"
 #import "NSMutableURLRequest+SUS.h"
-#import "NSMutableURLRequest+PMS.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -73,28 +72,20 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.fileHandle = [NSFileHandle fileHandleForWritingAtPath:self.filePath];
 	}
     
-	if ([settingsS.serverType isEqualToString:SUBSONIC] || [settingsS.serverType isEqualToString:UBUNTU_ONE])
-	{
-		NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(self.mySong.songId), @"id", nil];
-		[parameters setObject:@"true" forKey:@"estimateContentLength"];
-		
-		if (self.maxBitrateSetting == NSIntegerMax)
-		{
-			self.maxBitrateSetting = settingsS.currentMaxBitrate;
-		}
-		
-		if (self.maxBitrateSetting != 0)
-		{
-			NSString *maxBitRate = [[NSString alloc] initWithFormat:@"%ld", (long)self.maxBitrateSetting];
-			[parameters setObject:n2N(maxBitRate) forKey:@"maxBitRate"];
-		}
-		self.request = [NSMutableURLRequest requestWithSUSAction:@"stream" parameters:parameters byteOffset:(NSUInteger)self.byteOffset];
-	}
-	else if ([settingsS.serverType isEqualToString:WAVEBOX])
-	{
-        NSDictionary *parameters = [NSDictionary dictionaryWithObject:self.mySong.songId forKey:@"id"];
-		self.request = [NSMutableURLRequest requestWithPMSAction:@"stream" parameters:parameters byteOffset:(NSUInteger)self.byteOffset];
-	}
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(self.mySong.songId), @"id", nil];
+    [parameters setObject:@"true" forKey:@"estimateContentLength"];
+    
+    if (self.maxBitrateSetting == NSIntegerMax)
+    {
+        self.maxBitrateSetting = settingsS.currentMaxBitrate;
+    }
+    
+    if (self.maxBitrateSetting != 0)
+    {
+        NSString *maxBitRate = [[NSString alloc] initWithFormat:@"%ld", (long)self.maxBitrateSetting];
+        [parameters setObject:n2N(maxBitRate) forKey:@"maxBitRate"];
+    }
+    self.request = [NSMutableURLRequest requestWithSUSAction:@"stream" parameters:parameters byteOffset:(NSUInteger)self.byteOffset];
     
 	if (!self.request)
 	{

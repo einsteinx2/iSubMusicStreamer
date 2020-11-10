@@ -81,6 +81,10 @@
 		531D3A04255AB5F6000CB0DF /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 531D3A00255AB5F6000CB0DF /* MainWindow-iPad.xib */; };
 		531D3A16255ABA20000CB0DF /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A15255ABA20000CB0DF /* DDSocialDialog.m */; };
 		531D3A17255ABA20000CB0DF /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A15255ABA20000CB0DF /* DDSocialDialog.m */; };
+		531D3A1F255ABAAC000CB0DF /* ISMSLoaderNew.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A1E255ABAAC000CB0DF /* ISMSLoaderNew.m */; };
+		531D3A20255ABAAC000CB0DF /* ISMSLoaderNew.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A1E255ABAAC000CB0DF /* ISMSLoaderNew.m */; };
+		531D3A25255ABC9C000CB0DF /* ISMSURLSessionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A24255ABC9C000CB0DF /* ISMSURLSessionDelegate.m */; };
+		531D3A26255ABC9C000CB0DF /* ISMSURLSessionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A24255ABC9C000CB0DF /* ISMSURLSessionDelegate.m */; };
 		531F166E126FA2E600F524BD /* HomeAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 531F166D126FA2E600F524BD /* HomeAlbumViewController.m */; };
 		5324C6C613345D75004E6C79 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5324C6C513345D75004E6C79 /* OBSlider.m */; };
 		5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
@@ -151,14 +155,8 @@
 		533C65A815ABB9BD003EAF29 /* IntroViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65AC15ABB9BD003EAF29 /* IntroViewController.xib */; };
 		533C65AD15ABB9C6003EAF29 /* ServerListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65B315ABB9C6003EAF29 /* ServerListViewController.xib */; };
 		533C65AF15ABB9C6003EAF29 /* ServerListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65B315ABB9C6003EAF29 /* ServerListViewController.xib */; };
-		533C65B415ABB9C9003EAF29 /* ServerTypeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65BA15ABB9C9003EAF29 /* ServerTypeViewController.xib */; };
-		533C65B615ABB9C9003EAF29 /* ServerTypeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65BA15ABB9C9003EAF29 /* ServerTypeViewController.xib */; };
 		533C65BB15ABB9CC003EAF29 /* SubsonicServerEditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65C115ABB9CC003EAF29 /* SubsonicServerEditViewController.xib */; };
 		533C65BD15ABB9CC003EAF29 /* SubsonicServerEditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65C115ABB9CC003EAF29 /* SubsonicServerEditViewController.xib */; };
-		533C65C215ABB9D0003EAF29 /* UbuntuServerEditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65C815ABB9D0003EAF29 /* UbuntuServerEditViewController.xib */; };
-		533C65C415ABB9D0003EAF29 /* UbuntuServerEditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65C815ABB9D0003EAF29 /* UbuntuServerEditViewController.xib */; };
-		533C65C915ABB9D3003EAF29 /* PMSServerEditViewControllerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65CD15ABB9D3003EAF29 /* PMSServerEditViewControllerViewController.xib */; };
-		533C65CB15ABB9D3003EAF29 /* PMSServerEditViewControllerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65CD15ABB9D3003EAF29 /* PMSServerEditViewControllerViewController.xib */; };
 		533C65CE15ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65D415ABB9D6003EAF29 /* SettingsTabViewController.xib */; };
 		533C65D015ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65D415ABB9D6003EAF29 /* SettingsTabViewController.xib */; };
 		533C65D515ABB9F0003EAF29 /* DebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65DB15ABB9F0003EAF29 /* DebugViewController.xib */; };
@@ -240,8 +238,6 @@
 		535CB22512E0014A00389DA1 /* server-subsonic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CB22112E0014A00389DA1 /* server-subsonic@2x.png */; };
 		535CB22612E0014A00389DA1 /* server-ubuntu.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CB22212E0014A00389DA1 /* server-ubuntu.png */; };
 		535CB22712E0014A00389DA1 /* server-ubuntu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CB22312E0014A00389DA1 /* server-ubuntu@2x.png */; };
-		535CB23212E0027800389DA1 /* ServerTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 535CB23012E0027800389DA1 /* ServerTypeViewController.m */; };
-		535CB2A212E2348A00389DA1 /* UbuntuServerEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 535CB2A012E2348A00389DA1 /* UbuntuServerEditViewController.m */; };
 		535CB2A812E2372B00389DA1 /* ubuntu-add-server.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CB2A612E2372B00389DA1 /* ubuntu-add-server.png */; };
 		535CB2A912E2372B00389DA1 /* ubuntu-add-server@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CB2A712E2372B00389DA1 /* ubuntu-add-server@2x.png */; };
 		535CB48A12E2664700389DA1 /* server-button-subsonic.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CB48612E2664700389DA1 /* server-button-subsonic.png */; };
@@ -279,8 +275,6 @@
 		536D620B1144495400DFCE56 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 536D620A1144495400DFCE56 /* SystemConfiguration.framework */; };
 		536D624411444E4600DFCE56 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 536D624311444E4600DFCE56 /* Icon.png */; };
 		536F9F3D1197B0B9002E526A /* CurrentPlaylistSongUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 536F9F3C1197B0B9002E526A /* CurrentPlaylistSongUITableViewCell.m */; };
-		53703BD51588390A00B1FB33 /* PMSServerEditViewControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53703BD31588390900B1FB33 /* PMSServerEditViewControllerViewController.m */; };
-		53703BD71588390A00B1FB33 /* PMSServerEditViewControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53703BD31588390900B1FB33 /* PMSServerEditViewControllerViewController.m */; };
 		5379DC4F1219E48800F426CD /* ChatUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5379DC491219E48800F426CD /* ChatUITableViewCell.m */; };
 		5379DC501219E48800F426CD /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5379DC4B1219E48800F426CD /* ChatViewController.m */; };
 		5379DC511219E48800F426CD /* ChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5379DC4C1219E48800F426CD /* ChatViewController.xib */; };
@@ -673,8 +667,6 @@
 		53BC2810139AF0DD00A825F1 /* QuickAlbumsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BA497B1285D5B10010B380 /* QuickAlbumsViewController.m */; };
 		53BC2814139AF0DD00A825F1 /* CellOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A77FCC128E38E7005D2D65 /* CellOverlay.m */; };
 		53BC2815139AF0DD00A825F1 /* ModalAlbumArtViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C22CCE128EE81C00FFBA67 /* ModalAlbumArtViewController.m */; };
-		53BC2827139AF0DD00A825F1 /* ServerTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 535CB23012E0027800389DA1 /* ServerTypeViewController.m */; };
-		53BC2828139AF0DD00A825F1 /* UbuntuServerEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 535CB2A012E2348A00389DA1 /* UbuntuServerEditViewController.m */; };
 		53BC282A139AF0DD00A825F1 /* IntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C6052C12F1F01E003C6895 /* IntroViewController.m */; };
 		53BC282B139AF0DD00A825F1 /* CustomUIAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 532D9B42131AE19700FD8CA7 /* CustomUIAlertView.m */; };
 		53BC282C139AF0DD00A825F1 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5324C6C513345D75004E6C79 /* OBSlider.m */; };
@@ -1044,8 +1036,6 @@
 		53FE37241EA961720058B925 /* ISMSLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36531EA961720058B925 /* ISMSLoader.m */; };
 		53FE37251EA961720058B925 /* ISMSNotificationNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36591EA961720058B925 /* ISMSNotificationNames.m */; };
 		53FE37271EA961720058B925 /* ISMSNotificationNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36591EA961720058B925 /* ISMSNotificationNames.m */; };
-		53FE37281EA961720058B925 /* ISMSOldDataModelDecoders.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE365B1EA961720058B925 /* ISMSOldDataModelDecoders.m */; };
-		53FE372A1EA961720058B925 /* ISMSOldDataModelDecoders.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE365B1EA961720058B925 /* ISMSOldDataModelDecoders.m */; };
 		53FE372B1EA961720058B925 /* ISMSQueueAllLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE365D1EA961720058B925 /* ISMSQueueAllLoader.m */; };
 		53FE372D1EA961720058B925 /* ISMSQueueAllLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE365D1EA961720058B925 /* ISMSQueueAllLoader.m */; };
 		53FE372E1EA961720058B925 /* ISMSQuickAlbumsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE365F1EA961720058B925 /* ISMSQuickAlbumsLoader.m */; };
@@ -1068,8 +1058,6 @@
 		53FE37481EA961720058B925 /* ISMSStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE366F1EA961720058B925 /* ISMSStreamHandler.m */; };
 		53FE37491EA961720058B925 /* ISMSStreamManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36721EA961720058B925 /* ISMSStreamManager.m */; };
 		53FE374B1EA961720058B925 /* ISMSStreamManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36721EA961720058B925 /* ISMSStreamManager.m */; };
-		53FE374C1EA961720058B925 /* ISMSSubFolderLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36741EA961720058B925 /* ISMSSubFolderLoader.m */; };
-		53FE374E1EA961720058B925 /* ISMSSubFolderLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36741EA961720058B925 /* ISMSSubFolderLoader.m */; };
 		53FE374F1EA961720058B925 /* ISMSUpdateChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36761EA961720058B925 /* ISMSUpdateChecker.m */; };
 		53FE37511EA961720058B925 /* ISMSUpdateChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36761EA961720058B925 /* ISMSUpdateChecker.m */; };
 		53FE37521EA961720058B925 /* ISMSURLConnectionStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36781EA961720058B925 /* ISMSURLConnectionStreamHandler.m */; };
@@ -1090,24 +1078,12 @@
 		53FE37691EA961720058B925 /* MusicSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36891EA961720058B925 /* MusicSingleton.m */; };
 		53FE376A1EA961720058B925 /* NSError+ISMSError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE368B1EA961720058B925 /* NSError+ISMSError.m */; };
 		53FE376C1EA961720058B925 /* NSError+ISMSError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE368B1EA961720058B925 /* NSError+ISMSError.m */; };
-		53FE376D1EA961720058B925 /* NSMutableURLRequest+PMS.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE368D1EA961720058B925 /* NSMutableURLRequest+PMS.m */; };
-		53FE376F1EA961720058B925 /* NSMutableURLRequest+PMS.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE368D1EA961720058B925 /* NSMutableURLRequest+PMS.m */; };
 		53FE37701EA961720058B925 /* NSMutableURLRequest+SUS.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE368F1EA961720058B925 /* NSMutableURLRequest+SUS.m */; };
 		53FE37721EA961720058B925 /* NSMutableURLRequest+SUS.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE368F1EA961720058B925 /* NSMutableURLRequest+SUS.m */; };
 		53FE37731EA961720058B925 /* NSString+cleanCredentialsForLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36911EA961720058B925 /* NSString+cleanCredentialsForLog.m */; };
 		53FE37751EA961720058B925 /* NSString+cleanCredentialsForLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36911EA961720058B925 /* NSString+cleanCredentialsForLog.m */; };
 		53FE37761EA961720058B925 /* PlaylistSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36931EA961720058B925 /* PlaylistSingleton.m */; };
 		53FE37781EA961720058B925 /* PlaylistSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36931EA961720058B925 /* PlaylistSingleton.m */; };
-		53FE37791EA961720058B925 /* PMSLoginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36961EA961720058B925 /* PMSLoginLoader.m */; };
-		53FE377B1EA961720058B925 /* PMSLoginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36961EA961720058B925 /* PMSLoginLoader.m */; };
-		53FE377C1EA961720058B925 /* PMSQueueAllLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36981EA961720058B925 /* PMSQueueAllLoader.m */; };
-		53FE377E1EA961720058B925 /* PMSQueueAllLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36981EA961720058B925 /* PMSQueueAllLoader.m */; };
-		53FE377F1EA961720058B925 /* PMSRootFoldersLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE369A1EA961720058B925 /* PMSRootFoldersLoader.m */; };
-		53FE37811EA961720058B925 /* PMSRootFoldersLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE369A1EA961720058B925 /* PMSRootFoldersLoader.m */; };
-		53FE37821EA961720058B925 /* PMSStatusLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE369C1EA961720058B925 /* PMSStatusLoader.m */; };
-		53FE37841EA961720058B925 /* PMSStatusLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE369C1EA961720058B925 /* PMSStatusLoader.m */; };
-		53FE37851EA961720058B925 /* PMSSubFolderLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE369E1EA961720058B925 /* PMSSubFolderLoader.m */; };
-		53FE37871EA961720058B925 /* PMSSubFolderLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE369E1EA961720058B925 /* PMSSubFolderLoader.m */; };
 		53FE37881EA961720058B925 /* SavedSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A01EA961720058B925 /* SavedSettings.m */; };
 		53FE378A1EA961720058B925 /* SavedSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A01EA961720058B925 /* SavedSettings.m */; };
 		53FE378B1EA961720058B925 /* SearchXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A21EA961720058B925 /* SearchXMLParser.m */; };
@@ -1162,18 +1138,6 @@
 		53FE37D51EA961720058B925 /* SUSSubFolderDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36D41EA961720058B925 /* SUSSubFolderDAO.m */; };
 		53FE37D61EA961720058B925 /* SUSSubFolderLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36D61EA961720058B925 /* SUSSubFolderLoader.m */; };
 		53FE37D81EA961720058B925 /* SUSSubFolderLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36D61EA961720058B925 /* SUSSubFolderLoader.m */; };
-		53FE37D91EA961720058B925 /* WBDatabaseLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36D81EA961720058B925 /* WBDatabaseLoader.m */; };
-		53FE37DB1EA961720058B925 /* WBDatabaseLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36D81EA961720058B925 /* WBDatabaseLoader.m */; };
-		53FE37DC1EA961720058B925 /* WBDatabaseUpdateLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36DA1EA961720058B925 /* WBDatabaseUpdateLoader.m */; };
-		53FE37DE1EA961720058B925 /* WBDatabaseUpdateLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36DA1EA961720058B925 /* WBDatabaseUpdateLoader.m */; };
-		53FE37DF1EA961720058B925 /* WBDropdownFolderLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36DC1EA961720058B925 /* WBDropdownFolderLoader.m */; };
-		53FE37E11EA961720058B925 /* WBDropdownFolderLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36DC1EA961720058B925 /* WBDropdownFolderLoader.m */; };
-		53FE37E21EA961720058B925 /* WBQuickAlbumsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36DE1EA961720058B925 /* WBQuickAlbumsLoader.m */; };
-		53FE37E41EA961720058B925 /* WBQuickAlbumsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36DE1EA961720058B925 /* WBQuickAlbumsLoader.m */; };
-		53FE37E51EA961720058B925 /* WBScrobbleLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36E01EA961720058B925 /* WBScrobbleLoader.m */; };
-		53FE37E71EA961720058B925 /* WBScrobbleLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36E01EA961720058B925 /* WBScrobbleLoader.m */; };
-		53FE37E81EA961720058B925 /* WBServerShuffleLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36E21EA961720058B925 /* WBServerShuffleLoader.m */; };
-		53FE37EA1EA961720058B925 /* WBServerShuffleLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36E21EA961720058B925 /* WBServerShuffleLoader.m */; };
 		53FE38041EA961970058B925 /* RXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38031EA961970058B925 /* RXMLElement.m */; };
 		53FE38061EA961970058B925 /* RXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38031EA961970058B925 /* RXMLElement.m */; };
 		53FE38211EA961A10058B925 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38091EA961A10058B925 /* NSObject+SBJson.m */; };
@@ -1397,6 +1361,10 @@
 		531D3A00255AB5F6000CB0DF /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		531D3A14255ABA20000CB0DF /* DDSocialDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDSocialDialog.h; sourceTree = "<group>"; };
 		531D3A15255ABA20000CB0DF /* DDSocialDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDSocialDialog.m; sourceTree = "<group>"; };
+		531D3A1D255ABAAC000CB0DF /* ISMSLoaderNew.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSLoaderNew.h; sourceTree = "<group>"; };
+		531D3A1E255ABAAC000CB0DF /* ISMSLoaderNew.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ISMSLoaderNew.m; sourceTree = "<group>"; };
+		531D3A23255ABC9C000CB0DF /* ISMSURLSessionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSURLSessionDelegate.h; sourceTree = "<group>"; };
+		531D3A24255ABC9C000CB0DF /* ISMSURLSessionDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ISMSURLSessionDelegate.m; sourceTree = "<group>"; };
 		531F166C126FA2E600F524BD /* HomeAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeAlbumViewController.h; sourceTree = "<group>"; };
 		531F166D126FA2E600F524BD /* HomeAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeAlbumViewController.m; sourceTree = "<group>"; };
 		5324C6C413345D75004E6C79 /* OBSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBSlider.h; sourceTree = "<group>"; };
@@ -1521,10 +1489,6 @@
 		535CB22112E0014A00389DA1 /* server-subsonic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "server-subsonic@2x.png"; path = "Images/Other/server-subsonic@2x.png"; sourceTree = "<group>"; };
 		535CB22212E0014A00389DA1 /* server-ubuntu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "server-ubuntu.png"; path = "Images/Other/server-ubuntu.png"; sourceTree = "<group>"; };
 		535CB22312E0014A00389DA1 /* server-ubuntu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "server-ubuntu@2x.png"; path = "Images/Other/server-ubuntu@2x.png"; sourceTree = "<group>"; };
-		535CB22F12E0027800389DA1 /* ServerTypeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerTypeViewController.h; sourceTree = "<group>"; };
-		535CB23012E0027800389DA1 /* ServerTypeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerTypeViewController.m; sourceTree = "<group>"; };
-		535CB29F12E2348A00389DA1 /* UbuntuServerEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UbuntuServerEditViewController.h; sourceTree = "<group>"; };
-		535CB2A012E2348A00389DA1 /* UbuntuServerEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UbuntuServerEditViewController.m; sourceTree = "<group>"; };
 		535CB2A612E2372B00389DA1 /* ubuntu-add-server.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ubuntu-add-server.png"; path = "Images/Other/ubuntu-add-server.png"; sourceTree = "<group>"; };
 		535CB2A712E2372B00389DA1 /* ubuntu-add-server@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ubuntu-add-server@2x.png"; path = "Images/Other/ubuntu-add-server@2x.png"; sourceTree = "<group>"; };
 		535CB48612E2664700389DA1 /* server-button-subsonic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "server-button-subsonic.png"; path = "Images/Other/server-button-subsonic.png"; sourceTree = "<group>"; };
@@ -1562,9 +1526,8 @@
 		536D624311444E4600DFCE56 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = "Images/App Icons/Icon.png"; sourceTree = "<group>"; };
 		536F9F3B1197B0B9002E526A /* CurrentPlaylistSongUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentPlaylistSongUITableViewCell.h; sourceTree = "<group>"; };
 		536F9F3C1197B0B9002E526A /* CurrentPlaylistSongUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentPlaylistSongUITableViewCell.m; sourceTree = "<group>"; };
-		53703BD21588390800B1FB33 /* PMSServerEditViewControllerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMSServerEditViewControllerViewController.h; sourceTree = "<group>"; };
-		53703BD31588390900B1FB33 /* PMSServerEditViewControllerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSServerEditViewControllerViewController.m; sourceTree = "<group>"; };
 		53733C6414F88D62001D8104 /* AsynchronousImageViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsynchronousImageViewDelegate.h; sourceTree = "<group>"; };
+		53746678255AD19300DB9193 /* ISMSLoaderDelegateNew.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSLoaderDelegateNew.h; sourceTree = "<group>"; };
 		5379DC481219E48800F426CD /* ChatUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatUITableViewCell.h; sourceTree = "<group>"; };
 		5379DC491219E48800F426CD /* ChatUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatUITableViewCell.m; sourceTree = "<group>"; };
 		5379DC4A1219E48800F426CD /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
@@ -1613,10 +1576,7 @@
 		539148A72559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/EqualizerViewController.xib; sourceTree = "<group>"; };
 		539148A82559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SettingsTabViewController.xib; sourceTree = "<group>"; };
 		539148A92559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ServerListViewController.xib; sourceTree = "<group>"; };
-		539148AA2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ServerTypeViewController.xib; sourceTree = "<group>"; };
 		539148AB2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SubsonicServerEditViewController.xib; sourceTree = "<group>"; };
-		539148AC2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/UbuntuServerEditViewController.xib; sourceTree = "<group>"; };
-		539148AD2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PMSServerEditViewControllerViewController.xib; sourceTree = "<group>"; };
 		539148AE2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/IntroViewController.xib; sourceTree = "<group>"; };
 		539148AF2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = "Base.lproj/NewHomeViewController-iPad.xib"; sourceTree = "<group>"; };
 		539148B02559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/NewHomeViewController.xib; sourceTree = "<group>"; };
@@ -2090,8 +2050,6 @@
 		53FE36571EA961720058B925 /* ISMSMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSMediaItem.h; sourceTree = "<group>"; };
 		53FE36581EA961720058B925 /* ISMSNotificationNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSNotificationNames.h; sourceTree = "<group>"; };
 		53FE36591EA961720058B925 /* ISMSNotificationNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSNotificationNames.m; sourceTree = "<group>"; };
-		53FE365A1EA961720058B925 /* ISMSOldDataModelDecoders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSOldDataModelDecoders.h; sourceTree = "<group>"; };
-		53FE365B1EA961720058B925 /* ISMSOldDataModelDecoders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSOldDataModelDecoders.m; sourceTree = "<group>"; };
 		53FE365C1EA961720058B925 /* ISMSQueueAllLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSQueueAllLoader.h; sourceTree = "<group>"; };
 		53FE365D1EA961720058B925 /* ISMSQueueAllLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSQueueAllLoader.m; sourceTree = "<group>"; };
 		53FE365E1EA961720058B925 /* ISMSQuickAlbumsLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSQuickAlbumsLoader.h; sourceTree = "<group>"; };
@@ -2115,8 +2073,6 @@
 		53FE36701EA961720058B925 /* ISMSStreamHandlerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSStreamHandlerDelegate.h; sourceTree = "<group>"; };
 		53FE36711EA961720058B925 /* ISMSStreamManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSStreamManager.h; sourceTree = "<group>"; };
 		53FE36721EA961720058B925 /* ISMSStreamManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSStreamManager.m; sourceTree = "<group>"; };
-		53FE36731EA961720058B925 /* ISMSSubFolderLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSSubFolderLoader.h; sourceTree = "<group>"; };
-		53FE36741EA961720058B925 /* ISMSSubFolderLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSSubFolderLoader.m; sourceTree = "<group>"; };
 		53FE36751EA961720058B925 /* ISMSUpdateChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSUpdateChecker.h; sourceTree = "<group>"; };
 		53FE36761EA961720058B925 /* ISMSUpdateChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSUpdateChecker.m; sourceTree = "<group>"; };
 		53FE36771EA961720058B925 /* ISMSURLConnectionStreamHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSURLConnectionStreamHandler.h; sourceTree = "<group>"; };
@@ -2139,25 +2095,12 @@
 		53FE36891EA961720058B925 /* MusicSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MusicSingleton.m; sourceTree = "<group>"; };
 		53FE368A1EA961720058B925 /* NSError+ISMSError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+ISMSError.h"; sourceTree = "<group>"; };
 		53FE368B1EA961720058B925 /* NSError+ISMSError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+ISMSError.m"; sourceTree = "<group>"; };
-		53FE368C1EA961720058B925 /* NSMutableURLRequest+PMS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableURLRequest+PMS.h"; sourceTree = "<group>"; };
-		53FE368D1EA961720058B925 /* NSMutableURLRequest+PMS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+PMS.m"; sourceTree = "<group>"; };
 		53FE368E1EA961720058B925 /* NSMutableURLRequest+SUS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableURLRequest+SUS.h"; sourceTree = "<group>"; };
 		53FE368F1EA961720058B925 /* NSMutableURLRequest+SUS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+SUS.m"; sourceTree = "<group>"; };
 		53FE36901EA961720058B925 /* NSString+cleanCredentialsForLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+cleanCredentialsForLog.h"; sourceTree = "<group>"; };
 		53FE36911EA961720058B925 /* NSString+cleanCredentialsForLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+cleanCredentialsForLog.m"; sourceTree = "<group>"; };
 		53FE36921EA961720058B925 /* PlaylistSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistSingleton.h; sourceTree = "<group>"; };
 		53FE36931EA961720058B925 /* PlaylistSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistSingleton.m; sourceTree = "<group>"; };
-		53FE36941EA961720058B925 /* PMSLoaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMSLoaders.h; sourceTree = "<group>"; };
-		53FE36951EA961720058B925 /* PMSLoginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMSLoginLoader.h; sourceTree = "<group>"; };
-		53FE36961EA961720058B925 /* PMSLoginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSLoginLoader.m; sourceTree = "<group>"; };
-		53FE36971EA961720058B925 /* PMSQueueAllLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMSQueueAllLoader.h; sourceTree = "<group>"; };
-		53FE36981EA961720058B925 /* PMSQueueAllLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSQueueAllLoader.m; sourceTree = "<group>"; };
-		53FE36991EA961720058B925 /* PMSRootFoldersLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMSRootFoldersLoader.h; sourceTree = "<group>"; };
-		53FE369A1EA961720058B925 /* PMSRootFoldersLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSRootFoldersLoader.m; sourceTree = "<group>"; };
-		53FE369B1EA961720058B925 /* PMSStatusLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMSStatusLoader.h; sourceTree = "<group>"; };
-		53FE369C1EA961720058B925 /* PMSStatusLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSStatusLoader.m; sourceTree = "<group>"; };
-		53FE369D1EA961720058B925 /* PMSSubFolderLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMSSubFolderLoader.h; sourceTree = "<group>"; };
-		53FE369E1EA961720058B925 /* PMSSubFolderLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMSSubFolderLoader.m; sourceTree = "<group>"; };
 		53FE369F1EA961720058B925 /* SavedSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedSettings.h; sourceTree = "<group>"; };
 		53FE36A01EA961720058B925 /* SavedSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SavedSettings.m; sourceTree = "<group>"; };
 		53FE36A11EA961720058B925 /* SearchXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchXMLParser.h; sourceTree = "<group>"; };
@@ -2214,18 +2157,6 @@
 		53FE36D41EA961720058B925 /* SUSSubFolderDAO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUSSubFolderDAO.m; sourceTree = "<group>"; };
 		53FE36D51EA961720058B925 /* SUSSubFolderLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSSubFolderLoader.h; sourceTree = "<group>"; };
 		53FE36D61EA961720058B925 /* SUSSubFolderLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUSSubFolderLoader.m; sourceTree = "<group>"; };
-		53FE36D71EA961720058B925 /* WBDatabaseLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBDatabaseLoader.h; sourceTree = "<group>"; };
-		53FE36D81EA961720058B925 /* WBDatabaseLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBDatabaseLoader.m; sourceTree = "<group>"; };
-		53FE36D91EA961720058B925 /* WBDatabaseUpdateLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBDatabaseUpdateLoader.h; sourceTree = "<group>"; };
-		53FE36DA1EA961720058B925 /* WBDatabaseUpdateLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBDatabaseUpdateLoader.m; sourceTree = "<group>"; };
-		53FE36DB1EA961720058B925 /* WBDropdownFolderLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBDropdownFolderLoader.h; sourceTree = "<group>"; };
-		53FE36DC1EA961720058B925 /* WBDropdownFolderLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBDropdownFolderLoader.m; sourceTree = "<group>"; };
-		53FE36DD1EA961720058B925 /* WBQuickAlbumsLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBQuickAlbumsLoader.h; sourceTree = "<group>"; };
-		53FE36DE1EA961720058B925 /* WBQuickAlbumsLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBQuickAlbumsLoader.m; sourceTree = "<group>"; };
-		53FE36DF1EA961720058B925 /* WBScrobbleLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBScrobbleLoader.h; sourceTree = "<group>"; };
-		53FE36E01EA961720058B925 /* WBScrobbleLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBScrobbleLoader.m; sourceTree = "<group>"; };
-		53FE36E11EA961720058B925 /* WBServerShuffleLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBServerShuffleLoader.h; sourceTree = "<group>"; };
-		53FE36E21EA961720058B925 /* WBServerShuffleLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBServerShuffleLoader.m; sourceTree = "<group>"; };
 		53FE38021EA961970058B925 /* RXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXMLElement.h; sourceTree = "<group>"; };
 		53FE38031EA961970058B925 /* RXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXMLElement.m; sourceTree = "<group>"; };
 		53FE38081EA961A10058B925 /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJson.h"; sourceTree = "<group>"; };
@@ -2741,18 +2672,9 @@
 				53614AC7116432DA0088ABC0 /* ServerListViewController.h */,
 				53614AC8116432DA0088ABC0 /* ServerListViewController.m */,
 				533C65B315ABB9C6003EAF29 /* ServerListViewController.xib */,
-				535CB22F12E0027800389DA1 /* ServerTypeViewController.h */,
-				535CB23012E0027800389DA1 /* ServerTypeViewController.m */,
-				533C65BA15ABB9C9003EAF29 /* ServerTypeViewController.xib */,
 				53CED25C113E2FF100B09699 /* SubsonicServerEditViewController.h */,
 				53CED25D113E2FF100B09699 /* SubsonicServerEditViewController.m */,
 				533C65C115ABB9CC003EAF29 /* SubsonicServerEditViewController.xib */,
-				535CB29F12E2348A00389DA1 /* UbuntuServerEditViewController.h */,
-				535CB2A012E2348A00389DA1 /* UbuntuServerEditViewController.m */,
-				533C65C815ABB9D0003EAF29 /* UbuntuServerEditViewController.xib */,
-				53703BD21588390800B1FB33 /* PMSServerEditViewControllerViewController.h */,
-				53703BD31588390900B1FB33 /* PMSServerEditViewControllerViewController.m */,
-				533C65CD15ABB9D3003EAF29 /* PMSServerEditViewControllerViewController.xib */,
 				5398F27511DA627500007870 /* HelpTabViewController.h */,
 				5398F27611DA627500007870 /* HelpTabViewController.m */,
 				5398F27711DA627500007870 /* HelpTabViewController.xib */,
@@ -2994,8 +2916,6 @@
 				53FE364C1EA961720058B925 /* ISMSDataModelObjects.h */,
 				53FE36581EA961720058B925 /* ISMSNotificationNames.h */,
 				53FE36591EA961720058B925 /* ISMSNotificationNames.m */,
-				53FE365A1EA961720058B925 /* ISMSOldDataModelDecoders.h */,
-				53FE365B1EA961720058B925 /* ISMSOldDataModelDecoders.m */,
 				53FE36751EA961720058B925 /* ISMSUpdateChecker.h */,
 				53FE36761EA961720058B925 /* ISMSUpdateChecker.m */,
 				53FE367D1EA961720058B925 /* JukeboxConnectionDelegate.h */,
@@ -3096,8 +3016,6 @@
 			children = (
 				531D3A0E255AB7BB000CB0DF /* ISMS */,
 				531D3A0F255AB7C6000CB0DF /* SUS */,
-				531D3A10255AB7D4000CB0DF /* PMS */,
-				531D3A11255AB7DC000CB0DF /* WB */,
 			);
 			path = Loaders;
 			sourceTree = "<group>";
@@ -3162,12 +3080,15 @@
 			isa = PBXGroup;
 			children = (
 				53FE36561EA961720058B925 /* ISMSLoaders.h */,
+				531D3A1D255ABAAC000CB0DF /* ISMSLoaderNew.h */,
+				531D3A1E255ABAAC000CB0DF /* ISMSLoaderNew.m */,
+				53746678255AD19300DB9193 /* ISMSLoaderDelegateNew.h */,
+				531D3A23255ABC9C000CB0DF /* ISMSURLSessionDelegate.h */,
+				531D3A24255ABC9C000CB0DF /* ISMSURLSessionDelegate.m */,
 				53FE36521EA961720058B925 /* ISMSLoader.h */,
 				53FE36531EA961720058B925 /* ISMSLoader.m */,
 				53FE36541EA961720058B925 /* ISMSLoaderDelegate.h */,
 				53FE36551EA961720058B925 /* ISMSLoaderManager.h */,
-				53FE368C1EA961720058B925 /* NSMutableURLRequest+PMS.h */,
-				53FE368D1EA961720058B925 /* NSMutableURLRequest+PMS.m */,
 				53FE368E1EA961720058B925 /* NSMutableURLRequest+SUS.h */,
 				53FE368F1EA961720058B925 /* NSMutableURLRequest+SUS.m */,
 				53FE36491EA961720058B925 /* ISMSCoverArtLoader.h */,
@@ -3184,8 +3105,6 @@
 				53FE36671EA961720058B925 /* ISMSServerShuffleLoader.m */,
 				53FE366C1EA961720058B925 /* ISMSStatusLoader.h */,
 				53FE366D1EA961720058B925 /* ISMSStatusLoader.m */,
-				53FE36731EA961720058B925 /* ISMSSubFolderLoader.h */,
-				53FE36741EA961720058B925 /* ISMSSubFolderLoader.m */,
 				53FE364D1EA961720058B925 /* ISMSDropdownFolderLoader.h */,
 				53FE364E1EA961720058B925 /* ISMSDropdownFolderLoader.m */,
 			);
@@ -3224,43 +3143,6 @@
 				53FE36C81EA961720058B925 /* SUSScrobbleLoader.m */,
 			);
 			path = SUS;
-			sourceTree = "<group>";
-		};
-		531D3A10255AB7D4000CB0DF /* PMS */ = {
-			isa = PBXGroup;
-			children = (
-				53FE36941EA961720058B925 /* PMSLoaders.h */,
-				53FE36951EA961720058B925 /* PMSLoginLoader.h */,
-				53FE36961EA961720058B925 /* PMSLoginLoader.m */,
-				53FE36971EA961720058B925 /* PMSQueueAllLoader.h */,
-				53FE36981EA961720058B925 /* PMSQueueAllLoader.m */,
-				53FE36991EA961720058B925 /* PMSRootFoldersLoader.h */,
-				53FE369A1EA961720058B925 /* PMSRootFoldersLoader.m */,
-				53FE369B1EA961720058B925 /* PMSStatusLoader.h */,
-				53FE369C1EA961720058B925 /* PMSStatusLoader.m */,
-				53FE369D1EA961720058B925 /* PMSSubFolderLoader.h */,
-				53FE369E1EA961720058B925 /* PMSSubFolderLoader.m */,
-			);
-			path = PMS;
-			sourceTree = "<group>";
-		};
-		531D3A11255AB7DC000CB0DF /* WB */ = {
-			isa = PBXGroup;
-			children = (
-				53FE36D71EA961720058B925 /* WBDatabaseLoader.h */,
-				53FE36D81EA961720058B925 /* WBDatabaseLoader.m */,
-				53FE36D91EA961720058B925 /* WBDatabaseUpdateLoader.h */,
-				53FE36DA1EA961720058B925 /* WBDatabaseUpdateLoader.m */,
-				53FE36DB1EA961720058B925 /* WBDropdownFolderLoader.h */,
-				53FE36DC1EA961720058B925 /* WBDropdownFolderLoader.m */,
-				53FE36DD1EA961720058B925 /* WBQuickAlbumsLoader.h */,
-				53FE36DE1EA961720058B925 /* WBQuickAlbumsLoader.m */,
-				53FE36DF1EA961720058B925 /* WBScrobbleLoader.h */,
-				53FE36E01EA961720058B925 /* WBScrobbleLoader.m */,
-				53FE36E11EA961720058B925 /* WBServerShuffleLoader.h */,
-				53FE36E21EA961720058B925 /* WBServerShuffleLoader.m */,
-			);
-			path = WB;
 			sourceTree = "<group>";
 		};
 		53260B71127D012300B745B4 /* EGOTableViewPullRefresh */ = {
@@ -4421,8 +4303,6 @@
 				535CB22512E0014A00389DA1 /* server-subsonic@2x.png in Resources */,
 				535CB22612E0014A00389DA1 /* server-ubuntu.png in Resources */,
 				535CB22712E0014A00389DA1 /* server-ubuntu@2x.png in Resources */,
-				533C65B415ABB9C9003EAF29 /* ServerTypeViewController.xib in Resources */,
-				533C65C215ABB9D0003EAF29 /* UbuntuServerEditViewController.xib in Resources */,
 				535CB2A812E2372B00389DA1 /* ubuntu-add-server.png in Resources */,
 				535CB2A912E2372B00389DA1 /* ubuntu-add-server@2x.png in Resources */,
 				535CB48A12E2664700389DA1 /* server-button-subsonic.png in Resources */,
@@ -4529,7 +4409,6 @@
 				530A5F881516703F0081A83A /* playing-cell-icon@2x.png in Resources */,
 				530A5F8D15167CBA0081A83A /* playing-cell-icon-white.png in Resources */,
 				530A5F9015167CBA0081A83A /* playing-cell-icon-white@2x.png in Resources */,
-				533C65C915ABB9D3003EAF29 /* PMSServerEditViewControllerViewController.xib in Resources */,
 				533C657515ABB952003EAF29 /* NewHomeViewController.xib in Resources */,
 				53493EF415FC69560059492E /* player-songinfo.png in Resources */,
 				53493EF715FC69560059492E /* player-songinfo@2x.png in Resources */,
@@ -4724,8 +4603,6 @@
 				53BC2762139AF0DD00A825F1 /* server-subsonic@2x.png in Resources */,
 				53BC2763139AF0DD00A825F1 /* server-ubuntu.png in Resources */,
 				53BC2764139AF0DD00A825F1 /* server-ubuntu@2x.png in Resources */,
-				533C65B615ABB9C9003EAF29 /* ServerTypeViewController.xib in Resources */,
-				533C65C415ABB9D0003EAF29 /* UbuntuServerEditViewController.xib in Resources */,
 				53BC2767139AF0DD00A825F1 /* ubuntu-add-server.png in Resources */,
 				53BC2768139AF0DD00A825F1 /* ubuntu-add-server@2x.png in Resources */,
 				53BC2769139AF0DD00A825F1 /* server-button-subsonic.png in Resources */,
@@ -4832,7 +4709,6 @@
 				530A5F8A1516703F0081A83A /* playing-cell-icon@2x.png in Resources */,
 				530A5F8F15167CBA0081A83A /* playing-cell-icon-white.png in Resources */,
 				530A5F9215167CBA0081A83A /* playing-cell-icon-white@2x.png in Resources */,
-				533C65CB15ABB9D3003EAF29 /* PMSServerEditViewControllerViewController.xib in Resources */,
 				53FE390C1EA961ED0058B925 /* .hgignore in Resources */,
 				533C657715ABB952003EAF29 /* NewHomeViewController.xib in Resources */,
 				53493EF615FC69560059492E /* player-songinfo.png in Resources */,
@@ -4877,7 +4753,6 @@
 			files = (
 				1D3623260D0F684500981E51 /* iSubAppDelegate.m in Sources */,
 				28C286E10D94DF7D0034E888 /* FoldersViewController.m in Sources */,
-				53FE37E21EA961720058B925 /* WBQuickAlbumsLoader.m in Sources */,
 				53F2D3EE113A338500107D63 /* AlbumViewController.m in Sources */,
 				53FE375E1EA961720058B925 /* JukeboxSingleton.m in Sources */,
 				53FE36F81EA961720058B925 /* BassVisualizer.m in Sources */,
@@ -4890,7 +4765,6 @@
 				53FE38A71EA961C80058B925 /* ZKCDTrailer.m in Sources */,
 				53FE374F1EA961720058B925 /* ISMSUpdateChecker.m in Sources */,
 				53FE34C81EA961540058B925 /* NSMutableArray+Safe.m in Sources */,
-				53FE376D1EA961720058B925 /* NSMutableURLRequest+PMS.m in Sources */,
 				53FE37011EA961720058B925 /* DatabaseSingleton.m in Sources */,
 				533A2D07113C61CA00B3A376 /* AsynchronousImageView.m in Sources */,
 				53CED25F113E2FF100B09699 /* SubsonicServerEditViewController.m in Sources */,
@@ -4921,15 +4795,14 @@
 				530388A9116571920043292D /* AllSongsViewController.m in Sources */,
 				53FE354C1EA961540058B925 /* UIImage+Cropping.m in Sources */,
 				53FE37251EA961720058B925 /* ISMSNotificationNames.m in Sources */,
-				53FE37DC1EA961720058B925 /* WBDatabaseUpdateLoader.m in Sources */,
 				53FE35311EA961540058B925 /* CALayer+SublayerWithName.m in Sources */,
 				53FE34EC1EA961540058B925 /* NSObject+UserInfo.m in Sources */,
 				53FE370D1EA961720058B925 /* ISMSArtist.m in Sources */,
 				53FE354F1EA961540058B925 /* UIImage+CustomStretch.m in Sources */,
 				53FE37B81EA961720058B925 /* SUSQuickAlbumsLoader.m in Sources */,
-				53FE37791EA961720058B925 /* PMSLoginLoader.m in Sources */,
 				53FE36EC1EA961720058B925 /* BassEqualizer.m in Sources */,
 				53FE39831EA963180058B925 /* FMDatabasePool.m in Sources */,
+				531D3A25255ABC9C000CB0DF /* ISMSURLSessionDelegate.m in Sources */,
 				53ABE3591165C52D00197877 /* PlayingUITableViewCell.m in Sources */,
 				53ABE3631165C83900197877 /* PlayingViewController.m in Sources */,
 				53FE38301EA961A10058B925 /* SBJsonStreamParserState.m in Sources */,
@@ -4946,6 +4819,7 @@
 				53FE37191EA961720058B925 /* ISMSCoverArtLoader.m in Sources */,
 				53FE36FB1EA961720058B925 /* BassWrapper.m in Sources */,
 				53FE39401EA961ED0058B925 /* DAVResponse.m in Sources */,
+				531D3A1F255ABAAC000CB0DF /* ISMSLoaderNew.m in Sources */,
 				53FE35521EA961540058B925 /* UIImage+Reflection.m in Sources */,
 				53FE37C71EA961720058B925 /* SUSServerPlaylistsDAO.m in Sources */,
 				53FE37B51EA961720058B925 /* SUSQueueAllLoader.m in Sources */,
@@ -4962,12 +4836,10 @@
 				53FE382D1EA961A10058B925 /* SBJsonStreamParserAdapter.m in Sources */,
 				53FE37D61EA961720058B925 /* SUSSubFolderLoader.m in Sources */,
 				53FE35251EA961540058B925 /* NSURL+QueryParameterDictionary.m in Sources */,
-				53FE37281EA961720058B925 /* ISMSOldDataModelDecoders.m in Sources */,
 				53FE35641EA961540058B925 /* UITableViewCell+TableView.m in Sources */,
 				53FE393D1EA961ED0058B925 /* DAVConnection.m in Sources */,
 				53F4A07D116FF7EE00BB8411 /* CurrentPlaylistViewController.m in Sources */,
 				53FE37311EA961720058B925 /* ISMSRootFoldersLoader.m in Sources */,
-				53FE37E51EA961720058B925 /* WBScrobbleLoader.m in Sources */,
 				53F4A229117011B900BB8411 /* CurrentPlaylistBackgroundViewController.m in Sources */,
 				53FE37221EA961720058B925 /* ISMSLoader.m in Sources */,
 				53FE353A1EA961540058B925 /* UIButton+StretchBackground.m in Sources */,
@@ -4990,7 +4862,6 @@
 				53FE37491EA961720058B925 /* ISMSStreamManager.m in Sources */,
 				53FE388C1EA961C80058B925 /* GMAppleDouble.m in Sources */,
 				53FE34B91EA961540058B925 /* NSArray+FilterBlock.m in Sources */,
-				53FE37E81EA961720058B925 /* WBServerShuffleLoader.m in Sources */,
 				53FE39861EA963180058B925 /* FMDatabaseQueue.m in Sources */,
 				53FE35DF1EA961540058B925 /* EX2SlidingNotification.m in Sources */,
 				536F9F3D1197B0B9002E526A /* CurrentPlaylistSongUITableViewCell.m in Sources */,
@@ -5019,7 +4890,6 @@
 				530B417211B607A200743C09 /* CacheViewController.m in Sources */,
 				53FE352B1EA961540058B925 /* NSMutableOrderedSet+Safe.m in Sources */,
 				532862DB11C573AD00B40FF0 /* UAApplication.m in Sources */,
-				53FE37D91EA961720058B925 /* WBDatabaseLoader.m in Sources */,
 				53FE39BD1EA9703E0058B925 /* DDASLLogger.m in Sources */,
 				53FE34C51EA961540058B925 /* NSArray+Safe.m in Sources */,
 				53FE35221EA961540058B925 /* NSString+Validation.m in Sources */,
@@ -5055,7 +4925,6 @@
 				53FE35671EA961540058B925 /* UIView+Glow.m in Sources */,
 				53FE353D1EA961540058B925 /* UIColor+ColorWithHex.m in Sources */,
 				53FE35EB1EA961540058B925 /* SnappySlider.m in Sources */,
-				53FE37821EA961720058B925 /* PMSStatusLoader.m in Sources */,
 				D0F7918B19DE4DFC008032A3 /* ISMSScrubberView.m in Sources */,
 				53FE34EF1EA961540058B925 /* NSOrderedSet+FilterBlock.m in Sources */,
 				53FE370A1EA961720058B925 /* ISMSAlbum.m in Sources */,
@@ -5065,7 +4934,6 @@
 				53FE39371EA961ED0058B925 /* HTTPRedirectResponse.m in Sources */,
 				53FE38AD1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
 				D0EA476219DE41510083CE05 /* ISMSPlayerView.m in Sources */,
-				53FE377F1EA961720058B925 /* PMSRootFoldersLoader.m in Sources */,
 				53FE379D1EA961720058B925 /* SUSChatDAO.m in Sources */,
 				53FE37071EA961720058B925 /* HLSProxyResponse.m in Sources */,
 				53FE379A1EA961720058B925 /* SUSAllSongsLoader.m in Sources */,
@@ -5087,7 +4955,6 @@
 				53FE35461EA961540058B925 /* UIDevice+Software.m in Sources */,
 				53FE37D31EA961720058B925 /* SUSSubFolderDAO.m in Sources */,
 				534050FB11E9966C004AEC41 /* LyricsViewController.m in Sources */,
-				53FE37851EA961720058B925 /* PMSSubFolderLoader.m in Sources */,
 				53FE34CB1EA961540058B925 /* NSData+AES128.m in Sources */,
 				53FE39AA1EA970220058B925 /* DDContextFilterLogFormatter.m in Sources */,
 				53FE37C11EA961720058B925 /* SUSScrobbleLoader.m in Sources */,
@@ -5122,9 +4989,7 @@
 				53C22CCF128EE81C00FFBA67 /* ModalAlbumArtViewController.m in Sources */,
 				53FE352E1EA961540058B925 /* CALayer+ImageFromLayer.m in Sources */,
 				53FE34C21EA961540058B925 /* NSArray+Reverse.m in Sources */,
-				535CB23212E0027800389DA1 /* ServerTypeViewController.m in Sources */,
 				53FE38421EA961A10058B925 /* SBJsonWriter.m in Sources */,
-				535CB2A212E2348A00389DA1 /* UbuntuServerEditViewController.m in Sources */,
 				53C6052E12F1F01E003C6895 /* IntroViewController.m in Sources */,
 				53FE37761EA961720058B925 /* PlaylistSingleton.m in Sources */,
 				532D9B43131AE19700FD8CA7 /* CustomUIAlertView.m in Sources */,
@@ -5134,7 +4999,6 @@
 				53FE355B1EA961540058B925 /* UIImageView+ImageAnimated.m in Sources */,
 				538E5255255A31F2000DF682 /* UIApplication+Orientiation.m in Sources */,
 				53FE35551EA961540058B925 /* UIImage+RoundedImage.m in Sources */,
-				53FE37DF1EA961720058B925 /* WBDropdownFolderLoader.m in Sources */,
 				53FE37611EA961720058B925 /* JukeboxXMLParser.m in Sources */,
 				53FE39131EA961ED0058B925 /* DDRange.m in Sources */,
 				53FE39281EA961ED0058B925 /* MultipartMessageHeaderField.m in Sources */,
@@ -5172,7 +5036,6 @@
 				535696531810DA8700997C7B /* FXBlurView.m in Sources */,
 				53FE384F1EA961A80058B925 /* TBXML+HTTP.m in Sources */,
 				53FE356A1EA961540058B925 /* UIView+SetNeedsLayoutSafe.m in Sources */,
-				53FE374C1EA961720058B925 /* ISMSSubFolderLoader.m in Sources */,
 				53FE37371EA961720058B925 /* ISMSServer.m in Sources */,
 				53FE378B1EA961720058B925 /* SearchXMLParser.m in Sources */,
 				53A2BE24147DF09800E44822 /* EqualizerPointView.m in Sources */,
@@ -5191,7 +5054,6 @@
 				53FE37A91EA961720058B925 /* SUSLyricsDAO.m in Sources */,
 				53FE36FE1EA961720058B925 /* CacheSingleton.m in Sources */,
 				53FE35041EA961540058B925 /* NSString+FileSize.m in Sources */,
-				53FE377C1EA961720058B925 /* PMSQueueAllLoader.m in Sources */,
 				5304FC2D14F2F0D100A2AD42 /* iPadRootViewController.m in Sources */,
 				53FE36F51EA961720058B925 /* BassStream.m in Sources */,
 				5304FC3014F2F0D100A2AD42 /* MenuViewController.m in Sources */,
@@ -5199,7 +5061,6 @@
 				5304FC3C14F2F0D100A2AD42 /* MenuTableViewCell.m in Sources */,
 				537E9A0A14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */,
 				537E9A3114F43F43006CB0BC /* StackContainerView.m in Sources */,
-				53703BD51588390A00B1FB33 /* PMSServerEditViewControllerViewController.m in Sources */,
 				53FE389E1EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53493F2715FC6AC40059492E /* main.m in Sources */,
 				D0EA476719DE41E30083CE05 /* ISMSPlayerViewController.m in Sources */,
@@ -5215,7 +5076,6 @@
 			files = (
 				53BC279C139AF0DD00A825F1 /* iSubAppDelegate.m in Sources */,
 				53BC279D139AF0DD00A825F1 /* FoldersViewController.m in Sources */,
-				53FE37E41EA961720058B925 /* WBQuickAlbumsLoader.m in Sources */,
 				53BC27A1139AF0DD00A825F1 /* AlbumViewController.m in Sources */,
 				53FE37601EA961720058B925 /* JukeboxSingleton.m in Sources */,
 				53FE36FA1EA961720058B925 /* BassVisualizer.m in Sources */,
@@ -5228,7 +5088,6 @@
 				53FE38A91EA961C80058B925 /* ZKCDTrailer.m in Sources */,
 				53FE37511EA961720058B925 /* ISMSUpdateChecker.m in Sources */,
 				53FE34CA1EA961540058B925 /* NSMutableArray+Safe.m in Sources */,
-				53FE376F1EA961720058B925 /* NSMutableURLRequest+PMS.m in Sources */,
 				53FE37031EA961720058B925 /* DatabaseSingleton.m in Sources */,
 				53BC27A5139AF0DD00A825F1 /* AsynchronousImageView.m in Sources */,
 				53BC27A7139AF0DD00A825F1 /* SubsonicServerEditViewController.m in Sources */,
@@ -5259,15 +5118,14 @@
 				53BC27B0139AF0DD00A825F1 /* AllSongsViewController.m in Sources */,
 				53FE354E1EA961540058B925 /* UIImage+Cropping.m in Sources */,
 				53FE37271EA961720058B925 /* ISMSNotificationNames.m in Sources */,
-				53FE37DE1EA961720058B925 /* WBDatabaseUpdateLoader.m in Sources */,
 				53FE35331EA961540058B925 /* CALayer+SublayerWithName.m in Sources */,
 				53FE34EE1EA961540058B925 /* NSObject+UserInfo.m in Sources */,
 				53FE370F1EA961720058B925 /* ISMSArtist.m in Sources */,
 				53FE35511EA961540058B925 /* UIImage+CustomStretch.m in Sources */,
 				53FE37BA1EA961720058B925 /* SUSQuickAlbumsLoader.m in Sources */,
-				53FE377B1EA961720058B925 /* PMSLoginLoader.m in Sources */,
 				53FE36EE1EA961720058B925 /* BassEqualizer.m in Sources */,
 				53FE39851EA963180058B925 /* FMDatabasePool.m in Sources */,
+				531D3A26255ABC9C000CB0DF /* ISMSURLSessionDelegate.m in Sources */,
 				53BC27B2139AF0DD00A825F1 /* PlayingUITableViewCell.m in Sources */,
 				53BC27B3139AF0DD00A825F1 /* PlayingViewController.m in Sources */,
 				53FE38321EA961A10058B925 /* SBJsonStreamParserState.m in Sources */,
@@ -5284,6 +5142,7 @@
 				53FE371B1EA961720058B925 /* ISMSCoverArtLoader.m in Sources */,
 				53FE36FD1EA961720058B925 /* BassWrapper.m in Sources */,
 				53FE39421EA961ED0058B925 /* DAVResponse.m in Sources */,
+				531D3A20255ABAAC000CB0DF /* ISMSLoaderNew.m in Sources */,
 				53FE35541EA961540058B925 /* UIImage+Reflection.m in Sources */,
 				53FE37C91EA961720058B925 /* SUSServerPlaylistsDAO.m in Sources */,
 				53FE37B71EA961720058B925 /* SUSQueueAllLoader.m in Sources */,
@@ -5300,12 +5159,10 @@
 				53FE382F1EA961A10058B925 /* SBJsonStreamParserAdapter.m in Sources */,
 				53FE37D81EA961720058B925 /* SUSSubFolderLoader.m in Sources */,
 				53FE35271EA961540058B925 /* NSURL+QueryParameterDictionary.m in Sources */,
-				53FE372A1EA961720058B925 /* ISMSOldDataModelDecoders.m in Sources */,
 				53FE35661EA961540058B925 /* UITableViewCell+TableView.m in Sources */,
 				53FE393F1EA961ED0058B925 /* DAVConnection.m in Sources */,
 				53BC27BB139AF0DD00A825F1 /* CurrentPlaylistViewController.m in Sources */,
 				53FE37331EA961720058B925 /* ISMSRootFoldersLoader.m in Sources */,
-				53FE37E71EA961720058B925 /* WBScrobbleLoader.m in Sources */,
 				53BC27BC139AF0DD00A825F1 /* CurrentPlaylistBackgroundViewController.m in Sources */,
 				53FE37241EA961720058B925 /* ISMSLoader.m in Sources */,
 				53FE353C1EA961540058B925 /* UIButton+StretchBackground.m in Sources */,
@@ -5328,7 +5185,6 @@
 				53FE374B1EA961720058B925 /* ISMSStreamManager.m in Sources */,
 				53FE388E1EA961C80058B925 /* GMAppleDouble.m in Sources */,
 				53FE34BB1EA961540058B925 /* NSArray+FilterBlock.m in Sources */,
-				53FE37EA1EA961720058B925 /* WBServerShuffleLoader.m in Sources */,
 				53FE39881EA963180058B925 /* FMDatabaseQueue.m in Sources */,
 				53FE35E11EA961540058B925 /* EX2SlidingNotification.m in Sources */,
 				53BC27C2139AF0DD00A825F1 /* CurrentPlaylistSongUITableViewCell.m in Sources */,
@@ -5357,7 +5213,6 @@
 				53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */,
 				53FE352D1EA961540058B925 /* NSMutableOrderedSet+Safe.m in Sources */,
 				53BC27D6139AF0DD00A825F1 /* UAApplication.m in Sources */,
-				53FE37DB1EA961720058B925 /* WBDatabaseLoader.m in Sources */,
 				53FE39BE1EA9703E0058B925 /* DDASLLogger.m in Sources */,
 				53FE34C71EA961540058B925 /* NSArray+Safe.m in Sources */,
 				53FE35241EA961540058B925 /* NSString+Validation.m in Sources */,
@@ -5393,7 +5248,6 @@
 				53FE35691EA961540058B925 /* UIView+Glow.m in Sources */,
 				53FE353F1EA961540058B925 /* UIColor+ColorWithHex.m in Sources */,
 				53FE35ED1EA961540058B925 /* SnappySlider.m in Sources */,
-				53FE37841EA961720058B925 /* PMSStatusLoader.m in Sources */,
 				D0F7918D19DE4DFC008032A3 /* ISMSScrubberView.m in Sources */,
 				53FE34F11EA961540058B925 /* NSOrderedSet+FilterBlock.m in Sources */,
 				53FE370C1EA961720058B925 /* ISMSAlbum.m in Sources */,
@@ -5403,7 +5257,6 @@
 				53FE39391EA961ED0058B925 /* HTTPRedirectResponse.m in Sources */,
 				53FE38AF1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
 				D0EA476419DE41510083CE05 /* ISMSPlayerView.m in Sources */,
-				53FE37811EA961720058B925 /* PMSRootFoldersLoader.m in Sources */,
 				53FE379F1EA961720058B925 /* SUSChatDAO.m in Sources */,
 				53FE37091EA961720058B925 /* HLSProxyResponse.m in Sources */,
 				53FE379C1EA961720058B925 /* SUSAllSongsLoader.m in Sources */,
@@ -5425,7 +5278,6 @@
 				53FE35481EA961540058B925 /* UIDevice+Software.m in Sources */,
 				53FE37D51EA961720058B925 /* SUSSubFolderDAO.m in Sources */,
 				53BC27E5139AF0DD00A825F1 /* LyricsViewController.m in Sources */,
-				53FE37871EA961720058B925 /* PMSSubFolderLoader.m in Sources */,
 				53FE34CD1EA961540058B925 /* NSData+AES128.m in Sources */,
 				53FE39AB1EA970220058B925 /* DDContextFilterLogFormatter.m in Sources */,
 				53FE37C31EA961720058B925 /* SUSScrobbleLoader.m in Sources */,
@@ -5460,9 +5312,7 @@
 				53BC2815139AF0DD00A825F1 /* ModalAlbumArtViewController.m in Sources */,
 				53FE35301EA961540058B925 /* CALayer+ImageFromLayer.m in Sources */,
 				53FE34C41EA961540058B925 /* NSArray+Reverse.m in Sources */,
-				53BC2827139AF0DD00A825F1 /* ServerTypeViewController.m in Sources */,
 				53FE38441EA961A10058B925 /* SBJsonWriter.m in Sources */,
-				53BC2828139AF0DD00A825F1 /* UbuntuServerEditViewController.m in Sources */,
 				53BC282A139AF0DD00A825F1 /* IntroViewController.m in Sources */,
 				53FE37781EA961720058B925 /* PlaylistSingleton.m in Sources */,
 				53BC282B139AF0DD00A825F1 /* CustomUIAlertView.m in Sources */,
@@ -5472,7 +5322,6 @@
 				53FE355D1EA961540058B925 /* UIImageView+ImageAnimated.m in Sources */,
 				538E5256255A31F2000DF682 /* UIApplication+Orientiation.m in Sources */,
 				53FE35571EA961540058B925 /* UIImage+RoundedImage.m in Sources */,
-				53FE37E11EA961720058B925 /* WBDropdownFolderLoader.m in Sources */,
 				53FE37631EA961720058B925 /* JukeboxXMLParser.m in Sources */,
 				53FE39151EA961ED0058B925 /* DDRange.m in Sources */,
 				53FE392A1EA961ED0058B925 /* MultipartMessageHeaderField.m in Sources */,
@@ -5510,7 +5359,6 @@
 				535696551810DA8700997C7B /* FXBlurView.m in Sources */,
 				53FE38511EA961A80058B925 /* TBXML+HTTP.m in Sources */,
 				53FE356C1EA961540058B925 /* UIView+SetNeedsLayoutSafe.m in Sources */,
-				53FE374E1EA961720058B925 /* ISMSSubFolderLoader.m in Sources */,
 				53FE37391EA961720058B925 /* ISMSServer.m in Sources */,
 				53FE378D1EA961720058B925 /* SearchXMLParser.m in Sources */,
 				53A2BE26147DF09800E44822 /* EqualizerPointView.m in Sources */,
@@ -5529,7 +5377,6 @@
 				53FE37AB1EA961720058B925 /* SUSLyricsDAO.m in Sources */,
 				53FE37001EA961720058B925 /* CacheSingleton.m in Sources */,
 				53FE35061EA961540058B925 /* NSString+FileSize.m in Sources */,
-				53FE377E1EA961720058B925 /* PMSQueueAllLoader.m in Sources */,
 				5304FC2F14F2F0D100A2AD42 /* iPadRootViewController.m in Sources */,
 				53FE36F71EA961720058B925 /* BassStream.m in Sources */,
 				5304FC3214F2F0D100A2AD42 /* MenuViewController.m in Sources */,
@@ -5537,7 +5384,6 @@
 				5304FC3E14F2F0D100A2AD42 /* MenuTableViewCell.m in Sources */,
 				537E9A0C14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */,
 				537E9A3314F43F43006CB0BC /* StackContainerView.m in Sources */,
-				53703BD71588390A00B1FB33 /* PMSServerEditViewControllerViewController.m in Sources */,
 				53FE38A01EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53493F2915FC6AC40059492E /* main.m in Sources */,
 				D0EA476919DE41E30083CE05 /* ISMSPlayerViewController.m in Sources */,
@@ -5622,36 +5468,12 @@
 			name = ServerListViewController.xib;
 			sourceTree = "<group>";
 		};
-		533C65BA15ABB9C9003EAF29 /* ServerTypeViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				539148AA2559CBDF004AAC3F /* Base */,
-			);
-			name = ServerTypeViewController.xib;
-			sourceTree = "<group>";
-		};
 		533C65C115ABB9CC003EAF29 /* SubsonicServerEditViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				539148AB2559CBDF004AAC3F /* Base */,
 			);
 			name = SubsonicServerEditViewController.xib;
-			sourceTree = "<group>";
-		};
-		533C65C815ABB9D0003EAF29 /* UbuntuServerEditViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				539148AC2559CBDF004AAC3F /* Base */,
-			);
-			name = UbuntuServerEditViewController.xib;
-			sourceTree = "<group>";
-		};
-		533C65CD15ABB9D3003EAF29 /* PMSServerEditViewControllerViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				539148AD2559CBDF004AAC3F /* Base */,
-			);
-			name = PMSServerEditViewControllerViewController.xib;
 			sourceTree = "<group>";
 		};
 		533C65D415ABB9D6003EAF29 /* SettingsTabViewController.xib */ = {

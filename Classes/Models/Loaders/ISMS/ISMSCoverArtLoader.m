@@ -8,7 +8,6 @@
 
 #import "ISMSCoverArtLoader.h"
 #import "NSMutableURLRequest+SUS.h"
-#import "NSMutableURLRequest+PMS.h"
 
 @interface ISMSCoverArtLoader()
 // Keep strong reference to self so we don't die until done downloading when used standalone
@@ -159,19 +158,8 @@ static void initialize_navigationBarImages()
 						size = SCREEN_SCALE() == 2.0 ? @"120" : @"60";
 					}
 					
-					NSDictionary *parameters = nil;
-					NSMutableURLRequest *request = nil;
-					if ([settingsS.serverType isEqualToString:SUBSONIC] || [settingsS.serverType isEqualToString:UBUNTU_ONE])
-					{
-						parameters = [NSDictionary dictionaryWithObjectsAndKeys:n2N(size), @"size", n2N(self.coverArtId), @"id", nil];
-						request = [NSMutableURLRequest requestWithSUSAction:@"getCoverArt" parameters:parameters];
-					}
-					else if ([settingsS.serverType isEqualToString:WAVEBOX]) 
-					{
-						parameters = [NSDictionary dictionaryWithObjectsAndKeys:n2N(size), @"size", n2N(self.coverArtId), @"id", nil];
-						request = [NSMutableURLRequest requestWithPMSAction:@"art" parameters:parameters];
-					}
-				
+                    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:n2N(size), @"size", n2N(self.coverArtId), @"id", nil];
+                    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"getCoverArt" parameters:parameters];
 					if (request)
 					{
 						self.connection = [NSURLConnection connectionWithRequest:request delegate:self];

@@ -16,4 +16,3 @@
 @end
 
 #import "SUSScrobbleLoader.h"
-#import "WBScrobbleLoader.h"

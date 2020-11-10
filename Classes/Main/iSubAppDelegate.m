@@ -450,10 +450,6 @@ LOG_LEVEL_ISUB_DEFAULT
             settingsS.isNewSearchAPI = ((SUSStatusLoader *)theLoader).isNewSearchAPI;
             settingsS.isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
         }
-        else if ([theLoader isKindOfClass:[PMSStatusLoader class]])
-        {
-            settingsS.isVideoSupported = YES;
-        }
     }
 }
 
@@ -1329,8 +1325,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)playVideo:(ISMSSong *)aSong
 {
-    NSString *serverType = settingsS.serverType;
-    if (!aSong.isVideo || (([serverType isEqualToString:SUBSONIC] || [serverType isEqualToString:UBUNTU_ONE]) && !settingsS.isVideoSupported))
+    if (!aSong.isVideo || !settingsS.isVideoSupported)
         return;
     
     if (IS_IPAD())
@@ -1340,10 +1335,7 @@ LOG_LEVEL_ISUB_DEFAULT
             playlistS.repeatMode = ISMSRepeatMode_Normal;
     }
     
-    if ([serverType isEqualToString:SUBSONIC] || [serverType isEqualToString:UBUNTU_ONE])
-    {
-        [self playSubsonicVideo:aSong bitrates:settingsS.currentVideoBitrates];
-    }
+    [self playSubsonicVideo:aSong bitrates:settingsS.currentVideoBitrates];
 }
 
 - (void)playSubsonicVideo:(ISMSSong *)aSong bitrates:(NSArray *)bitrates

@@ -17,28 +17,12 @@
 
 + (id)loaderWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate
 {
-	if ([settingsS.serverType isEqualToString:SUBSONIC] || [settingsS.serverType isEqualToString:UBUNTU_ONE])
-	{
-		return [[SUSStatusLoader alloc] initWithDelegate:theDelegate];
-	}
-	else if ([settingsS.serverType isEqualToString:WAVEBOX])
-	{
-		return [[PMSStatusLoader alloc] initWithDelegate:theDelegate];
-	}
-	return nil;
+    return [[SUSStatusLoader alloc] initWithDelegate:theDelegate];
 }
 
 + (id)loaderWithCallbackBlock:(LoaderCallback)theBlock
 {
-	if ([settingsS.serverType isEqualToString:SUBSONIC] || [settingsS.serverType isEqualToString:UBUNTU_ONE])
-	{
-		return [[SUSStatusLoader alloc] initWithCallbackBlock:theBlock];
-	}
-	else if ([settingsS.serverType isEqualToString:WAVEBOX])
-	{
-		return [[PMSStatusLoader alloc] initWithCallbackBlock:theBlock];
-	}
-	return nil;
+    return [[SUSStatusLoader alloc] initWithCallbackBlock:theBlock];
 }
 
 @end

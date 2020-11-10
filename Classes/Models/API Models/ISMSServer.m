@@ -1,5 +1,5 @@
 //
-//  Server.m
+//  ISMSServer.m
 //  iSub
 //
 //  Created by Ben Baron on 12/29/10.

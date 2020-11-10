@@ -704,14 +704,11 @@
 	{
 		self.isReloading = YES;
 		[self loadData:[settingsS rootFoldersSelectedFolderId]];
-        if ([settingsS.serverType isEqualToString:SUBSONIC] || [settingsS.serverType isEqualToString:UBUNTU_ONE])
-        {
-            [self.refreshHeaderView setState:EGOOPullRefreshLoading];
-            
-            [UIView animateWithDuration:0.2 animations:^{
-                self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
-            }];
-        }
+        [self.refreshHeaderView setState:EGOOPullRefreshLoading];
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
+        }];
 	}
 }
 

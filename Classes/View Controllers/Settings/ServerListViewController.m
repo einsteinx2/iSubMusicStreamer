@@ -11,9 +11,6 @@
 #import "SettingsTabViewController.h"
 #import "HelpTabViewController.h"
 #import "FoldersViewController.h"
-#import "ServerTypeViewController.h"
-#import "UbuntuServerEditViewController.h"
-#import "PMSServerEditViewControllerViewController.h"
 #import "iPadRootViewController.h"
 #import "MenuViewController.h"
 
@@ -46,9 +43,6 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTable) name:@"reloadServerList" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSaveButton) name:@"showSaveButton" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(switchServer:) name:@"switchServer" object:nil];
-	
-	//viewObjectsS.tempServerList = [[NSMutableArray arrayWithArray:viewObjectsS.serverList] retain];
-	//DLog(@"tempServerList: %@", viewObjectsS.tempServerList);
 	
 	self.title = @"Servers";
 	if(self != [[self.navigationController viewControllers] objectAtIndexSafe:0])
@@ -174,15 +168,13 @@
 {
 	viewObjectsS.serverToEdit = nil;
 	
-	ServerTypeViewController *serverTypeViewController = [[ServerTypeViewController alloc] initWithNibName:@"ServerTypeViewController" bundle:nil];
-    
-	if ([serverTypeViewController respondsToSelector:@selector(setModalPresentationStyle:)])
-		serverTypeViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-    
+    SubsonicServerEditViewController *subsonicServerEditViewController = [[SubsonicServerEditViewController alloc] initWithNibName:@"SubsonicServerEditViewController" bundle:nil];
+    subsonicServerEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+
 	if (IS_IPAD())
-		[appDelegateS.ipadRootViewController presentViewController:serverTypeViewController animated:YES completion:nil];
+		[appDelegateS.ipadRootViewController presentViewController:subsonicServerEditViewController animated:YES completion:nil];
 	else
-		[self presentViewController:serverTypeViewController animated:YES completion:nil];
+		[self presentViewController:subsonicServerEditViewController animated:YES completion:nil];
     
     
 }
@@ -201,27 +193,9 @@
 
 - (void)showServerEditScreen
 {
-	if ([viewObjectsS.serverToEdit.type isEqualToString:UBUNTU_ONE])
-	{
-		UbuntuServerEditViewController *ubuntuServerEditViewController = [[UbuntuServerEditViewController alloc] initWithNibName:@"UbuntuServerEditViewController" bundle:nil];
-		if ([ubuntuServerEditViewController respondsToSelector:@selector(setModalPresentationStyle:)])
-			ubuntuServerEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-		[self presentViewController:ubuntuServerEditViewController animated:YES completion:nil];
-	}
-	else if ([viewObjectsS.serverToEdit.type isEqualToString:SUBSONIC])
-	{
-		SubsonicServerEditViewController *subsonicServerEditViewController = [[SubsonicServerEditViewController alloc] initWithNibName:@"SubsonicServerEditViewController" bundle:nil];
-		if ([subsonicServerEditViewController respondsToSelector:@selector(setModalPresentationStyle:)])
-			subsonicServerEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-		[self presentViewController:subsonicServerEditViewController animated:YES completion:nil];
-	}
-    else if ([viewObjectsS.serverToEdit.type isEqualToString:WAVEBOX])
-    {
-        PMSServerEditViewControllerViewController *pmsServerEditViewController = [[PMSServerEditViewControllerViewController alloc] initWithNibName:@"PMSServerEditViewControllerViewController" bundle:nil];
-		if ([pmsServerEditViewController respondsToSelector:@selector(setModalPresentationStyle:)])
-			pmsServerEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-		[self presentViewController:pmsServerEditViewController animated:YES completion:nil];
-    }
+    SubsonicServerEditViewController *subsonicServerEditViewController = [[SubsonicServerEditViewController alloc] initWithNibName:@"SubsonicServerEditViewController" bundle:nil];
+    subsonicServerEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:subsonicServerEditViewController animated:YES completion:nil];
 }
 
 - (void)switchServer:(NSNotification*)notification 
@@ -364,11 +338,7 @@
 	[detailsLabel setText:[NSString stringWithFormat:@"username: %@", aServer.username]];
 	[cell.contentView addSubview:detailsLabel];
 	
-	UIImage *typeImage = nil;
-	if ([aServer.type isEqualToString:SUBSONIC])
-		typeImage = [UIImage imageNamed:@"server-subsonic.png"];
-	else if ([aServer.type isEqualToString:UBUNTU_ONE])
-		typeImage = [UIImage imageNamed:@"server-ubuntu.png"];
+    UIImage *typeImage = [UIImage imageNamed:@"server-subsonic.png"];
 
 	UIImageView *serverType = [[UIImageView alloc] initWithImage:typeImage];
 	serverType.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
@@ -414,19 +384,11 @@
 		self.theNewRedirectionUrl = nil;
 		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Checking Server"];
         
-        if ([viewObjectsS.serverToEdit.type isEqualToString:SUBSONIC] || [viewObjectsS.serverToEdit.type isEqualToString:UBUNTU_ONE])
-        {
-            SUSStatusLoader *statusLoader = [[SUSStatusLoader alloc] initWithDelegate:self];
-            statusLoader.urlString = viewObjectsS.serverToEdit.url;
-            statusLoader.username = viewObjectsS.serverToEdit.username;
-            statusLoader.password = viewObjectsS.serverToEdit.password;
-            [statusLoader startLoad];
-        }
-        else if ([viewObjectsS.serverToEdit.type isEqualToString:WAVEBOX])
-        {
-            PMSLoginLoader *loginLoader = [[PMSLoginLoader alloc] initWithDelegate:self urlString:viewObjectsS.serverToEdit.url username:viewObjectsS.serverToEdit.username password:viewObjectsS.serverToEdit.password];
-            [loginLoader startLoad];
-        }
+        SUSStatusLoader *statusLoader = [[SUSStatusLoader alloc] initWithDelegate:self];
+        statusLoader.urlString = viewObjectsS.serverToEdit.url;
+        statusLoader.username = viewObjectsS.serverToEdit.username;
+        statusLoader.password = viewObjectsS.serverToEdit.password;
+        [statusLoader startLoad];
 	}
 }
 
@@ -540,13 +502,7 @@
 	settingsS.password = viewObjectsS.serverToEdit.password;
     settingsS.redirectUrlString = self.theNewRedirectionUrl;
     
-    if (theLoader.type == ISMSLoaderType_Login)
-    {
-        settingsS.sessionId = ((PMSLoginLoader *)theLoader).sessionId;
-        settingsS.isVideoSupported = YES;
-        [databaseS setCurrentMetadataDatabase];
-    }
-    else if (theLoader.type == ISMSLoaderType_Status && [viewObjectsS.serverToEdit.type isEqualToString:SUBSONIC])
+    if (theLoader.type == ISMSLoaderType_Status)
     {
         settingsS.isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
         settingsS.isNewSearchAPI = ((SUSStatusLoader *)theLoader).isNewSearchAPI;

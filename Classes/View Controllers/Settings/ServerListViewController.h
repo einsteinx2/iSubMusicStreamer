@@ -6,7 +6,7 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-@class SettingsTabViewController, HelpTabViewController, PMSLoginLoader;
+@class SettingsTabViewController, HelpTabViewController;
 
 @interface ServerListViewController : CustomUITableViewController <ISMSLoaderDelegate>
 

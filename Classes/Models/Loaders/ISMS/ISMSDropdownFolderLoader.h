@@ -15,4 +15,3 @@
 @end
 
 #import "SUSDropdownFolderLoader.h"
-#import "WBDropdownFolderLoader.h"

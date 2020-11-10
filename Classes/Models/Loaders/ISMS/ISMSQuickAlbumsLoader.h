@@ -17,4 +17,3 @@
 @end
 
 #import "SUSQuickAlbumsLoader.h"
-#import "WBQuickAlbumsLoader.h"

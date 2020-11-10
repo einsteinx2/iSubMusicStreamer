@@ -8,7 +8,7 @@
 
 @class ISMSArtist, ISMSAlbum, EGORefreshTableHeaderView, SUSSubFolderDAO, AsynchronousImageView;
 
-@interface AlbumViewController : CustomUITableViewController <ISMSLoaderDelegate, AsynchronousImageViewDelegate>
+@interface AlbumViewController : CustomUITableViewController <ISMSLoaderDelegateNew, AsynchronousImageViewDelegate>
 
 @property (nonatomic, strong) EGORefreshTableHeaderView *refreshHeaderView;
 @property (nonatomic) BOOL isReloading;

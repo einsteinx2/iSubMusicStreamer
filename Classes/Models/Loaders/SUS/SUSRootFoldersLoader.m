@@ -8,7 +8,6 @@
 
 #import "SUSRootFoldersLoader.h"
 #import "NSMutableURLRequest+SUS.h"
-#import "NSMutableURLRequest+PMS.h"
 
 @implementation SUSRootFoldersLoader
 

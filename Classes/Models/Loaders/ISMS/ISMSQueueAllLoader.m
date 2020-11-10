@@ -14,13 +14,9 @@
 
 + (id)loader
 {
-	if ([settingsS.serverType isEqualToString:SUBSONIC] || [settingsS.serverType isEqualToString:UBUNTU_ONE])
+	if ([settingsS.serverType isEqualToString:SUBSONIC])
 	{
 		return [[SUSQueueAllLoader alloc] init];
-	}
-	else if ([settingsS.serverType isEqualToString:WAVEBOX]) 
-	{
-		return [[PMSQueueAllLoader alloc] init];
 	}
 	return nil;
 }

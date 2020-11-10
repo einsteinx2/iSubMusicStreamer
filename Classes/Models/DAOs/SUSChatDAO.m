@@ -10,7 +10,6 @@
 #import "SUSChatLoader.h"
 #import "NSError+ISMSError.h"
 #import "NSMutableURLRequest+SUS.h"
-#import "NSMutableURLRequest+PMS.h"
 
 @implementation SUSChatDAO
 

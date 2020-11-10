@@ -360,37 +360,9 @@
 
 - (void)startLoad
 {
-    if ([settingsS.serverType isEqualToString:WAVEBOX])
-    {
-        WBDatabaseUpdateLoader *dbUpdate = [[WBDatabaseUpdateLoader alloc] initWithCallbackBlock:^(BOOL success, NSError *error, ISMSLoader *loader)
-        {
-            WBDatabaseUpdateLoader *theLoader = (WBDatabaseUpdateLoader *)loader;
-            
-            if (success && theLoader.requestYieldedNewQueries)
-            {
-                self.loader = [ISMSRootFoldersLoader loaderWithDelegate:self];
-                self.loader.selectedFolderId = self.selectedFolderId;
-                [self.loader startLoad];
-            }
-            else
-            {
-                if ([self.delegate respondsToSelector:@selector(loadingFinished:)])
-                {
-                    [self.delegate loadingFinished:nil];
-                    return;
-                }
-            }
-        }];
-        [dbUpdate startLoad];
-    }
-         
-    else
-    {
-        self.loader = [ISMSRootFoldersLoader loaderWithDelegate:self];
-        self.loader.selectedFolderId = self.selectedFolderId;
-        [self.loader startLoad];
-    }
-
+    self.loader = [ISMSRootFoldersLoader loaderWithDelegate:self];
+    self.loader.selectedFolderId = self.selectedFolderId;
+    [self.loader startLoad];
 }
 
 - (void)cancelLoad

@@ -17,28 +17,12 @@
 
 + (id)loaderWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate
 {
-	if ([settingsS.serverType isEqualToString:SUBSONIC] || [settingsS.serverType isEqualToString:UBUNTU_ONE])
-	{
-		return [[SUSRootFoldersLoader alloc] initWithDelegate:theDelegate];
-	}
-	else if ([settingsS.serverType isEqualToString:WAVEBOX]) 
-	{
-		return [[PMSRootFoldersLoader alloc] initWithDelegate:theDelegate];
-	}
-	return nil;
+    return [[SUSRootFoldersLoader alloc] initWithDelegate:theDelegate];
 }
 
 + (id)loaderWithCallbackBlock:(LoaderCallback)theBlock
 {
-	if ([settingsS.serverType isEqualToString:SUBSONIC] || [settingsS.serverType isEqualToString:UBUNTU_ONE])
-	{
-		return [[SUSRootFoldersLoader alloc] initWithCallbackBlock:theBlock];
-	}
-	else if ([settingsS.serverType isEqualToString:WAVEBOX])
-	{
-		return [[PMSRootFoldersLoader alloc] initWithCallbackBlock:theBlock];
-	}
-	return nil;
+    return [[SUSRootFoldersLoader alloc] initWithCallbackBlock:theBlock];
 }
 
 #pragma mark - Properties

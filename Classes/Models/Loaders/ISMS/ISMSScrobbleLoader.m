@@ -12,28 +12,12 @@
 
 + (id)loaderWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate
 {
-	if ([settingsS.serverType isEqualToString:SUBSONIC] || [settingsS.serverType isEqualToString:UBUNTU_ONE])
-	{
-		return [[SUSScrobbleLoader alloc] initWithDelegate:theDelegate];
-	}
-	else if ([settingsS.serverType isEqualToString:WAVEBOX])
-	{
-		return [[WBScrobbleLoader alloc] initWithDelegate:theDelegate];
-	}
-	return nil;
+    return [[SUSScrobbleLoader alloc] initWithDelegate:theDelegate];
 }
 
 + (id)loaderWithCallbackBlock:(LoaderCallback)theBlock
 {
-	if ([settingsS.serverType isEqualToString:SUBSONIC] || [settingsS.serverType isEqualToString:UBUNTU_ONE])
-	{
-		return [[SUSScrobbleLoader alloc] initWithCallbackBlock:theBlock];
-	}
-	else if ([settingsS.serverType isEqualToString:WAVEBOX])
-	{
-		return [[WBScrobbleLoader alloc] initWithCallbackBlock:theBlock];
-	}
-	return nil;
+    return [[SUSScrobbleLoader alloc] initWithCallbackBlock:theBlock];
 }
 
 @end

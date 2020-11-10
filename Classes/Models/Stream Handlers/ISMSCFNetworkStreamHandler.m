@@ -9,7 +9,6 @@
 #import "ISMSCFNetworkStreamHandler.h"
 #import "BassGaplessPlayer.h"
 #import "NSMutableURLRequest+SUS.h"
-#import "NSMutableURLRequest+PMS.h"
 
 @interface ISMSCFNetworkStreamHandler ()
 {
@@ -119,48 +118,17 @@ static const CFOptionFlags kNetworkEvents = kCFStreamEventOpenCompleted | kCFStr
         self.maxBitrateSetting = settingsS.currentMaxBitrate;
     }
 	
-    NSURLRequest *request;
-	if ([settingsS.serverType isEqualToString:SUBSONIC] || [settingsS.serverType isEqualToString:UBUNTU_ONE])
-	{
-		NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(self.mySong.songId), @"id", nil];
-        
-        // Causes a problem with some files in Subsonic, it will cut them off halfway
-		//[parameters setObject:@"true" forKey:@"estimateContentLength"];
-		
-		if (self.maxBitrateSetting != 0)
-		{
-			NSString *maxBitRate = [[NSString alloc] initWithFormat:@"%ld", (long)self.maxBitrateSetting];
-			[parameters setObject:n2N(maxBitRate) forKey:@"maxBitRate"];
-		}
-		request = [NSMutableURLRequest requestWithSUSAction:@"stream" parameters:parameters byteOffset:(NSUInteger)self.byteOffset];
-	}
-	else if ([settingsS.serverType isEqualToString:WAVEBOX])
-	{
-        NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObject:self.mySong.songId forKey:@"id"];
-        
-        if (self.bitrate < self.maxBitrateSetting || self.maxBitrateSetting == 0)
-        {
-            request = [NSMutableURLRequest requestWithPMSAction:@"stream" parameters:parameters byteOffset:(NSUInteger)self.byteOffset];
-        }
-        
-        else
-        {
-            [parameters setObject:@"OPUS" forKey:@"transType"];
-
-            NSString *transQuality;
-            switch (self.maxBitrateSetting)
-            {
-                case 64: transQuality = @"Low"; break;
-                case 96: transQuality = @"Medium"; break;
-                case 128: transQuality = @"High"; break;
-                default: transQuality = [NSString stringWithFormat:@"%li", (long)self.maxBitrateSetting];
-            }
-            [parameters setObject:transQuality forKey:@"transQuality"];
-            [parameters setObject:@"true" forKey:@"estimateContentLength"];
-            
-            request = [NSMutableURLRequest requestWithPMSAction:@"transcode" parameters:parameters byteOffset:(NSUInteger)self.byteOffset];
-        }
-	}
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(self.mySong.songId), @"id", nil];
+    
+    // Causes a problem with some files in Subsonic, it will cut them off halfway
+    //[parameters setObject:@"true" forKey:@"estimateContentLength"];
+    
+    if (self.maxBitrateSetting != 0)
+    {
+        NSString *maxBitRate = [[NSString alloc] initWithFormat:@"%ld", (long)self.maxBitrateSetting];
+        [parameters setObject:n2N(maxBitRate) forKey:@"maxBitRate"];
+    }
+    NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"stream" parameters:parameters byteOffset:(NSUInteger)self.byteOffset];
     
 	if (!request)
 	{

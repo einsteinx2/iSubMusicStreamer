@@ -9,7 +9,6 @@
 #import "SUSServerPlaylistsLoader.h"
 #import "SUSServerPlaylist.h"
 #import "NSMutableURLRequest+SUS.h"
-#import "NSMutableURLRequest+PMS.h"
 
 @implementation SUSServerPlaylistsLoader
 

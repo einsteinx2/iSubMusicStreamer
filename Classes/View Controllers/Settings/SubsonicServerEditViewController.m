@@ -8,7 +8,6 @@
 
 #import "SubsonicServerEditViewController.h"
 #import "FoldersViewController.h"
-#import "ServerTypeViewController.h"
 #import "iPadRootViewController.h"
 #import "MenuViewController.h"
 
@@ -29,13 +28,6 @@
 - (void)viewDidLoad 
 {
     [super viewDidLoad];
-	
-	if (!self.parentController)
-	{
-		CGRect frame = self.view.frame;
-		frame.origin.y = 20;
-		self.view.frame = frame;
-	}
 	
 	self.theNewRedirectUrl = nil;
 	
@@ -103,9 +95,6 @@
 - (IBAction)cancelButtonPressed:(id)sender
 {
 	viewObjectsS.serverToEdit = nil;
-	
-	if (self.parentController)
-		[self.parentController dismissViewControllerAnimated:YES completion:nil];
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
 	
@@ -230,9 +219,6 @@
 		[NSNotificationCenter postNotificationToMainThreadWithName:@"reloadServerList"];
 		[NSNotificationCenter postNotificationToMainThreadWithName:@"showSaveButton"];
 		
-		if (self.parentController)
-			[self.parentController dismissViewControllerAnimated:YES completion:nil];
-		
 		[self dismissViewControllerAnimated:YES completion:nil];
 		
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:0];
@@ -266,9 +252,6 @@
 		
 		[NSNotificationCenter postNotificationToMainThreadWithName:@"reloadServerList"];
 		[NSNotificationCenter postNotificationToMainThreadWithName:@"showSaveButton"];
-		
-		if (self.parentController)
-			[self.parentController dismissViewControllerAnimated:YES completion:nil];
 		
 		[self dismissViewControllerAnimated:YES completion:nil];
 		

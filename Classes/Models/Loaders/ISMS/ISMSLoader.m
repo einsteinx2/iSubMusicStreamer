@@ -11,7 +11,6 @@
 #import "ISMSLoaderManager.h"
 #import "NSError+ISMSError.h"
 #import "NSMutableURLRequest+SUS.h"
-#import "NSMutableURLRequest+PMS.h"
 
 @interface ISMSLoader ()
 @property (nonatomic, strong) ISMSLoader *selfRef;
