@@ -13,6 +13,7 @@
 #import "SongUITableViewCell.h"
 #import "ServerListViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
+#import "SUSQuickAlbumsLoader.h"
 
 @implementation HomeAlbumViewController
 
@@ -90,13 +91,13 @@
 	self.isLoading = YES;
 	self.offset += 20;
     
-    self.loader = [ISMSQuickAlbumsLoader loaderWithDelegate:self];
+    self.loader = [[SUSQuickAlbumsLoader alloc] initWithDelegate:self];
     self.loader.modifier = self.modifier;
     self.loader.offset = self.offset;
     [self.loader startLoad];
 }
 
-- (void)loadingFailed:(ISMSLoader *)theLoader withError:(NSError *)error
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
 {
     self.loader = nil;
 	self.isLoading = NO;
@@ -105,7 +106,7 @@
     [alert show];
 }	
 
-- (void)loadingFinished:(ISMSLoader *)theLoader
+- (void)loadingFinished:(SUSLoader *)theLoader
 {
     if (self.loader.listOfAlbums.count == 0)
     {

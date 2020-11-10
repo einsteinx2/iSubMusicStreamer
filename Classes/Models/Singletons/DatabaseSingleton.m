@@ -7,7 +7,7 @@
 //
 
 #import "DatabaseSingleton.h"
-#import "ISMSQueueAllLoader.h"
+#import "SUSQueueAllLoader.h"
 #import "PlaylistSingleton.h"
 #import "ISMSStreamManager.h"
 #import "JukeboxSingleton.h"
@@ -1051,7 +1051,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)setup 
 {
-	_queueAll = [ISMSQueueAllLoader loader];
+	_queueAll = [[SUSQueueAllLoader alloc] init];
 	
     _databaseFolderPath = [settingsS.documentsPath stringByAppendingPathComponent:@"database"];
 	

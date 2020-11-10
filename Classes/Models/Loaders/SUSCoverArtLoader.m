@@ -51,8 +51,8 @@ static void initialize_navigationBarImages() {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (ISMSLoaderType)type {
-    return ISMSLoaderType_CoverArt;
+- (SUSLoaderType)type {
+    return SUSLoaderType_CoverArt;
 }
 
 #pragma mark - Properties

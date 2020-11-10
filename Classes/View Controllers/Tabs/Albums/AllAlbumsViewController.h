@@ -9,7 +9,7 @@
 
 @class ISMSAlbum, SUSAllAlbumsDAO, EGORefreshTableHeaderView, LoadingScreen, SUSAllSongsDAO;
 
-@interface AllAlbumsViewController : CustomUITableViewController <UISearchBarDelegate, ISMSLoaderDelegate> 
+@interface AllAlbumsViewController : CustomUITableViewController <UISearchBarDelegate, SUSLoaderDelegate> 
 
 @property (strong) UIButton *reloadButton;
 @property (strong) UILabel *reloadLabel;

@@ -13,8 +13,8 @@
 
 #pragma mark - Loader Methods
 
-- (ISMSLoaderType)type {
-    return ISMSLoaderType_SubFolders;
+- (SUSLoaderType)type {
+    return SUSLoaderType_SubFolders;
 }
 
 - (NSURLRequest *)createRequest {
@@ -24,8 +24,6 @@
 - (void)processResponse {
     DLog(@"%@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
     
-    // Parse the data
-    //
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
     if (![root isValid]) {
         NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];

@@ -210,7 +210,7 @@
 
 #pragma mark - ISMSLoader delegate
 
-- (void)loadingFailed:(ISMSLoader *)theLoader withError:(NSError *)error
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
 {
     // Inform the user that the connection failed.
 	NSString *message = [NSString stringWithFormat:@"There was an error loading the now playing list.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
@@ -222,7 +222,7 @@
 	[self dataSourceDidFinishLoadingNewData];
 }
 
-- (void)loadingFinished:(ISMSLoader *)theLoader
+- (void)loadingFinished:(SUSLoader *)theLoader
 {
     [viewObjectsS hideLoadingScreen];
 	

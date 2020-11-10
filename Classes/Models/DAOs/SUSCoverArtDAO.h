@@ -6,12 +6,12 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-#import "ISMSLoaderManager.h"
+#import "SUSLoaderManager.h"
 
 @class FMDatabase, SUSCoverArtLoader;
-@interface SUSCoverArtDAO : NSObject <SUSLoaderDelegate, ISMSLoaderManager>
+@interface SUSCoverArtDAO : NSObject <SUSLoaderDelegate, SUSLoaderManager>
 
-@property (weak) NSObject<ISMSLoaderDelegate> *delegate;
+@property (weak) NSObject<SUSLoaderDelegate> *delegate;
 @property (strong) SUSCoverArtLoader *loader;
 
 @property (copy) NSString *coverArtId;

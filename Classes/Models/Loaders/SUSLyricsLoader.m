@@ -11,8 +11,8 @@
 
 @implementation SUSLyricsLoader
 
-- (ISMSLoaderType)type {
-    return ISMSLoaderType_Lyrics;
+- (SUSLoaderType)type {
+    return SUSLoaderType_Lyrics;
 }
 
 - (NSURLRequest *)createRequest {

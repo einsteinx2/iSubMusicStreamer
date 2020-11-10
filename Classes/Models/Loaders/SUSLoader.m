@@ -7,7 +7,19 @@
 //
 
 #import "SUSLoader.h"
-#import "ISMSURLSessionDelegate.h"
+
+@interface SUSLoaderURLSessionDelegate : NSObject <NSURLSessionDelegate>
+@end
+
+@implementation SUSLoaderURLSessionDelegate
+// Allow self-signed SSL certificates
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
+  if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+      NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+      completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
+  }
+}
+@end
 
 @interface SUSLoader()
 @property (strong) NSData *receivedData;
@@ -18,11 +30,11 @@
 @implementation SUSLoader
 
 static NSURLSession *_sharedSession = nil;
-static ISMSURLSessionDelegate *_sharedSessionDelegate = nil;
+static SUSLoaderURLSessionDelegate *_sharedSessionDelegate = nil;
 static dispatch_once_t _sharedSessionDispatchOnce = 0;
 + (NSURLSession *)sharedSession {
     dispatch_once(&_sharedSessionDispatchOnce, ^{
-        _sharedSessionDelegate = [[ISMSURLSessionDelegate alloc] init];
+        _sharedSessionDelegate = [[SUSLoaderURLSessionDelegate alloc] init];
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
         _sharedSession = [NSURLSession sessionWithConfiguration:configuration delegate:_sharedSessionDelegate delegateQueue:nil];
     });
@@ -42,7 +54,7 @@ static dispatch_once_t _sharedSessionDispatchOnce = 0;
     return self;
 }
 
-- (instancetype)initWithCallbackBlock:(LoaderCallback)theBlock {
+- (instancetype)initWithCallbackBlock:(SUSLoaderCallback)theBlock {
     if (self = [super init]) {
         [self setup];
         _callbackBlock = [theBlock copy];
@@ -51,8 +63,8 @@ static dispatch_once_t _sharedSessionDispatchOnce = 0;
     return self;
 }
 
-- (ISMSLoaderType)type {
-    return ISMSLoaderType_Generic;
+- (SUSLoaderType)type {
+    return SUSLoaderType_Generic;
 }
 
 - (void)startLoad {

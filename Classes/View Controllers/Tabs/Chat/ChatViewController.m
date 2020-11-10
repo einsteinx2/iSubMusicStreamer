@@ -222,7 +222,7 @@
 
 #pragma mark - ISMSLoader delegate
 
-- (void)loadingFailed:(ISMSLoader*)theLoader withError:(NSError *)error
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
 {
 	[viewObjectsS hideLoadingScreen];
 	
@@ -235,7 +235,7 @@
 	}
 }
 
-- (void)loadingFinished:(ISMSLoader*)theLoader
+- (void)loadingFinished:(SUSLoader *)theLoader
 {
 	[viewObjectsS hideLoadingScreen];
 	

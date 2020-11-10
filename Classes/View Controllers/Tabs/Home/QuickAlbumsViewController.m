@@ -11,6 +11,7 @@
 #import "iPadRootViewController.h"
 #import "StackScrollViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
+#import "SUSQuickAlbumsLoader.h"
 
 @interface QuickAlbumsViewController (Private)
 - (void)albumLoad:(NSString*)modifier;
@@ -112,12 +113,12 @@
 {
     [viewObjectsS showAlbumLoadingScreen:appDelegateS.window sender:self];
         
-    ISMSQuickAlbumsLoader *loader = [ISMSQuickAlbumsLoader loaderWithDelegate:self];
+    SUSQuickAlbumsLoader *loader = [[SUSQuickAlbumsLoader alloc] initWithDelegate:self];
     loader.modifier = theModifier;
     [loader startLoad];
 }
 
-- (void)loadingFailed:(ISMSLoader *)theLoader withError:(NSError *)error
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
 {
     [viewObjectsS hideLoadingScreen];
 
@@ -125,7 +126,7 @@
     [alert show];
 }
 
-- (void)loadingFinished:(ISMSLoader *)theLoader
+- (void)loadingFinished:(SUSLoader *)theLoader
 {
     [viewObjectsS hideLoadingScreen];
 

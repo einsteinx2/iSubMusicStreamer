@@ -11,8 +11,8 @@
 
 @implementation SUSDropdownFolderLoader
 
-- (ISMSLoaderType)type {
-    return ISMSLoaderType_DropdownFolder;
+- (SUSLoaderType)type {
+    return SUSLoaderType_DropdownFolder;
 }
 
 - (NSURLRequest *)createRequest {

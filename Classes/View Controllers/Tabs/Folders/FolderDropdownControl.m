@@ -7,6 +7,7 @@
 //
 
 #import "FolderDropdownControl.h"
+#import "SUSDropdownFolderLoader.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface FolderDropdownControl() {

@@ -13,6 +13,8 @@
 #import "FoldersViewController.h"
 #import "iPadRootViewController.h"
 #import "MenuViewController.h"
+#import "SUSStatusLoader.h"
+#import "SUSAllSongsLoader.h"
 
 @implementation ServerListViewController
 
@@ -445,7 +447,7 @@
     }   
 }
 
-- (void)loadingFailed:(ISMSLoader *)theLoader withError:(NSError *)error
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
 {
     UIAlertView *alert = nil;
 	if (error.code == ISMSErrorCode_IncorrectCredentials)
@@ -463,14 +465,14 @@
     [viewObjectsS hideLoadingScreen];
 }
 
-- (void)loadingFinished:(ISMSLoader *)theLoader
+- (void)loadingFinished:(SUSLoader *)theLoader
 {    	
 	settingsS.serverType = viewObjectsS.serverToEdit.type;
 	settingsS.urlString = viewObjectsS.serverToEdit.url;
 	settingsS.username = viewObjectsS.serverToEdit.username;
 	settingsS.password = viewObjectsS.serverToEdit.password;
     
-    if (theLoader.type == ISMSLoaderType_Status)
+    if (theLoader.type == SUSLoaderType_Status)
     {
         settingsS.isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
         settingsS.isNewSearchAPI = ((SUSStatusLoader *)theLoader).isNewSearchAPI;

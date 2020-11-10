@@ -10,6 +10,7 @@
 #import "FoldersViewController.h"
 #import "iPadRootViewController.h"
 #import "MenuViewController.h"
+#import "SUSStatusLoader.h"
 
 @implementation SubsonicServerEditViewController
 
@@ -145,7 +146,7 @@
 
 #pragma mark - Server URL Checker delegate
 
-- (void)loadingFailed:(ISMSLoader *)theLoader withError:(NSError *)error
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
 {
 	[viewObjectsS hideLoadingScreen];
 	
@@ -158,7 +159,7 @@
 	[alert show];
 }	
 	
-- (void)loadingFinished:(ISMSLoader *)theLoader
+- (void)loadingFinished:(SUSLoader *)theLoader
 {
 	//DLog(@"server check passed");
 	[viewObjectsS hideLoadingScreen];

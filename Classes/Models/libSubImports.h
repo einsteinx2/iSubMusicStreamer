@@ -45,7 +45,6 @@
 
 // Data Model
 #import "ISMSDataModelObjects.h"
-#import "ISMSLoader.h"
 #import "ISMSDataAccessObjects.h"
 #import "ISMSErrorDomain.h"
 #import "SUSErrorDomain.h"

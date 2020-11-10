@@ -11,6 +11,7 @@
 #import "PlaylistSingleton.h"
 #import "ISMSStreamManager.h"
 #import "NSMutableURLRequest+SUS.h"
+#import "SUSScrobbleLoader.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 

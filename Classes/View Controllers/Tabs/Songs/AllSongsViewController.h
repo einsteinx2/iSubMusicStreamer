@@ -9,7 +9,7 @@
 
 @class ISMSSong, ISMSAlbum, SUSAllSongsDAO, LoadingScreen, EGORefreshTableHeaderView;
 
-@interface AllSongsViewController : CustomUITableViewController <UISearchBarDelegate, ISMSLoaderDelegate> 
+@interface AllSongsViewController : CustomUITableViewController <UISearchBarDelegate, SUSLoaderDelegate> 
 
 @property (strong) UIButton *reloadButton;
 @property (strong) UILabel *reloadLabel;
@@ -33,8 +33,8 @@
 
 - (void)addCount;
 - (void)doneSearching_Clicked:(id)sender;
-- (void)loadingFailed:(ISMSLoader*)theLoader withError:(NSError *)error;
-- (void)loadingFinished:(ISMSLoader*)theLoader;
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error;
+- (void)loadingFinished:(SUSLoader *)theLoader;
 - (void)dataSourceDidFinishLoadingNewData;
 
 - (void)showLoadingScreen;

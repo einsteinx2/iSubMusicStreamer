@@ -1,15 +1,14 @@
 //
-//  QueueAll.h
+//  SUSQueueAllLoader.h
 //  iSub
 //
-//  Created by Ben Baron on 1/16/11.
-//  Copyright 2011 Ben Baron. All rights reserved.
+//  Created by Benjamin Baron on 6/14/12.
+//  Copyright (c) 2012 Ben Baron. All rights reserved.
 //
-#import "ISMSLoader.h"
 
-@class ISMSArtist;
+#import "SUSLoader.h"
 
-@interface ISMSQueueAllLoader : ISMSLoader 
+@interface SUSQueueAllLoader : SUSLoader
 
 @property BOOL isQueue;
 @property BOOL isShuffleButton;
@@ -33,8 +32,4 @@
 - (void)playAllData:(NSString *)folderId artist:(ISMSArtist *)theArtist;
 - (void)shuffleData:(NSString *)folderId artist:(ISMSArtist *)theArtist;
 
-- (void)finishLoad;
-
 @end
-
-#import "SUSQueueAllLoader.h"

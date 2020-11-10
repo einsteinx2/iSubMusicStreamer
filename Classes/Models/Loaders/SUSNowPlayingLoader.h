@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 Ben Baron. All rights reserved.
 //
 
-#import "ISMSLoader.h"
+#import "SUSLoader.h"
 
-@interface SUSNowPlayingLoader : ISMSLoader
+@interface SUSNowPlayingLoader : SUSLoader
 
-@property (strong) NSMutableArray *nowPlayingSongDicts;
+@property (strong) NSArray *nowPlayingSongDicts;
 
 @end

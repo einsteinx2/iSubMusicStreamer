@@ -6,7 +6,7 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-@interface QuickAlbumsViewController : UIViewController <ISMSLoaderDelegate>
+@interface QuickAlbumsViewController : UIViewController <SUSLoaderDelegate>
 
 @property (nonatomic, weak) UIViewController *parent;
 

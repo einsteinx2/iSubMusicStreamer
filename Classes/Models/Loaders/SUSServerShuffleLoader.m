@@ -12,8 +12,8 @@
 
 @implementation SUSServerShuffleLoader
 
-- (ISMSLoaderType)type {
-    return ISMSLoaderType_ServerShuffle;
+- (SUSLoaderType)type {
+    return SUSLoaderType_ServerShuffle;
 }
 
 - (NSURLRequest *)createRequest {

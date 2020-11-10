@@ -1,15 +1,15 @@
 //
-//  LoaderManager.h
+//  SUSLoaderManager.h
 //  iSub
 //
 //  Created by Ben Baron on 9/24/11.
 //  Copyright 2011 Ben Baron. All rights reserved.
 //
 
-@protocol ISMSLoaderManager <NSObject>
+@protocol SUSLoaderManager <NSObject>
 
 @required
-- (instancetype)initWithDelegate:(NSObject <ISMSLoaderDelegate> *)theDelegate;
+- (instancetype)initWithDelegate:(NSObject <SUSLoaderDelegate> *)theDelegate;
 - (void)startLoad;
 - (void)cancelLoad;
 

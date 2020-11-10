@@ -6,12 +6,12 @@
 //  Copyright 2011 Ben Baron. All rights reserved.
 //
 
-#import "ISMSLoaderManager.h"
+#import "SUSLoaderManager.h"
 #import "SUSLoaderDelegate.h"
 
 @class ISMSArtist, FMDatabase, SUSRootFoldersLoader;
 
-@interface SUSRootFoldersDAO : NSObject <ISMSLoaderManager, SUSLoaderDelegate>
+@interface SUSRootFoldersDAO : NSObject <SUSLoaderManager, SUSLoaderDelegate>
 {		
 	NSUInteger _tempRecordCount;
     NSArray *_indexNames;
@@ -19,7 +19,7 @@
     NSArray *_indexCounts;
 }
 
-@property (weak) id<ISMSLoaderDelegate> delegate;
+@property (weak) id<SUSLoaderDelegate> delegate;
 
 @property (strong) SUSRootFoldersLoader *loader;
 
@@ -37,7 +37,7 @@
 + (void)setFolderDropdownFolders:(NSDictionary *)folders;
 + (NSDictionary *)folderDropdownFolders;
 
-- (instancetype)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate;
+- (instancetype)initWithDelegate:(id <SUSLoaderDelegate>)theDelegate;
 
 - (ISMSArtist *)artistForPosition:(NSUInteger)position;
 - (void)clearSearchTable;

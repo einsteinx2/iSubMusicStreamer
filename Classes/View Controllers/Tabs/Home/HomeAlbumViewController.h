@@ -6,9 +6,9 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-@class ISMSArtist, ISMSAlbum;
+@class ISMSArtist, ISMSAlbum, SUSQuickAlbumsLoader;
 
-@interface HomeAlbumViewController : CustomUITableViewController <ISMSLoaderDelegate>
+@interface HomeAlbumViewController : CustomUITableViewController <SUSLoaderDelegate>
 
 @property (nonatomic, strong) SUSQuickAlbumsLoader *loader;
 

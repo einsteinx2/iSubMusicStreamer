@@ -15,6 +15,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "FolderDropdownControl.h"
 #import "UIViewController+PushViewControllerCustom.h"
+#import "SUSAllSongsLoader.h"
 
 @interface FoldersViewController (Private)
 
@@ -258,7 +259,7 @@
 	[self.dataModel startLoad];
 }
 
-- (void)loadingFailed:(ISMSLoader*)theLoader withError:(NSError *)error
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
 {	
 	viewObjectsS.isArtistsLoading = NO;
 	
@@ -272,7 +273,7 @@
     [alert show];
 }
 
-- (void)loadingFinished:(ISMSLoader*)theLoader
+- (void)loadingFinished:(SUSLoader *)theLoader
 {	
     //DLog(@"loadingFinished called");
 	if (isCountShowing)

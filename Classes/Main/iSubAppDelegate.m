@@ -25,6 +25,7 @@
 #import "HLSProxyConnection.h"
 #import "DDFileLogger.h"
 #import "DDTTYLogger.h"
+#import "SUSStatusLoader.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -396,7 +397,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
 {
-    if (theLoader.type == ISMSLoaderType_Status)
+    if (theLoader.type == SUSLoaderType_Status)
     {
         [viewObjectsS hideLoadingScreen];
         
@@ -427,7 +428,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)loadingFinished:(SUSLoader *)theLoader
 {
     // This happens right on app launch
-    if (theLoader.type == ISMSLoaderType_Status)
+    if (theLoader.type == SUSLoaderType_Status)
     {
         if ([theLoader isKindOfClass:[SUSStatusLoader class]])
         {

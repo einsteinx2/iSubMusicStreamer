@@ -847,8 +847,6 @@ static NSString *kName_Error = @"error";
 
 - (void)parseData
 {
-    // Parse the data
-    //
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
     if (![root isValid])
     {

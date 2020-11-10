@@ -217,7 +217,7 @@
 
 #pragma mark - Loader Delegate Methods
 
-- (void)loadingFailed:(ISMSLoader*)theLoader withError:(NSError *)error {
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
 	self.loader.delegate = nil;
 	self.loader = nil;
 	
@@ -226,7 +226,7 @@
 	}
 }
 
-- (void)loadingFinished:(ISMSLoader*)theLoader {
+- (void)loadingFinished:(SUSLoader *)theLoader {
 	self.loader.delegate = nil;
 	self.loader = nil;
 	

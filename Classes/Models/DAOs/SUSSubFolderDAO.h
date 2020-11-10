@@ -6,12 +6,12 @@
 //  Copyright 2011 Ben Baron. All rights reserved.
 //
 
-#import "ISMSLoaderManager.h"
+#import "SUSLoaderManager.h"
 #import "SUSLoaderDelegate.h"
 
 @class FMDatabase, ISMSArtist, ISMSAlbum, ISMSSong, SUSSubFolderLoader;
 
-@interface SUSSubFolderDAO : NSObject <SUSLoaderDelegate, ISMSLoaderManager>
+@interface SUSSubFolderDAO : NSObject <SUSLoaderDelegate, SUSLoaderManager>
 
 @property NSUInteger albumStartRow;
 @property NSUInteger songStartRow;

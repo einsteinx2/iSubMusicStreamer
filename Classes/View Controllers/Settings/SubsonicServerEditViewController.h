@@ -6,7 +6,7 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-@interface SubsonicServerEditViewController : UIViewController <ISMSLoaderDelegate>
+@interface SubsonicServerEditViewController : UIViewController <SUSLoaderDelegate>
 
 @property (nonatomic, strong) IBOutlet UITextField *urlField;
 @property (nonatomic, strong) IBOutlet UITextField *usernameField;

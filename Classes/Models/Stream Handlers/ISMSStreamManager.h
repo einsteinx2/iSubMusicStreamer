@@ -8,7 +8,6 @@
 
 #import "ISMSStreamHandlerDelegate.h"
 #import "ISMSStreamHandler.h"
-#import "ISMSLoaderDelegate.h"
 
 #define streamManagerS ((ISMSStreamManager *)[ISMSStreamManager sharedInstance])
 

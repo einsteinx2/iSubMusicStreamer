@@ -11,7 +11,7 @@
 
 #define databaseS ((DatabaseSingleton *)[DatabaseSingleton sharedInstance])
 
-@class FMDatabase, FMDatabaseQueue, ISMSArtist, ISMSAlbum, ISMSSong, ISMSQueueAllLoader;
+@class FMDatabase, FMDatabaseQueue, ISMSArtist, ISMSAlbum, ISMSSong, SUSQueueAllLoader;
 
 @interface DatabaseSingleton : NSObject 
 
@@ -32,7 +32,7 @@
 @property (strong) FMDatabaseQueue *bookmarksDbQueue;
 @property (strong) FMDatabaseQueue *metadataDbQueue;
 
-@property (strong) ISMSQueueAllLoader *queueAll;
+@property (strong) SUSQueueAllLoader *queueAll;
 
 + (instancetype)sharedInstance;
 + (void) setAllSongsToBackup;

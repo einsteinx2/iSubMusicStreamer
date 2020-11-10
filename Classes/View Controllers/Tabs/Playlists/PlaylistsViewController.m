@@ -1136,12 +1136,12 @@
 
 #pragma mark - ISMSLoader Delegate
 
-- (void)loadingFailed:(ISMSLoader *)theLoader withError:(NSError *)error
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
 {
     [viewObjectsS hideLoadingScreen];
 }
 
-- (void)loadingFinished:(ISMSLoader *)theLoader
+- (void)loadingFinished:(SUSLoader *)theLoader
 {    
     [self.tableView reloadData];
     
@@ -1263,8 +1263,6 @@ static NSString *kName_Error = @"error";
 
 - (void)parseData
 {
-    // Parse the data
-    //
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
     if (![root isValid])
     {

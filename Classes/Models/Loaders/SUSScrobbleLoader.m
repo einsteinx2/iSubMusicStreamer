@@ -11,8 +11,8 @@
 
 @implementation SUSScrobbleLoader
 
-- (ISMSLoaderType)type {
-    return ISMSLoaderType_Scrobble;
+- (SUSLoaderType)type {
+    return SUSLoaderType_Scrobble;
 }
 
 - (NSURLRequest *)createRequest {

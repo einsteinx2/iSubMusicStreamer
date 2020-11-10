@@ -113,8 +113,6 @@
 {
     BOOL showAlert = NO;
     
-    // Parse the data
-    //
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
     if ([root isValid])
     {

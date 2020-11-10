@@ -9,7 +9,7 @@
 
 @class CustomUITextView, EGORefreshTableHeaderView, SUSChatDAO;
 
-@interface ChatViewController : CustomUITableViewController <UITextViewDelegate, ISMSLoaderDelegate> 
+@interface ChatViewController : CustomUITableViewController <UITextViewDelegate, SUSLoaderDelegate> 
 
 @property (strong) UIView *headerView;
 @property (strong) CustomUITextView *textInput;

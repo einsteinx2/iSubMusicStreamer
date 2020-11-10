@@ -11,8 +11,8 @@
 
 @implementation SUSStatusLoader
 
-- (ISMSLoaderType)type {
-    return ISMSLoaderType_Status;
+- (SUSLoaderType)type {
+    return SUSLoaderType_Status;
 }
 
 - (NSURLRequest *)createRequest {
@@ -35,8 +35,6 @@
 - (void)processResponse {
     DLog(@"SUSStatusLoader: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
     
-    // Parse the data
-    //
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
     if (![root isValid]) {
         NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];

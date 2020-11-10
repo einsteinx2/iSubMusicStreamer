@@ -7,7 +7,6 @@
 //
 
 #import "ISMSCacheQueueManager.h"
-#import "ISMSLoader.h"
 #import "DatabaseSingleton.h"
 #import "SUSLyricsLoader.h"
 #import "SUSCoverArtLoader.h"

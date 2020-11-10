@@ -16,6 +16,7 @@
 #import "EGORefreshTableHeaderView.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "LoadingScreen.h"
+#import "SUSAllSongsLoader.h"
 
 @interface AllSongsViewController (Private)
 - (void)hideLoadingScreen;
@@ -199,14 +200,14 @@
 
 #pragma mark - LoaderDelegate methods
 
-- (void)loadingFailed:(ISMSLoader*)theLoader withError:(NSError *)error
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
 {
 	[self.tableView reloadData];
 	[self createDataModel];
     [self hideLoadingScreen];
 }
 
-- (void)loadingFinished:(ISMSLoader*)theLoader
+- (void)loadingFinished:(SUSLoader *)theLoader
 {
 	// Don't do anything, handled by the notification
 }

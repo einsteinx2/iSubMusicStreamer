@@ -180,9 +180,7 @@
 }	
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)theConnection 
-{	
-    // Parse the data
-    //
+{
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:receivedData];
     if (![root isValid])
     {

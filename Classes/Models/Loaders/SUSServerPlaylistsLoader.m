@@ -14,9 +14,9 @@
 
 #pragma mark - Lifecycle
 
-- (ISMSLoaderType)type
+- (SUSLoaderType)type
 {
-    return ISMSLoaderType_ServerPlaylist;
+    return SUSLoaderType_ServerPlaylist;
 }
 
 #pragma mark - Loader Methods

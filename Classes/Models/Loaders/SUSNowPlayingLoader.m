@@ -13,53 +13,41 @@
 
 #pragma mark - Lifecycle
 
-- (ISMSLoaderType)type
-{
-    return ISMSLoaderType_NowPlaying;
+- (SUSLoaderType)type {
+    return SUSLoaderType_NowPlaying;
 }
 
 #pragma mark - Loader Methods
 
-- (NSURLRequest *)createRequest
-{
+- (NSURLRequest *)createRequest {
 	return [NSMutableURLRequest requestWithSUSAction:@"getNowPlaying" parameters:nil];
 }
 
-- (void)processResponse
-{
-    // Parse the data
-    //
+- (void)processResponse {
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-    if (![root isValid])
-    {
+    if (![root isValid]) {
         NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
         [self informDelegateLoadingFailed:error];
-    }
-    else
-    {
+    } else {
         RXMLElement *error = [root child:@"error"];
-        if ([error isValid])
-        {
-            NSString *code = [error attribute:@"code"];
+        if ([error isValid]) {
+            NSInteger code = [[error attribute:@"code"] integerValue];
             NSString *message = [error attribute:@"message"];
-            [self subsonicErrorCode:[code intValue] message:message];
-        }
-        else
-        {
-            self.nowPlayingSongDicts = [[NSMutableArray alloc] initWithCapacity:0];
+            [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
+        } else {
+            NSMutableArray *songDicts = [[NSMutableArray alloc] init];
             
             // TODO: Stop using a dictionary for this
             [root iterate:@"nowPlaying.entry" usingBlock:^(RXMLElement *e) {
-                NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:0];
-                
+                NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
                 [dict setObjectSafe:[[ISMSSong alloc] initWithRXMLElement:e] forKey:@"song"];
                 [dict setObjectSafe:[e attribute:@"username"] forKey:@"username"];
                 [dict setObjectSafe:[e attribute:@"minutesAgo"] forKey:@"minutesAgo"];
                 [dict setObjectSafe:[e attribute:@"playerId"] forKey:@"playerId"];
                 [dict setObjectSafe:[e attribute:@"playerName"] forKey:@"playerName"];
-                
-                [self.nowPlayingSongDicts addObject:dict];
+                [songDicts addObject:dict];
             }];
+            self.nowPlayingSongDicts = songDicts;
             
             // Notify the delegate that the loading is finished
             [self informDelegateLoadingFinished];

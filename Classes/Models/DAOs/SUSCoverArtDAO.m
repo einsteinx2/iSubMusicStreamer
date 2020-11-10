@@ -11,14 +11,14 @@
 
 @implementation SUSCoverArtDAO
 
-- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate {
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate {
 	if ((self = [super init])) {
 		_delegate = theDelegate;
 	}
 	return self;
 }
 
-- (instancetype)initWithDelegate:(NSObject<ISMSLoaderDelegate> *)theDelegate coverArtId:(NSString *)artId isLarge:(BOOL)large {
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate coverArtId:(NSString *)artId isLarge:(BOOL)large {
 	if ((self = [super init])) {
 		_delegate = theDelegate;
 		_isLarge = large;
@@ -89,7 +89,7 @@
 
 #pragma mark - Loader Delegate Methods
 
-- (void)loadingFailed:(ISMSLoader*)theLoader withError:(NSError *)error {
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
 	self.loader.delegate = nil;
 	self.loader = nil;
 	
@@ -98,7 +98,7 @@
 	}
 }
 
-- (void)loadingFinished:(ISMSLoader*)theLoader {
+- (void)loadingFinished:(SUSLoader *)theLoader {
 	self.loader.delegate = nil;
 	self.loader = nil;
     

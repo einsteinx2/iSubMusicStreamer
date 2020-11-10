@@ -6,19 +6,19 @@
 //  Copyright (c) 2012 Ben Baron. All rights reserved.
 //
 
-#import "ISMSLoaderManager.h"
+#import "SUSLoaderManager.h"
 
 @class SUSNowPlayingLoader, Song;
-@interface SUSNowPlayingDAO : NSObject <ISMSLoaderDelegate, ISMSLoaderManager>
+@interface SUSNowPlayingDAO : NSObject <SUSLoaderDelegate, SUSLoaderManager>
 
-@property (weak) id<ISMSLoaderDelegate> delegate;
+@property (weak) id<SUSLoaderDelegate> delegate;
 @property (strong) SUSNowPlayingLoader *loader;
 
 @property (strong) NSArray *nowPlayingSongDicts;
 
 @property (readonly) NSUInteger count;
 
-- (instancetype)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate;
+- (instancetype)initWithDelegate:(id <SUSLoaderDelegate>)theDelegate;
 
 - (ISMSSong *)songForIndex:(NSUInteger)index;
 - (NSString *)playTimeForIndex:(NSUInteger)index;

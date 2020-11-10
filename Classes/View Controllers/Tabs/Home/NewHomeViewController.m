@@ -20,7 +20,7 @@
 #import "iPadRootViewController.h"
 #import "MenuViewController.h"
 #import "SearchXMLParser.h"
-
+#import "SUSServerShuffleLoader.h"
 #import "ISMSPlayerViewController.h"
 
 @implementation NewHomeViewController

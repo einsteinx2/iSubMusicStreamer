@@ -289,8 +289,6 @@
     DLog(@"%@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
 	if (!viewObjectsS.isLocalPlaylist)
 	{
-        // Parse the data
-        //
         RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
         if (![root isValid])
         {
@@ -353,8 +351,6 @@ static NSString *kName_Error = @"error";
 
 - (void)parseData
 {
-    // Parse the data
-    //
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
     if (![root isValid])
     {

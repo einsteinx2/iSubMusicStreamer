@@ -13,8 +13,8 @@
 
 #pragma mark - Lifecycle
 
-- (ISMSLoaderType)type {
-    return ISMSLoaderType_Chat;
+- (SUSLoaderType)type {
+    return SUSLoaderType_Chat;
 }
 
 #pragma mark - Loader Methods
@@ -31,17 +31,17 @@
     } else {
         RXMLElement *error = [root child:@"error"];
         if ([error isValid]) {
-            NSString *code = [error attribute:@"code"];
+            NSInteger code = [[error attribute:@"code"] integerValue];
             NSString *message = [error attribute:@"message"];
-            [self subsonicErrorCode:[code intValue] message:message];
+            [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
         } else {
-            self.chatMessages = [NSMutableArray arrayWithCapacity:0];
-            
+            NSMutableArray *messages = [[NSMutableArray alloc] init];
             [root iterate:@"chatMessages.chatMessage" usingBlock:^(RXMLElement *e) {
                 // Create the chat message object and add it to the array
                 ISMSChatMessage *chatMessage = [[ISMSChatMessage alloc] initWithRXMLElement:e];
-                [self.chatMessages addObject:chatMessage];
+                [messages addObject:chatMessage];
             }];
+            self.chatMessages = messages;
             
             // Notify the delegate that the loading is finished
             [self informDelegateLoadingFinished];

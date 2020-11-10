@@ -13,9 +13,9 @@
 
 @implementation SUSRootFoldersLoader
 
-- (ISMSLoaderType)type
+- (SUSLoaderType)type
 {
-    return ISMSLoaderType_RootFolders;
+    return SUSLoaderType_RootFolders;
 }
 
 #pragma mark Data loading

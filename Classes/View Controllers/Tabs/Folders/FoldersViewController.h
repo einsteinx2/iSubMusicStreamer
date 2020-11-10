@@ -10,7 +10,7 @@
 
 @class ISMSArtist, EGORefreshTableHeaderView, FolderDropdownControl, SUSRootFoldersDAO;
 
-@interface FoldersViewController : CustomUITableViewController <UISearchBarDelegate, ISMSLoaderDelegate, FolderDropdownDelegate>
+@interface FoldersViewController : CustomUITableViewController <UISearchBarDelegate, SUSLoaderDelegate, FolderDropdownDelegate>
 
 @property (nonatomic) BOOL letUserSelectRow;
 @property (nonatomic) BOOL isSearching;
@@ -30,8 +30,8 @@
 - (void)doneSearching_Clicked:(id)sender;
 
 // Loader Delegate Methods
-- (void)loadingFailed:(ISMSLoader*)theLoader withError:(NSError *)error;
-- (void)loadingFinished:(ISMSLoader*)theLoader;
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error;
+- (void)loadingFinished:(SUSLoader *)theLoader;
 
 // FolderDropdown Delegate Methods
 - (void)folderDropdownMoveViewsY:(float)y;

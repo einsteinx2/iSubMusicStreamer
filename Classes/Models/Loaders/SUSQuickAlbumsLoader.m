@@ -13,50 +13,38 @@
 
 #pragma mark - Lifecycle
 
-- (ISMSLoaderType)type
-{
-    return ISMSLoaderType_NowPlaying;
+- (SUSLoaderType)type {
+    return SUSLoaderType_QuickAlbums;
 }
 
 #pragma mark - Loader Methods
 
-- (NSURLRequest *)createRequest
-{
+- (NSURLRequest *)createRequest {
 	NSDictionary *parameters = @{@"size":@"20", @"type":n2N(self.modifier), @"offset":[NSString stringWithFormat:@"%lu", (unsigned long)self.offset]};
     return [NSMutableURLRequest requestWithSUSAction:@"getAlbumList" parameters:parameters];
 }
 
-- (void)processResponse
-{
-    // Parse the data
-    //
+- (void)processResponse {
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-    if (![root isValid])
-    {
+    if (![root isValid]) {
         NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
         [self informDelegateLoadingFailed:error];
-    }
-    else
-    {
+    } else {
         RXMLElement *error = [root child:@"error"];
         if ([error isValid])
         {
-            NSString *code = [error attribute:@"code"];
+            NSInteger code = [[error attribute:@"code"] integerValue];
             NSString *message = [error attribute:@"message"];
-            [self subsonicErrorCode:[code intValue] message:message];
-        }
-        else
-        {
-            self.listOfAlbums = [NSMutableArray arrayWithCapacity:0];
+            [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
+        } else {
+            NSMutableArray *albums = [[NSMutableArray alloc] init];
             [root iterate:@"albumList.album" usingBlock:^(RXMLElement *e) {
-                ISMSAlbum *anAlbum = [[ISMSAlbum alloc] initWithRXMLElement:e];
-                
-                //Add album object to lookup dictionary and list array
-                if (![anAlbum.title isEqualToString:@".AppleDouble"])
-                {
-                    [self.listOfAlbums addObject:anAlbum];
+                ISMSAlbum *album = [[ISMSAlbum alloc] initWithRXMLElement:e];
+                if (![album.title isEqualToString:@".AppleDouble"]) {
+                    [albums addObject:album];
                 }
             }];
+            self.listOfAlbums = albums;
             
             // Notify the delegate that the loading is finished
             [self informDelegateLoadingFinished];

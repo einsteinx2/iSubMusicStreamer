@@ -6,13 +6,13 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-#import "ISMSLoaderManager.h"
+#import "SUSLoaderManager.h"
 
 @class SUSChatLoader;
-@interface SUSChatDAO : NSObject <ISMSLoaderManager, ISMSLoaderDelegate>
+@interface SUSChatDAO : NSObject <SUSLoaderManager, SUSLoaderDelegate>
 
 @property (strong) SUSChatLoader *loader;
-@property (weak) NSObject <ISMSLoaderDelegate> *delegate;
+@property (weak) NSObject <SUSLoaderDelegate> *delegate;
 
 @property (strong) NSArray *chatMessages;
 
@@ -21,6 +21,6 @@
 
 - (void)sendChatMessage:(NSString *)message;
 
-- (instancetype)initWithDelegate:(id <ISMSLoaderDelegate>)theDelegate;
+- (instancetype)initWithDelegate:(id <SUSLoaderDelegate>)theDelegate;
 
 @end
