@@ -572,7 +572,7 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSObject<ISMSTableCellModel> *model = [self albumAtIndexPath:indexPath];
-    return [SwipeAction downloadAndQueueConfig:model];
+    return [SwipeAction downloadAndQueueConfigWithModel:model];
 }
 
 #pragma mark - Loading Display Handling

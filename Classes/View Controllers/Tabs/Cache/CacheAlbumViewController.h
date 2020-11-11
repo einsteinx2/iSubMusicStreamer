@@ -10,6 +10,7 @@
 
 @interface CacheAlbumViewController : CustomUITableViewController 
 
+@property (nonatomic, copy) NSString *artistName;
 @property (nonatomic, strong) NSMutableArray *listOfAlbums;
 @property (nonatomic, strong) NSMutableArray *listOfSongs;
 @property (nonatomic, strong) NSArray *sectionInfo;

@@ -9,7 +9,6 @@
 #import "PlaylistSongsViewController.h"
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
-#import "PlaylistSongUITableViewCell.h"
 #import "EGORefreshTableHeaderView.h"
 #import "CustomUIAlertView.h"
 #import "UIViewController+PushViewControllerCustom.h"
@@ -27,6 +26,7 @@
 #import "ISMSSong+DAO.h"
 #import "SUSServerPlaylist.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @interface PlaylistSongsViewController (Private)
 
@@ -102,7 +102,8 @@
 		[self.tableView addSubview:refreshHeaderView];
 	}
 	
-
+    self.tableView.rowHeight = 60.0;
+    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
 	if (IS_IPAD())
 	{
@@ -388,6 +389,14 @@ static NSString *kName_Error = @"error";
 
 #pragma mark Table view methods
 
+- (ISMSSong *)songAtIndexPath:(NSIndexPath *)indexPath {
+    if (viewObjectsS.isLocalPlaylist) {
+        return [ISMSSong songFromDbRow:indexPath.row inTable:[NSString stringWithFormat:@"playlist%@", self.md5] inDatabaseQueue:databaseS.localPlaylistsDbQueue];
+    } else {
+        return [ISMSSong songFromServerPlaylistId:self.md5 row:indexPath.row];
+    }
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
 {
     return 1;
@@ -404,41 +413,14 @@ static NSString *kName_Error = @"error";
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	static NSString *cellIdentifier = @"PlaylistSongCell";
-	PlaylistSongUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	if (!cell)
-	{
-		cell = [[PlaylistSongUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-	}
-	
-	cell.indexPath = indexPath;
-	
-	// Set up the cell...
-	ISMSSong *aSong;
-	if (viewObjectsS.isLocalPlaylist)
-	{
-		aSong = [ISMSSong songFromDbRow:indexPath.row inTable:[NSString stringWithFormat:@"playlist%@", self.md5] inDatabaseQueue:databaseS.localPlaylistsDbQueue];
-		//DLog(@"aSong: %@", aSong);
-	}
-	else
-	{
-		//aSong = [viewObjectsS.listOfPlaylistSongs objectAtIndexSafe:indexPath.row];
-		aSong = [ISMSSong songFromServerPlaylistId:self.md5 row:indexPath.row];
-	}
-	cell.mySong = aSong;
-	
-	cell.coverArtView.coverArtId = aSong.coverArtId;
-	
-    cell.cachedIndicatorView.hidden = !aSong.isFullyCached;
-	
-	[cell.numberLabel setText:[NSString stringWithFormat:@"%li", (long)(indexPath.row + 1)]];
-	[cell.songNameLabel setText:aSong.title];
-	if (aSong.album)
-		[cell.artistNameLabel setText:[NSString stringWithFormat:@"%@ - %@", aSong.artist, aSong.album]];
-	else
-		[cell.artistNameLabel setText:aSong.artist];
-	
-	return cell;
+    UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+    cell.hideNumberLabel = NO;
+    cell.hideCoverArt = NO;
+    cell.hideDurationLabel = NO;
+    cell.hideSecondaryLabel = NO;
+    cell.number = indexPath.row + 1;
+    [cell updateWithModel:[self songAtIndexPath:indexPath]];
+    return cell;
 }
 
 - (void)didSelectRowInternal:(NSIndexPath *)indexPath
@@ -474,7 +456,7 @@ static NSString *kName_Error = @"error";
 		}
 	}*/
 	
-	// Need to do this for speed
+	// Need to do this for speed (NOTE: haha well 10 years ago maybe, but probably not now)
 	NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
 	NSString *currTableName = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 	NSString *playTableName = [NSString stringWithFormat:@"%@%@", viewObjectsS.isLocalPlaylist ? @"playlist" : @"splaylist", self.md5];
@@ -512,6 +494,14 @@ static NSString *kName_Error = @"error";
 	{
 		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 	}
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    ISMSSong *song = [self songAtIndexPath:indexPath];
+    if (!song.isVideo) {
+        return [SwipeAction downloadAndQueueConfigWithModel:song];
+    }
+    return nil;
 }
 
 #pragma mark -

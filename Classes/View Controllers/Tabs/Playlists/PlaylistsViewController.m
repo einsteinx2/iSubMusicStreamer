@@ -1253,17 +1253,20 @@ static NSString *kName_Error = @"error";
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.segmentedControl.selectedSegmentIndex == 0) {
         // Current Playlist
-        return [SwipeAction downloadQueueAndDeleteConfig:[playlistS songForIndex:indexPath.row] deleteHandler:^{
-            [self deleteCurrentPlaylistSongsAtRowIndexes:@[@(indexPath.row)]];
-        }];
+        ISMSSong *song = [playlistS songForIndex:indexPath.row];
+        if (!song.isVideo) {
+            return [SwipeAction downloadQueueAndDeleteConfigWithModel:song deleteHandler:^{
+                [self deleteCurrentPlaylistSongsAtRowIndexes:@[@(indexPath.row)]];
+            }];
+        }
     } else if (self.segmentedControl.selectedSegmentIndex == 1) {
         // Local Playlists
-        return [SwipeAction downloadQueueAndDeleteConfig:[self localPlaylistForIndex:indexPath.row] deleteHandler:^{
+        return [SwipeAction downloadQueueAndDeleteConfigWithModel:[self localPlaylistForIndex:indexPath.row] deleteHandler:^{
             [self deleteLocalPlaylistsAtRowIndexes:@[@(indexPath.row)]];
         }];
     } else if (self.segmentedControl.selectedSegmentIndex == 2) {
         // Server Playlists
-        return [SwipeAction downloadQueueAndDeleteConfig:[self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:indexPath.row] deleteHandler:^{
+        return [SwipeAction downloadQueueAndDeleteConfigWithModel:[self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:indexPath.row] deleteHandler:^{
             [self deleteServerPlaylistsAtRowIndexes:@[@(indexPath.row)]];
         }];
         return nil;

@@ -707,8 +707,11 @@
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSObject<ISMSTableCellModel> *model = [self songAtIndexPath:indexPath];
-    return [SwipeAction downloadAndQueueConfig:model];
+    ISMSSong *song = [self songAtIndexPath:indexPath];
+    if (!song.isVideo) {
+        return [SwipeAction downloadAndQueueConfigWithModel:song];
+    }
+    return nil;
 }
 
 #pragma mark -

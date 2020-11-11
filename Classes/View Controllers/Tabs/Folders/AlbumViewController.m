@@ -323,10 +323,14 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < dataModel.albumsCount) {
-        return [SwipeAction downloadAndQueueConfig:[dataModel albumForTableViewRow:indexPath.row]];
+        return [SwipeAction downloadAndQueueConfigWithModel:[dataModel albumForTableViewRow:indexPath.row]];
     } else {
-        return [SwipeAction downloadAndQueueConfig:[dataModel songForTableViewRow:indexPath.row]];
+        ISMSSong *song = [dataModel songForTableViewRow:indexPath.row];
+        if (!song.isVideo) {
+            return [SwipeAction downloadAndQueueConfigWithModel:song];
+        }
     }
+    return nil;
 }
 
 #pragma mark - ISMSLoader delegate
