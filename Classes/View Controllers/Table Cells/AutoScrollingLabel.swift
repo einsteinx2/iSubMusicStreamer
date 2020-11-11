@@ -106,6 +106,7 @@ import SnapKit
             guard Date().timeIntervalSince(startTime) > (delay + duration) * 0.9 else {
                 // Instantly reset the view position and restart the animation
                 self.scrollView.contentOffset = CGPoint.zero
+                self.animator = nil;
                 self.startScrolling(delay: delay)
                 return
             }

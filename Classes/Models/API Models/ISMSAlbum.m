@@ -170,8 +170,8 @@
 - (NSString *)primaryLabelText { return self.title; }
 - (NSString *)secondaryLabelText { return self.artistName; }
 - (NSString *)durationLabelText { return nil; }
-- (void)download { [databaseS downloadAllSongs:self.artistId artist:[self artist]]; }
-- (void)queue { [databaseS queueAllSongs:self.artistId artist:[self artist]];
+- (void)download { [databaseS downloadAllSongs:self.albumId artist:[self artist]]; }
+- (void)queue { [databaseS queueAllSongs:self.albumId artist:[self artist]];
     
 }
 

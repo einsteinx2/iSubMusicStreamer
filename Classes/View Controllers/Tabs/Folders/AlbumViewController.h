@@ -6,12 +6,12 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewController.h"
+#import <UIKit/UIKit.h>
 #import "AsynchronousImageView.h"
 
 @class ISMSArtist, ISMSAlbum, EGORefreshTableHeaderView, SUSSubFolderDAO, AsynchronousImageView;
 
-@interface AlbumViewController : CustomUITableViewController <SUSLoaderDelegate, AsynchronousImageViewDelegate>
+@interface AlbumViewController : UITableViewController <SUSLoaderDelegate, AsynchronousImageViewDelegate>
 
 @property (nonatomic, strong) EGORefreshTableHeaderView *refreshHeaderView;
 @property (nonatomic) BOOL isReloading;

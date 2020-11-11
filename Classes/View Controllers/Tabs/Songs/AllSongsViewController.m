@@ -10,7 +10,6 @@
 #import "AllSongsViewController.h"
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
-#import "AllSongsUITableViewCell.h"
 #import "FoldersViewController.h"
 #import "CustomUITableView.h"
 #import "EGORefreshTableHeaderView.h"
@@ -32,6 +31,7 @@
 #import "ISMSSong+DAO.h"
 #import "ISMSIndex.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @interface AllSongsViewController (Private)
 - (void)hideLoadingScreen;
@@ -82,6 +82,9 @@
 	self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
 	self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
 	[self.tableView addSubview:self.refreshHeaderView];
+    
+    self.tableView.rowHeight = 60.0;
+    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
 	if (IS_IPAD())
 	{
@@ -128,15 +131,48 @@
 			self.tableView.tableHeaderView = nil;
 			if ([[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@isAllSongsLoading", settingsS.urlString]] isEqualToString:@"YES"])
 			{
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Resume Load?" message:@"If you've reloaded the albums tab since this load started you should choose 'Restart Load'.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Restart Load", @"Resume Load", nil];
-				alert.tag = 1;
-				[alert show];
+                NSString *message = @"If you've reloaded the albums tab since this load started you should choose 'Restart Load'.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.";
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Resume Load?"
+                                                                               message:message
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Restart Load" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                    [self showLoadingScreen];
+                    
+                    [self.dataModel restartLoad];
+                    self.tableView.tableHeaderView = nil;
+                    [self.tableView reloadData];
+                    
+                    [self dataSourceDidFinishLoadingNewData];
+                }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Resume Load" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                    [self showLoadingScreen];
+                    
+                    [self.dataModel startLoad];
+                    self.tableView.tableHeaderView = nil;
+                    [self.tableView reloadData];
+                    
+                    [self dataSourceDidFinishLoadingNewData];
+                }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+                [self presentViewController:alert animated:YES completion:nil];
 			}
 			else
 			{
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Load?" message:@"This could take a while if you have a big collection.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.\n\nNote: If you've added new artists, you should reload the Folders first." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-				alert.tag = 1;
-				[alert show];
+                NSString *message = @"This could take a while if you have a big collection.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.\n\nNote: If you've added new artists, you should reload the Folders first.";
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Load?"
+                                                                               message:message
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                    [self showLoadingScreen];
+                    
+                    [self.dataModel restartLoad];
+                    self.tableView.tableHeaderView = nil;
+                    [self.tableView reloadData];
+                    
+                    [self dataSourceDidFinishLoadingNewData];
+                }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+                [self presentViewController:alert animated:YES completion:nil];
 			}
 		}
 	}
@@ -494,6 +530,15 @@
 
 #pragma mark - UITableView delegate
 
+- (ISMSSong *)songAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.isSearching) {
+        return [self.dataModel songForPositionInSearch:(indexPath.row + 1)];
+    } else {
+        NSUInteger sectionStartIndex = [(ISMSIndex *)[self.dataModel.index objectAtIndexSafe:indexPath.section] position];
+        return [self.dataModel songForPosition:(sectionStartIndex + indexPath.row + 1)];
+    }
+}
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
 {
 	if(self.isSearching)
@@ -580,39 +625,44 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	static NSString *cellIdentifier = @"AllSongsCell";
-	AllSongsUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	if (!cell)
-	{
-		cell = [[AllSongsUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-	}
-	cell.indexPath = indexPath;
-	
-	ISMSSong *aSong = nil;
-	if(self.isSearching)
-	{
-		aSong = [self.dataModel songForPositionInSearch:(indexPath.row + 1)];
-	}
-	else
-	{
-		NSUInteger sectionStartIndex = [(ISMSIndex *)[self.dataModel.index objectAtIndexSafe:indexPath.section] position];
-		aSong = [self.dataModel songForPosition:(sectionStartIndex + indexPath.row + 1)];
-	}
-	
-	cell.md5 = [aSong.path md5];
-	cell.isSearching = self.isSearching;
-	
-	cell.coverArtView.coverArtId = aSong.coverArtId;
+    UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+    cell.hideNumberLabel = YES;
+    [cell updateWithModel:[self songAtIndexPath:indexPath]];
+    return cell;
     
-    cell.cachedIndicatorView.hidden = !aSong.isFullyCached;
-	
-	[cell.songNameLabel setText:aSong.title];
-	if (aSong.album)
-		[cell.artistNameLabel setText:[NSString stringWithFormat:@"%@ - %@", aSong.artist, aSong.album]];
-	else
-		[cell.artistNameLabel setText:aSong.artist];
-	
-	return cell;
+//	static NSString *cellIdentifier = @"AllSongsCell";
+//	AllSongsUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//	if (!cell)
+//	{
+//		cell = [[AllSongsUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+//	}
+//	cell.indexPath = indexPath;
+//
+//	ISMSSong *aSong = nil;
+//	if(self.isSearching)
+//	{
+//		aSong = [self.dataModel songForPositionInSearch:(indexPath.row + 1)];
+//	}
+//	else
+//	{
+//		NSUInteger sectionStartIndex = [(ISMSIndex *)[self.dataModel.index objectAtIndexSafe:indexPath.section] position];
+//		aSong = [self.dataModel songForPosition:(sectionStartIndex + indexPath.row + 1)];
+//	}
+//
+//	cell.md5 = [aSong.path md5];
+//	cell.isSearching = self.isSearching;
+//
+//	cell.coverArtView.coverArtId = aSong.coverArtId;
+//
+//    cell.cachedIndicatorView.hidden = !aSong.isFullyCached;
+//
+//	[cell.songNameLabel setText:aSong.title];
+//	if (aSong.album)
+//		[cell.artistNameLabel setText:[NSString stringWithFormat:@"%@ - %@", aSong.artist, aSong.album]];
+//	else
+//		[cell.artistNameLabel setText:aSong.artist];
+//
+//	return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
@@ -629,17 +679,7 @@
 			[databaseS resetCurrentPlaylistDb];
 		
 		// Add selected song to the playlist
-		ISMSSong *aSong = nil;
-		if(self.isSearching)
-		{
-			aSong = [self.dataModel songForPositionInSearch:(indexPath.row + 1)];
-		}
-		else
-		{
-			NSUInteger sectionStartIndex = [(ISMSIndex *)[self.dataModel.index objectAtIndexSafe:indexPath.section] position];
-			aSong = [self.dataModel songForPosition:(sectionStartIndex + indexPath.row + 1)];
-		}
-		
+		ISMSSong *aSong = [self songAtIndexPath:indexPath];
 		[aSong addToCurrentPlaylistDbQueue];
 		
 		// If jukebox mode, send song id to server
@@ -664,6 +704,11 @@
 	{
 		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 	}
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSObject<ISMSTableCellModel> *model = [self songAtIndexPath:indexPath];
+    return [SwipeAction downloadAndQueueConfig:model];
 }
 
 #pragma mark -

@@ -20,6 +20,7 @@
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation GenresViewController
 @synthesize isNoGenresScreenShowing, noGenresScreen;
@@ -50,6 +51,9 @@
 	
 	//Set defaults
 	//letUserSelectRow = YES;
+    
+    self.tableView.rowHeight = 60.0;
+    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
 	if (IS_IPAD())
 	{
@@ -198,7 +202,7 @@
 	{
 		cell.genreNameLabel.text = [databaseS.genresDbQueue stringForQuery:@"SELECT genre FROM genres WHERE ROWID = ?", @(indexPath.row + 1)];
 	}
-	
+
     return cell;
 }
 

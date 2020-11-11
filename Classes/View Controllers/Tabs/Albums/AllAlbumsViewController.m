@@ -10,8 +10,6 @@
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
 #import "AlbumViewController.h"
-#import "AllAlbumsUITableViewCell.h"
-#import "AllSongsUITableViewCell.h"
 #import "FoldersViewController.h"
 #import "CustomUITableView.h"
 #import "EGORefreshTableHeaderView.h"
@@ -34,6 +32,7 @@
 #import "ISMSIndex.h"
 #import "ISMSIndex.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation AllAlbumsViewController
 
@@ -79,6 +78,9 @@
 	self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
 	self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
 	[self.tableView addSubview:self.refreshHeaderView];
+    
+    self.tableView.rowHeight = 60.0;
+    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
 	if (IS_IPAD())
 	{
@@ -252,9 +254,21 @@
 {
 	if (![SUSAllSongsLoader isLoading])
 	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reload?" message:@"This could take a while if you have a big collection.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.\n\nNote: If you've added new artists, you should reload the Folders tab first." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-		alert.tag = 1;
-		[alert show];
+        NSString *message = @"This could take a while if you have a big collection.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.\n\nNote: If you've added new artists, you should reload the Folders tab first.";
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Reload?"
+                                                                       message:message
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [self showLoadingScreen];
+            
+            [self.allSongsDataModel restartLoad];
+            self.tableView.tableHeaderView = nil;
+            [self.tableView reloadData];
+            
+            [self dataSourceDidFinishLoadingNewData];
+        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
 	}
 	else
 	{
@@ -422,6 +436,16 @@
 
 #pragma mark - Tableview methods
 
+- (ISMSAlbum *)albumAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.isSearching) {
+        return [self.dataModel albumForPositionInSearch:(indexPath.row + 1)];
+    } else {
+        NSUInteger sectionStartIndex = [(ISMSIndex *)[self.dataModel.index objectAtIndexSafe:indexPath.section] position];
+        return [self.dataModel albumForPosition:(sectionStartIndex + indexPath.row + 1)];
+    }
+}
+
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
 {
 	if(self.isSearching)
@@ -495,34 +519,42 @@
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	static NSString *cellIdentifier = @"AllAlbumsCell";
-	AllAlbumsUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	if (!cell)
-	{
-		cell = [[AllAlbumsUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-	}
-	cell.accessoryType = UITableViewCellAccessoryNone;
-		
-	ISMSAlbum *anAlbum = nil;
-	if(self.isSearching)
-	{
-		anAlbum = [self.dataModel albumForPositionInSearch:(indexPath.row + 1)];
-	}
-	else
-	{
-		NSUInteger sectionStartIndex = [(ISMSIndex *)[self.dataModel.index objectAtIndexSafe:indexPath.section] position];
-		anAlbum = [self.dataModel albumForPosition:(sectionStartIndex + indexPath.row + 1)];
-	}
+    UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+    cell.hideNumberLabel = YES;
+    cell.hideDurationLabel = YES;
+    [cell updateWithModel:[self albumAtIndexPath:indexPath]];
+    return cell;
+    
+    
+    
+//	static NSString *cellIdentifier = @"AllAlbumsCell";
+//	AllAlbumsUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//	if (!cell)
+//	{
+//		cell = [[AllAlbumsUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+//	}
+//	cell.accessoryType = UITableViewCellAccessoryNone;
+//
+//	ISMSAlbum *anAlbum = nil;
+//	if(self.isSearching)
+//	{
+//		anAlbum = [self.dataModel albumForPositionInSearch:(indexPath.row + 1)];
+//	}
+//	else
+//	{
+//		NSUInteger sectionStartIndex = [(ISMSIndex *)[self.dataModel.index objectAtIndexSafe:indexPath.section] position];
+//		anAlbum = [self.dataModel albumForPosition:(sectionStartIndex + indexPath.row + 1)];
+//	}
+//
+//	cell.myId = anAlbum.albumId;
+//	cell.myArtist = [ISMSArtist artistWithName:anAlbum.artistName andArtistId:anAlbum.artistId];
+//
+//	cell.coverArtView.coverArtId = anAlbum.coverArtId;
+//
+//	[cell.albumNameLabel setText:anAlbum.title];
+//	[cell.artistNameLabel setText:anAlbum.artistName];
 	
-	cell.myId = anAlbum.albumId;
-	cell.myArtist = [ISMSArtist artistWithName:anAlbum.artistName andArtistId:anAlbum.artistId];
-	
-	cell.coverArtView.coverArtId = anAlbum.coverArtId;
-			
-	[cell.albumNameLabel setText:anAlbum.title];
-	[cell.artistNameLabel setText:anAlbum.artistName];
-	
-	return cell;
+//	return cell;
 }
 
 
@@ -531,26 +563,16 @@
 	if (!indexPath)
 		return;
 	
-	if (viewObjectsS.isCellEnabled)
-	{
-		ISMSAlbum *anAlbum = nil;
-		if(isSearching)
-		{
-			anAlbum = [self.dataModel albumForPositionInSearch:(indexPath.row + 1)];
-		}
-		else
-		{
-			NSUInteger sectionStartIndex = [(ISMSIndex *)[self.dataModel.index objectAtIndexSafe:indexPath.section] position];
-			anAlbum = [self.dataModel albumForPosition:(sectionStartIndex + indexPath.row + 1)];
-		}
-		
-		AlbumViewController* albumViewController = [[AlbumViewController alloc] initWithArtist:nil orAlbum:anAlbum];
-		[self pushViewControllerCustom:albumViewController];
-	}
-	else
-	{
+	if (viewObjectsS.isCellEnabled) {
+		[self pushViewControllerCustom:[[AlbumViewController alloc] initWithArtist:nil orAlbum:[self albumAtIndexPath:indexPath]]];
+	} else {
 		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 	}
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSObject<ISMSTableCellModel> *model = [self albumAtIndexPath:indexPath];
+    return [SwipeAction downloadAndQueueConfig:model];
 }
 
 #pragma mark - Loading Display Handling

@@ -6,13 +6,13 @@
 //  Copyright Ben Baron 2010. All rights reserved.
 //
 
-#import "CustomUITableViewController.h"
+#import <UIKit/UIKit.h>
 #import "FolderDropdownDelegate.h"
 #import "SUSLoader.h"
 
 @class ISMSArtist, EGORefreshTableHeaderView, FolderDropdownControl, SUSRootFoldersDAO;
 
-@interface FoldersViewController : CustomUITableViewController <UISearchBarDelegate, SUSLoaderDelegate, FolderDropdownDelegate>
+@interface FoldersViewController : UITableViewController <UISearchBarDelegate, SUSLoaderDelegate, FolderDropdownDelegate>
 
 @property (nonatomic) BOOL letUserSelectRow;
 @property (nonatomic) BOOL isSearching;

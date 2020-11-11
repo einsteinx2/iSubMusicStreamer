@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class RXMLElement;
 NS_SWIFT_NAME(ServerPlaylist)
-@interface SUSServerPlaylist : NSObject <NSCopying>
+@interface SUSServerPlaylist : NSObject <ISMSTableCellModel,  NSCopying>
 
 @property (copy) NSString *playlistId;
 @property (copy) NSString *playlistName;

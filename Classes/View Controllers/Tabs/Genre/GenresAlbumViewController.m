@@ -9,8 +9,6 @@
 #import "GenresAlbumViewController.h"
 #import "iPhoneStreamingPlayerViewController.h"
 #import "GenresAlbumUITableViewCell.h"
-#import "GenresSongUITableViewCell.h"
-#import "AllSongsUITableViewCell.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -22,6 +20,7 @@
 #import "JukeboxSingleton.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation GenresAlbumViewController
 
@@ -79,7 +78,9 @@
 	[headerView addSubview:shuffleButton];
 	
 	self.tableView.tableHeaderView = headerView;
-	
+    self.tableView.rowHeight = 60.0;
+    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
+    
 	if (IS_IPAD())
 	{
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
@@ -298,97 +299,127 @@
 	return ([self.listOfAlbums count] + [self.listOfSongs count]);
 }
 
-
-// Customize the height of individual rows to make the album rows taller to accomidate the album art.
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
-{
-	if (indexPath.row < [listOfAlbums count])
-		return 60.0;
-	else
-		return 50.0;
-}
-
-
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
-{	
-	// Set up the cell...
-	if (indexPath.row < [listOfAlbums count])
-	{
-		static NSString *cellIdentifier = @"GenresAlbumCell";
-		GenresAlbumUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		if (!cell)
-		{
-			cell = [[GenresAlbumUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		}
-		cell.segment = self.segment;
-		cell.seg1 = self.seg1;
-		cell.genre = genre;
-		
-		NSString *md5 = [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:0];
-		NSString *coverArtId;
-		if (settingsS.isOfflineMode) {
-			coverArtId = [databaseS.songCacheDbQueue stringForQuery:@"SELECT coverArtId FROM genresSongs WHERE md5 = ?", md5];
-		}
-		else {
-			coverArtId = [databaseS.genresDbQueue stringForQuery:@"SELECT coverArtId FROM genresSongs WHERE md5 = ?", md5];
-		}
-		NSString *name = [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
-		cell.albumNameLabel.text = name;
-	//DLog(@"name: %@", name);
-		
-		cell.coverArtView.coverArtId = coverArtId;
-				
-		return cell;
-	}
-	else
-	{
-		static NSString *cellIdentifier = @"GenresSongCell";
-		GenresSongUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		if (!cell)
-		{
-			cell = [[GenresSongUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-			cell.accessoryType = UITableViewCellAccessoryNone;
-		}
-		
-		NSUInteger a = indexPath.row - [listOfAlbums count];
-		cell.md5 = [listOfSongs objectAtIndexSafe:a];
-		
-		ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:cell.md5];
-		
-		if (aSong.track)
-		{
-			cell.trackNumberLabel.text = [NSString stringWithFormat:@"%i", [aSong.track intValue]];
-		}
-		else
-		{	
-			cell.trackNumberLabel.text = @"";
-		}
-			
-		cell.songNameLabel.text = aSong.title;
-		
-		if (aSong.artist)
-			cell.artistNameLabel.text = aSong.artist;
-		else
-			cell.artistNameLabel.text = @"";		
-		
-		if (aSong.duration)
-			cell.songDurationLabel.text = [NSString formatTime:[aSong.duration floatValue]];
-		else
-			cell.songDurationLabel.text = @"";
-		
-		if (settingsS.isOfflineMode)
-		{
-            cell.backgroundView = [[UIView alloc] init];
-		}
-		else
-		{
-            cell.cachedIndicatorView.hidden = !aSong.isFullyCached;
-		}
-		
-		return cell;
-	}
+{
+    // TODO: Handle genre "fake" albums
+    if (indexPath.row < listOfAlbums.count) {
+        // Album
+        static NSString *cellIdentifier = @"GenresAlbumCell";
+        GenresAlbumUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (!cell)
+        {
+            cell = [[GenresAlbumUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+        cell.segment = self.segment;
+        cell.seg1 = self.seg1;
+        cell.genre = genre;
+        
+        NSString *md5 = [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:0];
+        NSString *coverArtId;
+        if (settingsS.isOfflineMode) {
+            coverArtId = [databaseS.songCacheDbQueue stringForQuery:@"SELECT coverArtId FROM genresSongs WHERE md5 = ?", md5];
+        }
+        else {
+            coverArtId = [databaseS.genresDbQueue stringForQuery:@"SELECT coverArtId FROM genresSongs WHERE md5 = ?", md5];
+        }
+        NSString *name = [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
+        cell.albumNameLabel.text = name;
+    //DLog(@"name: %@", name);
+        
+        cell.coverArtView.coverArtId = coverArtId;
+                
+        return cell;
+    } else {
+        // Song
+        UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+        cell.hideNumberLabel = YES;
+        cell.hideCoverArt = NO;
+        cell.hideDurationLabel = YES;
+        cell.accessoryType = UITableViewCellAccessoryNone;
+        NSString *md5 = [listOfSongs objectAtIndexSafe:(indexPath.row - listOfAlbums.count)];
+        [cell updateWithModel:[ISMSSong songFromGenreDbQueue:md5]];
+    }
+    
+    
+//	// Set up the cell...
+//	if (indexPath.row < [listOfAlbums count])
+//	{
+//		static NSString *cellIdentifier = @"GenresAlbumCell";
+//		GenresAlbumUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//		if (!cell)
+//		{
+//			cell = [[GenresAlbumUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+//			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//		}
+//		cell.segment = self.segment;
+//		cell.seg1 = self.seg1;
+//		cell.genre = genre;
+//
+//		NSString *md5 = [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:0];
+//		NSString *coverArtId;
+//		if (settingsS.isOfflineMode) {
+//			coverArtId = [databaseS.songCacheDbQueue stringForQuery:@"SELECT coverArtId FROM genresSongs WHERE md5 = ?", md5];
+//		}
+//		else {
+//			coverArtId = [databaseS.genresDbQueue stringForQuery:@"SELECT coverArtId FROM genresSongs WHERE md5 = ?", md5];
+//		}
+//		NSString *name = [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
+//		cell.albumNameLabel.text = name;
+//	//DLog(@"name: %@", name);
+//
+//		cell.coverArtView.coverArtId = coverArtId;
+//
+//		return cell;
+//	}
+//	else
+//	{
+//		static NSString *cellIdentifier = @"GenresSongCell";
+//		GenresSongUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//		if (!cell)
+//		{
+//			cell = [[GenresSongUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+//			cell.accessoryType = UITableViewCellAccessoryNone;
+//		}
+//
+//		NSUInteger a = indexPath.row - [listOfAlbums count];
+//		cell.md5 = [listOfSongs objectAtIndexSafe:a];
+//
+//		ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:cell.md5];
+//
+//		if (aSong.track)
+//		{
+//			cell.trackNumberLabel.text = [NSString stringWithFormat:@"%i", [aSong.track intValue]];
+//		}
+//		else
+//		{
+//			cell.trackNumberLabel.text = @"";
+//		}
+//
+//		cell.songNameLabel.text = aSong.title;
+//
+//		if (aSong.artist)
+//			cell.artistNameLabel.text = aSong.artist;
+//		else
+//			cell.artistNameLabel.text = @"";
+//
+//		if (aSong.duration)
+//			cell.songDurationLabel.text = [NSString formatTime:[aSong.duration floatValue]];
+//		else
+//			cell.songDurationLabel.text = @"";
+//
+//		if (settingsS.isOfflineMode)
+//		{
+//            cell.backgroundView = [[UIView alloc] init];
+//		}
+//		else
+//		{
+//            cell.cachedIndicatorView.hidden = !aSong.isFullyCached;
+//		}
+//
+//		return cell;
+//	}
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

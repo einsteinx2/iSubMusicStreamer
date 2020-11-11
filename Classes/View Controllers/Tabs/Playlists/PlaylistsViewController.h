@@ -6,13 +6,13 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewController.h"
+#import <UIKit/UIKit.h>
 #import "SUSLoaderDelegate.h"
 #import "EX2SimpleConnectionQueue.h"
 
 @class SUSServerPlaylistsDAO;
 
-@interface PlaylistsViewController : CustomUITableViewController <EX2SimpleConnectionQueueDelegate, SUSLoaderDelegate>
+@interface PlaylistsViewController : UITableViewController <EX2SimpleConnectionQueueDelegate, SUSLoaderDelegate>
 
 @property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;

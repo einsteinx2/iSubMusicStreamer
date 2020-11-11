@@ -10,9 +10,7 @@
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
 #import "AlbumViewController.h"
-#import "ArtistUITableViewCell.h"
 #import "EGORefreshTableHeaderView.h"
-#import <QuartzCore/QuartzCore.h>
 #import "FolderDropdownControl.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "SUSAllSongsLoader.h"
@@ -27,6 +25,7 @@
 #import "ISMSArtist.h"
 #import "EX2Kit.h"
 #import "Swift.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface FoldersViewController (Private)
 
@@ -491,17 +490,16 @@
 #pragma mark TableView
 
 - (ISMSArtist *)artistAtIndexPath:(NSIndexPath *)indexPath {
-    ISMSArtist *artist = nil;
     if (self.isSearching) {
-        artist = [self.dataModel artistForPositionInSearch:(indexPath.row + 1)];
+        return [self.dataModel artistForPositionInSearch:(indexPath.row + 1)];
     } else {
         NSArray *indexPositions = self.dataModel.indexPositions;
         if (indexPositions.count > indexPath.section) {
             NSUInteger sectionStartIndex = [[indexPositions objectAtIndexSafe:indexPath.section] intValue];
-            artist = [self.dataModel artistForPosition:(sectionStartIndex + indexPath.row)];
+            return [self.dataModel artistForPosition:(sectionStartIndex + indexPath.row)];
         }
+        return nil;
     }
-    return artist;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView  {
