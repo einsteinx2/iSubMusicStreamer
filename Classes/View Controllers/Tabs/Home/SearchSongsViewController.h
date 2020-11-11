@@ -13,7 +13,7 @@
 //	2 = song
 //
 
-#import "CustomUITableViewController.h"
+#import <UIKit/UIKit.h>
 
 typedef enum {
 	ISMSSearchSongsSearchType_Artists = 0,
@@ -21,7 +21,7 @@ typedef enum {
 	ISMSSearchSongsSearchType_Songs
 } ISMSSearchSongsSearchType;
 
-@interface SearchSongsViewController : CustomUITableViewController 
+@interface SearchSongsViewController : UITableViewController 
 
 @property (copy) NSString *query;
 @property ISMSSearchSongsSearchType searchType;

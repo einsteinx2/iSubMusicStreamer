@@ -903,17 +903,17 @@
 
 - (void)showDeleteToggle
 {
-	// Show the delete toggle for already visible cells
-	for (id cell in self.tableView.visibleCells) 
-	{
-		if ([cell respondsToSelector:@selector(deleteToggleImage)])
-		{
-			if ([[cell deleteToggleImage] respondsToSelector:@selector(setHidden:)])
-			{
-				[[cell deleteToggleImage] setHidden:NO];
-			}
-		}
-	}
+//	// Show the delete toggle for already visible cells
+//	for (id cell in self.tableView.visibleCells) 
+//	{
+//		if ([cell respondsToSelector:@selector(deleteToggleImage)])
+//		{
+//			if ([[cell deleteToggleImage] respondsToSelector:@selector(setHidden:)])
+//			{
+//				[[cell deleteToggleImage] setHidden:NO];
+//			}
+//		}
+//	}
 }
 
 - (void)editSongsAction:(id)sender
@@ -1260,7 +1260,7 @@
 		{
 			cell = [[CacheQueueSongUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		}
-		cell.indexPath = indexPath;
+//		cell.indexPath = indexPath;
 
 		__block ISMSSong *aSong;
 		__block NSDate *cached;
@@ -1274,12 +1274,12 @@
 			[result close];
 		}];
 		
-		cell.deleteToggleImage.hidden = !self.tableView.editing;
-		cell.deleteToggleImage.image = [UIImage imageNamed:@"unselected.png"];
-		if ([viewObjectsS.multiDeleteList containsObject:cell.md5])
-		{
-			cell.deleteToggleImage.image = [UIImage imageNamed:@"selected.png"];
-		}
+//		cell.deleteToggleImage.hidden = !self.tableView.editing;
+//		cell.deleteToggleImage.image = [UIImage imageNamed:@"unselected.png"];
+//		if ([viewObjectsS.multiDeleteList containsObject:cell.md5])
+//		{
+//			cell.deleteToggleImage.image = [UIImage imageNamed:@"selected.png"];
+//		}
 		
 		cell.coverArtView.coverArtId = aSong.coverArtId;
 				

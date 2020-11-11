@@ -6,11 +6,11 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewCell.h"
+#import <UIKit/UIKit.h>
 
 @class AsynchronousImageView;
 
-@interface CacheQueueSongUITableViewCell : CustomUITableViewCell 
+@interface CacheQueueSongUITableViewCell : UITableViewCell
 
 @property (strong) AsynchronousImageView *coverArtView;
 @property (strong) UILabel *cacheInfoLabel;

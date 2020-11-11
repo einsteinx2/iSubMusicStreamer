@@ -6,9 +6,9 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewController.h"
+#import <UIKit/UIKit.h>
 
-@interface GenresAlbumViewController : CustomUITableViewController 
+@interface GenresAlbumViewController : UITableViewController 
 
 @property (strong) NSMutableArray *listOfAlbums;
 @property (strong) NSMutableArray *listOfSongs;

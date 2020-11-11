@@ -295,11 +295,11 @@
 
 - (void) showDeleteToggle
 {
-	// Show the delete toggle for already visible cells
-	for (id cell in self.tableView.visibleCells) 
-	{
-		[[cell deleteToggleImage] setHidden:NO];
-	}
+//	// Show the delete toggle for already visible cells
+//	for (id cell in self.tableView.visibleCells) 
+//	{
+//		[[cell deleteToggleImage] setHidden:NO];
+//	}
 }
 
 - (void)savePlaylistAction:(id)sender
@@ -577,14 +577,14 @@
         cell = [[CurrentPlaylistSongSmallUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
 	
-    cell.indexPath = indexPath;
-	
-	cell.deleteToggleImage.hidden = !self.tableView.editing;
-	cell.deleteToggleImage.image = [UIImage imageNamed:@"unselected.png"];
-	if ([viewObjectsS.multiDeleteList containsObject:@(indexPath.row)])
-	{
-		cell.deleteToggleImage.image = [UIImage imageNamed:@"selected.png"];
-	}
+//    cell.indexPath = indexPath;
+//	
+//	cell.deleteToggleImage.hidden = !self.tableView.editing;
+//	cell.deleteToggleImage.image = [UIImage imageNamed:@"unselected.png"];
+//	if ([viewObjectsS.multiDeleteList containsObject:@(indexPath.row)])
+//	{
+//		cell.deleteToggleImage.image = [UIImage imageNamed:@"selected.png"];
+//	}
 	
 	ISMSSong *aSong;
 	if (settingsS.isJukeboxEnabled)

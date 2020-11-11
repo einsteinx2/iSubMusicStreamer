@@ -6,12 +6,12 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewController.h"
+#import <UIKit/UIKit.h>
 #import "SUSLoaderDelegate.h"
 
 @class CustomUITextView, EGORefreshTableHeaderView, SUSChatDAO;
 
-@interface ChatViewController : CustomUITableViewController <UITextViewDelegate, SUSLoaderDelegate> 
+@interface ChatViewController : UITableViewController <UITextViewDelegate, SUSLoaderDelegate>
 
 @property (strong) UIView *headerView;
 @property (strong) CustomUITextView *textInput;

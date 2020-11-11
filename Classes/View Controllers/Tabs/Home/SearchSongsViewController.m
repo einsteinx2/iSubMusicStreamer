@@ -7,11 +7,8 @@
 //
 
 #import "SearchSongsViewController.h"
-#import "SearchSongUITableViewCell.h"
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
-#import "ArtistUITableViewCell.h"
-#import "AlbumUITableViewCell.h"
 #import "AlbumViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "SearchXMLParser.h"
@@ -28,6 +25,7 @@
 #import "ISMSAlbum.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation SearchSongsViewController
 
@@ -74,6 +72,9 @@
 	{
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
+    
+    self.tableView.rowHeight = 60.0;
+    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
 	if (!self.tableView.tableHeaderView) self.tableView.tableHeaderView = [[UIView alloc] init];
 	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
@@ -124,18 +125,6 @@
 	else
 	{
 		return self.listOfSongs.count + 1;
-	}
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	if (self.searchType == ISMSSearchSongsSearchType_Artists)
-	{
-		return 44.0;
-	}
-	else 
-	{
-		return 60.0;
 	}
 }
 
@@ -226,76 +215,89 @@
 }
 
 // Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
-{    
-	if (self.searchType == ISMSSearchSongsSearchType_Artists)
-	{
-		if (indexPath.row < self.listOfArtists.count)
-		{
-			static NSString *cellIdentifier = @"ArtistCell";
-			ArtistUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-			if (!cell)
-			{
-				cell = [[ArtistUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-			}
-						
-			ISMSArtist *anArtist = [self.listOfArtists objectAtIndexSafe:indexPath.row];
-			cell.myArtist = anArtist;
-			
-			[cell.artistNameLabel setText:anArtist.name];
-			
-			return cell;
-		}
-		else if (indexPath.row == self.listOfArtists.count)
-		{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	if (self.searchType == ISMSSearchSongsSearchType_Artists) {
+		if (indexPath.row < self.listOfArtists.count) {
+            // Artist
+            UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+            cell.hideNumberLabel = YES;
+            cell.hideCoverArt = YES;
+            cell.hideSecondaryLabel = YES;
+            cell.hideDurationLabel = YES;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            [cell updateWithModel:[self.listOfArtists objectAtIndexSafe:indexPath.row]];
+            return cell;
+            
+//			static NSString *cellIdentifier = @"ArtistCell";
+//			ArtistUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//			if (!cell)
+//			{
+//				cell = [[ArtistUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+//			}
+//
+//			ISMSArtist *anArtist = [self.listOfArtists objectAtIndexSafe:indexPath.row];
+//			cell.myArtist = anArtist;
+//
+//			[cell.artistNameLabel setText:anArtist.name];
+//
+//			return cell;
+		} else if (indexPath.row == self.listOfArtists.count) {
 			return [self createLoadingCell:indexPath.row];
 		}
-	}
-	else if (self.searchType == ISMSSearchSongsSearchType_Albums)
-	{
-		if (indexPath.row < self.listOfAlbums.count)
-		{
-			static NSString *cellIdentifier = @"AlbumCell";
-			AlbumUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-			if (!cell)
-			{
-				cell = [[AlbumUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-			}
-						
-			ISMSAlbum *anAlbum = [self.listOfAlbums objectAtIndexSafe:indexPath.row];
-			cell.myId = anAlbum.albumId;
-			cell.myArtist = [ISMSArtist artistWithName:anAlbum.artistName andArtistId:anAlbum.artistId];
-			cell.isIndexShowing = NO;
-			
-			cell.coverArtView.coverArtId = anAlbum.coverArtId;
-			
-			[cell.albumNameLabel setText:anAlbum.title];
-			
-			return cell;
-		}
-		else if (indexPath.row == [listOfAlbums count])
-		{
+	} else if (self.searchType == ISMSSearchSongsSearchType_Albums) {
+		if (indexPath.row < self.listOfAlbums.count) {
+            // Album
+            UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+            cell.hideNumberLabel = YES;
+            cell.hideCoverArt = NO;
+            cell.hideDurationLabel = YES;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            [cell updateWithModel:[self.listOfAlbums objectAtIndexSafe:indexPath.row]];
+            return cell;
+            
+//			static NSString *cellIdentifier = @"AlbumCell";
+//			AlbumUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//			if (!cell)
+//			{
+//				cell = [[AlbumUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+//				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//			}
+//						
+//			ISMSAlbum *anAlbum = [self.listOfAlbums objectAtIndexSafe:indexPath.row];
+//			cell.myId = anAlbum.albumId;
+//			cell.myArtist = [ISMSArtist artistWithName:anAlbum.artistName andArtistId:anAlbum.artistId];
+//			cell.isIndexShowing = NO;
+//			
+//			cell.coverArtView.coverArtId = anAlbum.coverArtId;
+//			
+//			[cell.albumNameLabel setText:anAlbum.title];
+//			
+//			return cell;
+		} else if (indexPath.row == [listOfAlbums count]) {
 			return [self createLoadingCell:indexPath.row];
 		}
-	}
-	else
-	{
-		if (indexPath.row < self.listOfSongs.count)
-		{
-			static NSString *cellIdentifier = @"SearchSongCell";
-			SearchSongUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-			if (!cell)
-			{
-				cell = [[SearchSongUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-			}
-			
-			cell.row = indexPath.row;
-			cell.mySong = [self.listOfSongs objectAtIndexSafe:indexPath.row];
-			return cell;
-		}
-		else if (indexPath.row == self.listOfSongs.count)
-		{
+	} else {
+		if (indexPath.row < self.listOfSongs.count) {
+            // Song
+            UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+            cell.hideNumberLabel = YES;
+            cell.hideCoverArt = NO;
+            cell.hideDurationLabel = YES;
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            [cell updateWithModel:[self.listOfSongs objectAtIndexSafe:indexPath.row]];
+            return cell;
+            
+//			static NSString *cellIdentifier = @"SearchSongCell";
+//			SearchSongUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//			if (!cell)
+//			{
+//				cell = [[SearchSongUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+//			}
+//
+//			cell.row = indexPath.row;
+//			cell.mySong = [self.listOfSongs objectAtIndexSafe:indexPath.row];
+//			return cell;
+		} else if (indexPath.row == self.listOfSongs.count) {
 			return [self createLoadingCell:indexPath.row];
 		}
 	}
@@ -392,6 +394,23 @@
 	}
 	
 	[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.searchType == ISMSSearchSongsSearchType_Artists) {
+        if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfArtists.count) {
+            return [SwipeAction downloadAndQueueConfigWithModel:[self.listOfArtists objectAtIndexSafe:indexPath.row]];
+        }
+    } else if (self.searchType == ISMSSearchSongsSearchType_Albums) {
+        if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfAlbums.count) {
+            return [SwipeAction downloadAndQueueConfigWithModel:[self.listOfAlbums objectAtIndexSafe:indexPath.row]];
+        }
+    } else {
+        if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfSongs.count) {
+            return [SwipeAction downloadAndQueueConfigWithModel:[self.listOfSongs objectAtIndexSafe:indexPath.row]];
+        }
+    }
+    return nil;
 }
 
 

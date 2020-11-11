@@ -18,6 +18,7 @@
  */
 
 #import "AsynchronousImageView.h"
+#import "CellCachedIndicatorView.h"
 
 /*
  * Data Models

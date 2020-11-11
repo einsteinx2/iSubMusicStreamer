@@ -6,9 +6,9 @@
 //  Copyright 2011 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewController.h"
+#import <UIKit/UIKit.h>
 
-@interface SearchAllViewController : CustomUITableViewController 
+@interface SearchAllViewController : UITableViewController
 
 @property (strong) NSMutableArray *cellNames;
 @property (strong) NSArray *listOfArtists;

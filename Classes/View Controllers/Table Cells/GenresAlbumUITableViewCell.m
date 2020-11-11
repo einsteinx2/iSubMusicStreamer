@@ -7,7 +7,6 @@
 //
 
 #import "GenresAlbumUITableViewCell.h"
-#import "CellOverlay.h"
 #import "AsynchronousImageView.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -72,10 +71,10 @@
 
 - (void)showOverlay
 {
-	[super showOverlay];
-
-	self.overlayView.downloadButton.alpha = (float)!settingsS.isOfflineMode;
-	self.overlayView.downloadButton.enabled = !settingsS.isOfflineMode;
+//	[super showOverlay];
+//
+//	self.overlayView.downloadButton.alpha = (float)!settingsS.isOfflineMode;
+//	self.overlayView.downloadButton.enabled = !settingsS.isOfflineMode;
 }
 
 - (void)downloadAllSongs
@@ -127,10 +126,10 @@
 	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
 	[self performSelector:@selector(downloadAllSongs) withObject:nil afterDelay:0.05];
 	
-	self.overlayView.downloadButton.alpha = .3;
-	self.overlayView.downloadButton.enabled = NO;
-	
-	[self hideOverlay];
+//	self.overlayView.downloadButton.alpha = .3;
+//	self.overlayView.downloadButton.enabled = NO;
+//
+//	[self hideOverlay];
 }
 
 - (void)queueAllSongs
@@ -182,7 +181,7 @@
 {
 	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
 	[self performSelector:@selector(queueAllSongs) withObject:nil afterDelay:0.05];
-	[self hideOverlay];
+//	[self hideOverlay];
 }
 
 #pragma mark - Scrolling

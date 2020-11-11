@@ -6,11 +6,11 @@
 //  Copyright 2011 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewController.h"
+#import <UIKit/UIKit.h>
 #import "FolderPickerDialog.h"
 #import "NewHomeViewController.h"
 
-@interface ShuffleFolderPickerViewController : CustomUITableViewController 
+@interface ShuffleFolderPickerViewController : UITableViewController
 
 @property (strong) NSMutableArray *sortedFolders;
 @property (weak) FolderPickerDialog *myDialog;

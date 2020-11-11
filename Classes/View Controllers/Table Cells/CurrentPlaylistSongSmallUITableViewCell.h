@@ -6,9 +6,9 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewCell.h"
+#import <UIKit/UIKit.h>
 
-@interface CurrentPlaylistSongSmallUITableViewCell : CustomUITableViewCell 
+@interface CurrentPlaylistSongSmallUITableViewCell : UITableViewCell 
 
 @property (strong) UILabel *numberLabel;
 @property (strong) UILabel *songNameLabel;

@@ -7,7 +7,6 @@
 //
 
 #import "PlayingViewController.h"
-#import "PlayingUITableViewCell.h"
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
 #import "EGORefreshTableHeaderView.h"
@@ -22,31 +21,23 @@
 #import "SUSNowPlayingDAO.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
-
-@interface PlayingViewController (Private)
-- (void)dataSourceDidFinishLoadingNewData;
-@end
+#import "Swift.h"
 
 @implementation PlayingViewController
 
-@synthesize nothingPlayingScreen, dataModel;
-@synthesize reloading, refreshHeaderView;
-@synthesize isNothingPlayingScreenShowing, receivedData;
-
 #pragma mark - Rotation Handling
 
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
+- (BOOL)shouldAutorotate {
+    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
         return NO;
+    }
     
     return YES;
 }
 
 #pragma mark Lifecycle
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 	
 	self.isNothingPlayingScreenShowing = NO;
@@ -67,34 +58,30 @@
 	self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
 	self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
 	[self.tableView addSubview:self.refreshHeaderView];
+    
+    self.tableView.rowHeight = 80.0;
+    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 		
 	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
-- (void)addURLRefBackButton
-{
-    if (appDelegateS.referringAppUrl && appDelegateS.mainTabBarController.selectedIndex != 4)
-    {
+- (void)addURLRefBackButton {
+    if (appDelegateS.referringAppUrl && appDelegateS.mainTabBarController.selectedIndex != 4) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:appDelegateS action:@selector(backToReferringApp)];
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated 
-{
+- (void)viewWillAppear:(BOOL)animated  {
     [super viewWillAppear:animated];
     
     [self addURLRefBackButton];
 	
     self.navigationItem.rightBarButtonItem = nil;
-	if(musicS.showPlayerIcon)
-	{
+	if (musicS.showPlayerIcon) {
 		UIImage *playingImage = [UIImage imageNamed:@"now-playing.png"];
-		UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithImage:playingImage
-																	   style:UIBarButtonItemStylePlain 
-																	  target:self 
-																	  action:@selector(nowPlayingAction:)];
+		UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithImage:playingImage style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 		self.navigationItem.rightBarButtonItem = buttonItem;
 	}
 	
@@ -105,24 +92,20 @@
 	[Flurry logEvent:@"NowPlayingTab"];
 }
 
-- (void)cancelLoad
-{
+- (void)cancelLoad {
 	[self.dataModel cancelLoad];
 	[viewObjectsS hideLoadingScreen];
 	[self dataSourceDidFinishLoadingNewData];
 }
 
--(void)viewWillDisappear:(BOOL)animated
-{
-	if (self.isNothingPlayingScreenShowing)
-	{
+-(void)viewWillDisappear:(BOOL)animated {
+	if (self.isNothingPlayingScreenShowing) {
 		[self.nothingPlayingScreen removeFromSuperview];
 		self.isNothingPlayingScreenShowing = NO;
 	}
 }
 
-- (void)didReceiveMemoryWarning 
-{
+- (void)didReceiveMemoryWarning  {
 	// Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
 }
@@ -130,99 +113,60 @@
 
 #pragma mark - Button Handling
 
-- (void) settingsAction:(id)sender 
-{
-	ServerListViewController *serverVC = [[ServerListViewController alloc] 
-										  initWithNibName:@"ServerListViewController" 
-												   bundle:nil];
+- (void) settingsAction:(id)sender  {
+	ServerListViewController *serverVC = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
 	serverVC.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:serverVC animated:YES];
 }
 
-
-- (IBAction)nowPlayingAction:(id)sender
-{
-	iPhoneStreamingPlayerViewController *playerVC = [[iPhoneStreamingPlayerViewController alloc]
-													 initWithNibName:@"iPhoneStreamingPlayerViewController"
-															  bundle:nil];
+- (IBAction)nowPlayingAction:(id)sender {
+	iPhoneStreamingPlayerViewController *playerVC = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
 	playerVC.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:playerVC animated:YES];
 }
 
-
 #pragma mark - Table View Delegate
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView  {
     return 1;
 }
 
-
-// Customize the number of rows in the table view.
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
     return self.dataModel.count;
 }
 
-
-// Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	static NSString *cellIdentifier = @"PlayingCell";
-	PlayingUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	if (!cell)
-	{
-		cell = [[PlayingUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-	}
-	
-	ISMSSong *aSong = [self.dataModel songForIndex:indexPath.row];
-	cell.mySong = aSong;
-	
-	// Set the cover art
-	cell.coverArtView.coverArtId = aSong.coverArtId;
-	
-	// Set the title label
-	NSString *playTime = [self.dataModel playTimeForIndex:indexPath.row];
-	NSString *username = [self.dataModel usernameForIndex:indexPath.row];
-	NSString *playerName = [self.dataModel playerNameForIndex:indexPath.row];
-	
-	if (playerName)
-	{
-		NSString *text = [NSString stringWithFormat:@"%@ @ %@ - %@", username, playerName, playTime];
-		[cell.userNameLabel setText:text];
-	}
-	else
-	{
-		NSString *text = [NSString stringWithFormat:@"%@ - %@", username, playTime];
-		[cell.userNameLabel setText:text];
-	}
-
-	// Set the song name label
-	cell.songNameLabel.text = aSong.title;
-	if (aSong.album)
-		cell.artistNameLabel.text = [NSString stringWithFormat:@"%@ - %@", aSong.artist, aSong.album];
-	else
-		cell.artistNameLabel.text = aSong.artist;
-	
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+    cell.hideHeaderLabel = NO;
+    cell.hideNumberLabel = YES;
+    NSString *playTime = [self.dataModel playTimeForIndex:indexPath.row];
+    NSString *username = [self.dataModel usernameForIndex:indexPath.row];
+    NSString *playerName = [self.dataModel playerNameForIndex:indexPath.row];
+    if (playerName) {
+        cell.headerText = [NSString stringWithFormat:@"%@ @ %@ - %@", username, playerName, playTime];
+    } else {
+        cell.headerText = [NSString stringWithFormat:@"%@ - %@", username, playTime];
+    }
+    [cell updateWithModel:[self.dataModel songForIndex:indexPath.row]];
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	if (!indexPath)
-		return;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	if (!indexPath) return;
 	
 	ISMSSong *playedSong = [self.dataModel playSongAtIndex:indexPath.row];
-	if (!playedSong.isVideo)
+    if (!playedSong.isVideo) {
         [self showPlayer];
+    }
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel songForIndex:indexPath.row]];
 }
 
 #pragma mark - ISMSLoader delegate
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
-{
-    // Inform the user that the connection failed.
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
 	NSString *message = [NSString stringWithFormat:@"There was an error loading the now playing list.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
 	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 	[alert show];
@@ -232,18 +176,15 @@
 	[self dataSourceDidFinishLoadingNewData];
 }
 
-- (void)loadingFinished:(SUSLoader *)theLoader
-{
+- (void)loadingFinished:(SUSLoader *)theLoader {
     [viewObjectsS hideLoadingScreen];
 	
 	[self.tableView reloadData];
 	[self dataSourceDidFinishLoadingNewData];
 	
 	// Display the no songs overlay if 0 results
-	if (self.dataModel.count == 0)
-	{
-		if (!self.isNothingPlayingScreenShowing)
-		{
+	if (self.dataModel.count == 0) {
+		if (!self.isNothingPlayingScreenShowing) {
 			self.isNothingPlayingScreenShowing = YES;
 			self.nothingPlayingScreen = [[UIImageView alloc] init];
 			self.nothingPlayingScreen.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -263,13 +204,9 @@
 			[self.nothingPlayingScreen addSubview:textLabel];
 			
 			[self.view addSubview:self.nothingPlayingScreen];
-			
 		}
-	}
-	else
-	{
-		if (self.isNothingPlayingScreenShowing)
-		{
+	} else {
+		if (self.isNothingPlayingScreenShowing) {
 			self.isNothingPlayingScreenShowing = NO;
 			[self.nothingPlayingScreen removeFromSuperview];
 		}
@@ -278,25 +215,18 @@
 
 #pragma mark - Pull to refresh methods
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{	
-	if (scrollView.isDragging) 
-	{
-		if (self.refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !self.reloading) 
-		{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	if (scrollView.isDragging) {
+		if (self.refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !self.reloading) {
 			[self.refreshHeaderView setState:EGOOPullRefreshNormal];
-		} 
-		else if (self.refreshHeaderView.state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !self.reloading) 
-		{
+		} else if (self.refreshHeaderView.state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !self.reloading) {
 			[self.refreshHeaderView setState:EGOOPullRefreshPulling];
 		}
 	}
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-	if (scrollView.contentOffset.y <= - 65.0f && !self.reloading) 
-	{
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+	if (scrollView.contentOffset.y <= - 65.0f && !self.reloading) {
 		self.reloading = YES;
 		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
 		[self.dataModel startLoad];
@@ -308,8 +238,7 @@
 	}
 }
 
-- (void)dataSourceDidFinishLoadingNewData
-{
+- (void)dataSourceDidFinishLoadingNewData {
 	self.reloading = NO;
     
     [UIView animateWithDuration:0.3 animations:^{

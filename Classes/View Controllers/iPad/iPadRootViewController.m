@@ -7,7 +7,6 @@
 //
 
 #import "iPadRootViewController.h"
-#import "CustomUITableView.h"
 #import "MenuViewController.h"
 #import "StackScrollViewController.h"
 #import "SavedSettings.h"

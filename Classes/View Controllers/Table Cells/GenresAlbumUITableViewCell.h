@@ -6,11 +6,11 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewCell.h"
+#import <UIKit/UIKit.h>
 
 @class AsynchronousImageView;
 
-@interface GenresAlbumUITableViewCell : CustomUITableViewCell 
+@interface GenresAlbumUITableViewCell : UITableViewCell 
 
 @property NSInteger segment;
 @property (copy) NSString *seg1;

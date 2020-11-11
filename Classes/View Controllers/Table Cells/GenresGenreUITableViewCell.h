@@ -6,9 +6,9 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewCell.h"
+#import <UIKit/UIKit.h>
 
-@interface GenresGenreUITableViewCell : CustomUITableViewCell 
+@interface GenresGenreUITableViewCell : UITableViewCell
 
 @property (strong) UIScrollView *genreNameScrollView;
 @property (strong) UILabel *genreNameLabel;

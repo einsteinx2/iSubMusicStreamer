@@ -6,11 +6,11 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewController.h"
+#import <UIKit/UIKit.h>
 
 @class EGORefreshTableHeaderView, SUSServerPlaylist;
 
-@interface PlaylistSongsViewController : CustomUITableViewController
+@interface PlaylistSongsViewController : UITableViewController
 
 @property (strong) EGORefreshTableHeaderView *refreshHeaderView;
 @property(nonatomic) BOOL reloading;

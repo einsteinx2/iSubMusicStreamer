@@ -6,9 +6,9 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewController.h"
+#import <UIKit/UIKit.h>
 
-@interface CacheAlbumViewController : CustomUITableViewController 
+@interface CacheAlbumViewController : UITableViewController 
 
 @property (nonatomic, copy) NSString *artistName;
 @property (nonatomic, strong) NSMutableArray *listOfAlbums;

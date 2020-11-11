@@ -6,9 +6,9 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewCell.h"
+#import <UIKit/UIKit.h>
 
-@interface ChatUITableViewCell : CustomUITableViewCell 
+@interface ChatUITableViewCell : UITableViewCell
 
 @property (strong) UILabel *userNameLabel;
 @property (strong) UILabel *messageLabel;

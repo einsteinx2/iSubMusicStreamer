@@ -11,82 +11,65 @@
 
 @implementation CurrentPlaylistSongSmallUITableViewCell
 
-@synthesize numberLabel, songNameLabel, artistNameLabel, durationLabel, nowPlayingImageView;
-
 #pragma mark - Lifecycle
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier 
-{
-    if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) 
-	{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.backgroundColor = [UIColor clearColor];
 		self.backgroundView.backgroundColor = [UIColor clearColor];
 		self.contentView.backgroundColor = [UIColor clearColor];
 		
-		numberLabel = [[UILabel alloc] init];
-		numberLabel.frame = CGRectMake(2, 0, 40, 45);
-		numberLabel.backgroundColor = [UIColor clearColor];
-		numberLabel.textAlignment = NSTextAlignmentCenter;
-		numberLabel.textColor = [UIColor whiteColor];
-        numberLabel.highlightedTextColor = [UIColor blackColor];
-		numberLabel.font = ISMSBoldFont(24);
-		numberLabel.adjustsFontSizeToFitWidth = YES;
-		numberLabel.minimumScaleFactor = 12.0 / numberLabel.font.pointSize;
-		[self.contentView addSubview:numberLabel];
+		_numberLabel = [[UILabel alloc] init];
+		_numberLabel.frame = CGRectMake(2, 0, 40, 45);
+		_numberLabel.backgroundColor = [UIColor clearColor];
+		_numberLabel.textAlignment = NSTextAlignmentCenter;
+		_numberLabel.textColor = [UIColor whiteColor];
+        _numberLabel.highlightedTextColor = [UIColor blackColor];
+		_numberLabel.font = ISMSBoldFont(24);
+		_numberLabel.adjustsFontSizeToFitWidth = YES;
+		_numberLabel.minimumScaleFactor = 12.0 / _numberLabel.font.pointSize;
+		[self.contentView addSubview:_numberLabel];
 		
-		nowPlayingImageView = [[UIImageView alloc] initWithImage:self.nowPlayingImageWhite];
-        nowPlayingImageView.highlightedImage = self.nowPlayingImageBlack;
-		nowPlayingImageView.center = numberLabel.center;
-		nowPlayingImageView.hidden = YES;
-		[self.contentView addSubview:nowPlayingImageView];
+        _nowPlayingImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"playing-cell-icon-white.png"]];
+        _nowPlayingImageView.highlightedImage = [UIImage imageNamed:@"playing-cell-icon.png"];
+		_nowPlayingImageView.center = _numberLabel.center;
+		_nowPlayingImageView.hidden = YES;
+		[self.contentView addSubview:_nowPlayingImageView];
 		
-		songNameLabel = [[UILabel alloc] init];
-		songNameLabel.frame = CGRectMake(45, 0, 235, 30);
-		songNameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		songNameLabel.backgroundColor = [UIColor clearColor];
-		songNameLabel.textAlignment = NSTextAlignmentLeft; // default
-		songNameLabel.textColor = [UIColor whiteColor];
-        songNameLabel.highlightedTextColor = [UIColor blackColor];
-		songNameLabel.font = ISMSSongFont;
-		[self.contentView addSubview:songNameLabel];
+		_songNameLabel = [[UILabel alloc] init];
+		_songNameLabel.frame = CGRectMake(45, 0, 235, 30);
+		_songNameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_songNameLabel.backgroundColor = [UIColor clearColor];
+		_songNameLabel.textAlignment = NSTextAlignmentLeft; // default
+		_songNameLabel.textColor = [UIColor whiteColor];
+        _songNameLabel.highlightedTextColor = [UIColor blackColor];
+		_songNameLabel.font = ISMSSongFont;
+		[self.contentView addSubview:_songNameLabel];
 		
-		artistNameLabel = [[UILabel alloc] init];
-		artistNameLabel.frame = CGRectMake(45, 27, 235, 15);
-		artistNameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		artistNameLabel.backgroundColor = [UIColor clearColor];
-        artistNameLabel.highlightedTextColor = [UIColor blackColor];
-		artistNameLabel.textAlignment = NSTextAlignmentLeft; // default
-		artistNameLabel.textColor = [UIColor whiteColor];
-		artistNameLabel.font = ISMSRegularFont(12);
-		[self.contentView addSubview:artistNameLabel];
+		_artistNameLabel = [[UILabel alloc] init];
+		_artistNameLabel.frame = CGRectMake(45, 27, 235, 15);
+		_artistNameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_artistNameLabel.backgroundColor = [UIColor clearColor];
+        _artistNameLabel.highlightedTextColor = [UIColor blackColor];
+		_artistNameLabel.textAlignment = NSTextAlignmentLeft; // default
+		_artistNameLabel.textColor = [UIColor whiteColor];
+		_artistNameLabel.font = ISMSRegularFont(12);
+		[self.contentView addSubview:_artistNameLabel];
 		
-		durationLabel = [[UILabel alloc] init];
-		durationLabel.frame = CGRectMake(270, 0, 45, 41);
-		durationLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-		durationLabel.backgroundColor = [UIColor clearColor];
-		durationLabel.textAlignment = NSTextAlignmentRight; // default
-		durationLabel.textColor = [UIColor whiteColor];
-        durationLabel.highlightedTextColor = [UIColor blackColor];
-		durationLabel.font = ISMSRegularFont(16);
-		durationLabel.adjustsFontSizeToFitWidth = YES;
-		durationLabel.minimumScaleFactor = 12.0 / durationLabel.font.pointSize;
-		[self.contentView addSubview:durationLabel];
+		_durationLabel = [[UILabel alloc] init];
+		_durationLabel.frame = CGRectMake(270, 0, 45, 41);
+		_durationLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+		_durationLabel.backgroundColor = [UIColor clearColor];
+		_durationLabel.textAlignment = NSTextAlignmentRight; // default
+		_durationLabel.textColor = [UIColor whiteColor];
+        _durationLabel.highlightedTextColor = [UIColor blackColor];
+		_durationLabel.font = ISMSRegularFont(16);
+		_durationLabel.adjustsFontSizeToFitWidth = YES;
+		_durationLabel.minimumScaleFactor = 12.0 / _durationLabel.font.pointSize;
+		[self.contentView addSubview:_durationLabel];
 	}
 	
 	return self;
-}
-
-
-#pragma mark - Overlay
-
-- (void)showOverlay
-{
-	return;
-}
-
-- (void)hideOverlay
-{
-	return;
 }
 
 @end

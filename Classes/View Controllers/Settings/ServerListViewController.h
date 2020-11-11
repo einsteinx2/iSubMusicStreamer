@@ -6,12 +6,12 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "CustomUITableViewController.h"
+#import <UIKit/UIKit.h>
 #import "SUSLoaderDelegate.h"
 
 @class SettingsTabViewController, HelpTabViewController;
 
-@interface ServerListViewController : CustomUITableViewController <SUSLoaderDelegate>
+@interface ServerListViewController : UITableViewController <SUSLoaderDelegate>
 
 @property (nonatomic) BOOL isEditing;
 @property (nonatomic, strong) UIView *headerView;

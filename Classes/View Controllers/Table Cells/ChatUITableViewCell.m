@@ -11,41 +11,35 @@
 
 @implementation ChatUITableViewCell
 
-@synthesize userNameLabel, messageLabel;
-
 #pragma mark - Lifecycle
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier 
-{
-    if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) 
-	{
-		userNameLabel = [[UILabel alloc] init];
-		userNameLabel.frame = CGRectMake(0, 0, 320, 20);
-		userNameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		userNameLabel.textAlignment = NSTextAlignmentCenter; // default
-		userNameLabel.backgroundColor = [UIColor blackColor];
-		userNameLabel.alpha = .65;
-		userNameLabel.font = ISMSBoldFont(10);
-		userNameLabel.textColor = [UIColor whiteColor];
-		[self.contentView addSubview:userNameLabel];
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier  {
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])  {
+		_userNameLabel = [[UILabel alloc] init];
+		_userNameLabel.frame = CGRectMake(0, 0, 320, 20);
+		_userNameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_userNameLabel.textAlignment = NSTextAlignmentCenter; // default
+		_userNameLabel.backgroundColor = [UIColor blackColor];
+		_userNameLabel.alpha = .65;
+		_userNameLabel.font = ISMSBoldFont(10);
+		_userNameLabel.textColor = [UIColor whiteColor];
+		[self.contentView addSubview:_userNameLabel];
 		
-		messageLabel = [[UILabel alloc] init];
-		messageLabel.frame = CGRectMake(5, 20, 310, 55);
-		messageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		messageLabel.textAlignment = NSTextAlignmentLeft; // default
-		messageLabel.backgroundColor = [UIColor clearColor];
-		messageLabel.font = ISMSRegularFont(20);
-		messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
-		messageLabel.numberOfLines = 0;
-		[self.contentView addSubview:messageLabel];
+		_messageLabel = [[UILabel alloc] init];
+		_messageLabel.frame = CGRectMake(5, 20, 310, 55);
+		_messageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_messageLabel.textAlignment = NSTextAlignmentLeft; // default
+		_messageLabel.backgroundColor = [UIColor clearColor];
+		_messageLabel.font = ISMSRegularFont(20);
+		_messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
+		_messageLabel.numberOfLines = 0;
+		[self.contentView addSubview:_messageLabel];
 	}
 	
 	return self;
 }
 
-
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
 		
 	// Automatically set the height based on the height of the message text
@@ -53,23 +47,10 @@
                                                                     options:NSStringDrawingUsesLineFragmentOrigin
                                                                  attributes:@{NSFontAttributeName:self.messageLabel.font}
                                                                     context:nil].size;
-	if (expectedLabelSize.height < 40)
-		expectedLabelSize.height = 40;
+    if (expectedLabelSize.height < 40) expectedLabelSize.height = 40;
 	CGRect newFrame = self.messageLabel.frame;
 	newFrame.size.height = expectedLabelSize.height;
 	self.messageLabel.frame = newFrame;
-}
-
-#pragma mark - Overlay
-
-- (void) hideOverlay
-{
-	return;
-}
-
-- (void) showOverlay
-{
-	return;
 }
 
 @end

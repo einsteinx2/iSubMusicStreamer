@@ -6,12 +6,12 @@
 //  Copyright Ben Baron 2010. All rights reserved.
 //
 
-#import "CustomUITableViewController.h"
+#import <UIKit/UIKit.h>
 #import "SUSLoaderDelegate.h"
 
 @class ISMSAlbum, SUSAllAlbumsDAO, EGORefreshTableHeaderView, LoadingScreen, SUSAllSongsDAO;
 
-@interface AllAlbumsViewController : CustomUITableViewController <UISearchBarDelegate, SUSLoaderDelegate> 
+@interface AllAlbumsViewController : UITableViewController <UISearchBarDelegate, SUSLoaderDelegate>
 
 @property (strong) UIButton *reloadButton;
 @property (strong) UILabel *reloadLabel;

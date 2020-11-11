@@ -12,11 +12,11 @@
 @implementation CellCachedIndicatorView
 
 - (instancetype)init {
-    return [self initWithSize:15];
+    return [self initWithSize:20];
 }
 
-- (instancetype)initWithSize:(CGFloat)size
-{
+// TODO: Flip for RTL
+- (instancetype)initWithSize:(CGFloat)size {
     if (self = [super initWithFrame:CGRectMake(0, 0, size, size)]) {
         UIBezierPath *maskPath = [UIBezierPath bezierPath];
         [maskPath moveToPoint:CGPointMake(0, 0)];
