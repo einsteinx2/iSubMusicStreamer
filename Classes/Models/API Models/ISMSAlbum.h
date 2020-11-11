@@ -6,19 +6,22 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "TBXML.h"
+#import "ISMSTableCellModel.h"
+#import "TBXML.h""
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class ISMSArtist, RXMLElement;
 NS_SWIFT_NAME(Album)
-@interface ISMSAlbum : NSObject <NSSecureCoding, NSCopying> 
+@interface ISMSAlbum : NSObject <ISMSTableCellModel, NSSecureCoding, NSCopying> 
 
 @property (nullable, copy) NSString *title;
 @property (nullable, copy) NSString *albumId;
 @property (nullable, copy) NSString *coverArtId;
 @property (nullable, copy) NSString *artistName;
 @property (nullable, copy) NSString *artistId;
+
+- (ISMSArtist *)artist;
 
 - (void)encodeWithCoder:(NSCoder *)encoder;
 - (instancetype)initWithCoder:(NSCoder *)decoder;

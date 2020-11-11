@@ -6,6 +6,7 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
+#import "ISMSTableCellModel.h"
 #import "TBXML.h"
 
 NS_ASSUME_NONNULL_BEGIN

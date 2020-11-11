@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -35,10 +33,10 @@
         <window opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" resizesToFullScreen="NO" id="2">
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask"/>
-            <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+            <color key="backgroundColor" systemColor="darkTextColor"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="36" y="43"/>
+            <point key="canvasLocation" x="52.173913043478265" y="28.794642857142854"/>
         </window>
         <tabBarController id="21" customClass="CustomUITabBarController">
             <extendedEdge key="edgesForExtendedLayout"/>
@@ -212,7 +210,7 @@
             <connections>
                 <outlet property="delegate" destination="3" id="40"/>
             </connections>
-            <point key="canvasLocation" x="-133" y="-146"/>
+            <point key="canvasLocation" x="-192.75362318840581" y="-97.767857142857139"/>
         </tabBarController>
         <tabBarController id="105" customClass="CustomUITabBarController">
             <extendedEdge key="edgesForExtendedLayout"/>
@@ -292,7 +290,7 @@
             <connections>
                 <outlet property="delegate" destination="3" id="112"/>
             </connections>
-            <point key="canvasLocation" x="318" y="-26"/>
+            <point key="canvasLocation" x="460.86956521739131" y="-17.410714285714285"/>
         </tabBarController>
     </objects>
     <resources>
@@ -306,5 +304,8 @@
         <image name="playing-tabbaricon.png" width="30" height="30"/>
         <image name="playlists-tabbaricon.png" width="30" height="30"/>
         <image name="songs-tabbaricon.png" width="30" height="30"/>
+        <systemColor name="darkTextColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

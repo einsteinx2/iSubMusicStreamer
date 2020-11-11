@@ -7,14 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ISMSMediaItem.h"
+#import "ISMSTableCellModel.h"
 #import "TBXML.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class RXMLElement;
 NS_SWIFT_NAME(Song)
-@interface ISMSSong : NSObject <NSSecureCoding, NSCopying, ISMSMediaItem>
+@interface ISMSSong : NSObject <ISMSTableCellModel, NSSecureCoding, NSCopying>
 
 @property (nullable, copy) NSString *title;
 @property (nullable, copy) NSString *songId;

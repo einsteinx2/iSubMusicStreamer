@@ -49,24 +49,22 @@
 
 #pragma mark - Rotation
 
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
+- (BOOL)shouldAutorotate {
+    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
         return NO;
+    }
     
     return YES;
 }
 
 #pragma mark - Lifecycle
 
-- (void)createDataModel
-{
+- (void)createDataModel {
 	self.dataModel = [[SUSRootFoldersDAO alloc] initWithDelegate:self];
 	dataModel.selectedFolderId = [settingsS rootFoldersSelectedFolderId];
 }
 
-- (void)viewDidLoad 
-{
+- (void)viewDidLoad  {
     [super viewDidLoad];
 	
 	[self createDataModel];
@@ -86,20 +84,19 @@
 //	self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
 	[self.tableView addSubview:self.refreshHeaderView];
 	
-	if (IS_IPAD())
-	{
+	if (IS_IPAD()) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
-	}
-	else
-	{		
-		if (self.dropdown.folders == nil || [self.dropdown.folders count] == 2)
+	} else {
+        if (self.dropdown.folders == nil || [self.dropdown.folders count] == 2) {
 			[self.tableView setContentOffset:CGPointMake(0, 86) animated:NO];
-		else
+        } else {
 			[self.tableView setContentOffset:CGPointMake(0, 50) animated:NO];
+        }
 	}
 	
 	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
+    self.tableView.rowHeight = 60;
 	
 	if ([self.dataModel isRootFolderIdCached])
 		[self addCount];
@@ -107,30 +104,24 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
-- (void)addURLRefBackButton
-{
-    if (appDelegateS.referringAppUrl && appDelegateS.mainTabBarController.selectedIndex != 4)
-    {
+- (void)addURLRefBackButton {
+    if (appDelegateS.referringAppUrl && appDelegateS.mainTabBarController.selectedIndex != 4) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:appDelegateS action:@selector(backToReferringApp)];
     }
 }
 
--(void)viewWillAppear:(BOOL)animated 
-{
+- (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
     
     [self addURLRefBackButton];
     
     self.navigationItem.rightBarButtonItem = nil;
-	if(musicS.showPlayerIcon)
-	{
+	if (musicS.showPlayerIcon) {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 	}
 	
-	if (![SUSAllSongsLoader isLoading] && !viewObjectsS.isArtistsLoading)
-	{
-		if (![self.dataModel isRootFolderIdCached])
-		{
+	if (![SUSAllSongsLoader isLoading] && !viewObjectsS.isArtistsLoading) {
+		if (![self.dataModel isRootFolderIdCached]) {
 			[self loadData:[settingsS rootFoldersSelectedFolderId]];
 		}
 	}
@@ -138,16 +129,12 @@
 	[Flurry logEvent:@"FoldersTab"];
 }
 
-
-- (void)didReceiveMemoryWarning 
-{
+- (void)didReceiveMemoryWarning  {
 	// Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
 }
 
-
-- (void)dealloc 
-{
+- (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	dataModel.delegate = nil;
@@ -156,13 +143,13 @@
 
 #pragma mark - Loading
 
-- (void)updateCount
-{
-	if (self.dataModel.count == 1)
+- (void)updateCount {
+    if (self.dataModel.count == 1) {
 		self.countLabel.text = [NSString stringWithFormat:@"%lu Folder", (unsigned long)self.dataModel.count];
-	else
+    } else {
 		self.countLabel.text = [NSString stringWithFormat:@"%lu Folders", (unsigned long)self.dataModel.count];
-	
+    }
+    
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 	[formatter setDateStyle:NSDateFormatterMediumStyle];
 	[formatter setTimeStyle:NSDateFormatterShortStyle];
@@ -170,14 +157,12 @@
 	
 }
 
-- (void)removeCount
-{
+- (void)removeCount {
 	self.tableView.tableHeaderView = nil;
 	self.isCountShowing = NO;
 }
 
-- (void)addCount
-{	
+- (void)addCount {
 	self.isCountShowing = YES;
 	
 	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 126)];
@@ -185,8 +170,7 @@
 	self.headerView.backgroundColor = ISMSHeaderColor;
 	
     // This is a hack to prevent unwanted taps in the header, but it messes with voice over
-	if (!UIAccessibilityIsVoiceOverRunning())
-    {
+	if (!UIAccessibilityIsVoiceOverRunning()) {
         self.blockerButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.blockerButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.blockerButton.frame = self.headerView.frame;
@@ -219,12 +203,9 @@
 	self.dropdown = [[FolderDropdownControl alloc] initWithFrame:CGRectMake(50, 53, 220, 30)];
 	self.dropdown.delegate = self;
 	NSDictionary *dropdownFolders = [SUSRootFoldersDAO folderDropdownFolders];
-	if (dropdownFolders != nil)
-	{
+	if (dropdownFolders != nil) {
 		self.dropdown.folders = dropdownFolders;
-	}
-	else
-	{
+	} else {
 		self.dropdown.folders = [NSDictionary dictionaryWithObject:@"All Folders" forKey:@-1];
 	}
 	[self.dropdown selectFolderWithId:self.dataModel.selectedFolderId];
@@ -234,8 +215,7 @@
 	[self updateCount];
     
     // Special handling for voice over users
-    if (UIAccessibilityIsVoiceOverRunning())
-    {
+    if (UIAccessibilityIsVoiceOverRunning()) {
         // Add a refresh button
         UIButton *voiceOverRefresh = [UIButton buttonWithType:UIButtonTypeCustom];
         voiceOverRefresh.frame = CGRectMake(0, 0, 50, 50);
@@ -251,15 +231,13 @@
 	self.tableView.tableHeaderView = self.headerView;
 }
 
-- (void)cancelLoad
-{
+- (void)cancelLoad {
 	[self.dataModel cancelLoad];
 	[viewObjectsS hideLoadingScreen];
 	[self dataSourceDidFinishLoadingNewData];
 }
 
--(void)loadData:(NSNumber *)folderId 
-{
+-(void)loadData:(NSNumber *)folderId  {
 	[self.dropdown updateFolders];
 	
 	viewObjectsS.isArtistsLoading = YES;
@@ -271,8 +249,7 @@
 	[self.dataModel startLoad];
 }
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
-{	
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
 	viewObjectsS.isArtistsLoading = NO;
 	
 	// Hide the loading screen
@@ -288,14 +265,14 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)loadingFinished:(SUSLoader *)theLoader
-{	
+- (void)loadingFinished:(SUSLoader *)theLoader {
     //DLog(@"loadingFinished called");
-	if (isCountShowing)
+    if (isCountShowing) {
 		[self updateCount];
-	else
+    } else {
 		[self addCount];		
-	
+    }
+    
 	[self.tableView reloadData];
 	
 	if (!IS_IPAD())
@@ -311,8 +288,7 @@
 
 #pragma mark - Folder Dropdown Delegate
 
-- (void)folderDropdownMoveViewsY:(float)y
-{
+- (void)folderDropdownMoveViewsY:(float)y {
 	//[self.tableView beginUpdates];
 	self.tableView.tableHeaderView.height += y;
 	self.searchBar.y += y;
@@ -333,15 +309,13 @@
 	self.tableView.tableHeaderView = self.tableView.tableHeaderView;
 }
 
-- (void)folderDropdownViewsFinishedMoving
-{
+- (void)folderDropdownViewsFinishedMoving {
 	//self.tableView.tableHeaderView = self.tableView.tableHeaderView;
 	/*[self.tableView setNeedsLayout];
 	[self.tableView reloadData];*/
 }
 
-- (void)folderDropdownSelectFolder:(NSNumber *)folderId
-{
+- (void)folderDropdownSelectFolder:(NSNumber *)folderId {
 	[self.dropdown selectFolderWithId:folderId];
 	 
 	// Save the default
@@ -350,22 +324,17 @@
 	// Reload the data
 	self.dataModel.selectedFolderId = folderId;
 	self.isSearching = NO;
-	if ([self.dataModel isRootFolderIdCached])
-	{
+	if ([self.dataModel isRootFolderIdCached]) {
 		[self.tableView reloadData];
 		[self updateCount];
-	}
-	else
-	{
+	} else {
 		[self loadData:folderId];
 	}
 }
 
-- (void)serverSwitched
-{
+- (void)serverSwitched {
 	[self createDataModel];
-	if (![self.dataModel isRootFolderIdCached])
-	{
+	if (![self.dataModel isRootFolderIdCached]) {
 		[self.tableView reloadData];
 		[self removeCount];
 	}
@@ -373,37 +342,30 @@
 	[self folderDropdownSelectFolder:@-1];
 }
 
-- (void)updateFolders
-{
+- (void)updateFolders {
 	[self.dropdown updateFolders];
 }
 
 #pragma mark - Button handling methods
 
-- (void) reloadAction:(id)sender
-{
-	if (![SUSAllSongsLoader isLoading])
-	{
+- (void)reloadAction:(id)sender {
+	if (![SUSAllSongsLoader isLoading]) {
 		[self loadData:[settingsS rootFoldersSelectedFolderId]];
-	}
-	else
-	{
+	} else {
 		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Please Wait" message:@"You cannot reload the Artists tab while the Albums or Songs tabs are loading" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 	}
 }
 
 
-- (void) settingsAction:(id)sender 
-{
+- (void)settingsAction:(id)sender {
 	ServerListViewController *serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
 	serverListViewController.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:serverListViewController animated:YES];
 }
 
 
-- (IBAction)nowPlayingAction:(id)sender
-{
+- (IBAction)nowPlayingAction:(id)sender {
 	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
 	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
@@ -413,8 +375,7 @@
 #pragma mark -
 #pragma mark SearchBar
 
-- (void)createSearchOverlay
-{
+- (void)createSearchOverlay {
 	self.searchOverlay = [[UIView alloc] init];
 	self.searchOverlay.frame = CGRectMake(0, 0, 480, 480);
 	self.searchOverlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -436,10 +397,8 @@
     } completion:nil];
 }
 
-- (void)hideSearchOverlay
-{
-	if (self.searchOverlay)
-	{
+- (void)hideSearchOverlay {
+	if (self.searchOverlay) {
 		// Animate the search overlay off screen
         [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             self.searchOverlay.alpha = 0;
@@ -453,23 +412,18 @@
 	}
 }
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar
-{
-	if (self.isSearching)
-		return;
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
+	if (self.isSearching) return;
 	
 	// Remove the index bar
 	self.isSearching = YES;
 	[self.dataModel clearSearchTable];
 	[self.tableView reloadData];
 	
-	//self.tableView.tableHeaderView;
-
 	[self.dropdown closeDropdownFast];
 	[self.tableView setContentOffset:CGPointMake(0, 86) animated:YES];
 	
-	if ([theSearchBar.text length] == 0)
-	{
+	if ([theSearchBar.text length] == 0) {
 		[self createSearchOverlay];
 				
 		self.letUserSelectRow = NO;
@@ -481,10 +435,8 @@
 }
 
 
-- (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText
-{
-	if([searchText length] > 0) 
-	{				
+- (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
+	if ([searchText length] > 0)  {
 		[self hideSearchOverlay];
 		
 		self.letUserSelectRow = YES;
@@ -493,9 +445,7 @@
 		[self.dataModel searchForFolderName:self.searchBar.text];
 		
 		[self.tableView reloadData];
-	}
-	else 
-	{		
+	} else {
 		[self createSearchOverlay];
 				
 		self.letUserSelectRow = NO;
@@ -509,19 +459,16 @@
 	}
 }
 
-- (void)searchBarSearchButtonClicked:(UISearchBar *)theSearchBar 
-{
+- (void)searchBarSearchButtonClicked:(UISearchBar *)theSearchBar {
 	//[self searchTableView];
 	[self.searchBar resignFirstResponder];
 }
 
-- (void)searchBarTextDidEndEditing:(UISearchBar *)theSearchBar
-{
+- (void)searchBarTextDidEndEditing:(UISearchBar *)theSearchBar {
 	[self hideSearchOverlay];
 }
 
-- (void)doneSearching_Clicked:(id)sender 
-{
+- (void)doneSearching_Clicked:(id)sender {
 	[self updateCount];
 	
 	self.searchBar.text = @"";
@@ -543,189 +490,115 @@
 
 #pragma mark TableView
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
-{	
-	if (self.isSearching)
-	{
-		return 1;
-	}
-	else
-	{
-		NSUInteger count = [[dataModel indexNames] count];
-		return count;
-	}
+- (ISMSArtist *)artistAtIndexPath:(NSIndexPath *)indexPath {
+    ISMSArtist *artist = nil;
+    if (self.isSearching) {
+        artist = [self.dataModel artistForPositionInSearch:(indexPath.row + 1)];
+    } else {
+        NSArray *indexPositions = self.dataModel.indexPositions;
+        if (indexPositions.count > indexPath.section) {
+            NSUInteger sectionStartIndex = [[indexPositions objectAtIndexSafe:indexPath.section] intValue];
+            artist = [self.dataModel artistForPosition:(sectionStartIndex + indexPath.row)];
+        }
+    }
+    return artist;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView  {
+    return self.isSearching ? 1 : self.dataModel.indexNames.count;
 }
 
 
 // Customize the number of rows in the table view.
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-	if (self.isSearching)
-	{
-		NSUInteger count = self.dataModel.searchCount;
-		return count;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	if (self.isSearching) {
+        return self.dataModel.searchCount;
+	} else if (self.dataModel.indexCounts.count > section) {
+        return [[self.dataModel.indexCounts objectAtIndexSafe:section] intValue];
 	}
-	else 
-	{
-		if ([[self.dataModel indexCounts] count] > section)
-		{
-			NSUInteger count = [[[self.dataModel indexCounts] objectAtIndexSafe:section] intValue];
-			return count;
-		}
-		
-		return 0;
-	}
+    return 0;
 }
 
-
 // Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-//    if (!cell) {
-//        cell = [[UniversalTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:UniversalTableViewCell.reuseId];
-//    }
-
-    
-//	static NSString *cellIdentifier = @"ArtistCell";
-//	ArtistUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-//	if (!cell)
-//	{
-//		cell = [[ArtistUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-//	}
-
-	ISMSArtist *anArtist = nil;
-	if(self.isSearching)
-	{
-		anArtist = [self.dataModel artistForPositionInSearch:(indexPath.row + 1)];
-	}
-	else
-	{
-		if ([[self.dataModel indexPositions] count] > indexPath.section)
-		{
-			//DLog(@"indexPositions: %@", [dataModel indexPositions]);
-			NSUInteger sectionStartIndex = [[[self.dataModel indexPositions] objectAtIndexSafe:indexPath.section] intValue];
-			anArtist = [self.dataModel artistForPosition:(sectionStartIndex + indexPath.row)];
-			//DLog(@"artist: %@", anArtist);
-		}
-	}
-//	cell.myArtist = anArtist;
-//
-//	[cell.artistNameLabel setText:anArtist.name];
-    
-    [cell updateCellWithArtist:anArtist];
+    cell.hideNumberLabel = YES;
+    cell.hideCoverArt = YES;
+    cell.hideSecondaryLabel = YES;
+    cell.hideDurationLabel = YES;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    [cell updateWithModel:[self artistAtIndexPath:indexPath]];
 
 	return cell;
 }
 
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
-{	
-	if(self.isSearching)
-		return @"";
-	
-	if ([[self.dataModel indexNames] count] == 0)
-		return @"";
-	
-	NSString *title = [[self.dataModel indexNames] objectAtIndexSafe:section];
-
-	return title;
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section  {
+	if (self.isSearching) return @"";
+	if (self.dataModel.indexNames.count == 0) return @"";
+    return [self.dataModel.indexNames objectAtIndexSafe:section];
 }
 
 
 // Following 2 methods handle the right side index
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView 
-{
-	if(self.isSearching)
-		return nil;
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView  {
+	if (self.isSearching) return nil;
 	
 	NSMutableArray *titles = [NSMutableArray arrayWithCapacity:0];
 	[titles addObject:@"{search}"];
 	[titles addObjectsFromArray:[self.dataModel indexNames]];
-		
 	return titles;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index 
-{
-	if(self.isSearching)
-		return -1;
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index  {
+	if (self.isSearching) return -1;
 	
-	if (index == 0) 
-	{
-		if (self.dropdown.folders == nil || [self.dropdown.folders count] == 2)
+    if (index == 0) {
+        if (self.dropdown.folders == nil || [self.dropdown.folders count] == 2) {
 			[self.tableView setContentOffset:CGPointMake(0, 86) animated:NO];
-		else
+        } else {
 			[self.tableView setContentOffset:CGPointMake(0, 50) animated:NO];
-		
+        }
 		return -1;
-	}
-	
+    }
 	return index - 1;
 }
 
 
-- (NSIndexPath *)tableView :(UITableView *)theTableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath 
-{
-//DLog(@"will indexPath.row: %i", indexPath.row);
-	if(self.letUserSelectRow)
-		return indexPath;
-	else
-		return nil;
+- (NSIndexPath *)tableView :(UITableView *)theTableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
+    return self.letUserSelectRow ? indexPath : nil;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
-{
-	if (!indexPath)
-		return;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
+	if (!indexPath) return;
 	
-	if (viewObjectsS.isCellEnabled)
-	{
-	//DLog(@"did indexPath.row: %i", indexPath.row);
-		ISMSArtist *anArtist = nil;
-		if(self.isSearching)
-		{
-			anArtist = [self.dataModel artistForPositionInSearch:(indexPath.row + 1)];
-		}
-		else 
-		{	
-			if ([[self.dataModel indexPositions] count] > indexPath.section)
-			{
-				NSUInteger sectionStartIndex = [[[self.dataModel indexPositions] objectAtIndexSafe:indexPath.section] intValue];
-				anArtist = [self.dataModel artistForPosition:(sectionStartIndex + indexPath.row)];
-			}
-		}
-		AlbumViewController* albumViewController = [[AlbumViewController alloc] initWithArtist:anArtist orAlbum:nil];
-		[self pushViewControllerCustom:albumViewController];
-	}
-	else
-	{
+	if (viewObjectsS.isCellEnabled) {
+		[self pushViewControllerCustom:[[AlbumViewController alloc] initWithArtist:[self artistAtIndexPath:indexPath] orAlbum:nil]];
+	} else {
 		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 	}
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSObject<ISMSTableCellModel> *model = [self artistAtIndexPath:indexPath];
+    return [SwipeAction downloadAndQueueConfig:model];
 }
 
 #pragma mark -
 #pragma mark Pull to refresh methods
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{	
-	if (scrollView.isDragging) 
-	{
-		if (self.refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !self.isReloading) 
-		{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	if (scrollView.isDragging) {
+		if (self.refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !self.isReloading) {
 			[self.refreshHeaderView setState:EGOOPullRefreshNormal];
-		} 
-		else if (self.refreshHeaderView.state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !self.isReloading) 
-		{
+		} else if (self.refreshHeaderView.state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !self.isReloading) {
 			[self.refreshHeaderView setState:EGOOPullRefreshPulling];
 		}
 	}
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-	if (scrollView.contentOffset.y <= - 65.0f && !self.isReloading) 
-	{
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+	if (scrollView.contentOffset.y <= - 65.0f && !self.isReloading)  {
 		self.isReloading = YES;
 		[self loadData:[settingsS rootFoldersSelectedFolderId]];
         [self.refreshHeaderView setState:EGOOPullRefreshLoading];
@@ -736,8 +609,7 @@
 	}
 }
 
-- (void)dataSourceDidFinishLoadingNewData
-{
+- (void)dataSourceDidFinishLoadingNewData {
 	self.isReloading = NO;
 	
     [UIView animateWithDuration:0.3 animations:^{

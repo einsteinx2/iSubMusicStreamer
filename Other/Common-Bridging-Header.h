@@ -13,6 +13,16 @@
 #ifndef Common_Bridging_Header_h
 #define Common_Bridging_Header_h
 
+/*
+ * User Interface Components
+ */
+
+#import "AsynchronousImageView.h"
+
+/*
+ * Data Models
+ */
+
 #import "ISMSArtist.h"
 #import "ISMSAlbum.h"
 #import "ISMSSong+DAO.h"

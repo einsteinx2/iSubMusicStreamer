@@ -1241,10 +1241,10 @@ LOG_LEVEL_ISUB_DEFAULT
 {
     [audioEngineS.player stop];
     
-    if (!aSong.itemId || !bitrates)
+    if (!aSong.songId || !bitrates)
         return;
     
-    NSDictionary *parameters = @{ @"id" : aSong.itemId, @"bitRate" : bitrates };
+    NSDictionary *parameters = @{ @"id" : aSong.songId, @"bitRate" : bitrates };
     NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"hls" parameters:parameters];
     
     // If we're on HTTPS, use our proxy to allow for playback from a self signed server

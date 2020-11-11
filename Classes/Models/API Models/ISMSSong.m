@@ -10,6 +10,7 @@
 #import "RXMLElement.h"
 #import "SavedSettings.h"
 #import "EX2Kit.h"
+#import "ISMSSong+DAO.h"
 #import <sys/stat.h>
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -306,16 +307,6 @@
     return [self isEqualToSong:other];
 }
 
-- (NSString *)itemId
-{
-    return self.songId;
-}
-
-- (void)setItemId:(NSString *)itemId
-{
-    self.songId = itemId;
-}
-
 - (NSString *)localSuffix
 {
 	if (self.transcodedSuffix)
@@ -389,4 +380,11 @@
 	return rate;
 }
 
+#pragma mark Table Cell Model
+
+- (NSString *)primaryLabelText { return self.title; }
+- (NSString *)secondaryLabelText { return self.artist; }
+- (NSString *)durationLabelText { return [NSString formatTime:[self.duration floatValue]]; }
+- (void)download { [self addToCacheQueueDbQueue]; }
+- (void)queue { [self addToCurrentPlaylistDbQueue]; }
 @end

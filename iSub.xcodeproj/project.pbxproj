@@ -12,7 +12,6 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */; };
 		28C286E10D94DF7D0034E888 /* FoldersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* FoldersViewController.m */; };
-		28F335F11007B36200424DE2 /* FoldersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28F335F01007B36200424DE2 /* FoldersViewController.xib */; };
 		5301583A15081B0A00B54CEF /* settings-tabbaricon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5301583815081B0A00B54CEF /* settings-tabbaricon.png */; };
 		5301583C15081B0A00B54CEF /* settings-tabbaricon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5301583815081B0A00B54CEF /* settings-tabbaricon.png */; };
 		5301583D15081B0A00B54CEF /* settings-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5301583915081B0A00B54CEF /* settings-tabbaricon@2x.png */; };
@@ -410,7 +409,6 @@
 		53BB7FB6121B97BA00BEE7E8 /* chat-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB7FB4121B97BA00BEE7E8 /* chat-tabbaricon@2x.png */; };
 		53BB800B121B9CA200BEE7E8 /* comment-write-pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB8009121B9CA200BEE7E8 /* comment-write-pressed@2x.png */; };
 		53BB800C121B9CA200BEE7E8 /* comment-write@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB800A121B9CA200BEE7E8 /* comment-write@2x.png */; };
-		53BC26A2139AF0DD00A825F1 /* FoldersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28F335F01007B36200424DE2 /* FoldersViewController.xib */; };
 		53BC26A4139AF0DD00A825F1 /* controller-next.png in Resources */ = {isa = PBXBuildFile; fileRef = 533A2D7F113C963300B3A376 /* controller-next.png */; };
 		53BC26A5139AF0DD00A825F1 /* controller-pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 533A2D80113C963300B3A376 /* controller-pause.png */; };
 		53BC26A6139AF0DD00A825F1 /* controller-play.png in Resources */ = {isa = PBXBuildFile; fileRef = 533A2D81113C963300B3A376 /* controller-play.png */; };
@@ -750,6 +748,12 @@
 		53D97406255BFD9100AABF7F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 53D97405255BFD9100AABF7F /* SnapKit */; };
 		53D9740A255BFDE900AABF7F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 53D97409255BFDE900AABF7F /* SnapKit */; };
 		53D9740B255BFDF900AABF7F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148B92559E597004AAC3F /* CoreServices.framework */; };
+		53D97433255C0BDE00AABF7F /* FoldersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28F335F01007B36200424DE2 /* FoldersViewController.xib */; };
+		53D97436255C0BDE00AABF7F /* FoldersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28F335F01007B36200424DE2 /* FoldersViewController.xib */; };
+		53D9743A255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D97439255C0DA900AABF7F /* AutoScrollingLabel.swift */; };
+		53D9743B255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D97439255C0DA900AABF7F /* AutoScrollingLabel.swift */; };
+		53D97454255C51CA00AABF7F /* SwipeAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D97453255C51CA00AABF7F /* SwipeAction.swift */; };
+		53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D97453255C51CA00AABF7F /* SwipeAction.swift */; };
 		53DE598314F1932C00206529 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DE598214F1932C00206529 /* CoreText.framework */; };
 		53DE598514F1933800206529 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DE598214F1932C00206529 /* CoreText.framework */; };
 		53DE598814F19BAF00206529 /* controller-extrabuttons-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 53DE598614F19BAF00206529 /* controller-extrabuttons-background.png */; };
@@ -1044,8 +1048,6 @@
 		53FE37511EA961720058B925 /* ISMSUpdateChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36761EA961720058B925 /* ISMSUpdateChecker.m */; };
 		53FE37521EA961720058B925 /* ISMSURLConnectionStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36781EA961720058B925 /* ISMSURLConnectionStreamHandler.m */; };
 		53FE37541EA961720058B925 /* ISMSURLConnectionStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36781EA961720058B925 /* ISMSURLConnectionStreamHandler.m */; };
-		53FE37551EA961720058B925 /* ISMSVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367A1EA961720058B925 /* ISMSVideo.m */; };
-		53FE37571EA961720058B925 /* ISMSVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367A1EA961720058B925 /* ISMSVideo.m */; };
 		53FE37581EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
 		53FE375A1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
 		53FE375B1EA961720058B925 /* JukeboxConnectionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367E1EA961720058B925 /* JukeboxConnectionDelegate.m */; };
@@ -1708,6 +1710,9 @@
 		53D97417255BFE9E00AABF7F /* iSub_Beta-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "iSub_Beta-Bridging-Header.h"; path = "Other/iSub_Beta-Bridging-Header.h"; sourceTree = "<group>"; };
 		53D97426255C02B100AABF7F /* Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Swift.h; sourceTree = "<group>"; };
 		53D9742A255C04A400AABF7F /* Common-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Common-Bridging-Header.h"; path = "Other/Common-Bridging-Header.h"; sourceTree = "<group>"; };
+		53D97439255C0DA900AABF7F /* AutoScrollingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoScrollingLabel.swift; sourceTree = "<group>"; };
+		53D9743E255C3E7200AABF7F /* ISMSTableCellModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSTableCellModel.h; sourceTree = "<group>"; };
+		53D97453255C51CA00AABF7F /* SwipeAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeAction.swift; sourceTree = "<group>"; };
 		53DE598214F1932C00206529 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		53DE598614F19BAF00206529 /* controller-extrabuttons-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-extrabuttons-background.png"; path = "Images/Player Icons/controller-extrabuttons-background.png"; sourceTree = "<group>"; };
 		53DE598714F19BAF00206529 /* controller-extrabuttons-background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-extrabuttons-background@2x.png"; path = "Images/Player Icons/controller-extrabuttons-background@2x.png"; sourceTree = "<group>"; };
@@ -1990,7 +1995,6 @@
 		53FE36501EA961720058B925 /* ISMSIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSIndex.h; sourceTree = "<group>"; };
 		53FE36511EA961720058B925 /* ISMSIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSIndex.m; sourceTree = "<group>"; };
 		53FE36551EA961720058B925 /* SUSLoaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSLoaderManager.h; sourceTree = "<group>"; };
-		53FE36571EA961720058B925 /* ISMSMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSMediaItem.h; sourceTree = "<group>"; };
 		53FE36581EA961720058B925 /* ISMSNotificationNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSNotificationNames.h; sourceTree = "<group>"; };
 		53FE36591EA961720058B925 /* ISMSNotificationNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSNotificationNames.m; sourceTree = "<group>"; };
 		53FE36641EA961720058B925 /* ISMSServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSServer.h; sourceTree = "<group>"; };
@@ -2008,8 +2012,6 @@
 		53FE36761EA961720058B925 /* ISMSUpdateChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSUpdateChecker.m; sourceTree = "<group>"; };
 		53FE36771EA961720058B925 /* ISMSURLConnectionStreamHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSURLConnectionStreamHandler.h; sourceTree = "<group>"; };
 		53FE36781EA961720058B925 /* ISMSURLConnectionStreamHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSURLConnectionStreamHandler.m; sourceTree = "<group>"; };
-		53FE36791EA961720058B925 /* ISMSVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSVideo.h; sourceTree = "<group>"; };
-		53FE367A1EA961720058B925 /* ISMSVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSVideo.m; sourceTree = "<group>"; };
 		53FE367B1EA961720058B925 /* iSubBassGaplessPlayerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSubBassGaplessPlayerDelegate.h; sourceTree = "<group>"; };
 		53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSubBassGaplessPlayerDelegate.m; sourceTree = "<group>"; };
 		53FE367D1EA961720058B925 /* JukeboxConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JukeboxConnectionDelegate.h; sourceTree = "<group>"; };
@@ -2468,6 +2470,7 @@
 			isa = PBXGroup;
 			children = (
 				53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */,
+				53D97439255C0DA900AABF7F /* AutoScrollingLabel.swift */,
 				53500EBF18064EED00D0A490 /* CustomUITableViewController.h */,
 				53500EC018064EED00D0A490 /* CustomUITableViewController.m */,
 				5348A59911879C3A0078994D /* CustomUITableView.h */,
@@ -2522,6 +2525,7 @@
 				53B9D0B71279FB6B00CAB0E0 /* SearchSongUITableViewCell.m */,
 				534E446F1155B106000B4134 /* SongUITableViewCell.h */,
 				534E44701155B106000B4134 /* SongUITableViewCell.m */,
+				53D97453255C51CA00AABF7F /* SwipeAction.swift */,
 			);
 			path = "Table Cells";
 			sourceTree = "<group>";
@@ -2887,24 +2891,22 @@
 				53FE368A1EA961720058B925 /* NSError+ISMSError.h */,
 				53FE368B1EA961720058B925 /* NSError+ISMSError.m */,
 				53FE36B51EA961720058B925 /* SUSErrorDomain.h */,
-				53FE36C91EA961720058B925 /* SUSServerPlaylist.h */,
-				53FE36CA1EA961720058B925 /* SUSServerPlaylist.m */,
 				53FE364F1EA961720058B925 /* ISMSErrorDomain.h */,
-				53FE36471EA961720058B925 /* ISMSChatMessage.h */,
-				53FE36481EA961720058B925 /* ISMSChatMessage.m */,
-				53FE36571EA961720058B925 /* ISMSMediaItem.h */,
-				53FE36411EA961720058B925 /* ISMSArtist.h */,
-				53FE36421EA961720058B925 /* ISMSArtist.m */,
-				53FE363F1EA961720058B925 /* ISMSAlbum.h */,
-				53FE36401EA961720058B925 /* ISMSAlbum.m */,
 				53FE36501EA961720058B925 /* ISMSIndex.h */,
 				53FE36511EA961720058B925 /* ISMSIndex.m */,
 				53FE36641EA961720058B925 /* ISMSServer.h */,
 				53FE36651EA961720058B925 /* ISMSServer.m */,
+				53D9743E255C3E7200AABF7F /* ISMSTableCellModel.h */,
+				53FE36C91EA961720058B925 /* SUSServerPlaylist.h */,
+				53FE36CA1EA961720058B925 /* SUSServerPlaylist.m */,
+				53FE36471EA961720058B925 /* ISMSChatMessage.h */,
+				53FE36481EA961720058B925 /* ISMSChatMessage.m */,
+				53FE36411EA961720058B925 /* ISMSArtist.h */,
+				53FE36421EA961720058B925 /* ISMSArtist.m */,
+				53FE363F1EA961720058B925 /* ISMSAlbum.h */,
+				53FE36401EA961720058B925 /* ISMSAlbum.m */,
 				53FE366A1EA961720058B925 /* ISMSSong.h */,
 				53FE366B1EA961720058B925 /* ISMSSong.m */,
-				53FE36791EA961720058B925 /* ISMSVideo.h */,
-				53FE367A1EA961720058B925 /* ISMSVideo.m */,
 			);
 			path = "API Models";
 			sourceTree = "<group>";
@@ -3949,7 +3951,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				28F335F11007B36200424DE2 /* FoldersViewController.xib in Resources */,
 				533C65E315ABBA09003EAF29 /* AlbumViewController.xib in Resources */,
 				533A2D83113C963300B3A376 /* controller-next.png in Resources */,
 				533A2D84113C963300B3A376 /* controller-pause.png in Resources */,
@@ -4242,6 +4243,7 @@
 				53493F1715FC6A3A0059492E /* shuffle-small@2x.png in Resources */,
 				539148E02559FEFD004AAC3F /* Launch Screen.storyboard in Resources */,
 				53493F3015FC6BD90059492E /* KeychainAccessGroups.plist in Resources */,
+				53D97433255C0BDE00AABF7F /* FoldersViewController.xib in Resources */,
 				53493F3815FC6C3A0059492E /* BassEffectDefaultPresets.plist in Resources */,
 				5349AD041613724D003603AF /* Default-568h@2x.png in Resources */,
 				53B65ABB16533E4800472DBF /* back-tabbaricon.png in Resources */,
@@ -4253,7 +4255,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53BC26A2139AF0DD00A825F1 /* FoldersViewController.xib in Resources */,
 				533C65E515ABBA09003EAF29 /* AlbumViewController.xib in Resources */,
 				53BC26A4139AF0DD00A825F1 /* controller-next.png in Resources */,
 				537EF7B7182B2F2200968FE0 /* controller-slider-thumb.png in Resources */,
@@ -4264,6 +4265,7 @@
 				53BC26AA139AF0DD00A825F1 /* default-album-art.png in Resources */,
 				53BC26AB139AF0DD00A825F1 /* settings-page.png in Resources */,
 				53BC26AC139AF0DD00A825F1 /* controller-repeat-all.png in Resources */,
+				53D97436255C0BDE00AABF7F /* FoldersViewController.xib in Resources */,
 				53BC26AD139AF0DD00A825F1 /* controller-repeat-one.png in Resources */,
 				53BC26AE139AF0DD00A825F1 /* controller-repeat.png in Resources */,
 				53BC26AF139AF0DD00A825F1 /* controller-shuffle-on.png in Resources */,
@@ -4670,7 +4672,6 @@
 				53FE37041EA961720058B925 /* HLSProxyConnection.m in Sources */,
 				53500EC118064EED00D0A490 /* CustomUITableViewController.m in Sources */,
 				53FE39461EA961ED0058B925 /* PUTResponse.m in Sources */,
-				53FE37551EA961720058B925 /* ISMSVideo.m in Sources */,
 				53FE37491EA961720058B925 /* ISMSStreamManager.m in Sources */,
 				53FE388C1EA961C80058B925 /* GMAppleDouble.m in Sources */,
 				53FE34B91EA961540058B925 /* NSArray+FilterBlock.m in Sources */,
@@ -4696,6 +4697,7 @@
 				53FE37911EA961720058B925 /* sqlite3.c in Sources */,
 				53B52BA511ADE0A6005776B5 /* GenresViewController.m in Sources */,
 				530B417211B607A200743C09 /* CacheViewController.m in Sources */,
+				53D97454255C51CA00AABF7F /* SwipeAction.swift in Sources */,
 				53FE352B1EA961540058B925 /* NSMutableOrderedSet+Safe.m in Sources */,
 				532862DB11C573AD00B40FF0 /* UAApplication.m in Sources */,
 				53FE39BD1EA9703E0058B925 /* DDASLLogger.m in Sources */,
@@ -4741,6 +4743,7 @@
 				53FE38AD1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
 				D0EA476219DE41510083CE05 /* ISMSPlayerView.m in Sources */,
 				53FE379D1EA961720058B925 /* SUSChatDAO.m in Sources */,
+				53D9743A255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */,
 				53FE37071EA961720058B925 /* HLSProxyResponse.m in Sources */,
 				53FE379A1EA961720058B925 /* SUSAllSongsLoader.m in Sources */,
 				53FE39221EA961ED0058B925 /* MultipartFormDataParser.m in Sources */,
@@ -4971,7 +4974,6 @@
 				53FE37061EA961720058B925 /* HLSProxyConnection.m in Sources */,
 				53500EC318064EED00D0A490 /* CustomUITableViewController.m in Sources */,
 				53FE39481EA961ED0058B925 /* PUTResponse.m in Sources */,
-				53FE37571EA961720058B925 /* ISMSVideo.m in Sources */,
 				53FE374B1EA961720058B925 /* ISMSStreamManager.m in Sources */,
 				53FE388E1EA961C80058B925 /* GMAppleDouble.m in Sources */,
 				53FE34BB1EA961540058B925 /* NSArray+FilterBlock.m in Sources */,
@@ -4997,6 +4999,7 @@
 				53FE37931EA961720058B925 /* sqlite3.c in Sources */,
 				53BC27CE139AF0DD00A825F1 /* GenresViewController.m in Sources */,
 				53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */,
+				53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */,
 				53FE352D1EA961540058B925 /* NSMutableOrderedSet+Safe.m in Sources */,
 				53BC27D6139AF0DD00A825F1 /* UAApplication.m in Sources */,
 				53FE39BE1EA9703E0058B925 /* DDASLLogger.m in Sources */,
@@ -5042,6 +5045,7 @@
 				53FE38AF1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
 				D0EA476419DE41510083CE05 /* ISMSPlayerView.m in Sources */,
 				53FE379F1EA961720058B925 /* SUSChatDAO.m in Sources */,
+				53D9743B255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */,
 				53FE37091EA961720058B925 /* HLSProxyResponse.m in Sources */,
 				53FE379C1EA961720058B925 /* SUSAllSongsLoader.m in Sources */,
 				53FE39241EA961ED0058B925 /* MultipartFormDataParser.m in Sources */,

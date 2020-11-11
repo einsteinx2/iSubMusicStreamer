@@ -6,13 +6,14 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import "ISMSTableCellModel.h"
 #import "TBXML.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class RXMLElement;
 NS_SWIFT_NAME(Artist)
-@interface ISMSArtist : NSObject <NSSecureCoding, NSCopying>
+@interface ISMSArtist : NSObject <ISMSTableCellModel, NSSecureCoding, NSCopying>
 
 @property (nullable, copy) NSString *name;
 @property (nullable, copy) NSString *artistId;

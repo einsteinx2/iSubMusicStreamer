@@ -10,6 +10,7 @@
 #import "RXMLElement.h"
 #import "ISMSArtist.h"
 #import "EX2Kit.h"
+#import "DatabaseSingleton.h"
 
 @implementation ISMSAlbum
 
@@ -160,6 +161,18 @@
 	return [NSString stringWithFormat:@"%@: title: %@, albumId: %@, coverArtId: %@, artistName: %@, artistId: %@", [super description], self.title, self.self.albumId, self.coverArtId, self.artistName, self.artistId];
 }
 
+- (ISMSArtist *)artist {
+    return [ISMSArtist artistWithName:self.artistName andArtistId:self.artistId];
+}
 
+#pragma mark Table Cell Model
+
+- (NSString *)primaryLabelText { return self.title; }
+- (NSString *)secondaryLabelText { return self.artistName; }
+- (NSString *)durationLabelText { return nil; }
+- (void)download { [databaseS downloadAllSongs:self.artistId artist:[self artist]]; }
+- (void)queue { [databaseS queueAllSongs:self.artistId artist:[self artist]];
+    
+}
 
 @end
