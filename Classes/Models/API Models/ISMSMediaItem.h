@@ -8,9 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(MediaItem)
 @protocol ISMSMediaItem <NSObject>
 
-@property (copy) NSString *itemId;
-@property (copy) NSString *title;
+@property (nullable, copy) NSString *itemId;
+@property (nullable, copy) NSString *title;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -8,10 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(Index)
 @interface ISMSIndex : NSObject
 
-@property (copy) NSString *name;
+@property (nullable, copy) NSString *name;
 @property NSUInteger position;
 @property NSUInteger count;
 
 @end
+
+NS_ASSUME_NONNULL_END

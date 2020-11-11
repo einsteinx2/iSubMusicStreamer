@@ -8,7 +8,10 @@
 
 #import "TBXML.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class RXMLElement;
+NS_SWIFT_NAME(ServerPlaylist)
 @interface SUSServerPlaylist : NSObject <NSCopying>
 
 @property (copy) NSString *playlistId;
@@ -18,3 +21,5 @@
 - (instancetype)initWithRXMLElement:(RXMLElement *)element;
 
 @end
+
+NS_ASSUME_NONNULL_END

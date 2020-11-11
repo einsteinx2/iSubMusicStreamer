@@ -26,6 +26,7 @@
 #import "SUSRootFoldersDAO.h"
 #import "ISMSArtist.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @interface FoldersViewController (Private)
 
@@ -98,6 +99,7 @@
 	}
 	
 	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
+    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
 	if ([self.dataModel isRootFolderIdCached])
 		[self addCount];
@@ -578,13 +580,19 @@
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
-{	
-	static NSString *cellIdentifier = @"ArtistCell";
-	ArtistUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	if (!cell)
-	{
-		cell = [[ArtistUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-	}
+{
+    UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+//    if (!cell) {
+//        cell = [[UniversalTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:UniversalTableViewCell.reuseId];
+//    }
+
+    
+//	static NSString *cellIdentifier = @"ArtistCell";
+//	ArtistUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//	if (!cell)
+//	{
+//		cell = [[ArtistUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+//	}
 
 	ISMSArtist *anArtist = nil;
 	if(self.isSearching)
@@ -601,10 +609,12 @@
 			//DLog(@"artist: %@", anArtist);
 		}
 	}
-	cell.myArtist = anArtist;
-	
-	[cell.artistNameLabel setText:anArtist.name];
-		
+//	cell.myArtist = anArtist;
+//
+//	[cell.artistNameLabel setText:anArtist.name];
+    
+    [cell updateCellWithArtist:anArtist];
+
 	return cell;
 }
 

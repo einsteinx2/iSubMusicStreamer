@@ -8,13 +8,16 @@
 
 #import "TBXML.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class RXMLElement;
-@interface ISMSArtist : NSObject <NSCoding, NSCopying>
+NS_SWIFT_NAME(Artist)
+@interface ISMSArtist : NSObject <NSSecureCoding, NSCopying>
 
-@property (copy) NSString *name;
-@property (copy) NSString *artistId;
+@property (nullable, copy) NSString *name;
+@property (nullable, copy) NSString *artistId;
 
-+ (ISMSArtist *) artistWithName:(NSString *)theName andArtistId:(NSString *)theId;
++ (ISMSArtist *)artistWithName:(NSString *)theName andArtistId:(NSString *)theId;
 
 - (void)encodeWithCoder:(NSCoder *)encoder;
 - (instancetype)initWithCoder:(NSCoder *)decoder;
@@ -25,3 +28,5 @@
 - (instancetype)initWithRXMLElement:(RXMLElement *)element;
 
 @end
+
+NS_ASSUME_NONNULL_END

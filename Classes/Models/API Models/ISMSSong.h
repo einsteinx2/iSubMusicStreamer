@@ -6,34 +6,38 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import "ISMSMediaItem.h"
 #import "TBXML.h"
 
-@class RXMLElement;
-@interface ISMSSong : NSObject <NSCoding, NSCopying, ISMSMediaItem>
+NS_ASSUME_NONNULL_BEGIN
 
-@property (copy) NSString *title;
-@property (copy) NSString *songId;
-@property (copy) NSString *parentId;
-@property (copy) NSString *artist;
-@property (copy) NSString *album;
-@property (copy) NSString *genre;
-@property (copy) NSString *coverArtId;
-@property (copy) NSString *path;
-@property (copy) NSString *suffix;
-@property (copy) NSString *transcodedSuffix;
-@property (copy) NSNumber *duration;
-@property (copy) NSNumber *bitRate;
-@property (copy) NSNumber *track;
-@property (copy) NSNumber *year;
-@property (copy) NSNumber *size;
-@property (copy) NSNumber *discNumber;
+@class RXMLElement;
+NS_SWIFT_NAME(Song)
+@interface ISMSSong : NSObject <NSSecureCoding, NSCopying, ISMSMediaItem>
+
+@property (nullable, copy) NSString *title;
+@property (nullable, copy) NSString *songId;
+@property (nullable, copy) NSString *parentId;
+@property (nullable, copy) NSString *artist;
+@property (nullable, copy) NSString *album;
+@property (nullable, copy) NSString *genre;
+@property (nullable, copy) NSString *coverArtId;
+@property (nullable, copy) NSString *path;
+@property (nullable, copy) NSString *suffix;
+@property (nullable, copy) NSString *transcodedSuffix;
+@property (nullable, copy) NSNumber *duration;
+@property (nullable, copy) NSNumber *bitRate;
+@property (nullable, copy) NSNumber *track;
+@property (nullable, copy) NSNumber *year;
+@property (nullable, copy) NSNumber *size;
+@property (nullable, copy) NSNumber *discNumber;
 @property BOOL isVideo;
 
-- (NSString *)localSuffix;
-- (NSString *)localPath;
-- (NSString *)localTempPath;
-- (NSString *)currentPath;
+- (nullable NSString *)localSuffix;
+- (nullable NSString *)localPath;
+- (nullable NSString *)localTempPath;
+- (nullable NSString *)currentPath;
 @property (readonly) BOOL isTempCached;
 @property (readonly) unsigned long long localFileSize;
 @property (readonly) NSUInteger estimatedBitrate;
@@ -41,7 +45,7 @@
 - (void)encodeWithCoder:(NSCoder *)encoder;
 - (instancetype)initWithCoder:(NSCoder *)decoder;
 
-- (instancetype)copyWithZone:(NSZone *)zone;
+- (instancetype)copyWithZone:(nullable NSZone *)zone;
 
 - (instancetype)initWithPMSDictionary:(NSDictionary *)dictionary;
 - (instancetype)initWithTBXMLElement:(TBXMLElement *)element;
@@ -52,4 +56,4 @@
 
 @end
 
-#import "ISMSSong+DAO.h"
+NS_ASSUME_NONNULL_END

@@ -8,20 +8,22 @@
 
 #import "TBXML.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class ISMSArtist, RXMLElement;
+NS_SWIFT_NAME(Album)
+@interface ISMSAlbum : NSObject <NSSecureCoding, NSCopying> 
 
-@interface ISMSAlbum : NSObject <NSCoding, NSCopying> 
-
-@property (copy) NSString *title;
-@property (copy) NSString *albumId;
-@property (copy) NSString *coverArtId;
-@property (copy) NSString *artistName;
-@property (copy) NSString *artistId;
+@property (nullable, copy) NSString *title;
+@property (nullable, copy) NSString *albumId;
+@property (nullable, copy) NSString *coverArtId;
+@property (nullable, copy) NSString *artistName;
+@property (nullable, copy) NSString *artistId;
 
 - (void)encodeWithCoder:(NSCoder *)encoder;
 - (instancetype)initWithCoder:(NSCoder *)decoder;
 
-- (instancetype)copyWithZone:(NSZone *)zone;
+- (instancetype)copyWithZone:(nullable NSZone *)zone;
 
 - (instancetype)initWithPMSDictionary:(NSDictionary *)dictionary;
 
@@ -32,3 +34,5 @@
 - (instancetype)initWithRXMLElement:(RXMLElement *)element;
 - (instancetype)initWithRXMLElement:(RXMLElement *)element artistId:(NSString *)artistIdToSet artistName:(NSString *)artistNameToSet;
 @end
+
+NS_ASSUME_NONNULL_END

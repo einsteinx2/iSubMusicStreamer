@@ -8,7 +8,10 @@
 
 #import "TBXML.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class RXMLElement;
+NS_SWIFT_NAME(ChatMessage)
 @interface ISMSChatMessage : NSObject <NSCopying>
 
 @property NSInteger timestamp;
@@ -20,3 +23,5 @@
 - (instancetype)copyWithZone:(NSZone *)zone;
 
 @end
+
+NS_ASSUME_NONNULL_END

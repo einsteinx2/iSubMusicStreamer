@@ -158,6 +158,9 @@
 	return self;
 }
 
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {

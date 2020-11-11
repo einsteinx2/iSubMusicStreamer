@@ -8,11 +8,16 @@
 
 #import "ISMSMediaItem.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(Video)
 @interface ISMSVideo : NSObject <ISMSMediaItem>
 
-@property (copy) NSString *itemId;
-@property (copy) NSString *title;
+@property (nullable, copy) NSString *itemId;
+@property (nullable, copy) NSString *title;
 
 - (BOOL)isEqualToVideo:(ISMSVideo *)otherVideo;
 
 @end
+
+NS_ASSUME_NONNULL_END

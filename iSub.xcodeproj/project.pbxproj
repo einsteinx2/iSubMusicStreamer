@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -213,7 +213,6 @@
 		5353B839134D4D6C005C589E /* PagingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5353B838134D4D6C005C589E /* PagingScrollView.m */; };
 		5353B83C134D8019005C589E /* upload-playlist.png in Resources */ = {isa = PBXBuildFile; fileRef = 5353B83A134D8019005C589E /* upload-playlist.png */; };
 		5353B83D134D8019005C589E /* upload-playlist@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5353B83B134D8019005C589E /* upload-playlist@2x.png */; };
-		5354914B11B03FC900928E0F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5354914A11B03FC900928E0F /* MobileCoreServices.framework */; };
 		535696531810DA8700997C7B /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 535696521810DA8700997C7B /* FXBlurView.m */; };
 		535696551810DA8700997C7B /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 535696521810DA8700997C7B /* FXBlurView.m */; };
 		535806EA11CD92DC00A09386 /* GenresSongUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 535806E911CD92DC00A09386 /* GenresSongUITableViewCell.m */; };
@@ -746,6 +745,11 @@
 		53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D44F8415AA621A00CDD3B8 /* Accelerate.framework */; };
 		53D8ACB3116C47E600E5C9CB /* PageControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D8ACB1116C47E600E5C9CB /* PageControlViewController.m */; };
 		53D8ACB4116C47E600E5C9CB /* PageControlViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53D8ACB2116C47E600E5C9CB /* PageControlViewController.xib */; };
+		53D973FE255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */; };
+		53D973FF255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */; };
+		53D97406255BFD9100AABF7F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 53D97405255BFD9100AABF7F /* SnapKit */; };
+		53D9740A255BFDE900AABF7F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 53D97409255BFDE900AABF7F /* SnapKit */; };
+		53D9740B255BFDF900AABF7F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148B92559E597004AAC3F /* CoreServices.framework */; };
 		53DE598314F1932C00206529 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DE598214F1932C00206529 /* CoreText.framework */; };
 		53DE598514F1933800206529 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DE598214F1932C00206529 /* CoreText.framework */; };
 		53DE598814F19BAF00206529 /* controller-extrabuttons-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 53DE598614F19BAF00206529 /* controller-extrabuttons-background.png */; };
@@ -1385,7 +1389,6 @@
 		53493F1C15FC6AA60059492E /* iSub-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "iSub-Info.plist"; path = "Other/iSub-Info.plist"; sourceTree = "<group>"; };
 		53493F2615FC6AC40059492E /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Other/main.m; sourceTree = "<group>"; };
 		53493F2C15FC6BD90059492E /* KeychainAccessGroups.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = KeychainAccessGroups.plist; path = Other/KeychainAccessGroups.plist; sourceTree = "<group>"; };
-		53493F3315FC6BF10059492E /* Imports.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Imports.h; path = Other/Imports.h; sourceTree = "<group>"; };
 		53493F3715FC6C3A0059492E /* BassEffectDefaultPresets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = BassEffectDefaultPresets.plist; path = Other/BassEffectDefaultPresets.plist; sourceTree = "<group>"; };
 		5349AD031613724D003603AF /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Images/Other/Default-568h@2x.png"; sourceTree = "<group>"; };
 		534E43B51155659A000B4134 /* AlbumUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AlbumUITableViewCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -1700,6 +1703,11 @@
 		53D8ACB0116C47E600E5C9CB /* PageControlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageControlViewController.h; sourceTree = "<group>"; };
 		53D8ACB1116C47E600E5C9CB /* PageControlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageControlViewController.m; sourceTree = "<group>"; };
 		53D8ACB2116C47E600E5C9CB /* PageControlViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PageControlViewController.xib; sourceTree = "<group>"; };
+		53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalTableViewCell.swift; sourceTree = "<group>"; };
+		53D97416255BFE9D00AABF7F /* iSub-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "iSub-Bridging-Header.h"; path = "Other/iSub-Bridging-Header.h"; sourceTree = "<group>"; };
+		53D97417255BFE9E00AABF7F /* iSub_Beta-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "iSub_Beta-Bridging-Header.h"; path = "Other/iSub_Beta-Bridging-Header.h"; sourceTree = "<group>"; };
+		53D97426255C02B100AABF7F /* Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Swift.h; sourceTree = "<group>"; };
+		53D9742A255C04A400AABF7F /* Common-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Common-Bridging-Header.h"; path = "Other/Common-Bridging-Header.h"; sourceTree = "<group>"; };
 		53DE598214F1932C00206529 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		53DE598614F19BAF00206529 /* controller-extrabuttons-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-extrabuttons-background.png"; path = "Images/Player Icons/controller-extrabuttons-background.png"; sourceTree = "<group>"; };
 		53DE598714F19BAF00206529 /* controller-extrabuttons-background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-extrabuttons-background@2x.png"; path = "Images/Player Icons/controller-extrabuttons-background@2x.png"; sourceTree = "<group>"; };
@@ -2222,6 +2230,7 @@
 				53FE36141EA961670058B925 /* libbass_mpc.a in Frameworks */,
 				53FE36201EA961670058B925 /* libbasswv.a in Frameworks */,
 				53F8917B1EB1351D00B3F131 /* libSystem.tbd in Frameworks */,
+				53D9740A255BFDE900AABF7F /* SnapKit in Frameworks */,
 				53F8917A1EB1351400B3F131 /* libxml2.tbd in Frameworks */,
 				53F8917C1EB1352300B3F131 /* libz.tbd in Frameworks */,
 				5349DF87161E408A0044A781 /* Accelerate.framework in Frameworks */,
@@ -2234,7 +2243,6 @@
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				53F675D8113B092C00822059 /* MediaPlayer.framework in Frameworks */,
 				53C7FDA0150F0EAF008DA51C /* MessageUI.framework in Frameworks */,
-				5354914B11B03FC900928E0F /* MobileCoreServices.framework in Frameworks */,
 				53A2BE2A147DF14600E44822 /* OpenGLES.framework in Frameworks */,
 				53F8917D1EB1354B00B3F131 /* Photos.framework in Frameworks */,
 				53F675E2113B095900822059 /* QuartzCore.framework in Frameworks */,
@@ -2242,6 +2250,7 @@
 				536D620B1144495400DFCE56 /* SystemConfiguration.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				539148C52559EAAF004AAC3F /* libFlurry_11.1.1.a in Frameworks */,
+				53D9740B255BFDF900AABF7F /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2258,6 +2267,7 @@
 				53FE36161EA961670058B925 /* libbass_mpc.a in Frameworks */,
 				53FE36221EA961680058B925 /* libbasswv.a in Frameworks */,
 				5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */,
+				53D97406255BFD9100AABF7F /* SnapKit in Frameworks */,
 				5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */,
 				5367C6D51EA92D2400B1C242 /* libz.tbd in Frameworks */,
 				53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */,
@@ -2310,7 +2320,10 @@
 			children = (
 				53493F2615FC6AC40059492E /* main.m */,
 				533F651C160533F4000098E1 /* Defines.h */,
-				53493F3315FC6BF10059492E /* Imports.h */,
+				53D97426255C02B100AABF7F /* Swift.h */,
+				53D97417255BFE9E00AABF7F /* iSub_Beta-Bridging-Header.h */,
+				53D97416255BFE9D00AABF7F /* iSub-Bridging-Header.h */,
+				53D9742A255C04A400AABF7F /* Common-Bridging-Header.h */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -2454,6 +2467,7 @@
 		531D39E2255AB252000CB0DF /* Table Cells */ = {
 			isa = PBXGroup;
 			children = (
+				53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */,
 				53500EBF18064EED00D0A490 /* CustomUITableViewController.h */,
 				53500EC018064EED00D0A490 /* CustomUITableViewController.m */,
 				5348A59911879C3A0078994D /* CustomUITableView.h */,
@@ -2872,8 +2886,6 @@
 			children = (
 				53FE368A1EA961720058B925 /* NSError+ISMSError.h */,
 				53FE368B1EA961720058B925 /* NSError+ISMSError.m */,
-				53FE36791EA961720058B925 /* ISMSVideo.h */,
-				53FE367A1EA961720058B925 /* ISMSVideo.m */,
 				53FE36B51EA961720058B925 /* SUSErrorDomain.h */,
 				53FE36C91EA961720058B925 /* SUSServerPlaylist.h */,
 				53FE36CA1EA961720058B925 /* SUSServerPlaylist.m */,
@@ -2891,6 +2903,8 @@
 				53FE36651EA961720058B925 /* ISMSServer.m */,
 				53FE366A1EA961720058B925 /* ISMSSong.h */,
 				53FE366B1EA961720058B925 /* ISMSSong.m */,
+				53FE36791EA961720058B925 /* ISMSVideo.h */,
+				53FE367A1EA961720058B925 /* ISMSVideo.m */,
 			);
 			path = "API Models";
 			sourceTree = "<group>";
@@ -3860,6 +3874,9 @@
 			dependencies = (
 			);
 			name = "iSub Release";
+			packageProductDependencies = (
+				53D97409255BFDE900AABF7F /* SnapKit */,
+			);
 			productName = iSubTESTING;
 			productReference = 1D6058910D05DD3D006BFB54 /* iSub.app */;
 			productType = "com.apple.product-type.application";
@@ -3878,6 +3895,9 @@
 			dependencies = (
 			);
 			name = "iSub Beta";
+			packageProductDependencies = (
+				53D97405255BFD9100AABF7F /* SnapKit */,
+			);
 			productName = iSubTESTING;
 			productReference = 53BC2865139AF0DD00A825F1 /* iSub Beta.app */;
 			productType = "com.apple.product-type.application";
@@ -3893,10 +3913,12 @@
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
 						DevelopmentTeam = 7596YH3S97;
+						LastSwiftMigration = 1210;
 						ProvisioningStyle = Automatic;
 					};
 					53BC269F139AF0DD00A825F1 = {
 						DevelopmentTeam = 7596YH3S97;
+						LastSwiftMigration = 1210;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -3910,6 +3932,9 @@
 				Base,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
+			packageReferences = (
+				53D97404255BFD9100AABF7F /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -4788,6 +4813,7 @@
 				535B726A134CFB0E003E0E1C /* FolderPickerDialog.m in Sources */,
 				53FE34DA1EA961540058B925 /* NSFileHandle+Hash.m in Sources */,
 				53FE35C41EA961540058B925 /* EX2Kit.m in Sources */,
+				53D973FE255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
 				53FE39801EA963180058B925 /* FMDatabaseAdditions.m in Sources */,
 				535B727E134D273B003E0E1C /* SearchAllViewController.m in Sources */,
 				53FE356D1EA961540058B925 /* UIView+Tools.m in Sources */,
@@ -5088,6 +5114,7 @@
 				53BC283C139AF0DD00A825F1 /* FolderPickerDialog.m in Sources */,
 				53FE34DC1EA961540058B925 /* NSFileHandle+Hash.m in Sources */,
 				53FE35C61EA961540058B925 /* EX2Kit.m in Sources */,
+				53D973FF255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
 				53FE39821EA963180058B925 /* FMDatabaseAdditions.m in Sources */,
 				53BC283D139AF0DD00A825F1 /* SearchAllViewController.m in Sources */,
 				53FE356F1EA961540058B925 /* UIView+Tools.m in Sources */,
@@ -5270,7 +5297,9 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_OBJC_UNUSED_IVARS = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/HockeySDK",
@@ -5283,6 +5312,10 @@
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Other/iSub-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/libBASS",
@@ -5297,6 +5330,9 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isub;
 				PRODUCT_NAME = iSub;
+				SWIFT_OBJC_BRIDGING_HEADER = "Other/iSub-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -5307,7 +5343,9 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_OBJC_UNUSED_IVARS = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/HockeySDK",
@@ -5318,6 +5356,10 @@
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Other/iSub-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/libBASS",
@@ -5332,6 +5374,8 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isub;
 				PRODUCT_NAME = iSub;
+				SWIFT_OBJC_BRIDGING_HEADER = "Other/iSub-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -5413,7 +5457,9 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_OBJC_UNUSED_IVARS = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/HockeySDK",
@@ -5426,6 +5472,10 @@
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Other/iSub-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/libBASS",
@@ -5440,6 +5490,9 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isub;
 				PRODUCT_NAME = iSub;
+				SWIFT_OBJC_BRIDGING_HEADER = "Other/iSub-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = AdHoc;
 		};
@@ -5448,7 +5501,9 @@
 			baseConfigurationReference = 53F1412015FD550C004D00D5 /* buildnumber.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/HockeySDK",
@@ -5464,6 +5519,10 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Other/iSub-Info-Beta.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/libBASS",
@@ -5479,6 +5538,9 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isubbetanew;
 				PRODUCT_NAME = "iSub Beta";
+				SWIFT_OBJC_BRIDGING_HEADER = "Other/iSub_Beta-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -5487,7 +5549,9 @@
 			baseConfigurationReference = 53F1412015FD550C004D00D5 /* buildnumber.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/HockeySDK",
@@ -5503,6 +5567,10 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Other/iSub-Info-Beta.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/libBASS",
@@ -5518,6 +5586,9 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isubbetanew;
 				PRODUCT_NAME = "iSub Beta";
+				SWIFT_OBJC_BRIDGING_HEADER = "Other/iSub_Beta-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = AdHoc;
 		};
@@ -5526,7 +5597,9 @@
 			baseConfigurationReference = 53F1412015FD550C004D00D5 /* buildnumber.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/HockeySDK",
@@ -5540,6 +5613,10 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Other/iSub-Info-Beta.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks/libBASS",
@@ -5555,6 +5632,8 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isubbetanew;
 				PRODUCT_NAME = "iSub Beta";
+				SWIFT_OBJC_BRIDGING_HEADER = "Other/iSub_Beta-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -5732,6 +5811,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		53D97404255BFD9100AABF7F /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		53D97405255BFD9100AABF7F /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 53D97404255BFD9100AABF7F /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		53D97409255BFDE900AABF7F /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 53D97404255BFD9100AABF7F /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
 }
