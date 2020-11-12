@@ -27,24 +27,7 @@
 #import "Swift.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface FoldersViewController (Private)
-
-- (void)dataSourceDidFinishLoadingNewData;
-- (void)addCount;
-- (void)loadData:(NSNumber *)folderId;
-
-@end
-
 @implementation FoldersViewController
-
-@synthesize searchBar, headerView;
-@synthesize isSearching;
-@synthesize dropdown;
-@synthesize isReloading, refreshHeaderView;
-@synthesize dataModel;
-@synthesize countLabel, reloadTimeLabel, blockerButton;
-@synthesize searchOverlay, dismissButton;
-@synthesize letUserSelectRow, isCountShowing;
 
 #pragma mark - Rotation
 
@@ -60,7 +43,7 @@
 
 - (void)createDataModel {
 	self.dataModel = [[SUSRootFoldersDAO alloc] initWithDelegate:self];
-	dataModel.selectedFolderId = [settingsS rootFoldersSelectedFolderId];
+	self.dataModel.selectedFolderId = [settingsS rootFoldersSelectedFolderId];
 }
 
 - (void)viewDidLoad  {
@@ -80,7 +63,6 @@
 		
 	// Add the pull to refresh view
 	self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
-//	self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
 	[self.tableView addSubview:self.refreshHeaderView];
 	
 	if (IS_IPAD()) {
@@ -136,8 +118,8 @@
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	dataModel.delegate = nil;
-	dropdown.delegate = nil;
+	self.dataModel.delegate = nil;
+	self.dropdown.delegate = nil;
 }
 
 #pragma mark - Loading
@@ -266,7 +248,7 @@
 
 - (void)loadingFinished:(SUSLoader *)theLoader {
     //DLog(@"loadingFinished called");
-    if (isCountShowing) {
+    if (self.isCountShowing) {
 		[self updateCount];
     } else {
 		[self addCount];		

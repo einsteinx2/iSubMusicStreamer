@@ -47,7 +47,6 @@
 
 @implementation MenuViewController
 
-#pragma mark -
 #pragma mark View lifecycle
 
 - (void)toggleOfflineMode
@@ -248,7 +247,7 @@
 	[self tableView:_tableView didSelectRowAtIndexPath:indexPath];
 }
 
-#pragma mark - Table view data source
+#pragma mark Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
 {
@@ -278,7 +277,7 @@
     return cell;
 }
 
-#pragma mark - Table view delegate
+#pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
@@ -384,14 +383,6 @@
 	
     _lastSelectedRow = indexPath.row;
 }
-
-#pragma mark - Memory management
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-}
-
 
 @end
 

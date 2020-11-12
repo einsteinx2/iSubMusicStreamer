@@ -86,7 +86,6 @@ LOG_LEVEL_ISUB_DEBUG
 	}
 }
 
-#pragma mark -
 #pragma mark Handle User Input
 
 - (void)reloadCoverArt

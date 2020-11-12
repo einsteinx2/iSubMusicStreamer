@@ -161,8 +161,6 @@ static CGFloat kDDSocialDialogPadding = 10;
 	touchInterceptingControl_ = nil;
 }
 
-#pragma mark -
-
 - (void)show {
 	
 	[self sizeToFitOrientation:NO];
@@ -255,7 +253,6 @@ static CGFloat kDDSocialDialogPadding = 10;
 	[touchInterceptingControl_ removeFromSuperview];
 }
 
-#pragma mark -
 #pragma mark Drawing
 
 - (void)addRoundedRectToPath:(CGContextRef)context rect:(CGRect)rect radius:(float)radius {

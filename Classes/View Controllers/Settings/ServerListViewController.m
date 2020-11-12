@@ -29,28 +29,21 @@
 
 @implementation ServerListViewController
 
-@synthesize settingsTabViewController, helpTabViewController;
-@synthesize isEditing, headerView, segmentedControl;
-
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
+- (BOOL)shouldAutorotate {
+    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
         return NO;
+    }
     
     return YES;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)viewDidLoad 
-{
+- (void)viewDidLoad  {
     [super viewDidLoad];
-    
-//	self.theNewRedirectionUrl = nil;
-	
+    	
 	self.tableView.allowsSelectionDuringEditing = YES;
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTable) name:@"reloadServerList" object:nil];
@@ -58,12 +51,14 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(switchServer:) name:@"switchServer" object:nil];
 	
 	self.title = @"Servers";
-	if(self != [[self.navigationController viewControllers] objectAtIndexSafe:0])
+    if (self != [[self.navigationController viewControllers] objectAtIndexSafe:0]) {
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(saveAction:)];
-	self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    }
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	
-	if (settingsS.serverList == nil || [settingsS.serverList count] == 0)
+    if (settingsS.serverList == nil || [settingsS.serverList count] == 0) {
 		[self addAction:nil];
+    }
 	
 	// Setup segmented control in the header view
 	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
@@ -73,54 +68,40 @@
 	self.segmentedControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	[self.segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
 	self.segmentedControl.frame = CGRectMake(5, 2, 310, 36);
-    if (IS_IOS7())
-        self.segmentedControl.tintColor = ISMSHeaderColor;
-	else
-        self.segmentedControl.tintColor = [UIColor colorWithWhite:.57 alpha:1];
+    self.segmentedControl.tintColor = ISMSHeaderColor;
 	self.segmentedControl.selectedSegmentIndex = 0;
 	[self.headerView addSubview:self.segmentedControl];
 	
 	self.tableView.tableHeaderView = self.headerView;
 	
-	if (IS_IPAD())
-	{
+	if (IS_IPAD()) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
-	}
-	else
-	{
+	} else {
 		if (!self.tableView.tableHeaderView) self.tableView.tableHeaderView = [[UIView alloc] init];
 		if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 	}
 }
 
-
-- (void)reloadTable
-{
+- (void)reloadTable {
 	[self.tableView reloadData];
 }
 
-
-- (void)showSaveButton
-{
-	if(!self.isEditing)
-	{
-		if(self == [[self.navigationController viewControllers] firstObject])
+- (void)showSaveButton {
+	if (!self.isEditing) {
+        if (self == [[self.navigationController viewControllers] firstObject]) {
 			self.navigationItem.leftBarButtonItem = nil;
-		else
+        } else {
 			self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(saveAction:)];
-		
+        }
 	}
 }
 
-
-- (void)segmentAction:(id)sender
-{
+- (void)segmentAction:(id)sender {
 	self.settingsTabViewController.parentController = nil;
 	self.settingsTabViewController = nil;
 	self.helpTabViewController = nil;
 	
-	if (self.segmentedControl.selectedSegmentIndex == 0)
-	{
+	if (self.segmentedControl.selectedSegmentIndex == 0) {
 		self.title = @"Servers";
 		
 		self.tableView.tableFooterView = nil;
@@ -131,9 +112,7 @@
 		if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 		
 		[self.tableView reloadData];
-	}
-	else if (self.segmentedControl.selectedSegmentIndex == 1)
-	{
+	} else if (self.segmentedControl.selectedSegmentIndex == 1) {
 		self.title = @"Settings";
 		
 		self.tableView.scrollEnabled = YES;
@@ -141,12 +120,10 @@
 		self.navigationItem.rightBarButtonItem = nil;
 		self.settingsTabViewController = [[SettingsTabViewController alloc] initWithNibName:@"SettingsTabViewController" bundle:nil];
 		self.settingsTabViewController.parentController = self;
-		self.tableView.tableFooterView = settingsTabViewController.view;
+		self.tableView.tableFooterView = self.settingsTabViewController.view;
 		if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 		[self.tableView reloadData];
-	}
-	else if (segmentedControl.selectedSegmentIndex == 2)
-	{
+	} else if (self.segmentedControl.selectedSegmentIndex == 2) {
 		self.title = @"Help";
 		
 		self.tableView.scrollEnabled = NO;
@@ -161,63 +138,45 @@
 	}
 }
 
-
-- (void)setEditing:(BOOL)editing animated:(BOOL)animate
-{
+- (void)setEditing:(BOOL)editing animated:(BOOL)animate {
     [super setEditing:editing animated:animate];
-    if(editing)
-    {
+    if (editing) {
 		self.isEditing = YES;
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addAction:)];
-    }
-    else
-    {
+    } else {
 		self.isEditing = NO;
 		[self showSaveButton];
     }
 }
 
-- (void)addAction:(id)sender
-{
+- (void)addAction:(id)sender {
 	viewObjectsS.serverToEdit = nil;
 	
     SubsonicServerEditViewController *subsonicServerEditViewController = [[SubsonicServerEditViewController alloc] initWithNibName:@"SubsonicServerEditViewController" bundle:nil];
     subsonicServerEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
 
-	if (IS_IPAD())
+    if (IS_IPAD()) {
 		[appDelegateS.ipadRootViewController presentViewController:subsonicServerEditViewController animated:YES completion:nil];
-	else
+    } else {
 		[self presentViewController:subsonicServerEditViewController animated:YES completion:nil];
-    
-    
+    }
 }
 
-- (void)saveAction:(id)sender
-{
+- (void)saveAction:(id)sender {
 	[self.navigationController popToRootViewControllerAnimated:YES];
 }
 
-
-- (void)didReceiveMemoryWarning 
-{
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-}
-
-- (void)showServerEditScreen
-{
+- (void)showServerEditScreen {
     SubsonicServerEditViewController *subsonicServerEditViewController = [[SubsonicServerEditViewController alloc] initWithNibName:@"SubsonicServerEditViewController" bundle:nil];
     subsonicServerEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:subsonicServerEditViewController animated:YES completion:nil];
 }
 
-- (void)switchServer:(NSNotification*)notification 
-{
+- (void)switchServer:(NSNotification*)notification  {
     // Save the url string first because the other settings in the if block below are saved using the url
     settingsS.urlString = viewObjectsS.serverToEdit.url;
 
-	if (notification.userInfo)
-	{
+	if (notification.userInfo) {
         settingsS.isVideoSupported = [notification.userInfo[@"isVideoSupported"] boolValue];
         settingsS.isNewSearchAPI = [notification.userInfo[@"isNewSearchAPI"] boolValue];
 	}
@@ -238,53 +197,42 @@
     settingsS.uuid = viewObjectsS.serverToEdit.uuid;
     settingsS.lastQueryId = viewObjectsS.serverToEdit.lastQueryId;
     		
-	if (self == [[self.navigationController viewControllers] objectAtIndexSafe:0] && !IS_IPAD())
-	{
+	if (self == [[self.navigationController viewControllers] objectAtIndexSafe:0] && !IS_IPAD()) {
 		[self.navigationController.view removeFromSuperview];
-	}
-	else
-	{
+	} else {
 		[self.navigationController popToRootViewControllerAnimated:YES];
 		
-		if ([appDelegateS.wifiReach currentReachabilityStatus] == NotReachable)
+        if ([appDelegateS.wifiReach currentReachabilityStatus] == NotReachable) {
 			return;
+        }
 		
 		// Cancel any caching
 		[streamManagerS removeAllStreams];
 		
 		// Cancel any tab loads
-		if ([SUSAllSongsLoader isLoading])
-		{
-		//DLog(@"detected all songs loading");
+		if ([SUSAllSongsLoader isLoading]) {
 			settingsS.isCancelLoading = YES;
 		}
-		
-		
-		while (settingsS.isCancelLoading)
-		{
-			//NSLog(@"waiting for the load to cancel before continuing");
-			if (!settingsS.isCancelLoading)
+    
+		while (settingsS.isCancelLoading) {
+            if (!settingsS.isCancelLoading){
 				break;
+            }
 		}
 		
 		// Stop any playing song and remove old tab bar controller from window
 		[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"recover"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		[audioEngineS.player stop];
-		 settingsS.isJukeboxEnabled = NO;
+		settingsS.isJukeboxEnabled = NO;
 		
-		if (settingsS.isOfflineMode)
-		{
+		if (settingsS.isOfflineMode) {
 			settingsS.isOfflineMode = NO;
 			
-			if (IS_IPAD())
-			{
+			if (IS_IPAD()) {
 				[appDelegateS.ipadRootViewController.menuViewController toggleOfflineMode];
-			}
-			else
-			{
-				for (UIView *subview in appDelegateS.window.subviews)
-				{
+			} else {
+				for (UIView *subview in appDelegateS.window.subviews) {
 					[subview removeFromSuperview];
 				}
 				[viewObjectsS orderMainTabBarController];
@@ -297,8 +245,9 @@
 		[databaseS setupDatabases];
 		
 		// Reset the tabs
-		if (!IS_IPAD())
+        if (!IS_IPAD()) {
 			[appDelegateS.rootViewController.navigationController popToRootViewControllerAnimated:NO];
+        }
         
 		appDelegateS.window.backgroundColor = viewObjectsS.windowColor;
 		
@@ -312,20 +261,15 @@
     return 1;
 }
 
-
-// Customize the number of rows in the table view.
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
-{
-	if (self.segmentedControl.selectedSegmentIndex == 0)
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
 		return settingsS.serverList.count;
-	else
+    } else {
 		return 0;
+    }
 }
 
-
-// Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	static NSString *cellIdentifier = @"ServerListCell";
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 	
@@ -354,10 +298,7 @@
 	serverType.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 	[cell.contentView addSubview:serverType];
 	
-	if([settingsS.urlString isEqualToString:aServer.url] && 
-	   [settingsS.username isEqualToString:aServer.username] &&
-	   [settingsS.password isEqualToString:aServer.password])
-	{
+	if ([settingsS.urlString isEqualToString:aServer.url] && [settingsS.username isEqualToString:aServer.username] && [settingsS.password isEqualToString:aServer.password]) {
 		UIImageView *currentServerMarker = [[UIImageView alloc] init];
 		currentServerMarker.image = [UIImage imageNamed:@"current-server.png"];
 		[cell.contentView addSubview:currentServerMarker];
@@ -365,9 +306,7 @@
 		currentServerMarker.frame = CGRectMake(3, 12, 26, 26);
 		serverNameLabel.frame = CGRectMake(35, 0, 236, 25);
 		detailsLabel.frame = CGRectMake(35, 27, 236, 18);
-	}
-	else 
-	{
+	} else {
 		serverNameLabel.frame = CGRectMake(5, 0, 266, 25);
 		detailsLabel.frame = CGRectMake(5, 27, 266, 18);
 	}
@@ -376,22 +315,14 @@
 	return cell;
 }
 
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
-{
-	if (!indexPath)
-		return;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
+	if (!indexPath) return;
 	
 	viewObjectsS.serverToEdit = [settingsS.serverList objectAtIndexSafe:indexPath.row];
-    //DLog(@"viewObjectsS.serverToEdit.url: %@", viewObjectsS.serverToEdit.url);
 
-	if (self.isEditing)
-	{
+	if (self.isEditing) {
 		[self showServerEditScreen];
-	}
-	else
-	{
-//		self.theNewRedirectionUrl = nil;
+	} else {
 		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Checking Server"];
         
         SUSStatusLoader *statusLoader = [[SUSStatusLoader alloc] initWithDelegate:self];
@@ -402,19 +333,15 @@
 	}
 }
 
-// Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
     return YES;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath 
-{
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath  {
 	return YES;
 }
 
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath 
-{
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath  {
 	NSArray *server = [ settingsS.serverList objectAtIndexSafe:fromIndexPath.row];
 	[settingsS.serverList removeObjectAtIndex:fromIndexPath.row];
 	[settingsS.serverList insertObject:server atIndex:toIndexPath.row];
@@ -425,15 +352,10 @@
 	[self.tableView reloadData];
 }
 
-
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath 
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) 
-	{
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
 		// Alert user to select new default server if they deleting the default
-		if ([ settingsS.urlString isEqualToString:[(ISMSServer *)[ settingsS.serverList objectAtIndexSafe:indexPath.row] url]])
-		{
+		if ([ settingsS.urlString isEqualToString:[(ISMSServer *)[ settingsS.serverList objectAtIndexSafe:indexPath.row] url]]) {
 			CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Notice" message:@"Make sure to select a new server" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 			alert.tag = 4;
 			[alert show];
@@ -442,13 +364,10 @@
         // Delete the row from the data source
         [settingsS.serverList removeObjectAtIndex:indexPath.row];
 		
-		@try
-		{
+		@try {
 			[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-		}
-		@catch (NSException *exception) 
-		{
-		//DLog(@"Exception: %@ - %@", exception.name, exception.reason);
+		} @catch (NSException *exception) {
+            //DLog(@"Exception: %@ - %@", exception.name, exception.reason);
 		}
 		
 		[self.tableView reloadData];
@@ -461,15 +380,11 @@
     }   
 }
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
-{
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
     UIAlertView *alert = nil;
-	if (error.code == ISMSErrorCode_IncorrectCredentials)
-	{
+	if (error.code == ISMSErrorCode_IncorrectCredentials) {
 		alert = [[UIAlertView alloc] initWithTitle:@"Server Unavailable" message:[NSString stringWithFormat:@"Either your username or password is incorrect\n\n☆☆ Tap the gear in the top left and choose a server to return to online mode. ☆☆\n\nError code %li:\n%@", (long)[error code], [error localizedDescription]] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	}
-	else
-	{
+	} else {
 		alert = [[UIAlertView alloc] initWithTitle:@"Server Unavailable" message:[NSString stringWithFormat:@"Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\n☆☆ Tap the gear in the top left and choose a server to return to online mode. ☆☆\n\nError code %li:\n%@", (long)[error code], [error localizedDescription]] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 	}
 	alert.tag = 3;
@@ -479,15 +394,13 @@
     [viewObjectsS hideLoadingScreen];
 }
 
-- (void)loadingFinished:(SUSLoader *)theLoader
-{    	
+- (void)loadingFinished:(SUSLoader *)theLoader {
 	settingsS.serverType = viewObjectsS.serverToEdit.type;
 	settingsS.urlString = viewObjectsS.serverToEdit.url;
 	settingsS.username = viewObjectsS.serverToEdit.username;
 	settingsS.password = viewObjectsS.serverToEdit.password;
     
-    if (theLoader.type == SUSLoaderType_Status)
-    {
+    if (theLoader.type == SUSLoaderType_Status) {
         settingsS.isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
         settingsS.isNewSearchAPI = ((SUSStatusLoader *)theLoader).isNewSearchAPI;
     }
@@ -499,4 +412,3 @@
 }
 
 @end
-

@@ -17,34 +17,29 @@
 
 @implementation GenresArtistUITableViewCell
 
-@synthesize genre, artistNameScrollView, artistNameLabel;
-
 #pragma mark - Lifecycle
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier 
-{
-	if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) 
-	{		
-		artistNameScrollView = [[UIScrollView alloc] init];
-		artistNameScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		artistNameScrollView.showsVerticalScrollIndicator = NO;
-		artistNameScrollView.showsHorizontalScrollIndicator = NO;
-		artistNameScrollView.userInteractionEnabled = NO;
-		artistNameScrollView.decelerationRate = UIScrollViewDecelerationRateFast;
-		[self.contentView addSubview:artistNameScrollView];
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier  {
+	if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+		_artistNameScrollView = [[UIScrollView alloc] init];
+		_artistNameScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_artistNameScrollView.showsVerticalScrollIndicator = NO;
+		_artistNameScrollView.showsHorizontalScrollIndicator = NO;
+		_artistNameScrollView.userInteractionEnabled = NO;
+		_artistNameScrollView.decelerationRate = UIScrollViewDecelerationRateFast;
+		[self.contentView addSubview:_artistNameScrollView];
 		
-		artistNameLabel = [[UILabel alloc] init];
-		artistNameLabel.backgroundColor = [UIColor clearColor];
-		artistNameLabel.textAlignment = NSTextAlignmentLeft; // default
-		artistNameLabel.font = ISMSArtistFont;
-		[artistNameScrollView addSubview:artistNameLabel];
+		_artistNameLabel = [[UILabel alloc] init];
+		_artistNameLabel.backgroundColor = [UIColor clearColor];
+		_artistNameLabel.textAlignment = NSTextAlignmentLeft; // default
+		_artistNameLabel.font = ISMSArtistFont;
+		[_artistNameScrollView addSubview:_artistNameLabel];
 	}
 	
 	return self;
 }
 
-- (void)layoutSubviews 
-{	
+- (void)layoutSubviews {
     [super layoutSubviews];
 	
 	self.contentView.frame = CGRectMake(0, 0, 320, 44);
@@ -61,41 +56,23 @@
 	self.artistNameLabel.frame = newFrame;
 }
 
-
-#pragma mark - Overlay
-
-//- (void)showOverlay
-//{
-//	[super showOverlay];
-//
-//	self.overlayView.downloadButton.alpha = (float)!settingsS.isOfflineMode;
-//	self.overlayView.downloadButton.enabled = !settingsS.isOfflineMode;
-//}
-
-- (void)downloadAllSongs
-{
+- (void)downloadAllSongs {
 	FMDatabaseQueue *dbQueue;
 	NSString *query;
 	
-	if (settingsS.isOfflineMode)
-	{
+	if (settingsS.isOfflineMode) {
 		dbQueue = databaseS.songCacheDbQueue;
 		query = @"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? AND genre = ? ORDER BY seg2 COLLATE NOCASE";
-	}
-	else
-	{
+	} else {
 		dbQueue = databaseS.genresDbQueue;
 		query = @"SELECT md5 FROM genresLayout WHERE seg1 = ? AND genre = ? ORDER BY seg2 COLLATE NOCASE";
 	}
 	
 	NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
-	[dbQueue inDatabase:^(FMDatabase *db)
-	{
+	[dbQueue inDatabase:^(FMDatabase *db) {
 		FMResultSet *result = [db executeQuery:query, self.artistNameLabel.text, self.genre];
-		while ([result next])
-		{
-			@autoreleasepool 
-			{
+		while ([result next]) {
+			@autoreleasepool {
 				NSString *md5 = [result stringForColumnIndex:0];
 				if (md5) [songMd5s addObject:md5];
 			}
@@ -103,10 +80,8 @@
 		[result close];
 	}];
 	
-	for (NSString *md5 in songMd5s)
-	{
-		@autoreleasepool 
-		{
+	for (NSString *md5 in songMd5s) {
+		@autoreleasepool {
 			ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:md5];
 			[aSong addToCacheQueueDbQueue];
 		}
@@ -116,8 +91,7 @@
 	[viewObjectsS hideLoadingScreen];
 }
 
-- (void)downloadAction
-{
+- (void)downloadAction {
 	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
 	[self performSelector:@selector(downloadAllSongs) withObject:nil afterDelay:0.05];
 	
@@ -127,30 +101,23 @@
 //	[self hideOverlay];
 }
 
-- (void)queueAllSongs
-{
+- (void)queueAllSongs {
 	FMDatabaseQueue *dbQueue;
 	NSString *query;
 	
-	if (settingsS.isOfflineMode)
-	{
+	if (settingsS.isOfflineMode) {
 		dbQueue = databaseS.songCacheDbQueue;
 		query = @"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? AND genre = ? ORDER BY seg2 COLLATE NOCASE";
-	}
-	else
-	{
+	} else {
 		dbQueue = databaseS.genresDbQueue;
 		query = @"SELECT md5 FROM genresLayout WHERE seg1 = ? AND genre = ? ORDER BY seg2 COLLATE NOCASE";
 	}
 	
 	NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
-	[dbQueue inDatabase:^(FMDatabase *db)
-	{
+	[dbQueue inDatabase:^(FMDatabase *db) {
 		FMResultSet *result = [db executeQuery:query, self.artistNameLabel.text, self.genre];
-		while ([result next])
-		{
-			@autoreleasepool 
-			{
+		while ([result next]) {
+			@autoreleasepool {
 				NSString *md5 = [result stringForColumnIndex:0];
 				if (md5) [songMd5s addObject:md5];
 			}
@@ -158,10 +125,8 @@
 		[result close];
 	}];
 	
-	for (NSString *md5 in songMd5s)
-	{
-		@autoreleasepool 
-		{
+	for (NSString *md5 in songMd5s) {
+		@autoreleasepool {
 			ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:md5];
 			[aSong addToCurrentPlaylistDbQueue];
 		}
@@ -172,19 +137,16 @@
 	[viewObjectsS hideLoadingScreen];
 }
 
-- (void)queueAction
-{
+- (void)queueAction {
 	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
 	[self performSelector:@selector(queueAllSongs) withObject:nil afterDelay:0.05];
 //	[self hideOverlay];
 }
 
-#pragma mark - Scrolling
+#pragma mark Scrolling
 
-- (void)scrollLabels
-{
-	if (self.artistNameLabel.frame.size.width > self.artistNameScrollView.frame.size.width)
-	{
+- (void)scrollLabels {
+	if (self.artistNameLabel.frame.size.width > self.artistNameScrollView.frame.size.width) {
         [UIView animateWithDuration:self.artistNameLabel.frame.size.width/150. animations:^{
             self.artistNameScrollView.contentOffset = CGPointMake(self.artistNameLabel.frame.size.width - self.artistNameScrollView.frame.size.width + 10, 0);
         } completion:^(BOOL finished) {

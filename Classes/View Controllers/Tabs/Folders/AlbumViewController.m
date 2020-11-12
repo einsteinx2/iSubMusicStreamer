@@ -26,20 +26,7 @@
 #import "Swift.h"
 #import <MediaPlayer/MediaPlayer.h>
 
-@interface AlbumViewController (Private)
-- (void)dataSourceDidFinishLoadingNewData;
-- (void)addHeaderAndIndex;
-@end
-
-
 @implementation AlbumViewController
-@synthesize myId, myArtist, myAlbum;
-@synthesize sectionInfo;
-@synthesize dataModel;
-@synthesize playAllShuffleAllView;
-@synthesize albumInfoView, albumInfoArtHolderView, albumInfoArtView, albumInfoAlbumLabel, albumInfoArtistLabel, albumInfoDurationLabel, albumInfoLabelHolderView, albumInfoTrackCountLabel, albumInfoArtReflection;
-
-@synthesize isReloading, refreshHeaderView;
 
 - (BOOL)shouldAutorotate {
     if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
@@ -71,12 +58,12 @@
 		
 		self.dataModel = [[SUSSubFolderDAO alloc] initWithDelegate:self andId:self.myId andArtist:self.myArtist];
 		
-        if (dataModel.hasLoaded) {
+        if (self.dataModel.hasLoaded) {
             [self.tableView reloadData];
             [self addHeaderAndIndex];
         } else {
             [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
-            [dataModel startLoad];
+            [self.dataModel startLoad];
         }
 	}
 	
@@ -91,7 +78,7 @@
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
 	
-	albumInfoArtView.delegate = self;
+	self.albumInfoArtView.delegate = self;
 	
 	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 		
@@ -146,8 +133,8 @@
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
-	albumInfoArtView.delegate = nil;
-	dataModel.delegate = nil;
+	self.albumInfoArtView.delegate = nil;
+	self.dataModel.delegate = nil;
 }
 
 #pragma mark Loading
@@ -159,7 +146,7 @@
 }
 
 - (void)createReflection {
-	albumInfoArtReflection.image = [albumInfoArtView reflectedImageWithHeight:albumInfoArtReflection.height];
+	self.albumInfoArtReflection.image = [self.albumInfoArtView reflectedImageWithHeight:self.albumInfoArtReflection.height];
 }
 
 - (void)asyncImageViewFinishedLoading:(AsynchronousImageView *)asyncImageView {
@@ -168,21 +155,21 @@
 }
 
 - (void)addHeaderAndIndex {
-	if (dataModel.songsCount == 0 && dataModel.albumsCount == 0)
+	if (self.dataModel.songsCount == 0 && self.dataModel.albumsCount == 0)
 	{
 		self.tableView.tableHeaderView = nil;
-	} else if (dataModel.songsCount > 0) {
+	} else if (self.dataModel.songsCount > 0) {
 		if (!self.tableView.tableHeaderView) {
-			CGFloat headerHeight = albumInfoView.height + playAllShuffleAllView.height;
+			CGFloat headerHeight = self.albumInfoView.height + self.playAllShuffleAllView.height;
 			CGRect headerFrame = CGRectMake(0., 0., 320, headerHeight);
 			UIView *headerView = [[UIView alloc] initWithFrame:headerFrame];
 			
-			albumInfoArtView.isLarge = YES;
+			self.albumInfoArtView.isLarge = YES;
 			
-			[headerView addSubview:albumInfoView];
+			[headerView addSubview:self.albumInfoView];
 			
-			playAllShuffleAllView.y = albumInfoView.height;
-			[headerView addSubview:playAllShuffleAllView];
+			self.playAllShuffleAllView.y = self.albumInfoView.height;
+			[headerView addSubview:self.playAllShuffleAllView];
 			
 			self.tableView.tableHeaderView = headerView;
 		}
@@ -196,37 +183,38 @@
 			self.myAlbum = anAlbum;
 		}
 		
-		albumInfoArtView.coverArtId = myAlbum.coverArtId;
-		albumInfoArtistLabel.text = myAlbum.artistName;
-		albumInfoAlbumLabel.text = myAlbum.title;
+		self.albumInfoArtView.coverArtId = self.myAlbum.coverArtId;
+        self.albumInfoArtistLabel.text = self.myAlbum.artistName;
+        self.albumInfoAlbumLabel.text = self.myAlbum.title;
 		
-		albumInfoDurationLabel.text = [NSString formatTime:dataModel.folderLength];
-		albumInfoTrackCountLabel.text = [NSString stringWithFormat:@"%lu Tracks", (unsigned long)dataModel.songsCount];
-		if (dataModel.songsCount == 1)
-			albumInfoTrackCountLabel.text = [NSString stringWithFormat:@"%lu Track", (unsigned long)dataModel.songsCount];
+        self.albumInfoDurationLabel.text = [NSString formatTime:self.dataModel.folderLength];
+        self.albumInfoTrackCountLabel.text = [NSString stringWithFormat:@"%lu Tracks", (unsigned long)self.dataModel.songsCount];
+        if (self.dataModel.songsCount == 1) {
+            self.albumInfoTrackCountLabel.text = [NSString stringWithFormat:@"%lu Track", (unsigned long)self.dataModel.songsCount];
+        }
 		
 		// Create reflection
 		[self createReflection];
 		
 		if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 	} else {
-		self.tableView.tableHeaderView = playAllShuffleAllView;
+		self.tableView.tableHeaderView = self.playAllShuffleAllView;
 		if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 	}
 	
-	self.sectionInfo = dataModel.sectionInfo;
-	if (sectionInfo)
+	self.sectionInfo = self.dataModel.sectionInfo;
+	if (self.sectionInfo)
 		[self.tableView reloadData];
 }
 
 #pragma mark Actions
 
 - (IBAction)expandCoverArt:(id)sender {
-	if(myAlbum.coverArtId) {
+	if (self.myAlbum.coverArtId) {
 		ModalAlbumArtViewController *largeArt = nil;
-		largeArt = [[ModalAlbumArtViewController alloc] initWithAlbum:myAlbum 
-													   numberOfTracks:dataModel.songsCount 
-														  albumLength:dataModel.folderLength];
+		largeArt = [[ModalAlbumArtViewController alloc] initWithAlbum:self.myAlbum
+													   numberOfTracks:self.dataModel.songsCount
+														  albumLength:self.dataModel.folderLength];
         if (IS_IPAD()) {
 			[appDelegateS.ipadRootViewController presentViewController:largeArt animated:YES completion:nil];
         } else {
@@ -236,11 +224,11 @@
 }
 
 - (IBAction)playAllAction:(id)sender {
-	[databaseS playAllSongs:myId artist:myArtist];
+	[databaseS playAllSongs:self.myId artist:self.myArtist];
 }
 
 - (IBAction)shuffleAction:(id)sender {
-	[databaseS shuffleAllSongs:myId artist:myArtist];
+	[databaseS shuffleAllSongs:self.myId artist:self.myArtist];
 }
 
 - (IBAction)nowPlayingAction:(id)sender {
@@ -254,15 +242,15 @@
 // Following 2 methods handle the right side index
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView  {
 	NSMutableArray *indexes = [[NSMutableArray alloc] init];
-	for (int i = 0; i < [sectionInfo count]; i++)
+	for (int i = 0; i < self.sectionInfo.count; i++)
 	{
-		[indexes addObject:[[sectionInfo objectAtIndexSafe:i] objectAtIndexSafe:0]];
+		[indexes addObject:[[self.sectionInfo objectAtIndexSafe:i] firstObject]];
 	}
 	return indexes;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index  {
-	NSUInteger row = [[[sectionInfo objectAtIndexSafe:index] objectAtIndexSafe:1] intValue];
+	NSUInteger row = [[[self.sectionInfo objectAtIndexSafe:index] objectAtIndexSafe:1] intValue];
 	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
 	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
 	
@@ -271,13 +259,13 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
-	return dataModel.totalCount;
+	return self.dataModel.totalCount;
 }
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-    if (indexPath.row < dataModel.albumsCount) {
+    if (indexPath.row < self.dataModel.albumsCount) {
         // Album
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
@@ -297,15 +285,15 @@
 
 // Customize the height of individual rows to make the album rows taller to accomidate the album art.
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return indexPath.row < dataModel.albumsCount ? 60.0 : 50.0;
+    return indexPath.row < self.dataModel.albumsCount ? 60.0 : 50.0;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (!indexPath) return;
 	
 	if (viewObjectsS.isCellEnabled) {
-		if (indexPath.row < dataModel.albumsCount) {
-            ISMSAlbum *anAlbum = [dataModel albumForTableViewRow:indexPath.row];
+		if (indexPath.row < self.dataModel.albumsCount) {
+            ISMSAlbum *anAlbum = [self.dataModel albumForTableViewRow:indexPath.row];
             			
 			AlbumViewController *albumViewController = [[AlbumViewController alloc] initWithArtist:nil orAlbum:anAlbum];	
 			[self pushViewControllerCustom:albumViewController];
@@ -322,10 +310,10 @@
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row < dataModel.albumsCount) {
-        return [SwipeAction downloadAndQueueConfigWithModel:[dataModel albumForTableViewRow:indexPath.row]];
+    if (indexPath.row < self.dataModel.albumsCount) {
+        return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel albumForTableViewRow:indexPath.row]];
     } else {
-        ISMSSong *song = [dataModel songForTableViewRow:indexPath.row];
+        ISMSSong *song = [self.dataModel songForTableViewRow:indexPath.row];
         if (!song.isVideo) {
             return [SwipeAction downloadAndQueueConfigWithModel:song];
         }
@@ -345,8 +333,9 @@
 	
 	[self dataSourceDidFinishLoadingNewData];
 	
-	if (self.dataModel.songsCount == 0 && self.dataModel.albumsCount == 0)
+    if (self.dataModel.songsCount == 0 && self.dataModel.albumsCount == 0) {
 		[self.tableView removeBottomShadow];
+    }
 }
 
 - (void)loadingFinished:(SUSLoader *)theLoader {
@@ -390,7 +379,7 @@
         [self.tableView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
     }];
 
-	[refreshHeaderView setState:EGOOPullRefreshNormal];
+	[self.refreshHeaderView setState:EGOOPullRefreshNormal];
 }
 
 @end

@@ -29,17 +29,12 @@
 
 @implementation SearchSongsViewController
 
-@synthesize query, searchType;
-@synthesize listOfArtists, listOfAlbums, listOfSongs, offset, isMoreResults;
-@synthesize connection, isLoading, receivedData;
-
-#pragma mark -
 #pragma mark View lifecycle
 
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
+- (BOOL)shouldAutorotate {
+    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
         return NO;
+    }
     
     return YES;
 }
@@ -48,9 +43,9 @@
 {
     if ((self = [super initWithNibName:n bundle:b]))
     {
-		offset = 0;
-		isMoreResults = YES;
-		isLoading = NO;
+		self.offset = 0;
+		self.isMoreResults = YES;
+		self.isLoading = NO;
     }
     return self;
 }
@@ -118,7 +113,7 @@
 	{
 		return self.listOfArtists.count + 1;
 	}
-	else if (searchType == ISMSSearchSongsSearchType_Albums)
+	else if (self.searchType == ISMSSearchSongsSearchType_Albums)
 	{
 		return self.listOfAlbums.count + 1;
 	}
@@ -138,11 +133,11 @@
 	self.offset += 20;
     NSDictionary *parameters = nil;
     NSString *action = nil;
-	NSString *offsetString = [NSString stringWithFormat:@"%lu", (unsigned long)offset];
+	NSString *offsetString = [NSString stringWithFormat:@"%lu", (unsigned long)self.offset];
 	if (settingsS.isNewSearchAPI)
 	{
         action = @"search2";
-		NSString *queryString = [NSString stringWithFormat:@"%@*", query];
+		NSString *queryString = [NSString stringWithFormat:@"%@*", self.query];
 		switch (self.searchType) 
 		{
 			case ISMSSearchSongsSearchType_Artists:
@@ -164,7 +159,7 @@
 	else
 	{
         action = @"search";
-        parameters = [NSDictionary dictionaryWithObjectsAndKeys:@"20", @"count", n2N(query), @"any", n2N(offsetString), @"offset", nil];
+        parameters = [NSDictionary dictionaryWithObjectsAndKeys:@"20", @"count", n2N(self.query), @"any", n2N(offsetString), @"offset", nil];
 	}
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:action parameters:parameters];
@@ -187,7 +182,7 @@
 	// This is the last cell and there could be more results, load the next 20 results;
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"NoReuse"];
 		
-	if (isMoreResults)
+	if (self.isMoreResults)
 	{
 		cell.textLabel.text = @"Loading more results...";
         UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
@@ -227,20 +222,6 @@
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             [cell updateWithModel:[self.listOfArtists objectAtIndexSafe:indexPath.row]];
             return cell;
-            
-//			static NSString *cellIdentifier = @"ArtistCell";
-//			ArtistUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-//			if (!cell)
-//			{
-//				cell = [[ArtistUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-//			}
-//
-//			ISMSArtist *anArtist = [self.listOfArtists objectAtIndexSafe:indexPath.row];
-//			cell.myArtist = anArtist;
-//
-//			[cell.artistNameLabel setText:anArtist.name];
-//
-//			return cell;
 		} else if (indexPath.row == self.listOfArtists.count) {
 			return [self createLoadingCell:indexPath.row];
 		}
@@ -254,26 +235,7 @@
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             [cell updateWithModel:[self.listOfAlbums objectAtIndexSafe:indexPath.row]];
             return cell;
-            
-//			static NSString *cellIdentifier = @"AlbumCell";
-//			AlbumUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-//			if (!cell)
-//			{
-//				cell = [[AlbumUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-//				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-//			}
-//						
-//			ISMSAlbum *anAlbum = [self.listOfAlbums objectAtIndexSafe:indexPath.row];
-//			cell.myId = anAlbum.albumId;
-//			cell.myArtist = [ISMSArtist artistWithName:anAlbum.artistName andArtistId:anAlbum.artistId];
-//			cell.isIndexShowing = NO;
-//			
-//			cell.coverArtView.coverArtId = anAlbum.coverArtId;
-//			
-//			[cell.albumNameLabel setText:anAlbum.title];
-//			
-//			return cell;
-		} else if (indexPath.row == [listOfAlbums count]) {
+		} else if (indexPath.row == [self.listOfAlbums count]) {
 			return [self createLoadingCell:indexPath.row];
 		}
 	} else {
@@ -286,17 +248,6 @@
             cell.accessoryType = UITableViewCellAccessoryNone;
             [cell updateWithModel:[self.listOfSongs objectAtIndexSafe:indexPath.row]];
             return cell;
-            
-//			static NSString *cellIdentifier = @"SearchSongCell";
-//			SearchSongUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-//			if (!cell)
-//			{
-//				cell = [[SearchSongUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-//			}
-//
-//			cell.row = indexPath.row;
-//			cell.mySong = [self.listOfSongs objectAtIndexSafe:indexPath.row];
-//			return cell;
 		} else if (indexPath.row == self.listOfSongs.count) {
 			return [self createLoadingCell:indexPath.row];
 		}
@@ -319,7 +270,7 @@
 	{
 		if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfArtists.count)
 		{
-			ISMSArtist *anArtist = [listOfArtists objectAtIndexSafe:indexPath.row];
+			ISMSArtist *anArtist = [self.listOfArtists objectAtIndexSafe:indexPath.row];
 			AlbumViewController *albumView = [[AlbumViewController alloc] initWithArtist:anArtist orAlbum:nil];
 			
 			[self pushViewControllerCustom:albumView];
@@ -332,7 +283,7 @@
 	{
 		if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfAlbums.count)
 		{
-			ISMSAlbum *anAlbum = [listOfAlbums objectAtIndexSafe:indexPath.row];
+			ISMSAlbum *anAlbum = [self.listOfAlbums objectAtIndexSafe:indexPath.row];
 			AlbumViewController *albumView = [[AlbumViewController alloc] initWithArtist:nil orAlbum:anAlbum];
 			
 			[self pushViewControllerCustom:albumView];
@@ -358,7 +309,7 @@
 			
 			// Add the songs to the playlist 
 			NSMutableArray *songIds = [[NSMutableArray alloc] init];
-			for (ISMSSong *aSong in listOfSongs)
+			for (ISMSSong *aSong in self.listOfSongs)
 			{
 				@autoreleasepool {
 				
@@ -436,12 +387,12 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-	[receivedData setLength:0];
+	[self.receivedData setLength:0];
 }
 
 - (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData 
 {
-	[receivedData appendData:incrementalData];
+	[self.receivedData appendData:incrementalData];
 }
 
 - (void)connection:(NSURLConnection *)theConnection didFailWithError:(NSError *)error
@@ -452,8 +403,8 @@
 	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 	[alert show];
 	
-	 connection = nil;
-	
+    self.connection = nil;
+
 	self.isLoading = NO;
 }	
 
@@ -461,44 +412,44 @@
 {	
 	//DLog(@"%@", [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding]);
 	
-	NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:receivedData];
+	NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:self.receivedData];
 	SearchXMLParser *parser = [[SearchXMLParser alloc] initXMLParser];
 	[xmlParser setDelegate:parser];
 	[xmlParser parse];
 	
 	//DLog(@"parser.listOfSongs:\n%@", parser.listOfSongs);
 	
-	if (searchType == ISMSSearchSongsSearchType_Artists)
+	if (self.searchType == ISMSSearchSongsSearchType_Artists)
 	{
 		if ([parser.listOfArtists count] == 0)
 		{
-			isMoreResults = NO;
+			self.isMoreResults = NO;
 		}
 		else 
 		{
-			[listOfArtists addObjectsFromArray:parser.listOfArtists];
+			[self.listOfArtists addObjectsFromArray:parser.listOfArtists];
 		}
 	}
-	else if (searchType == ISMSSearchSongsSearchType_Albums)
+	else if (self.searchType == ISMSSearchSongsSearchType_Albums)
 	{
 		if ([parser.listOfAlbums count] == 0)
 		{
-			isMoreResults = NO;
+			self.isMoreResults = NO;
 		}
 		else 
 		{
-			[listOfAlbums addObjectsFromArray:parser.listOfAlbums];
+			[self.listOfAlbums addObjectsFromArray:parser.listOfAlbums];
 		}
 	}
-	else if (searchType == ISMSSearchSongsSearchType_Songs)
+	else if (self.searchType == ISMSSearchSongsSearchType_Songs)
 	{
 		if ([parser.listOfSongs count] == 0)
 		{
-			isMoreResults = NO;
+			self.isMoreResults = NO;
 		}
 		else 
 		{
-			[listOfSongs addObjectsFromArray:parser.listOfSongs];
+			[self.listOfSongs addObjectsFromArray:parser.listOfSongs];
 		}
 	}
 	
@@ -509,20 +460,6 @@
 	self.receivedData = nil;
 	self.connection = nil;
 }
-
-
-#pragma mark -
-#pragma mark Memory management
-
-- (void)didReceiveMemoryWarning 
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Relinquish ownership any cached data, images, etc that aren't in use.
-}
-
-
 
 @end
 

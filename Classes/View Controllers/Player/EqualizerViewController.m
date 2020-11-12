@@ -122,7 +122,7 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - View lifecycle
+#pragma mark View lifecycle
 
 - (void)viewDidLoad
 {
@@ -683,9 +683,7 @@
 	[self.equalizerView nextType];
 }
 
-#pragma mark -
 #pragma mark Preset Picker
-#pragma mark -
 
 - (void)updatePresetPicker
 {
@@ -804,7 +802,7 @@
     return self.effectDAO.presets.count;
 }
 
-#pragma mark - TableView delegate for save dialog -
+#pragma mark TableView delegate for save dialog
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
 {	

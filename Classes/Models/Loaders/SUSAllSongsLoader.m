@@ -33,8 +33,6 @@
 
 @implementation SUSAllSongsLoader
 
-@synthesize receivedData;
-
 static BOOL isAllSongsLoading = NO;
 + (BOOL)isLoading { return isAllSongsLoading; }
 + (void)setIsLoading:(BOOL)isLoading { isAllSongsLoading = isLoading; }

@@ -48,18 +48,13 @@ static AudioEngine *sharedInstance = nil;
 }
 
 - (void)handleRouteChange:(NSNotification *)notification {
-//    if notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt == AVAudioSessionRouteChangeReason.oldDeviceUnavailable.rawValue {
-//        pause()
-//    }
-    
     AVAudioSessionRouteChangeReason reason = [[[notification userInfo] objectForKey:AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
     if (reason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {
         [self.player pause];
     }
 }
 
-- (void)startSong:(ISMSSong *)aSong atIndex:(NSUInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds
-{
+- (void)startSong:(ISMSSong *)aSong atIndex:(NSUInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds {
 	// Stop the player
 	[self.player stop];
     
@@ -71,8 +66,7 @@ static AudioEngine *sharedInstance = nil;
     [effectDAO selectPresetId:effectDAO.selectedPresetId];
 }
 
-- (void)startEmptyPlayer
-{    
+- (void)startEmptyPlayer {
     // Stop the player if it exists
 	[self.player stop];
     
@@ -83,27 +77,15 @@ static AudioEngine *sharedInstance = nil;
     }
 }
 
-- (BassEqualizer *)equalizer
-{
+- (BassEqualizer *)equalizer {
 	return self.player.equalizer;
 }
 
-- (BassVisualizer *)visualizer
-{
+- (BassVisualizer *)visualizer {
 	return self.player.visualizer;
 }
 
-#pragma mark - Memory management
-
-- (void)didReceiveMemoryWarning
-{
-	DDLogError(@"[AudioEngine] received memory warning");
-}
-
-#pragma mark - Singleton methods
-
-- (void)setup
-{
+- (void)setup {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 	
 	[[AVAudioSession sharedInstance] setActive:YES error:nil];
@@ -119,8 +101,7 @@ static AudioEngine *sharedInstance = nil;
     }];
 }
 
-+ (id)sharedInstance
-{
++ (id)sharedInstance {
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{
 		sharedInstance = [[self alloc] init];

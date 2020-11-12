@@ -10,12 +10,9 @@
 #import "Defines.h"
 
 @implementation MenuTableViewCell
-@synthesize glowView;
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-	if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
-	{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+	if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
 		self.clipsToBounds = YES;
 		
 		UIView* bgView = [[UIView alloc] init];
@@ -42,33 +39,28 @@
 		bottomLine.backgroundColor = [UIColor colorWithWhite:0 alpha:0.25];
 		[self.textLabel.superview addSubview:bottomLine];
 		
-		glowView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 43)];
-		glowView.image = [UIImage imageNamed:@"glow.png"];
-		glowView.hidden = YES;
-		glowView.alpha = 0.3;
-		[self addSubview:glowView];
+        self.glowView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 43)];
+        self.glowView.image = [UIImage imageNamed:@"glow.png"];
+        self.glowView.hidden = YES;
+        self.glowView.alpha = 0.3;
+		[self addSubview:self.glowView];
 	}
 	return self;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
 	[super layoutSubviews];
 	
 	self.textLabel.frame = CGRectMake(75, 0, self.bounds.size.width - 75, self.bounds.size.height);
 	self.imageView.frame = CGRectMake(0, 0, 70, self.bounds.size.height);
 }
 
-- (void)setSelected:(BOOL)sel animated:(BOOL)animated
-{
+- (void)setSelected:(BOOL)sel animated:(BOOL)animated {
 	[super setSelected:sel animated:animated];
 		
-	if (sel)
-	{
+	if (sel) {
 		self.textLabel.textColor = [UIColor whiteColor];
-	}
-	else
-	{
+	} else {
 		self.textLabel.textColor = [UIColor colorWithRed:(188.f/255.f) green:(188.f/255.f) blue:(188.f/255.f) alpha:1.f];
 	}
 }

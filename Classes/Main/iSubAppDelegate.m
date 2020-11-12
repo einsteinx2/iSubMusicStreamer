@@ -59,10 +59,7 @@ LOG_LEVEL_ISUB_DEFAULT
     return YES;
 }
 
-#pragma mark -
 #pragma mark Application lifecycle
-#pragma mark -
-
 
 /*void onUncaughtException(NSException* exception)
 {
@@ -405,7 +402,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self performSelector:@selector(checkServer) withObject:nil afterDelay:delay];
 }
 
-#pragma mark - SUS Loader Delegate
+#pragma mark SUS Loader Delegate
 
 - (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
 {
@@ -466,8 +463,6 @@ LOG_LEVEL_ISUB_DEFAULT
 //        }
     }
 }
-
-#pragma mark -
 
 - (void)loadFlurryAnalytics
 {
@@ -1107,68 +1102,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	return [dateComponents hour];
 }
 
-
-#pragma mark -
-#pragma mark Music Streamer
-#pragma mark -
-
-/*- (NSString *)getStreamURLStringForSongId:(NSString *)songId
-{	    
-    NSString *encodedUserName = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)settings.username, NULL, (CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ", kCFStringEncodingUTF8 );
-	NSString *encodedPassword = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)settings.password, NULL, (CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ", kCFStringEncodingUTF8 );
-    
-	if ([musicS maxBitrateSetting] != 0)
-	{
-		return [NSString stringWithFormat:@"%@/rest/stream.view?maxBitRate=%i&u=%@&p=%@&v=1.2.0&c=iSub&id=", settingsS.urlString, [musicS maxBitrateSetting], [encodedUserName autorelease], [encodedPassword autorelease]];
-	}
-    else
-	{
-		return [NSString stringWithFormat:@"%@/rest/stream.view?u=%@&p=%@&v=1.1.0&c=iSub&id=", settingsS.urlString, [encodedUserName autorelease], [encodedPassword autorelease]];
-	}
-}*/
-
-/*- (NSString *)getBaseUrl:(NSString *)action
-{	
-	NSString *urlString = [[[NSString alloc] init] autorelease];
-
-	urlString = defaultUrl;
-	
-	NSString *encodedUserName = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)defaultUserName, NULL, (CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ", kCFStringEncodingUTF8 );
-	NSString *encodedPassword = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)defaultPassword, NULL, (CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ", kCFStringEncodingUTF8 );
-    
-	//DLog(@"username: %@    password: %@", encodedUserName, encodedPassword);
-	
-	// Return the base URL
-	if ([action isEqualToString:@"getIndexes.view"] || [action isEqualToString:@"search.view"] || [action isEqualToString:@"search2.view"] || [action isEqualToString:@"getNowPlaying.view"] || [action isEqualToString:@"getPlaylists.view"] || [action isEqualToString:@"getMusicFolders.view"] || [action isEqualToString:@"createPlaylist.view"])
-	{
-		return [NSString stringWithFormat:@"%@/rest/%@?u=%@&p=%@&v=1.1.0&c=iSub", urlString, action, [encodedUserName autorelease], [encodedPassword autorelease]];
-	}
-	else if ([action isEqualToString:@"stream.view"] && [[settingsDictionary objectForKey:@"maxBitrateSetting"] intValue] != 7)
-	{
-		return [NSString stringWithFormat:@"%@/rest/stream.view?maxBitRate=%i&u=%@&p=%@&v=1.2.0&c=iSub&id=", urlString, [musicS maxBitrateSetting], [encodedUserName autorelease], [encodedPassword autorelease]];
-	}
-	else if ([action isEqualToString:@"addChatMessage.view"])
-	{
-		return [NSString stringWithFormat:@"%@/rest/addChatMessage.view?&u=%@&p=%@&v=1.2.0&c=iSub&message=", urlString, [encodedUserName autorelease], [encodedPassword autorelease]];
-	}
-	else if ([action isEqualToString:@"getLyrics.view"])
-	{
-		NSString *encodedArtist = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)musicS.currentSongObject.artist, NULL, (CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ", kCFStringEncodingUTF8 );
-		NSString *encodedTitle = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)musicS.currentSongObject.title, NULL, (CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ", kCFStringEncodingUTF8 );
-		
-		return [NSString stringWithFormat:@"%@/rest/getLyrics.view?artist=%@&title=%@&u=%@&p=%@&v=1.2.0&c=iSub", urlString, [encodedArtist autorelease], [encodedTitle autorelease], [encodedUserName autorelease], [encodedPassword autorelease]];
-	}
-	else if ([action isEqualToString:@"getRandomSongs.view"] || [action isEqualToString:@"getAlbumList.view"] || [action isEqualToString:@"jukeboxControl.view"])
-	{
-		return [NSString stringWithFormat:@"%@/rest/%@?u=%@&p=%@&v=1.2.0&c=iSub", urlString, action, [encodedUserName autorelease], [encodedPassword autorelease]];
-	}
-	else
-	{
-		return [NSString stringWithFormat:@"%@/rest/%@?u=%@&p=%@&v=1.1.0&c=iSub&id=", urlString, action, [encodedUserName autorelease], [encodedPassword autorelease]];
-	}
-}*/
-
-#pragma mark - Movie Playing
+#pragma mark Movie Playing
 
 - (void)createMoviePlayer
 {

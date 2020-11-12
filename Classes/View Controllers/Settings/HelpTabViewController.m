@@ -12,23 +12,18 @@
 
 @implementation HelpTabViewController
 
-@synthesize helpWebView, loadingIndicator;
-
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
+- (BOOL)shouldAutorotate {
+    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
         return NO;
+    }
     
     return YES;
 }
 
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad 
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 		
-	if ([appDelegateS.wifiReach currentReachabilityStatus] == NotReachable)
-	{		
+	if ([appDelegateS.wifiReach currentReachabilityStatus] == NotReachable) {
 		NSString* embedHTML = @"\
 		<html><head>\
 		<style type=\"text/css\">\
@@ -47,28 +42,24 @@
 		<body>\
 		You must be connected to the Internet to view the help videos.\
 		</body></html>";
-		[helpWebView loadHTMLString:embedHTML baseURL:nil];
-	}
-	else
-	{	
-		[loadingIndicator startAnimating];
+		[self.helpWebView loadHTMLString:embedHTML baseURL:nil];
+	} else {
+		[self.loadingIndicator startAnimating];
 		
 		NSString *helpUrlString = @"http://isubapp.com/iphoneHelp/index-3.0.html";
 		NSURL *helpUrl = [NSURL URLWithString:helpUrlString];
 		NSURLRequest *request = [NSURLRequest requestWithURL:helpUrl];
-		helpWebView.delegate = self;
-		[helpWebView loadRequest:request];
+        self.helpWebView.delegate = self;
+        [self.helpWebView loadRequest:request];
 	}
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
-	[loadingIndicator stopAnimating];
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+	[self.loadingIndicator stopAnimating];
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
-	[loadingIndicator stopAnimating];
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+	[self.loadingIndicator stopAnimating];
 	
 	NSString* embedHTML = @"\
 	<html><head>\
@@ -88,21 +79,11 @@
 	<body>\
 	There was an error loading the help content. Please try again later.\
 	</body></html>";
-	[helpWebView loadHTMLString:embedHTML baseURL:nil];
+	[self.helpWebView loadHTMLString:embedHTML baseURL:nil];
 }
 
-- (void)didReceiveMemoryWarning 
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
+- (void)dealloc {
+    self.helpWebView.delegate = nil;
 }
-
-- (void)dealloc 
-{
-	helpWebView.delegate = nil;
-}
-
 
 @end

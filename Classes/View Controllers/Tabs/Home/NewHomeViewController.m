@@ -39,32 +39,25 @@
 
 @implementation NewHomeViewController
 
-@synthesize receivedData, connection;
-@synthesize playerButton, jukeboxButton, searchBar, searchSegment, searchSegmentBackground, searchOverlay, dismissButton, isSearch, quickLabel, shuffleLabel, jukeboxLabel, settingsLabel, chatLabel, playerLabel, coverArtBorder, coverArtView, artistLabel, albumLabel, songLabel;
-
-- (BOOL)prefersStatusBarHidden
-{
+- (BOOL)prefersStatusBarHidden {
     return NO;
 }
 
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
+- (BOOL)shouldAutorotate {
+    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
         return NO;
+    }
     
     return YES;
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 	
 	BOOL rotationDisabled = settingsS.isRotationLockEnabled;
 	
-	if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation))
-	{
-		if (!IS_IPAD())
-		{
+	if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {
+		if (!IS_IPAD()) {
 			// Animate the segmented control off screen
 			[UIView beginAnimations:nil context:NULL];
 			[UIView setAnimationDuration:.3];
@@ -83,50 +76,38 @@
 			self.songLabel.alpha = 1.0;
 			[UIView commitAnimations];
             
-            if (IS_TALL_SCREEN())
-            {
-                [UIView animateWithDuration:duration animations:^
-                 {
-                     for (UIView *aView in self.topRow)
-                     {
+            if (IS_TALL_SCREEN()) {
+                [UIView animateWithDuration:duration animations:^{
+                     for (UIView *aView in self.topRow) {
                          aView.y = 75.;
                      }
                      
-                     for (UIView *aView in self.topRowLabels)
-                     {
+                     for (UIView *aView in self.topRowLabels) {
                          aView.y = 145.;
                      }
                      
                      self.coverArtBorder.y = 217.;
                      
-                     for (UIView *aView in self.bottomRow)
-                     {
+                     for (UIView *aView in self.bottomRow) {
                          aView.y = 115;
                      }
                      
-                     for (UIView *aView in self.bottomRowLabels)
-                     {
+                     for (UIView *aView in self.bottomRowLabels) {
                          aView.y = 160;
                      }
                  }];
             }
 		}
-	}
-	else if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation) && !rotationDisabled)
-	{
-		if (!IS_IPAD())
-		{
-            if (IS_TALL_SCREEN())
-            {
-                for (UIView *aView in self.topRow)
-                {
+	} else if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation) && !rotationDisabled) {
+		if (!IS_IPAD()) {
+            if (IS_TALL_SCREEN()) {
+                for (UIView *aView in self.topRow) {
                     aView.y -= 30;
                 }
                 
                 self.coverArtBorder.y -= 40;
                 
-                for (UIView *aView in self.bottomRow)
-                {
+                for (UIView *aView in self.bottomRow) {
                     aView.y += 40;
                 }
             }
@@ -152,70 +133,55 @@
 	}
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     DLog(@"y: %@", self.bottomRowLabels.firstObject);
         
     // Since the values in viewWillRotate would have to be rounded, we need to fix them here
-    if (IS_TALL_SCREEN())
-    {
-        if (UIInterfaceOrientationIsLandscape(fromInterfaceOrientation))
-        {
-            for (UIView *aView in self.topRow)
-            {
+    if (IS_TALL_SCREEN()) {
+        if (UIInterfaceOrientationIsLandscape(fromInterfaceOrientation)) {
+            for (UIView *aView in self.topRow) {
                 aView.y = 75.;
             }
             
-            for (UIView *aView in self.topRowLabels)
-            {
+            for (UIView *aView in self.topRowLabels) {
                 aView.y = 145.;
             }
             
             self.coverArtBorder.y = 217.;
             
-            for (UIView *aView in self.bottomRow)
-            {
+            for (UIView *aView in self.bottomRow) {
                 aView.y = 313.;
             }
             
-            for (UIView *aView in self.bottomRowLabels)
-            {
+            for (UIView *aView in self.bottomRowLabels) {
                 aView.y = 381;
             }
-        }
-        else
-        {
-            for (UIView *aView in self.topRow)
-            {
+        } else {
+            for (UIView *aView in self.topRow) {
                 aView.y = 45.;
             }
             
-            for (UIView *aView in self.topRowLabels)
-            {
+            for (UIView *aView in self.topRowLabels) {
                 aView.y = 115.;
             }
             
             self.coverArtBorder.y = 177.;
             
-            for (UIView *aView in self.bottomRow)
-            {
+            for (UIView *aView in self.bottomRow) {
                 aView.y = 127.;
             }
             
-            for (UIView *aView in self.bottomRowLabels)
-            {
+            for (UIView *aView in self.bottomRowLabels) {
                 aView.y = 159.;
             }
         }
     }    
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
 	[super viewDidLoad];
     
-    if (IS_IOS7())
-    {
+    if (IS_IOS7()) {
         self.searchSegment.tintColor = ISMSHeaderColor;
         self.searchSegmentBackground.backgroundColor = [UIColor colorWithWhite:.3 alpha:1];
     }
@@ -230,8 +196,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(performServerShuffle:) name:@"performServerShuffle" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
 
-	if (!IS_IPAD())
-	{
+	if (!IS_IPAD()) {
 		self.coverArtBorder = [UIButton buttonWithType:UIButtonTypeCustom];
 		self.coverArtBorder.frame = CGRectMake(15, 177, 290, 60);
 		self.coverArtBorder.layer.borderColor = [UIColor colorWithWhite:0.7 alpha:1.0].CGColor;
@@ -282,22 +247,13 @@
         		
 		[self initSongInfo];
 	}
-    
-    if (SYSTEM_VERSION_LESS_THAN(@"7"))
-    {
-        self.navigationController.navigationBar.translucent = NO;
-        self.navigationController.navigationBar.tintColor = [UIColor blackColor];
-    }
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
     
-	if (UIInterfaceOrientationIsPortrait([UIApplication orientation]))
-	{
-		if (!IS_IPAD())
-		{
+	if (UIInterfaceOrientationIsPortrait([UIApplication orientation])) {
+		if (!IS_IPAD()) {
 			self.quickLabel.alpha = 1.0;
 			self.shuffleLabel.alpha = 1.0;
 			self.jukeboxLabel.alpha = 1.0;
@@ -311,17 +267,13 @@
 			self.albumLabel.alpha = 1.0;
 			self.songLabel.alpha = 1.0;
             
-            if (IS_TALL_SCREEN())
-            {
+            if (IS_TALL_SCREEN()) {
                 // Make sure everything's in the right place
                 [self didRotateFromInterfaceOrientation:UIInterfaceOrientationLandscapeLeft];
             }
 		}
-	}
-	else if (UIInterfaceOrientationIsLandscape([UIApplication orientation]))
-	{
-		if (!IS_IPAD())
-		{
+	} else if (UIInterfaceOrientationIsLandscape([UIApplication orientation])) {
+		if (!IS_IPAD()) {
 			self.quickLabel.alpha = 0.0;
 			self.shuffleLabel.alpha = 0.0;
 			self.jukeboxLabel.alpha = 0.0;
@@ -335,8 +287,7 @@
 			self.albumLabel.alpha = 0.0;
 			self.songLabel.alpha = 0.0;
             
-            if (IS_TALL_SCREEN())
-            {
+            if (IS_TALL_SCREEN()) {
                 // Make sure everything's in the right place
                 [self didRotateFromInterfaceOrientation:UIInterfaceOrientationPortrait];
             }
@@ -346,35 +297,22 @@
     [self addURLRefBackButton];
 	
     self.navigationItem.rightBarButtonItem = nil;
-	if(musicS.showPlayerIcon)
-	{
+	if (musicS.showPlayerIcon) {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-	}
-
-	/*if(musicS.showPlayerIcon)
-	{
-		playerButton.enabled = YES;
-		playerButton.alpha = 1.0;
-	}
-	else
-	{
-		playerButton.enabled = NO;
-		playerButton.alpha = 0.5;
-	}*/
+    }
 	
-	if (settingsS.isJukeboxEnabled)
-	{
-		if (IS_IPAD())
+	if (settingsS.isJukeboxEnabled) {
+        if (IS_IPAD()) {
 			[self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-on-ipad.png"] forState:UIControlStateNormal];
-		else
+        } else {
 			[self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-on.png"] forState:UIControlStateNormal];
-	}
-	else
-	{
-		if (IS_IPAD())
+        }
+	} else {
+        if (IS_IPAD()) {
 			[self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-off-ipad.png"] forState:UIControlStateNormal];
-		else
-			[self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-off.png"] forState:UIControlStateNormal];
+        } else {
+            [self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-off.png"] forState:UIControlStateNormal];
+        }
 	}
 	
 	self.searchSegment.alpha = 0.0;
@@ -384,43 +322,33 @@
 	[Flurry logEvent:@"HomeTab"];
 }
 
-- (void)addURLRefBackButton
-{
-    if (appDelegateS.referringAppUrl && appDelegateS.mainTabBarController.selectedIndex != 4)
-    {
+- (void)addURLRefBackButton {
+    if (appDelegateS.referringAppUrl && appDelegateS.mainTabBarController.selectedIndex != 4) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:appDelegateS action:@selector(backToReferringApp)];
     }
 }
 
-- (void)initSongInfo
-{
+- (void)initSongInfo {
 	ISMSSong *currentSong = playlistS.currentSong ? playlistS.currentSong : playlistS.prevSong;
-	
-	if (currentSong != nil)
-	{		
+	if (currentSong != nil) {
 		self.coverArtView.coverArtId = currentSong.coverArtId;
 		
 		self.artistLabel.text = @"";
 		self.albumLabel.text = @"";
 		self.songLabel.text = @"";
 		
-		if (currentSong.artist)
-		{
+		if (currentSong.artist) {
 			self.artistLabel.text = [currentSong.artist copy];
 		}
 		
-		if (currentSong.album)
-		{
+		if (currentSong.album) {
 			self.albumLabel.text = [currentSong.album copy];
 		}
 		
-		if (currentSong.title)
-		{
+		if (currentSong.title) {
 			self.songLabel.text = [currentSong.title copy];
 		}
-	}
-	else
-	{
+	} else {
 		self.coverArtView.image = [UIImage imageNamed:@"default-album-art.png"];
 		self.artistLabel.text = @"Use the Folders tab to find music";
 		self.albumLabel.text = @"";
@@ -428,31 +356,27 @@
 	}
 }
 
-- (IBAction)quickAlbums
-{
+- (IBAction)quickAlbums {
 	QuickAlbumsViewController *quickAlbums = [[QuickAlbumsViewController alloc] init];
 	quickAlbums.parent = self;
 	//quickAlbums.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-	if ([quickAlbums respondsToSelector:@selector(setModalPresentationStyle:)])
+    if ([quickAlbums respondsToSelector:@selector(setModalPresentationStyle:)]) {
 		quickAlbums.modalPresentationStyle = UIModalPresentationFormSheet;
+    }
 	
-	if (IS_IPAD())
+    if (IS_IPAD()) {
 		[appDelegateS.ipadRootViewController presentViewController:quickAlbums animated:YES completion:nil];
-	else
+    } else {
 		[self presentViewController:quickAlbums animated:YES completion:nil];
-	
+    }
 }
 
-- (IBAction)serverShuffle
-{	
+- (IBAction)serverShuffle {
 	NSDictionary *folders = [SUSRootFoldersDAO folderDropdownFolders];
 	
-	if (folders == nil || [folders count] == 2)
-	{
+	if (folders == nil || [folders count] == 2) {
 		[self performServerShuffle:nil];
-	}
-	else
-	{		
+	} else {
 		float height = 65.0f;
 		height += (float)[folders count] * 44.0f;
 		
@@ -465,18 +389,14 @@
 	}
 }
 
-- (void)performServerShuffle:(NSNotification*)notification 
-{
+- (void)performServerShuffle:(NSNotification*)notification {
     SUSServerShuffleLoader *loader = [[SUSServerShuffleLoader alloc] initWithCallbackBlock:^(BOOL success, NSError *error, SUSLoader *loader) {
         [viewObjectsS hideLoadingScreen];
         
-        if (success)
-        {
+        if (success) {
             [musicS playSongAtPosition:0];
             [self showPlayer];
-        }
-        else
-        {
+        } else {
             CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:@"There was an error creating the server shuffle list.\n\nThe connection could not be created" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }
@@ -489,78 +409,53 @@
 
 }
 
-- (void)wbServerShuffle:(NSNotification *)notification
-{
-
-}
-
-- (void)cancelLoad
-{
+- (void)cancelLoad {
 	[self.connection cancel];
 	self.connection = nil;
 	self.receivedData = nil;
 	[viewObjectsS hideLoadingScreen];
 }
 
-- (IBAction)chat
-{
+- (IBAction)chat {
 	ChatViewController *chat = [[ChatViewController alloc] initWithNibName:@"ChatViewController" bundle:nil];
 	//playlists.isHomeTab = YES;
 	[self.navigationController pushViewController:chat animated:YES];
 }
 
-- (IBAction)settings
-{
+- (IBAction)settings {
 	[appDelegateS showSettings];
-
-//	ServerListViewController *serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
-//	if (IS_IPAD())
-//	{
-//		[appDelegateS.ipadRootViewController.menuViewController showSettings];
-//	}
-//	else
-//	{
-//		serverListViewController.hidesBottomBarWhenPushed = YES;
-//		[self.navigationController pushViewController:serverListViewController animated:YES];
-//	}
 }
 
-- (IBAction)player
-{
+- (IBAction)player {
 	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
 	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:streamingPlayerViewController animated:YES];
 }
 
-- (IBAction)support:(id)sender
-{	
+- (IBAction)support:(id)sender {
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Support" message:@"iSub support is happy to help with any issues you may have! \n\nWould you like to send an email to support or visit the iSub forum?" delegate:appDelegateS cancelButtonTitle:@"Not Now" otherButtonTitles:@"Send Email", @"iSub Forum", nil];
 	alert.tag = 7;
 	[alert show];
-	//[Crittercism showCrittercism:self];
 }
 
-- (void)nowPlayingAction:(id)sender
-{
+- (void)nowPlayingAction:(id)sender {
 	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
 	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
 }
 
-- (void)jukeboxOff
-{
-	if (IS_IPAD())
+- (void)jukeboxOff {
+    if (IS_IPAD()) {
 		[self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-off-ipad.png"] forState:UIControlStateNormal];
-	else
+    } else {
 		[self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-off.png"] forState:UIControlStateNormal];
-	
+    }
+    
 	[self initSongInfo];
 }
 
-- (IBAction)jukebox
-{
-    if (settingsS.isJukeboxEnabled)
-    {
+- (IBAction)jukebox {
+    if (settingsS.isJukeboxEnabled) {
         // Jukebox mode is on, turn it off
         if (IS_IPAD())
             [self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-off-ipad.png"] forState:UIControlStateNormal];
@@ -573,16 +468,15 @@
         [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_JukeboxDisabled];
         
         [Flurry logEvent:@"JukeboxDisabled"];
-    }
-    else
-    {
+    } else {
         [audioEngineS.player stop];
         
         // Jukebox mode is off, turn it on
-        if (IS_IPAD())
+        if (IS_IPAD()) {
             [self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-on-ipad.png"] forState:UIControlStateNormal];
-        else
+        } else {
             [self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-on.png"] forState:UIControlStateNormal];
+        }
         settingsS.isJukeboxEnabled = YES;
         
         [jukeboxS jukeboxGetInfo];
@@ -597,41 +491,27 @@
     [self initSongInfo];
 }
 
-- (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
-- (void)dealloc 
-{
+- (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark -
 #pragma mark Search Bar Delgate
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar
-{	
-	//NSString *key = [NSString stringWithFormat:@"isNewSearchAPI%@", [appDelegateS.defaultUrl md5]];
-	
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
 	// Create search overlay
 	self.searchOverlay = [[UIView alloc] init];
-	//if ([[appDelegateS.settingsDictionary objectForKey:key] isEqualToString:@"YES"])
-	if (settingsS.isNewSearchAPI)
-	{
-		if (IS_IPAD())
+	if (settingsS.isNewSearchAPI) {
+        if (IS_IPAD()) {
 			self.searchOverlay.frame = CGRectMake(0, 86, 1024, 1024);
-		else
+        } else {
 			self.searchOverlay.frame = CGRectMake(0, 82, 480, 480);
-	}
-	else
-	{
-		if (IS_IPAD())
+        }
+	} else {
+        if (IS_IPAD()) {
 			self.searchOverlay.frame = CGRectMake(0, 44, 1024, 1024);
-		else
+        } else {
 			self.searchOverlay.frame = CGRectMake(0, 44, 480, 480);
+        }
 	}
 	
 	self.searchOverlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -648,8 +528,7 @@
 	
 	// Animate the segmented control on screen
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        if (settingsS.isNewSearchAPI)
-        {
+        if (settingsS.isNewSearchAPI) {
             self.searchSegment.enabled = YES;
             self.searchSegment.alpha = 1;
             self.searchSegmentBackground.alpha = 1;
@@ -659,12 +538,10 @@
     } completion:nil];
 }
 
-- (void)searchBarTextDidEndEditing:(UISearchBar *)theSearchBar
-{
+- (void)searchBarTextDidEndEditing:(UISearchBar *)theSearchBar {
 	// Animate the segmented control off screen
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        if (settingsS.isNewSearchAPI)
-        {
+        if (settingsS.isNewSearchAPI) {
             self.searchSegment.alpha = 0;
             self.searchSegment.enabled = NO;
             self.searchSegmentBackground.alpha = 0;
@@ -674,48 +551,33 @@
     } completion:nil];
 }
 
-- (void)searchBarSearchButtonClicked:(UISearchBar *)theSearchBar
-{
+- (void)searchBarSearchButtonClicked:(UISearchBar *)theSearchBar {
 	self.isSearch = YES;
 	
 	[self.searchBar resignFirstResponder];
 	
-	NSString *searchTerms = [searchBar.text stringByTrimmingLeadingAndTrailingWhitespace];
+	NSString *searchTerms = [self.searchBar.text stringByTrimmingLeadingAndTrailingWhitespace];
 //DLog(@"-%@-", searchTerms);
 	
     NSDictionary *parameters = nil;
     NSString *action = nil;
-	if (settingsS.isNewSearchAPI)
-	{
+	if (settingsS.isNewSearchAPI) {
         // Due to a Subsonic bug, to get good search results, we need to add a * to the end of
         // Latin based languages, but not to unicode languages like Japanese.
         BOOL isLatin = [searchTerms canBeConvertedToEncoding:NSISOLatin1StringEncoding];
 		NSString *searchTermsString = isLatin ? [NSString stringWithFormat:@"%@*", searchTerms] : searchTerms;
         
         action = @"search2";
-		if (self.searchSegment.selectedSegmentIndex == 0)
-		{
-            parameters = [NSDictionary dictionaryWithObjectsAndKeys:@"20", @"artistCount", @"0", @"albumCount", @"0", @"songCount", 
-                          n2N(searchTermsString), @"query", nil];
+		if (self.searchSegment.selectedSegmentIndex == 0) {
+            parameters = [NSDictionary dictionaryWithObjectsAndKeys:@"20", @"artistCount", @"0", @"albumCount", @"0", @"songCount", n2N(searchTermsString), @"query", nil];
+		} else if (self.searchSegment.selectedSegmentIndex == 1) {
+            parameters = [NSDictionary dictionaryWithObjectsAndKeys:@"0", @"artistCount", @"20", @"albumCount", @"0", @"songCount", n2N(searchTermsString), @"query", nil];
+		} else if (self.searchSegment.selectedSegmentIndex == 2) {
+            parameters = [NSDictionary dictionaryWithObjectsAndKeys:@"0", @"artistCount", @"0", @"albumCount", @"20", @"songCount", n2N(searchTermsString), @"query", nil];
+		} else {
+            parameters = [NSDictionary dictionaryWithObjectsAndKeys:@"20", @"artistCount", @"20", @"albumCount", @"20", @"songCount", n2N(searchTermsString), @"query", nil];
 		}
-		else if (self.searchSegment.selectedSegmentIndex == 1)
-		{
-            parameters = [NSDictionary dictionaryWithObjectsAndKeys:@"0", @"artistCount", @"20", @"albumCount", @"0", @"songCount", 
-                          n2N(searchTermsString), @"query", nil];
-		}
-		else if (searchSegment.selectedSegmentIndex == 2)
-		{
-            parameters = [NSDictionary dictionaryWithObjectsAndKeys:@"0", @"artistCount", @"0", @"albumCount", @"20", @"songCount", 
-                          n2N(searchTermsString), @"query", nil];
-		}
-		else
-		{
-            parameters = [NSDictionary dictionaryWithObjectsAndKeys:@"20", @"artistCount", @"20", @"albumCount", @"20", @"songCount", 
-                          n2N(searchTermsString), @"query", nil];
-		}
-	}
-	else
-	{
+	} else {
         action = @"search";
         parameters = [NSDictionary dictionaryWithObjectsAndKeys:@"20", @"count", n2N(searchTerms), @"any", nil];
 	}
@@ -723,61 +585,48 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:action parameters:parameters];
     
 	self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
-	if (self.connection)
-	{
+	if (self.connection) {
 		self.receivedData = [NSMutableData dataWithLength:0];
 		
 		// Display the loading screen
 		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-	} 
-	else 
-	{
+	} else {
 		// Inform the user that the connection failed.
 		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:@"There was an error performing the search.\n\nThe connection could not be created" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 	}
 }
 
-#pragma mark -
 #pragma mark Connection delegate
 
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)space 
-{
+- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)space  {
 	if([[space authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust]) 
 		return YES; // Self-signed cert will be accepted
 	
 	return NO;
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
-{	
-	if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
-	{
+- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+	if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
 		[challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge]; 
 	}
 	[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	[self.receivedData setLength:0];
 }
 
-- (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData 
-{
+- (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData  {
 	[self.receivedData appendData:incrementalData];
 }
 
-- (void)connection:(NSURLConnection *)theConnection didFailWithError:(NSError *)error
-{
+- (void)connection:(NSURLConnection *)theConnection didFailWithError:(NSError *)error {
 	// Inform the user that the connection failed.
 	NSString *message;
-	if (isSearch)
-	{
+	if (self.isSearch) {
 		message = [NSString stringWithFormat:@"There was an error completing the search.\n\nError:%@", error.localizedDescription];
-	}
-	else
-	{
+	} else {
 		message = [NSString stringWithFormat:@"There was an error creating the server shuffle list.\n\nError:%@", error.localizedDescription];
 	}
 	
@@ -790,15 +639,13 @@
 	[viewObjectsS hideLoadingScreen];
 }	
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)theConnection 
-{	
+- (void)connectionDidFinishLoading:(NSURLConnection *)theConnection  {
     //DLog(@"received data: %@", [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding]);
 	
-	if (isSearch)
-	{
+	if (self.isSearch) {
 		// It's a search
 		
-		NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:receivedData];
+		NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:self.receivedData];
 		SearchXMLParser *parser = (SearchXMLParser*)[[SearchXMLParser alloc] initXMLParser];
 		[xmlParser setDelegate:parser];
 		[xmlParser parse];
@@ -809,53 +656,42 @@
 			isNewSearchAPI = YES;
 		
 		if (isNewSearchAPI && searchSegment.selectedSegmentIndex == 3)*/
-		if (settingsS.isNewSearchAPI && searchSegment.selectedSegmentIndex == 3)
-		{
+		if (settingsS.isNewSearchAPI && self.searchSegment.selectedSegmentIndex == 3) {
 			SearchAllViewController *searchViewController = [[SearchAllViewController alloc] initWithNibName:@"SearchAllViewController" 
 																						   bundle:nil];
 			searchViewController.listOfArtists = [NSMutableArray arrayWithArray:parser.listOfArtists];
 			searchViewController.listOfAlbums = [NSMutableArray arrayWithArray:parser.listOfAlbums];
 			searchViewController.listOfSongs = [NSMutableArray arrayWithArray:parser.listOfSongs];
 			
-			searchViewController.query = [NSString stringWithFormat:@"%@*", searchBar.text];
+			searchViewController.query = [NSString stringWithFormat:@"%@*", self.searchBar.text];
 			
 			
 			//[self.navigationController pushViewController:searchViewController animated:YES];
 			[self pushViewControllerCustom:searchViewController];
 			
-		}
-		else
-		{
+		} else {
 			SearchSongsViewController *searchViewController = [[SearchSongsViewController alloc] initWithNibName:@"SearchSongsViewController" 
 																										  bundle:nil];
 			searchViewController.title = @"Search";
 			//if (isNewSearchAPI)
-			if (settingsS.isNewSearchAPI)
-			{
-				if (self.searchSegment.selectedSegmentIndex == 0)
-				{
+			if (settingsS.isNewSearchAPI) {
+				if (self.searchSegment.selectedSegmentIndex == 0) {
 					searchViewController.listOfArtists = [NSMutableArray arrayWithArray:parser.listOfArtists];
 					//DLog(@"%@", searchViewController.listOfArtists);
-				}
-				else if (self.searchSegment.selectedSegmentIndex == 1)
-				{
+				} else if (self.searchSegment.selectedSegmentIndex == 1) {
 					searchViewController.listOfAlbums = [NSMutableArray arrayWithArray:parser.listOfAlbums];
 					//DLog(@"%@", searchViewController.listOfAlbums);
-				}
-				else if (self.searchSegment.selectedSegmentIndex == 2)
-				{
+				} else if (self.searchSegment.selectedSegmentIndex == 2) {
 					searchViewController.listOfSongs = [NSMutableArray arrayWithArray:parser.listOfSongs];
 					//DLog(@"%@", searchViewController.listOfSongs);
 				}
 				
-				searchViewController.searchType = (ISMSSearchSongsSearchType)searchSegment.selectedSegmentIndex;
-				searchViewController.query = [NSString stringWithFormat:@"%@*", searchBar.text];
-			}
-			else
-			{
+				searchViewController.searchType = (ISMSSearchSongsSearchType)self.searchSegment.selectedSegmentIndex;
+				searchViewController.query = [NSString stringWithFormat:@"%@*", self.searchBar.text];
+			} else {
 				searchViewController.listOfSongs = [NSMutableArray arrayWithArray:parser.listOfSongs];
 				searchViewController.searchType = 2;
-				searchViewController.query = searchBar.text;
+				searchViewController.query = self.searchBar.text;
 			}
 			
 			
@@ -867,9 +703,6 @@
 		// Hide the loading screen
 		[viewObjectsS hideLoadingScreen];
 	}
-	else
-	{
-    }
 }
 
 

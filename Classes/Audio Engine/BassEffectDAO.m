@@ -15,7 +15,7 @@
 
 @implementation BassEffectDAO
 
-#pragma mark - Lifecycle
+#pragma mark Lifecycle
 
 - (instancetype)initWithType:(BassEffectType)effectType
 {
@@ -61,7 +61,7 @@
 	_presets = [[NSDictionary alloc] initWithDictionary:presetsDict];
 }
 
-#pragma mark - Public DAO Methods
+#pragma mark Public DAO Methods
 
 NSInteger presetSort(id preset1, id preset2, void *context)
 {

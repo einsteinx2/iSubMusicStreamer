@@ -11,29 +11,22 @@
 #import "EX2Kit.h"
  
 @implementation ModalAlbumArtViewController
-@synthesize albumArt, artistLabel, albumLabel, myAlbum, numberOfTracks, albumLength, durationLabel, trackCountLabel, labelHolderView, albumArtReflection;
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-	if (!IS_IPAD())
-	{
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if (!IS_IPAD()) {
 		[UIView beginAnimations:@"rotate" context:nil];
 		//[UIView setAnimationDelegate:self];
 		//[UIView setAnimationDidStopSelector:@selector(textScrollingStopped)];
 		[UIView setAnimationDuration:duration];
 		
-		if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
-		{
-			albumArt.width = 480;
-			albumArt.height = 320;
-			labelHolderView.alpha = 0.0;
-			
-		}
-		else
-		{
-			albumArt.width = 320;
-			albumArt.height = 320;
-			labelHolderView.alpha = 1.0;
+		if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            self.albumArt.width = 480;
+            self.albumArt.height = 320;
+            self.labelHolderView.alpha = 0.0;
+		} else {
+            self.albumArt.width = 320;
+            self.albumArt.height = 320;
+            self.labelHolderView.alpha = 1.0;
 		}
 		
 		[UIView commitAnimations];
@@ -43,89 +36,76 @@
 	}
 }
 
-- (instancetype)initWithAlbum:(ISMSAlbum *)theAlbum numberOfTracks:(NSUInteger)tracks albumLength:(NSUInteger)length
-{
-	if ((self = [super initWithNibName:@"ModalAlbumArtViewController" bundle:nil]))
-	{
-		if ([self respondsToSelector:@selector(setModalPresentationStyle:)])
+- (instancetype)initWithAlbum:(ISMSAlbum *)theAlbum numberOfTracks:(NSUInteger)tracks albumLength:(NSUInteger)length {
+	if ((self = [super initWithNibName:@"ModalAlbumArtViewController" bundle:nil])) {
+        if ([self respondsToSelector:@selector(setModalPresentationStyle:)]) {
 			self.modalPresentationStyle = UIModalPresentationFormSheet;
+        }
 		
-		myAlbum = [theAlbum copy];
-		numberOfTracks = tracks;
-		albumLength = length;
+        self.myAlbum = [theAlbum copy];
+        self.numberOfTracks = tracks;
+        self.albumLength = length;
 	}
 	
 	return self;
 }
 
-- (void)viewDidLoad
-{	
-	if (IS_IPAD())
-	{
+- (void)viewDidLoad {
+	if (IS_IPAD()) {
 		// Fix album art size for iPad
-		albumArt.width = 540;
-		albumArt.height = 540;
-		albumArtReflection.y = 540;
-		albumArtReflection.width = 540;
-		labelHolderView.height = 125;
-		labelHolderView.y = 500;
+        self.albumArt.width = 540;
+        self.albumArt.height = 540;
+        self.albumArtReflection.y = 540;
+        self.albumArtReflection.width = 540;
+        self.labelHolderView.height = 125;
+        self.labelHolderView.y = 500;
 	}
 	
-	albumArt.isLarge = YES;
-	albumArt.delegate = self;
+    self.albumArt.isLarge = YES;
+    self.albumArt.delegate = self;
 	
 	//[UIApplication setStatusBarHidden:YES withAnimation:YES];
 	
-	artistLabel.text = myAlbum.artistName;
-	albumLabel.text = myAlbum.title;
-	durationLabel.text = [NSString formatTime:albumLength];
-	trackCountLabel.text = [NSString stringWithFormat:@"%lu Tracks", (unsigned long)numberOfTracks];
-	if (numberOfTracks == 1)
-		trackCountLabel.text = [NSString stringWithFormat:@"%lu Track", (unsigned long)numberOfTracks];
+    self.artistLabel.text = self.myAlbum.artistName;
+    self.albumLabel.text = self.myAlbum.title;
+    self.durationLabel.text = [NSString formatTime:self.albumLength];
+    self.trackCountLabel.text = [NSString stringWithFormat:@"%lu Tracks", (unsigned long)self.numberOfTracks];
+    if (self.numberOfTracks == 1) {
+        self.trackCountLabel.text = [NSString stringWithFormat:@"%lu Track", (unsigned long)self.numberOfTracks];
+    }
+    
+    self.albumArt.coverArtId = self.myAlbum.coverArtId;
 	
-	albumArt.coverArtId = self.myAlbum.coverArtId;
+    self.albumArtReflection.image = [self.albumArt reflectedImageWithHeight:self.albumArtReflection.height];
 	
-	albumArtReflection.image = [albumArt reflectedImageWithHeight:albumArtReflection.height];
-	
-	if (!IS_IPAD())
-	{
-		if (UIInterfaceOrientationIsLandscape([UIApplication orientation]))
-		{
+	if (!IS_IPAD()) {
+		if (UIInterfaceOrientationIsLandscape([UIApplication orientation])) {
 			[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-			albumArt.width = 480;
-		}
-		else
-		{
+            self.albumArt.width = 480;
+        } else {
 			[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
 		}
 	}
 }
 
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
+- (BOOL)shouldAutorotate {
+    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
         return NO;
+    }
     
     return YES;
 }
 
-- (IBAction)dismiss:(id)sender
-{
-	if (!IS_IPAD())
+- (IBAction)dismiss:(id)sender {
+    if (!IS_IPAD()) {
 		[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-	
+    }
+    
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)didReceiveMemoryWarning 
-{
-    [super didReceiveMemoryWarning];
-}
-
-
-- (void)asyncImageViewFinishedLoading:(AsynchronousImageView *)asyncImageView
-{
-	albumArtReflection.image = [albumArt reflectedImageWithHeight:albumArtReflection.height];
+- (void)asyncImageViewFinishedLoading:(AsynchronousImageView *)asyncImageView {
+    self.albumArtReflection.image = [self.albumArt reflectedImageWithHeight:self.albumArtReflection.height];
 }
 
 @end

@@ -14,36 +14,26 @@
 
 @implementation ViewObjectsSingleton
 
-#pragma mark -
-#pragma mark Class instance methods
-
-
-- (void)enableCells
-{
+- (void)enableCells {
 	self.isCellEnabled = YES;
 }
 
-- (void)hudWasHidden:(MBProgressHUD *)hud 
-{
+- (void)hudWasHidden:(MBProgressHUD *)hud  {
     // Remove HUD from screen when the HUD was hidden
     [self.HUD removeFromSuperview];
 	self.HUD = nil;
 }
 
-- (void)showLoadingScreenOnMainWindowNotification:(NSNotification *)notification
-{
+- (void)showLoadingScreenOnMainWindowNotification:(NSNotification *)notification {
     [self showLoadingScreenOnMainWindowWithMessage:notification.userInfo[@"message"]];
 }
 
-- (void)showLoadingScreenOnMainWindowWithMessage:(NSString *)message
-{	
+- (void)showLoadingScreenOnMainWindowWithMessage:(NSString *)message {
 	[self showLoadingScreen:appDelegateS.window withMessage:message];
 }
 
-- (void)showLoadingScreen:(UIView *)view withMessage:(NSString *)message
-{
-	if (self.isLoadingScreenShowing)
-    {
+- (void)showLoadingScreen:(UIView *)view withMessage:(NSString *)message {
+	if (self.isLoadingScreenShowing) {
         self.HUD.labelText = message ? message : self.HUD.labelText;
 		return;
     }
@@ -57,20 +47,16 @@
 	[self.HUD show:YES];
 }
 
-- (void)showAlbumLoadingScreenOnMainWindowNotification:(NSNotification *)notification
-{
+- (void)showAlbumLoadingScreenOnMainWindowNotification:(NSNotification *)notification {
     [self showAlbumLoadingScreenOnMainWindowWithSender:notification.userInfo[@"sender"]];
 }
 
-- (void)showAlbumLoadingScreenOnMainWindowWithSender:(id)sender
-{
+- (void)showAlbumLoadingScreenOnMainWindowWithSender:(id)sender {
     [self showAlbumLoadingScreen:appDelegateS.window sender:sender];
 }
 
-- (void)showAlbumLoadingScreen:(UIView *)view sender:(id)sender
-{	
-	if (self.isLoadingScreenShowing)
-		return;
+- (void)showAlbumLoadingScreen:(UIView *)view sender:(id)sender {
+	if (self.isLoadingScreenShowing) return;
 	
 	self.isLoadingScreenShowing = YES;
 	
@@ -91,21 +77,16 @@
 	[self.HUD show:YES];
 }
 	
-- (void)hideLoadingScreen
-{
-	if (!self.isLoadingScreenShowing)
-		return;
+- (void)hideLoadingScreen {
+	if (!self.isLoadingScreenShowing) return;
 	
 	self.isLoadingScreenShowing = NO;
 	
 	[self.HUD hide:YES];
 }
 
-- (UIColor *)currentDarkColor
-{
-	//switch ([[appDelegateS.settingsDictionary objectForKey:@"cacheSongCellColorSetting"] intValue])
-	switch(settingsS.cachedSongCellColorType)
-	{
+- (UIColor *)currentDarkColor {
+	switch(settingsS.cachedSongCellColorType) {
 		case 0:
 			return self.darkRed;
 		case 1:
@@ -121,11 +102,8 @@
 	return self.darkNormal;
 }
 
-- (UIColor *) currentLightColor
-{
-	//switch ([[appDelegateS.settingsDictionary objectForKey:@"cacheSongCellColorSetting"] intValue])
-	switch(settingsS.cachedSongCellColorType)
-	{
+- (UIColor *) currentLightColor {
+	switch(settingsS.cachedSongCellColorType) {
 		case 0:
 			return self.lightRed;
 		case 1:
@@ -143,48 +121,42 @@
 
 #pragma mark Tab Saving
 
-- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-	if (settingsS.isOfflineMode == NO)
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if (!settingsS.isOfflineMode) {
 		[[NSUserDefaults standardUserDefaults] setInteger:appDelegateS.mainTabBarController.selectedIndex forKey:@"mainTabBarControllerSelectedIndex"];
+    }
 }
 
-- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-	if (settingsS.isOfflineMode == NO)
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if (!settingsS.isOfflineMode) {
 		[[NSUserDefaults standardUserDefaults] setInteger:appDelegateS.mainTabBarController.selectedIndex forKey:@"mainTabBarControllerSelectedIndex"];
+    }
 }
 
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
-{
-	if (settingsS.isOfflineMode == NO)
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
+    if (!settingsS.isOfflineMode) {
 		[[NSUserDefaults standardUserDefaults] setInteger:appDelegateS.mainTabBarController.selectedIndex forKey:@"mainTabBarControllerSelectedIndex"];
+    }
 }
 
-- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed
-{
+- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed {
     NSUInteger count = tabBarController.viewControllers.count;
     NSMutableArray *savedTabsOrderArray = [[NSMutableArray alloc] initWithCapacity:count];
-    for (int i = 0; i < count; i ++)
-	{
+    for (int i = 0; i < count; i ++) {
         [savedTabsOrderArray addObject:@([[[tabBarController.viewControllers objectAtIndexSafe:i] tabBarItem] tag])];
     }
     [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:savedTabsOrderArray] forKey:@"mainTabBarTabsOrder"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (void)orderMainTabBarController
-{
+- (void)orderMainTabBarController {
 	appDelegateS.currentTabBarController = appDelegateS.mainTabBarController;
 	appDelegateS.mainTabBarController.delegate = self;
 	
 	NSArray *savedTabsOrderArray = [[NSUserDefaults standardUserDefaults] arrayForKey:@"mainTabBarTabsOrder"];
 	
 	// If this is an old device, remove Albums and Songs tabs
-	//if (![[appDelegateS.settingsDictionary objectForKey:@"enableSongsTabSetting"] isEqualToString:@"YES"]) 
-	if (!settingsS.isSongsTabEnabled)
-	{
-		//DLog(@"isSongsTabEnabled: %i", settingsS.isSongsTabEnabled);
+	if (!settingsS.isSongsTabEnabled) {
 		NSMutableArray *tabs = [[NSMutableArray alloc] init];
 		for (UIViewController *controller in appDelegateS.mainTabBarController.viewControllers)
 		{
@@ -207,28 +179,22 @@
 	}
 	
 	NSUInteger count = appDelegateS.mainTabBarController.viewControllers.count;
-	//DLog(@"savedTabsOrderArray: %@", savedTabsOrderArray);
-	if (savedTabsOrderArray.count == count) 
-	{
+	if (savedTabsOrderArray.count == count) {
 		BOOL needsReordering = NO;
 		
 		NSMutableDictionary *tabsOrderDictionary = [[NSMutableDictionary alloc] initWithCapacity:count];
-		for (int i = 0; i < count; i ++) 
-		{
+		for (int i = 0; i < count; i ++) {
 			NSNumber *tag = @([[[appDelegateS.mainTabBarController.viewControllers objectAtIndexSafe:i] tabBarItem] tag]);
 			[tabsOrderDictionary setObject:@(i) forKey:[tag stringValue]];
 			
-			if (!needsReordering && ![(NSNumber *)[savedTabsOrderArray objectAtIndexSafe:i] isEqualToNumber:tag]) 
-			{
+			if (!needsReordering && ![(NSNumber *)[savedTabsOrderArray objectAtIndexSafe:i] isEqualToNumber:tag]) {
 				needsReordering = YES;
 			}
 		}
 		
-		if (needsReordering) 
-		{
+		if (needsReordering) {
 			NSMutableArray *tabsViewControllers = [[NSMutableArray alloc] initWithCapacity:count];
-			for (int i = 0; i < count; i ++) 
-			{
+			for (int i = 0; i < count; i ++) {
 				[tabsViewControllers addObject:[appDelegateS.mainTabBarController.viewControllers objectAtIndexSafe:[(NSNumber *)[tabsOrderDictionary objectForKey:[(NSNumber *)[savedTabsOrderArray objectAtIndexSafe:i] stringValue]] intValue]]];
 			}
 			
@@ -236,14 +202,10 @@
 		}
 	}
 	
-	if ([[NSUserDefaults standardUserDefaults] integerForKey:@"mainTabBarControllerSelectedIndex"]) 
-	{
-		if ([[NSUserDefaults standardUserDefaults] integerForKey:@"mainTabBarControllerSelectedIndex"] == 2147483647) 
-		{
+	if ([[NSUserDefaults standardUserDefaults] integerForKey:@"mainTabBarControllerSelectedIndex"]) {
+		if ([[NSUserDefaults standardUserDefaults] integerForKey:@"mainTabBarControllerSelectedIndex"] == 2147483647) {
 			appDelegateS.mainTabBarController.selectedViewController = appDelegateS.mainTabBarController.moreNavigationController;
-		}
-		else 
-		{
+		} else {
 			appDelegateS.mainTabBarController.selectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"mainTabBarControllerSelectedIndex"];
 		}
 	}
@@ -251,17 +213,7 @@
 	appDelegateS.mainTabBarController.moreNavigationController.delegate = self;
 }
 
-#pragma mark - Memory management
-
-- (void)didReceiveMemoryWarning
-{
-//DLog(@"received memory warning");
-}
-
-#pragma mark - Singleton methods
-
-- (void)setup
-{
+- (void)setup {
 	_lightRed = [UIColor colorWithRed:255/255.0 green:146/255.0 blue:115/255.0 alpha:1];
 	_darkRed = [UIColor colorWithRed:226/255.0 green:0/255.0 blue:0/255.0 alpha:1];
 	
@@ -288,8 +240,7 @@
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(hideLoadingScreen) name:ISMSNotification_HideLoadingScreen object:nil];
 }
 
-+ (id)sharedInstance
-{
++ (id)sharedInstance {
     static ViewObjectsSingleton *sharedInstance = nil;
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{

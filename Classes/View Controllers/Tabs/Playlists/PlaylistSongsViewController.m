@@ -28,37 +28,23 @@
 #import "EX2Kit.h"
 #import "Swift.h"
 
-@interface PlaylistSongsViewController (Private)
-
-- (void)dataSourceDidFinishLoadingNewData;
-
-@end
-
-
 @implementation PlaylistSongsViewController
 
-@synthesize md5, serverPlaylist;
-@synthesize reloading, refreshHeaderView;
-@synthesize connection, receivedData, playlistCount; 
-
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
+- (BOOL)shouldAutorotate {
+    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
         return NO;
+    }
     
     return YES;
 }
 
-- (void)viewDidLoad 
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 
-    if (viewObjectsS.isLocalPlaylist)
-	{
+    if (viewObjectsS.isLocalPlaylist) {
 		self.title = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT playlist FROM localPlaylists WHERE md5 = ?", self.md5];
 		
-		if (!settingsS.isOfflineMode)
-		{
+		if (!settingsS.isOfflineMode) {
 			UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
 			headerView.backgroundColor = viewObjectsS.darkNormal;
 			
@@ -85,134 +71,104 @@
 			self.tableView.tableHeaderView = headerView;
 		}
 		
-		if (!IS_IPAD())
-		{
+		if (!IS_IPAD()) {
 			if (!self.tableView.tableHeaderView) self.tableView.tableHeaderView = [[UIView alloc] init];
 		}
-	}
-	else
-	{
+	} else {
         self.title = self.serverPlaylist.playlistName;
-		playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM splaylist%@", md5]];
+        self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM splaylist%@", self.md5]];
 		[self.tableView reloadData];
 		
 		// Add the pull to refresh view
 		self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
 		self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
-		[self.tableView addSubview:refreshHeaderView];
+		[self.tableView addSubview:self.refreshHeaderView];
 	}
 	
     self.tableView.rowHeight = 60.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
-	if (IS_IPAD())
-	{
+	if (IS_IPAD()) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
 	
 	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 }
 
--(void)loadData
-{
-    NSDictionary *parameters = [NSDictionary dictionaryWithObject:n2N(serverPlaylist.playlistId) forKey:@"id"];
+-(void)loadData {
+    NSDictionary *parameters = [NSDictionary dictionaryWithObject:n2N(self.serverPlaylist.playlistId) forKey:@"id"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"getPlaylist" parameters:parameters];
 	
 	self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
-	if (self.connection)
-	{
+	if (self.connection) {
 		// Create the NSMutableData to hold the received data.
 		// receivedData is an instance variable declared elsewhere.
 		self.receivedData = [NSMutableData data];
 		
 		self.tableView.scrollEnabled = NO;
 		[viewObjectsS showAlbumLoadingScreen:self.view sender:self];
-	} 
-	else 
-	{
+	} else {
 		// Inform the user that the connection failed.
 		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:@"There was an error grabbing the playlist.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 	}
 }	
 
-- (void)cancelLoad
-{
+- (void)cancelLoad {
 	[self.connection cancel];
 	self.connection = nil;
 	self.receivedData = nil;
 	self.tableView.scrollEnabled = YES;
 	[viewObjectsS hideLoadingScreen];
 	
-	if (!viewObjectsS.isLocalPlaylist)
-	{
+	if (!viewObjectsS.isLocalPlaylist) {
 		[self dataSourceDidFinishLoadingNewData];
 	}
 }
 
-- (void)viewWillAppear:(BOOL)animated 
-{
+- (void)viewWillAppear:(BOOL)animated  {
     [super viewWillAppear:animated];
     
     // For some reason this controller needs to do this, but none of the others do :/
     self.navigationController.navigationBar.translucent = NO;
 	
-	if(musicS.showPlayerIcon)
-	{
+	if(musicS.showPlayerIcon) {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-	}
-	else
-	{
+	} else {
 		self.navigationItem.rightBarButtonItem = nil;
 	}
 	
-	if (viewObjectsS.isLocalPlaylist)
-	{
+	if (viewObjectsS.isLocalPlaylist) {
 		self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM playlist%@", self.md5]];
 		[self.tableView reloadData];
-	}
-	else
-	{
-		if (self.playlistCount == 0)
-		{
+	} else {
+		if (self.playlistCount == 0) {
 			[self loadData];
 		}
 	}
 }
 
-
-- (void)didReceiveMemoryWarning 
-{
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-}
-
-- (void) settingsAction:(id)sender 
-{
+- (void) settingsAction:(id)sender  {
 	ServerListViewController *serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
 	serverListViewController.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:serverListViewController animated:YES];
 }
 
 
-- (IBAction)nowPlayingAction:(id)sender
-{
+- (IBAction)nowPlayingAction:(id)sender {
 	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
 	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
 }
 
-- (void)uploadPlaylistAction:(id)sender
-{	
+- (void)uploadPlaylistAction:(id)sender {
 	NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(self.title), @"name", nil];
     
 	NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM playlist%@", self.md5];
 	NSUInteger count = [databaseS.localPlaylistsDbQueue intForQuery:query];
 	NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:count];
-	for (int i = 1; i <= count; i++)
-	{
-		@autoreleasepool 
-		{
+	for (int i = 1; i <= count; i++) {
+		@autoreleasepool {
 			NSString *query = [NSString stringWithFormat:@"SELECT songId FROM playlist%@ WHERE ROWID = %i", self.md5, i];
 			NSString *songId = [databaseS.localPlaylistsDbQueue stringForQuery:query];
 			
@@ -224,17 +180,14 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
 	
 	self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
-	if (self.connection)
-	{
+	if (self.connection) {
 		// Create the NSMutableData to hold the received data.
 		// receivedData is an instance variable declared elsewhere.
 		self.receivedData = [NSMutableData data];
 		
 		self.tableView.scrollEnabled = NO;
 		[viewObjectsS showAlbumLoadingScreen:self.view sender:self];
-	} 
-	else 
-	{
+	} else {
 		// Inform the user that the connection failed.
 		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:@"There was an error saving the playlist to the server.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
@@ -243,47 +196,35 @@
 
 #pragma mark Connection Delegate
 
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)space 
-{
-	if([[space authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust]) 
+- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)space  {
+    if([[space authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust]) {
 		return YES; // Self-signed cert will be accepted
+    }
 	
 	return NO;
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
-{	
-	if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
-	{
+- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+	if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
 		[challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge]; 
 	}
 	[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	[self.receivedData setLength:0];
 }
 
-- (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData 
-{
+- (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData  {
     [self.receivedData appendData:incrementalData];
 }
 
-- (void)connection:(NSURLConnection *)theConnection didFailWithError:(NSError *)error
-{
+- (void)connection:(NSURLConnection *)theConnection didFailWithError:(NSError *)error {
 	NSString *message = @"";
-	if (viewObjectsS.isLocalPlaylist)
-	{
-		message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", 
-											 (long)[error code],
-											 [error localizedDescription]];
-	}
-	else
-	{
-		message = [NSString stringWithFormat:@"There was an error loading the playlist.\n\nError %li: %@",
-				   (long)[error code],
-				   [error localizedDescription]];
+	if (viewObjectsS.isLocalPlaylist) {
+		message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
+	} else {
+		message = [NSString stringWithFormat:@"There was an error loading the playlist.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
 	}
 	
 	// Inform the user that the connection failed.
@@ -299,32 +240,23 @@
 	[self dataSourceDidFinishLoadingNewData];
 }	
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)theConnection 
-{	
+- (void)connectionDidFinishLoading:(NSURLConnection *)theConnection {
     DLog(@"%@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
-	if (!viewObjectsS.isLocalPlaylist)
-	{
+	if (!viewObjectsS.isLocalPlaylist) {
         RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-        if (![root isValid])
-        {
+        if (![root isValid]) {
             //NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
             // TODO: Handle this error
-        }
-        else
-        {
+        } else {
             RXMLElement *error = [root child:@"error"];
-            if ([error isValid])
-            {
+            if ([error isValid]) {
                 //NSString *code = [error attribute:@"code"];
                 //NSString *message = [error attribute:@"message"];
                 //[self subsonicErrorCode:[code intValue] message:message];
                 // TODO: Handle this error
-            }
-            else
-            {
+            } else {
                 // TODO: Handle !isValid case
-                if ([[root child:@"playlist"] isValid])
-                {
+                if ([[root child:@"playlist"] isValid]) {
                     [databaseS removeServerPlaylistTable:self.md5];
                     [databaseS createServerPlaylistTable:self.md5];
                     [root iterate:@"playlist.entry" usingBlock:^(RXMLElement *e) {
@@ -343,9 +275,7 @@
 		[self dataSourceDidFinishLoadingNewData];
 		
 		[viewObjectsS hideLoadingScreen];
-	}
-	else
-	{
+	} else {
 		[self parseData];
 	}
 	
@@ -356,27 +286,21 @@
 
 static NSString *kName_Error = @"error";
 
-- (void) subsonicErrorCode:(NSString *)errorCode message:(NSString *)message
-{
+- (void) subsonicErrorCode:(NSString *)errorCode message:(NSString *)message {
 	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Subsonic Error" message:message delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
 	alert.tag = 1;
 	[alert show];
 	//DLog(@"Subsonic error %@:  %@", errorCode, message);
 }
 
-- (void)parseData
-{
+- (void)parseData {
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-    if (![root isValid])
-    {
+    if (![root isValid]) {
         NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
         [self subsonicErrorCode:nil message:error.description];
-    }
-    else
-    {
+    } else {
         RXMLElement *error = [root child:@"error"];
-        if ([error isValid])
-        {
+        if ([error isValid]) {
             NSString *code = [error attribute:@"code"];
             NSString *message = [error attribute:@"message"];
             [self subsonicErrorCode:code message:message];
@@ -385,7 +309,6 @@ static NSString *kName_Error = @"error";
     
     [viewObjectsS hideLoadingScreen];
 }
-
 
 #pragma mark Table view methods
 
@@ -397,22 +320,19 @@ static NSString *kName_Error = @"error";
     }
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
 
 // Customize the number of rows in the table view.
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	return self.playlistCount;
 }
 
 
 // Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
     cell.hideNumberLabel = NO;
     cell.hideCoverArt = NO;
@@ -423,16 +343,12 @@ static NSString *kName_Error = @"error";
     return cell;
 }
 
-- (void)didSelectRowInternal:(NSIndexPath *)indexPath
-{
+- (void)didSelectRowInternal:(NSIndexPath *)indexPath {
 	// Clear the current playlist
-	if (settingsS.isJukeboxEnabled)
-	{
+	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
 		[jukeboxS jukeboxClearRemotePlaylist];
-	}
-	else
-	{
+	} else {
 		[databaseS resetCurrentPlaylistDb];
 	}
 	
@@ -460,8 +376,7 @@ static NSString *kName_Error = @"error";
 	NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
 	NSString *currTableName = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 	NSString *playTableName = [NSString stringWithFormat:@"%@%@", viewObjectsS.isLocalPlaylist ? @"playlist" : @"splaylist", self.md5];
-	[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db)
-	 {
+	[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
 		 [db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
 		 if ([db hadError]) { DLog(@"Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
 		 
@@ -469,29 +384,26 @@ static NSString *kName_Error = @"error";
 		 [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
 	 }];
 	
-	if (settingsS.isJukeboxEnabled)
+    if (settingsS.isJukeboxEnabled) {
 		[jukeboxS jukeboxReplacePlaylistWithLocal];
+    }
 
     [viewObjectsS hideLoadingScreen];
     
     ISMSSong *playedSong = [musicS playSongAtPosition:indexPath.row];
-    if (!playedSong.isVideo)
+    if (!playedSong.isVideo) {
         [self showPlayer];
+    }
 }
 
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
-{
-	if (!indexPath)
-		return;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
+	if (!indexPath) return;
 	
-	if (viewObjectsS.isCellEnabled)
-	{
+	if (viewObjectsS.isCellEnabled) {
 		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
 		[self performSelector:@selector(didSelectRowInternal:) withObject:indexPath afterDelay:0.05];
-	}
-	else
-	{
+	} else {
 		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 	}
 }
@@ -504,29 +416,20 @@ static NSString *kName_Error = @"error";
     return nil;
 }
 
-#pragma mark -
 #pragma mark Pull to refresh methods
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{	
-	if (scrollView.isDragging && !viewObjectsS.isLocalPlaylist) 
-	{
-		if (self.refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !self.reloading) 
-		{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	if (scrollView.isDragging && !viewObjectsS.isLocalPlaylist)  {
+		if (self.refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !self.reloading)  {
 			[self.refreshHeaderView setState:EGOOPullRefreshNormal];
-		} 
-		else if (self.refreshHeaderView.state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !self.reloading) 
-		{
+		} else if (self.refreshHeaderView.state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !self.reloading) {
 			[self.refreshHeaderView setState:EGOOPullRefreshPulling];
 		}
 	}
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-	
-	if (scrollView.contentOffset.y <= - 65.0f && !self.reloading && !viewObjectsS.isLocalPlaylist) 
-	{
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+	if (scrollView.contentOffset.y <= - 65.0f && !self.reloading && !viewObjectsS.isLocalPlaylist) {
 		self.reloading = YES;
 		//[self reloadAction:nil];
 		[self loadData];
@@ -538,8 +441,7 @@ static NSString *kName_Error = @"error";
 	}
 }
 
-- (void)dataSourceDidFinishLoadingNewData
-{
+- (void)dataSourceDidFinishLoadingNewData {
 	self.reloading = NO;
 	
     [UIView animateWithDuration:0.3 animations:^{
@@ -549,7 +451,4 @@ static NSString *kName_Error = @"error";
 	[self.refreshHeaderView setState:EGOOPullRefreshNormal];
 }
 
-
-
 @end
-

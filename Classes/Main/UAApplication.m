@@ -18,85 +18,64 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 @implementation UAApplication
 
-- (instancetype)init 
-{
-	if ((self = [super init]))
-	{
+- (instancetype)init {
+	if (self = [super init]) {
 		[self becomeFirstResponder];
-		
-		if ([self respondsToSelector:@selector(beginReceivingRemoteControlEvents)])
-			[self beginReceivingRemoteControlEvents];
+        [self beginReceivingRemoteControlEvents];
 	}
 	return self;
 }
 
-#pragma mark - UIResponder
+#pragma mark UIResponder
 
--(BOOL)canBecomeFirstResponder 
-{
+- (BOOL)canBecomeFirstResponder {
     return YES;
 }
 
-#pragma mark - Motion
+#pragma mark Motion
 
-- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event 
-{
+- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event  {
 	
 }
 
-- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event 
-{
-	if (motion == UIEventSubtypeMotionShake) 
-	{
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event  {
+	if (motion == UIEventSubtypeMotionShake)  {
         //DLog(@"oh ya, shake it now!");
 	}
 }
 
-- (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent *)event 
-{ 
+- (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent *)event {
 	
 }
 
-#pragma mark - Remote Control
+#pragma mark Remote Control
 
-- (void)playPauseStop
-{
+- (void)playPauseStop {
 	DDLogVerbose(@"[UAApplication] playPauseStop called");
-	if (settingsS.isJukeboxEnabled)
-	{
+	if (settingsS.isJukeboxEnabled) {
 		DDLogVerbose(@"[UAApplication] playPauseStop jukebox is enabled");
-		if (jukeboxS.jukeboxIsPlaying)
-		{
+		if (jukeboxS.jukeboxIsPlaying) {
 			DDLogVerbose(@"[UAApplication] jukebox is playing, playPauseStop jukeboxStop called");
 			[jukeboxS jukeboxStop];
-		}
-		else
-		{
+		} else {
 			DDLogVerbose(@"[UAApplication] jukebox NOT playing, playPauseStop jukeboxPlay called");
 			[jukeboxS jukeboxPlay];
 		}
-	}
-	else
-	{
+	} else {
 		DDLogVerbose(@"[UAApplication] playPauseStop jukebox NOT enabled");
-        if (audioEngineS.player)
-		{
+        if (audioEngineS.player) {
 			DDLogVerbose(@"[UAApplication] audio engine player exists, playPauseStop [audioEngineS.player playPause] called");
 			[audioEngineS.player playPause];
-		}
-		else
-		{
+		} else {
 			DDLogVerbose(@"[UAApplication] audio engine player doesn't exist, playPauseStop [musicS playSongAtPosition:playlistS.currentIndex] called");
 			[musicS playSongAtPosition:playlistS.currentIndex];
 		}
 	}
 }
 
-- (void)remoteControlReceivedWithEvent:(UIEvent *)event 
-{
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
 	DDLogVerbose(@"[UAApplication] remoteControlReceivedWithEvent type: %li  subtype: %li  timestamp: %f", (long)event.type, (long)event.subtype, event.timestamp);
-	switch(event.subtype) 
-	{
+	switch(event.subtype) {
 		case UIEventSubtypeRemoteControlPlay:
 			DDLogVerbose(@"[UAApplication] UIEventSubtypeRemoteControlPlay, calling playPauseStop");
 			[self playPauseStop];

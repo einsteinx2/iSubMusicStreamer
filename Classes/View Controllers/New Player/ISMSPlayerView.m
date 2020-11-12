@@ -30,7 +30,7 @@
 
 @implementation ISMSPlayerView
 
-#pragma mark - Life cycle
+#pragma mark Life cycle
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor colorWithRedInt:34 greenInt:34 blueInt:34 alpha:1];
@@ -45,7 +45,7 @@
     return self;
 }
 
-#pragma mark - Properties
+#pragma mark Properties
 /**
  @brief Whether or not the controls should retract based on the height of the screen.
  
@@ -55,7 +55,7 @@
     return [[UIScreen mainScreen] bounds].size.height < 568;
 }
 
-#pragma mark - Layout
+#pragma mark Layout
 - (void)layoutSubviews {
     [self layoutControls];
     [self layoutFooterInfo];
@@ -111,7 +111,6 @@
 - (void)layoutCoverArt {
 
 }
-        
 
 /**
  @brief Lays out the info bar at the bottom of the screen. This bar may or may not retract

@@ -24,22 +24,16 @@
 
 @implementation GenresArtistViewController
 
-@synthesize listOfArtists;
-
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
+- (BOOL)shouldAutorotate {
+    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
         return NO;
+    }
     
     return YES;
 }
 
-- (void)viewDidLoad 
-{
+- (void)viewDidLoad  {
     [super viewDidLoad];
-	
-	
-	//DLog(@"listOfArtists: %@", listOfArtists);
 	
 	// Add the play all button + shuffle button
 	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
@@ -77,103 +71,72 @@
 	
 	self.tableView.tableHeaderView = headerView;
 	
-	if (IS_IPAD())
-	{
+	if (IS_IPAD()) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
 	
 	if (!self.tableView.tableHeaderView) self.tableView.tableHeaderView = [[UIView alloc] init];
-		
 	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 }
 
-
--(void)viewWillAppear:(BOOL)animated 
-{
+- (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	
-	if(musicS.showPlayerIcon)
-	{
+	if (musicS.showPlayerIcon) {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-	}
-	else
-	{
+	} else {
 		self.navigationItem.rightBarButtonItem = nil;
 	}
 }
 
-
-- (IBAction)nowPlayingAction:(id)sender
-{
+- (IBAction)nowPlayingAction:(id)sender {
 	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
 	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
 }
 
-
-- (void)didReceiveMemoryWarning 
-{
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-}
-
-
-- (void)showPlayer
-{
+- (void)showPlayer {
 	// Start the player	
 	[musicS playSongAtPosition:0];
 	
-	if (IS_IPAD())
-	{
+	if (IS_IPAD()) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
-	}
-	else
-	{
+	} else {
 		iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
 		streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
 		[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
 	}
 }
 
-- (void)playAllSongs
-{	
+- (void)playAllSongs {
 	// Turn off shuffle mode in case it's on
 	playlistS.isShuffle = NO;
 	
 	// Reset the current playlist
-	if (settingsS.isJukeboxEnabled)
-	{
+	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
 		[jukeboxS jukeboxClearRemotePlaylist];
-	}
-	else
-	{
+	} else {
 		[databaseS resetCurrentPlaylistDb];
 	}
 	
 	FMDatabaseQueue *dbQueue;
 	NSString *query;
 	
-	if (settingsS.isOfflineMode)
-	{
+	if (settingsS.isOfflineMode) {
 		dbQueue = databaseS.songCacheDbQueue;
 		query = @"SELECT md5 FROM cachedSongsLayout WHERE genre = ? ORDER BY seg1 COLLATE NOCASE";
-	}
-	else
-	{
+	} else {
 		dbQueue = databaseS.genresDbQueue;
 		query = @"SELECT md5 FROM genresLayout WHERE genre = ? ORDER BY seg1 COLLATE NOCASE";
 	}
 	
 	NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
-	[dbQueue inDatabase:^(FMDatabase *db)
-	{
+	[dbQueue inDatabase:^(FMDatabase *db) {
 		// Get the ID of all matching records (everything in genre ordered by artist)
 		FMResultSet *result = [db executeQuery:query, self.title];
-		while ([result next])
-		{
-			@autoreleasepool 
-			{
+		while ([result next]) {
+			@autoreleasepool {
 				NSString *md5 = [result stringForColumnIndex:0];
 				if (md5) [songMd5s addObject:md5];
 			}
@@ -181,18 +144,17 @@
 		[result close];
 	}];
 	
-	for (NSString *md5 in songMd5s)
-	{
-		@autoreleasepool 
-		{
+	for (NSString *md5 in songMd5s) {
+		@autoreleasepool {
 			ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:md5];
 			[aSong addToCurrentPlaylistDbQueue];
 		}
 	}
 	
-	if (settingsS.isJukeboxEnabled)
+    if (settingsS.isJukeboxEnabled) {
 		[jukeboxS jukeboxPlaySongAtPosition:@0];
-	
+    }
+    
 	// Hide loading screen
 	[viewObjectsS hideLoadingScreen];
 	
@@ -202,44 +164,34 @@
 	[self showPlayer];
 }
 
-- (void)shuffleSongs
-{		
+- (void)shuffleSongs {
 	// Turn off shuffle mode to reduce inserts
 	playlistS.isShuffle = NO;
 	
 	// Reset the current playlist
-	if (settingsS.isJukeboxEnabled)
-	{
+	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
 		[jukeboxS jukeboxClearRemotePlaylist];
-	}
-	else
-	{
+	} else {
 		[databaseS resetCurrentPlaylistDb];
 	}
 	
 	// Get the ID of all matching records (everything in genre ordered by artist)
 	FMDatabaseQueue *dbQueue;
 	NSString *query;
-	if (settingsS.isOfflineMode)
-	{
+	if (settingsS.isOfflineMode) {
 		dbQueue = databaseS.songCacheDbQueue;
 		query = @"SELECT md5 FROM cachedSongsLayout WHERE genre = ? ORDER BY seg1 COLLATE NOCASE";
-	}
-	else
-	{
+    } else {
 		dbQueue = databaseS.genresDbQueue;
 		query = @"SELECT md5 FROM genresLayout WHERE genre = ? ORDER BY seg1 COLLATE NOCASE";
 	}
 	
 	NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
-	[dbQueue inDatabase:^(FMDatabase *db)
-	{
+	[dbQueue inDatabase:^(FMDatabase *db) {
 		FMResultSet *result = [db executeQuery:query, self.title];
-		while ([result next])
-		{
-			@autoreleasepool 
-			{
+		while ([result next]) {
+			@autoreleasepool {
 				NSString *md5 = [result stringForColumnIndex:0];
 				if (md5) [songMd5s addObject:md5];
 			}
@@ -247,10 +199,8 @@
 		[result close];
 	}];
 	
-	for (NSString *md5 in songMd5s)
-	{
-		@autoreleasepool 
-		{
+	for (NSString *md5 in songMd5s) {
+		@autoreleasepool {
 			ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:md5];
 			[aSong addToCurrentPlaylistDbQueue];
 		}
@@ -259,9 +209,10 @@
 	// Shuffle the playlist
 	[databaseS shufflePlaylist];
 	
-	if (settingsS.isJukeboxEnabled)
+    if (settingsS.isJukeboxEnabled) {
 		[jukeboxS jukeboxPlaySongAtPosition:@0];
-	
+    }
+    
 	// Set the isShuffle flag
 	playlistS.isShuffle = YES;
 	
@@ -274,15 +225,13 @@
 	[self showPlayer];
 }
 
-- (void)playAllAction:(id)sender
-{
+- (void)playAllAction:(id)sender {
 	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
 	
 	[self performSelector:@selector(playAllSongs) withObject:nil afterDelay:0.05];
 }
 
-- (void)shuffleAction:(id)sender
-{
+- (void)shuffleAction:(id)sender {
 	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
 	
 	[self performSelector:@selector(shuffleSongs) withObject:nil afterDelay:0.05];
@@ -290,81 +239,64 @@
 
 #pragma mark Table view methods
 
-// Customize the number of rows in the table view.
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
-{
-	return [listOfArtists count];
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
+	return [self.listOfArtists count];
 }
 
-
-// Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
-{	
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	static NSString *cellIdentifier = @"GenresArtistCell";
 	GenresArtistUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	if (!cell)
-	{
+	if (!cell) {
 		cell = [[GenresArtistUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 	cell.genre = self.title;
 	
-	NSString *name = [listOfArtists objectAtIndexSafe:indexPath.row];
+	NSString *name = [self.listOfArtists objectAtIndexSafe:indexPath.row];
 	
 	[cell.artistNameLabel setText:name];
         
 	return cell;
 }
 
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{	
-	if (!indexPath)
-		return;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	if (!indexPath) return;
 	
-	if (viewObjectsS.isCellEnabled)
-	{
+	if (viewObjectsS.isCellEnabled) {
 		GenresAlbumViewController *genresAlbumViewController = [[GenresAlbumViewController alloc] initWithNibName:@"GenresAlbumViewController" bundle:nil];
-		genresAlbumViewController.title = [listOfArtists objectAtIndexSafe:indexPath.row];
+		genresAlbumViewController.title = [self.listOfArtists objectAtIndexSafe:indexPath.row];
 		genresAlbumViewController.listOfAlbums = [NSMutableArray arrayWithCapacity:1];
 		genresAlbumViewController.listOfSongs = [NSMutableArray arrayWithCapacity:1];
 		genresAlbumViewController.segment = 2;
-		genresAlbumViewController.seg1 = [listOfArtists objectAtIndexSafe:indexPath.row];
+		genresAlbumViewController.seg1 = [self.listOfArtists objectAtIndexSafe:indexPath.row];
 		genresAlbumViewController.genre = [NSString stringWithString:self.title];
 		
 		FMDatabaseQueue *dbQueue;
 		NSString *query;
-		if (settingsS.isOfflineMode)
-		{
+		if (settingsS.isOfflineMode) {
 			dbQueue = databaseS.songCacheDbQueue;
 			query = @"SELECT md5, segs, seg2 FROM cachedSongsLayout WHERE seg1 = ? AND genre = ? GROUP BY seg2 ORDER BY seg2 COLLATE NOCASE";
-		}
-		else
-		{
+		} else {
 			dbQueue = databaseS.genresDbQueue;
 			query = @"SELECT md5, segs, seg2 FROM genresLayout WHERE seg1 = ? AND genre = ? GROUP BY seg2 ORDER BY seg2 COLLATE NOCASE";
 		}
 		
-		[dbQueue inDatabase:^(FMDatabase *db)
-		{
+		[dbQueue inDatabase:^(FMDatabase *db) {
 			FMResultSet *result = [db executeQuery:query, [self.listOfArtists objectAtIndexSafe:indexPath.row], self.title];
-			while ([result next])
-			{
-				@autoreleasepool 
-				{
+			while ([result next]) {
+				@autoreleasepool  {
 					NSString *md5 = [result stringForColumnIndex:0];
 					NSInteger segs = [result intForColumnIndex:1];
 					NSString *seg2 = [result stringForColumnIndex:2];
 					
-					if (segs > 2)
-					{
-						if (md5 && seg2)
+					if (segs > 2) {
+                        if (md5 && seg2) {
 							[genresAlbumViewController.listOfAlbums addObject:@[md5, seg2]];
-					}
-					else
-					{
-						if (md5)
+                        }
+					} else {
+                        if (md5) {
 							[genresAlbumViewController.listOfSongs addObject:md5];
+                        }
 					}
 				}
 			}
@@ -372,13 +304,9 @@
 		}];
 		
 		[self pushViewControllerCustom:genresAlbumViewController];
-	}
-	else
-	{
+	} else {
 		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 	}
 }
 
-
 @end
-

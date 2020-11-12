@@ -30,50 +30,46 @@
 
 @implementation CacheAlbumViewController
 
-@synthesize listOfAlbums, listOfSongs, sectionInfo, segments;
-
-NSInteger trackSort2(id obj1, id obj2, void *context)
-{
+NSInteger trackSort2(id obj1, id obj2, void *context) {
 	NSUInteger track1TrackNum = [(NSNumber*)[(NSArray*)obj1 objectAtIndexSafe:1] intValue];
 	NSUInteger track2TrackNum = [(NSNumber*)[(NSArray*)obj2 objectAtIndexSafe:1] intValue];
     NSUInteger track1DiscNum = [(NSNumber*)[(NSArray*)obj1 objectAtIndexSafe:2] intValue];
     NSUInteger track2DiscNum = [(NSNumber*)[(NSArray*)obj2 objectAtIndexSafe:2] intValue];
     
     // first check the disc numbers.  if t1d < t2d, ascending
-    if (track1DiscNum < track2DiscNum)
+    if (track1DiscNum < track2DiscNum) {
         return NSOrderedAscending;
+    }
     
     // if they're equal, check the track numbers
-    else if (track1DiscNum == track2DiscNum)
-    {
-        if (track1TrackNum < track2TrackNum)
+    else if (track1DiscNum == track2DiscNum) {
+        if (track1TrackNum < track2TrackNum) {
             return NSOrderedAscending;
-        else if (track1TrackNum == track2TrackNum)
+        } else if (track1TrackNum == track2TrackNum) {
             return NSOrderedSame;
-        else
+        } else {
             return NSOrderedDescending;
+        }
     }
     
     // if t1d > t2d, descending
 	else return NSOrderedDescending;
 }
 
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
+- (BOOL)shouldAutorotate {
+    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
         return NO;
+    }
     
     return YES;
 }
 
-- (void)viewDidLoad 
-{
+- (void)viewDidLoad  {
     [super viewDidLoad];
     
     self.title = self.artistName;
 
-	if (IS_IPAD())
-	{
+	if (IS_IPAD()) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
     
@@ -86,16 +82,12 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 }
 
 
--(void)viewWillAppear:(BOOL)animated 
-{
+- (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 		
-	if(musicS.showPlayerIcon)
-	{
+	if (musicS.showPlayerIcon) {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-	}
-	else
-	{
+	} else {
 		self.navigationItem.rightBarButtonItem = nil;
 	}
 		
@@ -138,19 +130,15 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
 	// Create the section index
-	if (self.listOfAlbums.count > 10)
-	{
+	if (self.listOfAlbums.count > 10) {
 		__block NSArray *secInfo = nil;
-		[databaseS.albumListCacheDbQueue inDatabase:^(FMDatabase *db)
-		{
+		[databaseS.albumListCacheDbQueue inDatabase:^(FMDatabase *db) {
 			[db executeUpdate:@"DROP TABLE IF EXSITS albumIndex"];
 			[db executeUpdate:@"CREATE TEMP TABLE albumIndex (album TEXT)"];
 			
 			[db beginTransaction];
-			for (NSNumber *rowId in self.listOfAlbums)
-			{
-				@autoreleasepool 
-				{
+			for (NSNumber *rowId in self.listOfAlbums) {
+				@autoreleasepool {
 					[db executeUpdate:@"INSERT INTO albumIndex SELECT title FROM albumsCache WHERE rowid = ?", rowId];
 				}
 			}
@@ -160,16 +148,14 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 			[db executeUpdate:@"DROP TABLE IF EXISTS albumIndex"];
 		}];
 		
-		if (secInfo)
-		{
+		if (secInfo) {
 			self.sectionInfo = [NSArray arrayWithArray:secInfo];
-			if ([self.sectionInfo count] < 5)
+            if ([self.sectionInfo count] < 5) {
 				self.sectionInfo = nil;
-			else
+            } else {
 				[self.tableView reloadData];
-		}
-		else
-		{
+            }
+		} else {
 			self.sectionInfo = nil;
 		}
 	}	
@@ -178,63 +164,50 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cachedSongDeleted) name:@"cachedSongDeleted" object:nil];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"cachedSongDeleted" object:nil];
 }
 
 
-- (void)cachedSongDeleted
-{
+- (void)cachedSongDeleted {
 	NSUInteger segment = self.segments.count;
 	
 	self.listOfAlbums = [NSMutableArray arrayWithCapacity:1];
 	self.listOfSongs = [NSMutableArray arrayWithCapacity:1];
 	
 	NSMutableString *query = [NSMutableString stringWithFormat:@"SELECT md5, segs, seg%lu, track FROM cachedSongsLayout JOIN cachedSongs USING(md5) WHERE seg1 = ? ", (long)(segment+1)];
-	for (int i = 2; i <= segment; i++)
-	{
+	for (int i = 2; i <= segment; i++) {
 		[query appendFormat:@" AND seg%i = ? ", i];
 	}
 	[query appendFormat:@"GROUP BY seg%lu ORDER BY seg%lu COLLATE NOCASE", (long)(segment+1), (long)(segment+1)];
 	
-	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-	{
+	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
 		FMResultSet *result = [db executeQuery:query withArgumentsInArray:self.segments];
-		while ([result next])
-		{
-			@autoreleasepool 
-			{
+		while ([result next]) {
+			@autoreleasepool {
 				NSString *md5 = [result stringForColumnIndex:0];
 				NSInteger segs = [result intForColumnIndex:1];
 				NSString *seg = [result stringForColumnIndex:2];
 				NSInteger track = [result intForColumnIndex:3];
                 NSInteger discNumber = [result intForColumn:@"discNumber"];
 				
-				if (segs > (segment + 1))
-				{
-					if (md5 && seg)
-					{
+				if (segs > (segment + 1)) {
+					if (md5 && seg) {
                         NSArray *albumEntry = @[md5, seg];
 						[self.listOfAlbums addObject:albumEntry];
 					}
-				}
-				else
-				{
-					if (md5)
-					{
+				} else {
+					if (md5) {
                         NSArray *songEntry = @[md5, @(track), @(discNumber)];
 						[self.listOfSongs addObject:songEntry];
 						
 						BOOL multipleSameTrackNumbers = NO;
 						NSMutableArray *trackNumbers = [NSMutableArray arrayWithCapacity:self.listOfSongs.count];
-						for (NSArray *song in self.listOfSongs)
-						{
+						for (NSArray *song in self.listOfSongs) {
 							NSNumber *track = [song objectAtIndexSafe:1];
 							
-							if ([trackNumbers containsObject:track])
-							{
+							if ([trackNumbers containsObject:track]) {
 								multipleSameTrackNumbers = YES;
 								break;
 							}
@@ -244,8 +217,9 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 						}
 						
 						// Sort by track number
-						if (!multipleSameTrackNumbers)
+                        if (!multipleSameTrackNumbers) {
 							[self.listOfSongs sortUsingFunction:trackSort2 context:NULL];
+                        }
 					}
 				}
 			}
@@ -254,76 +228,56 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 	}];
 	
 	// If the table is empty, pop back one view, otherwise reload the table data
-	if (self.listOfAlbums.count + self.listOfSongs.count == 0)
-	{
-		if (IS_IPAD())
-		{
+	if (self.listOfAlbums.count + self.listOfSongs.count == 0) {
+		if (IS_IPAD()) {
 			// TODO: implement this properly
 			//[appDelegateS.ipadRootViewController.stackScrollViewController popToRootViewController];
-		}
-		else
-		{
+		} else {
 			// Handle the moreNavigationController stupidity
-			if (appDelegateS.currentTabBarController.selectedIndex == 4)
-			{
+			if (appDelegateS.currentTabBarController.selectedIndex == 4) {
 				[appDelegateS.currentTabBarController.moreNavigationController popToViewController:[appDelegateS.currentTabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
-			}
-			else
-			{
+			} else {
 				[(UINavigationController*)appDelegateS.currentTabBarController.selectedViewController popToRootViewControllerAnimated:YES];
 			}
 		}
-	}
-	else
-	{
+	} else {
 		[self.tableView reloadData];
 	}
 }
 
-- (void)playAllAction:(id)sender
-{	
+- (void)playAllAction:(id)sender {
 	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
 	[self performSelector:@selector(loadPlayAllPlaylist:) withObject:@"NO" afterDelay:0.05];
 }
 
-- (void)shuffleAction:(id)sender
-{
+- (void)shuffleAction:(id)sender {
 	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
 	[self performSelector:@selector(loadPlayAllPlaylist:) withObject:@"YES" afterDelay:0.05];
 }
 
-
-- (void)loadPlayAllPlaylist:(NSString *)shuffle
-{		
-	NSUInteger segment = [segments count];
+- (void)loadPlayAllPlaylist:(NSString *)shuffle {
+	NSUInteger segment = [self.segments count];
 	
 	BOOL isShuffle = [shuffle isEqualToString:@"YES"];
 	
-	if (settingsS.isJukeboxEnabled)
-	{
+	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
 		[jukeboxS jukeboxClearRemotePlaylist];
-	}
-	else
-	{
+	} else {
 		[databaseS resetCurrentPlaylistDb];
 	}
 	
 	NSMutableString *query = [NSMutableString stringWithString:@"SELECT md5 FROM cachedSongsLayout JOIN cachedSongs USING(md5) WHERE seg1 = ? "];
-	for (int i = 2; i <= segment; i++)
-	{
+	for (int i = 2; i <= segment; i++) {
 		[query appendFormat:@" AND seg%i = ? ", i];
 	}
 	[query appendString:@"ORDER BY seg1, seg2, seg3, seg4, seg5, seg6, seg7, seg8 COLLATE NOCASE"];
 	
 	NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:50];
-	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-	{
+	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *result = [db executeQuery:query withArgumentsInArray:self.segments];
-		while ([result next])
-		{
-			@autoreleasepool 
-			{
+		while ([result next]) {
+			@autoreleasepool {
 				NSString *md5 = [result stringForColumnIndex:0];
 				if (md5) [songMd5s addObject:md5];
 			}
@@ -331,27 +285,21 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 		[result close];
 	}];
 	
-	for (NSString *md5 in songMd5s)
-	{
-		@autoreleasepool 
-		{
+	for (NSString *md5 in songMd5s) {
+		@autoreleasepool {
 			ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:md5];
 			[aSong addToCurrentPlaylistDbQueue];
 		}
 	}
 	
-	if (isShuffle)
-	{
+	if (isShuffle) {
 		playlistS.isShuffle = YES;
 		
 		[databaseS resetShufflePlaylist];
-		[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db)
-		{
+		[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
 			[db executeUpdate:@"INSERT INTO shufflePlaylist SELECT * FROM currentPlaylist ORDER BY RANDOM()"];
 		}];
-	}
-	else
-	{
+	} else {
 		playlistS.isShuffle = NO;
 	}
 			
@@ -359,26 +307,19 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 	[EX2Dispatch runInMainThreadAndWaitUntilDone:NO block:^ { [self loadPlayAllPlaylist2]; }];
 }
 
-
-- (void)playAllPlaySong
-{	
+- (void)playAllPlaySong {
 	[musicS playSongAtPosition:0];
 	
-	if (IS_IPAD())
-	{
+	if (IS_IPAD()) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
-	}
-	else
-	{
+	} else {
 		iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
 		streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
 		[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
 	}
 }
 
-
-- (void)loadPlayAllPlaylist2
-{
+- (void)loadPlayAllPlaylist2 {
 	[viewObjectsS hideLoadingScreen];
 
 	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
@@ -387,22 +328,19 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 }
 
 
-- (IBAction)nowPlayingAction:(id)sender
-{
+- (IBAction)nowPlayingAction:(id)sender {
 	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
 	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
 }
 
 
-- (void)didReceiveMemoryWarning 
-{
+- (void)didReceiveMemoryWarning  {
 	// Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -423,24 +361,18 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 }
 
 // Following 2 methods handle the right side index
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView 
-{
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView  {
 	NSMutableArray *indexes = [[NSMutableArray alloc] init];
-	for (int i = 0; i < self.sectionInfo.count; i++)
-	{
+	for (int i = 0; i < self.sectionInfo.count; i++) {
 		[indexes addObject:[[self.sectionInfo objectAtIndexSafe:i] objectAtIndexSafe:0]];
 	}
 	return indexes;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index 
-{
-	if (index == 0)
-	{
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+	if (index == 0) {
 		[tableView scrollRectToVisible:CGRectMake(0, 50, 320, 40) animated:NO];
-	}
-	else
-	{
+	} else {
 		NSUInteger row = [[[self.sectionInfo objectAtIndexSafe:(index - 1)] objectAtIndexSafe:1] intValue];
 		NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
 		[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
@@ -450,8 +382,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 }
 
 // Customize the number of rows in the table view.
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	return (self.listOfAlbums.count + self.listOfSongs.count);
 }
 
@@ -476,64 +407,48 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{	
-	if (!indexPath)
-		return;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	if (!indexPath) return;
 	
-	if (viewObjectsS.isCellEnabled)
-	{
-		if (indexPath.row < self.listOfAlbums.count)
-		{		
-			NSUInteger segment = [segments count] + 1;
+	if (viewObjectsS.isCellEnabled) {
+		if (indexPath.row < self.listOfAlbums.count) {
+			NSUInteger segment = self.segments.count + 1;
 			
 			CacheAlbumViewController *cacheAlbumViewController = [[CacheAlbumViewController alloc] initWithNibName:@"CacheAlbumViewController" bundle:nil];
-			cacheAlbumViewController.artistName = [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
+			cacheAlbumViewController.artistName = [[self.listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
 			cacheAlbumViewController.listOfAlbums = [NSMutableArray arrayWithCapacity:1];
 			cacheAlbumViewController.listOfSongs = [NSMutableArray arrayWithCapacity:1];
 
 			NSMutableString *query = [NSMutableString stringWithFormat:@"SELECT md5, segs, seg%lu, track, cachedSongs.discNumber FROM cachedSongsLayout JOIN cachedSongs USING(md5) WHERE seg1 = ? ", (long)(segment+1)];
-			for (int i = 2; i <= segment; i++)
-			{
+			for (int i = 2; i <= segment; i++) {
 				[query appendFormat:@" AND seg%i = ? ", i];
 			}
 			[query appendFormat:@"GROUP BY seg%lu ORDER BY seg%lu COLLATE NOCASE", (long)(segment+1), (long)(segment+1)];
-			//DLog(@"query: %@", query);
 
-			NSMutableArray *newSegments = [NSMutableArray arrayWithArray:segments];
+			NSMutableArray *newSegments = [NSMutableArray arrayWithArray:self.segments];
 			[newSegments addObject:cacheAlbumViewController.artistName];
 			cacheAlbumViewController.segments = [NSArray arrayWithArray:newSegments];
-			//DLog(@"newSegments: %@", newSegments);
 			
-			[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-			{
+			[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
 				FMResultSet *result = [db executeQuery:query withArgumentsInArray:newSegments];
-				while ([result next])
-				{
-					@autoreleasepool
-					{
+				while ([result next]) {
+					@autoreleasepool {
 						NSString *md5 = [result stringForColumnIndex:0];
 						NSInteger segs = [result intForColumnIndex:1];
 						NSString *seg = [result stringForColumnIndex:2];
 						NSInteger track = [result intForColumnIndex:3];
                         NSInteger discNumber = [result intForColumn:@"discNumber"];
 						
-						if (segs > (segment + 1))
-						{
-							if (md5 && seg)
-							{
+						if (segs > (segment + 1)) {
+							if (md5 && seg) {
 								NSArray *albumEntry = @[md5, seg];
 								[cacheAlbumViewController.listOfAlbums addObject:albumEntry];
 							}
-						}
-						else
-						{
-							if (md5)
-							{
+						} else {
+							if (md5) {
                                 NSMutableArray *songEntry = [NSMutableArray arrayWithObjects:md5, @(track), nil];
                                 
-                                if (discNumber != 0)
-                                {
+                                if (discNumber != 0) {
                                     [songEntry addObject:@(discNumber)];
                                 }
                                 
@@ -541,8 +456,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 								
 								BOOL multipleSameTrackNumbers = NO;
 								NSMutableArray *trackNumbers = [NSMutableArray arrayWithCapacity:cacheAlbumViewController.listOfSongs.count];
-								for (NSArray *song in cacheAlbumViewController.listOfSongs)
-								{
+								for (NSArray *song in cacheAlbumViewController.listOfSongs) {
 									NSNumber *track = [song objectAtIndexSafe:1];
                                     NSNumber *disc = [song objectAtIndexSafe:2];
 									
@@ -550,9 +464,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
                                     // of the object we found doesn't have the same disc number as the one we're about to add.  If
                                     // it does, we have a problem, but if not, we can add it anyway and let the sort method sort it
                                     // out.  Hahah.  See what I did there?
-									if ([trackNumbers containsObject:track] &&
-                                        (disc == nil || [[cacheAlbumViewController.listOfSongs[[trackNumbers indexOfObject:track]] objectAtIndexSafe:2] isEqual:disc]))
-									{
+									if ([trackNumbers containsObject:track] && (disc == nil || [[cacheAlbumViewController.listOfSongs[[trackNumbers indexOfObject:track]] objectAtIndexSafe:2] isEqual:disc])) {
 										multipleSameTrackNumbers = YES;
 										break;
 									}
@@ -561,8 +473,9 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 								}
 								
 								// Sort by track number
-								if (!multipleSameTrackNumbers)
+                                if (!multipleSameTrackNumbers) {
 									[cacheAlbumViewController.listOfSongs sortUsingFunction:trackSort2 context:NULL];
+                                }
 							}
 						}
 					}
@@ -571,22 +484,16 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 			}];
 			
 			[self pushViewControllerCustom:cacheAlbumViewController];
-		}
-		else
-		{			
+		} else {
 			NSUInteger a = indexPath.row - self.listOfAlbums.count;
 			
-			if (settingsS.isJukeboxEnabled)
-			{
+			if (settingsS.isJukeboxEnabled) {
 				[databaseS resetJukeboxPlaylist];
 				[jukeboxS jukeboxClearRemotePlaylist];
-			}
-			else
-			{
+			} else {
 				[databaseS resetCurrentPlaylistDb];
 			}
-			for (NSArray *song in self.listOfSongs)
-			{
+			for (NSArray *song in self.listOfSongs) {
 				ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:[song objectAtIndexSafe:0]];
 				[aSong addToCurrentPlaylistDbQueue];
 			}
@@ -599,9 +506,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context)
 			
 			[self showPlayer];
 		}
-	}
-	else
-	{
+	} else {
 		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 	}
 }

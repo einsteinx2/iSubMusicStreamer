@@ -13,60 +13,51 @@
 #define myHeight 30
 
 @implementation EqualizerPointView
-@synthesize parentSize;
-@synthesize position, handle, eqValue;
+@synthesize frequency=_frequency, gain=_gain, handle=_handle, eqValue=_eqValue;
 
-- (instancetype)initWithCGPoint:(CGPoint)point parentSize:(CGSize)size
-{	
-	self = [super initWithFrame:CGRectMake(0, 0, myWidth, myHeight)];
-    if (self) 
-	{		
-		parentSize = size;
+- (instancetype)initWithCGPoint:(CGPoint)point parentSize:(CGSize)size {
+    if (self = [super initWithFrame:CGRectMake(0, 0, myWidth, myHeight)]) {
+		_parentSize = size;
 		self.center = point;
 		
-		position.x = point.x / parentSize.width;
-		position.y = point.y / parentSize.height;
-		handle = 0;
+		_position.x = point.x / size.width;
+		_position.y = point.y / size.height;
+		_handle = 0;
 		
 		self.image = [UIImage imageNamed:@"eqView.png"];
 		
 		self.userInteractionEnabled = YES;
 		
-		BASS_DX8_PARAMEQ p = BASS_DX8_PARAMEQMake(self.frequency, self.gain, DEFAULT_BANDWIDTH);
-		eqValue = [[BassParamEqValue alloc] initWithParameters:p];
+		BASS_DX8_PARAMEQ p = BASS_DX8_PARAMEQMake(_frequency, _gain, DEFAULT_BANDWIDTH);
+		_eqValue = [[BassParamEqValue alloc] initWithParameters:p];
     }
     return self;
 }
 
-- (CGFloat)percentXFromFrequency:(NSUInteger)frequency
-{
+- (CGFloat)percentXFromFrequency:(NSUInteger)frequency {
 	return (log2(frequency) - 5) / 9;
 }
 
-- (CGFloat)percentYFromGain:(CGFloat)gain
-{
+- (CGFloat)percentYFromGain:(CGFloat)gain {
 	return .5 - (gain / (CGFloat)(MAX_GAIN * 2));
 }
 
-- (instancetype)initWithEqValue:(BassParamEqValue *)value parentSize:(CGSize)size
-{
-	self = [super initWithFrame:CGRectMake(0, 0, myWidth, myHeight)];
-    if (self)
-	{		
-		parentSize = size;
+- (instancetype)initWithEqValue:(BassParamEqValue *)value parentSize:(CGSize)size {
+    if (self = [super initWithFrame:CGRectMake(0, 0, myWidth, myHeight)]) {
+		_parentSize = size;
 		
-		CGFloat x = parentSize.width * [self percentXFromFrequency:value.parameters.fCenter];
-		CGFloat y = parentSize.height * [self percentYFromGain:value.parameters.fGain];
+		CGFloat x = size.width * [self percentXFromFrequency:value.parameters.fCenter];
+		CGFloat y = size.height * [self percentYFromGain:value.parameters.fGain];
 		self.center = CGPointMake(x, y);
 		
-        position.x = [self percentXFromFrequency:value.parameters.fCenter];
-		position.y = [self percentYFromGain:value.parameters.fGain];
+        _position.x = [self percentXFromFrequency:value.parameters.fCenter];
+		_position.y = [self percentYFromGain:value.parameters.fGain];
 		
 		self.image = [UIImage imageNamed:@"eqView.png"];
 		
 		self.userInteractionEnabled = YES;
 		
-		eqValue = value;
+		self.eqValue = value;
     }
     return self;
 }
@@ -75,46 +66,35 @@
 {
 	[super setCenter:center];
 	
-	position.x = self.center.x / parentSize.width;
-	position.y = self.center.y / parentSize.height;
+	_position.x = self.center.x / self.parentSize.width;
+	_position.y = self.center.y / self.parentSize.height;
 }
 
-- (NSUInteger)frequency
-{
-	return exp2f((position.x * RANGE_OF_EXPONENTS) + 5);
+- (NSUInteger)frequency {
+	return exp2f((self.position.x * RANGE_OF_EXPONENTS) + 5);
 }
 
-- (CGFloat)gain
-{
-	return (.5 - position.y) * (CGFloat)(MAX_GAIN * 2);
+- (CGFloat)gain {
+	return (.5 - self.position.y) * (CGFloat)(MAX_GAIN * 2);
 }
 
-- (HFX)handle
-{
-	return eqValue.handle;
+- (HFX)handle {
+	return self.eqValue.handle;
 }
 
-- (void)setEqValue:(BassParamEqValue *)value
-{
-	eqValue = value;
+- (void)setEqValue:(BassParamEqValue *)value {
+	_eqValue = value;
 }
 
-- (BassParamEqValue *)eqValue
-{
-	eqValue.gain = self.gain;
-	eqValue.frequency = self.frequency;
-	eqValue.bandwidth = DEFAULT_BANDWIDTH;
+- (BassParamEqValue *)eqValue {
+	_eqValue.gain = self.gain;
+	_eqValue.frequency = self.frequency;
+	_eqValue.bandwidth = DEFAULT_BANDWIDTH;
 	
-	return eqValue;
+	return _eqValue;
 }
 
-- (void)dealloc
-{
-	 eqValue = nil;
-}
-
-- (NSComparisonResult)compare:(EqualizerPointView *)otherObject 
-{	
+- (NSComparisonResult)compare:(EqualizerPointView *)otherObject  {
 	// Return ordered same if now the same class as me
 	if(![otherObject isKindOfClass:[EqualizerPointView class]]) return NSOrderedSame;
 		
