@@ -244,7 +244,7 @@
             UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
             cell.hideNumberLabel = YES;
             cell.hideCoverArt = NO;
-            cell.hideDurationLabel = YES;
+            cell.hideDurationLabel = NO;
             cell.accessoryType = UITableViewCellAccessoryNone;
             [cell updateWithModel:[self.listOfSongs objectAtIndexSafe:indexPath.row]];
             return cell;

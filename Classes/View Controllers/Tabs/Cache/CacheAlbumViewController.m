@@ -400,7 +400,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
         // Song
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
-        cell.hideDurationLabel = YES;
+        cell.hideDurationLabel = NO;
         cell.accessoryType = UITableViewCellAccessoryNone;
         [cell updateWithModel:[self songAtIndexPath:indexPath]];
 	}

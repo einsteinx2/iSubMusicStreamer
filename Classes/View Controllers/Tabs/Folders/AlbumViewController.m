@@ -276,7 +276,7 @@
         // Song
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
-        cell.hideDurationLabel = YES;
+        cell.hideDurationLabel = NO;
         cell.accessoryType = UITableViewCellAccessoryNone;
         [cell updateWithModel:[self.dataModel songForTableViewRow:indexPath.row]];
     }

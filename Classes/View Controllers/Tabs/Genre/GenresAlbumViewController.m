@@ -325,9 +325,7 @@
             coverArtId = [databaseS.genresDbQueue stringForQuery:@"SELECT coverArtId FROM genresSongs WHERE md5 = ?", md5];
         }
         NSString *name = [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
-        cell.albumNameLabel.text = name;
-    //DLog(@"name: %@", name);
-        
+        cell.albumNameLabel.text = name;        
         cell.coverArtView.coverArtId = coverArtId;
                 
         return cell;
@@ -336,90 +334,11 @@
         UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
-        cell.hideDurationLabel = YES;
+        cell.hideDurationLabel = NO;
         cell.accessoryType = UITableViewCellAccessoryNone;
         NSString *md5 = [listOfSongs objectAtIndexSafe:(indexPath.row - listOfAlbums.count)];
         [cell updateWithModel:[ISMSSong songFromGenreDbQueue:md5]];
     }
-    
-    
-//	// Set up the cell...
-//	if (indexPath.row < [listOfAlbums count])
-//	{
-//		static NSString *cellIdentifier = @"GenresAlbumCell";
-//		GenresAlbumUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-//		if (!cell)
-//		{
-//			cell = [[GenresAlbumUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-//			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-//		}
-//		cell.segment = self.segment;
-//		cell.seg1 = self.seg1;
-//		cell.genre = genre;
-//
-//		NSString *md5 = [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:0];
-//		NSString *coverArtId;
-//		if (settingsS.isOfflineMode) {
-//			coverArtId = [databaseS.songCacheDbQueue stringForQuery:@"SELECT coverArtId FROM genresSongs WHERE md5 = ?", md5];
-//		}
-//		else {
-//			coverArtId = [databaseS.genresDbQueue stringForQuery:@"SELECT coverArtId FROM genresSongs WHERE md5 = ?", md5];
-//		}
-//		NSString *name = [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
-//		cell.albumNameLabel.text = name;
-//	//DLog(@"name: %@", name);
-//
-//		cell.coverArtView.coverArtId = coverArtId;
-//
-//		return cell;
-//	}
-//	else
-//	{
-//		static NSString *cellIdentifier = @"GenresSongCell";
-//		GenresSongUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-//		if (!cell)
-//		{
-//			cell = [[GenresSongUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-//			cell.accessoryType = UITableViewCellAccessoryNone;
-//		}
-//
-//		NSUInteger a = indexPath.row - [listOfAlbums count];
-//		cell.md5 = [listOfSongs objectAtIndexSafe:a];
-//
-//		ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:cell.md5];
-//
-//		if (aSong.track)
-//		{
-//			cell.trackNumberLabel.text = [NSString stringWithFormat:@"%i", [aSong.track intValue]];
-//		}
-//		else
-//		{
-//			cell.trackNumberLabel.text = @"";
-//		}
-//
-//		cell.songNameLabel.text = aSong.title;
-//
-//		if (aSong.artist)
-//			cell.artistNameLabel.text = aSong.artist;
-//		else
-//			cell.artistNameLabel.text = @"";
-//
-//		if (aSong.duration)
-//			cell.songDurationLabel.text = [NSString formatTime:[aSong.duration floatValue]];
-//		else
-//			cell.songDurationLabel.text = @"";
-//
-//		if (settingsS.isOfflineMode)
-//		{
-//            cell.backgroundView = [[UIView alloc] init];
-//		}
-//		else
-//		{
-//            cell.cachedIndicatorView.hidden = !aSong.isFullyCached;
-//		}
-//
-//		return cell;
-//	}
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

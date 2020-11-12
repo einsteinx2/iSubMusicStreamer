@@ -12,15 +12,15 @@ import SnapKit
 @objc public class UniversalTableViewCell: UITableViewCell {
     @objc static let reuseId = "UniversalTableViewCell"
     
-    @objc var tableCellModel: TableCellModel?
+    private var tableCellModel: TableCellModel?
     
-    let headerLabel = UILabel()
-    let cachedIndicator = CellCachedIndicatorView()
-    let numberLabel = UILabel()
-    let coverArtView = AsynchronousImageView()
-    let primaryLabel = AutoScrollingLabel()
-    let secondaryLabel = AutoScrollingLabel()
-    let durationLabel = UILabel()
+    private let headerLabel = UILabel()
+    private let cachedIndicator = CellCachedIndicatorView()
+    private let numberLabel = UILabel()
+    private let coverArtView = AsynchronousImageView()
+    private let primaryLabel = AutoScrollingLabel()
+    private let secondaryLabel = AutoScrollingLabel()
+    private let durationLabel = UILabel()
     
     @objc var number: Int = 0 {
         didSet { numberLabel.text = "\(number)" }
@@ -141,7 +141,7 @@ import SnapKit
         numberLabel.snp.remakeConstraints { make in
             if hideNumberLabel { make.width.equalTo(0) }
             else { make.width.equalTo(numberLabel.snp.height).multipliedBy(0.75) }
-            make.leading.equalTo(contentView).offset(hideNumberLabel ? 0 : 5)
+            make.leading.equalTo(contentView)
             make.top.equalTo(headerLabel.snp.bottom)
             make.bottom.equalTo(contentView)
         }
@@ -151,7 +151,7 @@ import SnapKit
         coverArtView.snp.remakeConstraints { make in
             if hideCoverArt { make.width.equalTo(0) }
             else { make.width.equalTo(coverArtView.snp.height) }
-            make.leading.equalTo(numberLabel.snp.trailing).offset(hideNumberLabel ? 0 : 5)
+            make.leading.equalTo(numberLabel.snp.trailing)
             make.top.equalTo(headerLabel.snp.bottom)
             make.bottom.equalTo(contentView)
         }
@@ -181,7 +181,7 @@ import SnapKit
         durationLabel.snp.remakeConstraints { make in
             if hideDurationLabel { make.width.equalTo(0) }
             else { make.width.equalTo(durationLabel.snp.height).multipliedBy(0.75) }
-            make.trailing.equalTo(contentView)
+            make.trailing.equalTo(contentView).offset(hideDurationLabel ? 0 : -5)
             make.top.equalTo(headerLabel.snp.bottom)
             make.bottom.equalTo(contentView)
         }

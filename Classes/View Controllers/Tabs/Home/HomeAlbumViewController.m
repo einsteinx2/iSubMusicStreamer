@@ -125,25 +125,6 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         [cell updateWithModel:[self.listOfAlbums objectAtIndexSafe:indexPath.row]];
         return cell;
-        
-//		static NSString *cellIdentifier = @"AllAlbumsCell";
-//		AllAlbumsUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-//		if (!cell)
-//		{
-//			cell = [[AllAlbumsUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-//		}
-//		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-//
-//		ISMSAlbum *anAlbum = [self.listOfAlbums objectAtIndexSafe:indexPath.row];
-//		cell.myId = anAlbum.albumId;
-//		cell.myArtist = [ISMSArtist artistWithName:anAlbum.artistName andArtistId:anAlbum.artistId];
-//
-//		cell.coverArtView.coverArtId = anAlbum.coverArtId;
-//
-//		[cell.albumNameLabel setText:anAlbum.title];
-//		[cell.artistNameLabel setText:anAlbum.artistName];
-//
-//		return cell;
 	} else if (indexPath.row == self.listOfAlbums.count) {
 		// This is the last cell and there could be more results, load the next 20 songs;
 		UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"HomeAlbumLoadCell"];
