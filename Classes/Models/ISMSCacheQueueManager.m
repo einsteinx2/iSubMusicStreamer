@@ -15,7 +15,7 @@
 #import "ISMSStreamHandler.h"
 #import "SUSLyricsDAO.h"
 #import "TBXML.h"
-#import "ISMSCFNetworkStreamHandler.h"
+#import "ISMSNSURLSessionStreamHandler.h"
 #import "FMDatabaseQueueAdditions.h"
 #import "SavedSettings.h"
 #import "CacheSingleton.h"
@@ -163,7 +163,7 @@ LOG_LEVEL_ISUB_DEBUG
 	else
 	{
 		DDLogVerbose(@"[ISMSCacheQueueManager] CQ creating download handler for %@", self.currentQueuedSong.title);
-		self.currentStreamHandler = [[ISMSCFNetworkStreamHandler alloc] initWithSong:self.currentQueuedSong isTemp:NO delegate:self];
+		self.currentStreamHandler = [[ISMSNSURLSessionStreamHandler alloc] initWithSong:self.currentQueuedSong isTemp:NO delegate:self];
 		self.currentStreamHandler.partialPrecacheSleep = NO;
 		[self.currentStreamHandler start];
 	}

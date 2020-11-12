@@ -735,6 +735,8 @@
 		53DE59A314F1A7B000206529 /* controller-forw30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53DE599314F1A7B000206529 /* controller-forw30@2x.png */; };
 		53DE59A514F1A7B000206529 /* controller-forw30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53DE599314F1A7B000206529 /* controller-forw30@2x.png */; };
 		53DF310711D3EE26007552A4 /* GenresGenreUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53DF310611D3EE26007552A4 /* GenresGenreUITableViewCell.m */; };
+		53E04938255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E04937255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m */; };
+		53E04939255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E04937255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m */; };
 		53F0CD8211589F0A00A665CD /* progress-label-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F0CD8111589F0A00A665CD /* progress-label-background.png */; };
 		53F2D3EE113A338500107D63 /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F2D3EC113A338500107D63 /* AlbumViewController.m */; };
 		53F4A074116FF48400BB8411 /* DebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4A072116FF48400BB8411 /* DebugViewController.m */; };
@@ -986,8 +988,6 @@
 		53FE370F1EA961720058B925 /* ISMSArtist.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36421EA961720058B925 /* ISMSArtist.m */; };
 		53FE37101EA961720058B925 /* ISMSCacheQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */; };
 		53FE37121EA961720058B925 /* ISMSCacheQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */; };
-		53FE37131EA961720058B925 /* ISMSCFNetworkStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36461EA961720058B925 /* ISMSCFNetworkStreamHandler.m */; };
-		53FE37151EA961720058B925 /* ISMSCFNetworkStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36461EA961720058B925 /* ISMSCFNetworkStreamHandler.m */; };
 		53FE37161EA961720058B925 /* ISMSChatMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36481EA961720058B925 /* ISMSChatMessage.m */; };
 		53FE37181EA961720058B925 /* ISMSChatMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36481EA961720058B925 /* ISMSChatMessage.m */; };
 		53FE37191EA961720058B925 /* SUSCoverArtLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE364A1EA961720058B925 /* SUSCoverArtLoader.m */; };
@@ -1008,8 +1008,6 @@
 		53FE374B1EA961720058B925 /* ISMSStreamManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36721EA961720058B925 /* ISMSStreamManager.m */; };
 		53FE374F1EA961720058B925 /* ISMSUpdateChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36761EA961720058B925 /* ISMSUpdateChecker.m */; };
 		53FE37511EA961720058B925 /* ISMSUpdateChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36761EA961720058B925 /* ISMSUpdateChecker.m */; };
-		53FE37521EA961720058B925 /* ISMSURLConnectionStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36781EA961720058B925 /* ISMSURLConnectionStreamHandler.m */; };
-		53FE37541EA961720058B925 /* ISMSURLConnectionStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36781EA961720058B925 /* ISMSURLConnectionStreamHandler.m */; };
 		53FE37581EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
 		53FE375A1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
 		53FE375B1EA961720058B925 /* JukeboxConnectionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367E1EA961720058B925 /* JukeboxConnectionDelegate.m */; };
@@ -1648,6 +1646,8 @@
 		53DE599314F1A7B000206529 /* controller-forw30@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-forw30@2x.png"; path = "Images/Player Icons/controller-forw30@2x.png"; sourceTree = "<group>"; };
 		53DF310511D3EE26007552A4 /* GenresGenreUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenresGenreUITableViewCell.h; sourceTree = "<group>"; };
 		53DF310611D3EE26007552A4 /* GenresGenreUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenresGenreUITableViewCell.m; sourceTree = "<group>"; };
+		53E04936255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSNSURLSessionStreamHandler.h; sourceTree = "<group>"; };
+		53E04937255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ISMSNSURLSessionStreamHandler.m; sourceTree = "<group>"; };
 		53E82A951406D47F0051D44B /* FolderDropdownDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderDropdownDelegate.h; sourceTree = "<group>"; };
 		53F0CD8111589F0A00A665CD /* progress-label-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "progress-label-background.png"; path = "Images/Other/progress-label-background.png"; sourceTree = "<group>"; };
 		53F1412015FD550C004D00D5 /* buildnumber.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = buildnumber.xcconfig; path = Other/buildnumber.xcconfig; sourceTree = "<group>"; };
@@ -1909,8 +1909,6 @@
 		53FE36421EA961720058B925 /* ISMSArtist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSArtist.m; sourceTree = "<group>"; };
 		53FE36431EA961720058B925 /* ISMSCacheQueueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSCacheQueueManager.h; sourceTree = "<group>"; };
 		53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSCacheQueueManager.m; sourceTree = "<group>"; };
-		53FE36451EA961720058B925 /* ISMSCFNetworkStreamHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSCFNetworkStreamHandler.h; sourceTree = "<group>"; };
-		53FE36461EA961720058B925 /* ISMSCFNetworkStreamHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSCFNetworkStreamHandler.m; sourceTree = "<group>"; };
 		53FE36471EA961720058B925 /* ISMSChatMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSChatMessage.h; sourceTree = "<group>"; };
 		53FE36481EA961720058B925 /* ISMSChatMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSChatMessage.m; sourceTree = "<group>"; };
 		53FE36491EA961720058B925 /* SUSCoverArtLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSCoverArtLoader.h; sourceTree = "<group>"; };
@@ -1934,8 +1932,6 @@
 		53FE36721EA961720058B925 /* ISMSStreamManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSStreamManager.m; sourceTree = "<group>"; };
 		53FE36751EA961720058B925 /* ISMSUpdateChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSUpdateChecker.h; sourceTree = "<group>"; };
 		53FE36761EA961720058B925 /* ISMSUpdateChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSUpdateChecker.m; sourceTree = "<group>"; };
-		53FE36771EA961720058B925 /* ISMSURLConnectionStreamHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSURLConnectionStreamHandler.h; sourceTree = "<group>"; };
-		53FE36781EA961720058B925 /* ISMSURLConnectionStreamHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSURLConnectionStreamHandler.m; sourceTree = "<group>"; };
 		53FE367B1EA961720058B925 /* iSubBassGaplessPlayerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSubBassGaplessPlayerDelegate.h; sourceTree = "<group>"; };
 		53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSubBassGaplessPlayerDelegate.m; sourceTree = "<group>"; };
 		53FE367D1EA961720058B925 /* JukeboxConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JukeboxConnectionDelegate.h; sourceTree = "<group>"; };
@@ -2882,10 +2878,8 @@
 				53FE36701EA961720058B925 /* ISMSStreamHandlerDelegate.h */,
 				53FE36711EA961720058B925 /* ISMSStreamManager.h */,
 				53FE36721EA961720058B925 /* ISMSStreamManager.m */,
-				53FE36451EA961720058B925 /* ISMSCFNetworkStreamHandler.h */,
-				53FE36461EA961720058B925 /* ISMSCFNetworkStreamHandler.m */,
-				53FE36771EA961720058B925 /* ISMSURLConnectionStreamHandler.h */,
-				53FE36781EA961720058B925 /* ISMSURLConnectionStreamHandler.m */,
+				53E04936255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.h */,
+				53E04937255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m */,
 				53FE363C1EA961710058B925 /* HLSProxyConnection.m */,
 				53FE363B1EA961710058B925 /* HLSProxyConnection.h */,
 				53FE363D1EA961710058B925 /* HLSProxyResponse.h */,
@@ -4484,6 +4478,7 @@
 				53FE36F21EA961720058B925 /* BassParamEqValue.m in Sources */,
 				53FE39191EA961ED0058B925 /* HTTPConnection.m in Sources */,
 				53FE351F1EA961540058B925 /* NSString+URLEncode.m in Sources */,
+				53E04938255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */,
 				53FE38521EA961A80058B925 /* TBXML.m in Sources */,
 				53FE378E1EA961720058B925 /* SocialSingleton.m in Sources */,
 				53FE398C1EA963180058B925 /* FMResultSet.m in Sources */,
@@ -4704,7 +4699,6 @@
 				53FE39431EA961ED0058B925 /* DELETEResponse.m in Sources */,
 				53FE375B1EA961720058B925 /* JukeboxConnectionDelegate.m in Sources */,
 				5365859314789ADA00FE57A5 /* EqualizerView.m in Sources */,
-				53FE37521EA961720058B925 /* ISMSURLConnectionStreamHandler.m in Sources */,
 				535696531810DA8700997C7B /* FXBlurView.m in Sources */,
 				53FE384F1EA961A80058B925 /* TBXML+HTTP.m in Sources */,
 				53FE356A1EA961540058B925 /* UIView+SetNeedsLayoutSafe.m in Sources */,
@@ -4718,7 +4712,6 @@
 				53FE35101EA961540058B925 /* NSString+md5.m in Sources */,
 				53FE36E91EA961720058B925 /* BassEffectValue.m in Sources */,
 				5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
-				53FE37131EA961720058B925 /* ISMSCFNetworkStreamHandler.m in Sources */,
 				53FE371F1EA961720058B925 /* ISMSIndex.m in Sources */,
 				53FE384C1EA961A80058B925 /* TBXML+Compression.m in Sources */,
 				53D97463255C74FB00AABF7F /* ISMSLocalPlaylist.m in Sources */,
@@ -4767,6 +4760,7 @@
 				53FE36F41EA961720058B925 /* BassParamEqValue.m in Sources */,
 				53FE391B1EA961ED0058B925 /* HTTPConnection.m in Sources */,
 				53FE35211EA961540058B925 /* NSString+URLEncode.m in Sources */,
+				53E04939255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */,
 				53FE38541EA961A80058B925 /* TBXML.m in Sources */,
 				53FE37901EA961720058B925 /* SocialSingleton.m in Sources */,
 				53FE398E1EA963180058B925 /* FMResultSet.m in Sources */,
@@ -4987,7 +4981,6 @@
 				53FE39451EA961ED0058B925 /* DELETEResponse.m in Sources */,
 				53FE375D1EA961720058B925 /* JukeboxConnectionDelegate.m in Sources */,
 				5365859514789ADA00FE57A5 /* EqualizerView.m in Sources */,
-				53FE37541EA961720058B925 /* ISMSURLConnectionStreamHandler.m in Sources */,
 				535696551810DA8700997C7B /* FXBlurView.m in Sources */,
 				53FE38511EA961A80058B925 /* TBXML+HTTP.m in Sources */,
 				53FE356C1EA961540058B925 /* UIView+SetNeedsLayoutSafe.m in Sources */,
@@ -5001,7 +4994,6 @@
 				53FE35121EA961540058B925 /* NSString+md5.m in Sources */,
 				53FE36EB1EA961720058B925 /* BassEffectValue.m in Sources */,
 				5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
-				53FE37151EA961720058B925 /* ISMSCFNetworkStreamHandler.m in Sources */,
 				53FE37211EA961720058B925 /* ISMSIndex.m in Sources */,
 				53FE384E1EA961A80058B925 /* TBXML+Compression.m in Sources */,
 				53D97464255C74FB00AABF7F /* ISMSLocalPlaylist.m in Sources */,

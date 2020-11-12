@@ -24,13 +24,15 @@
 
 #define ISMSMaxContentLengthFailures 25
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class ISMSSong;
 @interface ISMSStreamHandler : NSObject <NSSecureCoding>
 
 - (instancetype)initWithSong:(ISMSSong *)song byteOffset:(unsigned long long)bOffset secondsOffset:(double)sOffset isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate;
 - (instancetype)initWithSong:(ISMSSong *)song isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate;
 
-@property (weak) NSObject<ISMSStreamHandlerDelegate> *delegate;
+@property (nullable, weak) NSObject<ISMSStreamHandlerDelegate> *delegate;
 @property (copy) ISMSSong *mySong;
 @property unsigned long long byteOffset;
 @property double secondsOffset;
@@ -47,7 +49,7 @@
 @property BOOL shouldResume;
 @property unsigned long long contentLength;
 @property NSInteger maxBitrateSetting;
-@property (strong) NSDate *speedLoggingDate;
+@property (nullable, strong) NSDate *speedLoggingDate;
 @property unsigned long long speedLoggingLastSize;
 @property NSUInteger recentDownloadSpeedInBytesPerSec;
 @property BOOL isCanceled;
@@ -55,8 +57,8 @@
 @property BOOL isPartialPrecacheSleeping;
 @property NSUInteger secondsToPartialPrecache;
 @property BOOL tempBreakPartialPrecache;
-@property (strong) NSFileHandle *fileHandle;
-@property (strong) NSDate *startDate;
+@property (nullable, strong) NSFileHandle *fileHandle;
+@property (nullable, strong) NSDate *startDate;
 
 @property BOOL isEnableRateLimiting;
 
@@ -75,3 +77,5 @@
 + (NSUInteger)minBytesToStartPlaybackForKiloBitrate:(double)rate speedInBytesPerSec:(NSUInteger)bytesPerSec;
 
 @end
+
+NS_ASSUME_NONNULL_END

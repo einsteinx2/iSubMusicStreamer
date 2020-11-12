@@ -8,7 +8,7 @@
 
 #import "ISMSStreamManager.h"
 #import "ISMSStreamHandler.h"
-#import "ISMSCFNetworkStreamHandler.h"
+#import "ISMSNSURLSessionStreamHandler.h"
 #import "PlaylistSingleton.h"
 #import "SUSCoverArtLoader.h"
 #import "SUSLyricsDAO.h"
@@ -431,7 +431,7 @@ LOG_LEVEL_ISUB_DEBUG
 	if (!song)
 		return;
 	
-	ISMSStreamHandler *handler = [[ISMSCFNetworkStreamHandler alloc] initWithSong:song byteOffset:byteOffset secondsOffset:secondsOffset isTemp:isTemp delegate:self];
+	ISMSStreamHandler *handler = [[ISMSNSURLSessionStreamHandler alloc] initWithSong:song byteOffset:byteOffset secondsOffset:secondsOffset isTemp:isTemp delegate:self];
 	if (![self.handlerStack containsObject:handler]) {
 		[self.handlerStack insertObject:handler atIndex:index];
 		
