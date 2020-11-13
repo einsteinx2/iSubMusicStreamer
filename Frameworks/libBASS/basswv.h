@@ -1,6 +1,6 @@
 /*
 	BASSWV 2.4 C/C++ header file
-	Copyright (c) 2007-2013 Un4seen Developments Ltd.
+	Copyright (c) 2007-2020 Un4seen Developments Ltd.
 
 	See the BASSWV.CHM file for more detailed documentation
 */
@@ -28,6 +28,7 @@ extern "C" {
 HSTREAM BASSWVDEF(BASS_WV_StreamCreateFile)(BOOL mem, const void *file, QWORD offset, QWORD length, DWORD flags);
 HSTREAM BASSWVDEF(BASS_WV_StreamCreateURL)(const char *url, DWORD offset, DWORD flags, DOWNLOADPROC *proc, void *user);
 HSTREAM BASSWVDEF(BASS_WV_StreamCreateFileUser)(DWORD system, DWORD flags, const BASS_FILEPROCS *procs, void *user);
+HSTREAM BASSWVDEF(BASS_WV_StreamCreateFileUserEx)(DWORD system, DWORD flags, const BASS_FILEPROCS *procs, void *user, void *userwvc);
 
 #ifdef __cplusplus
 }

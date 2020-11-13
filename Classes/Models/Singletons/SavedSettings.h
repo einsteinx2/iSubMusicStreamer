@@ -148,7 +148,6 @@ typedef enum
 - (NSString *)documentsPath;
 - (NSString *)databasePath;
 - (NSString *)cachesPath;
-- (NSString *)currentCacheRoot;
 - (NSString *)songCachePath;
 - (NSString *)tempCachePath;
 

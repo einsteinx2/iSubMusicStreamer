@@ -236,7 +236,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	}];
     
     // Handle moving the song cache database if necessary
-    path = [[settingsS.currentCacheRoot stringByAppendingPathComponent:@"database"] stringByAppendingPathComponent:@"songCache.db"];
+    path = [settingsS.databasePath stringByAppendingPathComponent:@"songCache.db"];
     NSFileManager *defaultManager = [NSFileManager defaultManager];
     if ([defaultManager fileExistsAtPath:path])
     {
@@ -366,7 +366,7 @@ LOG_LEVEL_ISUB_DEFAULT
     }
 	
 	// Handle moving the song cache database if necessary
-	path = [NSString stringWithFormat:@"%@/database/%@cacheQueue.db", settingsS.currentCacheRoot, settingsS.urlString.md5];
+    path = [settingsS.databasePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@cacheQueue.db", settingsS.urlString.md5]];
     if ([defaultManager fileExistsAtPath:path])
     {
         // Set the no backup flag since the file already exists
@@ -375,7 +375,7 @@ LOG_LEVEL_ISUB_DEFAULT
     if (![defaultManager fileExistsAtPath:path])
     {
         // First check to see if it's in the old Library/Caches location
-        NSString *oldPath = [NSString stringWithFormat:@"%@/%@cacheQueue.db", settingsS.cachesPath, settingsS.urlString.md5];
+        NSString *oldPath = [settingsS.cachesPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@cacheQueue.db", settingsS.urlString.md5]];
         if ([defaultManager fileExistsAtPath:oldPath])
         {
             // It exists there, so move it to the new location
@@ -1062,7 +1062,7 @@ LOG_LEVEL_ISUB_DEFAULT
 + (void) setAllSongsToBackup
 {
     // Handle moving the song cache database if necessary
-    NSString *path = [[settingsS.currentCacheRoot stringByAppendingPathComponent:@"database"] stringByAppendingPathComponent:@"songCache.db"];
+    NSString *path = [settingsS.databasePath stringByAppendingPathComponent:@"songCache.db"];
     NSFileManager *defaultManager = [NSFileManager defaultManager];
     if ([defaultManager fileExistsAtPath:path])
     {
@@ -1074,7 +1074,7 @@ LOG_LEVEL_ISUB_DEFAULT
 + (void) setAllSongsToNotBackup
 {
     // Handle moving the song cache database if necessary
-    NSString *path = [[settingsS.currentCacheRoot stringByAppendingPathComponent:@"database"] stringByAppendingPathComponent:@"songCache.db"];
+    NSString *path = [settingsS.databasePath stringByAppendingPathComponent:@"songCache.db"];
     NSFileManager *defaultManager = [NSFileManager defaultManager];
     if ([defaultManager fileExistsAtPath:path])
     {
