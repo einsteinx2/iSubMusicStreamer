@@ -137,10 +137,10 @@
 		5332954F255EECE50027C51A /* HTTPRedirectResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53329504255EECE40027C51A /* HTTPRedirectResponse.m */; };
 		53329550255EECE50027C51A /* HTTPMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5332950A255EECE40027C51A /* HTTPMessage.m */; };
 		53329551255EECE50027C51A /* HTTPMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5332950A255EECE40027C51A /* HTTPMessage.m */; };
-		53329552255EECE50027C51A /* HTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5332950B255EECE40027C51A /* HTTPConnection.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
-		53329553255EECE50027C51A /* HTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5332950B255EECE40027C51A /* HTTPConnection.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self"; }; };
-		53329554255EECE50027C51A /* WebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 5332950C255EECE40027C51A /* WebSocket.m */; };
-		53329555255EECE50027C51A /* WebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 5332950C255EECE40027C51A /* WebSocket.m */; };
+		53329552255EECE50027C51A /* HTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5332950B255EECE40027C51A /* HTTPConnection.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self -Wno-unreachable-code"; }; };
+		53329553255EECE50027C51A /* HTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5332950B255EECE40027C51A /* HTTPConnection.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self -Wno-unreachable-code"; }; };
+		53329554255EECE50027C51A /* WebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 5332950C255EECE40027C51A /* WebSocket.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self -Wno-unreachable-code -Wno-logical-not-parentheses -Wno-unused-function"; }; };
+		53329555255EECE50027C51A /* WebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 5332950C255EECE40027C51A /* WebSocket.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self -Wno-unreachable-code -Wno-logical-not-parentheses -Wno-unused-function"; }; };
 		53329556255EECE50027C51A /* MultipartMessageHeaderField.m in Sources */ = {isa = PBXBuildFile; fileRef = 53329511255EECE40027C51A /* MultipartMessageHeaderField.m */; };
 		53329557255EECE50027C51A /* MultipartMessageHeaderField.m in Sources */ = {isa = PBXBuildFile; fileRef = 53329511255EECE40027C51A /* MultipartMessageHeaderField.m */; };
 		53329558255EECE50027C51A /* MultipartFormDataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53329512255EECE40027C51A /* MultipartFormDataParser.m */; };
@@ -201,6 +201,8 @@
 		533295F9255EEFE50027C51A /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 533295E7255EEFE40027C51A /* FMDatabasePool.m */; };
 		533295FA255EEFE50027C51A /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 533295E8255EEFE40027C51A /* FMResultSet.m */; };
 		533295FB255EEFE50027C51A /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 533295E8255EEFE40027C51A /* FMResultSet.m */; };
+		53329607255EF21D0027C51A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 53329606255EF21D0027C51A /* libsqlite3.tbd */; };
+		53329611255EF23B0027C51A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 53329606255EF21D0027C51A /* libsqlite3.tbd */; };
 		5333F01B182C5D17003CFB6F /* controller-volumeslider-thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = 5333F019182C5D17003CFB6F /* controller-volumeslider-thumb.png */; };
 		5333F01D182C5D17003CFB6F /* controller-volumeslider-thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = 5333F019182C5D17003CFB6F /* controller-volumeslider-thumb.png */; };
 		5333F01F182C5D17003CFB6F /* controller-volumeslider-thumb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5333F01A182C5D17003CFB6F /* controller-volumeslider-thumb@2x.png */; };
@@ -1084,8 +1086,6 @@
 		53FE378D1EA961720058B925 /* SearchXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A21EA961720058B925 /* SearchXMLParser.m */; };
 		53FE378E1EA961720058B925 /* SocialSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A41EA961720058B925 /* SocialSingleton.m */; };
 		53FE37901EA961720058B925 /* SocialSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A41EA961720058B925 /* SocialSingleton.m */; };
-		53FE37911EA961720058B925 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A51EA961720058B925 /* sqlite3.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		53FE37931EA961720058B925 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A51EA961720058B925 /* sqlite3.c */; settings = {COMPILER_FLAGS = "-w"; }; };
 		53FE37941EA961720058B925 /* SUSAllAlbumsDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A81EA961720058B925 /* SUSAllAlbumsDAO.m */; };
 		53FE37961EA961720058B925 /* SUSAllAlbumsDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A81EA961720058B925 /* SUSAllAlbumsDAO.m */; };
 		53FE37971EA961720058B925 /* SUSAllSongsDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36AA1EA961720058B925 /* SUSAllSongsDAO.m */; };
@@ -1360,6 +1360,7 @@
 		533295E7255EEFE40027C51A /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
 		533295E8255EEFE40027C51A /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
 		533295E9255EEFE40027C51A /* FMDatabaseQueueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueueAdditions.h; sourceTree = "<group>"; };
+		53329606255EF21D0027C51A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		5333F019182C5D17003CFB6F /* controller-volumeslider-thumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-volumeslider-thumb.png"; path = "Images/Player Icons/controller-volumeslider-thumb.png"; sourceTree = "<group>"; };
 		5333F01A182C5D17003CFB6F /* controller-volumeslider-thumb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-volumeslider-thumb@2x.png"; path = "Images/Player Icons/controller-volumeslider-thumb@2x.png"; sourceTree = "<group>"; };
 		533A2D05113C61C900B3A376 /* AsynchronousImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AsynchronousImageView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -1976,8 +1977,6 @@
 		53FE36A21EA961720058B925 /* SearchXMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchXMLParser.m; sourceTree = "<group>"; };
 		53FE36A31EA961720058B925 /* SocialSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialSingleton.h; sourceTree = "<group>"; };
 		53FE36A41EA961720058B925 /* SocialSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialSingleton.m; sourceTree = "<group>"; };
-		53FE36A51EA961720058B925 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
-		53FE36A61EA961720058B925 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
 		53FE36A71EA961720058B925 /* SUSAllAlbumsDAO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSAllAlbumsDAO.h; sourceTree = "<group>"; };
 		53FE36A81EA961720058B925 /* SUSAllAlbumsDAO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUSAllAlbumsDAO.m; sourceTree = "<group>"; };
 		53FE36A91EA961720058B925 /* SUSAllSongsDAO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSAllSongsDAO.h; sourceTree = "<group>"; };
@@ -2087,6 +2086,7 @@
 				53FE360E1EA961670058B925 /* libbass_ape.a in Frameworks */,
 				53FE36141EA961670058B925 /* libbass_mpc.a in Frameworks */,
 				53FE36201EA961670058B925 /* libbasswv.a in Frameworks */,
+				53329607255EF21D0027C51A /* libsqlite3.tbd in Frameworks */,
 				53F8917B1EB1351D00B3F131 /* libSystem.tbd in Frameworks */,
 				53D9740A255BFDE900AABF7F /* SnapKit in Frameworks */,
 				53F8917A1EB1351400B3F131 /* libxml2.tbd in Frameworks */,
@@ -2124,6 +2124,7 @@
 				53FE36101EA961670058B925 /* libbass_ape.a in Frameworks */,
 				53FE36161EA961670058B925 /* libbass_mpc.a in Frameworks */,
 				53FE36221EA961680058B925 /* libbasswv.a in Frameworks */,
+				53329611255EF23B0027C51A /* libsqlite3.tbd in Frameworks */,
 				5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */,
 				53D97406255BFD9100AABF7F /* SnapKit in Frameworks */,
 				5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */,
@@ -2222,7 +2223,7 @@
 				53FE37EB1EA961780058B925 /* Flurry */,
 				53FE35FA1EA961670058B925 /* libBASS */,
 				533295D2255EEFE40027C51A /* FMDB */,
-				531D3A0C255AB725000CB0DF /* SQLite */,
+				53329606255EF21D0027C51A /* libsqlite3.tbd */,
 				5367C6D61EA92D3000B1C242 /* libSystem.tbd */,
 				5367C6D41EA92D2400B1C242 /* libz.tbd */,
 				5367C6D21EA92D1A00B1C242 /* libxml2.tbd */,
@@ -2791,15 +2792,6 @@
 				53FE36D41EA961720058B925 /* SUSSubFolderDAO.m */,
 			);
 			path = DAOs;
-			sourceTree = "<group>";
-		};
-		531D3A0C255AB725000CB0DF /* SQLite */ = {
-			isa = PBXGroup;
-			children = (
-				53FE36A61EA961720058B925 /* sqlite3.h */,
-				53FE36A51EA961720058B925 /* sqlite3.c */,
-			);
-			path = SQLite;
 			sourceTree = "<group>";
 		};
 		531D3A0D255AB755000CB0DF /* Stream Handlers */ = {
@@ -4450,7 +4442,6 @@
 				530CE844119B9D9100728ED5 /* SongInfoPlaylistCustomUITableView.m in Sources */,
 				53FE35761EA961540058B925 /* UIWebView+HideShadows.m in Sources */,
 				53B5298A11AD9B79005776B5 /* LoadingScreen.m in Sources */,
-				53FE37911EA961720058B925 /* sqlite3.c in Sources */,
 				53B52BA511ADE0A6005776B5 /* GenresViewController.m in Sources */,
 				530B417211B607A200743C09 /* CacheViewController.m in Sources */,
 				53D97454255C51CA00AABF7F /* SwipeAction.swift in Sources */,
@@ -4715,7 +4706,6 @@
 				53FE35781EA961540058B925 /* UIWebView+HideShadows.m in Sources */,
 				53BC27CC139AF0DD00A825F1 /* LoadingScreen.m in Sources */,
 				53329545255EECE40027C51A /* HTTPErrorResponse.m in Sources */,
-				53FE37931EA961720058B925 /* sqlite3.c in Sources */,
 				53BC27CE139AF0DD00A825F1 /* GenresViewController.m in Sources */,
 				53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */,
 				53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */,
