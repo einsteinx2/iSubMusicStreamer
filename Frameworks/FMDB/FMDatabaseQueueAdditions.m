@@ -11,7 +11,7 @@
 #import "FMDatabaseAdditions.h"
 
 @interface FMDatabase (PrivateStuff)
-- (FMResultSet *)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray*)arrayArgs orDictionary:(NSDictionary *)dictionaryArgs orVAList:(va_list)args;
+- (FMResultSet * _Nullable)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray * _Nullable)arrayArgs orDictionary:(NSDictionary * _Nullable)dictionaryArgs orVAList:(va_list)args shouldBind:(BOOL)shouldBind;
 @end
 
 @implementation FMDatabaseQueue (Additions)
@@ -22,7 +22,7 @@ va_start(args, query);                                                          
 __block va_list *args_ptr = &args;                                                                                  \
 __block type ret;                                                                                                   \
 [self inDatabase:^(FMDatabase *db) {                                                                                \
-    FMResultSet *resultSet = [db executeQuery:query withArgumentsInArray:nil orDictionary:nil orVAList:*args_ptr];  \
+FMResultSet *resultSet = [db executeQuery:query withArgumentsInArray:0x00 orDictionary:0x00 orVAList:*args_ptr shouldBind:true];  \
     ret = [resultSet next] ? [resultSet sel:0] : (type)0;                                                           \
     [resultSet close];                                                                                              \
     [resultSet setParentDB:nil];                                                                                    \
