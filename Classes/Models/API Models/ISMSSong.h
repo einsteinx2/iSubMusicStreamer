@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "ISMSTableCellModel.h"
-#import "TBXML.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -47,8 +46,6 @@ NS_SWIFT_NAME(Song)
 
 - (instancetype)copyWithZone:(nullable NSZone *)zone;
 
-- (instancetype)initWithPMSDictionary:(NSDictionary *)dictionary;
-- (instancetype)initWithTBXMLElement:(TBXMLElement *)element;
 - (instancetype)initWithRXMLElement:(RXMLElement *)element;
 - (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict;
 

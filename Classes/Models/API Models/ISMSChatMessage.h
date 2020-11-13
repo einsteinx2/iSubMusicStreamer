@@ -7,7 +7,6 @@
 //
 
 #import "ISMSTableCellModel.h"
-#import "TBXML.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,9 +18,8 @@ NS_SWIFT_NAME(ChatMessage)
 @property (copy) NSString *user;
 @property (copy) NSString *message;
 
-- (instancetype)initWithTBXMLElement:(TBXMLElement *)element;
 - (instancetype)initWithRXMLElement:(RXMLElement *)element;
-- (instancetype)copyWithZone:(NSZone *)zone;
+- (instancetype)copyWithZone:(nullable NSZone *)zone;
 
 @end
 

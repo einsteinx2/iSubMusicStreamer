@@ -27,14 +27,14 @@
 
 - (void)processResponse {
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-    if (![root isValid]) {
+    if (!root.isValid) {
         NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
         [self informDelegateLoadingFailed:error];
         
         [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_LyricsFailed];
     } else {
         RXMLElement *error = [root child:@"error"];
-        if ([error isValid]) {
+        if (error.isValid) {
             NSInteger code = [[error attribute:@"code"] integerValue];
             NSString *message = [error attribute:@"message"];
             [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
@@ -42,7 +42,7 @@
             [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_LyricsFailed];
         } else {
             RXMLElement *lyrics = [root child:@"lyrics"];
-            if ([lyrics isValid]) {
+            if (lyrics.isValid) {
                 self.loadedLyrics = [lyrics text];
                 if ([self.loadedLyrics hasValue]) {
                     [self insertLyricsIntoDb];

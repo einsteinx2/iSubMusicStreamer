@@ -7,7 +7,6 @@
 //
 
 #import "NSString+URLEncode.h"
-#import "TBXML+Compression.h"
 #import "SavedSettings.h"
 
 @implementation NSMutableURLRequest (SUS)
@@ -128,7 +127,7 @@ static NSSet *setOfVersions = nil;
 		//DLog(@"using basic auth!");
 		NSString *authStr = [NSString stringWithFormat:@"%@:%@", username, password];
 		NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
-		NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64EncodingWithLineLength:0]];
+		NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64EncodedStringWithOptions:0]];
 		[request setValue:authValue forHTTPHeaderField:@"Authorization"];
 	}
 	

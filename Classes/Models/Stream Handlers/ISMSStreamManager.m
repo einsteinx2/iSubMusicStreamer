@@ -13,7 +13,7 @@
 #import "SUSCoverArtLoader.h"
 #import "SUSLyricsDAO.h"
 #import "ISMSCacheQueueManager.h"
-#import "TBXML.h"
+#import "RXMLElement.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
 #import "PlaylistSingleton.h"
@@ -622,40 +622,26 @@ LOG_LEVEL_ISUB_DEBUG
 	}
 	else if (handler.totalBytesTransferred < 1000)
 	{
-		BOOL isLicenseIssue = NO;
-		// Verify that it's a license issue
-		NSData *receivedData = [NSData dataWithContentsOfFile:handler.filePath];
-		NSError *error;
-		TBXML *tbxml = [[TBXML alloc] initWithXMLData:receivedData error:&error];
-		if (!error)
-		{
-			TBXMLElement *root = tbxml.rootXMLElement;
-				
-			TBXMLElement *error = [TBXML childElementNamed:@"error" parentElement:root];
-			if (error)
-			{
-				NSString *code = [TBXML valueOfAttributeNamed:@"code" forElement:error];
-				//NSString *message = [TBXML valueOfAttributeNamed:@"message" forElement:error];
-				if ([code isEqualToString:@"60"])
-				{
-					isLicenseIssue = YES;
-				}
-			}
-		}
-		
-		if (isLicenseIssue)
-		{
-			// This is a trial period message, alert the user and stop streaming
-            NSString *message = @"You can purchase a license for Subsonic by logging in to the web interface and clicking the red Donate link on the top right.\n\nPlease remember, iSub is a 3rd party client for Subsonic, and this license and trial is for Subsonic and not iSub.";
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Subsonic API Trial Expired"
-                                                                           message:message
-                                                                    preferredStyle:UIAlertControllerStyleAlert];
-            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-            [UIApplication.keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
-            
-			[[NSFileManager defaultManager] removeItemAtPath:handler.filePath error:NULL];
-			isSuccess = NO;
-		}	
+        // Verify that it's a license issue
+        NSData *receivedData = [NSData dataWithContentsOfFile:handler.filePath];
+        RXMLElement *root = [[RXMLElement alloc] initFromXMLData:receivedData];
+        if (root.isValid) {
+            RXMLElement *error = [root child:@"error"];
+            if (error.isValid) {
+                if ([[error attribute:@"code"] integerValue] == 60) {
+                    // This is a trial period message, alert the user and stop streaming
+                    NSString *message = @"You can purchase a license for Subsonic by logging in to the web interface and clicking the red Donate link on the top right.\n\nPlease remember, iSub is a 3rd party client for Subsonic, and this license and trial is for Subsonic and not iSub.";
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Subsonic API Trial Expired"
+                                                                                   message:message
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+                    [UIApplication.keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+ 
+                    [[NSFileManager defaultManager] removeItemAtPath:handler.filePath error:NULL];
+                    isSuccess = NO;
+                }
+            }
+        }
 	}
 	
 	if (isSuccess)

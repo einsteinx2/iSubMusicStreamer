@@ -7,7 +7,6 @@
 //
 
 #import "ISMSTableCellModel.h"
-#import "TBXML.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,9 +23,6 @@ NS_SWIFT_NAME(Artist)
 - (instancetype)initWithCoder:(NSCoder *)decoder;
 
 - (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict;
-
-- (instancetype)initWithTBXMLElement:(TBXMLElement *)element;
-- (instancetype)initWithRXMLElement:(RXMLElement *)element;
 
 @end
 

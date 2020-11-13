@@ -40,12 +40,12 @@
     DLog(@"SUSStatusLoader: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
     
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-    if (![root isValid]) {
+    if (!root.isValid) {
         NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
         [self informDelegateLoadingFailed:error];
         [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ServerCheckFailed];
     } else {
-        if ([[root tag] isEqualToString:@"subsonic-response"]) {
+        if ([root.tag isEqualToString:@"subsonic-response"]) {
 			self.versionString = [root attribute:@"version"];
 			if (self.versionString) {
 				NSArray *splitVersion = [self.versionString componentsSeparatedByString:@"."];
@@ -70,7 +70,7 @@
 			}
             
             RXMLElement *error = [root child:@"error"];
-            if ([error isValid]) {
+            if (error.isValid) {
                 NSString *code = [error attribute:@"code"];
                 if ([code integerValue] == 40) {
                     // Incorrect credentials, so fail

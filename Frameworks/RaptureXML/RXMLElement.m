@@ -63,12 +63,12 @@
 }
 
 - (id)initFromXMLFile:(NSString *)filename {
-    NSString *fullPath = [[[NSBundle bundleForClass:self.class] bundlePath] stringByAppendingPathComponent:filename];
+    NSString *fullPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:filename];
     return [self initFromXMLFilePath:fullPath];
 }
 
 - (id)initFromXMLFile:(NSString *)filename fileExtension:(NSString *)extension {
-    NSString *fullPath = [[NSBundle bundleForClass:[self class]] pathForResource:filename ofType:extension];
+    NSString *fullPath = [[NSBundle mainBundle] pathForResource:filename ofType:extension];
     return [self initFromXMLData:[NSData dataWithContentsOfFile:fullPath]];
 }
 
@@ -78,7 +78,7 @@
 
 - (id)initFromXMLData:(NSData *)data {
     if ((self = [super init])) {
-        xmlDocPtr doc = xmlReadMemory([data bytes], (int)[data length], "", nil, XML_PARSE_RECOVER);
+        xmlDocPtr doc = xmlReadMemory([data bytes], (int)[data length], "", nil, XML_PARSE_RECOVER|XML_PARSE_NOENT);
         self.xmlDoc = [[RXMLDocHolder alloc] initWithDocPtr:doc];
         
         if ([self isValid]) {
@@ -107,12 +107,12 @@
 }
 
 - (id)initFromHTMLFile:(NSString *)filename {
-    NSString *fullPath = [[[NSBundle bundleForClass:self.class] bundlePath] stringByAppendingPathComponent:filename];
+    NSString *fullPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:filename];
     return [self initFromHTMLData:[NSData dataWithContentsOfFile:fullPath]];
 }
 
 - (id)initFromHTMLFile:(NSString *)filename fileExtension:(NSString*)extension {
-    NSString *fullPath = [[NSBundle bundleForClass:[self class]] pathForResource:filename ofType:extension];
+    NSString *fullPath = [[NSBundle mainBundle] pathForResource:filename ofType:extension];
     return [self initFromHTMLData:[NSData dataWithContentsOfFile:fullPath]];
 }
 
@@ -202,7 +202,11 @@
 #pragma mark -
 
 - (NSString *)tag {
-    return [NSString stringWithUTF8String:(const char *)node_->name];
+    if (node_) {
+        return [NSString stringWithUTF8String:(const char *)node_->name];
+    } else {
+        return nil;
+    }
 }
 
 - (NSString *)text {
@@ -309,6 +313,8 @@
 - (RXMLElement *)child:(NSString *)tag {
     NSArray *components = [tag componentsSeparatedByString:@"."];
     xmlNodePtr cur = node_;
+	
+	if (!cur) return nil;
     
     // navigate down
     for (NSString *itag in components) {
@@ -361,9 +367,20 @@
         } else {
             cur = cur->children;
             while (cur != nil) {
-                if (cur->type == XML_ELEMENT_NODE && !xmlStrcmp(cur->name, tagC) && !xmlStrcmp(cur->ns->href, namespaceC)) {
-                    break;
+                if (cur->ns != nil) {
+                    if (cur->type == XML_ELEMENT_NODE &&
+                        !xmlStrcmp(cur->name, tagC) &&
+                        !xmlStrcmp(cur->ns->href, namespaceC)) {
+                        break;
+                    }
+                } else {
+                    if (cur->type == XML_ELEMENT_NODE &&
+                        !xmlStrcmp(cur->name, tagC) &&
+                        !xmlStrcmp(namespaceC, nil)) {
+                        break;
+                    }
                 }
+
                 
                 cur = cur->next;
             }

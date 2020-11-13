@@ -16,78 +16,8 @@
 
 @implementation ISMSSong
 
-- (instancetype)initWithPMSDictionary:(NSDictionary *)dictionary
-{
-	if ((self = [super init]))
-	{
-		NSString *songName = N2n([dictionary objectForKey:@"songName"]);
-		NSString *titleKey = !songName || songName.length == 0  ? @"fileName" : @"songName";
-		_title = [(NSString *)N2n([dictionary objectForKey:titleKey]) cleanString];
-		_songId = N2n([dictionary objectForKey:@"itemId"]);
-		_parentId = N2n([dictionary objectForKey:@"folderId"]);
-		_artist = [(NSString *)N2n([dictionary objectForKey:@"artistName"]) cleanString];
-		_album = [(NSString *)N2n([dictionary objectForKey:@"albumName"]) cleanString];
-		_genre = [(NSString *)N2n([dictionary objectForKey:@"genreName"]) cleanString];
-		_coverArtId = N2n([dictionary objectForKey:@"artId"]);
-		_suffix = [N2n([dictionary objectForKey:@"fileType"]) cleanString];
-		_duration = N2n([[dictionary objectForKey:@"duration"] copy]);
-		_bitRate = N2n([[dictionary objectForKey:@"bitrate"] copy]);
-		_track = N2n([[dictionary objectForKey:@"trackNumber"] copy]);
-		_year = N2n([[dictionary objectForKey:@"year"] copy]);
-		_size = N2n([[dictionary objectForKey:@"fileSize"] copy]);
-        _discNumber = N2n([[dictionary objectForKey:@"discNumber"] copy]);
-		 
-		// Generate "path" from artist, album and song name
-		NSString *artistName = _artist ? _artist : @"Unknown";
-		NSString *albumName = _album ? _album : @"Unknown";
-		_path = [NSString stringWithFormat:@"%@/%@/%@", artistName, albumName, _title];
-	}
-	return self;
-}
-
-- (instancetype)initWithTBXMLElement:(TBXMLElement *)element
-{
-	if ((self = [super init]))
-	{
-		_title = [[TBXML valueOfAttributeNamed:@"title" forElement:element] cleanString];
-		_songId = [[TBXML valueOfAttributeNamed:@"id" forElement:element] cleanString];
-		_parentId = [[TBXML valueOfAttributeNamed:@"parent" forElement:element] cleanString];
-		_artist = [[TBXML valueOfAttributeNamed:@"artist" forElement:element] cleanString];
-		_album = [[TBXML valueOfAttributeNamed:@"album" forElement:element] cleanString];
-		_genre = [[TBXML valueOfAttributeNamed:@"genre" forElement:element] cleanString];
-		_coverArtId = [[TBXML valueOfAttributeNamed:@"coverArt" forElement:element] cleanString];
-		_path = [[TBXML valueOfAttributeNamed:@"path" forElement:element] cleanString];
-		_suffix = [[TBXML valueOfAttributeNamed:@"suffix" forElement:element] cleanString];
-		_transcodedSuffix = [[TBXML valueOfAttributeNamed:@"transcodedSuffix" forElement:element] cleanString];
-		
-        NSString *durationString = [TBXML valueOfAttributeNamed:@"duration" forElement:element];
-		if(durationString) _duration = @(durationString.intValue);
-        
-        NSString *bitRateString = [TBXML valueOfAttributeNamed:@"bitRate" forElement:element];
-		if(bitRateString) _bitRate = @(bitRateString.intValue);
-
-        NSString *trackString = [TBXML valueOfAttributeNamed:@"track" forElement:element];
-		if(trackString) _track = @(trackString.intValue);
-        
-        NSString *yearString = [TBXML valueOfAttributeNamed:@"year" forElement:element];
-		if(yearString) _year = @(yearString.intValue);
-        
-        NSString *sizeString = [TBXML valueOfAttributeNamed:@"size" forElement:element];
-        if (sizeString) _size = @(sizeString.longLongValue);
-        
-        NSString *discNumberString = [TBXML valueOfAttributeNamed:@"discNumber" forElement:element];
-        if (discNumberString) _discNumber = @(discNumberString.longLongValue);
-        
-        _isVideo = [[TBXML valueOfAttributeNamed:@"isVideo" forElement:element] boolValue];
-	}
-	
-	return self;
-}
-
-- (instancetype)initWithRXMLElement:(RXMLElement *)element
-{
-    if ((self = [super init]))
-    {
+- (instancetype)initWithRXMLElement:(RXMLElement *)element {
+    if (self = [super init]) {
         _title = [[element attribute:@"title"] cleanString];
         _songId = [[element attribute:@"id"] cleanString];
         _parentId = [[element attribute:@"parent"] cleanString];
@@ -123,10 +53,8 @@
     return self;
 }
 
-- (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict
-{
-	if ((self = [super init]))
-	{
+- (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict {
+	if (self = [super init]) {
 		_title = [[attributeDict objectForKey:@"title"] cleanString];
 		_songId = [[attributeDict objectForKey:@"id"] cleanString];
 		_parentId = [[attributeDict objectForKey:@"parent"] cleanString];
@@ -163,8 +91,7 @@
     return YES;
 }
 
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
+- (void)encodeWithCoder:(NSCoder *)encoder {
 	[encoder encodeObject:self.title forKey:@"title"];
 	[encoder encodeObject:self.songId forKey:@"songId"];
 	[encoder encodeObject:self.parentId forKey:@"parentId"];
@@ -184,13 +111,10 @@
     [encoder encodeObject:self.discNumber forKey:@"discNumber"];
 }
 
-- (instancetype)initWithCoder:(NSCoder *)decoder
-{
-	if ((self = [super init]))
-	{
+- (instancetype)initWithCoder:(NSCoder *)decoder {
+	if (self = [super init]) {
 		// Check if this object is using the new encoding
-		if ([decoder containsValueForKey:@"songId"])
-		{
+		if ([decoder containsValueForKey:@"songId"]) {
 			_title = [[decoder decodeObjectForKey:@"title"] copy];
 			_songId = [[decoder decodeObjectForKey:@"songId"] copy];
 			_parentId = [[decoder decodeObjectForKey:@"parentId"] copy];
@@ -208,9 +132,7 @@
 			_size = [[decoder decodeObjectForKey:@"size"] copy];
             _isVideo = [decoder decodeBoolForKey:@"isVideo"];
             _discNumber = [decoder decodeObjectForKey:@"discNumber"];
-		}
-		else
-		{
+		} else {
 			_title = [[decoder decodeObject] copy];
 			_songId = [[decoder decodeObject] copy];
 			_artist = [[decoder decodeObject] copy];
@@ -231,8 +153,7 @@
 	return self;
 }
 
-- (instancetype)copyWithZone:(NSZone *)zone
-{
+- (instancetype)copyWithZone:(NSZone *)zone {
 	ISMSSong *newSong = [[ISMSSong alloc] init];
 
 	// Can directly assign because properties have "copy" type
@@ -257,24 +178,18 @@
 	return newSong;
 }
 
-- (NSString *)description
-{
+- (NSString *)description {
 	//return [NSString stringWithFormat:@"%@: title: %@, songId: %@", [super description], title, songId];
 	return [NSString stringWithFormat:@"%@  title: %@", [super description], self.title];
 }
 
-- (NSUInteger)hash
-{
+- (NSUInteger)hash {
 	return self.songId.hash;
 }
 
-- (BOOL)isEqualToSong:(ISMSSong *)otherSong
-{
-    if (self == otherSong)
-        return YES;
-	
-	if (!self.songId || !otherSong.songId || !self.path || !otherSong.path)
-		return NO;
+- (BOOL)isEqualToSong:(ISMSSong *)otherSong {
+    if (self == otherSong) return YES;
+	if (!self.songId || !otherSong.songId || !self.path || !otherSong.path) return NO;
 	
 	if (([self.songId isEqualToString:otherSong.songId] || (self.songId == nil && otherSong.songId == nil)) &&
 		([self.path isEqualToString:otherSong.path] || (self.path == nil && otherSong.path == nil)) &&
@@ -296,44 +211,31 @@
 	return NO;
 }
 
-- (BOOL)isEqual:(id)other 
-{
-    if (other == self)
-        return YES;
-	
-    if (!other || ![other isKindOfClass:[self class]])
-        return NO;
-	
+- (BOOL)isEqual:(id)other  {
+    if (other == self) return YES;
+    if (!other || ![other isKindOfClass:[self class]]) return NO;
     return [self isEqualToSong:other];
 }
 
-- (NSString *)localSuffix
-{
-	if (self.transcodedSuffix)
-		return self.transcodedSuffix;
-	
-	return self.suffix;
+- (NSString *)localSuffix {
+    return self.transcodedSuffix ? self.transcodedSuffix : self.suffix;
 }
 
-- (NSString *)localPath
-{
+- (NSString *)localPath {
     NSString *fileName = self.path.md5;    
     return fileName ? [settingsS.songCachePath stringByAppendingPathComponent:fileName] : nil;
 }
 
-- (NSString *)localTempPath
-{
+- (NSString *)localTempPath {
     NSString *fileName = self.path.md5;
 	return fileName ? [settingsS.tempCachePath stringByAppendingPathComponent:fileName] : nil;
 }
 
-- (NSString *)currentPath
-{
+- (NSString *)currentPath {
 	return self.isTempCached ? self.localTempPath : self.localPath;
 }
 
-- (BOOL)isTempCached
-{	
+- (BOOL)isTempCached {
 	// If the song is fully cached, then it doesn't matter if there is a temp cache file
 	//if (self.isFullyCached)
 	//	return NO;
@@ -342,8 +244,7 @@
 	return [[NSFileManager defaultManager] fileExistsAtPath:self.localTempPath];
 }
 
-- (unsigned long long)localFileSize
-{
+- (unsigned long long)localFileSize {
     // NOTE: This is almost certainly no longer the case
 	// Using C instead of Cocoa because of a weird crash on iOS 5 devices in the audio engine
 	// Asked question here: http://stackoverflow.com/questions/10289536/sigsegv-segv-accerr-crash-in-nsfileattributes-dealloc-when-autoreleasepool-is-dr
@@ -355,27 +256,25 @@
 	//return [[[NSFileManager defaultManager] attributesOfItemAtPath:self.currentPath error:NULL] fileSize];
 }
 
-- (NSUInteger)estimatedBitrate
-{	
+- (NSUInteger)estimatedBitrate {
 	NSInteger currentMaxBitrate = settingsS.currentMaxBitrate;
 	
 	// Default to 128 if there is no bitrate for this song object (should never happen)
 	NSUInteger rate = (!self.bitRate || [self.bitRate intValue] == 0) ? 128 : [self.bitRate intValue];
 	
 	// Check if this is being transcoded to the best of our knowledge
-	if (self.transcodedSuffix)
-	{
+	if (self.transcodedSuffix) {
 		// This is probably being transcoded, so attempt to determine the bitrate
-		if (rate > 128 && currentMaxBitrate == 0)
+        if (rate > 128 && currentMaxBitrate == 0) {
 			rate = 128; // Subsonic default transcoding bitrate
-		else if (rate > currentMaxBitrate && currentMaxBitrate != 0)
+        } else if (rate > currentMaxBitrate && currentMaxBitrate != 0) {
 			rate = currentMaxBitrate;
-	}
-	else
-	{
+        }
+	} else {
 		// This is not being transcoded between formats, however bitrate limiting may be active
-		if (rate > currentMaxBitrate && currentMaxBitrate != 0)
+        if (rate > currentMaxBitrate && currentMaxBitrate != 0) {
 			rate = currentMaxBitrate;
+        }
 	}
 
 	return rate;
@@ -388,4 +287,5 @@
 - (NSString *)durationLabelText { return [NSString formatTime:[self.duration floatValue]]; }
 - (void)download { [self addToCacheQueueDbQueue]; }
 - (void)queue { [self addToCurrentPlaylistDbQueue]; }
+
 @end

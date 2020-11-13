@@ -7,7 +7,6 @@
 //
 
 #import "ISMSTableCellModel.h"
-#import "TBXML.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,12 +27,8 @@ NS_SWIFT_NAME(Album)
 
 - (instancetype)copyWithZone:(nullable NSZone *)zone;
 
-- (instancetype)initWithPMSDictionary:(NSDictionary *)dictionary;
-
 - (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict;
 - (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict artist:(ISMSArtist *)myArtist;
-- (instancetype)initWithTBXMLElement:(TBXMLElement *)element;
-- (instancetype)initWithTBXMLElement:(TBXMLElement *)element artistId:(NSString *)artistIdToSet artistName:(NSString *)artistNameToSet;
 - (instancetype)initWithRXMLElement:(RXMLElement *)element;
 - (instancetype)initWithRXMLElement:(RXMLElement *)element artistId:(NSString *)artistIdToSet artistName:(NSString *)artistNameToSet;
 @end

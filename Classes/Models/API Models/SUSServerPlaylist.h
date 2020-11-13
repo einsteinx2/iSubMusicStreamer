@@ -7,7 +7,6 @@
 //
 
 #import "ISMSTableCellModel.h"
-#import "TBXML.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,7 +17,6 @@ NS_SWIFT_NAME(ServerPlaylist)
 @property (copy) NSString *playlistId;
 @property (copy) NSString *playlistName;
 
-- (instancetype)initWithTBXMLElement:(TBXMLElement *)element;
 - (instancetype)initWithRXMLElement:(RXMLElement *)element;
 
 @end

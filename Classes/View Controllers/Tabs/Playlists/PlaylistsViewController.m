@@ -998,12 +998,12 @@ static NSString *kName_Error = @"error";
 
 - (void)parseData {
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-    if (![root isValid]) {
+    if (!root.isValid) {
         NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
         [self subsonicErrorCode:nil message:error.description];
     } else {
         RXMLElement *error = [root child:@"error"];
-        if ([error isValid]) {
+        if (error.isValid) {
             NSString *code = [error attribute:@"code"];
             NSString *message = [error attribute:@"message"];
             [self subsonicErrorCode:code message:message];

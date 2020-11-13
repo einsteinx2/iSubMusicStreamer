@@ -8,7 +8,7 @@
 
 #import "SUSAllSongsLoader.h"
 #import "NSMutableURLRequest+SUS.h"
-#import "TBXML.h"
+#import "RXMLElement.h"
 #import "FMDatabaseQueueAdditions.h"
 #import "SavedSettings.h"
 #import "DatabaseSingleton.h"
@@ -498,144 +498,133 @@ static NSString *kName_Error = @"error";
 
 - (void)parseData {
 	@autoreleasepool  {
-		NSError *error;
-		TBXML *tbxml = [[TBXML alloc] initWithXMLData:self.receivedData error:&error];
-		if (!error) {
-			TBXMLElement *root = tbxml.rootXMLElement;
-
-			TBXMLElement *error = [TBXML childElementNamed:kName_Error parentElement:root];
-			if (error) {
-				NSInteger code = [[TBXML valueOfAttributeNamed:@"code" forElement:error] integerValue];
-				NSString *message = [TBXML valueOfAttributeNamed:@"message" forElement:error];
+        RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
+        if (!root.isValid) {
+            NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
+            [self informDelegateLoadingFailed:error];
+        } else {
+            RXMLElement *error = [root child:@"error"];
+            if (error.isValid) {
+                NSInteger code = [[error attribute:@"code"] integerValue];
+                NSString *message = [error attribute:@"message"];
                 [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
-			}
-			
-			TBXMLElement *directory = [TBXML childElementNamed:kName_Directory parentElement:root];
-			if (directory)  {
-				//NSDate *startTime = [NSDate date];
-				TBXMLElement *child = [TBXML childElementNamed:kName_Child parentElement:directory];
-				while (child != nil) {
-					@autoreleasepool {
-						if ([[TBXML valueOfAttributeNamed:@"isDir" forElement:child] isEqualToString:@"true"]) {
-							//Initialize the Album.
-							ISMSAlbum *anAlbum = [[ISMSAlbum alloc] initWithTBXMLElement:child artistId:self.currentArtist.artistId artistName:self.currentArtist.name];
-							
-							// Skip if it's .AppleDouble, otherwise process it
-							if (![anAlbum.title isEqualToString:@".AppleDouble"]) {
-								if (self.iteration == -1) {
-									// Add the album to the allAlbums table
-									[databaseS insertAlbum:anAlbum intoTable:@"allAlbumsTemp" inDatabaseQueue:databaseS.allAlbumsDbQueue];
-									self.tempAlbumsCount++;
-									self.totalAlbumsProcessed++;
-									
-									if (self.tempAlbumsCount == WRITE_BUFFER_AMOUNT) {
-										// Flush the records to disk
-										[databaseS.allAlbumsDbQueue inDatabase:^(FMDatabase *db) {
-											 [db executeUpdate:@"INSERT INTO allAlbumsUnsorted SELECT * FROM allAlbumsTemp"];
-											 [db executeUpdate:@"DROP TABLE IF EXISTS allAlbumsTemp"];
-											 [db executeUpdate:@"CREATE TEMPORARY TABLE allAlbumsTemp(title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
-										 }];
-										self.tempAlbumsCount = 0;
-									}
-								} else {
-									//Add album object to the subalbums table to be processed in the next iteration
-									[databaseS insertAlbum:anAlbum intoTable:[NSString stringWithFormat:@"subalbums%ld", (long)(self.iteration + 1)] inDatabaseQueue:databaseS.allAlbumsDbQueue];
-								}
-							}
-							
-							// Update the loading screen message
-							if (self.iteration == -1) {
-								[self sendAlbumNotification:anAlbum.title];
-							}
-							
-						} else {
-							//Initialize the Song.
-							ISMSSong *aSong = [[ISMSSong alloc] initWithTBXMLElement:child];
-							
-							// Add song object to the allSongs and genre databases
-							if (![aSong.title isEqualToString:@".AppleDouble"]) {
-								// Process it if it has a path
-								if (aSong.path) {
-									// Add the song to the allSongs table
-									[aSong insertIntoTable:@"allSongsTemp" inDatabaseQueue:databaseS.allSongsDbQueue];
-									self.tempSongsCount++;
-									self.totalSongsProcessed++;
-									
-									if (self.tempSongsCount == WRITE_BUFFER_AMOUNT) {
-										// Flush the records to disk
-										[databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
-											 [db executeUpdate:@"INSERT INTO allSongsUnsorted SELECT * FROM allSongsTemp"];
-											 [db executeUpdate:@"DROP TABLE IF EXISTS allSongsTemp"];
-											 NSString *query = [NSString stringWithFormat:@"CREATE TEMPORARY TABLE allSongsTemp (%@)", [ISMSSong standardSongColumnSchema]];
-											 [db executeUpdate:query];
-										 }];
-										self.tempSongsCount = 0;
-									}
-									
-									// If it has a genre, process that
-									if (aSong.genre) {
-										[databaseS.genresDbQueue inDatabase:^(FMDatabase *db) {
-											 // Add the genre to the genre table
-											 [db executeUpdate:@"INSERT INTO genresTemp (genre) VALUES (?)", aSong.genre];
-											 self.tempGenresCount++;
-											 
-											 if (self.tempGenresCount == WRITE_BUFFER_AMOUNT) {
-												 // Flush the records to disk
-												 [db executeUpdate:@"INSERT OR IGNORE INTO genresUnsorted SELECT * FROM genresTemp"];
-												 //[databaseS.genresDb executeUpdate:@"DELETE * FROM genresTemp"];
-												 [db executeUpdate:@"DROP TABLE IF EXISTS genresTemp"];
-												 [db executeUpdate:@"CREATE TEMPORARY TABLE genresTemp (genre TEXT)"];
-												 self.tempGenresCount = 0;
-											 }
+            } else {
+                [root iterate:@"directory.child" usingBlock:^(RXMLElement *child) {
+                    @autoreleasepool {
+                        if ([[child attribute:@"isDir"] isEqualToString:@"true"]) {
+                            // Initialize the Album
+                            ISMSAlbum *anAlbum = [[ISMSAlbum alloc] initWithRXMLElement:child artistId:self.currentArtist.artistId artistName:self.currentArtist.name];
+                            
+                            // Skip if it's .AppleDouble, otherwise process it
+                            if (![anAlbum.title isEqualToString:@".AppleDouble"]) {
+                                if (self.iteration == -1) {
+                                    // Add the album to the allAlbums table
+                                    [databaseS insertAlbum:anAlbum intoTable:@"allAlbumsTemp" inDatabaseQueue:databaseS.allAlbumsDbQueue];
+                                    self.tempAlbumsCount++;
+                                    self.totalAlbumsProcessed++;
+                                    
+                                    if (self.tempAlbumsCount == WRITE_BUFFER_AMOUNT) {
+                                        // Flush the records to disk
+                                        [databaseS.allAlbumsDbQueue inDatabase:^(FMDatabase *db) {
+                                             [db executeUpdate:@"INSERT INTO allAlbumsUnsorted SELECT * FROM allAlbumsTemp"];
+                                             [db executeUpdate:@"DROP TABLE IF EXISTS allAlbumsTemp"];
+                                             [db executeUpdate:@"CREATE TEMPORARY TABLE allAlbumsTemp(title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
+                                         }];
+                                        self.tempAlbumsCount = 0;
+                                    }
+                                } else {
+                                    //Add album object to the subalbums table to be processed in the next iteration
+                                    [databaseS insertAlbum:anAlbum intoTable:[NSString stringWithFormat:@"subalbums%ld", (long)(self.iteration + 1)] inDatabaseQueue:databaseS.allAlbumsDbQueue];
+                                }
+                            }
+                            
+                            // Update the loading screen message
+                            if (self.iteration == -1) {
+                                [self sendAlbumNotification:anAlbum.title];
+                            }
+                        } else {
+                            // Initialize the Song
+                            ISMSSong *aSong = [[ISMSSong alloc] initWithRXMLElement:child];
+                            
+                            // Add song object to the allSongs and genre databases
+                            if (![aSong.title isEqualToString:@".AppleDouble"]) {
+                                // Process it if it has a path
+                                if (aSong.path) {
+                                    // Add the song to the allSongs table
+                                    [aSong insertIntoTable:@"allSongsTemp" inDatabaseQueue:databaseS.allSongsDbQueue];
+                                    self.tempSongsCount++;
+                                    self.totalSongsProcessed++;
+                                    
+                                    if (self.tempSongsCount == WRITE_BUFFER_AMOUNT) {
+                                        // Flush the records to disk
+                                        [databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
+                                             [db executeUpdate:@"INSERT INTO allSongsUnsorted SELECT * FROM allSongsTemp"];
+                                             [db executeUpdate:@"DROP TABLE IF EXISTS allSongsTemp"];
+                                             NSString *query = [NSString stringWithFormat:@"CREATE TEMPORARY TABLE allSongsTemp (%@)", [ISMSSong standardSongColumnSchema]];
+                                             [db executeUpdate:query];
+                                         }];
+                                        self.tempSongsCount = 0;
+                                    }
+                                    
+                                    // If it has a genre, process that
+                                    if (aSong.genre) {
+                                        [databaseS.genresDbQueue inDatabase:^(FMDatabase *db) {
+                                             // Add the genre to the genre table
+                                             [db executeUpdate:@"INSERT INTO genresTemp (genre) VALUES (?)", aSong.genre];
+                                             self.tempGenresCount++;
+                                             
+                                             if (self.tempGenresCount == WRITE_BUFFER_AMOUNT) {
+                                                 // Flush the records to disk
+                                                 [db executeUpdate:@"INSERT OR IGNORE INTO genresUnsorted SELECT * FROM genresTemp"];
+                                                 //[databaseS.genresDb executeUpdate:@"DELETE * FROM genresTemp"];
+                                                 [db executeUpdate:@"DROP TABLE IF EXISTS genresTemp"];
+                                                 [db executeUpdate:@"CREATE TEMPORARY TABLE genresTemp (genre TEXT)"];
+                                                 self.tempGenresCount = 0;
+                                             }
                                              
                                              // Insert the song to the genresSongs table
                                              [aSong insertIntoGenreTable:@"genresSongsTemp" inDatabase:db];
-											 
-											 // Insert the song into the genresLayout table
-											 NSArray *splitPath = [aSong.path componentsSeparatedByString:@"/"];
-											 if ([splitPath count] <= 9) {
-												 NSMutableArray *segments = [[NSMutableArray alloc] initWithArray:splitPath];
-												 while ([segments count] < 9) {
-													 [segments addObject:@""];
-												 }
+                                             
+                                             // Insert the song into the genresLayout table
+                                             NSArray *splitPath = [aSong.path componentsSeparatedByString:@"/"];
+                                             if ([splitPath count] <= 9) {
+                                                 NSMutableArray *segments = [[NSMutableArray alloc] initWithArray:splitPath];
+                                                 while ([segments count] < 9) {
+                                                     [segments addObject:@""];
+                                                 }
                                                  
-												 NSString *query = @"INSERT INTO genresLayoutTemp (md5, genre, segs, seg1, seg2, seg3, seg4, seg5, seg6, seg7, seg8, seg9) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-												 [db executeUpdate:query, [aSong.path md5], aSong.genre, @([splitPath count]), [segments objectAtIndexSafe:0], [segments objectAtIndexSafe:1], [segments objectAtIndexSafe:2], [segments objectAtIndexSafe:3], [segments objectAtIndexSafe:4], [segments objectAtIndexSafe:5], [segments objectAtIndexSafe:6], [segments objectAtIndexSafe:7], [segments objectAtIndexSafe:8]];
-												 self.tempGenresLayoutCount++;
-												 
-												 if (self.tempGenresLayoutCount == WRITE_BUFFER_AMOUNT) {
+                                                 NSString *query = @"INSERT INTO genresLayoutTemp (md5, genre, segs, seg1, seg2, seg3, seg4, seg5, seg6, seg7, seg8, seg9) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                                 [db executeUpdate:query, [aSong.path md5], aSong.genre, @([splitPath count]), [segments objectAtIndexSafe:0], [segments objectAtIndexSafe:1], [segments objectAtIndexSafe:2], [segments objectAtIndexSafe:3], [segments objectAtIndexSafe:4], [segments objectAtIndexSafe:5], [segments objectAtIndexSafe:6], [segments objectAtIndexSafe:7], [segments objectAtIndexSafe:8]];
+                                                 self.tempGenresLayoutCount++;
+                                                 
+                                                 if (self.tempGenresLayoutCount == WRITE_BUFFER_AMOUNT) {
                                                      // Flush songs
                                                      [db executeUpdate:@"INSERT OR IGNORE INTO genresSongs SELECT * FROM genresSongsTemp"];
                                                      [db executeUpdate:@"DROP TABLE IF EXISTS genresSongsTemp"];
                                                      [db executeUpdate:[NSString stringWithFormat:@"CREATE TEMPORARY TABLE genresSongsTemp (md5 TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
                                                      
-													 // Flush the records to disk
-													 [db executeUpdate:@"INSERT OR IGNORE INTO genresLayout SELECT * FROM genresLayoutTemp"];
-													 //[databaseS.genresDb executeUpdate:@"DELETE * FROM genresLayoutTemp"];
-													 [db executeUpdate:@"DROP TABLE IF EXISTS genresLayoutTemp"];
-													 [db executeUpdate:@"CREATE TEMPORARY TABLE genresLayoutTemp (md5 TEXT, genre TEXT, segs INTEGER, seg1 TEXT, seg2 TEXT, seg3 TEXT, seg4 TEXT, seg5 TEXT, seg6 TEXT, seg7 TEXT, seg8 TEXT, seg9 TEXT)"];
-													 self.tempGenresLayoutCount = 0;
-												 }
-											 }
-										 }];
-									}
-								}
-							}
-							
-							// Update the loading screen message
-							if (self.iteration != -1) {
-								[self sendSongNotification:aSong.title];
-							}
-							
-						}
-						
-						child = [TBXML nextSiblingNamed:kName_Child searchFromElement:child];
-						
-					}
-				}
-				//DLog(@"artist or album folder processing time: %f", [[NSDate date] timeIntervalSinceDate:startTime]);
-			}
-		}
+                                                     // Flush the records to disk
+                                                     [db executeUpdate:@"INSERT OR IGNORE INTO genresLayout SELECT * FROM genresLayoutTemp"];
+                                                     //[databaseS.genresDb executeUpdate:@"DELETE * FROM genresLayoutTemp"];
+                                                     [db executeUpdate:@"DROP TABLE IF EXISTS genresLayoutTemp"];
+                                                     [db executeUpdate:@"CREATE TEMPORARY TABLE genresLayoutTemp (md5 TEXT, genre TEXT, segs INTEGER, seg1 TEXT, seg2 TEXT, seg3 TEXT, seg4 TEXT, seg5 TEXT, seg6 TEXT, seg7 TEXT, seg8 TEXT, seg9 TEXT)"];
+                                                     self.tempGenresLayoutCount = 0;
+                                                 }
+                                             }
+                                         }];
+                                    }
+                                }
+                            }
+                            
+                            // Update the loading screen message
+                            if (self.iteration != -1) {
+                                [self sendSongNotification:aSong.title];
+                            }
+                        }
+                    }
+                }];
+            }
+        }
 		
 		// Close the connection
 		//

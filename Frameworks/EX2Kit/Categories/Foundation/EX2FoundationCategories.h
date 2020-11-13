@@ -12,7 +12,6 @@
 #import "NSArray+Additions.h"
 #import "NSString+Additions.h"
 #import "NSNotificationCenter+MainThread.h"
-#import "NSData+Base64.h"
 #import "NSData+Gzip.h"
 #import "NSMutableDictionary+Safe.h"
 #import "NSURL+QueryParameterDictionary.h"

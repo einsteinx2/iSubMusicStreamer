@@ -120,7 +120,7 @@
                     
                     [self dataSourceDidFinishLoadingNewData];
                 }]];
-                [alert addAction:[UIAlertAction actionWithTitle:@"Resume Load" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                [alert addAction:[UIAlertAction actionWithTitle:@"Resume Load" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     [self showLoadingScreen];
                     
                     [self.dataModel startLoad];
@@ -136,7 +136,7 @@
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Load?"
                                                                                message:message
                                                                         preferredStyle:UIAlertControllerStyleAlert];
-                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     [self showLoadingScreen];
                     
                     [self.dataModel restartLoad];

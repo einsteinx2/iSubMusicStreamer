@@ -18,38 +18,22 @@
 
 @implementation SUSServerPlaylist
 
-- (instancetype)initWithTBXMLElement:(TBXMLElement *)element
-{
-	if ((self = [super init]))
-	{
-		_playlistId = [TBXML valueOfAttributeNamed:@"id" forElement:element];
-		_playlistName = [[TBXML valueOfAttributeNamed:@"name" forElement:element] cleanString];
-	}
-	
-	return self;
-}
-
-- (instancetype)initWithRXMLElement:(RXMLElement *)element
-{
-    if ((self = [super init]))
-    {
+- (instancetype)initWithRXMLElement:(RXMLElement *)element {
+    if (self = [super init]) {
         _playlistId = [element attribute:@"id"];
         _playlistName = [[element attribute:@"name"] cleanString];
     }
-    
     return self;
 }
 
--(id)copyWithZone: (NSZone *) zone
-{
+- (instancetype)copyWithZone:(NSZone *) zone {
     SUSServerPlaylist *playlist = [[SUSServerPlaylist alloc] init];
     playlist.playlistName = self.playlistName;
     playlist.playlistId = self.playlistId;
     return playlist;
 }
 
-- (NSComparisonResult)compare:(SUSServerPlaylist *)otherObject 
-{
+- (NSComparisonResult)compare:(SUSServerPlaylist *)otherObject  {
     return [self.playlistName caseInsensitiveCompare:otherObject.playlistName];
 }
 
@@ -59,12 +43,12 @@
         // TODO: Inform user of errors
         if (!error) {
             RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
-            if (![root isValid]) {
+            if (!root.isValid) {
                 //NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
                 // TODO: handle this error
             } else {
                 RXMLElement *error = [root child:@"error"];
-                if ([error isValid]) {
+                if (error.isValid) {
                     //NSString *code = [error attribute:@"code"];
                     //NSString *message = [error attribute:@"message"];
                     // TODO: handle this error
