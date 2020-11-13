@@ -51,24 +51,6 @@ static CGFloat kDDSocialDialogTitleMarginX = 8.0;
 static CGFloat kDDSocialDialogTitleMarginY = 4.0;
 static CGFloat kDDSocialDialogPadding = 10;
 
-@interface DDSocialDialog () 
-- (void)postDismissCleanup;
-
-- (void)addRoundedRectToPath:(CGContextRef)context rect:(CGRect)rect radius:(float)radius;
-- (void)drawRect:(CGRect)rect fill:(CGColorRef)fillColor radius:(CGFloat)radius;
-- (void)strokeLines:(CGRect)rect stroke:(CGColorRef)strokeColor;
-
-- (void)bounce1AnimationStopped;
-- (void)bounce2AnimationStopped;
-- (CGAffineTransform)transformForOrientation;
-- (void)sizeToFitOrientation:(BOOL)transform;
-- (BOOL)shouldRotateToOrientation:(UIDeviceOrientation)orientation;
-
-- (void)deviceOrientationDidChange:(void*)object;
-- (void)keyboardDidShow:(NSNotification*)notification;
-- (void)keyboardWillHide:(NSNotification*)notification;
-@end
-
 @implementation DDSocialDialog
 
 @synthesize theme = theme_;
