@@ -37,8 +37,8 @@
 @property (strong) SUSQueueAllLoader *queueAll;
 
 + (instancetype)sharedInstance;
-+ (void) setAllSongsToBackup;
-+ (void) setAllSongsToNotBackup;
++ (void)setAllSongsToBackup;
++ (void)setAllSongsToNotBackup;
 
 - (void)setupDatabases;
 - (void)setCurrentMetadataDatabase;

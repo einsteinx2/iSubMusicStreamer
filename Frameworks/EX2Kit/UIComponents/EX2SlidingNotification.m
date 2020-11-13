@@ -101,11 +101,8 @@ static BOOL _isThrottlingEnabled = YES;
 		
 		// If we're directly on the UIWindow, add 20 points for the status bar
 		self.view.frame = CGRectMake(0., 0, _parentView.width, self.view.height);
-        if (IS_IOS7())
-        {
-            self.imageView.y += 15.;
-            self.messageLabel.y += 15.;
-        }
+        self.imageView.y += 15.;
+        self.messageLabel.y += 15.;
 		
 		[_parentView addSubview:self.view];
 	}
@@ -168,8 +165,7 @@ static BOOL _isThrottlingEnabled = YES;
 	}
     
     // Add 20 points for the status bar if we're on iOS 7.
-    if (IS_IOS7())
-        self.view.height += 20.;
+    self.view.height += 20.;
     
     [self.view addBottomShadow];
     CALayer *shadow = [self.view bottomShadow];
@@ -210,12 +206,7 @@ static BOOL _isThrottlingEnabled = YES;
         //DLog(@"current frame: %@", NSStringFromCGRect(self.view.frame));
         [UIView animateWithDuration:ANIMATION_DELAY animations:^(void)
          {
-             // If we're directly on the UIWindow then add the status bar height
-             CGFloat y = 0.;
-             if (self.view.superview == [self.class mainWindow] && !IS_IOS7())
-                 y = [[UIApplication sharedApplication] statusBarFrame].size.height;
-             
-             self.view.y = y;
+             self.view.y = 0;
              
              //DLog(@"new frame: %@", NSStringFromCGRect(self.view.frame));
          }];

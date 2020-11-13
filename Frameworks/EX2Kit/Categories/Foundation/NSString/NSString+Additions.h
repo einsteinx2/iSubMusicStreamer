@@ -10,7 +10,6 @@
 #define EX2Kit_NSString_Additions_h
 
 #import "NSString+compareWithoutIndefiniteArticles.h"
-#import "NSString+cStringUTF8.h"
 #import "NSString+hex.h"
 #import "NSString+md5.h"
 #import "NSString+rfcEncode.h"

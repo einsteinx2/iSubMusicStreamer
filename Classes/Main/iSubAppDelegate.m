@@ -189,28 +189,13 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 	else
 	{
-        if (IS_IOS7())
-        {
-            [[UITabBar appearance] setBarTintColor:[UIColor blackColor]];
-            self.mainTabBarController.tabBar.translucent = NO;
-            self.offlineTabBarController.tabBar.translucent = NO;
-        }
+        [[UITabBar appearance] setBarTintColor:[UIColor blackColor]];
+        self.mainTabBarController.tabBar.translucent = NO;
+        self.offlineTabBarController.tabBar.translucent = NO;
         
 		// Setup the tabBarController
 		self.mainTabBarController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
         self.mainTabBarController.moreNavigationController.navigationBar.translucent = NO;
-		/*// Add the support tab
-		[Crittercism showCrittercism:nil];
-		UIViewController *vc = (UIViewController *)[Crittercism sharedInstance].crittercismViewController;
-		self.supportNavigationController = [[UINavigationController alloc] initWithRootViewController:vc];
-		supportNavigationController.tabBarItem.tag = 9;
-		supportNavigationController.tabBarItem.image = [UIImage imageNamed:@"support-tabbaricon.png"];
-		supportNavigationController.tabBarItem.title = @"Support";
-		NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:mainTabBarController.viewControllers];
-		[viewControllers addObject:supportNavigationController];
-		[mainTabBarController setViewControllers:viewControllers animated:NO];
-		[vc logMethods];
-         //DLog(@"toolbarItems: %@", [vc toolbarItems]);*/
 		
 		//DLog(@"isOfflineMode: %i", settingsS.isOfflineMode);
 		if (settingsS.isOfflineMode)

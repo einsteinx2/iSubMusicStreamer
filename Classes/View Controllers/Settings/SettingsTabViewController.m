@@ -105,11 +105,6 @@
 	self.enableNextSongCacheSwitch.on = settingsS.isNextSongCacheEnabled;
 	self.enableNextSongPartialCacheSwitch.on = settingsS.isPartialCacheNextSong;
     self.enableBackupCacheSwitch.on = settingsS.isBackupCacheEnabled;
-    
-    if (SYSTEM_VERSION_LESS_THAN(@"5.0.1"))
-    {
-        self.enableBackupCacheSwitch.enabled = NO;
-    }
 		
 	self.totalSpace = cacheS.totalSpace;
 	self.freeSpace = cacheS.freeSpace;
@@ -149,15 +144,12 @@
     self.maxVideoBitrateWifiSegmentedControl.selectedSegmentIndex = settingsS.maxVideoBitrateWifi;
     
     // Fix switch positions for iOS 7
-    if (IS_IOS7())
+    for (UISwitch *sw in self.switches)
     {
-        for (UISwitch *sw in self.switches)
-        {
-            sw.x += 5.;
-        }
-        
-        self.autoDeleteCacheSwitch.x -= 10.;
+        sw.x += 5.;
     }
+    
+    self.autoDeleteCacheSwitch.x -= 10.;
 }
 
 - (void)cachingTypeToggle

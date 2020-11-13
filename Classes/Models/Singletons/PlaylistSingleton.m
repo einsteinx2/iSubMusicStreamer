@@ -526,15 +526,6 @@
 	}
 }
 
-#pragma mark - Memory management
-
-- (void)didReceiveMemoryWarning
-{
-//DLog(@"received memory warning");
-	
-	
-}
-
 #pragma mark - Singleton methods
 
 - (void)setup
@@ -543,9 +534,7 @@
 	normalIndex = 0;
 	repeatMode = ISMSRepeatMode_Normal;
 	
-#ifdef IOS
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
-#endif
 }
 
 + (id)sharedInstance

@@ -218,12 +218,6 @@
 	self.swipeDetectorRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight)];
 	self.swipeDetectorRight.direction = UISwipeGestureRecognizerDirectionRight;
 	[self.equalizerView addGestureRecognizer:self.swipeDetectorRight];
-	
-    if (!IS_IOS7())
-    {
-        self.gainSlider.y += 4.;
-        self.presetLabel.superview.y -= 10.;
-    }
     
 	[Flurry logEvent:@"Equalizer"];
 }
@@ -726,7 +720,7 @@
         FXBlurView *blurView = [[FXBlurView alloc] initWithFrame:self.presetPicker.bounds];
         blurView.tintColor = [UIColor whiteColor];
         [blurView addSubview:self.presetPicker];
-        blurView.height += IS_IOS7() ? 32. : 0.;
+        blurView.height += 32.0;
         blurView.y = self.view.height;
         
         [self.view addSubview:blurView];

@@ -9,6 +9,7 @@
 #import "HLSProxyResponse.h"
 #import "HTTPConnection.h"
 #import "EX2Kit.h"
+#import "EX2RingBuffer.h"
 
 static const int ddLogLevel = LOG_LEVEL_ERROR;
 

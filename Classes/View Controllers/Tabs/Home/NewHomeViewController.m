@@ -181,10 +181,8 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
     
-    if (IS_IOS7()) {
-        self.searchSegment.tintColor = ISMSHeaderColor;
-        self.searchSegmentBackground.backgroundColor = [UIColor colorWithWhite:.3 alpha:1];
-    }
+    self.searchSegment.tintColor = ISMSHeaderColor;
+    self.searchSegmentBackground.backgroundColor = [UIColor colorWithWhite:.3 alpha:1];
     
 	self.searchSegment.selectedSegmentIndex = 3;
 	

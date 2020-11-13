@@ -28,8 +28,8 @@
  iPhone3,3 ->	iPhone 4/Other Carrier?
  iPhone4,1 ->	??iPhone 5
 
- iPod1,1   -> iPod touch 1G 
- iPod2,1   -> iPod touch 2G 
+ iPod1,1   -> iPod touch 1G
+ iPod2,1   -> iPod touch 2G
  iPod2,2   -> ??iPod touch 2.5G
  iPod3,1   -> iPod touch 3G
  iPod4,1   -> iPod touch 4G
@@ -158,7 +158,7 @@
 	{
 		if ([[UIScreen mainScreen] bounds].size.width < 768)
 			return UIDeviceiPhoneSimulatoriPhone;
-		else 
+		else
 			return UIDeviceiPhoneSimulatoriPad;
 
 		return UIDeviceiPhoneSimulator;
@@ -277,7 +277,7 @@
 			
 		case UIDevice1GiPod: return @"N45";
 		case UIDevice2GiPod: return @"N72";
-		case UIDevice3GiPod: return @"N18"; 
+		case UIDevice3GiPod: return @"N18";
 		case UIDevice4GiPod: return @"N80";
 		case UIDeviceUnknowniPod: return IPOD_UNKNOWN_NAMESTRING;
 			
@@ -294,7 +294,7 @@
 }
 
 // Illicit Bluetooth check -- cannot be used in App Store
-/* 
+/*
 Class  btclass = NSClassFromString(@"GKBluetoothSupport");
 if ([btclass respondsToSelector:@selector(bluetoothStatus)])
 {

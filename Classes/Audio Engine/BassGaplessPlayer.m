@@ -13,6 +13,7 @@
 #import "ISMSCacheQueueManager.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "EX2RingBuffer.h"
 #import <AVFoundation/AVFoundation.h>
 
 @interface BassGaplessPlayer ()
@@ -697,10 +698,10 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 	if (aSong.fileExists)
 	{
 		// Create the stream
-        HSTREAM fileStream = BASS_StreamCreateFile(NO, aSong.currentPath.cStringUTF8, 0, aSong.size.longValue, BASS_STREAM_DECODE|BASS_SAMPLE_FLOAT);
+        HSTREAM fileStream = BASS_StreamCreateFile(NO, [aSong.currentPath cStringUsingEncoding:NSUTF8StringEncoding], 0, aSong.size.longValue, BASS_STREAM_DECODE|BASS_SAMPLE_FLOAT);
 		if(!fileStream)
         {
-            fileStream = BASS_StreamCreateFile(NO, aSong.currentPath.cStringUTF8, 0, aSong.size.longValue, BASS_STREAM_DECODE|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_FLOAT);
+            fileStream = BASS_StreamCreateFile(NO, [aSong.currentPath cStringUsingEncoding:NSUTF8StringEncoding], 0, aSong.size.longValue, BASS_STREAM_DECODE|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_FLOAT);
         }
         
 		if (fileStream)

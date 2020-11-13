@@ -11,7 +11,5 @@
 
 #import "NSArray+Safe.h"
 #import "NSMutableArray+Safe.h"
-#import "NSArray+Reverse.h"
-#import "NSArray+FilterBlock.h"
 
 #endif

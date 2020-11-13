@@ -19,7 +19,7 @@
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 
-@interface SUSAllSongsLoader ()
+@interface SUSAllSongsLoader()
 @property (strong) NSData *receivedData;
 - (void)createLoadTempTables;
 - (void)createLoadTables;
@@ -33,18 +33,18 @@
 
 @implementation SUSAllSongsLoader
 
-static BOOL isAllSongsLoading = NO;
-+ (BOOL)isLoading { return isAllSongsLoading; }
-+ (void)setIsLoading:(BOOL)isLoading { isAllSongsLoading = isLoading; }
+@synthesize receivedData=_receivedData;
+
+static BOOL _isAllSongsLoading = NO;
++ (BOOL)isLoading { return _isAllSongsLoading; }
++ (void)setIsLoading:(BOOL)isLoading { _isAllSongsLoading = isLoading; }
 
 - (void)setup {
     [super setup];
-	
 	_notificationTimeArtist = [[NSDate alloc] init];
 	_notificationTimeAlbum = [[NSDate alloc] init];
 	_notificationTimeSong = [[NSDate alloc] init];
 }
-
 
 - (SUSLoaderType)type {
     return SUSLoaderType_AllSongs;

@@ -26,7 +26,6 @@
 #import "UIImage+Cropping.h"
 #import "UIWebView+HideShadows.h"
 #import "UIButton+StretchBackground.h"
-#import "UIView+Glow.h"
 #import "UIView+SetNeedsLayoutSafe.h"
 #import "UIImageView+ImageAnimated.h"
 #import "UIImage+Color.h"

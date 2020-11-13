@@ -15,6 +15,8 @@
 #import "CacheSingleton.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "EX2RingBuffer.h"
+#import "EX2NetworkIndicator.h"
 #import "LibSub.h"
 
 LOG_LEVEL_ISUB_DEFAULT

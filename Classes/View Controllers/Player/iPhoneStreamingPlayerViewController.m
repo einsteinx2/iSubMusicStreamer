@@ -75,22 +75,19 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 {
 	[super viewDidLoad];
     
-    if (IS_IOS7())
-    {
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-        self.automaticallyAdjustsScrollViewInsets = NO;
-        
-        self.volumeSlider.y -= 5.;
-        self.eqButton.y -= 5.;
-        self.prevButton.y -= 5.;
-        self.playButton.y -= 5.;
-        self.nextButton.y -= 5.;
-        self.extraButtonsButton.y -= 5.;
-        
-        self.progressSlider.superview.y -= 2.;
-        
-        [self.progressSlider setThumbImage:[UIImage imageNamed:@"controller-slider-thumb.png"] forState:UIControlStateNormal];
-    }
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    self.volumeSlider.y -= 5.;
+    self.eqButton.y -= 5.;
+    self.prevButton.y -= 5.;
+    self.playButton.y -= 5.;
+    self.nextButton.y -= 5.;
+    self.extraButtonsButton.y -= 5.;
+    
+    self.progressSlider.superview.y -= 2.;
+    
+    [self.progressSlider setThumbImage:[UIImage imageNamed:@"controller-slider-thumb.png"] forState:UIControlStateNormal];
 	
     //DLog(@"coverArtImageView class: %@", NSStringFromClass(coverArtImageView.class));
 	
@@ -121,12 +118,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
             self.extraButtonsButton.hidden = NO;
         }
     }
-    
-    if (!IS_IOS7())
-    {
-        self.progressSlider.y += 2.;
-    }
-    
+
 	[self createDownloadProgressView];
 	[self createLandscapeViews];
 	
@@ -154,12 +146,12 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	// Register for all notifications
 	[self registerForNotifications];
 	
-    if (!IS_TALL_SCREEN())
-    {
-        [self extraButtonsToggleAnimated:NO saveState:NO];
-        if (!settingsS.isExtraPlayerControlsShowing)
-            [self performSelector:@selector(hideExtraButtons) withObject:nil afterDelay:4.0];
-    }
+//    if (!IS_TALL_SCREEN())
+//    {
+//        [self extraButtonsToggleAnimated:NO saveState:NO];
+//        if (!settingsS.isExtraPlayerControlsShowing)
+//            [self performSelector:@selector(hideExtraButtons) withObject:nil afterDelay:4.0];
+//    }
 	
 	// Show the song info screen automatically if the setting is enabled
 	if (settingsS.isPlayerPlaylistShowing)
@@ -402,13 +394,10 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	self.downloadProgress.layer.cornerRadius = 5;
 	[self.progressSlider addSubview:self.downloadProgress];
     
-    if (IS_IOS7())
-    {
-        self.downloadProgress.height -= 20.;
-        self.downloadProgress.y += 1.;
-        self.downloadProgress.layer.cornerRadius = 1.;
-        [self.downloadProgress centerVertically];
-    }
+    self.downloadProgress.height -= 20.;
+    self.downloadProgress.y += 1.;
+    self.downloadProgress.layer.cornerRadius = 1.;
+    [self.downloadProgress centerVertically];
 	
 	if (settingsS.isJukeboxEnabled)
 		self.downloadProgress.hidden = YES;
@@ -913,8 +902,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		
 		CGRect newFrame = CGRectMake(10, 0, self.volumeSlider.width-20, self.volumeSlider.height);
 		self.volumeView = [[MPVolumeView alloc] initWithFrame:newFrame];
-        if (IS_IOS7())
-            [self.volumeView setVolumeThumbImage:[UIImage imageNamed:@"controller-volumeslider-thumb.png"] forState:UIControlStateNormal];
+        [self.volumeView setVolumeThumbImage:[UIImage imageNamed:@"controller-volumeslider-thumb.png"] forState:UIControlStateNormal];
 		[self.volumeSlider addSubview:self.volumeView];
 	}
 	

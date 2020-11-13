@@ -73,10 +73,8 @@
 - (void)viewDidLoad  {
     [super viewDidLoad];
     
-    if (IS_IOS7()) {
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-        self.automaticallyAdjustsScrollViewInsets = NO;
-    }
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.automaticallyAdjustsScrollViewInsets = NO;
 	
 	self.albumInfoArtView.delegate = self;
 	

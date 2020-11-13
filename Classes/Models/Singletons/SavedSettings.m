@@ -558,33 +558,14 @@
 	return [paths objectAtIndexSafe:0];
 }
 
-// As of 5.0.1, it's possible to mark files in the Documents folder to not be backed up. Therefore
-// we want to use that if possible, so that our cache doesn't get wiped when the device has no
-// more space left, as will happen if we put the files inside ./Library/Caches
-- (NSString *)currentCacheRoot
-{
-#ifdef IOS
-    if (SYSTEM_VERSION_GREATER_THAN(@"5.0.0"))
-    {
-        return self.documentsPath;
-    }
-    else
-    {
-        return self.cachesPath;
-    }
-#else
-    return self.documentsPath;
-#endif
-}
-
 - (NSString *)songCachePath
 {
-	return [self.currentCacheRoot stringByAppendingPathComponent:@"songCache"];
+	return [self.documentsPath stringByAppendingPathComponent:@"songCache"];
 }
 
 - (NSString *)tempCachePath
 {
-	return [self.currentCacheRoot stringByAppendingPathComponent:@"tempCache"];
+	return [self.documentsPath stringByAppendingPathComponent:@"tempCache"];
 }
 
 #pragma mark - Root Folders Settings

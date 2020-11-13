@@ -11,13 +11,8 @@
 
 #import "EX2Macros.h"
 #import "EX2Categories.h"
-#import "EX2Static.h"
-#import "EX2Components.h"
-
-#ifdef IOS
 #import "EX2UIComponents.h"
-#endif
-
+#import "EX2Dispatch.h"
 #import "DDLog.h"
 
 @interface EX2Kit : NSObject

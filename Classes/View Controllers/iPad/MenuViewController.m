@@ -296,7 +296,7 @@
                               scrollPosition:UITableViewScrollPositionNone];
             
             // Go back to the other app
-            [[UIApplication sharedApplication] openURL:appDelegateS.referringAppUrl];
+            [UIApplication.sharedApplication openURL:appDelegateS.referringAppUrl options:@{} completionHandler:nil];
             return;
         }
     }
