@@ -10,7 +10,7 @@
 #define iSub_JukeboxSingleton_h
 
 #import <Foundation/Foundation.h>
-#import "EX2SimpleConnectionQueue.h"
+//#import "EX2SimpleConnectionQueue.h"
 
 #define jukeboxS ((JukeboxSingleton *)[JukeboxSingleton sharedInstance])
 
@@ -18,7 +18,7 @@
 
 @property BOOL jukeboxIsPlaying;
 @property float jukeboxGain;
-@property (strong) EX2SimpleConnectionQueue *connectionQueue;
+//@property (strong) EX2SimpleConnectionQueue *connectionQueue;
 
 + (id)sharedInstance;
 

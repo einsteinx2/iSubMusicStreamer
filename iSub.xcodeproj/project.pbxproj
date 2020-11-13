@@ -737,6 +737,8 @@
 		53DF310711D3EE26007552A4 /* GenresGenreUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53DF310611D3EE26007552A4 /* GenresGenreUITableViewCell.m */; };
 		53E04938255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E04937255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m */; };
 		53E04939255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E04937255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m */; };
+		53E04947255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E04946255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift */; };
+		53E04948255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E04946255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift */; };
 		53F0CD8211589F0A00A665CD /* progress-label-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F0CD8111589F0A00A665CD /* progress-label-background.png */; };
 		53F2D3EE113A338500107D63 /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F2D3EC113A338500107D63 /* AlbumViewController.m */; };
 		53F4A074116FF48400BB8411 /* DebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4A072116FF48400BB8411 /* DebugViewController.m */; };
@@ -1010,12 +1012,8 @@
 		53FE37511EA961720058B925 /* ISMSUpdateChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36761EA961720058B925 /* ISMSUpdateChecker.m */; };
 		53FE37581EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
 		53FE375A1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
-		53FE375B1EA961720058B925 /* JukeboxConnectionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367E1EA961720058B925 /* JukeboxConnectionDelegate.m */; };
-		53FE375D1EA961720058B925 /* JukeboxConnectionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367E1EA961720058B925 /* JukeboxConnectionDelegate.m */; };
 		53FE375E1EA961720058B925 /* JukeboxSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36801EA961720058B925 /* JukeboxSingleton.m */; };
 		53FE37601EA961720058B925 /* JukeboxSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36801EA961720058B925 /* JukeboxSingleton.m */; };
-		53FE37611EA961720058B925 /* JukeboxXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36821EA961720058B925 /* JukeboxXMLParser.m */; };
-		53FE37631EA961720058B925 /* JukeboxXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36821EA961720058B925 /* JukeboxXMLParser.m */; };
 		53FE37641EA961720058B925 /* LibSub.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36851EA961720058B925 /* LibSub.m */; };
 		53FE37661EA961720058B925 /* LibSub.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36851EA961720058B925 /* LibSub.m */; };
 		53FE37671EA961720058B925 /* MusicSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36891EA961720058B925 /* MusicSingleton.m */; };
@@ -1648,6 +1646,7 @@
 		53DF310611D3EE26007552A4 /* GenresGenreUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenresGenreUITableViewCell.m; sourceTree = "<group>"; };
 		53E04936255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSNSURLSessionStreamHandler.h; sourceTree = "<group>"; };
 		53E04937255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ISMSNSURLSessionStreamHandler.m; sourceTree = "<group>"; };
+		53E04946255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSignedCertURLSessionDelegate.swift; sourceTree = "<group>"; };
 		53E82A951406D47F0051D44B /* FolderDropdownDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderDropdownDelegate.h; sourceTree = "<group>"; };
 		53F0CD8111589F0A00A665CD /* progress-label-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "progress-label-background.png"; path = "Images/Other/progress-label-background.png"; sourceTree = "<group>"; };
 		53F1412015FD550C004D00D5 /* buildnumber.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = buildnumber.xcconfig; path = Other/buildnumber.xcconfig; sourceTree = "<group>"; };
@@ -1934,12 +1933,8 @@
 		53FE36761EA961720058B925 /* ISMSUpdateChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSUpdateChecker.m; sourceTree = "<group>"; };
 		53FE367B1EA961720058B925 /* iSubBassGaplessPlayerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSubBassGaplessPlayerDelegate.h; sourceTree = "<group>"; };
 		53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSubBassGaplessPlayerDelegate.m; sourceTree = "<group>"; };
-		53FE367D1EA961720058B925 /* JukeboxConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JukeboxConnectionDelegate.h; sourceTree = "<group>"; };
-		53FE367E1EA961720058B925 /* JukeboxConnectionDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JukeboxConnectionDelegate.m; sourceTree = "<group>"; };
 		53FE367F1EA961720058B925 /* JukeboxSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JukeboxSingleton.h; sourceTree = "<group>"; };
 		53FE36801EA961720058B925 /* JukeboxSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JukeboxSingleton.m; sourceTree = "<group>"; };
-		53FE36811EA961720058B925 /* JukeboxXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JukeboxXMLParser.h; sourceTree = "<group>"; };
-		53FE36821EA961720058B925 /* JukeboxXMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JukeboxXMLParser.m; sourceTree = "<group>"; };
 		53FE36841EA961720058B925 /* LibSub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibSub.h; sourceTree = "<group>"; };
 		53FE36851EA961720058B925 /* LibSub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibSub.m; sourceTree = "<group>"; };
 		53FE36881EA961720058B925 /* MusicSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicSingleton.h; sourceTree = "<group>"; };
@@ -2702,10 +2697,6 @@
 				53FE36591EA961720058B925 /* ISMSNotificationNames.m */,
 				53FE36751EA961720058B925 /* ISMSUpdateChecker.h */,
 				53FE36761EA961720058B925 /* ISMSUpdateChecker.m */,
-				53FE367D1EA961720058B925 /* JukeboxConnectionDelegate.h */,
-				53FE367E1EA961720058B925 /* JukeboxConnectionDelegate.m */,
-				53FE36811EA961720058B925 /* JukeboxXMLParser.h */,
-				53FE36821EA961720058B925 /* JukeboxXMLParser.m */,
 				53FE36841EA961720058B925 /* LibSub.h */,
 				53FE36851EA961720058B925 /* LibSub.m */,
 				53FE36901EA961720058B925 /* NSString+cleanCredentialsForLog.h */,
@@ -2796,6 +2787,7 @@
 		531D39FE255AB5B8000CB0DF /* Loaders */ = {
 			isa = PBXGroup;
 			children = (
+				53E04946255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift */,
 				53FE368E1EA961720058B925 /* NSMutableURLRequest+SUS.h */,
 				53FE368F1EA961720058B925 /* NSMutableURLRequest+SUS.m */,
 				531D3A1D255ABAAC000CB0DF /* SUSLoader.h */,
@@ -4667,7 +4659,6 @@
 				53FE355B1EA961540058B925 /* UIImageView+ImageAnimated.m in Sources */,
 				538E5255255A31F2000DF682 /* UIApplication+Orientiation.m in Sources */,
 				53FE35551EA961540058B925 /* UIImage+RoundedImage.m in Sources */,
-				53FE37611EA961720058B925 /* JukeboxXMLParser.m in Sources */,
 				53FE39131EA961ED0058B925 /* DDRange.m in Sources */,
 				53FE39281EA961ED0058B925 /* MultipartMessageHeaderField.m in Sources */,
 				53FE35401EA961540058B925 /* UIColor+ColorWithInt.m in Sources */,
@@ -4697,7 +4688,6 @@
 				53FE34D71EA961540058B925 /* NSDate+UTC.m in Sources */,
 				53FE35431EA961540058B925 /* UIDevice+Hardware.m in Sources */,
 				53FE39431EA961ED0058B925 /* DELETEResponse.m in Sources */,
-				53FE375B1EA961720058B925 /* JukeboxConnectionDelegate.m in Sources */,
 				5365859314789ADA00FE57A5 /* EqualizerView.m in Sources */,
 				535696531810DA8700997C7B /* FXBlurView.m in Sources */,
 				53FE384F1EA961A80058B925 /* TBXML+HTTP.m in Sources */,
@@ -4718,6 +4708,7 @@
 				53FE389B1EA961C80058B925 /* NSFileManager+ZKAdditions.m in Sources */,
 				53FE37A91EA961720058B925 /* SUSLyricsDAO.m in Sources */,
 				53FE36FE1EA961720058B925 /* CacheSingleton.m in Sources */,
+				53E04947255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */,
 				53FE35041EA961540058B925 /* NSString+FileSize.m in Sources */,
 				5304FC2D14F2F0D100A2AD42 /* iPadRootViewController.m in Sources */,
 				53FE36F51EA961720058B925 /* BassStream.m in Sources */,
@@ -4949,7 +4940,6 @@
 				53FE355D1EA961540058B925 /* UIImageView+ImageAnimated.m in Sources */,
 				538E5256255A31F2000DF682 /* UIApplication+Orientiation.m in Sources */,
 				53FE35571EA961540058B925 /* UIImage+RoundedImage.m in Sources */,
-				53FE37631EA961720058B925 /* JukeboxXMLParser.m in Sources */,
 				53FE39151EA961ED0058B925 /* DDRange.m in Sources */,
 				53FE392A1EA961ED0058B925 /* MultipartMessageHeaderField.m in Sources */,
 				53FE35421EA961540058B925 /* UIColor+ColorWithInt.m in Sources */,
@@ -4979,7 +4969,6 @@
 				53FE34D91EA961540058B925 /* NSDate+UTC.m in Sources */,
 				53FE35451EA961540058B925 /* UIDevice+Hardware.m in Sources */,
 				53FE39451EA961ED0058B925 /* DELETEResponse.m in Sources */,
-				53FE375D1EA961720058B925 /* JukeboxConnectionDelegate.m in Sources */,
 				5365859514789ADA00FE57A5 /* EqualizerView.m in Sources */,
 				535696551810DA8700997C7B /* FXBlurView.m in Sources */,
 				53FE38511EA961A80058B925 /* TBXML+HTTP.m in Sources */,
@@ -5000,6 +4989,7 @@
 				53FE389D1EA961C80058B925 /* NSFileManager+ZKAdditions.m in Sources */,
 				53FE37AB1EA961720058B925 /* SUSLyricsDAO.m in Sources */,
 				53FE37001EA961720058B925 /* CacheSingleton.m in Sources */,
+				53E04948255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */,
 				53FE35061EA961540058B925 /* NSString+FileSize.m in Sources */,
 				5304FC2F14F2F0D100A2AD42 /* iPadRootViewController.m in Sources */,
 				53FE36F71EA961720058B925 /* BassStream.m in Sources */,

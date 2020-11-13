@@ -78,10 +78,9 @@
 - (void)loadAlbumFolder {
 	if (self.isCancelled) return;
 	
-	NSString *folderId = [self.folderIds firstObject];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"getMusicDirectory" parameters:@{@"id": folderId}];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"getMusicDirectory" parameters:@{@"id": self.folderIds.firstObject}];
     
-    NSURLSessionDataTask *dataTask = [[self.class sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSURLSessionDataTask *dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
             // Inform the delegate that loading failed
             [self informDelegateLoadingFailed:error];

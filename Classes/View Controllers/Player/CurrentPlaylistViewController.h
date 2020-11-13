@@ -21,10 +21,6 @@
 
 @property BOOL savePlaylistLocal;
 
-@property (strong) NSMutableData *receivedData;
-@property (strong) NSURLConnection *connection;
-@property (strong) NSMutableURLRequest *request;
-
 @property NSUInteger currentPlaylistCount;
 
 - (void) selectRow;

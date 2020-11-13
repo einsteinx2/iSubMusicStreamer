@@ -259,10 +259,8 @@ static BOOL isAllSongsLoading = NO;
 		dirId = [self.currentAlbum.albumId copy];
     }
     
-    NSDictionary *parameters = [NSDictionary dictionaryWithObject:n2N(dirId) forKey:@"id"];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"getMusicDirectory" parameters:parameters];
-
-    NSURLSessionDataTask *dataTask = [[self.class sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"getMusicDirectory" parameters:@{@"id": n2N(dirId)}];
+    NSURLSessionDataTask *dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
             // Load the same folder
             [self loadAlbumFolder];

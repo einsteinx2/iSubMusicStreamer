@@ -16,9 +16,6 @@
 
 @property (strong) NSArray *chatMessages;
 
-@property (strong) NSURLConnection *connection;
-@property (strong) NSMutableData *receivedData;
-
 - (void)sendChatMessage:(NSString *)message;
 
 - (instancetype)initWithDelegate:(id <SUSLoaderDelegate>)theDelegate;

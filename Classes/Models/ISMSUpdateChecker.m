@@ -9,184 +9,89 @@
 #import "ISMSUpdateChecker.h"
 #import "RXMLElement.h"
 #import "EX2Kit.h"
+#import "SUSLoader.h"
 
-@interface ISMSUpdateChecker ()
+@interface ISMSUpdateChecker()
 @property (strong) ISMSUpdateChecker *selfRef;
 @end
 
 @implementation ISMSUpdateChecker
 
-- (void)checkForUpdate
-{
-	self.request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://isubapp.com/update.xml"]];
-	self.connection = [NSURLConnection connectionWithRequest:self.request delegate:self];
-	if (self.connection)
-    {
-        self.selfRef = self;
-        self.receivedData = [NSMutableData dataWithCapacity:0];
-    }
-    else
-	{
-		self.receivedData = nil;
-		self.request = nil;
-	}
-	
-	// Take ownership of self to allow connection to finish and alertview button to be pressed
-}
-
-- (void)showAlert
-{
-#ifdef IOS
-	NSString *title = [NSString stringWithFormat:@"Free Update %@ Available", self.theNewVersion];
-	NSString *finalMessage = [self.message stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
-	
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:finalMessage delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"App Store", nil];
-	[alert show];
-#endif
-}
-
-#ifdef IOS
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	if(buttonIndex == 1)
-	{
-		//http://itunes.apple.com/us/app/isub-music-streamer/id362920532?mt=8&ls=1
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.com/apps/isubmusicstreamer"]];
-		//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftwareUpdate?id=id362920532"]];
-	}
-	
-    self.selfRef = nil;
-}
-#endif
-
-#pragma mark - Connection Delegate
-
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)space 
-{
-	if([[space authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust]) 
-		return YES; // Self-signed cert will be accepted
-	
-	return NO;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
-{	
-	if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
-	{
-		[challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge]; 
-	}
-	[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-	[self.receivedData setLength:0];
-}
-
-- (NSURLRequest *)connection:(NSURLConnection *)inConnection willSendRequest:(NSURLRequest *)inRequest redirectResponse:(NSURLResponse *)inRedirectResponse
-{
-    if (inRedirectResponse) 
-    {
-        NSMutableURLRequest *r = [self.request mutableCopy]; // original request
-        [r setURL:[inRequest URL]];
-        return r;
-    } 
-    else 
-    {
-        return inRequest;
-    }
-}
-
-- (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData 
-{
-	[self.receivedData appendData:incrementalData];
-}
-
-- (void)connection:(NSURLConnection *)theConnection didFailWithError:(NSError *)error
-{    	
-    self.connection = nil;
-    self.receivedData = nil;
-	self.request = nil;
-
-    self.selfRef = nil;
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)theConnection 
-{
-    BOOL showAlert = NO;
-    
-    RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-    if ([root isValid])
-    {
-        if ([[root tag] isEqualToString:@"update"])
-        {
-            NSString *currentVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleVersionKey];
-            self.theNewVersion = [root attribute:@"version"];
-            self.message = [root attribute:@"message"];
-            
-            NSArray *currentVersionSplit = [currentVersion componentsSeparatedByString:@"."];
-            NSArray *newVersionSplit = [self.theNewVersion componentsSeparatedByString:@"."];
-            
-            NSMutableArray *currentVersionPadded = [NSMutableArray arrayWithArray:currentVersionSplit];
-            NSMutableArray *newVersionPadded = [NSMutableArray arrayWithArray:newVersionSplit];
-            
-            if ([currentVersionPadded count] < 3)
-            {
-                for (NSInteger i = [currentVersionPadded count]; i < 3; i++)
-                {
-                    [currentVersionPadded addObject:@"0"];
-                }
-            }
-            
-            if ([newVersionPadded count] < 3)
-            {
-                for (NSInteger i = [newVersionPadded count]; i < 3; i++)
-                {
-                    [newVersionPadded addObject:@"0"];
-                }
-            }
-            
-            @try
-            {
-                if (currentVersionSplit == nil || newVersionSplit == nil || [currentVersionSplit count] == 0 || [newVersionSplit count] == 0)
-                    return;
-                
-                if ([[newVersionPadded objectAtIndexSafe:0] intValue] > [[currentVersionPadded objectAtIndexSafe:0] intValue])
-                {
-                    // Major version number is bigger, update is available
-                    showAlert = YES;
-                }
-                else if ([[newVersionPadded objectAtIndexSafe:0] intValue] == [[currentVersionPadded objectAtIndexSafe:0] intValue])
-                {
-                    if ([[newVersionPadded objectAtIndexSafe:1] intValue] > [[currentVersionPadded objectAtIndexSafe:1] intValue])
-                    {
-                        // Update is available
-                        showAlert = YES;
+- (void)checkForUpdate {
+    NSURLSessionDataTask *dataTask = [SUSLoader.sharedSession dataTaskWithURL:[NSURL URLWithString:@"http://isubapp.com/update.xml"] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
+            self.selfRef = nil;
+        } else {
+            BOOL showAlert = NO;
+            RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
+            if (root.isValid) {
+                if ([root.tag isEqualToString:@"update"]) {
+                    NSString *currentVersion = [NSBundle.mainBundle.infoDictionary objectForKey:(NSString*)kCFBundleVersionKey];
+                    self.theNewVersion = [root attribute:@"version"];
+                    self.message = [root attribute:@"message"];
+                    
+                    NSArray *currentVersionSplit = [currentVersion componentsSeparatedByString:@"."];
+                    NSArray *newVersionSplit = [self.theNewVersion componentsSeparatedByString:@"."];
+                    
+                    NSMutableArray *currentVersionPadded = [NSMutableArray arrayWithArray:currentVersionSplit];
+                    NSMutableArray *newVersionPadded = [NSMutableArray arrayWithArray:newVersionSplit];
+                    
+                    if (currentVersionPadded.count < 3) {
+                        for (NSInteger i = currentVersionPadded.count; i < 3; i++) {
+                            [currentVersionPadded addObject:@"0"];
+                        }
                     }
-                    else if ([[newVersionPadded objectAtIndexSafe:1] intValue] == [[currentVersionPadded objectAtIndexSafe:1] intValue])
-                    {
-                        if ([[newVersionPadded objectAtIndexSafe:2] intValue] > [[currentVersionPadded objectAtIndexSafe:2] intValue])
-                        {
-                            // Update is available
+                    
+                    if (newVersionPadded.count < 3) {
+                        for (NSInteger i = newVersionPadded.count; i < 3; i++) {
+                            [newVersionPadded addObject:@"0"];
+                        }
+                    }
+                    
+                    @try {
+                        if (currentVersionSplit == nil || newVersionSplit == nil || currentVersionSplit.count == 0 || newVersionSplit.count == 0)
+                            return;
+                        
+                        if ([newVersionPadded.firstObject intValue] > [currentVersionPadded.firstObject intValue]) {
+                            // Major version number is bigger, update is available
                             showAlert = YES;
-                        }				
+                        } else if ([newVersionPadded.firstObject intValue] == [currentVersionPadded.firstObject intValue]) {
+                            if ([[newVersionPadded objectAtIndexSafe:1] intValue] > [[currentVersionPadded objectAtIndexSafe:1] intValue]) {
+                                // Update is available
+                                showAlert = YES;
+                            } else if ([[newVersionPadded objectAtIndexSafe:1] intValue] == [[currentVersionPadded objectAtIndexSafe:1] intValue]) {
+                                if ([[newVersionPadded objectAtIndexSafe:2] intValue] > [[currentVersionPadded objectAtIndexSafe:2] intValue]) {
+                                    // Update is available
+                                    showAlert = YES;
+                                }
+                            }
+                        }
+                    } @catch (NSException *exception) {
                     }
                 }
             }
-            @catch (NSException *exception) 
-            {
+            if (showAlert) {
+                [EX2Dispatch runInMainThreadAsync:^{
+                    NSString *title = [NSString stringWithFormat:@"Free Update %@ Available", self.theNewVersion];
+                    NSString *finalMessage = [self.message stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:finalMessage preferredStyle:UIAlertControllerStyleAlert];
+                    [alert addAction:[UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:nil]];
+                    [alert addAction:[UIAlertAction actionWithTitle:@"App Store" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.com/apps/isubmusicstreamer"] options:@{} completionHandler:nil];
+                    }]];
+                    [UIApplication.keyWindow.rootViewController presentViewController:alert animated:YES completion:^{
+                        self.selfRef = nil;
+                    }];
+                }];
+            } else {
+                self.selfRef = nil;
             }
         }
-    }
+    }];
+    [dataTask resume];
     
-	self.connection = nil;
-    self.receivedData = nil;
-	self.request = nil;
-	
-	if (showAlert)
-		[self showAlert];
-    else
-        self.selfRef = nil;
+	// Take ownership of self to allow connection to finish and alertview button to be pressed
+    self.selfRef = self;
 }
 
 @end

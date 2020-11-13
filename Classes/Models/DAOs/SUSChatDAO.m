@@ -16,17 +16,14 @@
 
 #pragma mark - Lifecycle
 
-- (instancetype)initWithDelegate:(id <SUSLoaderDelegate>)theDelegate
-{
-    if ((self = [super init])) 
-	{
+- (instancetype)initWithDelegate:(id <SUSLoaderDelegate>)theDelegate {
+    if (self = [super init]) {
 		_delegate = theDelegate;
     }    
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
 	[_loader cancelLoad];
 	_loader.delegate = nil;
 }
@@ -35,82 +32,32 @@
 
 - (void)sendChatMessage:(NSString *)message
 {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObject:n2N(message) forKey:@"message"];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"addChatMessage" parameters:parameters];
-
-	self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
-	if (self.connection)
-	{
-		self.receivedData = [NSMutableData data];
-	} 
-	else 
-	{
-		NSDictionary *dict = [NSDictionary dictionaryWithObject:message forKey:@"message"];
-		NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_CouldNotSendChatMessage extraAttributes:dict];
-		[self.delegate loadingFailed:nil withError:error]; 
-	}
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"addChatMessage" parameters:@{@"message": n2N(message)}];
+    NSURLSessionDataTask *dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        [EX2Dispatch runInMainThreadAsync:^{
+            if (error) {
+                NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_CouldNotSendChatMessage extraAttributes:@{@"message": message}];
+                [self.delegate loadingFailed:nil withError:error];
+            } else {
+                [self startLoad];
+            }
+        }];
+    }];
+    [dataTask resume];
 }
-
-#pragma mark - Connection delegate for sending messages
-
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)space 
-{
-	if([[space authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust]) 
-		return YES; // Self-signed cert will be accepted
-	
-	return NO;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
-{	
-	if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
-	{
-		[challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge]; 
-	}
-	[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-	[self.receivedData setLength:0];
-}
-
-- (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData 
-{
-    [self.receivedData appendData:incrementalData];
-}
-
-- (void)connection:(NSURLConnection *)theConnection didFailWithError:(NSError *)error
-{
-	self.receivedData = nil;
-	self.connection = nil;
-	[self.delegate loadingFailed:nil withError:error];
-}	
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)theConnection 
-{	
-	self.receivedData = nil;
-	self.connection = nil;
-	
-	[self startLoad];
-}
-
 
 #pragma mark - Loader Manager Methods
 
-- (void)restartLoad
-{
+- (void)restartLoad {
     [self startLoad];
 }
 
-- (void)startLoad
-{	
+- (void)startLoad {
     self.loader = [[SUSChatLoader alloc] initWithDelegate:self];
     [self.loader startLoad];
 }
 
-- (void)cancelLoad
-{
+- (void)cancelLoad {
     [self.loader cancelLoad];
 	self.loader.delegate = nil;
     self.loader = nil;
@@ -118,26 +65,22 @@
 
 #pragma mark - Loader Delegate Methods
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
-{
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
 	self.loader.delegate = nil;
 	self.loader = nil;
 	
-	if ([self.delegate respondsToSelector:@selector(loadingFailed:withError:)])
-	{
+	if ([self.delegate respondsToSelector:@selector(loadingFailed:withError:)]) {
 		[self.delegate loadingFailed:nil withError:error];
 	}
 }
 
-- (void)loadingFinished:(SUSLoader *)theLoader
-{
+- (void)loadingFinished:(SUSLoader *)theLoader {
 	self.chatMessages = [NSArray arrayWithArray:self.loader.chatMessages];
 	
 	self.loader.delegate = nil;
 	self.loader = nil;
 	
-	if ([self.delegate respondsToSelector:@selector(loadingFinished:)])
-	{
+	if ([self.delegate respondsToSelector:@selector(loadingFinished:)]) {
 		[self.delegate loadingFinished:nil];
 	}
 }

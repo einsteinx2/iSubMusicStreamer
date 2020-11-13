@@ -114,31 +114,22 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)startConnection {
     NSAssert(NSThread.isMainThread, @"startConnection must be called from the main thread");
     
-    // TODO: Need to check if this is null?
     self.dataTask = [self.session dataTaskWithRequest:self.request];
-    if (self.dataTask) {
-        [self.dataTask resume];
-        self.isDownloading = YES;
-        DDLogVerbose(@"[ISMSNSURLSessionStreamHandler] Stream handler startConnectionInternalSuccess for %@", self.mySong);
+    [self.dataTask resume];
+    self.isDownloading = YES;
+    DDLogVerbose(@"[ISMSNSURLSessionStreamHandler] Stream handler startConnectionInternalSuccess for %@", self.mySong);
 
-        if (!self.isTempCache) {
-            self.mySong.isPartiallyCached = YES;
-        }
-        
-        [EX2NetworkIndicator usingNetwork];
-        
-        if ([self.delegate respondsToSelector:@selector(ISMSStreamHandlerStarted:)]) {
-            [self.delegate ISMSStreamHandlerStarted:self];
-        }
-        
-        [self startTimeOutTimer];
-    } else {
-        DDLogVerbose(@"[ISMSNSURLSessionStreamHandler] start connection failed");
-        NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_CouldNotCreateConnection];
-        if ([self.delegate respondsToSelector:@selector(ISMSStreamHandlerConnectionFailed:withError:)]) {
-            [self.delegate ISMSStreamHandlerConnectionFailed:self withError:error];
-        }
+    if (!self.isTempCache) {
+        self.mySong.isPartiallyCached = YES;
     }
+    
+    [EX2NetworkIndicator usingNetwork];
+    
+    if ([self.delegate respondsToSelector:@selector(ISMSStreamHandlerStarted:)]) {
+        [self.delegate ISMSStreamHandlerStarted:self];
+    }
+    
+    [self startTimeOutTimer];
 }
 
 // Cancel the download

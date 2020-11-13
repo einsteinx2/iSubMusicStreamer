@@ -23,19 +23,17 @@
 #import "NSError+ISMSError.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "SUSLoader.h"
 
 @implementation CurrentPlaylistViewController
 
-#pragma mark -
 #pragma mark View lifecycle
 
-- (void)dealloc
-{
+- (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)registerForNotifications
-{
+- (void)registerForNotifications {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_BassInitialized object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_BassFreed object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
@@ -45,8 +43,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songsQueued) name:ISMSNotification_CurrentPlaylistSongsQueued object:nil];
 }
 
-- (void)unregisterForNotifications
-{
+- (void)unregisterForNotifications {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_BassInitialized object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_BassFreed object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
@@ -57,8 +54,7 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_JukeboxSongInfo object:nil];
 }
 
-- (void)viewDidLoad 
-{
+- (void)viewDidLoad  {
     [super viewDidLoad];
 		
 	//NSDate *start = [NSDate date];	
@@ -137,28 +133,24 @@
     [self selectRow];
 }
 
-- (void)showStore
-{
+- (void)showStore {
 	[NSNotificationCenter postNotificationToMainThreadWithName:@"player show store"];
 }
 
-- (void)viewWillAppear:(BOOL)animated 
-{
+- (void)viewWillAppear:(BOOL)animated  {
 	[super viewWillAppear:animated];
 	
 	[self selectRow];
 }
 
-- (void)viewWillDisappear:(BOOL)animated 
-{
+- (void)viewWillDisappear:(BOOL)animated  {
     [super viewWillDisappear:animated];
 	
 	[self unregisterForNotifications];
 	//[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
 	//[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
 	
-	if (self.tableView.editing)
-	{
+	if (self.tableView.editing) {
 		// Clear the edit stuff if they switch tabs in the middle of editing
 		viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
 		self.tableView.editing = NO;
@@ -171,41 +163,29 @@
 	self.headerView = nil;
 }
 
-- (void)didReceiveMemoryWarning 
-{
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-}
-
-#pragma mark -
-
-- (void)jukeboxSongInfo
-{
+- (void)jukeboxSongInfo {
 	[self updateCurrentPlaylistCount];
 	[self.tableView reloadData];
 	[self selectRow];
 }
 
-- (void)songsQueued
-{
+- (void)songsQueued {
 	[self updateCurrentPlaylistCount];
 	[self.tableView reloadData];
 }
 
-- (void)updateCurrentPlaylistCount
-{
+- (void)updateCurrentPlaylistCount {
 	self.currentPlaylistCount = [playlistS count];
 		
-	if (self.currentPlaylistCount == 1)
+    if (self.currentPlaylistCount == 1) {
 		self.playlistCountLabel.text = [NSString stringWithFormat:@"1 song"];
-	else 
+    } else {
 		self.playlistCountLabel.text = [NSString stringWithFormat:@"%lu songs", (unsigned long)self.currentPlaylistCount];
+    }
 }
 
-- (void)editPlaylistAction:(id)sender
-{
-	if (!self.tableView.editing)
-	{
+- (void)editPlaylistAction:(id)sender {
+	if (!self.tableView.editing) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(showDeleteButton) name:@"showDeleteButton" object: nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(hideDeleteButton) name:@"hideDeleteButton" object: nil];
 		viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
@@ -215,15 +195,12 @@
 		[self showDeleteButton];
 		
 		// Hide the duration labels and shorten the song and artist labels
-		for (CurrentPlaylistSongSmallUITableViewCell *cell in [self.tableView visibleCells])
-		{
+		for (CurrentPlaylistSongSmallUITableViewCell *cell in self.tableView.visibleCells) {
 			cell.durationLabel.hidden = YES;
 		}
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(showDeleteToggle) userInfo:nil repeats:NO];
-	}
-	else 
-	{
+	} else {
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"showDeleteButton" object:nil];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideDeleteButton" object:nil];
 		viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
@@ -242,24 +219,18 @@
 	}
 }
 
-- (void) hideEditControls
-{
-	if (self.tableView.editing == YES)
+- (void)hideEditControls {
+    if (self.tableView.editing) {
 		[self editPlaylistAction:nil];
+    }
 }
 
-- (void) showDeleteButton
-{
-	if ([viewObjectsS.multiDeleteList count] == 0)
-	{
+- (void)showDeleteButton {
+	if ([viewObjectsS.multiDeleteList count] == 0) {
 		self.deleteSongsLabel.text = @"Clear Playlist";
-	}
-	else if ([viewObjectsS.multiDeleteList count] == 1)
-	{
+	} else if ([viewObjectsS.multiDeleteList count] == 1) {
 		self.deleteSongsLabel.text = @"Remove 1 Song  ";
-	}
-	else
-	{
+	} else {
 		self.deleteSongsLabel.text = [NSString stringWithFormat:@"Remove %lu Songs", (unsigned long)[viewObjectsS.multiDeleteList count]];
 	}
 	
@@ -268,33 +239,23 @@
 	self.deleteSongsLabel.hidden = NO;
 }
 
-- (void) hideDeleteButton
-{
-	if ([viewObjectsS.multiDeleteList count] == 0)
-	{
-		if (!self.tableView.editing)
-		{
+- (void)hideDeleteButton {
+	if ([viewObjectsS.multiDeleteList count] == 0) {
+		if (!self.tableView.editing) {
 			self.savePlaylistLabel.hidden = NO;
 			self.playlistCountLabel.hidden = NO;
 			self.deleteSongsLabel.hidden = YES;
-		}
-		else
-		{
+		} else {
 			self.deleteSongsLabel.text = @"Clear Playlist";
 		}
-	}
-	else if ([viewObjectsS.multiDeleteList count] == 1)
-	{
+	} else if ([viewObjectsS.multiDeleteList count] == 1) {
 		self.deleteSongsLabel.text = @"Remove 1 Song  ";
-	}
-	else 
-	{
+	} else {
 		self.deleteSongsLabel.text = [NSString stringWithFormat:@"Remove %lu Songs", (unsigned long)[viewObjectsS.multiDeleteList count]];
 	}
 }
 
-- (void) showDeleteToggle
-{
+- (void) showDeleteToggle {
 //	// Show the delete toggle for already visible cells
 //	for (id cell in self.tableView.visibleCells) 
 //	{
@@ -302,18 +263,12 @@
 //	}
 }
 
-- (void)savePlaylistAction:(id)sender
-{
-	if (self.deleteSongsLabel.hidden == YES)
-	{
-		if (!self.tableView.editing)
-		{
-			if (settingsS.isOfflineMode)
-			{
+- (void)savePlaylistAction:(id)sender {
+	if (self.deleteSongsLabel.hidden == YES) {
+		if (!self.tableView.editing) {
+			if (settingsS.isOfflineMode) {
 				[self showSavePlaylistAlert];
-			}
-			else
-			{
+			} else {
 				UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Local or Server?" 
 																	  message:@"Would you like to save this playlist to your device or to your Subsonic server?" 
 																	 delegate:self 
@@ -322,20 +277,14 @@
 				[myAlertView show];
 			}
 		}
-	}
-	else 
-	{
+	} else {
 		[self unregisterForNotifications];
 		
-		if ([self.deleteSongsLabel.text isEqualToString:@"Clear Playlist"])
-		{
-			if (settingsS.isJukeboxEnabled)
-			{
+		if ([self.deleteSongsLabel.text isEqualToString:@"Clear Playlist"]) {
+			if (settingsS.isJukeboxEnabled) {
 				[databaseS resetJukeboxPlaylist];
 				[jukeboxS jukeboxClearPlaylist];
-			}
-			else
-			{
+			} else {
                 [audioEngineS.player stop];
 				[databaseS resetCurrentPlaylistDb];
 			}
@@ -344,9 +293,7 @@
 			
 			[self updateCurrentPlaylistCount];
 			[self.tableView reloadData];
-		}
-		else
-		{
+		} else {
 			//
 			// Delete action
 			//
@@ -380,32 +327,30 @@
 		
 		// Fix the playlist count
 		NSUInteger songCount = playlistS.count;
-		if (songCount == 1)
+        if (songCount == 1) {
 			self.playlistCountLabel.text = [NSString stringWithFormat:@"1 song"];
-		else
+        } else {
 			self.playlistCountLabel.text = [NSString stringWithFormat:@"%lu songs", (unsigned long)songCount];
-		
-		if (!settingsS.isJukeboxEnabled)
+        }
+        
+        if (!settingsS.isJukeboxEnabled) {
 			[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistOrderChanged];
-		
+        }
+        
 		[self registerForNotifications];
 	}
 }
 
-- (void)uploadPlaylist:(NSString*)name
-{	
+- (void)uploadPlaylist:(NSString*)name {
 	NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(name), @"name", nil];
 	NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:self.currentPlaylistCount];
 	NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 	NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
 	NSString *table = playlistS.isShuffle ? shufTable : currTable;
 	
-	[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db)
-	 {
-		 for (int i = 0; i < self.currentPlaylistCount; i++)
-		 {
-			 @autoreleasepool 
-			 {
+	[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
+		 for (int i = 0; i < self.currentPlaylistCount; i++) {
+			 @autoreleasepool {
 				 ISMSSong *aSong = [ISMSSong songFromDbRow:i inTable:table inDatabase:db];
 				 [songIds addObject:n2N(aSong.songId)];
 			 }
@@ -413,22 +358,51 @@
 	 }];
 	[parameters setObject:[NSArray arrayWithArray:songIds] forKey:@"songId"];
 	
-	self.request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
-	
-	self.connection = [[NSURLConnection alloc] initWithRequest:self.request delegate:self];
-	if (self.connection)
-	{
-		self.receivedData = [NSMutableData data];
-		
-		self.tableView.scrollEnabled = NO;
-		[viewObjectsS showAlbumLoadingScreen:self.view sender:self];
-	} 
-	else 
-	{
-		// Inform the user that the connection failed.
-		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:@"There was an error saving the playlist to the server.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-	}
+    NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
+    NSURLSessionDataTask *dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        [EX2Dispatch runInMainThreadAsync:^{
+            if (error) {
+                NSString *message = @"";
+                message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@",
+                           (long)[error code],
+                           [error localizedDescription]];
+                
+                // Inform the user that the connection failed.
+                CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+                
+                self.tableView.scrollEnabled = YES;
+                [viewObjectsS hideLoadingScreen];
+            } else {
+                RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
+                if (![root isValid]) {
+                    NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
+                    [self subsonicErrorCode:nil message:error.description];
+                } else {
+                    RXMLElement *error = [root child:@"error"];
+                    if ([error isValid])
+                    {
+                        NSString *code = [error attribute:@"code"];
+                        NSString *message = [error attribute:@"message"];
+                        [self subsonicErrorCode:code message:message];
+                    }
+                }
+                
+                self.tableView.scrollEnabled = YES;
+                [viewObjectsS hideLoadingScreen];
+            }
+        }];
+    }];
+    [dataTask resume];
+    
+    self.tableView.scrollEnabled = NO;
+    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
+}
+
+- (void)subsonicErrorCode:(NSString *)errorCode message:(NSString *)message {
+    CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Subsonic Error" message:message delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    alert.tag = 1;
+    [alert show];
 }
 
 - (void)showSavePlaylistAlert
@@ -438,43 +412,30 @@
 	[myAlertView show];
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if ([alertView.title isEqualToString:@"Local or Server?"])
-	{
-		if (buttonIndex == 0)
-		{
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if ([alertView.title isEqualToString:@"Local or Server?"]) {
+		if (buttonIndex == 0) {
 			self.savePlaylistLocal = YES;
-		}
-		else if (buttonIndex == 1)
-		{
+		} else if (buttonIndex == 1) {
 			self.savePlaylistLocal = NO;
-		}
-		else if (buttonIndex == 2)
-		{
+		} else if (buttonIndex == 2) {
 			return;
 		}
 		
 		[self showSavePlaylistAlert];
-	}
-    else if([alertView.title isEqualToString:@"Playlist Name:"])
-	{
+	} else if ([alertView.title isEqualToString:@"Playlist Name:"]) {
         NSString *text = [alertView textFieldAtIndex:0].text;
-		if(buttonIndex == 1)
-		{
-			if (self.savePlaylistLocal || settingsS.isOfflineMode)
-			{
+		if (buttonIndex == 1) {
+			if (self.savePlaylistLocal || settingsS.isOfflineMode) {
 				// Check if the playlist exists, if not create the playlist table and add the entry to localPlaylists table
 				NSString *test = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT md5 FROM localPlaylists WHERE md5 = ?", [text md5]];
-				if (!test)
-				{
+				if (!test) {
 					NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
 					NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 					NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
 					NSString *table = playlistS.isShuffle ? shufTable : currTable;
 					
-					[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db)
-					{
+					[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
 						[db executeUpdate:@"INSERT INTO localPlaylists (playlist, md5) VALUES (?, ?)", text, [text md5]];
 						[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", [text md5], [ISMSSong standardSongColumnSchema]]];
 						
@@ -483,59 +444,45 @@
 						[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", [text md5], table]];
 						[db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
 					}];
-				}
-				else
-				{
+				} else {
 					// If it exists, ask to overwrite
 					UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Overwrite?" message:@"There is already a playlist with this name. Would you like to overwrite it?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
                     [myAlertView ex2SetCustomObject:text forKey:@"name"];
 					[myAlertView show];
 				}
-			}
-			else
-			{
+			} else {
 				NSString *tableName = [NSString stringWithFormat:@"splaylist%@", [text md5]];
-				if ([databaseS.localPlaylistsDbQueue tableExists:tableName])
-				{
+				if ([databaseS.localPlaylistsDbQueue tableExists:tableName]) {
 					// If it exists, ask to overwrite
 					UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Overwrite?" message:@"There is already a playlist with this name. Would you like to overwrite it?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
                     [myAlertView ex2SetCustomObject:text forKey:@"name"];
 					[myAlertView show];
-				}
-				else 
-				{
+				} else {
 					[self uploadPlaylist:text];
 				}
 			}
 		}
-	}
-	else if([alertView.title isEqualToString:@"Overwrite?"])
-	{
+	} else if([alertView.title isEqualToString:@"Overwrite?"]) {
         NSString *text = [alertView ex2CustomObjectForKey:@"name"];
-		if(buttonIndex == 1)
-		{
+		if (buttonIndex == 1) {
 			// If yes, overwrite the playlist
-			if (self.savePlaylistLocal || settingsS.isOfflineMode)
-			{
+			if (self.savePlaylistLocal || settingsS.isOfflineMode) {
 				NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
-				[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db)
-				{
+				[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
 					[db executeUpdate:[NSString stringWithFormat:@"DROP TABLE playlist%@", [text md5]]];
 					[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", [text md5], [ISMSSong standardSongColumnSchema]]];
 					
 					[db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
 					if ([db hadError]) { DLog(@"Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
-					if (playlistS.isShuffle)
+                    if (playlistS.isShuffle) {
 						[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM shufflePlaylist", [text md5]]];
-					else
+                    } else {
 						[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM currentPlaylist", [text md5]]];
-					[db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
+                    }
+                    [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
 				}];
-			}
-			else
-			{
-				[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db)
-				{
+			} else {
+				[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
 					[db executeUpdate:[NSString stringWithFormat:@"DROP TABLE splaylist%@", [text md5]]];
 				}];
 				
@@ -548,32 +495,23 @@
 	self.playlistCountLabel.backgroundColor = [UIColor clearColor];
 }
 
-- (void)selectRow
-{
+- (void)selectRow {
 	[self.tableView reloadData];
-	if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount)
-	{
+	if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
 		[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
 	}
 }
 
-
-#pragma mark -
 #pragma mark Table view data source
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	return self.currentPlaylistCount;
 }
 
-
-// Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
-{	
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
 	static NSString *cellIdentifier = @"CurrentPlaylistSongSmallCell";
     CurrentPlaylistSongSmallUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (!cell) 
-	{
+    if (!cell) {
         cell = [[CurrentPlaylistSongSmallUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
 	
@@ -587,28 +525,24 @@
 //	}
 	
 	ISMSSong *aSong;
-	if (settingsS.isJukeboxEnabled)
-	{
-		if (playlistS.isShuffle)
+	if (settingsS.isJukeboxEnabled) {
+        if (playlistS.isShuffle) {
 			aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"jukeboxShufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
-		else
-			aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"jukeboxCurrentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
-	}
-	else
-	{
-		if (playlistS.isShuffle)
+        } else {
+            aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"jukeboxCurrentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
+        }
+	} else {
+        if (playlistS.isShuffle) {
 			aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"shufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
-		else
+        } else {
 			aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"currentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
+        }
 	}
 	
-	if (indexPath.row == playlistS.currentIndex && (audioEngineS.player.isStarted || (settingsS.isJukeboxEnabled && jukeboxS.jukeboxIsPlaying)))
-	{
+	if (indexPath.row == playlistS.currentIndex && (audioEngineS.player.isStarted || (settingsS.isJukeboxEnabled && jukeboxS.jukeboxIsPlaying))) {
 		cell.numberLabel.hidden = YES;
 		cell.nowPlayingImageView.hidden = NO;
-	}
-	else
-	{
+	} else {
 		cell.numberLabel.hidden = NO;
 		cell.nowPlayingImageView.hidden = YES;
 		cell.numberLabel.text = [NSString stringWithFormat:@"%li", (long)(indexPath.row + 1)];
@@ -616,47 +550,36 @@
 	
 	cell.songNameLabel.text = aSong.title;
 
-	if (aSong.album)
+    if (aSong.album) {
 		cell.artistNameLabel.text = [NSString stringWithFormat:@"%@ - %@", aSong.artist, aSong.album];
-	else
+    } else {
 		cell.artistNameLabel.text = aSong.artist;
-
+    }
+    
 	cell.durationLabel.text = [NSString formatTime:[aSong.duration floatValue]];	
 	
 	// Hide the duration labels if editing
-	if (self.tableView.editing)
-	{
+	if (self.tableView.editing) {
 		cell.durationLabel.hidden = YES;
 	}
 	
     return cell;
 }
 
-
-
-// Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
     return YES;
 }
 
-
-// Set the editing style, set to none for no delete minus sign (overriding with own custom multi-delete boxes)
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return UITableViewCellEditingStyleNone;
 	//return UITableViewCellEditingStyleDelete;
 }
 
-
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath 
-{
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
 	NSInteger fromRow = fromIndexPath.row + 1;
 	NSInteger toRow = toIndexPath.row + 1;
 	
-	[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db)
-	 {
+	[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
 		 NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 		 NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
 		 NSString *table = playlistS.isShuffle ? shufTable : currTable;
@@ -665,8 +588,7 @@
 		 NSString *query = [NSString stringWithFormat:@"CREATE TABLE moveTemp (%@)", [ISMSSong standardSongColumnSchema]];
 		 [db executeUpdate:query];
 		 
-		 if (fromRow < toRow)
-		 {
+		 if (fromRow < toRow) {
 			 [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID < ?", table], @(fromRow)];
 			 [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID > ? AND ROWID <= ?", table], @(fromRow), @(toRow)];
 			 [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID = ?", table], @(fromRow)];
@@ -674,9 +596,7 @@
 			 
 			 [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE %@", table]];
 			 [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE moveTemp RENAME TO %@", table]];
-		 }
-		 else
-		 {
+		 } else {
 			 [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID < ?", table], @(toRow)];
 			 [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID = ?", table], @(fromRow)];
 			 [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID >= ? AND ROWID < ?", table], @(toRow), @(fromRow)];
@@ -687,22 +607,17 @@
 		 }
 	 }];
 	
-	if (settingsS.isJukeboxEnabled)
-	{
+	if (settingsS.isJukeboxEnabled) {
 		[jukeboxS jukeboxReplacePlaylistWithLocal];
 	}
 		
 	// Fix the multiDeleteList to reflect the new row positions
-	if ([viewObjectsS.multiDeleteList count] > 0)
-	{
+	if (viewObjectsS.multiDeleteList.count > 0) {
 		NSMutableArray *tempMultiDeleteList = [[NSMutableArray alloc] init];
 		int newPosition;
-		for (NSNumber *position in viewObjectsS.multiDeleteList)
-		{
-			if (fromIndexPath.row > toIndexPath.row)
-			{
-				if ([position intValue] >= toIndexPath.row && [position intValue] <= fromIndexPath.row)
-				{
+		for (NSNumber *position in viewObjectsS.multiDeleteList) {
+			if (fromIndexPath.row > toIndexPath.row) {
+				if ([position intValue] >= toIndexPath.row && [position intValue] <= fromIndexPath.row) {
 					if ([position intValue] == fromIndexPath.row)
 					{
 						[tempMultiDeleteList addObject:@(toIndexPath.row)];
@@ -742,148 +657,29 @@
 	}
 	
 	// Correct the value of currentPlaylistPosition
-	if (fromIndexPath.row == playlistS.currentIndex)
-	{
+	if (fromIndexPath.row == playlistS.currentIndex) {
 		playlistS.currentIndex = toIndexPath.row;
-	}
-	else 
-	{
-		if (fromIndexPath.row < playlistS.currentIndex && toIndexPath.row >= playlistS.currentIndex)
-		{
+	} else {
+		if (fromIndexPath.row < playlistS.currentIndex && toIndexPath.row >= playlistS.currentIndex) {
 			playlistS.currentIndex = playlistS.currentIndex - 1;
-		}
-		else if (fromIndexPath.row > playlistS.currentIndex && toIndexPath.row <= playlistS.currentIndex)
-		{
+		} else if (fromIndexPath.row > playlistS.currentIndex && toIndexPath.row <= playlistS.currentIndex) {
 			playlistS.currentIndex = playlistS.currentIndex + 1;
 		}
 	}
 	
-	if (!settingsS.isJukeboxEnabled)
+    if (!settingsS.isJukeboxEnabled) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistOrderChanged];
+    }
 }
 
-
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath 
-{
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
 	return YES;
 }
 
-
-
-#pragma mark -
-#pragma mark Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
-{
-	if (!indexPath)
-		return;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
+	if (!indexPath) return;
 	
 	[musicS playSongAtPosition:indexPath.row];
 }
 
-#pragma mark - Connection Delegate
-
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)space 
-{
-	if([[space authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust]) 
-		return YES; // Self-signed cert will be accepted
-	
-	return NO;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
-{	
-	if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
-	{
-		[challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge]; 
-	}
-	[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-	[self.receivedData setLength:0];
-}
-
-- (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData 
-{
-	[self.receivedData appendData:incrementalData];
-}
-
-- (void)connection:(NSURLConnection *)theConnection didFailWithError:(NSError *)error
-{
-	NSString *message = @"";
-	message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", 
-			   (long)[error code],
-			   [error localizedDescription]];
-	
-	// Inform the user that the connection failed.
-	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	[alert show];
-	
-	self.tableView.scrollEnabled = YES;
-	[viewObjectsS hideLoadingScreen];
-	
-	self.connection = nil;
-	self.receivedData = nil;
-}	
-
-- (NSURLRequest *)connection: (NSURLConnection *)inConnection willSendRequest:(NSURLRequest *)inRequest redirectResponse:(NSURLResponse *)inRedirectResponse;
-{
-    if (inRedirectResponse) 
-	{
-        NSMutableURLRequest *newRequest = [self.request mutableCopy];
-        [newRequest setURL:[inRequest URL]];
-        return newRequest;
-    } 
-	else 
-	{
-        return inRequest;
-    }
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)theConnection 
-{	
-	[self parseData];
-	
-	self.tableView.scrollEnabled = YES;
-	self.connection = nil;
-}
-
-static NSString *kName_Error = @"error";
-
-- (void) subsonicErrorCode:(NSString *)errorCode message:(NSString *)message
-{
-	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Subsonic Error" message:message delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-	alert.tag = 1;
-	[alert show];
-}
-
-- (void)parseData
-{
-    RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-    if (![root isValid])
-    {
-        NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
-        [self subsonicErrorCode:nil message:error.description];
-    }
-    else
-    {
-        RXMLElement *error = [root child:@"error"];
-        if ([error isValid])
-        {
-            NSString *code = [error attribute:@"code"];
-            NSString *message = [error attribute:@"message"];
-            [self subsonicErrorCode:code message:message];
-        }
-    }
-	
-	self.receivedData = nil;
-	
-	[viewObjectsS hideLoadingScreen];
-}
-
-
 @end
-

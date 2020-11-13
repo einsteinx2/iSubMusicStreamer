@@ -54,9 +54,8 @@
 }
 
 - (void)loadSongsAndQueueOrDownload:(BOOL)isDownload {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObject:n2N(self.playlistId) forKey:@"id"];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"getPlaylist" parameters:parameters];
-    NSURLSessionDataTask *dataTask = [[SUSLoader sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"getPlaylist" parameters:@{@"id": n2N(self.playlistId)}];
+    NSURLSessionDataTask *dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         // TODO: Inform user of errors
         if (!error) {
             RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
