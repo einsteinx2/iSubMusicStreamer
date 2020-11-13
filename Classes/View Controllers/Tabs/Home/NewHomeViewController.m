@@ -38,6 +38,10 @@
 #import "SUSQuickAlbumsLoader.h"
 #import "HomeAlbumViewController.h"
 
+@interface NewHomeViewController()
+@property (strong) NSURLSessionDataTask *dataTask;
+@end
+
 @implementation NewHomeViewController
 
 - (BOOL)prefersStatusBarHidden {
@@ -348,9 +352,8 @@
 }
 
 - (void)cancelLoad {
-	[self.connection cancel];
-	self.connection = nil;
-	self.receivedData = nil;
+    [self.dataTask cancel];
+    self.dataTask = nil;
 	[viewObjectsS hideLoadingScreen];
 }
 
@@ -521,127 +524,60 @@
 	}
 		
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:action parameters:parameters];
+    self.dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        [EX2Dispatch runInMainThreadAsync:^{
+            if (error) {
+                NSString *message;
+                if (self.isSearch) {
+                    message = [NSString stringWithFormat:@"There was an error completing the search.\n\nError:%@", error.localizedDescription];
+                } else {
+                    message = [NSString stringWithFormat:@"There was an error creating the server shuffle list.\n\nError:%@", error.localizedDescription];
+                }
+                CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+            } else {
+                if (self.isSearch) {
+                    NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:data];
+                    SearchXMLParser *parser = (SearchXMLParser*)[[SearchXMLParser alloc] initXMLParser];
+                    [xmlParser setDelegate:parser];
+                    [xmlParser parse];
+                    
+                    if (settingsS.isNewSearchAPI && self.searchSegment.selectedSegmentIndex == 3) {
+                        SearchAllViewController *searchViewController = [[SearchAllViewController alloc] initWithNibName:@"SearchAllViewController" bundle:nil];
+                        searchViewController.listOfArtists = [NSMutableArray arrayWithArray:parser.listOfArtists];
+                        searchViewController.listOfAlbums = [NSMutableArray arrayWithArray:parser.listOfAlbums];
+                        searchViewController.listOfSongs = [NSMutableArray arrayWithArray:parser.listOfSongs];
+                        searchViewController.query = [NSString stringWithFormat:@"%@*", self.searchBar.text];
+                        [self pushViewControllerCustom:searchViewController];
+                        
+                    } else {
+                        SearchSongsViewController *searchViewController = [[SearchSongsViewController alloc] initWithNibName:@"SearchSongsViewController" bundle:nil];
+                        searchViewController.title = @"Search";
+                        if (settingsS.isNewSearchAPI) {
+                            if (self.searchSegment.selectedSegmentIndex == 0) {
+                                searchViewController.listOfArtists = [NSMutableArray arrayWithArray:parser.listOfArtists];
+                            } else if (self.searchSegment.selectedSegmentIndex == 1) {
+                                searchViewController.listOfAlbums = [NSMutableArray arrayWithArray:parser.listOfAlbums];
+                            } else if (self.searchSegment.selectedSegmentIndex == 2) {
+                                searchViewController.listOfSongs = [NSMutableArray arrayWithArray:parser.listOfSongs];
+                            }
+                            searchViewController.searchType = (ISMSSearchSongsSearchType)self.searchSegment.selectedSegmentIndex;
+                            searchViewController.query = [NSString stringWithFormat:@"%@*", self.searchBar.text];
+                        } else {
+                            searchViewController.listOfSongs = [NSMutableArray arrayWithArray:parser.listOfSongs];
+                            searchViewController.searchType = 2;
+                            searchViewController.query = self.searchBar.text;
+                        }
+                        [self pushViewControllerCustom:searchViewController];
+                    }
+                }
+            }
+            [viewObjectsS hideLoadingScreen];
+        }];
+    }];
+    [self.dataTask resume];
     
-	self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
-	if (self.connection) {
-		self.receivedData = [NSMutableData dataWithLength:0];
-		
-		// Display the loading screen
-		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-	} else {
-		// Inform the user that the connection failed.
-		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:@"There was an error performing the search.\n\nThe connection could not be created" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-	}
+    [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
 }
-
-#pragma mark Connection delegate
-
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)space  {
-	if([[space authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust]) 
-		return YES; // Self-signed cert will be accepted
-	
-	return NO;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-	if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-		[challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge]; 
-	}
-	[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-	[self.receivedData setLength:0];
-}
-
-- (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData  {
-	[self.receivedData appendData:incrementalData];
-}
-
-- (void)connection:(NSURLConnection *)theConnection didFailWithError:(NSError *)error {
-	// Inform the user that the connection failed.
-	NSString *message;
-	if (self.isSearch) {
-		message = [NSString stringWithFormat:@"There was an error completing the search.\n\nError:%@", error.localizedDescription];
-	} else {
-		message = [NSString stringWithFormat:@"There was an error creating the server shuffle list.\n\nError:%@", error.localizedDescription];
-	}
-	
-	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	[alert show];
-	
-	self.connection = nil;
-	self.receivedData = nil;
-	
-	[viewObjectsS hideLoadingScreen];
-}	
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)theConnection  {
-    //DLog(@"received data: %@", [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding]);
-	
-	if (self.isSearch) {
-		// It's a search
-		
-		NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:self.receivedData];
-		SearchXMLParser *parser = (SearchXMLParser*)[[SearchXMLParser alloc] initXMLParser];
-		[xmlParser setDelegate:parser];
-		[xmlParser parse];
-		
-		/*NSString *key = [NSString stringWithFormat:@"isNewSearchAPI%@", [appDelegateS.defaultUrl md5]];
-		BOOL isNewSearchAPI = NO;
-		if ([[appDelegateS.settingsDictionary objectForKey:key] isEqualToString:@"YES"])
-			isNewSearchAPI = YES;
-		
-		if (isNewSearchAPI && searchSegment.selectedSegmentIndex == 3)*/
-		if (settingsS.isNewSearchAPI && self.searchSegment.selectedSegmentIndex == 3) {
-			SearchAllViewController *searchViewController = [[SearchAllViewController alloc] initWithNibName:@"SearchAllViewController" 
-																						   bundle:nil];
-			searchViewController.listOfArtists = [NSMutableArray arrayWithArray:parser.listOfArtists];
-			searchViewController.listOfAlbums = [NSMutableArray arrayWithArray:parser.listOfAlbums];
-			searchViewController.listOfSongs = [NSMutableArray arrayWithArray:parser.listOfSongs];
-			
-			searchViewController.query = [NSString stringWithFormat:@"%@*", self.searchBar.text];
-			
-			
-			//[self.navigationController pushViewController:searchViewController animated:YES];
-			[self pushViewControllerCustom:searchViewController];
-			
-		} else {
-			SearchSongsViewController *searchViewController = [[SearchSongsViewController alloc] initWithNibName:@"SearchSongsViewController" 
-																										  bundle:nil];
-			searchViewController.title = @"Search";
-			//if (isNewSearchAPI)
-			if (settingsS.isNewSearchAPI) {
-				if (self.searchSegment.selectedSegmentIndex == 0) {
-					searchViewController.listOfArtists = [NSMutableArray arrayWithArray:parser.listOfArtists];
-					//DLog(@"%@", searchViewController.listOfArtists);
-				} else if (self.searchSegment.selectedSegmentIndex == 1) {
-					searchViewController.listOfAlbums = [NSMutableArray arrayWithArray:parser.listOfAlbums];
-					//DLog(@"%@", searchViewController.listOfAlbums);
-				} else if (self.searchSegment.selectedSegmentIndex == 2) {
-					searchViewController.listOfSongs = [NSMutableArray arrayWithArray:parser.listOfSongs];
-					//DLog(@"%@", searchViewController.listOfSongs);
-				}
-				
-				searchViewController.searchType = (ISMSSearchSongsSearchType)self.searchSegment.selectedSegmentIndex;
-				searchViewController.query = [NSString stringWithFormat:@"%@*", self.searchBar.text];
-			} else {
-				searchViewController.listOfSongs = [NSMutableArray arrayWithArray:parser.listOfSongs];
-				searchViewController.searchType = 2;
-				searchViewController.query = self.searchBar.text;
-			}
-			
-			
-			[self pushViewControllerCustom:searchViewController];
-			//[self.navigationController pushViewController:searchViewController animated:YES];
-			
-		}
-		
-		// Hide the loading screen
-		[viewObjectsS hideLoadingScreen];
-	}
-}
-
 
 @end

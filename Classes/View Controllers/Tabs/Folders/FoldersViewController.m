@@ -65,7 +65,6 @@
         }
 	}
 	
-	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
     self.tableView.rowHeight = 60;
 	
@@ -372,8 +371,6 @@
         } completion:^(BOOL finished) {
             [self.searchOverlay removeFromSuperview];
             self.searchOverlay = nil;
-            
-            if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
         }];
 	}
 }

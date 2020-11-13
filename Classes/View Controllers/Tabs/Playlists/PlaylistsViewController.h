@@ -8,11 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "SUSLoaderDelegate.h"
-#import "EX2SimpleConnectionQueue.h"
 
 @class SUSServerPlaylistsDAO;
 
-@interface PlaylistsViewController : UITableViewController <EX2SimpleConnectionQueueDelegate, SUSLoaderDelegate>
+@interface PlaylistsViewController : UITableViewController <SUSLoaderDelegate>
 
 @property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
@@ -25,11 +24,7 @@
 @property (nonatomic, strong) UILabel *editPlaylistLabel;
 @property (nonatomic, strong) UIButton *editPlaylistButton;
 @property (nonatomic) BOOL isPlaylistSaveEditShowing;
-@property (nonatomic, strong) EX2SimpleConnectionQueue *connectionQueue;
 @property (nonatomic) BOOL savePlaylistLocal;
-@property (nonatomic, strong) NSMutableData *receivedData;
-@property (nonatomic, strong) NSURLConnection *connection;
-@property (nonatomic, strong) NSMutableURLRequest *request;
 @property (nonatomic, strong) SUSServerPlaylistsDAO *serverPlaylistsDataModel;
 @property (nonatomic) NSUInteger currentPlaylistCount;
 
@@ -39,7 +34,6 @@
 - (void)segmentAction:(id)sender;
 - (void)updateCurrentPlaylistCount;
 
-- (void)parseData;
 - (void)cancelLoad;
 
 @end

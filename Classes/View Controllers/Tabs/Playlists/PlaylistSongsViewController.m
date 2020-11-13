@@ -27,8 +27,13 @@
 #import "SUSServerPlaylist.h"
 #import "EX2Kit.h"
 #import "Swift.h"
+#import "SUSLoader.h"
 
 LOG_LEVEL_ISUB_DEFAULT
+
+@interface PlaylistSongsViewController()
+@property (strong) NSURLSessionDataTask *dataTask;
+@end
 
 @implementation PlaylistSongsViewController
 
@@ -64,10 +69,6 @@ LOG_LEVEL_ISUB_DEFAULT
 			
 			self.tableView.tableHeaderView = headerView;
 		}
-		
-		if (!UIDevice.isIPad) {
-			if (!self.tableView.tableHeaderView) self.tableView.tableHeaderView = [[UIView alloc] init];
-		}
 	} else {
         self.title = self.serverPlaylist.playlistName;
         self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM splaylist%@", self.md5]];
@@ -85,33 +86,66 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
-	
-	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 }
 
--(void)loadData {
+- (void)loadData {
     NSDictionary *parameters = [NSDictionary dictionaryWithObject:n2N(self.serverPlaylist.playlistId) forKey:@"id"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"getPlaylist" parameters:parameters];
-	
-	self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
-	if (self.connection) {
-		// Create the NSMutableData to hold the received data.
-		// receivedData is an instance variable declared elsewhere.
-		self.receivedData = [NSMutableData data];
-		
-		self.tableView.scrollEnabled = NO;
-		[viewObjectsS showAlbumLoadingScreen:self.view sender:self];
-	} else {
-		// Inform the user that the connection failed.
-		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:@"There was an error grabbing the playlist.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-	}
+    self.dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
+            [EX2Dispatch runInMainThreadAsync:^{
+                NSString *message = [NSString stringWithFormat:@"There was an error loading the playlist.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
+                CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+                
+                self.tableView.scrollEnabled = YES;
+                [viewObjectsS hideLoadingScreen];
+                [self dataSourceDidFinishLoadingNewData];
+            }];
+        } else {
+            RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
+            if (!root.isValid) {
+                //NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
+                // TODO: Handle this error
+            } else {
+                RXMLElement *error = [root child:@"error"];
+                if (error.isValid) {
+                    //NSString *code = [error attribute:@"code"];
+                    //NSString *message = [error attribute:@"message"];
+                    //[self subsonicErrorCode:[code intValue] message:message];
+                    // TODO: Handle this error
+                } else {
+                    // TODO: Handle !isValid case
+                    if ([[root child:@"playlist"] isValid]) {
+                        [databaseS removeServerPlaylistTable:self.md5];
+                        [databaseS createServerPlaylistTable:self.md5];
+                        [root iterate:@"playlist.entry" usingBlock:^(RXMLElement *e) {
+                            ISMSSong *aSong = [[ISMSSong alloc] initWithRXMLElement:e];
+                            [aSong insertIntoServerPlaylistWithPlaylistId:self.md5];
+                        }];
+                    }
+                }
+            }
+            
+            self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM splaylist%@", self.md5]];
+            
+            [EX2Dispatch runInMainThreadAsync:^{
+                [self.tableView reloadData];
+                [self dataSourceDidFinishLoadingNewData];
+                [viewObjectsS hideLoadingScreen];
+                self.tableView.scrollEnabled = YES;
+            }];
+        }
+    }];
+    [self.dataTask resume];
+    
+    self.tableView.scrollEnabled = NO;
+    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
 }	
 
 - (void)cancelLoad {
-	[self.connection cancel];
-	self.connection = nil;
-	self.receivedData = nil;
+    [self.dataTask cancel];
+    self.dataTask = nil;
 	self.tableView.scrollEnabled = YES;
 	[viewObjectsS hideLoadingScreen];
 	
@@ -172,136 +206,46 @@ LOG_LEVEL_ISUB_DEFAULT
 	[parameters setObject:[NSArray arrayWithArray:songIds] forKey:@"songId"];
 	
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
-	
-	self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
-	if (self.connection) {
-		// Create the NSMutableData to hold the received data.
-		// receivedData is an instance variable declared elsewhere.
-		self.receivedData = [NSMutableData data];
-		
-		self.tableView.scrollEnabled = NO;
-		[viewObjectsS showAlbumLoadingScreen:self.view sender:self];
-	} else {
-		// Inform the user that the connection failed.
-		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:@"There was an error saving the playlist to the server.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-	}
-}
-
-#pragma mark Connection Delegate
-
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)space  {
-    if([[space authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-		return YES; // Self-signed cert will be accepted
-    }
-	
-	return NO;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-	if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-		[challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge]; 
-	}
-	[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-	[self.receivedData setLength:0];
-}
-
-- (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData  {
-    [self.receivedData appendData:incrementalData];
-}
-
-- (void)connection:(NSURLConnection *)theConnection didFailWithError:(NSError *)error {
-	NSString *message = @"";
-	if (viewObjectsS.isLocalPlaylist) {
-		message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
-	} else {
-		message = [NSString stringWithFormat:@"There was an error loading the playlist.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
-	}
-	
-	// Inform the user that the connection failed.
-	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	[alert show];
-	
-	self.tableView.scrollEnabled = YES;
-	[viewObjectsS hideLoadingScreen];
-	
-	self.connection = nil;
-	self.receivedData = nil;
-	
-	[self dataSourceDidFinishLoadingNewData];
-}	
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)theConnection {
-    DDLogVerbose(@"%@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
-	if (!viewObjectsS.isLocalPlaylist) {
-        RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-        if (!root.isValid) {
-            //NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
-            // TODO: Handle this error
+    self.dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
+            [EX2Dispatch runInMainThreadAsync:^{
+                NSString *message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
+                CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+            }];
         } else {
-            RXMLElement *error = [root child:@"error"];
-            if (error.isValid) {
-                //NSString *code = [error attribute:@"code"];
-                //NSString *message = [error attribute:@"message"];
-                //[self subsonicErrorCode:[code intValue] message:message];
-                // TODO: Handle this error
+            DDLogVerbose(@"%@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+            RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
+            if (!root.isValid) {
+                NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
+                [self subsonicErrorCode:nil message:error.description];
             } else {
-                // TODO: Handle !isValid case
-                if ([[root child:@"playlist"] isValid]) {
-                    [databaseS removeServerPlaylistTable:self.md5];
-                    [databaseS createServerPlaylistTable:self.md5];
-                    [root iterate:@"playlist.entry" usingBlock:^(RXMLElement *e) {
-                        ISMSSong *aSong = [[ISMSSong alloc] initWithRXMLElement:e];
-                        [aSong insertIntoServerPlaylistWithPlaylistId:self.md5];
-                    }];
+                RXMLElement *error = [root child:@"error"];
+                if (error.isValid) {
+                    NSString *code = [error attribute:@"code"];
+                    NSString *message = [error attribute:@"message"];
+                    [self subsonicErrorCode:code message:message];
                 }
             }
         }
-		
-		self.tableView.scrollEnabled = YES;
-
-		self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM splaylist%@", self.md5]];
-		[self.tableView reloadData];
-		
-		[self dataSourceDidFinishLoadingNewData];
-		
-		[viewObjectsS hideLoadingScreen];
-	} else {
-		[self parseData];
-	}
-	
-	self.tableView.scrollEnabled = YES;
-	self.receivedData = nil;
-	self.connection = nil;
+        
+        [EX2Dispatch runInMainThreadAsync:^{
+            self.tableView.scrollEnabled = YES;
+            [viewObjectsS hideLoadingScreen];
+            [self dataSourceDidFinishLoadingNewData];
+        }];
+    }];
+    [self.dataTask resume];
+    
+    self.tableView.scrollEnabled = NO;
+    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
 }
 
-static NSString *kName_Error = @"error";
-
-- (void) subsonicErrorCode:(NSString *)errorCode message:(NSString *)message {
+- (void)subsonicErrorCode:(NSString *)errorCode message:(NSString *)message {
 	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Subsonic Error" message:message delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
 	alert.tag = 1;
 	[alert show];
 	//DLog(@"Subsonic error %@:  %@", errorCode, message);
-}
-
-- (void)parseData {
-    RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-    if (!root.isValid) {
-        NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
-        [self subsonicErrorCode:nil message:error.description];
-    } else {
-        RXMLElement *error = [root child:@"error"];
-        if (error.isValid) {
-            NSString *code = [error attribute:@"code"];
-            NSString *message = [error attribute:@"message"];
-            [self subsonicErrorCode:code message:message];
-        }
-    }
-    
-    [viewObjectsS hideLoadingScreen];
 }
 
 #pragma mark Table view methods

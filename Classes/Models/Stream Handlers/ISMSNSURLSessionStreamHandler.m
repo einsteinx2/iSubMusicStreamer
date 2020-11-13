@@ -175,6 +175,7 @@ LOG_LEVEL_ISUB_DEFAULT
         if ([httpResponse statusCode] >= 500) {
             // This is a failure, cancel the connection and call the didFail delegate method
             [self.dataTask cancel];
+            self.dataTask = nil;
 //            [self connection:self.connection didFailWithError:[NSError errorWithISMSCode:ISMSErrorCode_CouldNotReachServer]];
         } else if (self.contentLength == ULLONG_MAX) {
             // Set the content length if it isn't set already, only set the first connection, not on retries
@@ -289,6 +290,7 @@ LOG_LEVEL_ISUB_DEFAULT
         if (!self.isCanceled) {
             // There is no file handle for some reason, cancel the connection
             [self.dataTask cancel];
+            self.dataTask = nil;
             [self performSelectorOnMainThread:@selector(didFailInternal:) withObject:[NSError errorWithISMSCode:ISMSErrorCode_CouldNotReachServer] waitUntilDone:NO];
         }
     }

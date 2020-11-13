@@ -31,8 +31,6 @@
 @property (nonatomic, strong) UILabel *artistLabel;
 @property (nonatomic, strong) UILabel *albumLabel;
 @property (nonatomic, strong) UILabel *songLabel;
-@property (nonatomic, strong) NSURLConnection *connection;
-@property (nonatomic, strong) NSMutableData *receivedData;
 
 @property (nonatomic, strong) IBOutletCollection(UIButton) NSArray *topRow;
 @property (nonatomic, strong) IBOutletCollection(UILabel) NSArray *topRowLabels;

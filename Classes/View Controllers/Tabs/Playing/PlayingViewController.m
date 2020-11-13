@@ -51,9 +51,7 @@
     
     self.tableView.rowHeight = 80.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
-		
-	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
-    
+        
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 

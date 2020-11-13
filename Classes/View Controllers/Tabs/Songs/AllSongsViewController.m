@@ -69,8 +69,6 @@
 	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
-	
-	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 }
 
 - (void)addURLRefBackButton {
@@ -338,14 +336,11 @@
 
 - (void)createSearchOverlay {
 	self.searchOverlay = [[UIView alloc] init];
-	//searchOverlay.frame = CGRectMake(0, 74, 480, 480);
 	self.searchOverlay.frame = CGRectMake(0, 0, 480, 480);
 	self.searchOverlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	self.searchOverlay.backgroundColor = [UIColor colorWithWhite:0 alpha:.80];
 	self.searchOverlay.alpha = 0.0;
-	//[self.view.superview addSubview:searchOverlay];
-	//[self.tableView.tableFooterView addSubview:searchOverlay];
-	self.tableView.tableFooterView = self.searchOverlay;//self.tableView.tableFooterView;
+	self.tableView.tableFooterView = self.searchOverlay;
 	
 	self.dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	self.dismissButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -370,7 +365,6 @@
         } completion:^(BOOL finished) {
             [self.searchOverlay removeFromSuperview];
             self.searchOverlay = nil;
-            if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
         }];
 	}
 }

@@ -69,9 +69,7 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
 	
 	self.albumInfoArtView.delegate = self;
-	
-	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
-		
+			
 	// Add the pull to refresh view
 	self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
 	self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
@@ -180,11 +178,8 @@
 		
 		// Create reflection
 		[self createReflection];
-		
-		if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 	} else {
 		self.tableView.tableHeaderView = self.playAllShuffleAllView;
-		if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 	}
 	
 	self.sectionInfo = self.dataModel.sectionInfo;

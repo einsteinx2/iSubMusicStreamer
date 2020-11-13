@@ -70,9 +70,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
-	} else {
-		if (!self.tableView.tableHeaderView) self.tableView.tableHeaderView = [[UIView alloc] init];
-		if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 	}
 }
 
@@ -97,29 +94,21 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
 		self.title = @"Servers";
-		
 		self.tableView.tableFooterView = nil;
-		
 		self.tableView.scrollEnabled = YES;
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
-		
-		if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
-		
 		[self.tableView reloadData];
 	} else if (self.segmentedControl.selectedSegmentIndex == 1) {
 		self.title = @"Settings";
-		
 		self.tableView.scrollEnabled = YES;
 		[self setEditing:NO animated:NO];
 		self.navigationItem.rightBarButtonItem = nil;
 		self.settingsTabViewController = [[SettingsTabViewController alloc] initWithNibName:@"SettingsTabViewController" bundle:nil];
 		self.settingsTabViewController.parentController = self;
 		self.tableView.tableFooterView = self.settingsTabViewController.view;
-		if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 		[self.tableView reloadData];
 	} else if (self.segmentedControl.selectedSegmentIndex == 2) {
 		self.title = @"Help";
-		
 		self.tableView.scrollEnabled = NO;
 		[self setEditing:NO animated:NO];
 		self.navigationItem.rightBarButtonItem = nil;
@@ -127,7 +116,6 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.helpTabViewController.view.frame = self.view.bounds;
         self.helpTabViewController.view.height -= 40.;
 		self.tableView.tableFooterView = self.helpTabViewController.view;
-		if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
 		[self.tableView reloadData];
 	}
 }

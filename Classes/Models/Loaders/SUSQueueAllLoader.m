@@ -118,7 +118,9 @@
                 [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
             }
             
-            [self finishLoad];
+            [EX2Dispatch runInMainThreadAsync:^{
+                [self finishLoad];
+            }];
         }
     }];
     [dataTask resume];

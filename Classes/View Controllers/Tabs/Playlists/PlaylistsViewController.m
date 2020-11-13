@@ -35,6 +35,11 @@
 
 LOG_LEVEL_ISUB_DEFAULT
 
+@interface PlaylistsViewController()
+@property (nonatomic, strong) NSURLSession *sharedSession;
+@property (nonatomic, strong) SelfSignedCertURLSessionDelegate *sharedSessionDelegate;
+@end
+
 @implementation PlaylistsViewController
 
 #pragma mark - Rotation
@@ -77,31 +82,42 @@ LOG_LEVEL_ISUB_DEFAULT
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_JukeboxSongInfo object:nil];
 }
 
+- (void)recreateSharedSession {
+    [self.sharedSession invalidateAndCancel];
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+    self.sharedSessionDelegate = [[SelfSignedCertURLSessionDelegate alloc] init];
+    self.sharedSession = [NSURLSession sessionWithConfiguration:configuration
+                                                       delegate:self.sharedSessionDelegate
+                                                  delegateQueue:nil];
+}
+
 - (void)viewDidLoad  {
     [super viewDidLoad];
+    
+    [self recreateSharedSession];
 		
 	self.serverPlaylistsDataModel = [[SUSServerPlaylistsDAO alloc] initWithDelegate:self];
 	
 	self.isNoPlaylistsScreenShowing = NO;
 	self.isPlaylistSaveEditShowing = NO;
 	self.savePlaylistLocal = NO;
-	
-	self.receivedData = nil;
-		
+			
     self.title = @"Playlists";
 	
-	if (settingsS.isOfflineMode)
+    if (settingsS.isOfflineMode) {
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"gear.png"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsAction:)];
-	
+    }
+    
 	// Setup segmented control in the header view
 	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
 	self.headerView.backgroundColor = [UIColor colorWithWhite:.3 alpha:1];
 	
-	if (settingsS.isOfflineMode)
+    if (settingsS.isOfflineMode) {
 		self.segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Current", @"Offline Playlists"]];
-	else
+    } else {
 		self.segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Current", @"Local", @"Server"]];
-	
+    }
+    
 	self.segmentedControl.frame = CGRectMake(5, 5, 310, 36);
 	self.segmentedControl.selectedSegmentIndex = 0;
 	self.segmentedControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -114,16 +130,10 @@ LOG_LEVEL_ISUB_DEFAULT
     self.tableView.rowHeight = 60.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
-	if (UIDevice.isIPad)
-	{
+	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
-	
-	if (!self.tableView.tableFooterView) self.tableView.tableFooterView = [[UIView alloc] init];
-	
-	self.connectionQueue = [[EX2SimpleConnectionQueue alloc] init];
-	self.connectionQueue.delegate = self;
-    
+	    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
@@ -608,20 +618,38 @@ LOG_LEVEL_ISUB_DEFAULT
 		 }
 	 }];
 	[parameters setObject:[NSArray arrayWithArray:songIds] forKey:@"songId"];
-
-	self.request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
-	
-	self.connection = [[NSURLConnection alloc] initWithRequest:self.request delegate:self];
-	if (self.connection) {
-		self.receivedData = [NSMutableData data];
-		
-		self.tableView.scrollEnabled = NO;
-		[viewObjectsS showAlbumLoadingScreen:self.view sender:self];
-	} else {
-		// Inform the user that the connection failed.
-		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:@"There was an error saving the playlist to the server.\n\nCould not create the network request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-	}
+	NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
+    NSURLSessionDataTask *dataTask = [self.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
+            [EX2Dispatch runInMainThreadAsync:^{
+                NSString *message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
+                CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+            }];
+        } else {
+            RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
+            if (!root.isValid) {
+                NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
+                [self subsonicErrorCode:nil message:error.description];
+            } else {
+                RXMLElement *error = [root child:@"error"];
+                if (error.isValid) {
+                    NSString *code = [error attribute:@"code"];
+                    NSString *message = [error attribute:@"message"];
+                    [self subsonicErrorCode:code message:message];
+                }
+            }
+        }
+        
+        [EX2Dispatch runInMainThreadAsync:^{
+            self.tableView.scrollEnabled = YES;
+            [viewObjectsS hideLoadingScreen];
+        }];
+    }];
+    [dataTask resume];
+    
+    self.tableView.scrollEnabled = NO;
+    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
 }
 
 - (void)deleteCurrentPlaylistSongsAtRowIndexes:(NSArray<NSNumber*> *)rowIndexes {
@@ -670,15 +698,13 @@ LOG_LEVEL_ISUB_DEFAULT
         NSString *playlistId = [[self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:[index intValue]] playlistId];
         NSDictionary *parameters = [NSDictionary dictionaryWithObject:n2N(playlistId) forKey:@"id"];
         DDLogVerbose(@"parameters: %@", parameters);
-        NSMutableURLRequest *aRequest = [NSMutableURLRequest requestWithSUSAction:@"deletePlaylist" parameters:parameters];
-        
-        self.connection = [[NSURLConnection alloc] initWithRequest:aRequest delegate:self startImmediately:NO];
-        if (self.connection) {
-            [self.connectionQueue registerConnection:self.connection];
-            [self.connectionQueue startQueue];
-        } else {
-            //DLog(@"There was an error deleting a server playlist, could not create network request");
-        }
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"deletePlaylist" parameters:parameters];
+        NSURLSessionDataTask *dataTask = [self.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            if (error) {
+                // TODO: Handle error
+            }
+        }];
+        [dataTask resume];
     }
 }
 
@@ -769,16 +795,11 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)cancelLoad {
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
-		[self.connection cancel];
+        [self recreateSharedSession];
 	} else {
-		if (self.connectionQueue.isRunning) {
-			[self.connectionQueue clearQueue];
-			
-			[self connectionQueueDidFinish:self.connectionQueue];
-		} else {
-			[self.serverPlaylistsDataModel cancelLoad];
-			[viewObjectsS hideLoadingScreen];
-		}
+        [self recreateSharedSession];
+        [self.serverPlaylistsDataModel cancelLoad];
+        [viewObjectsS hideLoadingScreen];
 	}
 }
 
@@ -904,102 +925,10 @@ LOG_LEVEL_ISUB_DEFAULT
     [viewObjectsS hideLoadingScreen];
 }
 
-#pragma mark - Connection Delegate
-
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)space {
-	if([[space authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust]) 
-		return YES; // Self-signed cert will be accepted
-	
-	return NO;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-	if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
-	{
-		[challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge]; 
-	}
-	[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    if (self.segmentedControl.selectedSegmentIndex == 0)
-		[self.receivedData setLength:0];
-}
-
-- (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData {
-	if (self.segmentedControl.selectedSegmentIndex == 0)
-		[self.receivedData appendData:incrementalData];
-}
-
-- (void)connection:(NSURLConnection *)theConnection didFailWithError:(NSError *)error {
-	NSString *message = @"";
-	if (self.segmentedControl.selectedSegmentIndex == 0) {
-		message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", 
-				   (long)[error code],
-				   [error localizedDescription]];
-	} else {
-		message = [NSString stringWithFormat:@"There was an error loading the playlists.\n\nError %li: %@",
-				   (long)[error code],
-				   [error localizedDescription]];
-	}
-	
-	// Inform the user that the connection failed.
-	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	[alert show];
-	
-	self.tableView.scrollEnabled = YES;
-	[viewObjectsS hideLoadingScreen];
-	
-	
-	if (self.segmentedControl.selectedSegmentIndex == 0) {
-	} else {
-		[self.connectionQueue connectionFinished:theConnection];
-	}
-}	
-
-- (NSURLRequest *)connection: (NSURLConnection *)inConnection willSendRequest:(NSURLRequest *)inRequest redirectResponse:(NSURLResponse *)inRedirectResponse {
-    if (inRedirectResponse) {
-        NSMutableURLRequest *newRequest = [self.request mutableCopy];
-        [newRequest setURL:[inRequest URL]];
-        return newRequest;
-    } else {
-        return inRequest;
-    }
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)theConnection {
-	if (self.segmentedControl.selectedSegmentIndex == 0) {
-		[self parseData];
-	} else {
-		[self.connectionQueue connectionFinished:theConnection];
-	}
-	
-	self.tableView.scrollEnabled = YES;
-}
-
-static NSString *kName_Error = @"error";
-
-- (void) subsonicErrorCode:(NSString *)errorCode message:(NSString *)message {
+- (void)subsonicErrorCode:(NSString *)errorCode message:(NSString *)message {
 	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Subsonic Error" message:message delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
 	alert.tag = 1;
 	[alert show];
-}
-
-- (void)parseData {
-    RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
-    if (!root.isValid) {
-        NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
-        [self subsonicErrorCode:nil message:error.description];
-    } else {
-        RXMLElement *error = [root child:@"error"];
-        if (error.isValid) {
-            NSString *code = [error attribute:@"code"];
-            NSString *message = [error attribute:@"message"];
-            [self subsonicErrorCode:code message:message];
-        }
-    }
-	
-	[viewObjectsS hideLoadingScreen];
 }
 
 #pragma mark Table view methods
@@ -1264,9 +1193,7 @@ static NSString *kName_Error = @"error";
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	self.serverPlaylistsDataModel.delegate = nil;
-	self.connectionQueue = nil;
 }
-
 
 @end
 
