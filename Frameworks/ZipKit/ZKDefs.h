@@ -11,42 +11,42 @@
 #define ZK_TARGET_OS_IPHONE (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE || TARGET_OS_IPHONE_SIMULATOR)
 
 enum ZKReturnCodes {
-	zkFailed = -1,
-	zkCancelled = 0,
-	zkSucceeded = 1,
+    zkFailed    = -1,
+    zkCancelled = 0,
+    zkSucceeded = 1,
 };
 
 // File & path naming
-extern NSString* const ZKArchiveFileExtension;
-extern NSString* const ZKMacOSXDirectory;
-extern NSString* const ZKDotUnderscore;
-extern NSString* const ZKExpansionDirectoryName;
+extern NSString *const ZKArchiveFileExtension;
+extern NSString *const ZKMacOSXDirectory;
+extern NSString *const ZKDotUnderscore;
+extern NSString *const ZKExpansionDirectoryName;
 
 // Keys for dictionary passed to size calculation thread
-extern NSString* const ZKPathsKey;
-extern NSString* const ZKusingResourceForkKey;
+extern NSString *const ZKPathsKey;
+extern NSString *const ZKusingResourceForkKey;
 
 // Keys for dictionary returned from ZKDataArchive inflation
-extern NSString* const ZKFileDataKey;
-extern NSString* const ZKFileAttributesKey;
-extern NSString* const ZKPathKey;
+extern NSString *const ZKFileDataKey;
+extern NSString *const ZKFileAttributesKey;
+extern NSString *const ZKPathKey;
 
 // Zipping & Unzipping
-extern const NSUInteger ZKZipBlockSize;
-extern const NSUInteger ZKNotificationIterations;
+extern const unsigned long long ZKZipBlockSize;
+extern const UInt32 ZKNotificationIterations;
 
 // Magic numbers and lengths for zip records
-extern const NSUInteger ZKCDHeaderMagicNumber;
-extern const NSUInteger ZKCDHeaderFixedDataLength;
+extern const UInt32 ZKCDHeaderMagicNumber;
+extern const UInt32 ZKCDHeaderFixedDataLength;
 
-extern const NSUInteger ZKCDTrailerMagicNumber;
-extern const NSUInteger ZKCDTrailerFixedDataLength;
+extern const UInt32 ZKCDTrailerMagicNumber;
+extern const UInt32 ZKCDTrailerFixedDataLength;
 
-extern const NSUInteger ZKLFHeaderMagicNumber;
-extern const NSUInteger ZKLFHeaderFixedDataLength;
+extern const UInt32 ZKLFHeaderMagicNumber;
+extern const UInt32 ZKLFHeaderFixedDataLength;
 
-extern const NSUInteger ZKCDTrailer64MagicNumber;
-extern const NSUInteger ZKCDTrailer64FixedDataLength;
+extern const UInt32 ZKCDTrailer64MagicNumber;
+extern const UInt32 ZKCDTrailer64FixedDataLength;
 
-extern const NSUInteger ZKCDTrailer64LocatorMagicNumber;
-extern const NSUInteger ZKCDTrailer64LocatorFixedDataLength;
+extern const UInt32 ZKCDTrailer64LocatorMagicNumber;
+extern const UInt32 ZKCDTrailer64LocatorFixedDataLength;

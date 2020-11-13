@@ -7,23 +7,21 @@
 
 #import "NSDictionary+ZKAdditions.h"
 
-NSString* const ZKTotalFileSize = @"ZKTotalFileSize";
-NSString* const ZKItemCount = @"ZKItemCount";
+NSString *const ZKTotalFileSize = @"ZKTotalFileSize";
+NSString *const ZKItemCount = @"ZKItemCount";
 
 @implementation NSDictionary (ZKAdditions)
 
-+ (NSDictionary *) zk_totalSizeAndCountDictionaryWithSize:(unsigned long long) size andItemCount:(unsigned long long) count {
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithUnsignedLongLong:size], ZKTotalFileSize,
-			[NSNumber numberWithUnsignedLongLong:count], ZKItemCount, nil];
++ (NSDictionary *)zk_totalSizeAndCountDictionaryWithSize:(UInt64)size andItemCount:(UInt64)count {
+    return @{ZKTotalFileSize: @(size), ZKItemCount: @(count)};
 }
 
-- (unsigned long long) zk_totalFileSize {
-	return [[self objectForKey:ZKTotalFileSize] unsignedLongLongValue];
+- (UInt64)zk_totalFileSize {
+    return [self[ZKTotalFileSize] unsignedLongLongValue];
 }
 
-- (unsigned long long) zk_itemCount {
-	return [[self objectForKey:ZKItemCount] unsignedLongLongValue];
+- (UInt64)zk_itemCount {
+    return [self[ZKItemCount] unsignedLongLongValue];
 }
 
 @end
