@@ -203,7 +203,7 @@ LOG_LEVEL_ISUB_DEBUG
             
             if (!handler.mySong.isFullyCached && !handler.mySong.isTempCached && !([cacheQueueManagerS.currentQueuedSong isEqualToSong:handler.mySong] && cacheQueueManagerS.isQueueDownloading))
             {
-                DLog(@"Removing song from cached songs table: %@", handler.mySong);
+                DDLogVerbose(@"Removing song from cached songs table: %@", handler.mySong);
                 [handler.mySong removeFromCachedSongsTableDbQueue];
             }
 			//[handler.mySong removeFromCachedSongsTableDbQueue];
@@ -283,7 +283,7 @@ LOG_LEVEL_ISUB_DEBUG
 		ISMSStreamHandler *handler = [self.handlerStack objectAtIndex:index];
 		if (!handler.mySong.isFullyCached && !handler.mySong.isTempCached && !([cacheQueueManagerS.currentQueuedSong isEqualToSong:handler.mySong] && cacheQueueManagerS.isQueueDownloading))
         {
-            DLog(@"Removing song from cached songs table: %@", handler.mySong);
+            DDLogVerbose(@"Removing song from cached songs table: %@", handler.mySong);
             [handler.mySong removeFromCachedSongsTableDbQueue];
         }
         [self.handlerStack removeObjectAtIndexSafe:index];
@@ -657,7 +657,7 @@ LOG_LEVEL_ISUB_DEBUG
                 [handler.mySong removeFromCacheQueueDbQueue];
             }
             
-            DLog(@"Marking isFullyCached = YES for %@", handler.mySong);
+            DDLogVerbose(@"Marking isFullyCached = YES for %@", handler.mySong);
 			handler.mySong.isFullyCached = YES;
 		}
 		

@@ -14,7 +14,7 @@
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        if (IS_IPAD()) return;
+        if (UIDevice.isIPad) return;
         
         if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
             self.albumArt.width = 320;
@@ -48,7 +48,7 @@
 }
 
 - (void)viewDidLoad {
-	if (IS_IPAD()) {
+	if (UIDevice.isIPad) {
 		// Fix album art size for iPad
         self.albumArt.width = 540;
         self.albumArt.height = 540;
@@ -75,7 +75,7 @@
 	
     self.albumArtReflection.image = [self.albumArt reflectedImageWithHeight:self.albumArtReflection.height];
 	
-	if (!IS_IPAD()) {
+	if (!UIDevice.isIPad) {
 		if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 			[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
             self.albumArt.width = 480;
@@ -86,7 +86,7 @@
 }
 
 - (IBAction)dismiss:(id)sender {
-    if (!IS_IPAD()) {
+    if (!UIDevice.isIPad) {
 		[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
     }
     

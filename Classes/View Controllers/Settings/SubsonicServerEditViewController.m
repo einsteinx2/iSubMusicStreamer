@@ -232,7 +232,7 @@
 		
 		[self dismissViewControllerAnimated:YES completion:nil];
 		
-		if (IS_IPAD())
+		if (UIDevice.isIPad)
 			[appDelegateS.ipadRootViewController.menuViewController showHome];
 				
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:0];

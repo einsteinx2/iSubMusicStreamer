@@ -140,13 +140,6 @@ static BOOL _isThrottlingEnabled = YES;
     [self sizeToFit];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
 - (void)sizeToFit
 {
 	CGSize maximumLabelSize = CGSizeMake(self.messageLabel.width, 300.);

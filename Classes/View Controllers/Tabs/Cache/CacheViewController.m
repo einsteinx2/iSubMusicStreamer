@@ -44,7 +44,7 @@
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
-    if (!IS_IPAD() && self.isNoSongsScreenShowing) {
+    if (!UIDevice.isIPad && self.isNoSongsScreenShowing) {
         [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
             if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
                 self.noSongsScreen.transform = CGAffineTransformTranslate(self.noSongsScreen.transform, 0.0, 110.0);
@@ -168,7 +168,7 @@
 		[self updateQueueDownloadProgress];
 	}
 	
-    if (IS_IPAD()) {
+    if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
     }
     
@@ -708,7 +708,7 @@
 		
 		[self.view addSubview:self.noSongsScreen];
 		
-		if (!IS_IPAD()) {
+		if (!UIDevice.isIPad) {
 			if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 				self.noSongsScreen.transform = CGAffineTransformTranslate(self.noSongsScreen.transform, 0.0, 23.0);
 			}

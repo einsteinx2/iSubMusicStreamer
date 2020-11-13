@@ -104,7 +104,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	//coverArtImageView.delegate = self;
 
 	// Create the extra views not in the XIB file
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait(UIApplication.orientation))
+    if (UIInterfaceOrientationIsPortrait(UIApplication.orientation))
     {
         [self showTallPlayerButtons];
         
@@ -124,7 +124,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	
 	// Setup the navigation controller buttons
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"player-overlay.png"] style:UIBarButtonItemStylePlain target:self action:@selector(songInfoToggle:)];
-	if (!IS_IPAD())
+	if (!UIDevice.isIPad)
     {
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back.png"] style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
     }
@@ -161,7 +161,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	
 	self.coverArtHolderView.layer.masksToBounds = YES;
 	
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		// Fix some positions
 		self.eqButton.y -= 10;
@@ -179,7 +179,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
     self.swipeDetector.delegate = self;
     
     // Fix starting in landscape on iPhone 5
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsLandscape(UIApplication.orientation))
+    if (UIInterfaceOrientationIsLandscape(UIApplication.orientation))
     {
         NSArray *viewsToSkip = @[self.reflectionView, self.artistLabel, self.albumLabel, self.titleLabel];
         for(UIView *subview in self.view.subviews)
@@ -237,7 +237,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		self.view.backgroundColor = [UIColor blackColor]; 
 	}
 	
-	if (UIInterfaceOrientationIsPortrait(UIApplication.orientation) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait(UIApplication.orientation) || UIDevice.isIPad)
 	{
 		[self createSongTitle];
 	}
@@ -339,7 +339,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(largeSongInfoWasToggled) name:ISMSNotification_LargeSongInfoToggle object:nil];
 		
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showPlayerOverlayTemp) 
 													 name:ISMSNotification_ShowPlayer object:nil];
@@ -375,7 +375,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	[[NSNotificationCenter defaultCenter] removeObserver:self 
 													name:@"player show store" object:nil];
 	
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		[[NSNotificationCenter defaultCenter] removeObserver:self 
 														name:ISMSNotification_ShowPlayer object:nil];
@@ -406,9 +406,9 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 - (void)createLandscapeViews
 {
 	// Setup landscape orientation if necessary
-	if (!IS_IPAD())
+	if (!UIDevice.isIPad)
 	{
-		self.artistLabel = [[UILabel alloc] initWithFrame:CGRectMake(IS_TALL_SCREEN() ? 349 : 305, 60, 170, 30)];
+		self.artistLabel = [[UILabel alloc] initWithFrame:CGRectMake(349, 60, 170, 30)];
 		self.artistLabel.backgroundColor = [UIColor clearColor];
 		self.artistLabel.textColor = [UIColor colorWithWhite:.7 alpha:1.];
 		self.artistLabel.font = ISMSBoldFont(22);
@@ -417,7 +417,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		[self.view addSubview:self.artistLabel];
 		[self.view sendSubviewToBack:self.artistLabel];
 		
-		self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(IS_TALL_SCREEN() ? 349 : 305, 90, 170, 30)];
+		self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(349, 90, 170, 30)];
 		self.titleLabel.backgroundColor = [UIColor clearColor];
 		self.titleLabel.textColor = [UIColor whiteColor];
 		self.titleLabel.font = ISMSBoldFont(24);
@@ -426,7 +426,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		[self.view addSubview:self.titleLabel];
 		[self.view sendSubviewToBack:self.titleLabel];
 		
-		self.albumLabel = [[UILabel alloc] initWithFrame:CGRectMake(IS_TALL_SCREEN() ? 349 : 305, 120, 170, 30)];
+		self.albumLabel = [[UILabel alloc] initWithFrame:CGRectMake(349, 120, 170, 30)];
 		self.albumLabel.backgroundColor = [UIColor clearColor];
 		self.albumLabel.textColor = [UIColor colorWithWhite:.7 alpha:1.];
 		self.albumLabel.font = ISMSRegularFont(22);
@@ -481,7 +481,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        if (!IS_IPAD()) {
+        if (!UIDevice.isIPad) {
             if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
                 //[self setSongTitle];
                 [self createSongTitle];
@@ -508,7 +508,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
             [self extraButtonsToggleAnimated:NO saveState:NO];
         }
         
-        if (!IS_IPAD())
+        if (!UIDevice.isIPad)
         {
             if (UIInterfaceOrientationIsPortrait(UIApplication.orientation))
             {
@@ -570,19 +570,16 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
                 self.pageControlViewController.scrollView.contentSize = CGSizeMake(width, height);
                 [self.pageControlViewController changePage:self.pageControlViewController.pageControl];
                 
-                if (IS_TALL_SCREEN())
+                NSArray *viewsToSkip = @[self.reflectionView, self.artistLabel, self.albumLabel, self.titleLabel];
+                for(UIView *subview in self.view.subviews)
                 {
-                    NSArray *viewsToSkip = @[self.reflectionView, self.artistLabel, self.albumLabel, self.titleLabel];
-                    for(UIView *subview in self.view.subviews)
-                    {
-                        if (![viewsToSkip containsObject:subview])
-                            subview.x += 44.;
-                    }
+                    if (![viewsToSkip containsObject:subview])
+                        subview.x += 44.;
                 }
             }
         }
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        if (!IS_IPAD() && UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
+        if (!UIDevice.isIPad && UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
             [self createSongTitle];
         }
         
@@ -630,7 +627,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
  
 - (void)createSongTitle
 {
-	if (UIInterfaceOrientationIsPortrait(UIApplication.orientation) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait(UIApplication.orientation) || UIDevice.isIPad)
 	{
 		self.navigationItem.titleView = nil;
 		
@@ -690,7 +687,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 
 - (void)setSongTitle
 {
-	if (UIInterfaceOrientationIsPortrait(UIApplication.orientation) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait(UIApplication.orientation) || UIDevice.isIPad)
 	{		
 		self.artistTitleLabel.text = self.currentSong.artist;
 		self.albumTitleLabel.text = self.currentSong.album;
@@ -1038,7 +1035,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 
 - (void)extraButtonsToggleAnimated:(BOOL)animated saveState:(BOOL)saveState
 {
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
+    if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
         return;
     }
     
@@ -1193,7 +1190,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
         CGRect cropRect = CGRectMake(0., cornerRadius, self.sliderMultipleLabel.width, self.sliderMultipleLabel.height);
         UIImage *croppedImage = [[backgroundLayer imageFromLayer] croppedImage:cropRect];
         self.sliderMultipleLabel.backgroundColor = [UIColor colorWithPatternImage:croppedImage];
-        self.sliderMultipleLabel.top = IS_TALL_SCREEN() ? 0. : self.extraButtons.height - 1.;
+        self.sliderMultipleLabel.top = 0;
 
 		[self.coverArtHolderView addSubview:self.sliderMultipleLabel];
 	}
@@ -1522,7 +1519,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 			}
 		}
 		
-		if (self.isExtraButtonsShowing || IS_TALL_SCREEN())
+		if (self.isExtraButtonsShowing)
 			[self updateFormatLabel];
 	}
 	

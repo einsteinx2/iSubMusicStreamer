@@ -27,6 +27,8 @@
 #import "ISMSServer.h"
 #import "EX2Kit.h"
 
+LOG_LEVEL_ISUB_DEFAULT
+
 @implementation ServerListViewController
 
 - (void)dealloc {
@@ -66,7 +68,7 @@
 	
 	self.tableView.tableHeaderView = self.headerView;
 	
-	if (IS_IPAD()) {
+	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	} else {
 		if (!self.tableView.tableHeaderView) self.tableView.tableHeaderView = [[UIView alloc] init];
@@ -147,7 +149,7 @@
     SubsonicServerEditViewController *subsonicServerEditViewController = [[SubsonicServerEditViewController alloc] initWithNibName:@"SubsonicServerEditViewController" bundle:nil];
     subsonicServerEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
 
-    if (IS_IPAD()) {
+    if (UIDevice.isIPad) {
 		[appDelegateS.ipadRootViewController presentViewController:subsonicServerEditViewController animated:YES completion:nil];
     } else {
 		[self presentViewController:subsonicServerEditViewController animated:YES completion:nil];
@@ -189,7 +191,7 @@
     settingsS.uuid = viewObjectsS.serverToEdit.uuid;
     settingsS.lastQueryId = viewObjectsS.serverToEdit.lastQueryId;
     		
-	if (self == [[self.navigationController viewControllers] objectAtIndexSafe:0] && !IS_IPAD()) {
+	if (self == [[self.navigationController viewControllers] objectAtIndexSafe:0] && !UIDevice.isIPad) {
 		[self.navigationController.view removeFromSuperview];
 	} else {
 		[self.navigationController popToRootViewControllerAnimated:YES];
@@ -221,7 +223,7 @@
 		if (settingsS.isOfflineMode) {
 			settingsS.isOfflineMode = NO;
 			
-			if (IS_IPAD()) {
+			if (UIDevice.isIPad) {
 				[appDelegateS.ipadRootViewController.menuViewController toggleOfflineMode];
 			} else {
 				for (UIView *subview in appDelegateS.window.subviews) {
@@ -237,7 +239,7 @@
 		[databaseS setupDatabases];
 		
 		// Reset the tabs
-        if (!IS_IPAD()) {
+        if (!UIDevice.isIPad) {
 			[appDelegateS.rootViewController.navigationController popToRootViewControllerAnimated:NO];
         }
         
@@ -382,7 +384,7 @@
 	alert.tag = 3;
 	[alert show];
         
-    DLog(@"server verification failed, hiding loading screen");
+    DDLogError(@"server verification failed, hiding loading screen");
     [viewObjectsS hideLoadingScreen];
 }
 
@@ -399,7 +401,7 @@
 	
 	[self switchServer:nil];
     
-    DLog(@"server verification passed, hiding loading screen");
+    DDLogVerbose(@"server verification passed, hiding loading screen");
     [viewObjectsS hideLoadingScreen];
 }
 

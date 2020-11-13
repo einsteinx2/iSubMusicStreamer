@@ -35,7 +35,7 @@
 		[self.cellNames addObject:@"Songs"];
 	}
 	
-	if (IS_IPAD()) {
+	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
     

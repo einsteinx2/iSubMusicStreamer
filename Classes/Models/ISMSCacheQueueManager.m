@@ -70,7 +70,7 @@ LOG_LEVEL_ISUB_DEBUG
     DDLogVerbose(@"[ISMSCacheQueueManager] starting download queue for: %@", self.currentQueuedSong);
 	
 	// For simplicity sake, just make sure we never go under 25 MB and let the cache check process take care of the rest
-	if (cacheS.freeSpace <= BytesFromMiB(25)) {
+	if (cacheS.freeSpace <= 25 * 1024 * 1024) {
 		/*[EX2Dispatch runInMainThread:^
 		 {
 			 [cacheS showNoFreeSpaceMessage:NSLocalizedString(@"Your device has run out of space and cannot download any more music. Please free some space and try again", @"Download manager, device out of space message")];
@@ -262,7 +262,7 @@ LOG_LEVEL_ISUB_DEBUG
 		[self stopDownloadQueue];
 	}
     
-    ALog(@"finished download took %f seconds", [[NSDate date] timeIntervalSinceDate:start]);
+    DDLogVerbose(@"finished download took %f seconds", [[NSDate date] timeIntervalSinceDate:start]);
 }
 
 #pragma mark Singleton methods

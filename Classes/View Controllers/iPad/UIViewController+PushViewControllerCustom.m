@@ -18,7 +18,7 @@
 
 - (void)pushViewControllerCustom:(UIViewController *)viewController
 {
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		viewController.view.width = ISMSiPadViewWidth;
 		viewController.view.layer.cornerRadius = ISMSiPadCornerRadius;
@@ -37,7 +37,7 @@
 
 - (void)pushViewControllerCustomWithNavControllerOnIpad:(UIViewController *)viewController
 {
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:viewController];
 		nav.navigationBar.tintColor = [UIColor blackColor];
@@ -54,7 +54,7 @@
 - (void)showPlayer
 {
 	// Show the player
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
 	}

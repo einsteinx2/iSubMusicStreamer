@@ -21,7 +21,6 @@
     NSString *isSubmissionString = [NSString stringWithFormat:@"%i", self.isSubmission];
     NSDictionary *parameters = @{@"id": n2N(self.aSong.songId), @"submission": n2N(isSubmissionString)};
     NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"scrobble" parameters:parameters];
-    ALog(@"%@", parameters);
     return request;
 }
 

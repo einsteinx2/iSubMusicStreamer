@@ -40,7 +40,7 @@
 		self.navigationItem.rightBarButtonItem = nil;
 	}
 	
-	if (IS_IPAD()) {
+	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
     

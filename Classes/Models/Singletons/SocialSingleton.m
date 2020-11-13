@@ -18,7 +18,10 @@
 #import "ISMSStreamManager.h"
 #import "ISMSSong+DAO.h"
 #import "ISMSServer.h"
+#import "Defines.h"
 #import "EX2Kit.h"
+
+LOG_LEVEL_ISUB_DEFAULT
 
 @implementation SocialSingleton
 
@@ -107,7 +110,7 @@
 - (void)scrobbleSong:(ISMSSong*)aSong isSubmission:(BOOL)isSubmission {
 	if (settingsS.isScrobbleEnabled && !settingsS.isOfflineMode) {
 		SUSScrobbleLoader *loader = [[SUSScrobbleLoader alloc] initWithCallbackBlock:^(BOOL success, NSError *error, SUSLoader *loader) {
-            ALog(@"Scrobble successfully completed for song: %@", aSong.title);
+            DDLogVerbose(@"Scrobble successfully completed for song: %@", aSong.title);
         }];
         loader.aSong = aSong;
         loader.isSubmission = isSubmission;

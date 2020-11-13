@@ -28,7 +28,7 @@
 #pragma mark - Rotation
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	if (!IS_IPAD() && self.isNoChatMessagesScreenShowing) {
+	if (!UIDevice.isIPad && self.isNoChatMessagesScreenShowing) {
 		if (UIInterfaceOrientationIsPortrait(fromInterfaceOrientation)) {
 			CGAffineTransform translate = CGAffineTransformMakeTranslation(0.0, 42.0);
 			self.noChatMessagesScreen.transform = translate;
@@ -93,7 +93,7 @@
 	self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
 	[self.tableView addSubview:self.refreshHeaderView];
 	
-	if (IS_IPAD()) {
+	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
 
@@ -155,7 +155,7 @@
 		
 		[self.view addSubview:self.noChatMessagesScreen];
 		
-		if (!IS_IPAD()) {
+		if (!UIDevice.isIPad) {
 			if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 				CGAffineTransform translate = CGAffineTransformMakeTranslation(0.0, 42.0);
 				CGAffineTransform scale = CGAffineTransformMakeScale(0.75, 0.75);
@@ -204,7 +204,7 @@
 - (void)textViewDidBeginEditing:(UITextView *)textView {
 	// Create overlay
 	self.chatMessageOverlay = [[UIView alloc] init];
-    if (IS_IPAD()) {
+    if (UIDevice.isIPad) {
 		self.chatMessageOverlay.frame = CGRectMake(0, 82, 1024, 1024);
     } else {
 		self.chatMessageOverlay.frame = CGRectMake(0, 82, 480, 480);

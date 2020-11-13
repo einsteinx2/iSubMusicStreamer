@@ -39,7 +39,7 @@
 	
 	self.dataModel = [[SUSNowPlayingDAO alloc] initWithDelegate:self];
 	
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}

@@ -38,7 +38,7 @@
                 }
             }
             
-            if (!IS_IPAD()) {
+            if (!UIDevice.isIPad) {
                 [UIApplication.sharedApplication setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
 
                 self.controlsContainer.alpha = 1.0;
@@ -56,7 +56,7 @@
             
             UIApplication.sharedApplication.idleTimerDisabled = YES;
             
-            if (!IS_IPAD()) {
+            if (!UIDevice.isIPad) {
                 [UIApplication.sharedApplication setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
 
                 self.controlsContainer.alpha = 0.0;
@@ -143,7 +143,7 @@
 	self.lastGainValue = self.gainSlider.value;
 	self.gainBoostAmountLabel.text = [NSString stringWithFormat:@"%.1fx", self.gainSlider.value];
 	
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		self.gainSlider.y += 7;
 		self.gainBoostLabel.y += 7;
@@ -152,16 +152,13 @@
 		self.deletePresetButton.y -= 10;
 	}
     
-    if (IS_TALL_SCREEN())
-    {
-        [self.controlsContainer bringSubviewToFront:self.savePresetButton];
-        [self.controlsContainer bringSubviewToFront:self.deletePresetButton];
-        
-        self.savePresetButton.x -= 5.;
-        self.deletePresetButton.x -= 5.;
-    }
+    [self.controlsContainer bringSubviewToFront:self.savePresetButton];
+    [self.controlsContainer bringSubviewToFront:self.deletePresetButton];
+    
+    self.savePresetButton.x -= 5.;
+    self.deletePresetButton.x -= 5.;
 	
-	if (UIInterfaceOrientationIsLandscape(UIApplication.orientation) && !IS_IPAD())
+	if (UIInterfaceOrientationIsLandscape(UIApplication.orientation) && !UIDevice.isIPad)
 	{
 		self.controlsContainer.alpha = 0.0;
 		self.controlsContainer.userInteractionEnabled = NO;
@@ -204,7 +201,7 @@
 		
 	[self createEqViews];
 	
-	if (!IS_IPAD() && UIInterfaceOrientationIsLandscape(UIApplication.orientation))
+	if (!UIDevice.isIPad && UIInterfaceOrientationIsLandscape(UIApplication.orientation))
 	{
 		[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 		self.equalizerPath.alpha = 0.0;
@@ -526,7 +523,7 @@
 	{
 		/*if ([touch tapCount] == 1)
 		{
-			if (!IS_IPAD() && UIInterfaceOrientationIsLandscape(UIApplication.orientation))
+			if (!UIDevice.isIPad && UIInterfaceOrientationIsLandscape(UIApplication.orientation))
 			{
 				[self showLandscapeVisualizerButtons];
 			}
@@ -540,7 +537,7 @@
 			[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(type:) object:nil];
 			
 			// Only create EQ points in portrait mode when EQ is visible
-			if (IS_IPAD() || UIInterfaceOrientationIsPortrait(UIApplication.orientation))
+			if (UIDevice.isIPad || UIInterfaceOrientationIsPortrait(UIApplication.orientation))
 			{
 				// add a point
 				//DLog(@"double tap, adding point");

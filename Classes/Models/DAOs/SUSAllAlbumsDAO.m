@@ -12,7 +12,10 @@
 #import "DatabaseSingleton.h"
 #import "ISMSAlbum.h"
 #import "ISMSIndex.h"
+#import "Defines.h"
 #import "EX2Kit.h"
+
+LOG_LEVEL_ISUB_DEFAULT
 
 @implementation SUSAllAlbumsDAO
 
@@ -116,9 +119,9 @@
 		// Perform the search
 		NSString *query = @"INSERT INTO allAlbumsNameSearch SELECT ROWID FROM allAlbums WHERE title LIKE ? LIMIT 100";
 		[db executeUpdate:query, [NSString stringWithFormat:@"%%%@%%", name]];
-		if ([db hadError])
+		//if ([db hadError])
 		//DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-		DLog(@"allAlbumsNameSearch count: %i", [db intForQuery:@"SELECT count(*) FROM allAlbumsNameSearch"]);
+        DDLogVerbose(@"allAlbumsNameSearch count: %i", [db intForQuery:@"SELECT count(*) FROM allAlbumsNameSearch"]);
 	}];
 }
 

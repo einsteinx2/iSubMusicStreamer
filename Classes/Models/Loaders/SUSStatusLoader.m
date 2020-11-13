@@ -13,6 +13,8 @@
 #import "Defines.h"
 #import "EX2Kit.h"
 
+LOG_LEVEL_ISUB_DEFAULT
+
 @implementation SUSStatusLoader
 
 - (SUSLoaderType)type {
@@ -37,7 +39,7 @@
 }
 
 - (void)processResponse {
-    DLog(@"SUSStatusLoader: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+    DDLogVerbose(@"SUSStatusLoader: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
     
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
     if (!root.isValid) {

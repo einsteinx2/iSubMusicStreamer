@@ -40,7 +40,7 @@
 	self.versionLabel.text = [NSString stringWithFormat:@"iSub %@ build %@", build, version];
 	
 	// Hide elements
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		self.swipeCellsLabel.hidden = self.tapHoldCellsLabel.hidden = YES;
 		self.enableSwipeSwitch.hidden = self.enableTapAndHoldSwitch.hidden = YES;
@@ -208,7 +208,7 @@
 				default: break;
 			}
 			
-			if (IS_IPAD())
+			if (UIDevice.isIPad)
 				[appDelegateS.ipadRootViewController.menuViewController.playerController quickSecondsSetLabels];
 		}
         else if (sender == self.maxVideoBitrate3GSegmentedControl)
@@ -417,7 +417,7 @@
 			{
 				settingsS.isSongsTabEnabled = YES;
 				
-				if (IS_IPAD())
+				if (UIDevice.isIPad)
 				{
 					[appDelegateS.ipadRootViewController.menuViewController loadCellContents];
 				}
@@ -436,7 +436,7 @@
 			{
 				settingsS.isSongsTabEnabled = NO;
 
-				if (IS_IPAD())
+				if (UIDevice.isIPad)
 					[appDelegateS.ipadRootViewController.menuViewController loadCellContents];
 				else
 					[viewObjectsS orderMainTabBarController];
@@ -532,7 +532,7 @@
 
 - (void)popFoldersTab
 {
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 		[appDelegateS.artistsNavigationController popToRootViewControllerAnimated:NO];
 	else
 		[appDelegateS.rootViewController.navigationController popToRootViewControllerAnimated:NO];

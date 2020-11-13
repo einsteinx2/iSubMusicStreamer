@@ -15,6 +15,10 @@
 
 @implementation UIDevice (Hardware)
 
++ (BOOL)isIPad {
+    return UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad;
+}
+
 /*
  Platforms
  

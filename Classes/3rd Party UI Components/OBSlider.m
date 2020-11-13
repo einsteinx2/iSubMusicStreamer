@@ -7,6 +7,7 @@
 
 #import "OBSlider.h"
 #import "EX2Macros.h"
+#import "UIDevice+Hardware.h"
 
 @interface OBSlider ()
 
@@ -52,7 +53,7 @@
     CGRect bounds = self.bounds;
     bounds = CGRectInset(bounds, 0, SIZE_EXTENSION_Y);
 	
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 		bounds = CGRectInset(bounds, 0, SIZE_EXTENSION_Y_IPAD);
 	
     return CGRectContainsPoint(bounds, point);

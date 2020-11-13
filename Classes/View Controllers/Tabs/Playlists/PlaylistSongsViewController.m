@@ -28,6 +28,8 @@
 #import "EX2Kit.h"
 #import "Swift.h"
 
+LOG_LEVEL_ISUB_DEFAULT
+
 @implementation PlaylistSongsViewController
 
 - (void)viewDidLoad {
@@ -63,7 +65,7 @@
 			self.tableView.tableHeaderView = headerView;
 		}
 		
-		if (!IS_IPAD()) {
+		if (!UIDevice.isIPad) {
 			if (!self.tableView.tableHeaderView) self.tableView.tableHeaderView = [[UIView alloc] init];
 		}
 	} else {
@@ -80,7 +82,7 @@
     self.tableView.rowHeight = 60.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
-	if (IS_IPAD()) {
+	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
 	
@@ -233,7 +235,7 @@
 }	
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)theConnection {
-    DLog(@"%@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+    DDLogVerbose(@"%@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
 	if (!viewObjectsS.isLocalPlaylist) {
         RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
         if (!root.isValid) {
@@ -370,7 +372,7 @@ static NSString *kName_Error = @"error";
 	NSString *playTableName = [NSString stringWithFormat:@"%@%@", viewObjectsS.isLocalPlaylist ? @"playlist" : @"splaylist", self.md5];
 	[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
 		 [db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
-		 if ([db hadError]) { DLog(@"Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
+		 if ([db hadError]) { DDLogError(@"Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
 		 
 		 [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ SELECT * FROM %@", currTableName, playTableName]];
 		 [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];

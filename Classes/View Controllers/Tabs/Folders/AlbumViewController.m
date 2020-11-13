@@ -80,7 +80,7 @@
     self.tableView.rowHeight = 60.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
     
-	if (IS_IPAD()) {
+	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
 	
@@ -200,7 +200,7 @@
 		largeArt = [[ModalAlbumArtViewController alloc] initWithAlbum:self.myAlbum
 													   numberOfTracks:self.dataModel.songsCount
 														  albumLength:self.dataModel.folderLength];
-        if (IS_IPAD()) {
+        if (UIDevice.isIPad) {
 			[appDelegateS.ipadRootViewController presentViewController:largeArt animated:YES completion:nil];
         } else {
             [self presentViewController:largeArt animated:YES completion:nil];

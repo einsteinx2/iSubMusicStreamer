@@ -24,10 +24,7 @@
 {
 	if ((self = [super init]))
 	{		
-		if (SCREEN_SCALE() == 1.0)// && !IS_IPAD())
-			_lineSpecBufSize = 256 * sizeof(short);
-		else
-			_lineSpecBufSize = 512 * sizeof(short);
+		_lineSpecBufSize = 512 * sizeof(short);
 		_lineSpecBuf = malloc(_lineSpecBufSize);
 		
 		_fftData = malloc(sizeof(float) * 1024);

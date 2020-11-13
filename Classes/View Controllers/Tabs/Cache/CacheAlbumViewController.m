@@ -28,6 +28,8 @@
 #import "CacheSingleton.h"
 #import "ISMSSong+DAO.h"
 
+LOG_LEVEL_ISUB_DEFAULT
+
 @implementation CacheAlbumViewController
 
 NSInteger trackSort2(id obj1, id obj2, void *context) {
@@ -61,7 +63,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
     
     self.title = self.artistName;
 
-	if (IS_IPAD()) {
+	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
     
@@ -221,7 +223,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
 	
 	// If the table is empty, pop back one view, otherwise reload the table data
 	if (self.listOfAlbums.count + self.listOfSongs.count == 0) {
-		if (IS_IPAD()) {
+		if (UIDevice.isIPad) {
 			// TODO: implement this properly
 			//[appDelegateS.ipadRootViewController.stackScrollViewController popToRootViewController];
 		} else {
@@ -302,7 +304,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
 - (void)playAllPlaySong {
 	[musicS playSongAtPosition:0];
 	
-	if (IS_IPAD()) {
+	if (UIDevice.isIPad) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
 	} else {
 		iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
@@ -551,7 +553,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
                     [query appendFormat:@" AND seg%i = ? ", i];
                 }
                 
-                DLog(@"query: %@, parameter: %@", query, newSegments);
+                DDLogVerbose(@"query: %@, parameter: %@", query, newSegments);
                 NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:0];
                 [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
                     FMResultSet *result = [db executeQuery:query withArgumentsInArray:newSegments];
@@ -564,7 +566,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
                     [result close];
                 }];
                 
-                DLog(@"songMd5s: %@", songMd5s);
+                DDLogVerbose(@"songMd5s: %@", songMd5s);
                 for (NSString *md5 in songMd5s) {
                     @autoreleasepool {
                         [ISMSSong removeSongFromCacheDbQueueByMD5:md5];

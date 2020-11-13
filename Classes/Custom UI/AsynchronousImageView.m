@@ -93,7 +93,7 @@ LOG_LEVEL_ISUB_DEBUG
 	/*if(musicS.currentSongObject.coverArtId)
 	{
 		musicS.coverArtUrl = nil;
-		if (SCREEN_SCALE() == 2.0)
+		if (UIScreen.mainScreen.scale >= 2.0)
 		{
 			musicS.coverArtUrl = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@%@&size=640", [appDelegateS getBaseUrl:@"getCoverArt.view"], musicS.currentSongObject.coverArtId]];
 		}
@@ -167,7 +167,7 @@ LOG_LEVEL_ISUB_DEBUG
 
 - (void)loadingFinished:(SUSLoader *)theLoader
 {
-    DLog(@"[AsynchronousImageView] async cover art loading finished for: %@", self.coverArtId);
+    DDLogVerbose(@"[AsynchronousImageView] async cover art loading finished for: %@", self.coverArtId);
     
 	[self.activityIndicator removeFromSuperview];
 	self.activityIndicator = nil;

@@ -33,13 +33,15 @@
 #import "Swift.h"
 #import "ISMSLocalPlaylist.h"
 
+LOG_LEVEL_ISUB_DEFAULT
+
 @implementation PlaylistsViewController
 
 #pragma mark - Rotation
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        if (IS_IPAD()) return;
+        if (UIDevice.isIPad) return;
         
         if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
             self.noPlaylistsScreen.transform = CGAffineTransformTranslate(self.noPlaylistsScreen.transform, 0.0, -23.0);
@@ -112,7 +114,7 @@
     self.tableView.rowHeight = 60.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
@@ -389,7 +391,7 @@
 	
 	[self.view addSubview:self.noPlaylistsScreen];
 	
-	if (!IS_IPAD()) {
+	if (!UIDevice.isIPad) {
 		if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 			//noPlaylistsScreen.transform = CGAffineTransformScale(noPlaylistsScreen.transform, 0.75, 0.75);
 			self.noPlaylistsScreen.transform = CGAffineTransformTranslate(self.noPlaylistsScreen.transform, 0.0, 23.0);
@@ -667,7 +669,7 @@
     for (NSNumber *index in rowIndexes) {
         NSString *playlistId = [[self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:[index intValue]] playlistId];
         NSDictionary *parameters = [NSDictionary dictionaryWithObject:n2N(playlistId) forKey:@"id"];
-        DLog(@"parameters: %@", parameters);
+        DDLogVerbose(@"parameters: %@", parameters);
         NSMutableURLRequest *aRequest = [NSMutableURLRequest requestWithSUSAction:@"deletePlaylist" parameters:parameters];
         
         self.connection = [[NSURLConnection alloc] initWithRequest:aRequest delegate:self startImmediately:NO];
@@ -815,7 +817,7 @@
 						
 						[db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylist"];
 						//[db executeUpdate:@"ATTACH DATABASE ? AS ?", [NSString stringWithFormat:@"%@/%@currentPlaylist.db", databaseS.databaseFolderPath, [settingsS.urlString md5]], @"currentPlaylistDb"];
-						if ([db hadError]) { DLog(@"Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
+						if ([db hadError]) { DDLogError(@"Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
 						
 						[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", [text md5], table]];
 						[db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
@@ -853,7 +855,7 @@
 					[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", [text md5], [ISMSSong standardSongColumnSchema]]];
 					
 					[db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
-					if ([db hadError]) { DLog(@"Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
+					if ([db hadError]) { DDLogError(@"Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
 					
 					[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", [text md5], table]];
 					[db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];

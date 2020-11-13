@@ -46,7 +46,7 @@
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        if (IS_IPAD()) return;
+        if (UIDevice.isIPad) return;
         
         if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
             self.quickLabel.alpha = 1.0;
@@ -124,7 +124,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(performServerShuffle:) name:@"performServerShuffle" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
 
-	if (!IS_IPAD()) {
+	if (!UIDevice.isIPad) {
 		self.coverArtBorder = [UIButton buttonWithType:UIButtonTypeCustom];
 		self.coverArtBorder.frame = CGRectMake(15, 177, 290, 60);
 		self.coverArtBorder.layer.borderColor = [UIColor colorWithWhite:0.7 alpha:1.0].CGColor;
@@ -180,7 +180,7 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
     
-    if (!IS_IPAD()) {
+    if (!UIDevice.isIPad) {
         if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
             self.quickLabel.alpha = 1.0;
             self.shuffleLabel.alpha = 1.0;
@@ -218,13 +218,13 @@
     }
 	
 	if (settingsS.isJukeboxEnabled) {
-        if (IS_IPAD()) {
+        if (UIDevice.isIPad) {
 			[self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-on-ipad.png"] forState:UIControlStateNormal];
         } else {
 			[self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-on.png"] forState:UIControlStateNormal];
         }
 	} else {
-        if (IS_IPAD()) {
+        if (UIDevice.isIPad) {
 			[self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-off-ipad.png"] forState:UIControlStateNormal];
         } else {
             [self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-off.png"] forState:UIControlStateNormal];
@@ -383,7 +383,7 @@
 }
 
 - (void)jukeboxOff {
-    if (IS_IPAD()) {
+    if (UIDevice.isIPad) {
 		[self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-off-ipad.png"] forState:UIControlStateNormal];
     } else {
 		[self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-off.png"] forState:UIControlStateNormal];
@@ -395,7 +395,7 @@
 - (IBAction)jukebox {
     if (settingsS.isJukeboxEnabled) {
         // Jukebox mode is on, turn it off
-        if (IS_IPAD())
+        if (UIDevice.isIPad)
             [self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-off-ipad.png"] forState:UIControlStateNormal];
         else
             [self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-off.png"] forState:UIControlStateNormal];
@@ -410,7 +410,7 @@
         [audioEngineS.player stop];
         
         // Jukebox mode is off, turn it on
-        if (IS_IPAD()) {
+        if (UIDevice.isIPad) {
             [self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-on-ipad.png"] forState:UIControlStateNormal];
         } else {
             [self.jukeboxButton setImage:[UIImage imageNamed:@"home-jukebox-on.png"] forState:UIControlStateNormal];
@@ -439,13 +439,13 @@
 	// Create search overlay
 	self.searchOverlay = [[UIView alloc] init];
 	if (settingsS.isNewSearchAPI) {
-        if (IS_IPAD()) {
+        if (UIDevice.isIPad) {
 			self.searchOverlay.frame = CGRectMake(0, 86, 1024, 1024);
         } else {
 			self.searchOverlay.frame = CGRectMake(0, 82, 480, 480);
         }
 	} else {
-        if (IS_IPAD()) {
+        if (UIDevice.isIPad) {
 			self.searchOverlay.frame = CGRectMake(0, 44, 1024, 1024);
         } else {
 			self.searchOverlay.frame = CGRectMake(0, 44, 480, 480);

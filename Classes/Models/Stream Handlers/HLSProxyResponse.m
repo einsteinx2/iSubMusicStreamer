@@ -216,8 +216,8 @@ static const CFOptionFlags kNetworkEvents = kCFStreamEventOpenCompleted | kCFStr
     
     // Initialize the ring buffer. Choosing a small starting value as it is getting read from about as fast as it's being written to
     // but just in case we'll use a large enough maximum length to hold a whole segment of the largest bitrate we support
-    self.proxyBuffer = [[EX2RingBuffer alloc] initWithBufferLength:BytesFromKiB(100)];
-    self.proxyBuffer.maximumLength = BytesFromMiB(3.5);
+    self.proxyBuffer = [[EX2RingBuffer alloc] initWithBufferLength:100 * 1024];
+    self.proxyBuffer.maximumLength = 3.5 * 1024 * 1024;
 		
 	if (messageRef != NULL) CFRelease(messageRef);
 	return;

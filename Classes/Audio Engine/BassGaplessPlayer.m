@@ -32,7 +32,7 @@ LOG_LEVEL_ISUB_DEBUG
 
 // Stream create failure retry values
 #define ISMS_BassStreamRetryDelay 2.0
-#define ISMS_BassStreamMinFilesizeToFail BytesFromMiB(15) //(3) // 3MB is no longer enough with super high resolution artwork
+#define ISMS_BassStreamMinFilesizeToFail 15*1024*1024
 
 #define startSongRetryTimer @"startSong"
 
@@ -42,7 +42,7 @@ LOG_LEVEL_ISUB_DEBUG
 	{
 		_streamQueue = [NSMutableArray arrayWithCapacity:5];
 		_streamGcdQueue = dispatch_queue_create("com.isubapp.BassStreamQueue", NULL);
-		_ringBuffer = [EX2RingBuffer ringBufferWithLength:BytesFromKiB(640)];
+		_ringBuffer = [EX2RingBuffer ringBufferWithLength:640 * 1024];
         
         _equalizer = [[BassEqualizer alloc] init];
         _visualizer = [[BassVisualizer alloc] init];
@@ -429,7 +429,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
     // Calculate the amount of seconds to start as a factor of how many seconds of audio are being downloaded per second
     double secondsPerSecondFactor = kiloBytesPerSec / kiloBytesForOneSecond;
     
-    DLog(@"secondsPerSecondsFactor: %f", secondsPerSecondFactor);
+    DDLogVerbose(@"secondsPerSecondsFactor: %f", secondsPerSecondFactor);
     
     double numberOfSecondsToBuffer;
     if (secondsPerSecondFactor < .5)
@@ -486,7 +486,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
     
 	@autoreleasepool
 	{
-		NSUInteger readSize = BytesFromKiB(64);
+		NSUInteger readSize = 64 * 1024;
 		while (![[NSThread currentThread] isCancelled])
 		{						
 			// Fill the buffer if there is empty space

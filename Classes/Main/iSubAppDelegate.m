@@ -88,7 +88,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
     // Adjust the window to the correct size before anything else loads to prevent
     // various sizing/positioning issues
-    if (!IS_IPAD())
+    if (!UIDevice.isIPad)
     {
         CGSize screenSize = [[UIScreen mainScreen] preferredMode].size;
         CGFloat screenScale = [UIScreen mainScreen].scale;
@@ -96,7 +96,7 @@ LOG_LEVEL_ISUB_DEFAULT
         self.window.size = CGSizeMake(screenSize.width / screenScale, screenSize.height / screenScale);
     }
 	
-#if !IS_ADHOC() && !IS_RELEASE()
+#if !defined(ADHOC) && !defined(RELEASE)
     // Don't turn on console logging for adhoc or release builds
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
     [[DDTTYLogger sharedInstance] setColorsEnabled:YES];
@@ -169,7 +169,7 @@ LOG_LEVEL_ISUB_DEFAULT
     
 	// Create and display UI
 	self.introController = nil;
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		self.ipadRootViewController = [[iPadRootViewController alloc] initWithNibName:nil bundle:nil];
 		[self.window setBackgroundColor:[UIColor clearColor]];
@@ -282,7 +282,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     // Handle being openned by a URL
-    DLog(@"url host: %@ path components: %@", url.host, url.pathComponents );
+    DDLogVerbose(@"url host: %@ path components: %@", url.host, url.pathComponents );
     
     if (url.host)
     {
@@ -334,7 +334,7 @@ LOG_LEVEL_ISUB_DEFAULT
         self.referringAppUrl = [NSURL URLWithString:[queryParameters objectForKey:@"ref"]];
         
         // On the iPad we need to reload the menu table to see the back button
-        if (IS_IPAD())
+        if (UIDevice.isIPad)
         {
             [self.ipadRootViewController.menuViewController loadCellContents];
         }
@@ -431,7 +431,7 @@ LOG_LEVEL_ISUB_DEFAULT
         //DLog(@"server verification passed, hiding loading screen");
         [viewObjectsS hideLoadingScreen];
         
-        if (!IS_IPAD() && !settingsS.isOfflineMode)
+        if (!UIDevice.isIPad && !settingsS.isOfflineMode)
             [viewObjectsS orderMainTabBarController];
         
         // TODO: Find another way to detect crashes without using HockeyApp
@@ -448,10 +448,10 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)loadFlurryAnalytics
 {
 	BOOL isSessionStarted = NO;
-#if IS_RELEASE()
+#if defined(RELEASE)
     [Flurry startSession:@"3KK4KKD2PSEU5APF7PNX"];
     isSessionStarted = YES;
-#elif IS_BETA()
+#elif defined(BETA)
     [Flurry startSession:@"KNN9DUXQEENZUG4Q12UA"];
     isSessionStarted = YES;
 #endif
@@ -743,7 +743,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	[cacheQueueManagerS stopDownloadQueue];
 
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 		[self.ipadRootViewController.menuViewController toggleOfflineMode];
 	else
 		[self.mainTabBarController.view removeFromSuperview];
@@ -751,7 +751,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[databaseS closeAllDatabases];
 	[databaseS setupDatabases];
 	
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
 	}
@@ -776,7 +776,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	[audioEngineS.player stop];
 	
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 		[self.ipadRootViewController.menuViewController toggleOfflineMode];
 	else
 		[self.offlineTabBarController.view removeFromSuperview];
@@ -786,7 +786,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self checkServer];
 	[cacheQueueManagerS startDownloadQueue];
 	
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
 	}
@@ -873,7 +873,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)showSettings
 {
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		[self.ipadRootViewController.menuViewController showSettings];
 	}
@@ -911,7 +911,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			{
 				[self showSettings];
 				
-				/*if (IS_IPAD())
+				/*if (UIDevice.isIPad)
 				{
 					[mainMenu showSettings];
 				}
@@ -945,7 +945,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			}
 			else if (buttonIndex == 1)
 			{
-				if (IS_IPAD())
+				if (UIDevice.isIPad)
 				{
 					[mainMenu showSettings];
 				}
@@ -1011,7 +1011,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
 {   
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 		[self.ipadRootViewController dismissViewControllerAnimated:YES completion:nil];
 	else
 		[self.currentTabBarController dismissViewControllerAnimated:YES completion:nil];
@@ -1099,7 +1099,7 @@ LOG_LEVEL_ISUB_DEFAULT
         self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
         self.moviePlayer.allowsAirPlay = YES;
         
-        if (IS_IPAD())
+        if (UIDevice.isIPad)
         {
             [self.ipadRootViewController.menuViewController.playerHolder addSubview:self.moviePlayer.view];
             self.moviePlayer.view.frame = self.moviePlayer.view.superview.bounds;
@@ -1142,7 +1142,7 @@ LOG_LEVEL_ISUB_DEFAULT
     if (!aSong.isVideo || !settingsS.isVideoSupported)
         return;
     
-    if (IS_IPAD())
+    if (UIDevice.isIPad)
     {
         // Turn off repeat one so user doesn't get stuck
         if (playlistS.repeatMode == ISMSRepeatMode_RepeatOne)
@@ -1166,7 +1166,7 @@ LOG_LEVEL_ISUB_DEFAULT
     NSString *host = request.URL.absoluteString;
     host = [host.lowercaseString hasPrefix:@"https"] ? [NSString stringWithFormat:@"http://localhost:%u%@", self.hlsProxyServer.listeningPort, request.URL.relativePath] : host;
     NSString *urlString = [NSString stringWithFormat:@"%@?%@", host, [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]];
-    DLog(@"HLS urlString: %@", urlString);
+    DDLogVerbose(@"HLS urlString: %@", urlString);
     
     [self createMoviePlayer];
     
@@ -1187,7 +1187,7 @@ LOG_LEVEL_ISUB_DEFAULT
         [window addSubview:view];
     }
     
-    if (!IS_IPAD())
+    if (!UIDevice.isIPad)
     {
         [self removeMoviePlayer];
     }
@@ -1195,7 +1195,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)moviePlayBackDidFinish:(NSNotification *)notification
 {
-    DLog(@"userInfo: %@", notification.userInfo);
+    DDLogVerbose(@"userInfo: %@", notification.userInfo);
     if (notification.userInfo)
     {
         NSNumber *reason = [notification.userInfo objectForKey:MPMoviePlayerPlaybackDidFinishReasonUserInfoKey];

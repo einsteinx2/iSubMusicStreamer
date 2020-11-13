@@ -7,8 +7,11 @@
 //
 
 #import "SUSLoader.h"
+#import "Defines.h"
 #import "EX2Kit.h"
 #import "Swift.h"
+
+LOG_LEVEL_ISUB_DEFAULT
 
 @interface SUSLoader()
 @property (strong) NSData *receivedData;
@@ -74,7 +77,7 @@ static dispatch_once_t _sharedSessionDispatchOnce = 0;
         } else {
             self.receivedData = data;
             
-            DLog(@"loader type: %i response:\n%@", self.type, [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+            DDLogVerbose(@"loader type: %i response:\n%@", self.type, [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
             [self processResponse];
         }
     }];

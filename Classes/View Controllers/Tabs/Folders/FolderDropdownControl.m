@@ -13,6 +13,8 @@
 #import "SUSRootFoldersDAO.h"
 #import "EX2Kit.h"
 
+LOG_LEVEL_ISUB_DEFAULT
+
 @interface FolderDropdownControl() {
     __strong NSDictionary *_folders;
 }
@@ -231,8 +233,8 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
         SUSDropdownFolderLoader *theLoader = (SUSDropdownFolderLoader *)loader;
         if (success) {
             self.folders = theLoader.updatedfolders;
-            ALog(@"%@", self.folders);
-            ALog(@"%@", theLoader.updatedfolders);
+            DDLogVerbose(@"%@", self.folders);
+            DDLogVerbose(@"%@", theLoader.updatedfolders);
             [SUSRootFoldersDAO setFolderDropdownFolders:self.folders];
         } else {
             // TODO: Handle error

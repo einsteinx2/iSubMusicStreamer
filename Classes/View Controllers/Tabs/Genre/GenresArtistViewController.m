@@ -63,7 +63,7 @@
 	
 	self.tableView.tableHeaderView = headerView;
 	
-	if (IS_IPAD()) {
+	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
 	
@@ -91,7 +91,7 @@
 	// Start the player	
 	[musicS playSongAtPosition:0];
 	
-	if (IS_IPAD()) {
+	if (UIDevice.isIPad) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
 	} else {
 		iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];

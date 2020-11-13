@@ -55,7 +55,7 @@
 	self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
 	[self.tableView addSubview:self.refreshHeaderView];
 	
-	if (IS_IPAD()) {
+	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	} else {
         if (self.dropdown.folders == nil || [self.dropdown.folders count] == 2) {
@@ -241,7 +241,7 @@
     
 	[self.tableView reloadData];
 	
-	if (!IS_IPAD())
+	if (!UIDevice.isIPad)
 		self.tableView.backgroundColor = [UIColor clearColor];
 	
 	viewObjectsS.isArtistsLoading = NO;

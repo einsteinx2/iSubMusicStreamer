@@ -68,7 +68,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (possibleSize < maxCacheSize)
 		{
 			// Set the max cache size to 25MB less than the free space
-			settingsS.maxCacheSize = possibleSize - BytesFromMiB(25);
+			settingsS.maxCacheSize = possibleSize - (25 * 1024 * 1024);
 		}
 	}
 }
@@ -144,10 +144,10 @@ LOG_LEVEL_ISUB_DEFAULT
             NSString *path = [settingsS.songCachePath stringByAppendingPathComponent:[result stringForColumn:@"md5"]];
             NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
             size += [attr fileSize];
-            ALog(@"Added %llu to size for partially downloaded song", [attr fileSize]);
+            DDLogVerbose(@"Added %llu to size for partially downloaded song", [attr fileSize]);
         }
         
-        ALog(@"Total cache size was found to be: %llu", size);
+        DDLogVerbose(@"Total cache size was found to be: %llu", size);
         self->_cacheSize = size;
         
     }];

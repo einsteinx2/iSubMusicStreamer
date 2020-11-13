@@ -40,7 +40,7 @@
 - (FMDatabaseQueue *)dbQueue
 {
 	if (self.isLarge)
-		return IS_IPAD() ? databaseS.coverArtCacheDb540Queue : databaseS.coverArtCacheDb320Queue;
+		return UIDevice.isIPad ? databaseS.coverArtCacheDb540Queue : databaseS.coverArtCacheDb320Queue;
 	else
 		return databaseS.coverArtCacheDb60Queue;
 }
@@ -54,7 +54,7 @@
 
 - (UIImage *)defaultCoverArtImage {
     if (self.isLarge) {
-		return IS_IPAD() ? [UIImage imageNamed:@"default-album-art-ipad"] : [UIImage imageNamed:@"default-album-art"];
+		return UIDevice.isIPad ? [UIImage imageNamed:@"default-album-art-ipad"] : [UIImage imageNamed:@"default-album-art"];
     } else {
 		return [UIImage imageNamed:@"default-album-art-small"];
     }

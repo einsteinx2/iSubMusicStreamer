@@ -15,7 +15,7 @@
 - (UIImage *)imageWithTint:(UIColor *)tintColor 
 {
     // Begin drawing
-    //CGRect aRect = CGRectMake(0.f, 0.f, self.size.width * SCREEN_SCALE(), self.size.height * SCREEN_SCALE());
+    //CGRect aRect = CGRectMake(0.f, 0.f, self.size.width * UIScreen.mainScreen.scale, self.size.height * UIScreen.mainScreen.scale);
     CGRect aRect = CGRectMake(0.f, 0.f, self.size.width, self.size.height);
     CGImageRef alphaMask;
 	
@@ -24,7 +24,7 @@
     //
     {
         //UIGraphicsBeginImageContext(aRect.size);
-        UIGraphicsBeginImageContextWithOptions(aRect.size, NO, SCREEN_SCALE());
+        UIGraphicsBeginImageContextWithOptions(aRect.size, NO, UIScreen.mainScreen.scale);
         CGContextRef c = UIGraphicsGetCurrentContext(); 
 		
         // draw image
@@ -39,7 +39,7 @@
 	
     //
     //UIGraphicsBeginImageContext(aRect.size);
-    UIGraphicsBeginImageContextWithOptions(aRect.size, NO, SCREEN_SCALE());
+    UIGraphicsBeginImageContextWithOptions(aRect.size, NO, UIScreen.mainScreen.scale);
 	
     // Get the graphic context
     CGContextRef c = UIGraphicsGetCurrentContext(); 

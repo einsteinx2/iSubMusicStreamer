@@ -93,7 +93,7 @@ LOG_LEVEL_ISUB_DEFAULT
         else if(![db columnExists:@"discNumber" inTableWithName:@"songsCache"])
         {
             BOOL success = [db executeUpdate:@"ALTER TABLE songsCache ADD COLUMN discNumber INTEGER"];
-            ALog(@"songsCache has no discNumber and add worked: %d", success);
+            DDLogVerbose(@"songsCache has no discNumber and add worked: %d", success);
         }
         
         if (![db tableExists:@"albumsCacheCount"])
@@ -114,7 +114,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	}];
 	
 	// Setup music player cover art cache database
-	if (IS_IPAD())
+	if (UIDevice.isIPad)
 	{
 		// Only load large album art DB if this is an iPad
 		path = [NSString stringWithFormat:@"%@/coverArtCache540.db", self.databaseFolderPath];
@@ -180,7 +180,7 @@ LOG_LEVEL_ISUB_DEFAULT
         else if(![db columnExists:@"discNumber" inTableWithName:@"currentPlaylist"])
         {
             BOOL success = [db executeUpdate:@"ALTER TABLE currentPlaylist ADD COLUMN discNumber INTEGER"];
-            ALog(@"currentPlaylist has no discNumber and add worked: %d", success);
+            DDLogVerbose(@"currentPlaylist has no discNumber and add worked: %d", success);
         }
         
 		if (![db tableExists:@"shufflePlaylist"])
@@ -190,7 +190,7 @@ LOG_LEVEL_ISUB_DEFAULT
         else if(![db columnExists:@"discNumber" inTableWithName:@"shufflePlaylist"])
         {
             BOOL success = [db executeUpdate:@"ALTER TABLE shufflePlaylist ADD COLUMN discNumber INTEGER"];
-            ALog(@"shufflePlaylist has no discNumber and add worked: %d", success);
+            DDLogVerbose(@"shufflePlaylist has no discNumber and add worked: %d", success);
         }
         
 		if (![db tableExists:@"jukeboxCurrentPlaylist"])
@@ -200,7 +200,7 @@ LOG_LEVEL_ISUB_DEFAULT
         else if(![db columnExists:@"discNumber" inTableWithName:@"jukeboxCurrentPlaylist"])
         {
             BOOL success = [db executeUpdate:@"ALTER TABLE jukeboxCurrentPlaylist ADD COLUMN discNumber INTEGER"];
-            ALog(@"jukeboxCurrentPlaylist has no discNumber and add worked: %d", success);
+            DDLogVerbose(@"jukeboxCurrentPlaylist has no discNumber and add worked: %d", success);
         }
         
 		if (![db tableExists:@"jukeboxShufflePlaylist"]) 
@@ -210,7 +210,7 @@ LOG_LEVEL_ISUB_DEFAULT
         else if(![db columnExists:@"discNumber" inTableWithName:@"jukeboxShufflePlaylist"])
         {
             BOOL success = [db executeUpdate:@"ALTER TABLE jukeboxShufflePlaylist ADD COLUMN discNumber INTEGER"];
-            ALog(@"jukeboxShufflePlaylist has no discNumber and add worked: %d", success);
+            DDLogVerbose(@"jukeboxShufflePlaylist has no discNumber and add worked: %d", success);
         }
 	}];	
 	
@@ -283,7 +283,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		}
         else if(![db columnExists:@"discNumber" inTableWithName:@"cachedSongs"])
         {
-            ALog(@"Added column discNumber on table cachedSongs");
+            DDLogVerbose(@"Added column discNumber on table cachedSongs");
             [db executeUpdate:@"ALTER TABLE cachedSongs ADD COLUMN discNumber INTEGER"];
         }
         
@@ -302,10 +302,10 @@ LOG_LEVEL_ISUB_DEFAULT
 			[db executeUpdate:@"CREATE INDEX seg8 ON cachedSongsLayout (seg8)"];
 			[db executeUpdate:@"CREATE INDEX seg9 ON cachedSongsLayout (seg9)"];
 		}
-		DLog(@"checking if genres table exists");
+		DDLogVerbose(@"checking if genres table exists");
 		if (![db tableExists:@"genres"]) 
 		{
-			DLog(@"doesn't exist, creating genres table");
+            DDLogVerbose(@"doesn't exist, creating genres table");
 			[db executeUpdate:@"CREATE TABLE genres(genre TEXT UNIQUE)"];
 		}
 		if (![db tableExists:@"genresSongs"]) 
@@ -356,7 +356,7 @@ LOG_LEVEL_ISUB_DEFAULT
                           {
                               [db executeUpdate:@"INSERT OR IGNORE INTO sizesSongs VALUES(?, ?)", aSong.songId, attr[NSFileSize]];
                           }];
-                         ALog(@"Added %@ to the size table (%llu)", aSong.title, [attr fileSize]);
+                         DDLogVerbose(@"Added %@ to the size table (%llu)", aSong.title, [attr fileSize]);
                      }
                  }
              }
@@ -621,7 +621,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	
 	// Clear the player cover art
-	FMDatabaseQueue *dbQueue = IS_IPAD() ? self.coverArtCacheDb540Queue : self.coverArtCacheDb320Queue;
+	FMDatabaseQueue *dbQueue = UIDevice.isIPad ? self.coverArtCacheDb540Queue : self.coverArtCacheDb320Queue;
 	[dbQueue inDatabase:^(FMDatabase *db)
 	{
 		[db executeUpdate:@"DROP TABLE IF EXISTS coverArtCache"];
@@ -837,7 +837,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		hadError = [db hadError];
 		
 		if (hadError)
-			DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+            DDLogError(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
 	}];
 	
 	return !hadError;

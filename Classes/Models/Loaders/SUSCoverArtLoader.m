@@ -12,6 +12,9 @@
 #import "SavedSettings.h"
 #import "DatabaseSingleton.h"
 #import "EX2Kit.h"
+#import "Defines.h"
+
+LOG_LEVEL_ISUB_DEFAULT
 
 @implementation SUSCoverArtLoader
 
@@ -63,7 +66,7 @@ static void initialize_navigationBarImages() {
 
 - (FMDatabaseQueue *)dbQueue {
 	if (self.isLarge) {
-		return IS_IPAD() ? databaseS.coverArtCacheDb540Queue : databaseS.coverArtCacheDb320Queue;
+		return UIDevice.isIPad ? databaseS.coverArtCacheDb540Queue : databaseS.coverArtCacheDb320Queue;
 	} else {
 		return databaseS.coverArtCacheDb60Queue;
 	}
@@ -94,13 +97,13 @@ static void initialize_navigationBarImages() {
                     [_loadingImageNames addObject:self.coverArtId];
                     NSString *size = nil;
                     if (self.isLarge) {
-                        if (IS_IPAD()) {
-                            size = SCREEN_SCALE() == 2.0 ? @"1080" : @"540";
+                        if (UIDevice.isIPad) {
+                            size = UIScreen.mainScreen.scale >= 2.0 ? @"1080" : @"540";
                         } else {
-                            size = SCREEN_SCALE() == 2.0 ? @"640" : @"320";
+                            size = UIScreen.mainScreen.scale >= 2.0 ? @"640" : @"320";
                         }
                     } else {
-                        size = SCREEN_SCALE() == 2.0 ? @"120" : @"60";
+                        size = UIScreen.mainScreen.scale >= 2.0 ? @"120" : @"60";
                     }
                     
                     return [NSMutableURLRequest requestWithSUSAction:@"getCoverArt" parameters:@{@"id": n2N(self.coverArtId), @"size": n2N(size)}];
@@ -118,14 +121,14 @@ static void initialize_navigationBarImages() {
     
     // Check to see if the data is a valid image. If so, use it; if not, use the default image.
     if([UIImage imageWithData:self.receivedData]) {
-        DLog(@"art loading completed for: %@", self.coverArtId);
+        DDLogVerbose(@"art loading completed for: %@", self.coverArtId);
         [self.dbQueue inDatabase:^(FMDatabase *db) {
             [db executeUpdate:@"REPLACE INTO coverArtCache (id, data) VALUES (?, ?)", [self.coverArtId md5], self.receivedData];
         }];
         
         [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CoverArtFinishedInternal object:self.coverArtId];
     } else {
-        DLog(@"art loading failed for: %@", self.coverArtId);
+        DDLogVerbose(@"art loading failed for: %@", self.coverArtId);
         
         [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CoverArtFinishedInternal object:self.coverArtId];
     }

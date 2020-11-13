@@ -200,7 +200,7 @@ double startSongSeconds = 0.0;
 #pragma mark Helper Methods
 
 - (BOOL)showPlayerIcon {
-    return !IS_IPAD();
+    return !UIDevice.isIPad;
 }
 
 - (void)showPlayer {

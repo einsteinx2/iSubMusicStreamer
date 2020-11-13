@@ -15,6 +15,8 @@
 #import "Defines.h"
 #import "EX2Kit.h"
 
+LOG_LEVEL_ISUB_DEFAULT
+
 @implementation SUSLyricsLoader
 
 - (SUSLoaderType)type {
@@ -69,7 +71,7 @@
 	[databaseS.lyricsDbQueue inDatabase:^(FMDatabase *db) {
 		 [db executeUpdate:@"INSERT INTO lyrics (artist, title, lyrics) VALUES (?, ?, ?)", self.artist, self.title, self.loadedLyrics];
          if ([db hadError]) {
-			 DLog(@"Err inserting lyrics %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+             DDLogError(@"Err inserting lyrics %d: %@", [db lastErrorCode], [db lastErrorMessage]);
          }
 	 }];
 }

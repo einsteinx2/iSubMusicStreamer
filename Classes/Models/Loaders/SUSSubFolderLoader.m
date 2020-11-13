@@ -18,6 +18,8 @@
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 
+LOG_LEVEL_ISUB_DEFAULT
+
 @implementation SUSSubFolderLoader
 
 #pragma mark - Loader Methods
@@ -31,7 +33,7 @@
 }
 
 - (void)processResponse {
-    DLog(@"%@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+    DDLogVerbose(@"%@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
     
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
     if (!root.isValid) {
@@ -110,7 +112,7 @@
         
         hadError = [db hadError];
         if (hadError)
-            DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+            DDLogError(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
     }];
     
     return !hadError;
@@ -123,7 +125,7 @@
         
         hadError = [db hadError];
         if (hadError)
-            DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+            DDLogError(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
     }];
     
     return !hadError;
@@ -134,11 +136,11 @@
     [self.dbQueue inDatabase:^(FMDatabase *db) {
         [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO songsCache (folderId, %@) VALUES (?, %@)", [ISMSSong standardSongColumnNames], [ISMSSong standardSongColumnQMarks]], self.myId.md5, aSong.title, aSong.songId, aSong.artist, aSong.album, aSong.genre, aSong.coverArtId, aSong.path, aSong.suffix, aSong.transcodedSuffix, aSong.duration, aSong.bitRate, aSong.track, aSong.year, aSong.size, aSong.parentId, NSStringFromBOOL(aSong.isVideo), aSong.discNumber];
         
-        ALog(@"Added to folderCache with discNumber: %@", aSong.discNumber);
+        DDLogVerbose(@"Added to folderCache with discNumber: %@", aSong.discNumber);
         
         hadError = [db hadError];
         if (hadError)
-            DLog(@"Err inserting song %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+            DDLogError(@"Err inserting song %d: %@", [db lastErrorCode], [db lastErrorMessage]);
     }];
     
     return !hadError;
@@ -151,7 +153,7 @@
         
         hadError = [db hadError];
         if ([db hadError])
-            DLog(@"Err inserting album count %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+            DDLogError(@"Err inserting album count %d: %@", [db lastErrorCode], [db lastErrorMessage]);
     }];
     
     return !hadError;
@@ -164,7 +166,7 @@
         
         hadError = [db hadError];
         if (hadError)
-            DLog(@"Err inserting song count %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+            DDLogError(@"Err inserting song count %d: %@", [db lastErrorCode], [db lastErrorMessage]);
     }];
         
     return !hadError;
@@ -177,7 +179,7 @@
         
         hadError = [db hadError];
         if ([db hadError])
-            DLog(@"Err inserting folder length %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+            DDLogError(@"Err inserting folder length %d: %@", [db lastErrorCode], [db lastErrorMessage]);
     }];
    
     return !hadError;

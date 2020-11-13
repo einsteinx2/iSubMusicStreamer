@@ -21,6 +21,8 @@
 #import "ISMSCacheQueueManager.h"
 #import "EX2Kit.h"
 
+LOG_LEVEL_ISUB_DEFAULT
+
 @implementation ISMSSong (DAO)
 
 - (FMDatabaseQueue *)dbQueue
@@ -84,7 +86,7 @@
             // get the attributes dictionary
             NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
             [db executeUpdate:@"REPLACE INTO sizesSongs VALUES (?, ?)", self.path.md5, attr[NSFileSize]];
-            ALog(@"Size for song \"%@\" successfully added to database on cache completion", self.title);
+            DDLogVerbose(@"Size for song \"%@\" successfully added to database on cache completion", self.title);
 		}];
 		
 		[self insertIntoCachedSongsLayoutDbQueue];
@@ -100,7 +102,7 @@
 				{							
 					[db executeUpdate:@"INSERT OR IGNORE INTO genres (genre) VALUES (?)", self.genre];
 					if ([db hadError])
-						DLog(@"Err adding the genre %d: %@", [db lastErrorCode], [db lastErrorMessage]); 
+                        DDLogError(@"Err adding the genre %d: %@", [db lastErrorCode], [db lastErrorMessage]);
 				}
 			}];
 			
@@ -265,7 +267,7 @@
 	{
 		[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO songsCache (folderId, %@) VALUES (?, %@)", [ISMSSong standardSongColumnNames], [ISMSSong standardSongColumnQMarks]], [folderId md5], self.title, self.songId, self.artist, self.album, self.genre, self.coverArtId, self.path, self.suffix, self.transcodedSuffix, self.duration, self.bitRate, self.track, self.year, self.size, self.parentId, NSStringFromBOOL(self.isVideo), self.discNumber];
         
-        ALog(@"Added to songsCache with folderCache: %@", self.discNumber);
+        DDLogVerbose(@"Added to songsCache with folderCache: %@", self.discNumber);
 
 		
 		hadError = [db hadError];
@@ -296,7 +298,7 @@
     hadError = [db hadError];
     if (hadError)
     {
-        ALog(@"Err inserting song into genre table %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+        DDLogError(@"Err inserting song into genre table %d: %@", [db lastErrorCode], [db lastErrorMessage]);
     }
 	
 	return !hadError;
@@ -309,7 +311,7 @@
 	{
 		BOOL success = [db executeUpdate:[NSString stringWithFormat:@"REPLACE INTO cachedSongs (md5, finished, cachedDate, playedDate, %@) VALUES (?, 'NO', ?, 0, %@)",  [ISMSSong standardSongColumnNames], [ISMSSong standardSongColumnQMarks]], [self.path md5], @((unsigned long long)[[NSDate date] timeIntervalSince1970]), self.title, self.songId, self.artist, self.album, self.genre, self.coverArtId, self.path, self.suffix, self.transcodedSuffix, self.duration, self.bitRate, self.track, self.year, self.size, self.parentId, NSStringFromBOOL(self.isVideo), self.discNumber];
         
-        ALog(@"Inserted into cachedSongs with discNumber: %@ and insert was successful? %d", self.discNumber, success);
+        DDLogVerbose(@"Inserted into cachedSongs with discNumber: %@ and insert was successful? %d", self.discNumber, success);
 		
 		hadError = [db hadError];
 		if (hadError) 
@@ -372,7 +374,7 @@
 		{
 			BOOL success = [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO cacheQueue (md5, finished, cachedDate, playedDate, %@) VALUES (?, ?, ?, ?, %@)", [ISMSSong standardSongColumnNames], [ISMSSong standardSongColumnQMarks]], [self.path md5], @"NO", @((unsigned long long)[[NSDate date] timeIntervalSince1970]), @0, self.title, self.songId, self.artist, self.album, self.genre, self.coverArtId, self.path, self.suffix, self.transcodedSuffix, self.duration, self.bitRate, self.track, self.year, self.size, self.parentId, NSStringFromBOOL(self.isVideo), self.discNumber];
             
-            ALog(@"Added to cacheQueue with discNumber: %@ and insert was successful? %d", self.discNumber, success);
+            DDLogVerbose(@"Added to cacheQueue with discNumber: %@ and insert was successful? %d", self.discNumber, success);
 			
 			hadError = [db hadError];
 			if (hadError)
@@ -519,21 +521,21 @@
 		NSString *genreTest = [db stringForQuery:@"SELECT genre FROM genresSongs WHERE genre = ? LIMIT 1", genre];
 		if (!genreTest)
 		{
-			DLog(@"deleting from genres table");
+            DDLogVerbose(@"deleting from genres table");
 			[db executeUpdate:@"DELETE FROM genres WHERE genre = ?", genre];
 			if ([db hadError]) hadError = YES;
 			
 			[db executeUpdate:@"DROP TABLE IF EXISTS genresTemp"];
 			[db executeUpdate:@"CREATE TABLE genresTemp (genre TEXT)"];
 			if ([db hadError]) hadError = YES;
-			DLog(@"created genres temp, error %i", hadError);
+            DDLogVerbose(@"created genres temp, error %i", hadError);
 			[db executeUpdate:@"INSERT INTO genresTemp SELECT * FROM genres"];
 			if ([db hadError]) hadError = YES;
 			[db executeUpdate:@"DROP TABLE genres"];
 			if ([db hadError]) hadError = YES;
 			[db executeUpdate:@"ALTER TABLE genresTemp RENAME TO genres"];
 			if ([db hadError]) hadError = YES;
-			DLog(@"renamed genrestemp to genres, error %i", hadError);
+            DDLogVerbose(@"renamed genrestemp to genres, error %i", hadError);
 			[db executeUpdate:@"CREATE UNIQUE INDEX genreNames ON genres (genre)"];
 			if ([db hadError]) hadError = YES;
 		}

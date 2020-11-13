@@ -43,11 +43,7 @@ typedef struct
 
 static void SetupArrays()
 {
-	if (SCREEN_SCALE() == 1.0)// && !IS_IPAD())
-		specWidth = specHeight = 256;
-	else
-		specWidth = specHeight = 512;
-	
+	specWidth = specHeight = 512;
 	specbuf = malloc(specWidth * specHeight * 4);
 	palette = malloc((specHeight + 128) * 4);
 	
@@ -56,7 +52,7 @@ static void SetupArrays()
 
 static void SetupDrawEQPalette()
 {
-	float scale = SCREEN_SCALE();
+	float scale = UIScreen.mainScreen.scale;
 	
 	// setup palette
 	RGBQUAD *pal = (RGBQUAD *)palette;
@@ -346,7 +342,7 @@ static void SetupDrawBitmap()
 			{
 				specbuf[x * specWidth + specpos] = palette[specHeight+126];
 				
-				if (SCREEN_SCALE() == 2.0 && specpos + 1 < specWidth)
+				if (UIScreen.mainScreen.scale >= 2.0 && specpos + 1 < specWidth)
 					specbuf[x * specWidth + specpos + 1] = palette[specHeight+126];
 			}
 			break;

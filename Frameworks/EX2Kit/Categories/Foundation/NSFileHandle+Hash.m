@@ -15,7 +15,7 @@
 
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
-#define READ_CHUNK_SIZE BytesFromKB(16)
+#define READ_CHUNK_SIZE 16*1024
 
 - (NSString *)sha1
 {    
