@@ -104,7 +104,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	//coverArtImageView.delegate = self;
 
 	// Create the extra views not in the XIB file
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([UIApplication orientation]))
+    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait(UIApplication.orientation))
     {
         [self showTallPlayerButtons];
         
@@ -179,7 +179,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
     self.swipeDetector.delegate = self;
     
     // Fix starting in landscape on iPhone 5
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsLandscape([UIApplication orientation]))
+    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsLandscape(UIApplication.orientation))
     {
         NSArray *viewsToSkip = @[self.reflectionView, self.artistLabel, self.albumLabel, self.titleLabel];
         for(UIView *subview in self.view.subviews)
@@ -237,7 +237,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		self.view.backgroundColor = [UIColor blackColor]; 
 	}
 	
-	if (UIInterfaceOrientationIsPortrait([UIApplication orientation]) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait(UIApplication.orientation) || IS_IPAD())
 	{
 		[self createSongTitle];
 	}
@@ -448,7 +448,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
         [positions setObject:[NSValue valueWithCGRect:self.titleLabel.frame] forKey:@"titleLabel"];
 		self.originalViewFrames = [NSDictionary dictionaryWithDictionary:positions];
 		
-		if (UIInterfaceOrientationIsLandscape([UIApplication orientation]))
+		if (UIInterfaceOrientationIsLandscape(UIApplication.orientation))
 		{
 			self.coverArtHolderView.frame = CGRectMake(0, 0, 300, 270);
 			self.prevButton.origin = CGPointMake(315, 184);
@@ -468,12 +468,6 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	}
 }
 
-- (void)didReceiveMemoryWarning 
-{
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-}
-
 - (void)dealloc
 {	
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
@@ -485,158 +479,125 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 
 #pragma mark Rotation
 
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
-        return NO;
-    
-    return YES;
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-	
-    if (!IS_IPAD())
-    {
-        if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation))
-        {
-            //[self setSongTitle];
-            [self createSongTitle];
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        if (!IS_IPAD()) {
+            if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
+                //[self setSongTitle];
+                [self createSongTitle];
+            } else {
+                [self removeSongTitle];
+            }
         }
-        else
-        {
-            [self removeSongTitle];
-        }
-    }
-    
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
-    {
-        [UIView animateWithDuration:.25 animations:^
-         {
-             self.extraButtons.alpha = 0.0;
-             self.songInfoView.alpha = 0.0;
-         }
-        completion:^(BOOL finished)
-         {
-             if (finished)
-             {
-                 [self removeTallPlayerButtons];
-                 
-                 if (settingsS.isExtraPlayerControlsShowing)
-                 {
-                     self.isExtraButtonsShowing = NO;
-                     [self extraButtonsToggleAnimated:YES saveState:NO];
+        
+        if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
+            [UIView animateWithDuration:.25 animations:^{
+                 self.extraButtons.alpha = 0.0;
+                 self.songInfoView.alpha = 0.0;
+             } completion:^(BOOL finished) {
+                 if (finished) {
+                     [self removeTallPlayerButtons];
+                     
+                     if (settingsS.isExtraPlayerControlsShowing) {
+                         self.isExtraButtonsShowing = NO;
+                         [self extraButtonsToggleAnimated:YES saveState:NO];
+                     }
                  }
-             }
-         }];
-    }
-    else if (IS_TALL_SCREEN())
-    {
-        if (self.isExtraButtonsShowing)
-        {
+             }];
+        } else if (self.isExtraButtonsShowing) {
             [self extraButtonsToggleAnimated:NO saveState:NO];
         }
-    }
-	
-	if (!IS_IPAD())
-	{
-		[UIView beginAnimations:@"rotate" context:nil];
-		[UIView setAnimationDuration:duration];
-		if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation))
-		{
-			self.coverArtHolderView.frame = [[self.originalViewFrames objectForKey:@"coverArtHolderView"] CGRectValue];
-			self.prevButton.frame = [[self.originalViewFrames objectForKey:@"prevButton"] CGRectValue];
-			self.playButton.frame = [[self.originalViewFrames objectForKey:@"playButton"] CGRectValue];
-			self.nextButton.frame = [[self.originalViewFrames objectForKey:@"nextButton"] CGRectValue];
-			self.eqButton.frame = [[self.originalViewFrames objectForKey:@"eqButton"] CGRectValue];
-			self.extraButtonsButton.frame = [[self.originalViewFrames objectForKey:@"extraButtonsButton"] CGRectValue];
-			self.volumeSlider.frame = [[self.originalViewFrames objectForKey:@"volumeSlider"] CGRectValue];
-            //self.artistLabel.frame = [[self.originalViewFrames objectForKey:@"artistLabel"] CGRectValue];
-            //self.albumLabel.frame = [[self.originalViewFrames objectForKey:@"albumLabel"] CGRectValue];
-            //self.titleLabel.frame = [[self.originalViewFrames objectForKey:@"titleLabel"] CGRectValue];
-			
-			CGRect volumeFrame = [[self.originalViewFrames objectForKey:@"volumeSlider"] CGRectValue];
-			volumeFrame.origin.x = 0;
-			volumeFrame.origin.y = 0;
-			
-			if (settingsS.isJukeboxEnabled)
-				self.jukeboxVolumeView.frame = volumeFrame;
-			else
-				self.volumeView.frame = volumeFrame;
-			
-			self.artistLabel.alpha = 0.1;
-			self.albumLabel.alpha = 0.1;
-			self.titleLabel.alpha = 0.1;
-			
-			CGFloat width = 320 * self.pageControlViewController.numberOfPages;
-			CGFloat height = self.pageControlViewController.numberOfPages == 1 ? 320 : 300;
-			self.pageControlViewController.scrollView.contentSize = CGSizeMake(width, height);
-            [self.pageControlViewController changePage:self.pageControlViewController.pageControl];
-		}
-		else if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
-		{
-			self.coverArtHolderView.frame = CGRectMake(0, 0, 300, 270);
-			self.prevButton.origin = CGPointMake(315, 184);
-			self.playButton.origin = CGPointMake(372.5, 184);
-			self.nextButton.origin = CGPointMake(425, 184);
-			self.eqButton.origin = CGPointMake(328, 20);
-			self.extraButtonsButton.origin = CGPointMake(418, 20);
-			self.volumeSlider.frame = CGRectMake(300, 244, 180, 55);
-            self.artistLabel.frame = [[self.originalViewFrames objectForKey:@"artistLabel"] CGRectValue];
-            self.albumLabel.frame = [[self.originalViewFrames objectForKey:@"albumLabel"] CGRectValue];
-            self.titleLabel.frame = [[self.originalViewFrames objectForKey:@"titleLabel"] CGRectValue];
-			
-			if (settingsS.isJukeboxEnabled)
-				self.jukeboxVolumeView.frame = CGRectMake(0, 0, 180, 22.5);
-			else
-				self.volumeView.frame = CGRectMake(0, 0, 180, 55);
-			
-			self.navigationItem.titleView = nil;
-			
-			self.artistLabel.alpha = 1.0;
-			self.albumLabel.alpha = 1.0;
-			self.titleLabel.alpha = 1.0;
-			
-			CGFloat width = 300 * self.pageControlViewController.numberOfPages;
-			CGFloat height = self.pageControlViewController.numberOfPages == 1 ? 270 : 250;
-			self.pageControlViewController.scrollView.contentSize = CGSizeMake(width, height);
-            [self.pageControlViewController changePage:self.pageControlViewController.pageControl];
-            
-            if (IS_TALL_SCREEN())
+        
+        if (!IS_IPAD())
+        {
+            if (UIInterfaceOrientationIsPortrait(UIApplication.orientation))
             {
-                NSArray *viewsToSkip = @[self.reflectionView, self.artistLabel, self.albumLabel, self.titleLabel];
-                for(UIView *subview in self.view.subviews)
+                self.coverArtHolderView.frame = [[self.originalViewFrames objectForKey:@"coverArtHolderView"] CGRectValue];
+                self.prevButton.frame = [[self.originalViewFrames objectForKey:@"prevButton"] CGRectValue];
+                self.playButton.frame = [[self.originalViewFrames objectForKey:@"playButton"] CGRectValue];
+                self.nextButton.frame = [[self.originalViewFrames objectForKey:@"nextButton"] CGRectValue];
+                self.eqButton.frame = [[self.originalViewFrames objectForKey:@"eqButton"] CGRectValue];
+                self.extraButtonsButton.frame = [[self.originalViewFrames objectForKey:@"extraButtonsButton"] CGRectValue];
+                self.volumeSlider.frame = [[self.originalViewFrames objectForKey:@"volumeSlider"] CGRectValue];
+                //self.artistLabel.frame = [[self.originalViewFrames objectForKey:@"artistLabel"] CGRectValue];
+                //self.albumLabel.frame = [[self.originalViewFrames objectForKey:@"albumLabel"] CGRectValue];
+                //self.titleLabel.frame = [[self.originalViewFrames objectForKey:@"titleLabel"] CGRectValue];
+                
+                CGRect volumeFrame = [[self.originalViewFrames objectForKey:@"volumeSlider"] CGRectValue];
+                volumeFrame.origin.x = 0;
+                volumeFrame.origin.y = 0;
+                
+                if (settingsS.isJukeboxEnabled)
+                    self.jukeboxVolumeView.frame = volumeFrame;
+                else
+                    self.volumeView.frame = volumeFrame;
+                
+                self.artistLabel.alpha = 0.1;
+                self.albumLabel.alpha = 0.1;
+                self.titleLabel.alpha = 0.1;
+                
+                CGFloat width = 320 * self.pageControlViewController.numberOfPages;
+                CGFloat height = self.pageControlViewController.numberOfPages == 1 ? 320 : 300;
+                self.pageControlViewController.scrollView.contentSize = CGSizeMake(width, height);
+                [self.pageControlViewController changePage:self.pageControlViewController.pageControl];
+            }
+            else
+            {
+                self.coverArtHolderView.frame = CGRectMake(0, 0, 300, 270);
+                self.prevButton.origin = CGPointMake(315, 184);
+                self.playButton.origin = CGPointMake(372.5, 184);
+                self.nextButton.origin = CGPointMake(425, 184);
+                self.eqButton.origin = CGPointMake(328, 20);
+                self.extraButtonsButton.origin = CGPointMake(418, 20);
+                self.volumeSlider.frame = CGRectMake(300, 244, 180, 55);
+                self.artistLabel.frame = [[self.originalViewFrames objectForKey:@"artistLabel"] CGRectValue];
+                self.albumLabel.frame = [[self.originalViewFrames objectForKey:@"albumLabel"] CGRectValue];
+                self.titleLabel.frame = [[self.originalViewFrames objectForKey:@"titleLabel"] CGRectValue];
+                
+                if (settingsS.isJukeboxEnabled)
+                    self.jukeboxVolumeView.frame = CGRectMake(0, 0, 180, 22.5);
+                else
+                    self.volumeView.frame = CGRectMake(0, 0, 180, 55);
+                
+                self.navigationItem.titleView = nil;
+                
+                self.artistLabel.alpha = 1.0;
+                self.albumLabel.alpha = 1.0;
+                self.titleLabel.alpha = 1.0;
+                
+                CGFloat width = 300 * self.pageControlViewController.numberOfPages;
+                CGFloat height = self.pageControlViewController.numberOfPages == 1 ? 270 : 250;
+                self.pageControlViewController.scrollView.contentSize = CGSizeMake(width, height);
+                [self.pageControlViewController changePage:self.pageControlViewController.pageControl];
+                
+                if (IS_TALL_SCREEN())
                 {
-                    if (![viewsToSkip containsObject:subview])
-                        subview.x += 44.;
+                    NSArray *viewsToSkip = @[self.reflectionView, self.artistLabel, self.albumLabel, self.titleLabel];
+                    for(UIView *subview in self.view.subviews)
+                    {
+                        if (![viewsToSkip containsObject:subview])
+                            subview.x += 44.;
+                    }
                 }
             }
-		}
-		[UIView commitAnimations];
-	}
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-	[super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-	
-	if (!IS_IPAD() && UIInterfaceOrientationIsLandscape(fromInterfaceOrientation))
-	{
-		[self createSongTitle];
-	}
+        }
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        if (!IS_IPAD() && UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
+            [self createSongTitle];
+        }
+        
+        if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
+            self.extraButtons.alpha = 0.0;
+            self.songInfoView.alpha = 0.0;
+            [self showTallPlayerButtons];
+            [UIView animateWithDuration:.25 animations:^{
+                 self.extraButtons.alpha = 1.0;
+                 self.songInfoView.alpha = 1.0;
+             }];
+        }
+    }];
     
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsLandscape(fromInterfaceOrientation))
-    {
-        self.extraButtons.alpha = 0.0;
-        self.songInfoView.alpha = 0.0;
-        [self showTallPlayerButtons];
-        [UIView animateWithDuration:.25 animations:^
-         {
-             self.extraButtons.alpha = 1.0;
-             self.songInfoView.alpha = 1.0;
-         }];
-    }
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 #pragma mark Main
@@ -669,7 +630,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
  
 - (void)createSongTitle
 {
-	if (UIInterfaceOrientationIsPortrait([UIApplication orientation]) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait(UIApplication.orientation) || IS_IPAD())
 	{
 		self.navigationItem.titleView = nil;
 		
@@ -729,7 +690,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 
 - (void)setSongTitle
 {
-	if (UIInterfaceOrientationIsPortrait([UIApplication orientation]) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait(UIApplication.orientation) || IS_IPAD())
 	{		
 		self.artistTitleLabel.text = self.currentSong.artist;
 		self.albumTitleLabel.text = self.currentSong.album;
@@ -1077,11 +1038,11 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 
 - (void)extraButtonsToggleAnimated:(BOOL)animated saveState:(BOOL)saveState
 {
-    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([UIApplication orientation])) {
+    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
         return;
     }
     
-//    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait([UIApplication orientation]))
+//    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait(UIApplication.orientation))
 //    {        
 //        if (self.isExtraButtonsShowing)
 //        {

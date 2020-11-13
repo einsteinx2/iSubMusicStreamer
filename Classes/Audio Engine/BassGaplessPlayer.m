@@ -13,7 +13,6 @@
 #import "ISMSCacheQueueManager.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
-#import "EX2RingBuffer.h"
 #import <AVFoundation/AVFoundation.h>
 
 @interface BassGaplessPlayer ()

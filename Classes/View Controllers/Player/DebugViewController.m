@@ -15,10 +15,7 @@
 
 @implementation DebugViewController
 
-#pragma mark - Lifecycle
-
-- (void)viewDidLoad 
-{
+- (void)viewDidLoad  {
     [super viewDidLoad];
 	
 	self.currentSongProgress = 0.;
@@ -37,14 +34,11 @@
     [self updateStats];
 }
 
-- (void)showStore
-{
+- (void)showStore {
 	[NSNotificationCenter postNotificationToMainThreadWithName:@"player show store"];
 }
 
-
-- (void)viewDidDisappear:(BOOL)animated
-{	
+- (void)viewDidDisappear:(BOOL)animated {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	
 	 self.currentSongProgressView = nil;
@@ -60,67 +54,47 @@
 	 self.songInfoToggleButton = nil;
 }
 
-- (void)didReceiveMemoryWarning 
-{
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-}
-
-- (void)dealloc
-{
+- (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];	
 }
 
-#pragma mark -
-
-- (void)cacheSongObjects
-{
+- (void)cacheSongObjects {
 	self.currentSong = playlistS.currentDisplaySong;
 	self.nextSong = playlistS.nextSong;
 }
 		 
-- (void)updateStats
-{
-	if (!settingsS.isJukeboxEnabled)
-	{
+- (void)updateStats {
+	if (!settingsS.isJukeboxEnabled) {
 		// Set the current song progress bar
-		if (![self.currentSong isTempCached])
+        if (![self.currentSong isTempCached]) {
 			self.currentSongProgress = self.currentSong.downloadProgress;
-		
+        }
+        
 		self.nextSongProgress = self.nextSong.downloadProgress;
 	}
 	
-	if (settingsS.isJukeboxEnabled)
-	{
+	if (settingsS.isJukeboxEnabled) {
 		self.currentSongProgressView.progress = 0.0;
 		self.currentSongProgressView.alpha = 0.2;
 		
 		self.nextSongProgressView.progress = 0.0;
 		self.nextSongProgressView.alpha = 0.2;
-	}
-	else
-	{
+	} else {
 		// Set the current song progress bar
-		if ([self.currentSong isTempCached])
-		{
+		if (self.currentSong.isTempCached) {
 			self.currentSongProgressView.progress = 0.0;
 			self.currentSongProgressView.alpha = 0.2;
-		}
-		else
-		{
+		} else {
 			self.currentSongProgressView.progress = self.currentSongProgress;
 			self.currentSongProgressView.alpha = 1.0;
 		}
 				
 		// Set the next song progress bar
-		if (self.nextSong.path != nil)
-		{
+		if (self.nextSong.path != nil) {
 			// Make sure label and progress view aren't greyed out
 			self.nextSongLabel.alpha = 1.0;
 			self.nextSongProgressView.alpha = 1.0;
-		}
-		else
-		{
+		} else {
 			// There is no next song, so return 0 and grey out the label and progress view
 			self.nextSongLabel.alpha = 0.2;
 			self.nextSongProgressView.alpha = 0.2;
@@ -130,19 +104,17 @@
 	
 	// Set the number of songs cached label
 	NSUInteger cachedSongs = cacheS.numberOfCachedSongs;
-	if (cachedSongs == 1)
+    if (cachedSongs == 1) {
 		self.songsCachedLabel.text = @"1 song";
-	else
+    } else {
 		self.songsCachedLabel.text = [NSString stringWithFormat:@"%lu songs", (unsigned long)cachedSongs];
-	
+    }
+    
 	// Set the cache setting labels
-	if (settingsS.cachingType == ISMSCachingType_minSpace)
-	{
+	if (settingsS.cachingType == ISMSCachingType_minSpace) {
 		self.cacheSettingLabel.text = @"Min Free Space:";
 		self.cacheSettingSizeLabel.text = [NSString formatFileSize:settingsS.minFreeSpace];
-	}
-	else
-	{
+	} else {
 		self.cacheSettingLabel.text = @"Max Cache Size:";
 		self.cacheSettingSizeLabel.text = [NSString formatFileSize:settingsS.maxCacheSize];
 	}
@@ -156,8 +128,7 @@
 	[self performSelector:@selector(updateStats) withObject:nil afterDelay:1.0];
 }
 
-- (IBAction)songInfoToggle
-{
+- (IBAction)songInfoToggle {
 	[NSNotificationCenter postNotificationToMainThreadWithName:@"hideSongInfo"];
 }
 

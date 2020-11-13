@@ -13,7 +13,7 @@
 #import <MessageUI/MFMailComposeViewController.h>
 
 #import "SUSLoaderDelegate.h"
-#import "EX2Reachability.h"
+#import "EX2Kit.h"
 
 #define appDelegateS [iSubAppDelegate sharedInstance]
 

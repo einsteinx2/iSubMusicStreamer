@@ -20,19 +20,10 @@
 #import "CacheSingleton.h"
 #import "DatabaseSingleton.h"
 #import "EX2Kit.h"
-#import "LibSub.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
 
 @implementation SettingsTabViewController
-
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
-        return NO;
-    
-    return YES;
-}
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad 
@@ -480,14 +471,14 @@
             settingsS.isDisableUsageOver3G = self.disableCellUsageSwitch.on;
             
             BOOL handleStupidity = NO;
-            if (!settingsS.isOfflineMode && settingsS.isDisableUsageOver3G && ![LibSub isWifi])
+            if (!settingsS.isOfflineMode && settingsS.isDisableUsageOver3G && !EX2Reachability.isWifi)
             {
                 // We're on 3G and we just disabled use on 3G, so go offline
                 [appDelegateS enterOfflineModeForce];
                 
                 handleStupidity = YES;
             }
-            else if (settingsS.isOfflineMode && !settingsS.isDisableUsageOver3G && ![LibSub isWifi])
+            else if (settingsS.isOfflineMode && !settingsS.isDisableUsageOver3G && !EX2Reachability.isWifi)
             {
                 // We're on 3G and we just enabled use on 3G, so go online if we're offline
                 [appDelegateS enterOfflineModeForce];
@@ -618,14 +609,6 @@
 	settingsS.scrobblePercent = self.scrobblePercentSlider.value;
 }
 
-- (void)didReceiveMemoryWarning 
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
 - (void)dealloc 
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -636,7 +619,7 @@
 	UITableView *tableView = (UITableView *)self.view.superview;
 	CGRect rect = CGRectMake(0, 500, 320, 5);
 	[tableView scrollRectToVisible:rect animated:NO];
-	rect = UIInterfaceOrientationIsPortrait([UIApplication orientation]) ? CGRectMake(0, 1600, 320, 5) : CGRectMake(0, 1455, 320, 5);
+	rect = UIInterfaceOrientationIsPortrait(UIApplication.orientation) ? CGRectMake(0, 1600, 320, 5) : CGRectMake(0, 1455, 320, 5);
 	[tableView scrollRectToVisible:rect animated:NO];
 }
 

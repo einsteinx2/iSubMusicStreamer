@@ -27,14 +27,6 @@
 
 #pragma mark - Rotation
 
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 	if (!IS_IPAD() && self.isNoChatMessagesScreenShowing) {
 		if (UIInterfaceOrientationIsPortrait(fromInterfaceOrientation)) {
@@ -164,7 +156,7 @@
 		[self.view addSubview:self.noChatMessagesScreen];
 		
 		if (!IS_IPAD()) {
-			if (UIInterfaceOrientationIsLandscape([UIApplication orientation])) {
+			if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 				CGAffineTransform translate = CGAffineTransformMakeTranslation(0.0, 42.0);
 				CGAffineTransform scale = CGAffineTransformMakeScale(0.75, 0.75);
 				self.noChatMessagesScreen.transform = CGAffineTransformConcat(scale, translate);

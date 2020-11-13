@@ -12,28 +12,25 @@
  
 @implementation ModalAlbumArtViewController
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	if (!IS_IPAD()) {
-		[UIView beginAnimations:@"rotate" context:nil];
-		//[UIView setAnimationDelegate:self];
-		//[UIView setAnimationDidStopSelector:@selector(textScrollingStopped)];
-		[UIView setAnimationDuration:duration];
-		
-		if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-            self.albumArt.width = 480;
-            self.albumArt.height = 320;
-            self.labelHolderView.alpha = 0.0;
-		} else {
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        if (IS_IPAD()) return;
+        
+        if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
             self.albumArt.width = 320;
             self.albumArt.height = 320;
             self.labelHolderView.alpha = 1.0;
-		}
-		
-		[UIView commitAnimations];
-		
-		[[UIApplication sharedApplication] setStatusBarHidden:UIInterfaceOrientationIsLandscape(toInterfaceOrientation) 
-												withAnimation:UIStatusBarAnimationSlide];
-	}
+        } else {
+            self.albumArt.width = 480;
+            self.albumArt.height = 320;
+            self.labelHolderView.alpha = 0.0;
+        }
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) { }];
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:UIInterfaceOrientationIsLandscape(UIApplication.orientation)
+                                            withAnimation:UIStatusBarAnimationSlide];
+    
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 - (instancetype)initWithAlbum:(ISMSAlbum *)theAlbum numberOfTracks:(NSUInteger)tracks albumLength:(NSUInteger)length {
@@ -79,21 +76,13 @@
     self.albumArtReflection.image = [self.albumArt reflectedImageWithHeight:self.albumArtReflection.height];
 	
 	if (!IS_IPAD()) {
-		if (UIInterfaceOrientationIsLandscape([UIApplication orientation])) {
+		if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 			[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
             self.albumArt.width = 480;
         } else {
 			[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
 		}
 	}
-}
-
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
 }
 
 - (IBAction)dismiss:(id)sender {

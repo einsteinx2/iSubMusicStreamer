@@ -34,14 +34,6 @@
 
 @implementation AllSongsViewController
 
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 #pragma mark - View Controller Lifecycle
 
 - (void)createDataModel {

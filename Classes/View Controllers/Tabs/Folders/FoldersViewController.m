@@ -29,16 +29,6 @@
 
 @implementation FoldersViewController
 
-#pragma mark - Rotation
-
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 #pragma mark - Lifecycle
 
 - (void)createDataModel {
@@ -108,11 +98,6 @@
 	}
 	
 	[Flurry logEvent:@"FoldersTab"];
-}
-
-- (void)didReceiveMemoryWarning  {
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
 }
 
 - (void)dealloc {

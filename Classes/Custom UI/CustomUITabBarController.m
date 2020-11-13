@@ -9,18 +9,17 @@
 #import "CustomUITabBarController.h"
 #import "SavedSettings.h"
 
-@interface CustomUITabBarController ()
-
-@end
-
 @implementation CustomUITabBarController
 
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
+- (BOOL)shouldAutorotate {
+    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
         return NO;
-    
+    }
     return YES;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
 }
 
 @end

@@ -23,98 +23,62 @@
     return YES;
 }
 
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
-        return NO;
-    
-    return !self.isPresetPickerShowing;
-}
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
+            self.equalizerPath.alpha = 1.0;
+            for (EqualizerPointView *view in self.equalizerPointViews) {
+                view.alpha = 1.0;
+            }
+            
+            UIDevice *device = [UIDevice currentDevice];
+            if (device.batteryState != UIDeviceBatteryStateCharging && device.batteryState != UIDeviceBatteryStateFull) {
+                if (settingsS.isScreenSleepEnabled) {
+                    UIApplication.sharedApplication.idleTimerDisabled = NO;
+                }
+            }
+            
+            if (!IS_IPAD()) {
+                [UIApplication.sharedApplication setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-	
-	[UIView beginAnimations:@"rotate" context:nil];
-	[UIView setAnimationDuration:duration];
-	if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation))
-	{
-		self.equalizerPath.alpha = 1.0;
-		for (EqualizerPointView *view in self.equalizerPointViews)
-		{
-			view.alpha = 1.0;
-		}
-		
-		UIDevice *device = [UIDevice currentDevice];
-		if (device.batteryState != UIDeviceBatteryStateCharging && device.batteryState != UIDeviceBatteryStateFull) 
-		{
-			if (settingsS.isScreenSleepEnabled)
-				[UIApplication sharedApplication].idleTimerDisabled = NO;
-		}
-		
-		if (!IS_IPAD())
-		{
-            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+                self.controlsContainer.alpha = 1.0;
+                self.controlsContainer.userInteractionEnabled = YES;
+                
+                if (self.wasVisualizerOffBeforeRotation) {
+                    [self.equalizerView changeType:ISMSBassVisualType_none];
+                }
+            }
+        } else {
+            self.equalizerPath.alpha = 0.0;
+            for (EqualizerPointView *view in self.equalizerPointViews) {
+                view.alpha = 0.0;
+            }
+            
+            UIApplication.sharedApplication.idleTimerDisabled = YES;
+            
+            if (!IS_IPAD()) {
+                [UIApplication.sharedApplication setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
 
-			self.controlsContainer.alpha = 1.0;
-			self.controlsContainer.userInteractionEnabled = YES;
-			
-			if (self.wasVisualizerOffBeforeRotation)
-			{
-				[self.equalizerView changeType:ISMSBassVisualType_none];
-			}
-			
-			/*if (self.landscapeButtonsHolder.superview)
-				[self hideLandscapeVisualizerButtons];*/
-		}
-	}
-	else
-	{
-		self.equalizerPath.alpha = 0.0;
-		for (EqualizerPointView *view in self.equalizerPointViews)
-		{
-			view.alpha = 0.0;
-		}
-		
-		[UIApplication sharedApplication].idleTimerDisabled = YES;
-		
-		if (!IS_IPAD())
-		{
-            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-
-			self.controlsContainer.alpha = 0.0;
-			self.controlsContainer.userInteractionEnabled = NO;
-			
-			self.wasVisualizerOffBeforeRotation = (self.equalizerView.visualType == ISMSBassVisualType_none);
-			if (self.wasVisualizerOffBeforeRotation)
-			{
-				[self.equalizerView nextType];
-			}
-		}
-	}
-	[UIView commitAnimations];
-	
-	NSUInteger count = [self.navigationController.viewControllers count];
-	UIViewController *backViewController = [self.navigationController.viewControllers objectAtIndex:count-2];
-	[backViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-	[super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-	
-	/*if (UIInterfaceOrientationIsPortrait(fromInterfaceOrientation))
-	{
-		[self removeEqViews];
-	}
-	else
-	{
-		[self createEqViews];
-	}*/
-	
-	NSUInteger count = [self.navigationController.viewControllers count];
-	UIViewController *backViewController = [self.navigationController.viewControllers objectAtIndex:count-2];
-	[backViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+                self.controlsContainer.alpha = 0.0;
+                self.controlsContainer.userInteractionEnabled = NO;
+                
+                self.wasVisualizerOffBeforeRotation = (self.equalizerView.visualType == ISMSBassVisualType_none);
+                if (self.wasVisualizerOffBeforeRotation) {
+                    [self.equalizerView nextType];
+                }
+            }
+        }
+        
+//        NSUInteger count = [self.navigationController.viewControllers count];
+//        UIViewController *backViewController = [self.navigationController.viewControllers objectAtIndex:count-2];
+//        [backViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+//        NSUInteger count = [self.navigationController.viewControllers count];
+//        UIViewController *backViewController = [self.navigationController.viewControllers objectAtIndex:count-2];
+//        [backViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    }];
+        
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 - (void)dealloc
@@ -197,7 +161,7 @@
         self.deletePresetButton.x -= 5.;
     }
 	
-	if (UIInterfaceOrientationIsLandscape([UIApplication orientation]) && !IS_IPAD())
+	if (UIInterfaceOrientationIsLandscape(UIApplication.orientation) && !IS_IPAD())
 	{
 		self.controlsContainer.alpha = 0.0;
 		self.controlsContainer.userInteractionEnabled = NO;
@@ -224,13 +188,13 @@
 
 - (void)swipeLeft
 {
-	if (UIInterfaceOrientationIsLandscape([UIApplication orientation]))
+	if (UIInterfaceOrientationIsLandscape(UIApplication.orientation))
 		[self.equalizerView nextType];
 }
 
 - (void)swipeRight
 {
-	if (UIInterfaceOrientationIsLandscape([UIApplication orientation]))
+	if (UIInterfaceOrientationIsLandscape(UIApplication.orientation))
 		[self.equalizerView prevType];
 }
 
@@ -240,7 +204,7 @@
 		
 	[self createEqViews];
 	
-	if (!IS_IPAD() && UIInterfaceOrientationIsLandscape([UIApplication orientation]))
+	if (!IS_IPAD() && UIInterfaceOrientationIsLandscape(UIApplication.orientation))
 	{
 		[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 		self.equalizerPath.alpha = 0.0;
@@ -344,14 +308,6 @@
 	audioEngineS.visualizer.type = BassVisualizerTypeNone;
 	
 	self.navigationController.navigationBar.hidden = NO;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
 }
 
 - (void)hideSavePresetButton:(BOOL)animated
@@ -570,13 +526,13 @@
 	{
 		/*if ([touch tapCount] == 1)
 		{
-			if (!IS_IPAD() && UIInterfaceOrientationIsLandscape([UIApplication orientation]))
+			if (!IS_IPAD() && UIInterfaceOrientationIsLandscape(UIApplication.orientation))
 			{
 				[self showLandscapeVisualizerButtons];
 			}
 			
 			// Only change visualizers in lanscape mode, when visualier is full screen
-			//if (UIInterfaceOrientationIsLandscape([UIApplication orientation]))
+			//if (UIInterfaceOrientationIsLandscape(UIApplication.orientation))
 			//	[self performSelector:@selector(type:) withObject:nil afterDelay:0.25];
 		}*/
 		if ([touch tapCount] == 2)
@@ -584,7 +540,7 @@
 			[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(type:) object:nil];
 			
 			// Only create EQ points in portrait mode when EQ is visible
-			if (IS_IPAD() || UIInterfaceOrientationIsPortrait([UIApplication orientation]))
+			if (IS_IPAD() || UIInterfaceOrientationIsPortrait(UIApplication.orientation))
 			{
 				// add a point
 				//DLog(@"double tap, adding point");

@@ -302,7 +302,7 @@
 
 - (CGSize)realSizeDidRotate
 {
-    UIInterfaceOrientation orientation = [UIApplication orientation];
+    UIInterfaceOrientation orientation = UIApplication.orientation;
     
     CGSize size = self.frame.size;
     if ((UIInterfaceOrientationIsLandscape(orientation) && size.width < size.height) ||

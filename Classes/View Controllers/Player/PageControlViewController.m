@@ -45,7 +45,7 @@
     self.scrollView.pagingEnabled = YES;
 	CGSize contentSize;
 	CGFloat height;
-	if (UIInterfaceOrientationIsPortrait([UIApplication orientation]) || IS_IPAD())
+	if (UIInterfaceOrientationIsPortrait(UIApplication.orientation) || IS_IPAD())
 	{
 		contentSize = CGSizeMake(320 * self.numberOfPages, self.numberOfPages == 1 ? 320 : 300);
 		height = self.numberOfPages == 1 ? 320 : 300;
@@ -245,12 +245,6 @@
 - (void)hideSongInfo
 {
 	[NSNotificationCenter postNotificationToMainThreadWithName:@"hideSongInfo"];
-}
-
-- (void)didReceiveMemoryWarning 
-{
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
 }
 
 - (void)viewDidDisappear:(BOOL)animated

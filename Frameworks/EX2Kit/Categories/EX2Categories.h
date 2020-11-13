@@ -9,11 +9,8 @@
 #ifndef EX2Kit_Categories_h
 #define EX2Kit_Categories_h
 
-#ifdef IOS
 #import "EX2UIKitCategories.h"
 #import "EX2QuartzCoreCategories.h"
-#endif
-
 #import "EX2FoundationCategories.h"
 
 #endif

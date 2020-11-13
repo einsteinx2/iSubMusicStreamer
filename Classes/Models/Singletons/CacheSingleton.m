@@ -247,15 +247,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	streamManagerS.lastTempCachedSong = nil;
 }
 
-#pragma mark - Memory management
-
-- (void)didReceiveMemoryWarning
-{
-//DLog(@"received memory warning");
-	
-	
-}
-
 #pragma mark - Singleton methods
 			
 - (void)setup
@@ -281,7 +272,6 @@ LOG_LEVEL_ISUB_DEFAULT
             {
                 DDLogInfo(@"Moved cache path from %@ to %@", oldPath, settingsS.songCachePath);
                 
-#ifdef IOS
                 // Now set all of the files to not be backed up
                 if (!settingsS.isBackupCacheEnabled)
                 {
@@ -292,7 +282,6 @@ LOG_LEVEL_ISUB_DEFAULT
                         [fileUrl addSkipBackupAttribute];
                     }
                 }
-#endif
             }
         }
         else
@@ -335,10 +324,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	// Do the first check sooner
 	[self performSelector:@selector(checkCache) withObject:nil afterDelay:0.05];
-	
-#ifdef IOS
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
-#endif
 }
 
 + (id)sharedInstance

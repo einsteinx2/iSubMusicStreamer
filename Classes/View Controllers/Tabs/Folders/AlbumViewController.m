@@ -28,14 +28,6 @@
 
 @implementation AlbumViewController
 
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 #pragma mark Lifecycle
 
 - (AlbumViewController *)initWithArtist:(ISMSArtist *)anArtist orAlbum:(ISMSAlbum *)anAlbum {
@@ -121,11 +113,6 @@
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_SongPlaybackStarted object:nil];	
-}
-
-- (void)didReceiveMemoryWarning  {
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
 }
 
 - (void)dealloc {

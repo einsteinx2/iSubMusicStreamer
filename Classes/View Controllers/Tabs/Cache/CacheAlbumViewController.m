@@ -56,14 +56,6 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
 	else return NSOrderedDescending;
 }
 
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 - (void)viewDidLoad  {
     [super viewDidLoad];
     
@@ -332,12 +324,6 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
 	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
 	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
-}
-
-
-- (void)didReceiveMemoryWarning  {
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
 }
 
 - (void)dealloc {

@@ -88,14 +88,6 @@
     self.rootView.y += 20.;
 }
 
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation  {
 	[self.menuViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 	[self.stackScrollViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];

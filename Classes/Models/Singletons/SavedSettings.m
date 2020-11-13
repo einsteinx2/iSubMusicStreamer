@@ -16,7 +16,6 @@
 #import "ISMSCacheQueueManager.h"
 #import "ISMSServer.h"
 #import "EX2Kit.h"
-#import "LibSub.h"
 
 // Test server details
 #define DEFAULT_SERVER_TYPE SUBSONIC
@@ -679,11 +678,7 @@
 {
 	@synchronized(self)
 	{
-#ifdef IOS
-		switch ([LibSub isWifi] ? self.maxBitrateWifi : self.maxBitrate3G)
-#else
-        switch (self.maxBitrateWifi)
-#endif
+		switch (EX2Reachability.isWifi ? self.maxBitrateWifi : self.maxBitrate3G)
 		{
 			case 0: return 64;
 			case 1: return 96;
@@ -735,11 +730,7 @@
 {    
     @synchronized(self)
 	{
-#ifdef IOS
-		switch ([LibSub isWifi] ? self.maxVideoBitrateWifi : self.maxVideoBitrate3G)
-#else
-        switch (self.maxVideoBitrateWifi)
-#endif
+		switch (EX2Reachability.isWifi ? self.maxVideoBitrateWifi : self.maxVideoBitrate3G)
 		{
 			case 0: return @[@60];
 			case 1: return @[@256, @60];
@@ -756,11 +747,7 @@
 {
 	@synchronized(self)
 	{
-#ifdef IOS
-		switch ([LibSub isWifi] ? self.maxVideoBitrateWifi : self.maxVideoBitrate3G)
-#else
-        switch (self.maxVideoBitrateWifi)
-#endif		
+		switch (EX2Reachability.isWifi ? self.maxVideoBitrateWifi : self.maxVideoBitrate3G)
         {
 			case 0: return 60;
 			case 1: return 256;
@@ -858,11 +845,7 @@
 		[_userDefaults setBool:isManualCachingOnWWANEnabled forKey:@"isManualCachingOnWWANEnabled"];
 		[_userDefaults synchronize];
         
-#ifdef IOS
-        if (![LibSub isWifi])
-#else
-        if (YES)
-#endif
+        if (!EX2Reachability.isWifi)
         {
             isManualCachingOnWWANEnabled ? [cacheQueueManagerS startDownloadQueue] : [cacheQueueManagerS stopDownloadQueue];
         }
@@ -1565,11 +1548,9 @@
 
 - (void)setup
 {
-#ifdef IOS
 	// Disable screen sleep if necessary
 	if (!self.isScreenSleepEnabled)
 		[UIApplication sharedApplication].idleTimerDisabled = YES;
-#endif
 	
 	_userDefaults = [NSUserDefaults standardUserDefaults];
 	_serverList = nil;

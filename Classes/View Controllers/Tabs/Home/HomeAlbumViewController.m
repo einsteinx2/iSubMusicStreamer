@@ -24,14 +24,6 @@
 
 @implementation HomeAlbumViewController
 
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 - (instancetype)initWithNibName:(NSString *)n bundle:(NSBundle *)b; {
     if (self = [super initWithNibName:n bundle:b]) {
 		_isMoreAlbums = YES;

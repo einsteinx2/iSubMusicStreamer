@@ -35,14 +35,6 @@
 
 @implementation AllAlbumsViewController
 
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 - (void)createDataModel {
 	self.dataModel = [[SUSAllAlbumsDAO alloc] init];
 	self.allSongsDataModel.delegate = nil;

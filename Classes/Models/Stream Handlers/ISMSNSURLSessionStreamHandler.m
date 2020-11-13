@@ -15,9 +15,6 @@
 #import "CacheSingleton.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
-#import "EX2RingBuffer.h"
-#import "EX2NetworkIndicator.h"
-#import "LibSub.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -249,7 +246,7 @@ LOG_LEVEL_ISUB_DEFAULT
             if (intervalSinceLastThrottle > ISMSThrottleTimeInterval && self.totalBytesTransferred > ISMSMinBytesToStartLimiting(self.bitrate)) {
                 NSTimeInterval delay = 0.0;
                 
-                double maxBytesPerInterval = [self.class maxBytesPerIntervalForBitrate:(double)self.bitrate is3G:![LibSub isWifi]];
+                double maxBytesPerInterval = [self.class maxBytesPerIntervalForBitrate:(double)self.bitrate is3G:!EX2Reachability.isWifi];
                 double numberOfIntervals = intervalSinceLastThrottle / ISMSThrottleTimeInterval;
                 double maxBytesPerTotalInterval = maxBytesPerInterval * numberOfIntervals;
                 

@@ -25,16 +25,6 @@
 
 @implementation PlayingViewController
 
-#pragma mark - Rotation Handling
-
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 #pragma mark Lifecycle
 
 - (void)viewDidLoad {
@@ -104,12 +94,6 @@
 		self.isNothingPlayingScreenShowing = NO;
 	}
 }
-
-- (void)didReceiveMemoryWarning  {
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-}
-
 
 #pragma mark - Button Handling
 

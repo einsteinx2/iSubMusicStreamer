@@ -23,7 +23,6 @@
 #import "ISMSStreamManager.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
-#import "LibSub.h"
 
 //LOG_LEVEL_ISUB_DEFAULT
 LOG_LEVEL_ISUB_DEBUG
@@ -64,7 +63,7 @@ LOG_LEVEL_ISUB_DEBUG
 	
 	// Check if there's another queued song and that were are on Wifi
 	self.currentQueuedSong = self.currentQueuedSongInDb;
-	if (!self.currentQueuedSong || (![LibSub isWifi] && !settingsS.isManualCachingOnWWANEnabled) || settingsS.isOfflineMode) {
+	if (!self.currentQueuedSong || (!EX2Reachability.isWifi && !settingsS.isManualCachingOnWWANEnabled) || settingsS.isOfflineMode) {
 		return;
     }
     

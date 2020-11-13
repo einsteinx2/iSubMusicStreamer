@@ -704,7 +704,7 @@
 }
 
 - (void)setTransformForCurrentOrientation:(BOOL)animated {
-	UIInterfaceOrientation orientation = [UIApplication orientation];
+	UIInterfaceOrientation orientation = UIApplication.orientation;
 	NSInteger degrees = 0;
 	
 	// Stay in sync with the superview

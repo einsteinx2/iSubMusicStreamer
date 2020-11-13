@@ -20,16 +20,6 @@
 
 @implementation SubsonicServerEditViewController
 
-#pragma mark - Rotation
-
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
-        return NO;
-    
-    return YES;
-}
-
 #pragma mark - Lifecycle
 
 - (void)viewDidLoad 

@@ -11,25 +11,16 @@
 
 @implementation CurrentPlaylistBackgroundViewController
 
-- (void)viewDidLoad 
-{
+- (void)viewDidLoad  {
 	self.playlistView = [[CurrentPlaylistViewController alloc] initWithNibName:@"CurrentPlaylistViewController" bundle:nil];
 	[self.view addSubview:self.playlistView.view];
 		
     [super viewDidLoad];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
 	[self.playlistView viewDidDisappear:NO];
 	self.playlistView = nil;
 }
-
-- (void)didReceiveMemoryWarning 
-{
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-}
-
 
 @end

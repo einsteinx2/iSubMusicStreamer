@@ -52,11 +52,7 @@
 #endif
 
 // Screen scale detection
-#ifdef IOS
-#define SCREEN_SCALE() ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] ? [[UIScreen mainScreen] scale] : 1.0f)
-#else
-#define SCREEN_SCALE() ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)] ? [[NSScreen mainScreen] backingScaleFactor] : 1.0f)
-#endif
+#define SCREEN_SCALE() [[UIScreen mainScreen] scale]
 
 // Check if simulator
 #if TARGET_IPHONE_SIMULATOR

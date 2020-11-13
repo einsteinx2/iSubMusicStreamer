@@ -9,7 +9,6 @@
 #import "NewHomeViewController.h"
 #import "ServerListViewController.h"
 #import "iPhoneStreamingPlayerViewController.h"
-#import "QuickAlbumsViewController.h"
 #import "ChatViewController.h"
 #import "SearchSongsViewController.h"
 #import "ShuffleFolderPickerViewController.h"
@@ -36,6 +35,8 @@
 #import "SUSRootFoldersDAO.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "SUSQuickAlbumsLoader.h"
+#import "HomeAlbumViewController.h"
 
 @implementation NewHomeViewController
 
@@ -43,139 +44,68 @@
     return NO;
 }
 
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-	
-	BOOL rotationDisabled = settingsS.isRotationLockEnabled;
-	
-	if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {
-		if (!IS_IPAD()) {
-			// Animate the segmented control off screen
-			[UIView beginAnimations:nil context:NULL];
-			[UIView setAnimationDuration:.3];
-			[UIView setAnimationCurve:UIViewAnimationCurveLinear];
-			self.quickLabel.alpha = 1.0;
-			self.shuffleLabel.alpha = 1.0;
-			self.jukeboxLabel.alpha = 1.0;
-			self.settingsLabel.alpha = 1.0;
-			self.chatLabel.alpha = 1.0;
-			self.playerLabel.alpha = 1.0;
-			
-			self.coverArtBorder.alpha = 1.0;
-			self.coverArtView.alpha = 1.0;
-			self.artistLabel.alpha = 1.0;
-			self.albumLabel.alpha = 1.0;
-			self.songLabel.alpha = 1.0;
-			[UIView commitAnimations];
-            
-            if (IS_TALL_SCREEN()) {
-                [UIView animateWithDuration:duration animations:^{
-                     for (UIView *aView in self.topRow) {
-                         aView.y = 75.;
-                     }
-                     
-                     for (UIView *aView in self.topRowLabels) {
-                         aView.y = 145.;
-                     }
-                     
-                     self.coverArtBorder.y = 217.;
-                     
-                     for (UIView *aView in self.bottomRow) {
-                         aView.y = 115;
-                     }
-                     
-                     for (UIView *aView in self.bottomRowLabels) {
-                         aView.y = 160;
-                     }
-                 }];
-            }
-		}
-	} else if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation) && !rotationDisabled) {
-		if (!IS_IPAD()) {
-            if (IS_TALL_SCREEN()) {
-                for (UIView *aView in self.topRow) {
-                    aView.y -= 30;
-                }
-                
-                self.coverArtBorder.y -= 40;
-                
-                for (UIView *aView in self.bottomRow) {
-                    aView.y += 40;
-                }
-            }
-            
-			// Animate the segmented control off screen
-			[UIView beginAnimations:nil context:NULL];
-			[UIView setAnimationDuration:.3];
-			[UIView setAnimationCurve:UIViewAnimationCurveLinear];
-			self.quickLabel.alpha = 0.0;
-			self.shuffleLabel.alpha = 0.0;
-			self.jukeboxLabel.alpha = 0.0;
-			self.settingsLabel.alpha = 0.0;
-			self.chatLabel.alpha = 0.0;
-			self.playerLabel.alpha = 0.0;
-			
-			self.coverArtBorder.alpha = 0.0;
-			self.coverArtView.alpha = 0.0;
-			self.artistLabel.alpha = 0.0;
-			self.albumLabel.alpha = 0.0;
-			self.songLabel.alpha = 0.0;
-			[UIView commitAnimations];
-		}
-	}
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    DLog(@"y: %@", self.bottomRowLabels.firstObject);
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        if (IS_IPAD()) return;
         
-    // Since the values in viewWillRotate would have to be rounded, we need to fix them here
-    if (IS_TALL_SCREEN()) {
-        if (UIInterfaceOrientationIsLandscape(fromInterfaceOrientation)) {
+        if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
+            self.quickLabel.alpha = 1.0;
+            self.shuffleLabel.alpha = 1.0;
+            self.jukeboxLabel.alpha = 1.0;
+            self.settingsLabel.alpha = 1.0;
+            self.chatLabel.alpha = 1.0;
+            self.playerLabel.alpha = 1.0;
+            
+            self.coverArtBorder.alpha = 1.0;
+            self.coverArtView.alpha = 1.0;
+            self.artistLabel.alpha = 1.0;
+            self.albumLabel.alpha = 1.0;
+            self.songLabel.alpha = 1.0;
+
             for (UIView *aView in self.topRow) {
                 aView.y = 75.;
             }
-            
+             
             for (UIView *aView in self.topRowLabels) {
                 aView.y = 145.;
             }
-            
+             
             self.coverArtBorder.y = 217.;
-            
+             
             for (UIView *aView in self.bottomRow) {
-                aView.y = 313.;
+                aView.y = 300;
             }
-            
+             
             for (UIView *aView in self.bottomRowLabels) {
-                aView.y = 381;
+                aView.y = 370;
             }
         } else {
             for (UIView *aView in self.topRow) {
-                aView.y = 45.;
+                aView.y = 55.;
             }
-            
-            for (UIView *aView in self.topRowLabels) {
-                aView.y = 115.;
-            }
-            
+
             self.coverArtBorder.y = 177.;
-            
+
             for (UIView *aView in self.bottomRow) {
-                aView.y = 127.;
+                aView.y = 137.;
             }
+                
+            self.quickLabel.alpha = 0.0;
+            self.shuffleLabel.alpha = 0.0;
+            self.jukeboxLabel.alpha = 0.0;
+            self.settingsLabel.alpha = 0.0;
+            self.chatLabel.alpha = 0.0;
+            self.playerLabel.alpha = 0.0;
             
-            for (UIView *aView in self.bottomRowLabels) {
-                aView.y = 159.;
-            }
+            self.coverArtBorder.alpha = 0.0;
+            self.coverArtView.alpha = 0.0;
+            self.artistLabel.alpha = 0.0;
+            self.albumLabel.alpha = 0.0;
+            self.songLabel.alpha = 0.0;
         }
-    }    
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) { }];
+    
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 - (void)viewDidLoad {
@@ -250,47 +180,35 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
     
-	if (UIInterfaceOrientationIsPortrait([UIApplication orientation])) {
-		if (!IS_IPAD()) {
-			self.quickLabel.alpha = 1.0;
-			self.shuffleLabel.alpha = 1.0;
-			self.jukeboxLabel.alpha = 1.0;
-			self.settingsLabel.alpha = 1.0;
-			self.chatLabel.alpha = 1.0;
-			self.playerLabel.alpha = 1.0;
-			
-			self.coverArtBorder.alpha = 1.0;
-			self.coverArtView.alpha = 1.0;
-			self.artistLabel.alpha = 1.0;
-			self.albumLabel.alpha = 1.0;
-			self.songLabel.alpha = 1.0;
+    if (!IS_IPAD()) {
+        if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
+            self.quickLabel.alpha = 1.0;
+            self.shuffleLabel.alpha = 1.0;
+            self.jukeboxLabel.alpha = 1.0;
+            self.settingsLabel.alpha = 1.0;
+            self.chatLabel.alpha = 1.0;
+            self.playerLabel.alpha = 1.0;
             
-            if (IS_TALL_SCREEN()) {
-                // Make sure everything's in the right place
-                [self didRotateFromInterfaceOrientation:UIInterfaceOrientationLandscapeLeft];
-            }
-		}
-	} else if (UIInterfaceOrientationIsLandscape([UIApplication orientation])) {
-		if (!IS_IPAD()) {
-			self.quickLabel.alpha = 0.0;
-			self.shuffleLabel.alpha = 0.0;
-			self.jukeboxLabel.alpha = 0.0;
-			self.settingsLabel.alpha = 0.0;
-			self.chatLabel.alpha = 0.0;
-			self.playerLabel.alpha = 0.0;
-			
-			self.coverArtBorder.alpha = 0.0;
-			self.coverArtView.alpha = 0.0;
-			self.artistLabel.alpha = 0.0;
-			self.albumLabel.alpha = 0.0;
-			self.songLabel.alpha = 0.0;
+            self.coverArtBorder.alpha = 1.0;
+            self.coverArtView.alpha = 1.0;
+            self.artistLabel.alpha = 1.0;
+            self.albumLabel.alpha = 1.0;
+            self.songLabel.alpha = 1.0;
+        } else {
+            self.quickLabel.alpha = 0.0;
+            self.shuffleLabel.alpha = 0.0;
+            self.jukeboxLabel.alpha = 0.0;
+            self.settingsLabel.alpha = 0.0;
+            self.chatLabel.alpha = 0.0;
+            self.playerLabel.alpha = 0.0;
             
-            if (IS_TALL_SCREEN()) {
-                // Make sure everything's in the right place
-                [self didRotateFromInterfaceOrientation:UIInterfaceOrientationPortrait];
-            }
-		}
-	}
+            self.coverArtBorder.alpha = 0.0;
+            self.coverArtView.alpha = 0.0;
+            self.artistLabel.alpha = 0.0;
+            self.albumLabel.alpha = 0.0;
+            self.songLabel.alpha = 0.0;
+        }
+    }
     
     [self addURLRefBackButton];
 	
@@ -354,19 +272,41 @@
 	}
 }
 
+- (void)loadQuickAlbums:(NSString *)modifier title:(NSString *)title {
+    [viewObjectsS showAlbumLoadingScreen:appDelegateS.window sender:self];
+    SUSQuickAlbumsLoader *loader = [[SUSQuickAlbumsLoader alloc] initWithCallbackBlock:^(BOOL success, NSError *error, SUSLoader *loader) {
+        [viewObjectsS hideLoadingScreen];
+        if (error) {
+            CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:[NSString stringWithFormat:@"There was an error grabbing the album list.\n\nError:%@", error.localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+        } else {
+            HomeAlbumViewController *albumViewController = [[HomeAlbumViewController alloc] initWithNibName:@"HomeAlbumViewController" bundle:nil];
+            albumViewController.title = title;//titles[modifier];
+            albumViewController.listOfAlbums = ((SUSQuickAlbumsLoader*)loader).listOfAlbums;
+            albumViewController.modifier = modifier;
+            [self pushViewControllerCustom:albumViewController];
+        }
+    }];
+    loader.modifier = modifier;
+    [loader startLoad];
+}
+
 - (IBAction)quickAlbums {
-	QuickAlbumsViewController *quickAlbums = [[QuickAlbumsViewController alloc] init];
-	quickAlbums.parent = self;
-	//quickAlbums.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    if ([quickAlbums respondsToSelector:@selector(setModalPresentationStyle:)]) {
-		quickAlbums.modalPresentationStyle = UIModalPresentationFormSheet;
-    }
-	
-    if (IS_IPAD()) {
-		[appDelegateS.ipadRootViewController presentViewController:quickAlbums animated:YES completion:nil];
-    } else {
-		[self presentViewController:quickAlbums animated:YES completion:nil];
-    }
+    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    [sheet addAction:[UIAlertAction actionWithTitle:@"Recently Played" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self loadQuickAlbums:@"recent" title:action.title];
+    }]];
+    [sheet addAction:[UIAlertAction actionWithTitle:@"Frequently Played" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self loadQuickAlbums:@"frequent" title:action.title];
+    }]];
+    [sheet addAction:[UIAlertAction actionWithTitle:@"Recently Played" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self loadQuickAlbums:@"newest" title:action.title];
+    }]];
+    [sheet addAction:[UIAlertAction actionWithTitle:@"Random Albums" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self loadQuickAlbums:@"random" title:action.title];
+    }]];
+    [sheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:sheet animated:YES completion:nil];
 }
 
 - (IBAction)serverShuffle {

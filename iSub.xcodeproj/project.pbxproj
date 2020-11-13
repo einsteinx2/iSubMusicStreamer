@@ -216,8 +216,6 @@
 		533C657715ABB952003EAF29 /* NewHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C657B15ABB952003EAF29 /* NewHomeViewController.xib */; };
 		533C657C15ABB975003EAF29 /* NewHomeViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C658215ABB975003EAF29 /* NewHomeViewController-iPad.xib */; };
 		533C657E15ABB975003EAF29 /* NewHomeViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C658215ABB975003EAF29 /* NewHomeViewController-iPad.xib */; };
-		533C658315ABB9A2003EAF29 /* QuickAlbumsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C658915ABB9A2003EAF29 /* QuickAlbumsViewController.xib */; };
-		533C658515ABB9A2003EAF29 /* QuickAlbumsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C658915ABB9A2003EAF29 /* QuickAlbumsViewController.xib */; };
 		533C658A15ABB9A9003EAF29 /* HomeAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C659015ABB9A9003EAF29 /* HomeAlbumViewController.xib */; };
 		533C658C15ABB9A9003EAF29 /* HomeAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C659015ABB9A9003EAF29 /* HomeAlbumViewController.xib */; };
 		533C659115ABB9AD003EAF29 /* SearchSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C659715ABB9AD003EAF29 /* SearchSongsViewController.xib */; };
@@ -459,7 +457,6 @@
 		53B8A1FB11704E100005AA86 /* play-all-note.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B8A1FA11704E100005AA86 /* play-all-note.png */; };
 		53B9D0B41279FAEF00CAB0E0 /* SearchSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B9D0B21279FAEF00CAB0E0 /* SearchSongsViewController.m */; };
 		53BA49431285BD7A0010B380 /* NewHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BA49411285BD7A0010B380 /* NewHomeViewController.m */; };
-		53BA497D1285D5B10010B380 /* QuickAlbumsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BA497B1285D5B10010B380 /* QuickAlbumsViewController.m */; };
 		53BB7ECA121B8D8F00BEE7E8 /* CustomUITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BB7EC9121B8D8F00BEE7E8 /* CustomUITextView.m */; };
 		53BB7F9C121B95A600BEE7E8 /* comment-write.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB7F9B121B95A600BEE7E8 /* comment-write.png */; };
 		53BB7FAC121B96E400BEE7E8 /* comment-write-pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB7FAB121B96E400BEE7E8 /* comment-write-pressed.png */; };
@@ -700,7 +697,6 @@
 		53BC280A139AF0DD00A825F1 /* SearchSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B9D0B21279FAEF00CAB0E0 /* SearchSongsViewController.m */; };
 		53BC280D139AF0DD00A825F1 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53260B78127D012300B745B4 /* EGORefreshTableHeaderView.m */; };
 		53BC280F139AF0DD00A825F1 /* NewHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BA49411285BD7A0010B380 /* NewHomeViewController.m */; };
-		53BC2810139AF0DD00A825F1 /* QuickAlbumsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BA497B1285D5B10010B380 /* QuickAlbumsViewController.m */; };
 		53BC2815139AF0DD00A825F1 /* ModalAlbumArtViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C22CCE128EE81C00FFBA67 /* ModalAlbumArtViewController.m */; };
 		53BC282A139AF0DD00A825F1 /* IntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C6052C12F1F01E003C6895 /* IntroViewController.m */; };
 		53BC282B139AF0DD00A825F1 /* CustomUIAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 532D9B42131AE19700FD8CA7 /* CustomUIAlertView.m */; };
@@ -1068,8 +1064,6 @@
 		53FE375A1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
 		53FE375E1EA961720058B925 /* JukeboxSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36801EA961720058B925 /* JukeboxSingleton.m */; };
 		53FE37601EA961720058B925 /* JukeboxSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36801EA961720058B925 /* JukeboxSingleton.m */; };
-		53FE37641EA961720058B925 /* LibSub.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36851EA961720058B925 /* LibSub.m */; };
-		53FE37661EA961720058B925 /* LibSub.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36851EA961720058B925 /* LibSub.m */; };
 		53FE37671EA961720058B925 /* MusicSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36891EA961720058B925 /* MusicSingleton.m */; };
 		53FE37691EA961720058B925 /* MusicSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36891EA961720058B925 /* MusicSingleton.m */; };
 		53FE376A1EA961720058B925 /* NSError+ISMSError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE368B1EA961720058B925 /* NSError+ISMSError.m */; };
@@ -1517,7 +1511,6 @@
 		539148AE2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/IntroViewController.xib; sourceTree = "<group>"; };
 		539148AF2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = "Base.lproj/NewHomeViewController-iPad.xib"; sourceTree = "<group>"; };
 		539148B02559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/NewHomeViewController.xib; sourceTree = "<group>"; };
-		539148B12559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/QuickAlbumsViewController.xib; sourceTree = "<group>"; };
 		539148B22559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/HomeAlbumViewController.xib; sourceTree = "<group>"; };
 		539148B32559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SearchSongsViewController.xib; sourceTree = "<group>"; };
 		539148B42559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ShuffleFolderPickerViewController.xib; sourceTree = "<group>"; };
@@ -1612,8 +1605,6 @@
 		53B9D0B21279FAEF00CAB0E0 /* SearchSongsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchSongsViewController.m; sourceTree = "<group>"; };
 		53BA49401285BD7A0010B380 /* NewHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewHomeViewController.h; sourceTree = "<group>"; };
 		53BA49411285BD7A0010B380 /* NewHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = NewHomeViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		53BA497A1285D5B10010B380 /* QuickAlbumsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuickAlbumsViewController.h; sourceTree = "<group>"; };
-		53BA497B1285D5B10010B380 /* QuickAlbumsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuickAlbumsViewController.m; sourceTree = "<group>"; };
 		53BB7EC8121B8D8F00BEE7E8 /* CustomUITextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomUITextView.h; sourceTree = "<group>"; };
 		53BB7EC9121B8D8F00BEE7E8 /* CustomUITextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUITextView.m; sourceTree = "<group>"; };
 		53BB7F9B121B95A600BEE7E8 /* comment-write.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "comment-write.png"; path = "Images/Other/comment-write.png"; sourceTree = SOURCE_ROOT; };
@@ -1959,8 +1950,6 @@
 		53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSubBassGaplessPlayerDelegate.m; sourceTree = "<group>"; };
 		53FE367F1EA961720058B925 /* JukeboxSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JukeboxSingleton.h; sourceTree = "<group>"; };
 		53FE36801EA961720058B925 /* JukeboxSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JukeboxSingleton.m; sourceTree = "<group>"; };
-		53FE36841EA961720058B925 /* LibSub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibSub.h; sourceTree = "<group>"; };
-		53FE36851EA961720058B925 /* LibSub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibSub.m; sourceTree = "<group>"; };
 		53FE36881EA961720058B925 /* MusicSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicSingleton.h; sourceTree = "<group>"; };
 		53FE36891EA961720058B925 /* MusicSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MusicSingleton.m; sourceTree = "<group>"; };
 		53FE368A1EA961720058B925 /* NSError+ISMSError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+ISMSError.h"; sourceTree = "<group>"; };
@@ -2421,9 +2410,6 @@
 				53BA49411285BD7A0010B380 /* NewHomeViewController.m */,
 				533C658215ABB975003EAF29 /* NewHomeViewController-iPad.xib */,
 				533C657B15ABB952003EAF29 /* NewHomeViewController.xib */,
-				53BA497A1285D5B10010B380 /* QuickAlbumsViewController.h */,
-				53BA497B1285D5B10010B380 /* QuickAlbumsViewController.m */,
-				533C658915ABB9A2003EAF29 /* QuickAlbumsViewController.xib */,
 				531F166C126FA2E600F524BD /* HomeAlbumViewController.h */,
 				531F166D126FA2E600F524BD /* HomeAlbumViewController.m */,
 				533C659015ABB9A9003EAF29 /* HomeAlbumViewController.xib */,
@@ -2638,8 +2624,6 @@
 				53FE36591EA961720058B925 /* ISMSNotificationNames.m */,
 				53FE36751EA961720058B925 /* ISMSUpdateChecker.h */,
 				53FE36761EA961720058B925 /* ISMSUpdateChecker.m */,
-				53FE36841EA961720058B925 /* LibSub.h */,
-				53FE36851EA961720058B925 /* LibSub.m */,
 				53FE36901EA961720058B925 /* NSString+cleanCredentialsForLog.h */,
 				53FE36911EA961720058B925 /* NSString+cleanCredentialsForLog.m */,
 				53FE36A11EA961720058B925 /* SearchXMLParser.h */,
@@ -3839,7 +3823,6 @@
 				53260B89127D012300B745B4 /* grayArrow@2x.png in Resources */,
 				53260B8A127D012300B745B4 /* whiteArrow.png in Resources */,
 				53260B8B127D012300B745B4 /* whiteArrow@2x.png in Resources */,
-				533C658315ABB9A2003EAF29 /* QuickAlbumsViewController.xib in Resources */,
 				53F8C80B129728F9007BDC0E /* home-background-ipad.png in Resources */,
 				533C657C15ABB975003EAF29 /* NewHomeViewController-iPad.xib in Resources */,
 				53F8CC791297949A007BDC0E /* home-background.png in Resources */,
@@ -4137,7 +4120,6 @@
 				53BC271E139AF0DD00A825F1 /* grayArrow@2x.png in Resources */,
 				53BC271F139AF0DD00A825F1 /* whiteArrow.png in Resources */,
 				53BC2720139AF0DD00A825F1 /* whiteArrow@2x.png in Resources */,
-				533C658515ABB9A2003EAF29 /* QuickAlbumsViewController.xib in Resources */,
 				53BC2726139AF0DD00A825F1 /* home-background-ipad.png in Resources */,
 				533C657E15ABB975003EAF29 /* NewHomeViewController-iPad.xib in Resources */,
 				53BC272A139AF0DD00A825F1 /* home-background.png in Resources */,
@@ -4452,7 +4434,6 @@
 				53FE35221EA961540058B925 /* NSString+Validation.m in Sources */,
 				538229F611C98091003F1E23 /* CacheAlbumViewController.m in Sources */,
 				53FE37731EA961720058B925 /* NSString+cleanCredentialsForLog.m in Sources */,
-				53FE37641EA961720058B925 /* LibSub.m in Sources */,
 				53FE35C71EA961540058B925 /* EX2Dispatch.m in Sources */,
 				53FE37A31EA961720058B925 /* SUSCoverArtDAO.m in Sources */,
 				53FE35371EA961540058B925 /* UIButton+Colors.m in Sources */,
@@ -4525,7 +4506,6 @@
 				53BA49431285BD7A0010B380 /* NewHomeViewController.m in Sources */,
 				5332954C255EECE40027C51A /* HTTPAsyncFileResponse.m in Sources */,
 				53FE34FB1EA961540058B925 /* NSString+Clean.m in Sources */,
-				53BA497D1285D5B10010B380 /* QuickAlbumsViewController.m in Sources */,
 				5332956A255EECE50027C51A /* DELETEResponse.m in Sources */,
 				53C22CCF128EE81C00FFBA67 /* ModalAlbumArtViewController.m in Sources */,
 				53FE352E1EA961540058B925 /* CALayer+ImageFromLayer.m in Sources */,
@@ -4717,7 +4697,6 @@
 				53BC27D7139AF0DD00A825F1 /* CacheAlbumViewController.m in Sources */,
 				53FE37751EA961720058B925 /* NSString+cleanCredentialsForLog.m in Sources */,
 				5332954D255EECE40027C51A /* HTTPAsyncFileResponse.m in Sources */,
-				53FE37661EA961720058B925 /* LibSub.m in Sources */,
 				53FE35C91EA961540058B925 /* EX2Dispatch.m in Sources */,
 				53329563255EECE50027C51A /* DDRange.m in Sources */,
 				53FE37A51EA961720058B925 /* SUSCoverArtDAO.m in Sources */,
@@ -4790,7 +4769,6 @@
 				53FE34FA1EA961540058B925 /* GTMNSString+HTML.m in Sources */,
 				53BC280F139AF0DD00A825F1 /* NewHomeViewController.m in Sources */,
 				53FE34FD1EA961540058B925 /* NSString+Clean.m in Sources */,
-				53BC2810139AF0DD00A825F1 /* QuickAlbumsViewController.m in Sources */,
 				53BC2815139AF0DD00A825F1 /* ModalAlbumArtViewController.m in Sources */,
 				53FE35301EA961540058B925 /* CALayer+ImageFromLayer.m in Sources */,
 				53BC282A139AF0DD00A825F1 /* IntroViewController.m in Sources */,
@@ -4885,14 +4863,6 @@
 				539148AF2559CBDF004AAC3F /* Base */,
 			);
 			name = "NewHomeViewController-iPad.xib";
-			sourceTree = "<group>";
-		};
-		533C658915ABB9A2003EAF29 /* QuickAlbumsViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				539148B12559CBDF004AAC3F /* Base */,
-			);
-			name = QuickAlbumsViewController.xib;
 			sourceTree = "<group>";
 		};
 		533C659015ABB9A9003EAF29 /* HomeAlbumViewController.xib */ = {

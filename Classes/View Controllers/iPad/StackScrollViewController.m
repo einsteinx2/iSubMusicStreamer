@@ -930,11 +930,6 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 	}
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-}
-
 - (void)viewDidUnload
 {
 	[super viewDidUnload];
@@ -946,14 +941,6 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 
 
 #pragma mark - Rotation support
-
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
-        return NO;
-    
-    return YES;
-}
 
 -(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {

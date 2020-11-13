@@ -15,12 +15,8 @@
 
 @implementation LyricsViewController
 
-#pragma mark - Lifecycle
-
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil 
-{
-    if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) 
-	{
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil  {
+    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         _dataModel = [[SUSLyricsDAO alloc] init];
 		
         // Custom initialization
@@ -49,49 +45,34 @@
     return self;
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLyricsLabel) name:ISMSNotification_SongPlaybackStarted object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLyricsLabel) name:ISMSNotification_LyricsDownloaded object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLyricsLabel) name:ISMSNotification_LyricsFailed object:nil];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
 	[super viewDidDisappear:animated];
-	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_SongPlaybackStarted object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_LyricsDownloaded object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_LyricsFailed object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideSongInfoFast" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideSongInfo" object:nil];
-	
 	[self.dataModel cancelLoad];
 }
 
-- (void)dealloc 
-{
+- (void)dealloc {
 	_dataModel.delegate = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)updateLyricsLabel
-{	
+- (void)updateLyricsLabel {
     ISMSSong *currentSong = playlistS.currentSong;
     NSString *lyrics = [self.dataModel lyricsForArtist:currentSong.artist andTitle:currentSong.title];
-    if (!lyrics.hasValue)
+    if (!lyrics.hasValue) {
         lyrics = @"\n\nNo lyrics found";
-    
+    }
     self.textView.text = lyrics;
 }
 

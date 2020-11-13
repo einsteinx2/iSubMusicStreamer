@@ -1027,18 +1027,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 }
 
-// New Model Stuff
-
-
-#pragma mark - Memory management
-
-- (void)didReceiveMemoryWarning
-{
-//DLog(@"received memory warning");
-	
-	
-}
-
 #pragma mark - Singleton methods
 
 - (void)setup 
@@ -1055,8 +1043,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 	
 	[self setupDatabases];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 }
 
 + (void) setAllSongsToBackup

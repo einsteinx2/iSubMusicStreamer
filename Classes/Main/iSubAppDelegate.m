@@ -51,12 +51,8 @@ LOG_LEVEL_ISUB_DEFAULT
 	return (iSubAppDelegate*)[UIApplication sharedApplication].delegate;
 }
 
-- (BOOL)shouldAutorotate
-{
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait)
-        return NO;
-    
-    return YES;
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    return UIInterfaceOrientationMaskAll;
 }
 
 #pragma mark Application lifecycle

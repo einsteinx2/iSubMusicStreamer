@@ -42,24 +42,19 @@
 
 #pragma mark Rotation handling
 
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	if (!IS_IPAD() && self.isNoSongsScreenShowing) {
-        [UIView animateWithDuration:duration animations:^{
-            if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {
-                self.noSongsScreen.transform = CGAffineTransformTranslate(self.noSongsScreen.transform, 0.0, -23.0);
-            } else {
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    if (!IS_IPAD() && self.isNoSongsScreenShowing) {
+        [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+            if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
                 self.noSongsScreen.transform = CGAffineTransformTranslate(self.noSongsScreen.transform, 0.0, 110.0);
+            } else {
+                self.noSongsScreen.transform = CGAffineTransformTranslate(self.noSongsScreen.transform, 0.0, -23.0);
             }
-        }];
-	}
+        } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) { }];
+    }
+
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 #pragma mark - View lifecycle
@@ -714,7 +709,7 @@
 		[self.view addSubview:self.noSongsScreen];
 		
 		if (!IS_IPAD()) {
-			if (UIInterfaceOrientationIsLandscape([UIApplication orientation])) {
+			if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 				self.noSongsScreen.transform = CGAffineTransformTranslate(self.noSongsScreen.transform, 0.0, 23.0);
 			}
 		}

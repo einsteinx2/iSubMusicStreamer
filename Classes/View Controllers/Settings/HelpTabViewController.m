@@ -12,14 +12,6 @@
 
 @implementation HelpTabViewController
 
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 		

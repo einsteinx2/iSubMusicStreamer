@@ -65,6 +65,9 @@ extern NSString * const EX2ReachabilityNotification_ReachabilityChanged;
 	SCNetworkReachabilityRef reachabilityRef;
 }
 
+// Convenience method to check if we're on wifi
++ (BOOL)isWifi;
+
 //reachabilityWithHostName- Use to check the reachability of a particular host name. 
 + (EX2Reachability*) reachabilityWithHostName: (NSString*) hostName;
 

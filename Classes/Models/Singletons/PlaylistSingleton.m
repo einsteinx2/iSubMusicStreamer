@@ -533,8 +533,6 @@
 	shuffleIndex = 0;
 	normalIndex = 0;
 	repeatMode = ISMSRepeatMode_Normal;
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 }
 
 + (id)sharedInstance

@@ -685,14 +685,6 @@ LOG_LEVEL_ISUB_DEBUG
 	}
 }
 
-#pragma mark - Memory management
-
-- (void)didReceiveMemoryWarning
-{
-//DLog(@"received memory warning");
-	
-}
-
 #pragma mark - Singleton methods
 
 - (void)delayedSetup
@@ -749,10 +741,6 @@ LOG_LEVEL_ISUB_DEBUG
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentPlaylistOrderChanged) name:ISMSNotification_CurrentPlaylistOrderChanged object:nil];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentPlaylistOrderChanged) name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
-	
-#ifdef IOS
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
-#endif
 }
 
 + (id)sharedInstance

@@ -323,7 +323,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 
 - (CGAffineTransform)transformForOrientation {
 	
-	UIInterfaceOrientation orientation = [UIApplication orientation];
+	UIInterfaceOrientation orientation = UIApplication.orientation;
 	if (orientation == UIInterfaceOrientationLandscapeLeft) {
 		return CGAffineTransformMakeRotation(M_PI*1.5);
 	} else if (orientation == UIInterfaceOrientationLandscapeRight) {
@@ -341,7 +341,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 		self.transform = CGAffineTransformIdentity;
 	}
 	
-	orientation_ = (UIDeviceOrientation)[UIApplication orientation];
+	orientation_ = (UIDeviceOrientation)UIApplication.orientation;
 	
 	CGSize frameSize = defaultFrameSize_;
 	self.frame = CGRectMake(kDDSocialDialogPadding, kDDSocialDialogPadding, frameSize.width - kDDSocialDialogPadding * 2, frameSize.height - kDDSocialDialogPadding * 2);
@@ -373,7 +373,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 
 - (void)deviceOrientationDidChange:(void*)object {
 	
-	UIDeviceOrientation orientation = (UIDeviceOrientation)[UIApplication orientation];
+	UIDeviceOrientation orientation = (UIDeviceOrientation)UIApplication.orientation;
 	
 	if ([self shouldRotateToOrientation:orientation]) {
 		if (!showingKeyboard_) {
@@ -399,7 +399,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 
 - (void)keyboardDidShow:(NSNotification*)notification {
 
-	UIInterfaceOrientation orientation = [UIApplication orientation];	
+	UIInterfaceOrientation orientation = UIApplication.orientation;	
 
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && UIInterfaceOrientationIsPortrait(orientation)) {
 		// On the iPad the screen is large enough that we don't need to 
@@ -435,7 +435,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 
 - (void)keyboardWillHide:(NSNotification*)notification {
 
-	UIInterfaceOrientation orientation = [UIApplication orientation];	
+	UIInterfaceOrientation orientation = UIApplication.orientation;	
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && UIInterfaceOrientationIsPortrait(orientation)) {
 		return;

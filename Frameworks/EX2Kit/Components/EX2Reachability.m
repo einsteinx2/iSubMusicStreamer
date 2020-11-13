@@ -132,6 +132,11 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 	[super dealloc];
 }
 
++ (BOOL)isWifi
+{
+    return self.reachabilityForLocalWiFi.currentReachabilityStatus == ReachableViaWiFi;
+}
+
 + (EX2Reachability*) reachabilityWithHostName: (NSString*) hostName;
 {
 	EX2Reachability* retVal = NULL;

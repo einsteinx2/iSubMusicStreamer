@@ -85,9 +85,7 @@ static AudioEngine *sharedInstance = nil;
 	return self.player.visualizer;
 }
 
-- (void)setup {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
-	
+- (void)setup {	
 	[[AVAudioSession sharedInstance] setActive:YES error:nil];
 	
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(handleInterruption:) name:AVAudioSessionInterruptionNotification object:[AVAudioSession sharedInstance]];

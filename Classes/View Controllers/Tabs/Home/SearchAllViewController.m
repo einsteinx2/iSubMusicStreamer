@@ -16,14 +16,6 @@
 
 @implementation SearchAllViewController
 
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad {

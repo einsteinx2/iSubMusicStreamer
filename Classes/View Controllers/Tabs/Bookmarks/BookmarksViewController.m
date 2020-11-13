@@ -28,14 +28,6 @@
 
 #pragma mark - View lifecycle
 
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }

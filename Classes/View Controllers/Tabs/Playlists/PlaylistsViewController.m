@@ -37,25 +37,18 @@
 
 #pragma mark - Rotation
 
-- (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-        return NO;
-    }
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        if (IS_IPAD()) return;
+        
+        if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
+            self.noPlaylistsScreen.transform = CGAffineTransformTranslate(self.noPlaylistsScreen.transform, 0.0, -23.0);
+        } else {
+            self.noPlaylistsScreen.transform = CGAffineTransformTranslate(self.noPlaylistsScreen.transform, 0.0, 110.0);
+        }
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) { }];
     
-    return YES;
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	if (!IS_IPAD() && self.isNoPlaylistsScreenShowing) {
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:duration];
-		if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {
-			self.noPlaylistsScreen.transform = CGAffineTransformTranslate(self.noPlaylistsScreen.transform, 0.0, -23.0);
-		} else {
-			self.noPlaylistsScreen.transform = CGAffineTransformTranslate(self.noPlaylistsScreen.transform, 0.0, 110.0);
-		}
-		[UIView commitAnimations];
-	}
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 #pragma mark - Lifecycle
@@ -170,12 +163,6 @@
 		self.editing = NO;
 	}
 }
-
-- (void)didReceiveMemoryWarning  {
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-}
-
 
 #pragma mark - Button Handling
 
@@ -403,7 +390,7 @@
 	[self.view addSubview:self.noPlaylistsScreen];
 	
 	if (!IS_IPAD()) {
-		if (UIInterfaceOrientationIsLandscape([UIApplication orientation])) {
+		if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 			//noPlaylistsScreen.transform = CGAffineTransformScale(noPlaylistsScreen.transform, 0.75, 0.75);
 			self.noPlaylistsScreen.transform = CGAffineTransformTranslate(self.noPlaylistsScreen.transform, 0.0, 23.0);
 		}
@@ -433,7 +420,7 @@
 		
 		// TODO: do this for iPad as well, different minScrollRow values
 		NSUInteger minScrollRow = 5;
-        if (UIInterfaceOrientationIsLandscape([UIApplication orientation])) {
+        if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 			minScrollRow = 2;
         }
 		

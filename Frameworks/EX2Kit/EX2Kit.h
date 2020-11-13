@@ -13,6 +13,9 @@
 #import "EX2Categories.h"
 #import "EX2UIComponents.h"
 #import "EX2Dispatch.h"
+#import "EX2RingBuffer.h"
+#import "EX2NetworkIndicator.h"
+#import "EX2Reachability.h"
 #import "DDLog.h"
 
 @interface EX2Kit : NSObject
