@@ -5180,6 +5180,7 @@
 					"-ObjC",
 				);
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
