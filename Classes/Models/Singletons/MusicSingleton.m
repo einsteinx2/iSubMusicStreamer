@@ -58,6 +58,12 @@ double startSongSeconds = 0.0;
     NSUInteger currentIndex = playlistS.currentIndex;
 	
 	if (!currentSong) return;
+    
+    // Fix for bug that caused songs to sometimes start playing then immediately restart
+    if (audioEngineS.player.isPlaying && [audioEngineS.player.currentStream.song isEqual:currentSong]) {
+        // We're already playing this song so bail
+        return;
+    }
 	
 	// Check to see if the song is already cached
 	if (currentSong.isFullyCached) {
