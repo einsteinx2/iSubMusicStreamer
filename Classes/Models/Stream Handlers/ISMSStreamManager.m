@@ -21,7 +21,7 @@
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 
-LOG_LEVEL_ISUB_DEBUG
+LOG_LEVEL_ISUB_DEFAULT
 #define maxNumOfReconnects 5
 
 @implementation ISMSStreamManager

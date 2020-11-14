@@ -28,7 +28,7 @@ static AudioEngine *sharedInstance = nil;
 - (void)handleInterruption:(NSNotification *)notification {
     AVAudioSessionInterruptionType interruptionType = [[[notification userInfo] objectForKey:AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
     if (interruptionType == AVAudioSessionInterruptionTypeBegan) {
-        DDLogCVerbose(@"[AudioEngine] audio session begin interruption");
+        DDLogVerbose(@"[AudioEngine] audio session begin interruption");
         if (self.player.isPlaying) {
             self.shouldResumeFromInterruption = YES;
             [sharedInstance.player pause];
@@ -36,7 +36,7 @@ static AudioEngine *sharedInstance = nil;
             self.shouldResumeFromInterruption = NO;
         }
     } else if (interruptionType == AVAudioSessionInterruptionTypeEnded) {
-        DDLogCVerbose(@"[AudioEngine] audio session interruption ended, isPlaying: %@   isMainThread: %@", NSStringFromBOOL(sharedInstance.player.isPlaying), NSStringFromBOOL([NSThread isMainThread]));
+        DDLogVerbose(@"[AudioEngine] audio session interruption ended, isPlaying: %@   isMainThread: %@", NSStringFromBOOL(sharedInstance.player.isPlaying), NSStringFromBOOL([NSThread isMainThread]));
         AVAudioSessionInterruptionOptions interruptionOptions = [[[notification userInfo] objectForKey:AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
         if (self.shouldResumeFromInterruption && interruptionOptions == AVAudioSessionInterruptionOptionShouldResume) {
             [self.player playPause];

@@ -24,7 +24,6 @@
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 
-//LOG_LEVEL_ISUB_DEFAULT
 LOG_LEVEL_ISUB_DEBUG
 
 #define maxNumOfReconnects 5

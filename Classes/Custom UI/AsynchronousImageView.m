@@ -18,7 +18,7 @@
 #import "Defines.h"
 #import "EX2Kit.h"
 
-LOG_LEVEL_ISUB_DEBUG
+LOG_LEVEL_ISUB_DEFAULT
 
 @interface AsynchronousImageView ()
 {

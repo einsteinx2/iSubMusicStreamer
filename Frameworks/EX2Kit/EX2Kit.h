@@ -16,7 +16,7 @@
 #import "EX2RingBuffer.h"
 #import "EX2NetworkIndicator.h"
 #import "EX2Reachability.h"
-#import "DDLog.h"
+#import <CocoaLumberjack/CocoaLumberjack.h>
 
 @interface EX2Kit : NSObject
 

@@ -21,10 +21,10 @@
 #import "ISMSUpdateChecker.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "UIViewController+PushViewControllerCustom.h"
-#import "HTTPServer.h"
-#import "HLSProxyConnection.h"
-#import "DDFileLogger.h"
-#import "DDTTYLogger.h"
+//#import "HTTPServer.h"
+//#import "HLSProxyConnection.h"
+//#import "DDFileLogger.h"
+//#import "DDTTYLogger.h"
 #import "SUSStatusLoader.h"
 #import "CustomUIAlertView.h"
 #import "NSMutableURLRequest+SUS.h"
@@ -265,18 +265,19 @@ LOG_LEVEL_ISUB_DEFAULT
     }
 }
 
+// TODO: Fix video playback
 - (void)startHLSProxy
 {
-    self.hlsProxyServer = [[HTTPServer alloc] init];
-    self.hlsProxyServer.connectionClass = [HLSProxyConnection class];
-    
-    NSError *error;
-	BOOL success = [self.hlsProxyServer start:&error];
-	
-	if(!success)
-	{
-		DDLogError(@"Error starting HLS proxy server: %@", error);
-	}
+//    self.hlsProxyServer = [[HTTPServer alloc] init];
+//    self.hlsProxyServer.connectionClass = [HLSProxyConnection class];
+//
+//    NSError *error;
+//	BOOL success = [self.hlsProxyServer start:&error];
+//
+//	if(!success)
+//	{
+//		DDLogError(@"Error starting HLS proxy server: %@", error);
+//	}
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
@@ -1152,28 +1153,29 @@ LOG_LEVEL_ISUB_DEFAULT
     [self playSubsonicVideo:aSong bitrates:settingsS.currentVideoBitrates];
 }
 
+// TODO: Fix video playback
 - (void)playSubsonicVideo:(ISMSSong *)aSong bitrates:(NSArray *)bitrates
 {
     [audioEngineS.player stop];
     
-    if (!aSong.songId || !bitrates)
-        return;
-    
-    NSDictionary *parameters = @{ @"id" : aSong.songId, @"bitRate" : bitrates };
-    NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"hls" parameters:parameters];
-    
-    // If we're on HTTPS, use our proxy to allow for playback from a self signed server
-    NSString *host = request.URL.absoluteString;
-    host = [host.lowercaseString hasPrefix:@"https"] ? [NSString stringWithFormat:@"http://localhost:%u%@", self.hlsProxyServer.listeningPort, request.URL.relativePath] : host;
-    NSString *urlString = [NSString stringWithFormat:@"%@?%@", host, [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]];
-    DDLogVerbose(@"HLS urlString: %@", urlString);
-    
-    [self createMoviePlayer];
-    
-    [self.moviePlayer stop]; // Doing this to prevent potential crash
-    self.moviePlayer.contentURL = [NSURL URLWithString:urlString];
-    //[moviePlayer prepareToPlay];
-    [self.moviePlayer play];
+//    if (!aSong.songId || !bitrates)
+//        return;
+//
+//    NSDictionary *parameters = @{ @"id" : aSong.songId, @"bitRate" : bitrates };
+//    NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"hls" parameters:parameters];
+//
+//    // If we're on HTTPS, use our proxy to allow for playback from a self signed server
+//    NSString *host = request.URL.absoluteString;
+//    host = [host.lowercaseString hasPrefix:@"https"] ? [NSString stringWithFormat:@"http://localhost:%u%@", self.hlsProxyServer.listeningPort, request.URL.relativePath] : host;
+//    NSString *urlString = [NSString stringWithFormat:@"%@?%@", host, [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]];
+//    DDLogVerbose(@"HLS urlString: %@", urlString);
+//
+//    [self createMoviePlayer];
+//
+//    [self.moviePlayer stop]; // Doing this to prevent potential crash
+//    self.moviePlayer.contentURL = [NSURL URLWithString:urlString];
+//    //[moviePlayer prepareToPlay];
+//    [self.moviePlayer play];
 }
 
 - (void)moviePlayerExitedFullscreen:(NSNotification *)notification

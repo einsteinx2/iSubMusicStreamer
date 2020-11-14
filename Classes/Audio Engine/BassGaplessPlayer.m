@@ -23,7 +23,7 @@
 
 @implementation BassGaplessPlayer
 
-LOG_LEVEL_ISUB_DEBUG
+LOG_LEVEL_ISUB_DEFAULT
 
 #define ISMS_BassDeviceNumber 1
 
@@ -99,7 +99,7 @@ void CALLBACK MyStreamEndCallback(HSYNC handle, DWORD channel, DWORD data, void 
     
 	@autoreleasepool
 	{
-        DDLogCVerbose(@"[BassGaplessPlayer] Stream End Callback called");
+        DDLogVerbose(@"[BassGaplessPlayer] Stream End Callback called");
         
         // This must be done in the stream GCD queue because if we do it in this thread
         // it will pause the audio output momentarily while it's loading the stream
@@ -110,11 +110,11 @@ void CALLBACK MyStreamEndCallback(HSYNC handle, DWORD channel, DWORD data, void 
              {
                  // Prepare the next song in the queue
                  ISMSSong *nextSong = [userInfo.player nextSong];
-                 DDLogCVerbose(@"[BassGaplessPlayer]  Preparing stream for: %@", nextSong);
+                 DDLogVerbose(@"[BassGaplessPlayer]  Preparing stream for: %@", nextSong);
                  BassStream *nextStream = [userInfo.player prepareStreamForSong:nextSong];
                  if (nextStream)
                  {
-                     DDLogCVerbose(@"[BassGaplessPlayer] Stream prepared successfully for: %@", nextSong);
+                     DDLogVerbose(@"[BassGaplessPlayer] Stream prepared successfully for: %@", nextSong);
                      @synchronized(userInfo.player.streamQueue)
                      {
                          [userInfo.player.streamQueue addObject:nextStream];
@@ -123,7 +123,7 @@ void CALLBACK MyStreamEndCallback(HSYNC handle, DWORD channel, DWORD data, void 
                  }
                  else
                  {
-                     DDLogCVerbose(@"[BassGaplessPlayer] Could NOT create stream for: %@", nextSong);
+                     DDLogVerbose(@"[BassGaplessPlayer] Could NOT create stream for: %@", nextSong);
                      userInfo.isNextSongStreamFailed = YES;
                  }
                  
@@ -186,7 +186,7 @@ QWORD CALLBACK MyFileLenProc(void *user)
 			length = [theSong.size longLongValue];
 		}
 		
-		DDLogCVerbose(@"[BassGaplessPlayer] checking %@ length: %llu", theSong.title, length);
+		DDLogVerbose(@"[BassGaplessPlayer] checking %@ length: %llu", theSong.title, length);
 		return length;
 	}
 }
@@ -260,7 +260,7 @@ BOOL CALLBACK MyFileSeekProc(QWORD offset, void *user)
             }
         }
 		
-		DDLogCVerbose(@"[BassGaplessPlayer] seeking to %llu  success: %@", offset, NSStringFromBOOL(success));
+		DDLogVerbose(@"[BassGaplessPlayer] seeking to %llu  success: %@", offset, NSStringFromBOOL(success));
 		
 		return success;
 	}
@@ -561,8 +561,8 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                                     									
 									userInfo.neededSize = size + bytesToWait;
 									
-                                    DDLogCVerbose(@"[BassGaplessPlayer] AUDIO ENGINE - calculating wait, bitrate: %lu, recentBytesPerSec: %lu, bytesToWait: %lu", (unsigned long)bitrate, (unsigned long)handler.recentDownloadSpeedInBytesPerSec, (unsigned long)bytesToWait);
-									DDLogCVerbose(@"[BassGaplessPlayer] AUDIO ENGINE - waiting for %lu   neededSize: %llu", (unsigned long)bytesToWait, userInfo.neededSize);
+                                    DDLogVerbose(@"[BassGaplessPlayer] AUDIO ENGINE - calculating wait, bitrate: %lu, recentBytesPerSec: %lu, bytesToWait: %lu", (unsigned long)bitrate, (unsigned long)handler.recentDownloadSpeedInBytesPerSec, (unsigned long)bytesToWait);
+									DDLogVerbose(@"[BassGaplessPlayer] AUDIO ENGINE - waiting for %lu   neededSize: %llu", (unsigned long)bytesToWait, userInfo.neededSize);
 									
 									// Sleep for 10000 microseconds, or 1/100th of a second
 #define sleepTime 10000
@@ -614,7 +614,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 											}
 										}
 									}
-									DDLogCVerbose(@"[BassGaplessPlayer] done waiting");
+									DDLogVerbose(@"[BassGaplessPlayer] done waiting");
 								}
 							}
 							

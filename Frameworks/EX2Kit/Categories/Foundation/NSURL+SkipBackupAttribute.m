@@ -7,11 +7,11 @@
 //
 
 #import "NSURL+SkipBackupAttribute.h"
-#import "DDLog.h"
 #import "EX2Macros.h"
+#import <CocoaLumberjack/CocoaLumberjack.h>
 #import <sys/xattr.h>
 
-static const int ddLogLevel = LOG_LEVEL_ERROR;
+static const DDLogLevel ddLogLevel = DDLogLevelError;
 
 @implementation NSURL (SkipBackupAttribute)
 

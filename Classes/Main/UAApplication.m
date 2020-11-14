@@ -12,9 +12,9 @@
 #import "PlaylistSingleton.h"
 #import "MusicSingleton.h"
 #import "JukeboxSingleton.h"
-#import "DDLog.h"
+#import "EX2Kit.h"
 
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+LOG_LEVEL_ISUB_DEFAULT
 
 @implementation UAApplication
 

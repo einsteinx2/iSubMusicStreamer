@@ -20,7 +20,7 @@
 #import "EX2Kit.h"
 #import <MediaPlayer/MediaPlayer.h>
 
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+LOG_LEVEL_ISUB_DEFAULT
 
 @implementation MusicSingleton
 

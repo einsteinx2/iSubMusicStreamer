@@ -7,13 +7,13 @@
 //
 
 #import "NSFileHandle+Hash.h"
-#import "DDLog.h"
 #import "EX2Macros.h"
+#import <CocoaLumberjack/CocoaLumberjack.h>
 #import <CommonCrypto/CommonDigest.h>
 
 @implementation NSFileHandle (Hash)
 
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 
 #define READ_CHUNK_SIZE 16*1024
 
