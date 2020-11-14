@@ -21,47 +21,78 @@
 #import "JukeboxSingleton.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation GenresArtistViewController
 
 - (void)viewDidLoad  {
     [super viewDidLoad];
 	
-	// Add the play all button + shuffle button
-	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
-	headerView.backgroundColor = ISMSHeaderColor;
-	
-	UILabel *playAllLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
-	playAllLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
-	playAllLabel.backgroundColor = [UIColor clearColor];
-	playAllLabel.textColor = ISMSHeaderButtonColor;
-	playAllLabel.textAlignment = NSTextAlignmentCenter;
-	playAllLabel.font = ISMSBoldFont(24);
-	playAllLabel.text = @"Play All";
-	[headerView addSubview:playAllLabel];
-	
-	UIButton *playAllButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	playAllButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
-	playAllButton.frame = CGRectMake(0, 0, 160, 40);
-	[playAllButton addTarget:self action:@selector(playAllAction:) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:playAllButton];
-	
-	UILabel *shuffleLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 0, 160, 50)];
-	shuffleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-	shuffleLabel.backgroundColor = [UIColor clearColor];
-	shuffleLabel.textColor = ISMSHeaderButtonColor;
-	shuffleLabel.textAlignment = NSTextAlignmentCenter;
-	shuffleLabel.font = ISMSBoldFont(24);
-	shuffleLabel.text = @"Shuffle";
-	[headerView addSubview:shuffleLabel];
-	
-	UIButton *shuffleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	shuffleButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-	shuffleButton.frame = CGRectMake(160, 0, 160, 40);
-	[shuffleButton addTarget:self action:@selector(shuffleAction:) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:shuffleButton];
-	
-	self.tableView.tableHeaderView = headerView;
+    // Create the container view and constrain it to the table
+    UIView *headerView = [[UIView alloc] init];
+    headerView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.tableView.tableHeaderView = headerView;
+    [headerView.centerXAnchor constraintEqualToAnchor:self.tableView.centerXAnchor].active = YES;
+    [headerView.widthAnchor constraintEqualToAnchor:self.tableView.widthAnchor].active = YES;
+    [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor].active = YES;
+    
+    // Create the play all and shuffle buttons and constrain to the container view
+    PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
+        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+        [EX2Dispatch runInMainThreadAsync:^{
+            [self playAllSongs];
+        }];
+    } shuffleHandler:^{
+        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
+        [EX2Dispatch runInMainThreadAsync:^{
+            [self shuffleSongs];
+        }];
+    }];
+    [headerView addSubview:playAllAndShuffleHeader];
+    [playAllAndShuffleHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor].active = YES;
+    [playAllAndShuffleHeader.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor].active = YES;
+    [playAllAndShuffleHeader.topAnchor constraintEqualToAnchor:headerView.topAnchor].active = YES;
+    [playAllAndShuffleHeader.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor].active = YES;
+    
+    // Force re-layout using the constraints
+    [self.tableView.tableHeaderView layoutIfNeeded];
+    self.tableView.tableHeaderView = self.tableView.tableHeaderView;
+    
+//	// Add the play all button + shuffle button
+//	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
+//	headerView.backgroundColor = ISMSHeaderColor;
+//
+//	UILabel *playAllLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
+//	playAllLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
+//	playAllLabel.backgroundColor = [UIColor clearColor];
+//	playAllLabel.textColor = ISMSHeaderButtonColor;
+//	playAllLabel.textAlignment = NSTextAlignmentCenter;
+//	playAllLabel.font = ISMSBoldFont(24);
+//	playAllLabel.text = @"Play All";
+//	[headerView addSubview:playAllLabel];
+//
+//	UIButton *playAllButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//	playAllButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
+//	playAllButton.frame = CGRectMake(0, 0, 160, 40);
+//	[playAllButton addTarget:self action:@selector(playAllAction:) forControlEvents:UIControlEventTouchUpInside];
+//	[headerView addSubview:playAllButton];
+//
+//	UILabel *shuffleLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 0, 160, 50)];
+//	shuffleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
+//	shuffleLabel.backgroundColor = [UIColor clearColor];
+//	shuffleLabel.textColor = ISMSHeaderButtonColor;
+//	shuffleLabel.textAlignment = NSTextAlignmentCenter;
+//	shuffleLabel.font = ISMSBoldFont(24);
+//	shuffleLabel.text = @"Shuffle";
+//	[headerView addSubview:shuffleLabel];
+//
+//	UIButton *shuffleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//	shuffleButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
+//	shuffleButton.frame = CGRectMake(160, 0, 160, 40);
+//	[shuffleButton addTarget:self action:@selector(shuffleAction:) forControlEvents:UIControlEventTouchUpInside];
+//	[headerView addSubview:shuffleButton];
+//
+//	self.tableView.tableHeaderView = headerView;
 	
 	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
@@ -214,17 +245,17 @@
 	[self showPlayer];
 }
 
-- (void)playAllAction:(id)sender {
-	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-	
-	[self performSelector:@selector(playAllSongs) withObject:nil afterDelay:0.05];
-}
-
-- (void)shuffleAction:(id)sender {
-	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
-	
-	[self performSelector:@selector(shuffleSongs) withObject:nil afterDelay:0.05];
-}
+//- (void)playAllAction:(id)sender {
+//	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+//	
+//	[self performSelector:@selector(playAllSongs) withObject:nil afterDelay:0.05];
+//}
+//
+//- (void)shuffleAction:(id)sender {
+//	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
+//	
+//	[self performSelector:@selector(shuffleSongs) withObject:nil afterDelay:0.05];
+//}
 
 #pragma mark Table view methods
 

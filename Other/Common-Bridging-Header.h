@@ -28,4 +28,10 @@
 #import "ISMSAlbum.h"
 #import "ISMSSong+DAO.h"
 
+/*
+ * Extensions
+ */
+
+#import "NSString+time.h"
+
 #endif /* Common_Bridging_Header_h */

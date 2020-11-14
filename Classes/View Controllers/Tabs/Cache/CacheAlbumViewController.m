@@ -80,75 +80,8 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
 	} else {
 		self.navigationItem.rightBarButtonItem = nil;
 	}
-		
-	// Add the play all button + shuffle button
-	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
-	headerView.backgroundColor = ISMSHeaderColor;
-	
-	UILabel *playAllLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
-	playAllLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-	playAllLabel.backgroundColor = [UIColor clearColor];
-	playAllLabel.textColor = ISMSHeaderButtonColor;
-	playAllLabel.textAlignment = NSTextAlignmentCenter;
-	playAllLabel.font = ISMSRegularFont(24);
-	playAllLabel.text = @"Play All";
-	[headerView addSubview:playAllLabel];
-	
-	UIButton *playAllButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	playAllButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-	playAllButton.frame = CGRectMake(0, 0, 160, 40);
-	[playAllButton addTarget:self action:@selector(playAllAction:) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:playAllButton];
-	
-	UILabel *shuffleLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 0, 160, 50)];
-	shuffleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-	shuffleLabel.backgroundColor = [UIColor clearColor];
-	shuffleLabel.textColor = ISMSHeaderButtonColor;
-	shuffleLabel.textAlignment = NSTextAlignmentCenter;
-	shuffleLabel.font = ISMSRegularFont(24);
-	shuffleLabel.text = @"Shuffle";
-	[headerView addSubview:shuffleLabel];
-	
-	UIButton *shuffleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	shuffleButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-	shuffleButton.frame = CGRectMake(160, 0, 160, 40);
-	[shuffleButton addTarget:self action:@selector(shuffleAction:) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:shuffleButton];
-	
-	self.tableView.tableHeaderView = headerView;
-    self.tableView.rowHeight = 60.0;
-    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
-	
-	// Create the section index
-	if (self.listOfAlbums.count > 10) {
-		__block NSArray *secInfo = nil;
-		[databaseS.albumListCacheDbQueue inDatabase:^(FMDatabase *db) {
-			[db executeUpdate:@"DROP TABLE IF EXSITS albumIndex"];
-			[db executeUpdate:@"CREATE TEMP TABLE albumIndex (album TEXT)"];
-			
-			[db beginTransaction];
-			for (NSNumber *rowId in self.listOfAlbums) {
-				@autoreleasepool {
-					[db executeUpdate:@"INSERT INTO albumIndex SELECT title FROM albumsCache WHERE rowid = ?", rowId];
-				}
-			}
-			[db commit];
-			
-			secInfo = [databaseS sectionInfoFromTable:@"albumIndex" inDatabase:db withColumn:@"album"];
-			[db executeUpdate:@"DROP TABLE IF EXISTS albumIndex"];
-		}];
-		
-		if (secInfo) {
-			self.sectionInfo = [NSArray arrayWithArray:secInfo];
-            if ([self.sectionInfo count] < 5) {
-				self.sectionInfo = nil;
-            } else {
-				[self.tableView reloadData];
-            }
-		} else {
-			self.sectionInfo = nil;
-		}
-	}	
+
+    [self addHeaderAndIndex];
 	
 	// Set notification receiver for when cached songs are deleted to reload the table
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cachedSongDeleted) name:@"cachedSongDeleted" object:nil];
@@ -159,6 +92,68 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"cachedSongDeleted" object:nil];
 }
 
+- (void)addHeaderAndIndex {
+    // Create the container view and constrain it to the table
+    UIView *headerView = [[UIView alloc] init];
+    headerView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.tableView.tableHeaderView = headerView;
+    [headerView.centerXAnchor constraintEqualToAnchor:self.tableView.centerXAnchor].active = YES;
+    [headerView.widthAnchor constraintEqualToAnchor:self.tableView.widthAnchor].active = YES;
+    [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor].active = YES;
+    
+    // Create the play all and shuffle buttons and constrain to the container view
+    PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
+        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+        [EX2Dispatch runInBackgroundAsync:^{
+            [self loadPlayAllPlaylist:NO];
+        }];
+    } shuffleHandler:^{
+        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
+        [EX2Dispatch runInBackgroundAsync:^{
+            [self loadPlayAllPlaylist:YES];
+        }];
+    }];
+    [headerView addSubview:playAllAndShuffleHeader];
+    [playAllAndShuffleHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor].active = YES;
+    [playAllAndShuffleHeader.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor].active = YES;
+    [playAllAndShuffleHeader.topAnchor constraintEqualToAnchor:headerView.topAnchor].active = YES;
+    [playAllAndShuffleHeader.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor].active = YES;
+    
+    // Force re-layout using the constraints
+    [self.tableView.tableHeaderView layoutIfNeeded];
+    self.tableView.tableHeaderView = self.tableView.tableHeaderView;
+    
+    // Create the section index
+    if (self.listOfAlbums.count > 10) {
+        __block NSArray *secInfo = nil;
+        [databaseS.albumListCacheDbQueue inDatabase:^(FMDatabase *db) {
+            [db executeUpdate:@"DROP TABLE IF EXSITS albumIndex"];
+            [db executeUpdate:@"CREATE TEMP TABLE albumIndex (album TEXT)"];
+            
+            [db beginTransaction];
+            for (NSNumber *rowId in self.listOfAlbums) {
+                @autoreleasepool {
+                    [db executeUpdate:@"INSERT INTO albumIndex SELECT title FROM albumsCache WHERE rowid = ?", rowId];
+                }
+            }
+            [db commit];
+            
+            secInfo = [databaseS sectionInfoFromTable:@"albumIndex" inDatabase:db withColumn:@"album"];
+            [db executeUpdate:@"DROP TABLE IF EXISTS albumIndex"];
+        }];
+        
+        if (secInfo) {
+            self.sectionInfo = [NSArray arrayWithArray:secInfo];
+            if ([self.sectionInfo count] < 5) {
+                self.sectionInfo = nil;
+            } else {
+                [self.tableView reloadData];
+            }
+        } else {
+            self.sectionInfo = nil;
+        }
+    }
+}
 
 - (void)cachedSongDeleted {
 	NSUInteger segment = self.segments.count;
@@ -235,21 +230,9 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
 	}
 }
 
-- (void)playAllAction:(id)sender {
-	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-	[self performSelector:@selector(loadPlayAllPlaylist:) withObject:@"NO" afterDelay:0.05];
-}
-
-- (void)shuffleAction:(id)sender {
-	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
-	[self performSelector:@selector(loadPlayAllPlaylist:) withObject:@"YES" afterDelay:0.05];
-}
-
-- (void)loadPlayAllPlaylist:(NSString *)shuffle {
+- (void)loadPlayAllPlaylist:(BOOL)shuffle {
 	NSUInteger segment = [self.segments count];
-	
-	BOOL isShuffle = [shuffle isEqualToString:@"YES"];
-	
+		
 	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
 		[jukeboxS jukeboxClearRemotePlaylist];
@@ -282,7 +265,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
 		}
 	}
 	
-	if (isShuffle) {
+	if (shuffle) {
 		playlistS.isShuffle = YES;
 		
 		[databaseS resetShufflePlaylist];
@@ -294,29 +277,19 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
 	}
 			
 	// Must do UI stuff in main thread
-	[EX2Dispatch runInMainThreadAndWaitUntilDone:NO block:^ { [self loadPlayAllPlaylist2]; }];
+    [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+	[EX2Dispatch runInMainThreadAndWaitUntilDone:NO block:^ {
+        [viewObjectsS hideLoadingScreen];
+        [musicS playSongAtPosition:0];
+        if (UIDevice.isIPad) {
+            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
+        } else {
+            iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
+            streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:streamingPlayerViewController animated:YES];
+        }
+    }];
 }
-
-- (void)playAllPlaySong {
-	[musicS playSongAtPosition:0];
-	
-	if (UIDevice.isIPad) {
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
-	} else {
-		iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
-		streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
-		[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
-	}
-}
-
-- (void)loadPlayAllPlaylist2 {
-	[viewObjectsS hideLoadingScreen];
-
-	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
-	
-	[self playAllPlaySong];
-}
-
 
 - (IBAction)nowPlayingAction:(id)sender {
 	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];

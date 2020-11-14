@@ -68,7 +68,7 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
 	
-	self.albumInfoArtView.delegate = self;
+//	self.albumInfoArtView.delegate = self;
 			
 	// Add the pull to refresh view
 	self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
@@ -82,7 +82,7 @@
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createReflection) name:@"createReflection"  object:nil];
+//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createReflection) name:@"createReflection"  object:nil];
 }
 
 - (void)reloadData {
@@ -116,7 +116,7 @@
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
-	self.albumInfoArtView.delegate = nil;
+//	self.albumInfoArtView.delegate = nil;
 	self.dataModel.delegate = nil;
 }
 
@@ -128,59 +128,58 @@
 	[viewObjectsS hideLoadingScreen];
 }
 
-- (void)createReflection {
-	self.albumInfoArtReflection.image = [self.albumInfoArtView reflectedImageWithHeight:self.albumInfoArtReflection.height];
-}
+//- (void)createReflection {
+//	self.albumInfoArtReflection.image = [self.albumInfoArtView reflectedImageWithHeight:self.albumInfoArtReflection.height];
+//}
+//
+//- (void)asyncImageViewFinishedLoading:(AsynchronousImageView *)asyncImageView {
+//	// Make sure to set the reflection again once the art loads
+//	[self createReflection];
+//}
 
-- (void)asyncImageViewFinishedLoading:(AsynchronousImageView *)asyncImageView {
-	// Make sure to set the reflection again once the art loads
-	[self createReflection];
-}
-
+// Autolayout solution described here: https://medium.com/@aunnnn/table-header-view-with-autolayout-13de4cfc4343
 - (void)addHeaderAndIndex {
-	if (self.dataModel.songsCount == 0 && self.dataModel.albumsCount == 0)
-	{
+	if (self.dataModel.songsCount == 0 && self.dataModel.albumsCount == 0) {
 		self.tableView.tableHeaderView = nil;
-	} else if (self.dataModel.songsCount > 0) {
-		if (!self.tableView.tableHeaderView) {
-			CGFloat headerHeight = self.albumInfoView.height + self.playAllShuffleAllView.height;
-			CGRect headerFrame = CGRectMake(0., 0., 320, headerHeight);
-			UIView *headerView = [[UIView alloc] initWithFrame:headerFrame];
-			
-			self.albumInfoArtView.isLarge = YES;
-			
-			[headerView addSubview:self.albumInfoView];
-			
-			self.playAllShuffleAllView.y = self.albumInfoView.height;
-			[headerView addSubview:self.playAllShuffleAllView];
-			
-			self.tableView.tableHeaderView = headerView;
-		}
-		
-		if (!self.myAlbum) {
-			ISMSAlbum *anAlbum = [[ISMSAlbum alloc] init];
-			ISMSSong *aSong = [self.dataModel songForTableViewRow:self.dataModel.albumsCount];
-			anAlbum.title = aSong.album;
-			anAlbum.artistName = aSong.artist;
-			anAlbum.coverArtId = aSong.coverArtId;
-			self.myAlbum = anAlbum;
-		}
-		
-		self.albumInfoArtView.coverArtId = self.myAlbum.coverArtId;
-        self.albumInfoArtistLabel.text = self.myAlbum.artistName;
-        self.albumInfoAlbumLabel.text = self.myAlbum.title;
-		
-        self.albumInfoDurationLabel.text = [NSString formatTime:self.dataModel.folderLength];
-        self.albumInfoTrackCountLabel.text = [NSString stringWithFormat:@"%lu Tracks", (unsigned long)self.dataModel.songsCount];
-        if (self.dataModel.songsCount == 1) {
-            self.albumInfoTrackCountLabel.text = [NSString stringWithFormat:@"%lu Track", (unsigned long)self.dataModel.songsCount];
+    } else {
+        // Create the container view and constrain it to the table
+        UIView *headerView = [[UIView alloc] init];
+        headerView.translatesAutoresizingMaskIntoConstraints = NO;
+        self.tableView.tableHeaderView = headerView;
+        [headerView.centerXAnchor constraintEqualToAnchor:self.tableView.centerXAnchor].active = YES;
+        [headerView.widthAnchor constraintEqualToAnchor:self.tableView.widthAnchor].active = YES;
+        [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor].active = YES;
+        
+        // Create the play all and shuffle buttons and constrain to the container view
+        PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
+            [databaseS playAllSongs:self.myId artist:self.myArtist];
+        } shuffleHandler:^{
+            [databaseS shuffleAllSongs:self.myId artist:self.myArtist];
+        }];
+        [headerView addSubview:playAllAndShuffleHeader];
+        [playAllAndShuffleHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor].active = YES;
+        [playAllAndShuffleHeader.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor].active = YES;
+        [playAllAndShuffleHeader.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor].active = YES;
+        
+        if (self.dataModel.songsCount > 0) {
+            // Create the album header view and constrain to the container view
+            AlbumTableViewHeader *albumHeader = [[AlbumTableViewHeader alloc] initWithAlbum:self.myAlbum tracks:self.dataModel.songsCount duration:self.dataModel.folderLength];
+            [headerView addSubview:albumHeader];
+            [albumHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor].active = YES;
+            [albumHeader.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor].active = YES;
+            [albumHeader.topAnchor constraintEqualToAnchor:headerView.topAnchor].active = YES;
+            
+            // Constrain the buttons below the album header
+            [playAllAndShuffleHeader.topAnchor constraintEqualToAnchor:albumHeader.bottomAnchor].active = YES;
+        } else {
+            // Play All and Shuffle buttons only
+            [playAllAndShuffleHeader.topAnchor constraintEqualToAnchor:headerView.topAnchor].active = YES;
         }
-		
-		// Create reflection
-		[self createReflection];
-	} else {
-		self.tableView.tableHeaderView = self.playAllShuffleAllView;
-	}
+        
+        // Force re-layout using the constraints
+        [self.tableView.tableHeaderView layoutIfNeeded];
+        self.tableView.tableHeaderView = self.tableView.tableHeaderView;
+    }
 	
 	self.sectionInfo = self.dataModel.sectionInfo;
 	if (self.sectionInfo)
@@ -203,13 +202,13 @@
 	}
 }
 
-- (IBAction)playAllAction:(id)sender {
-	[databaseS playAllSongs:self.myId artist:self.myArtist];
-}
+//- (IBAction)playAllAction:(id)sender {
+//	[databaseS playAllSongs:self.myId artist:self.myArtist];
+//}
 
-- (IBAction)shuffleAction:(id)sender {
-	[databaseS shuffleAllSongs:self.myId artist:self.myArtist];
-}
+//- (IBAction)shuffleAction:(id)sender {
+//	[databaseS shuffleAllSongs:self.myId artist:self.myArtist];
+//}
 
 - (IBAction)nowPlayingAction:(id)sender {
 	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
@@ -255,7 +254,7 @@
     } else {
         // Song
         cell.hideNumberLabel = YES;
-        cell.hideCoverArt = NO;
+        cell.hideCoverArt = YES;
         cell.hideDurationLabel = NO;
         cell.accessoryType = UITableViewCellAccessoryNone;
         [cell updateWithModel:[self.dataModel songForTableViewRow:indexPath.row]];

@@ -100,13 +100,13 @@
 	}
 	
 	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-	self.headerView.backgroundColor = [UIColor colorWithWhite:.3 alpha:1];
+    self.headerView.backgroundColor = UIColor.systemGray3Color;//UIColor.systemBackgroundColor;//[UIColor colorWithWhite:.3 alpha:1];
 	self.segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Cached", @"Downloading"]];
 	[self.segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
 	
 	self.segmentedControl.frame = CGRectMake(5, 5, 310, 36);
 	self.segmentedControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.segmentedControl.tintColor = ISMSHeaderColor;
+//    self.segmentedControl.tintColor = ISMSHeaderColor;
 	self.segmentedControl.selectedSegmentIndex = 0;
 	if (settingsS.isOfflineMode) {
 		self.segmentedControl.hidden = YES;
@@ -119,13 +119,13 @@
 		
 		self.headerView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
 		self.headerView2.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		self.headerView2.backgroundColor = viewObjectsS.darkNormal;
+//		self.headerView2.backgroundColor = viewObjectsS.darkNormal;
 		[self.headerView addSubview:self.headerView2];
 		
 		self.playAllLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
 		self.playAllLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
-		self.playAllLabel.backgroundColor = [UIColor clearColor];
-		self.playAllLabel.textColor = ISMSHeaderButtonColor;
+//		self.playAllLabel.backgroundColor = [UIColor clearColor];
+        self.playAllLabel.textColor = UIColor.labelColor;//ISMSHeaderButtonColor;
 		self.playAllLabel.textAlignment = NSTextAlignmentCenter;
 		self.playAllLabel.font = ISMSRegularFont(24);
 		self.playAllLabel.text = @"Play All";
@@ -139,8 +139,8 @@
 		
 		self.shuffleLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 0, 160, 50)];
 		self.shuffleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-		self.shuffleLabel.backgroundColor = [UIColor clearColor];
-		self.shuffleLabel.textColor = ISMSHeaderButtonColor;
+//		self.shuffleLabel.backgroundColor = [UIColor clearColor];
+        self.shuffleLabel.textColor = UIColor.labelColor;//ISMSHeaderButtonColor;
 		self.shuffleLabel.textAlignment = NSTextAlignmentCenter;
 		self.shuffleLabel.font = ISMSRegularFont(24);
 		self.shuffleLabel.text = @"Shuffle";
@@ -255,7 +255,7 @@
 		} else {
 			[self removeNoSongsScreen];
 			
-			if (settingsS.isOfflineMode == NO) {
+			if (!settingsS.isOfflineMode) {
 				[self addSaveEditButtons];
 			}
 		}
@@ -546,8 +546,8 @@
 		
 		self.songsCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, y, 160, 34)];
 		self.songsCountLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-		self.songsCountLabel.backgroundColor = [UIColor clearColor];
-		self.songsCountLabel.textColor = [UIColor whiteColor];
+//		self.songsCountLabel.backgroundColor = [UIColor clearColor];
+        self.songsCountLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
 		self.songsCountLabel.textAlignment = NSTextAlignmentCenter;
 		self.songsCountLabel.font = ISMSBoldFont(22);
 		if (self.segmentedControl.selectedSegmentIndex == 0) {
@@ -568,8 +568,8 @@
 		
 		self.cacheSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, y + 33, 160, 14)];
 		self.cacheSizeLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-		self.cacheSizeLabel.backgroundColor = [UIColor clearColor];
-		self.cacheSizeLabel.textColor = [UIColor whiteColor];
+//		self.cacheSizeLabel.backgroundColor = [UIColor clearColor];
+        self.cacheSizeLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
 		self.cacheSizeLabel.textAlignment = NSTextAlignmentCenter;
 		self.cacheSizeLabel.font = ISMSBoldFont(12);
 		if (self.segmentedControl.selectedSegmentIndex == 0) {
@@ -602,8 +602,8 @@
 		
 		self.editSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, y, 160, 50)];
 		self.editSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
-		self.editSongsLabel.backgroundColor = [UIColor clearColor];
-		self.editSongsLabel.textColor = [UIColor whiteColor];
+//		self.editSongsLabel.backgroundColor = [UIColor clearColor];
+        self.editSongsLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
 		self.editSongsLabel.textAlignment = NSTextAlignmentCenter;
 		self.editSongsLabel.font = ISMSBoldFont(22);
 		self.editSongsLabel.text = @"Edit";
@@ -618,7 +618,7 @@
 		self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, y, 160, 50)];
 		self.deleteSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
 		self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
-		self.deleteSongsLabel.textColor = [UIColor whiteColor];
+        self.deleteSongsLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
 		self.deleteSongsLabel.textAlignment = NSTextAlignmentCenter;
 		self.deleteSongsLabel.font = ISMSBoldFont(22);
 		self.deleteSongsLabel.adjustsFontSizeToFitWidth = YES;
@@ -631,13 +631,13 @@
 		if (self.segmentedControl.selectedSegmentIndex == 0) {
 			self.headerView2 = [[UIView alloc] initWithFrame:CGRectMake(0, y + 52, 320, 50)];
 			self.headerView2.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-			self.headerView2.backgroundColor = viewObjectsS.darkNormal;
+            self.headerView2.backgroundColor = UIColor.systemBackgroundColor;//viewObjectsS.darkNormal;
 			[self.headerView addSubview:self.headerView2];
 			
 			self.playAllLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
 			self.playAllLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-			self.playAllLabel.backgroundColor = [UIColor clearColor];
-			self.playAllLabel.textColor = ISMSHeaderButtonColor;
+//			self.playAllLabel.backgroundColor = [UIColor clearColor];
+            self.playAllLabel.textColor = UIColor.labelColor;//ISMSHeaderButtonColor;
 			self.playAllLabel.textAlignment = NSTextAlignmentCenter;
 			self.playAllLabel.font = ISMSRegularFont(24);
 			self.playAllLabel.text = @"Play All";
@@ -651,8 +651,8 @@
 			
 			self.shuffleLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 0, 160, 50)];
 			self.shuffleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-			self.shuffleLabel.backgroundColor = [UIColor clearColor];
-			self.shuffleLabel.textColor = ISMSHeaderButtonColor;
+//			self.shuffleLabel.backgroundColor = [UIColor clearColor];
+            self.shuffleLabel.textColor = UIColor.labelColor;//ISMSHeaderButtonColor;
 			self.shuffleLabel.textAlignment = NSTextAlignmentCenter;
 			self.shuffleLabel.font = ISMSRegularFont(24);
 			self.shuffleLabel.text = @"Shuffle";
@@ -690,7 +690,7 @@
 		self.noSongsScreen.userInteractionEnabled = YES;
 		
 		UILabel *textLabel = [[UILabel alloc] init];
-		textLabel.backgroundColor = [UIColor clearColor];
+//		textLabel.backgroundColor = [UIColor clearColor];
 		textLabel.textColor = [UIColor whiteColor];
 		textLabel.font = ISMSBoldFont(30);
 		textLabel.textAlignment = NSTextAlignmentCenter;

@@ -203,6 +203,12 @@
 		533295FB255EEFE50027C51A /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 533295E8255EEFE40027C51A /* FMResultSet.m */; };
 		53329607255EF21D0027C51A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 53329606255EF21D0027C51A /* libsqlite3.tbd */; };
 		53329611255EF23B0027C51A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 53329606255EF21D0027C51A /* libsqlite3.tbd */; };
+		53329641255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53329640255F2B960027C51A /* AlbumTableViewHeader.swift */; };
+		53329642255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53329640255F2B960027C51A /* AlbumTableViewHeader.swift */; };
+		53329648255F2E770027C51A /* PlayAllAndShuffleHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53329647255F2E770027C51A /* PlayAllAndShuffleHeader.swift */; };
+		53329649255F2E770027C51A /* PlayAllAndShuffleHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53329647255F2E770027C51A /* PlayAllAndShuffleHeader.swift */; };
+		53329652255F30220027C51A /* ClosureSleeve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53329651255F30220027C51A /* ClosureSleeve.swift */; };
+		53329653255F30220027C51A /* ClosureSleeve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53329651255F30220027C51A /* ClosureSleeve.swift */; };
 		5333F01B182C5D17003CFB6F /* controller-volumeslider-thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = 5333F019182C5D17003CFB6F /* controller-volumeslider-thumb.png */; };
 		5333F01D182C5D17003CFB6F /* controller-volumeslider-thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = 5333F019182C5D17003CFB6F /* controller-volumeslider-thumb.png */; };
 		5333F01F182C5D17003CFB6F /* controller-volumeslider-thumb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5333F01A182C5D17003CFB6F /* controller-volumeslider-thumb@2x.png */; };
@@ -1349,6 +1355,9 @@
 		533295E8255EEFE40027C51A /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
 		533295E9255EEFE40027C51A /* FMDatabaseQueueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueueAdditions.h; sourceTree = "<group>"; };
 		53329606255EF21D0027C51A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		53329640255F2B960027C51A /* AlbumTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumTableViewHeader.swift; sourceTree = "<group>"; };
+		53329647255F2E770027C51A /* PlayAllAndShuffleHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayAllAndShuffleHeader.swift; sourceTree = "<group>"; };
+		53329651255F30220027C51A /* ClosureSleeve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosureSleeve.swift; sourceTree = "<group>"; };
 		5333F019182C5D17003CFB6F /* controller-volumeslider-thumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-volumeslider-thumb.png"; path = "Images/Player Icons/controller-volumeslider-thumb.png"; sourceTree = "<group>"; };
 		5333F01A182C5D17003CFB6F /* controller-volumeslider-thumb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-volumeslider-thumb@2x.png"; path = "Images/Player Icons/controller-volumeslider-thumb@2x.png"; sourceTree = "<group>"; };
 		533A2D05113C61C900B3A376 /* AsynchronousImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AsynchronousImageView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -2249,6 +2258,7 @@
 				531D39E3255AB26B000CB0DF /* Player */,
 				531D39DF255AB20D000CB0DF /* New Player */,
 				531D39E1255AB23F000CB0DF /* iPad */,
+				53329647255F2E770027C51A /* PlayAllAndShuffleHeader.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -2428,6 +2438,7 @@
 				53F2D3EB113A338500107D63 /* AlbumViewController.h */,
 				53F2D3EC113A338500107D63 /* AlbumViewController.m */,
 				533C65E915ABBA09003EAF29 /* AlbumViewController.xib */,
+				53329640255F2B960027C51A /* AlbumTableViewHeader.swift */,
 				53C22CCD128EE81C00FFBA67 /* ModalAlbumArtViewController.h */,
 				53C22CCE128EE81C00FFBA67 /* ModalAlbumArtViewController.m */,
 				532B552614D641C500B8AA67 /* ModalAlbumArtViewController.xib */,
@@ -2577,6 +2588,7 @@
 				537E6C1D181208A200127E29 /* CustomUITabBarController.m */,
 				53BCC519181387B300442E86 /* CustomUINavigationController.h */,
 				53BCC51A181387B300442E86 /* CustomUINavigationController.m */,
+				53329651255F30220027C51A /* ClosureSleeve.swift */,
 			);
 			path = "Custom UI";
 			sourceTree = "<group>";
@@ -4382,7 +4394,9 @@
 				53329578255EECE50027C51A /* DDTTYLogger.m in Sources */,
 				53F4A229117011B900BB8411 /* CurrentPlaylistBackgroundViewController.m in Sources */,
 				53FE353A1EA961540058B925 /* UIButton+StretchBackground.m in Sources */,
+				53329652255F30220027C51A /* ClosureSleeve.swift in Sources */,
 				53FE35701EA961540058B925 /* UIViewController+IsVisible.m in Sources */,
+				53329648255F2E770027C51A /* PlayAllAndShuffleHeader.swift in Sources */,
 				53FE38B91EA961C80058B925 /* ZKLFHeader.m in Sources */,
 				53FE37D01EA961720058B925 /* SUSStatusLoader.m in Sources */,
 				53FE37BB1EA961720058B925 /* SUSRootFoldersDAO.m in Sources */,
@@ -4482,6 +4496,7 @@
 				531D3A16255ABA20000CB0DF /* DDSocialDialog.m in Sources */,
 				53260B83127D012300B745B4 /* EGORefreshTableHeaderView.m in Sources */,
 				53FE34F81EA961540058B925 /* GTMNSString+HTML.m in Sources */,
+				53329641255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */,
 				53BA49431285BD7A0010B380 /* NewHomeViewController.m in Sources */,
 				5332954C255EECE40027C51A /* HTTPAsyncFileResponse.m in Sources */,
 				53FE34FB1EA961540058B925 /* NSString+Clean.m in Sources */,
@@ -4568,6 +4583,7 @@
 				53BC279D139AF0DD00A825F1 /* FoldersViewController.m in Sources */,
 				53BC27A1139AF0DD00A825F1 /* AlbumViewController.m in Sources */,
 				53FE37601EA961720058B925 /* JukeboxSingleton.m in Sources */,
+				53329649255F2E770027C51A /* PlayAllAndShuffleHeader.swift in Sources */,
 				53FE36FA1EA961720058B925 /* BassVisualizer.m in Sources */,
 				53FE37CF1EA961720058B925 /* SUSServerShuffleLoader.m in Sources */,
 				53FE37961EA961720058B925 /* SUSAllAlbumsDAO.m in Sources */,
@@ -4614,6 +4630,7 @@
 				53BC27B3139AF0DD00A825F1 /* PlayingViewController.m in Sources */,
 				53BC27B6139AF0DD00A825F1 /* PlaylistsViewController.m in Sources */,
 				53FE36F11EA961720058B925 /* BassGaplessPlayer.m in Sources */,
+				53329642255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */,
 				53FE37181EA961720058B925 /* ISMSChatMessage.m in Sources */,
 				53FE38BE1EA961C80058B925 /* ZKLog.m in Sources */,
 				53FE35901EA961540058B925 /* EX2RingBuffer.m in Sources */,
@@ -4736,6 +4753,7 @@
 				53FE38061EA961970058B925 /* RXMLElement.m in Sources */,
 				53FE37721EA961720058B925 /* NSMutableURLRequest+SUS.m in Sources */,
 				533295EF255EEFE50027C51A /* FMDatabaseQueueAdditions.m in Sources */,
+				53329653255F30220027C51A /* ClosureSleeve.swift in Sources */,
 				53FE354B1EA961540058B925 /* UIImage+Color.m in Sources */,
 				533295EB255EEFE50027C51A /* FMDatabaseQueue.m in Sources */,
 				53BC2803139AF0DD00A825F1 /* HomeAlbumViewController.m in Sources */,
