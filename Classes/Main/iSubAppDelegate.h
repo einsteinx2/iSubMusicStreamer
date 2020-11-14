@@ -17,7 +17,7 @@
 
 #define appDelegateS [iSubAppDelegate sharedInstance]
 
-@class BBSplitViewController, iPadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, iPhoneStreamingPlayerViewController, SettingsViewController, FoldersViewController, AudioStreamer, IntroViewController, SUSStatusLoader, MPMoviePlayerController, HTTPServer, ServerListViewController;
+@class BBSplitViewController, iPadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, iPhoneStreamingPlayerViewController, SettingsViewController, FoldersViewController, AudioStreamer, IntroViewController, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HTTPServer, ServerListViewController;
 
 @interface iSubAppDelegate : NSObject <UIApplicationDelegate, MFMailComposeViewControllerDelegate, SUSLoaderDelegate>
 
@@ -64,7 +64,8 @@
 
 @property (strong) NSURL *referringAppUrl;
 
-@property (strong) MPMoviePlayerController *moviePlayer;
+//@property (strong) MPMoviePlayerController *moviePlayer;
+@property (strong) AVPlayerViewController *videoPlayerController;
 
 - (void)backToReferringApp;
 

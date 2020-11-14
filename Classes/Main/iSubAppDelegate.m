@@ -20,6 +20,7 @@
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ISMSUpdateChecker.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import <AVKit/AVKit.h>
 #import "UIViewController+PushViewControllerCustom.h"
 //#import "HTTPServer.h"
 //#import "HLSProxyConnection.h"
@@ -1086,46 +1087,51 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark Movie Playing
 
-- (void)createMoviePlayer
-{
-    if (!self.moviePlayer)
-    {
-        self.moviePlayer = [[MPMoviePlayerController alloc] init];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerExitedFullscreen:) name:MPMoviePlayerDidExitFullscreenNotification object:self.moviePlayer];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:self.moviePlayer];
-        
-        self.moviePlayer.controlStyle = MPMovieControlStyleDefault;
-        self.moviePlayer.shouldAutoplay = YES;
-        self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
-        self.moviePlayer.allowsAirPlay = YES;
-        
-        if (UIDevice.isIPad)
-        {
-            [self.ipadRootViewController.menuViewController.playerHolder addSubview:self.moviePlayer.view];
-            self.moviePlayer.view.frame = self.moviePlayer.view.superview.bounds;
-        }
-        else
-        {
-            [self.mainTabBarController.view addSubview:self.moviePlayer.view];
-            self.moviePlayer.view.frame = CGRectZero;
-        }
-        
-        [self.moviePlayer setFullscreen:YES animated:YES];
-    }
+- (void)createMoviePlayer {
+//    if (!self.moviePlayer)
+//    {
+//        self.moviePlayer = [[MPMoviePlayerController alloc] init];
+//
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerExitedFullscreen:) name:MPMoviePlayerDidExitFullscreenNotification object:self.moviePlayer];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:self.moviePlayer];
+//
+//        self.moviePlayer.controlStyle = MPMovieControlStyleDefault;
+//        self.moviePlayer.shouldAutoplay = YES;
+//        self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
+//        self.moviePlayer.allowsAirPlay = YES;
+//
+//        if (UIDevice.isIPad)
+//        {
+//            [self.ipadRootViewController.menuViewController.playerHolder addSubview:self.moviePlayer.view];
+//            self.moviePlayer.view.frame = self.moviePlayer.view.superview.bounds;
+//        }
+//        else
+//        {
+//            [self.mainTabBarController presentViewController:self.moviePlayer animated:YES completion:nil];
+////            [self.mainTabBarController.view addSubview:self.moviePlayer.view];
+////            self.moviePlayer.view.frame = CGRectZero;
+//        }
+//
+//        [self.moviePlayer setFullscreen:YES animated:YES];
+//    }
 }
 
 - (void)removeMoviePlayer
 {
-    if (self.moviePlayer)
-    {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerDidExitFullscreenNotification object:self.moviePlayer];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:self.moviePlayer];
-        
-        // Dispose of any existing movie player
-        [self.moviePlayer stop];
-        [self.moviePlayer.view removeFromSuperview];
-        self.moviePlayer = nil;
+//    if (self.moviePlayer)
+//    {
+//        [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerDidExitFullscreenNotification object:self.moviePlayer];
+//        [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:self.moviePlayer];
+//
+//        // Dispose of any existing movie player
+//        [self.moviePlayer stop];
+//        [self.moviePlayer.view removeFromSuperview];
+//        self.moviePlayer = nil;
+//    }
+    if (self.videoPlayerController) {
+        [self.videoPlayerController dismissViewControllerAnimated:YES completion:^{
+            self.videoPlayerController = nil;
+        }];
     }
 }
 
@@ -1158,61 +1164,68 @@ LOG_LEVEL_ISUB_DEFAULT
 {
     [audioEngineS.player stop];
     
-//    if (!aSong.songId || !bitrates)
-//        return;
-//
-//    NSDictionary *parameters = @{ @"id" : aSong.songId, @"bitRate" : bitrates };
-//    NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"hls" parameters:parameters];
-//
-//    // If we're on HTTPS, use our proxy to allow for playback from a self signed server
-//    NSString *host = request.URL.absoluteString;
+    if (!aSong.songId || !bitrates)
+        return;
+
+    NSDictionary *parameters = @{ @"id" : aSong.songId, @"bitRate" : bitrates };
+    NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"hls" parameters:parameters];
+
+    // If we're on HTTPS, use our proxy to allow for playback from a self signed server
+    NSString *host = request.URL.absoluteString;
 //    host = [host.lowercaseString hasPrefix:@"https"] ? [NSString stringWithFormat:@"http://localhost:%u%@", self.hlsProxyServer.listeningPort, request.URL.relativePath] : host;
-//    NSString *urlString = [NSString stringWithFormat:@"%@?%@", host, [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]];
-//    DDLogVerbose(@"HLS urlString: %@", urlString);
-//
+    NSString *urlString = [NSString stringWithFormat:@"%@?%@", host, [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]];
+    DDLogVerbose(@"HLS urlString: %@", urlString);
+
+    self.videoPlayerController = [[AVPlayerViewController alloc] init];
+    self.videoPlayerController.player = [AVPlayer playerWithURL:[NSURL URLWithString:urlString]];
+    self.videoPlayerController.allowsPictureInPicturePlayback = YES;
+    self.videoPlayerController.entersFullScreenWhenPlaybackBegins = YES;
+    self.videoPlayerController.exitsFullScreenWhenPlaybackEnds = YES;
+    [UIApplication.keyWindow.rootViewController presentViewController:self.videoPlayerController animated:YES completion:nil];
+    
 //    [self createMoviePlayer];
-//
+
 //    [self.moviePlayer stop]; // Doing this to prevent potential crash
 //    self.moviePlayer.contentURL = [NSURL URLWithString:urlString];
 //    //[moviePlayer prepareToPlay];
 //    [self.moviePlayer play];
 }
 
-- (void)moviePlayerExitedFullscreen:(NSNotification *)notification
-{
-    // Hack to fix broken navigation bar positioning
-    UIWindow *window = [UIApplication keyWindow];
-    UIView *view = [window.subviews lastObject];
-    if (view)
-    {
-        [view removeFromSuperview];
-        [window addSubview:view];
-    }
-    
-    if (!UIDevice.isIPad)
-    {
-        [self removeMoviePlayer];
-    }
-}
-
-- (void)moviePlayBackDidFinish:(NSNotification *)notification
-{
-    DDLogVerbose(@"userInfo: %@", notification.userInfo);
-    if (notification.userInfo)
-    {
-        NSNumber *reason = [notification.userInfo objectForKey:MPMoviePlayerPlaybackDidFinishReasonUserInfoKey];
-        if (reason && reason.integerValue == MPMovieFinishReasonPlaybackEnded)
-        {
-            // Playback ended normally, so start the next item
-            [playlistS incrementIndex];
-            [musicS playSongAtPosition:playlistS.currentIndex];
-        }
-    }
-    else
-    {
-        //[self removeMoviePlayer];
-    }
-}
+//- (void)moviePlayerExitedFullscreen:(NSNotification *)notification
+//{
+//    // Hack to fix broken navigation bar positioning
+//    UIWindow *window = [UIApplication keyWindow];
+//    UIView *view = [window.subviews lastObject];
+//    if (view)
+//    {
+//        [view removeFromSuperview];
+//        [window addSubview:view];
+//    }
+//    
+//    if (!UIDevice.isIPad)
+//    {
+//        [self removeMoviePlayer];
+//    }
+//}
+//
+//- (void)moviePlayBackDidFinish:(NSNotification *)notification
+//{
+//    DDLogVerbose(@"userInfo: %@", notification.userInfo);
+//    if (notification.userInfo)
+//    {
+//        NSNumber *reason = [notification.userInfo objectForKey:MPMoviePlayerPlaybackDidFinishReasonUserInfoKey];
+//        if (reason && reason.integerValue == MPMovieFinishReasonPlaybackEnded)
+//        {
+//            // Playback ended normally, so start the next item
+//            [playlistS incrementIndex];
+//            [musicS playSongAtPosition:playlistS.currentIndex];
+//        }
+//    }
+//    else
+//    {
+//        //[self removeMoviePlayer];
+//    }
+//}
 
 
 @end
