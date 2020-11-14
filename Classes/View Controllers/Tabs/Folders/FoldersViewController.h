@@ -10,15 +10,14 @@
 #import "FolderDropdownDelegate.h"
 #import "SUSLoader.h"
 
-@class ISMSArtist, EGORefreshTableHeaderView, FolderDropdownControl, SUSRootFoldersDAO;
+@class ISMSArtist, SUSRootFoldersDAO, FolderDropdownControl;//, RefreshControl;
 
 @interface FoldersViewController : UITableViewController <UISearchBarDelegate, SUSLoaderDelegate, FolderDropdownDelegate>
 
 @property (nonatomic) BOOL letUserSelectRow;
 @property (nonatomic) BOOL isSearching;
 @property (nonatomic) BOOL isCountShowing;
-@property (nonatomic, strong) EGORefreshTableHeaderView *refreshHeaderView;
-@property (nonatomic) BOOL isReloading;
+//@property (nonatomic, strong) RefreshControl *refreshControl;
 @property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) UILabel *countLabel;

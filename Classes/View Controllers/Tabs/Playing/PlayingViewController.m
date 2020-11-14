@@ -9,7 +9,6 @@
 #import "PlayingViewController.h"
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
-#import "EGORefreshTableHeaderView.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "CustomUIAlertView.h"
 #import "iSubAppDelegate.h"
@@ -44,10 +43,12 @@
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
 	
-	// Add the pull to refresh view
-	self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
-	self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
-	[self.tableView addSubview:self.refreshHeaderView];
+    // Add the pull to refresh view
+    __weak PlayingViewController *weakSelf = self;
+    self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
+        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+        [weakSelf.dataModel startLoad];
+    }];
     
     self.tableView.rowHeight = 80.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
@@ -83,7 +84,7 @@
 - (void)cancelLoad {
 	[self.dataModel cancelLoad];
 	[viewObjectsS hideLoadingScreen];
-	[self dataSourceDidFinishLoadingNewData];
+	[self.refreshControl endRefreshing];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -155,14 +156,14 @@
 	
 	[viewObjectsS hideLoadingScreen];
 	
-	[self dataSourceDidFinishLoadingNewData];
+	[self.refreshControl endRefreshing];
 }
 
 - (void)loadingFinished:(SUSLoader *)theLoader {
     [viewObjectsS hideLoadingScreen];
 	
 	[self.tableView reloadData];
-	[self dataSourceDidFinishLoadingNewData];
+	[self.refreshControl endRefreshing];
 	
 	// Display the no songs overlay if 0 results
 	if (self.dataModel.count == 0) {
@@ -193,41 +194,6 @@
 			[self.nothingPlayingScreen removeFromSuperview];
 		}
 	}
-}
-
-#pragma mark - Pull to refresh methods
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	if (scrollView.isDragging) {
-		if (self.refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !self.reloading) {
-			[self.refreshHeaderView setState:EGOOPullRefreshNormal];
-		} else if (self.refreshHeaderView.state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !self.reloading) {
-			[self.refreshHeaderView setState:EGOOPullRefreshPulling];
-		}
-	}
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-	if (scrollView.contentOffset.y <= - 65.0f && !self.reloading) {
-		self.reloading = YES;
-		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-		[self.dataModel startLoad];
-		[self.refreshHeaderView setState:EGOOPullRefreshLoading];
-        
-        [UIView animateWithDuration:0.2 animations:^{
-            self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
-        }];
-	}
-}
-
-- (void)dataSourceDidFinishLoadingNewData {
-	self.reloading = NO;
-    
-    [UIView animateWithDuration:0.3 animations:^{
-        self.tableView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
-    }];
-	
-	[self.refreshHeaderView setState:EGOOPullRefreshNormal];
 }
 
 @end

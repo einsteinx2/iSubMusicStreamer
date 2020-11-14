@@ -84,15 +84,6 @@
 		5324C6C613345D75004E6C79 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5324C6C513345D75004E6C79 /* OBSlider.m */; };
 		5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
 		5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
-		53260B83127D012300B745B4 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53260B78127D012300B745B4 /* EGORefreshTableHeaderView.m */; };
-		53260B84127D012300B745B4 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7A127D012300B745B4 /* blackArrow.png */; };
-		53260B85127D012300B745B4 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7B127D012300B745B4 /* blackArrow@2x.png */; };
-		53260B86127D012300B745B4 /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7C127D012300B745B4 /* blueArrow.png */; };
-		53260B87127D012300B745B4 /* blueArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7D127D012300B745B4 /* blueArrow@2x.png */; };
-		53260B88127D012300B745B4 /* grayArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7E127D012300B745B4 /* grayArrow.png */; };
-		53260B89127D012300B745B4 /* grayArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7F127D012300B745B4 /* grayArrow@2x.png */; };
-		53260B8A127D012300B745B4 /* whiteArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B80127D012300B745B4 /* whiteArrow.png */; };
-		53260B8B127D012300B745B4 /* whiteArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B81127D012300B745B4 /* whiteArrow@2x.png */; };
 		5327A5D314DA1E4400DEE1B6 /* controller-extras.png in Resources */ = {isa = PBXBuildFile; fileRef = 5327A5D114DA1E4400DEE1B6 /* controller-extras.png */; };
 		5327A5D514DA1E4400DEE1B6 /* controller-extras.png in Resources */ = {isa = PBXBuildFile; fileRef = 5327A5D114DA1E4400DEE1B6 /* controller-extras.png */; };
 		5327A5D614DA1E4400DEE1B6 /* controller-extras@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5327A5D214DA1E4400DEE1B6 /* controller-extras@2x.png */; };
@@ -330,6 +321,8 @@
 		5388A42D1198AD840049BA9E /* unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = 5388A42B1198AD840049BA9E /* unselected.png */; };
 		538C01B012C3DCC40061545B /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 538C01AE12C3DCC40061545B /* back.png */; };
 		538C01B112C3DCC40061545B /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 538C01AF12C3DCC40061545B /* back@2x.png */; };
+		538C8FE125606299005D6CA9 /* RefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE025606299005D6CA9 /* RefreshControl.swift */; };
+		538C8FE225606299005D6CA9 /* RefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE025606299005D6CA9 /* RefreshControl.swift */; };
 		538E5255255A31F2000DF682 /* UIApplication+Orientiation.m in Sources */ = {isa = PBXBuildFile; fileRef = 538E5254255A31F2000DF682 /* UIApplication+Orientiation.m */; };
 		538E5256255A31F2000DF682 /* UIApplication+Orientiation.m in Sources */ = {isa = PBXBuildFile; fileRef = 538E5254255A31F2000DF682 /* UIApplication+Orientiation.m */; };
 		539148BA2559E597004AAC3F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148B92559E597004AAC3F /* CoreServices.framework */; };
@@ -516,14 +509,6 @@
 		53BC2711139AF0DD00A825F1 /* comment-write@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB800A121B9CA200BEE7E8 /* comment-write@2x.png */; };
 		53BC2713139AF0DD00A825F1 /* home-tabbaricon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5314B4EC126FD20300CDB511 /* home-tabbaricon.png */; };
 		53BC2714139AF0DD00A825F1 /* home-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5314B4ED126FD20300CDB511 /* home-tabbaricon@2x.png */; };
-		53BC2719139AF0DD00A825F1 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7A127D012300B745B4 /* blackArrow.png */; };
-		53BC271A139AF0DD00A825F1 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7B127D012300B745B4 /* blackArrow@2x.png */; };
-		53BC271B139AF0DD00A825F1 /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7C127D012300B745B4 /* blueArrow.png */; };
-		53BC271C139AF0DD00A825F1 /* blueArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7D127D012300B745B4 /* blueArrow@2x.png */; };
-		53BC271D139AF0DD00A825F1 /* grayArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7E127D012300B745B4 /* grayArrow.png */; };
-		53BC271E139AF0DD00A825F1 /* grayArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B7F127D012300B745B4 /* grayArrow@2x.png */; };
-		53BC271F139AF0DD00A825F1 /* whiteArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B80127D012300B745B4 /* whiteArrow.png */; };
-		53BC2720139AF0DD00A825F1 /* whiteArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53260B81127D012300B745B4 /* whiteArrow@2x.png */; };
 		53BC2726139AF0DD00A825F1 /* home-background-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F8C803129728F9007BDC0E /* home-background-ipad.png */; };
 		53BC272A139AF0DD00A825F1 /* home-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F8CC621297949A007BDC0E /* home-background.png */; };
 		53BC272B139AF0DD00A825F1 /* home-background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F8CC631297949A007BDC0E /* home-background@2x.png */; };
@@ -649,7 +634,6 @@
 		53BC27FC139AF0DD00A825F1 /* CustomUITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BB7EC9121B8D8F00BEE7E8 /* CustomUITextView.m */; };
 		53BC2803139AF0DD00A825F1 /* HomeAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 531F166D126FA2E600F524BD /* HomeAlbumViewController.m */; };
 		53BC280A139AF0DD00A825F1 /* SearchSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B9D0B21279FAEF00CAB0E0 /* SearchSongsViewController.m */; };
-		53BC280D139AF0DD00A825F1 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53260B78127D012300B745B4 /* EGORefreshTableHeaderView.m */; };
 		53BC280F139AF0DD00A825F1 /* NewHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BA49411285BD7A0010B380 /* NewHomeViewController.m */; };
 		53BC2815139AF0DD00A825F1 /* ModalAlbumArtViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C22CCE128EE81C00FFBA67 /* ModalAlbumArtViewController.m */; };
 		53BC282A139AF0DD00A825F1 /* IntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C6052C12F1F01E003C6895 /* IntroViewController.m */; };
@@ -1237,16 +1221,6 @@
 		5324C6C513345D75004E6C79 /* OBSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBSlider.m; sourceTree = "<group>"; };
 		532590FF14EE22C100DF4BDB /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		5325910014EE22C400DF4BDB /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
-		53260B77127D012300B745B4 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EGORefreshTableHeaderView.h; path = Classes/View/EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
-		53260B78127D012300B745B4 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EGORefreshTableHeaderView.m; path = Classes/View/EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
-		53260B7A127D012300B745B4 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
-		53260B7B127D012300B745B4 /* blackArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blackArrow@2x.png"; sourceTree = "<group>"; };
-		53260B7C127D012300B745B4 /* blueArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueArrow.png; sourceTree = "<group>"; };
-		53260B7D127D012300B745B4 /* blueArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blueArrow@2x.png"; sourceTree = "<group>"; };
-		53260B7E127D012300B745B4 /* grayArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grayArrow.png; sourceTree = "<group>"; };
-		53260B7F127D012300B745B4 /* grayArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grayArrow@2x.png"; sourceTree = "<group>"; };
-		53260B80127D012300B745B4 /* whiteArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteArrow.png; sourceTree = "<group>"; };
-		53260B81127D012300B745B4 /* whiteArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "whiteArrow@2x.png"; sourceTree = "<group>"; };
 		5327A5D114DA1E4400DEE1B6 /* controller-extras.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-extras.png"; path = "Images/Player Icons/controller-extras.png"; sourceTree = "<group>"; };
 		5327A5D214DA1E4400DEE1B6 /* controller-extras@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-extras@2x.png"; path = "Images/Player Icons/controller-extras@2x.png"; sourceTree = "<group>"; };
 		5327A5D914DA221100DEE1B6 /* controller-extras-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-extras-ipad.png"; path = "Images/Player Icons/controller-extras-ipad.png"; sourceTree = "<group>"; };
@@ -1440,6 +1414,7 @@
 		5388A42B1198AD840049BA9E /* unselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = unselected.png; path = Images/Other/unselected.png; sourceTree = "<group>"; };
 		538C01AE12C3DCC40061545B /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = back.png; path = Images/Other/back.png; sourceTree = "<group>"; };
 		538C01AF12C3DCC40061545B /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "back@2x.png"; path = "Images/Other/back@2x.png"; sourceTree = "<group>"; };
+		538C8FE025606299005D6CA9 /* RefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshControl.swift; sourceTree = "<group>"; };
 		538E5253255A31F2000DF682 /* UIApplication+Orientiation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Orientiation.h"; sourceTree = "<group>"; };
 		538E5254255A31F2000DF682 /* UIApplication+Orientiation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Orientiation.m"; sourceTree = "<group>"; };
 		539148A62559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/DebugViewController.xib; sourceTree = "<group>"; };
@@ -2397,6 +2372,7 @@
 				531D39EC255AB314000CB0DF /* Playing */,
 				531D39ED255AB323000CB0DF /* Bookmarks */,
 				531D39F0255AB365000CB0DF /* Chat */,
+				538C8FE025606299005D6CA9 /* RefreshControl.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -2537,7 +2513,6 @@
 		531D39F3255AB3B0000CB0DF /* 3rd Party UI Components */ = {
 			isa = PBXGroup;
 			children = (
-				53260B71127D012300B745B4 /* EGOTableViewPullRefresh */,
 				535696501810DA8700997C7B /* FXBlurView */,
 				531D3A14255ABA20000CB0DF /* DDSocialDialog.h */,
 				531D3A15255ABA20000CB0DF /* DDSocialDialog.m */,
@@ -2735,31 +2710,6 @@
 				53FE363E1EA961720058B925 /* HLSProxyResponse.m */,
 			);
 			path = "Stream Handlers";
-			sourceTree = "<group>";
-		};
-		53260B71127D012300B745B4 /* EGOTableViewPullRefresh */ = {
-			isa = PBXGroup;
-			children = (
-				53260B77127D012300B745B4 /* EGORefreshTableHeaderView.h */,
-				53260B78127D012300B745B4 /* EGORefreshTableHeaderView.m */,
-				53260B79127D012300B745B4 /* Resources */,
-			);
-			path = EGOTableViewPullRefresh;
-			sourceTree = "<group>";
-		};
-		53260B79127D012300B745B4 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				53260B7A127D012300B745B4 /* blackArrow.png */,
-				53260B7B127D012300B745B4 /* blackArrow@2x.png */,
-				53260B7C127D012300B745B4 /* blueArrow.png */,
-				53260B7D127D012300B745B4 /* blueArrow@2x.png */,
-				53260B7E127D012300B745B4 /* grayArrow.png */,
-				53260B7F127D012300B745B4 /* grayArrow@2x.png */,
-				53260B80127D012300B745B4 /* whiteArrow.png */,
-				53260B81127D012300B745B4 /* whiteArrow@2x.png */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		533295D2255EEFE40027C51A /* FMDB */ = {
@@ -3643,14 +3593,6 @@
 				5314B4EE126FD20300CDB511 /* home-tabbaricon.png in Resources */,
 				5314B4EF126FD20300CDB511 /* home-tabbaricon@2x.png in Resources */,
 				533C659115ABB9AD003EAF29 /* SearchSongsViewController.xib in Resources */,
-				53260B84127D012300B745B4 /* blackArrow.png in Resources */,
-				53260B85127D012300B745B4 /* blackArrow@2x.png in Resources */,
-				53260B86127D012300B745B4 /* blueArrow.png in Resources */,
-				53260B87127D012300B745B4 /* blueArrow@2x.png in Resources */,
-				53260B88127D012300B745B4 /* grayArrow.png in Resources */,
-				53260B89127D012300B745B4 /* grayArrow@2x.png in Resources */,
-				53260B8A127D012300B745B4 /* whiteArrow.png in Resources */,
-				53260B8B127D012300B745B4 /* whiteArrow@2x.png in Resources */,
 				53F8C80B129728F9007BDC0E /* home-background-ipad.png in Resources */,
 				533C657C15ABB975003EAF29 /* NewHomeViewController-iPad.xib in Resources */,
 				53F8CC791297949A007BDC0E /* home-background.png in Resources */,
@@ -3941,14 +3883,6 @@
 				53BC2713139AF0DD00A825F1 /* home-tabbaricon.png in Resources */,
 				53BC2714139AF0DD00A825F1 /* home-tabbaricon@2x.png in Resources */,
 				533C659315ABB9AD003EAF29 /* SearchSongsViewController.xib in Resources */,
-				53BC2719139AF0DD00A825F1 /* blackArrow.png in Resources */,
-				53BC271A139AF0DD00A825F1 /* blackArrow@2x.png in Resources */,
-				53BC271B139AF0DD00A825F1 /* blueArrow.png in Resources */,
-				53BC271C139AF0DD00A825F1 /* blueArrow@2x.png in Resources */,
-				53BC271D139AF0DD00A825F1 /* grayArrow.png in Resources */,
-				53BC271E139AF0DD00A825F1 /* grayArrow@2x.png in Resources */,
-				53BC271F139AF0DD00A825F1 /* whiteArrow.png in Resources */,
-				53BC2720139AF0DD00A825F1 /* whiteArrow@2x.png in Resources */,
 				53BC2726139AF0DD00A825F1 /* home-background-ipad.png in Resources */,
 				533C657E15ABB975003EAF29 /* NewHomeViewController-iPad.xib in Resources */,
 				53BC272A139AF0DD00A825F1 /* home-background.png in Resources */,
@@ -4306,7 +4240,6 @@
 				531F166E126FA2E600F524BD /* HomeAlbumViewController.m in Sources */,
 				53B9D0B41279FAEF00CAB0E0 /* SearchSongsViewController.m in Sources */,
 				531D3A16255ABA20000CB0DF /* DDSocialDialog.m in Sources */,
-				53260B83127D012300B745B4 /* EGORefreshTableHeaderView.m in Sources */,
 				53FE34F81EA961540058B925 /* GTMNSString+HTML.m in Sources */,
 				53329641255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */,
 				53BA49431285BD7A0010B380 /* NewHomeViewController.m in Sources */,
@@ -4345,6 +4278,7 @@
 				53FE34E61EA961540058B925 /* NSNumber+CleanString.m in Sources */,
 				53FE38B61EA961C80058B925 /* ZKFileArchive.m in Sources */,
 				536585811478920D00FE57A5 /* EqualizerViewController.m in Sources */,
+				538C8FE125606299005D6CA9 /* RefreshControl.swift in Sources */,
 				53FE35431EA961540058B925 /* UIDevice+Hardware.m in Sources */,
 				5365859314789ADA00FE57A5 /* EqualizerView.m in Sources */,
 				535696531810DA8700997C7B /* FXBlurView.m in Sources */,
@@ -4429,6 +4363,7 @@
 				53BC27B3139AF0DD00A825F1 /* PlayingViewController.m in Sources */,
 				53BC27B6139AF0DD00A825F1 /* PlaylistsViewController.m in Sources */,
 				53FE36F11EA961720058B925 /* BassGaplessPlayer.m in Sources */,
+				538C8FE225606299005D6CA9 /* RefreshControl.swift in Sources */,
 				53329642255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */,
 				53FE37181EA961720058B925 /* ISMSChatMessage.m in Sources */,
 				53FE38BE1EA961C80058B925 /* ZKLog.m in Sources */,
@@ -4542,7 +4477,6 @@
 				53BC2803139AF0DD00A825F1 /* HomeAlbumViewController.m in Sources */,
 				53BC280A139AF0DD00A825F1 /* SearchSongsViewController.m in Sources */,
 				531D3A17255ABA20000CB0DF /* DDSocialDialog.m in Sources */,
-				53BC280D139AF0DD00A825F1 /* EGORefreshTableHeaderView.m in Sources */,
 				53FE34FA1EA961540058B925 /* GTMNSString+HTML.m in Sources */,
 				53BC280F139AF0DD00A825F1 /* NewHomeViewController.m in Sources */,
 				53FE34FD1EA961540058B925 /* NSString+Clean.m in Sources */,

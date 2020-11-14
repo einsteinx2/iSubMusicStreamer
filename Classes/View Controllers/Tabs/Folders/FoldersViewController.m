@@ -10,7 +10,6 @@
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
 #import "AlbumViewController.h"
-#import "EGORefreshTableHeaderView.h"
 #import "FolderDropdownControl.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "SUSAllSongsLoader.h"
@@ -52,8 +51,10 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFolders) name:ISMSNotification_ServerCheckPassed object:nil];
 		
 	// Add the pull to refresh view
-	self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
-	[self.tableView addSubview:self.refreshHeaderView];
+    __weak FoldersViewController *weakSelf = self;
+    self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
+        [weakSelf loadData:[settingsS rootFoldersSelectedFolderId]];
+    }];
 	
 	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
@@ -103,7 +104,7 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	self.dataModel.delegate = nil;
-	self.dropdown.delegate = nil;
+    self.dropdown.delegate = nil;
 }
 
 #pragma mark - Loading
@@ -199,7 +200,7 @@
 - (void)cancelLoad {
 	[self.dataModel cancelLoad];
 	[viewObjectsS hideLoadingScreen];
-	[self dataSourceDidFinishLoadingNewData];
+    [self.refreshControl endRefreshing];
 }
 
 -(void)loadData:(NSNumber *)folderId  {
@@ -220,7 +221,7 @@
 	// Hide the loading screen
 	[viewObjectsS hideLoadingScreen];
 	
-	[self dataSourceDidFinishLoadingNewData];
+    [self.refreshControl endRefreshing];
 	
 	// Inform the user that the connection failed.
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Subsonic Error"
@@ -240,15 +241,12 @@
     
 	[self.tableView reloadData];
 	
-	if (!UIDevice.isIPad)
-		self.tableView.backgroundColor = [UIColor clearColor];
-	
 	viewObjectsS.isArtistsLoading = NO;
 	
 	// Hide the loading screen
 	[viewObjectsS hideLoadingScreen];
 	
-	[self dataSourceDidFinishLoadingNewData];
+    [self.refreshControl endRefreshing];
 }
 
 #pragma mark - Folder Dropdown Delegate
@@ -543,41 +541,6 @@
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSObject<ISMSTableCellModel> *model = [self artistAtIndexPath:indexPath];
     return [SwipeAction downloadAndQueueConfigWithModel:model];
-}
-
-#pragma mark -
-#pragma mark Pull to refresh methods
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	if (scrollView.isDragging) {
-		if (self.refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !self.isReloading) {
-			[self.refreshHeaderView setState:EGOOPullRefreshNormal];
-		} else if (self.refreshHeaderView.state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !self.isReloading) {
-			[self.refreshHeaderView setState:EGOOPullRefreshPulling];
-		}
-	}
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-	if (scrollView.contentOffset.y <= - 65.0f && !self.isReloading)  {
-		self.isReloading = YES;
-		[self loadData:[settingsS rootFoldersSelectedFolderId]];
-        [self.refreshHeaderView setState:EGOOPullRefreshLoading];
-        
-        [UIView animateWithDuration:0.2 animations:^{
-            self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
-        }];
-	}
-}
-
-- (void)dataSourceDidFinishLoadingNewData {
-	self.isReloading = NO;
-	
-    [UIView animateWithDuration:0.3 animations:^{
-        [self.tableView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
-    }];
-
-	[self.refreshHeaderView setState:EGOOPullRefreshNormal];
 }
 
 @end

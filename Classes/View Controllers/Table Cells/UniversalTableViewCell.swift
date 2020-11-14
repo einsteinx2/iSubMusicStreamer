@@ -107,12 +107,14 @@ import SnapKit
         fatalError("unimplemented")
     }
     
-    @objc func update(model: TableCellModel) {
+    @objc func update(model: TableCellModel?) {
         tableCellModel = model;
-        if !hideCoverArt { coverArtView.coverArtId = model.coverArtId }
-        primaryLabel.text = model.primaryLabelText
-        if !hideSecondaryLabel { secondaryLabel.text = model.secondaryLabelText }
-        if !hideDurationLabel { durationLabel.text = model.durationLabelText }
+        if let model = model {
+            if !hideCoverArt { coverArtView.coverArtId = model.coverArtId }
+            primaryLabel.text = model.primaryLabelText
+            if !hideSecondaryLabel { secondaryLabel.text = model.secondaryLabelText }
+            if !hideDurationLabel { durationLabel.text = model.durationLabelText }
+        }
     }
     
     @objc func update(primaryText: String, secondaryText: String?) {

@@ -10,7 +10,6 @@
 #import "ChatUITableViewCell.h"
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
-#import "EGORefreshTableHeaderView.h"
 #import "CustomUITextView.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
@@ -22,6 +21,7 @@
 #import "SUSChatDAO.h"
 #import "ISMSChatMessage.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation ChatViewController
 
@@ -88,10 +88,12 @@
 	
 	self.tableView.tableHeaderView = self.headerView;
 
-	// Add the pull to refresh view
-	self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
-	self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
-	[self.tableView addSubview:self.refreshHeaderView];
+    // Add the pull to refresh view
+    __weak ChatViewController *weakSelf = self;
+    self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
+        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+        [weakSelf loadData];
+    }];
 	
 	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
@@ -183,7 +185,7 @@
 	[viewObjectsS hideLoadingScreen];
 	
 	[self.tableView reloadData];
-	[self dataSourceDidFinishLoadingNewData];
+	[self.refreshControl endRefreshing];
 	
 	if (error.code == ISMSErrorCode_CouldNotSendChatMessage) {
 		self.textInput.text = [[[error userInfo] objectForKey:@"message"] copy];
@@ -194,7 +196,7 @@
 	[viewObjectsS hideLoadingScreen];
 	
 	[self.tableView reloadData];
-	[self dataSourceDidFinishLoadingNewData];
+	[self.refreshControl endRefreshing];
 }
 
 #pragma mark UITextView delegate
@@ -314,41 +316,6 @@
 		self.textInput.text = @"";
 		[self.textInput resignFirstResponder];
 	}
-}
-
-#pragma mark Pull to refresh methods
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	if (scrollView.isDragging)  {
-		if (self.refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !self.isReloading)  {
-			[self.refreshHeaderView setState:EGOOPullRefreshNormal];
-		} else if (self.refreshHeaderView.state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !self.isReloading) {
-			[self.refreshHeaderView setState:EGOOPullRefreshPulling];
-		}
-	}
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-	if (scrollView.contentOffset.y <= - 65.0f && !self.isReloading) {
-		self.isReloading = YES;
-		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-		[self loadData];
-		[self.refreshHeaderView setState:EGOOPullRefreshLoading];
-        
-        [UIView animateWithDuration:0.2 animations:^{
-            self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
-        }];
-	}
-}
-
-- (void)dataSourceDidFinishLoadingNewData {
-	self.isReloading = NO;
-	
-    [UIView animateWithDuration:0.3 animations:^{
-        self.tableView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
-    }];
-	
-	[self.refreshHeaderView setState:EGOOPullRefreshNormal];
 }
 
 - (void)dealloc  {

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SUSLoaderDelegate.h"
 
-@class SUSNowPlayingDAO, EGORefreshTableHeaderView;
+@class SUSNowPlayingDAO;
 
 @interface PlayingViewController : UITableViewController <SUSLoaderDelegate>
 
@@ -17,8 +17,6 @@
 @property (nonatomic, strong) UIImageView *nothingPlayingScreen;
 @property (nonatomic, strong) NSMutableData *receivedData;
 @property (nonatomic, strong) SUSNowPlayingDAO *dataModel;
-@property (nonatomic, strong) EGORefreshTableHeaderView *refreshHeaderView;
-@property (nonatomic) BOOL reloading;
 
 - (void)cancelLoad;
 

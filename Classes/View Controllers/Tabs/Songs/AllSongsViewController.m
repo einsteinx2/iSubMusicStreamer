@@ -11,7 +11,6 @@
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
 #import "FoldersViewController.h"
-#import "EGORefreshTableHeaderView.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "LoadingScreen.h"
 #import "SUSAllSongsLoader.h"
@@ -58,10 +57,11 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadingFinishedNotification) name:ISMSNotification_AllSongsLoadingFinished object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
 	
-	// Add the pull to refresh view
-	self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
-	self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
-	[self.tableView addSubview:self.refreshHeaderView];
+    // Add the pull to refresh view
+    __weak AllSongsViewController *weakSelf = self;
+    self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
+        [weakSelf reloadAction:nil];
+    }];
     
     self.tableView.rowHeight = 60.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
@@ -108,7 +108,7 @@
                     self.tableView.tableHeaderView = nil;
                     [self.tableView reloadData];
                     
-                    [self dataSourceDidFinishLoadingNewData];
+                    [self.refreshControl endRefreshing];
                 }]];
                 [alert addAction:[UIAlertAction actionWithTitle:@"Resume Load" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     [self showLoadingScreen];
@@ -117,7 +117,7 @@
                     self.tableView.tableHeaderView = nil;
                     [self.tableView reloadData];
                     
-                    [self dataSourceDidFinishLoadingNewData];
+                    [self.refreshControl endRefreshing];
                 }]];
                 [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
                 [self presentViewController:alert animated:YES completion:nil];
@@ -133,7 +133,7 @@
                     self.tableView.tableHeaderView = nil;
                     [self.tableView reloadData];
                     
-                    [self dataSourceDidFinishLoadingNewData];
+                    [self.refreshControl endRefreshing];
                 }]];
                 [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
                 [self presentViewController:alert animated:YES completion:nil];
@@ -309,14 +309,14 @@
             self.tableView.tableHeaderView = nil;
             [self.tableView reloadData];
             
-            [self dataSourceDidFinishLoadingNewData];
+            [self.refreshControl endRefreshing];
         }]];
         [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
         [self presentViewController:alert animated:YES completion:nil];
 	} else {
 		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Please Wait" message:@"You cannot reload the Songs tab while the Folders or Albums tabs are loading" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
-		[self dataSourceDidFinishLoadingNewData];
+		[self.refreshControl endRefreshing];
 	}
 }
 
@@ -559,40 +559,6 @@
         return [SwipeAction downloadAndQueueConfigWithModel:song];
     }
     return nil;
-}
-
-#pragma mark Pull to refresh methods
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	if (scrollView.isDragging)  {
-		if (self.refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !self.isReloading) {
-			[self.refreshHeaderView setState:EGOOPullRefreshNormal];
-		} else if (self.refreshHeaderView.state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !self.isReloading) {
-			[self.refreshHeaderView setState:EGOOPullRefreshPulling];
-		}
-	}
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-	if (scrollView.contentOffset.y <= - 65.0f && !self.isReloading)  {
-		self.isReloading = YES;
-		[self reloadAction:nil];
-		[self.refreshHeaderView setState:EGOOPullRefreshLoading];
-        
-        [UIView animateWithDuration:0.2 animations:^{
-            self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
-        }];
-	}
-}
-
-- (void)dataSourceDidFinishLoadingNewData {
-	self.isReloading = NO;
-	
-    [UIView animateWithDuration:0.3 animations:^{
-        self.tableView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
-    }];
-	
-	[self.refreshHeaderView setState:EGOOPullRefreshNormal];
 }
 
 @end

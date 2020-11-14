@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SUSLoader.h"
 
-@class ISMSSong, ISMSAlbum, SUSAllSongsDAO, LoadingScreen, EGORefreshTableHeaderView;
+@class ISMSSong, ISMSAlbum, SUSAllSongsDAO, LoadingScreen;
 
 @interface AllSongsViewController : UITableViewController <UISearchBarDelegate, SUSLoaderDelegate> 
 
@@ -24,8 +24,6 @@
 @property NSInteger numberOfRows;
 @property BOOL isSearching;
 @property BOOL isProcessingArtists;
-@property (strong) EGORefreshTableHeaderView *refreshHeaderView;
-@property BOOL isReloading;
 @property (strong) UIView *searchOverlay;
 @property (strong) UIButton *dismissButton;
 @property (strong) SUSAllSongsDAO *dataModel;
@@ -37,7 +35,6 @@
 - (void)doneSearching_Clicked:(id)sender;
 - (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error;
 - (void)loadingFinished:(SUSLoader *)theLoader;
-- (void)dataSourceDidFinishLoadingNewData;
 
 - (void)showLoadingScreen;
 - (void)hideLoadingScreen;

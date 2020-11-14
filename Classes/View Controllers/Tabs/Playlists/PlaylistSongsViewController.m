@@ -9,7 +9,6 @@
 #import "PlaylistSongsViewController.h"
 #import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
-#import "EGORefreshTableHeaderView.h"
 #import "CustomUIAlertView.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "NSMutableURLRequest+SUS.h"
@@ -74,10 +73,11 @@ LOG_LEVEL_ISUB_DEFAULT
         self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM splaylist%@", self.md5]];
 		[self.tableView reloadData];
 		
-		// Add the pull to refresh view
-		self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, 320.0f, self.tableView.bounds.size.height)];
-		self.refreshHeaderView.backgroundColor = [UIColor whiteColor];
-		[self.tableView addSubview:self.refreshHeaderView];
+        // Add the pull to refresh view
+        __weak PlaylistSongsViewController *weakSelf = self;
+        self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
+            [weakSelf loadData];
+        }];
 	}
 	
     self.tableView.rowHeight = 60.0;
@@ -100,7 +100,7 @@ LOG_LEVEL_ISUB_DEFAULT
                 
                 self.tableView.scrollEnabled = YES;
                 [viewObjectsS hideLoadingScreen];
-                [self dataSourceDidFinishLoadingNewData];
+                [self.refreshControl endRefreshing];
             }];
         } else {
             RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
@@ -131,7 +131,7 @@ LOG_LEVEL_ISUB_DEFAULT
             
             [EX2Dispatch runInMainThreadAsync:^{
                 [self.tableView reloadData];
-                [self dataSourceDidFinishLoadingNewData];
+                [self.refreshControl endRefreshing];
                 [viewObjectsS hideLoadingScreen];
                 self.tableView.scrollEnabled = YES;
             }];
@@ -150,7 +150,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[viewObjectsS hideLoadingScreen];
 	
 	if (!viewObjectsS.isLocalPlaylist) {
-		[self dataSourceDidFinishLoadingNewData];
+        [self.refreshControl endRefreshing];
 	}
 }
 
@@ -232,7 +232,7 @@ LOG_LEVEL_ISUB_DEFAULT
         [EX2Dispatch runInMainThreadAsync:^{
             self.tableView.scrollEnabled = YES;
             [viewObjectsS hideLoadingScreen];
-            [self dataSourceDidFinishLoadingNewData];
+            [self.refreshControl endRefreshing];
         }];
     }];
     [self.dataTask resume];
@@ -352,41 +352,6 @@ LOG_LEVEL_ISUB_DEFAULT
         return [SwipeAction downloadAndQueueConfigWithModel:song];
     }
     return nil;
-}
-
-#pragma mark Pull to refresh methods
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	if (scrollView.isDragging && !viewObjectsS.isLocalPlaylist)  {
-		if (self.refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !self.reloading)  {
-			[self.refreshHeaderView setState:EGOOPullRefreshNormal];
-		} else if (self.refreshHeaderView.state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !self.reloading) {
-			[self.refreshHeaderView setState:EGOOPullRefreshPulling];
-		}
-	}
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-	if (scrollView.contentOffset.y <= - 65.0f && !self.reloading && !viewObjectsS.isLocalPlaylist) {
-		self.reloading = YES;
-		//[self reloadAction:nil];
-		[self loadData];
-		[self.refreshHeaderView setState:EGOOPullRefreshLoading];
-        
-        [UIView animateWithDuration:0.2 animations:^{
-            self.tableView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
-        }];
-	}
-}
-
-- (void)dataSourceDidFinishLoadingNewData {
-	self.reloading = NO;
-	
-    [UIView animateWithDuration:0.3 animations:^{
-        self.tableView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
-    }];
-	
-	[self.refreshHeaderView setState:EGOOPullRefreshNormal];
 }
 
 @end
