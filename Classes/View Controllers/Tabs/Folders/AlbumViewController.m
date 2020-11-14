@@ -264,11 +264,6 @@
     return cell;
 }
 
-// Customize the height of individual rows to make the album rows taller to accomidate the album art.
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return indexPath.row < self.dataModel.albumsCount ? 60.0 : 50.0;
-}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (!indexPath) return;
 	
