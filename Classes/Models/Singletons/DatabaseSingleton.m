@@ -82,13 +82,13 @@ LOG_LEVEL_ISUB_DEFAULT
         if (![db tableExists:@"albumsCache"])
         {
             [db executeUpdate:@"CREATE TABLE albumsCache (folderId TEXT, title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
-            [db executeUpdate:@"CREATE INDEX albumsFolderId ON albumsCache (folderId)"];
+            [db executeUpdate:@"CREATE INDEX albumsCache_albumsFolderId ON albumsCache (folderId)"];
         }
         
         if (![db tableExists:@"songsCache"])
         {
             [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE songsCache (folderId TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
-            [db executeUpdate:@"CREATE INDEX songsFolderId ON songsCache (folderId)"];
+            [db executeUpdate:@"CREATE INDEX songsCache_songsFolderId ON songsCache (folderId)"];
         }
         else if(![db columnExists:@"discNumber" inTableWithName:@"songsCache"])
         {
@@ -99,17 +99,17 @@ LOG_LEVEL_ISUB_DEFAULT
         if (![db tableExists:@"albumsCacheCount"])
         {
             [db executeUpdate:@"CREATE TABLE albumsCacheCount (folderId TEXT, count INTEGER)"];
-            [db executeUpdate:@"CREATE INDEX albumsCacheCountFolderId ON albumsCacheCount (folderId)"];
+            [db executeUpdate:@"CREATE INDEX albumsCacheCount_folderId ON albumsCacheCount (folderId)"];
         }
         if (![db tableExists:@"songsCacheCount"])
         {
             [db executeUpdate:@"CREATE TABLE songsCacheCount (folderId TEXT, count INTEGER)"];
-            [db executeUpdate:@"CREATE INDEX songsCacheCountFolderId ON songsCacheCount (folderId)"];
+            [db executeUpdate:@"CREATE INDEX songsCacheCount_folderId ON songsCacheCount (folderId)"];
         }
         if (![db tableExists:@"folderLength"])
         {
             [db executeUpdate:@"CREATE TABLE folderLength (folderId TEXT, length INTEGER)"];
-            [db executeUpdate:@"CREATE INDEX folderLengthFolderId ON folderLength (folderId)"];
+            [db executeUpdate:@"CREATE INDEX folderLength_folderId ON folderLength (folderId)"];
         }
 	}];
 	
@@ -278,8 +278,8 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (![db tableExists:@"cachedSongs"])
 		{
 			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE cachedSongs (md5 TEXT UNIQUE, finished TEXT, cachedDate INTEGER, playedDate INTEGER, %@)", [ISMSSong standardSongColumnSchema]]];
-			[db executeUpdate:@"CREATE INDEX cachedDate ON cachedSongs (cachedDate DESC)"];
-			[db executeUpdate:@"CREATE INDEX playedDate ON cachedSongs (playedDate DESC)"];
+			[db executeUpdate:@"CREATE INDEX cachedSongs_cachedDate ON cachedSongs (cachedDate DESC)"];
+			[db executeUpdate:@"CREATE INDEX cachedSongs_playedDate ON cachedSongs (playedDate DESC)"];
 		}
         else if(![db columnExists:@"discNumber" inTableWithName:@"cachedSongs"])
         {
@@ -287,20 +287,20 @@ LOG_LEVEL_ISUB_DEFAULT
             [db executeUpdate:@"ALTER TABLE cachedSongs ADD COLUMN discNumber INTEGER"];
         }
         
-		[db executeUpdate:@"CREATE INDEX md5 IF NOT EXISTS ON cachedSongs (md5)"];
+		[db executeUpdate:@"CREATE INDEX IF NOT EXISTS cachedSongs_md5 ON cachedSongs (md5)"];
 		if (![db tableExists:@"cachedSongsLayout"]) 
 		{
 			[db executeUpdate:@"CREATE TABLE cachedSongsLayout (md5 TEXT UNIQUE, genre TEXT, segs INTEGER, seg1 TEXT, seg2 TEXT, seg3 TEXT, seg4 TEXT, seg5 TEXT, seg6 TEXT, seg7 TEXT, seg8 TEXT, seg9 TEXT)"];
-			[db executeUpdate:@"CREATE INDEX genreLayout ON cachedSongsLayout (genre)"];
-			[db executeUpdate:@"CREATE INDEX seg1 ON cachedSongsLayout (seg1)"];
-			[db executeUpdate:@"CREATE INDEX seg2 ON cachedSongsLayout (seg2)"];
-			[db executeUpdate:@"CREATE INDEX seg3 ON cachedSongsLayout (seg3)"];
-			[db executeUpdate:@"CREATE INDEX seg4 ON cachedSongsLayout (seg4)"];
-			[db executeUpdate:@"CREATE INDEX seg5 ON cachedSongsLayout (seg5)"];
-			[db executeUpdate:@"CREATE INDEX seg6 ON cachedSongsLayout (seg6)"];
-			[db executeUpdate:@"CREATE INDEX seg7 ON cachedSongsLayout (seg7)"];
-			[db executeUpdate:@"CREATE INDEX seg8 ON cachedSongsLayout (seg8)"];
-			[db executeUpdate:@"CREATE INDEX seg9 ON cachedSongsLayout (seg9)"];
+			[db executeUpdate:@"CREATE INDEX cachedSongsLayout_genreLayout ON cachedSongsLayout (genre)"];
+			[db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg1 ON cachedSongsLayout (seg1)"];
+			[db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg2 ON cachedSongsLayout (seg2)"];
+			[db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg3 ON cachedSongsLayout (seg3)"];
+			[db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg4 ON cachedSongsLayout (seg4)"];
+			[db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg5 ON cachedSongsLayout (seg5)"];
+			[db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg6 ON cachedSongsLayout (seg6)"];
+			[db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg7 ON cachedSongsLayout (seg7)"];
+			[db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg8 ON cachedSongsLayout (seg8)"];
+			[db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg9 ON cachedSongsLayout (seg9)"];
 		}
 		DDLogVerbose(@"checking if genres table exists");
 		if (![db tableExists:@"genres"]) 
@@ -311,7 +311,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (![db tableExists:@"genresSongs"]) 
 		{
 			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE genresSongs (md5 TEXT UNIQUE, %@)", [ISMSSong standardSongColumnSchema]]];
-			[db executeUpdate:@"CREATE INDEX songGenre ON genresSongs (genre)"];
+			[db executeUpdate:@"CREATE INDEX genresSongs_genre ON genresSongs (genre)"];
 		}
         else if(![db columnExists:@"discNumber" inTableWithName:@"genresSongs"])
         {
@@ -404,7 +404,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (![db tableExists:@"cacheQueue"]) 
 		{
 			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE cacheQueue (md5 TEXT UNIQUE, finished TEXT, cachedDate INTEGER, playedDate INTEGER, %@)", [ISMSSong standardSongColumnSchema]]];
-			//[cacheQueueDb executeUpdate:@"CREATE INDEX queueDate ON cacheQueue (cachedDate DESC)"];
+			//[cacheQueueDb executeUpdate:@"CREATE INDEX cacheQueue_queueDate ON cacheQueue (cachedDate DESC)"];
 		}
         else if(![db columnExists:@"discNumber" inTableWithName:@"cacheQueue"])
         {
@@ -412,7 +412,7 @@ LOG_LEVEL_ISUB_DEFAULT
         }
         
 	}];
-		
+    
 	// Setup the lyrics database
 	path = [NSString stringWithFormat:@"%@/lyrics.db", self.databaseFolderPath];
 	self.lyricsDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
@@ -423,7 +423,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (![db tableExists:@"lyrics"])
 		{
 			[db executeUpdate:@"CREATE TABLE lyrics (artist TEXT, title TEXT, lyrics TEXT)"];
-			[db executeUpdate:@"CREATE INDEX artistTitle ON lyrics (artist, title)"];
+			[db executeUpdate:@"CREATE INDEX lyrics_artistTitle ON lyrics (artist, title)"];
 		}
 	}];
 	
@@ -452,7 +452,7 @@ LOG_LEVEL_ISUB_DEFAULT
                 [db executeUpdate:@"INSERT INTO bookmarksTemp SELECT bookmarkId, playlistIndex, name, position, title, songId, artist, album, genre, coverArtId, path, suffix, transcodedSuffix, duration, bitRate, track, year, size, parentId, 0, bytes FROM bookmarks"];
                 [db executeUpdate:@"DROP TABLE bookmarks"];
                 [db executeUpdate:@"ALTER TABLE bookmarksTemp RENAME TO bookmarks"];
-                [db executeUpdate:@"CREATE INDEX songId ON bookmarks (songId)"];
+                [db executeUpdate:@"CREATE INDEX bookmarks_songId ON bookmarks (songId)"];
             }
             
             if(![db columnExists:@"discNumber" inTableWithName:@"bookmarks"])
@@ -463,7 +463,7 @@ LOG_LEVEL_ISUB_DEFAULT
         else
 		{
 			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE bookmarks (bookmarkId INTEGER PRIMARY KEY, playlistIndex INTEGER, name TEXT, position INTEGER, %@, bytes INTEGER)", [ISMSSong standardSongColumnSchema]]];
-			[db executeUpdate:@"CREATE INDEX songId ON bookmarks (songId)"];
+			[db executeUpdate:@"CREATE INDEX bookmarks_songId ON bookmarks (songId)"];
 		}
 	}];
 	
@@ -490,8 +490,8 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)updateTableDefinitions
 {
 	// Add parentId column to tables if necessary
-	NSArray *parentIdDatabaseQueues = @[self.albumListCacheDbQueue, self.currentPlaylistDbQueue, self.currentPlaylistDbQueue, self.currentPlaylistDbQueue, self.currentPlaylistDbQueue, self.songCacheDbQueue, self.songCacheDbQueue, self.cacheQueueDbQueue, self.songCacheDbQueue, self.cacheQueueDbQueue];
-	NSArray *parentIdTables = @[@"songsCache", @"currentPlaylist", @"shufflePlaylist", @"jukeboxCurrentPlaylist", @"jukeboxShufflePlaylist", @"cachedSongs", @"genresSongs", @"cacheQueue", @"cachedSongsList", @"queuedSongsList"];
+	NSArray *parentIdDatabaseQueues = @[self.albumListCacheDbQueue, self.currentPlaylistDbQueue, self.currentPlaylistDbQueue, self.currentPlaylistDbQueue, self.currentPlaylistDbQueue, self.songCacheDbQueue, self.songCacheDbQueue, self.cacheQueueDbQueue];
+	NSArray *parentIdTables = @[@"songsCache", @"currentPlaylist", @"shufflePlaylist", @"jukeboxCurrentPlaylist", @"jukeboxShufflePlaylist", @"cachedSongs", @"genresSongs", @"cacheQueue"];
 	NSString *parentIdColumnName = @"parentId";
     NSString *isVideoColumnName = @"isVideo";
 	for (int i = 0; i < [parentIdDatabaseQueues count]; i++)
@@ -570,12 +570,12 @@ LOG_LEVEL_ISUB_DEFAULT
 			// Swap the tables
 			[db executeUpdate:@"DROP TABLE IF EXISTS bookmarks"];
 			[db executeUpdate:@"ALTER TABLE bookmarksTemp RENAME TO bookmarks"];	
-			[db executeUpdate:@"CREATE INDEX songId ON bookmarks (songId)"];
+			[db executeUpdate:@"CREATE INDEX bookmarks_songId ON bookmarks (songId)"];
 		}
         
-        if(![db columnExists:@"discNumber" inTableWithName:@"bookmarkId"])
+        if(![db columnExists:@"discNumber" inTableWithName:@"bookmarks"])
         {
-            [db executeUpdate:@"ALTER TABLE bookmarkId ADD COLUMN discNumber INTEGER"];
+            [db executeUpdate:@"ALTER TABLE bookmarks ADD COLUMN discNumber INTEGER"];
         }
 	}];
 	

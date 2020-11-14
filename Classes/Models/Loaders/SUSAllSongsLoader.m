@@ -174,9 +174,7 @@ static BOOL _isAllSongsLoading = NO;
 			[db executeUpdate:@"CREATE TABLE resumeLoad (artistNum INTEGER, iteration INTEGER)"];
 			[db executeUpdate:@"INSERT INTO resumeLoad (artistNum, iteration) VALUES (1, 0)"];
 			[db executeUpdate:@"CREATE VIRTUAL TABLE allAlbums USING FTS3(title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT, tokenize=porter)"];
-			//[db executeUpdate:@"CREATE INDEX title ON allAlbums (title ASC)"];
 			[db executeUpdate:@"CREATE TABLE allAlbumsUnsorted(title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
-			//[db executeUpdate:@"CREATE INDEX title ON allAlbumsUnsorted (title ASC)"];
 			[db executeUpdate:@"CREATE TABLE allAlbumsCount (count INTEGER)"];
 			[db executeUpdate:@"CREATE TABLE allAlbumsUnsortedCount (count INTEGER)"];
 			
@@ -193,12 +191,10 @@ static BOOL _isAllSongsLoading = NO;
 			[db executeUpdate:@"INSERT INTO resumeLoad (albumNum, iteration) VALUES (1, 0)"];
 			NSString *query = [NSString stringWithFormat:@"CREATE VIRTUAL TABLE allSongs USING FTS3 (%@, tokenize=porter)", [ISMSSong standardSongColumnSchema]];
 			[db executeUpdate:query];
-			//[db executeUpdate:@"CREATE INDEX title ON allSongs (title ASC)"];
-			//[db executeUpdate:@"CREATE INDEX songGenre ON allSongs (genre)"];
 			
 			query = [NSString stringWithFormat:@"CREATE TABLE allSongsUnsorted (%@)", [ISMSSong standardSongColumnSchema]];
 			[db executeUpdate:query];
-			//[db executeUpdate:@"CREATE INDEX title ON allSongsUnsorted (title ASC)"];
+			//[db executeUpdate:@"CREATE INDEX allSongsUnsorted_title ON allSongsUnsorted (title ASC)"];
 			[db executeUpdate:@"CREATE TABLE allSongsCount (count INTEGER)"];
 		}];
 		
@@ -208,17 +204,17 @@ static BOOL _isAllSongsLoading = NO;
 			[db executeUpdate:@"CREATE TABLE genres (genre TEXT UNIQUE)"];
 			[db executeUpdate:@"CREATE TABLE genresUnsorted (genre TEXT UNIQUE)"];
 			[db executeUpdate:@"CREATE TABLE genresLayout (md5 TEXT, genre TEXT, segs INTEGER, seg1 TEXT, seg2 TEXT, seg3 TEXT, seg4 TEXT, seg5 TEXT, seg6 TEXT, seg7 TEXT, seg8 TEXT, seg9 TEXT)"];
-			/*[databaseS.genresDb executeUpdate:@"CREATE UNIQUE INDEX md5 ON genresLayout (md5)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX layoutGenre ON genresLayout (genre)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX seg1 ON genresLayout (seg1)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX seg2 ON genresLayout (seg2)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX seg3 ON genresLayout (seg3)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX seg4 ON genresLayout (seg4)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX seg5 ON genresLayout (seg5)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX seg6 ON genresLayout (seg6)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX seg7 ON genresLayout (seg7)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX seg8 ON genresLayout (seg8)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX seg9 ON genresLayout (seg9)"];*/
+			/*[databaseS.genresDb executeUpdate:@"CREATE UNIQUE INDEX genresLayout.md5 ON genresLayout (md5)"];
+			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_genre ON genresLayout (genre)"];
+			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg1 ON genresLayout (seg1)"];
+			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg2 ON genresLayout (seg2)"];
+			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg3 ON genresLayout (seg3)"];
+			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg4 ON genresLayout (seg4)"];
+			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg5 ON genresLayout (seg5)"];
+			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg6 ON genresLayout (seg6)"];
+			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg7 ON genresLayout (seg7)"];
+			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg8 ON genresLayout (seg8)"];
+			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg9 ON genresLayout (seg9)"];*/
             
             [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE genresSongs (md5 TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
 		}];

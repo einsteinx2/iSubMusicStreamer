@@ -193,7 +193,7 @@
 			[db executeUpdate:@"CREATE TEMPORARY TABLE albumIndex (title TEXT)"];
 			
 			[db executeUpdate:@"INSERT INTO albumIndex SELECT title FROM albumsCache WHERE rowid >= ? LIMIT ?", @(self.albumStartRow), @(self.albumsCount)];
-			[db executeUpdate:@"CREATE INDEX albumIndexIndex ON albumIndex (title)"];
+			[db executeUpdate:@"CREATE INDEX albumIndex_title ON albumIndex (title)"];
             
 			sectionInfo = [databaseS sectionInfoFromTable:@"albumIndex" inDatabase:db withColumn:@"title"];
 			[db executeUpdate:@"DROP TABLE IF EXISTS albumIndex"];

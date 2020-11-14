@@ -456,7 +456,7 @@
         
         [databaseS.bookmarksDb executeUpdate:@"DROP TABLE bookmarks"];
         [databaseS.bookmarksDb executeUpdate:@"ALTER TABLE bookmarksTemp RENAME TO bookmarks"];
-        [databaseS.bookmarksDb executeUpdate:@"CREATE INDEX songId ON bookmarks (songId)"];
+        [databaseS.bookmarksDb executeUpdate:@"CREATE INDEX bookmarks_songId ON bookmarks (songId)"];
     } else {
         [databaseS.bookmarksDb executeUpdate:@"INSERT INTO bookmarksTemp SELECT * FROM bookmarks WHERE ROWID < ?", [NSNumber numberWithInt:toRow]];
         [databaseS.bookmarksDb executeUpdate:@"INSERT INTO bookmarksTemp SELECT * FROM bookmarks WHERE ROWID = ?", [NSNumber numberWithInt:fromRow]];
@@ -465,7 +465,7 @@
         
         [databaseS.bookmarksDb executeUpdate:@"DROP TABLE bookmarks"];
         [databaseS.bookmarksDb executeUpdate:@"ALTER TABLE bookmarksTemp RENAME TO bookmarks"];
-        [databaseS.bookmarksDb executeUpdate:@"CREATE INDEX songId ON bookmarks (songId)"];
+        [databaseS.bookmarksDb executeUpdate:@"CREATE INDEX bookmarks_songId ON bookmarks (songId)"];
     }
 }
 

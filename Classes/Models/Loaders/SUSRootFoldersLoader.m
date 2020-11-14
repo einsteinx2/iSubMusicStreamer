@@ -192,8 +192,6 @@
          [db executeUpdate:[NSString stringWithFormat:query, self.tableModifier]];
          query = @"CREATE VIRTUAL TABLE rootFolderNameCache%@ USING FTS3 (id TEXT PRIMARY KEY, name TEXT, tokenize=porter)";
          [db executeUpdate:[NSString stringWithFormat:query, self.tableModifier]];
-         query = @"CREATE INDEX name ON rootFolderNameCache%@ (name ASC)";
-         [db executeUpdate:[NSString stringWithFormat:query, self.tableModifier]];
          query = @"CREATE TABLE rootFolderCount%@ (count INTEGER)";
          [db executeUpdate:[NSString stringWithFormat:query, self.tableModifier]];
      }];
