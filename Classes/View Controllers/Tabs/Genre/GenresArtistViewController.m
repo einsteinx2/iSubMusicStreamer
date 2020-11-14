@@ -268,7 +268,6 @@
 	GenresArtistUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (!cell) {
 		cell = [[GenresArtistUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 	cell.genre = self.title;
 	

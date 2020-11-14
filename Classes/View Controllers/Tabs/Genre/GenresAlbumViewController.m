@@ -277,7 +277,6 @@
         GenresAlbumUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         if (!cell) {
             cell = [[GenresAlbumUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
         cell.segment = self.segment;
         cell.seg1 = self.seg1;
@@ -302,7 +301,6 @@
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
         cell.hideDurationLabel = NO;
-        cell.accessoryType = UITableViewCellAccessoryNone;
         NSString *md5 = [listOfSongs objectAtIndexSafe:(indexPath.row - listOfAlbums.count)];
         [cell updateWithModel:[ISMSSong songFromGenreDbQueue:md5]];
     }

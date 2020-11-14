@@ -111,7 +111,6 @@
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
         cell.hideDurationLabel = YES;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         [cell updateWithModel:[self.listOfAlbums objectAtIndexSafe:indexPath.row]];
         return cell;
 	} else if (indexPath.row == self.listOfAlbums.count) {
@@ -152,7 +151,7 @@
 	}
 }
 
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfAlbums.count) {
         return [SwipeAction downloadAndQueueConfigWithModel:[self.listOfAlbums objectAtIndexSafe:indexPath.row]];
     }

@@ -202,7 +202,6 @@
             cell.hideCoverArt = YES;
             cell.hideSecondaryLabel = YES;
             cell.hideDurationLabel = YES;
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             [cell updateWithModel:[self.listOfArtists objectAtIndexSafe:indexPath.row]];
             return cell;
 		} else if (indexPath.row == self.listOfArtists.count) {
@@ -215,7 +214,6 @@
             cell.hideNumberLabel = YES;
             cell.hideCoverArt = NO;
             cell.hideDurationLabel = YES;
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             [cell updateWithModel:[self.listOfAlbums objectAtIndexSafe:indexPath.row]];
             return cell;
 		} else if (indexPath.row == [self.listOfAlbums count]) {
@@ -228,7 +226,6 @@
             cell.hideNumberLabel = YES;
             cell.hideCoverArt = NO;
             cell.hideDurationLabel = NO;
-            cell.accessoryType = UITableViewCellAccessoryNone;
             [cell updateWithModel:[self.listOfSongs objectAtIndexSafe:indexPath.row]];
             return cell;
 		} else if (indexPath.row == self.listOfSongs.count) {
@@ -308,7 +305,7 @@
 	[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.searchType == ISMSSearchSongsSearchType_Artists) {
         if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfArtists.count) {
             return [SwipeAction downloadAndQueueConfigWithModel:[self.listOfArtists objectAtIndexSafe:indexPath.row]];

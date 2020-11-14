@@ -135,7 +135,9 @@ import SnapKit
     }
     
     @objc func stopScrolling() {
-        animator?.stopAnimation(true)
+        if let animator = animator, animator.isInterruptible {
+            animator.stopAnimation(true)
+        }
         animator = nil
         self.scrollView.contentOffset = CGPoint.zero
     }

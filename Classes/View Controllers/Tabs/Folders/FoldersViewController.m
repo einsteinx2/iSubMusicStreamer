@@ -488,7 +488,6 @@
     cell.hideCoverArt = YES;
     cell.hideSecondaryLabel = YES;
     cell.hideDurationLabel = YES;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     [cell updateWithModel:[self artistAtIndexPath:indexPath]];
 
 	return cell;
@@ -541,7 +540,7 @@
 	}
 }
 
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSObject<ISMSTableCellModel> *model = [self artistAtIndexPath:indexPath];
     return [SwipeAction downloadAndQueueConfigWithModel:model];
 }

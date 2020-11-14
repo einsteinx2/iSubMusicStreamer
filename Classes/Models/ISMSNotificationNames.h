@@ -39,9 +39,6 @@ extern NSString * const ISMSNotification_AllSongsAlbumName;
 extern NSString * const ISMSNotification_AllSongsSongName;
 extern NSString * const ISMSNotification_AllSongsLoadingFinished;
 
-extern NSString * const ISMSNotification_StorePurchaseComplete;
-extern NSString * const ISMSNotification_StorePurchaseFailed;
-
 extern NSString * const ISMSNotification_SongCachingEnabled;
 extern NSString * const ISMSNotification_SongCachingDisabled;
 

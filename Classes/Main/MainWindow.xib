@@ -231,7 +231,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <viewControllers>
-                        <viewController nibName="CacheViewController" id="122" customClass="CacheViewController">
+                        <viewController nibName="CacheOfflineFoldersViewController" id="122" customClass="CacheOfflineFoldersViewController">
                             <extendedEdge key="edgesForExtendedLayout"/>
                             <toolbarItems/>
                             <navigationItem key="navigationItem" title="Item" id="123"/>

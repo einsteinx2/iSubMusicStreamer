@@ -39,9 +39,6 @@ NSString * const ISMSNotification_AllSongsAlbumName = @"ISMSNotification_AllSong
 NSString * const ISMSNotification_AllSongsSongName = @"ISMSNotification_AllSongsSongName";
 NSString * const ISMSNotification_AllSongsLoadingFinished = @"ISMSNotification_AllSongsLoadingFinished";
 
-NSString * const ISMSNotification_StorePurchaseComplete = @"ISMSNotification_StorePurchaseComplete";
-NSString * const ISMSNotification_StorePurchaseFailed = @"ISMSNotification_StorePurchaseFailed";
-
 NSString * const ISMSNotification_SongCachingEnabled = @"ISMSNotification_SongCachingEnabled";
 NSString * const ISMSNotification_SongCachingDisabled = @"ISMSNotification_SongCachingDisabled";
 

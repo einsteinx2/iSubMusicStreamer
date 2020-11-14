@@ -218,13 +218,13 @@
 - (void)editBookmarksAction:(id)sender {
 	if (self.isEditing == NO) {
 		[self.tableView reloadData];
-        self.editing = YES;
+        [self setEditing:YES animated:YES];
 		self.editBookmarksLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
 		self.editBookmarksLabel.text = @"Done";
 		[self showDeleteButton];
     } else {
 		[self hideDeleteButton];
-        self.editing = NO;
+        [self setEditing:NO animated:YES];
 		self.editBookmarksLabel.backgroundColor = [UIColor clearColor];
 		self.editBookmarksLabel.text = @"Edit";
 		
@@ -417,7 +417,7 @@
     return UITableViewCellEditingStyleDelete;
 }
 
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     __block ISMSSong *song = nil;
     [databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *result = [db executeQuery:@"SELECT * FROM bookmarks WHERE bookmarkId = ?", [self.bookmarkIds objectAtIndexSafe:indexPath.row]];

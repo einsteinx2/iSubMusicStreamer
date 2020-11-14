@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CacheViewController : UITableViewController 
+@interface CacheViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic, strong) UIView *headerView;
-@property (nonatomic, strong) UIView *headerView2;
+@property (strong) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) UIView *segmentControlContainer;
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
+@property (nonatomic, strong) UIView *saveEditContainer;
 @property (nonatomic, strong) UILabel *songsCountLabel;
 @property (nonatomic, strong) UIButton *deleteSongsButton;
 @property (nonatomic, strong) UILabel *deleteSongsLabel;

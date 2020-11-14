@@ -142,7 +142,7 @@
     }
 }
 
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel songForIndex:indexPath.row]];
 }
 

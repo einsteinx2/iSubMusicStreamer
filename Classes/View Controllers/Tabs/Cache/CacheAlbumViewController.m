@@ -32,7 +32,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 @implementation CacheAlbumViewController
 
-NSInteger trackSort2(id obj1, id obj2, void *context) {
+static NSInteger trackSort(id obj1, id obj2, void *context) {
 	NSUInteger track1TrackNum = [(NSNumber*)[(NSArray*)obj1 objectAtIndexSafe:1] intValue];
 	NSUInteger track2TrackNum = [(NSNumber*)[(NSArray*)obj2 objectAtIndexSafe:1] intValue];
     NSUInteger track1DiscNum = [(NSNumber*)[(NSArray*)obj1 objectAtIndexSafe:2] intValue];
@@ -203,7 +203,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
 						
 						// Sort by track number
                         if (!multipleSameTrackNumbers) {
-							[self.listOfSongs sortUsingFunction:trackSort2 context:NULL];
+							[self.listOfSongs sortUsingFunction:trackSort context:NULL];
                         }
 					}
 				}
@@ -351,14 +351,12 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
         cell.hideDurationLabel = YES;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         [cell updateWithModel:[self albumAtIndexPath:indexPath]];
 	} else {
         // Song
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
         cell.hideDurationLabel = NO;
-        cell.accessoryType = UITableViewCellAccessoryNone;
         [cell updateWithModel:[self songAtIndexPath:indexPath]];
 	}
     return cell;
@@ -431,7 +429,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
 								
 								// Sort by track number
                                 if (!multipleSameTrackNumbers) {
-									[cacheAlbumViewController.listOfSongs sortUsingFunction:trackSort2 context:NULL];
+									[cacheAlbumViewController.listOfSongs sortUsingFunction:trackSort context:NULL];
                                 }
 							}
 						}
@@ -468,7 +466,7 @@ NSInteger trackSort2(id obj1, id obj2, void *context) {
 	}
 }
 
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.listOfAlbums.count) {
         // Custom queue and delete actions
         ISMSAlbum *album = [self albumAtIndexPath:indexPath];

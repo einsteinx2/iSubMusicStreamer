@@ -66,7 +66,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCurrentPlaylistCount) name:@"updateCurrentPlaylistCount" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewWillAppear:) name:ISMSNotification_StorePurchaseComplete object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songsQueued) name:ISMSNotification_CurrentPlaylistSongsQueued object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jukeboxSongInfo) name:ISMSNotification_JukeboxSongInfo object:nil];
 }
@@ -77,7 +76,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"updateCurrentPlaylistCount" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_StorePurchaseComplete object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistSongsQueued object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_JukeboxSongInfo object:nil];
 }
@@ -506,7 +504,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)editPlaylistAction:(id)sender {
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
 		if (self.isEditing) {
-            self.editing = NO;
+            [self setEditing:NO animated:YES];
             [self hideDeleteButton];
             self.editPlaylistLabel.backgroundColor = [UIColor clearColor];
             self.editPlaylistLabel.text = @"Edit";
@@ -517,8 +515,8 @@ LOG_LEVEL_ISUB_DEFAULT
                 [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
             }
         } else {
-			[self.tableView reloadData];
-            self.editing = YES;
+//			[self.tableView reloadData];
+            [self setEditing:YES animated:YES];
 			self.editPlaylistLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
 			self.editPlaylistLabel.text = @"Done";
 			[self showDeleteButton];
@@ -526,7 +524,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 	else if (self.segmentedControl.selectedSegmentIndex == 1 || self.segmentedControl.selectedSegmentIndex == 2) {
 		if (self.isEditing) {
-            self.editing = NO;
+            [self setEditing:NO animated:YES];
             [self hideDeleteButton];
             self.editPlaylistLabel.backgroundColor = [UIColor clearColor];
             self.editPlaylistLabel.text = @"Edit";
@@ -534,8 +532,8 @@ LOG_LEVEL_ISUB_DEFAULT
             // Reload the table to correct the numbers
             [self.tableView reloadData];
         } else {
-			[self.tableView reloadData];
-            self.editing = YES;
+//			[self.tableView reloadData];
+            [self setEditing:YES animated:YES];
 			self.editPlaylistLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
 			self.editPlaylistLabel.text = @"Done";
 			[self showDeleteButton];
@@ -1096,7 +1094,6 @@ LOG_LEVEL_ISUB_DEFAULT
         cell.hideDurationLabel = NO;
         cell.hideSecondaryLabel = NO;
         cell.number = indexPath.row + 1;
-        cell.accessoryType = UITableViewCellAccessoryNone;
         [cell updateWithModel:[playlistS songForIndex:indexPath.row]];
 	} else if (self.segmentedControl.selectedSegmentIndex == 1) {
         // Local playlist
@@ -1104,7 +1101,6 @@ LOG_LEVEL_ISUB_DEFAULT
         cell.hideCoverArt = YES;
         cell.hideDurationLabel = YES;
         cell.hideSecondaryLabel = NO;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         [cell updateWithModel:[self localPlaylistForIndex:indexPath.row]];
 	} else if (self.segmentedControl.selectedSegmentIndex == 2) {
         // Server playlist
@@ -1112,7 +1108,6 @@ LOG_LEVEL_ISUB_DEFAULT
         cell.hideCoverArt = YES;
         cell.hideDurationLabel = YES;
         cell.hideSecondaryLabel = YES;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         [cell updateWithModel:[self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:indexPath.row]];
 	}
 	
@@ -1165,7 +1160,7 @@ LOG_LEVEL_ISUB_DEFAULT
     }
 }
 
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.segmentedControl.selectedSegmentIndex == 0) {
         // Current Playlist
         ISMSSong *song = [playlistS songForIndex:indexPath.row];

@@ -30,11 +30,6 @@
 #import "ISMSArtist.h"
 
 @interface CacheViewController ()
-- (void)addNoSongsScreen;
-- (void)segmentAction:(id)sender;
-- (void)removeSaveEditButtons;
-- (void)addSaveEditButtons;
-- (void)removeNoSongsScreen;
 @property NSUInteger cacheQueueCount;
 @end
 
@@ -42,8 +37,7 @@
 
 #pragma mark Rotation handling
 
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     if (!UIDevice.isIPad && self.isNoSongsScreenShowing) {
         [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
             if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
@@ -72,7 +66,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTable) name:@"cachedSongDeleted" object:nil];
 	
 	// Set notification receiver for when network status changes to reload the table
-	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(segmentAction:) name:EX2ReachabilityNotification_ReachabilityChanged object: nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(segmentAction:) name:EX2ReachabilityNotification_ReachabilityChanged object: nil];
 }
 
 - (void)unregisterForNotifications {
@@ -89,81 +83,47 @@
 	
 	self.jukeboxInputBlocker = nil;
 	
-	viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
 	self.isNoSongsScreenShowing = NO;
 	self.isSaveEditShowing = NO;
-		
-	self.tableView.separatorColor = [UIColor clearColor];
+    
+    self.view.backgroundColor = UIColor.systemBackgroundColor;
+
+    self.tableView.y = 45;
 	
-	if (settingsS.isOfflineMode) {
-		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"gear.png"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsAction:)];
-	}
-	
-	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-    self.headerView.backgroundColor = UIColor.systemGray3Color;//UIColor.systemBackgroundColor;//[UIColor colorWithWhite:.3 alpha:1];
+    self.segmentControlContainer = [[UIView alloc] init];
+    self.segmentControlContainer.translatesAutoresizingMaskIntoConstraints = NO;
+    
 	self.segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Cached", @"Downloading"]];
+    self.segmentedControl.translatesAutoresizingMaskIntoConstraints = NO;
 	[self.segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-	
-	self.segmentedControl.frame = CGRectMake(5, 5, 310, 36);
 	self.segmentedControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-//    self.segmentedControl.tintColor = ISMSHeaderColor;
 	self.segmentedControl.selectedSegmentIndex = 0;
-	if (settingsS.isOfflineMode) {
-		self.segmentedControl.hidden = YES;
-	}
-	[self.headerView addSubview:self.segmentedControl];
+
+    [self.segmentControlContainer addSubview:self.segmentedControl];
+    [self.view addSubview:self.segmentControlContainer];
+    
+    NSLayoutConstraint *segContainerTop = [self.segmentControlContainer.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor];
+    segContainerTop.constant = 7;
+    segContainerTop.active = YES;
+    NSLayoutConstraint *segContainerLead = [self.segmentControlContainer.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor];
+    segContainerLead.constant = 5;
+    segContainerLead.active = YES;
+    NSLayoutConstraint *segContainerTrail = [self.segmentControlContainer.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor];
+    segContainerTrail.constant = -5;
+    segContainerTrail.active = YES;
+    
+    [self.segmentedControl.topAnchor constraintEqualToAnchor:self.segmentControlContainer.topAnchor].active = YES;
+    [self.segmentedControl.bottomAnchor constraintEqualToAnchor:self.segmentControlContainer.bottomAnchor].active = YES;
+    [self.segmentedControl.leadingAnchor constraintEqualToAnchor:self.segmentControlContainer.leadingAnchor].active = YES;
+    [self.segmentedControl.trailingAnchor constraintEqualToAnchor:self.segmentControlContainer.trailingAnchor].active = YES;
 	
-	if (settingsS.isOfflineMode) {
-		self.headerView.frame = CGRectMake(0, 0, 320, 50);
-		self.headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		
-		self.headerView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
-		self.headerView2.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-//		self.headerView2.backgroundColor = viewObjectsS.darkNormal;
-		[self.headerView addSubview:self.headerView2];
-		
-		self.playAllLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
-		self.playAllLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
-//		self.playAllLabel.backgroundColor = [UIColor clearColor];
-        self.playAllLabel.textColor = UIColor.labelColor;//ISMSHeaderButtonColor;
-		self.playAllLabel.textAlignment = NSTextAlignmentCenter;
-		self.playAllLabel.font = ISMSRegularFont(24);
-		self.playAllLabel.text = @"Play All";
-		[self.headerView2 addSubview:self.playAllLabel];
-		
-		self.playAllButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.playAllButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
-		self.playAllButton.frame = CGRectMake(0, 0, 160, 40);
-		[self.playAllButton addTarget:self action:@selector(playAllAction:) forControlEvents:UIControlEventTouchUpInside];
-		[self.headerView2 addSubview:self.playAllButton];
-		
-		self.shuffleLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 0, 160, 50)];
-		self.shuffleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-//		self.shuffleLabel.backgroundColor = [UIColor clearColor];
-        self.shuffleLabel.textColor = UIColor.labelColor;//ISMSHeaderButtonColor;
-		self.shuffleLabel.textAlignment = NSTextAlignmentCenter;
-		self.shuffleLabel.font = ISMSRegularFont(24);
-		self.shuffleLabel.text = @"Shuffle";
-		[self.headerView2 addSubview:self.shuffleLabel];
-		
-		self.shuffleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.shuffleButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-		self.shuffleButton.frame = CGRectMake(160, 0, 160, 40);
-		[self.shuffleButton addTarget:self action:@selector(shuffleAction:) forControlEvents:UIControlEventTouchUpInside];
-		[self.headerView2 addSubview:self.shuffleButton];
-	}
-	
-	self.tableView.tableHeaderView = self.headerView;
+    self.tableView.allowsMultipleSelectionDuringEditing = YES;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
-	if (settingsS.isOfflineMode) {
-		self.title = @"Artists";
-	} else {
-		self.title = @"Cache";
-		
-		// Setup the update timer
-		[self updateQueueDownloadProgress];
-	}
+    self.title = @"Cache";
+    
+    // Setup the update timer
+    [self updateQueueDownloadProgress];
 	
     if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
@@ -182,9 +142,7 @@
 	[super viewWillAppear:animated];
 		
 	[self registerForNotifications];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewWillAppear:) name:ISMSNotification_StorePurchaseComplete object:nil];
-	
+		
 	[self reloadTable];
 	
 	[self updateQueueDownloadProgress];
@@ -235,13 +193,11 @@
 	[self unregisterForNotifications];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateQueueDownloadProgress) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCacheSizeLabel) object:nil];
-	
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_StorePurchaseComplete object:nil];
 }
 
 - (void)segmentAction:(id)sender {
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
-		if (self.tableView.editing) {
+		if (self.isEditing) {
 			[self editSongsAction:nil];
 		}
 		
@@ -249,18 +205,13 @@
 		
 		if (self.listOfArtists.count == 0) {
 			[self removeSaveEditButtons];
-			
-			[self addNoSongsScreen];
 			[self addNoSongsScreen];
 		} else {
 			[self removeNoSongsScreen];
-			
-			if (!settingsS.isOfflineMode) {
-				[self addSaveEditButtons];
-			}
+            [self addSaveEditButtons];
 		}
 	} else if (self.segmentedControl.selectedSegmentIndex == 1) {
-		if (self.tableView.editing) {
+		if (self.isEditing) {
 			[self editSongsAction:nil];
 		}
 		
@@ -289,25 +240,8 @@
 	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
 }
 
-- (void)playAllAction:(id)sender {
-	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-	[self performSelector:@selector(loadPlayAllPlaylist:) withObject:@"NO" afterDelay:0.05];
-}
-
-- (void)shuffleAction:(id)sender {
-	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-	[self performSelector:@selector(loadPlayAllPlaylist:) withObject:@"YES" afterDelay:0.05];
-}
-
-- (void)loadPlayAllPlaylist:(NSString *)shuffle {
+- (void)loadPlayAllPlaylist:(BOOL)shuffle {
     playlistS.isShuffle = NO;
-	
-	BOOL isShuffle;
-    if ([shuffle isEqualToString:@"YES"]) {
-		isShuffle = YES;
-    } else {
-		isShuffle = NO;
-    }
 	
 	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
@@ -335,7 +269,7 @@
 		}
 	}
 	
-	if (isShuffle) {
+	if (shuffle) {
 		playlistS.isShuffle = YES;
 		[databaseS shufflePlaylist];
 	} else {
@@ -428,7 +362,7 @@
                 } else {
 					self.songsCountLabel.text = [NSString stringWithFormat:@"%lu Songs", (unsigned long)cachedSongsCount];
                 }
-			} else if (settingsS.isOfflineMode == NO) {
+			} else {
 				[self addSaveEditButtons];
 			}
 			
@@ -441,16 +375,16 @@
 			[db executeUpdate:@"CREATE TEMP TABLE cacheQueueList (md5 TEXT)"];
 			[db executeUpdate:@"INSERT INTO cacheQueueList SELECT md5 FROM cacheQueue"];
 			
-			if (self.tableView.editing) {
-				NSArray *multiDeleteList = [NSArray arrayWithArray:viewObjectsS.multiDeleteList];
-				for (NSString *md5 in multiDeleteList) {
-					NSString *dbMd5 = [db stringForQuery:@"SELECT md5 FROM cacheQueueList WHERE md5 = ?", md5];
-					//DLog(@"md5: %@   dbMD5: %@", md5, dbMd5);
-                    if (!dbMd5) {
-						[viewObjectsS.multiDeleteList removeObject:md5];
-                    }
-				}
-			}
+//			if (self.isEditing) {
+//				NSArray *multiDeleteList = [NSArray arrayWithArray:viewObjectsS.multiDeleteList];
+//				for (NSString *md5 in multiDeleteList) {
+//					NSString *dbMd5 = [db stringForQuery:@"SELECT md5 FROM cacheQueueList WHERE md5 = ?", md5];
+//					//DLog(@"md5: %@   dbMD5: %@", md5, dbMd5);
+//                    if (!dbMd5) {
+//						[viewObjectsS.multiDeleteList removeObject:md5];
+//                    }
+//				}
+//			}
 		}];
 		
 		self.cacheQueueCount = [databaseS.cacheQueueDbQueue intForQuery:@"SELECT COUNT(*) FROM cacheQueueList"];
@@ -506,9 +440,43 @@
 	[self performSelector:@selector(updateQueueDownloadProgress) withObject:nil afterDelay:1.];
 }
 
+- (void)addHeader {
+    // Create the container view and constrain it to the table
+    UIView *headerView = [[UIView alloc] init];
+    headerView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.tableView.tableHeaderView = headerView;
+    [headerView.centerXAnchor constraintEqualToAnchor:self.tableView.centerXAnchor].active = YES;
+    [headerView.widthAnchor constraintEqualToAnchor:self.tableView.widthAnchor].active = YES;
+    [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor].active = YES;
+    
+    // Create the play all and shuffle buttons and constrain to the container view
+    PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
+        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+        [EX2Dispatch runInMainThreadAsync:^{
+            [self loadPlayAllPlaylist:NO];
+        }];
+    } shuffleHandler:^{
+        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
+        [EX2Dispatch runInMainThreadAsync:^{
+            [self loadPlayAllPlaylist:YES];
+        }];
+    }];
+    [headerView addSubview:playAllAndShuffleHeader];
+    [playAllAndShuffleHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor].active = YES;
+    [playAllAndShuffleHeader.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor].active = YES;
+    [playAllAndShuffleHeader.topAnchor constraintEqualToAnchor:headerView.topAnchor].active = YES;
+    [playAllAndShuffleHeader.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor].active = YES;
+    
+    // Force re-layout using the constraints
+    [self.tableView.tableHeaderView layoutIfNeeded];
+    self.tableView.tableHeaderView = self.tableView.tableHeaderView;
+}
+
 - (void)removeSaveEditButtons {
 	if (self.isSaveEditShowing == YES) {
 		self.isSaveEditShowing = NO;
+        [self.saveEditContainer removeFromSuperview];
+        self.saveEditContainer = nil;
 		[self.songsCountLabel removeFromSuperview]; 
 		self.songsCountLabel = nil;
 		[self.deleteSongsButton removeFromSuperview]; 
@@ -522,12 +490,8 @@
 		[self.cacheSizeLabel removeFromSuperview]; 
 		self.cacheSizeLabel = nil;
 		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCacheSizeLabel) object:nil];
-		[self.headerView2 removeFromSuperview];
-		self.headerView2 = nil;
-		
-		self.headerView.frame = CGRectMake(0, 0, 320, 44);
-		
-		self.tableView.tableHeaderView = self.headerView;
+        
+        self.tableView.tableHeaderView = nil;
 	}
 }
 
@@ -537,16 +501,16 @@
 	if (self.isSaveEditShowing == NO) {
 		// Modify the header view to include the save and edit buttons
 		self.isSaveEditShowing = YES;
-		int y = 43;
-		
-		self.headerView.frame = CGRectMake(0, 0, 320, y + 100);
-        if (self.segmentedControl.selectedSegmentIndex == 1) {
-			self.headerView.frame = CGRectMake(0, 0, 320, y + 50);
-        }
-		
-		self.songsCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, y, 160, 34)];
+
+        self.saveEditContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 44, self.tableView.width, 50)];
+        self.saveEditContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.tableView.y = 45 + 50;
+        [self.view addSubview:self.saveEditContainer];
+        
+        CGFloat halfWidth = self.saveEditContainer.width / 2.0;
+
+		self.songsCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 34)];
 		self.songsCountLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-//		self.songsCountLabel.backgroundColor = [UIColor clearColor];
         self.songsCountLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
 		self.songsCountLabel.textAlignment = NSTextAlignmentCenter;
 		self.songsCountLabel.font = ISMSBoldFont(22);
@@ -564,12 +528,11 @@
 				self.songsCountLabel.text = [NSString stringWithFormat:@"%lu Songs", (unsigned long)self.cacheQueueCount];
             }
 		}
-		[self.headerView addSubview:self.songsCountLabel];
+		[self.saveEditContainer addSubview:self.songsCountLabel];
 		
-		self.cacheSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, y + 33, 160, 14)];
+		self.cacheSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 33, halfWidth, 14)];
 		self.cacheSizeLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-//		self.cacheSizeLabel.backgroundColor = [UIColor clearColor];
-        self.cacheSizeLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
+        self.cacheSizeLabel.textColor = UIColor.labelColor;
 		self.cacheSizeLabel.textAlignment = NSTextAlignmentCenter;
 		self.cacheSizeLabel.font = ISMSBoldFont(12);
 		if (self.segmentedControl.selectedSegmentIndex == 0) {
@@ -590,82 +553,45 @@
 			
 			self.cacheSizeLabel.text = @"";
 		}
-		[self.headerView addSubview:self.cacheSizeLabel];
+		[self.saveEditContainer addSubview:self.cacheSizeLabel];
 		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCacheSizeLabel) object:nil];
 		[self updateCacheSizeLabel];
 		
 		self.deleteSongsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.deleteSongsButton.frame = CGRectMake(0, y, 160, 50);
+		self.deleteSongsButton.frame = CGRectMake(0, 0, halfWidth, 50);
 		self.deleteSongsButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
 		[self.deleteSongsButton addTarget:self action:@selector(deleteSongsAction:) forControlEvents:UIControlEventTouchUpInside];
-		[self.headerView addSubview:self.deleteSongsButton];
+		[self.saveEditContainer addSubview:self.deleteSongsButton];
 		
-		self.editSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, y, 160, 50)];
+		self.editSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(halfWidth, 0, halfWidth, 50)];
 		self.editSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
-//		self.editSongsLabel.backgroundColor = [UIColor clearColor];
-        self.editSongsLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
+        self.editSongsLabel.textColor = UIColor.labelColor;
 		self.editSongsLabel.textAlignment = NSTextAlignmentCenter;
 		self.editSongsLabel.font = ISMSBoldFont(22);
 		self.editSongsLabel.text = @"Edit";
-		[self.headerView addSubview:self.editSongsLabel];
+		[self.saveEditContainer addSubview:self.editSongsLabel];
 		
 		self.editSongsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.editSongsButton.frame = CGRectMake(160, y, 160, 40);
+		self.editSongsButton.frame = CGRectMake(halfWidth, 0, halfWidth, 40);
 		self.editSongsButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
 		[self.editSongsButton addTarget:self action:@selector(editSongsAction:) forControlEvents:UIControlEventTouchUpInside];
-		[self.headerView addSubview:self.editSongsButton];	
+		[self.saveEditContainer addSubview:self.editSongsButton];
 		
-		self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, y, 160, 50)];
+		self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 50)];
 		self.deleteSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
 		self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
-        self.deleteSongsLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
+        self.deleteSongsLabel.textColor = UIColor.labelColor;
 		self.deleteSongsLabel.textAlignment = NSTextAlignmentCenter;
 		self.deleteSongsLabel.font = ISMSBoldFont(22);
 		self.deleteSongsLabel.adjustsFontSizeToFitWidth = YES;
 		self.deleteSongsLabel.minimumScaleFactor = 12.0 / self.deleteSongsLabel.font.pointSize;
 		self.deleteSongsLabel.text = @"Delete # Songs";
 		self.deleteSongsLabel.hidden = YES;
-		[self.headerView addSubview:self.deleteSongsLabel];
-		
-		self.headerView2 = nil;
-		if (self.segmentedControl.selectedSegmentIndex == 0) {
-			self.headerView2 = [[UIView alloc] initWithFrame:CGRectMake(0, y + 52, 320, 50)];
-			self.headerView2.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-            self.headerView2.backgroundColor = UIColor.systemBackgroundColor;//viewObjectsS.darkNormal;
-			[self.headerView addSubview:self.headerView2];
-			
-			self.playAllLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
-			self.playAllLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-//			self.playAllLabel.backgroundColor = [UIColor clearColor];
-            self.playAllLabel.textColor = UIColor.labelColor;//ISMSHeaderButtonColor;
-			self.playAllLabel.textAlignment = NSTextAlignmentCenter;
-			self.playAllLabel.font = ISMSRegularFont(24);
-			self.playAllLabel.text = @"Play All";
-			[self.headerView2 addSubview:self.playAllLabel];
-			
-			self.playAllButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			self.playAllButton.frame = CGRectMake(0, 0, 160, 40);
-			self.playAllButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-			[self.playAllButton addTarget:self action:@selector(playAllAction:) forControlEvents:UIControlEventTouchUpInside];
-			[self.headerView2 addSubview:self.playAllButton];
-			
-			self.shuffleLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 0, 160, 50)];
-			self.shuffleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-//			self.shuffleLabel.backgroundColor = [UIColor clearColor];
-            self.shuffleLabel.textColor = UIColor.labelColor;//ISMSHeaderButtonColor;
-			self.shuffleLabel.textAlignment = NSTextAlignmentCenter;
-			self.shuffleLabel.font = ISMSRegularFont(24);
-			self.shuffleLabel.text = @"Shuffle";
-			[self.headerView2 addSubview:self.shuffleLabel];
-			
-			self.shuffleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			self.shuffleButton.frame = CGRectMake(160, 0, 160, 40);
-			self.shuffleButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-			[self.shuffleButton addTarget:self action:@selector(shuffleAction:) forControlEvents:UIControlEventTouchUpInside];
-			[self.headerView2 addSubview:self.shuffleButton];
-		}
-		
-		self.tableView.tableHeaderView = self.headerView;
+		[self.saveEditContainer addSubview:self.deleteSongsLabel];
+        
+        if (self.segmentedControl.selectedSegmentIndex == 0) {
+            [self addHeader];
+        }
 	}
 }
 
@@ -714,9 +640,10 @@
 }
 
 - (void)showDeleteButton {
-	if ([viewObjectsS.multiDeleteList count] == 0) {
+    NSUInteger selectedRowsCount = self.tableView.indexPathsForSelectedRows.count;
+	if (selectedRowsCount == 0) {
 		self.deleteSongsLabel.text = @"Select All";
-	} else if ([viewObjectsS.multiDeleteList count] == 1) {
+	} else if (selectedRowsCount == 1) {
         if (self.segmentedControl.selectedSegmentIndex == 0) {
 			self.deleteSongsLabel.text = @"Delete 1 Folder  ";
         } else {
@@ -724,9 +651,9 @@
         }
 	} else {
         if (self.segmentedControl.selectedSegmentIndex == 0) {
-			self.deleteSongsLabel.text = [NSString stringWithFormat:@"Delete %lu Folders", (unsigned long)[viewObjectsS.multiDeleteList count]];
+			self.deleteSongsLabel.text = [NSString stringWithFormat:@"Delete %lu Folders", (unsigned long)selectedRowsCount];
         } else {
-			self.deleteSongsLabel.text = [NSString stringWithFormat:@"Delete %lu Songs", (unsigned long)[viewObjectsS.multiDeleteList count]];
+			self.deleteSongsLabel.text = [NSString stringWithFormat:@"Delete %lu Songs", (unsigned long)selectedRowsCount];
         }
 	}
 	
@@ -736,16 +663,17 @@
 }
 
 - (void)hideDeleteButton {
-	if (!self.tableView.editing) {
+	if (!self.isEditing) {
 		self.songsCountLabel.hidden = NO;
 		self.cacheSizeLabel.hidden = NO;
 		self.deleteSongsLabel.hidden = YES;
 		return;
 	}
 	
-	if ([viewObjectsS.multiDeleteList count] == 0) {
+    NSUInteger selectedRowsCount = self.tableView.indexPathsForSelectedRows.count;
+	if (selectedRowsCount == 0) {
 		self.deleteSongsLabel.text = @"Select All";
-	} else if ([viewObjectsS.multiDeleteList count] == 1) {
+	} else if (selectedRowsCount == 1) {
         if (self.segmentedControl.selectedSegmentIndex == 0) {
 			self.deleteSongsLabel.text = @"Delete 1 Folder  ";
         } else {
@@ -753,9 +681,9 @@
         }
     } else {
         if (self.segmentedControl.selectedSegmentIndex == 0) {
-			self.deleteSongsLabel.text = [NSString stringWithFormat:@"Delete %lu Folders", (unsigned long)[viewObjectsS.multiDeleteList count]];
+			self.deleteSongsLabel.text = [NSString stringWithFormat:@"Delete %lu Folders", (unsigned long)selectedRowsCount];
         } else {
-			self.deleteSongsLabel.text = [NSString stringWithFormat:@"Delete %lu Songs", (unsigned long)[viewObjectsS.multiDeleteList count]];
+			self.deleteSongsLabel.text = [NSString stringWithFormat:@"Delete %lu Songs", (unsigned long)selectedRowsCount];
         }
 	}
 }
@@ -777,11 +705,11 @@
 
 - (void)editSongsAction:(id)sender {
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
-		if (!self.tableView.editing) {
+		if (!self.isEditing) {
 			[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(showDeleteButton) name:@"showDeleteButton" object: nil];
 			[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(hideDeleteButton) name:@"hideDeleteButton" object: nil];
-			viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
-			[self.tableView setEditing:YES animated:YES];
+            [self setEditing:YES animated:YES];
+//            self.editing = YES;
 			self.editSongsLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
 			self.editSongsLabel.text = @"Done";
 			[self showDeleteButton];
@@ -790,8 +718,8 @@
 		} else {
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"showDeleteButton" object:nil];
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideDeleteButton" object:nil];
-			viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
-			[self.tableView setEditing:NO animated:YES];
+            [self setEditing:NO animated:YES];
+//            self.editing = NO;
 			[self hideDeleteButton];
 			self.editSongsLabel.backgroundColor = [UIColor clearColor];
 			self.editSongsLabel.text = @"Edit";
@@ -803,8 +731,8 @@
 		if (!self.tableView.editing) {
 			[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(showDeleteButton) name:@"showDeleteButton" object: nil];
 			[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(hideDeleteButton) name:@"hideDeleteButton" object: nil];
-			viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
-			[self.tableView setEditing:YES animated:YES];
+            [self setEditing:YES animated:YES];
+//            self.editing = YES;
 			self.editSongsLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
 			self.editSongsLabel.text = @"Done";
 			[self showDeleteButton];
@@ -813,8 +741,8 @@
 		} else {
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"showDeleteButton" object:nil];
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideDeleteButton" object:nil];
-			viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
-			[self.tableView setEditing:NO animated:YES];
+            [self setEditing:NO animated:YES];
+//            self.editing = NO;
 			[self hideDeleteButton];
 			self.editSongsLabel.backgroundColor = [UIColor clearColor];
 			self.editSongsLabel.text = @"Edit";
@@ -823,6 +751,11 @@
 			[self reloadTable];
 		}
 	}
+}
+
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    [super setEditing:editing animated:animated];
+    [self.tableView setEditing:editing animated:animated];
 }
 
 - (void)deleteRowsAtIndexPathsWithAnimation:(NSArray *)indexes {
@@ -837,24 +770,47 @@
     }
 }
 
+- (NSMutableArray<NSString*> *)selectedRowNames {
+    NSMutableArray<NSString*> *selectedRowNames = [[NSMutableArray alloc] init];
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        for (NSIndexPath *indexPath in self.tableView.indexPathsForSelectedRows) {
+            NSString *name = [[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] objectAtIndexSafe:indexPath.row];
+            [selectedRowNames addObject:name];
+        }
+    }
+    return selectedRowNames;
+}
+
+- (NSMutableArray<NSString*> *)selectedRowMD5s {
+    NSMutableArray<NSString*> *selectedRowMD5s = [[NSMutableArray alloc] init];
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        for (NSString *folderName in self.selectedRowNames) {
+            [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
+                FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ", folderName];
+                while ([result next]) {
+                    NSString *md5 = [result stringForColumnIndex:0];
+                    if (md5) [selectedRowMD5s addObject:md5];
+                }
+                [result close];
+            }];
+        }
+    } else if (self.segmentedControl.selectedSegmentIndex == 1) {
+        for (NSIndexPath *indexPath in self.tableView.indexPathsForSelectedRows) {
+            [databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
+                FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cacheQueueList ROWID = ?", @(indexPath.row + 1)];
+                NSString *md5 = [result stringForColumn:@"md5"];
+                if (md5) [selectedRowMD5s addObject:md5];
+                [result close];
+            }];
+        }
+    }
+    return selectedRowMD5s;
+}
+
 - (void)deleteCachedSongs {
 	[self unregisterForNotifications];
-	
-	NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:0];
-	for (NSString *folderName in viewObjectsS.multiDeleteList) {
-		[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-			FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ", folderName];
-			while ([result next]) {
-				@autoreleasepool {
-					NSString *md5 = [result stringForColumnIndex:0];
-					if (md5) [songMd5s addObject:md5];
-				}
-			}
-			[result close];
-		}];
-	}
 			
-	for (NSString *md5 in songMd5s) {
+	for (NSString *md5 in self.selectedRowMD5s) {
 		@autoreleasepool {
 			[ISMSSong removeSongFromCacheDbQueueByMD5:md5];
 		}
@@ -876,11 +832,8 @@
 - (void)deleteQueuedSongs {
 	[self unregisterForNotifications];
 	
-	// Sort the multiDeleteList to make sure it's accending
-	[viewObjectsS.multiDeleteList sortUsingSelector:@selector(compare:)];
-		
 	// Delete each song from the database
-	for (NSString *md5 in viewObjectsS.multiDeleteList) {
+	for (NSString *md5 in self.selectedRowMD5s) {
 		//NSDate *inside = [NSDate date];
 		if (cacheQueueManagerS.isQueueDownloading) {
 			// Check if we're deleting the song that's currently caching. If so, stop the download.
@@ -910,30 +863,35 @@
 }
 
 - (void)deleteSongsAction:(id)sender {
-	if (self.tableView.editing) {
+	if (self.isEditing) {
 		if ([self.deleteSongsLabel.text isEqualToString:@"Select All"]) {
 			if (self.segmentedControl.selectedSegmentIndex == 0) {
 				// Select all the rows
-				for (NSArray *section in self.listOfArtistsSections) {
-					for (NSString *folderName in section) {
-						//DLog(@"folderName: %@", folderName);
-						[viewObjectsS.multiDeleteList addObject:folderName];
-					}
-				}
+                NSUInteger sectionCount = self.listOfArtistsSections.count;
+                for (NSUInteger section = 0; section < sectionCount; section++) {
+                    NSUInteger rowCount = [(NSArray*)self.listOfArtistsSections[section] count];
+                    for (NSUInteger row = 0; row < rowCount; row++) {
+                        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section] animated:NO scrollPosition:UITableViewScrollPositionNone];
+                    }
+                }
 			} else {
 				// Select all the rows
-				[databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
-					FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cacheQueueList"];
-					while ([result next]) {
-						@autoreleasepool {
-							NSString *md5 = [result stringForColumnIndex:0];
-							if (md5) [viewObjectsS.multiDeleteList addObject:md5];
-						}
-					}
-				}];
+                NSUInteger rowCount = [databaseS.cacheQueueDbQueue intForQuery:@"SELECT count(*) FROM cacheQueueList"];
+                for (NSUInteger i = 0; i < rowCount; i++) {
+                    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+                }
+//				[databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
+//					FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cacheQueueList"];
+//					while ([result next]) {
+//						@autoreleasepool {
+//							NSString *md5 = [result stringForColumnIndex:0];
+//							if (md5) [viewObjectsS.multiDeleteList addObject:md5];
+//						}
+//					}
+//				}];
 			}
 			
-			[self.tableView reloadData];
+//			[self.tableView reloadData];
 			[self showDeleteButton];
 		} else {
 			[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Deleting"];
@@ -1024,7 +982,6 @@
         cell.hideCoverArt = YES;
         cell.hideSecondaryLabel = YES;
         cell.hideDurationLabel = YES;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         NSString *name = [[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] objectAtIndexSafe:indexPath.row];
         [cell updateWithModel:[ISMSArtist artistWithName:name andArtistId:@""]];
         return cell;
@@ -1078,13 +1035,13 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return UITableViewCellEditingStyleNone;
-	//return UITableViewCellEditingStyleDelete;
+//	return UITableViewCellEditingStyleNone;
+	return UITableViewCellEditingStyleDelete;
 }
 
 #pragma mark Table view delegate
 
-NSInteger trackSort1(id obj1, id obj2, void *context) {
+static NSInteger trackSort(id obj1, id obj2, void *context) {
 	NSUInteger track1 = [(NSNumber*)[(NSArray*)obj1 objectAtIndexSafe:1] intValue];
 	NSUInteger track2 = [(NSNumber*)[(NSArray*)obj2 objectAtIndexSafe:1] intValue];
     if (track1 < track2) {
@@ -1099,6 +1056,11 @@ NSInteger trackSort1(id obj1, id obj2, void *context) {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
 	if (!indexPath) return;
+    
+    if (self.isEditing) {
+        [self showDeleteButton];
+        return;
+    }
 	
     if (self.segmentedControl.selectedSegmentIndex == 0) {
 		if (viewObjectsS.isCellEnabled) {
@@ -1158,7 +1120,7 @@ NSInteger trackSort1(id obj1, id obj2, void *context) {
 								
 								// Sort by track number
                                 if (!multipleSameTrackNumbers) {
-									[cacheAlbumViewController.listOfSongs sortUsingFunction:trackSort1 context:NULL];
+									[cacheAlbumViewController.listOfSongs sortUsingFunction:trackSort context:NULL];
                                 }
 							}
 						}
@@ -1179,7 +1141,16 @@ NSInteger trackSort1(id obj1, id obj2, void *context) {
 	}
 }
 
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (!indexPath) return;
+    
+    if (self.isEditing) {
+        [self hideDeleteButton];
+    }
+}
+
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     // Custom queue and delete actions
     NSString *name = [[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] objectAtIndexSafe:indexPath.row];
     return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{

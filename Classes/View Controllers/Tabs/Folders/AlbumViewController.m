@@ -76,6 +76,8 @@
 	[self.tableView addSubview:self.refreshHeaderView];
     
     self.tableView.rowHeight = 60.0;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorColor = UIColor.clearColor;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
     
 	if (UIDevice.isIPad) {
@@ -246,17 +248,17 @@
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
     if (indexPath.row < self.dataModel.albumsCount) {
         // Album
+        cell.hideSecondaryLabel = YES;
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
         cell.hideDurationLabel = YES;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         [cell updateWithModel:[self.dataModel albumForTableViewRow:indexPath.row]];
     } else {
         // Song
+        cell.hideSecondaryLabel = NO;
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = YES;
         cell.hideDurationLabel = NO;
-        cell.accessoryType = UITableViewCellAccessoryNone;
         [cell updateWithModel:[self.dataModel songForTableViewRow:indexPath.row]];
     }
     return cell;
@@ -288,7 +290,7 @@
 	}
 }
 
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.dataModel.albumsCount) {
         return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel albumForTableViewRow:indexPath.row]];
     } else {

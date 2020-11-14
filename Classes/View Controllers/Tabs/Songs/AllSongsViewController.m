@@ -553,7 +553,7 @@
 	}
 }
 
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     ISMSSong *song = [self songAtIndexPath:indexPath];
     if (!song.isVideo) {
         return [SwipeAction downloadAndQueueConfigWithModel:song];
