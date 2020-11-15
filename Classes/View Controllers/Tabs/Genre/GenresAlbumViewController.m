@@ -42,15 +42,16 @@
     [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor].active = YES;
     
     // Create the play all and shuffle buttons and constrain to the container view
+    __weak GenresAlbumViewController *weakSelf = self;
     PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
         [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
         [EX2Dispatch runInMainThreadAsync:^{
-            [self playAllSongs];
+            [weakSelf playAllSongs];
         }];
     } shuffleHandler:^{
         [viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
         [EX2Dispatch runInMainThreadAsync:^{
-            [self shuffleSongs];
+            [weakSelf shuffleSongs];
         }];
     }];
     [headerView addSubview:playAllAndShuffleHeader];
@@ -63,40 +64,6 @@
     [self.tableView.tableHeaderView layoutIfNeeded];
     self.tableView.tableHeaderView = self.tableView.tableHeaderView;
 	
-//	// Add the play all button + shuffle button
-//	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
-//	headerView.backgroundColor = ISMSHeaderColor;
-//
-//	UILabel *playAllLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
-//	playAllLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
-//	playAllLabel.backgroundColor = [UIColor clearColor];
-//	playAllLabel.textColor = ISMSHeaderButtonColor;
-//	playAllLabel.textAlignment = NSTextAlignmentCenter;
-//	playAllLabel.font = ISMSBoldFont(24);
-//	playAllLabel.text = @"Play All";
-//	[headerView addSubview:playAllLabel];
-//
-//	UIButton *playAllButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//	playAllButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
-//	playAllButton.frame = CGRectMake(0, 0, 160, 40);
-//	[playAllButton addTarget:self action:@selector(playAllAction:) forControlEvents:UIControlEventTouchUpInside];
-//	[headerView addSubview:playAllButton];
-//
-//	UILabel *shuffleLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 0, 160, 50)];
-//	shuffleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-//	shuffleLabel.backgroundColor = [UIColor clearColor];
-//	shuffleLabel.textColor = ISMSHeaderButtonColor;
-//	shuffleLabel.textAlignment = NSTextAlignmentCenter;
-//	shuffleLabel.font = ISMSBoldFont(24);
-//	shuffleLabel.text = @"Shuffle";
-//	[headerView addSubview:shuffleLabel];
-//
-//	UIButton *shuffleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//	shuffleButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-//	shuffleButton.frame = CGRectMake(160, 0, 160, 40);
-//	[shuffleButton addTarget:self action:@selector(shuffleAction:) forControlEvents:UIControlEventTouchUpInside];
-//	[headerView addSubview:shuffleButton];
-	
 	self.tableView.tableHeaderView = headerView;
     self.tableView.rowHeight = 60.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
@@ -105,7 +72,6 @@
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
 }
-
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -116,7 +82,6 @@
 		self.navigationItem.rightBarButtonItem = nil;
 	}
 }
-
 
 - (IBAction)nowPlayingAction:(id)sender {
 	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];

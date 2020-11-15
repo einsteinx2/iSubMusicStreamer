@@ -102,15 +102,16 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
     [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor].active = YES;
     
     // Create the play all and shuffle buttons and constrain to the container view
+    __weak CacheAlbumViewController *weakSelf = self;
     PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
         [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
         [EX2Dispatch runInBackgroundAsync:^{
-            [self loadPlayAllPlaylist:NO];
+            [weakSelf loadPlayAllPlaylist:NO];
         }];
     } shuffleHandler:^{
         [viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
         [EX2Dispatch runInBackgroundAsync:^{
-            [self loadPlayAllPlaylist:YES];
+            [weakSelf loadPlayAllPlaylist:YES];
         }];
     }];
     [headerView addSubview:playAllAndShuffleHeader];

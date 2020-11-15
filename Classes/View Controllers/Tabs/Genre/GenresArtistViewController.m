@@ -37,15 +37,16 @@
     [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor].active = YES;
     
     // Create the play all and shuffle buttons and constrain to the container view
+    __weak GenresArtistViewController *weakSelf = self;
     PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
         [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
         [EX2Dispatch runInMainThreadAsync:^{
-            [self playAllSongs];
+            [weakSelf playAllSongs];
         }];
     } shuffleHandler:^{
         [viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
         [EX2Dispatch runInMainThreadAsync:^{
-            [self shuffleSongs];
+            [weakSelf shuffleSongs];
         }];
     }];
     [headerView addSubview:playAllAndShuffleHeader];

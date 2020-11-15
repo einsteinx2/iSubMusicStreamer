@@ -70,7 +70,7 @@
     // Add the pull to refresh view
     __weak AlbumViewController *weakSelf = self;
     self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
-        [viewObjectsS showAlbumLoadingScreen:weakSelf.view sender:self];
+        [viewObjectsS showAlbumLoadingScreen:weakSelf.view sender:weakSelf];
         [weakSelf.dataModel startLoad];
     }];
     
@@ -82,8 +82,6 @@
 	if (UIDevice.isIPad) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
-	
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createReflection) name:@"createReflection"  object:nil];
 }
 
 - (void)reloadData {
@@ -116,8 +114,6 @@
 
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
-//	self.albumInfoArtView.delegate = nil;
 	self.dataModel.delegate = nil;
 }
 
@@ -128,15 +124,6 @@
     [self.refreshControl endRefreshing];
 	[viewObjectsS hideLoadingScreen];
 }
-
-//- (void)createReflection {
-//	self.albumInfoArtReflection.image = [self.albumInfoArtView reflectedImageWithHeight:self.albumInfoArtReflection.height];
-//}
-//
-//- (void)asyncImageViewFinishedLoading:(AsynchronousImageView *)asyncImageView {
-//	// Make sure to set the reflection again once the art loads
-//	[self createReflection];
-//}
 
 // Autolayout solution described here: https://medium.com/@aunnnn/table-header-view-with-autolayout-13de4cfc4343
 - (void)addHeaderAndIndex {
@@ -152,10 +139,11 @@
         [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor].active = YES;
         
         // Create the play all and shuffle buttons and constrain to the container view
+        __weak AlbumViewController *weakSelf = self;
         PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
-            [databaseS playAllSongs:self.myId artist:self.myArtist];
+            [databaseS playAllSongs:weakSelf.myId artist:weakSelf.myArtist];
         } shuffleHandler:^{
-            [databaseS shuffleAllSongs:self.myId artist:self.myArtist];
+            [databaseS shuffleAllSongs:weakSelf.myId artist:weakSelf.myArtist];
         }];
         [headerView addSubview:playAllAndShuffleHeader];
         [playAllAndShuffleHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor].active = YES;
@@ -202,14 +190,6 @@
         }
 	}
 }
-
-//- (IBAction)playAllAction:(id)sender {
-//	[databaseS playAllSongs:self.myId artist:self.myArtist];
-//}
-
-//- (IBAction)shuffleAction:(id)sender {
-//	[databaseS shuffleAllSongs:self.myId artist:self.myArtist];
-//}
 
 - (IBAction)nowPlayingAction:(id)sender {
 	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
@@ -269,12 +249,10 @@
 	if (viewObjectsS.isCellEnabled) {
 		if (indexPath.row < self.dataModel.albumsCount) {
             ISMSAlbum *anAlbum = [self.dataModel albumForTableViewRow:indexPath.row];
-            			
 			AlbumViewController *albumViewController = [[AlbumViewController alloc] initWithArtist:nil orAlbum:anAlbum];	
 			[self pushViewControllerCustom:albumViewController];
 		} else {
             ISMSSong *playedSong = [self.dataModel playSongAtTableViewRow:indexPath.row];
-            
             if (!playedSong.isVideo) {
                 [self showPlayer];
             }

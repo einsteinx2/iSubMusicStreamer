@@ -11,7 +11,8 @@ import SnapKit
 
 @objc class AutoScrollingLabel: UIView {
     private let scrollView = UIScrollView()
-    private let label = UILabel()
+    private let label1 = UILabel()
+    private let label2 = UILabel()
     private var animator: UIViewPropertyAnimator?
     
     // Hack to use inside table header due to UITableView header AutoLayout weirdness
@@ -21,19 +22,32 @@ import SnapKit
     @objc var repeatScroll = true
     
     @objc var font: UIFont? {
-        get { label.font }
-        set { label.font = newValue }
+        get {
+            label1.font
+        }
+        set {
+            label1.font = newValue
+            label2.font = newValue
+        }
     }
     
     @objc var textColor: UIColor? {
-        get { label.textColor }
-        set { label.textColor = newValue }
+        get {
+            label1.textColor
+        }
+        set {
+            label1.textColor = newValue
+            label2.textColor = newValue
+        }
     }
     
     @objc var text: String? {
-        get { label.text }
+        get {
+            label1.text
+        }
         set {
-            label.text = newValue
+            label1.text = newValue
+            label2.text = newValue
             updateLabelSize()
             if autoScroll {
                 startScrolling()
@@ -60,8 +74,13 @@ import SnapKit
             make.leading.trailing.top.bottom.equalTo(scrollView)
         }
         
-        contentView.addSubview(label)
-        label.snp.makeConstraints { make in
+        contentView.addSubview(label1)
+        label1.snp.makeConstraints { make in
+            make.centerY.equalTo(scrollView)
+        }
+        
+        contentView.addSubview(label2)
+        label2.snp.makeConstraints { make in
             make.centerY.equalTo(scrollView)
         }
     }
@@ -76,8 +95,7 @@ import SnapKit
         updateLabelSize()
         scrollView.layoutSubviews()
 
-        
-        if (autoScroll) {
+        if autoScroll {
             startScrolling()
         }
     }
@@ -89,11 +107,16 @@ import SnapKit
                                      options: .usesLineFragmentOrigin,
                                      attributes: [NSAttributedString.Key.font: font],
                                      context: nil)
-        label.frame.size.width = size.width
+        label1.frame.size.width = size.width
+        label2.frame.size.width = size.width
     }
     
     private func createAnimator(delay: TimeInterval) {
-        guard scrollView.frame.width > 0, scrollView.frame.width < label.frame.width else { return }
+        guard scrollView.frame.width > 0, scrollView.frame.width < label1.frame.width else { return }
+        
+        // Set initial positions
+        label1.frame.origin.x = 0
+        label2.frame.origin.x = label1.frame.width + 50//scrollView.frame.width
         
         // Stop any existing animation
         stopScrolling()
@@ -101,12 +124,14 @@ import SnapKit
         // Create the new animation
         let startTime = Date()
         let minDuration = 1.0
-        var duration = TimeInterval(label.frame.width - scrollView.frame.width) * 0.03
+        var duration = TimeInterval((label1.frame.width * 2) - scrollView.frame.width) * 0.03
         duration = duration < minDuration ? minDuration : duration
-        animator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: duration, delay: delay, options: .curveLinear, animations: {
-            let x = self.label.frame.width - self.scrollView.frame.width + 20
+        animator = UIViewPropertyAnimator(duration: duration, curve: .linear) { [unowned self] in
+            // Animate to show the second label
+            let x = self.label1.frame.width + 50
             self.scrollView.contentOffset = CGPoint(x: x, y: self.scrollView.contentOffset.y)//0)
-        }, completion: { position in
+        }
+        animator?.addCompletion { [unowned self] position in
             // Hack due to UIKit bug that causes the completion block to fire instantly
             // if animation starts before the view is fully displayed like in a table cell
             guard Date().timeIntervalSince(startTime) > (delay + duration) * 0.9 else {
@@ -117,16 +142,14 @@ import SnapKit
                 return
             }
             
-            // Scroll back when finished
-            self.animator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: duration, delay: 0.75, options: .curveLinear, animations: {
-                self.scrollView.contentOffset = CGPoint(x: 0, y: self.scrollView.contentOffset.y)//CGPoint.zero
-            }, completion: { _ in
-                self.animator = nil;
-                if (self.repeatScroll) {
-                    self.startScrolling(delay: delay)
-                }
-            });
-        })
+            // Reset scroll view before the next run
+            self.scrollView.contentOffset = CGPoint(x: 0, y: self.scrollView.contentOffset.y)
+            self.animator = nil;
+            if self.repeatScroll {
+                self.startScrolling(delay: delay * 5)
+            }
+        }
+        animator?.isInterruptible = true
     }
     
     @objc func startScrolling(delay: TimeInterval = 2.5) {
@@ -135,10 +158,19 @@ import SnapKit
     }
     
     @objc func stopScrolling() {
-        if let animator = animator, animator.isInterruptible {
-            animator.stopAnimation(true)
-        }
+        animator?.stopAnimation(true)
         animator = nil
         self.scrollView.contentOffset = CGPoint.zero
+    }
+    
+    deinit {
+        stopScrolling()
+    }
+    
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if self.window == nil {
+            self.stopScrolling()
+        }
     }
 }

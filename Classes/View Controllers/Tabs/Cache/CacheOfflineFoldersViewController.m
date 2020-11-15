@@ -89,15 +89,16 @@
     [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor].active = YES;
     
     // Create the play all and shuffle buttons and constrain to the container view
+    __weak CacheOfflineFoldersViewController *weakSelf = self;
     PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
         [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
         [EX2Dispatch runInMainThreadAsync:^{
-            [self loadPlayAllPlaylist:NO];
+            [weakSelf loadPlayAllPlaylist:NO];
         }];
     } shuffleHandler:^{
         [viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
         [EX2Dispatch runInMainThreadAsync:^{
-            [self loadPlayAllPlaylist:YES];
+            [weakSelf loadPlayAllPlaylist:YES];
         }];
     }];
     [headerView addSubview:playAllAndShuffleHeader];
