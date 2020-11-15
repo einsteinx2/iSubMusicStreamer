@@ -15,7 +15,7 @@
 - (void)removeObjectAtIndexSafe:(NSUInteger)index;
 - (void)removeObjectSafe:(id)object;
 - (void)addObjectsFromArraySafe:(NSArray *)array;
-+ (id)orderedSetWithArraySafe:(NSArray *)array;
-- (id)initWithArraySafe:(NSArray *)array;
++ (instancetype)orderedSetWithArraySafe:(NSArray *)array;
+- (instancetype)initWithArraySafe:(NSArray *)array;
 
 @end

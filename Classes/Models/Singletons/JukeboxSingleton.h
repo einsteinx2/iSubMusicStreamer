@@ -14,13 +14,16 @@
 
 #define jukeboxS ((JukeboxSingleton *)[JukeboxSingleton sharedInstance])
 
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(Jukebox)
 @interface JukeboxSingleton : NSObject
 
 @property BOOL jukeboxIsPlaying;
 @property float jukeboxGain;
 //@property (strong) EX2SimpleConnectionQueue *connectionQueue;
 
-+ (id)sharedInstance;
++ (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
 // Jukebox control methods
 - (void)jukeboxPlaySongAtPosition:(NSNumber *)position;
@@ -39,5 +42,7 @@
 - (void)jukeboxGetInfo;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

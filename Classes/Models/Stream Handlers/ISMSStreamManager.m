@@ -743,7 +743,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentPlaylistOrderChanged) name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
 }
 
-+ (id)sharedInstance
++ (instancetype)sharedInstance
 {
     static ISMSStreamManager *sharedInstance = nil;
     static dispatch_once_t once = 0;

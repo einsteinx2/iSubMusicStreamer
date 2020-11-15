@@ -239,7 +239,7 @@
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(hideLoadingScreen) name:ISMSNotification_HideLoadingScreen object:nil];
 }
 
-+ (id)sharedInstance {
++ (instancetype)sharedInstance {
     static ViewObjectsSingleton *sharedInstance = nil;
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{

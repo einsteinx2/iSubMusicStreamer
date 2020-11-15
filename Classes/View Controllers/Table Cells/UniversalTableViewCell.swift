@@ -91,8 +91,7 @@ import SnapKit
         cachedIndicator.isHidden = true
         contentView.addSubview(cachedIndicator)
         cachedIndicator.snp.makeConstraints { make in
-            make.leading.equalTo(contentView)
-            make.top.equalTo(contentView)
+            make.leading.top.equalToSuperview()
         }
         
         makeHeaderLabelConstraints()
@@ -133,9 +132,7 @@ import SnapKit
         headerLabel.snp.remakeConstraints { make in
             if hideHeaderLabel { make.height.equalTo(0) }
             else { make.height.equalTo(20)}
-            make.leading.equalTo(contentView)
-            make.trailing.equalTo(contentView)
-            make.top.equalTo(contentView)
+            make.leading.trailing.top.equalToSuperview()
         }
     }
     
@@ -143,9 +140,8 @@ import SnapKit
         numberLabel.snp.remakeConstraints { make in
             if hideNumberLabel { make.width.equalTo(0) }
             else { make.width.equalTo(numberLabel.snp.height).multipliedBy(0.75) }
-            make.leading.equalTo(contentView)
+            make.leading.bottom.equalToSuperview()
             make.top.equalTo(headerLabel.snp.bottom)
-            make.bottom.equalTo(contentView)
         }
     }
     
@@ -155,7 +151,7 @@ import SnapKit
             else { make.width.equalTo(coverArtView.snp.height) }
             make.leading.equalTo(numberLabel.snp.trailing)
             make.top.equalTo(headerLabel.snp.bottom)
-            make.bottom.equalTo(contentView)
+            make.bottom.equalToSuperview()
         }
     }
     
@@ -171,11 +167,11 @@ import SnapKit
     private func makeSecondaryLabelConstraints() {
         secondaryLabel.snp.remakeConstraints { make in
             if hideSecondaryLabel { make.height.equalTo(0) }
-            else { make.height.equalTo(contentView).multipliedBy(0.33) }
+            else { make.height.equalToSuperview().multipliedBy(0.33) }
             make.leading.equalTo(primaryLabel)
             make.trailing.equalTo(primaryLabel)
             make.top.equalTo(primaryLabel.snp.bottom)
-            make.bottom.equalTo(contentView)
+            make.bottom.equalToSuperview()
         }
     }
     
@@ -183,9 +179,9 @@ import SnapKit
         durationLabel.snp.remakeConstraints { make in
             if hideDurationLabel { make.width.equalTo(0) }
             else { make.width.equalTo(durationLabel.snp.height).multipliedBy(0.75) }
-            make.trailing.equalTo(contentView).offset(hideDurationLabel ? 0 : -5)
+            make.trailing.equalToSuperview().offset(hideDurationLabel ? 0 : -5)
             make.top.equalTo(headerLabel.snp.bottom)
-            make.bottom.equalTo(contentView)
+            make.bottom.equalToSuperview()
         }
     }
 }

@@ -13,17 +13,20 @@
 
 #define musicS ((MusicSingleton *)[MusicSingleton sharedInstance])
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class ISMSSong;
+NS_SWIFT_NAME(Music)
 @interface MusicSingleton : NSObject
 
 @property BOOL isAutoNextNotificationOn;
 @property (readonly) BOOL showPlayerIcon;
 
-+ (id)sharedInstance;
++ (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
 - (void)startSongAtOffsetInBytes:(unsigned long long)bytes andSeconds:(double)seconds;
 - (void)startSong;
-- (ISMSSong *)playSongAtPosition:(NSInteger)position;
+- (nullable ISMSSong *)playSongAtPosition:(NSInteger)position;
 - (void)nextSong;
 - (void)prevSong;
 - (void)resumeSong;
@@ -31,5 +34,7 @@
 - (void)updateLockScreenInfo;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

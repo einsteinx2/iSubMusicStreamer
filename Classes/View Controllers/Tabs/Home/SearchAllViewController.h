@@ -8,12 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class ISMSArtist, ISMSAlbum, ISMSSong;
 @interface SearchAllViewController : UITableViewController
 
-@property (strong) NSMutableArray *cellNames;
-@property (strong) NSArray *listOfArtists;
-@property (strong) NSArray *listOfAlbums;
-@property (strong) NSArray *listOfSongs;
-@property (strong) NSString *query;
+@property (nullable, strong) NSMutableArray *cellNames;
+@property (nullable, strong) NSArray<ISMSArtist*> *listOfArtists;
+@property (nullable, strong) NSArray<ISMSAlbum*> *listOfAlbums;
+@property (nullable, strong) NSArray<ISMSSong*> *listOfSongs;
+@property (nullable, strong) NSString *query;
 
 @end
+
+NS_ASSUME_NONNULL_END

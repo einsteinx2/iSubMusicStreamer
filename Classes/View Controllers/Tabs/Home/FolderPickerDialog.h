@@ -47,6 +47,8 @@
 
 @class ShuffleFolderPickerViewController;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FolderPickerDialog : UIView {
 @private	
 	UIButton *closeButton_;
@@ -67,3 +69,5 @@
 - (void)dismiss:(BOOL)animated;
 - (void)show;
 @end
+
+NS_ASSUME_NONNULL_END

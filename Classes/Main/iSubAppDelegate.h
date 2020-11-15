@@ -19,6 +19,9 @@
 
 @class BBSplitViewController, iPadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, iPhoneStreamingPlayerViewController, SettingsViewController, FoldersViewController, AudioStreamer, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HTTPServer, ServerListViewController;
 
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(AppDelegate)
 @interface iSubAppDelegate : NSObject <UIApplicationDelegate, MFMailComposeViewControllerDelegate, SUSLoaderDelegate>
 
 @property (strong) HTTPServer *hlsProxyServer;
@@ -61,14 +64,14 @@
 
 @property BOOL showIntro;
 
-@property (strong) NSURL *referringAppUrl;
+@property (nullable, strong) NSURL *referringAppUrl;
 
 //@property (strong) MPMoviePlayerController *moviePlayer;
-@property (strong) AVPlayerViewController *videoPlayerController;
+@property (nullable, strong) AVPlayerViewController *videoPlayerController;
 
 - (void)backToReferringApp;
 
-+ (iSubAppDelegate *)sharedInstance;
++ (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
 - (void)enterOnlineModeForce;
 - (void)enterOfflineModeForce;
@@ -92,5 +95,6 @@
 
 @end
 
-#endif
+NS_ASSUME_NONNULL_END
 
+#endif

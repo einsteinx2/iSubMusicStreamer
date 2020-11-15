@@ -15,23 +15,28 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef enum {
 	ISMSSearchSongsSearchType_Artists = 0,
 	ISMSSearchSongsSearchType_Albums,
 	ISMSSearchSongsSearchType_Songs
 } ISMSSearchSongsSearchType;
 
+@class ISMSArtist, ISMSAlbum, ISMSSong;
 @interface SearchSongsViewController : UITableViewController 
 
-@property (copy) NSString *query;
+@property (nullable, copy) NSString *query;
 @property ISMSSearchSongsSearchType searchType;
-@property (strong) NSMutableArray *listOfArtists;
-@property (strong) NSMutableArray *listOfAlbums;
-@property (strong) NSMutableArray *listOfSongs;
+@property (nullable, strong) NSMutableArray<ISMSArtist*> *listOfArtists;
+@property (nullable, strong) NSMutableArray<ISMSAlbum*> *listOfAlbums;
+@property (nullable, strong) NSMutableArray<ISMSSong*> *listOfSongs;
 @property NSUInteger offset;
 @property BOOL isMoreResults;
 @property BOOL isLoading;
-@property (strong) NSURLConnection *connection;
-@property (strong) NSMutableData *receivedData;	
+@property (nullable, strong) NSURLConnection *connection;
+@property (nullable, strong) NSMutableData *receivedData;	
 
 @end
+
+NS_ASSUME_NONNULL_END

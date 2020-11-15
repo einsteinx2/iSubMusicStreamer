@@ -208,7 +208,7 @@
                                                   delegateQueue:nil];
 }
 
-+ (id)sharedInstance {
++ (instancetype)sharedInstance {
     static JukeboxSingleton *sharedInstance = nil;
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{

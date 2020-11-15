@@ -90,7 +90,7 @@ static BOOL _isThrottlingEnabled = YES;
     }
 }
 
-- (id)initOnView:(UIView *)theParentView message:(NSString *)theMessage image:(UIImage*)theImage displayTime:(NSTimeInterval)time
+- (instancetype)initOnView:(UIView *)theParentView message:(NSString *)theMessage image:(UIImage*)theImage displayTime:(NSTimeInterval)time
 {
 	if ((self = [super initWithNibName:@"EX2SlidingNotification" bundle:[EX2Kit resourceBundle]])) 
 	{
@@ -110,22 +110,22 @@ static BOOL _isThrottlingEnabled = YES;
 	return self;
 }
 
-- (id)initOnView:(UIView *)theParentView message:(NSString *)theMessage image:(UIImage*)theImage
+- (instancetype)initOnView:(UIView *)theParentView message:(NSString *)theMessage image:(UIImage*)theImage
 {
 	return [self initOnView:theParentView message:theMessage image:theImage displayTime:DEFAULT_DISPLAY_TIME];
 }
 
-+ (id)slidingNotificationOnMainWindowWithMessage:(NSString *)theMessage image:(UIImage*)theImage
++ (instancetype)slidingNotificationOnMainWindowWithMessage:(NSString *)theMessage image:(UIImage*)theImage
 {
 	return [[self alloc] initOnView:[self mainWindow] message:theMessage image:theImage];
 }
 
-+ (id)slidingNotificationOnTopViewWithMessage:(NSString *)theMessage image:(UIImage*)theImage
++ (instancetype)slidingNotificationOnTopViewWithMessage:(NSString *)theMessage image:(UIImage*)theImage
 {
 	return [[self alloc] initOnView:[self mainWindow].subviews.firstObject message:theMessage image:theImage];
 }
 
-+ (id)slidingNotificationOnView:(UIView *)theParentView message:(NSString *)theMessage image:(UIImage*)theImage
++ (instancetype)slidingNotificationOnView:(UIView *)theParentView message:(NSString *)theMessage image:(UIImage*)theImage
 {
 	return [[self alloc] initOnView:theParentView message:theMessage image:theImage];
 }

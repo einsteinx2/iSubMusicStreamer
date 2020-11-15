@@ -11,7 +11,7 @@
 
 @implementation ZKCDTrailer64Locator
 
-- (id)init {
+- (instancetype)init {
     if (self = [super init]) {
         self.magicNumber = ZKCDTrailer64LocatorMagicNumber;
         self.diskNumberWithStartOfCentralDirectory = 0;

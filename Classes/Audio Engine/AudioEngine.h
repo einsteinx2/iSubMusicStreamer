@@ -24,21 +24,24 @@
 
 #define audioEngineS ((AudioEngine *)[AudioEngine sharedInstance])
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class ISMSSong, BassParamEqValue, BassStream, SUSRegisterActionLoader, EX2RingBuffer;
+NS_SWIFT_NAME(AudioEngine)
 @interface AudioEngine : NSObject <AVAudioSessionDelegate>
 
-+ (id)sharedInstance;
++ (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
 @property BOOL shouldResumeFromInterruption;
 
-@property (readonly) BassEqualizer *equalizer;
-@property (readonly) BassVisualizer *visualizer;
-@property (strong) BassGaplessPlayer *player;
+@property (nullable, readonly) BassEqualizer *equalizer;
+@property (nullable, readonly) BassVisualizer *visualizer;
+@property (nullable, strong) BassGaplessPlayer *player;
 
 @property NSUInteger startByteOffset;
 @property NSUInteger startSecondsOffset;
 
-@property (strong) iSubBassGaplessPlayerDelegate *delegate;
+@property (nullable, strong) iSubBassGaplessPlayerDelegate *delegate;
 
 // BASS methods
 //
@@ -46,5 +49,7 @@
 - (void)startEmptyPlayer;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

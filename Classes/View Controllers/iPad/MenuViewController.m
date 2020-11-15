@@ -10,7 +10,6 @@
 #import "iPadRootViewController.h"
 #import "StackScrollViewController.h"
 #import "MenuTableViewCell.h"
-#import "NewHomeViewController.h"
 #import "FoldersViewController.h"
 #import "AllAlbumsViewController.h"
 #import "AllSongsViewController.h"
@@ -28,6 +27,7 @@
 #import "Defines.h"
 #import "SavedSettings.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @interface MenuTableItem : NSObject
 @property (nonatomic, strong) UIImage *image;
@@ -349,7 +349,8 @@
 				controller = (UIViewController *)navController;
 				break;
 			}
-			case 1: controller = [[NewHomeViewController alloc] initWithNibName:@"NewHomeViewController-iPad" bundle:nil]; break;
+//			case 1: controller = [[NewHomeViewController alloc] initWithNibName:@"NewHomeViewController-iPad" bundle:nil]; break;
+            case 1: controller = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil]; break;
 			case 2: controller = [[FoldersViewController alloc] initWithNibName:@"FoldersViewController" bundle:nil]; break;
 			case 3: controller = [[PlaylistsViewController alloc] initWithNibName:@"PlaylistsViewController" bundle:nil]; break;
 			case 4: controller = [[PlayingViewController alloc] initWithNibName:@"PlayingViewController" bundle:nil]; break;

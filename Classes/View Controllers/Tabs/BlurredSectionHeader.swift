@@ -31,8 +31,8 @@ import SnapKit
         label.textColor = .label
         contentView.addSubview(label)
         label.snp.makeConstraints { make in
-            make.leading.equalTo(contentView).offset(10)
-            make.trailing.top.bottom.equalTo(contentView)
+            make.leading.equalToSuperview().offset(10)
+            make.trailing.top.bottom.equalToSuperview()
         }
     }
     

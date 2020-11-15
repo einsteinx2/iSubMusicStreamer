@@ -9,6 +9,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /// Static class that wraps various GCD functionality in a simple Objective-C interface
 @interface EX2Dispatch : NSObject
 
@@ -52,10 +54,12 @@
 
 /// Runs a block asyncronously in a parallel background queue
 /// @param block The block to run
-+ (void)runInBackgroundAsync:(void (^)(void))block;
++ (void)runInBackgroundAsync:(void (^)(void))block NS_SWIFT_NAME(runInBackgroundAsync(_:));
 
 /// Runs a block asyncronously in the main thread queue
 /// @param block The block to run
-+ (void)runInMainThreadAsync:(void (^)(void))block;
++ (void)runInMainThreadAsync:(void (^)(void))block NS_SWIFT_NAME(runInMainThreadAsync(_:));
 
 @end
+
+NS_ASSUME_NONNULL_END

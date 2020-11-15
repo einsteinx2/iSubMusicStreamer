@@ -137,7 +137,7 @@
             }];
         } else {
             NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:self.receivedData];
-            SearchXMLParser *parser = [[SearchXMLParser alloc] initXMLParser];
+            SearchXMLParser *parser = [[SearchXMLParser alloc] init];
             [xmlParser setDelegate:parser];
             [xmlParser parse];
             if (self.searchType == ISMSSearchSongsSearchType_Artists) {

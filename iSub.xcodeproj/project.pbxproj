@@ -149,10 +149,6 @@
 		533A2D84113C963300B3A376 /* controller-pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 533A2D80113C963300B3A376 /* controller-pause.png */; };
 		533A2D85113C963300B3A376 /* controller-play.png in Resources */ = {isa = PBXBuildFile; fileRef = 533A2D81113C963300B3A376 /* controller-play.png */; };
 		533A2D86113C963300B3A376 /* controller-previous.png in Resources */ = {isa = PBXBuildFile; fileRef = 533A2D82113C963300B3A376 /* controller-previous.png */; };
-		533C657515ABB952003EAF29 /* NewHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C657B15ABB952003EAF29 /* NewHomeViewController.xib */; };
-		533C657715ABB952003EAF29 /* NewHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C657B15ABB952003EAF29 /* NewHomeViewController.xib */; };
-		533C657C15ABB975003EAF29 /* NewHomeViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C658215ABB975003EAF29 /* NewHomeViewController-iPad.xib */; };
-		533C657E15ABB975003EAF29 /* NewHomeViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C658215ABB975003EAF29 /* NewHomeViewController-iPad.xib */; };
 		533C658A15ABB9A9003EAF29 /* HomeAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C659015ABB9A9003EAF29 /* HomeAlbumViewController.xib */; };
 		533C658C15ABB9A9003EAF29 /* HomeAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C659015ABB9A9003EAF29 /* HomeAlbumViewController.xib */; };
 		533C659115ABB9AD003EAF29 /* SearchSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C659715ABB9AD003EAF29 /* SearchSongsViewController.xib */; };
@@ -216,6 +212,10 @@
 		5349AD041613724D003603AF /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5349AD031613724D003603AF /* Default-568h@2x.png */; };
 		5349AD061613724D003603AF /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5349AD031613724D003603AF /* Default-568h@2x.png */; };
 		5349DF87161E408A0044A781 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D44F8415AA621A00CDD3B8 /* Accelerate.framework */; };
+		534B20DA25619936007FF1D7 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 534B20D925619936007FF1D7 /* HomeViewController.xib */; };
+		534B20DB25619936007FF1D7 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 534B20D925619936007FF1D7 /* HomeViewController.xib */; };
+		534B20E025619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */; };
+		534B20E125619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */; };
 		534E443F1155AD01000B4134 /* default-album-art-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 534E443E1155AD01000B4134 /* default-album-art-small.png */; };
 		53523D8A11CD580D006AEA48 /* GenresAlbumUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53523D8711CD580D006AEA48 /* GenresAlbumUITableViewCell.m */; };
 		53523D8B11CD580D006AEA48 /* GenresArtistUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53523D8911CD580D006AEA48 /* GenresArtistUITableViewCell.m */; };
@@ -323,6 +323,12 @@
 		538C8FE225606299005D6CA9 /* RefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE025606299005D6CA9 /* RefreshControl.swift */; };
 		538C8FE725609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE625609F4F005D6CA9 /* BlurredSectionHeader.swift */; };
 		538C8FE825609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE625609F4F005D6CA9 /* BlurredSectionHeader.swift */; };
+		538C8FEA2560C7AB005D6CA9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */; };
+		538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */; };
+		538C8FEC2560C8BA005D6CA9 /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DD25602526003F962C /* CocoaLumberjackSwift.framework */; };
+		538C8FED2560C8BA005D6CA9 /* CocoaLumberjackSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DD25602526003F962C /* CocoaLumberjackSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		538C8FEE2560C8C4005D6CA9 /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DD25602526003F962C /* CocoaLumberjackSwift.framework */; };
+		538C8FEF2560C8C4005D6CA9 /* CocoaLumberjackSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DD25602526003F962C /* CocoaLumberjackSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		538E5255255A31F2000DF682 /* UIApplication+Orientiation.m in Sources */ = {isa = PBXBuildFile; fileRef = 538E5254255A31F2000DF682 /* UIApplication+Orientiation.m */; };
 		538E5256255A31F2000DF682 /* UIApplication+Orientiation.m in Sources */ = {isa = PBXBuildFile; fileRef = 538E5254255A31F2000DF682 /* UIApplication+Orientiation.m */; };
 		539148BA2559E597004AAC3F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148B92559E597004AAC3F /* CoreServices.framework */; };
@@ -375,18 +381,6 @@
 		53ADBBBD133525BD0098FAE6 /* folder-dropdown-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53ADBBBB133525BD0098FAE6 /* folder-dropdown-arrow@2x.png */; };
 		53ADBBC013352DB40098FAE6 /* FolderDropdownControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ADBBBF13352DB40098FAE6 /* FolderDropdownControl.m */; };
 		53B20D1D12C27AAA00A90DD9 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20D1C12C27AAA00A90DD9 /* Default@2x.png */; };
-		53B20DCE12C2945400A90DD9 /* home-quick-random.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DCD12C2945400A90DD9 /* home-quick-random.png */; };
-		53B20DD212C2957A00A90DD9 /* home-quick-random@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DD112C2957A00A90DD9 /* home-quick-random@2x.png */; };
-		53B20DDD12C298E500A90DD9 /* home-quick-recent@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DD512C298E500A90DD9 /* home-quick-recent@2x.png */; };
-		53B20DDE12C298E500A90DD9 /* home-quick-recent.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DD612C298E500A90DD9 /* home-quick-recent.png */; };
-		53B20DDF12C298E500A90DD9 /* home-quick-newest@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DD712C298E500A90DD9 /* home-quick-newest@2x.png */; };
-		53B20DE012C298E500A90DD9 /* home-quick-newest.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DD812C298E500A90DD9 /* home-quick-newest.png */; };
-		53B20DE112C298E500A90DD9 /* home-quick-frequent@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DD912C298E500A90DD9 /* home-quick-frequent@2x.png */; };
-		53B20DE212C298E500A90DD9 /* home-quick-frequent.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DDA12C298E500A90DD9 /* home-quick-frequent.png */; };
-		53B20DE312C298E500A90DD9 /* home-quick-cancel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DDB12C298E500A90DD9 /* home-quick-cancel@2x.png */; };
-		53B20DE412C298E500A90DD9 /* home-quick-cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DDC12C298E500A90DD9 /* home-quick-cancel.png */; };
-		53B20DE712C29A7600A90DD9 /* home-quick-topbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DE512C29A7600A90DD9 /* home-quick-topbar@2x.png */; };
-		53B20DE812C29A7600A90DD9 /* home-quick-topbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DE612C29A7600A90DD9 /* home-quick-topbar.png */; };
 		53B20E2E12C2A60D00A90DD9 /* home-chat-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20E2B12C2A60D00A90DD9 /* home-chat-ipad.png */; };
 		53B20E2F12C2A60D00A90DD9 /* home-chat.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20E2C12C2A60D00A90DD9 /* home-chat.png */; };
 		53B20E3012C2A60D00A90DD9 /* home-chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20E2D12C2A60D00A90DD9 /* home-chat@2x.png */; };
@@ -403,7 +397,6 @@
 		53B65AC116533E4800472DBF /* back-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B65ABA16533E4800472DBF /* back-tabbaricon@2x.png */; };
 		53B8A1FB11704E100005AA86 /* play-all-note.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B8A1FA11704E100005AA86 /* play-all-note.png */; };
 		53B9D0B41279FAEF00CAB0E0 /* SearchSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B9D0B21279FAEF00CAB0E0 /* SearchSongsViewController.m */; };
-		53BA49431285BD7A0010B380 /* NewHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BA49411285BD7A0010B380 /* NewHomeViewController.m */; };
 		53BB7ECA121B8D8F00BEE7E8 /* CustomUITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BB7EC9121B8D8F00BEE7E8 /* CustomUITextView.m */; };
 		53BB7F9C121B95A600BEE7E8 /* comment-write.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB7F9B121B95A600BEE7E8 /* comment-write.png */; };
 		53BB7FAC121B96E400BEE7E8 /* comment-write-pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB7FAB121B96E400BEE7E8 /* comment-write-pressed.png */; };
@@ -530,18 +523,6 @@
 		53BC2742139AF0DD00A825F1 /* controller-stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 5327F1BE12B8243C00735119 /* controller-stop.png */; };
 		53BC2743139AF0DD00A825F1 /* controller-stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5327F1BF12B8243C00735119 /* controller-stop@2x.png */; };
 		53BC2745139AF0DD00A825F1 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20D1C12C27AAA00A90DD9 /* Default@2x.png */; };
-		53BC2746139AF0DD00A825F1 /* home-quick-random.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DCD12C2945400A90DD9 /* home-quick-random.png */; };
-		53BC2747139AF0DD00A825F1 /* home-quick-random@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DD112C2957A00A90DD9 /* home-quick-random@2x.png */; };
-		53BC2748139AF0DD00A825F1 /* home-quick-recent@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DD512C298E500A90DD9 /* home-quick-recent@2x.png */; };
-		53BC2749139AF0DD00A825F1 /* home-quick-recent.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DD612C298E500A90DD9 /* home-quick-recent.png */; };
-		53BC274A139AF0DD00A825F1 /* home-quick-newest@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DD712C298E500A90DD9 /* home-quick-newest@2x.png */; };
-		53BC274B139AF0DD00A825F1 /* home-quick-newest.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DD812C298E500A90DD9 /* home-quick-newest.png */; };
-		53BC274C139AF0DD00A825F1 /* home-quick-frequent@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DD912C298E500A90DD9 /* home-quick-frequent@2x.png */; };
-		53BC274D139AF0DD00A825F1 /* home-quick-frequent.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DDA12C298E500A90DD9 /* home-quick-frequent.png */; };
-		53BC274E139AF0DD00A825F1 /* home-quick-cancel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DDB12C298E500A90DD9 /* home-quick-cancel@2x.png */; };
-		53BC274F139AF0DD00A825F1 /* home-quick-cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DDC12C298E500A90DD9 /* home-quick-cancel.png */; };
-		53BC2750139AF0DD00A825F1 /* home-quick-topbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DE512C29A7600A90DD9 /* home-quick-topbar@2x.png */; };
-		53BC2751139AF0DD00A825F1 /* home-quick-topbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20DE612C29A7600A90DD9 /* home-quick-topbar.png */; };
 		53BC2752139AF0DD00A825F1 /* home-chat-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20E2B12C2A60D00A90DD9 /* home-chat-ipad.png */; };
 		53BC2753139AF0DD00A825F1 /* home-chat.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20E2C12C2A60D00A90DD9 /* home-chat.png */; };
 		53BC2754139AF0DD00A825F1 /* home-chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20E2D12C2A60D00A90DD9 /* home-chat@2x.png */; };
@@ -614,7 +595,6 @@
 		53BC27FC139AF0DD00A825F1 /* CustomUITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BB7EC9121B8D8F00BEE7E8 /* CustomUITextView.m */; };
 		53BC2803139AF0DD00A825F1 /* HomeAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 531F166D126FA2E600F524BD /* HomeAlbumViewController.m */; };
 		53BC280A139AF0DD00A825F1 /* SearchSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B9D0B21279FAEF00CAB0E0 /* SearchSongsViewController.m */; };
-		53BC280F139AF0DD00A825F1 /* NewHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BA49411285BD7A0010B380 /* NewHomeViewController.m */; };
 		53BC2815139AF0DD00A825F1 /* ModalAlbumArtViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C22CCE128EE81C00FFBA67 /* ModalAlbumArtViewController.m */; };
 		53BC282B139AF0DD00A825F1 /* CustomUIAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 532D9B42131AE19700FD8CA7 /* CustomUIAlertView.m */; };
 		53BC282C139AF0DD00A825F1 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5324C6C513345D75004E6C79 /* OBSlider.m */; };
@@ -1049,14 +1029,8 @@
 		53FE38BB1EA961C80058B925 /* ZKLFHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE387D1EA961C80058B925 /* ZKLFHeader.m */; };
 		53FE38BC1EA961C80058B925 /* ZKLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE387F1EA961C80058B925 /* ZKLog.m */; };
 		53FE38BE1EA961C80058B925 /* ZKLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE387F1EA961C80058B925 /* ZKLog.m */; };
-		D0EA476219DE41510083CE05 /* ISMSPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476119DE41510083CE05 /* ISMSPlayerView.m */; };
-		D0EA476419DE41510083CE05 /* ISMSPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476119DE41510083CE05 /* ISMSPlayerView.m */; };
-		D0EA476719DE41E30083CE05 /* ISMSPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476619DE41E30083CE05 /* ISMSPlayerViewController.m */; };
-		D0EA476919DE41E30083CE05 /* ISMSPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476619DE41E30083CE05 /* ISMSPlayerViewController.m */; };
 		D0EA476C19DE449A0083CE05 /* UIView+AutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476B19DE449A0083CE05 /* UIView+AutoLayout.m */; };
 		D0EA476E19DE449A0083CE05 /* UIView+AutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476B19DE449A0083CE05 /* UIView+AutoLayout.m */; };
-		D0F7918B19DE4DFC008032A3 /* ISMSScrubberView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0F7918A19DE4DFC008032A3 /* ISMSScrubberView.m */; };
-		D0F7918D19DE4DFC008032A3 /* ISMSScrubberView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0F7918A19DE4DFC008032A3 /* ISMSScrubberView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1090,6 +1064,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				538C8FED2560C8BA005D6CA9 /* CocoaLumberjackSwift.framework in Embed Frameworks */,
 				533D18E425602530003F962C /* CocoaLumberjack.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -1101,6 +1076,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				538C8FEF2560C8C4005D6CA9 /* CocoaLumberjackSwift.framework in Embed Frameworks */,
 				533D18E825602539003F962C /* CocoaLumberjack.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -1263,6 +1239,8 @@
 		53493F2C15FC6BD90059492E /* KeychainAccessGroups.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = KeychainAccessGroups.plist; path = Other/KeychainAccessGroups.plist; sourceTree = "<group>"; };
 		53493F3715FC6C3A0059492E /* BassEffectDefaultPresets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = BassEffectDefaultPresets.plist; path = Other/BassEffectDefaultPresets.plist; sourceTree = "<group>"; };
 		5349AD031613724D003603AF /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Images/Other/Default-568h@2x.png"; sourceTree = "<group>"; };
+		534B20D925619936007FF1D7 /* HomeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
+		534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+AddArrangedSubviews.swift"; sourceTree = "<group>"; };
 		534E443E1155AD01000B4134 /* default-album-art-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default-album-art-small.png"; path = "Images/Other/default-album-art-small.png"; sourceTree = "<group>"; };
 		53523D8611CD580D006AEA48 /* GenresAlbumUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenresAlbumUITableViewCell.h; sourceTree = "<group>"; };
 		53523D8711CD580D006AEA48 /* GenresAlbumUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenresAlbumUITableViewCell.m; sourceTree = "<group>"; };
@@ -1374,6 +1352,7 @@
 		538C01AF12C3DCC40061545B /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "back@2x.png"; path = "Images/Other/back@2x.png"; sourceTree = "<group>"; };
 		538C8FE025606299005D6CA9 /* RefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshControl.swift; sourceTree = "<group>"; };
 		538C8FE625609F4F005D6CA9 /* BlurredSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurredSectionHeader.swift; sourceTree = "<group>"; };
+		538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		538E5253255A31F2000DF682 /* UIApplication+Orientiation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Orientiation.h"; sourceTree = "<group>"; };
 		538E5254255A31F2000DF682 /* UIApplication+Orientiation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Orientiation.m"; sourceTree = "<group>"; };
 		539148A62559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/DebugViewController.xib; sourceTree = "<group>"; };
@@ -1381,8 +1360,6 @@
 		539148A82559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SettingsTabViewController.xib; sourceTree = "<group>"; };
 		539148A92559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ServerListViewController.xib; sourceTree = "<group>"; };
 		539148AB2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SubsonicServerEditViewController.xib; sourceTree = "<group>"; };
-		539148AF2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = "Base.lproj/NewHomeViewController-iPad.xib"; sourceTree = "<group>"; };
-		539148B02559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/NewHomeViewController.xib; sourceTree = "<group>"; };
 		539148B22559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/HomeAlbumViewController.xib; sourceTree = "<group>"; };
 		539148B32559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SearchSongsViewController.xib; sourceTree = "<group>"; };
 		539148B42559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ShuffleFolderPickerViewController.xib; sourceTree = "<group>"; };
@@ -1447,18 +1424,6 @@
 		53ADBBBE13352DB40098FAE6 /* FolderDropdownControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderDropdownControl.h; sourceTree = "<group>"; };
 		53ADBBBF13352DB40098FAE6 /* FolderDropdownControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FolderDropdownControl.m; sourceTree = "<group>"; };
 		53B20D1C12C27AAA00A90DD9 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Images/Other/Default@2x.png"; sourceTree = "<group>"; };
-		53B20DCD12C2945400A90DD9 /* home-quick-random.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-random.png"; path = "Images/Home Screen/home-quick-random.png"; sourceTree = "<group>"; };
-		53B20DD112C2957A00A90DD9 /* home-quick-random@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-random@2x.png"; path = "Images/Home Screen/home-quick-random@2x.png"; sourceTree = "<group>"; };
-		53B20DD512C298E500A90DD9 /* home-quick-recent@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-recent@2x.png"; path = "Images/Home Screen/home-quick-recent@2x.png"; sourceTree = "<group>"; };
-		53B20DD612C298E500A90DD9 /* home-quick-recent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-recent.png"; path = "Images/Home Screen/home-quick-recent.png"; sourceTree = "<group>"; };
-		53B20DD712C298E500A90DD9 /* home-quick-newest@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-newest@2x.png"; path = "Images/Home Screen/home-quick-newest@2x.png"; sourceTree = "<group>"; };
-		53B20DD812C298E500A90DD9 /* home-quick-newest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-newest.png"; path = "Images/Home Screen/home-quick-newest.png"; sourceTree = "<group>"; };
-		53B20DD912C298E500A90DD9 /* home-quick-frequent@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-frequent@2x.png"; path = "Images/Home Screen/home-quick-frequent@2x.png"; sourceTree = "<group>"; };
-		53B20DDA12C298E500A90DD9 /* home-quick-frequent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-frequent.png"; path = "Images/Home Screen/home-quick-frequent.png"; sourceTree = "<group>"; };
-		53B20DDB12C298E500A90DD9 /* home-quick-cancel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-cancel@2x.png"; path = "Images/Home Screen/home-quick-cancel@2x.png"; sourceTree = "<group>"; };
-		53B20DDC12C298E500A90DD9 /* home-quick-cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-cancel.png"; path = "Images/Home Screen/home-quick-cancel.png"; sourceTree = "<group>"; };
-		53B20DE512C29A7600A90DD9 /* home-quick-topbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-topbar@2x.png"; path = "Images/Home Screen/home-quick-topbar@2x.png"; sourceTree = "<group>"; };
-		53B20DE612C29A7600A90DD9 /* home-quick-topbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-topbar.png"; path = "Images/Home Screen/home-quick-topbar.png"; sourceTree = "<group>"; };
 		53B20E2B12C2A60D00A90DD9 /* home-chat-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-chat-ipad.png"; path = "Images/Home Screen/home-chat-ipad.png"; sourceTree = "<group>"; };
 		53B20E2C12C2A60D00A90DD9 /* home-chat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-chat.png"; path = "Images/Home Screen/home-chat.png"; sourceTree = "<group>"; };
 		53B20E2D12C2A60D00A90DD9 /* home-chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-chat@2x.png"; path = "Images/Home Screen/home-chat@2x.png"; sourceTree = "<group>"; };
@@ -1475,8 +1440,6 @@
 		53B8A1FA11704E100005AA86 /* play-all-note.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "play-all-note.png"; path = "Images/Other/play-all-note.png"; sourceTree = "<group>"; };
 		53B9D0B11279FAEF00CAB0E0 /* SearchSongsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchSongsViewController.h; sourceTree = "<group>"; };
 		53B9D0B21279FAEF00CAB0E0 /* SearchSongsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchSongsViewController.m; sourceTree = "<group>"; };
-		53BA49401285BD7A0010B380 /* NewHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewHomeViewController.h; sourceTree = "<group>"; };
-		53BA49411285BD7A0010B380 /* NewHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = NewHomeViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		53BB7EC8121B8D8F00BEE7E8 /* CustomUITextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomUITextView.h; sourceTree = "<group>"; };
 		53BB7EC9121B8D8F00BEE7E8 /* CustomUITextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUITextView.m; sourceTree = "<group>"; };
 		53BB7F9B121B95A600BEE7E8 /* comment-write.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "comment-write.png"; path = "Images/Other/comment-write.png"; sourceTree = SOURCE_ROOT; };
@@ -1896,14 +1859,8 @@
 		53FE387D1EA961C80058B925 /* ZKLFHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKLFHeader.m; sourceTree = "<group>"; };
 		53FE387E1EA961C80058B925 /* ZKLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZKLog.h; sourceTree = "<group>"; };
 		53FE387F1EA961C80058B925 /* ZKLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKLog.m; sourceTree = "<group>"; };
-		D0EA476019DE41510083CE05 /* ISMSPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSPlayerView.h; sourceTree = "<group>"; };
-		D0EA476119DE41510083CE05 /* ISMSPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSPlayerView.m; sourceTree = "<group>"; };
-		D0EA476519DE41E30083CE05 /* ISMSPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSPlayerViewController.h; sourceTree = "<group>"; };
-		D0EA476619DE41E30083CE05 /* ISMSPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSPlayerViewController.m; sourceTree = "<group>"; };
 		D0EA476A19DE449A0083CE05 /* UIView+AutoLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AutoLayout.h"; sourceTree = "<group>"; };
 		D0EA476B19DE449A0083CE05 /* UIView+AutoLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AutoLayout.m"; sourceTree = "<group>"; };
-		D0F7918919DE4DFC008032A3 /* ISMSScrubberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSScrubberView.h; sourceTree = "<group>"; };
-		D0F7918A19DE4DFC008032A3 /* ISMSScrubberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSScrubberView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1922,6 +1879,7 @@
 				53329607255EF21D0027C51A /* libsqlite3.tbd in Frameworks */,
 				53F8917B1EB1351D00B3F131 /* libSystem.tbd in Frameworks */,
 				53D9740A255BFDE900AABF7F /* SnapKit in Frameworks */,
+				538C8FEC2560C8BA005D6CA9 /* CocoaLumberjackSwift.framework in Frameworks */,
 				53F8917A1EB1351400B3F131 /* libxml2.tbd in Frameworks */,
 				53F8917C1EB1352300B3F131 /* libz.tbd in Frameworks */,
 				5349DF87161E408A0044A781 /* Accelerate.framework in Frameworks */,
@@ -1961,6 +1919,7 @@
 				53329611255EF23B0027C51A /* libsqlite3.tbd in Frameworks */,
 				5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */,
 				53D97406255BFD9100AABF7F /* SnapKit in Frameworks */,
+				538C8FEE2560C8C4005D6CA9 /* CocoaLumberjackSwift.framework in Frameworks */,
 				5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */,
 				5367C6D51EA92D2400B1C242 /* libz.tbd in Frameworks */,
 				53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */,
@@ -2104,32 +2063,10 @@
 				531D39E8255AB2C1000CB0DF /* Tabs */,
 				531D39E4255AB284000CB0DF /* Settings */,
 				531D39E3255AB26B000CB0DF /* Player */,
-				531D39DF255AB20D000CB0DF /* New Player */,
 				531D39E1255AB23F000CB0DF /* iPad */,
 				53329647255F2E770027C51A /* PlayAllAndShuffleHeader.swift */,
 			);
 			path = "View Controllers";
-			sourceTree = "<group>";
-		};
-		531D39DF255AB20D000CB0DF /* New Player */ = {
-			isa = PBXGroup;
-			children = (
-				531D39E0255AB216000CB0DF /* Scrubber */,
-				D0EA476519DE41E30083CE05 /* ISMSPlayerViewController.h */,
-				D0EA476619DE41E30083CE05 /* ISMSPlayerViewController.m */,
-				D0EA476019DE41510083CE05 /* ISMSPlayerView.h */,
-				D0EA476119DE41510083CE05 /* ISMSPlayerView.m */,
-			);
-			path = "New Player";
-			sourceTree = "<group>";
-		};
-		531D39E0255AB216000CB0DF /* Scrubber */ = {
-			isa = PBXGroup;
-			children = (
-				D0F7918919DE4DFC008032A3 /* ISMSScrubberView.h */,
-				D0F7918A19DE4DFC008032A3 /* ISMSScrubberView.m */,
-			);
-			path = Scrubber;
 			sourceTree = "<group>";
 		};
 		531D39E1255AB23F000CB0DF /* iPad */ = {
@@ -2242,10 +2179,7 @@
 		531D39E6255AB2A5000CB0DF /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				53BA49401285BD7A0010B380 /* NewHomeViewController.h */,
-				53BA49411285BD7A0010B380 /* NewHomeViewController.m */,
-				533C658215ABB975003EAF29 /* NewHomeViewController-iPad.xib */,
-				533C657B15ABB952003EAF29 /* NewHomeViewController.xib */,
+				538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */,
 				531F166C126FA2E600F524BD /* HomeAlbumViewController.h */,
 				531F166D126FA2E600F524BD /* HomeAlbumViewController.m */,
 				533C659015ABB9A9003EAF29 /* HomeAlbumViewController.xib */,
@@ -2260,6 +2194,7 @@
 				535B727B134D26D6003E0E1C /* SearchAllViewController.h */,
 				535B727C134D26E2003E0E1C /* SearchAllViewController.m */,
 				533C65A515ABB9B3003EAF29 /* SearchAllViewController.xib */,
+				534B20D925619936007FF1D7 /* HomeViewController.xib */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -2432,6 +2367,7 @@
 				53BCC519181387B300442E86 /* CustomUINavigationController.h */,
 				53BCC51A181387B300442E86 /* CustomUINavigationController.m */,
 				53329651255F30220027C51A /* ClosureSleeve.swift */,
+				534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */,
 			);
 			path = "Custom UI";
 			sourceTree = "<group>";
@@ -2923,18 +2859,6 @@
 				53F8CC761297949A007BDC0E /* home-shuffle-ipad.png */,
 				53F8CC771297949A007BDC0E /* home-shuffle.png */,
 				53F8CC781297949A007BDC0E /* home-shuffle@2x.png */,
-				53B20DCD12C2945400A90DD9 /* home-quick-random.png */,
-				53B20DD112C2957A00A90DD9 /* home-quick-random@2x.png */,
-				53B20DD512C298E500A90DD9 /* home-quick-recent@2x.png */,
-				53B20DD612C298E500A90DD9 /* home-quick-recent.png */,
-				53B20DD712C298E500A90DD9 /* home-quick-newest@2x.png */,
-				53B20DD812C298E500A90DD9 /* home-quick-newest.png */,
-				53B20DD912C298E500A90DD9 /* home-quick-frequent@2x.png */,
-				53B20DDA12C298E500A90DD9 /* home-quick-frequent.png */,
-				53B20DDB12C298E500A90DD9 /* home-quick-cancel@2x.png */,
-				53B20DDC12C298E500A90DD9 /* home-quick-cancel.png */,
-				53B20DE512C29A7600A90DD9 /* home-quick-topbar@2x.png */,
-				53B20DE612C29A7600A90DD9 /* home-quick-topbar.png */,
 				53C7FD78150F00C5008DA51C /* home-chat-ipad@2x.png */,
 				53C7FD79150F00C5008DA51C /* home-jukebox-off-ipad@2x.png */,
 				53C7FD7A150F00C5008DA51C /* home-jukebox-on-ipad@2x.png */,
@@ -3424,6 +3348,7 @@
 				53A2213711A8489900C1ACD4 /* queue-button.png in Resources */,
 				53B52BA611ADE0A6005776B5 /* GenresViewController.xib in Resources */,
 				530B417311B607A200743C09 /* CacheViewController.xib in Resources */,
+				534B20DA25619936007FF1D7 /* HomeViewController.xib in Resources */,
 				5312E1AF11B8C23100AFC08D /* bookmarks-tabbaricon.png in Resources */,
 				531D3A03255AB5F6000CB0DF /* MainWindow-iPad.xib in Resources */,
 				5312E1B011B8C23100AFC08D /* genres-tabbaricon.png in Resources */,
@@ -3492,7 +3417,6 @@
 				5314B4EF126FD20300CDB511 /* home-tabbaricon@2x.png in Resources */,
 				533C659115ABB9AD003EAF29 /* SearchSongsViewController.xib in Resources */,
 				53F8C80B129728F9007BDC0E /* home-background-ipad.png in Resources */,
-				533C657C15ABB975003EAF29 /* NewHomeViewController-iPad.xib in Resources */,
 				53F8CC791297949A007BDC0E /* home-background.png in Resources */,
 				53F8CC7A1297949A007BDC0E /* home-background@2x.png in Resources */,
 				53F8CC7B1297949A007BDC0E /* home-jukebox-off-ipad.png in Resources */,
@@ -3516,18 +3440,6 @@
 				5327F1C012B8243C00735119 /* controller-stop.png in Resources */,
 				5327F1C112B8243C00735119 /* controller-stop@2x.png in Resources */,
 				53B20D1D12C27AAA00A90DD9 /* Default@2x.png in Resources */,
-				53B20DCE12C2945400A90DD9 /* home-quick-random.png in Resources */,
-				53B20DD212C2957A00A90DD9 /* home-quick-random@2x.png in Resources */,
-				53B20DDD12C298E500A90DD9 /* home-quick-recent@2x.png in Resources */,
-				53B20DDE12C298E500A90DD9 /* home-quick-recent.png in Resources */,
-				53B20DDF12C298E500A90DD9 /* home-quick-newest@2x.png in Resources */,
-				53B20DE012C298E500A90DD9 /* home-quick-newest.png in Resources */,
-				53B20DE112C298E500A90DD9 /* home-quick-frequent@2x.png in Resources */,
-				53B20DE212C298E500A90DD9 /* home-quick-frequent.png in Resources */,
-				53B20DE312C298E500A90DD9 /* home-quick-cancel@2x.png in Resources */,
-				53B20DE412C298E500A90DD9 /* home-quick-cancel.png in Resources */,
-				53B20DE712C29A7600A90DD9 /* home-quick-topbar@2x.png in Resources */,
-				53B20DE812C29A7600A90DD9 /* home-quick-topbar.png in Resources */,
 				53B20E2E12C2A60D00A90DD9 /* home-chat-ipad.png in Resources */,
 				53B20E2F12C2A60D00A90DD9 /* home-chat.png in Resources */,
 				53B20E3012C2A60D00A90DD9 /* home-chat@2x.png in Resources */,
@@ -3629,7 +3541,6 @@
 				530A5F881516703F0081A83A /* playing-cell-icon@2x.png in Resources */,
 				530A5F8D15167CBA0081A83A /* playing-cell-icon-white.png in Resources */,
 				530A5F9015167CBA0081A83A /* playing-cell-icon-white@2x.png in Resources */,
-				533C657515ABB952003EAF29 /* NewHomeViewController.xib in Resources */,
 				53493EF415FC69560059492E /* player-songinfo.png in Resources */,
 				53493EF715FC69560059492E /* player-songinfo@2x.png in Resources */,
 				53493EFB15FC699A0059492E /* ipad-menu-selected-background.png in Resources */,
@@ -3761,7 +3672,6 @@
 				53BC2714139AF0DD00A825F1 /* home-tabbaricon@2x.png in Resources */,
 				533C659315ABB9AD003EAF29 /* SearchSongsViewController.xib in Resources */,
 				53BC2726139AF0DD00A825F1 /* home-background-ipad.png in Resources */,
-				533C657E15ABB975003EAF29 /* NewHomeViewController-iPad.xib in Resources */,
 				53BC272A139AF0DD00A825F1 /* home-background.png in Resources */,
 				53BC272B139AF0DD00A825F1 /* home-background@2x.png in Resources */,
 				53FE35F61EA961540058B925 /* table-fade-top.png in Resources */,
@@ -3784,20 +3694,8 @@
 				53BC2743139AF0DD00A825F1 /* controller-stop@2x.png in Resources */,
 				53FE35F01EA961540058B925 /* table-fade-bottom.png in Resources */,
 				53BC2745139AF0DD00A825F1 /* Default@2x.png in Resources */,
-				53BC2746139AF0DD00A825F1 /* home-quick-random.png in Resources */,
-				53BC2747139AF0DD00A825F1 /* home-quick-random@2x.png in Resources */,
-				53BC2748139AF0DD00A825F1 /* home-quick-recent@2x.png in Resources */,
-				53BC2749139AF0DD00A825F1 /* home-quick-recent.png in Resources */,
 				53649DD4184DA99B00E600EC /* Icon-76.png in Resources */,
-				53BC274A139AF0DD00A825F1 /* home-quick-newest@2x.png in Resources */,
-				53BC274B139AF0DD00A825F1 /* home-quick-newest.png in Resources */,
-				53BC274C139AF0DD00A825F1 /* home-quick-frequent@2x.png in Resources */,
-				53BC274D139AF0DD00A825F1 /* home-quick-frequent.png in Resources */,
-				53BC274E139AF0DD00A825F1 /* home-quick-cancel@2x.png in Resources */,
 				537EF7BB182B2F2200968FE0 /* controller-slider-thumb@2x.png in Resources */,
-				53BC274F139AF0DD00A825F1 /* home-quick-cancel.png in Resources */,
-				53BC2750139AF0DD00A825F1 /* home-quick-topbar@2x.png in Resources */,
-				53BC2751139AF0DD00A825F1 /* home-quick-topbar.png in Resources */,
 				53BC2752139AF0DD00A825F1 /* home-chat-ipad.png in Resources */,
 				53BC2753139AF0DD00A825F1 /* home-chat.png in Resources */,
 				53BC2754139AF0DD00A825F1 /* home-chat@2x.png in Resources */,
@@ -3877,6 +3775,7 @@
 				537E9A4614F4B5D1006CB0BC /* controller-speed-tab@2x.png in Resources */,
 				537E9A4B14F4B84D006CB0BC /* controller-equalizer-on.png in Resources */,
 				537E9A4E14F4B84D006CB0BC /* controller-equalizer-on@2x.png in Resources */,
+				534B20DB25619936007FF1D7 /* HomeViewController.xib in Resources */,
 				537E9A5714F4CE44006CB0BC /* underPageBackgroundDark.png in Resources */,
 				537E9A5A14F4CE44006CB0BC /* underPageBackgroundDark@2x.png in Resources */,
 				5301583C15081B0A00B54CEF /* settings-tabbaricon.png in Resources */,
@@ -3899,7 +3798,6 @@
 				530A5F8A1516703F0081A83A /* playing-cell-icon@2x.png in Resources */,
 				530A5F8F15167CBA0081A83A /* playing-cell-icon-white.png in Resources */,
 				530A5F9215167CBA0081A83A /* playing-cell-icon-white@2x.png in Resources */,
-				533C657715ABB952003EAF29 /* NewHomeViewController.xib in Resources */,
 				53493EF615FC69560059492E /* player-songinfo.png in Resources */,
 				53493EF915FC69560059492E /* player-songinfo@2x.png in Resources */,
 				53493EFD15FC699A0059492E /* ipad-menu-selected-background.png in Resources */,
@@ -3999,6 +3897,7 @@
 				53FE34F51EA961540058B925 /* NSOrderedSet+Safe.m in Sources */,
 				53D8ACB3116C47E600E5C9CB /* PageControlViewController.m in Sources */,
 				53FE37881EA961720058B925 /* SavedSettings.m in Sources */,
+				538C8FEA2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53FE37401EA961720058B925 /* ISMSSong.m in Sources */,
 				53FE35161EA961540058B925 /* NSString+SHA1.m in Sources */,
 				53F4A074116FF48400BB8411 /* DebugViewController.m in Sources */,
@@ -4059,15 +3958,14 @@
 				5358083811CEB5F200A09386 /* CacheQueueSongUITableViewCell.m in Sources */,
 				53FE353D1EA961540058B925 /* UIColor+ColorWithHex.m in Sources */,
 				53FE35EB1EA961540058B925 /* SnappySlider.m in Sources */,
-				D0F7918B19DE4DFC008032A3 /* ISMSScrubberView.m in Sources */,
 				53FE370A1EA961720058B925 /* ISMSAlbum.m in Sources */,
 				53FE37B21EA961720058B925 /* SUSNowPlayingLoader.m in Sources */,
 				53FE34D11EA961540058B925 /* NSData+Gzip.m in Sources */,
 				53FE38AD1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
-				D0EA476219DE41510083CE05 /* ISMSPlayerView.m in Sources */,
 				53FE379D1EA961720058B925 /* SUSChatDAO.m in Sources */,
 				53D9743A255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */,
 				533295F6255EEFE50027C51A /* FMTokenizers.m in Sources */,
+				534B20E025619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */,
 				53FE379A1EA961720058B925 /* SUSAllSongsLoader.m in Sources */,
 				53FE35071EA961540058B925 /* NSString+Gzip.m in Sources */,
 				53FE37C41EA961720058B925 /* SUSServerPlaylist.m in Sources */,
@@ -4098,7 +3996,6 @@
 				531D3A16255ABA20000CB0DF /* DDSocialDialog.m in Sources */,
 				53FE34F81EA961540058B925 /* GTMNSString+HTML.m in Sources */,
 				53329641255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */,
-				53BA49431285BD7A0010B380 /* NewHomeViewController.m in Sources */,
 				53FE34FB1EA961540058B925 /* NSString+Clean.m in Sources */,
 				53C22CCF128EE81C00FFBA67 /* ModalAlbumArtViewController.m in Sources */,
 				53FE352E1EA961540058B925 /* CALayer+ImageFromLayer.m in Sources */,
@@ -4164,7 +4061,6 @@
 				537E9A3114F43F43006CB0BC /* StackContainerView.m in Sources */,
 				53FE389E1EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53493F2715FC6AC40059492E /* main.m in Sources */,
-				D0EA476719DE41E30083CE05 /* ISMSPlayerViewController.m in Sources */,
 				536C994D16619F5D005A73C6 /* ViewObjectsSingleton.m in Sources */,
 				53FE37581EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */,
 			);
@@ -4186,6 +4082,7 @@
 				53BC27A4139AF0DD00A825F1 /* iPhoneStreamingPlayerViewController.m in Sources */,
 				53FE376C1EA961720058B925 /* NSError+ISMSError.m in Sources */,
 				53FE37121EA961720058B925 /* ISMSCacheQueueManager.m in Sources */,
+				538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53FE38A91EA961C80058B925 /* ZKCDTrailer.m in Sources */,
 				53FE37511EA961720058B925 /* ISMSUpdateChecker.m in Sources */,
 				53FE34CA1EA961540058B925 /* NSMutableArray+Safe.m in Sources */,
@@ -4293,14 +4190,13 @@
 				53FE351E1EA961540058B925 /* NSString+TrimmingAdditions.m in Sources */,
 				53FE37A21EA961720058B925 /* SUSChatLoader.m in Sources */,
 				53BC27E0139AF0DD00A825F1 /* CacheQueueSongUITableViewCell.m in Sources */,
+				534B20E125619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */,
 				53FE353F1EA961540058B925 /* UIColor+ColorWithHex.m in Sources */,
 				53FE35ED1EA961540058B925 /* SnappySlider.m in Sources */,
-				D0F7918D19DE4DFC008032A3 /* ISMSScrubberView.m in Sources */,
 				53FE370C1EA961720058B925 /* ISMSAlbum.m in Sources */,
 				53FE37B41EA961720058B925 /* SUSNowPlayingLoader.m in Sources */,
 				53FE34D31EA961540058B925 /* NSData+Gzip.m in Sources */,
 				53FE38AF1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
-				D0EA476419DE41510083CE05 /* ISMSPlayerView.m in Sources */,
 				53FE379F1EA961720058B925 /* SUSChatDAO.m in Sources */,
 				53D9743B255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */,
 				53FE379C1EA961720058B925 /* SUSAllSongsLoader.m in Sources */,
@@ -4335,7 +4231,6 @@
 				53BC280A139AF0DD00A825F1 /* SearchSongsViewController.m in Sources */,
 				531D3A17255ABA20000CB0DF /* DDSocialDialog.m in Sources */,
 				53FE34FA1EA961540058B925 /* GTMNSString+HTML.m in Sources */,
-				53BC280F139AF0DD00A825F1 /* NewHomeViewController.m in Sources */,
 				53FE34FD1EA961540058B925 /* NSString+Clean.m in Sources */,
 				53BC2815139AF0DD00A825F1 /* ModalAlbumArtViewController.m in Sources */,
 				53FE35301EA961540058B925 /* CALayer+ImageFromLayer.m in Sources */,
@@ -4398,7 +4293,6 @@
 				537E9A3314F43F43006CB0BC /* StackContainerView.m in Sources */,
 				53FE38A01EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53493F2915FC6AC40059492E /* main.m in Sources */,
-				D0EA476919DE41E30083CE05 /* ISMSPlayerViewController.m in Sources */,
 				533D1820255F72FF003F962C /* CacheOfflineFoldersViewController.m in Sources */,
 				536C994F16619F5D005A73C6 /* ViewObjectsSingleton.m in Sources */,
 				53FE375A1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */,
@@ -4408,22 +4302,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		533C657B15ABB952003EAF29 /* NewHomeViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				539148B02559CBDF004AAC3F /* Base */,
-			);
-			name = NewHomeViewController.xib;
-			sourceTree = "<group>";
-		};
-		533C658215ABB975003EAF29 /* NewHomeViewController-iPad.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				539148AF2559CBDF004AAC3F /* Base */,
-			);
-			name = "NewHomeViewController-iPad.xib";
-			sourceTree = "<group>";
-		};
 		533C659015ABB9A9003EAF29 /* HomeAlbumViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

@@ -261,7 +261,7 @@ double startSongSeconds = 0.0;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLockScreenInfo) name:ISMSNotification_AlbumArtLargeDownloaded object:nil];
 }
 
-+ (id)sharedInstance {
++ (instancetype)sharedInstance {
     static MusicSingleton *sharedInstance = nil;
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{

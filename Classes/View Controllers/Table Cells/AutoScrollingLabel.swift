@@ -28,6 +28,11 @@ import SnapKit
         set {
             label1.font = newValue
             label2.font = newValue
+            stopScrolling()
+            updateLabelSize()
+            if autoScroll {
+                startScrolling()
+            }
         }
     }
     
@@ -48,6 +53,7 @@ import SnapKit
         set {
             label1.text = newValue
             label2.text = newValue
+            stopScrolling()
             updateLabelSize()
             if autoScroll {
                 startScrolling()
@@ -64,14 +70,14 @@ import SnapKit
         scrollView.decelerationRate = .fast
         addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalTo(self)
+            make.leading.trailing.top.bottom.equalToSuperview()
         }
         
         // Must use an intermediary content view for autolayout to work correctly inside a scroll view
         let contentView = UIView()
         scrollView.addSubview(contentView)
         contentView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalTo(scrollView)
+            make.leading.trailing.top.bottom.equalToSuperview()
         }
         
         contentView.addSubview(label1)

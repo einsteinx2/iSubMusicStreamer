@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "FolderPickerDialog.h"
-#import "NewHomeViewController.h"
 
 @interface ShuffleFolderPickerViewController : UITableViewController
 

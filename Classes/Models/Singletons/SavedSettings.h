@@ -23,7 +23,10 @@ typedef enum
 	ISMSCachingType_maxSize = 1
 } ISMSCachingType;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class AudioEngine;
+NS_SWIFT_NAME(Settings)
 @interface SavedSettings : NSObject 
 {    
 	__strong NSUserDefaults *_userDefaults;
@@ -68,18 +71,18 @@ typedef enum
 @property BOOL isOfflineMode;
 
 // Server Login Settings
-@property (strong) NSMutableArray *serverList;
-@property (copy) NSString *serverType;
-@property (copy) NSString *urlString;
-@property (copy) NSString *username;
-@property (copy) NSString *password;
-@property (copy) NSString *uuid;
-@property (copy) NSString *lastQueryId;
-@property (copy) NSString *sessionId;
+@property (nullable, strong) NSMutableArray *serverList;
+@property (nullable, copy) NSString *serverType;
+@property (nullable, copy) NSString *urlString;
+@property (nullable, copy) NSString *username;
+@property (nullable, copy) NSString *password;
+@property (nullable, copy) NSString *uuid;
+@property (nullable, copy) NSString *lastQueryId;
+@property (nullable, copy) NSString *sessionId;
 
 // Root Folders Settings
-@property (strong) NSDate *rootFoldersReloadTime;
-@property (strong) NSNumber *rootFoldersSelectedFolderId;
+@property (nullable, strong) NSDate *rootFoldersReloadTime;
+@property (nullable, strong) NSNumber *rootFoldersSelectedFolderId;
 
 @property BOOL isForceOfflineMode;
 @property NSInteger recoverSetting;
@@ -161,8 +164,10 @@ typedef enum
 - (void)loadState;
 - (void)saveState;
 
-+ (instancetype)sharedInstance;
++ (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

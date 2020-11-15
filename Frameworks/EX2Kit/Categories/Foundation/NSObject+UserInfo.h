@@ -14,6 +14,6 @@
 @property (nonatomic, strong) NSMutableDictionary *ex2UserInfo;
 
 - (void)ex2SetCustomObject:(id)value forKey:(id)key;
-- (id)ex2CustomObjectForKey:(id)key;
+- (instancetype)ex2CustomObjectForKey:(id)key;
 
 @end

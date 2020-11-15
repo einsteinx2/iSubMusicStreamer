@@ -27,7 +27,7 @@
     _totalBytesDrained = totalBytesDrained;
 }
 
-- (id)initWithBufferLength:(NSUInteger)bytes
+- (instancetype)initWithBufferLength:(NSUInteger)bytes
 {
 	if ((self = [super init]))
 	{
@@ -39,7 +39,7 @@
 	return self;
 }
 
-+ (id)ringBufferWithLength:(NSUInteger)bytes
++ (instancetype)ringBufferWithLength:(NSUInteger)bytes
 {
 	return [[EX2RingBuffer alloc] initWithBufferLength:bytes];
 }

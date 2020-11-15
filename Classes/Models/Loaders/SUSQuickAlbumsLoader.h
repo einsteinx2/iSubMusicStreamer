@@ -8,10 +8,14 @@
 
 #import "SUSLoader.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface SUSQuickAlbumsLoader : SUSLoader
 
-@property (strong) NSMutableArray *listOfAlbums;
-@property (strong) NSString *modifier;
+@property (nullable, strong) NSMutableArray *listOfAlbums;
+@property (nullable, strong) NSString *modifier;
 @property NSUInteger offset;
 
 @end
+
+NS_ASSUME_NONNULL_END

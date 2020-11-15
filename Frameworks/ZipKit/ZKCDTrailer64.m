@@ -11,7 +11,7 @@
 
 @implementation ZKCDTrailer64
 
-- (id)init {
+- (instancetype)init {
     if (self = [super init]) {
         self.magicNumber = ZKCDTrailer64MagicNumber;
         self.sizeOfTrailer = 44;

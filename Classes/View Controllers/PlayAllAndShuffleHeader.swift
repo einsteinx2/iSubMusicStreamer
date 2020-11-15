@@ -27,10 +27,8 @@ import SnapKit
         playAllButton.addClosure(for: .touchUpInside, closure: playAllHandler)
         addSubview(playAllButton)
         playAllButton.snp.makeConstraints { make in
-            make.width.equalTo(self).dividedBy(2)
-            make.leading.equalTo(self)
-            make.top.equalTo(self)
-            make.bottom.equalTo(self)
+            make.width.equalToSuperview().dividedBy(2)
+            make.leading.top.bottom.equalToSuperview()
         }
         
         shuffleButton.setTitle("Shuffle", for: .normal)
@@ -39,10 +37,8 @@ import SnapKit
         shuffleButton.addClosure(for: .touchUpInside, closure: shuffleHandler)
         addSubview(shuffleButton)
         shuffleButton.snp.makeConstraints { make in
-            make.width.equalTo(self).dividedBy(2)
-            make.trailing.equalTo(self)
-            make.top.equalTo(self)
-            make.bottom.equalTo(self)
+            make.width.equalToSuperview().dividedBy(2)
+            make.trailing.top.bottom.equalToSuperview()
         }
     }
     

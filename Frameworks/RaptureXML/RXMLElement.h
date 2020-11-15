@@ -39,7 +39,7 @@
     xmlDocPtr doc_;
 }
 
-- (id)initWithDocPtr:(xmlDocPtr)doc;
+- (instancetype)initWithDocPtr:(xmlDocPtr)doc;
 - (xmlDocPtr)doc;
 
 @end
@@ -48,33 +48,33 @@
     xmlNodePtr node_;
 }
 
-- (id)initFromXMLString:(NSString *)xmlString encoding:(NSStringEncoding)encoding;
-- (id)initFromXMLFile:(NSString *)filename;
-- (id)initFromXMLFile:(NSString *)filename fileExtension:(NSString*)extension;
-- (id)initFromXMLFilePath:(NSString *)fullPath;
-- (id)initFromURL:(NSURL *)url __attribute__((deprecated));
-- (id)initFromXMLData:(NSData *)data;
-- (id)initFromXMLDoc:(RXMLDocHolder *)doc node:(xmlNodePtr)node;
+- (instancetype)initFromXMLString:(NSString *)xmlString encoding:(NSStringEncoding)encoding;
+- (instancetype)initFromXMLFile:(NSString *)filename;
+- (instancetype)initFromXMLFile:(NSString *)filename fileExtension:(NSString*)extension;
+- (instancetype)initFromXMLFilePath:(NSString *)fullPath;
+- (instancetype)initFromURL:(NSURL *)url __attribute__((deprecated));
+- (instancetype)initFromXMLData:(NSData *)data;
+- (instancetype)initFromXMLDoc:(RXMLDocHolder *)doc node:(xmlNodePtr)node;
 
-- (id)initFromHTMLString:(NSString *)xmlString encoding:(NSStringEncoding)encoding;
-- (id)initFromHTMLFile:(NSString *)filename;
-- (id)initFromHTMLFile:(NSString *)filename fileExtension:(NSString*)extension;
-- (id)initFromHTMLFilePath:(NSString *)fullPath;
-- (id)initFromHTMLData:(NSData *)data;
+- (instancetype)initFromHTMLString:(NSString *)xmlString encoding:(NSStringEncoding)encoding;
+- (instancetype)initFromHTMLFile:(NSString *)filename;
+- (instancetype)initFromHTMLFile:(NSString *)filename fileExtension:(NSString*)extension;
+- (instancetype)initFromHTMLFilePath:(NSString *)fullPath;
+- (instancetype)initFromHTMLData:(NSData *)data;
 
-+ (id)elementFromXMLString:(NSString *)xmlString encoding:(NSStringEncoding)encoding;
-+ (id)elementFromXMLFile:(NSString *)filename;
-+ (id)elementFromXMLFilename:(NSString *)filename fileExtension:(NSString *)extension;
-+ (id)elementFromXMLFilePath:(NSString *)fullPath;
-+ (id)elementFromURL:(NSURL *)url __attribute__((deprecated));
-+ (id)elementFromXMLData:(NSData *)data;
-+ (id)elementFromXMLDoc:(RXMLDocHolder *)doc node:(xmlNodePtr)node;
++ (instancetype)elementFromXMLString:(NSString *)xmlString encoding:(NSStringEncoding)encoding;
++ (instancetype)elementFromXMLFile:(NSString *)filename;
++ (instancetype)elementFromXMLFilename:(NSString *)filename fileExtension:(NSString *)extension;
++ (instancetype)elementFromXMLFilePath:(NSString *)fullPath;
++ (instancetype)elementFromURL:(NSURL *)url __attribute__((deprecated));
++ (instancetype)elementFromXMLData:(NSData *)data;
++ (instancetype)elementFromXMLDoc:(RXMLDocHolder *)doc node:(xmlNodePtr)node;
 
-+ (id)elementFromHTMLString:(NSString *)xmlString encoding:(NSStringEncoding)encoding;
-+ (id)elementFromHTMLFile:(NSString *)filename;
-+ (id)elementFromHTMLFile:(NSString *)filename fileExtension:(NSString*)extension;
-+ (id)elementFromHTMLFilePath:(NSString *)fullPath;
-+ (id)elementFromHTMLData:(NSData *)data;
++ (instancetype)elementFromHTMLString:(NSString *)xmlString encoding:(NSStringEncoding)encoding;
++ (instancetype)elementFromHTMLFile:(NSString *)filename;
++ (instancetype)elementFromHTMLFile:(NSString *)filename fileExtension:(NSString*)extension;
++ (instancetype)elementFromHTMLFilePath:(NSString *)fullPath;
++ (instancetype)elementFromHTMLData:(NSData *)data;
 
 - (NSString *)attribute:(NSString *)attributeName;
 - (NSString *)attribute:(NSString *)attributeName inNamespace:(NSString *)ns;

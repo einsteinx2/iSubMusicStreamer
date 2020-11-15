@@ -120,7 +120,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark Singleton methods
 
-+ (id)sharedInstance {
++ (instancetype)sharedInstance {
     static SocialSingleton *sharedInstance = nil;
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{

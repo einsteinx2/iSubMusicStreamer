@@ -15,6 +15,9 @@
 
 @class FoldersViewController, ISMSArtist, LoadingScreen, ISMSAlbum, AlbumViewController, ISMSServer;
 
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(ViewObjects)
 @interface ViewObjectsSingleton : NSObject <UITabBarControllerDelegate, UINavigationControllerDelegate, MBProgressHUDDelegate>
 
 @property (strong) MBProgressHUD *HUD;
@@ -84,7 +87,7 @@
 
 @property BOOL isLoadingScreenShowing;
 
-+ (id)sharedInstance;
++ (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
 - (void)orderMainTabBarController;
 
@@ -93,11 +96,13 @@
 - (void)showAlbumLoadingScreenOnMainWindowWithSender:(id)sender;
 - (void)showAlbumLoadingScreen:(UIView *)view sender:(id)sender;
 - (void)hideLoadingScreen;
-- (UIColor *) currentLightColor;
-- (UIColor *) currentDarkColor;
+- (UIColor *)currentLightColor;
+- (UIColor *)currentDarkColor;
 
 - (void)enableCells;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

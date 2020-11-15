@@ -20,8 +20,8 @@
 @property (nonatomic, readonly) NSUInteger filledSpaceLength;
 @property long long totalBytesDrained;
 
-- (id)initWithBufferLength:(NSUInteger)bytes;
-+ (id)ringBufferWithLength:(NSUInteger)bytes;
+- (instancetype)initWithBufferLength:(NSUInteger)bytes;
++ (instancetype)ringBufferWithLength:(NSUInteger)bytes;
 
 - (BOOL)fillWithBytes:(const void *)byteBuffer length:(NSUInteger)bufferLength;
 - (BOOL)fillWithData:(NSData *)data;

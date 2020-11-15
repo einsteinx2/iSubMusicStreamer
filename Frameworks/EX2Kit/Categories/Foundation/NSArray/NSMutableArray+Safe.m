@@ -53,7 +53,7 @@
     }
 }
 
-+ (id)arrayWithArraySafe:(NSArray *)array
++ (instancetype)arrayWithArraySafe:(NSArray *)array
 {
     if (array.count > 0)
     {
@@ -62,7 +62,7 @@
     return [self arrayWithCapacity:0];
 }
 
-- (id)initWithArraySafe:(NSArray *)array
+- (instancetype)initWithArraySafe:(NSArray *)array
 {
     if (array.count > 0)
     {

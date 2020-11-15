@@ -53,7 +53,7 @@
     }
 }
 
-+ (id)orderedSetWithArraySafe:(NSArray *)array
++ (instancetype)orderedSetWithArraySafe:(NSArray *)array
 {
     if (array.count > 0)
     {
@@ -62,7 +62,7 @@
     return [self orderedSetWithCapacity:0];
 }
 
-- (id)initWithArraySafe:(NSArray *)array
+- (instancetype)initWithArraySafe:(NSArray *)array
 {
     if (array.count > 0)
     {

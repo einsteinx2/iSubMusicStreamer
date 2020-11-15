@@ -759,7 +759,7 @@
 #pragma mark -
 #pragma mark Setup
 
-- (id)init {
+- (instancetype)init {
     if (self = [super init]) {
         self.useZip64Extensions = NO;
     }

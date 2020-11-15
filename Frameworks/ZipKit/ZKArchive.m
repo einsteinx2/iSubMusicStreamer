@@ -238,7 +238,7 @@
 #pragma mark -
 #pragma mark Setup
 
-- (id)init {
+- (instancetype)init {
     if (self = [super init]) {
         self.invoker = nil;
         self.delegate = nil;

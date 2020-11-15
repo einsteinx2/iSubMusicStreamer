@@ -31,16 +31,16 @@ import SnapKit
         addSubview(coverArtView)
         coverArtView.snp.makeConstraints { make in
             make.width.equalTo(coverArtView.snp.height)
-            make.leading.equalTo(self).offset(10)
-            make.top.equalTo(self).offset(10)
-            make.bottom.equalTo(self).offset(-10)
+            make.leading.equalToSuperview().offset(10)
+            make.top.equalToSuperview().offset(10)
+            make.bottom.equalToSuperview().offset(-10)
         }
         
         let labelContainer = UIView()
         addSubview(labelContainer)
         labelContainer.snp.makeConstraints { make in
             make.leading.equalTo(coverArtView.snp.trailing).offset(10)
-            make.trailing.equalTo(self).offset(-10)
+            make.trailing.equalToSuperview().offset(-10)
             make.top.bottom.equalTo(coverArtView)
         }
         
@@ -50,8 +50,8 @@ import SnapKit
         artistLabel.isInsideTableHeader = true
         labelContainer.addSubview(artistLabel)
         artistLabel.snp.makeConstraints { make in
-            make.width.leading.trailing.top.equalTo(labelContainer)
-            make.height.equalTo(labelContainer).dividedBy(3)
+            make.width.leading.trailing.top.equalToSuperview()
+            make.height.equalToSuperview().dividedBy(3)
         }
         
         albumLabel.text = album.title
@@ -77,11 +77,9 @@ import SnapKit
         tracksLabel.textColor = .systemGray
         labelContainer.addSubview(tracksLabel)
         tracksLabel.snp.makeConstraints { make in
-            make.width.equalTo(labelContainer)
+            make.width.leading.bottom.equalToSuperview()
             make.height.equalTo(labelContainer).dividedBy(3)
-            make.leading.equalTo(labelContainer)
             make.top.equalTo(albumLabel.snp.bottom)
-            make.bottom.equalTo(labelContainer)
         }
     }
     

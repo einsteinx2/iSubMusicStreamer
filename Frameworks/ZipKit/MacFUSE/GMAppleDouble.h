@@ -98,7 +98,7 @@ GM_EXPORT @interface GMAppleDoubleEntry : NSObject {
  * @param entryID A valid entry identifier
  * @param data Raw data for the entry
  */
-- (id) initWithEntryID:(GMAppleDoubleEntryID)entryID data:(NSData *)data;
+- (instancetype) initWithEntryID:(GMAppleDoubleEntryID)entryID data:(NSData *)data;
 
 /*! @abstract The entry ID */
 - (GMAppleDoubleEntryID) entryID;

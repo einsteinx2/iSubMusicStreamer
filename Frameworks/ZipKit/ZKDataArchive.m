@@ -368,7 +368,7 @@
 #pragma mark -
 #pragma mark Setup
 
-- (id)init {
+- (instancetype)init {
     if (self = [super init]) {
         self.data = [NSMutableData data];
         self.inflatedFiles = [NSMutableArray array];

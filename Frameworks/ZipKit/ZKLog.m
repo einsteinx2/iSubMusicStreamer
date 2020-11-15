@@ -76,7 +76,7 @@ static ZKLog *zkSharedInstance = nil;
     return zkSharedInstance;
 }
 
-- (id)init {
+- (instancetype)init {
     @synchronized([self class]) {
         if (zkSharedInstance == nil) {
             if (self = [super init]) {
@@ -103,7 +103,7 @@ static ZKLog *zkSharedInstance = nil;
     return zkSharedInstance;
 }
 
-+ (id)allocWithZone:(NSZone *)zone {
++ (instancetype)allocWithZone:(NSZone *)zone {
     @synchronized(self) {
         if (zkSharedInstance == nil) {
             return [super allocWithZone:zone];
@@ -118,7 +118,7 @@ static ZKLog *zkSharedInstance = nil;
     [super initialize];
 }
 
-- (id)copyWithZone:(NSZone *)zone {
+- (instancetype)copyWithZone:(NSZone *)zone {
     return self;
 }
 

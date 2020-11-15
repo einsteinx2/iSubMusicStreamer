@@ -13,24 +13,25 @@
 
 #define playlistS ((PlaylistSingleton *)[PlaylistSingleton sharedInstance])
 
-typedef enum
-{
+NS_ASSUME_NONNULL_BEGIN
+
+typedef enum {
 	ISMSRepeatMode_Normal = 0,
 	ISMSRepeatMode_RepeatOne = 1,
 	ISMSRepeatMode_RepeatAll = 2
 } ISMSRepeatMode;
 
 @class ISMSSong, FMDatabase;
-@interface PlaylistSingleton : NSObject
-{
+NS_SWIFT_NAME(PlayQueue)
+@interface PlaylistSingleton : NSObject {
 	NSInteger shuffleIndex;
 	NSInteger normalIndex;
 	ISMSRepeatMode repeatMode;
 }
 
-+ (id)sharedInstance;
++ (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
-- (ISMSSong *)songForIndex:(NSUInteger)index;
+- (nullable ISMSSong *)songForIndex:(NSUInteger)index;
 - (NSInteger)decrementIndex;
 - (NSInteger)incrementIndex;
 
@@ -38,10 +39,10 @@ typedef enum
 - (NSUInteger)indexForOffsetFromCurrentIndex:(NSInteger)offset;
 
 // Convenience properties
-- (ISMSSong *)prevSong;
-- (ISMSSong *)currentDisplaySong;
-- (ISMSSong *)currentSong;
-- (ISMSSong *)nextSong;
+- (nullable ISMSSong *)prevSong;
+- (nullable ISMSSong *)currentDisplaySong;
+- (nullable ISMSSong *)currentSong;
+- (nullable ISMSSong *)nextSong;
 
 @property NSInteger shuffleIndex;
 @property NSInteger normalIndex;
@@ -59,5 +60,7 @@ typedef enum
 - (void)shuffleToggle;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

@@ -11,13 +11,13 @@
 
 @interface EX2SlidingNotification : UIViewController
 
-- (id)initOnView:(UIView *)theParentView message:(NSString *)theMessage image:(UIImage*)theImage displayTime:(NSTimeInterval)time;
+- (instancetype)initOnView:(UIView *)theParentView message:(NSString *)theMessage image:(UIImage*)theImage displayTime:(NSTimeInterval)time;
 
-+ (id)slidingNotificationOnMainWindowWithMessage:(NSString *)theMessage image:(UIImage*)theImage;
-+ (id)slidingNotificationOnTopViewWithMessage:(NSString *)theMessage image:(UIImage*)theImage;
++ (instancetype)slidingNotificationOnMainWindowWithMessage:(NSString *)theMessage image:(UIImage*)theImage;
++ (instancetype)slidingNotificationOnTopViewWithMessage:(NSString *)theMessage image:(UIImage*)theImage;
 
-+ (id)slidingNotificationOnView:(UIView *)theParentView message:(NSString *)theMessage image:(UIImage*)theImage;
-- (id)initOnView:(UIView *)theParentView message:(NSString *)theMessage image:(UIImage*)theImage;
++ (instancetype)slidingNotificationOnView:(UIView *)theParentView message:(NSString *)theMessage image:(UIImage*)theImage;
+- (instancetype)initOnView:(UIView *)theParentView message:(NSString *)theMessage image:(UIImage*)theImage;
 
 // Allow user to set main window explicitly instead of trying to figure it out each time
 + (void)setMainWindow:(UIWindow *)mainWindow;

@@ -37,7 +37,7 @@
 - (void)processResponse {
     // TODO: Refactor this with RaptureXML
     NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:self.receivedData];
-    SearchXMLParser *parser = (SearchXMLParser*)[[SearchXMLParser alloc] initXMLParser];
+    SearchXMLParser *parser = (SearchXMLParser*)[[SearchXMLParser alloc] init];
     [xmlParser setDelegate:parser];
     [xmlParser parse];
     

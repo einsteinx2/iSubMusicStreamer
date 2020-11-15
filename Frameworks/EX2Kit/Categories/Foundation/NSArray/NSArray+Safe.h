@@ -11,7 +11,7 @@
 @interface NSArray (Safe)
 
 - (id)objectAtIndexSafe:(NSUInteger)index;
-+ (id)arrayWithArraySafe:(NSArray *)array;
-- (id)initWithArraySafe:(NSArray *)array;
++ (instancetype)arrayWithArraySafe:(NSArray *)array;
+- (instancetype)initWithArraySafe:(NSArray *)array;
 
 @end

@@ -326,7 +326,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self performSelector:@selector(checkCache) withObject:nil afterDelay:0.05];
 }
 
-+ (id)sharedInstance
++ (instancetype)sharedInstance
 {
     static CacheSingleton *sharedInstance = nil;
     static dispatch_once_t once = 0;

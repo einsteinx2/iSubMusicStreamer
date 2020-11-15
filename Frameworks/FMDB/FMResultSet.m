@@ -394,7 +394,7 @@
     return [self UTF8StringForColumn:columnName];
 }
 
-- (id)objectForColumnIndex:(int)columnIdx {
+- (instancetype)objectForColumnIndex:(int)columnIdx {
     if (columnIdx < 0 || columnIdx >= sqlite3_column_count([_statement statement])) {
         return nil;
     }
@@ -424,11 +424,11 @@
     return returnValue;
 }
 
-- (id)objectForColumnName:(NSString*)columnName {
+- (instancetype)objectForColumnName:(NSString*)columnName {
     return [self objectForColumn:columnName];
 }
 
-- (id)objectForColumn:(NSString*)columnName {
+- (instancetype)objectForColumn:(NSString*)columnName {
     return [self objectForColumnIndex:[self columnIndexForName:columnName]];
 }
 
@@ -437,11 +437,11 @@
     return [NSString stringWithUTF8String: sqlite3_column_name([_statement statement], columnIdx)];
 }
 
-- (id)objectAtIndexedSubscript:(int)columnIdx {
+- (instancetype)objectAtIndexedSubscript:(int)columnIdx {
     return [self objectForColumnIndex:columnIdx];
 }
 
-- (id)objectForKeyedSubscript:(NSString *)columnName {
+- (instancetype)objectForKeyedSubscript:(NSString *)columnName {
     return [self objectForColumn:columnName];
 }
 

@@ -46,7 +46,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 @implementation iSubAppDelegate
 
-+ (iSubAppDelegate *)sharedInstance
++ (instancetype)sharedInstance
 {
 	return (iSubAppDelegate*)[UIApplication sharedApplication].delegate;
 }

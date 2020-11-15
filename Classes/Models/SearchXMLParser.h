@@ -8,12 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class ISMSArtist, ISMSAlbum, ISMSSong;
 @interface SearchXMLParser : NSObject <NSXMLParserDelegate>
 
-@property (strong) NSMutableArray *listOfArtists;
-@property (strong) NSMutableArray *listOfAlbums;
-@property (strong) NSMutableArray *listOfSongs;
+@property (readonly) NSArray<ISMSArtist*> *listOfArtists;
+@property (readonly) NSArray<ISMSAlbum*> *listOfAlbums;
+@property (readonly) NSArray<ISMSSong*> *listOfSongs;
 
-- (SearchXMLParser *) initXMLParser;
+- (instancetype)init;
 
 @end
+
+NS_ASSUME_NONNULL_END

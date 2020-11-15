@@ -20,7 +20,7 @@
 
 @property (strong) SUSLyricsDAO *lyricsDAO;
 
-+ (id)sharedInstance;
++ (instancetype)sharedInstance;
 
 - (void)startDownloadQueue;
 - (void)stopDownloadQueue;

@@ -13,7 +13,7 @@
 
 @implementation ZKCDTrailer
 
-- (id)init {
+- (instancetype)init {
     if (self = [super init]) {
         [self addObserver:self forKeyPath:@"comment" options:NSKeyValueObservingOptionNew context:nil];
 

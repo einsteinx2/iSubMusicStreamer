@@ -40,7 +40,7 @@
 
 @implementation SnappySlider
 
-- (id)initWithFrame:(CGRect)aFrame
+- (instancetype)initWithFrame:(CGRect)aFrame
 {
 	if ((self = [super initWithFrame:aFrame]))
 	{
@@ -50,7 +50,7 @@
 	return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
 	if ((self = [super initWithCoder:aDecoder]))
 	{

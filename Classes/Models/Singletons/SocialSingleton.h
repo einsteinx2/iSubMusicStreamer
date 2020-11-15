@@ -20,7 +20,7 @@
 @property (readonly) NSTimeInterval scrobbleDelay;
 @property (readonly) NSTimeInterval subsonicDelay;
 
-+ (id)sharedInstance;
++ (instancetype)sharedInstance;
 
 - (void)scrobbleSongAsPlaying;
 - (void)scrobbleSongAsSubmission;

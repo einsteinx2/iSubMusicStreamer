@@ -13,7 +13,7 @@
     CFLocaleRef m_locale;
 }
 
-- (id)initWithLocale:(CFLocaleRef)locale
+- (instancetype)initWithLocale:(CFLocaleRef)locale
 {
     if ((self = [super init])) {
         m_locale = (locale != NULL) ? CFRetain(locale) : CFLocaleCopyCurrent();

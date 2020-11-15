@@ -266,7 +266,7 @@ LOG_LEVEL_ISUB_DEBUG
 
 #pragma mark Singleton methods
 
-+ (id)sharedInstance {
++ (instancetype)sharedInstance {
     static ISMSCacheQueueManager *sharedInstance = nil;
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{
