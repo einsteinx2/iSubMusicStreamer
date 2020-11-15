@@ -1123,33 +1123,27 @@ LOG_LEVEL_ISUB_DEFAULT
         return;
     }
 	
-	if (viewObjectsS.isCellEnabled)
-	{
-		if (self.segmentedControl.selectedSegmentIndex == 0)
-		{
-            ISMSSong *playedSong = [musicS playSongAtPosition:indexPath.row];
-            if (!playedSong.isVideo)
-                [self showPlayer];
-		}
-		else if (self.segmentedControl.selectedSegmentIndex == 1)
-		{
-			PlaylistSongsViewController *playlistSongsViewController = [[PlaylistSongsViewController alloc] initWithNibName:@"PlaylistSongsViewController" bundle:nil];
-			playlistSongsViewController.md5 = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT md5 FROM localPlaylists WHERE ROWID = ?", @(indexPath.row + 1)];
-			[self pushViewControllerCustom:playlistSongsViewController];
-		}
-		else if (self.segmentedControl.selectedSegmentIndex == 2)
-		{
-			PlaylistSongsViewController *playlistSongsViewController = [[PlaylistSongsViewController alloc] initWithNibName:@"PlaylistSongsViewController" bundle:nil];
-            SUSServerPlaylist *playlist = [self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:indexPath.row];
-			playlistSongsViewController.md5 = [playlist.playlistName md5];
-            playlistSongsViewController.serverPlaylist = playlist;
-			[self pushViewControllerCustom:playlistSongsViewController];
-		}
-	}
-	else
-	{
-		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-	}
+    if (self.segmentedControl.selectedSegmentIndex == 0)
+    {
+        ISMSSong *playedSong = [musicS playSongAtPosition:indexPath.row];
+        if (!playedSong.isVideo) {
+            [self showPlayer];
+        }
+    }
+    else if (self.segmentedControl.selectedSegmentIndex == 1)
+    {
+        PlaylistSongsViewController *playlistSongsViewController = [[PlaylistSongsViewController alloc] initWithNibName:@"PlaylistSongsViewController" bundle:nil];
+        playlistSongsViewController.md5 = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT md5 FROM localPlaylists WHERE ROWID = ?", @(indexPath.row + 1)];
+        [self pushViewControllerCustom:playlistSongsViewController];
+    }
+    else if (self.segmentedControl.selectedSegmentIndex == 2)
+    {
+        PlaylistSongsViewController *playlistSongsViewController = [[PlaylistSongsViewController alloc] initWithNibName:@"PlaylistSongsViewController" bundle:nil];
+        SUSServerPlaylist *playlist = [self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:indexPath.row];
+        playlistSongsViewController.md5 = [playlist.playlistName md5];
+        playlistSongsViewController.serverPlaylist = playlist;
+        [self pushViewControllerCustom:playlistSongsViewController];
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {

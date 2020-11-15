@@ -519,38 +519,34 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	if (!indexPath) return;
 	
-	if (viewObjectsS.isCellEnabled) {
-		// Clear the current playlist
-        if (settingsS.isJukeboxEnabled) {
-			[databaseS resetJukeboxPlaylist];
-        } else {
-			[databaseS resetCurrentPlaylistDb];
-        }
-        
-		// Add selected song to the playlist
-		ISMSSong *aSong = [self songAtIndexPath:indexPath];
-		[aSong addToCurrentPlaylistDbQueue];
-		
-		// If jukebox mode, send song id to server
-		if (settingsS.isJukeboxEnabled) {
-			[jukeboxS jukeboxStop];
-			[jukeboxS jukeboxClearPlaylist];
-			[jukeboxS jukeboxAddSong:aSong.songId];
-		}
-		
-		// Set player defaults
-		playlistS.isShuffle = NO;
-		
-        [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+    // Clear the current playlist
+    if (settingsS.isJukeboxEnabled) {
+        [databaseS resetJukeboxPlaylist];
+    } else {
+        [databaseS resetCurrentPlaylistDb];
+    }
+    
+    // Add selected song to the playlist
+    ISMSSong *aSong = [self songAtIndexPath:indexPath];
+    [aSong addToCurrentPlaylistDbQueue];
+    
+    // If jukebox mode, send song id to server
+    if (settingsS.isJukeboxEnabled) {
+        [jukeboxS jukeboxStop];
+        [jukeboxS jukeboxClearPlaylist];
+        [jukeboxS jukeboxAddSong:aSong.songId];
+    }
+    
+    // Set player defaults
+    playlistS.isShuffle = NO;
+    
+    [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
 
-		// Start the song
-		ISMSSong *playedSong = [musicS playSongAtPosition:0];
-        if (!playedSong.isVideo) {
-            [self showPlayer];
-        }
-	} else {
-		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-	}
+    // Start the song
+    ISMSSong *playedSong = [musicS playSongAtPosition:0];
+    if (!playedSong.isVideo) {
+        [self showPlayer];
+    }
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {

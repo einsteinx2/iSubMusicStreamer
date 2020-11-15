@@ -282,51 +282,47 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (!indexPath) return;
 	
-	if (viewObjectsS.isCellEnabled) {
-		GenresAlbumViewController *genresAlbumViewController = [[GenresAlbumViewController alloc] initWithNibName:@"GenresAlbumViewController" bundle:nil];
-		genresAlbumViewController.title = [self.listOfArtists objectAtIndexSafe:indexPath.row];
-		genresAlbumViewController.listOfAlbums = [NSMutableArray arrayWithCapacity:1];
-		genresAlbumViewController.listOfSongs = [NSMutableArray arrayWithCapacity:1];
-		genresAlbumViewController.segment = 2;
-		genresAlbumViewController.seg1 = [self.listOfArtists objectAtIndexSafe:indexPath.row];
-		genresAlbumViewController.genre = [NSString stringWithString:self.title];
-		
-		FMDatabaseQueue *dbQueue;
-		NSString *query;
-		if (settingsS.isOfflineMode) {
-			dbQueue = databaseS.songCacheDbQueue;
-			query = @"SELECT md5, segs, seg2 FROM cachedSongsLayout WHERE seg1 = ? AND genre = ? GROUP BY seg2 ORDER BY seg2 COLLATE NOCASE";
-		} else {
-			dbQueue = databaseS.genresDbQueue;
-			query = @"SELECT md5, segs, seg2 FROM genresLayout WHERE seg1 = ? AND genre = ? GROUP BY seg2 ORDER BY seg2 COLLATE NOCASE";
-		}
-		
-		[dbQueue inDatabase:^(FMDatabase *db) {
-			FMResultSet *result = [db executeQuery:query, [self.listOfArtists objectAtIndexSafe:indexPath.row], self.title];
-			while ([result next]) {
-				@autoreleasepool  {
-					NSString *md5 = [result stringForColumnIndex:0];
-					NSInteger segs = [result intForColumnIndex:1];
-					NSString *seg2 = [result stringForColumnIndex:2];
-					
-					if (segs > 2) {
-                        if (md5 && seg2) {
-							[genresAlbumViewController.listOfAlbums addObject:@[md5, seg2]];
-                        }
-					} else {
-                        if (md5) {
-							[genresAlbumViewController.listOfSongs addObject:md5];
-                        }
-					}
-				}
-			}
-			[result close];
-		}];
-		
-		[self pushViewControllerCustom:genresAlbumViewController];
-	} else {
-		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-	}
+    GenresAlbumViewController *genresAlbumViewController = [[GenresAlbumViewController alloc] initWithNibName:@"GenresAlbumViewController" bundle:nil];
+    genresAlbumViewController.title = [self.listOfArtists objectAtIndexSafe:indexPath.row];
+    genresAlbumViewController.listOfAlbums = [NSMutableArray arrayWithCapacity:1];
+    genresAlbumViewController.listOfSongs = [NSMutableArray arrayWithCapacity:1];
+    genresAlbumViewController.segment = 2;
+    genresAlbumViewController.seg1 = [self.listOfArtists objectAtIndexSafe:indexPath.row];
+    genresAlbumViewController.genre = [NSString stringWithString:self.title];
+    
+    FMDatabaseQueue *dbQueue;
+    NSString *query;
+    if (settingsS.isOfflineMode) {
+        dbQueue = databaseS.songCacheDbQueue;
+        query = @"SELECT md5, segs, seg2 FROM cachedSongsLayout WHERE seg1 = ? AND genre = ? GROUP BY seg2 ORDER BY seg2 COLLATE NOCASE";
+    } else {
+        dbQueue = databaseS.genresDbQueue;
+        query = @"SELECT md5, segs, seg2 FROM genresLayout WHERE seg1 = ? AND genre = ? GROUP BY seg2 ORDER BY seg2 COLLATE NOCASE";
+    }
+    
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *result = [db executeQuery:query, [self.listOfArtists objectAtIndexSafe:indexPath.row], self.title];
+        while ([result next]) {
+            @autoreleasepool  {
+                NSString *md5 = [result stringForColumnIndex:0];
+                NSInteger segs = [result intForColumnIndex:1];
+                NSString *seg2 = [result stringForColumnIndex:2];
+                
+                if (segs > 2) {
+                    if (md5 && seg2) {
+                        [genresAlbumViewController.listOfAlbums addObject:@[md5, seg2]];
+                    }
+                } else {
+                    if (md5) {
+                        [genresAlbumViewController.listOfSongs addObject:md5];
+                    }
+                }
+            }
+        }
+        [result close];
+    }];
+    
+    [self pushViewControllerCustom:genresAlbumViewController];
 }
 
 @end

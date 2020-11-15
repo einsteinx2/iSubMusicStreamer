@@ -24,9 +24,9 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppDelegate)
 @interface iSubAppDelegate : NSObject <UIApplicationDelegate, MFMailComposeViewControllerDelegate, SUSLoaderDelegate>
 
-@property (strong) HTTPServer *hlsProxyServer;
+@property (nullable, strong) HTTPServer *hlsProxyServer;
 
-@property (strong) SUSStatusLoader *statusLoader;
+@property (nullable,  strong) SUSStatusLoader *statusLoader;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 
@@ -78,12 +78,12 @@ NS_SWIFT_NAME(AppDelegate)
 
 - (void)loadFlurryAnalytics;
 
-- (void)reachabilityChanged:(NSNotification *)note;
+- (void)reachabilityChanged:(nullable NSNotification *)note;
 - (NSInteger)getHour;
 
 - (void)showSettings;
 
-- (void)batteryStateChanged:(NSNotification *)notification;
+- (void)batteryStateChanged:(nullable NSNotification *)notification;
 
 - (void)startRedirectingLogToFile;
 - (void)stopRedirectingLogToFile;

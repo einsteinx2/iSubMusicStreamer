@@ -244,6 +244,7 @@ double startSongSeconds = 0.0;
     if (settingsS.isLockScreenArtEnabled)
     {
         SUSCoverArtDAO *artDataModel = [[SUSCoverArtDAO alloc] initWithDelegate:nil coverArtId:currentSong.coverArtId isLarge:YES];
+        MPMediaItemArtwork *artwork = [MPMediaItemArtwork all]
         [trackInfo setObject:[[MPMediaItemArtwork alloc] initWithImage:artDataModel.coverArtImage] forKey:MPMediaItemPropertyArtwork];
     }
     

@@ -163,45 +163,41 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	if (!indexPath) return;
 	
-	if (viewObjectsS.isCellEnabled) {
-		GenresArtistViewController *artistViewController = [[GenresArtistViewController alloc] initWithNibName:@"GenresArtistViewController" bundle:nil];
-		if (settingsS.isOfflineMode) {
-			NSString *title = [databaseS.songCacheDbQueue stringForQuery:@"SELECT genre FROM genres WHERE ROWID = ?", @(indexPath.row + 1)];
-			artistViewController.title = [NSString stringWithString:title ? title : @""];
-		} else {
-			NSString *title = [databaseS.genresDbQueue stringForQuery:@"SELECT genre FROM genres WHERE ROWID = ?", @(indexPath.row + 1)];
-			artistViewController.title = [NSString stringWithString:title ? title : @""];
-		}
-		artistViewController.listOfArtists = [NSMutableArray arrayWithCapacity:1];
+    GenresArtistViewController *artistViewController = [[GenresArtistViewController alloc] initWithNibName:@"GenresArtistViewController" bundle:nil];
+    if (settingsS.isOfflineMode) {
+        NSString *title = [databaseS.songCacheDbQueue stringForQuery:@"SELECT genre FROM genres WHERE ROWID = ?", @(indexPath.row + 1)];
+        artistViewController.title = [NSString stringWithString:title ? title : @""];
+    } else {
+        NSString *title = [databaseS.genresDbQueue stringForQuery:@"SELECT genre FROM genres WHERE ROWID = ?", @(indexPath.row + 1)];
+        artistViewController.title = [NSString stringWithString:title ? title : @""];
+    }
+    artistViewController.listOfArtists = [NSMutableArray arrayWithCapacity:1];
 
-		FMDatabaseQueue *dbQueue;
-		NSString *query;
-		
-		if (settingsS.isOfflineMode)  {
-			dbQueue = databaseS.songCacheDbQueue;
-			query = @"SELECT seg1 FROM cachedSongsLayout a INNER JOIN genresSongs b ON a.md5 = b.md5 WHERE b.genre = ? GROUP BY seg1 ORDER BY seg1 COLLATE NOCASE";
-		} else {
-			dbQueue = databaseS.genresDbQueue;
-			query = @"SELECT seg1 FROM genresLayout a INNER JOIN genresSongs b ON a.md5 = b.md5 WHERE b.genre = ? GROUP BY seg1 ORDER BY seg1 COLLATE NOCASE";
-		}
-		
-		[dbQueue inDatabase:^(FMDatabase *db) {
-			FMResultSet *result = [db executeQuery:query, artistViewController.title];
-			if ([db hadError]) {
-                //DLog(@"Error grabbing the artists for this genre... Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-			} else {
-				while ([result next]) {
-					NSString *artist = [result stringForColumnIndex:0];
-					if (artist) [artistViewController.listOfArtists addObject:artist];
-				}
-			}
-			[result close];
-		}];
-		
-		[self pushViewControllerCustom:artistViewController];
-	} else {
-		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-	}
+    FMDatabaseQueue *dbQueue;
+    NSString *query;
+    
+    if (settingsS.isOfflineMode)  {
+        dbQueue = databaseS.songCacheDbQueue;
+        query = @"SELECT seg1 FROM cachedSongsLayout a INNER JOIN genresSongs b ON a.md5 = b.md5 WHERE b.genre = ? GROUP BY seg1 ORDER BY seg1 COLLATE NOCASE";
+    } else {
+        dbQueue = databaseS.genresDbQueue;
+        query = @"SELECT seg1 FROM genresLayout a INNER JOIN genresSongs b ON a.md5 = b.md5 WHERE b.genre = ? GROUP BY seg1 ORDER BY seg1 COLLATE NOCASE";
+    }
+    
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *result = [db executeQuery:query, artistViewController.title];
+        if ([db hadError]) {
+            //DLog(@"Error grabbing the artists for this genre... Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+        } else {
+            while ([result next]) {
+                NSString *artist = [result stringForColumnIndex:0];
+                if (artist) [artistViewController.listOfArtists addObject:artist];
+            }
+        }
+        [result close];
+    }];
+    
+    [self pushViewControllerCustom:artistViewController];
 }
 
 @end

@@ -20,50 +20,27 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ViewObjects)
 @interface ViewObjectsSingleton : NSObject <UITabBarControllerDelegate, UINavigationControllerDelegate, MBProgressHUDDelegate>
 
-@property (strong) MBProgressHUD *HUD;
-
-// XMLParser objects used to tell the parser how to parse
-//
-@property (copy) NSString *parseState;
-@property (copy) NSString *allAlbumsParseState;
-@property (copy) NSString *allSongsParseState;
-
-// Home page objects
-//
-@property (strong) NSMutableArray *homeListOfAlbums;
+@property (nullable, strong) MBProgressHUD *HUD;
 
 // Artists page objects
 //
 @property BOOL isArtistsLoading;
 
-// Albums page objects and variables
-//
-@property (copy) NSString *currentArtistName;
-@property (copy) NSString *currentArtistId;
-
 // Playlists view objects
 //
-@property (strong) NSMutableArray *listOfPlaylists;
-@property (strong) NSMutableArray *listOfPlaylistSongs;
-@property (copy) NSString *localPlaylist;
-@property (strong) NSMutableArray *listOfLocalPlaylists;
 @property BOOL isLocalPlaylist;
 
 // Settings page objects
 //
-@property (strong) ISMSServer *serverToEdit;
+@property (nullable, strong) ISMSServer *serverToEdit;
 
 // Chat page objects
 //
 @property (strong) NSMutableArray *chatMessages;
 
 // New Stuff
-@property BOOL isCellEnabled;
 @property (strong) NSTimer *cellEnabledTimer;
-@property (strong) NSMutableArray *queueAlbumListOfAlbums;
-@property (strong) NSMutableArray *queueAlbumListOfSongs;
 @property (strong) NSMutableArray *multiDeleteList;
-//@property BOOL isOfflineMode;
 @property BOOL isOnlineModeAlertShowing;
 
 // Cell colors
@@ -81,8 +58,6 @@ NS_SWIFT_NAME(ViewObjects)
 @property (strong) UIColor *windowColor;
 @property (strong) UIColor *jukeboxColor;
 
-@property (copy) NSString *currentLoadingFolderId;
-
 @property BOOL isNoNetworkAlertShowing;
 
 @property BOOL isLoadingScreenShowing;
@@ -91,15 +66,13 @@ NS_SWIFT_NAME(ViewObjects)
 
 - (void)orderMainTabBarController;
 
-- (void)showLoadingScreenOnMainWindowWithMessage:(NSString *)message;
-- (void)showLoadingScreen:(UIView *)view withMessage:(NSString *)message;
+- (void)showLoadingScreenOnMainWindowWithMessage:(nullable NSString *)message;
+- (void)showLoadingScreen:(UIView *)view withMessage:(nullable NSString *)message;
 - (void)showAlbumLoadingScreenOnMainWindowWithSender:(id)sender;
 - (void)showAlbumLoadingScreen:(UIView *)view sender:(id)sender;
 - (void)hideLoadingScreen;
 - (UIColor *)currentLightColor;
 - (UIColor *)currentDarkColor;
-
-- (void)enableCells;
 
 @end
 

@@ -77,7 +77,7 @@
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:finalMessage preferredStyle:UIAlertControllerStyleAlert];
                     [alert addAction:[UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:nil]];
                     [alert addAction:[UIAlertAction actionWithTitle:@"App Store" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.com/apps/isubmusicstreamer"] options:@{} completionHandler:nil];
+                        [UIApplication.sharedApplication openURL:[NSURL URLWithString:@"itms-apps://itunes.com/apps/isubmusicstreamer"] options:@{} completionHandler:nil];
                     }]];
                     [UIApplication.keyWindow.rootViewController presentViewController:alert animated:YES completion:^{
                         self.selfRef = nil;

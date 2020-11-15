@@ -246,20 +246,16 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (!indexPath) return;
 	
-	if (viewObjectsS.isCellEnabled) {
-		if (indexPath.row < self.dataModel.albumsCount) {
-            ISMSAlbum *anAlbum = [self.dataModel albumForTableViewRow:indexPath.row];
-			AlbumViewController *albumViewController = [[AlbumViewController alloc] initWithArtist:nil orAlbum:anAlbum];	
-			[self pushViewControllerCustom:albumViewController];
-		} else {
-            ISMSSong *playedSong = [self.dataModel playSongAtTableViewRow:indexPath.row];
-            if (!playedSong.isVideo) {
-                [self showPlayer];
-            }
-		}
-	} else {
-		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-	}
+    if (indexPath.row < self.dataModel.albumsCount) {
+        ISMSAlbum *anAlbum = [self.dataModel albumForTableViewRow:indexPath.row];
+        AlbumViewController *albumViewController = [[AlbumViewController alloc] initWithArtist:nil orAlbum:anAlbum];
+        [self pushViewControllerCustom:albumViewController];
+    } else {
+        ISMSSong *playedSong = [self.dataModel playSongAtTableViewRow:indexPath.row];
+        if (!playedSong.isVideo) {
+            [self showPlayer];
+        }
+    }
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {

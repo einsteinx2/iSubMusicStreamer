@@ -45,7 +45,7 @@ static void *key;
     }
 }
 
-- (instancetype)ex2CustomObjectForKey:(id)key
+- (id)ex2CustomObjectForKey:(id)key
 {
     if (!key) return nil;
     

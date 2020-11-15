@@ -337,13 +337,9 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	if (!indexPath) return;
-	
-	if (viewObjectsS.isCellEnabled) {
-		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-		[self performSelector:@selector(didSelectRowInternal:) withObject:indexPath afterDelay:0.05];
-	} else {
-		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-	}
+    
+    [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+    [self performSelector:@selector(didSelectRowInternal:) withObject:indexPath afterDelay:0.05];
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {

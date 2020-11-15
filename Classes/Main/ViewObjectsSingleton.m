@@ -14,10 +14,6 @@
 
 @implementation ViewObjectsSingleton
 
-- (void)enableCells {
-	self.isCellEnabled = YES;
-}
-
 - (void)hudWasHidden:(MBProgressHUD *)hud  {
     // Remove HUD from screen when the HUD was hidden
     [self.HUD removeFromSuperview];
@@ -67,7 +63,12 @@
 	UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	cancelButton.bounds = CGRectMake(0, 0, 1024, 1024);
 	cancelButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	[cancelButton addTarget:sender action:@selector(cancelLoad) forControlEvents:UIControlEventTouchUpInside];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+    if ([sender respondsToSelector:@selector(cancelLoad)]) {
+        [cancelButton addTarget:sender action:@selector(cancelLoad) forControlEvents:UIControlEventTouchUpInside];
+    }
+#pragma clang diagnostic pop
 	[self.HUD addSubview:cancelButton];
 	
 	[appDelegateS.window addSubview:self.HUD];
@@ -231,9 +232,7 @@
 
 	_windowColor = [UIColor colorWithWhite:.3 alpha:1];
 	_jukeboxColor = [UIColor colorWithRed:140.0/255.0 green:0.0 blue:0.0 alpha:1.0];
-	
-	_isCellEnabled = YES;
-	
+		
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(showAlbumLoadingScreenOnMainWindowNotification:) name:ISMSNotification_ShowAlbumLoadingScreenOnMainWindow object:nil];
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(showLoadingScreenOnMainWindowNotification:) name:ISMSNotification_ShowLoadingScreenOnMainWindow object:nil];
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(hideLoadingScreen) name:ISMSNotification_HideLoadingScreen object:nil];

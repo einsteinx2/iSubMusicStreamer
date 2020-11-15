@@ -244,21 +244,21 @@
 	if (!indexPath) return;
 	
 	if (self.searchType == ISMSSearchSongsSearchType_Artists) {
-		if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfArtists.count) {
+		if (indexPath.row != self.listOfArtists.count) {
 			ISMSArtist *anArtist = [self.listOfArtists objectAtIndexSafe:indexPath.row];
 			AlbumViewController *albumView = [[AlbumViewController alloc] initWithArtist:anArtist orAlbum:nil];
 			[self pushViewControllerCustom:albumView];
 			return;
 		}
 	} else if (self.searchType == ISMSSearchSongsSearchType_Albums) {
-		if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfAlbums.count) {
+		if (indexPath.row != self.listOfAlbums.count) {
 			ISMSAlbum *anAlbum = [self.listOfAlbums objectAtIndexSafe:indexPath.row];
 			AlbumViewController *albumView = [[AlbumViewController alloc] initWithArtist:nil orAlbum:anAlbum];
 			[self pushViewControllerCustom:albumView];
 			return;
 		}
 	} else {
-		if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfSongs.count) {
+		if (indexPath.row != self.listOfSongs.count) {
 			// Clear the current playlist
 			if (settingsS.isJukeboxEnabled) {
 				[databaseS resetJukeboxPlaylist];
@@ -307,15 +307,15 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.searchType == ISMSSearchSongsSearchType_Artists) {
-        if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfArtists.count) {
+        if (indexPath.row != self.listOfArtists.count) {
             return [SwipeAction downloadAndQueueConfigWithModel:[self.listOfArtists objectAtIndexSafe:indexPath.row]];
         }
     } else if (self.searchType == ISMSSearchSongsSearchType_Albums) {
-        if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfAlbums.count) {
+        if (indexPath.row != self.listOfAlbums.count) {
             return [SwipeAction downloadAndQueueConfigWithModel:[self.listOfAlbums objectAtIndexSafe:indexPath.row]];
         }
     } else {
-        if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfSongs.count) {
+        if (indexPath.row != self.listOfSongs.count) {
             return [SwipeAction downloadAndQueueConfigWithModel:[self.listOfSongs objectAtIndexSafe:indexPath.row]];
         }
     }

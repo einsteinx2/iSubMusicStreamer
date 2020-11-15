@@ -279,7 +279,7 @@ LOG_LEVEL_ISUB_DEFAULT
 //	}
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
     // Handle being openned by a URL
     DDLogVerbose(@"url host: %@ path components: %@", url.host, url.pathComponents );
@@ -347,7 +347,7 @@ LOG_LEVEL_ISUB_DEFAULT
 {
     if (self.referringAppUrl)
     {
-        [[UIApplication sharedApplication] openURL:self.referringAppUrl];
+        [UIApplication.sharedApplication openURL:self.referringAppUrl options:@{} completionHandler:nil];
     }
 }
 

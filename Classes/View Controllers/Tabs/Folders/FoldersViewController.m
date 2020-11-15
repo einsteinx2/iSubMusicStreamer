@@ -448,12 +448,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	if (!indexPath) return;
-	
-	if (viewObjectsS.isCellEnabled) {
-		[self pushViewControllerCustom:[[AlbumViewController alloc] initWithArtist:[self artistAtIndexPath:indexPath] orAlbum:nil]];
-	} else {
-		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-	}
+    [self pushViewControllerCustom:[[AlbumViewController alloc] initWithArtist:[self artistAtIndexPath:indexPath] orAlbum:nil]];
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {

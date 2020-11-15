@@ -258,7 +258,7 @@
         NSString *name = [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
         cell.albumNameLabel.text = name;        
         cell.coverArtView.coverArtId = coverArtId;
-                
+            
         return cell;
     } else {
         // Song
@@ -268,103 +268,100 @@
         cell.hideDurationLabel = NO;
         NSString *md5 = [listOfSongs objectAtIndexSafe:(indexPath.row - listOfAlbums.count)];
         [cell updateWithModel:[ISMSSong songFromGenreDbQueue:md5]];
+        return cell;
     }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (!indexPath) return;
 	
-	if (viewObjectsS.isCellEnabled) {
-		if (indexPath.row < [listOfAlbums count]) {
-			GenresAlbumViewController *genresAlbumViewController = [[GenresAlbumViewController alloc] initWithNibName:@"GenresAlbumViewController" bundle:nil];
-			genresAlbumViewController.title = [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
-			genresAlbumViewController.listOfAlbums = [NSMutableArray arrayWithCapacity:1];
-			genresAlbumViewController.listOfSongs = [NSMutableArray arrayWithCapacity:1];
-			genresAlbumViewController.segment = (self.segment + 1);
-			genresAlbumViewController.seg1 = self.seg1;
-			genresAlbumViewController.genre = [NSString stringWithString:genre];
-			
-			FMDatabaseQueue *dbQueue;
-			NSString *query;
-			if (settingsS.isOfflineMode) {
-				dbQueue = databaseS.songCacheDbQueue;
-				query = [NSString stringWithFormat:@"SELECT md5, segs, seg%li FROM cachedSongsLayout WHERE seg1 = ? AND seg%li = ? AND genre = ? GROUP BY seg%li ORDER BY seg%li COLLATE NOCASE", (long)(segment + 1), (long)segment, (long)(segment + 1), (long)(segment + 1)];
-			} else {
-				dbQueue = databaseS.genresDbQueue;
-				query = [NSString stringWithFormat:@"SELECT md5, segs, seg%li FROM genresLayout WHERE seg1 = ? AND seg%li = ? AND genre = ? GROUP BY seg%li ORDER BY seg%li COLLATE NOCASE", (long)(segment + 1), (long)segment, (long)(segment + 1), (long)(segment + 1)];
-			}
-			
-			[dbQueue inDatabase:^(FMDatabase *db) {
-				FMResultSet *result = [db executeQuery:query, self.seg1, [[self.listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1], self.genre];
-				while ([result next]) {
-					@autoreleasepool {
-						NSString *md5 = [result stringForColumnIndex:0];
-						NSInteger segs = [result intForColumnIndex:1];
-						NSString *seg = [result stringForColumnIndex:2];
-						
-						if (segs > (self.segment + 1)) {
-                            if (md5 && seg) {
-								[genresAlbumViewController.listOfAlbums addObject:@[md5, seg]];
-                            }
-						} else {
-                            if (md5) {
-								[genresAlbumViewController.listOfSongs addObject:md5];
-                            }
-						}
-					}
-				}
-				[result close];
-			}];
-			
-			[self pushViewControllerCustom:genresAlbumViewController];
-		} else {
-			// Find the new playlist position
-			NSUInteger songRow = indexPath.row - listOfAlbums.count;
-			
-			// Clear the current playlist
-			if (settingsS.isJukeboxEnabled) {
-				[databaseS resetJukeboxPlaylist];
-				[jukeboxS jukeboxClearRemotePlaylist];
-			} else {
-				[databaseS resetCurrentPlaylistDb];
-			}
-			
-			// Add the songs to the playlist 
-			NSMutableArray *songIds = [[NSMutableArray alloc] init];
-			for (NSString *songMD5 in listOfSongs) {
-				@autoreleasepool {
-					ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:songMD5];
-
-					[aSong addToCurrentPlaylistDbQueue];
-					
-					// In jukebox mode, collect the song ids to send to the server
-					if (settingsS.isJukeboxEnabled)
-						[songIds addObject:aSong.songId];
-				
-				}
-			}
-			
-			// If jukebox mode, send song ids to server
-			if (settingsS.isJukeboxEnabled) {
-				[jukeboxS jukeboxStop];
-				[jukeboxS jukeboxClearPlaylist];
-				[jukeboxS jukeboxAddSongs:songIds];
-			}
-			
-			// Set player defaults
-			playlistS.isShuffle = NO;
-            
-            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
-			
-			// Start the song
-            ISMSSong *playedSong = [musicS playSongAtPosition:songRow];
-            if (!playedSong.isVideo) {
-                [self showPlayer];
+    if (indexPath.row < [listOfAlbums count]) {
+        GenresAlbumViewController *genresAlbumViewController = [[GenresAlbumViewController alloc] initWithNibName:@"GenresAlbumViewController" bundle:nil];
+        genresAlbumViewController.title = [[listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
+        genresAlbumViewController.listOfAlbums = [NSMutableArray arrayWithCapacity:1];
+        genresAlbumViewController.listOfSongs = [NSMutableArray arrayWithCapacity:1];
+        genresAlbumViewController.segment = (self.segment + 1);
+        genresAlbumViewController.seg1 = self.seg1;
+        genresAlbumViewController.genre = [NSString stringWithString:genre];
+        
+        FMDatabaseQueue *dbQueue;
+        NSString *query;
+        if (settingsS.isOfflineMode) {
+            dbQueue = databaseS.songCacheDbQueue;
+            query = [NSString stringWithFormat:@"SELECT md5, segs, seg%li FROM cachedSongsLayout WHERE seg1 = ? AND seg%li = ? AND genre = ? GROUP BY seg%li ORDER BY seg%li COLLATE NOCASE", (long)(segment + 1), (long)segment, (long)(segment + 1), (long)(segment + 1)];
+        } else {
+            dbQueue = databaseS.genresDbQueue;
+            query = [NSString stringWithFormat:@"SELECT md5, segs, seg%li FROM genresLayout WHERE seg1 = ? AND seg%li = ? AND genre = ? GROUP BY seg%li ORDER BY seg%li COLLATE NOCASE", (long)(segment + 1), (long)segment, (long)(segment + 1), (long)(segment + 1)];
+        }
+        
+        [dbQueue inDatabase:^(FMDatabase *db) {
+            FMResultSet *result = [db executeQuery:query, self.seg1, [[self.listOfAlbums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1], self.genre];
+            while ([result next]) {
+                @autoreleasepool {
+                    NSString *md5 = [result stringForColumnIndex:0];
+                    NSInteger segs = [result intForColumnIndex:1];
+                    NSString *seg = [result stringForColumnIndex:2];
+                    
+                    if (segs > (self.segment + 1)) {
+                        if (md5 && seg) {
+                            [genresAlbumViewController.listOfAlbums addObject:@[md5, seg]];
+                        }
+                    } else {
+                        if (md5) {
+                            [genresAlbumViewController.listOfSongs addObject:md5];
+                        }
+                    }
+                }
             }
-		}
-	} else {
-		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-	}
+            [result close];
+        }];
+        
+        [self pushViewControllerCustom:genresAlbumViewController];
+    } else {
+        // Find the new playlist position
+        NSUInteger songRow = indexPath.row - listOfAlbums.count;
+        
+        // Clear the current playlist
+        if (settingsS.isJukeboxEnabled) {
+            [databaseS resetJukeboxPlaylist];
+            [jukeboxS jukeboxClearRemotePlaylist];
+        } else {
+            [databaseS resetCurrentPlaylistDb];
+        }
+        
+        // Add the songs to the playlist
+        NSMutableArray *songIds = [[NSMutableArray alloc] init];
+        for (NSString *songMD5 in listOfSongs) {
+            @autoreleasepool {
+                ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:songMD5];
+
+                [aSong addToCurrentPlaylistDbQueue];
+                
+                // In jukebox mode, collect the song ids to send to the server
+                if (settingsS.isJukeboxEnabled)
+                    [songIds addObject:aSong.songId];
+            
+            }
+        }
+        
+        // If jukebox mode, send song ids to server
+        if (settingsS.isJukeboxEnabled) {
+            [jukeboxS jukeboxStop];
+            [jukeboxS jukeboxClearPlaylist];
+            [jukeboxS jukeboxAddSongs:songIds];
+        }
+        
+        // Set player defaults
+        playlistS.isShuffle = NO;
+        
+        [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+        
+        // Start the song
+        ISMSSong *playedSong = [musicS playSongAtPosition:songRow];
+        if (!playedSong.isVideo) {
+            [self showPlayer];
+        }
+    }
 }
 
 @end

@@ -55,7 +55,7 @@ typedef void (^SUSLoaderCallback)(BOOL success, NSError * _Nullable error, SUSLo
 - (NSURLRequest *)createRequest; // Override this
 - (void)processResponse; // Override this
 
-- (void)informDelegateLoadingFailed:(NSError *)error;
+- (void)informDelegateLoadingFailed:(nullable NSError *)error;
 - (void)informDelegateLoadingFinished;
 
 @end

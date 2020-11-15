@@ -142,7 +142,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (!indexPath) return;
 	
-	if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfAlbums.count) {
+	if (indexPath.row != self.listOfAlbums.count) {
 		ISMSAlbum *anAlbum = [self.listOfAlbums objectAtIndexSafe:indexPath.row];
 		AlbumViewController *albumViewController = [[AlbumViewController alloc] initWithArtist:nil orAlbum:anAlbum];
 		[self pushViewControllerCustom:albumViewController];
@@ -152,7 +152,7 @@
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (viewObjectsS.isCellEnabled && indexPath.row != self.listOfAlbums.count) {
+    if (indexPath.row != self.listOfAlbums.count) {
         return [SwipeAction downloadAndQueueConfigWithModel:[self.listOfAlbums objectAtIndexSafe:indexPath.row]];
     }
     return nil;
