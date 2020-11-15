@@ -22,20 +22,21 @@ LOG_LEVEL_ISUB_DEFAULT
 
 @implementation FolderDropdownControl
 
+// TODO: Redraw border color after switching between light/dark mode
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
 		_selectedFolderId = @-1;
 		_folders = [SUSRootFoldersDAO folderDropdownFolders];
 		_labels = [[NSMutableArray alloc] init];
 		_isOpen = NO;
-		_borderColor = ISMSHeaderTextColor;
-		_textColor   = ISMSHeaderTextColor;
-		_lightColor  = [UIColor whiteColor];
-		_darkColor   = [UIColor whiteColor];
+        _borderColor = UIColor.systemGrayColor;//labelColor;//ISMSHeaderTextColor;
+        _textColor   = UIColor.labelColor;//ISMSHeaderTextColor;
+        _lightColor  = UIColor.systemBackgroundColor;//[UIColor whiteColor];
+        _darkColor   = UIColor.systemBackgroundColor;//[UIColor whiteColor];
 		
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		self.userInteractionEnabled = YES;
-		self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = UIColor.systemGray5Color;//[UIColor clearColor];
 		self.layer.borderColor = _borderColor.CGColor;
 		self.layer.borderWidth = 2.0;
 		self.layer.cornerRadius = 8;
@@ -45,9 +46,9 @@ LOG_LEVEL_ISUB_DEFAULT
 		_selectedFolderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		_selectedFolderLabel.userInteractionEnabled = YES;
 		_selectedFolderLabel.backgroundColor = [UIColor clearColor];
-		_selectedFolderLabel.textColor = _borderColor;
+        _selectedFolderLabel.textColor = _textColor;//_borderColor;
 		_selectedFolderLabel.textAlignment = NSTextAlignmentCenter;
-		_selectedFolderLabel.font = ISMSBoldFont(20);
+        _selectedFolderLabel.font = [UIFont boldSystemFontOfSize:20];//ISMSBoldFont(20);
 		_selectedFolderLabel.text = @"All Folders";
 		[self addSubview:_selectedFolderLabel];
 		
@@ -127,7 +128,7 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
 			folderLabel.backgroundColor = self.darkColor;
 		folderLabel.textColor = self.textColor;
 		folderLabel.textAlignment = NSTextAlignmentCenter;
-		folderLabel.font = ISMSBoldFont(20);
+        folderLabel.font = [UIFont boldSystemFontOfSize:20];//ISMSBoldFont(20);
 		folderLabel.text = folder;
 		folderLabel.tag = tag;
         folderLabel.isAccessibilityElement = NO;
@@ -148,10 +149,14 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
 	if (self.isOpen) {
         // Close it
         [UIView animateWithDuration:.25 animations:^{
-             self.height -= self.sizeIncrease;
-             [self.delegate folderDropdownMoveViewsY:-self.sizeIncrease];
+            self.height -= self.sizeIncrease;
+            if ([self.delegate respondsToSelector:@selector(folderDropdownMoveViewsY:)]) {
+                [self.delegate folderDropdownMoveViewsY:-self.sizeIncrease];
+            }
          } completion:^(BOOL finished) {
-             [self.delegate folderDropdownViewsFinishedMoving];
+             if ([self.delegate respondsToSelector:@selector(folderDropdownViewsFinishedMoving)]) {
+                 [self.delegate folderDropdownViewsFinishedMoving];
+             }
          }];
 		
 		[CATransaction begin];
@@ -162,9 +167,13 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
         // Open it
 		[UIView animateWithDuration:.25 animations:^{
 			self.height += self.sizeIncrease;
-			[self.delegate folderDropdownMoveViewsY:self.sizeIncrease];
+            if ([self.delegate respondsToSelector:@selector(folderDropdownMoveViewsY:)]) {
+                [self.delegate folderDropdownMoveViewsY:self.sizeIncrease];
+            }
 		} completion:^(BOOL finished) {
-			[self.delegate folderDropdownViewsFinishedMoving];
+            if ([self.delegate respondsToSelector:@selector(folderDropdownViewsFinishedMoving)]) {
+                [self.delegate folderDropdownViewsFinishedMoving];
+            }
 		}];
 				
 		[CATransaction begin];
@@ -198,11 +207,15 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
 		self.isOpen = NO;
 		
 		self.height -= self.sizeIncrease;
-		[self.delegate folderDropdownMoveViewsY:-self.sizeIncrease];
+        if ([self.delegate respondsToSelector:@selector(folderDropdownMoveViewsY:)]) {
+            [self.delegate folderDropdownMoveViewsY:-self.sizeIncrease];
+        }
 		
 		self.arrowImage.transform = CATransform3DMakeRotation((M_PI / 180.0) * 0.0f, 0.0f, 0.0f, 1.0f);
 		
-		[self.delegate folderDropdownViewsFinishedMoving];
+        if ([self.delegate respondsToSelector:@selector(folderDropdownViewsFinishedMoving)]) {
+            [self.delegate folderDropdownViewsFinishedMoving];
+        }
 	}
 }
 
@@ -219,7 +232,9 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
 	[self closeDropdownFast];
 	
 	// Call the delegate method
-	[self.delegate folderDropdownSelectFolder:self.selectedFolderId];	
+    if ([self.delegate respondsToSelector:@selector(folderDropdownSelectFolder:)]) {
+        [self.delegate folderDropdownSelectFolder:self.selectedFolderId];
+    }
 }
 
 - (void)selectFolderWithId:(NSNumber *)folderId {

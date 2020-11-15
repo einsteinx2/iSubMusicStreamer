@@ -14,7 +14,6 @@
 #import <netinet/in.h>
 #import <netdb.h>
 #import <arpa/inet.h>
-#import "IntroViewController.h"
 #import "iPadRootViewController.h"
 #import "MenuViewController.h"
 #import "iPhoneStreamingPlayerViewController.h"
@@ -163,13 +162,10 @@ LOG_LEVEL_ISUB_DEFAULT
 			self.showIntro = YES;
 		}
 	}
-		
-    self.introController = nil;
-		
+				
 	[self loadFlurryAnalytics];
     
 	// Create and display UI
-	self.introController = nil;
 	if (UIDevice.isIPad)
 	{
 		self.ipadRootViewController = [[iPadRootViewController alloc] initWithNibName:nil bundle:nil];
@@ -179,9 +175,10 @@ LOG_LEVEL_ISUB_DEFAULT
         
 		if (self.showIntro)
 		{
-			self.introController = [[IntroViewController alloc] init];
-			self.introController.modalPresentationStyle = UIModalPresentationFormSheet;
-			[self.ipadRootViewController presentViewController:self.introController animated:NO completion:nil];
+            [self showSettings];
+//			self.introController = [[IntroViewController alloc] init];
+//			self.introController.modalPresentationStyle = UIModalPresentationFormSheet;
+//			[self.ipadRootViewController presentViewController:self.introController animated:NO completion:nil];
 		}
 	}
 	else
@@ -216,8 +213,9 @@ LOG_LEVEL_ISUB_DEFAULT
 		
 		if (self.showIntro)
 		{
-			self.introController = [[IntroViewController alloc] init];
-			[self.currentTabBarController presentViewController:self.introController animated:NO completion:nil];
+//			self.introController = [[IntroViewController alloc] init];
+//			[self.currentTabBarController presentViewController:self.introController animated:NO completion:nil];
+            [self showSettings];
 		}
 	}
     

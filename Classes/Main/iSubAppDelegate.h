@@ -17,7 +17,7 @@
 
 #define appDelegateS [iSubAppDelegate sharedInstance]
 
-@class BBSplitViewController, iPadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, iPhoneStreamingPlayerViewController, SettingsViewController, FoldersViewController, AudioStreamer, IntroViewController, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HTTPServer, ServerListViewController;
+@class BBSplitViewController, iPadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, iPhoneStreamingPlayerViewController, SettingsViewController, FoldersViewController, AudioStreamer, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HTTPServer, ServerListViewController;
 
 @interface iSubAppDelegate : NSObject <UIApplicationDelegate, MFMailComposeViewControllerDelegate, SUSLoaderDelegate>
 
@@ -27,7 +27,6 @@
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 
-@property (strong) IntroViewController *introController;
 @property (strong) SettingsViewController *settingsViewController;
 @property (strong) IBOutlet UIImageView *background;
 @property (strong) UITabBarController *currentTabBarController;
