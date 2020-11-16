@@ -193,7 +193,7 @@ import SnapKit
             make.height.equalTo(80)
             make.leading.equalToSuperview().offset(35)
             make.trailing.equalToSuperview().offset(-30)
-            make.centerY.equalToSuperview()
+            make.centerY.equalTo(verticalStack)
         }
         
         remakeConstraints()

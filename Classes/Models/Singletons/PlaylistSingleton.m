@@ -15,6 +15,7 @@
 #import "JukeboxSingleton.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import <MediaPlayer/MediaPlayer.h>
 
 @implementation PlaylistSingleton
 
@@ -463,6 +464,14 @@
 		{
 			repeatMode = mode;
 			[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_RepeatModeChanged];
+            
+            MPRepeatType currentRepeatType;
+            switch (mode) {
+                case ISMSRepeatMode_RepeatOne: currentRepeatType = MPRepeatTypeOne; break;
+                case ISMSRepeatMode_RepeatAll: currentRepeatType = MPRepeatTypeAll; break;
+                default: currentRepeatType = MPRepeatTypeOff; break;
+            }
+            MPRemoteCommandCenter.sharedCommandCenter.changeRepeatModeCommand.currentRepeatType = currentRepeatType;
 		}
 	}
 }
@@ -488,6 +497,9 @@
 				
 		// Send a notification to update the playlist view
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistShuffleToggled];
+        
+        // Inform the OS
+        MPRemoteCommandCenter.sharedCommandCenter.changeShuffleModeCommand.currentShuffleType = MPShuffleTypeOff;
 	}
 	else
 	{
@@ -523,6 +535,9 @@
 		
 		// Send a notification to update the playlist view 
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistShuffleToggled];
+        
+        // Inform the OS
+        MPRemoteCommandCenter.sharedCommandCenter.changeShuffleModeCommand.currentShuffleType = MPShuffleTypeItems;
 	}
 }
 

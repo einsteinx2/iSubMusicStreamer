@@ -241,11 +241,13 @@ double startSongSeconds = 0.0;
         [trackInfo setObject:progress forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
     [trackInfo setObject:@(1.0) forKey:MPNowPlayingInfoPropertyPlaybackRate];
     
-    if (settingsS.isLockScreenArtEnabled)
-    {
+    if (settingsS.isLockScreenArtEnabled) {
         SUSCoverArtDAO *artDataModel = [[SUSCoverArtDAO alloc] initWithDelegate:nil coverArtId:currentSong.coverArtId isLarge:YES];
-        MPMediaItemArtwork *artwork = [MPMediaItemArtwork all]
-        [trackInfo setObject:[[MPMediaItemArtwork alloc] initWithImage:artDataModel.coverArtImage] forKey:MPMediaItemPropertyArtwork];
+        UIImage *image = artDataModel.coverArtImage;
+        MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithBoundsSize:image.size requestHandler:^UIImage * _Nonnull(CGSize size) {
+            return artDataModel.coverArtImage;
+        }];
+        [trackInfo setObject:artwork forKey:MPMediaItemPropertyArtwork];
     }
     
     [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = trackInfo;

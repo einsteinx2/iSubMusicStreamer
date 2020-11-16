@@ -100,7 +100,6 @@
 		5327A5EC14DA553B00DEE1B6 /* controller-album@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5327A5E614DA553B00DEE1B6 /* controller-album@2x.png */; };
 		5327F1C012B8243C00735119 /* controller-stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 5327F1BE12B8243C00735119 /* controller-stop.png */; };
 		5327F1C112B8243C00735119 /* controller-stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5327F1BF12B8243C00735119 /* controller-stop@2x.png */; };
-		532862DB11C573AD00B40FF0 /* UAApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 532862DA11C573AD00B40FF0 /* UAApplication.m */; };
 		532B552714D641C500B8AA67 /* ModalAlbumArtViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 532B552614D641C500B8AA67 /* ModalAlbumArtViewController.xib */; };
 		532B552914D641C500B8AA67 /* ModalAlbumArtViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 532B552614D641C500B8AA67 /* ModalAlbumArtViewController.xib */; };
 		532D9B43131AE19700FD8CA7 /* CustomUIAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 532D9B42131AE19700FD8CA7 /* CustomUIAlertView.m */; };
@@ -216,6 +215,8 @@
 		534B20DB25619936007FF1D7 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 534B20D925619936007FF1D7 /* HomeViewController.xib */; };
 		534B20E025619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */; };
 		534B20E125619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */; };
+		534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20E52561E444007FF1D7 /* LockScreenAudioControls.swift */; };
+		534B20E72561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20E52561E444007FF1D7 /* LockScreenAudioControls.swift */; };
 		534E443F1155AD01000B4134 /* default-album-art-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 534E443E1155AD01000B4134 /* default-album-art-small.png */; };
 		53523D8A11CD580D006AEA48 /* GenresAlbumUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53523D8711CD580D006AEA48 /* GenresAlbumUITableViewCell.m */; };
 		53523D8B11CD580D006AEA48 /* GenresArtistUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53523D8911CD580D006AEA48 /* GenresArtistUITableViewCell.m */; };
@@ -579,7 +580,6 @@
 		53BC27CC139AF0DD00A825F1 /* LoadingScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B5298911AD9B79005776B5 /* LoadingScreen.m */; };
 		53BC27CE139AF0DD00A825F1 /* GenresViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B52BA311ADE0A6005776B5 /* GenresViewController.m */; };
 		53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530B417011B607A200743C09 /* CacheViewController.m */; };
-		53BC27D6139AF0DD00A825F1 /* UAApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 532862DA11C573AD00B40FF0 /* UAApplication.m */; };
 		53BC27D7139AF0DD00A825F1 /* CacheAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 538229F411C98091003F1E23 /* CacheAlbumViewController.m */; };
 		53BC27DB139AF0DD00A825F1 /* GenresAlbumUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53523D8711CD580D006AEA48 /* GenresAlbumUITableViewCell.m */; };
 		53BC27DC139AF0DD00A825F1 /* GenresArtistUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53523D8911CD580D006AEA48 /* GenresArtistUITableViewCell.m */; };
@@ -1164,8 +1164,6 @@
 		5327A5E614DA553B00DEE1B6 /* controller-album@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-album@2x.png"; path = "Images/Player Icons/controller-album@2x.png"; sourceTree = "<group>"; };
 		5327F1BE12B8243C00735119 /* controller-stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-stop.png"; path = "Images/Player Icons/controller-stop.png"; sourceTree = "<group>"; };
 		5327F1BF12B8243C00735119 /* controller-stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-stop@2x.png"; path = "Images/Player Icons/controller-stop@2x.png"; sourceTree = "<group>"; };
-		532862D911C573AD00B40FF0 /* UAApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAApplication.h; sourceTree = "<group>"; };
-		532862DA11C573AD00B40FF0 /* UAApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UAApplication.m; sourceTree = "<group>"; };
 		532B552614D641C500B8AA67 /* ModalAlbumArtViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ModalAlbumArtViewController.xib; sourceTree = "<group>"; };
 		532D9B41131AE19700FD8CA7 /* CustomUIAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomUIAlertView.h; sourceTree = "<group>"; };
 		532D9B42131AE19700FD8CA7 /* CustomUIAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUIAlertView.m; sourceTree = "<group>"; };
@@ -1241,6 +1239,7 @@
 		5349AD031613724D003603AF /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Images/Other/Default-568h@2x.png"; sourceTree = "<group>"; };
 		534B20D925619936007FF1D7 /* HomeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
 		534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+AddArrangedSubviews.swift"; sourceTree = "<group>"; };
+		534B20E52561E444007FF1D7 /* LockScreenAudioControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenAudioControls.swift; sourceTree = "<group>"; };
 		534E443E1155AD01000B4134 /* default-album-art-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default-album-art-small.png"; path = "Images/Other/default-album-art-small.png"; sourceTree = "<group>"; };
 		53523D8611CD580D006AEA48 /* GenresAlbumUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenresAlbumUITableViewCell.h; sourceTree = "<group>"; };
 		53523D8711CD580D006AEA48 /* GenresAlbumUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenresAlbumUITableViewCell.m; sourceTree = "<group>"; };
@@ -2340,10 +2339,9 @@
 				531D39FF255AB5F6000CB0DF /* MainWindow.xib */,
 				1D3623240D0F684500981E51 /* iSubAppDelegate.h */,
 				1D3623250D0F684500981E51 /* iSubAppDelegate.m */,
-				532862D911C573AD00B40FF0 /* UAApplication.h */,
-				532862DA11C573AD00B40FF0 /* UAApplication.m */,
 				536C994C16619F5D005A73C6 /* ViewObjectsSingleton.h */,
 				536C994B16619F5D005A73C6 /* ViewObjectsSingleton.m */,
+				534B20E52561E444007FF1D7 /* LockScreenAudioControls.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -3931,7 +3929,6 @@
 				530B417211B607A200743C09 /* CacheViewController.m in Sources */,
 				53D97454255C51CA00AABF7F /* SwipeAction.swift in Sources */,
 				53FE352B1EA961540058B925 /* NSMutableOrderedSet+Safe.m in Sources */,
-				532862DB11C573AD00B40FF0 /* UAApplication.m in Sources */,
 				53FE34C51EA961540058B925 /* NSArray+Safe.m in Sources */,
 				53FE35221EA961540058B925 /* NSString+Validation.m in Sources */,
 				538229F611C98091003F1E23 /* CacheAlbumViewController.m in Sources */,
@@ -3945,6 +3942,7 @@
 				53FE36E31EA961720058B925 /* AudioEngine.m in Sources */,
 				53523D8B11CD580D006AEA48 /* GenresArtistUITableViewCell.m in Sources */,
 				533295F0255EEFE50027C51A /* FMDatabase.m in Sources */,
+				534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
 				53523D8F11CD5889006AEA48 /* GenresAlbumViewController.m in Sources */,
 				53FE35281EA961540058B925 /* NSURL+SkipBackupAttribute.m in Sources */,
 				53FE37BE1EA961720058B925 /* SUSRootFoldersLoader.m in Sources */,
@@ -4163,10 +4161,10 @@
 				53BC27CE139AF0DD00A825F1 /* GenresViewController.m in Sources */,
 				53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */,
 				538C8FE825609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */,
+				534B20E72561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
 				53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */,
 				533295FB255EEFE50027C51A /* FMResultSet.m in Sources */,
 				53FE352D1EA961540058B925 /* NSMutableOrderedSet+Safe.m in Sources */,
-				53BC27D6139AF0DD00A825F1 /* UAApplication.m in Sources */,
 				53FE34C71EA961540058B925 /* NSArray+Safe.m in Sources */,
 				53FE35241EA961540058B925 /* NSString+Validation.m in Sources */,
 				53BC27D7139AF0DD00A825F1 /* CacheAlbumViewController.m in Sources */,

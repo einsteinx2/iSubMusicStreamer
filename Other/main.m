@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UAApplication.h"
 #import "iSubAppDelegate.h"
 
 int main(int argc, char *argv[]) {
     @autoreleasepool {
-        return UIApplicationMain(argc, argv, NSStringFromClass(UAApplication.class), NSStringFromClass(iSubAppDelegate.class));
+        return UIApplicationMain(argc, argv, NSStringFromClass(UIApplication.class), NSStringFromClass(iSubAppDelegate.class));
     }
 }

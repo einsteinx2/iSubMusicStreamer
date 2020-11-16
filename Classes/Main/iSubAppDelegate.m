@@ -21,10 +21,6 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <AVKit/AVKit.h>
 #import "UIViewController+PushViewControllerCustom.h"
-//#import "HTTPServer.h"
-//#import "HLSProxyConnection.h"
-//#import "DDFileLogger.h"
-//#import "DDTTYLogger.h"
 #import "SUSStatusLoader.h"
 #import "CustomUIAlertView.h"
 #import "NSMutableURLRequest+SUS.h"
@@ -41,6 +37,7 @@
 #import "ISMSCacheQueueManager.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -71,9 +68,6 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application
 {
-    // Set up the window
-    //self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
     // Make sure audio engine and cache singletons get loaded
 	[AudioEngine sharedInstance];
 	[CacheSingleton sharedInstance];
@@ -83,6 +77,9 @@ LOG_LEVEL_ISUB_DEFAULT
     
     // Run the one time actions
     [self oneTimeRun];
+    
+    // Initialize the lock screen controls
+    [LockScreenAudioControls setup];
     
     //NSSetUncaughtExceptionHandler(&onUncaughtException);
 
