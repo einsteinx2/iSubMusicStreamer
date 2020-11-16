@@ -66,7 +66,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
     
-    self.tableView.rowHeight = 80.0;
+    self.tableView.rowHeight = 65.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 }
 

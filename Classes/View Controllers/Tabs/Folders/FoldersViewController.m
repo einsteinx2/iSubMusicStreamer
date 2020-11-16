@@ -66,7 +66,7 @@
     
     [self.tableView registerClass:BlurredSectionHeader.class forHeaderFooterViewReuseIdentifier:BlurredSectionHeader.reuseId];
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
-    self.tableView.rowHeight = 60;
+    self.tableView.rowHeight = 65.0;
 	
 	if ([self.dataModel isRootFolderIdCached])
 		[self addCount];

@@ -124,7 +124,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	self.tableView.tableHeaderView = self.headerView;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
-    self.tableView.rowHeight = 60.0;
+    self.tableView.rowHeight = 65.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
 	if (UIDevice.isIPad) {

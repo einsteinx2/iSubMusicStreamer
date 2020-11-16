@@ -950,7 +950,7 @@
 // Customize the height of individual rows to make the album rows taller to accomidate the album art.
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.segmentedControl.selectedSegmentIndex == 0) {
-		return 80.0;
+		return 65.0;
     } else {
 		return 80.0;
     }

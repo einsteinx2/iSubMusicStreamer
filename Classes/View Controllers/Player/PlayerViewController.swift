@@ -9,6 +9,8 @@
 import UIKit
 import SnapKit
 
+// TODO: Add bitrate and file type labels
+// TODO: Add bookmark button
 @objc class PlayerViewController: UIViewController {
     var currentSong: Song?
     
@@ -70,7 +72,6 @@ import SnapKit
         // Song Info
         //
         
-//        songInfoContainer.backgroundColor = .green
         view.addSubview(songInfoContainer)
         songInfoContainer.snp.makeConstraints { make in
             make.width.equalTo(coverArtPageControl.view)
@@ -101,11 +102,9 @@ import SnapKit
         
         view.addSubview(progressBarContainer)
         progressBarContainer.snp.makeConstraints { make in
-//            make.width.equalTo(songInfoContainer)
             make.height.equalTo(60)
             make.leading.trailing.equalTo(coverArtPageControl.view)
             make.top.equalTo(songInfoContainer.snp.bottom).offset(20)
-//            make.centerX.equalToSuperview()
         }
 
         elapsedTimeLabel.textColor = .label
@@ -156,7 +155,6 @@ import SnapKit
         controlsStack.snp.makeConstraints { make in
             make.height.equalTo(60)
             make.top.equalTo(progressBarContainer.snp.bottom)
-//            make.leading.trailing.equalTo(songInfoContainer)
             make.leading.trailing.equalTo(coverArtPageControl.view)
         }
         
@@ -461,6 +459,7 @@ import SnapKit
             songNameLabel.text = nil
             artistNameLabel.text = nil
             progressSlider.value = 0
+            downloadProgressView.isHidden = true
             return
         }
         
@@ -469,13 +468,12 @@ import SnapKit
         songNameLabel.text = song.title
         artistNameLabel.text = song.artist
         progressSlider.maximumValue = song.duration?.floatValue ?? 0.0
+        updateDownloadProgress(animated: false)
     }
     
-    @objc private func startUpdatingDownloadProgress() {
-        stopUpdatingDownloadProgress()
+    private func updateDownloadProgress(animated: Bool) {
         guard let currentSong = currentSong, !currentSong.isTempCached else {
             downloadProgressView.isHidden = true
-            perform(#selector(startUpdatingDownloadProgress), with: nil, afterDelay: 1.0)
             return
         }
         
@@ -483,15 +481,16 @@ import SnapKit
         
         // Set the width based on the download progress + leading offset size
         let width = (currentSong.downloadProgress * progressSlider.frame.width) + 5
+        print("width: \(width)")
         
-        if width > downloadProgressView.frame.width {
+        if animated && width > downloadProgressView.frame.width {
             // If it's longer, animate it
-            UIView.animate(withDuration: 1.0) {
+            UIView.animate(withDuration: 1.0, delay: 0.0, options: .curveEaseOut, animations: {
                 self.downloadProgressView.snp.updateConstraints { make in
                     make.width.equalTo(width)
                 }
                 self.downloadProgressView.layoutIfNeeded()
-            }
+            }, completion: nil)
         } else {
             // If it's shorter, it's probably starting a new song so don't animate
             self.downloadProgressView.snp.updateConstraints { make in
@@ -499,6 +498,38 @@ import SnapKit
             }
             self.downloadProgressView.layoutIfNeeded()
         }
+    }
+    
+    @objc private func startUpdatingDownloadProgress() {
+        stopUpdatingDownloadProgress()
+//        guard let currentSong = currentSong, !currentSong.isTempCached else {
+//            downloadProgressView.isHidden = true
+//            perform(#selector(startUpdatingDownloadProgress), with: nil, afterDelay: 1.0)
+//            return
+//        }
+//
+//        downloadProgressView.isHidden = false
+//
+//        // Set the width based on the download progress + leading offset size
+//        let width = (currentSong.downloadProgress * progressSlider.frame.width) + 5
+//
+//        if width > downloadProgressView.frame.width {
+//            // If it's longer, animate it
+//            UIView.animate(withDuration: 1.0) {
+//                self.downloadProgressView.snp.updateConstraints { make in
+//                    make.width.equalTo(width)
+//                }
+//                self.downloadProgressView.layoutIfNeeded()
+//            }
+//        } else {
+//            // If it's shorter, it's probably starting a new song so don't animate
+//            self.downloadProgressView.snp.updateConstraints { make in
+//                make.width.equalTo(width)
+//            }
+//            self.downloadProgressView.layoutIfNeeded()
+//        }
+        
+        updateDownloadProgress(animated: true)
         
         perform(#selector(startUpdatingDownloadProgress), with: nil, afterDelay: 1.0)
     }
@@ -530,7 +561,24 @@ import SnapKit
     }
     
     @objc private func updateJukeboxControls() {
-        if Settings.shared().isJukeboxEnabled && jukeboxVolumeSlider.superview == nil {
+        let jukeboxEnabled = Settings.shared().isJukeboxEnabled
+        view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor : .systemBackground
+        
+        if jukeboxEnabled {
+            if Jukebox.shared().isPlaying {
+                self.playPauseButton.setImage(UIImage(named: "controller-stop"), for: .normal)
+            } else {
+                self.playPauseButton.setImage(UIImage(named: "controller-play"), for: .normal)
+            }
+        } else {
+            if AudioEngine.shared().player?.isPlaying ?? false {
+                self.playPauseButton.setImage(UIImage(named: "controller-pause"), for: .normal)
+            } else {
+                self.playPauseButton.setImage(UIImage(named: "controller-play"), for: .normal)
+            }
+        }
+        
+        if jukeboxEnabled && jukeboxVolumeSlider.superview == nil {
             // Add the volume control
             jukeboxVolumeSlider.value = Jukebox.shared().gain
             view.addSubview(jukeboxVolumeSlider)
@@ -541,7 +589,7 @@ import SnapKit
 //                make.centerX.equalToSuperview()
                 make.top.equalTo(moreControlsStack.snp.bottom).offset(30)
             }
-        } else if !Settings.shared().isJukeboxEnabled && jukeboxVolumeSlider.superview != nil {
+        } else if !jukeboxEnabled && jukeboxVolumeSlider.superview != nil {
             // Remove the volume control
             jukeboxVolumeSlider.removeFromSuperview()
         }

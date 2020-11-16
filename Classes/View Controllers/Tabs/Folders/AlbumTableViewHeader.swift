@@ -26,8 +26,8 @@ import SnapKit
         coverArtView.coverArtId = album.coverArtId
         coverArtView.isLarge = true
         coverArtView.backgroundColor = .label
-        coverArtView.layer.borderWidth = 1
-        coverArtView.layer.borderColor = UIColor.label.cgColor
+//        coverArtView.layer.borderWidth = 1
+//        coverArtView.layer.borderColor = UIColor.systemGray5.cgColor
         addSubview(coverArtView)
         coverArtView.snp.makeConstraints { make in
             make.width.equalTo(coverArtView.snp.height)
@@ -45,7 +45,7 @@ import SnapKit
         }
         
         artistLabel.text = album.artistName
-        artistLabel.font = .systemFont(ofSize: 20)
+        artistLabel.font = .boldSystemFont(ofSize: 20)
         artistLabel.textColor = .label
         artistLabel.isInsideTableHeader = true
         labelContainer.addSubview(artistLabel)
@@ -74,7 +74,7 @@ import SnapKit
         tracksLabel.font = .systemFont(ofSize: 20)
         tracksLabel.adjustsFontSizeToFitWidth = true
         tracksLabel.minimumScaleFactor = 0.5
-        tracksLabel.textColor = .systemGray
+        tracksLabel.textColor = .secondaryLabel
         labelContainer.addSubview(tracksLabel)
         tracksLabel.snp.makeConstraints { make in
             make.width.leading.bottom.equalToSuperview()

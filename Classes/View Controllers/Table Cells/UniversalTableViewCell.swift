@@ -185,9 +185,9 @@ import SnapKit
         coverArtView.snp.remakeConstraints { make in
             if hideCoverArt { make.width.equalTo(0) }
             else { make.width.equalTo(coverArtView.snp.height) }
-            make.leading.equalTo(numberLabel.snp.trailing).offset(10)
-            make.top.equalTo(headerLabel.snp.bottom).offset(10)
-            make.bottom.equalToSuperview().offset(-10)
+            make.leading.equalTo(numberLabel.snp.trailing).offset(5)//10)
+            make.top.equalTo(headerLabel.snp.bottom).offset(5)//10)
+            make.bottom.equalToSuperview().offset(-5)//-10)
         }
     }
     
@@ -223,7 +223,7 @@ import SnapKit
         durationLabel.snp.remakeConstraints { make in
             if hideDurationLabel { make.width.equalTo(0) }
             else { make.width.equalTo(30) }
-            make.trailing.equalToSuperview().offset(hideDurationLabel ? 0 : -5)
+            make.trailing.equalToSuperview().offset(hideDurationLabel ? 0 : -10)
             make.top.equalTo(headerLabel.snp.bottom)
             make.bottom.equalToSuperview()
         }
