@@ -171,8 +171,8 @@ typedef struct {
 	
 	[self changeType:settingsS.currentVisualizerType];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopEqDisplay) name:UIApplicationWillResignActiveNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startEqDisplay) name:UIApplicationDidBecomeActiveNotification object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(stopEqDisplay) name:UIApplicationWillResignActiveNotification];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(startEqDisplay) name:UIApplicationDidBecomeActiveNotification];
 	
 	return self;
 }
@@ -193,7 +193,7 @@ typedef struct {
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [NSNotificationCenter removeObserverOnMainThread:self];
     
     CGContextRelease(specdc);
     free(palette);

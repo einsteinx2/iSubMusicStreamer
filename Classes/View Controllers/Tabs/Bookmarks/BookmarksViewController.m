@@ -28,7 +28,7 @@
 #pragma mark - View lifecycle
 
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 - (void)viewDidLoad  {
@@ -51,7 +51,7 @@
     self.tableView.rowHeight = 80;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
 }
 
 - (void)addURLRefBackButton {

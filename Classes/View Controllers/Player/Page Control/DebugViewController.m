@@ -23,12 +23,9 @@
 		
     // Cache the song objects
     [self cacheSongObjects];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cacheSongObjects)
-                                                 name:ISMSNotification_SongPlaybackStarted object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cacheSongObjects)
-                                                 name:ISMSNotification_SongPlaybackEnded object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cacheSongObjects)
-                                                 name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(cacheSongObjects) name:ISMSNotification_SongPlaybackStarted];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(cacheSongObjects) name:ISMSNotification_SongPlaybackEnded];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(cacheSongObjects) name:ISMSNotification_CurrentPlaylistIndexChanged];
     
     // Set the fields
     [self updateStats];
@@ -55,7 +52,7 @@
 }
 
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];	
+	[NSNotificationCenter removeObserverOnMainThread:self];	
 }
 
 - (void)cacheSongObjects {

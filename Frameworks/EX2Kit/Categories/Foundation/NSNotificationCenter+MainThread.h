@@ -17,12 +17,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)postNotificationToMainThreadWithName:(NSString *)name userInfo:(nullable NSDictionary *)userInfo NS_SWIFT_NAME(postNotificationToMainThread(name:userInfo:));
 + (void)postNotificationToMainThreadWithName:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo NS_SWIFT_NAME(postNotificationToMainThread(name:object:userInfo:));
 
-+ (void)addObserverOnMainThread:(id)notificationObserver selector:(SEL)notificationSelector name:(NSString *)notificationName object:(nullable id)notificationSender NS_SWIFT_NAME(addObserverOnMainThread(_:selector:name:object:));
-+ (void)addObserverOnMainThreadAsync:(id)notificationObserver selector:(SEL)notificationSelector name:(NSString *)notificationName object:(nullable id)notificationSender NS_SWIFT_NAME(addObserverOnMainThreadAsync(_:selector:name:object:));
++ (void)addObserverOnMainThread:(id)observer selector:(SEL)selector name:(NSString *)name object:(nullable id)notificationSender NS_SWIFT_NAME(addObserverOnMainThread(_:selector:name:object:));
++ (void)addObserverOnMainThread:(id)observer selector:(SEL)selector name:(NSString *)name NS_SWIFT_NAME(addObserverOnMainThread(_:selector:name:));
++ (void)addObserverOnMainThreadAsync:(id)observer selector:(SEL)selector name:(NSString *)name object:(nullable id)notificationSender NS_SWIFT_NAME(addObserverOnMainThreadAsync(_:selector:name:object:));
++ (void)addObserverOnMainThreadAsync:(id)observer selector:(SEL)selector name:(NSString *)name NS_SWIFT_NAME(addObserverOnMainThreadAsync(_:selector:name:));
 + (id <NSObject>)addObserverOnMainThreadForName:(NSString *)name object:(nullable id)object usingBlock:(void (^)(NSNotification *note))block NS_SWIFT_NAME(addObserverOnMainThreadForName(_:object:handler:));
++ (id <NSObject>)addObserverOnMainThreadForName:(NSString *)name usingBlock:(void (^)(NSNotification *note))block NS_SWIFT_NAME(addObserverOnMainThreadForName(_:handler:));
 
-+ (void)removeObserverOnMainThread:(id)notificationObserver NS_SWIFT_NAME(removeObserverOnMainThread(_:));
-+ (void)removeObserverOnMainThread:(id)notificationObserver name:(NSString *)notificationName object:(nullable id)notificationSender NS_SWIFT_NAME(removeObserverOnMainThread(_:name:object:));
++ (void)removeObserverOnMainThread:(id)observer NS_SWIFT_NAME(removeObserverOnMainThread(_:));
++ (void)removeObserverOnMainThread:(id)observer name:(NSString *)name object:(nullable id)objct NS_SWIFT_NAME(removeObserverOnMainThread(_:name:object:));
++ (void)removeObserverOnMainThread:(id)observer name:(NSString *)name NS_SWIFT_NAME(removeObserverOnMainThread(_:name:));
 
 @end
 

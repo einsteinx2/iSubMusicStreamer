@@ -48,9 +48,9 @@ LOG_LEVEL_ISUB_DEFAULT
         _visualizer = [[BassVisualizer alloc] init];
 		
 		// Keep track of the playlist index
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePlaylistIndex:) name:ISMSNotification_CurrentPlaylistOrderChanged object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePlaylistIndex:) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePlaylistIndex:) name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
+        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(updatePlaylistIndex:) name:ISMSNotification_CurrentPlaylistOrderChanged];
+        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(updatePlaylistIndex:) name:ISMSNotification_CurrentPlaylistIndexChanged];
+        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(updatePlaylistIndex:) name:ISMSNotification_CurrentPlaylistShuffleToggled];
 	}
 	
     return self;
@@ -68,7 +68,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)dealloc
 {
     [self cancelRetrySongOperation];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 #pragma mark - Decode Stream Callbacks

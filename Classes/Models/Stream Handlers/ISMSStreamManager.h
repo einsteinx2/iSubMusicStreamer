@@ -22,8 +22,8 @@ NS_SWIFT_NAME(StreamManager)
 @property (strong) NSMutableArray<ISMSStreamHandler*> *handlerStack;
 @property (strong) SUSLyricsDAO *lyricsDAO;
 
-@property (copy) ISMSSong *lastCachedSong;
-@property (copy) ISMSSong *lastTempCachedSong;
+@property (nullable, copy) ISMSSong *lastCachedSong;
+@property (nullable, copy) ISMSSong *lastTempCachedSong;
 
 @property (readonly) BOOL isQueueDownloading;
 

@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -44,7 +43,7 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="6">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="488"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="487"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="137">
@@ -169,7 +168,7 @@
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" translucent="NO" prompted="NO"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="137.68115942028987" y="176.78571428571428"/>
+            <point key="canvasLocation" x="-42" y="278"/>
         </view>
         <view opaque="NO" contentMode="scaleToFill" id="83">
             <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
@@ -258,7 +257,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" clearsContextBeforeDrawing="NO" tag="131" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="87">
-                            <rect key="frame" x="194" y="-1" width="45" height="45"/>
+                            <rect key="frame" x="193" y="-1" width="45" height="45"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
                             <state key="normal" title="Shuffle" image="controller-shuffle.png">
@@ -325,7 +324,7 @@
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.71999999999999997" colorSpace="custom" customColorSpace="sRGB"/>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="139" y="-55"/>
+            <point key="canvasLocation" x="-55" y="-91"/>
         </view>
         <view userInteractionEnabled="NO" contentMode="scaleToFill" id="154">
             <rect key="frame" x="0.0" y="0.0" width="320" height="220"/>
@@ -413,7 +412,7 @@
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.71999999999999997" colorSpace="custom" customColorSpace="sRGB"/>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-423" y="95"/>
+            <point key="canvasLocation" x="-17" y="27"/>
         </view>
     </objects>
     <resources>

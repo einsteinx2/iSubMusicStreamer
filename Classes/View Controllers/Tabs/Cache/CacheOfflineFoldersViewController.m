@@ -45,22 +45,22 @@
 #pragma mark - View lifecycle
 
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 - (void)registerForNotifications {
 	// Set notification receiver for when queued songs finish downloading to reload the table
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTable) name:ISMSNotification_StreamHandlerSongDownloaded object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTable) name:ISMSNotification_CacheQueueSongDownloaded object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:ISMSNotification_StreamHandlerSongDownloaded];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:ISMSNotification_CacheQueueSongDownloaded];
 	
 	// Set notification receiver for when cached songs are deleted to reload the table
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTable) name:@"cachedSongDeleted" object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:@"cachedSongDeleted"];
 }
 
 - (void)unregisterForNotifications {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_StreamHandlerSongDownloaded object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CacheQueueSongDownloaded object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"cachedSongDeleted" object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_StreamHandlerSongDownloaded];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CacheQueueSongDownloaded];
+	[NSNotificationCenter removeObserverOnMainThread:self name:@"cachedSongDeleted"];
 }
 
 - (void)viewDidLoad  {
@@ -75,7 +75,7 @@
     self.tableView.rowHeight = 60.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
 }
 
 - (void)addHeader {

@@ -107,12 +107,12 @@ LOG_LEVEL_ISUB_DEFAULT
 	// Setup network reachability notifications
 	self.wifiReach = [EX2Reachability reachabilityForLocalWiFi];
 	[self.wifiReach startNotifier];
-	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(reachabilityChanged:) name: EX2ReachabilityNotification_ReachabilityChanged object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reachabilityChanged:) name:EX2ReachabilityNotification_ReachabilityChanged];
 	[self.wifiReach currentReachabilityStatus];
 	
 	// Check battery state and register for notifications
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryStateChanged:) name:@"UIDeviceBatteryStateDidChangeNotification" object:[UIDevice currentDevice]];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(batteryStateChanged:) name:@"UIDeviceBatteryStateDidChangeNotification" object:UIDevice.currentDevice];
 	[self batteryStateChanged:nil];	
 	
 	// Handle offline mode
@@ -1086,8 +1086,8 @@ LOG_LEVEL_ISUB_DEFAULT
 //    {
 //        self.moviePlayer = [[MPMoviePlayerController alloc] init];
 //
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerExitedFullscreen:) name:MPMoviePlayerDidExitFullscreenNotification object:self.moviePlayer];
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:self.moviePlayer];
+//        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(moviePlayerExitedFullscreen:) name:MPMoviePlayerDidExitFullscreenNotification object:self.moviePlayer];
+//        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:self.moviePlayer];
 //
 //        self.moviePlayer.controlStyle = MPMovieControlStyleDefault;
 //        self.moviePlayer.shouldAutoplay = YES;
@@ -1114,8 +1114,8 @@ LOG_LEVEL_ISUB_DEFAULT
 {
 //    if (self.moviePlayer)
 //    {
-//        [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerDidExitFullscreenNotification object:self.moviePlayer];
-//        [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:self.moviePlayer];
+//        [NSNotificationCenter removeObserverOnMainThread:self name:MPMoviePlayerDidExitFullscreenNotification object:self.moviePlayer];
+//        [NSNotificationCenter removeObserverOnMainThread:self name:MPMoviePlayerPlaybackDidFinishNotification object:self.moviePlayer];
 //
 //        // Dispose of any existing movie player
 //        [self.moviePlayer stop];

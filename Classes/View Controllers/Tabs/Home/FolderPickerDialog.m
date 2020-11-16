@@ -141,7 +141,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 }
 
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 	closeButton_ = nil;
 	titleLabel_ = nil;
 	touchInterceptingControl_ = nil;
@@ -195,13 +195,9 @@ static CGFloat kDDSocialDialogPadding = 10;
         }];
     }];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(deviceOrientationDidChange:)
-												 name:@"UIDeviceOrientationDidChangeNotification" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(keyboardDidShow:) name:@"UIKeyboardDidShowNotification" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(keyboardWillHide:) name:@"UIKeyboardWillHideNotification" object:nil];	
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(deviceOrientationDidChange:) name:@"UIDeviceOrientationDidChangeNotification"];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(keyboardDidShow:) name:@"UIKeyboardDidShowNotification"];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(keyboardWillHide:) name:@"UIKeyboardWillHideNotification"];
 }
 
 - (void)cancel:(id)sender
@@ -224,12 +220,9 @@ static CGFloat kDDSocialDialogPadding = 10;
 
 - (void)postDismissCleanup {
 	
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:@"UIDeviceOrientationDidChangeNotification" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:@"UIKeyboardDidShowNotification" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:@"UIKeyboardWillHideNotification" object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:@"UIDeviceOrientationDidChangeNotification"];
+	[NSNotificationCenter removeObserverOnMainThread:self name:@"UIKeyboardDidShowNotification"];
+	[NSNotificationCenter removeObserverOnMainThread:self name:@"UIKeyboardWillHideNotification"];
 	[self removeFromSuperview];
 	[touchInterceptingControl_ removeFromSuperview];
 }

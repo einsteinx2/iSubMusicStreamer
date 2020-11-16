@@ -518,14 +518,9 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)songCachingToggled
 {
 	if (settingsS.isSongCachingEnabled)
-		[[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(fillStreamQueue) 
-													 name:ISMSNotification_SongPlaybackEnded 
-												   object:nil];
+		[NSNotificationCenter addObserverOnMainThread:self selector:@selector(fillStreamQueue) name:ISMSNotification_SongPlaybackEnded];
 	else
-		[[NSNotificationCenter defaultCenter] removeObserver:self 
-														name:ISMSNotification_SongPlaybackEnded 
-													  object:nil];
+        [NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_SongPlaybackEnded object:nil];
 }
 
 - (void)currentPlaylistIndexChanged
@@ -727,20 +722,14 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.lastCachedSong = nil;
 	self.lyricsDAO = [[SUSLyricsDAO alloc] initWithDelegate:nil]; 
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songCachingToggled) name:ISMSNotification_SongCachingEnabled object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songCachingToggled) name:ISMSNotification_SongCachingDisabled object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentPlaylistIndexChanged) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-	
-	if (settingsS.isSongCachingEnabled)
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillStreamQueue) name:ISMSNotification_SongPlaybackEnded object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentPlaylistOrderChanged) name:ISMSNotification_RepeatModeChanged object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentPlaylistOrderChanged) name:ISMSNotification_CurrentPlaylistOrderChanged object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentPlaylistOrderChanged) name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(songCachingToggled) name:ISMSNotification_SongCachingEnabled];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(songCachingToggled) name:ISMSNotification_SongCachingDisabled];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(currentPlaylistIndexChanged) name:ISMSNotification_CurrentPlaylistIndexChanged];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(currentPlaylistOrderChanged) name:ISMSNotification_RepeatModeChanged];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(currentPlaylistOrderChanged) name:ISMSNotification_CurrentPlaylistOrderChanged];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(currentPlaylistOrderChanged) name:ISMSNotification_CurrentPlaylistShuffleToggled];
+    if (settingsS.isSongCachingEnabled)
+        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(fillStreamQueue) name:ISMSNotification_SongPlaybackEnded];
 }
 
 + (instancetype)sharedInstance

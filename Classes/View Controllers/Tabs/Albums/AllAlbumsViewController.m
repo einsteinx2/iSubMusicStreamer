@@ -50,9 +50,9 @@
 	
 	[self createDataModel];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createDataModel) name:ISMSNotification_ServerSwitched object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadingFinishedNotification) name:ISMSNotification_AllSongsLoadingFinished object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(createDataModel) name:ISMSNotification_ServerSwitched];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(loadingFinishedNotification) name:ISMSNotification_AllSongsLoadingFinished];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
 	
     // Add the pull to refresh view
     __weak AllAlbumsViewController *weakSelf = self;
@@ -198,7 +198,7 @@
 }
 
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 #pragma mark Button handling methods
@@ -438,19 +438,19 @@
 #pragma mark Loading Display Handling
 
 - (void)registerForLoadingNotifications {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLoadingScreen:) name:ISMSNotification_AllSongsLoadingArtists object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLoadingScreen:) name:ISMSNotification_AllSongsLoadingAlbums object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLoadingScreen:) name:ISMSNotification_AllSongsArtistName object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLoadingScreen:) name:ISMSNotification_AllSongsAlbumName object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLoadingScreen:) name:ISMSNotification_AllSongsSongName object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateLoadingScreen:) name:ISMSNotification_AllSongsLoadingArtists];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateLoadingScreen:) name:ISMSNotification_AllSongsLoadingAlbums];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateLoadingScreen:) name:ISMSNotification_AllSongsArtistName];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateLoadingScreen:) name:ISMSNotification_AllSongsAlbumName];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateLoadingScreen:) name:ISMSNotification_AllSongsSongName];
 }
 
 - (void)unregisterForLoadingNotifications {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_AllSongsLoadingArtists object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_AllSongsLoadingAlbums object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_AllSongsArtistName object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_AllSongsAlbumName object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_AllSongsSongName object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_AllSongsLoadingArtists];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_AllSongsLoadingAlbums];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_AllSongsArtistName];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_AllSongsAlbumName];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_AllSongsSongName];
 }
 
 - (void)updateLoadingScreen:(NSNotification *)notification {

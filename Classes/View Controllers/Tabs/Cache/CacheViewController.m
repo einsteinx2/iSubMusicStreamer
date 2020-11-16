@@ -54,26 +54,26 @@
 #pragma mark - View lifecycle
 
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 - (void)registerForNotifications {
 	// Set notification receiver for when queued songs finish downloading to reload the table
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTable) name:ISMSNotification_StreamHandlerSongDownloaded object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTable) name:ISMSNotification_CacheQueueSongDownloaded object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:ISMSNotification_StreamHandlerSongDownloaded];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:ISMSNotification_CacheQueueSongDownloaded];
 	
 	// Set notification receiver for when cached songs are deleted to reload the table
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTable) name:@"cachedSongDeleted" object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:@"cachedSongDeleted"];
 	
 	// Set notification receiver for when network status changes to reload the table
-	[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(segmentAction:) name:EX2ReachabilityNotification_ReachabilityChanged object: nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(segmentAction:) name:EX2ReachabilityNotification_ReachabilityChanged];
 }
 
 - (void)unregisterForNotifications {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_StreamHandlerSongDownloaded object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CacheQueueSongDownloaded object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"cachedSongDeleted" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:EX2ReachabilityNotification_ReachabilityChanged object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_StreamHandlerSongDownloaded];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CacheQueueSongDownloaded];
+	[NSNotificationCenter removeObserverOnMainThread:self name:@"cachedSongDeleted"];
+	[NSNotificationCenter removeObserverOnMainThread:self name:EX2ReachabilityNotification_ReachabilityChanged];
 }
 
 - (void)viewDidLoad  {
@@ -129,7 +129,7 @@
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
 }
 
 - (void)addURLRefBackButton {
@@ -707,8 +707,6 @@
 - (void)editSongsAction:(id)sender {
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
 		if (!self.isEditing) {
-			[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(showDeleteButton) name:@"showDeleteButton" object: nil];
-			[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(hideDeleteButton) name:@"hideDeleteButton" object: nil];
             [self setEditing:YES animated:YES];
 //            self.editing = YES;
 			self.editSongsLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
@@ -717,8 +715,6 @@
 			
 			[self performSelector:@selector(showDeleteToggle) withObject:nil afterDelay:0.3];
 		} else {
-			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"showDeleteButton" object:nil];
-			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideDeleteButton" object:nil];
             [self setEditing:NO animated:YES];
 //            self.editing = NO;
 			[self hideDeleteButton];
@@ -730,8 +726,6 @@
 		}
 	} else if (self.segmentedControl.selectedSegmentIndex == 1) {
 		if (!self.tableView.editing) {
-			[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(showDeleteButton) name:@"showDeleteButton" object: nil];
-			[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(hideDeleteButton) name:@"hideDeleteButton" object: nil];
             [self setEditing:YES animated:YES];
 //            self.editing = YES;
 			self.editSongsLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
@@ -740,8 +734,6 @@
 			
 			[self performSelector:@selector(showDeleteToggle) withObject:nil afterDelay:0.3];
 		} else {
-			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"showDeleteButton" object:nil];
-			[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideDeleteButton" object:nil];
             [self setEditing:NO animated:YES];
 //            self.editing = NO;
 			[self hideDeleteButton];

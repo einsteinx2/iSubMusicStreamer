@@ -21,7 +21,7 @@
 	_maxBitrateSetting = NSIntegerMax;
 	_secondsToPartialPrecache = ISMSNumSecondsToPartialPreCacheDefault;
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playlistIndexChanged) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(playlistIndexChanged) name:ISMSNotification_CurrentPlaylistIndexChanged];
 }
 
 - (instancetype)init
@@ -45,7 +45,7 @@
 		_secondsOffset = sOffset;
 		_isTempCache = isTemp;
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playlistIndexChanged) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
+		[NSNotificationCenter addObserverOnMainThread:self selector:@selector(playlistIndexChanged) name:ISMSNotification_CurrentPlaylistIndexChanged];
 	}
 	
 	return self;
@@ -58,7 +58,7 @@
 
 - (void)dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 - (NSString *)filePath

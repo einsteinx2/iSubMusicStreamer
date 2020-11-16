@@ -22,15 +22,15 @@
 {
     if ((self = [super init]))
     {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(grabCurrentPlaylistIndex:) name:ISMSNotification_CurrentPlaylistOrderChanged object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(grabCurrentPlaylistIndex:) name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
+        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(grabCurrentPlaylistIndex:) name:ISMSNotification_CurrentPlaylistOrderChanged];
+        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(grabCurrentPlaylistIndex:) name:ISMSNotification_CurrentPlaylistShuffleToggled];
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 - (void)grabCurrentPlaylistIndex:(NSNotification *)notification

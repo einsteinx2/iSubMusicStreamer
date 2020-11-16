@@ -260,8 +260,8 @@ double startSongSeconds = 0.0;
 #pragma mark Singleton methods
 
 - (void)setup  {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLockScreenInfo) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLockScreenInfo) name:ISMSNotification_AlbumArtLargeDownloaded object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateLockScreenInfo) name:ISMSNotification_CurrentPlaylistIndexChanged];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateLockScreenInfo) name:ISMSNotification_AlbumArtLargeDownloaded];
 }
 
 + (instancetype)sharedInstance {

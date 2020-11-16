@@ -60,23 +60,23 @@ LOG_LEVEL_ISUB_DEFAULT
 #pragma mark - Lifecycle
 
 - (void)registerForNotifications {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_BassInitialized object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_BassFreed object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCurrentPlaylistCount) name:@"updateCurrentPlaylistCount" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songsQueued) name:ISMSNotification_CurrentPlaylistSongsQueued object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jukeboxSongInfo) name:ISMSNotification_JukeboxSongInfo object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(selectRow) name:ISMSNotification_BassInitialized];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(selectRow) name:ISMSNotification_BassFreed];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistIndexChanged];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistShuffleToggled];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateCurrentPlaylistCount) name:@"updateCurrentPlaylistCount"];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(songsQueued) name:ISMSNotification_CurrentPlaylistSongsQueued];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(jukeboxSongInfo) name:ISMSNotification_JukeboxSongInfo];
 }
 
 - (void)unregisterForNotifications {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_BassInitialized object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_BassFreed object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"updateCurrentPlaylistCount" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistSongsQueued object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_JukeboxSongInfo object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_BassInitialized];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_BassFreed];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CurrentPlaylistIndexChanged];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CurrentPlaylistShuffleToggled];
+	[NSNotificationCenter removeObserverOnMainThread:self name:@"updateCurrentPlaylistCount"];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CurrentPlaylistSongsQueued];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_JukeboxSongInfo];
 }
 
 - (void)recreateSharedSession {
@@ -131,7 +131,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
 	    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
 }
 
 - (void)addURLRefBackButton {
@@ -1179,7 +1179,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)dealloc 
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 	self.serverPlaylistsDataModel.delegate = nil;
 }
 

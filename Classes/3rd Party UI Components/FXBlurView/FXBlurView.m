@@ -32,6 +32,7 @@
 
 
 #import "FXBlurView.h"
+#import "NSNotificationCenter+MainThread.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <QuartzCore/QuartzCore.h>
@@ -317,7 +318,7 @@
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 - (void)setIterations:(NSUInteger)iterations

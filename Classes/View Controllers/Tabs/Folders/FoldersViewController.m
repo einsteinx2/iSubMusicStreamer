@@ -45,8 +45,8 @@
 	self.isSearching = NO;
 	self.isCountShowing = NO;
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serverSwitched) name:ISMSNotification_ServerSwitched object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFolders) name:ISMSNotification_ServerCheckPassed object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(serverSwitched) name:ISMSNotification_ServerSwitched];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateFolders) name:ISMSNotification_ServerCheckPassed];
 		
 	// Add the pull to refresh view
     __weak FoldersViewController *weakSelf = self;
@@ -71,7 +71,7 @@
 	if ([self.dataModel isRootFolderIdCached])
 		[self addCount];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
 }
 
 - (void)addURLRefBackButton {
@@ -100,7 +100,7 @@
 }
 
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 	self.dataModel.delegate = nil;
     self.dropdown.delegate = nil;
 }

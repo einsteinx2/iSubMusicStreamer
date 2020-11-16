@@ -267,20 +267,20 @@
 }
 
 - (void)unregisterForNotifications {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_JukeboxEnabled object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_JukeboxDisabled object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_SongPlaybackEnded object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_SongPlaybackPaused object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_SongPlaybackStarted object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_ServerSwitched object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_JukeboxSongInfo object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideSongInfo" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_LargeSongInfoToggle object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_JukeboxEnabled object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_JukeboxDisabled object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_SongPlaybackEnded object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_SongPlaybackPaused object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_SongPlaybackStarted object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_ServerSwitched object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_JukeboxSongInfo object:nil];
+    [NSNotificationCenter removeObserverOnMainThread:self name:@"hideSongInfo" object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_LargeSongInfoToggle object:nil];
 		
 	if (UIDevice.isIPad) {
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_ShowPlayer object:nil];
+		[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_ShowPlayer object:nil];
 	}
 }
 
@@ -369,7 +369,7 @@
 	
 	self.coverArtImageView.delegate = nil;
 	
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 #pragma mark Rotation

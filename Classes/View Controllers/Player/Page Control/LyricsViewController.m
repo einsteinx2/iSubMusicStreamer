@@ -47,24 +47,24 @@
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLyricsLabel) name:ISMSNotification_SongPlaybackStarted object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLyricsLabel) name:ISMSNotification_LyricsDownloaded object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLyricsLabel) name:ISMSNotification_LyricsFailed object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateLyricsLabel) name:ISMSNotification_SongPlaybackStarted];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateLyricsLabel) name:ISMSNotification_LyricsDownloaded];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateLyricsLabel) name:ISMSNotification_LyricsFailed];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
 	[super viewDidDisappear:animated];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_SongPlaybackStarted object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_LyricsDownloaded object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_LyricsFailed object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideSongInfoFast" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideSongInfo" object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_SongPlaybackStarted];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_LyricsDownloaded];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_LyricsFailed];
+	[NSNotificationCenter removeObserverOnMainThread:self name:@"hideSongInfoFast"];
+	[NSNotificationCenter removeObserverOnMainThread:self name:@"hideSongInfo"];
 	[self.dataModel cancelLoad];
 }
 
 - (void)dealloc {
 	_dataModel.delegate = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 - (void)updateLyricsLabel {

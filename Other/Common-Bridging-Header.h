@@ -27,6 +27,7 @@
 #import "CurrentPlaylistViewController.h"
 #import "LyricsViewController.h"
 #import "DebugViewController.h"
+#import "EqualizerViewController.h"
 
 // Views
 #import "AsynchronousImageView.h"

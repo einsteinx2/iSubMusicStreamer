@@ -83,12 +83,12 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
     [self addHeaderAndIndex];
 	
 	// Set notification receiver for when cached songs are deleted to reload the table
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cachedSongDeleted) name:@"cachedSongDeleted" object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(cachedSongDeleted) name:@"cachedSongDeleted"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"cachedSongDeleted" object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:@"cachedSongDeleted"];
 }
 
 - (void)addHeaderAndIndex {
@@ -298,7 +298,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 }
 
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 #pragma mark Table view methods

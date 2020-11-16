@@ -43,7 +43,7 @@
 		self.view.backgroundColor = ISMSiPadBackgroundColor;
 	}
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
 }
 
 - (void)showNoGenresScreen {

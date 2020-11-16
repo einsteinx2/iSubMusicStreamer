@@ -32,7 +32,7 @@ LOG_LEVEL_ISUB_DEFAULT
 @implementation ServerListViewController
 
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 - (void)viewDidLoad  {
@@ -40,9 +40,9 @@ LOG_LEVEL_ISUB_DEFAULT
     	
 	self.tableView.allowsSelectionDuringEditing = YES;
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTable) name:@"reloadServerList" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSaveButton) name:@"showSaveButton" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(switchServer:) name:@"switchServer" object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:@"reloadServerList"];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(showSaveButton) name:@"showSaveButton"];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(switchServer:) name:@"switchServer"];
 	
 	self.title = @"Servers";
     if (self != [[self.navigationController viewControllers] objectAtIndexSafe:0]) {

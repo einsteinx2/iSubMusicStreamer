@@ -98,8 +98,8 @@
 	
 	[self.tableView reloadData];
 		
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:ISMSNotification_SongPlaybackStarted object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadData) name:ISMSNotification_CurrentPlaylistIndexChanged];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadData) name:ISMSNotification_SongPlaybackStarted];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -107,12 +107,12 @@
 	
 	[self.dataModel cancelLoad];
 	
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];	
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_SongPlaybackStarted object:nil];	
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CurrentPlaylistIndexChanged];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_SongPlaybackStarted];
 }
 
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 	self.dataModel.delegate = nil;
 }
 

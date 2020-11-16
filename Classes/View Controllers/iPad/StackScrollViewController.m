@@ -71,8 +71,7 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 		
 		[self.view addSubview:slideViews];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showPlayer) 
-													 name:ISMSNotification_ShowPlayer object:nil];
+		[NSNotificationCenter addObserverOnMainThread:self selector:@selector(showPlayer) name:ISMSNotification_ShowPlayer];
 	}
 	
 	return self;
@@ -80,7 +79,7 @@ const CGFloat BOUNCE_DISTANCE = 10.0;
 
 - (void)dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 - (UIView *)slideViewAtIndex:(NSUInteger)index

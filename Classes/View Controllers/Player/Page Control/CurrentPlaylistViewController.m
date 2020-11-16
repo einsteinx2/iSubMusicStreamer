@@ -32,27 +32,27 @@ LOG_LEVEL_ISUB_DEFAULT
 #pragma mark View lifecycle
 
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 - (void)registerForNotifications {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_BassInitialized object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_BassFreed object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jukeboxSongInfo) name:ISMSNotification_JukeboxSongInfo object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCurrentPlaylistCount) name:@"updateCurrentPlaylistCount" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songsQueued) name:ISMSNotification_CurrentPlaylistSongsQueued object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(selectRow) name:ISMSNotification_BassInitialized];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(selectRow) name:ISMSNotification_BassFreed];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistIndexChanged];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistShuffleToggled];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(jukeboxSongInfo) name:ISMSNotification_JukeboxSongInfo];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateCurrentPlaylistCount) name:@"updateCurrentPlaylistCount"];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(songsQueued) name:ISMSNotification_CurrentPlaylistSongsQueued];
 }
 
 - (void)unregisterForNotifications {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_BassInitialized object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_BassFreed object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"updateCurrentPlaylistCount" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistSongsQueued object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_JukeboxSongInfo object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_BassInitialized];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_BassFreed];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CurrentPlaylistIndexChanged];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CurrentPlaylistShuffleToggled];
+	[NSNotificationCenter removeObserverOnMainThread:self name:@"updateCurrentPlaylistCount"];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CurrentPlaylistSongsQueued];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_JukeboxSongInfo];
 }
 
 - (void)viewDidLoad  {
@@ -130,7 +130,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
     self.tableView.rowHeight = 80.0;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideEditControls) name:@"hideEditControls" object:nil];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(hideEditControls) name:@"hideEditControls"];
 	
 	[self.tableView reloadData];
     
@@ -156,7 +156,7 @@ LOG_LEVEL_ISUB_DEFAULT
         [self setEditing:NO animated:YES];
 	}
 	
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideEditControls" object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:@"hideEditControls" object:nil];
 	
 	self.headerView = nil;
 }

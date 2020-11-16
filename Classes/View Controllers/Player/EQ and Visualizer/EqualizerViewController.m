@@ -83,7 +83,7 @@
 
 - (void)dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 #pragma mark View lifecycle
@@ -214,8 +214,8 @@
 
 	self.navigationController.navigationBar.hidden = YES;
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createEqViews) name:ISMSNotification_BassEffectPresetLoaded object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissPicker) name:@"hidePresetPicker" object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(createEqViews) name:ISMSNotification_BassEffectPresetLoaded];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(dismissPicker) name:@"hidePresetPicker"];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -292,8 +292,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_BassEffectPresetLoaded object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hidePresetPicker" object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_BassEffectPresetLoaded];
+	[NSNotificationCenter removeObserverOnMainThread:self name:@"hidePresetPicker"];
 	
 	[self removeEqViews];
 	

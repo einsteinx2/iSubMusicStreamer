@@ -263,16 +263,13 @@
 	if ([view isKindOfClass:[UIWindow class]]) {
 		[self setTransformForCurrentOrientation:NO];
 	}
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) 
-												 name:UIDeviceOrientationDidChangeNotification object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification];
 	
 	return me;
 }
 
 - (void)removeFromSuperview {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIDeviceOrientationDidChangeNotification
-                                                  object:nil];
+    [NSNotificationCenter removeObserverOnMainThread:self name:UIDeviceOrientationDidChangeNotification];
     
     [super removeFromSuperview];
 }
@@ -322,7 +319,7 @@
 
 - (void)dealloc 
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 	
 #if !__has_feature(objc_arc)
     [indicator release];

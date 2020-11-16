@@ -37,8 +37,8 @@ static void initialize_navigationBarImages() {
 		_isLarge = large;
 		_coverArtId = [artId copy];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coverArtDownloadFinished:) name:ISMSNotification_CoverArtFinishedInternal object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coverArtDownloadFailed:) name:ISMSNotification_CoverArtFailedInternal object:nil];
+		[NSNotificationCenter addObserverOnMainThread:self selector:@selector(coverArtDownloadFinished:) name:ISMSNotification_CoverArtFinishedInternal];
+		[NSNotificationCenter addObserverOnMainThread:self selector:@selector(coverArtDownloadFailed:) name:ISMSNotification_CoverArtFailedInternal];
 	}
 	return self;
 }
@@ -48,14 +48,14 @@ static void initialize_navigationBarImages() {
 		_isLarge = large;
 		_coverArtId = [artId copy];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coverArtDownloadFinished:) name:ISMSNotification_CoverArtFinishedInternal object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coverArtDownloadFailed:) name:ISMSNotification_CoverArtFailedInternal object:nil];
+		[NSNotificationCenter addObserverOnMainThread:self selector:@selector(coverArtDownloadFinished:) name:ISMSNotification_CoverArtFinishedInternal];
+		[NSNotificationCenter addObserverOnMainThread:self selector:@selector(coverArtDownloadFailed:) name:ISMSNotification_CoverArtFailedInternal];
 	}
 	return self;
 }
 
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
 - (SUSLoaderType)type {

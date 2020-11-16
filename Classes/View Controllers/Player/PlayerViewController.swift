@@ -12,25 +12,33 @@ import SnapKit
 @objc class PlayerViewController: UIViewController {
     var currentSong: Song?
     
+    private var notificationObservers = [NSObjectProtocol]()
+    
     // Cover Art
-    let coverArtPageControl = PageControlViewController()
-//    let coverArt = AsynchronousImageView()
+    private let coverArtPageControl = PageControlViewController()
     
     // Song info
-    let songInfoContainer = UIView()
-    let songNameLabel = AutoScrollingLabel()
-    let artistNameLabel = AutoScrollingLabel()
+    private let songInfoContainer = UIView()
+    private let songNameLabel = AutoScrollingLabel()
+    private let artistNameLabel = AutoScrollingLabel()
     
     // Player controls
-    let controlsStack = UIStackView()
-    let playPauseButton = UIButton(type: .custom)
-    let previousButton = UIButton(type: .custom)
-    let nextButton = UIButton(type: .custom)
-    let quickSkipBackButton = UIButton(type: .custom)
-    let quickSkipForwardButton = UIButton(type: .custom)
+    private let controlsStack = UIStackView()
+    private let playPauseButton = UIButton(type: .custom)
+    private let previousButton = UIButton(type: .custom)
+    private let nextButton = UIButton(type: .custom)
+    private let quickSkipBackButton = UIButton(type: .custom)
+    private let quickSkipForwardButton = UIButton(type: .custom)
+    
+    // More Controls
+    private let moreControlsStack = UIStackView()
+    private let repeatButton = UIButton(type: .custom)
+    private let equalizerButton = UIButton(type: .custom)
+    private let shuffleButton = UIButton(type: .custom)
+    
     
     // Progress bar
-    var progressDisplayLink: CADisplayLink!
+    private var progressDisplayLink: CADisplayLink!
     private let progressBarContainer = UIView()
     private let elapsedTimeLabel = UILabel()
     private let remainingTimeLabel = UILabel()
@@ -55,15 +63,6 @@ import SnapKit
             make.trailing.equalToSuperview().offset(-40)
             make.height.equalTo(coverArtPageControl.view.snp.width).offset(20)
         }
-        
-//        coverArt.isLarge = true
-//        view.addSubview(coverArt)
-//        coverArt.snp.makeConstraints { make in
-//            make.top.equalToSuperview().offset(40)
-//            make.leading.equalToSuperview().offset(40)
-//            make.trailing.equalToSuperview().offset(-40)
-//            make.height.equalTo(coverArt.snp.width)
-//        }
         
         //
         // Song Info
@@ -98,7 +97,6 @@ import SnapKit
         // Progress bar
         //
         
-//        progressBarContainer.backgroundColor = .blue
         view.addSubview(progressBarContainer)
         progressBarContainer.snp.makeConstraints { make in
             make.width.equalTo(songInfoContainer)
@@ -139,7 +137,6 @@ import SnapKit
         downloadProgressView.snp.makeConstraints { make in
             make.width.equalTo(0)
             make.leading.equalTo(progressSlider).offset(-5)
-//            make.trailing.equalTo(progressSlider).offset(3)
             make.top.equalTo(progressSlider).offset(-3)
             make.bottom.equalTo(progressSlider).offset(3)
         }
@@ -148,7 +145,6 @@ import SnapKit
         // Controls
         //
         
-//        controlsStack.backgroundColor = .red
         controlsStack.axis = .horizontal
         controlsStack.alignment = .center
         controlsStack.distribution = .equalCentering
@@ -226,6 +222,49 @@ import SnapKit
             }
         }
         
+        //
+        // More Controls
+        //
+        
+        moreControlsStack.axis = .horizontal
+        moreControlsStack.alignment = .center
+        moreControlsStack.distribution = .equalCentering
+        moreControlsStack.addArrangedSubviews([repeatButton, equalizerButton, shuffleButton])
+        view.addSubview(moreControlsStack)
+        moreControlsStack.snp.makeConstraints { make in
+            make.height.equalTo(60)
+            make.top.equalTo(controlsStack.snp.bottom)
+            make.leading.trailing.equalTo(controlsStack)
+        }
+        
+        updateRepeatButtonIcon()
+        repeatButton.addClosure(for: .touchUpInside) { [unowned self] in
+            switch PlayQueue.shared().repeatMode {
+            case ISMSRepeatMode_Normal: PlayQueue.shared().repeatMode = ISMSRepeatMode_RepeatOne
+            case ISMSRepeatMode_RepeatOne: PlayQueue.shared().repeatMode = ISMSRepeatMode_RepeatAll
+            case ISMSRepeatMode_RepeatAll: PlayQueue.shared().repeatMode = ISMSRepeatMode_Normal
+            default: break
+            }
+            self.updateRepeatButtonIcon()
+        }
+        
+        equalizerButton.setTitle("Equalizer", for: .normal)
+        equalizerButton.setTitleColor(.systemBlue, for: .normal)
+        equalizerButton.addClosure(for: .touchUpInside) { [unowned self] in
+            let controller = EqualizerViewController(nibName: "EqualizerViewController", bundle: nil)
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
+        
+        updateShuffleButtonIcon()
+        shuffleButton.addClosure(for: .touchUpInside) { [unowned self] in
+            let message = PlayQueue.shared().isShuffle ? "Unshuffling" : "Shuffling"
+            ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: message)
+            EX2Dispatch.runInBackgroundAsync {
+                PlayQueue.shared().shuffleToggle()
+            }
+            self.updateShuffleButtonIcon()
+        }
+        
 //        remakeConstraints()
     }
     
@@ -241,7 +280,7 @@ import SnapKit
         super.viewWillDisappear(animated)
         stopUpdatingSlider()
         stopUpdatingDownloadProgress()
-        NotificationCenter.removeObserverOnMainThread(self)
+        unregisterForNotifications()
     }
     
 //    private func remakeConstraints() {
@@ -254,25 +293,38 @@ import SnapKit
 //    }
     
     private func registerForNotifications() {
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_JukeboxSongInfo, object: nil)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_CurrentPlaylistIndexChanged, object: nil)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_ServerSwitched, object: nil)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_CurrentPlaylistShuffleToggled, object: nil)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_ShowPlayer, object: nil)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_JukeboxSongInfo)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_CurrentPlaylistIndexChanged)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_ServerSwitched)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_CurrentPlaylistShuffleToggled)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_ShowPlayer)
         
-        NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackEnded, object: nil) { [unowned self] _ in
+        notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackEnded) { [unowned self] _ in
             self.playPauseButton.setImage(UIImage(named: "controller-play"), for: .normal)
-        }
-        NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackPaused, object: nil) { [unowned self] _ in
+        })
+        notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackPaused, object: nil) { [unowned self] _ in
             self.playPauseButton.setImage(UIImage(named: "controller-play"), for: .normal)
-        }
-        NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackStarted, object: nil) { [unowned self] _ in
+        })
+        notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackStarted, object: nil) { [unowned self] _ in
             self.playPauseButton.setImage(UIImage(named: "controller-pause"), for: .normal)
+        })
+        
+        notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_CurrentPlaylistShuffleToggled) { [unowned self] _ in
+            self.updateShuffleButtonIcon()
+            self.updateSongInfo()
+            ViewObjects.shared().hideLoadingScreen()
+        })
+    }
+    
+    private func unregisterForNotifications() {
+        NotificationCenter.removeObserverOnMainThread(self)
+        for observer in notificationObservers {
+            NotificationCenter.removeObserverOnMainThread(observer)
         }
     }
     
     deinit {
-        NotificationCenter.removeObserverOnMainThread(self)
+        unregisterForNotifications()
     }
     
     private func startUpdatingSlider() {
@@ -436,6 +488,22 @@ import SnapKit
 //        let controller = CurrentPlaylistBackgroundViewController(nibName: "CurrentPlaylistBackgroundViewController", bundle: nil)
         let controller = CurrentPlaylistViewController()
         present(controller, animated: true, completion: nil)
+    }
+    
+    private func updateRepeatButtonIcon() {
+        let imageName: String
+        switch PlayQueue.shared().repeatMode {
+        case ISMSRepeatMode_RepeatOne: imageName = "controller-repeat-one"
+        case ISMSRepeatMode_RepeatAll: imageName = "controller-repeat-all"
+        default: imageName = "controller-repeat"
+        }
+        
+        repeatButton.setImage(UIImage(named: imageName), for: .normal)
+    }
+    
+    private func updateShuffleButtonIcon() {
+        let imageName = PlayQueue.shared().isShuffle ? "controller-shuffle-on" : "controller-shuffle"
+        shuffleButton.setImage(UIImage(named: imageName), for: .normal)
     }
 }
 

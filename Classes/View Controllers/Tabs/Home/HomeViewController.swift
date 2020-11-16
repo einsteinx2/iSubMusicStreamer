@@ -56,11 +56,11 @@ import SnapKit
     }
     
     private func registerNotifications() {
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxOff), name: ISMSNotification_JukeboxDisabled, object: nil)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(initSongInfo), name: ISMSNotification_SongPlaybackStarted, object: nil)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(initSongInfo), name: ISMSNotification_ServerSwitched, object: nil)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(performServerShuffle(notification:)), name: "performServerShuffle", object: nil)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification.rawValue, object: nil)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxOff), name: ISMSNotification_JukeboxDisabled)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(initSongInfo), name: ISMSNotification_SongPlaybackStarted)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(initSongInfo), name: ISMSNotification_ServerSwitched)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(performServerShuffle(notification:)), name: "performServerShuffle")
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification.rawValue)
     }
     
     deinit {
