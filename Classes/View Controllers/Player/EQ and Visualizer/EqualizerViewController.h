@@ -16,8 +16,10 @@
 @property (strong) IBOutlet UIView *controlsContainer;
 @property BOOL isPresetPickerShowing;
 @property (strong) IBOutlet UIPickerView *presetPicker;
+@property (strong) IBOutlet UIVisualEffectView *presetPickerBlurView;
 @property (strong) IBOutlet UILabel *presetLabel;
 @property (strong) IBOutlet UIButton *toggleButton;
+@property (strong) IBOutlet UIView *equalizerSeparatorLine;
 @property (strong) IBOutlet EqualizerPathView *equalizerPath;
 @property (strong) IBOutlet EqualizerView *equalizerView;
 @property (strong) NSMutableArray *equalizerPointViews;

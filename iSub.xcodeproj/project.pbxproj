@@ -229,8 +229,6 @@
 		5353B839134D4D6C005C589E /* PagingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5353B838134D4D6C005C589E /* PagingScrollView.m */; };
 		5353B83C134D8019005C589E /* upload-playlist.png in Resources */ = {isa = PBXBuildFile; fileRef = 5353B83A134D8019005C589E /* upload-playlist.png */; };
 		5353B83D134D8019005C589E /* upload-playlist@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5353B83B134D8019005C589E /* upload-playlist@2x.png */; };
-		535696531810DA8700997C7B /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 535696521810DA8700997C7B /* FXBlurView.m */; };
-		535696551810DA8700997C7B /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 535696521810DA8700997C7B /* FXBlurView.m */; };
 		5358083811CEB5F200A09386 /* CacheQueueSongUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5358083711CEB5F200A09386 /* CacheQueueSongUITableViewCell.m */; };
 		535A889A113F62DD00979783 /* default-album-art.png in Resources */ = {isa = PBXBuildFile; fileRef = 535A8899113F62DD00979783 /* default-album-art.png */; };
 		535B726A134CFB0E003E0E1C /* FolderPickerDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 535B7269134CFB0A003E0E1C /* FolderPickerDialog.m */; };
@@ -1242,8 +1240,6 @@
 		5353B83A134D8019005C589E /* upload-playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "upload-playlist.png"; path = "Images/Other/upload-playlist.png"; sourceTree = "<group>"; };
 		5353B83B134D8019005C589E /* upload-playlist@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "upload-playlist@2x.png"; path = "Images/Other/upload-playlist@2x.png"; sourceTree = "<group>"; };
 		5354914A11B03FC900928E0F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		535696511810DA8700997C7B /* FXBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlurView.h; sourceTree = "<group>"; };
-		535696521810DA8700997C7B /* FXBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlurView.m; sourceTree = "<group>"; };
 		5358083611CEB5F200A09386 /* CacheQueueSongUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheQueueSongUITableViewCell.h; sourceTree = "<group>"; };
 		5358083711CEB5F200A09386 /* CacheQueueSongUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheQueueSongUITableViewCell.m; sourceTree = "<group>"; };
 		535A8899113F62DD00979783 /* default-album-art.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default-album-art.png"; path = "Images/Other/default-album-art.png"; sourceTree = "<group>"; };
@@ -2325,7 +2321,6 @@
 		531D39F3255AB3B0000CB0DF /* 3rd Party UI Components */ = {
 			isa = PBXGroup;
 			children = (
-				535696501810DA8700997C7B /* FXBlurView */,
 				531D3A14255ABA20000CB0DF /* DDSocialDialog.h */,
 				531D3A15255ABA20000CB0DF /* DDSocialDialog.m */,
 				5324C6C413345D75004E6C79 /* OBSlider.h */,
@@ -2584,15 +2579,6 @@
 				533D18DD25602526003F962C /* CocoaLumberjackSwift.framework */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		535696501810DA8700997C7B /* FXBlurView */ = {
-			isa = PBXGroup;
-			children = (
-				535696511810DA8700997C7B /* FXBlurView.h */,
-				535696521810DA8700997C7B /* FXBlurView.m */,
-			);
-			path = FXBlurView;
 			sourceTree = "<group>";
 		};
 		53752BE62562CEC500438636 /* Page Control */ = {
@@ -4008,7 +3994,6 @@
 				538C8FE125606299005D6CA9 /* RefreshControl.swift in Sources */,
 				53FE35431EA961540058B925 /* UIDevice+Hardware.m in Sources */,
 				5365859314789ADA00FE57A5 /* EqualizerView.m in Sources */,
-				535696531810DA8700997C7B /* FXBlurView.m in Sources */,
 				53FE356A1EA961540058B925 /* UIView+SetNeedsLayoutSafe.m in Sources */,
 				53FE37371EA961720058B925 /* ISMSServer.m in Sources */,
 				53FE378B1EA961720058B925 /* SearchXMLParser.m in Sources */,
@@ -4241,7 +4226,6 @@
 				53FE35451EA961540058B925 /* UIDevice+Hardware.m in Sources */,
 				5365859514789ADA00FE57A5 /* EqualizerView.m in Sources */,
 				533295F3255EEFE50027C51A /* FMDatabase+InMemoryOnDiskIO.m in Sources */,
-				535696551810DA8700997C7B /* FXBlurView.m in Sources */,
 				53FE356C1EA961540058B925 /* UIView+SetNeedsLayoutSafe.m in Sources */,
 				53FE37391EA961720058B925 /* ISMSServer.m in Sources */,
 				53FE378D1EA961720058B925 /* SearchXMLParser.m in Sources */,

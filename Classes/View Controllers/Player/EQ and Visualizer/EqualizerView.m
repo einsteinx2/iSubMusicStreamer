@@ -14,6 +14,7 @@
 #import "AudioEngine.h"
 #import "SavedSettings.h"
 #import "EX2Kit.h"
+#import <stdlib.h>
 
 //CLASS IMPLEMENTATIONS:
 
@@ -43,8 +44,10 @@ typedef struct {
     int specHeight; //256 or 512
 
     CGContextRef specdc;
-    DWORD *specbuf;
-    DWORD *palette;
+    unsigned long specbufLength;
+    unsigned long palletLength;
+    uint32_t *specbuf;
+    uint32_t *palette;
     int specpos;
 }
 
@@ -55,9 +58,11 @@ typedef struct {
 - (void)setupArrays {
     drawInterval = 1./20.;
 	specWidth = specHeight = 512;
-	specbuf = malloc(specWidth * specHeight * 4);
-	palette = malloc((specHeight + 128) * 4);
-	memset(palette, 0, ((specHeight + 128) * 4));
+    specbufLength = specWidth * specHeight;
+    palletLength = specHeight + 128;
+	specbuf = calloc(specbufLength, sizeof(uint32_t));
+	palette = calloc(palletLength, sizeof(uint32_t));
+//	memset(palette, 0, palletSize * sizeof(uint32_t));
 }
 
 - (void)setupDrawEQPalette {
@@ -213,6 +218,8 @@ typedef struct {
 
 - (void)startEqDisplay {
 	//DLog(@"starting eq display");
+    if (self.drawTimer) return;
+    
 	self.drawTimer = [NSTimer scheduledTimerWithTimeInterval:drawInterval target:self selector:@selector(drawTheEq) userInfo:nil repeats:YES];
 }
 
@@ -321,7 +328,9 @@ typedef struct {
                 if (y > 127) {
 					y = 127; // cap it
                 }
-				specbuf[(specHeight - 1 - x) * specWidth + specpos] = palette[specHeight - 1 + y]; // plot it
+                if (specHeight - 1 + y > 0 && specHeight - 1 + y < palletLength) {
+                    specbuf[(specHeight - 1 - x) * specWidth + specpos] = palette[specHeight - 1 + y]; // plot it
+                }
 			}
             
 			// move marker onto next position
@@ -475,25 +484,29 @@ typedef struct {
 			audioEngineS.visualizer.type = BassVisualizerTypeNone;
 			[self eraseBitBuffer];
 			[self erase];
+            [self stopEqDisplay];
 			self.visualType = ISMSBassVisualType_none;
 			break;
 			
 		case ISMSBassVisualType_line:
 			audioEngineS.visualizer.type = BassVisualizerTypeLine;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			self.visualType = ISMSBassVisualType_line; 
+			self.visualType = ISMSBassVisualType_line;
+            [self startEqDisplay];
 			break;
 			
 		case ISMSBassVisualType_skinnyBar:
 			audioEngineS.visualizer.type = BassVisualizerTypeFFT;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			self.visualType = ISMSBassVisualType_skinnyBar; 
+			self.visualType = ISMSBassVisualType_skinnyBar;
+            [self startEqDisplay];
 			break;
 			
 		case ISMSBassVisualType_fatBar:
 			audioEngineS.visualizer.type = BassVisualizerTypeFFT;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			self.visualType = ISMSBassVisualType_fatBar;
+            [self startEqDisplay];
 			break;
 			
 		case ISMSBassVisualType_aphexFace:
@@ -501,7 +514,8 @@ typedef struct {
 			[self eraseBitBuffer];
             specpos = 0;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			self.visualType = ISMSBassVisualType_aphexFace; 
+			self.visualType = ISMSBassVisualType_aphexFace;
+            [self startEqDisplay];
 			break;
 			
 		case ISMSBassVisualType_maxValue:
