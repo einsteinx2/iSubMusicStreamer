@@ -36,7 +36,6 @@ import SnapKit
     private let equalizerButton = UIButton(type: .custom)
     private let shuffleButton = UIButton(type: .custom)
     
-    
     // Progress bar
     private var progressDisplayLink: CADisplayLink!
     private let progressBarContainer = UIView()
@@ -44,6 +43,9 @@ import SnapKit
     private let remainingTimeLabel = UILabel()
     private let downloadProgressView = UIView()
     private let progressSlider = OBSlider()
+    
+    // Jukebox
+    private let jukeboxVolumeSlider = UISlider()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,8 +61,8 @@ import SnapKit
         view.addSubview(coverArtPageControl.view)
         coverArtPageControl.view.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(40)
-            make.leading.equalToSuperview().offset(40)
-            make.trailing.equalToSuperview().offset(-40)
+            make.leading.equalToSuperview().offset(40).priority(.required)
+            make.trailing.equalToSuperview().offset(-40).priority(.required)
             make.height.equalTo(coverArtPageControl.view.snp.width).offset(20)
         }
         
@@ -99,10 +101,11 @@ import SnapKit
         
         view.addSubview(progressBarContainer)
         progressBarContainer.snp.makeConstraints { make in
-            make.width.equalTo(songInfoContainer)
+//            make.width.equalTo(songInfoContainer)
             make.height.equalTo(60)
+            make.leading.trailing.equalTo(coverArtPageControl.view)
             make.top.equalTo(songInfoContainer.snp.bottom).offset(20)
-            make.centerX.equalToSuperview()
+//            make.centerX.equalToSuperview()
         }
 
         elapsedTimeLabel.textColor = .label
@@ -153,7 +156,8 @@ import SnapKit
         controlsStack.snp.makeConstraints { make in
             make.height.equalTo(60)
             make.top.equalTo(progressBarContainer.snp.bottom)
-            make.leading.trailing.equalTo(songInfoContainer)
+//            make.leading.trailing.equalTo(songInfoContainer)
+            make.leading.trailing.equalTo(coverArtPageControl.view)
         }
         
         playPauseButton.setImage(UIImage(named: "controller-play"), for: .normal)
@@ -234,7 +238,7 @@ import SnapKit
         moreControlsStack.snp.makeConstraints { make in
             make.height.equalTo(60)
             make.top.equalTo(controlsStack.snp.bottom)
-            make.leading.trailing.equalTo(controlsStack)
+            make.leading.trailing.equalTo(coverArtPageControl.view)
         }
         
         updateRepeatButtonIcon()
@@ -248,12 +252,13 @@ import SnapKit
             self.updateRepeatButtonIcon()
         }
         
-        equalizerButton.setTitle("Equalizer", for: .normal)
-        equalizerButton.setTitleColor(.systemBlue, for: .normal)
+        let equalizerButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular, scale: .large)
+        equalizerButton.setImage(UIImage(systemName: "slider.vertical.3", withConfiguration: equalizerButtonConfig), for: .normal)
         equalizerButton.addClosure(for: .touchUpInside) { [unowned self] in
             let controller = EqualizerViewController(nibName: "EqualizerViewController", bundle: nil)
             self.navigationController?.pushViewController(controller, animated: true)
         }
+        updateEqualizerButton()
         
         updateShuffleButtonIcon()
         shuffleButton.addClosure(for: .touchUpInside) { [unowned self] in
@@ -265,6 +270,19 @@ import SnapKit
             self.updateShuffleButtonIcon()
         }
         
+        //
+        // Jukebox
+        //
+        
+        jukeboxVolumeSlider.setThumbImage(UIImage(named: "controller-slider-thumb"), for: .normal)
+        jukeboxVolumeSlider.minimumValue = 0.0
+        jukeboxVolumeSlider.maximumValue = 1.0
+        jukeboxVolumeSlider.isContinuous = false
+        jukeboxVolumeSlider.addClosure(for: .valueChanged) { [unowned self] in
+            Jukebox.shared().setVolume(self.jukeboxVolumeSlider.value)
+        }
+        updateJukeboxControls()
+        
 //        remakeConstraints()
     }
     
@@ -273,6 +291,8 @@ import SnapKit
         updateSongInfo()
         startUpdatingSlider()
         startUpdatingDownloadProgress()
+        updateJukeboxControls()
+        updateEqualizerButton()
         registerForNotifications()
     }
     
@@ -298,6 +318,9 @@ import SnapKit
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_ServerSwitched)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_CurrentPlaylistShuffleToggled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_ShowPlayer)
+        
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: ISMSNotification_JukeboxDisabled)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: ISMSNotification_JukeboxEnabled)
         
         notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackEnded) { [unowned self] _ in
             self.playPauseButton.setImage(UIImage(named: "controller-play"), for: .normal)
@@ -504,6 +527,28 @@ import SnapKit
     private func updateShuffleButtonIcon() {
         let imageName = PlayQueue.shared().isShuffle ? "controller-shuffle-on" : "controller-shuffle"
         shuffleButton.setImage(UIImage(named: imageName), for: .normal)
+    }
+    
+    @objc private func updateJukeboxControls() {
+        if Settings.shared().isJukeboxEnabled && jukeboxVolumeSlider.superview == nil {
+            // Add the volume control
+            jukeboxVolumeSlider.value = Jukebox.shared().gain
+            view.addSubview(jukeboxVolumeSlider)
+            jukeboxVolumeSlider.snp.remakeConstraints { make in
+                make.leading.trailing.equalTo(moreControlsStack)
+                make.leading.trailing.equalTo(coverArtPageControl.view)
+//                make.width.equalTo(200)
+//                make.centerX.equalToSuperview()
+                make.top.equalTo(moreControlsStack.snp.bottom).offset(30)
+            }
+        } else if !Settings.shared().isJukeboxEnabled && jukeboxVolumeSlider.superview != nil {
+            // Remove the volume control
+            jukeboxVolumeSlider.removeFromSuperview()
+        }
+    }
+    
+    private func updateEqualizerButton() {
+        equalizerButton.tintColor = Settings.shared().isEqualizerOn ? .systemBlue : UIColor(white: 0.8, alpha: 1.0)
     }
 }
 
