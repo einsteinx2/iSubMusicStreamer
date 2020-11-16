@@ -89,6 +89,11 @@ import SnapKit
         label2.snp.makeConstraints { make in
             make.centerY.equalTo(scrollView)
         }
+        
+//        scrollView.backgroundColor = .red
+//        contentView.backgroundColor = .blue
+//        label1.backgroundColor = .green
+//        label2.backgroundColor = .cyan
     }
     
     required init?(coder: NSCoder) {

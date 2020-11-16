@@ -60,7 +60,7 @@
         [weakSelf reloadAction:nil];
     }];
     
-    self.tableView.rowHeight = 60.0;
+    self.tableView.rowHeight = 80.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
 	if (UIDevice.isIPad) {

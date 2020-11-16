@@ -10,13 +10,15 @@ import UIKit
 
 @objc class SwipeAction: NSObject {
     @objc static func downloadAndQueueConfig(model: TableCellModel) -> UISwipeActionsConfiguration {
-        let config = UISwipeActionsConfiguration.init(actions: [download(model: model), queue(model: model)])
+        let actions = model.isCached ? [queue(model: model)] : [download(model: model), queue(model: model)];
+        let config = UISwipeActionsConfiguration(actions: actions)
         config.performsFirstActionWithFullSwipe = false;
         return config;
     }
     
     @objc static func downloadQueueAndDeleteConfig(model: TableCellModel, deleteHandler: @escaping () -> ()) -> UISwipeActionsConfiguration {
-        let config = UISwipeActionsConfiguration.init(actions: [download(model: model), queue(model: model), delete(handler: deleteHandler)])
+        let actions = model.isCached ? [queue(model: model), delete(handler: deleteHandler)] : [download(model: model), queue(model: model), delete(handler: deleteHandler)];
+        let config = UISwipeActionsConfiguration(actions: actions)
         config.performsFirstActionWithFullSwipe = false;
         return config;
     }
@@ -33,7 +35,7 @@ import UIKit
             actions.append(delete(handler: deleteHandler))
         }
         
-        let config = UISwipeActionsConfiguration.init(actions: actions)
+        let config = UISwipeActionsConfiguration(actions: actions)
         config.performsFirstActionWithFullSwipe = false;
         return config;
     }
@@ -51,7 +53,7 @@ import UIKit
     }
     
     @objc static func download(handler: @escaping () -> ()) -> UIContextualAction {
-        let action = UIContextualAction.init(style: .normal, title: "Download") { _, _, completionHandler in
+        let action = UIContextualAction(style: .normal, title: "Download") { _, _, completionHandler in
             handler()
             completionHandler(true)
         }
@@ -60,7 +62,7 @@ import UIKit
     }
     
     @objc static func queue(handler: @escaping () -> ()) -> UIContextualAction {
-        let action = UIContextualAction.init(style: .normal, title: "Queue") { _, _, completionHandler in
+        let action = UIContextualAction(style: .normal, title: "Queue") { _, _, completionHandler in
             handler()
             completionHandler(true)
         }
@@ -69,7 +71,7 @@ import UIKit
     }
     
     @objc static func delete(handler: @escaping () -> ()) -> UIContextualAction {
-        let action = UIContextualAction.init(style: .normal, title: "Delete") { _, _, completionHandler in
+        let action = UIContextualAction(style: .normal, title: "Delete") { _, _, completionHandler in
             handler()
             completionHandler(true)
         }

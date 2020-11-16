@@ -73,7 +73,7 @@
         [weakSelf.dataModel startLoad];
     }];
     
-    self.tableView.rowHeight = 60.0;
+    self.tableView.rowHeight = 80.0;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorColor = UIColor.clearColor;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];

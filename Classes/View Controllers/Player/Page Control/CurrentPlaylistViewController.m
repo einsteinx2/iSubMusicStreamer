@@ -128,7 +128,7 @@ LOG_LEVEL_ISUB_DEFAULT
     
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
-    self.tableView.rowHeight = 60;
+    self.tableView.rowHeight = 80.0;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideEditControls) name:@"hideEditControls" object:nil];
 	
@@ -499,7 +499,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
     
     cell.autoScroll = NO;
-    cell.hideCoverArt = YES;
     cell.number = indexPath.row + 1;
     [cell updateWithModel:aSong];
 	
