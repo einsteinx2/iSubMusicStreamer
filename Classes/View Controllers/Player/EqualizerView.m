@@ -17,42 +17,51 @@
 
 //CLASS IMPLEMENTATIONS:
 
-// A class extension to declare private methods
-@interface EqualizerView (private)
+typedef struct {
+    BYTE rgbRed, rgbGreen, rgbBlue, Aplha;
+} RGBQUAD;
 
-- (BOOL)createFramebuffer;
-- (void)destroyFramebuffer;
+// A class extension to declare private methods
+@interface EqualizerView () {
+    // The pixel dimensions of the backbuffer
+    GLint backingWidth;
+    GLint backingHeight;
+    
+    EAGLContext *context;
+    
+    // OpenGL names for the renderbuffer and framebuffers used to render to this view
+    GLuint viewRenderbuffer, viewFramebuffer;
+    
+    // OpenGL name for the depth buffer that is attached to viewFramebuffer, if it exists (0 if it does not exist)
+    GLuint depthRenderbuffer;
+    
+    GLuint    imageTexture;
+    BOOL needsErase;
+    
+    float drawInterval;
+    int specWidth; //256 or 512
+    int specHeight; //256 or 512
+
+    CGContextRef specdc;
+    DWORD *specbuf;
+    DWORD *palette;
+    int specpos;
+}
 
 @end
 
 @implementation EqualizerView
 
-static float drawInterval = 1./20.;
-static int specWidth; //256 or 512
-static int specHeight; //256 or 512
-
-static CGContextRef specdc;
-static DWORD *specbuf;
-static DWORD *palette;
-int specpos = 0;
-
-typedef struct 
-{
-	BYTE rgbRed, rgbGreen, rgbBlue, Aplha;
-} RGBQUAD;
-
-static void SetupArrays()
-{
+- (void)setupArrays {
+    drawInterval = 1./20.;
 	specWidth = specHeight = 512;
 	specbuf = malloc(specWidth * specHeight * 4);
 	palette = malloc((specHeight + 128) * 4);
-	
 	memset(palette, 0, ((specHeight + 128) * 4));
 }
 
-static void SetupDrawEQPalette()
-{
-	float scale = UIScreen.mainScreen.scale;
+- (void)setupDrawEQPalette {
+    float scale = 2.0;//UIScreen.mainScreen.scale;
 	
 	// setup palette
 	RGBQUAD *pal = (RGBQUAD *)palette;
@@ -77,20 +86,17 @@ static void SetupDrawEQPalette()
 	 pal[318+a].rgbRed = 255;
 	 }*/
 	
-	for (a = 1; a < 128 * scale; a++) 
-	{
-		pal[a].rgbBlue = 256 - ((2/scale) * a);
-		pal[a].rgbGreen   = (2/scale) * a;
-	}
-    for (a = 1; a < 128 * scale; a++) 
-	{
+	for (a = 1; a < 128 * scale; a++) {
+		pal[a].rgbBlue = 256 - ((2 / scale) * a);
+		pal[a].rgbGreen   = (2 / scale) * a;
+    }
+    for (a = 1; a < 128 * scale; a++)  {
 		int start = 128 * scale - 1;
-		pal[start+a].rgbGreen = 256 - ((2/scale) * a);
-		pal[start+a].rgbRed   = (2/scale) * a;
+		pal[start+a].rgbGreen = 256 - ((2 / scale) * a);
+		pal[start+a].rgbRed   = (2 / scale) * a;
 	}
 	
-	for (a = 0; a < 32; a++) 
-	{
+	for (a = 0; a < 32; a++) {
 		pal[specHeight + a].rgbBlue       = 8 * a;
 		pal[specHeight + 32 + a].rgbBlue  = 255;
 		pal[specHeight + 32 + a].rgbRed   = 8 * a;
@@ -103,9 +109,7 @@ static void SetupDrawEQPalette()
 	}
 }
 
-//- (void)createBitmapToDraw
-static void SetupDrawBitmap()
-{
+- (void)setupDrawBitmap {
 	// create the bitmap
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	specdc = CGBitmapContextCreate(specbuf, specWidth, specHeight, 8, specWidth * 4, colorSpace, (CGBitmapInfo)kCGImageAlphaNoneSkipLast);
@@ -114,16 +118,14 @@ static void SetupDrawBitmap()
 
 // Implement this to override the default layer class (which is [CALayer class]).
 // We do this so that our view will be backed by a layer that is capable of OpenGL ES rendering.
-+ (Class) layerClass
-{
++ (Class)layerClass {
 	return [CAEAGLLayer class];
 }
 
-- (instancetype)setup
-{
-    SetupArrays();
-    SetupDrawEQPalette();
-    SetupDrawBitmap();
+- (instancetype)setup {
+    [self setupArrays];
+    [self setupDrawEQPalette];
+    [self setupDrawBitmap];
     
 	self.userInteractionEnabled = YES;
 	
@@ -176,28 +178,21 @@ static void SetupDrawBitmap()
 }
 
 // The GL view is stored in the nib file. When it's unarchived it's sent -initWithCoder:
-- (instancetype)initWithCoder:(NSCoder*)coder 
-{
-    if ((self = [super initWithCoder:coder]))
-	{
+- (instancetype)initWithCoder:(NSCoder*)coder  {
+    if ((self = [super initWithCoder:coder])) {
 		return [self setup];
 	}
-	
 	return self;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-	if ((self = [super initWithFrame:frame]))
-	{
+- (instancetype)initWithFrame:(CGRect)frame {
+	if ((self = [super initWithFrame:frame])) {
 		return [self setup];
 	}
-	
 	return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     CGContextRelease(specdc);
@@ -206,42 +201,35 @@ static void SetupDrawBitmap()
     
     [self.drawTimer invalidate];
     
-    if (imageTexture)
-    {
+    if (imageTexture) {
         glDeleteTextures(1, &imageTexture);
         imageTexture = 0;
     }
     
-    if([EAGLContext currentContext] == context)
-    {
+    if([EAGLContext currentContext] == context) {
         [EAGLContext setCurrentContext:nil];
     }
-    
 }
 
-- (void)startEqDisplay
-{
+- (void)startEqDisplay {
 	//DLog(@"starting eq display");
 	self.drawTimer = [NSTimer scheduledTimerWithTimeInterval:drawInterval target:self selector:@selector(drawTheEq) userInfo:nil repeats:YES];
 }
 
-- (void)stopEqDisplay
-{
+- (void)stopEqDisplay {
 	//DLog(@"stopping eq display");
 	[self.drawTimer invalidate];
     self.drawTimer = nil;
 }
 
-- (void)createBitmapToDraw
-{
+- (void)createBitmapToDraw {
 	// create the bitmap
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	specdc = CGBitmapContextCreate(specbuf, specWidth, specHeight, 8, specWidth * 4, colorSpace, (CGBitmapInfo)kCGImageAlphaNoneSkipLast);
 	CGColorSpaceRelease(colorSpace);
 }
 
-- (void)drawTheEq
-{		
+- (void)drawTheEq {
 	if (!audioEngineS.player.isPlaying || self.visualType == ISMSBassVisualType_none)
 		return;
 	
@@ -249,13 +237,11 @@ static void SetupDrawBitmap()
 	
     int x = 0, y = 0, y1 = 0;
 
-	switch(self.visualType)
-	{
+	switch(self.visualType) {
 		case ISMSBassVisualType_none:
 		case ISMSBassVisualType_maxValue:
 			break;
-		case ISMSBassVisualType_line:
-		{
+        case ISMSBassVisualType_line: {
 			[self eraseBitBuffer];
 			for (x = 0; x < specWidth; x++) 
 			{
@@ -274,76 +260,79 @@ static void SetupDrawBitmap()
 			}
 			break;
 		}
-		case ISMSBassVisualType_skinnyBar:
-		{
+        case ISMSBassVisualType_skinnyBar: {
 			[self eraseBitBuffer];
-			for (x=0;x<specWidth/2;x++) 
-			{
+			for (x = 0; x < specWidth / 2; x++) {
 #if 1
-				y=sqrt([audioEngineS.visualizer fftData:x+1]) * 3 * specHeight - 4; // scale it (sqrt to make low values more visible)
+				y = sqrt([audioEngineS.visualizer fftData:x + 1]) * 3 * specHeight - 4; // scale it (sqrt to make low values more visible)
 #else
-				y=[audioEngineS fftData:x+1] * 10 * specHeight; // scale it (linearly)
+				y = [audioEngineS fftData:x + 1] * 10 * specHeight; // scale it (linearly)
 #endif
-				if (y>specHeight) y=specHeight; // cap it
-				if (x && (y1=(y+y1)/2)) // interpolate from previous to make the display smoother
-					while (--y1>=0) specbuf[(specHeight-1-y1)*specWidth+x*2-1]=palette[y1+1];
-				y1=y;
-				while (--y>=0) specbuf[(specHeight-1-y)*specWidth+x*2]=palette[y+1]; // draw level
+                if (y > specHeight) {
+                    y = specHeight; // cap it
+                }
+                if (x && (y1 = (y + y1) / 2)) { // interpolate from previous to make the display smoother
+                    while (--y1 >= 0) {
+                        specbuf[(specHeight - 1 - y1) * specWidth + x * 2 - 1] = palette[y1 + 1];
+                    }
+                }
+				y1 = y;
+                while (--y >= 0) {
+                    specbuf[(specHeight - 1 - y) * specWidth + x * 2] = palette[y + 1]; // draw level
+                }
 			}
 			break;
-		}
-		case ISMSBassVisualType_fatBar:
-		{
+		} case ISMSBassVisualType_fatBar: {
 			int b0 = 0;
 			[self eraseBitBuffer];
 #define BANDS 28
-			for (x=0; x < BANDS; x++) 
-			{
+			for (x=0; x < BANDS; x++) {
 				float peak = 0;
 				int b1 = pow(2, x * 10.0 / (BANDS - 1));
-				if (b1 > 1023)
+                if (b1 > 1023) {
 					b1 = 1023;
-				if (b1 <= b0)
+                }
+                if (b1 <= b0) {
 					b1 = b0 + 1; // make sure it uses at least 1 FFT bin
-				
-				for (; b0 < b1; b0++)
-				{
-					if (peak < [audioEngineS.visualizer fftData:1+b0])
-						peak = [audioEngineS.visualizer fftData:1+b0];
+                }
+                
+				for (; b0 < b1; b0++) {
+                    if (peak < [audioEngineS.visualizer fftData:1 + b0]) {
+						peak = [audioEngineS.visualizer fftData:1 + b0];
+                    }
 				}
 				
 				y = sqrt(peak) * 3 * specHeight - 4; // scale it (sqrt to make low values more visible)
 				
-				if (y > specHeight) 
+                if (y > specHeight) {
 					y = specHeight; // cap it
-				
-				while (--y >= 0)
-				{
-					for (y1 = 0; y1 < specWidth / BANDS - 2; y1++)
-					{	
+                }
+                
+				while (--y >= 0) {
+					for (y1 = 0; y1 < specWidth / BANDS - 2; y1++) {
 						specbuf[(specHeight - 1 - y) * specWidth + x * (specWidth / BANDS) + y1] = palette[y + 1]; // draw bar
 					}
 				}
 			}
 			break;
-		}
-		case ISMSBassVisualType_aphexFace:
-		{
-			for (x=0; x < specHeight; x++) 
-			{
-				y = sqrt([audioEngineS.visualizer fftData:x+1]) * 3 * 127; // scale it (sqrt to make low values more visible)
-				if (y > 127)
+		} case ISMSBassVisualType_aphexFace: {
+			for (x=0; x < specHeight; x++) {
+				y = sqrt([audioEngineS.visualizer fftData:x + 1]) * 3 * 127; // scale it (sqrt to make low values more visible)
+                if (y > 127) {
 					y = 127; // cap it
+                }
 				specbuf[(specHeight - 1 - x) * specWidth + specpos] = palette[specHeight - 1 + y]; // plot it
 			}
+            
 			// move marker onto next position
 			specpos = (specpos + 1) % specWidth;
-			for (x = 0; x < specHeight; x++)
-			{
+			for (x = 0; x < specHeight; x++) {
 				specbuf[x * specWidth + specpos] = palette[specHeight+126];
 				
-				if (UIScreen.mainScreen.scale >= 2.0 && specpos + 1 < specWidth)
+//                if (UIScreen.mainScreen.scale >= 2.0 && specpos + 1 < specWidth) {
+                if (specpos + 1 < specWidth) {
 					specbuf[x * specWidth + specpos + 1] = palette[specHeight+126];
+                }
 			}
 			break;
 		}
@@ -356,12 +345,18 @@ static void SetupDrawBitmap()
 	
 	GLfloat width = self.frame.size.width;
 	GLfloat height = self.frame.size.height;
-	GLfloat box[] = 
-	{   0,     height, 0, 
+	GLfloat box[] = {
+        0,     height, 0,
 		width, height, 0,
 		width,      0, 0,
-	    0,          0, 0 };
-	GLfloat tex[] = {0,0, 1,0, 1,1, 0,1};
+	    0,          0, 0
+    };
+	GLfloat tex[] = {
+        0,0,
+        1,0,
+        1,1,
+        0,1
+    };
 	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -378,8 +373,7 @@ static void SetupDrawBitmap()
 	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
 	
 	UIApplicationState state = [UIApplication sharedApplication].applicationState;
-	if (state == UIApplicationStateActive)
-	{
+	if (state == UIApplicationStateActive) {
 		// Make sure we didn't resign active while the method was already running
 		[context presentRenderbuffer:GL_RENDERBUFFER_OES];
 	}
@@ -388,8 +382,7 @@ static void SetupDrawBitmap()
 // If our view is resized, we'll be asked to layout subviews.
 // This is the perfect opportunity to also update the framebuffer so that it is
 // the same size as our display area.
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
 	//DLog(@"self.layer.frame: %@", NSStringFromCGRect(self.layer.frame));
 	//self.layer.frame = self.frame;
 	//DLog(@"self.layer.frame: %@", NSStringFromCGRect(self.layer.frame));
@@ -409,8 +402,7 @@ static void SetupDrawBitmap()
 	[self createFramebuffer];
 	
 	// Clear the framebuffer the first time it is allocated
-	if (needsErase) 
-	{
+	if (needsErase) {
 		[self erase];
 		needsErase = NO;
 	}
@@ -438,8 +430,7 @@ static void SetupDrawBitmap()
 	glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
 	glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
 	
-	if(glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
-	{
+	if (glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES) {
 		NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
 		return NO;
 	}
@@ -448,23 +439,20 @@ static void SetupDrawBitmap()
 }
 
 // Clean up any buffers we have allocated.
-- (void)destroyFramebuffer
-{
+- (void)destroyFramebuffer {
 	glDeleteFramebuffersOES(1, &viewFramebuffer);
 	viewFramebuffer = 0;
 	glDeleteRenderbuffersOES(1, &viewRenderbuffer);
 	viewRenderbuffer = 0;
 	
-	if(depthRenderbuffer)
-	{
+	if (depthRenderbuffer) {
 		glDeleteRenderbuffersOES(1, &depthRenderbuffer);
 		depthRenderbuffer = 0;
 	}
 }
 
 // Erases the screen
-- (void)erase
-{
+- (void)erase {
 	[EAGLContext setCurrentContext:context];
 	
 	//Clear the buffer
@@ -477,15 +465,12 @@ static void SetupDrawBitmap()
 	[context presentRenderbuffer:GL_RENDERBUFFER_OES];
 }
 
-- (void)eraseBitBuffer
-{
+- (void)eraseBitBuffer {
 	memset(specbuf, 0, (specWidth * specHeight * 4));
 }
 
-- (void)changeType:(ISMSBassVisualType)type
-{
-	switch (type)
-	{
+- (void)changeType:(ISMSBassVisualType)type {
+	switch (type) {
 		case ISMSBassVisualType_none:
 			audioEngineS.visualizer.type = BassVisualizerTypeNone;
 			[self eraseBitBuffer];
@@ -526,21 +511,21 @@ static void SetupDrawBitmap()
 	//DLog(@"visualType: %i   currentVisualizerType: %i", visualType, settingsS.currentVisualizerType);
 }
 
-- (void)nextType
-{
+- (void)nextType {
 	int newType = self.visualType + 1;
-	if (newType == ISMSBassVisualType_maxValue)
+    if (newType == ISMSBassVisualType_maxValue) {
 		newType = 0;
+    }
 	
 	[self changeType:newType];
 }
 
-- (void)prevType
-{
+- (void)prevType {
 	int newType = self.visualType - 1;
-	if (newType < 0)
+    if (newType < 0) {
 		newType = ISMSBassVisualType_maxValue - 1;
-	
+    }
+    
 	[self changeType:newType];
 }
 
