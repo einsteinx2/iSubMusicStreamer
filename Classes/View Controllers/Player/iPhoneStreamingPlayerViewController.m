@@ -7,7 +7,6 @@
 //
 
 #import "iPhoneStreamingPlayerViewController.h"
-#import "PageControlViewController.h"
 #import <QuartzCore/CoreAnimation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <CFNetwork/CFNetwork.h>
@@ -805,7 +804,7 @@
 		
 		if (!self.pageControlViewController)
 		{
-			self.pageControlViewController = [[PageControlViewController alloc] initWithNibName:@"PageControlViewController" bundle:nil];
+			self.pageControlViewController = [[OldPageControlViewController alloc] initWithNibName:@"OldPageControlViewController" bundle:nil];
 			self.pageControlViewController.view.frame = CGRectMake (0, 0, self.coverArtImageView.frame.size.width, self.coverArtImageView.frame.size.height);
 		}
 		

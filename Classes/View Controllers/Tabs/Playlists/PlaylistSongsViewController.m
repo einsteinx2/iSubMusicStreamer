@@ -7,7 +7,6 @@
 //
 
 #import "PlaylistSongsViewController.h"
-#import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
 #import "CustomUIAlertView.h"
 #import "UIViewController+PushViewControllerCustom.h"
@@ -158,7 +157,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [super viewWillAppear:animated];
     
     // For some reason this controller needs to do this, but none of the others do :/
-    self.navigationController.navigationBar.translucent = NO;
+//    self.navigationController.navigationBar.translucent = NO;
 	
 	if(musicS.showPlayerIcon) {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
@@ -184,9 +183,9 @@ LOG_LEVEL_ISUB_DEFAULT
 
 
 - (IBAction)nowPlayingAction:(id)sender {
-	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
-	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
+    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
+    playerViewController.hidesBottomBarWhenPushed = YES;
+	[self.navigationController pushViewController:playerViewController animated:YES];
 }
 
 - (void)uploadPlaylistAction:(id)sender {

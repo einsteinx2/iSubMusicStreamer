@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h> 
 
-@class iPhoneStreamingPlayerViewController;
+@class PlayerViewController;
 @interface MenuViewController : UIViewController <UITableViewDelegate, UITableViewDataSource> 
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UIView *playerHolder;
 @property (strong, nonatomic) UINavigationController *playerNavController;
-@property (strong, nonatomic) iPhoneStreamingPlayerViewController *playerController;
+@property (strong, nonatomic) PlayerViewController *playerController;
 @property (strong, nonatomic) NSMutableArray *cellContents;
 @property (nonatomic) BOOL isFirstLoad;
 @property (nonatomic) NSUInteger lastSelectedRow;

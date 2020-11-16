@@ -7,7 +7,6 @@
 //
 
 #import "PlayingViewController.h"
-#import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "CustomUIAlertView.h"
@@ -103,9 +102,9 @@
 }
 
 - (IBAction)nowPlayingAction:(id)sender {
-	iPhoneStreamingPlayerViewController *playerVC = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
-	playerVC.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:playerVC animated:YES];
+    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
+    playerViewController.hidesBottomBarWhenPushed = YES;
+	[self.navigationController pushViewController:playerViewController animated:YES];
 }
 
 #pragma mark - Table View Delegate

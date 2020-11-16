@@ -17,7 +17,7 @@
 
 #define appDelegateS [iSubAppDelegate sharedInstance]
 
-@class BBSplitViewController, iPadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, iPhoneStreamingPlayerViewController, SettingsViewController, FoldersViewController, AudioStreamer, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HTTPServer, ServerListViewController;
+@class BBSplitViewController, iPadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, SettingsViewController, FoldersViewController, AudioStreamer, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HTTPServer, ServerListViewController;
 
 NS_ASSUME_NONNULL_BEGIN
 

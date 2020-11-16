@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CurrentPlaylistViewController : UITableViewController 
+@interface CurrentPlaylistViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
+@property (strong) UITableView *tableView;
 @property (strong) UIView *headerView;
 @property (strong) UILabel *savePlaylistLabel;
 @property (strong) UILabel *deleteSongsLabel;

@@ -7,7 +7,6 @@
 //
 
 #import "CurrentPlaylistViewController.h"
-#import "CurrentPlaylistSongSmallUITableViewCell.h"
 #import "CustomUIAlertView.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "ViewObjectsSingleton.h"
@@ -24,6 +23,7 @@
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "SUSLoader.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -58,38 +58,29 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)viewDidLoad  {
     [super viewDidLoad];
 		
-	//NSDate *start = [NSDate date];	
-	self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.backgroundColor = UIColor.systemBackgroundColor;
 	
     [self registerForNotifications];
-    
-    viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
-    //viewObjectsS.multiDeleteList = nil; viewObjectsS.multiDeleteList = [[NSMutableArray alloc] init];
-    
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectRow) name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
-    
-    [self updateCurrentPlaylistCount];
 				
     // Setup header view
     self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
-    self.headerView.backgroundColor = [UIColor colorWithWhite:.3 alpha:1];
+    self.headerView.backgroundColor = UIColor.systemBackgroundColor;//[UIColor colorWithWhite:.3 alpha:1];
     
     self.savePlaylistLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 232, 34)];
     self.savePlaylistLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
     self.savePlaylistLabel.backgroundColor = [UIColor clearColor];
-    self.savePlaylistLabel.textColor = [UIColor whiteColor];
+    self.savePlaylistLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
     self.savePlaylistLabel.textAlignment = NSTextAlignmentCenter;
-    self.savePlaylistLabel.font = ISMSBoldFont(22);
+    self.savePlaylistLabel.font = [UIFont boldSystemFontOfSize:22];// ISMSBoldFont(22);
     self.savePlaylistLabel.text = @"Save Playlist";
     [self.headerView addSubview:self.savePlaylistLabel];
     
     self.playlistCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 33, 232, 14)];
     self.playlistCountLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
     self.playlistCountLabel.backgroundColor = [UIColor clearColor];
-    self.playlistCountLabel.textColor = [UIColor whiteColor];
+    self.playlistCountLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
     self.playlistCountLabel.textAlignment = NSTextAlignmentCenter;
-    self.playlistCountLabel.font = ISMSBoldFont(12);
+    self.playlistCountLabel.font = [UIFont boldSystemFontOfSize:12];//ISMSBoldFont(12);
     [self.headerView addSubview:self.playlistCountLabel];
     
     self.savePlaylistButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -101,9 +92,9 @@ LOG_LEVEL_ISUB_DEFAULT
     self.editPlaylistLabel = [[UILabel alloc] initWithFrame:CGRectMake(232, 0, 88, 50)];
     self.editPlaylistLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
     self.editPlaylistLabel.backgroundColor = [UIColor clearColor];
-    self.editPlaylistLabel.textColor = [UIColor whiteColor];
+    self.editPlaylistLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
     self.editPlaylistLabel.textAlignment = NSTextAlignmentCenter;
-    self.editPlaylistLabel.font = ISMSBoldFont(22);
+    self.editPlaylistLabel.font = [UIFont boldSystemFontOfSize:22];//ISMSBoldFont(22);
     self.editPlaylistLabel.text = @"Edit";
     [self.headerView addSubview:self.editPlaylistLabel];
     
@@ -116,16 +107,28 @@ LOG_LEVEL_ISUB_DEFAULT
     self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 232, 50)];
     self.deleteSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
     self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
-    self.deleteSongsLabel.textColor = [UIColor whiteColor];
+    self.deleteSongsLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
     self.deleteSongsLabel.textAlignment = NSTextAlignmentCenter;
-    self.deleteSongsLabel.font = ISMSBoldFont(22);
+    self.deleteSongsLabel.font = [UIFont boldSystemFontOfSize:22];//ISMSBoldFont(22);
     self.deleteSongsLabel.adjustsFontSizeToFitWidth = YES;
     self.deleteSongsLabel.minimumScaleFactor = 12.0 / self.deleteSongsLabel.font.pointSize;
     self.deleteSongsLabel.text = @"Remove # Songs";
     self.deleteSongsLabel.hidden = YES;
     [self.headerView addSubview:self.deleteSongsLabel];
     
-    self.tableView.tableHeaderView = self.headerView;
+    [self.view addSubview:self.headerView];
+    self.headerView.width = self.view.width;
+    [self updateCurrentPlaylistCount];
+    
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.headerView.height, self.view.width, self.view.height - self.headerView.height)];
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    [self.view addSubview:self.tableView];
+    
+    self.tableView.allowsMultipleSelectionDuringEditing = YES;
+    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
+    self.tableView.rowHeight = 60;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideEditControls) name:@"hideEditControls" object:nil];
 	
@@ -148,15 +151,9 @@ LOG_LEVEL_ISUB_DEFAULT
     [super viewWillDisappear:animated];
 	
 	[self unregisterForNotifications];
-	//[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-	//[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
-	
-	if (self.tableView.editing) {
-		// Clear the edit stuff if they switch tabs in the middle of editing
-		viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
-		self.tableView.editing = NO;
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"showDeleteButton" object:nil];
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideDeleteButton" object:nil];
+
+	if (self.isEditing) {
+        [self setEditing:NO animated:YES];
 	}
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideEditControls" object:nil];
@@ -186,53 +183,51 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)editPlaylistAction:(id)sender {
-	if (!self.tableView.editing) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(showDeleteButton) name:@"showDeleteButton" object: nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(hideDeleteButton) name:@"hideDeleteButton" object: nil];
-		viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
-		[self.tableView setEditing:YES animated:YES];
+	if (!self.isEditing) {
+        // Deelect all the rows
+        for (int i = 0; i < self.currentPlaylistCount; i++) {
+            [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO];
+        }
+        
+		[self setEditing:YES animated:YES];
 		self.editPlaylistLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
 		self.editPlaylistLabel.text = @"Done";
+        
 		[self showDeleteButton];
-		
-		// Hide the duration labels and shorten the song and artist labels
-		for (CurrentPlaylistSongSmallUITableViewCell *cell in self.tableView.visibleCells) {
-			cell.durationLabel.hidden = YES;
-		}
-		
-		[NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(showDeleteToggle) userInfo:nil repeats:NO];
 	} else {
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"showDeleteButton" object:nil];
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideDeleteButton" object:nil];
-		viewObjectsS.multiDeleteList = [NSMutableArray arrayWithCapacity:1];
-		[self.tableView setEditing:NO animated:YES];
+		[self setEditing:NO animated:YES];
 		[self hideDeleteButton];
 		self.editPlaylistLabel.backgroundColor = [UIColor clearColor];
 		self.editPlaylistLabel.text = @"Edit";
 		
 		// Reload the table to correct the numbers
-		[self.tableView reloadData];
+//		[self.tableView reloadData];
 
-		if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount)
-		{
+		if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
 			[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
 		}
 	}
 }
 
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    [super setEditing:editing animated:animated];
+    [self.tableView setEditing:editing animated:animated];
+}
+
 - (void)hideEditControls {
-    if (self.tableView.editing) {
+    if (self.isEditing) {
 		[self editPlaylistAction:nil];
     }
 }
 
 - (void)showDeleteButton {
-	if ([viewObjectsS.multiDeleteList count] == 0) {
+    NSUInteger selectedRowsCount = self.tableView.indexPathsForSelectedRows.count;
+	if (selectedRowsCount == 0) {
 		self.deleteSongsLabel.text = @"Clear Playlist";
-	} else if ([viewObjectsS.multiDeleteList count] == 1) {
+	} else if (selectedRowsCount == 1) {
 		self.deleteSongsLabel.text = @"Remove 1 Song  ";
 	} else {
-		self.deleteSongsLabel.text = [NSString stringWithFormat:@"Remove %lu Songs", (unsigned long)[viewObjectsS.multiDeleteList count]];
+		self.deleteSongsLabel.text = [NSString stringWithFormat:@"Remove %lu Songs", (unsigned long)selectedRowsCount];
 	}
 	
 	self.savePlaylistLabel.hidden = YES;
@@ -241,32 +236,34 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)hideDeleteButton {
-	if ([viewObjectsS.multiDeleteList count] == 0) {
-		if (!self.tableView.editing) {
-			self.savePlaylistLabel.hidden = NO;
-			self.playlistCountLabel.hidden = NO;
-			self.deleteSongsLabel.hidden = YES;
-		} else {
-			self.deleteSongsLabel.text = @"Clear Playlist";
-		}
-	} else if ([viewObjectsS.multiDeleteList count] == 1) {
+    if (!self.isEditing) {
+        self.savePlaylistLabel.hidden = NO;
+        self.playlistCountLabel.hidden = NO;
+        self.deleteSongsLabel.hidden = YES;
+        return;
+    }
+    
+    NSUInteger selectedRowsCount = self.tableView.indexPathsForSelectedRows.count;
+	if (selectedRowsCount == 0) {
+        self.deleteSongsLabel.text = @"Clear Playlist";
+	} else if (selectedRowsCount == 1) {
 		self.deleteSongsLabel.text = @"Remove 1 Song  ";
 	} else {
-		self.deleteSongsLabel.text = [NSString stringWithFormat:@"Remove %lu Songs", (unsigned long)[viewObjectsS.multiDeleteList count]];
+		self.deleteSongsLabel.text = [NSString stringWithFormat:@"Remove %lu Songs", (unsigned long)selectedRowsCount];
 	}
 }
 
-- (void) showDeleteToggle {
-//	// Show the delete toggle for already visible cells
-//	for (id cell in self.tableView.visibleCells) 
-//	{
-//		[[cell deleteToggleImage] setHidden:NO];
-//	}
+- (NSMutableArray<NSNumber*> *)selectedRowIndexes {
+    NSMutableArray<NSNumber*> *selectedRowIndexes = [[NSMutableArray alloc] init];
+    for (NSIndexPath *indexPath in self.tableView.indexPathsForSelectedRows) {
+        [selectedRowIndexes addObject:@(indexPath.row)];
+    }
+    return selectedRowIndexes;
 }
 
 - (void)savePlaylistAction:(id)sender {
 	if (self.deleteSongsLabel.hidden == YES) {
-		if (!self.tableView.editing) {
+		if (!self.isEditing) {
 			if (settingsS.isOfflineMode) {
 				[self showSavePlaylistAlert];
 			} else {
@@ -279,50 +276,24 @@ LOG_LEVEL_ISUB_DEFAULT
 			}
 		}
 	} else {
+        NSMutableArray *selectedRowIndexes = [self selectedRowIndexes];
+        
 		[self unregisterForNotifications];
 		
-		if ([self.deleteSongsLabel.text isEqualToString:@"Clear Playlist"]) {
-			if (settingsS.isJukeboxEnabled) {
-				[databaseS resetJukeboxPlaylist];
-				[jukeboxS clearPlaylist];
-			} else {
-                [audioEngineS.player stop];
-				[databaseS resetCurrentPlaylistDb];
-			}
-			
-			[self editPlaylistAction:nil];
-			
-			[self updateCurrentPlaylistCount];
-			[self.tableView reloadData];
+        if (selectedRowIndexes.count == 0) {
+            // Select all the rows
+            for (int i = 0; i < self.currentPlaylistCount; i++) {
+                [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+            }
+            [self showDeleteButton];
 		} else {
-			//
 			// Delete action
-			//
-			
-			[playlistS deleteSongs:viewObjectsS.multiDeleteList];
-			
+            [playlistS deleteSongs:selectedRowIndexes];
 			[self updateCurrentPlaylistCount];
-			[self.tableView reloadData];
-						
-			/*// Create indexPaths from multiDeleteList and delete the rows in the table view
-			NSMutableArray *indexes = [[NSMutableArray alloc] init];
-			for (NSNumber *index in viewObjectsS.multiDeleteList)
-			{
-				@autoreleasepool 
-				{
-					[indexes addObject:[NSIndexPath indexPathForRow:[index integerValue] inSection:0]];
-				}
-			}
-			
-			@try
-			{
-				[self.tableView deleteRowsAtIndexPaths:indexes withRowAnimation:NO];
-			}
-			@catch (NSException *exception) 
-			{
-			//DLog(@"Exception: %@ - %@", exception.name, exception.reason);
-			}*/
-			
+            [self.tableView deleteRowsAtIndexPaths:self.tableView.indexPathsForSelectedRows withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self updateTableCellNumbers];
+            
+//			[self.tableView reloadData];
 			[self editPlaylistAction:nil];
 		}
 		
@@ -510,20 +481,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
-	static NSString *cellIdentifier = @"CurrentPlaylistSongSmallCell";
-    CurrentPlaylistSongSmallUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (!cell) {
-        cell = [[CurrentPlaylistSongSmallUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    }
-	
-//    cell.indexPath = indexPath;
-//	
-//	cell.deleteToggleImage.hidden = !self.tableView.editing;
-//	cell.deleteToggleImage.image = [UIImage imageNamed:@"unselected.png"];
-//	if ([viewObjectsS.multiDeleteList containsObject:@(indexPath.row)])
-//	{
-//		cell.deleteToggleImage.image = [UIImage imageNamed:@"selected.png"];
-//	}
+    UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
 	
 	ISMSSong *aSong;
 	if (settingsS.isJukeboxEnabled) {
@@ -539,30 +497,11 @@ LOG_LEVEL_ISUB_DEFAULT
 			aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"currentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
         }
 	}
-	
-	if (indexPath.row == playlistS.currentIndex && (audioEngineS.player.isStarted || (settingsS.isJukeboxEnabled && jukeboxS.isPlaying))) {
-		cell.numberLabel.hidden = YES;
-		cell.nowPlayingImageView.hidden = NO;
-	} else {
-		cell.numberLabel.hidden = NO;
-		cell.nowPlayingImageView.hidden = YES;
-		cell.numberLabel.text = [NSString stringWithFormat:@"%li", (long)(indexPath.row + 1)];
-	}
-	
-	cell.songNameLabel.text = aSong.title;
-
-    if (aSong.album) {
-		cell.artistNameLabel.text = [NSString stringWithFormat:@"%@ - %@", aSong.artist, aSong.album];
-    } else {
-		cell.artistNameLabel.text = aSong.artist;
-    }
     
-	cell.durationLabel.text = [NSString formatTime:[aSong.duration floatValue]];	
-	
-	// Hide the duration labels if editing
-	if (self.tableView.editing) {
-		cell.durationLabel.hidden = YES;
-	}
+    cell.autoScroll = NO;
+    cell.hideCoverArt = YES;
+    cell.number = indexPath.row + 1;
+    [cell updateWithModel:aSong];
 	
     return cell;
 }
@@ -572,8 +511,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return UITableViewCellEditingStyleNone;
-	//return UITableViewCellEditingStyleDelete;
+    return UITableViewCellEditingStyleDelete;
 }
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
@@ -611,51 +549,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (settingsS.isJukeboxEnabled) {
 		[jukeboxS replacePlaylistWithLocal];
 	}
-		
-	// Fix the multiDeleteList to reflect the new row positions
-	if (viewObjectsS.multiDeleteList.count > 0) {
-		NSMutableArray *tempMultiDeleteList = [[NSMutableArray alloc] init];
-		int newPosition;
-		for (NSNumber *position in viewObjectsS.multiDeleteList) {
-			if (fromIndexPath.row > toIndexPath.row) {
-				if ([position intValue] >= toIndexPath.row && [position intValue] <= fromIndexPath.row) {
-					if ([position intValue] == fromIndexPath.row)
-					{
-						[tempMultiDeleteList addObject:@(toIndexPath.row)];
-					}
-					else 
-					{
-						newPosition = [position intValue] + 1;
-						[tempMultiDeleteList addObject:@(newPosition)];
-					}
-				}
-				else
-				{
-					[tempMultiDeleteList addObject:position];
-				}
-			}
-			else
-			{
-				if ([position intValue] <= toIndexPath.row && [position intValue] >= fromIndexPath.row)
-				{
-					if ([position intValue] == fromIndexPath.row)
-					{
-						[tempMultiDeleteList addObject:@(toIndexPath.row)];
-					}
-					else 
-					{
-						newPosition = [position intValue] - 1;
-						[tempMultiDeleteList addObject:@(newPosition)];
-					}
-				}
-				else
-				{
-					[tempMultiDeleteList addObject:position];
-				}
-			}
-		}
-		viewObjectsS.multiDeleteList = [NSMutableArray arrayWithArray:tempMultiDeleteList];
-	}
 	
 	// Correct the value of currentPlaylistPosition
 	if (fromIndexPath.row == playlistS.currentIndex) {
@@ -679,8 +572,44 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	if (!indexPath) return;
-	
-	[musicS playSongAtPosition:indexPath.row];
+    
+    if (self.isEditing) {
+        [self showDeleteButton];
+        return;
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+
+    [EX2Dispatch runInMainThreadAfterDelay:0.5 block:^{
+        [musicS playSongAtPosition:indexPath.row];
+    }];
+}
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (!indexPath) return;
+    
+    if (self.isEditing) {
+        [self hideDeleteButton];
+    }
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    ISMSSong *song = [playlistS songForIndex:indexPath.row];
+    if (!song.isVideo) {
+        return [SwipeAction downloadQueueAndDeleteConfigWithModel:song deleteHandler:^{
+            [playlistS deleteSongs:@[@(indexPath.row)]];
+            [self updateCurrentPlaylistCount];
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }];
+    }
+    return nil;
+}
+
+- (void)updateTableCellNumbers {
+    for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
+        UniversalTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        cell.number = indexPath.row + 1;
+    }
 }
 
 @end

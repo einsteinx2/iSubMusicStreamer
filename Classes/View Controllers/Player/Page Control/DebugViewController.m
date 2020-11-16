@@ -17,7 +17,7 @@
 
 - (void)viewDidLoad  {
     [super viewDidLoad];
-	
+    	
 	self.currentSongProgress = 0.;
 	self.nextSongProgress = 0.;
 		

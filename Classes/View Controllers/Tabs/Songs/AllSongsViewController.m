@@ -8,7 +8,6 @@
 
 
 #import "AllSongsViewController.h"
-#import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
 #import "FoldersViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
@@ -327,9 +326,9 @@
 }
 
 - (IBAction)nowPlayingAction:(id)sender {
-	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
-	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
+    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
+    playerViewController.hidesBottomBarWhenPushed = YES;
+	[self.navigationController pushViewController:playerViewController animated:YES];
 }
 
 #pragma mark UISearchBar delegate

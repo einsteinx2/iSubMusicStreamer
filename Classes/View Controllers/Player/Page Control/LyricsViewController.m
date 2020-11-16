@@ -22,7 +22,7 @@
         // Custom initialization
 		self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 300)];
 		self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		
+        		
 		_textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 45, 320, 255)];
 		_textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_textView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.8];

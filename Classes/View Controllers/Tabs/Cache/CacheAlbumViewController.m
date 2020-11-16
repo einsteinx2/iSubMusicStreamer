@@ -7,7 +7,6 @@
 //
 
 #import "CacheAlbumViewController.h"
-#import "iPhoneStreamingPlayerViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "iPadRootViewController.h"
 #import "StackScrollViewController.h"
@@ -285,17 +284,17 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
         if (UIDevice.isIPad) {
             [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
         } else {
-            iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
-            streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:streamingPlayerViewController animated:YES];
+            PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
+            playerViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:playerViewController animated:YES];
         }
     }];
 }
 
 - (IBAction)nowPlayingAction:(id)sender {
-	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
-	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
+    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
+    playerViewController.hidesBottomBarWhenPushed = YES;
+	[self.navigationController pushViewController:playerViewController animated:YES];
 }
 
 - (void)dealloc {

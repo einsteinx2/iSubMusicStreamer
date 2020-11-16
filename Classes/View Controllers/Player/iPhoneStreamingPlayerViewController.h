@@ -8,13 +8,13 @@
 
 #import "AsynchronousImageView.h"
 
-@class PageControlViewController, MPVolumeView, OBSlider, ISMSSong;
+@class OldPageControlViewController, MPVolumeView, OBSlider, ISMSSong;
 
 @interface iPhoneStreamingPlayerViewController : UIViewController <AsynchronousImageViewDelegate, UIGestureRecognizerDelegate>
 
 @property BOOL isFlipped;
 @property BOOL isExtraButtonsShowing;
-@property (strong) PageControlViewController *pageControlViewController;
+@property (strong) OldPageControlViewController *pageControlViewController;
 @property uint64_t bookmarkBytePosition;	
 @property (strong) MPVolumeView *volumeView;
 @property (strong) UISlider *jukeboxVolumeView;

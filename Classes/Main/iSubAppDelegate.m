@@ -16,7 +16,6 @@
 #import <arpa/inet.h>
 #import "iPadRootViewController.h"
 #import "MenuViewController.h"
-#import "iPhoneStreamingPlayerViewController.h"
 #import "ISMSUpdateChecker.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <AVKit/AVKit.h>
@@ -61,9 +60,9 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)showPlayer
 {
-    iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
-    streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
-    [(UINavigationController*)self.currentTabBarController.selectedViewController pushViewController:streamingPlayerViewController animated:YES];
+    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
+    playerViewController.hidesBottomBarWhenPushed = YES;
+    [(UINavigationController*)self.currentTabBarController.selectedViewController pushViewController:playerViewController animated:YES];
 }
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application

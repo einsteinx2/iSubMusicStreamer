@@ -10,15 +10,19 @@
 #import "AsynchronousImageViewDelegate.h"
 #import "SUSLoaderDelegate.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SUSCoverArtDAO;
 @interface AsynchronousImageView : UIImageView <SUSLoaderDelegate>
 
-@property (weak) IBOutlet NSObject<AsynchronousImageViewDelegate> *delegate;
-@property (copy) NSString *coverArtId;
-@property (strong) SUSCoverArtDAO *coverArtDAO;
+@property (nullable, weak) IBOutlet NSObject<AsynchronousImageViewDelegate> *delegate;
+@property (nullable, copy) NSString *coverArtId;
+@property (nullable, strong) SUSCoverArtDAO *coverArtDAO;
 @property BOOL isLarge;
-@property (strong) UIActivityIndicatorView *activityIndicator;
+@property (nullable, strong) UIActivityIndicatorView *activityIndicator;
 
-- (instancetype)initWithFrame:(CGRect)frame coverArtId:(NSString *)artId isLarge:(BOOL)large delegate:(NSObject<AsynchronousImageViewDelegate> *)theDelegate;
+- (instancetype)initWithFrame:(CGRect)frame coverArtId:(nullable NSString *)artId isLarge:(BOOL)large delegate:(nullable NSObject<AsynchronousImageViewDelegate> *)theDelegate;
 
 @end
+
+NS_ASSUME_NONNULL_END

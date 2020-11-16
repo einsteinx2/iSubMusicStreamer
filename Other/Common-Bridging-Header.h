@@ -20,11 +20,13 @@
  */
 
 // View Controllers
-#import "iPhoneStreamingPlayerViewController.h"
 #import "ChatViewController.h"
 #import "SearchSongsViewController.h"
 #import "SearchAllViewController.h"
 #import "HomeAlbumViewController.h"
+#import "CurrentPlaylistViewController.h"
+#import "LyricsViewController.h"
+#import "DebugViewController.h"
 
 // Views
 #import "AsynchronousImageView.h"

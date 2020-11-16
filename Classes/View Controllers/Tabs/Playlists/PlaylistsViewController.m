@@ -8,7 +8,6 @@
 
 #import "PlaylistsViewController.h"
 #import "ServerListViewController.h"
-#import "iPhoneStreamingPlayerViewController.h"
 #import "PlaylistSongsViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "CustomUIAlertView.h"
@@ -184,9 +183,9 @@ LOG_LEVEL_ISUB_DEFAULT
 
 
 - (IBAction)nowPlayingAction:(id)sender {
-	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
-	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
+    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
+    playerViewController.hidesBottomBarWhenPushed = YES;
+	[self.navigationController pushViewController:playerViewController animated:YES];
 }
 
 #pragma mark -

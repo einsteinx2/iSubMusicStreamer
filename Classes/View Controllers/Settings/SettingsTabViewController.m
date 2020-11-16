@@ -10,7 +10,6 @@
 #import "FoldersViewController.h"
 #import "iPadRootViewController.h"
 #import "MenuViewController.h"
-#import "iPhoneStreamingPlayerViewController.h"
 #import "iPadRootViewController.h"
 #import "StackScrollViewController.h"
 #import "iSubAppDelegate.h"
@@ -20,6 +19,8 @@
 #import "CacheSingleton.h"
 #import "DatabaseSingleton.h"
 #import "EX2Kit.h"
+#import "Swift.h"
+#import "AsynchronousImageView.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
 
@@ -208,8 +209,8 @@
 				default: break;
 			}
 			
-			if (UIDevice.isIPad)
-				[appDelegateS.ipadRootViewController.menuViewController.playerController quickSecondsSetLabels];
+//			if (UIDevice.isIPad)
+//				[appDelegateS.ipadRootViewController.menuViewController.playerController quickSecondsSetLabels];
 		}
         else if (sender == self.maxVideoBitrate3GSegmentedControl)
         {

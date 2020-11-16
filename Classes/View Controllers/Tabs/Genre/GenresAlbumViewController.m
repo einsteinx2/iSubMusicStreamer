@@ -7,7 +7,6 @@
 //
 
 #import "GenresAlbumViewController.h"
-#import "iPhoneStreamingPlayerViewController.h"
 #import "GenresAlbumUITableViewCell.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "ViewObjectsSingleton.h"
@@ -21,6 +20,7 @@
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
+#import "AsynchronousImageView.h"
 
 @implementation GenresAlbumViewController
 
@@ -84,9 +84,9 @@
 }
 
 - (IBAction)nowPlayingAction:(id)sender {
-	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
-	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
+    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
+    playerViewController.hidesBottomBarWhenPushed = YES;
+	[self.navigationController pushViewController:playerViewController animated:YES];
 }
 
 - (void)showPlayer {
@@ -94,9 +94,9 @@
 	if (UIDevice.isIPad) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
 	} else {
-		iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
-		streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
-		[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
+        PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
+        playerViewController.hidesBottomBarWhenPushed = YES;
+		[self.navigationController pushViewController:playerViewController animated:YES];
 	}	
 }
 

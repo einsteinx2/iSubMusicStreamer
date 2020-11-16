@@ -10,7 +10,6 @@
 //
 
 #import "AsynchronousImageView.h"
-#import "PageControlViewController.h"
 #import "AsynchronousImageViewDelegate.h"
 #import "iSubAppDelegate.h"
 #import "MusicSingleton.h"

@@ -9,10 +9,10 @@
 #import "UIViewController+PushViewControllerCustom.h"
 #import "iPadRootViewController.h"
 #import "StackScrollViewController.h"
-#import "iPhoneStreamingPlayerViewController.h"
 #import "iSubAppDelegate.h"
 #import "Defines.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation UIViewController (PushViewControllerCustom)
 
@@ -60,9 +60,9 @@
 	}
 	else
 	{
-		iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
-		streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
-		[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
+        PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
+        playerViewController.hidesBottomBarWhenPushed = YES;
+		[self.navigationController pushViewController:playerViewController animated:YES];
 	}
 }
 

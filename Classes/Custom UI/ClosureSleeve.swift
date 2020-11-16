@@ -23,10 +23,6 @@ import UIKit
     @objc func invoke() {
         closure()
     }
-    
-    deinit {
-        print("closure sleeve deinit")
-    }
 }
 
 @objc extension UIControl {

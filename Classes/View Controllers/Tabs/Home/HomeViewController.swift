@@ -316,7 +316,7 @@ import SnapKit
     }
     
     @objc private func nowPlayingAction(sender: Any?) {
-        let controller = PlayerViewController()//iPhoneStreamingPlayerViewController(nibName: "iPhoneStreamingPlayerViewController", bundle: nil)
+        let controller = PlayerViewController()
         controller.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(controller, animated: true)
     }

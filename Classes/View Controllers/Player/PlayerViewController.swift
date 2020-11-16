@@ -13,7 +13,8 @@ import SnapKit
     var currentSong: Song?
     
     // Cover Art
-    let coverArt = AsynchronousImageView()
+    let coverArtPageControl = PageControlViewController()
+//    let coverArt = AsynchronousImageView()
     
     // Song info
     let songInfoContainer = UIView()
@@ -41,18 +42,28 @@ import SnapKit
         
         view.backgroundColor = .systemBackground
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image:  UIImage(named: "player-overlay"), style: .plain, target: self, action: #selector(showCurrentPlaylist))
+        
         //
         // Cover art
         //
         
-        coverArt.isLarge = true
-        view.addSubview(coverArt)
-        coverArt.snp.makeConstraints { make in
+        view.addSubview(coverArtPageControl.view)
+        coverArtPageControl.view.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(40)
             make.leading.equalToSuperview().offset(40)
             make.trailing.equalToSuperview().offset(-40)
-            make.height.equalTo(coverArt.snp.width)
+            make.height.equalTo(coverArtPageControl.view.snp.width).offset(20)
         }
+        
+//        coverArt.isLarge = true
+//        view.addSubview(coverArt)
+//        coverArt.snp.makeConstraints { make in
+//            make.top.equalToSuperview().offset(40)
+//            make.leading.equalToSuperview().offset(40)
+//            make.trailing.equalToSuperview().offset(-40)
+//            make.height.equalTo(coverArt.snp.width)
+//        }
         
         //
         // Song Info
@@ -61,9 +72,9 @@ import SnapKit
 //        songInfoContainer.backgroundColor = .green
         view.addSubview(songInfoContainer)
         songInfoContainer.snp.makeConstraints { make in
-            make.width.equalTo(coverArt)
+            make.width.equalTo(coverArtPageControl.view)
             make.height.equalTo(70)
-            make.top.equalTo(coverArt.snp.bottom).offset(20)
+            make.top.equalTo(coverArtPageControl.view.snp.bottom).offset(20)
             make.centerX.equalToSuperview()
         }
         
@@ -370,7 +381,8 @@ import SnapKit
     @objc private func updateSongInfo() {
         guard let song = PlayQueue.shared().currentSong() else {
             currentSong = nil
-            coverArt.coverArtId = nil
+            coverArtPageControl.coverArtId = nil
+            coverArtPageControl.coverArtImage = UIImage(named: "default-album-art-ipad")
             songNameLabel.text = nil
             artistNameLabel.text = nil
             progressSlider.value = 0
@@ -378,7 +390,7 @@ import SnapKit
         }
         
         currentSong = song
-        coverArt.coverArtId = song.coverArtId
+        coverArtPageControl.coverArtId = song.coverArtId
         songNameLabel.text = song.title
         artistNameLabel.text = song.artist
         progressSlider.maximumValue = song.duration?.floatValue ?? 0.0
@@ -418,6 +430,12 @@ import SnapKit
     
     private func stopUpdatingDownloadProgress() {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(startUpdatingDownloadProgress), object: nil)
+    }
+    
+    @objc private func showCurrentPlaylist() {
+//        let controller = CurrentPlaylistBackgroundViewController(nibName: "CurrentPlaylistBackgroundViewController", bundle: nil)
+        let controller = CurrentPlaylistViewController()
+        present(controller, animated: true, completion: nil)
     }
 }
 

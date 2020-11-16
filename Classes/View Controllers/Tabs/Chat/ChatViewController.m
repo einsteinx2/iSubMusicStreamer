@@ -8,7 +8,6 @@
 
 #import "ChatViewController.h"
 #import "ChatUITableViewCell.h"
-#import "iPhoneStreamingPlayerViewController.h"
 #import "ServerListViewController.h"
 #import "CustomUITextView.h"
 #import "iSubAppDelegate.h"
@@ -174,9 +173,9 @@
 }
 
 - (IBAction)nowPlayingAction:(id)sender {
-	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
-	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
+    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
+    playerViewController.hidesBottomBarWhenPushed = YES;
+	[self.navigationController pushViewController:playerViewController animated:YES];
 }
 
 #pragma mark ISMSLoader delegate

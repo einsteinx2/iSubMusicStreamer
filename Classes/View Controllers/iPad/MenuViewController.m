@@ -19,7 +19,6 @@
 #import "GenresViewController.h"
 #import "CacheViewController.h"
 #import "ChatViewController.h"
-#import "iPhoneStreamingPlayerViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "ServerListViewController.h"
 #import "CustomUINavigationController.h"
@@ -90,7 +89,7 @@
         [self.view addSubview:_playerHolder];
         
         // Create the player
-		_playerController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
+		_playerController = [[PlayerViewController alloc] init];
 		_playerNavController = [[CustomUINavigationController alloc] initWithRootViewController:_playerController];
         _playerNavController.view.frame = _playerHolder.frame;
         _playerNavController.view.translatesAutoresizingMaskIntoConstraints = YES;

@@ -10,7 +10,6 @@
 #import "CacheAlbumViewController.h"
 #import "CacheQueueSongUITableViewCell.h"
 #import "ServerListViewController.h"
-#import "iPhoneStreamingPlayerViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
@@ -28,6 +27,7 @@
 #import "EX2Kit.h"
 #import "Swift.h"
 #import "ISMSArtist.h"
+#import "AsynchronousImageView.h"
 
 @interface CacheViewController ()
 @property NSUInteger cacheQueueCount;
@@ -235,9 +235,9 @@
 }
 
 - (IBAction)nowPlayingAction:(id)sender {
-	iPhoneStreamingPlayerViewController *streamingPlayerViewController = [[iPhoneStreamingPlayerViewController alloc] initWithNibName:@"iPhoneStreamingPlayerViewController" bundle:nil];
-	streamingPlayerViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:streamingPlayerViewController animated:YES];
+    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
+    playerViewController.hidesBottomBarWhenPushed = YES;
+	[self.navigationController pushViewController:playerViewController animated:YES];
 }
 
 - (void)loadPlayAllPlaylist:(BOOL)shuffle {
