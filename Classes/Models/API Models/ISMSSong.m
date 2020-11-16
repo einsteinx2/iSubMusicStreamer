@@ -285,6 +285,7 @@
 - (NSString *)primaryLabelText { return self.title; }
 - (NSString *)secondaryLabelText { return self.artist; }
 - (NSString *)durationLabelText { return [NSString formatTime:[self.duration floatValue]]; }
+- (BOOL)isCached { return self.isFullyCached; }
 - (void)download { [self addToCacheQueueDbQueue]; }
 - (void)queue { [self addToCurrentPlaylistDbQueue]; }
 

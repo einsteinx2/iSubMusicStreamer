@@ -90,6 +90,7 @@
 - (NSString *)secondaryLabelText { return nil; }
 - (NSString *)durationLabelText { return nil; }
 - (NSString *)coverArtId { return nil; }
+- (BOOL)isCached { return NO; }
 - (void)download { [self loadSongsAndQueueOrDownload:YES]; }
 - (void)queue { [self loadSongsAndQueueOrDownload:NO]; }
 

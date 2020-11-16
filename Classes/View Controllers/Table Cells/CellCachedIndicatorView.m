@@ -9,6 +9,11 @@
 #import "CellCachedIndicatorView.h"
 #import "ViewObjectsSingleton.h"
 
+@interface CellCachedIndicatorView() {
+    CGFloat _size;
+}
+@end
+
 @implementation CellCachedIndicatorView
 
 - (instancetype)init {
@@ -18,6 +23,8 @@
 // TODO: Flip for RTL
 - (instancetype)initWithSize:(CGFloat)size {
     if (self = [super initWithFrame:CGRectMake(0, 0, size, size)]) {
+        _size = size;
+        
         UIBezierPath *maskPath = [UIBezierPath bezierPath];
         [maskPath moveToPoint:CGPointMake(0, 0)];
         [maskPath addLineToPoint:CGPointMake(size, 0)];
@@ -29,9 +36,12 @@
 
         self.backgroundColor = viewObjectsS.currentLightColor;
         self.layer.mask = triangleMaskLayer;
-        self.hidden = YES;
     }
     return self;
+}
+
+- (CGSize)intrinsicContentSize {
+    return CGSizeMake(_size, _size);
 }
 
 @end

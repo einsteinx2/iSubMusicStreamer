@@ -35,6 +35,7 @@
 - (NSString *)secondaryLabelText { return self.count == 1 ? @"1 song" : [NSString stringWithFormat:@"%lu songs", (unsigned long)self.count]; }
 - (NSString *)durationLabelText { return nil; }
 - (NSString *)coverArtId { return nil; }
+- (BOOL)isCached { return NO; }
 
 - (void)download {
     [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];

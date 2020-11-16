@@ -17,6 +17,7 @@ NS_SWIFT_NAME(TableCellModel)
 @property (nullable, readonly, copy) NSString *secondaryLabelText;
 @property (nullable, readonly, copy) NSString *durationLabelText;
 @property (nullable, readonly, copy) NSString *coverArtId;
+@property (readonly) BOOL isCached;
 
 - (void)download;
 - (void)queue;

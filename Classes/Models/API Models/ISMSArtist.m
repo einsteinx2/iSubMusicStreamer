@@ -71,6 +71,7 @@
 - (NSString *)secondaryLabelText { return nil; }
 - (NSString *)durationLabelText { return nil; }
 - (NSString *)coverArtId { return nil; }
+- (BOOL)isCached { return NO; }
 - (void)download { [databaseS downloadAllSongs:self.artistId artist:self]; }
 - (void)queue { [databaseS queueAllSongs:self.artistId artist:self]; }
 

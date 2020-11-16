@@ -46,8 +46,12 @@ import SnapKit
         didSet { headerLabel.text = headerText }
     }
     
+    @objc var hideCacheIndicator: Bool = false {
+        didSet { cachedIndicator.isHidden = (hideCacheIndicator || !(tableCellModel?.isCached ?? false)) }
+    }
+    
     @objc var hideHeaderLabel: Bool = true {
-        didSet { if oldValue != hideNumberLabel { makeHeaderLabelConstraints() } }
+        didSet { if oldValue != hideHeaderLabel { makeHeaderLabelConstraints() } }
     }
     
     @objc var hideNumberLabel: Bool = false {
@@ -129,6 +133,8 @@ import SnapKit
             primaryLabel.text = model.primaryLabelText
             if !hideSecondaryLabel { secondaryLabel.text = model.secondaryLabelText }
             if !hideDurationLabel { durationLabel.text = model.durationLabelText }
+            print("model.isCached: \(model.isCached) hideCacheIndicator: \(hideCacheIndicator) hideCacheIndicator || !model.isCached: \(hideCacheIndicator || !model.isCached)")
+            cachedIndicator.isHidden = hideCacheIndicator || !model.isCached
         }
     }
     
@@ -140,6 +146,7 @@ import SnapKit
         hideDurationLabel = true
         primaryLabel.text = primaryText
         secondaryLabel.text = secondaryText;
+        cachedIndicator.isHidden = true;
     }
     
     @objc func startScrollingLabels() {

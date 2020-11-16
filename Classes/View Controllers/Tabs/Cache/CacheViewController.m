@@ -979,6 +979,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
         UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+        cell.hideCacheIndicator = YES;
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = YES;
         cell.hideSecondaryLabel = YES;

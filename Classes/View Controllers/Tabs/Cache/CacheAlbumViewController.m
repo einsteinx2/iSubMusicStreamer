@@ -348,12 +348,14 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
 	if (indexPath.row < self.listOfAlbums.count) {
         // Album
+        cell.hideCacheIndicator = YES;
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
         cell.hideDurationLabel = YES;
         [cell updateWithModel:[self albumAtIndexPath:indexPath]];
 	} else {
         // Song
+        cell.hideCacheIndicator = YES;
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
         cell.hideDurationLabel = NO;

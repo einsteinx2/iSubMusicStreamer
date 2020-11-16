@@ -110,6 +110,7 @@
 - (NSString *)primaryLabelText { return self.title; }
 - (NSString *)secondaryLabelText { return self.artistName; }
 - (NSString *)durationLabelText { return nil; }
+- (BOOL)isCached { return NO; }
 - (void)download { [databaseS downloadAllSongs:self.albumId artist:[self artist]]; }
 - (void)queue { [databaseS queueAllSongs:self.albumId artist:[self artist]]; }
 
