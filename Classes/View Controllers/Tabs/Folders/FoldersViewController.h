@@ -18,9 +18,9 @@
 @property (nonatomic) BOOL isCountShowing;
 @property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) UISearchBar *searchBar;
+@property (nonatomic, strong) UIVisualEffectView *searchOverlay;
 @property (nonatomic, strong) UILabel *countLabel;
 @property (nonatomic, strong) UILabel *reloadTimeLabel;
-@property (nonatomic, strong) UIButton *dismissButton;
 @property (nonatomic, strong) FolderDropdownControl *dropdown;
 @property (nonatomic, strong) SUSRootFoldersDAO *dataModel;
 

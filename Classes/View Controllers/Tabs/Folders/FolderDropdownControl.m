@@ -15,6 +15,8 @@
 
 LOG_LEVEL_ISUB_DEFAULT
 
+#define HEIGHT 40
+
 @interface FolderDropdownControl() {
     __strong NSDictionary *_folders;
 }
@@ -42,7 +44,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.layer.cornerRadius = 8;
 		self.layer.masksToBounds = YES;
 		
-		_selectedFolderLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, self.frame.size.width - 10, 30)];
+		_selectedFolderLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, self.frame.size.width - 10, HEIGHT)];
 		_selectedFolderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		_selectedFolderLabel.userInteractionEnabled = YES;
 		_selectedFolderLabel.backgroundColor = [UIColor clearColor];
@@ -52,7 +54,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		_selectedFolderLabel.text = @"All Folders";
 		[self addSubview:_selectedFolderLabel];
 		
-		UIView *arrowImageView = [[UIView alloc] initWithFrame:CGRectMake(193, 7, 18, 18)];
+		UIView *arrowImageView = [[UIView alloc] initWithFrame:CGRectMake(193, 12, 18, 18)];
 		arrowImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 		[self addSubview:arrowImageView];
 		
@@ -62,7 +64,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		_arrowImage.contents = (id)[UIImage imageNamed:@"folder-dropdown-arrow.png"].CGImage;
 		[[arrowImageView layer] addSublayer:_arrowImage];
 		
-		_dropdownButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 220, 30)];
+		_dropdownButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 220, HEIGHT)];
 		_dropdownButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		[_dropdownButton addTarget:self action:@selector(toggleDropdown:) forControlEvents:UIControlEventTouchUpInside];
         _dropdownButton.accessibilityLabel = _selectedFolderLabel.text;
@@ -94,7 +96,7 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
 	}
 	[self.labels removeAllObjects];
 	
-	self.sizeIncrease = _folders.count * 30.0f;
+	self.sizeIncrease = _folders.count * HEIGHT;
 	
 	NSMutableArray *sortedValues = [NSMutableArray arrayWithCapacity:_folders.count];
 	for (NSNumber *key in _folders.allKeys) {
@@ -115,7 +117,7 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
 	for (int i = 0; i < [sortedValues count]; i++) {
 		NSString *folder   = [[sortedValues objectAtIndexSafe:i] objectAtIndexSafe:1];
 		NSUInteger tag     = [[[sortedValues objectAtIndexSafe:i] objectAtIndexSafe:0] intValue];
-		CGRect labelFrame  = CGRectMake(0, (i + 1) * 30, self.frame.size.width, 30);
+		CGRect labelFrame  = CGRectMake(0, (i + 1) * HEIGHT, self.frame.size.width, HEIGHT);
 		CGRect buttonFrame = CGRectMake(0, 0, labelFrame.size.width, labelFrame.size.height);
 		
 		UILabel *folderLabel = [[UILabel alloc] initWithFrame:labelFrame];

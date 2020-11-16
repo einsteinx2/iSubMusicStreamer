@@ -199,7 +199,15 @@
 {
 	[self.dbQueue inDatabase:^(FMDatabase *db)
 	{
-		[db executeUpdate:@"DELETE FROM rootFolderNameSearch"];
+        if ([db tableExists:@"rootFolderNameSearch"]) {
+            [db executeUpdate:@"DELETE FROM rootFolderNameSearch"];
+        } else {
+            // Inialize the search DB
+            NSString *query = @"DROP TABLE IF EXISTS rootFolderNameSearch";
+            [db executeUpdate:query];
+            query = @"CREATE TEMPORARY TABLE rootFolderNameSearch (id TEXT PRIMARY KEY, name TEXT)";
+            [db executeUpdate:query];
+        }
 	}];
 }
 
