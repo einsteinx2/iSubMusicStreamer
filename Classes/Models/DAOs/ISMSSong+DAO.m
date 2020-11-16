@@ -411,7 +411,7 @@ LOG_LEVEL_ISUB_DEFAULT
 				success = NO;
 		}
 		
-		[jukeboxS jukeboxAddSong:self.songId];
+		[jukeboxS addSong:self.songId];
 	}
 	else
 	{
@@ -439,7 +439,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (![self insertIntoTable:@"jukeboxShufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue])
 			success = NO;
 		
-		[jukeboxS jukeboxAddSong:self.songId];
+		[jukeboxS addSong:self.songId];
 	}
 	else
 	{
@@ -635,7 +635,7 @@ LOG_LEVEL_ISUB_DEFAULT
 {
 	if (settingsS.isJukeboxEnabled)
 	{
-		return jukeboxS.jukeboxIsPlaying && [self isEqualToSong:playlistS.currentSong];
+		return jukeboxS.isPlaying && [self isEqualToSong:playlistS.currentSong];
 	}
 	else
 	{

@@ -284,7 +284,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if ([self.deleteSongsLabel.text isEqualToString:@"Clear Playlist"]) {
 			if (settingsS.isJukeboxEnabled) {
 				[databaseS resetJukeboxPlaylist];
-				[jukeboxS jukeboxClearPlaylist];
+				[jukeboxS clearPlaylist];
 			} else {
                 [audioEngineS.player stop];
 				[databaseS resetCurrentPlaylistDb];
@@ -540,7 +540,7 @@ LOG_LEVEL_ISUB_DEFAULT
         }
 	}
 	
-	if (indexPath.row == playlistS.currentIndex && (audioEngineS.player.isStarted || (settingsS.isJukeboxEnabled && jukeboxS.jukeboxIsPlaying))) {
+	if (indexPath.row == playlistS.currentIndex && (audioEngineS.player.isStarted || (settingsS.isJukeboxEnabled && jukeboxS.isPlaying))) {
 		cell.numberLabel.hidden = YES;
 		cell.nowPlayingImageView.hidden = NO;
 	} else {
@@ -609,7 +609,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	 }];
 	
 	if (settingsS.isJukeboxEnabled) {
-		[jukeboxS jukeboxReplacePlaylistWithLocal];
+		[jukeboxS replacePlaylistWithLocal];
 	}
 		
 	// Fix the multiDeleteList to reflect the new row positions

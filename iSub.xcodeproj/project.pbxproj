@@ -217,6 +217,8 @@
 		534B20E125619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */; };
 		534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20E52561E444007FF1D7 /* LockScreenAudioControls.swift */; };
 		534B20E72561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20E52561E444007FF1D7 /* LockScreenAudioControls.swift */; };
+		534B20E9256202CF007FF1D7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20E8256202CF007FF1D7 /* PlayerViewController.swift */; };
+		534B20EA256202CF007FF1D7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20E8256202CF007FF1D7 /* PlayerViewController.swift */; };
 		534E443F1155AD01000B4134 /* default-album-art-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 534E443E1155AD01000B4134 /* default-album-art-small.png */; };
 		53523D8A11CD580D006AEA48 /* GenresAlbumUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53523D8711CD580D006AEA48 /* GenresAlbumUITableViewCell.m */; };
 		53523D8B11CD580D006AEA48 /* GenresArtistUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53523D8911CD580D006AEA48 /* GenresArtistUITableViewCell.m */; };
@@ -1240,6 +1242,7 @@
 		534B20D925619936007FF1D7 /* HomeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
 		534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+AddArrangedSubviews.swift"; sourceTree = "<group>"; };
 		534B20E52561E444007FF1D7 /* LockScreenAudioControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenAudioControls.swift; sourceTree = "<group>"; };
+		534B20E8256202CF007FF1D7 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		534E443E1155AD01000B4134 /* default-album-art-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default-album-art-small.png"; path = "Images/Other/default-album-art-small.png"; sourceTree = "<group>"; };
 		53523D8611CD580D006AEA48 /* GenresAlbumUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenresAlbumUITableViewCell.h; sourceTree = "<group>"; };
 		53523D8711CD580D006AEA48 /* GenresAlbumUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenresAlbumUITableViewCell.m; sourceTree = "<group>"; };
@@ -2120,6 +2123,7 @@
 		531D39E3255AB26B000CB0DF /* Player */ = {
 			isa = PBXGroup;
 			children = (
+				534B20E8256202CF007FF1D7 /* PlayerViewController.swift */,
 				53F675AD113B048600822059 /* iPhoneStreamingPlayerViewController.h */,
 				53F675AE113B048600822059 /* iPhoneStreamingPlayerViewController.m */,
 				5398F2B511DA8B1000007870 /* iPhoneStreamingPlayerViewController.xib */,
@@ -4045,6 +4049,7 @@
 				5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
 				533295F4255EEFE50027C51A /* FMDatabase+FTS3.m in Sources */,
 				53FE371F1EA961720058B925 /* ISMSIndex.m in Sources */,
+				534B20E9256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
 				53D97463255C74FB00AABF7F /* ISMSLocalPlaylist.m in Sources */,
 				53FE37A91EA961720058B925 /* SUSLyricsDAO.m in Sources */,
 				53FE36FE1EA961720058B925 /* CacheSingleton.m in Sources */,
@@ -4171,6 +4176,7 @@
 				53FE37751EA961720058B925 /* NSString+cleanCredentialsForLog.m in Sources */,
 				53FE35C91EA961540058B925 /* EX2Dispatch.m in Sources */,
 				53FE37A51EA961720058B925 /* SUSCoverArtDAO.m in Sources */,
+				534B20EA256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
 				53FE35391EA961540058B925 /* UIButton+Colors.m in Sources */,
 				53FE34D61EA961540058B925 /* NSData+Hash.m in Sources */,
 				53BC27DB139AF0DD00A825F1 /* GenresAlbumUITableViewCell.m in Sources */,

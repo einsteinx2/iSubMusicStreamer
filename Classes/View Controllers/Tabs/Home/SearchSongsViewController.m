@@ -262,7 +262,7 @@
 			// Clear the current playlist
 			if (settingsS.isJukeboxEnabled) {
 				[databaseS resetJukeboxPlaylist];
-				[jukeboxS jukeboxClearRemotePlaylist];
+				[jukeboxS clearRemotePlaylist];
 			} else {
 				[databaseS resetCurrentPlaylistDb];
 			}
@@ -282,9 +282,9 @@
 			
 			// If jukebox mode, send song ids to server
 			if (settingsS.isJukeboxEnabled) {
-				[jukeboxS jukeboxStop];
-				[jukeboxS jukeboxClearPlaylist];
-				[jukeboxS jukeboxAddSongs:songIds];
+				[jukeboxS stop];
+				[jukeboxS clearPlaylist];
+				[jukeboxS addSongs:songIds];
 			}
 			
 			// Set player defaults

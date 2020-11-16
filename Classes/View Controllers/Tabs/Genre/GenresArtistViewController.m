@@ -136,7 +136,7 @@
 	// Reset the current playlist
 	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
-		[jukeboxS jukeboxClearRemotePlaylist];
+		[jukeboxS clearRemotePlaylist];
 	} else {
 		[databaseS resetCurrentPlaylistDb];
 	}
@@ -173,7 +173,7 @@
 	}
 	
     if (settingsS.isJukeboxEnabled) {
-		[jukeboxS jukeboxPlaySongAtPosition:@0];
+		[jukeboxS playSongAtPosition:@0];
     }
     
 	// Hide loading screen
@@ -192,7 +192,7 @@
 	// Reset the current playlist
 	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
-		[jukeboxS jukeboxClearRemotePlaylist];
+		[jukeboxS clearRemotePlaylist];
 	} else {
 		[databaseS resetCurrentPlaylistDb];
 	}
@@ -231,7 +231,7 @@
 	[databaseS shufflePlaylist];
 	
     if (settingsS.isJukeboxEnabled) {
-		[jukeboxS jukeboxPlaySongAtPosition:@0];
+		[jukeboxS playSongAtPosition:@0];
     }
     
 	// Set the isShuffle flag

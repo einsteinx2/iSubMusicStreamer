@@ -31,8 +31,8 @@ import MediaPlayer
         remote.playCommand.addTarget { _ in
             guard playQueue.currentSong() != nil else { return .noActionableNowPlayingItem }
             if settings.isJukeboxEnabled {
-                if !jukebox.jukeboxIsPlaying {
-                    jukebox.jukeboxPlay()
+                if !jukebox.isPlaying {
+                    jukebox.play()
                     return .success
                 }
             } else if let player = audioEngine.player, !player.isPlaying {
@@ -50,8 +50,8 @@ import MediaPlayer
         remote.pauseCommand.addTarget { _ in
             guard playQueue.currentSong() != nil else { return .noActionableNowPlayingItem }
             if settings.isJukeboxEnabled {
-                if jukebox.jukeboxIsPlaying {
-                    jukebox.jukeboxStop()
+                if jukebox.isPlaying {
+                    jukebox.stop()
                     return .success
                 }
             } else if let player = audioEngine.player, player.isPlaying {
@@ -66,10 +66,10 @@ import MediaPlayer
         remote.togglePlayPauseCommand.addTarget { _ in
             guard playQueue.currentSong() != nil else { return .noActionableNowPlayingItem }
             if settings.isJukeboxEnabled {
-                if jukebox.jukeboxIsPlaying {
-                    jukebox.jukeboxStop()
+                if jukebox.isPlaying {
+                    jukebox.stop()
                 } else {
-                    jukebox.jukeboxPlay()
+                    jukebox.play()
                 }
                 return .success
             } else if let player = audioEngine.player {
@@ -86,8 +86,8 @@ import MediaPlayer
         remote.stopCommand.addTarget { _ in
             guard playQueue.currentSong() != nil else { return .noActionableNowPlayingItem }
             if settings.isJukeboxEnabled {
-                if jukebox.jukeboxIsPlaying {
-                    jukebox.jukeboxStop()
+                if jukebox.isPlaying {
+                    jukebox.stop()
                     return .success
                 }
             } else if let player = audioEngine.player, player.isPlaying {

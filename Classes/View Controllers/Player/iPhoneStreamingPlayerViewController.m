@@ -36,47 +36,30 @@
 
 @interface iPhoneStreamingPlayerViewController ()
 @property (strong) NSDictionary *originalViewFrames;
-- (void)createReflection;
-- (void)initSongInfo;
-- (void)setStopButtonImage;
-- (void)setPlayButtonImage;
-- (void)setPauseButtonImage;
-- (void)updateBarButtonImage;
-- (void)registerForNotifications;
-- (void)unregisterForNotifications;
-- (void)createDownloadProgressView;
-- (void)createLandscapeViews;
-- (void)updateFormatLabel;
-- (void)hideExtraButtons;
 @end
 
 @implementation iPhoneStreamingPlayerViewController
 
-static const CGFloat kDefaultReflectionFraction = 0.30;
-static const CGFloat kDefaultReflectionOpacity = 0.55;
-
 #pragma mark -
 #pragma mark Controller Life Cycle
 
-- (BOOL)prefersStatusBarHidden
-{
+- (BOOL)prefersStatusBarHidden {
     return NO;
 }
 
-- (NSString *)stringFromSeconds:(NSUInteger)seconds
-{
-	if (seconds < 60)
+- (NSString *)stringFromSeconds:(NSUInteger)seconds {
+    if (seconds < 60) {
 		return [NSString stringWithFormat:@"%lus", (unsigned long)seconds];
-	else
+    } else {
 		return [NSString stringWithFormat:@"%lum", (long)(seconds / 60)];
+    }
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
 	[super viewDidLoad];
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.automaticallyAdjustsScrollViewInsets = NO;
+//    self.automaticallyAdjustsScrollViewInsets = NO;
     
     self.volumeSlider.y -= 5.;
     self.eqButton.y -= 5.;
@@ -104,17 +87,14 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	//coverArtImageView.delegate = self;
 
 	// Create the extra views not in the XIB file
-    if (UIInterfaceOrientationIsPortrait(UIApplication.orientation))
-    {
+    if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
         [self showTallPlayerButtons];
         
         // Only show Extra Buttons Button if the Show Large Song Info setting is turned on
-        if (!settingsS.isShowLargeSongInfoInPlayer)
-        {
+        if (!settingsS.isShowLargeSongInfoInPlayer) {
             self.extraButtonsButton.hidden = YES;
         }
-        else
-        {
+        else {
             self.extraButtonsButton.hidden = NO;
         }
     }
@@ -124,8 +104,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	
 	// Setup the navigation controller buttons
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"player-overlay.png"] style:UIBarButtonItemStylePlain target:self action:@selector(songInfoToggle:)];
-	if (!UIDevice.isIPad)
-    {
+	if (!UIDevice.isIPad) {
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back.png"] style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
     }
     
@@ -135,34 +114,17 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
     // This also calls init song info, so no need to call it explicitly above
 	[self jukeboxToggled];
 	
-	// Setup the cover art reflection
-	self.reflectionHeight = self.coverArtImageView.bounds.size.height * kDefaultReflectionFraction;
-	self.reflectionView.height = self.reflectionHeight;
-	self.reflectionView.image = [self.coverArtImageView reflectedImageWithHeight:self.reflectionHeight];
-	self.reflectionView.alpha = kDefaultReflectionOpacity;
-	if (self.isFlipped)
-		self.reflectionView.alpha = 0.0;
-	
 	// Register for all notifications
 	[self registerForNotifications];
 	
-//    if (!IS_TALL_SCREEN())
-//    {
-//        [self extraButtonsToggleAnimated:NO saveState:NO];
-//        if (!settingsS.isExtraPlayerControlsShowing)
-//            [self performSelector:@selector(hideExtraButtons) withObject:nil afterDelay:4.0];
-//    }
-	
 	// Show the song info screen automatically if the setting is enabled
-	if (settingsS.isPlayerPlaylistShowing)
-	{
+	if (settingsS.isPlayerPlaylistShowing) {
 		[self playlistToggleAnimated:NO saveState:NO];
 	}
 	
 	self.coverArtHolderView.layer.masksToBounds = YES;
 	
-	if (UIDevice.isIPad)
-	{
+	if (UIDevice.isIPad) {
 		// Fix some positions
 		self.eqButton.y -= 10;
 		self.prevButton.y -= 10;
@@ -179,29 +141,24 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
     self.swipeDetector.delegate = self;
     
     // Fix starting in landscape on iPhone 5
-    if (UIInterfaceOrientationIsLandscape(UIApplication.orientation))
-    {
-        NSArray *viewsToSkip = @[self.reflectionView, self.artistLabel, self.albumLabel, self.titleLabel];
-        for(UIView *subview in self.view.subviews)
-        {
+    if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
+        NSArray *viewsToSkip = @[self.artistLabel, self.albumLabel, self.titleLabel];
+        for (UIView *subview in self.view.subviews) {
             if (![viewsToSkip containsObject:subview])
                 subview.x += 44.;
         }
     }
 }
 
-- (void)showTallPlayerButtons
-{
+- (void)showTallPlayerButtons {
     //[self.songInfoView removeFromSuperview];
     //[self.extraButtons removeFromSuperview];
     
     //self.extraButtonsButton.hidden = YES;
     self.extraButtonsButton.enabled = YES;
     
-    if (self.coverArtHolderView.y != 100.)
-    {
-        for (UIView *subview in self.view.subviews)
-        {
+    if (self.coverArtHolderView.y != 100.) {
+        for (UIView *subview in self.view.subviews) {
             subview.y += 100.;
         }
     }
@@ -213,8 +170,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
     [self.view addSubview:self.extraButtons];
 }
 
-- (void)removeTallPlayerButtons
-{
+- (void)removeTallPlayerButtons {
     [self.songInfoView removeFromSuperview];
     [self.extraButtons removeFromSuperview];
     
@@ -222,168 +178,114 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
     self.extraButtonsButton.enabled = YES;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 		
-	if (settingsS.isJukeboxEnabled)
-	{
-		[jukeboxS jukeboxGetInfo];
-		
+	if (settingsS.isJukeboxEnabled) {
+		[jukeboxS getInfo];
 		self.view.backgroundColor = viewObjectsS.jukeboxColor;
-	}
-	else 
-	{
+	} else {
 		self.view.backgroundColor = [UIColor blackColor]; 
 	}
 	
-	if (UIInterfaceOrientationIsPortrait(UIApplication.orientation) || UIDevice.isIPad)
-	{
+	if (UIInterfaceOrientationIsPortrait(UIApplication.orientation) || UIDevice.isIPad) {
 		[self createSongTitle];
 	}
 	
 	[self updateDownloadProgress];
 	[self updateSlider];
 	
-	if (settingsS.isJukeboxEnabled)
-	{
-		[jukeboxS jukeboxGetInfo];
+	if (settingsS.isJukeboxEnabled) {
+		[jukeboxS getInfo];
 		
-		if (jukeboxS.jukeboxIsPlaying)
+        if (jukeboxS.isPlaying) {
 			[self setStopButtonImage];
-		else 
+        } else {
 			[self setPlayButtonImage];
-	}
-	else
-	{
-		if(audioEngineS.player.isPlaying)
+        }
+	} else {
+        if (audioEngineS.player.isPlaying) {
 			[self setPauseButtonImage];
-		else
-			[self setPlayButtonImage];
+        } else {
+            [self setPlayButtonImage];
+        }
 	}
 	
 	NSString *imageName = settingsS.isEqualizerOn ? @"controller-equalizer-on.png" : @"controller-equalizer.png";
 	[self.eqButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
 	
 	[self quickSecondsSetLabels];
-
 }
 
-- (void)quickSecondsSetLabels
-{
+- (void)quickSecondsSetLabels {
 	NSString *quickSeconds = [self stringFromSeconds:settingsS.quickSkipNumberOfSeconds];
 	self.quickBackLabel.text = quickSeconds;
 	self.quickForwLabel.text = quickSeconds;
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 	
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
-	if (!settingsS.isExtraPlayerControlsShowing)
-	{
-		if (self.isExtraButtonsShowing)
+	if (!settingsS.isExtraPlayerControlsShowing) {
+        if (self.isExtraButtonsShowing) {
 			[self extraButtonsToggleAnimated:NO saveState:NO];
+        }
 	}
 }
 
-- (void)asyncImageViewFinishedLoading:(AsynchronousImageView *)asyncImageView
-{
-	[self createReflection];
+- (void)asyncImageViewFinishedLoading:(AsynchronousImageView *)asyncImageView {
+    if (self.isFlipped) {
+        [self updateBarButtonImage];
+    }
 }
 
-- (void)largeSongInfoWasToggled
-{
-	if (self.isExtraButtonsShowing)
-	{
+- (void)largeSongInfoWasToggled {
+	if (self.isExtraButtonsShowing) {
 		[self extraButtonsToggleAnimated:NO saveState:NO];
 		[self extraButtonsToggleAnimated:NO saveState:NO];
 	}
 }
 
-- (void)registerForNotifications
-{
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jukeboxToggled) 
-												 name:ISMSNotification_JukeboxDisabled object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jukeboxToggled) 
-												 name:ISMSNotification_JukeboxEnabled object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setPlayButtonImage) 
-												 name:ISMSNotification_SongPlaybackEnded object:nil];
-    
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setPlayButtonImage) 
-												 name:ISMSNotification_SongPlaybackPaused object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setPauseButtonImage) 
-												 name:ISMSNotification_SongPlaybackStarted object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initSongInfo) 
-												 name:ISMSNotification_JukeboxSongInfo object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initSongInfo) 
-												 name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initSongInfo) 
-												 name:ISMSNotification_ServerSwitched object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initSongInfo) 
-												 name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateShuffleIcon) 
-												 name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songInfoToggle:) 
-												 name:@"hideSongInfo" object:nil];
-	
+- (void)registerForNotifications {
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jukeboxToggled) name:ISMSNotification_JukeboxDisabled object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jukeboxToggled) name:ISMSNotification_JukeboxEnabled object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setPlayButtonImage) name:ISMSNotification_SongPlaybackEnded object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setPlayButtonImage) name:ISMSNotification_SongPlaybackPaused object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setPauseButtonImage) name:ISMSNotification_SongPlaybackStarted object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initSongInfo) name:ISMSNotification_JukeboxSongInfo object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initSongInfo) name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initSongInfo) name:ISMSNotification_ServerSwitched object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initSongInfo) name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateShuffleIcon) name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songInfoToggle:) name:@"hideSongInfo" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(largeSongInfoWasToggled) name:ISMSNotification_LargeSongInfoToggle object:nil];
 		
-	if (UIDevice.isIPad)
-	{
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showPlayerOverlayTemp) 
-													 name:ISMSNotification_ShowPlayer object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initSongInfo) 
-													 name:ISMSNotification_ShowPlayer object:nil];
+	if (UIDevice.isIPad) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showPlayerOverlayTemp) name:ISMSNotification_ShowPlayer object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initSongInfo) name:ISMSNotification_ShowPlayer object:nil];
 	}
 }
 
-- (void)unregisterForNotifications
-{
-	[[NSNotificationCenter defaultCenter] removeObserver:self 
-													name:ISMSNotification_JukeboxEnabled object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self 
-													name:ISMSNotification_JukeboxDisabled object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self 
-													name:ISMSNotification_SongPlaybackEnded object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self 
-													name:ISMSNotification_SongPlaybackPaused object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self 
-													name:ISMSNotification_SongPlaybackStarted object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self 
-													name:ISMSNotification_ServerSwitched object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self 
-													name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self 
-													name:ISMSNotification_JukeboxSongInfo object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self 
-													name:@"hideSongInfo" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self 
-													name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
+- (void)unregisterForNotifications {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_JukeboxEnabled object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_JukeboxDisabled object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_SongPlaybackEnded object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_SongPlaybackPaused object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_SongPlaybackStarted object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_ServerSwitched object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistIndexChanged object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_JukeboxSongInfo object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideSongInfo" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_CurrentPlaylistShuffleToggled object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_LargeSongInfoToggle object:nil];
-	
-	[[NSNotificationCenter defaultCenter] removeObserver:self 
-													name:@"player show store" object:nil];
-	
-	if (UIDevice.isIPad)
-	{
-		[[NSNotificationCenter defaultCenter] removeObserver:self 
-														name:ISMSNotification_ShowPlayer object:nil];
+		
+	if (UIDevice.isIPad) {
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:ISMSNotification_ShowPlayer object:nil];
 	}
 }
 
-- (void)createDownloadProgressView
-{
+- (void)createDownloadProgressView {
 	self.downloadProgress = [[UIView alloc] initWithFrame:self.progressSlider.frame];
 	self.downloadProgress.x = 0.0;
 	self.downloadProgress.y = 0.0;
@@ -403,11 +305,9 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		self.downloadProgress.hidden = YES;
 }
 
-- (void)createLandscapeViews
-{
+- (void)createLandscapeViews {
 	// Setup landscape orientation if necessary
-	if (!UIDevice.isIPad)
-	{
+	if (!UIDevice.isIPad) {
 		self.artistLabel = [[UILabel alloc] initWithFrame:CGRectMake(349, 60, 170, 30)];
 		self.artistLabel.backgroundColor = [UIColor clearColor];
 		self.artistLabel.textColor = [UIColor colorWithWhite:.7 alpha:1.];
@@ -448,8 +348,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
         [positions setObject:[NSValue valueWithCGRect:self.titleLabel.frame] forKey:@"titleLabel"];
 		self.originalViewFrames = [NSDictionary dictionaryWithDictionary:positions];
 		
-		if (UIInterfaceOrientationIsLandscape(UIApplication.orientation))
-		{
+		if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 			self.coverArtHolderView.frame = CGRectMake(0, 0, 300, 270);
 			self.prevButton.origin = CGPointMake(315, 184);
 			self.playButton.origin = CGPointMake(372.5, 184);
@@ -458,9 +357,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 			self.volumeView.frame = CGRectMake(0, 0, 180, 55);
 			self.eqButton.origin = CGPointMake(328, 20);
 			self.extraButtonsButton.origin = CGPointMake(418, 20);
-		}
-		else
-		{
+		} else {
 			self.artistLabel.alpha = 0.1;
 			self.albumLabel.alpha = 0.1;
 			self.titleLabel.alpha = 0.1;
@@ -468,8 +365,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	}
 }
 
-- (void)dealloc
-{	
+- (void)dealloc {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	
 	self.coverArtImageView.delegate = nil;
@@ -570,7 +466,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
                 self.pageControlViewController.scrollView.contentSize = CGSizeMake(width, height);
                 [self.pageControlViewController changePage:self.pageControlViewController.pageControl];
                 
-                NSArray *viewsToSkip = @[self.reflectionView, self.artistLabel, self.albumLabel, self.titleLabel];
+                NSArray *viewsToSkip = @[self.artistLabel, self.albumLabel, self.titleLabel];
                 for(UIView *subview in self.view.subviews)
                 {
                     if (![viewsToSkip containsObject:subview])
@@ -716,8 +612,6 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	
     [self setSongTitle];
 	self.coverArtImageView.coverArtId = self.currentSong.coverArtId;
-//DLog(@"player coverArtId: %@", currentSong.coverArtId);
-    [self createReflection];
     
 	// Update the icon in top right
 	if (self.isFlipped)
@@ -736,9 +630,9 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	
 	if (settingsS.isJukeboxEnabled)
 	{
-		self.jukeboxVolumeView.value = jukeboxS.jukeboxGain;
+		self.jukeboxVolumeView.value = jukeboxS.gain;
 		
-		if (jukeboxS.jukeboxIsPlaying)
+		if (jukeboxS.isPlaying)
 			[self setStopButtonImage];
 		else 
 			[self setPlayButtonImage];
@@ -835,7 +729,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		[self.volumeView removeFromSuperview];
 		self.volumeView = nil;
 		
-		[jukeboxS jukeboxGetInfo];
+		[jukeboxS getInfo];
 		
 		self.view.backgroundColor = viewObjectsS.jukeboxColor;
 		
@@ -847,7 +741,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		self.jukeboxVolumeView.minimumValue = 0.0;
 		self.jukeboxVolumeView.maximumValue = 1.0;
 		self.jukeboxVolumeView.continuous = NO;
-		self.jukeboxVolumeView.value = jukeboxS.jukeboxGain;
+		self.jukeboxVolumeView.value = jukeboxS.gain;
 		[self.volumeSlider addSubview:self.jukeboxVolumeView];
 	}
 	else
@@ -869,7 +763,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 
 - (void)jukeboxVolumeChanged:(id)sender
 {
-	[jukeboxS jukeboxSetVolume:self.jukeboxVolumeView.value];
+	[jukeboxS setVolume:self.jukeboxVolumeView.value];
 }
 
 - (void)backAction:(id)sender
@@ -924,12 +818,10 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
         self.extraButtonsButton.enabled = NO;
         if (animated) {
             [UIView transitionWithView:self.coverArtHolderView duration:0.40 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
-                self.reflectionView.alpha = 0.0;
                 self.extraButtonsButton.alpha = 0.5;
                 [self.coverArtHolderView addSubview:self.pageControlViewController.view];
             } completion:nil];
         } else {
-            self.reflectionView.alpha = 0.0;
             self.extraButtonsButton.alpha = 0.5;
             [self.coverArtHolderView addSubview:self.pageControlViewController.view];
         }
@@ -946,7 +838,6 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		if (animated)
 		{
             [UIView transitionWithView:self.coverArtHolderView duration:0.40 options:UIViewAnimationOptionTransitionFlipFromLeft animations:^{
-                self.reflectionView.alpha = kDefaultReflectionOpacity;
                 self.extraButtonsButton.alpha = 1.0;
                 [self.pageControlViewController.view removeFromSuperview];
             } completion:^(BOOL finished) {
@@ -955,7 +846,6 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
         }
         else
         {
-            self.reflectionView.alpha = kDefaultReflectionOpacity;
             self.extraButtonsButton.alpha = 1.0;
             [self.pageControlViewController.view removeFromSuperview];
             self.pageControlViewController = nil;
@@ -985,10 +875,10 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 {
 	if (settingsS.isJukeboxEnabled)
 	{
-		if (jukeboxS.jukeboxIsPlaying)
-			[jukeboxS jukeboxStop];
+		if (jukeboxS.isPlaying)
+			[jukeboxS stop];
 		else
-			[jukeboxS jukeboxPlay];
+			[jukeboxS play];
 	}
 	else
 	{
@@ -1010,7 +900,7 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 	if (audioEngineS.player.progress > 10.0)
 	{
 		if (settingsS.isJukeboxEnabled)
-			[jukeboxS jukeboxPlaySongAtPosition:@(playlistS.currentIndex)];
+			[jukeboxS playSongAtPosition:@(playlistS.currentIndex)];
 		else
 			[musicS playSongAtPosition:playlistS.currentIndex];
 	}
@@ -1038,43 +928,6 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
     if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
         return;
     }
-    
-//    if (IS_TALL_SCREEN() && UIInterfaceOrientationIsPortrait(UIApplication.orientation))
-//    {        
-//        if (self.isExtraButtonsShowing)
-//        {
-//            [self.extraButtonsButton setImage:self.extraButtonsButtonOffImage forState:UIControlStateNormal];
-//            
-//            self.largeOverlayView.alpha = 0.0;
-//            
-//            if (animated)
-//            {
-//                [UIView commitAnimations];
-//            }
-//            else
-//            {
-//                [self.largeOverlayView removeFromSuperview];
-//            }
-//        }
-//        else
-//        {
-//            [self.extraButtonsButton setImage:self.extraButtonsButtonOnImage forState:UIControlStateNormal];
-//
-//            if (settingsS.isShowLargeSongInfoInPlayer)
-//            {
-//                self.largeOverlayView.frame = self.coverArtImageView.bounds;//CGRectMake(0, self.extraButtons.height, self.coverArtImageView.width, self.coverArtImageView.height - self.extraButtons.height - self.songInfoView.height);
-//                self.largeOverlayView.alpha = 0.0;
-//                [self.coverArtImageView addSubview:self.largeOverlayView];
-//            }
-//            self.largeOverlayView.alpha = 1.0;
-//        }
-//        
-//        self.isExtraButtonsShowing = !self.isExtraButtonsShowing;
-//        
-//        if (saveState)
-//            settingsS.isExtraPlayerControlsShowing = self.isExtraButtonsShowing;
-//        return;
-//    }
     
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideExtraButtons) object:nil];
 	
@@ -1535,18 +1388,6 @@ static const CGFloat kDefaultReflectionOpacity = 0.55;
 		self.formatLabel.text = [BassWrapper formatForChannel:audioEngineS.player.currentStream.stream];
 	else
 		self.formatLabel.text = @"";
-}
-
-#pragma mark Image Reflection
-
-- (void)createReflection
-{	
-    // Create reflection
-	self.reflectionView.image = [self.coverArtImageView reflectedImageWithHeight:self.reflectionHeight];
-	if (self.isFlipped)
-	{
-		[self updateBarButtonImage];
-	}
 }
 
 - (IBAction)showEq:(id)sender

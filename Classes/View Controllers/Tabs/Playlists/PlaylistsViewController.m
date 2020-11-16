@@ -160,7 +160,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self registerForNotifications];
 	
 	if (settingsS.isJukeboxEnabled)
-		[jukeboxS jukeboxGetInfo];
+		[jukeboxS getInfo];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -1044,7 +1044,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		}];
 		
 		if (settingsS.isJukeboxEnabled) {
-			[jukeboxS jukeboxReplacePlaylistWithLocal];
+			[jukeboxS replacePlaylistWithLocal];
 		}
 		
 		// Correct the value of currentPlaylistPosition

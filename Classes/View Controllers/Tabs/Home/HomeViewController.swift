@@ -121,7 +121,7 @@ import SnapKit
                 AudioEngine.shared().player?.stop()
                 self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-on-ipad"))
                 Settings.shared().isJukeboxEnabled = true
-                Jukebox.shared().jukeboxGetInfo()
+                Jukebox.shared().getInfo()
                 AppDelegate.shared().window.backgroundColor = ViewObjects.shared().jukeboxColor
                 NotificationCenter.postNotificationToMainThread(name: ISMSNotification_JukeboxEnabled)
                 Flurry.logEvent("JukeboxEnabled")
@@ -210,6 +210,8 @@ import SnapKit
         searchSegment.alpha = 0.0
         searchSegment.isEnabled = false
         searchSegmentContainer.alpha = 0.0
+        
+        initSongInfo()
         
         Flurry.logEvent("HomeTab")
     }
@@ -314,7 +316,7 @@ import SnapKit
     }
     
     @objc private func nowPlayingAction(sender: Any?) {
-        let controller = iPhoneStreamingPlayerViewController(nibName: "iPhoneStreamingPlayerViewController", bundle: nil)
+        let controller = PlayerViewController()//iPhoneStreamingPlayerViewController(nibName: "iPhoneStreamingPlayerViewController", bundle: nil)
         controller.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(controller, animated: true)
     }

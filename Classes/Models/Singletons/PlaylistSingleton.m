@@ -187,7 +187,7 @@
 		
 		if (settingsS.isJukeboxEnabled)
 		{
-			[jukeboxS jukeboxReplacePlaylistWithLocal];
+			[jukeboxS replacePlaylistWithLocal];
 		}
 		
 		if (goToNextSong)
@@ -491,8 +491,8 @@
 		
 		if (settingsS.isJukeboxEnabled)
 		{
-			[jukeboxS jukeboxReplacePlaylistWithLocal];
-			[jukeboxS jukeboxPlaySongAtPosition:@0];
+			[jukeboxS replacePlaylistWithLocal];
+			[jukeboxS playSongAtPosition:@0];
 		}
 				
 		// Send a notification to update the playlist view
@@ -526,9 +526,9 @@
 		
 		if (settingsS.isJukeboxEnabled)
 		{
-			[jukeboxS jukeboxReplacePlaylistWithLocal];
+			[jukeboxS replacePlaylistWithLocal];
 			
-			[jukeboxS jukeboxPlaySongAtPosition:@1];
+			[jukeboxS playSongAtPosition:@1];
 			
 			//self.isShuffle = NO;
 		}

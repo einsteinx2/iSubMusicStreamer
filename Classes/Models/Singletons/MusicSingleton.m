@@ -155,7 +155,7 @@ double startSongSeconds = 0.0;
             currentSong = nil;
             [EX2SlidingNotification slidingNotificationOnMainWindowWithMessage:@"Cannot play videos in Jukebox mode." image:nil];
         } else {
-            [jukeboxS jukeboxPlaySongAtPosition:@(position)];
+            [jukeboxS playSongAtPosition:@(position)];
         }
 	} else {
 		[streamManagerS removeAllStreamsExceptForSong:playlistS.currentSong];

@@ -12,7 +12,6 @@
 
 @interface iPhoneStreamingPlayerViewController : UIViewController <AsynchronousImageViewDelegate, UIGestureRecognizerDelegate>
 
-@property NSUInteger reflectionHeight;
 @property BOOL isFlipped;
 @property BOOL isExtraButtonsShowing;
 @property (strong) PageControlViewController *pageControlViewController;
@@ -30,7 +29,6 @@
 @property (strong) IBOutlet UIButton *eqButton;
 @property (strong) IBOutlet UIView *volumeSlider;
 @property (strong) IBOutlet AsynchronousImageView *coverArtImageView;
-@property (strong) IBOutlet UIImageView *reflectionView;
 @property (strong) IBOutlet UIButton *songInfoToggleButton;
 @property (strong) UILabel *artistLabel;
 @property (strong) UILabel *albumLabel;

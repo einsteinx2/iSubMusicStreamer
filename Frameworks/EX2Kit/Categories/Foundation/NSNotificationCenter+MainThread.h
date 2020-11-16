@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)addObserverOnMainThread:(id)notificationObserver selector:(SEL)notificationSelector name:(NSString *)notificationName object:(nullable id)notificationSender NS_SWIFT_NAME(addObserverOnMainThread(_:selector:name:object:));
 + (void)addObserverOnMainThreadAsync:(id)notificationObserver selector:(SEL)notificationSelector name:(NSString *)notificationName object:(nullable id)notificationSender NS_SWIFT_NAME(addObserverOnMainThreadAsync(_:selector:name:object:));
++ (id <NSObject>)addObserverOnMainThreadForName:(NSString *)name object:(nullable id)object usingBlock:(void (^)(NSNotification *note))block NS_SWIFT_NAME(addObserverOnMainThreadForName(_:object:handler:));
 
 + (void)removeObserverOnMainThread:(id)notificationObserver NS_SWIFT_NAME(removeObserverOnMainThread(_:));
 + (void)removeObserverOnMainThread:(id)notificationObserver name:(NSString *)notificationName object:(nullable id)notificationSender NS_SWIFT_NAME(removeObserverOnMainThread(_:name:object:));

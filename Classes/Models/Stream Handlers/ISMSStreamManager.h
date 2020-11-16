@@ -13,10 +13,13 @@
 
 #define ISMSNumberOfStreamsToQueue 2
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class ISMSSong, ISMSStreamHandler, SUSLyricsDAO;
+NS_SWIFT_NAME(StreamManager)
 @interface ISMSStreamManager : NSObject <ISMSStreamHandlerDelegate>
 
-@property (strong) NSMutableArray *handlerStack;
+@property (strong) NSMutableArray<ISMSStreamHandler*> *handlerStack;
 @property (strong) SUSLyricsDAO *lyricsDAO;
 
 @property (copy) ISMSSong *lastCachedSong;
@@ -26,11 +29,11 @@
 
 @property (readonly) ISMSSong *currentStreamingSong;
 
-+ (instancetype)sharedInstance;
++ (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
 - (void)delayedSetup;
 
-- (ISMSStreamHandler *)handlerForSong:(ISMSSong *)aSong;
+- (nullable ISMSStreamHandler *)handlerForSong:(ISMSSong *)aSong;
 - (BOOL)isSongInQueue:(ISMSSong *)aSong;
 - (BOOL)isSongFirstInQueue:(ISMSSong *)aSong;
 - (BOOL)isSongDownloading:(ISMSSong *)aSong;
@@ -70,3 +73,5 @@
 - (void)stealHandlerForCacheQueue:(ISMSStreamHandler *)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

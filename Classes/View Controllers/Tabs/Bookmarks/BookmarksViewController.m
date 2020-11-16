@@ -330,7 +330,7 @@
 	
 	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
-		[jukeboxS jukeboxClearRemotePlaylist];
+		[jukeboxS clearRemotePlaylist];
 	} else {
 		[databaseS resetCurrentPlaylistDb];
 	}
@@ -367,7 +367,7 @@
 		}];
 		
         if (settingsS.isJukeboxEnabled) {
-			[jukeboxS jukeboxReplacePlaylistWithLocal];
+			[jukeboxS replacePlaylistWithLocal];
         }
 	} else {
 		[aSong addToCurrentPlaylistDbQueue];

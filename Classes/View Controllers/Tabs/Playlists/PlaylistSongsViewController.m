@@ -285,7 +285,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	// Clear the current playlist
 	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
-		[jukeboxS jukeboxClearRemotePlaylist];
+		[jukeboxS clearRemotePlaylist];
 	} else {
 		[databaseS resetCurrentPlaylistDb];
 	}
@@ -323,7 +323,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	 }];
 	
     if (settingsS.isJukeboxEnabled) {
-		[jukeboxS jukeboxReplacePlaylistWithLocal];
+		[jukeboxS replacePlaylistWithLocal];
     }
 
     [viewObjectsS hideLoadingScreen];

@@ -45,11 +45,15 @@
 
 #pragma mark UINavigationControllerDelegate
 
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    // Prevent view controllers from going under the navigation bar
+    viewController.edgesForExtendedLayout = UIRectEdgeNone;
+}
+
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animate {
     // Enable the gesture again once the new controller is shown
-    if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
-        self.interactivePopGestureRecognizer.enabled = YES;
-    }
+    // TODO: Why did I do this years ago? lol
+    self.interactivePopGestureRecognizer.enabled = YES;
 }
 
 @end

@@ -69,6 +69,7 @@
 #import "JukeboxSingleton.h"
 #import "SavedSettings.h"
 #import "AudioEngine.h"
+#import "ISMSStreamManager.h"
 
 /*
  * Frameworks
@@ -76,6 +77,7 @@
 
 #import "EX2Kit.h"
 #import "Flurry.h"
+#import "OBSlider.h"
 
 #endif /* Common_Bridging_Header_h */
 

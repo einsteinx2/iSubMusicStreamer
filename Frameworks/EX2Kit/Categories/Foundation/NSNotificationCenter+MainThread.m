@@ -17,7 +17,7 @@
     id object = info[@"object"];
     NSDictionary *userInfo = info[@"userInfo"];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:name object:object userInfo:userInfo];
+    [NSNotificationCenter.defaultCenter postNotificationName:name object:object userInfo:userInfo];
 }
 
 + (void)postNotificationToMainThreadWithName:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo
@@ -29,7 +29,7 @@
 	// If this is already the main thread, just call the method directly
 	if ([NSThread isMainThread])
 	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:name object:object userInfo:userInfo];
+		[NSNotificationCenter.defaultCenter postNotificationName:name object:object userInfo:userInfo];
 		return;
 	}
 	
@@ -71,7 +71,7 @@
 {
     // Ensure this runs in the main thread
     [EX2Dispatch runInMainThreadAndWaitUntilDone:YES block:^{
-        [[NSNotificationCenter defaultCenter] addObserver:notificationObserver selector:notificationSelector name:notificationName object:notificationSender];
+        [NSNotificationCenter.defaultCenter addObserver:notificationObserver selector:notificationSelector name:notificationName object:notificationSender];
     }];
 }
 
@@ -79,8 +79,12 @@
 {
     // Ensure this runs in the main thread
     [EX2Dispatch runInMainThreadAndWaitUntilDone:NO block:^{
-        [[NSNotificationCenter defaultCenter] addObserver:notificationObserver selector:notificationSelector name:notificationName object:notificationSender];
+        [NSNotificationCenter.defaultCenter addObserver:notificationObserver selector:notificationSelector name:notificationName object:notificationSender];
     }];
+}
+
++ (id <NSObject>)addObserverOnMainThreadForName:(NSString *)name object:(nullable id)object usingBlock:(void (^)(NSNotification *note))block {
+    return [NSNotificationCenter.defaultCenter addObserverForName:name object:object queue:NSOperationQueue.mainQueue usingBlock:block];
 }
 
 /*
@@ -91,7 +95,7 @@
 {
     // Ensure this runs in the main thread
     [EX2Dispatch runInMainThreadAndWaitUntilDone:YES block:^{
-        [[NSNotificationCenter defaultCenter] removeObserver:notificationObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:notificationObserver];
     }];
 }
 
@@ -99,7 +103,7 @@
 {
     // Ensure this runs in the main thread
     [EX2Dispatch runInMainThreadAndWaitUntilDone:YES block:^{
-        [[NSNotificationCenter defaultCenter] removeObserver:notificationObserver name:notificationName object:notificationSender];
+        [NSNotificationCenter.defaultCenter removeObserver:notificationObserver name:notificationName object:notificationSender];
     }];
 }
 

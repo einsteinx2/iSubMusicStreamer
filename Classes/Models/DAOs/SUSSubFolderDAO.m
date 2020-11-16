@@ -130,7 +130,7 @@
 	// Clear the current playlist
 	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
-		[jukeboxS jukeboxClearRemotePlaylist];
+		[jukeboxS clearRemotePlaylist];
 	} else {
 		[databaseS resetCurrentPlaylistDb];
 	}

@@ -23,10 +23,13 @@ import UIKit
     @objc func invoke() {
         closure()
     }
+    
+    deinit {
+        print("closure sleeve deinit")
+    }
 }
 
 @objc extension UIControl {
-    
     // Adds a closure/block as an action instead of using an Objective-C method
     func addClosure(for controlEvents: UIControl.Event, closure: @escaping ()->()) {
         // "Sleeve" the closure to wrap it in an object so we can use the invoke method as the action handler
@@ -36,6 +39,6 @@ import UIKit
         addTarget(sleeve, action: #selector(ClosureSleeve.invoke), for: controlEvents)
         
         // Have the control keep a reference to the closure "sleeve"
-        objc_setAssociatedObject(self, String(ObjectIdentifier(self).hashValue) + String(controlEvents.rawValue), sleeve, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+        objc_setAssociatedObject(self, String(controlEvents.rawValue), sleeve, .OBJC_ASSOCIATION_RETAIN)
     }
 }

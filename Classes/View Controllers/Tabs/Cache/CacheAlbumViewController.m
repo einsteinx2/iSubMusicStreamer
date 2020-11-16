@@ -236,7 +236,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 		
 	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
-		[jukeboxS jukeboxClearRemotePlaylist];
+		[jukeboxS clearRemotePlaylist];
 	} else {
 		[databaseS resetCurrentPlaylistDb];
 	}
@@ -444,7 +444,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
         
         if (settingsS.isJukeboxEnabled) {
             [databaseS resetJukeboxPlaylist];
-            [jukeboxS jukeboxClearRemotePlaylist];
+            [jukeboxS clearRemotePlaylist];
         } else {
             [databaseS resetCurrentPlaylistDb];
         }

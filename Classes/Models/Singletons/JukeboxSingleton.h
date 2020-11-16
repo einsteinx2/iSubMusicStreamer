@@ -19,27 +19,27 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Jukebox)
 @interface JukeboxSingleton : NSObject
 
-@property BOOL jukeboxIsPlaying;
-@property float jukeboxGain;
+@property BOOL isPlaying;
+@property float gain;
 //@property (strong) EX2SimpleConnectionQueue *connectionQueue;
 
 + (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
 // Jukebox control methods
-- (void)jukeboxPlaySongAtPosition:(NSNumber *)position;
-- (void)jukeboxPlay;
-- (void)jukeboxStop;
-- (void)jukeboxPrevSong;
-- (void)jukeboxNextSong;
-- (void)jukeboxSetVolume:(float)level;
-- (void)jukeboxAddSong:(NSString*)songId;
-- (void)jukeboxAddSongs:(NSArray*)songIds;
-- (void)jukeboxReplacePlaylistWithLocal;
-- (void)jukeboxRemoveSong:(NSString*)songId;
-- (void)jukeboxClearPlaylist;
-- (void)jukeboxClearRemotePlaylist;
-- (void)jukeboxShuffle;
-- (void)jukeboxGetInfo;
+- (void)playSongAtPosition:(NSNumber *)position;
+- (void)play;
+- (void)stop;
+- (void)skipPrev;
+- (void)skipNext;
+- (void)setVolume:(float)level;
+- (void)addSong:(NSString*)songId;
+- (void)addSongs:(NSArray*)songIds;
+- (void)replacePlaylistWithLocal;
+- (void)removeSong:(NSString*)songId;
+- (void)clearPlaylist;
+- (void)clearRemotePlaylist;
+- (void)shuffle;
+- (void)getInfo;
 
 @end
 

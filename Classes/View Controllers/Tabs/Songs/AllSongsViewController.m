@@ -532,9 +532,9 @@
     
     // If jukebox mode, send song id to server
     if (settingsS.isJukeboxEnabled) {
-        [jukeboxS jukeboxStop];
-        [jukeboxS jukeboxClearPlaylist];
-        [jukeboxS jukeboxAddSong:aSong.songId];
+        [jukeboxS stop];
+        [jukeboxS clearPlaylist];
+        [jukeboxS addSong:aSong.songId];
     }
     
     // Set player defaults

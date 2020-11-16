@@ -49,13 +49,13 @@
         if (self.isShuffleButton) {
             // Perform the shuffle
             if (settingsS.isJukeboxEnabled) {
-                [jukeboxS jukeboxClearRemotePlaylist];
+                [jukeboxS clearRemotePlaylist];
             }
             
             [databaseS shufflePlaylist];
             
             if (settingsS.isJukeboxEnabled) {
-                [jukeboxS jukeboxReplacePlaylistWithLocal];
+                [jukeboxS replacePlaylistWithLocal];
             }
         }
         

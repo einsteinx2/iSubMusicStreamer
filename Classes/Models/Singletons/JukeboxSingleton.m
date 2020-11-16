@@ -31,60 +31,60 @@
 
 #pragma mark Jukebox Control methods
 
-- (void)jukeboxPlaySongAtPosition:(NSNumber *)position {
+- (void)playSongAtPosition:(NSNumber *)position {
     [self queueDataTaskWithAction:@"skip" parameters:@{@"index": n2N(position.stringValue)}];
     playlistS.currentIndex = position.intValue;
 }
 
 
-- (void)jukeboxPlay {
+- (void)play {
     [self queueDataTaskWithAction:@"start" parameters:nil];
-	self.jukeboxIsPlaying = YES;
+	self.isPlaying = YES;
 }
 
-- (void)jukeboxStop {
+- (void)stop {
     [self queueDataTaskWithAction:@"stop" parameters:nil];
-    self.jukeboxIsPlaying = YES;
-	self.jukeboxIsPlaying = NO;
+    self.isPlaying = YES;
+	self.isPlaying = NO;
 }
 
-- (void)jukeboxPrevSong {
+- (void)skipPrev {
 	NSInteger index = playlistS.currentIndex - 1;
 	if (index >= 0) {
-		[self jukeboxPlaySongAtPosition:@(index)];
-		self.jukeboxIsPlaying = YES;
+		[self playSongAtPosition:@(index)];
+		self.isPlaying = YES;
 	}
 }
 
-- (void)jukeboxNextSong {
+- (void)skipNext {
 	NSInteger index = playlistS.currentIndex + 1;
 	if (index <= ([databaseS.currentPlaylistDbQueue intForQuery:@"SELECT COUNT(*) FROM jukeboxCurrentPlaylist"] - 1)) {
-		[self jukeboxPlaySongAtPosition:@(index)];
-		self.jukeboxIsPlaying = YES;
+		[self playSongAtPosition:@(index)];
+		self.isPlaying = YES;
 	} else {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackEnded];
-		[self jukeboxStop];
-		self.jukeboxIsPlaying = NO;
+		[self stop];
+		self.isPlaying = NO;
 	}
 }
 
-- (void)jukeboxSetVolume:(float)level {
+- (void)setVolume:(float)level {
     NSString *gainString = [NSString stringWithFormat:@"%f", level];
     [self queueDataTaskWithAction:@"setGain" parameters:@{@"gain": n2N(gainString)}];
 }
 
-- (void)jukeboxAddSong:(NSString *)songId {
+- (void)addSong:(NSString *)songId {
     [self queueDataTaskWithAction:@"add" parameters:@{@"id": n2N(songId)}];
 }
 
-- (void)jukeboxAddSongs:(NSArray *)songIds {
+- (void)addSongs:(NSArray *)songIds {
 	if (songIds.count > 0) {
         [self queueDataTaskWithAction:@"add" parameters:@{@"id": n2N(songIds)}];
 	}
 }
 
-- (void)jukeboxReplacePlaylistWithLocal {
-	[self jukeboxClearRemotePlaylist];
+- (void)replacePlaylistWithLocal {
+	[self clearRemotePlaylist];
 	
 	__block NSMutableArray *songIds = [[NSMutableArray alloc] init];
 	[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
@@ -99,23 +99,23 @@
 		[result close];
 	}];
 	
-	[self jukeboxAddSongs:songIds];
+	[self addSongs:songIds];
 }
 
-- (void)jukeboxRemoveSong:(NSString*)songId {
+- (void)removeSong:(NSString*)songId {
     [self queueDataTaskWithAction:@"remove" parameters:@{@"id": n2N(songId)}];
 }
 
-- (void)jukeboxClearPlaylist {
+- (void)clearPlaylist {
     [self queueDataTaskWithAction:@"clear" parameters:nil];
     [databaseS resetJukeboxPlaylist];
 }
 
-- (void)jukeboxClearRemotePlaylist {
+- (void)clearRemotePlaylist {
     [self queueDataTaskWithAction:@"clear" parameters:nil];
 }
 
-- (void)jukeboxShuffle {
+- (void)shuffle {
     [self queueDataTaskWithAction:@"shuffle" parameters:nil];
     [databaseS resetJukeboxPlaylist];
 }
@@ -135,7 +135,7 @@
     }
 }
 
-- (void)jukeboxGetInfo {
+- (void)getInfo {
 	// Make sure this doesn't run a bunch of times in a row
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(jukeboxGetInfoInternal) object:nil];
 	[self performSelector:@selector(jukeboxGetInfoInternal) withObject:nil afterDelay:0.5];
@@ -166,7 +166,7 @@
             [xmlParser parse];
             
             [EX2Dispatch runInMainThreadAsync:^{
-                [jukeboxS jukeboxGetInfo];
+                [jukeboxS getInfo];
             }];
         }
     }];
@@ -186,8 +186,8 @@
                     
             [EX2Dispatch runInMainThreadAsync:^{
                 playlistS.currentIndex = parserDelegate.currentIndex;
-                jukeboxS.jukeboxGain = parserDelegate.gain;
-                jukeboxS.jukeboxIsPlaying = parserDelegate.isPlaying;
+                jukeboxS.gain = parserDelegate.gain;
+                jukeboxS.isPlaying = parserDelegate.isPlaying;
                 
                 [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackStarted];
                 [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_JukeboxSongInfo];

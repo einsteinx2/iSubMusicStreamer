@@ -969,7 +969,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (settingsS.isJukeboxEnabled)
 	{
 		[databaseS resetJukeboxPlaylist];
-		[jukeboxS jukeboxClearRemotePlaylist];
+		[jukeboxS clearRemotePlaylist];
 	}
 	else
 	{
@@ -992,7 +992,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (settingsS.isJukeboxEnabled)
 	{
 		[databaseS resetJukeboxPlaylist];
-		[jukeboxS jukeboxClearRemotePlaylist];
+		[jukeboxS clearRemotePlaylist];
 	}
 	else
 	{

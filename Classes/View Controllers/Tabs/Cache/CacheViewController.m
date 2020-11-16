@@ -245,7 +245,7 @@
 	
 	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
-		[jukeboxS jukeboxClearRemotePlaylist];
+		[jukeboxS clearRemotePlaylist];
 	} else {
 		[databaseS resetCurrentPlaylistDb];
 	}
@@ -277,7 +277,7 @@
 	}
 	
     if (settingsS.isJukeboxEnabled) {
-		[jukeboxS jukeboxPlaySongAtPosition:@(0)];
+		[jukeboxS playSongAtPosition:@(0)];
     }
     
 	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
