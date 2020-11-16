@@ -161,8 +161,9 @@
         if (error) {
             [self handleConnectionError:error];
         } else {
+            JukeboxXMLParserDelegate *parserDelegate = [[JukeboxXMLParserDelegate alloc] init];
             NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:data];
-            [xmlParser setDelegate:[[JukeboxXMLParserDelegate alloc] init]];
+            [xmlParser setDelegate:parserDelegate];
             [xmlParser parse];
             
             [EX2Dispatch runInMainThreadAsync:^{

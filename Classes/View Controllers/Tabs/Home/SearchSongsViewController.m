@@ -135,27 +135,27 @@
                 self.isLoading = NO;
             }];
         } else {
+            SearchXMLParser *parserDelegate = [[SearchXMLParser alloc] init];
             NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:self.receivedData];
-            SearchXMLParser *parser = [[SearchXMLParser alloc] init];
-            [xmlParser setDelegate:parser];
+            [xmlParser setDelegate:parserDelegate];
             [xmlParser parse];
             if (self.searchType == ISMSSearchSongsSearchType_Artists) {
-                if (parser.listOfArtists.count == 0) {
+                if (parserDelegate.listOfArtists.count == 0) {
                     self.isMoreResults = NO;
                 } else {
-                    [self.listOfArtists addObjectsFromArray:parser.listOfArtists];
+                    [self.listOfArtists addObjectsFromArray:parserDelegate.listOfArtists];
                 }
             } else if (self.searchType == ISMSSearchSongsSearchType_Albums) {
-                if (parser.listOfAlbums.count == 0) {
+                if (parserDelegate.listOfAlbums.count == 0) {
                     self.isMoreResults = NO;
                 } else {
-                    [self.listOfAlbums addObjectsFromArray:parser.listOfAlbums];
+                    [self.listOfAlbums addObjectsFromArray:parserDelegate.listOfAlbums];
                 }
             } else if (self.searchType == ISMSSearchSongsSearchType_Songs) {
-                if (parser.listOfSongs.count == 0) {
+                if (parserDelegate.listOfSongs.count == 0) {
                     self.isMoreResults = NO;
                 } else {
-                    [self.listOfSongs addObjectsFromArray:parser.listOfSongs];
+                    [self.listOfSongs addObjectsFromArray:parserDelegate.listOfSongs];
                 }
             }
             
