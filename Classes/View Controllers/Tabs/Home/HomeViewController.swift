@@ -36,18 +36,11 @@ import SnapKit
     private var buttons: [HomeViewButton] {
         return [quickAlbumsButton, serverShuffleButton, jukeboxButton, settingsButton, spacerButton, chatButton]
     }
-
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         guard verticalStack.superview != nil else { return }
         self.view.setNeedsUpdateConstraints()
-        coordinator.animate(alongsideTransition: { _ in
-            self.songInfoButton.alpha = UIApplication.orientation().isPortrait ? 1 : 0;
-        }, completion: nil)
     }
     
     override func updateViewConstraints() {
@@ -163,6 +156,7 @@ import SnapKit
         
         searchBar.delegate = self
         searchBar.placeholder = "Server Search"
+        searchBar.searchBarStyle = .minimal
         searchBarContainer.addSubview(searchBar)
         searchBar.snp.makeConstraints { make in
             make.leading.top.equalToSuperview().offset(5)
@@ -187,14 +181,7 @@ import SnapKit
         songInfoButton.setAction { [unowned self] in
             self.nowPlayingAction(sender: nil)
         }
-        songInfoButton.alpha = UIApplication.orientation().isPortrait ? 1 : 0;
         view.addSubview(songInfoButton)
-        songInfoButton.snp.makeConstraints { make in
-            make.height.equalTo(80)
-            make.leading.equalToSuperview().offset(35)
-            make.trailing.equalToSuperview().offset(-30)
-            make.centerY.equalTo(verticalStack)
-        }
         
         remakeConstraints()
     }
@@ -221,33 +208,45 @@ import SnapKit
             for button in buttons {
                 button.showLabel()
             }
-            verticalStack.snp.remakeConstraints { make in
-                make.top.equalTo(searchBarContainer.snp.bottom).offset(100)
-                make.leading.equalToSuperview().offset(20)
-                make.trailing.equalToSuperview().offset(-20)
-                make.bottom.equalToSuperview().offset(-100)
-            }
             searchSegment.snp.remakeConstraints { make in
                 make.leading.equalToSuperview().offset(13)
                 make.trailing.equalToSuperview().offset(-13)
                 make.top.equalToSuperview().offset(5)
                 make.bottom.equalToSuperview().offset(-10)
             }
+            verticalStack.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().offset(-20)
+                make.centerY.equalToSuperview().offset(15)
+                make.height.equalToSuperview().multipliedBy(0.75)
+            }
+            songInfoButton.snp.remakeConstraints { make in
+                make.height.equalTo(80)
+                make.leading.equalToSuperview().offset(35)
+                make.trailing.equalToSuperview().offset(-30)
+                make.centerY.equalTo(verticalStack)
+            }
         } else {
             for button in buttons {
                 button.hideLabel()
-            }
-            verticalStack.snp.remakeConstraints { make in
-                make.top.equalTo(searchBarContainer.snp.bottom).offset(30)
-                make.leading.equalToSuperview().offset(100)
-                make.trailing.equalToSuperview().offset(-100)
-                make.bottom.equalToSuperview().offset(-30)
             }
             searchSegment.snp.remakeConstraints { make in
                 make.leading.equalToSuperview().offset(52)
                 make.trailing.equalToSuperview().offset(-52)
                 make.top.equalToSuperview().offset(5)
                 make.bottom.equalToSuperview().offset(-10)
+            }
+            verticalStack.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().offset(-20)
+                make.centerY.equalToSuperview().offset(15)
+                make.height.equalToSuperview().multipliedBy(0.60)
+            }
+            songInfoButton.snp.remakeConstraints { make in
+                make.height.equalTo(80)
+                make.width.equalToSuperview().dividedBy(2)
+                make.centerX.equalToSuperview()
+                make.centerY.equalTo(bottomRowStack)
             }
         }
     }
@@ -274,6 +273,7 @@ import SnapKit
         }
         loader.modifier = modifier
         quickAlbumsLoader = loader
+        loader.startLoad()
     }
     
     @objc private func performServerShuffle(notification: Notification?) {
