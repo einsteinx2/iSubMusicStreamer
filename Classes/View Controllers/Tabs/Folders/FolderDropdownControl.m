@@ -145,6 +145,8 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
 		[folderLabel addSubview:folderButton];
         folderButton.isAccessibilityElement = self.isOpen;
 	}
+    
+    self.selectedFolderLabel.text = [self.folders objectForKey:self.selectedFolderId];
 }
 
 - (void)toggleDropdown:(id)sender {
