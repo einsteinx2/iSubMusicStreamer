@@ -19,6 +19,10 @@ import SnapKit
     // Cover Art
     private let coverArtPageControl = PageControlViewController()
     
+    // Stack view for all other UI elements
+    private let verticalStackContainer = UIView()
+    private let verticalStack = UIStackView()
+    
     // Song info
     private let songInfoContainer = UIView()
     private let songNameLabel = AutoScrollingLabel()
@@ -47,11 +51,22 @@ import SnapKit
     private let progressSlider = OBSlider()
     
     // Jukebox
+    private let jukeboxVolumeContainer = UIView()
     private let jukeboxVolumeSlider = UISlider()
+    
+    private var isShortScreen: Bool {
+        return (UIApplication.orientation().isPortrait ? UIScreen.main.bounds.size.height : UIScreen.main.bounds.size.width) < 700
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        print("Screen size: \(UIScreen.main.bounds.size)")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.overrideUserInterfaceStyle = .dark
         view.backgroundColor = .systemBackground
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image:  UIImage(named: "player-overlay"), style: .plain, target: self, action: #selector(showCurrentPlaylist))
@@ -62,21 +77,52 @@ import SnapKit
         
         view.addSubview(coverArtPageControl.view)
         coverArtPageControl.view.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(40)
-            make.leading.equalToSuperview().offset(40).priority(.required)
-            make.trailing.equalToSuperview().offset(-40).priority(.required)
             make.height.equalTo(coverArtPageControl.view.snp.width).offset(20)
+            if isShortScreen {
+                make.top.equalToSuperview().offset(10)
+                make.leading.equalToSuperview().offset(40).priority(.required)
+                make.trailing.equalToSuperview().offset(-40).priority(.required)
+            } else {
+                make.top.equalToSuperview().offset(20)
+                make.leading.equalToSuperview().offset(20).priority(.required)
+                make.trailing.equalToSuperview().offset(-20).priority(.required)
+            }
+        }
+        
+        //
+        // Vertical Stack View
+        //
+        
+        view.addSubview(verticalStackContainer)
+        verticalStackContainer.snp.makeConstraints { make in
+            make.leading.equalTo(coverArtPageControl.view).offset(20)
+            make.trailing.equalTo(coverArtPageControl.view).offset(-20)
+            make.top.equalTo(coverArtPageControl.view.snp.bottom)
+            make.bottom.equalToSuperview()
+        }
+        
+        verticalStack.addArrangedSubviews([songInfoContainer, progressBarContainer, controlsStack, moreControlsStack])
+        verticalStack.axis = .vertical
+        verticalStack.distribution = .equalSpacing//.equalCentering
+        verticalStackContainer.addSubview(verticalStack)
+        verticalStack.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            if isShortScreen && Settings.shared().isJukeboxEnabled {
+                make.height.equalToSuperview()
+                make.centerY.equalToSuperview()
+            } else {
+                make.height.equalToSuperview().multipliedBy(0.8)
+                make.centerY.equalToSuperview().offset(-20)
+            }
         }
         
         //
         // Song Info
         //
         
-        view.addSubview(songInfoContainer)
         songInfoContainer.snp.makeConstraints { make in
-            make.width.equalTo(coverArtPageControl.view)
+            make.width.equalToSuperview()
             make.height.equalTo(70)
-            make.top.equalTo(coverArtPageControl.view.snp.bottom).offset(20)
             make.centerX.equalToSuperview()
         }
         
@@ -100,11 +146,9 @@ import SnapKit
         // Progress bar
         //
         
-        view.addSubview(progressBarContainer)
         progressBarContainer.snp.makeConstraints { make in
-            make.height.equalTo(60)
-            make.leading.trailing.equalTo(coverArtPageControl.view)
-            make.top.equalTo(songInfoContainer.snp.bottom).offset(20)
+            make.height.equalTo(45)
+            make.leading.trailing.equalToSuperview()
         }
 
         elapsedTimeLabel.textColor = .label
@@ -151,11 +195,9 @@ import SnapKit
         controlsStack.alignment = .center
         controlsStack.distribution = .equalCentering
         controlsStack.addArrangedSubviews([quickSkipBackButton, previousButton, playPauseButton, nextButton, quickSkipForwardButton])
-        view.addSubview(controlsStack)
         controlsStack.snp.makeConstraints { make in
-            make.height.equalTo(60)
-            make.top.equalTo(progressBarContainer.snp.bottom)
-            make.leading.trailing.equalTo(coverArtPageControl.view)
+            make.height.equalTo(50)
+            make.leading.trailing.equalToSuperview()
         }
         
         playPauseButton.setImage(UIImage(named: "controller-play"), for: .normal)
@@ -232,11 +274,9 @@ import SnapKit
         moreControlsStack.alignment = .center
         moreControlsStack.distribution = .equalCentering
         moreControlsStack.addArrangedSubviews([repeatButton, equalizerButton, shuffleButton])
-        view.addSubview(moreControlsStack)
         moreControlsStack.snp.makeConstraints { make in
-            make.height.equalTo(60)
-            make.top.equalTo(controlsStack.snp.bottom)
-            make.leading.trailing.equalTo(coverArtPageControl.view)
+            make.height.equalTo(50)
+            make.leading.trailing.equalToSuperview()
         }
         
         updateRepeatButtonIcon()
@@ -272,12 +312,22 @@ import SnapKit
         // Jukebox
         //
         
+        jukeboxVolumeContainer.snp.makeConstraints { make in
+            make.height.equalTo(50)
+        }
+        
         jukeboxVolumeSlider.setThumbImage(UIImage(named: "controller-slider-thumb"), for: .normal)
         jukeboxVolumeSlider.minimumValue = 0.0
         jukeboxVolumeSlider.maximumValue = 1.0
         jukeboxVolumeSlider.isContinuous = false
         jukeboxVolumeSlider.addClosure(for: .valueChanged) { [unowned self] in
             Jukebox.shared().setVolume(self.jukeboxVolumeSlider.value)
+        }
+        jukeboxVolumeContainer.addSubview(jukeboxVolumeSlider)
+        jukeboxVolumeSlider.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.centerY.equalToSuperview()
         }
         updateJukeboxControls()
         
@@ -539,7 +589,6 @@ import SnapKit
     }
     
     @objc private func showCurrentPlaylist() {
-//        let controller = CurrentPlaylistBackgroundViewController(nibName: "CurrentPlaylistBackgroundViewController", bundle: nil)
         let controller = CurrentPlaylistViewController()
         present(controller, animated: true, completion: nil)
     }
@@ -562,7 +611,7 @@ import SnapKit
     
     @objc private func updateJukeboxControls() {
         let jukeboxEnabled = Settings.shared().isJukeboxEnabled
-        view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor : .systemBackground
+//        view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor : .systemBackground
         
         if jukeboxEnabled {
             if Jukebox.shared().isPlaying {
@@ -578,20 +627,13 @@ import SnapKit
             }
         }
         
-        if jukeboxEnabled && jukeboxVolumeSlider.superview == nil {
+        if jukeboxEnabled && jukeboxVolumeContainer.superview == nil {
             // Add the volume control
             jukeboxVolumeSlider.value = Jukebox.shared().gain
-            view.addSubview(jukeboxVolumeSlider)
-            jukeboxVolumeSlider.snp.remakeConstraints { make in
-                make.leading.trailing.equalTo(moreControlsStack)
-                make.leading.trailing.equalTo(coverArtPageControl.view)
-//                make.width.equalTo(200)
-//                make.centerX.equalToSuperview()
-                make.top.equalTo(moreControlsStack.snp.bottom).offset(30)
-            }
-        } else if !jukeboxEnabled && jukeboxVolumeSlider.superview != nil {
+            verticalStack.addArrangedSubview(jukeboxVolumeContainer)
+        } else if !jukeboxEnabled && jukeboxVolumeContainer.superview != nil {
             // Remove the volume control
-            jukeboxVolumeSlider.removeFromSuperview()
+            verticalStack.removeArrangedSubview(jukeboxVolumeContainer)
         }
     }
     
