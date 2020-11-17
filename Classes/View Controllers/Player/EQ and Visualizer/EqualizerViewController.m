@@ -17,10 +17,6 @@
 
 @implementation EqualizerViewController
 
-//- (BOOL)prefersStatusBarHidden {
-//    return !UIDevice.isIPad;
-//}
-
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {

@@ -280,10 +280,6 @@
 	[viewObjectsS hideLoadingScreen];
 	
     [self.refreshControl endRefreshing];
-	
-    if (self.dataModel.songsCount == 0 && self.dataModel.albumsCount == 0) {
-		[self.tableView removeBottomShadow];
-    }
 }
 
 - (void)loadingFinished:(SUSLoader *)theLoader {
