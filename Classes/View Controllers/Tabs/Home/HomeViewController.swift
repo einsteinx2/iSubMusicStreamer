@@ -40,12 +40,56 @@ import SnapKit
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         guard verticalStack.superview != nil else { return }
-        self.view.setNeedsUpdateConstraints()
+        view.setNeedsUpdateConstraints()
     }
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
-        self.remakeConstraints()
+        if UIApplication.orientation().isPortrait {
+            for button in buttons {
+                button.showLabel()
+            }
+            searchSegment.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(13)
+                make.trailing.equalToSuperview().offset(-13)
+                make.top.equalToSuperview().offset(5)
+                make.bottom.equalToSuperview().offset(-10)
+            }
+            verticalStack.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().offset(-20)
+                make.centerY.equalToSuperview().offset(15)
+                make.height.equalToSuperview().multipliedBy(0.75)
+            }
+            songInfoButton.snp.remakeConstraints { make in
+                make.height.equalTo(80)
+                make.leading.equalToSuperview().offset(35)
+                make.trailing.equalToSuperview().offset(-30)
+                make.centerY.equalTo(verticalStack)
+            }
+        } else {
+            for button in buttons {
+                button.hideLabel()
+            }
+            searchSegment.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(52)
+                make.trailing.equalToSuperview().offset(-52)
+                make.top.equalToSuperview().offset(5)
+                make.bottom.equalToSuperview().offset(-10)
+            }
+            verticalStack.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().offset(-20)
+                make.centerY.equalToSuperview().offset(15)
+                make.height.equalToSuperview().multipliedBy(0.60)
+            }
+            songInfoButton.snp.remakeConstraints { make in
+                make.height.equalTo(80)
+                make.width.equalToSuperview().dividedBy(2)
+                make.centerX.equalToSuperview()
+                make.centerY.equalTo(bottomRowStack)
+            }
+        }
     }
     
     private func registerNotifications() {
@@ -122,6 +166,7 @@ import SnapKit
             self.initSongInfo()
         }
         
+        topRowStack.translatesAutoresizingMaskIntoConstraints = false
         topRowStack.addArrangedSubviews([quickAlbumsButton, serverShuffleButton, jukeboxButton])
         topRowStack.axis = .horizontal
         topRowStack.distribution = .equalCentering
@@ -137,10 +182,12 @@ import SnapKit
             navigationController?.pushViewController(controller, animated: true)
         }
         
+        bottomRowStack.translatesAutoresizingMaskIntoConstraints = false
         bottomRowStack.addArrangedSubviews([settingsButton, spacerButton, chatButton])
         bottomRowStack.axis = .horizontal
         bottomRowStack.distribution = .equalCentering
 
+        verticalStack.translatesAutoresizingMaskIntoConstraints = false
         verticalStack.addArrangedSubviews([topRowStack, bottomRowStack])
         verticalStack.axis = .vertical
         verticalStack.distribution = .equalCentering
@@ -178,12 +225,11 @@ import SnapKit
         searchSegment.selectedSegmentIndex = 3
         searchSegmentContainer.addSubview(searchSegment)
         
+        songInfoButton.translatesAutoresizingMaskIntoConstraints = false
         songInfoButton.setAction { [unowned self] in
             self.nowPlayingAction(sender: nil)
         }
         view.addSubview(songInfoButton)
-        
-        remakeConstraints()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -201,54 +247,6 @@ import SnapKit
         initSongInfo()
         
         Flurry.logEvent("HomeTab")
-    }
-    
-    private func remakeConstraints() {
-        if UIApplication.orientation().isPortrait {
-            for button in buttons {
-                button.showLabel()
-            }
-            searchSegment.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(13)
-                make.trailing.equalToSuperview().offset(-13)
-                make.top.equalToSuperview().offset(5)
-                make.bottom.equalToSuperview().offset(-10)
-            }
-            verticalStack.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(20)
-                make.trailing.equalToSuperview().offset(-20)
-                make.centerY.equalToSuperview().offset(15)
-                make.height.equalToSuperview().multipliedBy(0.75)
-            }
-            songInfoButton.snp.remakeConstraints { make in
-                make.height.equalTo(80)
-                make.leading.equalToSuperview().offset(35)
-                make.trailing.equalToSuperview().offset(-30)
-                make.centerY.equalTo(verticalStack)
-            }
-        } else {
-            for button in buttons {
-                button.hideLabel()
-            }
-            searchSegment.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(52)
-                make.trailing.equalToSuperview().offset(-52)
-                make.top.equalToSuperview().offset(5)
-                make.bottom.equalToSuperview().offset(-10)
-            }
-            verticalStack.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(20)
-                make.trailing.equalToSuperview().offset(-20)
-                make.centerY.equalToSuperview().offset(15)
-                make.height.equalToSuperview().multipliedBy(0.60)
-            }
-            songInfoButton.snp.remakeConstraints { make in
-                make.height.equalTo(80)
-                make.width.equalToSuperview().dividedBy(2)
-                make.centerX.equalToSuperview()
-                make.centerY.equalTo(bottomRowStack)
-            }
-        }
     }
     
     @objc private func initSongInfo() {

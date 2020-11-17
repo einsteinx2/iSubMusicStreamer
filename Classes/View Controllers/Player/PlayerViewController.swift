@@ -60,7 +60,79 @@ import SnapKit
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        print("Screen size: \(UIScreen.main.bounds.size)")
+        view.setNeedsUpdateConstraints()
+    }
+    
+    override func updateViewConstraints() {
+        super.updateViewConstraints()
+        updateDownloadProgress(animated: false)
+        if UIApplication.orientation().isPortrait {
+            coverArtPageControl.view.snp.remakeConstraints { make in
+                make.height.equalTo(coverArtPageControl.view.snp.width).offset(20)
+                if isShortScreen {
+                    make.top.equalToSuperview().offset(10)
+                    make.leading.equalToSuperview().offset(40)
+                    make.trailing.equalToSuperview().offset(-40)
+                } else {
+                    make.top.equalToSuperview().offset(20)
+                    make.leading.equalToSuperview().offset(20)
+                    make.trailing.equalToSuperview().offset(-20)
+                }
+            }
+            
+            verticalStackContainer.snp.remakeConstraints { make in
+                make.leading.equalTo(coverArtPageControl.view).offset(20)
+                make.trailing.equalTo(coverArtPageControl.view).offset(-20)
+                make.top.equalTo(coverArtPageControl.view.snp.bottom)
+                make.bottom.equalToSuperview()
+            }
+            
+            verticalStack.snp.remakeConstraints { make in
+                make.leading.trailing.equalToSuperview()
+                if isShortScreen && Settings.shared().isJukeboxEnabled {
+                    make.height.equalToSuperview()
+                    make.centerY.equalToSuperview()
+                } else {
+                    make.height.equalToSuperview().multipliedBy(0.8)
+                    make.centerY.equalToSuperview().offset(-20)
+                }
+            }
+        } else {
+            coverArtPageControl.view.snp.remakeConstraints { make in
+                make.width.equalTo(coverArtPageControl.view.snp.height).offset(-20)
+                make.top.equalToSuperview().offset(20)
+                make.bottom.equalToSuperview().offset(-20)
+                if isShortScreen {
+                    make.leading.equalToSuperview().offset(20)
+                } else {
+                    make.centerX.equalToSuperview().multipliedBy(0.5)
+                }
+            }
+            
+            verticalStackContainer.snp.remakeConstraints { make in
+                make.leading.equalTo(coverArtPageControl.view.snp.trailing).offset(20)
+                make.trailing.equalToSuperview().offset(-20)
+                make.top.equalToSuperview()
+                make.bottom.equalToSuperview()
+            }
+            
+            verticalStack.snp.remakeConstraints { make in
+                if isShortScreen && Settings.shared().isJukeboxEnabled {
+                    make.leading.trailing.equalToSuperview()
+                    make.height.equalToSuperview()
+                    make.centerY.equalToSuperview()
+                } else if isShortScreen {
+                    make.leading.trailing.equalToSuperview()
+                    make.height.equalToSuperview().multipliedBy(0.8)
+                    make.centerY.equalToSuperview().offset(-20)
+                } else {
+                    make.width.equalToSuperview().dividedBy(2)
+                    make.centerX.equalToSuperview()
+                    make.height.equalToSuperview().multipliedBy(0.8)
+                    make.centerY.equalToSuperview().offset(-20)
+                }
+            }
+        }
     }
     
     override func viewDidLoad() {
@@ -75,46 +147,22 @@ import SnapKit
         // Cover art
         //
         
+        coverArtPageControl.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(coverArtPageControl.view)
-        coverArtPageControl.view.snp.makeConstraints { make in
-            make.height.equalTo(coverArtPageControl.view.snp.width).offset(20)
-            if isShortScreen {
-                make.top.equalToSuperview().offset(10)
-                make.leading.equalToSuperview().offset(40).priority(.required)
-                make.trailing.equalToSuperview().offset(-40).priority(.required)
-            } else {
-                make.top.equalToSuperview().offset(20)
-                make.leading.equalToSuperview().offset(20).priority(.required)
-                make.trailing.equalToSuperview().offset(-20).priority(.required)
-            }
-        }
+        
         
         //
         // Vertical Stack View
         //
         
+        verticalStackContainer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(verticalStackContainer)
-        verticalStackContainer.snp.makeConstraints { make in
-            make.leading.equalTo(coverArtPageControl.view).offset(20)
-            make.trailing.equalTo(coverArtPageControl.view).offset(-20)
-            make.top.equalTo(coverArtPageControl.view.snp.bottom)
-            make.bottom.equalToSuperview()
-        }
         
+        verticalStack.translatesAutoresizingMaskIntoConstraints = false
         verticalStack.addArrangedSubviews([songInfoContainer, progressBarContainer, controlsStack, moreControlsStack])
         verticalStack.axis = .vertical
         verticalStack.distribution = .equalSpacing//.equalCentering
         verticalStackContainer.addSubview(verticalStack)
-        verticalStack.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            if isShortScreen && Settings.shared().isJukeboxEnabled {
-                make.height.equalToSuperview()
-                make.centerY.equalToSuperview()
-            } else {
-                make.height.equalToSuperview().multipliedBy(0.8)
-                make.centerY.equalToSuperview().offset(-20)
-            }
-        }
         
         //
         // Song Info
@@ -147,7 +195,7 @@ import SnapKit
         //
         
         progressBarContainer.snp.makeConstraints { make in
-            make.height.equalTo(45)
+            make.height.equalTo(40)
             make.leading.trailing.equalToSuperview()
         }
 
@@ -330,8 +378,6 @@ import SnapKit
             make.centerY.equalToSuperview()
         }
         updateJukeboxControls()
-        
-//        remakeConstraints()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -350,15 +396,6 @@ import SnapKit
         stopUpdatingDownloadProgress()
         unregisterForNotifications()
     }
-    
-//    private func remakeConstraints() {
-//        if UIApplication.orientation().isPortrait {
-//            coverArt.snp.makeConstraints { make in
-//                make.width.equalTo(coverArt.height)
-//                make.top.leading.trailing.equalToSuperview().offset(20)
-//            }
-//        }
-//    }
     
     private func registerForNotifications() {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_JukeboxSongInfo)
@@ -487,7 +524,6 @@ import SnapKit
     
     @objc private func updateSlider() {
         guard let currentSong = currentSong, let player = AudioEngine.shared().player else { return }
-//        print("\(Date().timeIntervalSince1970)update slider called")
         
         let duration = currentSong.duration?.doubleValue ?? 0.0
         if Settings.shared().isJukeboxEnabled {
@@ -521,6 +557,7 @@ import SnapKit
         updateDownloadProgress(animated: false)
     }
     
+    private var previousDownloadProgress: CGFloat = 0.0;
     private func updateDownloadProgress(animated: Bool) {
         guard let currentSong = currentSong, !currentSong.isTempCached else {
             downloadProgressView.isHidden = true
@@ -529,58 +566,30 @@ import SnapKit
         
         downloadProgressView.isHidden = false
         
-        // Set the width based on the download progress + leading offset size
-        let width = (currentSong.downloadProgress * progressSlider.frame.width) + 5
-        print("width: \(width)")
+        func remakeConstraints() {
+            self.downloadProgressView.snp.remakeConstraints { make in
+                make.width.equalTo(self.progressSlider).multipliedBy(currentSong.downloadProgress).offset(10)
+                make.leading.equalTo(self.progressSlider).offset(-5)
+                make.top.equalTo(self.progressSlider).offset(-3)
+                make.bottom.equalTo(self.progressSlider).offset(3)
+            }
+        }
         
-        if animated && width > downloadProgressView.frame.width {
+        // Set the width based on the download progress + leading/trailing offset size
+        if animated && currentSong.downloadProgress > previousDownloadProgress {
             // If it's longer, animate it
-            UIView.animate(withDuration: 1.0, delay: 0.0, options: .curveEaseOut, animations: {
-                self.downloadProgressView.snp.updateConstraints { make in
-                    make.width.equalTo(width)
-                }
-                self.downloadProgressView.layoutIfNeeded()
-            }, completion: nil)
+            UIView.animate(withDuration: 1.0, delay: 0.0, options: .curveEaseOut, animations: remakeConstraints, completion: nil)
         } else {
             // If it's shorter, it's probably starting a new song so don't animate
-            self.downloadProgressView.snp.updateConstraints { make in
-                make.width.equalTo(width)
-            }
-            self.downloadProgressView.layoutIfNeeded()
+            remakeConstraints()
         }
+        
+        previousDownloadProgress = currentSong.downloadProgress
     }
     
     @objc private func startUpdatingDownloadProgress() {
         stopUpdatingDownloadProgress()
-//        guard let currentSong = currentSong, !currentSong.isTempCached else {
-//            downloadProgressView.isHidden = true
-//            perform(#selector(startUpdatingDownloadProgress), with: nil, afterDelay: 1.0)
-//            return
-//        }
-//
-//        downloadProgressView.isHidden = false
-//
-//        // Set the width based on the download progress + leading offset size
-//        let width = (currentSong.downloadProgress * progressSlider.frame.width) + 5
-//
-//        if width > downloadProgressView.frame.width {
-//            // If it's longer, animate it
-//            UIView.animate(withDuration: 1.0) {
-//                self.downloadProgressView.snp.updateConstraints { make in
-//                    make.width.equalTo(width)
-//                }
-//                self.downloadProgressView.layoutIfNeeded()
-//            }
-//        } else {
-//            // If it's shorter, it's probably starting a new song so don't animate
-//            self.downloadProgressView.snp.updateConstraints { make in
-//                make.width.equalTo(width)
-//            }
-//            self.downloadProgressView.layoutIfNeeded()
-//        }
-        
         updateDownloadProgress(animated: true)
-        
         perform(#selector(startUpdatingDownloadProgress), with: nil, afterDelay: 1.0)
     }
     
@@ -611,6 +620,7 @@ import SnapKit
     
     @objc private func updateJukeboxControls() {
         let jukeboxEnabled = Settings.shared().isJukeboxEnabled
+        equalizerButton.isHidden = jukeboxEnabled
 //        view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor : .systemBackground
         
         if jukeboxEnabled {
