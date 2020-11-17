@@ -207,13 +207,16 @@
 	[viewObjectsS hideLoadingScreen];
 	
     [self.refreshControl endRefreshing];
-	
-	// Inform the user that the connection failed.
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Subsonic Error"
-                                                                   message:error.localizedDescription
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-    [self presentViewController:alert animated:YES completion:nil];
+    
+    // Inform the user that the connection failed.
+    // NOTE: Must call after a delay or the refresh control won't hide
+    [EX2Dispatch runInMainThreadAfterDelay:0.3 block:^{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Subsonic Error"
+                                                                       message:error.localizedDescription
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }];
 }
 
 - (void)loadingFinished:(SUSLoader *)theLoader {
