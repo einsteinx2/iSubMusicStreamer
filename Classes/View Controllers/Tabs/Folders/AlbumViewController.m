@@ -10,7 +10,6 @@
 #import "ModalAlbumArtViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "iPadRootViewController.h"
-#import "CustomUIAlertView.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -64,7 +63,6 @@
     [super viewDidLoad];
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.automaticallyAdjustsScrollViewInsets = NO;
 				
     // Add the pull to refresh view
     __weak AlbumViewController *weakSelf = self;
@@ -272,10 +270,12 @@
 #pragma mark - ISMSLoader delegate
 
 - (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
-    // Inform the user that the connection failed.
-	NSString *message = [NSString stringWithFormat:@"There was an error loading the album.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
-	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	[alert show];
+    if (settingsS.isPopupsEnabled) {
+        NSString *message = [NSString stringWithFormat:@"There was an error loading the album.\n\nError %li: %@", (long)error.code, error.localizedDescription];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 	
 	[viewObjectsS hideLoadingScreen];
 	

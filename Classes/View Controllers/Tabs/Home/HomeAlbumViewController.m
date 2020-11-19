@@ -11,7 +11,6 @@
 #import "ServerListViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "SUSQuickAlbumsLoader.h"
-#import "CustomUIAlertView.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "SavedSettings.h"
@@ -75,8 +74,12 @@
     self.loader = nil;
 	self.isLoading = NO;
 	    
-    CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:[NSString stringWithFormat:@"There was an error doing the search.\n\nError:%@", error.localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];
+    if (settingsS.isPopupsEnabled) {
+        NSString *message = [NSString stringWithFormat:@"There was an error performing the search.\n\nError:%@", error.localizedDescription];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }	
 
 - (void)loadingFinished:(SUSLoader *)theLoader {

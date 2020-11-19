@@ -9,13 +9,11 @@
 #import "ServerListViewController.h"
 #import "SubsonicServerEditViewController.h"
 #import "SettingsTabViewController.h"
-#import "HelpTabViewController.h"
 #import "FoldersViewController.h"
 #import "iPadRootViewController.h"
 #import "MenuViewController.h"
 #import "SUSStatusLoader.h"
 #import "SUSAllSongsLoader.h"
-#import "CustomUIAlertView.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -58,7 +56,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
 	self.headerView.backgroundColor = [UIColor colorWithWhite:.3 alpha:1];
 	
-	self.segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Servers", @"Settings", @"Help"]];
+	self.segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Servers", @"Settings"]];
 	self.segmentedControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	[self.segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
 	self.segmentedControl.frame = CGRectMake(5, 2, 310, 36);
@@ -90,7 +88,6 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)segmentAction:(id)sender {
 	self.settingsTabViewController.parentController = nil;
 	self.settingsTabViewController = nil;
-	self.helpTabViewController = nil;
 	
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
 		self.title = @"Servers";
@@ -106,16 +103,6 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.settingsTabViewController = [[SettingsTabViewController alloc] initWithNibName:@"SettingsTabViewController" bundle:nil];
 		self.settingsTabViewController.parentController = self;
 		self.tableView.tableFooterView = self.settingsTabViewController.view;
-		[self.tableView reloadData];
-	} else if (self.segmentedControl.selectedSegmentIndex == 2) {
-		self.title = @"Help";
-		self.tableView.scrollEnabled = NO;
-		[self setEditing:NO animated:NO];
-		self.navigationItem.rightBarButtonItem = nil;
-		self.helpTabViewController = [[HelpTabViewController alloc] initWithNibName:@"HelpTabViewController" bundle:nil];
-		self.helpTabViewController.view.frame = self.view.bounds;
-        self.helpTabViewController.view.height -= 40.;
-		self.tableView.tableFooterView = self.helpTabViewController.view;
 		[self.tableView reloadData];
 	}
 }
@@ -337,10 +324,13 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		// Alert user to select new default server if they deleting the default
-		if ([ settingsS.urlString isEqualToString:[(ISMSServer *)[ settingsS.serverList objectAtIndexSafe:indexPath.row] url]]) {
-			CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Notice" message:@"Make sure to select a new server" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-			alert.tag = 4;
-			[alert show];
+		if ([settingsS.urlString isEqualToString:[(ISMSServer *)[settingsS.serverList objectAtIndexSafe:indexPath.row] url]]) {
+            if (settingsS.isPopupsEnabled) {
+                NSString *message = @"Make sure to select a new server";
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notice" message:message preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
 		}
 		
         // Delete the row from the data source
@@ -363,14 +353,15 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
-    UIAlertView *alert = nil;
+    NSString *message = nil;
 	if (error.code == ISMSErrorCode_IncorrectCredentials) {
-		alert = [[UIAlertView alloc] initWithTitle:@"Server Unavailable" message:[NSString stringWithFormat:@"Either your username or password is incorrect\n\n☆☆ Tap the gear in the top left and choose a server to return to online mode. ☆☆\n\nError code %li:\n%@", (long)[error code], [error localizedDescription]] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		message = [NSString stringWithFormat:@"Either your username or password is incorrect\n\n☆☆ Choose a server to return to online mode. ☆☆\n\nError code %li:\n%@", (long)error.code, error.localizedDescription];
 	} else {
-		alert = [[UIAlertView alloc] initWithTitle:@"Server Unavailable" message:[NSString stringWithFormat:@"Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\n☆☆ Tap the gear in the top left and choose a server to return to online mode. ☆☆\n\nError code %li:\n%@", (long)[error code], [error localizedDescription]] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        message = [NSString stringWithFormat:@"Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\n☆☆ Choose a server to return to online mode. ☆☆\n\nError code %li:\n%@", (long)error.code, error.localizedDescription];
 	}
-	alert.tag = 3;
-	[alert show];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Server Unavailable" message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
         
     DDLogError(@"server verification failed, hiding loading screen");
     [viewObjectsS hideLoadingScreen];

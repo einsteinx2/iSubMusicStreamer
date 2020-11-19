@@ -9,8 +9,6 @@
 #ifndef iSub_ISMSCustomUIObjects_h
 #define iSub_ISMSCustomUIObjects_h
 
-#import "CustomUIAlertView.h"
-#import "CustomUITextView.h"
 #import "AsynchronousImageViewDelegate.h"
 #import "AsynchronousImageView.h"
 #import "LoadingScreen.h"

@@ -38,17 +38,17 @@ NS_SWIFT_NAME(StreamManager)
 - (BOOL)isSongFirstInQueue:(ISMSSong *)aSong;
 - (BOOL)isSongDownloading:(ISMSSong *)aSong;
 
-- (void)cancelAllStreamsExcept:(NSArray *)handlersToSkip;
-- (void)cancelAllStreamsExceptForSongs:(NSArray *)songsToSkip;
-- (void)cancelAllStreamsExceptForSong:(ISMSSong *)aSong;
+- (void)cancelAllStreamsExcept:(nullable NSArray *)handlersToSkip;
+- (void)cancelAllStreamsExceptForSongs:(nullable NSArray *)songsToSkip;
+- (void)cancelAllStreamsExceptForSong:(nullable ISMSSong *)aSong;
 - (void)cancelAllStreams;
 - (void)cancelStreamAtIndex:(NSUInteger)index;
 - (void)cancelStream:(ISMSStreamHandler *)handler;
 - (void)cancelStreamForSong:(ISMSSong *)aSong;
 
-- (void)removeAllStreamsExcept:(NSArray *)handlersToSkip;
-- (void)removeAllStreamsExceptForSongs:(NSArray *)songsToSkip;
-- (void)removeAllStreamsExceptForSong:(ISMSSong *)aSong;
+- (void)removeAllStreamsExcept:(nullable NSArray *)handlersToSkip;
+- (void)removeAllStreamsExceptForSongs:(nullable NSArray *)songsToSkip;
+- (void)removeAllStreamsExceptForSong:(nullable ISMSSong *)aSong;
 - (void)removeAllStreams;
 - (void)removeStreamAtIndex:(NSUInteger)index;
 - (void)removeStream:(ISMSStreamHandler *)handler;

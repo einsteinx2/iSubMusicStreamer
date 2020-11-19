@@ -8,7 +8,6 @@
 
 #import "PlaylistSongsViewController.h"
 #import "ServerListViewController.h"
-#import "CustomUIAlertView.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "ViewObjectsSingleton.h"
@@ -93,9 +92,12 @@ LOG_LEVEL_ISUB_DEFAULT
     self.dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
             [EX2Dispatch runInMainThreadAsync:^{
-                NSString *message = [NSString stringWithFormat:@"There was an error loading the playlist.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
-                CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert show];
+                if (settingsS.isPopupsEnabled) {
+                    NSString *message = [NSString stringWithFormat:@"There was an error loading the playlist.\n\nError %li: %@", (long)error.code, error.localizedDescription];
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+                    [self presentViewController:alert animated:YES completion:nil];
+                }
                 
                 self.tableView.scrollEnabled = YES;
                 [viewObjectsS hideLoadingScreen];
@@ -207,11 +209,14 @@ LOG_LEVEL_ISUB_DEFAULT
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
     self.dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
-            [EX2Dispatch runInMainThreadAsync:^{
-                NSString *message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
-                CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert show];
-            }];
+            if (settingsS.isPopupsEnabled) {
+                [EX2Dispatch runInMainThreadAsync:^{
+                    NSString *message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)error.code, error.localizedDescription];
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+                    [self presentViewController:alert animated:YES completion:nil];
+                }];
+            }
         } else {
             DDLogVerbose(@"%@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
             RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
@@ -241,10 +246,13 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)subsonicErrorCode:(NSString *)errorCode message:(NSString *)message {
-	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Subsonic Error" message:message delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-	alert.tag = 1;
-	[alert show];
-	//DLog(@"Subsonic error %@:  %@", errorCode, message);
+    if (settingsS.isPopupsEnabled) {
+        [EX2Dispatch runInMainThreadAsync:^{
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Subsonic Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+            [self presentViewController:alert animated:YES completion:nil];
+        }];
+    }
 }
 
 #pragma mark Table view methods

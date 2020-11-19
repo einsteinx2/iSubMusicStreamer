@@ -9,7 +9,6 @@
 #import "PlayingViewController.h"
 #import "ServerListViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
-#import "CustomUIAlertView.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -49,7 +48,7 @@
         [weakSelf.dataModel startLoad];
     }];
     
-    self.tableView.rowHeight = 65.0;
+    self.tableView.rowHeight = 85.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
         
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
@@ -149,9 +148,12 @@
 #pragma mark - ISMSLoader delegate
 
 - (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
-	NSString *message = [NSString stringWithFormat:@"There was an error loading the now playing list.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
-	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	[alert show];
+    if (settingsS.isPopupsEnabled) {
+        NSString *message = [NSString stringWithFormat:@"There was an error loading the now playing list.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 	
 	[viewObjectsS hideLoadingScreen];
 	

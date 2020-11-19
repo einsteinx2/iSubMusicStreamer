@@ -88,19 +88,25 @@
     self.rootView.y += 20.;
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation  {
-	[self.menuViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-	[self.stackScrollViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[self.menuViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-	[self.stackScrollViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-}
-
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[self.menuViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
-	[self.stackScrollViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
-}
+//- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+//    [self.menuViewController viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+//    [self.stackScrollViewController viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+//    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+//}
+//
+//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation  {
+//	[self.menuViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+//	[self.stackScrollViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+//}
+//
+//- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+//	[self.menuViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+//	[self.stackScrollViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+//}
+//
+//- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+//	[self.menuViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+//	[self.stackScrollViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+//}
 
 @end

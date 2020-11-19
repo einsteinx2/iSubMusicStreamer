@@ -13,14 +13,12 @@
 #import "bass_fx.h"
 #import "bassmix.h"
 #import <AudioToolbox/AudioToolbox.h>
-#import <AVFoundation/AVAudioSession.h>
 #import "BassWrapper.h"
 #import "BassStream.h"
 #import "BassEqualizer.h"
 #import "BassVisualizer.h"
 #import "BassGaplessPlayer.h"
 #import "iSubBassGaplessPlayerDelegate.h"
-#import <AVFoundation/AVFoundation.h>
 
 #define audioEngineS ((AudioEngine *)[AudioEngine sharedInstance])
 
@@ -28,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class ISMSSong, BassParamEqValue, BassStream, SUSRegisterActionLoader, EX2RingBuffer;
 NS_SWIFT_NAME(AudioEngine)
-@interface AudioEngine : NSObject <AVAudioSessionDelegate>
+@interface AudioEngine : NSObject
 
 + (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 

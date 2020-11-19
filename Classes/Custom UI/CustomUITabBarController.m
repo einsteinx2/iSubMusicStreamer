@@ -12,7 +12,7 @@
 @implementation CustomUITabBarController
 
 - (BOOL)shouldAutorotate {
-    if (settingsS.isRotationLockEnabled && [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
+    if (settingsS.isRotationLockEnabled && UIDevice.currentDevice.orientation != UIDeviceOrientationPortrait) {
         return NO;
     }
     return YES;
@@ -21,5 +21,19 @@
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskAll;
 }
+
+//- (void)viewDidLoad {
+//    [super viewDidLoad];
+//
+//    self.tabBar.backgroundImage = [[UIImage alloc] init];
+//    self.tabBar.barTintColor = UIColor.clearColor;
+//    self.tabBar.translucent = YES;
+//
+//    // Add blur effect
+//    UIVisualEffectView *blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+//    blurView.frame = self.tabBar.bounds;
+//    blurView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    [self.tabBar insertSubview:blurView atIndex:0];
+//}
 
 @end

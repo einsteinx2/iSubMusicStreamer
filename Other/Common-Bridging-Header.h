@@ -33,7 +33,6 @@
 #import "AsynchronousImageView.h"
 #import "CellCachedIndicatorView.h"
 #import "FolderPickerDialog.h"
-#import "CustomUIAlertView.h"
 
 /*
  * Data Models

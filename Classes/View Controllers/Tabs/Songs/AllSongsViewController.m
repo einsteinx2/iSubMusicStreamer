@@ -13,7 +13,6 @@
 #import "UIViewController+PushViewControllerCustom.h"
 #import "LoadingScreen.h"
 #import "SUSAllSongsLoader.h"
-#import "CustomUIAlertView.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -313,8 +312,12 @@
         [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
         [self presentViewController:alert animated:YES completion:nil];
 	} else {
-		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Please Wait" message:@"You cannot reload the Songs tab while the Folders or Albums tabs are loading" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
+        if (settingsS.isPopupsEnabled) {
+            NSString *message = @"You cannot reload the Songs tab while the Folders or Albums tabs are loading";
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Please Wait" message:message preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
 		[self.refreshControl endRefreshing];
 	}
 }

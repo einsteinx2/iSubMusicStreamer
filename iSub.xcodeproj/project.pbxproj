@@ -102,7 +102,6 @@
 		5327F1C112B8243C00735119 /* controller-stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5327F1BF12B8243C00735119 /* controller-stop@2x.png */; };
 		532B552714D641C500B8AA67 /* ModalAlbumArtViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 532B552614D641C500B8AA67 /* ModalAlbumArtViewController.xib */; };
 		532B552914D641C500B8AA67 /* ModalAlbumArtViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 532B552614D641C500B8AA67 /* ModalAlbumArtViewController.xib */; };
-		532D9B43131AE19700FD8CA7 /* CustomUIAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 532D9B42131AE19700FD8CA7 /* CustomUIAlertView.m */; };
 		5332468014D7BDFA008B35F6 /* controller-equalizer-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 5332467B14D7BDFA008B35F6 /* controller-equalizer-ipad.png */; };
 		5332468214D7BDFA008B35F6 /* controller-equalizer-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 5332467B14D7BDFA008B35F6 /* controller-equalizer-ipad.png */; };
 		5332468314D7BDFA008B35F6 /* controller-next-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 5332467C14D7BDFA008B35F6 /* controller-next-ipad.png */; };
@@ -347,8 +346,6 @@
 		539797FE1162D4D200F41D8B /* AllAlbumsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 539797FD1162D4D200F41D8B /* AllAlbumsViewController.xib */; };
 		539799791163084200F41D8B /* loading-screen-image.png in Resources */ = {isa = PBXBuildFile; fileRef = 539799781163084200F41D8B /* loading-screen-image.png */; };
 		5398F26D11DA61DA00007870 /* SettingsTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5398F26B11DA61DA00007870 /* SettingsTabViewController.m */; };
-		5398F27811DA627500007870 /* HelpTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5398F27611DA627500007870 /* HelpTabViewController.m */; };
-		5398F27911DA627500007870 /* HelpTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5398F27711DA627500007870 /* HelpTabViewController.xib */; };
 		53A2213611A8489900C1ACD4 /* cache-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 53A2213411A8489900C1ACD4 /* cache-button.png */; };
 		53A2213711A8489900C1ACD4 /* queue-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 53A2213511A8489900C1ACD4 /* queue-button.png */; };
 		53A2BE24147DF09800E44822 /* EqualizerPointView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A2BE23147DF09800E44822 /* EqualizerPointView.m */; };
@@ -452,7 +449,6 @@
 		53BC26D8139AF0DD00A825F1 /* GenresAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53523D8E11CD5889006AEA48 /* GenresAlbumViewController.xib */; };
 		53BC26D9139AF0DD00A825F1 /* GenresArtistViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53523D9311CD61F7006AEA48 /* GenresArtistViewController.xib */; };
 		53BC26DA139AF0DD00A825F1 /* delete-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 5314C7B311D4157D000CA726 /* delete-button.png */; };
-		53BC26DC139AF0DD00A825F1 /* HelpTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5398F27711DA627500007870 /* HelpTabViewController.xib */; };
 		53BC26DE139AF0DD00A825F1 /* albums-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF18811DA8D7500447FF7 /* albums-tabbaricon@2x.png */; };
 		53BC26DF139AF0DD00A825F1 /* artists-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF18C11DA90D800447FF7 /* artists-tabbaricon@2x.png */; };
 		53BC26E0139AF0DD00A825F1 /* bookmarks-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF18D11DA90D800447FF7 /* bookmarks-tabbaricon@2x.png */; };
@@ -580,7 +576,6 @@
 		53BC27E0139AF0DD00A825F1 /* CacheQueueSongUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5358083711CEB5F200A09386 /* CacheQueueSongUITableViewCell.m */; };
 		53BC27E1139AF0DD00A825F1 /* GenresGenreUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53DF310611D3EE26007552A4 /* GenresGenreUITableViewCell.m */; };
 		53BC27E2139AF0DD00A825F1 /* SettingsTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5398F26B11DA61DA00007870 /* SettingsTabViewController.m */; };
-		53BC27E3139AF0DD00A825F1 /* HelpTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5398F27611DA627500007870 /* HelpTabViewController.m */; };
 		53BC27E5139AF0DD00A825F1 /* LyricsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 534050F911E9966C004AEC41 /* LyricsViewController.m */; };
 		53BC27F8139AF0DD00A825F1 /* ChatUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5379DC491219E48800F426CD /* ChatUITableViewCell.m */; };
 		53BC27F9139AF0DD00A825F1 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5379DC4B1219E48800F426CD /* ChatViewController.m */; };
@@ -588,7 +583,6 @@
 		53BC2803139AF0DD00A825F1 /* HomeAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 531F166D126FA2E600F524BD /* HomeAlbumViewController.m */; };
 		53BC280A139AF0DD00A825F1 /* SearchSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B9D0B21279FAEF00CAB0E0 /* SearchSongsViewController.m */; };
 		53BC2815139AF0DD00A825F1 /* ModalAlbumArtViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C22CCE128EE81C00FFBA67 /* ModalAlbumArtViewController.m */; };
-		53BC282B139AF0DD00A825F1 /* CustomUIAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 532D9B42131AE19700FD8CA7 /* CustomUIAlertView.m */; };
 		53BC282C139AF0DD00A825F1 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5324C6C513345D75004E6C79 /* OBSlider.m */; };
 		53BC282D139AF0DD00A825F1 /* FolderDropdownControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ADBBBF13352DB40098FAE6 /* FolderDropdownControl.m */; };
 		53BC283C139AF0DD00A825F1 /* FolderPickerDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 535B7269134CFB0A003E0E1C /* FolderPickerDialog.m */; };
@@ -1148,8 +1142,6 @@
 		5327F1BE12B8243C00735119 /* controller-stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-stop.png"; path = "Images/Player Icons/controller-stop.png"; sourceTree = "<group>"; };
 		5327F1BF12B8243C00735119 /* controller-stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-stop@2x.png"; path = "Images/Player Icons/controller-stop@2x.png"; sourceTree = "<group>"; };
 		532B552614D641C500B8AA67 /* ModalAlbumArtViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ModalAlbumArtViewController.xib; sourceTree = "<group>"; };
-		532D9B41131AE19700FD8CA7 /* CustomUIAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomUIAlertView.h; sourceTree = "<group>"; };
-		532D9B42131AE19700FD8CA7 /* CustomUIAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUIAlertView.m; sourceTree = "<group>"; };
 		5332467B14D7BDFA008B35F6 /* controller-equalizer-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-equalizer-ipad.png"; path = "Images/Player Icons/controller-equalizer-ipad.png"; sourceTree = "<group>"; };
 		5332467C14D7BDFA008B35F6 /* controller-next-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-next-ipad.png"; path = "Images/Player Icons/controller-next-ipad.png"; sourceTree = "<group>"; };
 		5332467D14D7BDFA008B35F6 /* controller-pause-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-pause-ipad.png"; path = "Images/Player Icons/controller-pause-ipad.png"; sourceTree = "<group>"; };
@@ -1365,9 +1357,6 @@
 		539799781163084200F41D8B /* loading-screen-image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "loading-screen-image.png"; path = "Images/Other/loading-screen-image.png"; sourceTree = "<group>"; };
 		5398F26A11DA61DA00007870 /* SettingsTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTabViewController.h; sourceTree = "<group>"; };
 		5398F26B11DA61DA00007870 /* SettingsTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTabViewController.m; sourceTree = "<group>"; };
-		5398F27511DA627500007870 /* HelpTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpTabViewController.h; sourceTree = "<group>"; };
-		5398F27611DA627500007870 /* HelpTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpTabViewController.m; sourceTree = "<group>"; };
-		5398F27711DA627500007870 /* HelpTabViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HelpTabViewController.xib; sourceTree = "<group>"; };
 		5398F2B511DA8B1000007870 /* iPhoneStreamingPlayerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = iPhoneStreamingPlayerViewController.xib; sourceTree = "<group>"; };
 		53A2213411A8489900C1ACD4 /* cache-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cache-button.png"; path = "Images/Other/cache-button.png"; sourceTree = "<group>"; };
 		53A2213511A8489900C1ACD4 /* queue-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "queue-button.png"; path = "Images/Other/queue-button.png"; sourceTree = "<group>"; };
@@ -2116,9 +2105,6 @@
 				53CED25C113E2FF100B09699 /* SubsonicServerEditViewController.h */,
 				53CED25D113E2FF100B09699 /* SubsonicServerEditViewController.m */,
 				533C65C115ABB9CC003EAF29 /* SubsonicServerEditViewController.xib */,
-				5398F27511DA627500007870 /* HelpTabViewController.h */,
-				5398F27611DA627500007870 /* HelpTabViewController.m */,
-				5398F27711DA627500007870 /* HelpTabViewController.xib */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -2298,8 +2284,6 @@
 			isa = PBXGroup;
 			children = (
 				533F65201605429E000098E1 /* ISMSCustomUIObjects.h */,
-				532D9B41131AE19700FD8CA7 /* CustomUIAlertView.h */,
-				532D9B42131AE19700FD8CA7 /* CustomUIAlertView.m */,
 				53BB7EC8121B8D8F00BEE7E8 /* CustomUITextView.h */,
 				53BB7EC9121B8D8F00BEE7E8 /* CustomUITextView.m */,
 				53733C6414F88D62001D8104 /* AsynchronousImageViewDelegate.h */,
@@ -3330,7 +3314,6 @@
 				533C65CE15ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */,
 				53FE35EE1EA961540058B925 /* table-fade-bottom.png in Resources */,
 				53649DCD184DA90600E600EC /* Icon-120.png in Resources */,
-				5398F27911DA627500007870 /* HelpTabViewController.xib in Resources */,
 				53AAF18911DA8D7500447FF7 /* albums-tabbaricon@2x.png in Resources */,
 				53AAF19311DA90D800447FF7 /* artists-tabbaricon@2x.png in Resources */,
 				53AAF19411DA90D800447FF7 /* bookmarks-tabbaricon@2x.png in Resources */,
@@ -3584,7 +3567,6 @@
 				53BC26D9139AF0DD00A825F1 /* GenresArtistViewController.xib in Resources */,
 				53BC26DA139AF0DD00A825F1 /* delete-button.png in Resources */,
 				533C65D015ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */,
-				53BC26DC139AF0DD00A825F1 /* HelpTabViewController.xib in Resources */,
 				53BC26DE139AF0DD00A825F1 /* albums-tabbaricon@2x.png in Resources */,
 				53BC26DF139AF0DD00A825F1 /* artists-tabbaricon@2x.png in Resources */,
 				53BC26E0139AF0DD00A825F1 /* bookmarks-tabbaricon@2x.png in Resources */,
@@ -3937,7 +3919,6 @@
 				53FE34FE1EA961540058B925 /* NSString+compareWithoutIndefiniteArticles.m in Sources */,
 				53FE35D31EA961540058B925 /* EX2LargerTouchScrollView.m in Sources */,
 				53FE37AF1EA961720058B925 /* SUSNowPlayingDAO.m in Sources */,
-				5398F27811DA627500007870 /* HelpTabViewController.m in Sources */,
 				53FE35461EA961540058B925 /* UIDevice+Software.m in Sources */,
 				53FE37D31EA961720058B925 /* SUSSubFolderDAO.m in Sources */,
 				534050FB11E9966C004AEC41 /* LyricsViewController.m in Sources */,
@@ -3960,7 +3941,6 @@
 				53C22CCF128EE81C00FFBA67 /* ModalAlbumArtViewController.m in Sources */,
 				53FE352E1EA961540058B925 /* CALayer+ImageFromLayer.m in Sources */,
 				53FE37761EA961720058B925 /* PlaylistSingleton.m in Sources */,
-				532D9B43131AE19700FD8CA7 /* CustomUIAlertView.m in Sources */,
 				5324C6C613345D75004E6C79 /* OBSlider.m in Sources */,
 				53FE38861EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */,
 				53FE355B1EA961540058B925 /* UIImageView+ImageAnimated.m in Sources */,
@@ -4168,7 +4148,6 @@
 				53FE35001EA961540058B925 /* NSString+compareWithoutIndefiniteArticles.m in Sources */,
 				53FE35D51EA961540058B925 /* EX2LargerTouchScrollView.m in Sources */,
 				53FE37B11EA961720058B925 /* SUSNowPlayingDAO.m in Sources */,
-				53BC27E3139AF0DD00A825F1 /* HelpTabViewController.m in Sources */,
 				53FE35481EA961540058B925 /* UIDevice+Software.m in Sources */,
 				53FE37D51EA961720058B925 /* SUSSubFolderDAO.m in Sources */,
 				53BC27E5139AF0DD00A825F1 /* LyricsViewController.m in Sources */,
@@ -4194,7 +4173,6 @@
 				53BC2815139AF0DD00A825F1 /* ModalAlbumArtViewController.m in Sources */,
 				53FE35301EA961540058B925 /* CALayer+ImageFromLayer.m in Sources */,
 				53FE37781EA961720058B925 /* PlaylistSingleton.m in Sources */,
-				53BC282B139AF0DD00A825F1 /* CustomUIAlertView.m in Sources */,
 				53BC282C139AF0DD00A825F1 /* OBSlider.m in Sources */,
 				53FE38881EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */,
 				53FE355D1EA961540058B925 /* UIImageView+ImageAnimated.m in Sources */,

@@ -21,7 +21,6 @@
 #import <AVKit/AVKit.h>
 #import "UIViewController+PushViewControllerCustom.h"
 #import "SUSStatusLoader.h"
-#import "CustomUIAlertView.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "ViewObjectsSingleton.h"
 #import "ZipKit.h"
@@ -37,13 +36,13 @@
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
+#import <UserNotifications/UserNotifications.h>
 
 LOG_LEVEL_ISUB_DEFAULT
 
 @implementation iSubAppDelegate
 
-+ (instancetype)sharedInstance
-{
++ (instancetype)sharedInstance {
 	return (iSubAppDelegate*)[UIApplication sharedApplication].delegate;
 }
 
@@ -53,20 +52,13 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark Application lifecycle
 
-/*void onUncaughtException(NSException* exception)
-{
-    NSLog(@"uncaught exception: %@", exception.description);
-}*/
-
-- (void)showPlayer
-{
+- (void)showPlayer {
     PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
     playerViewController.hidesBottomBarWhenPushed = YES;
     [(UINavigationController*)self.currentTabBarController.selectedViewController pushViewController:playerViewController animated:YES];
 }
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application
-{
+- (void)applicationDidFinishLaunching:(UIApplication *)application {
     // Make sure audio engine and cache singletons get loaded
 	[AudioEngine sharedInstance];
 	[CacheSingleton sharedInstance];
@@ -80,15 +72,11 @@ LOG_LEVEL_ISUB_DEFAULT
     // Initialize the lock screen controls
     [LockScreenAudioControls setup];
     
-    //NSSetUncaughtExceptionHandler(&onUncaughtException);
-
-    // Adjust the window to the correct size before anything else loads to prevent
-    // various sizing/positioning issues
-    if (!UIDevice.isIPad)
-    {
-        CGSize screenSize = [[UIScreen mainScreen] preferredMode].size;
-        CGFloat screenScale = [UIScreen mainScreen].scale;
-        screenScale = screenScale == 0. ? 1. : screenScale;
+    // Adjust the window to the correct size before anything else loads to prevent various sizing/positioning issues
+    // NOTE: This is still needed, probably due to the old school XIB file used for the main window
+    if (!UIDevice.isIPad) {
+        CGSize screenSize = UIScreen.mainScreen.preferredMode.size;
+        CGFloat screenScale = UIScreen.mainScreen.scale;
         self.window.size = CGSizeMake(screenSize.width / screenScale, screenSize.height / screenScale);
     }
 	
@@ -102,8 +90,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	fileLogger.logFileManager.maximumNumberOfLogFiles = 7;
 	[DDLog addLogger:fileLogger];
     
-    
-	
 	// Setup network reachability notifications
 	self.wifiReach = [EX2Reachability reachabilityForLocalWiFi];
 	[self.wifiReach startNotifier];
@@ -111,50 +97,48 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self.wifiReach currentReachabilityStatus];
 	
 	// Check battery state and register for notifications
-	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
+	UIDevice.currentDevice.batteryMonitoringEnabled = YES;
 	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(batteryStateChanged:) name:@"UIDeviceBatteryStateDidChangeNotification" object:UIDevice.currentDevice];
 	[self batteryStateChanged:nil];	
 	
+    // Request authorization to send background notifications
+    [UNUserNotificationCenter.currentNotificationCenter requestAuthorizationWithOptions:UNAuthorizationOptionAlert|UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        DDLogVerbose(@"Request for local notifications granted: %@", NSStringFromBOOL(granted));
+    }];
+    
 	// Handle offline mode
-	if (settingsS.isForceOfflineMode)
-	{
+    NSString *offlineModeAlertMessage = nil;
+	if (settingsS.isForceOfflineMode) {
 		settingsS.isOfflineMode = YES;
-		
-		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Notice" message:@"Offline mode switch on, entering offline mode." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-		alert.tag = 4;
-		[alert performSelector:@selector(show) withObject:nil afterDelay:1.1];
-	}
-	else if ([self.wifiReach currentReachabilityStatus] == NotReachable)
-	{
+        offlineModeAlertMessage = @"Offline mode switch on, entering offline mode.";
+	} else if (self.wifiReach.currentReachabilityStatus == NotReachable) {
 		settingsS.isOfflineMode = YES;
-		
-		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Notice" message:@"No network detected, entering offline mode." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-		alert.tag = 4;
-		[alert performSelector:@selector(show) withObject:nil afterDelay:1.1];
-	}
-    else if ([self.wifiReach currentReachabilityStatus] == ReachableViaWWAN && settingsS.isDisableUsageOver3G)
-    {
+        offlineModeAlertMessage = @"No network detected, entering offline mode.";
+	} else if (self.wifiReach.currentReachabilityStatus == ReachableViaWWAN && settingsS.isDisableUsageOver3G) {
         settingsS.isOfflineMode = YES;
-		
-		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Notice" message:@"You are not on Wifi, and have chosen to disable use over cellular. Entering offline mode." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-		alert.tag = 4;
-		[alert performSelector:@selector(show) withObject:nil afterDelay:1.1];
-    }
-	else
-	{
+        offlineModeAlertMessage = @"You are not on Wifi, and have chosen to disable use over cellular. Entering offline mode.";
+    } else {
 		settingsS.isOfflineMode = NO;
 	}
+    
+    // Optionally show offline mode alert
+    if (offlineModeAlertMessage && settingsS.isPopupsEnabled) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notice" message:offlineModeAlertMessage preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [EX2Dispatch runInMainThreadAfterDelay:1.1 block:^{
+            [UIApplication.keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+        }];
+    }
 		
 	self.showIntro = NO;
-	if (settingsS.isTestServer)
-	{
-		if (settingsS.isOfflineMode)
-		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome!" message:@"Looks like this is your first time using iSub or you haven't set up your Subsonic account info yet.\n\nYou'll need an internet connection to watch the intro video and use the included demo account." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-			[alert performSelector:@selector(show) withObject:nil afterDelay:1.0];
-		}
-		else
-		{
+	if (settingsS.isTestServer) {
+		if (settingsS.isOfflineMode) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Welcome!" message:@"Looks like this is your first time using iSub or you haven't set up your Subsonic account info yet.\n\nYou'll need an internet connection to get started." preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+            [EX2Dispatch runInMainThreadAfterDelay:1.0 block:^{
+                [UIApplication.keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+            }];
+		} else {
 			self.showIntro = YES;
 		}
 	}
@@ -162,23 +146,16 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self loadFlurryAnalytics];
     
 	// Create and display UI
-	if (UIDevice.isIPad)
-	{
+	if (UIDevice.isIPad) {
 		self.ipadRootViewController = [[iPadRootViewController alloc] initWithNibName:nil bundle:nil];
 		[self.window setBackgroundColor:[UIColor clearColor]];
         self.window.rootViewController = self.ipadRootViewController;
 		[self.window makeKeyAndVisible];
         
-		if (self.showIntro)
-		{
+		if (self.showIntro) {
             [self showSettings];
-//			self.introController = [[IntroViewController alloc] init];
-//			self.introController.modalPresentationStyle = UIModalPresentationFormSheet;
-//			[self.ipadRootViewController presentViewController:self.introController animated:NO completion:nil];
 		}
-	}
-	else
-	{
+	} else {
         [[UITabBar appearance] setBarTintColor:[UIColor blackColor]];
         self.mainTabBarController.tabBar.translucent = NO;
         self.offlineTabBarController.tabBar.translucent = NO;
@@ -187,53 +164,35 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.mainTabBarController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
         self.mainTabBarController.moreNavigationController.navigationBar.translucent = NO;
 		
-		//DLog(@"isOfflineMode: %i", settingsS.isOfflineMode);
-		if (settingsS.isOfflineMode)
-		{
-			//DLog(@"--------------- isOfflineMode");
+		if (settingsS.isOfflineMode) {
 			self.currentTabBarController = self.offlineTabBarController;
-			//[self.window addSubview:self.offlineTabBarController.view];
             self.window.rootViewController = self.offlineTabBarController;
-		}
-		else 
-		{
+		} else {
 			// Recover the tab order and load the main tabBarController
 			self.currentTabBarController = self.mainTabBarController;
-			
-			//[viewObjectsS orderMainTabBarController]; // Do this after server check
-			//[self.window addSubview:self.mainTabBarController.view];
             self.window.rootViewController = self.mainTabBarController;
 		}
         
         [self.window makeKeyAndVisible];
 		
-		if (self.showIntro)
-		{
-//			self.introController = [[IntroViewController alloc] init];
-//			[self.currentTabBarController presentViewController:self.introController animated:NO completion:nil];
+		if (self.showIntro) {
             [self showSettings];
 		}
 	}
     
-	if (settingsS.isJukeboxEnabled)
-		self.window.backgroundColor = viewObjectsS.jukeboxColor;
-	else 
-		self.window.backgroundColor = viewObjectsS.windowColor;
+    self.window.backgroundColor = settingsS.isJukeboxEnabled ? viewObjectsS.jukeboxColor : viewObjectsS.windowColor;
 		
 	// Check the server status in the background
-    if (!settingsS.isOfflineMode)
-	{
-		//DLog(@"adding loading screen");
+    if (!settingsS.isOfflineMode) {
 		[viewObjectsS showAlbumLoadingScreen:self.window sender:self];
-		
 		[self checkServer];
 	}
     
-    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(showPlayer) name:ISMSNotification_ShowPlayer object:nil];
-    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(playVideoNotification:) name:ISMSNotification_PlayVideo object:nil];
-    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(removeMoviePlayer) name:ISMSNotification_RemoveMoviePlayer object:nil];
-    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(jukeboxToggled) name:ISMSNotification_JukeboxDisabled object:nil];
-    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(jukeboxToggled) name:ISMSNotification_JukeboxEnabled object:nil];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(showPlayer) name:ISMSNotification_ShowPlayer];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(playVideoNotification:) name:ISMSNotification_PlayVideo];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(removeMoviePlayer) name:ISMSNotification_RemoveMoviePlayer];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(jukeboxToggled) name:ISMSNotification_JukeboxDisabled];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(jukeboxToggled) name:ISMSNotification_JukeboxEnabled];
     
     [self startHLSProxy];
     
@@ -242,27 +201,20 @@ LOG_LEVEL_ISUB_DEFAULT
 	[musicS resumeSong];
 }
 
-- (void)jukeboxToggled
-{
+- (void)jukeboxToggled {
     // Change the background color when jukebox is on
-    if (settingsS.isJukeboxEnabled)
-        self.window.backgroundColor = viewObjectsS.jukeboxColor;
-    else
-        self.window.backgroundColor = viewObjectsS.windowColor;
+    self.window.backgroundColor = settingsS.isJukeboxEnabled ? viewObjectsS.jukeboxColor : viewObjectsS.windowColor;
 }
 
-- (void)oneTimeRun
-{
-    if (settingsS.oneTimeRunIncrementor < 1)
-    {
+- (void)oneTimeRun {
+    if (settingsS.oneTimeRunIncrementor < 1) {
         settingsS.isPartialCacheNextSong = NO;
         settingsS.oneTimeRunIncrementor = 1;
     }
 }
 
 // TODO: Fix video playback
-- (void)startHLSProxy
-{
+- (void)startHLSProxy {
 //    self.hlsProxyServer = [[HTTPServer alloc] init];
 //    self.hlsProxyServer.connectionClass = [HLSProxyConnection class];
 //
@@ -275,63 +227,42 @@ LOG_LEVEL_ISUB_DEFAULT
 //	}
 }
 
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
-{
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
     // Handle being openned by a URL
     DDLogVerbose(@"url host: %@ path components: %@", url.host, url.pathComponents );
     
-    if (url.host)
-    {
-        if ([[url.host lowercaseString] isEqualToString:@"play"])
-        {
-            if (audioEngineS.player)
-            {
-                if (!audioEngineS.player.isPlaying)
-                {
+    if (url.host) {
+        if ([[url.host lowercaseString] isEqualToString:@"play"]) {
+            if (audioEngineS.player) {
+                if (!audioEngineS.player.isPlaying) {
                     [audioEngineS.player playPause];
                 }
-            }
-            else
-            {
+            } else {
                 [musicS playSongAtPosition:playlistS.currentIndex];
             }
-        }
-        else if ([[url.host lowercaseString] isEqualToString:@"pause"])
-        {
-            if (audioEngineS.player.isPlaying)
-            {
+        } else if ([[url.host lowercaseString] isEqualToString:@"pause"]) {
+            if (audioEngineS.player.isPlaying) {
                 [audioEngineS.player playPause];
             }
-        }
-        else if ([[url.host lowercaseString] isEqualToString:@"playpause"])
-        {
-            if (audioEngineS.player)
-            {
+        } else if ([[url.host lowercaseString] isEqualToString:@"playpause"]) {
+            if (audioEngineS.player) {
                 [audioEngineS.player playPause];
-            }
-            else
-            {
+            } else {
                 [musicS playSongAtPosition:playlistS.currentIndex];
             }
-        }
-        else if ([[url.host lowercaseString] isEqualToString:@"next"])
-        {
+        } else if ([[url.host lowercaseString] isEqualToString:@"next"]) {
             [musicS playSongAtPosition:playlistS.nextIndex];
-        }
-        else if ([[url.host lowercaseString] isEqualToString:@"prev"])
-        {
+        } else if ([[url.host lowercaseString] isEqualToString:@"prev"]) {
             [musicS playSongAtPosition:playlistS.prevIndex];
         }
     }
     
     NSDictionary *queryParameters = url.queryParameterDictionary;
-    if ([queryParameters.allKeys containsObject:@"ref"])
-    {
+    if ([queryParameters.allKeys containsObject:@"ref"]) {
         self.referringAppUrl = [NSURL URLWithString:[queryParameters objectForKey:@"ref"]];
         
         // On the iPad we need to reload the menu table to see the back button
-        if (UIDevice.isIPad)
-        {
+        if (UIDevice.isIPad) {
             [self.ipadRootViewController.menuViewController loadCellContents];
         }
     }
@@ -339,23 +270,19 @@ LOG_LEVEL_ISUB_DEFAULT
     return YES;
 }
 
-- (void)backToReferringApp
-{
-    if (self.referringAppUrl)
-    {
+- (void)backToReferringApp {
+    if (self.referringAppUrl) {
         [UIApplication.sharedApplication openURL:self.referringAppUrl options:@{} completionHandler:nil];
     }
 }
 
 // Check server cancel load
-- (void)cancelLoad
-{
+- (void)cancelLoad {
 	[self.statusLoader cancelLoad];
 	[viewObjectsS hideLoadingScreen];
 }
 
-- (void)checkServer
-{
+- (void)checkServer {
     //DLog(@"urlString: %@", settingsS.urlString);
 	ISMSUpdateChecker *updateChecker = [[ISMSUpdateChecker alloc] init];
 	[updateChecker checkForUpdate];
@@ -364,8 +291,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	// if it's not then display an alert and allow user to change settings if they want.
 	// This is in case the user is, for instance, connected to a wifi network but does not 
 	// have internet access or if the host url entered was wrong.
-    if (!settingsS.isOfflineMode) 
-	{
+    if (!settingsS.isOfflineMode) {
         self.statusLoader = [[SUSStatusLoader alloc] initWithDelegate:self];
         self.statusLoader.urlString = settingsS.urlString;
         self.statusLoader.username = settingsS.username;
@@ -381,28 +307,16 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark SUS Loader Delegate
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
-{
-    if (theLoader.type == SUSLoaderType_Status)
-    {
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
+    if (theLoader.type == SUSLoaderType_Status) {
         [viewObjectsS hideLoadingScreen];
         
-        if(!settingsS.isOfflineMode)
-        {
-            /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Server Unavailable" message:[NSString stringWithFormat:@"Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\n☆☆ Tap the gear in the top left and choose a server to return to online mode. ☆☆\n\nError code %i:\n%@", [error code], [error localizedDescription]] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:@"Settings", nil];
-             alert.tag = 3;
-             [alert show];
-             [alert release];
-             
-             [self enterOfflineModeForce];*/
-            
+        if (!settingsS.isOfflineMode) {
             DDLogVerbose(@"Loading failed for loading type %i, entering offline mode. Error: %@", theLoader.type, error);
-            
             [self enterOfflineMode];
         }
         
-        if ([theLoader isKindOfClass:[SUSStatusLoader class]])
-        {
+        if ([theLoader isKindOfClass:SUSStatusLoader.class]) {
             settingsS.isNewSearchAPI = ((SUSStatusLoader *)theLoader).isNewSearchAPI;
             settingsS.isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
         }
@@ -411,13 +325,10 @@ LOG_LEVEL_ISUB_DEFAULT
     }
 }
 
-- (void)loadingFinished:(SUSLoader *)theLoader
-{
+- (void)loadingFinished:(SUSLoader *)theLoader {
     // This happens right on app launch
-    if (theLoader.type == SUSLoaderType_Status)
-    {
-        if ([theLoader isKindOfClass:[SUSStatusLoader class]])
-        {
+    if (theLoader.type == SUSLoaderType_Status) {
+        if ([theLoader isKindOfClass:SUSStatusLoader.class]) {
             settingsS.isNewSearchAPI = ((SUSStatusLoader *)theLoader).isNewSearchAPI;
             settingsS.isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
         }
@@ -427,8 +338,9 @@ LOG_LEVEL_ISUB_DEFAULT
         //DLog(@"server verification passed, hiding loading screen");
         [viewObjectsS hideLoadingScreen];
         
-        if (!UIDevice.isIPad && !settingsS.isOfflineMode)
+        if (!UIDevice.isIPad && !settingsS.isOfflineMode) {
             [viewObjectsS orderMainTabBarController];
+        }
         
         // TODO: Find another way to detect crashes without using HockeyApp
 //        // Since the download queue has been a frequent source of crashes in the past, and we start this on launch automatically
@@ -441,8 +353,7 @@ LOG_LEVEL_ISUB_DEFAULT
     }
 }
 
-- (void)loadFlurryAnalytics
-{
+- (void)loadFlurryAnalytics {
 	BOOL isSessionStarted = NO;
 #if defined(RELEASE)
     [Flurry startSession:@"3KK4KKD2PSEU5APF7PNX"];
@@ -452,51 +363,23 @@ LOG_LEVEL_ISUB_DEFAULT
     isSessionStarted = YES;
 #endif
 	
-	if (isSessionStarted)
-	{		
+	if (isSessionStarted) {
 		// Send the firmware version
-		UIDevice *device = [UIDevice currentDevice];
-		NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:[device completeVersionString], @"FirmwareVersion", 
-																		  [device platform], @"HardwareVersion", nil];
-		[Flurry logEvent:@"DeviceInfo" withParameters:params];
+        [Flurry logEvent:@"DeviceInfo" withParameters:@{@"FirmwareVersion": UIDevice.currentDevice.completeVersionString, @"HardwareVersion": UIDevice.currentDevice.platform}];
 	}
 }
 
-/*
-#ifdef ADHOC
-- (NSString *)userNameForCrashManager:(BITCrashManager *)crashManager
-{
-    if ([[UIDevice currentDevice] respondsToSelector:@selector(uniqueIdentifier)])
-        return [[UIDevice currentDevice] performSelector:@selector(uniqueIdentifier)];
-    return nil;
-}
-#endif
-
-- (NSString *)customDeviceIdentifierForUpdateManager
-{
-#ifdef ADHOC
-    if ([[UIDevice currentDevice] respondsToSelector:@selector(uniqueIdentifier)])
-		return [[UIDevice currentDevice] performSelector:@selector(uniqueIdentifier)];
-#endif
-	
-	return nil;
-}
-*/
-
-- (NSString *)latestLogFileName
-{
+- (NSString *)latestLogFileName {
     NSString *logsFolder = [settingsS.cachesPath stringByAppendingPathComponent:@"Logs"];
-	NSArray *logFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:logsFolder error:nil];
+	NSArray *logFiles = [NSFileManager.defaultManager contentsOfDirectoryAtPath:logsFolder error:nil];
 	
 	NSTimeInterval modifiedTime = 0.;
 	NSString *fileNameToUse;
-	for (NSString *file in logFiles)
-	{
-		NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[logsFolder stringByAppendingPathComponent:file] error:nil];
-		NSDate *modified = [attributes fileModificationDate];
+	for (NSString *file in logFiles) {
+		NSDictionary *attributes = [NSFileManager.defaultManager attributesOfItemAtPath:[logsFolder stringByAppendingPathComponent:file] error:nil];
+		NSDate *modified = attributes.fileModificationDate;
 		//DLog(@"Checking file %@ with modified time of %f", file, [modified timeIntervalSince1970]);
-		if (modified && [modified timeIntervalSince1970] >= modifiedTime)
-		{
+		if (modified && modified.timeIntervalSince1970 >= modifiedTime) {
 			//DLog(@"Using this file, since it's modified time %f is higher than %f", [modified timeIntervalSince1970], modifiedTime);
 			
 			// This file is newer
@@ -524,8 +407,7 @@ LOG_LEVEL_ISUB_DEFAULT
 //	return nil;
 //}
 
-- (NSString *)zipAllLogFiles
-{    
+- (NSString *)zipAllLogFiles {
     NSString *zipFileName = @"iSub Logs.zip";
     NSString *zipFilePath = [settingsS.cachesPath stringByAppendingPathComponent:zipFileName];
     NSString *logsFolder = [settingsS.cachesPath stringByAppendingPathComponent:@"Logs"];
@@ -536,136 +418,96 @@ LOG_LEVEL_ISUB_DEFAULT
     // Zip the logs
     ZKFileArchive *archive = [ZKFileArchive archiveWithArchivePath:zipFilePath];
     NSInteger result = [archive deflateDirectory:logsFolder relativeToPath:settingsS.cachesPath usingResourceFork:NO];
-    if (result == zkSucceeded)
-    {
+    if (result == zkSucceeded) {
         return zipFilePath;
     }
     return nil;
 }
 
-- (void)startRedirectingLogToFile
-{
+- (void)startRedirectingLogToFile {
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentsDirectory = [paths objectAtIndexSafe:0];
 	NSString *logPath = [documentsDirectory stringByAppendingPathComponent:@"console.log"];
 	freopen([logPath cStringUsingEncoding:NSASCIIStringEncoding],"a+",stderr);
 }
 
-- (void)stopRedirectingLogToFile
-{
+- (void)stopRedirectingLogToFile {
 	freopen("/dev/tty","w",stderr);
 }
 
-- (void)batteryStateChanged:(NSNotification *)notification
-{
-	UIDevice *device = [UIDevice currentDevice];
-	if (device.batteryState == UIDeviceBatteryStateCharging || device.batteryState == UIDeviceBatteryStateFull) 
-	{
-			[UIApplication sharedApplication].idleTimerDisabled = YES;
+- (void)batteryStateChanged:(NSNotification *)notification {
+	if (UIDevice.currentDevice.batteryState == UIDeviceBatteryStateCharging || UIDevice.currentDevice.batteryState == UIDeviceBatteryStateFull) {
+        UIApplication.sharedApplication.idleTimerDisabled = YES;
+    } else if (settingsS.isScreenSleepEnabled) {
+        UIApplication.sharedApplication.idleTimerDisabled = NO;
     }
-	else
-	{
-		if (settingsS.isScreenSleepEnabled)
-			[UIApplication sharedApplication].idleTimerDisabled = NO;
-	}
 }
 
-- (void)applicationWillResignActive:(UIApplication*)application
-{
-	//DLog(@"applicationWillResignActive called");
-	
-	//DLog(@"applicationWillResignActive finished");
-}
-
-
-- (void)applicationDidBecomeActive:(UIApplication*)application
-{
-	//DLog(@"isWifi: %i", [self isWifi]);
-	//DLog(@"applicationDidBecomeActive called");
-	
-	//DLog(@"applicationDidBecomeActive finished");
-    
+- (void)applicationDidBecomeActive:(UIApplication*)application {
     [self checkServer];
 }
 
-
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-	//DLog(@"applicationDidEnterBackground called");
-	
+- (void)applicationDidEnterBackground:(UIApplication *)application {
 	[settingsS saveState];
 	
-	[[NSUserDefaults standardUserDefaults] synchronize];
+	[NSUserDefaults.standardUserDefaults synchronize];
 	
-	if (cacheQueueManagerS.isQueueDownloading)
-    {
-		self.backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:
-						  ^{
-							  // App is about to be put to sleep, stop the cache download queue
-							  if (cacheQueueManagerS.isQueueDownloading)
-								  [cacheQueueManagerS stopDownloadQueue];
-							  
-							  // Make sure to end the background so we don't get killed by the OS
-                              [self cancelBackgroundTask];
-                              
-                              // Cancel the next server check otherwise it will fire immediately on launch
-                              [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(checkServer) object:nil];
-						  }];
+	if (cacheQueueManagerS.isQueueDownloading) {
+		self.backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+            // App is about to be put to sleep, stop the cache download queue
+            if (cacheQueueManagerS.isQueueDownloading) {
+                [cacheQueueManagerS stopDownloadQueue];
+            }
+            
+            // Make sure to end the background so we don't get killed by the OS
+            [self cancelBackgroundTask];
+            
+            // Cancel the next server check otherwise it will fire immediately on launch
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(checkServer) object:nil];
+        }];
         
         self.isInBackground = YES;
 		[self performSelector:@selector(checkRemainingBackgroundTime) withObject:nil afterDelay:1.0];
 	}
 }
 
-- (void)checkRemainingBackgroundTime
-{
-    NSLog(@"checking remaining background time: %f", [[UIApplication sharedApplication] backgroundTimeRemaining]);
+- (void)checkRemainingBackgroundTime {
+    NSLog(@"checking remaining background time: %f", UIApplication.sharedApplication.backgroundTimeRemaining);
     
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(checkRemainingBackgroundTime) object:nil];
-    if (!self.isInBackground)
-    {
+    if (!self.isInBackground) {
         return;
     }
     
     UIApplication *application = [UIApplication sharedApplication];
-    if ([application backgroundTimeRemaining] < 30.0 && cacheQueueManagerS.isQueueDownloading)
-    {
+    if (application.backgroundTimeRemaining < 30.0 && cacheQueueManagerS.isQueueDownloading) {
         // Warn at 2 minute mark if cache queue is downloading
-        UILocalNotification *localNotif = [[UILocalNotification alloc] init];
-        if (localNotif)
-        {
-            localNotif.alertBody = NSLocalizedString(@"Songs are still caching. Please return to iSub within 30 seconds, or it will be put to sleep and your song caching will be paused.", nil);
-            localNotif.alertAction = NSLocalizedString(@"Open iSub", nil);
-            [application presentLocalNotificationNow:localNotif];
-        }
-    }
-    else if (!cacheQueueManagerS.isQueueDownloading)
-    {
+        // TODO: Test this implementation
+        UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+        content.body = @"Songs are still caching. Please return to iSub within 30 seconds, or it will be put to sleep and your song caching will be paused.";
+        content.sound = UNNotificationSound.defaultSound;
+        UNNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:NO];
+        UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:NSUUID.UUID.UUIDString content:content trigger:trigger];
+        [UNUserNotificationCenter.currentNotificationCenter addNotificationRequest:request withCompletionHandler:nil];
+    } else if (!cacheQueueManagerS.isQueueDownloading) {
         // Cancel the next server check otherwise it will fire immediately on launch
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(checkServer) object:nil];
         [self cancelBackgroundTask];
-    }
-    else
-    {
+    } else {
         [self performSelector:@selector(checkRemainingBackgroundTime) withObject:nil afterDelay:1.0];
     }
 }
 
-- (void)cancelBackgroundTask
-{
-    if (self.backgroundTask != UIBackgroundTaskInvalid)
-    {
-        [[UIApplication sharedApplication] endBackgroundTask:self.backgroundTask];
+- (void)cancelBackgroundTask {
+    if (self.backgroundTask != UIBackgroundTaskInvalid) {
+        [UIApplication.sharedApplication endBackgroundTask:self.backgroundTask];
         self.backgroundTask = UIBackgroundTaskInvalid;
     }
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-	//DLog(@"applicationWillEnterForeground called");
+- (void)applicationWillEnterForeground:(UIApplication *)application {
 	
-	if ([[UIApplication sharedApplication] respondsToSelector:@selector(endBackgroundTask:)])
-    {
+	if ([UIApplication.sharedApplication respondsToSelector:@selector(endBackgroundTask:)]) {
 		self.isInBackground = NO;
         [self cancelBackgroundTask];
 	}
@@ -674,56 +516,52 @@ LOG_LEVEL_ISUB_DEFAULT
 	[musicS updateLockScreenInfo];
 }
 
-
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-	//DLog(@"applicationWillTerminate called");
-	
-	[[UIApplication sharedApplication] endReceivingRemoteControlEvents];
-	
+- (void)applicationWillTerminate:(UIApplication *)application {
+	[UIApplication.sharedApplication endReceivingRemoteControlEvents];
 	[settingsS saveState];
-	
 	[audioEngineS.player stop];
 }
 
-- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
-{
-	
-}
-
-
 #pragma mark Helper Methods
 
-- (void)enterOfflineMode
-{
-	if (viewObjectsS.isNoNetworkAlertShowing == NO)
-	{
+- (void)enterOfflineMode {
+	if (viewObjectsS.isNoNetworkAlertShowing == NO) {
 		viewObjectsS.isNoNetworkAlertShowing = YES;
-		
-		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Notice" message:@"Server unavailable, would you like to enter offline mode? Any currently playing music will stop.\n\nIf this is just temporary connection loss, select No." delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-		alert.tag = 4;
-		[alert show];
+        if (settingsS.isPopupsEnabled) {
+            NSString *message = @"Server unavailable, would you like to enter offline mode? Any currently playing music will stop.\n\nIf this is just temporary connection loss, select No.";
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notice" message:message preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                [self enterOfflineModeForce];
+            }]];
+            [alert addAction:[UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleCancel handler:nil]];
+            [self.window.rootViewController presentViewController:alert animated:YES completion:^{
+                viewObjectsS.isNoNetworkAlertShowing = NO;
+            }];
+        }
 	}
 }
 
-
-- (void)enterOnlineMode
-{
-	if (!viewObjectsS.isOnlineModeAlertShowing)
-	{
+- (void)enterOnlineMode {
+	if (!viewObjectsS.isOnlineModeAlertShowing) {
 		viewObjectsS.isOnlineModeAlertShowing = YES;
-		
-		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Notice" message:@"Network detected, would you like to enter online mode? Any currently playing music will stop." delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-		alert.tag = 4;
-		[alert show];
+        if (settingsS.isPopupsEnabled) {
+            NSString *message = @"Network detected, would you like to enter online mode? Any currently playing music will stop.";
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notice" message:message preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                [self enterOnlineModeForce];
+            }]];
+            [alert addAction:[UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleCancel handler:nil]];
+            [self.window.rootViewController presentViewController:alert animated:YES completion:^{
+                viewObjectsS.isOnlineModeAlertShowing = NO;
+            }];
+        }
 	}
 }
 
-
-- (void)enterOfflineModeForce
-{
-	if (settingsS.isOfflineMode)
+- (void)enterOfflineModeForce {
+    if (settingsS.isOfflineMode) {
 		return;
+    }
 	
 	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_EnteringOfflineMode];
 	
@@ -732,121 +570,92 @@ LOG_LEVEL_ISUB_DEFAULT
     [Flurry logEvent:@"JukeboxDisabled"];
     
 	settingsS.isOfflineMode = YES;
-		
+    
 	[audioEngineS.player stop];
-	
 	[streamManagerS cancelAllStreams];
-	
 	[cacheQueueManagerS stopDownloadQueue];
 
-	if (UIDevice.isIPad)
+    if (UIDevice.isIPad) {
 		[self.ipadRootViewController.menuViewController toggleOfflineMode];
-	else
+    } else {
 		[self.mainTabBarController.view removeFromSuperview];
-	
+    }
+    
 	[databaseS closeAllDatabases];
 	[databaseS setupDatabases];
 	
-	if (UIDevice.isIPad)
-	{
+	if (UIDevice.isIPad) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
-	}
-	else
-	{
+	} else {
 		self.currentTabBarController = self.offlineTabBarController;
-		//[self.window addSubview:self.offlineTabBarController.view];
         self.window.rootViewController = self.offlineTabBarController;
 	}
 	
 	[musicS updateLockScreenInfo];
 }
 
-- (void)enterOnlineModeForce
-{
-	if ([self.wifiReach currentReachabilityStatus] == NotReachable)
-		return;
+- (void)enterOnlineModeForce {
+	if ([self.wifiReach currentReachabilityStatus] == NotReachable) return;
 	
 	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_EnteringOnlineMode];
-		
+    
 	settingsS.isOfflineMode = NO;
 	
 	[audioEngineS.player stop];
 	
-	if (UIDevice.isIPad)
+    if (UIDevice.isIPad) {
 		[self.ipadRootViewController.menuViewController toggleOfflineMode];
-	else
+    } else {
 		[self.offlineTabBarController.view removeFromSuperview];
-	
+    }
+    
 	[databaseS closeAllDatabases];
 	[databaseS setupDatabases];
 	[self checkServer];
 	[cacheQueueManagerS startDownloadQueue];
 	
-	if (UIDevice.isIPad)
-	{
+	if (UIDevice.isIPad) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
-	}
-	else
-	{
+	} else {
 		[viewObjectsS orderMainTabBarController];
-		//[self.window addSubview:self.mainTabBarController.view];
         self.window.rootViewController = self.mainTabBarController;
 	}
 	
 	[musicS updateLockScreenInfo];
 }
 
-- (void)reachabilityChangedInternal
-{
-    EX2Reachability *curReach = self.wifiReach;
-    
-	if ([curReach currentReachabilityStatus] == NotReachable)
-	{
-		//Change over to offline mode
-		if (!settingsS.isOfflineMode)
-		{
+- (void)reachabilityChangedInternal {
+    NetworkStatus currentReachabilityStatus = self.wifiReach.currentReachabilityStatus;
+	if (currentReachabilityStatus == NotReachable) {
+		// Change over to offline mode
+		if (!settingsS.isOfflineMode) {
             DDLogVerbose(@"Reachability changed to NotReachable, prompting to go to offline mode");
 			[self enterOfflineMode];
 		}
-	}
-    else if ([curReach currentReachabilityStatus] == ReachableViaWWAN && settingsS.isDisableUsageOver3G)
-    {
-        if (!settingsS.isOfflineMode)
-		{            
+	} else if (currentReachabilityStatus == ReachableViaWWAN && settingsS.isDisableUsageOver3G) {
+        if (!settingsS.isOfflineMode) {
 			[self enterOfflineModeForce];
-            
             [[EX2SlidingNotification slidingNotificationOnMainWindowWithMessage:@"You have chosen to disable usage over cellular in settings and are no longer on Wifi. Entering offline mode." image:nil] showAndHideSlidingNotification];
 		}
-    }
-	else
-	{
+    } else {
 		[self checkServer];
 		
-		if (settingsS.isOfflineMode)
-		{
+		if (settingsS.isOfflineMode) {
 			[self enterOnlineMode];
-		}
-		else
-		{
-            if ([curReach currentReachabilityStatus] == ReachableViaWiFi || settingsS.isManualCachingOnWWANEnabled)
-            {
-                if (!cacheQueueManagerS.isQueueDownloading)
-                {
+		} else {
+            if (currentReachabilityStatus == ReachableViaWiFi || settingsS.isManualCachingOnWWANEnabled) {
+                if (!cacheQueueManagerS.isQueueDownloading) {
                     [cacheQueueManagerS startDownloadQueue];
                 }
-            }
-			else
-            {
+            } else {
                 [cacheQueueManagerS stopDownloadQueue];
             }
 		}
 	}
 }
 
-- (void)reachabilityChanged:(NSNotification *)note
-{
-	if (settingsS.isForceOfflineMode)
-		return;
+- (void)reachabilityChanged:(NSNotification *)note {
+    if (settingsS.isForceOfflineMode) return;
     
     [EX2Dispatch runInMainThreadAsync:^{
         // Cancel any previous requests
@@ -859,224 +668,25 @@ LOG_LEVEL_ISUB_DEFAULT
     }];
 }
 
-- (BOOL)isWifi
-{
-	if ([self.wifiReach currentReachabilityStatus] == ReachableViaWiFi)
-		return YES;
-	else
-		return NO;
+- (BOOL)isWifi {
+    return self.wifiReach.currentReachabilityStatus == ReachableViaWiFi;
 }
 
-- (void)showSettings
-{
-	if (UIDevice.isIPad)
-	{
+- (void)showSettings {
+	if (UIDevice.isIPad) {
 		[self.ipadRootViewController.menuViewController showSettings];
-	}
-	else
-	{
+	} else {
 		self.serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
 		self.serverListViewController.hidesBottomBarWhenPushed = YES;
 		
-		if (self.currentTabBarController.selectedIndex >= 4)
-		{
-			//[self.currentTabBarController.moreNavigationController popToViewController:[currentTabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
+		if (self.currentTabBarController.selectedIndex >= 4) {
 			[self.currentTabBarController.moreNavigationController pushViewController:self.serverListViewController animated:YES];
-		}
-		else if (self.currentTabBarController.selectedIndex == NSNotFound)
-		{
-			//[self.currentTabBarController.moreNavigationController popToRootViewControllerAnimated:YES];
+		} else if (self.currentTabBarController.selectedIndex == NSNotFound) {
 			[self.currentTabBarController.moreNavigationController pushViewController:self.serverListViewController animated:YES];
-		}
-		else
-		{
-			//[(UINavigationController*)self.currentTabBarController.selectedViewController popToRootViewControllerAnimated:YES];
+		} else {
 			[(UINavigationController*)self.currentTabBarController.selectedViewController pushViewController:self.serverListViewController animated:YES];
 		}
 	}
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	switch (alertView.tag)
-	{
-		case 1:
-		{
-			// Title: @"Subsonic Error"
-			if(buttonIndex == 1)
-			{
-				[self showSettings];
-				
-				/*if (UIDevice.isIPad)
-				{
-					[mainMenu showSettings];
-				}
-				else
-				{
-					ServerListViewController *serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
-					
-					if (currentTabBarController.selectedIndex == 4)
-					{
-						[currentTabBarController.moreNavigationController pushViewController:serverListViewController animated:YES];
-					}
-					else
-					{
-						[(UINavigationController*)currentTabBarController.selectedViewController pushViewController:serverListViewController animated:YES];
-					}
-					
-					[serverListViewController release];
-				}*/
-			}
-			
-			break;
-		}
-		/*case 2: // Isn't used
-		{
-			// Title: @"Error"
-			[introController dismissModalViewControllerAnimated:NO];
-			
-			if (buttonIndex == 0)
-			{
-				[self appInit2];
-			}
-			else if (buttonIndex == 1)
-			{
-				if (UIDevice.isIPad)
-				{
-					[mainMenu showSettings];
-				}
-				else
-				{
-					[self showSettings];
-				}
-			}
-			
-			break;
-		}*/
-		case 3:
-		{
-			// Title: @"Server Unavailable"
-			if (buttonIndex == 1)
-			{
-				[self showSettings];
-			}
-			
-			break;
-		}
-		case 4:
-		{
-			// Title: @"Notice"
-			
-			// Offline mode handling
-			
-			viewObjectsS.isOnlineModeAlertShowing = NO;
-			viewObjectsS.isNoNetworkAlertShowing = NO;
-			
-			if (buttonIndex == 1)
-			{
-				if (settingsS.isOfflineMode)
-				{
-					[self enterOnlineModeForce];
-				}
-				else
-				{
-					[self enterOfflineModeForce];
-				}
-			}
-			
-			break;
-		}
-		case 6:
-		{
-			// Title: @"Update Alerts"
-			if (buttonIndex == 0)
-			{
-				settingsS.isUpdateCheckEnabled = NO;
-			}
-			else if (buttonIndex == 1)
-			{
-				settingsS.isUpdateCheckEnabled = YES;
-			}
-			
-			settingsS.isUpdateCheckQuestionAsked = YES;
-			
-			break;
-		}
-	}
-}
-
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
-{   
-	if (UIDevice.isIPad)
-		[self.ipadRootViewController dismissViewControllerAnimated:YES completion:nil];
-	else
-		[self.currentTabBarController dismissViewControllerAnimated:YES completion:nil];
-}
-
-
-/*- (BOOL)wifiReachability
-{
-	switch ([wifiReach currentReachabilityStatus])
-	{
-		case NotReachable:
-		{
-			return NO;
-		}
-		case ReachableViaWWAN:
-		{
-			return NO;
-		}
-		case ReachableViaWiFi:
-		{
-			return YES;
-		}
-	}
-	
-	return NO;
-}*/
-
-
-/*- (BOOL) connectedToNetwork
-{
-	// Create zero addy
-	struct sockaddr_in zeroAddress;
-	bzero(&zeroAddress, sizeof(zeroAddress));
-	zeroAddress.sin_len = sizeof(zeroAddress);
-	zeroAddress.sin_family = AF_INET;
-	
-	// Recover reachability flags
-	SCNetworkReachabilityRef defaultRouteReachability = SCNetworkReachabilityCreateWithAddress(NULL, (struct sockaddr *)&zeroAddress);
-	SCNetworkReachabilityFlags flags;
-	
-	BOOL didRetrieveFlags = SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags);
-	CFRelease(defaultRouteReachability);
-	
-	if (!didRetrieveFlags) {
-		printf("Error. Could not recover network reachability flags\n"); return 0;
-	}
-	
-	BOOL isReachable = flags & kSCNetworkFlagsReachable;
-	BOOL needsConnection = flags & kSCNetworkFlagsConnectionRequired;
-	return (isReachable && !needsConnection) ? YES : NO;
-}*/
-
-- (NSInteger) getHour
-{
-	// Get the time
-	NSCalendar *calendar= [[NSCalendar alloc] initWithCalendarIdentifier: NSCalendarIdentifierGregorian];
-	NSCalendarUnit unitFlags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
-	NSDate *date = [NSDate date];
-	NSDateComponents *dateComponents = [calendar components:unitFlags fromDate:date];
-
-	// Turn the date into Integers
-	//NSInteger year = [dateComponents year];
-	//NSInteger month = [dateComponents month];
-	//NSInteger day = [dateComponents day];
-	//NSInteger hour = [dateComponents hour];
-	//NSInteger min = [dateComponents minute];
-	//NSInteger sec = [dateComponents second];
-	
-	return [dateComponents hour];
 }
 
 #pragma mark Movie Playing
@@ -1129,17 +739,14 @@ LOG_LEVEL_ISUB_DEFAULT
     }
 }
 
-- (void)playVideoNotification:(NSNotification *)notification
-{
+- (void)playVideoNotification:(NSNotification *)notification {
     id aSong = notification.userInfo[@"song"];
-    if (aSong && [aSong isKindOfClass:[ISMSSong class]])
-    {
+    if (aSong && [aSong isKindOfClass:[ISMSSong class]]) {
         [self playVideo:aSong];
     }
 }
 
-- (void)playVideo:(ISMSSong *)aSong
-{
+- (void)playVideo:(ISMSSong *)aSong {
     if (!aSong.isVideo || !settingsS.isVideoSupported)
         return;
     
@@ -1154,8 +761,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 // TODO: Fix video playback
-- (void)playSubsonicVideo:(ISMSSong *)aSong bitrates:(NSArray *)bitrates
-{
+- (void)playSubsonicVideo:(ISMSSong *)aSong bitrates:(NSArray *)bitrates {
     [audioEngineS.player stop];
     
     if (!aSong.songId || !bitrates)

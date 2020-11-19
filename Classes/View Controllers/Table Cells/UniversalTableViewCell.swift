@@ -111,7 +111,8 @@ import SnapKit
         cachedIndicator.isHidden = true
         contentView.addSubview(cachedIndicator)
         cachedIndicator.snp.makeConstraints { make in
-            make.leading.top.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.top.equalTo(headerLabel.snp.bottom)
         }
         
         makeHeaderLabelConstraints()

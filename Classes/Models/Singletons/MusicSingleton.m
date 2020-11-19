@@ -8,7 +8,6 @@
 
 #import "MusicSingleton.h"
 #import "ISMSStreamHandler.h"
-#import "CustomUIAlertView.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
 #import "PlaylistSingleton.h"
@@ -76,15 +75,6 @@ double startSongSeconds = 0.0;
 			//[streamManagerS fillStreamQueue:audioEngineS.player.isStarted];
         }
 	} else if (!currentSong.isFullyCached && settingsS.isOfflineMode) {
-		/*// The song is not fully cached and this is offline mode, so warn that it can't be played
-		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Notice" 
-																	message:@"Unable to play this song in offline mode as it isn't fully cached." 
-																   delegate:self 
-														  cancelButtonTitle:@"Ok" 
-														  otherButtonTitles:nil];
-		alert.tag = 4;
-		[alert show];*/
-		
 		[self playSongAtPosition:playlistS.nextIndex];
 	} else {
 		if ([cacheQueueManagerS.currentQueuedSong isEqualToSong:currentSong]) {

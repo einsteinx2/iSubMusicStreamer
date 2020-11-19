@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SUSLoaderDelegate.h"
 
-@class SettingsTabViewController, HelpTabViewController;
+@class SettingsTabViewController;
 
 @interface ServerListViewController : UITableViewController <SUSLoaderDelegate>
 
@@ -18,7 +18,6 @@
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
 //@property (nonatomic, copy) NSString *theNewRedirectionUrl;
 @property (nonatomic, strong) SettingsTabViewController *settingsTabViewController;
-@property (nonatomic, strong) HelpTabViewController *helpTabViewController;
 
 - (void)addAction:(id)sender;
 - (void)segmentAction:(id)sender;

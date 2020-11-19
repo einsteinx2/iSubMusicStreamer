@@ -11,7 +11,6 @@
 #import "AlbumViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "SearchXMLParser.h"
-#import "CustomUIAlertView.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -129,9 +128,12 @@
     NSURLSessionDataTask *dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
             [EX2Dispatch runInMainThreadAsync:^{
-                NSString *message = [NSString stringWithFormat:@"There was an error completing the search.\n\nError:%@", error.localizedDescription];
-                CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert show];
+                if (settingsS.isPopupsEnabled) {
+                    NSString *message = [NSString stringWithFormat:@"There was an error performing the search.\n\nError:%@", error.localizedDescription];
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+                    [self presentViewController:alert animated:YES completion:nil];
+                }
                 self.isLoading = NO;
             }];
         } else {

@@ -10,7 +10,6 @@
 #import "ServerListViewController.h"
 #import "PlaylistSongsViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
-#import "CustomUIAlertView.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
@@ -618,11 +617,14 @@ LOG_LEVEL_ISUB_DEFAULT
 	NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
     NSURLSessionDataTask *dataTask = [self.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
-            [EX2Dispatch runInMainThreadAsync:^{
-                NSString *message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
-                CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert show];
-            }];
+            if (settingsS.isPopupsEnabled) {
+                [EX2Dispatch runInMainThreadAsync:^{
+                    NSString *message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)error.code, error.localizedDescription];
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+                    [self presentViewController:alert animated:YES completion:nil];
+                }];
+            }
         } else {
             RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
             if (!root.isValid) {
@@ -726,17 +728,23 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (self.deleteSongsLabel.hidden == YES) {
 			if (!self.isEditing) {
 				if (settingsS.isOfflineMode) {
-					[self showSavePlaylistTextBoxAlert];
+					[self showSavePlaylistAlert];
 				} else {
-					self.savePlaylistLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
-					self.playlistCountLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
+//					self.savePlaylistLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
+//					self.playlistCountLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
 					
-					UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Local or Server?" 
-																		  message:@"Would you like to save this playlist to your device or to your Subsonic server?" 
-																		 delegate:self 
-																cancelButtonTitle:nil
-																otherButtonTitles:@"Local", @"Server", nil];
-					[myAlertView show];
+                    NSString *message = @"Would you like to save this playlist to your device or to your Subsonic server?";
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Playlist Location" message:message preferredStyle:UIAlertControllerStyleAlert];
+                    [alert addAction:[UIAlertAction actionWithTitle:@"Local" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        self.savePlaylistLocal = YES;
+                        [self showSavePlaylistAlert];
+                    }]];
+                    [alert addAction:[UIAlertAction actionWithTitle:@"Server" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        self.savePlaylistLocal = NO;
+                        [self showSavePlaylistAlert];
+                    }]];
+                    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+                    [self presentViewController:alert animated:YES completion:nil];
 				}
 			}
 		} else {
@@ -800,96 +808,79 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 }
 
-- (void)showSavePlaylistTextBoxAlert {
-	UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Playlist Name:" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Save", nil];
-	myAlertView.alertViewStyle = UIAlertViewStylePlainTextInput;
-    [myAlertView show];
+- (void)showSavePlaylistAlert {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Save Playlist" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"Playlist name";
+    }];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *name = [[[alert textFields] firstObject] text];
+        if (self.savePlaylistLocal || settingsS.isOfflineMode) {
+            // Check if the playlist exists, if not create the playlist table and add the entry to localPlaylists table
+            NSString *test = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT md5 FROM localPlaylists WHERE md5 = ?", name.md5];
+            if (test) {
+                // If it exists, ask to overwrite
+                [self showOverwritePlaylistAlert:name];
+            } else {
+                NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
+                NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
+                NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
+                NSString *table = playlistS.isShuffle ? shufTable : currTable;
+                
+                [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
+                    [db executeUpdate:@"INSERT INTO localPlaylists (playlist, md5) VALUES (?, ?)", name, name.md5];
+                    [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", name.md5, ISMSSong.standardSongColumnSchema]];
+                    
+                    [db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
+                    if (db.hadError) { DDLogError(@"Err attaching the currentPlaylistDb %d: %@", db.lastErrorCode, db.lastErrorMessage); }
+                    [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", name.md5, table]];
+                    [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
+                }];
+            }
+        } else {
+            NSString *tableName = [NSString stringWithFormat:@"splaylist%@", name.md5];
+            if ([databaseS.localPlaylistsDbQueue tableExists:tableName]) {
+                // If it exists, ask to overwrite
+                [self showOverwritePlaylistAlert:name];
+            } else {
+                [self uploadPlaylist:name];
+            }
+        }
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if ([alertView.title isEqualToString:@"Local or Server?"]) {
-		if (buttonIndex == 0) {
-			self.savePlaylistLocal = YES;
-		} else if (buttonIndex == 1) {
-			self.savePlaylistLocal = NO;
-		} else if (buttonIndex == 2) {
-			return;
-		}
-		
-		[self showSavePlaylistTextBoxAlert];
-	} else if([alertView.title isEqualToString:@"Playlist Name:"]) {
-		NSString *text = [alertView textFieldAtIndex:0].text;
-		if (buttonIndex == 1) {
-			if (self.savePlaylistLocal || settingsS.isOfflineMode) {
-				// Check if the playlist exists, if not create the playlist table and add the entry to localPlaylists table
-				NSString *test = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT md5 FROM localPlaylists WHERE md5 = ?", [text md5]];
-				if (!test) {
-					NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
-					NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-					NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-					NSString *table = playlistS.isShuffle ? shufTable : currTable;
-					
-					[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-						[db executeUpdate:@"INSERT INTO localPlaylists (playlist, md5) VALUES (?, ?)", text, [text md5]];
-						[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", [text md5], [ISMSSong standardSongColumnSchema]]];
-						
-						[db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylist"];
-						//[db executeUpdate:@"ATTACH DATABASE ? AS ?", [NSString stringWithFormat:@"%@/%@currentPlaylist.db", databaseS.databaseFolderPath, [settingsS.urlString md5]], @"currentPlaylistDb"];
-						if ([db hadError]) { DDLogError(@"Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
-						
-						[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", [text md5], table]];
-						[db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
-					}];
-				} else {
-					// If it exists, ask to overwrite
-					UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Overwrite?" message:@"There is already a playlist with this name. Would you like to overwrite it?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-                    [myAlertView ex2SetCustomObject:text forKey:@"name"];
-					[myAlertView show];
-				}
-			} else {
-				NSString *tableName = [NSString stringWithFormat:@"splaylist%@", [text md5]];
-				if ([databaseS.localPlaylistsDbQueue tableExists:tableName]) {
-					// If it exists, ask to overwrite
-					UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Overwrite?" message:@"There is already a playlist with this name. Would you like to overwrite it?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-                    [myAlertView ex2SetCustomObject:text forKey:@"name"];
-					[myAlertView show];
-				} else {
-					[self uploadPlaylist:text];
-				}
-			}
-		}
-	} else if([alertView.title isEqualToString:@"Overwrite?"]) {
-        NSString *text = [alertView ex2CustomObjectForKey:@"name"];
-		if (buttonIndex == 1) {
-			if (self.savePlaylistLocal || settingsS.isOfflineMode) {
-				NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
-				NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-				NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-				NSString *table = playlistS.isShuffle ? shufTable : currTable;
-				
-				[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-					// If yes, overwrite the playlist
-					[db executeUpdate:[NSString stringWithFormat:@"DROP TABLE playlist%@", [text md5]]];
-					[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", [text md5], [ISMSSong standardSongColumnSchema]]];
-					
-					[db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
-					if ([db hadError]) { DDLogError(@"Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
-					
-					[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", [text md5], table]];
-					[db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
-				}];				
-			} else {
-				[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-					[db executeUpdate:[NSString stringWithFormat:@"DROP TABLE splaylist%@", [text md5]]];
-				}];
-				
-				[self uploadPlaylist:text];
-			}
-		}
-	}
-	
-	self.savePlaylistLabel.backgroundColor = [UIColor clearColor];
-	self.playlistCountLabel.backgroundColor = [UIColor clearColor];
+- (void)showOverwritePlaylistAlert:(NSString *)name {
+    NSString *message = [NSString stringWithFormat:@"A playlist named \"%@\" already exists. Would you like to overwrite it?", name];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Overwrite?" message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Overwrite" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        // If yes, overwrite the playlist
+        if (self.savePlaylistLocal || settingsS.isOfflineMode) {
+            NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", settingsS.urlString.md5];
+            NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
+            NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
+            NSString *table = playlistS.isShuffle ? shufTable : currTable;
+            
+            [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
+                [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE playlist%@", name.md5]];
+                [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", name.md5, ISMSSong.standardSongColumnSchema]];
+                
+                [db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
+                if (db.hadError) { DDLogError(@"Err attaching the currentPlaylistDb %d: %@", db.lastErrorCode, db.lastErrorMessage); }
+                [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", name.md5, table]];
+                [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
+            }];
+        } else {
+            [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
+                [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE splaylist%@", name.md5]];
+            }];
+            
+            [self uploadPlaylist:name];
+        }
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)selectRow {
@@ -923,9 +914,13 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)subsonicErrorCode:(NSString *)errorCode message:(NSString *)message {
-	CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Subsonic Error" message:message delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-	alert.tag = 1;
-	[alert show];
+    if (settingsS.isPopupsEnabled) {
+        [EX2Dispatch runInMainThreadAsync:^{
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Subsonic Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+            [self presentViewController:alert animated:YES completion:nil];
+        }];
+    }
 }
 
 #pragma mark Table view methods

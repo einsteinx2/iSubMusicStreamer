@@ -258,8 +258,11 @@ import SnapKit
         let loader = SUSQuickAlbumsLoader { _, error, loader in
             ViewObjects.shared().hideLoadingScreen()
             if let error = error {
-                let alert = CustomUIAlertView(title: "Error", message: "There was an error grabbing the album list.\n\nError: \(error.localizedDescription)", delegate: nil, cancelButtonTitle: "OK")
-                alert.show()
+                if Settings.shared().isPopupsEnabled {
+                    let alert = UIAlertController(title: "Error", message: "There was an error grabbing the album list.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
             } else if let loader = loader as? SUSQuickAlbumsLoader {
                 let controller = HomeAlbumViewController(nibName: "HomeAlbumViewController", bundle: nil)
                 controller.modifier = modifier
@@ -282,8 +285,11 @@ import SnapKit
                 Music.shared().playSong(atPosition: 0)
                 self.showPlayer()
             } else {
-                let alert = CustomUIAlertView(title: "Error", message: "There was an error creating the server shuffle list.\n\nThe connection could not be created", delegate: nil, cancelButtonTitle: "OK")
-                alert.show()
+                if Settings.shared().isPopupsEnabled {
+                    let alert = UIAlertController(title: "Error", message: "There was an error creating the server shuffle list.\n\nThe connection could not be created", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
             }
             self.serverShuffleLoader = nil
         }
@@ -398,9 +404,11 @@ extension HomeViewController: UISearchBarDelegate {
             dataTask = SUSLoader.sharedSession().dataTask(with: request) { data, _, error in
                 EX2Dispatch.runInMainThreadAsync {
                     if let error = error {
-                        let message = "There was an error completing the search.\n\nError: \(error.localizedDescription)"
-                        let alert = CustomUIAlertView(title: "Error", message: message, delegate: nil, cancelButtonTitle: "OK")
-                        alert.show()
+                        if Settings.shared().isPopupsEnabled {
+                            let alert = UIAlertController(title: "Error", message: "There was an error completing the search.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                            self.present(alert, animated: true, completion: nil)
+                        }
                     } else if let data = data {
                         let xmlParser = XMLParser(data: data)
                         let parser = SearchXMLParser()

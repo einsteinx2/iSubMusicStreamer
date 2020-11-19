@@ -209,10 +209,13 @@
 
 - (void)viewDidAppear:(BOOL)animated {
 	if (settingsS.isShouldShowEQViewInstructions) {
-		NSString *title = [NSString stringWithFormat:@"Instructions"];
-		UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:title message:@"Double tap to create a new EQ point and double tap any existing EQ points to remove them." delegate:self cancelButtonTitle:@"Don't Show Again" otherButtonTitles:@"OK", nil];
-		myAlertView.tag = 3;
-		[myAlertView show];
+        NSString *message = @"Double tap to create a new EQ point and double tap any existing EQ points to remove them.";
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Instructions" message:message preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Don't Show Again" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            settingsS.isShouldShowEQViewInstructions = NO;
+        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
 	}
 }
 
@@ -354,10 +357,17 @@
 }
 
 - (void)promptToDeleteCustomPreset {
-	NSString *title = [NSString stringWithFormat:@"\"%@\"", [self.effectDAO.selectedPreset objectForKey:@"name"]];
-	UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:title message:@"Are you sure you want to delete this preset?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Delete", nil];
-	myAlertView.tag = 1;
-	[myAlertView show];
+    NSString *title = [NSString stringWithFormat:@"\"%@\"", [self.effectDAO.selectedPreset objectForKey:@"name"]];
+    NSString *message = @"Are you sure you want to delete this preset?";
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [self.effectDAO deleteCustomPresetForId:self.effectDAO.selectedPresetId];
+        [self updatePresetPicker];
+        [self.presetPicker selectRow:0 inComponent:0 animated:NO];
+        [self pickerView:self.presetPicker didSelectRow:0 inComponent:0];
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)promptToSaveCustomPreset {
@@ -382,35 +392,18 @@
 }
 
 - (void)promptForSavePresetName {
-	UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"New Preset Name:" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Save", nil];
-	myAlertView.alertViewStyle = UIAlertViewStylePlainTextInput;
-	myAlertView.tag = 2;
-	[myAlertView show];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if (alertView.tag == 1) {
-		// Delete the preset
-		if (buttonIndex) {
-			[self.effectDAO deleteCustomPresetForId:self.effectDAO.selectedPresetId];
-			[self updatePresetPicker];
-            [self.presetPicker selectRow:0 inComponent:0 animated:NO];
-            [self pickerView:self.presetPicker didSelectRow:0 inComponent:0];
-		}
-	} else if (alertView.tag == 2) {
-		// Save the preset
-		if (buttonIndex) {
-			//DLog(@"Preset name: %@", presetNameTextField.text);
-            NSString *text = [alertView textFieldAtIndex:0].text;
-			[self.effectDAO saveCustomPreset:[self serializedEqPoints] name:text];
-			[self.effectDAO deleteTempCustomPreset];
-			[self updatePresetPicker];
-		}
-	} else if (alertView.tag == 3) {
-		if (buttonIndex == 0) {
-			settingsS.isShouldShowEQViewInstructions = NO;
-		}
-	}
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Create Preset" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"Preset name";
+    }];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *name = [alert.textFields.firstObject text];
+        [self.effectDAO saveCustomPreset:self.serializedEqPoints name:name];
+        [self.effectDAO deleteTempCustomPreset];
+        [self updatePresetPicker];
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (IBAction)movedGainSlider:(id)sender {

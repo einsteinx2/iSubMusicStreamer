@@ -12,7 +12,6 @@
 #import "FolderDropdownControl.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "SUSAllSongsLoader.h"
-#import "CustomUIAlertView.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -289,21 +288,21 @@
 #pragma mark Button handling methods
 
 - (void)reloadAction:(id)sender {
-	if (![SUSAllSongsLoader isLoading]) {
+	if (!SUSAllSongsLoader.isLoading) {
 		[self loadData:[settingsS rootFoldersSelectedFolderId]];
-	} else {
-		CustomUIAlertView *alert = [[CustomUIAlertView alloc] initWithTitle:@"Please Wait" message:@"You cannot reload the Artists tab while the Albums or Songs tabs are loading" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-	}
+	} else if (settingsS.isPopupsEnabled) {
+        NSString *message = @"You cannot reload the Artists tab while the Albums or Songs tabs are loading";
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Please Wait" message:message preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
-
 
 - (void)settingsAction:(id)sender {
 	ServerListViewController *serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
 	serverListViewController.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:serverListViewController animated:YES];
 }
-
 
 - (IBAction)nowPlayingAction:(id)sender {
     PlayerViewController *playerViewController = [[PlayerViewController alloc] init];

@@ -10,7 +10,6 @@
 #define iSub_iSubAppDelegate_h
 
 #import <MessageUI/MessageUI.h>
-#import <MessageUI/MFMailComposeViewController.h>
 
 #import "SUSLoaderDelegate.h"
 #import "EX2Kit.h"
@@ -22,7 +21,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppDelegate)
-@interface iSubAppDelegate : NSObject <UIApplicationDelegate, MFMailComposeViewControllerDelegate, SUSLoaderDelegate>
+@interface iSubAppDelegate : NSObject <UIApplicationDelegate, SUSLoaderDelegate>
 
 @property (nullable, strong) HTTPServer *hlsProxyServer;
 
@@ -79,7 +78,6 @@ NS_SWIFT_NAME(AppDelegate)
 - (void)loadFlurryAnalytics;
 
 - (void)reachabilityChanged:(nullable NSNotification *)note;
-- (NSInteger)getHour;
 
 - (void)showSettings;
 

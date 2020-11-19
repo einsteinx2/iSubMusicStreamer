@@ -26,16 +26,19 @@
 
 #pragma mark - Rotation
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	if (!UIDevice.isIPad && self.isNoChatMessagesScreenShowing) {
-		if (UIInterfaceOrientationIsPortrait(fromInterfaceOrientation)) {
-			CGAffineTransform translate = CGAffineTransformMakeTranslation(0.0, 42.0);
-			self.noChatMessagesScreen.transform = translate;
-		} else {
-			CGAffineTransform translate = CGAffineTransformMakeTranslation(0.0, -160.0);
-			self.noChatMessagesScreen.transform = translate;
-		}
-	}
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        if (!UIDevice.isIPad && self.isNoChatMessagesScreenShowing) {
+            if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
+                CGAffineTransform translate = CGAffineTransformMakeTranslation(0.0, -160.0);
+                self.noChatMessagesScreen.transform = translate;
+            } else {
+                CGAffineTransform translate = CGAffineTransformMakeTranslation(0.0, 42.0);
+                self.noChatMessagesScreen.transform = translate;
+            }
+        }
+    } completion:nil];
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 #pragma mark Life Cycle
@@ -58,7 +61,6 @@
     [super viewDidLoad];
 	
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.automaticallyAdjustsScrollViewInsets = NO;
     
 	self.isNoChatMessagesScreenShowing = NO;
 	

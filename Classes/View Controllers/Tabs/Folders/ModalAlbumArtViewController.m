@@ -27,9 +27,6 @@
         }
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) { }];
     
-    [[UIApplication sharedApplication] setStatusBarHidden:UIInterfaceOrientationIsLandscape(UIApplication.orientation)
-                                            withAnimation:UIStatusBarAnimationSlide];
-    
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
@@ -74,22 +71,9 @@
     self.albumArt.coverArtId = self.myAlbum.coverArtId;
 	
     self.albumArtReflection.image = [self.albumArt reflectedImageWithHeight:self.albumArtReflection.height];
-	
-	if (!UIDevice.isIPad) {
-		if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
-			[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-            self.albumArt.width = 480;
-        } else {
-			[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-		}
-	}
 }
 
 - (IBAction)dismiss:(id)sender {
-    if (!UIDevice.isIPad) {
-		[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-    }
-    
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
 

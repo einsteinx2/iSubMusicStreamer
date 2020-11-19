@@ -22,9 +22,6 @@
 
 LOG_LEVEL_ISUB_DEFAULT
 
-// Singleton object
-static AudioEngine *sharedInstance = nil;
-
 - (void)handleInterruption:(NSNotification *)notification {
     AVAudioSessionInterruptionType interruptionType = [[[notification userInfo] objectForKey:AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
     if (interruptionType == AVAudioSessionInterruptionTypeBegan) {
@@ -88,8 +85,8 @@ static AudioEngine *sharedInstance = nil;
 - (void)setup {	
 	[[AVAudioSession sharedInstance] setActive:YES error:nil];
 	
-    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(handleInterruption:) name:AVAudioSessionInterruptionNotification object:[AVAudioSession sharedInstance]];
-    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(handleRouteChange:) name:AVAudioSessionRouteChangeNotification object:[AVAudioSession sharedInstance]];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(handleInterruption:) name:AVAudioSessionInterruptionNotification object:AVAudioSession.sharedInstance];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(handleRouteChange:) name:AVAudioSessionRouteChangeNotification object:AVAudioSession.sharedInstance];
     
     _delegate = [[iSubBassGaplessPlayerDelegate alloc] init];
     
@@ -99,6 +96,7 @@ static AudioEngine *sharedInstance = nil;
     }];
 }
 
+static AudioEngine *sharedInstance = nil;
 + (instancetype)sharedInstance {
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{
