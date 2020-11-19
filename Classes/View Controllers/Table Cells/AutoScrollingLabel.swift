@@ -9,6 +9,8 @@
 import UIKit
 import SnapKit
 
+private let labelGap = 25.0
+
 @objc class AutoScrollingLabel: UIView {
     private let scrollView = UIScrollView()
     private let label1 = UILabel()
@@ -28,10 +30,11 @@ import SnapKit
         set {
             label1.font = newValue
             label2.font = newValue
-            stopScrolling()
-            updateLabelSize()
-            if autoScroll {
-                startScrolling()
+            if self.window != nil {
+                stopScrolling()
+                if autoScroll {
+                    startScrolling()
+                }
             }
         }
     }
@@ -53,10 +56,11 @@ import SnapKit
         set {
             label1.text = newValue
             label2.text = newValue
-            stopScrolling()
-            updateLabelSize()
-            if autoScroll {
-                startScrolling()
+            if self.window != nil {
+                stopScrolling()
+                if autoScroll {
+                    startScrolling()
+                }
             }
         }
     }
@@ -70,26 +74,31 @@ import SnapKit
         scrollView.decelerationRate = .fast
         addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalToSuperview()
+            make.width.equalToSuperview().priority(.required)
+            make.leading.top.bottom.equalToSuperview().priority(.required)
         }
         
         // Must use an intermediary content view for autolayout to work correctly inside a scroll view
         let contentView = UIView()
         scrollView.addSubview(contentView)
         contentView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalToSuperview()
+            make.leading.trailing.top.bottom.equalToSuperview().priority(.required)
         }
-        
+
         contentView.addSubview(label1)
         label1.snp.makeConstraints { make in
             make.centerY.equalTo(scrollView)
         }
-        
+
+        label2.isHidden = true
         contentView.addSubview(label2)
         label2.snp.makeConstraints { make in
             make.centerY.equalTo(scrollView)
+            make.leading.equalTo(label1.snp.trailing).offset(labelGap)
         }
-        
+
+        // Background colors for debugging autolayout
+//        backgroundColor = .darkGray
 //        scrollView.backgroundColor = .red
 //        contentView.backgroundColor = .blue
 //        label1.backgroundColor = .green
@@ -101,36 +110,25 @@ import SnapKit
     }
     
     override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        updateLabelSize()
+        stopScrolling()
         scrollView.layoutSubviews()
-
+        
+        // Must call super AFTER updating scroll view or it will layout incorrectly
+        super.layoutSubviews()
+                
         if autoScroll {
             startScrolling()
         }
     }
     
-    func updateLabelSize() {
-        guard let text = text, let font = font, scrollView.frame.width > 0, !isInsideTableHeader else { return }
-
-        let size = text.boundingRect(with: CGSize(width: 1000, height: self.frame.height),
-                                     options: .usesLineFragmentOrigin,
-                                     attributes: [NSAttributedString.Key.font: font],
-                                     context: nil)
-        label1.frame.size.width = size.width
-        label2.frame.size.width = size.width
-    }
-    
     private func createAnimator(delay: TimeInterval) {
-        guard scrollView.frame.width > 0, scrollView.frame.width < label1.frame.width else { return }
-        
-        // Set initial positions
-        label1.frame.origin.x = 0
-        label2.frame.origin.x = label1.frame.width + 50//scrollView.frame.width
+        guard scrollView.frame.width > 0, label1.frame.width > 0, scrollView.frame.width < label1.frame.width else { return }
         
         // Stop any existing animation
         stopScrolling()
+        
+        // Unhide label2 for the animation
+        label2.isHidden = false
         
         // Create the new animation
         let startTime = Date()
@@ -139,28 +137,28 @@ import SnapKit
         duration = duration < minDuration ? minDuration : duration
         animator = UIViewPropertyAnimator(duration: duration, curve: .linear) { [unowned self] in
             // Animate to show the second label
-            let x = self.label1.frame.width + 50
-            self.scrollView.contentOffset = CGPoint(x: x, y: self.scrollView.contentOffset.y)//0)
+            self.scrollView.contentOffset.x = self.label1.frame.width + CGFloat(labelGap)
         }
         animator?.addCompletion { [unowned self] position in
             // Hack due to UIKit bug that causes the completion block to fire instantly
             // if animation starts before the view is fully displayed like in a table cell
-            guard Date().timeIntervalSince(startTime) > (delay + duration) * 0.9 else {
-                // Instantly reset the view position and restart the animation
-                self.scrollView.contentOffset = CGPoint(x: 0, y: self.scrollView.contentOffset.y)//CGPoint.zero
-                self.animator = nil;
-                self.startScrolling(delay: delay)
-                return
-            }
+            // which means we need to reschedule with the same delay instead of the longer repeat delay
+            let didAnimate = Date().timeIntervalSince(startTime) > (delay + duration) * 0.9
+            let repeatDelay = didAnimate ? delay * 5 : delay
             
             // Reset scroll view before the next run
-            self.scrollView.contentOffset = CGPoint(x: 0, y: self.scrollView.contentOffset.y)
+            resetScrollView()
             self.animator = nil;
             if self.repeatScroll {
-                self.startScrolling(delay: delay * 5)
+                self.startScrolling(delay: repeatDelay)
             }
         }
         animator?.isInterruptible = true
+    }
+    
+    private func resetScrollView() {
+        label2.isHidden = true
+        scrollView.contentOffset = .zero
     }
     
     @objc func startScrolling(delay: TimeInterval = 2.5) {
@@ -171,7 +169,7 @@ import SnapKit
     @objc func stopScrolling() {
         animator?.stopAnimation(true)
         animator = nil
-        self.scrollView.contentOffset = CGPoint.zero
+        resetScrollView()
     }
     
     deinit {
@@ -180,8 +178,15 @@ import SnapKit
     
     override func didMoveToWindow() {
         super.didMoveToWindow()
-        if self.window == nil {
-            self.stopScrolling()
+        if window == nil {
+            // If the view leaves the window, stop and reset all scrolling
+            stopScrolling()
+        } else {
+            // Force the labels to re-layout or it won't always animate
+            label1.setNeedsLayout()
+            label2.setNeedsLayout()
+            label1.layoutIfNeeded()
+            label2.layoutIfNeeded()
         }
     }
 }
