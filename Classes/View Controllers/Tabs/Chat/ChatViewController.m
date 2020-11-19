@@ -75,7 +75,7 @@
 	
 	self.textInput = [[CustomUITextView alloc] initWithFrame:CGRectMake(5, 5, 240, 72)];
 	self.textInput.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	self.textInput.font = ISMSRegularFont(16);
+    self.textInput.font = [UIFont systemFontOfSize:16];
 	self.textInput.delegate = self;
 	[self.headerView addSubview:self.textInput];
 	
@@ -143,7 +143,7 @@
 		UILabel *textLabel = [[UILabel alloc] init];
 		textLabel.backgroundColor = [UIColor clearColor];
 		textLabel.textColor = [UIColor whiteColor];
-		textLabel.font = ISMSBoldFont(30);
+		textLabel.font = [UIFont boldSystemFontOfSize:30];
 		textLabel.textAlignment = NSTextAlignmentCenter;
 		textLabel.numberOfLines = 0;
 		[textLabel setText:@"No Chat Messages\non the\nServer"];
@@ -254,7 +254,7 @@
 	ISMSChatMessage *aChatMessage = [self.dataModel.chatMessages objectAtIndexSafe:indexPath.row];
     CGSize expectedLabelSize = [aChatMessage.message boundingRectWithSize:CGSizeMake(310,CGFLOAT_MAX)
                                                                   options:NSStringDrawingUsesLineFragmentOrigin
-                                                               attributes:@{NSFontAttributeName:ISMSRegularFont(20)}
+                                                               attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:20]}
                                                                   context:nil].size;
     if (expectedLabelSize.height < 40) {
 		expectedLabelSize.height = 40;

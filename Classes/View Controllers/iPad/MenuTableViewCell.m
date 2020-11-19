@@ -24,21 +24,13 @@
         self.backgroundView = [[UIView alloc] init];
         self.backgroundView.backgroundColor = [UIColor clearColor];
 				
-		self.textLabel.font = ISMSBoldFont([UIFont systemFontSize]);
+        self.textLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
 		self.textLabel.shadowOffset = CGSizeMake(0, 2);
 		self.textLabel.shadowColor = [UIColor colorWithWhite:0 alpha:0.25];
         self.textLabel.backgroundColor = [UIColor clearColor];
 		
 		self.imageView.contentMode = UIViewContentModeCenter;
-		
-//		UIView *topLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 1)];
-//		topLine.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.25];
-//		[self.textLabel.superview addSubview:topLine];
-//		
-//		UIView *bottomLine = [[UIView alloc] initWithFrame:CGRectMake(0, 43, self.bounds.size.width, 1)];
-//		bottomLine.backgroundColor = [UIColor colorWithWhite:0 alpha:0.25];
-//		[self.textLabel.superview addSubview:bottomLine];
-		
+        
         self.glowView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 43)];
         self.glowView.image = [UIImage imageNamed:@"glow.png"];
         self.glowView.hidden = YES;
@@ -50,7 +42,6 @@
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
-	
 	self.textLabel.frame = CGRectMake(75, 0, self.bounds.size.width - 75, self.bounds.size.height);
 	self.imageView.frame = CGRectMake(0, 0, 70, self.bounds.size.height);
 }

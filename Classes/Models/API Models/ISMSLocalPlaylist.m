@@ -12,7 +12,7 @@
 #import "FMDatabaseQueueAdditions.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
-#import "ISMSNotificationNames.h"
+#import "Defines.h"
 
 @implementation ISMSLocalPlaylist
 

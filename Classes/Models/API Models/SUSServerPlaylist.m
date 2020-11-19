@@ -14,7 +14,7 @@
 #import "ViewObjectsSingleton.h"
 #import "SUSLoader.h"
 #import "NSMutableURLRequest+SUS.h"
-#import "ISMSNotificationNames.h"
+#import "Defines.h"
 
 @implementation SUSServerPlaylist
 

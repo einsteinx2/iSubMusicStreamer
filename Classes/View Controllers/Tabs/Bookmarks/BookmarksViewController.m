@@ -87,7 +87,7 @@
 		UILabel *textLabel = [[UILabel alloc] init];
 		textLabel.backgroundColor = [UIColor clearColor];
 		textLabel.textColor = [UIColor whiteColor];
-		textLabel.font = ISMSBoldFont(30);
+		textLabel.font = [UIFont boldSystemFontOfSize:30];
 		textLabel.textAlignment = NSTextAlignmentCenter;
 		textLabel.numberOfLines = 0;
 		if (settingsS.isOfflineMode) {
@@ -111,7 +111,7 @@
 		self.bookmarkCountLabel.backgroundColor = [UIColor clearColor];
 		self.bookmarkCountLabel.textColor = [UIColor whiteColor];
 		self.bookmarkCountLabel.textAlignment = NSTextAlignmentCenter;
-		self.bookmarkCountLabel.font = ISMSBoldFont(22);
+		self.bookmarkCountLabel.font = [UIFont boldSystemFontOfSize:22];
 		if (bookmarksCount == 1)
 			self.bookmarkCountLabel.text = [NSString stringWithFormat:@"1 Bookmark"];
 		else 
@@ -129,7 +129,7 @@
 		self.editBookmarksLabel.backgroundColor = [UIColor clearColor];
 		self.editBookmarksLabel.textColor = [UIColor whiteColor];
 		self.editBookmarksLabel.textAlignment = NSTextAlignmentCenter;
-		self.editBookmarksLabel.font = ISMSBoldFont(22);
+		self.editBookmarksLabel.font = [UIFont boldSystemFontOfSize:22];
 		self.editBookmarksLabel.text = @"Edit";
 		[self.headerView addSubview:self.editBookmarksLabel];
 		
@@ -144,7 +144,7 @@
 		self.deleteBookmarksLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
 		self.deleteBookmarksLabel.textColor = [UIColor whiteColor];
 		self.deleteBookmarksLabel.textAlignment = NSTextAlignmentCenter;
-		self.deleteBookmarksLabel.font = ISMSBoldFont(22);
+		self.deleteBookmarksLabel.font = [UIFont boldSystemFontOfSize:22];
 		self.deleteBookmarksLabel.adjustsFontSizeToFitWidth = YES;
 		self.deleteBookmarksLabel.minimumScaleFactor = 12.0 / self.deleteBookmarksLabel.font.pointSize;
 		self.deleteBookmarksLabel.text = @"Remove # Bookmarks";

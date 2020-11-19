@@ -245,7 +245,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	serverNameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	serverNameLabel.backgroundColor = [UIColor clearColor];
 	serverNameLabel.textAlignment = NSTextAlignmentLeft; // default
-	serverNameLabel.font = ISMSBoldFont(20);
+	serverNameLabel.font = [UIFont boldSystemFontOfSize:20];
 	[serverNameLabel setText:aServer.url];
 	[cell.contentView addSubview:serverNameLabel];
 	
@@ -253,7 +253,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	detailsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	detailsLabel.backgroundColor = [UIColor clearColor];
 	detailsLabel.textAlignment = NSTextAlignmentLeft; // default
-	detailsLabel.font = ISMSRegularFont(15);
+    detailsLabel.font = [UIFont systemFontOfSize:15];
 	[detailsLabel setText:[NSString stringWithFormat:@"username: %@", aServer.username]];
 	[cell.contentView addSubview:detailsLabel];
 	

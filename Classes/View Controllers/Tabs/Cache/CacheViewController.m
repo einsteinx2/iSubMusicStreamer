@@ -510,7 +510,7 @@
 		self.songsCountLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
         self.songsCountLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
 		self.songsCountLabel.textAlignment = NSTextAlignmentCenter;
-		self.songsCountLabel.font = ISMSBoldFont(22);
+		self.songsCountLabel.font = [UIFont boldSystemFontOfSize:22];
 		if (self.segmentedControl.selectedSegmentIndex == 0) {
 			NSUInteger cachedSongsCount = [databaseS.songCacheDbQueue intForQuery:@"SELECT COUNT(*) FROM cachedSongs WHERE finished = 'YES' AND md5 != ''"];
             if ([databaseS.songCacheDbQueue intForQuery:@"SELECT COUNT(*) FROM cachedSongs WHERE finished = 'YES' AND md5 != ''"] == 1) {
@@ -531,7 +531,7 @@
 		self.cacheSizeLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
         self.cacheSizeLabel.textColor = UIColor.labelColor;
 		self.cacheSizeLabel.textAlignment = NSTextAlignmentCenter;
-		self.cacheSizeLabel.font = ISMSBoldFont(12);
+		self.cacheSizeLabel.font = [UIFont boldSystemFontOfSize:12];
 		if (self.segmentedControl.selectedSegmentIndex == 0) {
             if (cacheS.cacheSize <= 0) {
 				self.cacheSizeLabel.text = @"";
@@ -564,7 +564,7 @@
 		self.editSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
         self.editSongsLabel.textColor = UIColor.labelColor;
 		self.editSongsLabel.textAlignment = NSTextAlignmentCenter;
-		self.editSongsLabel.font = ISMSBoldFont(22);
+		self.editSongsLabel.font = [UIFont boldSystemFontOfSize:22];
 		self.editSongsLabel.text = @"Edit";
 		[self.saveEditContainer addSubview:self.editSongsLabel];
 		
@@ -579,7 +579,7 @@
 		self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
         self.deleteSongsLabel.textColor = UIColor.labelColor;
 		self.deleteSongsLabel.textAlignment = NSTextAlignmentCenter;
-		self.deleteSongsLabel.font = ISMSBoldFont(22);
+		self.deleteSongsLabel.font = [UIFont boldSystemFontOfSize:22];
 		self.deleteSongsLabel.adjustsFontSizeToFitWidth = YES;
 		self.deleteSongsLabel.minimumScaleFactor = 12.0 / self.deleteSongsLabel.font.pointSize;
 		self.deleteSongsLabel.text = @"Delete # Songs";
@@ -615,7 +615,7 @@
 		UILabel *textLabel = [[UILabel alloc] init];
 //		textLabel.backgroundColor = [UIColor clearColor];
 		textLabel.textColor = [UIColor whiteColor];
-		textLabel.font = ISMSBoldFont(30);
+		textLabel.font = [UIFont boldSystemFontOfSize:30];
 		textLabel.textAlignment = NSTextAlignmentCenter;
 		textLabel.numberOfLines = 0;
         if (self.segmentedControl.selectedSegmentIndex == 0) {

@@ -54,7 +54,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			sendLabel.backgroundColor = [UIColor clearColor];
 			sendLabel.textColor = ISMSHeaderTextColor;
 			sendLabel.textAlignment = NSTextAlignmentCenter;
-			sendLabel.font = ISMSBoldFont(30);
+			sendLabel.font = [UIFont boldSystemFontOfSize:30];
 			sendLabel.text = @"Save to Server";
 			[headerView addSubview:sendLabel];
 			

@@ -11,6 +11,7 @@
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
 #import "Defines.h"
+#import "ISMSBassVisualType.h"
 
 @interface EqualizerView : UIView
 

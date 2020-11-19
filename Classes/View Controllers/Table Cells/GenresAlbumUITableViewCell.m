@@ -38,7 +38,7 @@
 		_albumNameLabel = [[UILabel alloc] init];
 		_albumNameLabel.backgroundColor = [UIColor clearColor];
 		_albumNameLabel.textAlignment = NSTextAlignmentLeft; // default
-		_albumNameLabel.font = ISMSAlbumFont;
+		_albumNameLabel.font = [UIFont systemFontOfSize:16];
 		[_albumNameScrollView addSubview:_albumNameLabel];
 	}
 	

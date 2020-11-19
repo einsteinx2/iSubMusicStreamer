@@ -30,7 +30,7 @@
 		_cacheInfoLabel.textAlignment = NSTextAlignmentCenter; // default
 		_cacheInfoLabel.backgroundColor = [UIColor blackColor];
 		_cacheInfoLabel.alpha = .65;
-		_cacheInfoLabel.font = ISMSBoldFont(10);
+        _cacheInfoLabel.font = [UIFont boldSystemFontOfSize:10];
         _cacheInfoLabel.textColor = [UIColor labelColor];
 		[self.contentView addSubview:_cacheInfoLabel];
 		
@@ -47,14 +47,14 @@
 		_songNameLabel = [[UILabel alloc] init];
 		_songNameLabel.backgroundColor = [UIColor clearColor];
 		_songNameLabel.textAlignment = NSTextAlignmentLeft; // default
-		_songNameLabel.font = ISMSSongFont;
+		_songNameLabel.font = [UIFont systemFontOfSize:16];
         _songNameLabel.textColor = [UIColor labelColor];
 		[_nameScrollView addSubview:_songNameLabel];
 		
 		_artistNameLabel = [[UILabel alloc] init];
 		_artistNameLabel.backgroundColor = [UIColor clearColor];
 		_artistNameLabel.textAlignment = NSTextAlignmentLeft; // default
-		_artistNameLabel.font = ISMSRegularFont(15);
+        _artistNameLabel.font = [UIFont systemFontOfSize:15];
         _artistNameLabel.textColor = [UIColor labelColor];
 		[_nameScrollView addSubview:_artistNameLabel];
 	}

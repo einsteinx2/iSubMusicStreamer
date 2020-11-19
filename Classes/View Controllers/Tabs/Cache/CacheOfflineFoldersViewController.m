@@ -294,7 +294,7 @@
 		
 		UILabel *textLabel = [[UILabel alloc] init];
 		textLabel.textColor = UIColor.whiteColor;
-		textLabel.font = ISMSBoldFont(30);
+		textLabel.font = [UIFont boldSystemFontOfSize:30];
 		textLabel.textAlignment = NSTextAlignmentCenter;
 		textLabel.numberOfLines = 0;
         textLabel.text = @"No Cached\nSongs";

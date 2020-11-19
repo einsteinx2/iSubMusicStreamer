@@ -50,7 +50,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		_selectedFolderLabel.backgroundColor = [UIColor clearColor];
         _selectedFolderLabel.textColor = _textColor;//_borderColor;
 		_selectedFolderLabel.textAlignment = NSTextAlignmentCenter;
-        _selectedFolderLabel.font = [UIFont boldSystemFontOfSize:20];//ISMSBoldFont(20);
+        _selectedFolderLabel.font = [UIFont boldSystemFontOfSize:20];
 		_selectedFolderLabel.text = @"All Folders";
 		[self addSubview:_selectedFolderLabel];
 		
@@ -130,7 +130,7 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
 			folderLabel.backgroundColor = self.darkColor;
 		folderLabel.textColor = self.textColor;
 		folderLabel.textAlignment = NSTextAlignmentCenter;
-        folderLabel.font = [UIFont boldSystemFontOfSize:20];//ISMSBoldFont(20);
+        folderLabel.font = [UIFont boldSystemFontOfSize:20];
 		folderLabel.text = folder;
 		folderLabel.tag = tag;
         folderLabel.isAccessibilityElement = NO;

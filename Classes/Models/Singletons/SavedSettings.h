@@ -14,6 +14,7 @@
 #import <Social/Social.h>
 #import "PlaylistSingleton.h"
 #import "Defines.h"
+#import "ISMSBassVisualType.h"
 
 #define settingsS ((SavedSettings *)[SavedSettings sharedInstance])
 

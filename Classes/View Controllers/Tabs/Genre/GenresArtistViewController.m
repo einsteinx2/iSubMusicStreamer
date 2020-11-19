@@ -67,7 +67,7 @@
 //	playAllLabel.backgroundColor = [UIColor clearColor];
 //	playAllLabel.textColor = ISMSHeaderButtonColor;
 //	playAllLabel.textAlignment = NSTextAlignmentCenter;
-//	playAllLabel.font = ISMSBoldFont(24);
+//	playAllLabel.font = [UIFont boldSystemFontOfSize:24];
 //	playAllLabel.text = @"Play All";
 //	[headerView addSubview:playAllLabel];
 //
@@ -82,7 +82,7 @@
 //	shuffleLabel.backgroundColor = [UIColor clearColor];
 //	shuffleLabel.textColor = ISMSHeaderButtonColor;
 //	shuffleLabel.textAlignment = NSTextAlignmentCenter;
-//	shuffleLabel.font = ISMSBoldFont(24);
+//	shuffleLabel.font = [UIFont boldSystemFontOfSize:24];
 //	shuffleLabel.text = @"Shuffle";
 //	[headerView addSubview:shuffleLabel];
 //

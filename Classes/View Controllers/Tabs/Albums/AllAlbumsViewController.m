@@ -80,7 +80,7 @@
 	self.countLabel.backgroundColor = [UIColor clearColor];
 	self.countLabel.textColor = [UIColor blackColor];
 	self.countLabel.textAlignment = NSTextAlignmentCenter;
-	self.countLabel.font = ISMSBoldFont(30);
+	self.countLabel.font = [UIFont boldSystemFontOfSize:30];
 	[self.headerView addSubview:self.countLabel];
 	
 	self.searchBar = [[UISearchBar  alloc] initWithFrame:CGRectMake(0, 50, 320, 40)];
@@ -95,7 +95,7 @@
 	self.reloadTimeLabel.backgroundColor = [UIColor clearColor];
 	self.reloadTimeLabel.textColor = [UIColor colorWithRed:176.0/255.0 green:181.0/255.0 blue:188.0/255.0 alpha:1];
 	self.reloadTimeLabel.textAlignment = NSTextAlignmentCenter;
-	self.reloadTimeLabel.font = ISMSRegularFont(11);
+    self.reloadTimeLabel.font = [UIFont systemFontOfSize:11];
 	[self.headerView addSubview:self.reloadTimeLabel];
 	
 	self.countLabel.text = [NSString stringWithFormat:@"%lu Albums", (unsigned long)self.dataModel.count];

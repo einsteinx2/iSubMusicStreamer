@@ -128,15 +128,15 @@
 	self.countLabel.backgroundColor = [UIColor clearColor];
     self.countLabel.textColor = UIColor.labelColor;//ISMSHeaderTextColor;
 	self.countLabel.textAlignment = NSTextAlignmentCenter;
-    self.countLabel.font = [UIFont boldSystemFontOfSize:32];//ISMSBoldFont(30);
+    self.countLabel.font = [UIFont boldSystemFontOfSize:32];
 	[self.headerView addSubview:self.countLabel];
 	
 	self.reloadTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, 320, 14)];
 	self.reloadTimeLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	self.reloadTimeLabel.backgroundColor = [UIColor clearColor];
-    self.reloadTimeLabel.textColor = UIColor.labelColor;//ISMSHeaderTextColor;
+    self.reloadTimeLabel.textColor = UIColor.labelColor;
 	self.reloadTimeLabel.textAlignment = NSTextAlignmentCenter;
-    self.reloadTimeLabel.font = [UIFont systemFontOfSize:11];//ISMSRegularFont(11);
+    self.reloadTimeLabel.font = [UIFont systemFontOfSize:11];
 	[self.headerView addSubview:self.reloadTimeLabel];
 	
     self.dropdown = [[FolderDropdownControl alloc] initWithFrame:CGRectMake(50, 61, 220, 40)];

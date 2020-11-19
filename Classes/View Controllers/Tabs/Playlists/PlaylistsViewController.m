@@ -244,7 +244,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.savePlaylistLabel.backgroundColor = [UIColor clearColor];
 		self.savePlaylistLabel.textColor = [UIColor whiteColor];
 		self.savePlaylistLabel.textAlignment = NSTextAlignmentCenter;
-		self.savePlaylistLabel.font = ISMSBoldFont(22);
+		self.savePlaylistLabel.font = [UIFont boldSystemFontOfSize:22];
 		if (self.segmentedControl.selectedSegmentIndex == 0) {
 			self.savePlaylistLabel.text = @"Save Playlist";
 		} else if (self.segmentedControl.selectedSegmentIndex == 1) {
@@ -271,7 +271,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.playlistCountLabel.backgroundColor = [UIColor clearColor];
 		self.playlistCountLabel.textColor = [UIColor whiteColor];
 		self.playlistCountLabel.textAlignment = NSTextAlignmentCenter;
-		self.playlistCountLabel.font = ISMSBoldFont(12);
+		self.playlistCountLabel.font = [UIFont boldSystemFontOfSize:12];
 		if (self.segmentedControl.selectedSegmentIndex == 0) {
             if (self.currentPlaylistCount == 1) {
 				self.playlistCountLabel.text = [NSString stringWithFormat:@"1 song"];
@@ -292,7 +292,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.editPlaylistLabel.backgroundColor = [UIColor clearColor];
 		self.editPlaylistLabel.textColor = [UIColor whiteColor];
 		self.editPlaylistLabel.textAlignment = NSTextAlignmentCenter;
-		self.editPlaylistLabel.font = ISMSBoldFont(22);
+		self.editPlaylistLabel.font = [UIFont boldSystemFontOfSize:22];
 		self.editPlaylistLabel.text = @"Edit";
 		[self.headerView addSubview:self.editPlaylistLabel];
 		
@@ -307,7 +307,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
 		self.deleteSongsLabel.textColor = [UIColor whiteColor];
 		self.deleteSongsLabel.textAlignment = NSTextAlignmentCenter;
-		self.deleteSongsLabel.font = ISMSBoldFont(22);
+		self.deleteSongsLabel.font = [UIFont boldSystemFontOfSize:22];
 		self.deleteSongsLabel.adjustsFontSizeToFitWidth = YES;
 		self.deleteSongsLabel.minimumScaleFactor = 12.0 / self.deleteSongsLabel.font.pointSize;
 		if (self.segmentedControl.selectedSegmentIndex == 0) {
@@ -367,7 +367,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	UILabel *textLabel = [[UILabel alloc] init];
 	textLabel.backgroundColor = [UIColor clearColor];
 	textLabel.textColor = [UIColor whiteColor];
-	textLabel.font = ISMSBoldFont(30);
+	textLabel.font = [UIFont boldSystemFontOfSize:30];
 	textLabel.textAlignment = NSTextAlignmentCenter;
 	textLabel.numberOfLines = 0;
     if (self.segmentedControl.selectedSegmentIndex == 0) {
@@ -382,7 +382,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	UILabel *textLabel2 = [[UILabel alloc] init];
 	textLabel2.backgroundColor = [UIColor clearColor];
 	textLabel2.textColor = [UIColor whiteColor];
-	textLabel2.font = ISMSBoldFont(14);
+    textLabel2.font = [UIFont boldSystemFontOfSize:14];
 	textLabel2.textAlignment = NSTextAlignmentCenter;
 	textLabel2.numberOfLines = 0;
     if (self.segmentedControl.selectedSegmentIndex == 0) {
