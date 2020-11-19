@@ -26,8 +26,6 @@ import SnapKit
         coverArtView.coverArtId = album.coverArtId
         coverArtView.isLarge = true
         coverArtView.backgroundColor = .label
-//        coverArtView.layer.borderWidth = 1
-//        coverArtView.layer.borderColor = UIColor.systemGray5.cgColor
         addSubview(coverArtView)
         coverArtView.snp.makeConstraints { make in
             make.width.equalTo(coverArtView.snp.height)
@@ -45,41 +43,38 @@ import SnapKit
         }
         
         artistLabel.text = album.artistName
-        artistLabel.font = .boldSystemFont(ofSize: 20)
+        artistLabel.font = .boldSystemFont(ofSize: 17)
         artistLabel.textColor = .label
-        artistLabel.isInsideTableHeader = true
         labelContainer.addSubview(artistLabel)
         artistLabel.snp.makeConstraints { make in
             make.width.leading.trailing.top.equalToSuperview()
-            make.height.equalToSuperview().dividedBy(3)
+            make.height.equalToSuperview().multipliedBy(0.27)
         }
         
         albumLabel.text = album.title
-        albumLabel.font = .systemFont(ofSize: 20)
+        albumLabel.font = .systemFont(ofSize: 14)
         albumLabel.textColor = .label
-        albumLabel.isInsideTableHeader = true
         labelContainer.addSubview(albumLabel)
         albumLabel.snp.makeConstraints { make in
             make.width.height.leading.trailing.equalTo(artistLabel)
             make.top.equalTo(artistLabel.snp.bottom)
         }
         
-        let tracksString = tracks == 1 ? "1 Track" : "\(tracks) Tracks"
+        let tracksString = tracks == 1 ? "1 track" : "\(tracks) tracks"
         let durationString = NSString.formatTime(duration)
         var finalString = tracksString
         if let durationString = durationString {
-            finalString += " • \(durationString) Minutes"
+            finalString += " • \(durationString) minutes"
         }
         tracksLabel.text = finalString
-        tracksLabel.font = .systemFont(ofSize: 20)
+        tracksLabel.font = .systemFont(ofSize: 12)
         tracksLabel.adjustsFontSizeToFitWidth = true
         tracksLabel.minimumScaleFactor = 0.5
         tracksLabel.textColor = .secondaryLabel
         labelContainer.addSubview(tracksLabel)
         tracksLabel.snp.makeConstraints { make in
+            make.height.equalTo(labelContainer).multipliedBy(0.2)
             make.width.leading.bottom.equalToSuperview()
-            make.height.equalTo(labelContainer).dividedBy(3)
-            make.top.equalTo(albumLabel.snp.bottom)
         }
     }
     

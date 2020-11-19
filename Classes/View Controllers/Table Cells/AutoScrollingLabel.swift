@@ -17,9 +17,6 @@ private let labelGap = 25.0
     private let label2 = UILabel()
     private var animator: UIViewPropertyAnimator?
     
-    // Hack to use inside table header due to UITableView header AutoLayout weirdness
-    @objc var isInsideTableHeader = false
-    
     @objc var autoScroll = true
     @objc var repeatScroll = true
     
