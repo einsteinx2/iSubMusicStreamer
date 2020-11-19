@@ -124,10 +124,6 @@
     
     // Setup the update timer
     [self updateQueueDownloadProgress];
-	
-    if (UIDevice.isIPad) {
-		self.view.backgroundColor = ISMSiPadBackgroundColor;
-    }
     
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
 }

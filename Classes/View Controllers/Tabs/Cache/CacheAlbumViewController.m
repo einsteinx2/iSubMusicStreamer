@@ -9,7 +9,6 @@
 #import "CacheAlbumViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "iPadRootViewController.h"
-#import "StackScrollViewController.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -62,10 +61,6 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
     
     self.title = self.artistName;
 
-	if (UIDevice.isIPad) {
-		self.view.backgroundColor = ISMSiPadBackgroundColor;
-	}
-    
     self.tableView.rowHeight = 65.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 }
@@ -215,8 +210,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 	// If the table is empty, pop back one view, otherwise reload the table data
 	if (self.listOfAlbums.count + self.listOfSongs.count == 0) {
 		if (UIDevice.isIPad) {
-			// TODO: implement this properly
-			//[appDelegateS.ipadRootViewController.stackScrollViewController popToRootViewController];
+            [appDelegateS.ipadRootViewController.currentContentNavigationController popToRootViewControllerAnimated:YES];
 		} else {
 			// Handle the moreNavigationController stupidity
 			if (appDelegateS.currentTabBarController.selectedIndex == 4) {

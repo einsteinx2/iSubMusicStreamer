@@ -52,23 +52,15 @@
     self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
         [weakSelf loadData:[settingsS rootFoldersSelectedFolderId]];
     }];
-	
-	if (UIDevice.isIPad) {
-		self.view.backgroundColor = ISMSiPadBackgroundColor;
-	} else {
-        if (self.dropdown.folders == nil || [self.dropdown.folders count] == 2) {
-			[self.tableView setContentOffset:CGPointMake(0, 104) animated:NO];
-        } else {
-			[self.tableView setContentOffset:CGPointMake(0, 54) animated:NO];
-        }
-	}
     
     [self.tableView registerClass:BlurredSectionHeader.class forHeaderFooterViewReuseIdentifier:BlurredSectionHeader.reuseId];
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
     self.tableView.rowHeight = 65.0;
 	
-	if ([self.dataModel isRootFolderIdCached])
+    if (self.dataModel.isRootFolderIdCached) {
 		[self addCount];
+        [self.tableView setContentOffset:CGPointMake(0, 0) animated:NO];
+    }
     
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
 }

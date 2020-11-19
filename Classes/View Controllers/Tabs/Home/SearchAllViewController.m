@@ -34,10 +34,6 @@
 	if (self.listOfSongs.count > 0) {
 		[self.cellNames addObject:@"Songs"];
 	}
-	
-	if (UIDevice.isIPad) {
-		self.view.backgroundColor = ISMSiPadBackgroundColor;
-	}
     
     self.tableView.rowHeight = 65.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];

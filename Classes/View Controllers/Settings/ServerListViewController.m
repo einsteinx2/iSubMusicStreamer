@@ -65,10 +65,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self.headerView addSubview:self.segmentedControl];
 	
 	self.tableView.tableHeaderView = self.headerView;
-	
-	if (UIDevice.isIPad) {
-		self.view.backgroundColor = ISMSiPadBackgroundColor;
-	}
 }
 
 - (void)reloadTable {

@@ -40,12 +40,9 @@
 	
 	self.title = @"Bookmarks";
 	
-	if (settingsS.isOfflineMode)
+    if (settingsS.isOfflineMode) {
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"gear.png"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsAction:)];
-	
-	if (UIDevice.isIPad) {
-		self.view.backgroundColor = ISMSiPadBackgroundColor;
-	}
+    }
     
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.tableView.rowHeight = 85.0;

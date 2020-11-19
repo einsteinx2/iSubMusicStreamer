@@ -96,10 +96,6 @@
         [weakSelf loadData];
     }];
 	
-	if (UIDevice.isIPad) {
-		self.view.backgroundColor = ISMSiPadBackgroundColor;
-	}
-	
 	[self createDataModel];
 
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];

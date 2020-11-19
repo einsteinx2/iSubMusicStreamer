@@ -11,7 +11,6 @@
 #import "iPadRootViewController.h"
 #import "MenuViewController.h"
 #import "iPadRootViewController.h"
-#import "StackScrollViewController.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "FMDatabaseQueueAdditions.h"
@@ -641,15 +640,15 @@
 // Fix for panel sliding on iPad while using sliders
 - (IBAction)touchDown:(id)sender
 {
-    appDelegateS.ipadRootViewController.stackScrollViewController.isSlidingEnabled = NO;
+//    appDelegateS.ipadRootViewController.stackScrollViewController.isSlidingEnabled = NO;
 }
 - (IBAction)touchUpInside:(id)sender
 {
-    appDelegateS.ipadRootViewController.stackScrollViewController.isSlidingEnabled = YES;
+//    appDelegateS.ipadRootViewController.stackScrollViewController.isSlidingEnabled = YES;
 }
 - (IBAction)touchUpOutside:(id)sender
 {
-    appDelegateS.ipadRootViewController.stackScrollViewController.isSlidingEnabled = YES;
+//    appDelegateS.ipadRootViewController.stackScrollViewController.isSlidingEnabled = YES;
 }
 
 @end

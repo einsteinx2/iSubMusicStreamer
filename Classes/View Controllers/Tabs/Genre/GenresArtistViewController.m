@@ -93,10 +93,6 @@
 //	[headerView addSubview:shuffleButton];
 //
 //	self.tableView.tableHeaderView = headerView;
-	
-	if (UIDevice.isIPad) {
-		self.view.backgroundColor = ISMSiPadBackgroundColor;
-	}
 }
 
 - (void)viewWillAppear:(BOOL)animated {

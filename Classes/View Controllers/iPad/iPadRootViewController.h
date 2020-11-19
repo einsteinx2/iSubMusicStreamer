@@ -8,20 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
-
 @class MenuViewController;
-@class StackScrollViewController;
-
-@class UIViewExt;
 
 @interface iPadRootViewController : UIViewController 
 
-@property (strong) UIViewExt* rootView;
-@property (strong) UIView* leftMenuView;
-@property (strong) UIView* rightSlideView;
+@property (strong) UIView* rootView;
+@property (strong) UIView* menuView;
+@property (strong) UIView* contentView;
+
+@property (strong) UINavigationController *currentContentNavigationController;
 
 @property (strong) MenuViewController* menuViewController;
-@property (strong) StackScrollViewController* stackScrollViewController;
 
+- (void)switchContentViewController:(UIViewController *)controller;
 
 @end

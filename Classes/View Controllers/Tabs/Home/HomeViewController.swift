@@ -45,7 +45,7 @@ import SnapKit
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
-        if UIApplication.orientation().isPortrait {
+        if UIApplication.orientation().isPortrait || UIDevice.isIPad() {
             for button in buttons {
                 button.showLabel()
             }

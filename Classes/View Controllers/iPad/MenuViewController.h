@@ -21,8 +21,6 @@
 
 - (instancetype)initWithFrame:(CGRect)frame;
 - (void)loadCellContents;
-- (UIView *)createHeaderView:(BOOL)withImage;
-- (UIView *)createFooterView;
 - (void)showHome;
 - (void)showSettings;
 

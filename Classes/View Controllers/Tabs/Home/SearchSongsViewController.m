@@ -47,10 +47,6 @@
 	} else {
 		self.navigationItem.rightBarButtonItem = nil;
 	}
-	
-	if (UIDevice.isIPad) {
-		self.view.backgroundColor = ISMSiPadBackgroundColor;
-	}
     
     self.tableView.rowHeight = 65.0;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];

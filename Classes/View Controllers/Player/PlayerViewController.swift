@@ -66,7 +66,7 @@ import SnapKit
     override func updateViewConstraints() {
         super.updateViewConstraints()
         updateDownloadProgress(animated: false)
-        if UIApplication.orientation().isPortrait {
+        if UIApplication.orientation().isPortrait || UIDevice.isIPad() {
             coverArtPageControl.view.snp.remakeConstraints { make in
                 make.height.equalTo(coverArtPageControl.view.snp.width).offset(20)
                 if isShortScreen {
@@ -342,7 +342,11 @@ import SnapKit
         equalizerButton.setImage(UIImage(systemName: "slider.vertical.3", withConfiguration: equalizerButtonConfig), for: .normal)
         equalizerButton.addClosure(for: .touchUpInside) { [unowned self] in
             let controller = EqualizerViewController(nibName: "EqualizerViewController", bundle: nil)
-            self.navigationController?.pushViewController(controller, animated: true)
+            if UIDevice.isIPad() {
+                self.present(controller, animated: true, completion: nil)
+            } else {
+                self.navigationController?.pushViewController(controller, animated: true)
+            }
         }
         updateEqualizerButton()
         

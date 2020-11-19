@@ -8,7 +8,6 @@
 
 #import "UIViewController+PushViewControllerCustom.h"
 #import "iPadRootViewController.h"
-#import "StackScrollViewController.h"
 #import "iSubAppDelegate.h"
 #import "Defines.h"
 #import "EX2Kit.h"
@@ -16,50 +15,19 @@
 
 @implementation UIViewController (PushViewControllerCustom)
 
-- (void)pushViewControllerCustom:(UIViewController *)viewController
-{
-	if (UIDevice.isIPad)
-	{
-		viewController.view.width = ISMSiPadViewWidth;
-		viewController.view.layer.cornerRadius = ISMSiPadCornerRadius;
-		viewController.view.layer.masksToBounds = YES;
-		StackScrollViewController *stack = [iSubAppDelegate sharedInstance].ipadRootViewController.stackScrollViewController;
-		[stack addViewInSlider:viewController invokeByController:self isStackStartView:NO];
-	}
-	else
-	{
-        if ([self isKindOfClass:[UINavigationController class]])
-            [(UINavigationController *)self pushViewController:viewController animated:YES];
-        else
-            [self.navigationController pushViewController:viewController animated:YES];
-	}
+- (void)pushViewControllerCustom:(UIViewController *)viewController {
+    if ([self isKindOfClass:[UINavigationController class]]) {
+        [(UINavigationController *)self pushViewController:viewController animated:YES];
+    } else {
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
-- (void)pushViewControllerCustomWithNavControllerOnIpad:(UIViewController *)viewController
-{
-	if (UIDevice.isIPad)
-	{
-		UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:viewController];
-		nav.navigationBar.tintColor = [UIColor blackColor];
-		
-		viewController.view.width = ISMSiPadViewWidth;
-		[self pushViewControllerCustom:nav];
-	}
-	else
-	{
-		[self pushViewControllerCustom:viewController];
-	}
-}
-
-- (void)showPlayer
-{
+- (void)showPlayer {
 	// Show the player
-	if (UIDevice.isIPad)
-	{
+	if (UIDevice.isIPad) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
-	}
-	else
-	{
+	} else {
         PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
         playerViewController.hidesBottomBarWhenPushed = YES;
 		[self.navigationController pushViewController:playerViewController animated:YES];

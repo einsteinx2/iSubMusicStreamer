@@ -33,9 +33,6 @@ typedef enum {
 #define ISMSAlbumFont ISMSRegularFont(16)
 #define ISMSSongFont ISMSRegularFont(16)
 
-#define ISMSiPadBackgroundColor [UIColor colorWithRedInt:200 greenInt:200 blueInt:206 alpha:1]
-#define ISMSiPadCornerRadius 5.
-
 #define ISMSLoadingTimeout 240.0
 #define ISMSJukeboxTimeout 60.0
 #define ISMSServerCheckTimeout 15.0

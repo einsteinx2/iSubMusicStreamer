@@ -63,7 +63,7 @@ static CGColorRef fillColorOn;
 - (void)drawTextLabelAtPoint:(CGPoint)point withString:(NSString *)string {
     [string drawAtPoint:point withAttributes:@{
         NSFontAttributeName : [UIFont fontWithName:@"Arial" size:10.0f],
-        NSForegroundColorAttributeName: UIColor.labelColor
+        NSForegroundColorAttributeName: UIColor.whiteColor
     }];
 }
 

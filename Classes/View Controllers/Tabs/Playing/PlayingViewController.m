@@ -36,11 +36,6 @@
 	
 	self.dataModel = [[SUSNowPlayingDAO alloc] initWithDelegate:self];
 	
-	if (UIDevice.isIPad)
-	{
-		self.view.backgroundColor = ISMSiPadBackgroundColor;
-	}
-	
     // Add the pull to refresh view
     __weak PlayingViewController *weakSelf = self;
     self.refreshControl = [[RefreshControl alloc] initWithHandler:^{

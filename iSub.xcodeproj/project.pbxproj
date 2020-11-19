@@ -22,18 +22,10 @@
 		5304FC2F14F2F0D100A2AD42 /* iPadRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC1C14F2F0D100A2AD42 /* iPadRootViewController.m */; };
 		5304FC3014F2F0D100A2AD42 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC1E14F2F0D100A2AD42 /* MenuViewController.m */; };
 		5304FC3214F2F0D100A2AD42 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC1E14F2F0D100A2AD42 /* MenuViewController.m */; };
-		5304FC3614F2F0D100A2AD42 /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC2214F2F0D100A2AD42 /* StackScrollViewController.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations -Wno-deprecated-implementations"; }; };
-		5304FC3814F2F0D100A2AD42 /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC2214F2F0D100A2AD42 /* StackScrollViewController.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations -Wno-deprecated-implementations"; }; };
 		5304FC3C14F2F0D100A2AD42 /* MenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC2614F2F0D100A2AD42 /* MenuTableViewCell.m */; };
 		5304FC3E14F2F0D100A2AD42 /* MenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC2614F2F0D100A2AD42 /* MenuTableViewCell.m */; };
 		5304FC5214F2F59400A2AD42 /* glow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5304FC4A14F2F59400A2AD42 /* glow.png */; };
 		5304FC5414F2F59400A2AD42 /* glow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5304FC4A14F2F59400A2AD42 /* glow.png */; };
-		5304FC5514F2F59400A2AD42 /* backgroundImage_repeat.png in Resources */ = {isa = PBXBuildFile; fileRef = 5304FC4B14F2F59400A2AD42 /* backgroundImage_repeat.png */; };
-		5304FC5714F2F59400A2AD42 /* backgroundImage_repeat.png in Resources */ = {isa = PBXBuildFile; fileRef = 5304FC4B14F2F59400A2AD42 /* backgroundImage_repeat.png */; };
-		5304FC5D14F309F100A2AD42 /* underPageBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5304FC5C14F309F000A2AD42 /* underPageBackground@2x.png */; };
-		5304FC5F14F309F100A2AD42 /* underPageBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5304FC5C14F309F000A2AD42 /* underPageBackground@2x.png */; };
-		5304FC6114F30A6A00A2AD42 /* underPageBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 5304FC6014F30A6900A2AD42 /* underPageBackground.png */; };
-		5304FC6314F30A6A00A2AD42 /* underPageBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 5304FC6014F30A6900A2AD42 /* underPageBackground.png */; };
 		5305C2061157F4F800BC78F0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5305C2051157F4F800BC78F0 /* Default.png */; };
 		5306236D14D3295300D320A8 /* EqualizerPathView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306236C14D3295300D320A8 /* EqualizerPathView.m */; };
 		5306236F14D3295300D320A8 /* EqualizerPathView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306236C14D3295300D320A8 /* EqualizerPathView.m */; };
@@ -293,8 +285,6 @@
 		537E6C20181208A200127E29 /* CustomUITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E6C1D181208A200127E29 /* CustomUITabBarController.m */; };
 		537E9A0A14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E9A0914F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m */; };
 		537E9A0C14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E9A0914F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m */; };
-		537E9A3114F43F43006CB0BC /* StackContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E9A3014F43F41006CB0BC /* StackContainerView.m */; };
-		537E9A3314F43F43006CB0BC /* StackContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E9A3014F43F41006CB0BC /* StackContainerView.m */; };
 		537E9A4114F4B5D1006CB0BC /* controller-speed-tab.png in Resources */ = {isa = PBXBuildFile; fileRef = 537E9A3F14F4B5D1006CB0BC /* controller-speed-tab.png */; };
 		537E9A4314F4B5D1006CB0BC /* controller-speed-tab.png in Resources */ = {isa = PBXBuildFile; fileRef = 537E9A3F14F4B5D1006CB0BC /* controller-speed-tab.png */; };
 		537E9A4414F4B5D1006CB0BC /* controller-speed-tab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 537E9A4014F4B5D1006CB0BC /* controller-speed-tab@2x.png */; };
@@ -303,10 +293,6 @@
 		537E9A4B14F4B84D006CB0BC /* controller-equalizer-on.png in Resources */ = {isa = PBXBuildFile; fileRef = 537E9A4714F4B84D006CB0BC /* controller-equalizer-on.png */; };
 		537E9A4C14F4B84D006CB0BC /* controller-equalizer-on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 537E9A4814F4B84D006CB0BC /* controller-equalizer-on@2x.png */; };
 		537E9A4E14F4B84D006CB0BC /* controller-equalizer-on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 537E9A4814F4B84D006CB0BC /* controller-equalizer-on@2x.png */; };
-		537E9A5514F4CE44006CB0BC /* underPageBackgroundDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 537E9A5314F4CE3F006CB0BC /* underPageBackgroundDark.png */; };
-		537E9A5714F4CE44006CB0BC /* underPageBackgroundDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 537E9A5314F4CE3F006CB0BC /* underPageBackgroundDark.png */; };
-		537E9A5814F4CE44006CB0BC /* underPageBackgroundDark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 537E9A5414F4CE41006CB0BC /* underPageBackgroundDark@2x.png */; };
-		537E9A5A14F4CE44006CB0BC /* underPageBackgroundDark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 537E9A5414F4CE41006CB0BC /* underPageBackgroundDark@2x.png */; };
 		537EF7B5182B2F2200968FE0 /* controller-slider-thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = 537EF7B3182B2F2200968FE0 /* controller-slider-thumb.png */; };
 		537EF7B7182B2F2200968FE0 /* controller-slider-thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = 537EF7B3182B2F2200968FE0 /* controller-slider-thumb.png */; };
 		537EF7B9182B2F2200968FE0 /* controller-slider-thumb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 537EF7B4182B2F2200968FE0 /* controller-slider-thumb@2x.png */; };
@@ -1081,14 +1067,9 @@
 		5304FC1C14F2F0D100A2AD42 /* iPadRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iPadRootViewController.m; sourceTree = "<group>"; };
 		5304FC1D14F2F0D100A2AD42 /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
 		5304FC1E14F2F0D100A2AD42 /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
-		5304FC2114F2F0D100A2AD42 /* StackScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StackScrollViewController.h; sourceTree = "<group>"; };
-		5304FC2214F2F0D100A2AD42 /* StackScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackScrollViewController.m; sourceTree = "<group>"; };
 		5304FC2514F2F0D100A2AD42 /* MenuTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuTableViewCell.h; sourceTree = "<group>"; };
 		5304FC2614F2F0D100A2AD42 /* MenuTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewCell.m; sourceTree = "<group>"; };
 		5304FC4A14F2F59400A2AD42 /* glow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = glow.png; sourceTree = "<group>"; };
-		5304FC4B14F2F59400A2AD42 /* backgroundImage_repeat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backgroundImage_repeat.png; sourceTree = "<group>"; };
-		5304FC5C14F309F000A2AD42 /* underPageBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "underPageBackground@2x.png"; sourceTree = "<group>"; };
-		5304FC6014F30A6900A2AD42 /* underPageBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = underPageBackground.png; sourceTree = "<group>"; };
 		5305C2051157F4F800BC78F0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Images/Other/Default.png; sourceTree = "<group>"; };
 		5306236B14D3295300D320A8 /* EqualizerPathView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerPathView.h; sourceTree = "<group>"; };
 		5306236C14D3295300D320A8 /* EqualizerPathView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EqualizerPathView.m; sourceTree = "<group>"; };
@@ -1300,14 +1281,10 @@
 		537E6C1D181208A200127E29 /* CustomUITabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUITabBarController.m; sourceTree = "<group>"; };
 		537E9A0814F323EE006CB0BC /* UIViewController+PushViewControllerCustom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PushViewControllerCustom.h"; sourceTree = "<group>"; };
 		537E9A0914F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PushViewControllerCustom.m"; sourceTree = "<group>"; };
-		537E9A2F14F43F3F006CB0BC /* StackContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StackContainerView.h; sourceTree = "<group>"; };
-		537E9A3014F43F41006CB0BC /* StackContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackContainerView.m; sourceTree = "<group>"; };
 		537E9A3F14F4B5D1006CB0BC /* controller-speed-tab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-speed-tab.png"; path = "Images/Player Icons/controller-speed-tab.png"; sourceTree = "<group>"; };
 		537E9A4014F4B5D1006CB0BC /* controller-speed-tab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-speed-tab@2x.png"; path = "Images/Player Icons/controller-speed-tab@2x.png"; sourceTree = "<group>"; };
 		537E9A4714F4B84D006CB0BC /* controller-equalizer-on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-equalizer-on.png"; path = "Images/Player Icons/controller-equalizer-on.png"; sourceTree = "<group>"; };
 		537E9A4814F4B84D006CB0BC /* controller-equalizer-on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-equalizer-on@2x.png"; path = "Images/Player Icons/controller-equalizer-on@2x.png"; sourceTree = "<group>"; };
-		537E9A5314F4CE3F006CB0BC /* underPageBackgroundDark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = underPageBackgroundDark.png; sourceTree = "<group>"; };
-		537E9A5414F4CE41006CB0BC /* underPageBackgroundDark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "underPageBackgroundDark@2x.png"; sourceTree = "<group>"; };
 		537EF7B3182B2F2200968FE0 /* controller-slider-thumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-slider-thumb.png"; path = "Images/Player Icons/controller-slider-thumb.png"; sourceTree = "<group>"; };
 		537EF7B4182B2F2200968FE0 /* controller-slider-thumb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-slider-thumb@2x.png"; path = "Images/Player Icons/controller-slider-thumb@2x.png"; sourceTree = "<group>"; };
 		537FCC5312F8F7F400F1D996 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = "Images/App Icons/iTunesArtwork"; sourceTree = "<group>"; };
@@ -2038,18 +2015,9 @@
 				5304FC1E14F2F0D100A2AD42 /* MenuViewController.m */,
 				5304FC2514F2F0D100A2AD42 /* MenuTableViewCell.h */,
 				5304FC2614F2F0D100A2AD42 /* MenuTableViewCell.m */,
-				5304FC2114F2F0D100A2AD42 /* StackScrollViewController.h */,
-				5304FC2214F2F0D100A2AD42 /* StackScrollViewController.m */,
-				537E9A2F14F43F3F006CB0BC /* StackContainerView.h */,
-				537E9A3014F43F41006CB0BC /* StackContainerView.m */,
 				5304FC4A14F2F59400A2AD42 /* glow.png */,
-				5304FC4B14F2F59400A2AD42 /* backgroundImage_repeat.png */,
-				5304FC5C14F309F000A2AD42 /* underPageBackground@2x.png */,
-				5304FC6014F30A6900A2AD42 /* underPageBackground.png */,
 				537E9A0814F323EE006CB0BC /* UIViewController+PushViewControllerCustom.h */,
 				537E9A0914F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m */,
-				537E9A5314F4CE3F006CB0BC /* underPageBackgroundDark.png */,
-				537E9A5414F4CE41006CB0BC /* underPageBackgroundDark@2x.png */,
 			);
 			path = iPad;
 			sourceTree = "<group>";
@@ -3457,15 +3425,10 @@
 				53DE59A014F1A7B000206529 /* controller-forw30.png in Resources */,
 				53DE59A314F1A7B000206529 /* controller-forw30@2x.png in Resources */,
 				5304FC5214F2F59400A2AD42 /* glow.png in Resources */,
-				5304FC5514F2F59400A2AD42 /* backgroundImage_repeat.png in Resources */,
-				5304FC5D14F309F100A2AD42 /* underPageBackground@2x.png in Resources */,
-				5304FC6114F30A6A00A2AD42 /* underPageBackground.png in Resources */,
 				537E9A4114F4B5D1006CB0BC /* controller-speed-tab.png in Resources */,
 				537E9A4414F4B5D1006CB0BC /* controller-speed-tab@2x.png in Resources */,
 				537E9A4914F4B84D006CB0BC /* controller-equalizer-on.png in Resources */,
 				537E9A4C14F4B84D006CB0BC /* controller-equalizer-on@2x.png in Resources */,
-				537E9A5514F4CE44006CB0BC /* underPageBackgroundDark.png in Resources */,
-				537E9A5814F4CE44006CB0BC /* underPageBackgroundDark@2x.png in Resources */,
 				5301583A15081B0A00B54CEF /* settings-tabbaricon.png in Resources */,
 				5301583D15081B0A00B54CEF /* settings-tabbaricon@2x.png in Resources */,
 				53C7FD72150EFF7A008DA51C /* Default-Landscape@2x.png in Resources */,
@@ -3708,16 +3671,11 @@
 				53DE59A214F1A7B000206529 /* controller-forw30.png in Resources */,
 				53DE59A514F1A7B000206529 /* controller-forw30@2x.png in Resources */,
 				5304FC5414F2F59400A2AD42 /* glow.png in Resources */,
-				5304FC5714F2F59400A2AD42 /* backgroundImage_repeat.png in Resources */,
-				5304FC5F14F309F100A2AD42 /* underPageBackground@2x.png in Resources */,
-				5304FC6314F30A6A00A2AD42 /* underPageBackground.png in Resources */,
 				537E9A4314F4B5D1006CB0BC /* controller-speed-tab.png in Resources */,
 				537E9A4614F4B5D1006CB0BC /* controller-speed-tab@2x.png in Resources */,
 				537E9A4B14F4B84D006CB0BC /* controller-equalizer-on.png in Resources */,
 				537E9A4E14F4B84D006CB0BC /* controller-equalizer-on@2x.png in Resources */,
 				534B20DB25619936007FF1D7 /* HomeViewController.xib in Resources */,
-				537E9A5714F4CE44006CB0BC /* underPageBackgroundDark.png in Resources */,
-				537E9A5A14F4CE44006CB0BC /* underPageBackgroundDark@2x.png in Resources */,
 				5301583C15081B0A00B54CEF /* settings-tabbaricon.png in Resources */,
 				5301583F15081B0A00B54CEF /* settings-tabbaricon@2x.png in Resources */,
 				53C7FD74150EFF7A008DA51C /* Default-Landscape@2x.png in Resources */,
@@ -3988,10 +3946,8 @@
 				5304FC2D14F2F0D100A2AD42 /* iPadRootViewController.m in Sources */,
 				53FE36F51EA961720058B925 /* BassStream.m in Sources */,
 				5304FC3014F2F0D100A2AD42 /* MenuViewController.m in Sources */,
-				5304FC3614F2F0D100A2AD42 /* StackScrollViewController.m in Sources */,
 				5304FC3C14F2F0D100A2AD42 /* MenuTableViewCell.m in Sources */,
 				537E9A0A14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */,
-				537E9A3114F43F43006CB0BC /* StackContainerView.m in Sources */,
 				53FE389E1EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53493F2715FC6AC40059492E /* main.m in Sources */,
 				53752BEC2562CEF800438636 /* CoverArtViewController.swift in Sources */,
@@ -4215,10 +4171,8 @@
 				5304FC2F14F2F0D100A2AD42 /* iPadRootViewController.m in Sources */,
 				53FE36F71EA961720058B925 /* BassStream.m in Sources */,
 				5304FC3214F2F0D100A2AD42 /* MenuViewController.m in Sources */,
-				5304FC3814F2F0D100A2AD42 /* StackScrollViewController.m in Sources */,
 				5304FC3E14F2F0D100A2AD42 /* MenuTableViewCell.m in Sources */,
 				537E9A0C14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */,
-				537E9A3314F43F43006CB0BC /* StackContainerView.m in Sources */,
 				53FE38A01EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53493F2915FC6AC40059492E /* main.m in Sources */,
 				533D1820255F72FF003F962C /* CacheOfflineFoldersViewController.m in Sources */,

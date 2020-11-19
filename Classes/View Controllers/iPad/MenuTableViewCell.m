@@ -31,13 +31,13 @@
 		
 		self.imageView.contentMode = UIViewContentModeCenter;
 		
-		UIView *topLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 1)];
-		topLine.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.25];
-		[self.textLabel.superview addSubview:topLine];
-		
-		UIView *bottomLine = [[UIView alloc] initWithFrame:CGRectMake(0, 43, self.bounds.size.width, 1)];
-		bottomLine.backgroundColor = [UIColor colorWithWhite:0 alpha:0.25];
-		[self.textLabel.superview addSubview:bottomLine];
+//		UIView *topLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 1)];
+//		topLine.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.25];
+//		[self.textLabel.superview addSubview:topLine];
+//		
+//		UIView *bottomLine = [[UIView alloc] initWithFrame:CGRectMake(0, 43, self.bounds.size.width, 1)];
+//		bottomLine.backgroundColor = [UIColor colorWithWhite:0 alpha:0.25];
+//		[self.textLabel.superview addSubview:bottomLine];
 		
         self.glowView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 43)];
         self.glowView.image = [UIImage imageNamed:@"glow.png"];
