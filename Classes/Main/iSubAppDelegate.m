@@ -40,6 +40,11 @@
 
 LOG_LEVEL_ISUB_DEFAULT
 
+@interface iSubAppDelegate()
+@property (nonatomic) BOOL isNoNetworkAlertShowing;
+@property (nonatomic) BOOL isOnlineModeAlertShowing;
+@end
+
 @implementation iSubAppDelegate
 
 + (instancetype)sharedInstance {
@@ -525,8 +530,8 @@ LOG_LEVEL_ISUB_DEFAULT
 #pragma mark Helper Methods
 
 - (void)enterOfflineMode {
-	if (viewObjectsS.isNoNetworkAlertShowing == NO) {
-		viewObjectsS.isNoNetworkAlertShowing = YES;
+	if (!self.isNoNetworkAlertShowing) {
+		self.isNoNetworkAlertShowing = YES;
         if (settingsS.isPopupsEnabled) {
             NSString *message = @"Server unavailable, would you like to enter offline mode? Any currently playing music will stop.\n\nIf this is just temporary connection loss, select No.";
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notice" message:message preferredStyle:UIAlertControllerStyleAlert];
@@ -535,15 +540,15 @@ LOG_LEVEL_ISUB_DEFAULT
             }]];
             [alert addAction:[UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleCancel handler:nil]];
             [self.window.rootViewController presentViewController:alert animated:YES completion:^{
-                viewObjectsS.isNoNetworkAlertShowing = NO;
+                self.isNoNetworkAlertShowing = NO;
             }];
         }
 	}
 }
 
 - (void)enterOnlineMode {
-	if (!viewObjectsS.isOnlineModeAlertShowing) {
-		viewObjectsS.isOnlineModeAlertShowing = YES;
+	if (!self.isOnlineModeAlertShowing) {
+        self.isOnlineModeAlertShowing = YES;
         if (settingsS.isPopupsEnabled) {
             NSString *message = @"Network detected, would you like to enter online mode? Any currently playing music will stop.";
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notice" message:message preferredStyle:UIAlertControllerStyleAlert];
@@ -552,7 +557,7 @@ LOG_LEVEL_ISUB_DEFAULT
             }]];
             [alert addAction:[UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleCancel handler:nil]];
             [self.window.rootViewController presentViewController:alert animated:YES completion:^{
-                viewObjectsS.isOnlineModeAlertShowing = NO;
+                self.isOnlineModeAlertShowing = NO;
             }];
         }
 	}

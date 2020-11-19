@@ -28,12 +28,12 @@ LOG_LEVEL_ISUB_DEFAULT
         DDLogVerbose(@"[AudioEngine] audio session begin interruption");
         if (self.player.isPlaying) {
             self.shouldResumeFromInterruption = YES;
-            [sharedInstance.player pause];
+            [self.player pause];
         } else {
             self.shouldResumeFromInterruption = NO;
         }
     } else if (interruptionType == AVAudioSessionInterruptionTypeEnded) {
-        DDLogVerbose(@"[AudioEngine] audio session interruption ended, isPlaying: %@   isMainThread: %@", NSStringFromBOOL(sharedInstance.player.isPlaying), NSStringFromBOOL([NSThread isMainThread]));
+        DDLogVerbose(@"[AudioEngine] audio session interruption ended, isPlaying: %@   isMainThread: %@", NSStringFromBOOL(self.player.isPlaying), NSStringFromBOOL(NSThread.isMainThread));
         AVAudioSessionInterruptionOptions interruptionOptions = [[[notification userInfo] objectForKey:AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
         if (self.shouldResumeFromInterruption && interruptionOptions == AVAudioSessionInterruptionOptionShouldResume) {
             [self.player playPause];
@@ -96,8 +96,8 @@ LOG_LEVEL_ISUB_DEFAULT
     }];
 }
 
-static AudioEngine *sharedInstance = nil;
 + (instancetype)sharedInstance {
+    static AudioEngine *sharedInstance = nil;
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{
 		sharedInstance = [[self alloc] init];

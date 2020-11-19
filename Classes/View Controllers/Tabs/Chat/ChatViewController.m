@@ -71,7 +71,6 @@
 	// Create text input box in header
 	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 82)];
 	self.headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	self.headerView.backgroundColor = ISMSHeaderColor;
 	
 	self.textInput = [[CustomUITextView alloc] initWithFrame:CGRectMake(5, 5, 240, 72)];
 	self.textInput.autoresizingMask = UIViewAutoresizingFlexibleWidth;

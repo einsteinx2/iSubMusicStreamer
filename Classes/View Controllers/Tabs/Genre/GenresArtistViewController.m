@@ -60,7 +60,6 @@
     
 //	// Add the play all button + shuffle button
 //	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
-//	headerView.backgroundColor = ISMSHeaderColor;
 //
 //	UILabel *playAllLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
 //	playAllLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;

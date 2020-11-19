@@ -34,7 +34,7 @@
         CAShapeLayer *triangleMaskLayer = [CAShapeLayer layer];
         [triangleMaskLayer setPath:maskPath.CGPath];
 
-        self.backgroundColor = viewObjectsS.currentLightColor;
+        self.backgroundColor = viewObjectsS.currentDarkColor;
         self.layer.mask = triangleMaskLayer;
     }
     return self;

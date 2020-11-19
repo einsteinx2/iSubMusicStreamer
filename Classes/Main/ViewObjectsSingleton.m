@@ -11,6 +11,12 @@
 #import "Defines.h"
 #import "SavedSettings.h"
 #import "EX2Kit.h"
+#import "MBProgressHUD.h"
+
+@interface ViewObjectsSingleton() <MBProgressHUDDelegate>
+@property (nullable, strong) MBProgressHUD *HUD;
+@property BOOL isLoadingScreenShowing;
+@end
 
 @implementation ViewObjectsSingleton
 
@@ -88,53 +94,35 @@
 
 - (UIColor *)currentDarkColor {
 	switch(settingsS.cachedSongCellColorType) {
-		case 0:
-			return self.darkRed;
-		case 1:
-			return self.darkYellow;
-		case 2:
-			return self.darkGreen;
-		case 3:
-			return self.darkBlue;
-		default:
-			return self.darkNormal;
+		case 0: return self.darkRed;
+		case 1: return self.darkYellow;
+		case 2: return self.darkGreen;
+		case 3: return self.darkBlue;
+		default: return self.darkBlue;
 	}
-	
-	return self.darkNormal;
-}
-
-- (UIColor *) currentLightColor {
-	switch(settingsS.cachedSongCellColorType) {
-		case 0:
-			return self.lightRed;
-		case 1:
-			return self.lightYellow;
-		case 2:
-			return self.lightGreen;
-		case 3:
-			return self.lightBlue;
-		default:
-			return self.lightNormal;
-	}
-	
-	return self.lightNormal;
 }
 
 #pragma mark Tab Saving
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    // Prevent view controllers from going under the navigation bar
+    viewController.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    // Remember selected tab
     if (!settingsS.isOfflineMode) {
 		[[NSUserDefaults standardUserDefaults] setInteger:appDelegateS.mainTabBarController.selectedIndex forKey:@"mainTabBarControllerSelectedIndex"];
     }
 }
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    // Remember selected tab
     if (!settingsS.isOfflineMode) {
 		[[NSUserDefaults standardUserDefaults] setInteger:appDelegateS.mainTabBarController.selectedIndex forKey:@"mainTabBarControllerSelectedIndex"];
     }
 }
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
+    // Remember selected tab
     if (!settingsS.isOfflineMode) {
 		[[NSUserDefaults standardUserDefaults] setInteger:appDelegateS.mainTabBarController.selectedIndex forKey:@"mainTabBarControllerSelectedIndex"];
     }
@@ -142,12 +130,12 @@
 
 - (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed {
     NSUInteger count = tabBarController.viewControllers.count;
-    NSMutableArray *savedTabsOrderArray = [[NSMutableArray alloc] initWithCapacity:count];
+    NSMutableArray *savedTabsOrder = [[NSMutableArray alloc] initWithCapacity:count];
     for (int i = 0; i < count; i ++) {
-        [savedTabsOrderArray addObject:@([[[tabBarController.viewControllers objectAtIndexSafe:i] tabBarItem] tag])];
+        [savedTabsOrder addObject:@([[[tabBarController.viewControllers objectAtIndexSafe:i] tabBarItem] tag])];
     }
-    [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:savedTabsOrderArray] forKey:@"mainTabBarTabsOrder"];
-	[[NSUserDefaults standardUserDefaults] synchronize];
+    [NSUserDefaults.standardUserDefaults setObject:savedTabsOrder forKey:@"mainTabBarTabsOrder"];
+	[NSUserDefaults.standardUserDefaults synchronize];
 }
 
 - (void)orderMainTabBarController {
@@ -215,21 +203,11 @@
 }
 
 - (void)setup {
-	_lightRed = [UIColor colorWithRed:255/255.0 green:146/255.0 blue:115/255.0 alpha:1];
 	_darkRed = [UIColor colorWithRed:226/255.0 green:0/255.0 blue:0/255.0 alpha:1];
-	
-	_lightYellow = [UIColor colorWithRed:255/255.0 green:233/255.0 blue:115/255.0 alpha:1];
 	_darkYellow = [UIColor colorWithRed:255/255.0 green:215/255.0 blue:0/255.0 alpha:1];
-	
-	_lightGreen = [UIColor colorWithRed:169/255.0 green:241/255.0 blue:108/255.0 alpha:1];
 	_darkGreen = [UIColor colorWithRed:103/255.0 green:227/255.0 blue:0/255.0 alpha:1];
-	
-	_lightBlue = [UIColor colorWithRed:87/255.0 green:198/255.0 blue:255/255.0 alpha:1];
 	_darkBlue = [UIColor colorWithRed:28/255.0 green:163/255.0 blue:255/255.0 alpha:1];
 	
-	_lightNormal = [UIColor whiteColor];
-	_darkNormal = ISMSHeaderColor;
-
 	_windowColor = [UIColor colorWithWhite:.3 alpha:1];
 	_jukeboxColor = [UIColor colorWithRed:140.0/255.0 green:0.0 blue:0.0 alpha:1.0];
 		

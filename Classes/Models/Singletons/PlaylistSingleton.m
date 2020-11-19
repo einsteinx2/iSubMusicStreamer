@@ -70,7 +70,7 @@
 		
 		NSMutableArray *indexesMut = [NSMutableArray arrayWithArray:indexes];
 		
-		// Sort the multiDeleteList to make sure it's accending
+		// Sort the indexes to make sure they're accending
 		[indexesMut sortUsingSelector:@selector(compare:)];
 		
 		if (settingsS.isJukeboxEnabled)

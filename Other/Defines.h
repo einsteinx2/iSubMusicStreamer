@@ -11,10 +11,6 @@
 
 #import "ISMSNotificationNames.h"
 
-#define ISMSHeaderColor [UIColor colorWithRedInt:200 greenInt:200 blueInt:206 alpha:1]
-#define ISMSHeaderTextColor [UIColor colorWithRedInt:77 greenInt:77 blueInt:77 alpha:1]
-#define ISMSHeaderButtonColor [UIColor colorWithRedInt:0 greenInt:122 blueInt:255 alpha:1]
-
 #ifdef BETA
     #ifdef SILENT
         #define LOG_LEVEL_ISUB_DEFAULT static const DDLogLevel ddLogLevel = DDLogLevelVerbose;

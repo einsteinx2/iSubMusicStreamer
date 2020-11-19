@@ -68,7 +68,6 @@
 	//Build the search and reload view
 	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 90)];
 	self.headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	self.headerView.backgroundColor = ISMSHeaderColor;
 	
 	self.reloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	self.reloadButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;

@@ -34,15 +34,19 @@ LOG_LEVEL_ISUB_DEFAULT
 
 @implementation PlaylistSongsViewController
 
+- (BOOL)isLocalPlaylist {
+    return self.serverPlaylist == nil;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    if (viewObjectsS.isLocalPlaylist) {
+    if (self.isLocalPlaylist) {
 		self.title = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT playlist FROM localPlaylists WHERE md5 = ?", self.md5];
 		
 		if (!settingsS.isOfflineMode) {
 			UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
-			headerView.backgroundColor = viewObjectsS.darkNormal;
+//			headerView.backgroundColor = viewObjectsS.darkNormal;
 			
 			UIImageView *sendImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"upload-playlist.png"]];
 			sendImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
@@ -52,7 +56,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			UILabel *sendLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 320, 50)];
 			sendLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
 			sendLabel.backgroundColor = [UIColor clearColor];
-			sendLabel.textColor = ISMSHeaderTextColor;
+            sendLabel.textColor = UIColor.labelColor;
 			sendLabel.textAlignment = NSTextAlignmentCenter;
 			sendLabel.font = [UIFont boldSystemFontOfSize:30];
 			sendLabel.text = @"Save to Server";
@@ -146,7 +150,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.tableView.scrollEnabled = YES;
 	[viewObjectsS hideLoadingScreen];
 	
-	if (!viewObjectsS.isLocalPlaylist) {
+	if (!self.isLocalPlaylist) {
         [self.refreshControl endRefreshing];
 	}
 }
@@ -163,7 +167,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.navigationItem.rightBarButtonItem = nil;
 	}
 	
-	if (viewObjectsS.isLocalPlaylist) {
+	if (self.isLocalPlaylist) {
 		self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM playlist%@", self.md5]];
 		[self.tableView reloadData];
 	} else {
@@ -254,7 +258,7 @@ LOG_LEVEL_ISUB_DEFAULT
 #pragma mark Table view methods
 
 - (ISMSSong *)songAtIndexPath:(NSIndexPath *)indexPath {
-    if (viewObjectsS.isLocalPlaylist) {
+    if (self.isLocalPlaylist) {
         return [ISMSSong songFromDbRow:indexPath.row inTable:[NSString stringWithFormat:@"playlist%@", self.md5] inDatabaseQueue:databaseS.localPlaylistsDbQueue];
     } else {
         return [ISMSSong songFromServerPlaylistId:self.md5 row:indexPath.row];
@@ -300,7 +304,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		@autoreleasepool
 		{
 			ISMSSong *aSong;
-			if (viewObjectsS.isLocalPlaylist)
+			if (self.isLocalPlaylist)
 			{
 				aSong = [ISMSSong songFromDbRow:i inTable:[NSString stringWithFormat:@"playlist%@", self.md5] inDatabaseQueue:databaseS.localPlaylistsDbQueue];
 			}
@@ -316,7 +320,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	// Need to do this for speed (NOTE: haha well 10 years ago maybe, but probably not now)
 	NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
 	NSString *currTableName = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-	NSString *playTableName = [NSString stringWithFormat:@"%@%@", viewObjectsS.isLocalPlaylist ? @"playlist" : @"splaylist", self.md5];
+	NSString *playTableName = [NSString stringWithFormat:@"%@%@", self.isLocalPlaylist ? @"playlist" : @"splaylist", self.md5];
 	[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
 		 [db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
 		 if ([db hadError]) { DDLogError(@"Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }

@@ -121,12 +121,11 @@
 	
 	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 157)];
 	self.headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.headerView.backgroundColor = UIColor.systemBackgroundColor;//ISMSHeaderColor;
 	
 	self.countLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 9, 320, 30)];
 	self.countLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	self.countLabel.backgroundColor = [UIColor clearColor];
-    self.countLabel.textColor = UIColor.labelColor;//ISMSHeaderTextColor;
+    self.countLabel.textColor = UIColor.labelColor;
 	self.countLabel.textAlignment = NSTextAlignmentCenter;
     self.countLabel.font = [UIFont boldSystemFontOfSize:32];
 	[self.headerView addSubview:self.countLabel];

@@ -60,7 +60,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.segmentedControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	[self.segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
 	self.segmentedControl.frame = CGRectMake(5, 2, 310, 36);
-    self.segmentedControl.tintColor = ISMSHeaderColor;
 	self.segmentedControl.selectedSegmentIndex = 0;
 	[self.headerView addSubview:self.segmentedControl];
 	

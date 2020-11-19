@@ -31,14 +31,14 @@ LOG_LEVEL_ISUB_DEFAULT
 		_folders = [SUSRootFoldersDAO folderDropdownFolders];
 		_labels = [[NSMutableArray alloc] init];
 		_isOpen = NO;
-        _borderColor = UIColor.systemGrayColor;//labelColor;//ISMSHeaderTextColor;
-        _textColor   = UIColor.labelColor;//ISMSHeaderTextColor;
-        _lightColor  = UIColor.systemBackgroundColor;//[UIColor whiteColor];
-        _darkColor   = UIColor.systemBackgroundColor;//[UIColor whiteColor];
+        _borderColor = UIColor.systemGrayColor;
+        _textColor   = UIColor.labelColor;
+        _lightColor  = UIColor.systemBackgroundColor;
+        _darkColor   = UIColor.systemBackgroundColor;
 		
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		self.userInteractionEnabled = YES;
-        self.backgroundColor = UIColor.systemGray5Color;//[UIColor clearColor];
+        self.backgroundColor = UIColor.systemGray5Color;
 		self.layer.borderColor = _borderColor.CGColor;
 		self.layer.borderWidth = 2.0;
 		self.layer.cornerRadius = 8;
@@ -48,7 +48,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		_selectedFolderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		_selectedFolderLabel.userInteractionEnabled = YES;
 		_selectedFolderLabel.backgroundColor = [UIColor clearColor];
-        _selectedFolderLabel.textColor = _textColor;//_borderColor;
+        _selectedFolderLabel.textColor = _textColor;
 		_selectedFolderLabel.textAlignment = NSTextAlignmentCenter;
         _selectedFolderLabel.font = [UIFont boldSystemFontOfSize:20];
 		_selectedFolderLabel.text = @"All Folders";

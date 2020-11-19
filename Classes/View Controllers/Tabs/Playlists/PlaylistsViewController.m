@@ -117,7 +117,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.segmentedControl.frame = CGRectMake(5, 5, 310, 36);
 	self.segmentedControl.selectedSegmentIndex = 0;
 	self.segmentedControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.segmentedControl.tintColor = ISMSHeaderColor;
 	[self.segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
 	[self.headerView addSubview:self.segmentedControl];
 	
@@ -403,8 +402,6 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)segmentAction:(id)sender {
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
-		viewObjectsS.isLocalPlaylist = YES;
-		
 		// Get the current playlist count
 		self.currentPlaylistCount = [playlistS count];
 
@@ -450,8 +447,6 @@ LOG_LEVEL_ISUB_DEFAULT
 			[self removeSaveEditButtons];
 		}
 	} else if (self.segmentedControl.selectedSegmentIndex == 1) {
-		viewObjectsS.isLocalPlaylist = YES;
-		
 		// Clear the edit stuff if they switch tabs in the middle of editing
 		[self removeEditControls];
 		
@@ -475,9 +470,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (localPlaylistsCount == 0) {
 			[self addNoPlaylistsScreen];
 		}
-	} else if (self.segmentedControl.selectedSegmentIndex == 2) {
-		viewObjectsS.isLocalPlaylist = NO;
-		
+	} else if (self.segmentedControl.selectedSegmentIndex == 2) {		
 		// Clear the edit stuff if they switch tabs in the middle of editing
 		[self removeEditControls];
 		
