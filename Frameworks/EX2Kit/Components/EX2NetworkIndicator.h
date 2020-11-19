@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+// NOTE: This now only works on devices before the iPhone X (aka no-notch displays)
 @interface EX2NetworkIndicator : NSObject
 
 + (void)usingNetwork;

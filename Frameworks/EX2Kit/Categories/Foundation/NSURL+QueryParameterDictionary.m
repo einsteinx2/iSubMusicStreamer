@@ -14,7 +14,7 @@
 // Thanks to this SO answer: http://stackoverflow.com/a/11679248/299262
 - (NSDictionary *)queryParameterDictionary
 {
-    NSString *string =  [[self.absoluteString stringByReplacingOccurrencesOfString:@"+" withString:@" "] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *string =  [[self.absoluteString stringByReplacingOccurrencesOfString:@"+" withString:@" "] stringByRemovingPercentEncoding];
     NSScanner *scanner = [NSScanner scannerWithString:string];
     [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@"&?"]];
     

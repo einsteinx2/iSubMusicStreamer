@@ -383,7 +383,8 @@ static CGFloat kDDSocialDialogPadding = 10;
 			}
 		} 
 		
-        CGFloat duration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
+//        CGFloat duration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
+        CGFloat duration = 0.3;
         [UIView animateWithDuration:duration animations:^{
             [self sizeToFitOrientation:YES];
         }];

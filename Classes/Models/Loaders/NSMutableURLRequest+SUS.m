@@ -35,8 +35,8 @@ static NSSet *setOfVersions = nil;
     NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@/rest/%@.view", url, action];
     if ([action isEqualToString:@"hls"])
         urlString = [NSMutableString stringWithFormat:@"%@/rest/%@.m3u8", url, action];
-	NSString *username = [user URLEncodeString];
-	NSString *password = [pass URLEncodeString];
+	NSString *username = [user URLQueryEncodeString];
+	NSString *password = [pass URLQueryEncodeString];
 	NSString *version = nil;
 	
 	// Set the API version for this call by checking the arrays
@@ -63,15 +63,15 @@ static NSSet *setOfVersions = nil;
 					for (id subValue in (NSArray*)value) {
 						if ([subValue isKindOfClass:[NSString class]]) {
 							// handle single value for key
-							[postString appendFormat:@"&%@=%@", [key URLEncodeString], [(NSString*)subValue URLEncodeString]];
+							[postString appendFormat:@"&%@=%@", [key URLQueryEncodeString], [(NSString*)subValue URLQueryEncodeString]];
 						} else if ([subValue isKindOfClass:[NSNumber class]]) {
                             // Convert numbers to strings
-							[postString appendFormat:@"&%@=%@", [key URLEncodeString], [[(NSNumber *)subValue stringValue] URLEncodeString]];
+							[postString appendFormat:@"&%@=%@", [key URLQueryEncodeString], [[(NSNumber *)subValue stringValue] URLQueryEncodeString]];
                         }
 					}
 				} else if ([value isKindOfClass:[NSString class]]) {
 					// handle single value for key
-					[postString appendFormat:@"&%@=%@", [key URLEncodeString], [(NSString*)value URLEncodeString]];
+					[postString appendFormat:@"&%@=%@", [key URLQueryEncodeString], [(NSString*)value URLQueryEncodeString]];
 				}
 			}
 		}

@@ -12,7 +12,6 @@
 #import "NSString+compareWithoutIndefiniteArticles.h"
 #import "NSString+hex.h"
 #import "NSString+md5.h"
-#import "NSString+rfcEncode.h"
 #import "NSString+time.h"
 #import "NSString+TrimmingAdditions.h"
 #import "NSString+URLEncode.h"

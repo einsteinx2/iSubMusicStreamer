@@ -10,8 +10,7 @@
 
 @interface NSString (URLEncode)
 
-+ (NSString *)URLEncodeString:(NSString *)string; 
-- (NSString *)URLEncodeString; 
-- (NSString *)URLDecode;
++ (NSString *)URLQueryEncodeString:(NSString *)string; 
+- (NSString *)URLQueryEncodeString; 
 
 @end

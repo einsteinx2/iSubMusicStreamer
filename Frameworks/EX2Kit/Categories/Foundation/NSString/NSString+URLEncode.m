@@ -10,23 +10,12 @@
 
 @implementation NSString (URLEncode)
 
-+ (NSString *)URLEncodeString:(NSString *)string 
-{
-    NSString *result = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                    (__bridge CFStringRef)string, NULL, CFSTR(";/?:@&=$+{}[]<>,"), kCFStringEncodingUTF8);
-    
-    
-    return result;
++ (NSString *)URLQueryEncodeString:(NSString *)string  {
+    return [string stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
 } 
 
-- (NSString *)URLEncodeString 
-{ 
-    return [NSString URLEncodeString:self]; 
-}
-
-- (NSString *)URLDecode
-{
-    return (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)self, CFSTR(""));
+- (NSString *)URLQueryEncodeString {
+    return [NSString URLQueryEncodeString:self]; 
 }
 
 @end

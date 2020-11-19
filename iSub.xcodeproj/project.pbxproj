@@ -752,8 +752,6 @@
 		53FE350F1EA961540058B925 /* NSString+hex.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34111EA961540058B925 /* NSString+hex.m */; };
 		53FE35101EA961540058B925 /* NSString+md5.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34131EA961540058B925 /* NSString+md5.m */; };
 		53FE35121EA961540058B925 /* NSString+md5.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34131EA961540058B925 /* NSString+md5.m */; };
-		53FE35131EA961540058B925 /* NSString+rfcEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34151EA961540058B925 /* NSString+rfcEncode.m */; };
-		53FE35151EA961540058B925 /* NSString+rfcEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34151EA961540058B925 /* NSString+rfcEncode.m */; };
 		53FE35161EA961540058B925 /* NSString+SHA1.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34171EA961540058B925 /* NSString+SHA1.m */; };
 		53FE35181EA961540058B925 /* NSString+SHA1.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34171EA961540058B925 /* NSString+SHA1.m */; };
 		53FE35191EA961540058B925 /* NSString+time.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34191EA961540058B925 /* NSString+time.m */; };
@@ -1556,8 +1554,6 @@
 		53FE34111EA961540058B925 /* NSString+hex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+hex.m"; sourceTree = "<group>"; };
 		53FE34121EA961540058B925 /* NSString+md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+md5.h"; sourceTree = "<group>"; };
 		53FE34131EA961540058B925 /* NSString+md5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+md5.m"; sourceTree = "<group>"; };
-		53FE34141EA961540058B925 /* NSString+rfcEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+rfcEncode.h"; sourceTree = "<group>"; };
-		53FE34151EA961540058B925 /* NSString+rfcEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+rfcEncode.m"; sourceTree = "<group>"; };
 		53FE34161EA961540058B925 /* NSString+SHA1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SHA1.h"; sourceTree = "<group>"; };
 		53FE34171EA961540058B925 /* NSString+SHA1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SHA1.m"; sourceTree = "<group>"; };
 		53FE34181EA961540058B925 /* NSString+time.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+time.h"; sourceTree = "<group>"; };
@@ -2917,8 +2913,6 @@
 				53FE34111EA961540058B925 /* NSString+hex.m */,
 				53FE34121EA961540058B925 /* NSString+md5.h */,
 				53FE34131EA961540058B925 /* NSString+md5.m */,
-				53FE34141EA961540058B925 /* NSString+rfcEncode.h */,
-				53FE34151EA961540058B925 /* NSString+rfcEncode.m */,
 				53FE34161EA961540058B925 /* NSString+SHA1.h */,
 				53FE34171EA961540058B925 /* NSString+SHA1.m */,
 				53FE34181EA961540058B925 /* NSString+time.h */,
@@ -3926,7 +3920,6 @@
 				53FE38A41EA961C80058B925 /* ZKCDHeader.m in Sources */,
 				53FE350D1EA961540058B925 /* NSString+hex.m in Sources */,
 				5379DC4F1219E48800F426CD /* ChatUITableViewCell.m in Sources */,
-				53FE35131EA961540058B925 /* NSString+rfcEncode.m in Sources */,
 				5379DC501219E48800F426CD /* ChatViewController.m in Sources */,
 				53BB7ECA121B8D8F00BEE7E8 /* CustomUITextView.m in Sources */,
 				53FE38041EA961970058B925 /* RXMLElement.m in Sources */,
@@ -4155,7 +4148,6 @@
 				53FE38A61EA961C80058B925 /* ZKCDHeader.m in Sources */,
 				53FE350F1EA961540058B925 /* NSString+hex.m in Sources */,
 				53BC27F8139AF0DD00A825F1 /* ChatUITableViewCell.m in Sources */,
-				53FE35151EA961540058B925 /* NSString+rfcEncode.m in Sources */,
 				53BC27F9139AF0DD00A825F1 /* ChatViewController.m in Sources */,
 				533295F7255EEFE50027C51A /* FMTokenizers.m in Sources */,
 				53BC27FC139AF0DD00A825F1 /* CustomUITextView.m in Sources */,

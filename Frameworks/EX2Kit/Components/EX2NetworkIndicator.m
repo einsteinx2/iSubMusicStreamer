@@ -11,6 +11,9 @@
 
 static NSUInteger networkUseCount = 0;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @implementation EX2NetworkIndicator
 
 + (void)usingNetwork
@@ -49,3 +52,5 @@ static NSUInteger networkUseCount = 0;
 }
 
 @end
+
+#pragma clang diagnostic pop
