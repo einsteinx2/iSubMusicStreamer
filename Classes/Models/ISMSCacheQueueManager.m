@@ -39,7 +39,7 @@ LOG_LEVEL_ISUB_DEBUG
 - (ISMSSong *)currentQueuedSongInDb {
 	__block ISMSSong *aSong = nil;
 	[databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
-		 FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue WHERE finished = 'NO' LIMIT 1"];
+		 FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue WHERE finished = 'NO' ORDER BY ROWID ASC LIMIT 1"];
 		 if ([db hadError]) {
 			 //DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
 		 } else {
@@ -54,12 +54,9 @@ LOG_LEVEL_ISUB_DEBUG
 
 // Start downloading the file specified in the text field.
 - (void)startDownloadQueue
-{    
-	// Are we already downloading?  If so, stop it.
-	[self stopDownloadQueue];
-	
-	//DLog(@"starting download queue");
-	
+{
+    if (self.isQueueDownloading) return;
+    	
 	// Check if there's another queued song and that were are on Wifi
 	self.currentQueuedSong = self.currentQueuedSongInDb;
 	if (!self.currentQueuedSong || (!EX2Reachability.isWifi && !settingsS.isManualCachingOnWWANEnabled) || settingsS.isOfflineMode) {
@@ -156,6 +153,8 @@ LOG_LEVEL_ISUB_DEBUG
 }
 
 - (void)stopDownloadQueue {
+    if (!self.isQueueDownloading) return;
+    
     //DLog(@"stopping download queue");
 	self.isQueueDownloading = NO;
 	
@@ -256,6 +255,7 @@ LOG_LEVEL_ISUB_DEBUG
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CacheQueueSongDownloaded userInfo:userInfo];
 		
 		// Download the next song in the queue
+        self.isQueueDownloading = NO;
 		[self startDownloadQueue];
 	} else {
 		[self stopDownloadQueue];

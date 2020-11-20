@@ -87,8 +87,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 #if !defined(ADHOC) && !defined(RELEASE)
     // Don't turn on console logging for adhoc or release builds
-    [DDLog addLogger:[DDTTYLogger sharedInstance]];
-    [[DDTTYLogger sharedInstance] setColorsEnabled:YES];
+    [DDLog addLogger:[DDOSLogger sharedInstance]];
 #endif
 	DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
 	fileLogger.rollingFrequency = 60 * 60 * 24; // 24 hour rolling
@@ -352,13 +351,13 @@ LOG_LEVEL_ISUB_DEFAULT
         }
         
         // TODO: Find another way to detect crashes without using HockeyApp
-//        // Since the download queue has been a frequent source of crashes in the past, and we start this on launch automatically
-//        // potentially resulting in a crash loop, do NOT start the download queue automatically if the app crashed on last launch.
+        // Since the download queue has been a frequent source of crashes in the past, and we start this on launch automatically
+        // potentially resulting in a crash loop, do NOT start the download queue automatically if the app crashed on last launch.
 //        if (![BITHockeyManager sharedHockeyManager].crashManager.didCrashInLastSession)
-//        {
-//            // Start the queued downloads if Wifi is available
-//            [cacheQueueManagerS startDownloadQueue];
-//        }
+        {
+            // Start the queued downloads if Wifi is available
+            [cacheQueueManagerS startDownloadQueue];
+        }
     }
 }
 

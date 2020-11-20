@@ -482,8 +482,7 @@ LOG_LEVEL_ISUB_DEFAULT
 + (BOOL)removeSongFromCacheDbQueueByMD5:(NSString *)md5
 {
 	// Check if we're deleting the song that's currently playing. If so, stop the player.
-	if (playlistS.currentSong && !settingsS.isJukeboxEnabled &&
-		[[playlistS.currentSong.path md5] isEqualToString:md5])
+	if (playlistS.currentSong && !settingsS.isJukeboxEnabled && [[playlistS.currentSong.path md5] isEqualToString:md5])
 	{
 		//DLog(@"stopping the player before deleting the file");
         [audioEngineS.player stop];

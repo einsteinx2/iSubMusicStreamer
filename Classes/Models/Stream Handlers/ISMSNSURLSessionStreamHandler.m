@@ -191,7 +191,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
-    NSLog(@"didReceiveData size %lu totalBytesTransferred: %llu  bytesTransferred: %llu  thread: %@", data.length, self.totalBytesTransferred, self.bytesTransferred, NSThread.currentThread);
+//    NSLog(@"didReceiveData size %lu totalBytesTransferred: %llu  bytesTransferred: %llu  thread: %@", data.length, self.totalBytesTransferred, self.bytesTransferred, NSThread.currentThread);
     [self performSelectorOnMainThread:@selector(stopTimeOutTimer) withObject:nil waitUntilDone:NO];
         
     if (self.isCanceled) {
@@ -285,7 +285,7 @@ LOG_LEVEL_ISUB_DEFAULT
             }
         }
     } else {
-        DDLogVerbose(@"[ISMSNSURLSessionStreamHandler] Stream handler did receive data but encryptor was nil for %@", self.mySong);
+        DDLogVerbose(@"[ISMSNSURLSessionStreamHandler] Stream handler did receive data but file handle was nil for %@", self.mySong);
 
         if (!self.isCanceled) {
             // There is no file handle for some reason, cancel the connection

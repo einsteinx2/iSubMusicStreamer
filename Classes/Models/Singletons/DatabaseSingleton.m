@@ -59,6 +59,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)setupDatabases
 {
 	NSString *urlStringMd5 = [[settingsS urlString] md5];
+    DDLogVerbose(@"Database path: %@", self.databaseFolderPath);
     DDLogVerbose(@"Database prefix: %@", urlStringMd5);
 		
 	// Only load Albums, Songs, and Genre databases if this is a newer device
