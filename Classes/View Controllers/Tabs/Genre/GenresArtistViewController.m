@@ -8,7 +8,6 @@
 
 #import "GenresArtistViewController.h"
 #import "GenresAlbumViewController.h"
-#import "GenresArtistUITableViewCell.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -26,7 +25,7 @@
 
 - (void)viewDidLoad  {
     [super viewDidLoad];
-	
+        
     // Create the container view and constrain it to the table
     UIView *headerView = [[UIView alloc] init];
     headerView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -58,40 +57,8 @@
     [self.tableView.tableHeaderView layoutIfNeeded];
     self.tableView.tableHeaderView = self.tableView.tableHeaderView;
     
-//	// Add the play all button + shuffle button
-//	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
-//
-//	UILabel *playAllLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
-//	playAllLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
-//	playAllLabel.backgroundColor = [UIColor clearColor];
-//	playAllLabel.textColor = ISMSHeaderButtonColor;
-//	playAllLabel.textAlignment = NSTextAlignmentCenter;
-//	playAllLabel.font = [UIFont boldSystemFontOfSize:24];
-//	playAllLabel.text = @"Play All";
-//	[headerView addSubview:playAllLabel];
-//
-//	UIButton *playAllButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//	playAllButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
-//	playAllButton.frame = CGRectMake(0, 0, 160, 40);
-//	[playAllButton addTarget:self action:@selector(playAllAction:) forControlEvents:UIControlEventTouchUpInside];
-//	[headerView addSubview:playAllButton];
-//
-//	UILabel *shuffleLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 0, 160, 50)];
-//	shuffleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-//	shuffleLabel.backgroundColor = [UIColor clearColor];
-//	shuffleLabel.textColor = ISMSHeaderButtonColor;
-//	shuffleLabel.textAlignment = NSTextAlignmentCenter;
-//	shuffleLabel.font = [UIFont boldSystemFontOfSize:24];
-//	shuffleLabel.text = @"Shuffle";
-//	[headerView addSubview:shuffleLabel];
-//
-//	UIButton *shuffleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//	shuffleButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-//	shuffleButton.frame = CGRectMake(160, 0, 160, 40);
-//	[shuffleButton addTarget:self action:@selector(shuffleAction:) forControlEvents:UIControlEventTouchUpInside];
-//	[headerView addSubview:shuffleButton];
-//
-//	self.tableView.tableHeaderView = headerView;
+    self.tableView.rowHeight = 65.0;
+    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -240,18 +207,6 @@
 	[self showPlayer];
 }
 
-//- (void)playAllAction:(id)sender {
-//	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-//	
-//	[self performSelector:@selector(playAllSongs) withObject:nil afterDelay:0.05];
-//}
-//
-//- (void)shuffleAction:(id)sender {
-//	[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
-//	
-//	[self performSelector:@selector(shuffleSongs) withObject:nil afterDelay:0.05];
-//}
-
 #pragma mark Table view methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
@@ -259,18 +214,15 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	static NSString *cellIdentifier = @"GenresArtistCell";
-	GenresArtistUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	if (!cell) {
-		cell = [[GenresArtistUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-	}
-	cell.genre = self.title;
-	
-	NSString *name = [self.listOfArtists objectAtIndexSafe:indexPath.row];
-	
-	[cell.artistNameLabel setText:name];
-        
-	return cell;
+    UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+    cell.hideCoverArt = YES;
+    cell.hideNumberLabel = YES;
+    cell.hideDurationLabel = YES;
+    cell.hideSecondaryLabel = YES;
+    
+    NSString *name = [self.listOfArtists objectAtIndexSafe:indexPath.row];
+    [cell updateWithPrimaryText:name secondaryText:nil];
+    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -317,6 +269,101 @@
     }];
     
     [self pushViewControllerCustom:genresAlbumViewController];
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *name = [self.listOfArtists objectAtIndexSafe:indexPath.row];
+    if (settingsS.isOfflineMode) {
+        return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
+            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+            [EX2Dispatch runInMainThreadAfterDelay:0.05 block:^{
+                FMDatabaseQueue *dbQueue = databaseS.songCacheDbQueue;
+                NSString *query = @"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? AND genre = ? ORDER BY seg2 COLLATE NOCASE";
+                
+                NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
+                [dbQueue inDatabase:^(FMDatabase *db) {
+                    FMResultSet *result = [db executeQuery:query, name, self.title];
+                    while ([result next]) {
+                        @autoreleasepool {
+                            NSString *md5 = [result stringForColumnIndex:0];
+                            if (md5) [songMd5s addObject:md5];
+                        }
+                    }
+                    [result close];
+                }];
+                
+                for (NSString *md5 in songMd5s) {
+                    @autoreleasepool {
+                        ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:md5];
+                        [aSong addToCurrentPlaylistDbQueue];
+                    }
+                }
+                
+                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+                
+                [viewObjectsS hideLoadingScreen];
+            }];
+        } deleteHandler:nil];
+    } else {
+        return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:^{
+            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+            [EX2Dispatch runInMainThreadAfterDelay:0.05 block:^{
+                FMDatabaseQueue *dbQueue = databaseS.genresDbQueue;
+                NSString *query = @"SELECT md5 FROM genresLayout WHERE seg1 = ? AND genre = ? ORDER BY seg2 COLLATE NOCASE";
+                
+                NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
+                [dbQueue inDatabase:^(FMDatabase *db) {
+                    FMResultSet *result = [db executeQuery:query, name, self.title];
+                    while ([result next]) {
+                        @autoreleasepool {
+                            NSString *md5 = [result stringForColumnIndex:0];
+                            if (md5) [songMd5s addObject:md5];
+                        }
+                    }
+                    [result close];
+                }];
+                
+                for (NSString *md5 in songMd5s) {
+                    @autoreleasepool {
+                        ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:md5];
+                        [aSong addToCacheQueueDbQueue];
+                    }
+                }
+                
+                // Hide the loading screen
+                [viewObjectsS hideLoadingScreen];
+            }];
+        } queueHandler:^{
+            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+            [EX2Dispatch runInMainThreadAfterDelay:0.05 block:^{
+                FMDatabaseQueue *dbQueue = databaseS.genresDbQueue;
+                NSString *query = @"SELECT md5 FROM genresLayout WHERE seg1 = ? AND genre = ? ORDER BY seg2 COLLATE NOCASE";
+                
+                NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
+                [dbQueue inDatabase:^(FMDatabase *db) {
+                    FMResultSet *result = [db executeQuery:query, name, self.title];
+                    while ([result next]) {
+                        @autoreleasepool {
+                            NSString *md5 = [result stringForColumnIndex:0];
+                            if (md5) [songMd5s addObject:md5];
+                        }
+                    }
+                    [result close];
+                }];
+                
+                for (NSString *md5 in songMd5s) {
+                    @autoreleasepool {
+                        ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:md5];
+                        [aSong addToCurrentPlaylistDbQueue];
+                    }
+                }
+                
+                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+                
+                [viewObjectsS hideLoadingScreen];
+            }];
+        } deleteHandler:nil];
+    }
 }
 
 @end

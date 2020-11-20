@@ -151,6 +151,17 @@ import SnapKit
         cachedIndicator.isHidden = true;
     }
     
+    @objc func update(primaryText: String, secondaryText: String?, coverArtId: String?) {
+        tableCellModel = nil;
+        hideNumberLabel = true
+        hideSecondaryLabel = (secondaryText == nil)
+        hideDurationLabel = true
+        primaryLabel.text = primaryText
+        secondaryLabel.text = secondaryText;
+        coverArtView.coverArtId = coverArtId;
+        cachedIndicator.isHidden = true;
+    }
+    
 //    @objc func startScrollingLabels() {
 //        primaryLabel.startScrolling()
 //        if !hideSecondaryLabel {

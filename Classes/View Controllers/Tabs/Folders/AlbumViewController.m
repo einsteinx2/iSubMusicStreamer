@@ -61,9 +61,7 @@
 
 - (void)viewDidLoad  {
     [super viewDidLoad];
-    
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-				
+    				
     // Add the pull to refresh view
     __weak AlbumViewController *weakSelf = self;
     self.refreshControl = [[RefreshControl alloc] initWithHandler:^{

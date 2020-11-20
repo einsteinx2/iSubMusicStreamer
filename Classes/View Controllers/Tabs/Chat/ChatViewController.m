@@ -59,9 +59,7 @@
 
 - (void)viewDidLoad  {
     [super viewDidLoad];
-	
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-    
+	    
 	self.isNoChatMessagesScreenShowing = NO;
 	
 	self.tableView.separatorColor = [UIColor clearColor];

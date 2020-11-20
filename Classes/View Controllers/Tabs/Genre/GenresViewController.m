@@ -8,7 +8,6 @@
 
 #import "GenresViewController.h"
 #import "GenresArtistViewController.h"
-#import "GenresGenreUITableViewCell.h"
 #import "ServerListViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "iSubAppDelegate.h"
@@ -20,6 +19,7 @@
 #import "DatabaseSingleton.h"
 #import "EX2Kit.h"
 #import "Swift.h"
+#import "ISMSSong+DAO.h"
 
 @implementation GenresViewController
 
@@ -138,18 +138,19 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
-	static NSString *cellIdentifier = @"GenresGenreCell";
-	GenresGenreUITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	if (!cell) {
-		cell = [[GenresGenreUITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-	}
-
-	if (settingsS.isOfflineMode) {
-		cell.genreNameLabel.text = [databaseS.songCacheDbQueue stringForQuery:@"SELECT genre FROM genres WHERE ROWID = ?", @(indexPath.row + 1)];
-	} else {
-		cell.genreNameLabel.text = [databaseS.genresDbQueue stringForQuery:@"SELECT genre FROM genres WHERE ROWID = ?", @(indexPath.row + 1)];
-	}
-
+    UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+    cell.hideSecondaryLabel = YES;
+    cell.hideDurationLabel = YES;
+    cell.hideCoverArt = YES;
+    cell.hideNumberLabel = YES;
+    
+    NSString *name = nil;
+    if (settingsS.isOfflineMode) {
+        name = [databaseS.songCacheDbQueue stringForQuery:@"SELECT genre FROM genres WHERE ROWID = ?", @(indexPath.row + 1)];
+    } else {
+        name = [databaseS.genresDbQueue stringForQuery:@"SELECT genre FROM genres WHERE ROWID = ?", @(indexPath.row + 1)];
+    }
+    [cell updateWithPrimaryText:name secondaryText:nil];
     return cell;
 }
 
@@ -193,6 +194,109 @@
     }];
     
     [self pushViewControllerCustom:artistViewController];
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *name = nil;
+    if (settingsS.isOfflineMode) {
+        name = [databaseS.songCacheDbQueue stringForQuery:@"SELECT genre FROM genres WHERE ROWID = ?", @(indexPath.row + 1)];
+    } else {
+        name = [databaseS.genresDbQueue stringForQuery:@"SELECT genre FROM genres WHERE ROWID = ?", @(indexPath.row + 1)];
+    }
+    
+    if (settingsS.isOfflineMode) {
+        return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
+            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+            [EX2Dispatch runInMainThreadAfterDelay:0.05 block:^{
+                FMDatabaseQueue *dbQueue = databaseS.songCacheDbQueue;
+                NSString *query = @"SELECT md5 FROM cachedSongsLayout WHERE genre = ? ORDER BY seg1 COLLATE NOCASE";
+
+                NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
+                [dbQueue inDatabase:^(FMDatabase *db) {
+                    FMResultSet *result = [db executeQuery:query, name];
+                    
+                    while ([result next]) {
+                        @autoreleasepool {
+                            NSString *md5 = [result stringForColumnIndex:0];
+                            if (md5) [songMd5s addObject:md5];
+                        }
+                    }
+                    [result close];
+                }];
+                
+                for (NSString *md5 in songMd5s) {
+                    @autoreleasepool {
+                        ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:md5];
+                        [aSong addToCurrentPlaylistDbQueue];
+                    }
+                }
+                
+                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+                
+                [viewObjectsS hideLoadingScreen];
+            }];
+        } deleteHandler:nil];
+    } else {
+        return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:^{
+            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+            [EX2Dispatch runInMainThreadAfterDelay:0.05 block:^{
+                FMDatabaseQueue *dbQueue = databaseS.genresDbQueue;
+                NSString *query = [NSString stringWithFormat:@"SELECT md5 FROM genresLayout WHERE genre = ? ORDER BY seg1 COLLATE NOCASE"];
+                
+                NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
+                [dbQueue inDatabase:^(FMDatabase *db) {
+                    FMResultSet *result = [db executeQuery:query, name];
+                    while ([result next]) {
+                        @autoreleasepool {
+                            NSString *md5 = [result stringForColumnIndex:0];
+                            if (md5) [songMd5s addObject:md5];
+                        }
+                    }
+                    [result close];
+                }];
+                
+                for (NSString *md5 in songMd5s) {
+                    @autoreleasepool {
+                        ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:md5];
+                        [aSong addToCacheQueueDbQueue];
+                    }
+                }
+                
+                // Hide the loading screen
+                [viewObjectsS hideLoadingScreen];
+            }];
+        } queueHandler:^{
+            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+            [EX2Dispatch runInMainThreadAfterDelay:0.05 block:^{
+                FMDatabaseQueue *dbQueue = databaseS.genresDbQueue;
+                NSString *query = @"SELECT md5 FROM genresLayout WHERE genre = ? ORDER BY seg1 COLLATE NOCASE";
+                
+                NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
+                [dbQueue inDatabase:^(FMDatabase *db) {
+                    FMResultSet *result = [db executeQuery:query, name];
+                    
+                    while ([result next]) {
+                        @autoreleasepool {
+                            NSString *md5 = [result stringForColumnIndex:0];
+                            if (md5) [songMd5s addObject:md5];
+                        }
+                    }
+                    [result close];
+                }];
+                
+                for (NSString *md5 in songMd5s) {
+                    @autoreleasepool {
+                        ISMSSong *aSong = [ISMSSong songFromGenreDbQueue:md5];
+                        [aSong addToCurrentPlaylistDbQueue];
+                    }
+                }
+                
+                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+                
+                [viewObjectsS hideLoadingScreen];
+            }];
+        } deleteHandler:nil];
+    }
 }
 
 @end
