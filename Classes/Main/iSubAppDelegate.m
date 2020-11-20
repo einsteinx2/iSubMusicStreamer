@@ -171,7 +171,7 @@ LOG_LEVEL_ISUB_DEFAULT
         
 		// Setup the tabBarController
         self.mainTabBarController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-		
+
 		if (settingsS.isOfflineMode) {
 			self.currentTabBarController = self.offlineTabBarController;
             self.window.rootViewController = self.offlineTabBarController;
@@ -179,6 +179,9 @@ LOG_LEVEL_ISUB_DEFAULT
 			// Recover the tab order and load the main tabBarController
 			self.currentTabBarController = self.mainTabBarController;
             self.window.rootViewController = self.mainTabBarController;
+            if (!UIDevice.isIPad) {
+                [viewObjectsS orderMainTabBarController];
+            }
 		}
         
         [self.window makeKeyAndVisible];
@@ -345,10 +348,6 @@ LOG_LEVEL_ISUB_DEFAULT
         
         //DLog(@"server verification passed, hiding loading screen");
         [viewObjectsS hideLoadingScreen];
-        
-        if (!UIDevice.isIPad && !settingsS.isOfflineMode) {
-            [viewObjectsS orderMainTabBarController];
-        }
         
         // TODO: Find another way to detect crashes without using HockeyApp
         // Since the download queue has been a frequent source of crashes in the past, and we start this on launch automatically

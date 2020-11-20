@@ -147,20 +147,16 @@
 	// If this is an old device, remove Albums and Songs tabs
 	if (!settingsS.isSongsTabEnabled) {
 		NSMutableArray *tabs = [[NSMutableArray alloc] init];
-		for (UIViewController *controller in appDelegateS.mainTabBarController.viewControllers)
-		{
-			if (controller.tabBarItem.tag != 1 && controller.tabBarItem.tag != 2 && controller.tabBarItem.tag != 6)
-			{
+		for (UIViewController *controller in appDelegateS.mainTabBarController.viewControllers) {
+			if (controller.tabBarItem.tag != 1 && controller.tabBarItem.tag != 2 && controller.tabBarItem.tag != 6) {
 				[tabs addObject:controller];
 			}
 		}
 		appDelegateS.mainTabBarController.viewControllers = tabs;
 		
 		tabs = [[NSMutableArray alloc] init];
-		for (NSNumber *tag in savedTabsOrderArray)
-		{
-			if ([tag intValue] != 1 && [tag intValue] != 2 && [tag intValue] != 6)
-			{
+		for (NSNumber *tag in savedTabsOrderArray) {
+			if (tag.intValue != 1 && tag.intValue != 2 && tag.intValue != 6) {
 				[tabs addObject:tag];
 			}
 		}
@@ -190,16 +186,16 @@
 			appDelegateS.mainTabBarController.viewControllers = [NSArray arrayWithArray:tabsViewControllers];
 		}
 	}
-	
-	if ([[NSUserDefaults standardUserDefaults] integerForKey:@"mainTabBarControllerSelectedIndex"]) {
-		if ([[NSUserDefaults standardUserDefaults] integerForKey:@"mainTabBarControllerSelectedIndex"] == 2147483647) {
-			appDelegateS.mainTabBarController.selectedViewController = appDelegateS.mainTabBarController.moreNavigationController;
-		} else {
-			appDelegateS.mainTabBarController.selectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"mainTabBarControllerSelectedIndex"];
-		}
-	}
-	
-	appDelegateS.mainTabBarController.moreNavigationController.delegate = self;
+    
+    appDelegateS.mainTabBarController.moreNavigationController.delegate = self;
+    
+    if ([NSUserDefaults.standardUserDefaults integerForKey:@"mainTabBarControllerSelectedIndex"]) {
+        if ([NSUserDefaults.standardUserDefaults integerForKey:@"mainTabBarControllerSelectedIndex"] == 2147483647) {
+            appDelegateS.mainTabBarController.selectedViewController = appDelegateS.mainTabBarController.moreNavigationController;
+        } else {
+            appDelegateS.mainTabBarController.selectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"mainTabBarControllerSelectedIndex"];
+        }
+    }
 }
 
 - (void)setup {
