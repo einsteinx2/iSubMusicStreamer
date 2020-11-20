@@ -18,25 +18,25 @@ import SnapKit
     private let cachedIndicator = CellCachedIndicatorView()
     private let numberLabel = UILabel()
     private let coverArtView = AsynchronousImageView()
-    private let primaryLabel = AutoScrollingLabel()
-    private let secondaryLabel = AutoScrollingLabel()
+    private let primaryLabel = UILabel()
+    private let secondaryLabel = UILabel()
     private let durationLabel = UILabel()
     
-    @objc var autoScroll: Bool {
-        get { return primaryLabel.autoScroll }
-        set {
-            primaryLabel.autoScroll = newValue
-            secondaryLabel.autoScroll = newValue
-        }
-    }
-    
-    @objc var repeatScroll: Bool {
-        get { return primaryLabel.repeatScroll }
-        set {
-            primaryLabel.repeatScroll = newValue
-            secondaryLabel.repeatScroll = newValue
-        }
-    }
+//    @objc var autoScroll: Bool {
+//        get { return primaryLabel.autoScroll }
+//        set {
+//            primaryLabel.autoScroll = newValue
+//            secondaryLabel.autoScroll = newValue
+//        }
+//    }
+//    
+//    @objc var repeatScroll: Bool {
+//        get { return primaryLabel.repeatScroll }
+//        set {
+//            primaryLabel.repeatScroll = newValue
+//            secondaryLabel.repeatScroll = newValue
+//        }
+//    }
     
     @objc var number: Int = 0 {
         didSet { numberLabel.text = "\(number)" }
@@ -151,19 +151,19 @@ import SnapKit
         cachedIndicator.isHidden = true;
     }
     
-    @objc func startScrollingLabels() {
-        primaryLabel.startScrolling()
-        if !hideSecondaryLabel {
-            secondaryLabel.startScrolling()
-        }
-    }
-    
-    @objc func stopScrollingLabels() {
-        primaryLabel.stopScrolling()
-        if !hideSecondaryLabel {
-            secondaryLabel.stopScrolling()
-        }
-    }
+//    @objc func startScrollingLabels() {
+//        primaryLabel.startScrolling()
+//        if !hideSecondaryLabel {
+//            secondaryLabel.startScrolling()
+//        }
+//    }
+//
+//    @objc func stopScrollingLabels() {
+//        primaryLabel.stopScrolling()
+//        if !hideSecondaryLabel {
+//            secondaryLabel.stopScrolling()
+//        }
+//    }
     
     // MARK: AutoLayout
     

@@ -69,20 +69,15 @@
 	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 90)];
 	self.headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	
-	self.reloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	self.reloadButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	self.reloadButton.frame = CGRectMake(0, 0, 320, 40);
-	[self.headerView addSubview:self.reloadButton];
-	
 	self.countLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 5, 320, 30)];
 	self.countLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	self.countLabel.backgroundColor = [UIColor clearColor];
-	self.countLabel.textColor = [UIColor blackColor];
+    self.countLabel.textColor = UIColor.labelColor;
 	self.countLabel.textAlignment = NSTextAlignmentCenter;
 	self.countLabel.font = [UIFont boldSystemFontOfSize:30];
 	[self.headerView addSubview:self.countLabel];
 	
 	self.searchBar = [[UISearchBar  alloc] initWithFrame:CGRectMake(0, 50, 320, 40)];
+    self.searchBar.searchBarStyle = UISearchBarStyleMinimal;
 	self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	self.searchBar.delegate = self;
 	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -91,8 +86,7 @@
 	
 	self.reloadTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 36, 320, 12)];
 	self.reloadTimeLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	self.reloadTimeLabel.backgroundColor = [UIColor clearColor];
-	self.reloadTimeLabel.textColor = [UIColor colorWithRed:176.0/255.0 green:181.0/255.0 blue:188.0/255.0 alpha:1];
+    self.reloadTimeLabel.textColor = UIColor.secondaryLabelColor;
 	self.reloadTimeLabel.textAlignment = NSTextAlignmentCenter;
     self.reloadTimeLabel.font = [UIFont systemFontOfSize:11];
 	[self.headerView addSubview:self.reloadTimeLabel];
@@ -347,7 +341,7 @@
 	if (self.isSearching) {
 		return 1;
 	} else {
-		NSUInteger count = [[self.dataModel index] count];
+		NSUInteger count = [self.dataModel.index count];
 		return count;
 	}
 }

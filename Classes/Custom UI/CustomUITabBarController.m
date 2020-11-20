@@ -22,6 +22,14 @@
     return UIInterfaceOrientationMaskAll;
 }
 
+//- (void)viewWillLayoutSubviews {
+//    [super viewWillLayoutSubviews];
+//    
+//    CGRect tabBarFrame = self.tabBar.frame;
+//    tabBarFrame.size.height = 100;
+//    self.tabBar.frame = tabBarFrame;
+//}
+
 //- (void)viewDidLoad {
 //    [super viewDidLoad];
 //

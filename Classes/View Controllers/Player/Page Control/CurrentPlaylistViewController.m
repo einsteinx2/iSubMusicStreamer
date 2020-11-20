@@ -491,7 +491,7 @@ LOG_LEVEL_ISUB_DEFAULT
         }
 	}
     
-    cell.autoScroll = NO;
+//    cell.autoScroll = NO;
     cell.number = indexPath.row + 1;
     [cell updateWithModel:aSong];
 	

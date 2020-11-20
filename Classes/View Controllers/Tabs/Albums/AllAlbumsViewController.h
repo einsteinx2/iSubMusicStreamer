@@ -14,8 +14,6 @@
 @interface AllAlbumsViewController : UITableViewController <UISearchBarDelegate, SUSLoaderDelegate>
 
 @property (strong) UIButton *reloadButton;
-@property (strong) UILabel *reloadLabel;
-@property (strong) UIImageView *reloadImage;
 @property (strong) UILabel *countLabel;
 @property (strong) UILabel *reloadTimeLabel;
 @property (strong) IBOutlet UISearchBar *searchBar;

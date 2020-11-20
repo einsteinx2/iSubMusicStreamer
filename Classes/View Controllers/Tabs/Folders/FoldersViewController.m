@@ -124,7 +124,6 @@
 	
 	self.countLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 9, 320, 30)];
 	self.countLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	self.countLabel.backgroundColor = [UIColor clearColor];
     self.countLabel.textColor = UIColor.labelColor;
 	self.countLabel.textAlignment = NSTextAlignmentCenter;
     self.countLabel.font = [UIFont boldSystemFontOfSize:32];
@@ -132,8 +131,7 @@
 	
 	self.reloadTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, 320, 14)];
 	self.reloadTimeLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	self.reloadTimeLabel.backgroundColor = [UIColor clearColor];
-    self.reloadTimeLabel.textColor = UIColor.labelColor;
+    self.reloadTimeLabel.textColor = UIColor.secondaryLabelColor;
 	self.reloadTimeLabel.textAlignment = NSTextAlignmentCenter;
     self.reloadTimeLabel.font = [UIFont systemFontOfSize:11];
 	[self.headerView addSubview:self.reloadTimeLabel];

@@ -118,6 +118,7 @@
     [self.segmentedControl.trailingAnchor constraintEqualToAnchor:self.segmentControlContainer.trailingAnchor].active = YES;
 	
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
+    [self.tableView registerClass:BlurredSectionHeader.class forHeaderFooterViewReuseIdentifier:BlurredSectionHeader.reuseId];
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	
     self.title = @"Cache";
@@ -909,7 +910,22 @@
 	return 1;
 }
 
-// Following 2 methods handle the right side index
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (self.segmentedControl.selectedSegmentIndex == 0 && self.showIndex) {
+        BlurredSectionHeader *sectionHeader = [tableView dequeueReusableHeaderFooterViewWithIdentifier:BlurredSectionHeader.reuseId];
+        sectionHeader.text = [[self.sectionInfo objectAtIndexSafe:section] objectAtIndexSafe:0];
+        return sectionHeader;
+    }
+    return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (self.segmentedControl.selectedSegmentIndex == 0 && self.showIndex) {
+        return 60;
+    }
+    return 0;
+}
+
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView  {
 	if (self.segmentedControl.selectedSegmentIndex == 0 && self.showIndex) {
 		NSMutableArray *indexes = [[NSMutableArray alloc] init];
@@ -920,14 +936,6 @@
 	}
 		
 	return nil;
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	if (self.segmentedControl.selectedSegmentIndex == 0) {
-		return [[self.sectionInfo objectAtIndexSafe:section] objectAtIndexSafe:0];
-	}
-	
-	return @"";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index  {

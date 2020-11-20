@@ -932,12 +932,22 @@ LOG_LEVEL_ISUB_DEFAULT
     return selectedRowIndexes;
 }
 
-// Following 2 methods handle the right side index
+- (NSInteger)numberOfSectionIndexes {
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        if (self.currentPlaylistCount > 200) {
+            return 20;
+        } else if (self.currentPlaylistCount > 20) {
+            return self.currentPlaylistCount / 10;
+        }
+    }
+    return 0;
+}
+
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-	if (self.segmentedControl.selectedSegmentIndex == 0 && self.currentPlaylistCount > 0) {
+	if (self.segmentedControl.selectedSegmentIndex == 0 && self.currentPlaylistCount >= 20) {
 		if (!self.isEditing) {
 			NSMutableArray *searchIndexes = [[NSMutableArray alloc] init];
-			for (int x = 0; x < 20; x++) {
+			for (int x = 0; x < self.numberOfSectionIndexes; x++) {
 				[searchIndexes addObject:@"●"];
 			}
 			return searchIndexes;
@@ -950,11 +960,11 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
 		if (index == 0) {
 			[tableView scrollRectToVisible:CGRectMake(0, 0, 320, 40) animated:NO];
-		} else if (index == 19) {
+		} else if (index == self.numberOfSectionIndexes - 1) {
 			NSInteger row = self.currentPlaylistCount - 1;
 			[tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
 		} else {
-			NSInteger row = self.currentPlaylistCount / 20 * index;
+			NSInteger row = self.currentPlaylistCount / self.numberOfSectionIndexes * index;
 			[tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
 			return -1;		
 		}
