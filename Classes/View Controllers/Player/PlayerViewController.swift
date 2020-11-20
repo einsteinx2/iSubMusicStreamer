@@ -60,6 +60,7 @@ import SnapKit
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        self.equalizerButton.isHidden = UIApplication.orientation().isPortrait
         view.setNeedsUpdateConstraints()
     }
     
@@ -386,6 +387,7 @@ import SnapKit
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        equalizerButton.isHidden = UIApplication.orientation().isLandscape
         updateSongInfo()
         startUpdatingSlider()
         startUpdatingDownloadProgress()

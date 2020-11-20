@@ -88,6 +88,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
+    
     self.toggleButton.layer.masksToBounds = YES;
     self.toggleButton.layer.cornerRadius = 2.;
     
@@ -172,6 +174,16 @@
 	self.swipeDetectorRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight)];
 	self.swipeDetectorRight.direction = UISwipeGestureRecognizerDirectionRight;
 	[self.equalizerView addGestureRecognizer:self.swipeDetectorRight];
+    
+    if (self.isBeingPresented) {
+        self.closeButton = [UIButton buttonWithType:UIButtonTypeClose];
+        CGRect closeButtonFrame = self.closeButton.frame;
+        closeButtonFrame.origin = CGPointMake(20, 20);
+        self.closeButton.frame = closeButtonFrame;
+        self.closeButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+        [self.closeButton addTarget:self action:@selector(dismiss:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:self.closeButton];
+    }
     
 	[Flurry logEvent:@"Equalizer"];
 }
@@ -511,8 +523,12 @@
 	}
 }
 
-- (IBAction)dismiss:(id)sender {
-	[self.navigationController popViewControllerAnimated:YES];
+- (void)dismiss:(id)sender {
+    if (self.navigationController) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 - (IBAction)toggle:(id)sender {

@@ -11,6 +11,7 @@
 @class EqualizerView, EqualizerPointView, EqualizerPathView, BassParamEqValue, BassEffectDAO, SnappySlider;
 @interface EqualizerViewController : UIViewController <DDSocialDialogDelegate, UITableViewDelegate, UITableViewDataSource, UIPickerViewDataSource, UIPickerViewDelegate>
 
+@property (strong) UIButton *closeButton;
 @property (strong) UIView *overlay;
 @property (strong) UIButton *dismissButton;
 @property (strong) IBOutlet UIView *controlsContainer;
