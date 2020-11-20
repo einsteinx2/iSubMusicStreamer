@@ -98,8 +98,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			[self.dbQueue inDatabase:^(FMDatabase *db)
 			{
 				NSString *genre = [db stringForQuery:@"SELECT genre FROM genres WHERE genre = ?", self.genre];
-				if (genre)
-				{							
+				if (!genre) {						
 					[db executeUpdate:@"INSERT OR IGNORE INTO genres (genre) VALUES (?)", self.genre];
 					if ([db hadError])
                         DDLogError(@"Err adding the genre %d: %@", [db lastErrorCode], [db lastErrorMessage]);
