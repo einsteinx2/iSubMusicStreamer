@@ -59,7 +59,6 @@
 @property (nonatomic, strong) IBOutlet UISegmentedControl *quickSkipSegmentControl;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *secondsToStartPlayerSegmentControl;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *secondsToBufferSegmentControl;
-@property (nonatomic, strong) IBOutlet UISwitch *showLargeSongInfoSwitch;
 @property (nonatomic, strong) IBOutlet UISwitch *enableLockScreenArt;
 @property (nonatomic, strong) IBOutlet UILabel *enableLockArtLabel;
 @property (nonatomic, strong) IBOutlet UILabel *swipeCellsLabel;

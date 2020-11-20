@@ -87,7 +87,6 @@
 	self.enableSwipeSwitch.on = settingsS.isSwipeEnabled;
 	self.enableTapAndHoldSwitch.on = settingsS.isTapAndHoldEnabled;
 	
-	self.showLargeSongInfoSwitch.on = settingsS.isShowLargeSongInfoInPlayer;
 	self.enableLockScreenArt.on = settingsS.isLockScreenArtEnabled;
 	
 	// Cache Settings
@@ -389,11 +388,6 @@
 		else if (sender == self.checkUpdatesSwitch)
 		{
 			settingsS.isUpdateCheckEnabled = self.checkUpdatesSwitch.on;
-		}
-		else if (sender == self.showLargeSongInfoSwitch)
-		{
-			settingsS.isShowLargeSongInfoInPlayer = self.showLargeSongInfoSwitch.on;
-			[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_LargeSongInfoToggle];
 		}
 		else if (sender == self.enableSwipeSwitch)
 		{

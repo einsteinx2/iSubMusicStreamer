@@ -29,44 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
 @class AudioEngine;
 NS_SWIFT_NAME(Settings)
 @interface SavedSettings : NSObject 
-{    
-	__strong NSUserDefaults *_userDefaults;
-	
-	__strong NSMutableArray *_serverList;
-	__strong NSString *_serverType;
-	__strong NSString *_urlString;
-	__strong NSString *_username;
-	__strong NSString *_password;
-    __strong NSString *_uuid;
-    __strong NSString *_lastQueryId;
-    __strong NSString *_sessionId;
-	
-	BOOL _isPopupsEnabled;
-	BOOL _isJukeboxEnabled;
-	BOOL _isScreenSleepEnabled;
-	float _gainMultiplier;
-	BOOL _isPartialCacheNextSong;
-	BOOL _isExtraPlayerControlsShowing;
-	BOOL _isPlayerPlaylistShowing;
-	NSUInteger _quickSkipNumberOfSeconds;
-	NSUInteger _audioEngineStartNumberOfSeconds;
-	NSUInteger _audioEngineBufferNumberOfSeconds;
-	BOOL _isShowLargeSongInfoInPlayer;
-	BOOL _isLockScreenArtEnabled;
-	BOOL _isEqualizerOn;
-	
-	// State Saving
-	BOOL _isPlaying;
-	BOOL _isShuffle;
-	NSInteger _normalPlaylistIndex;
-	NSInteger _shufflePlaylistIndex;
-	ISMSRepeatMode _repeatMode;
-	NSInteger _bitRate;
-	unsigned long long _byteOffset;
-	double _secondsOffset;
-	BOOL _isRecover;
-	NSInteger _recoverSetting;
-}
 
 @property BOOL isCancelLoading;
 @property BOOL isOfflineMode;
@@ -123,22 +85,11 @@ NS_SWIFT_NAME(Settings)
 @property BOOL isPartialCacheNextSong;
 @property ISMSBassVisualType currentVisualizerType;
 @property NSUInteger quickSkipNumberOfSeconds;
-
-@property BOOL isExtraPlayerControlsShowing;
-@property BOOL isPlayerPlaylistShowing;
-
 @property BOOL isShouldShowEQViewInstructions;
-
-@property BOOL isShowLargeSongInfoInPlayer;
-
 @property BOOL isLockScreenArtEnabled;
-
 @property BOOL isEqualizerOn;
-
 @property NSUInteger oneTimeRunIncrementor;
-
 @property BOOL isDisableUsageOver3G;
-
 @property BOOL isCacheSizeTableFinished;
 
 // State Saving
@@ -148,18 +99,11 @@ NS_SWIFT_NAME(Settings)
 @property NSInteger bitRate;
 
 // Document Paths
-
 - (NSString *)documentsPath;
 - (NSString *)databasePath;
 - (NSString *)cachesPath;
 - (NSString *)songCachePath;
 - (NSString *)tempCachePath;
-
-/*- (BOOL)isSelectedIndexForBassEffectADefault:(BassEffectType)type;
-- (NSUInteger)selectedIndexForBassEffect:(BassEffectType)type;
-- (void)selectedIndexForBassEffect:(BassEffectType)type index:(NSUInteger)index isDefault:(BOOL)isDefault;*/
-
-//- (NSString *)formatFileSize:(unsigned long long int)size;
 
 - (void)setupSaveState;
 - (void)loadState;

@@ -59,8 +59,6 @@ extern NSString * const ISMSNotification_EnteringOnlineMode;
 extern NSString * const ISMSNotification_BassInitialized;
 extern NSString * const ISMSNotification_BassFreed;
 
-extern NSString * const ISMSNotification_LargeSongInfoToggle;
-
 extern NSString * const ISMSNotification_JukeboxEnabled;
 extern NSString * const ISMSNotification_JukeboxDisabled;
 

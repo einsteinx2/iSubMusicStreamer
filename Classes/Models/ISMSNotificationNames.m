@@ -59,8 +59,6 @@ NSString * const ISMSNotification_EnteringOnlineMode = @"ISMSNotification_Enteri
 NSString * const ISMSNotification_BassInitialized = @"ISMSNotification_BassInitialized";
 NSString * const ISMSNotification_BassFreed = @"ISMSNotification_BassFreed";
 
-NSString * const ISMSNotification_LargeSongInfoToggle = @"ISMSNotification_LargeSongInfoToggle";
-
 NSString * const ISMSNotification_JukeboxEnabled = @"ISMSNotification_JukeboxEnabled";
 NSString * const ISMSNotification_JukeboxDisabled = @"ISMSNotification_JukeboxDisabled";
 
