@@ -177,7 +177,7 @@
     MenuTableItem *item = _cellContents[indexPath.row];
     cell.textLabel.text = item.text;
 	cell.imageView.image = item.image;
-	cell.glowView.hidden = YES;
+//	cell.glowView.hidden = YES;
 	cell.imageView.alpha = 0.6;
 
     return cell;
@@ -203,16 +203,16 @@
         }
     }
 	
-	// Set the tabel cell glow
-	//
-	for (MenuTableViewCell *cell in _tableView.visibleCells) {
-		cell.glowView.hidden = YES;
-		cell.imageView.alpha = 0.6;
-	}
-    
-    MenuTableViewCell *selectedCell = (MenuTableViewCell *)[_tableView cellForRowAtIndexPath:indexPath];
-	[selectedCell glowView].hidden = NO;
-	selectedCell.imageView.alpha = 1.0;
+//	// Set the tabel cell glow
+//	//
+//	for (MenuTableViewCell *cell in _tableView.visibleCells) {
+//		cell.glowView.hidden = YES;
+//		cell.imageView.alpha = 0.6;
+//	}
+//
+//    MenuTableViewCell *selectedCell = (MenuTableViewCell *)[_tableView cellForRowAtIndexPath:indexPath];
+//	[selectedCell glowView].hidden = NO;
+//	selectedCell.imageView.alpha = 1.0;
 		
 	[self performSelector:@selector(showControllerForIndexPath:) withObject:indexPath afterDelay:0.05];
 }

@@ -33,8 +33,8 @@ LOG_LEVEL_ISUB_DEFAULT
 		_isOpen = NO;
         _borderColor = UIColor.systemGrayColor;
         _textColor   = UIColor.labelColor;
-        _lightColor  = UIColor.systemBackgroundColor;
-        _darkColor   = UIColor.systemBackgroundColor;
+        _lightColor  = [UIColor colorNamed:@"isubBackgroundColor"];
+        _darkColor   = [UIColor colorNamed:@"isubBackgroundColor"];
 		
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		self.userInteractionEnabled = YES;

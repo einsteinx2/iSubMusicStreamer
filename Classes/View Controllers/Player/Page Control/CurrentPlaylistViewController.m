@@ -57,13 +57,13 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)viewDidLoad  {
     [super viewDidLoad];
 		
-    self.tableView.backgroundColor = UIColor.systemBackgroundColor;
+    self.tableView.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
 	
     [self registerForNotifications];
 				
     // Setup header view
     self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
-    self.headerView.backgroundColor = UIColor.systemBackgroundColor;//[UIColor colorWithWhite:.3 alpha:1];
+    self.headerView.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
     
     self.savePlaylistLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 232, 34)];
     self.savePlaylistLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;

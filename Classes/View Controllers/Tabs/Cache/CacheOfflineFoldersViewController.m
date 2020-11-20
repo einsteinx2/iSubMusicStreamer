@@ -67,7 +67,7 @@
 	[super viewDidLoad];
     
     self.title = @"Artists";
-    self.view.backgroundColor = UIColor.systemBackgroundColor;
+    self.view.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"gear.png"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsAction:)];
 	
     [self addHeader];

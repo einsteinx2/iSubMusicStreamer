@@ -210,7 +210,7 @@ import SnapKit
             make.trailing.bottom.equalToSuperview().offset(-5)
         }
         
-        searchSegmentContainer.backgroundColor = .systemBackground
+        searchSegmentContainer.backgroundColor = UIColor(named: "isubBackgroundColor")
         view.addSubview(searchSegmentContainer)
         searchSegmentContainer.snp.makeConstraints { make in
             make.height.equalTo(50)

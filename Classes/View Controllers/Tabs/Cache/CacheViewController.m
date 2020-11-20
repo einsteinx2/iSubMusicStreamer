@@ -86,7 +86,7 @@
 	self.isNoSongsScreenShowing = NO;
 	self.isSaveEditShowing = NO;
     
-    self.view.backgroundColor = UIColor.systemBackgroundColor;
+    self.view.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
 
     self.tableView.y = 45;
 	

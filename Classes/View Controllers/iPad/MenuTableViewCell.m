@@ -9,6 +9,10 @@
 #import "MenuTableViewCell.h"
 #import "Defines.h"
 
+@interface MenuTableViewCell()
+@property (nonatomic, strong) UILabel *indicatorLabel;
+@end
+
 @implementation MenuTableViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -31,11 +35,18 @@
 		
 		self.imageView.contentMode = UIViewContentModeCenter;
         
-        self.glowView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 43)];
-        self.glowView.image = [UIImage imageNamed:@"glow.png"];
-        self.glowView.hidden = YES;
-        self.glowView.alpha = 0.3;
-		[self addSubview:self.glowView];
+        self.indicatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(-14, 0, 40, 36)];
+        self.indicatorLabel.textColor = [UIColor colorWithWhite:1 alpha:0.25];
+        self.indicatorLabel.text = @"•";
+        self.indicatorLabel.font = [UIFont boldSystemFontOfSize:60];
+        self.indicatorLabel.hidden = YES;
+        [self addSubview:self.indicatorLabel];
+        
+//        self.glowView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 43)];
+//        self.glowView.image = [UIImage imageNamed:@"glow.png"];
+//        self.glowView.hidden = YES;
+//        self.glowView.alpha = 0.3;
+//		[self addSubview:self.glowView];
 	}
 	return self;
 }
@@ -54,6 +65,7 @@
 	} else {
 		self.textLabel.textColor = [UIColor colorWithRed:(188.f/255.f) green:(188.f/255.f) blue:(188.f/255.f) alpha:1.f];
 	}
+    self.indicatorLabel.hidden = !sel;
 }
 
 @end

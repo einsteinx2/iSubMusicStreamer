@@ -140,7 +140,7 @@ import SnapKit
         super.viewDidLoad()
         
         view.overrideUserInterfaceStyle = .dark
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = UIColor(named: "isubBackgroundColor")
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image:  UIImage(named: "player-overlay"), style: .plain, target: self, action: #selector(showCurrentPlaylist))
         
@@ -627,7 +627,7 @@ import SnapKit
     @objc private func updateJukeboxControls() {
         let jukeboxEnabled = Settings.shared().isJukeboxEnabled
         equalizerButton.isHidden = jukeboxEnabled
-//        view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor : .systemBackground
+//        view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor : UIColor(named: "isubBackgroundColor")
         
         if jukeboxEnabled {
             if Jukebox.shared().isPlaying {

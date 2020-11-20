@@ -19,7 +19,7 @@ import SnapKit
     @objc init(album: Album, tracks: Int, duration: Double) {
         super.init(frame: CGRect.zero)
         
-        backgroundColor = .systemBackground
+        backgroundColor = UIColor(named: "isubBackgroundColor")
         snp.makeConstraints { make in
             make.height.equalTo(100)
         }
@@ -141,7 +141,7 @@ private class ModalCoverArtViewController: UIViewController {
         super.viewDidLoad()
         
         view.overrideUserInterfaceStyle = .dark
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = UIColor(named: "isubBackgroundColor")
         
         coverArt.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(coverArt)

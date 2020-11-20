@@ -10,6 +10,4 @@
 
 @interface MenuTableViewCell : UITableViewCell
 
-@property (nonatomic) UIImageView *glowView;
-
 @end

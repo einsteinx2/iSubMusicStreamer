@@ -11,6 +11,7 @@
 #import "SavedSettings.h"
 #import "EX2Kit.h"
 #import "CustomUINavigationController.h"
+//#import "ViewObjectsSingleton.h"
 
 @implementation iPadRootViewController
 
@@ -59,6 +60,7 @@
     UINavigationController *navController = [[CustomUINavigationController alloc] initWithRootViewController:controller];
     navController.view.frame = self.contentView.bounds;
     navController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    navController.navigationBar.backgroundColor = viewObjectsS.windowColor;
     [self addChildViewController:navController];
     [self.contentView addSubview:navController.view];
     
