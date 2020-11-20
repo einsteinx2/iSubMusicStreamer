@@ -22,8 +22,7 @@
 
 #define ISMSiPadCornerRadius 5.
 
-+ (CAGradientLayer *)verticalShadowWithAlpha:(CGFloat)shadowAlpha inverse:(BOOL)inverse
-{
++ (CAGradientLayer *)verticalShadowWithAlpha:(CGFloat)shadowAlpha inverse:(BOOL)inverse {
 	CAGradientLayer *newShadow = [[CAGradientLayer alloc] init];
     newShadow.startPoint = CGPointMake(0, 0.5);
     newShadow.endPoint = CGPointMake(1.0, 0.5);
@@ -36,8 +35,7 @@
 	return newShadow;
 }
 
-- (void)addLeftShadowWithWidth:(CGFloat)shadowWidth alpha:(CGFloat)shadowAlpha
-{
+- (void)addLeftShadowWithWidth:(CGFloat)shadowWidth alpha:(CGFloat)shadowAlpha {
 	[self removeLeftShadow];
 	
 	CAGradientLayer *leftShadow = [UIView verticalShadowWithAlpha:shadowAlpha inverse:YES];
@@ -46,18 +44,15 @@
 	[self.layer insertSublayer:leftShadow atIndex:0];
 }
 
-- (void)addLeftShadow
-{
+- (void)addLeftShadow {
 	[self addLeftShadowWithWidth:DEFAULT_SHADOW_WIDTH alpha:DEFAULT_SHADOW_ALPHA];
 }
 
-- (void)removeLeftShadow
-{
+- (void)removeLeftShadow {
 	[[self.layer sublayerWithName:ISMSLeftShadowName] removeFromSuperlayer];
 }
 
-- (void)addRightShadowWithWidth:(CGFloat)shadowWidth alpha:(CGFloat)shadowAlpha
-{
+- (void)addRightShadowWithWidth:(CGFloat)shadowWidth alpha:(CGFloat)shadowAlpha {
 	[self removeRightShadow];
 	
 	CAGradientLayer *rightShadow = [UIView verticalShadowWithAlpha:shadowAlpha inverse:NO];
@@ -66,18 +61,15 @@
 	[self.layer insertSublayer:rightShadow atIndex:0];
 }
 
-- (void)addRightShadow
-{
+- (void)addRightShadow {
 	[self addRightShadowWithWidth:DEFAULT_SHADOW_WIDTH alpha:DEFAULT_SHADOW_ALPHA];
 }
 
-- (void)removeRightShadow
-{
+- (void)removeRightShadow {
 	[[self.layer sublayerWithName:ISMSRightShadowName] removeFromSuperlayer];
 }
 
-- (void)addBottomLine
-{
+- (void)addBottomLine {
     UIView *bottomLine = [[UIView alloc] init];
     bottomLine.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     bottomLine.frame = CGRectMake(0., self.height - 1., self.width, 1.);
@@ -85,8 +77,7 @@
     [self addSubview:bottomLine];
 }
 
-+ (CAGradientLayer *)horizontalShadowWithAlpha:(CGFloat)shadowAlpha inverse:(BOOL)inverse
-{
++ (CAGradientLayer *)horizontalShadowWithAlpha:(CGFloat)shadowAlpha inverse:(BOOL)inverse {
 	CAGradientLayer *newShadow = [[CAGradientLayer alloc] init];
     newShadow.startPoint = CGPointMake(0.5, 0);
     newShadow.endPoint = CGPointMake(0.5, 1.0);
@@ -99,8 +90,7 @@
 	return newShadow;
 }
 
-- (void)addBottomShadowWithWidth:(CGFloat)shadowWidth alpha:(CGFloat)shadowAlpha
-{
+- (void)addBottomShadowWithWidth:(CGFloat)shadowWidth alpha:(CGFloat)shadowAlpha {
 	[self removeBottomShadow];
 	
 	CAGradientLayer *bottomShadow = [UIView horizontalShadowWithAlpha:shadowAlpha inverse:NO];
@@ -109,13 +99,11 @@
 	[self.layer insertSublayer:bottomShadow atIndex:0];
 }
 
-- (void)addBottomShadow
-{
+- (void)addBottomShadow {
 	[self addBottomShadowWithWidth:DEFAULT_SHADOW_WIDTH alpha:DEFAULT_SHADOW_ALPHA];
 }
 
-- (void)removeBottomShadow
-{
+- (void)removeBottomShadow {
 	[self.bottomShadow removeFromSuperlayer];
 }
 
@@ -123,8 +111,7 @@
     return [self.layer sublayerWithName:ISMSBottomShadowName];
 }
 
-- (void)addTopShadowWithWidth:(CGFloat)shadowWidth alpha:(CGFloat)shadowAlpha
-{
+- (void)addTopShadowWithWidth:(CGFloat)shadowWidth alpha:(CGFloat)shadowAlpha {
 	[self removeTopShadow];
 	
 	CAGradientLayer *topShadow = [UIView horizontalShadowWithAlpha:shadowAlpha inverse:YES];
@@ -133,181 +120,147 @@
 	[self.layer insertSublayer:topShadow atIndex:0];
 }
 
-- (void)addTopShadow
-{
+- (void)addTopShadow {
 	[self addTopShadowWithWidth:DEFAULT_SHADOW_WIDTH alpha:DEFAULT_SHADOW_ALPHA];
 }
 
-- (void)removeTopShadow
-{
+- (void)removeTopShadow {
 	[[self.layer sublayerWithName:ISMSTopShadowName] removeFromSuperlayer];
 }
 
-- (CGFloat)left 
-{
+- (CGFloat)left  {
     return CGRectGetMinX(self.frame);
 }
 
-- (void)setLeft:(CGFloat)x 
-{
+- (void)setLeft:(CGFloat)x  {
     CGRect frame = self.frame;
     frame.origin.x = x;
     self.frame = frame;
 }
 
-- (CGFloat)top 
-{
+- (CGFloat)top  {
     return CGRectGetMinY(self.frame);
 }
 
-- (void)setTop:(CGFloat)y 
-{
+- (void)setTop:(CGFloat)y  {
     CGRect frame = self.frame;
     frame.origin.y = y;
     self.frame = frame;
 }
 
-- (CGFloat)right 
-{
+- (CGFloat)right  {
     return CGRectGetMaxX(self.frame);
 }
 
-- (void)setRight:(CGFloat)right 
-{
+- (void)setRight:(CGFloat)right  {
     CGRect frame = self.frame;
     frame.origin.x = right - frame.size.width;
     self.frame = frame;
 }
 
-- (CGFloat)bottom 
-{
+- (CGFloat)bottom {
 	return CGRectGetMaxY(self.frame);
 }
 
-- (void)setBottom:(CGFloat)bottom 
-{
+- (void)setBottom:(CGFloat)bottom  {
     CGRect frame = self.frame;
     frame.origin.y = bottom - frame.size.height;
     self.frame = frame;
 }
 
-- (CGPoint)centerOfBounds
-{
+- (CGPoint)centerOfBounds {
     return CGPointMake(self.bounds.size.width / 2.0, self.bounds.size.height / 2.0);
 }
 
-
-- (CGFloat)x
-{
+- (CGFloat)x {
 	return self.left;;
 }
 
-- (void)setX:(CGFloat)x
-{
-    if (!isfinite(x))
-        return;
+- (void)setX:(CGFloat)x {
+    if (!isfinite(x)) return;
     
 	CGRect newFrame = self.frame;
 	newFrame.origin.x = x;
 	self.frame = newFrame;
 }
 
-- (CGFloat)y
-{
+- (CGFloat)y {
 	return self.top;
 }
 
-- (void)setY:(CGFloat)y
-{
-    if (!isfinite(y))
-        return;
+- (void)setY:(CGFloat)y {
+    if (!isfinite(y)) return;
     
 	CGRect newFrame = self.frame;
 	newFrame.origin.y = y;
 	self.frame = newFrame;
 }
 
-- (CGPoint)origin
-{
+- (CGPoint)origin {
 	return self.frame.origin;
 }
 
-- (void)setOrigin:(CGPoint)origin
-{
-	if (!isfinite(origin.x) || !isfinite(origin.y))
-		return;
+- (void)setOrigin:(CGPoint)origin {
+	if (!isfinite(origin.x) || !isfinite(origin.y)) return;
 	
 	CGRect newFrame = self.frame;
 	newFrame.origin = origin;
 	self.frame = newFrame;
 }
 
-- (CGFloat)width
-{
+- (CGFloat)width {
 	return CGRectGetWidth(self.frame);
 }
 
-- (void)setWidth:(CGFloat)width
-{
-    if (!isfinite(width))
-        return;
+- (void)setWidth:(CGFloat)width {
+    if (!isfinite(width)) return;
     
 	CGRect newFrame = self.frame;
 	newFrame.size.width = width;
 	self.frame = newFrame;
 }
 
-- (CGFloat)height
-{
+- (CGFloat)height {
 	return CGRectGetHeight(self.frame);
 }
 
-- (void)setHeight:(CGFloat)height
-{
-    if (!isfinite(height))
-        return;
+- (void)setHeight:(CGFloat)height {
+    if (!isfinite(height)) return;
     
 	CGRect newFrame = self.frame;
 	newFrame.size.height = height;
 	self.frame = newFrame;
 }
 
-- (CGSize)size
-{
+- (CGSize)size {
 	return self.frame.size;
 }
 
-- (void)setSize:(CGSize)size
-{
-	if (!isfinite(size.width) || !isfinite(size.height))
-		return;
+- (void)setSize:(CGSize)size {
+	if (!isfinite(size.width) || !isfinite(size.height)) return;
 	
 	CGRect newFrame = self.frame;
 	newFrame.size = size;
 	self.frame = newFrame;
 }
 
-- (UIViewController *)viewController;
-{
-    id nextResponder = [self nextResponder];
-    if ([nextResponder isKindOfClass:[UIViewController class]]) 
-	{
-        return nextResponder;
-    } 
-	else 
-	{
-        return nil;
+- (UIViewController *)viewController; {
+    UIResponder *next = self.nextResponder;
+    while (next) {
+        if ([next isKindOfClass:UIViewController.class]) {
+            return (UIViewController *)next;
+        }
+        next = next.nextResponder;
     }
+    return nil;
 }
 
-- (CGSize)realSizeDidRotate
-{
+- (CGSize)realSizeDidRotate {
     UIInterfaceOrientation orientation = UIApplication.orientation;
     
     CGSize size = self.frame.size;
     if ((UIInterfaceOrientationIsLandscape(orientation) && size.width < size.height) ||
-        (UIInterfaceOrientationIsPortrait(orientation) && size.width > size.height))
-    {
+        (UIInterfaceOrientationIsPortrait(orientation) && size.width > size.height)) {
         // flip width and height
         CGFloat f = size.width;
         size.width = size.height;
@@ -317,42 +270,33 @@
 }
 
 // Convert the view for use in Arabic/Hebrew layout
-- (void)convertToRTL
-{
-    for (UIView *subview in self.subviews)
-    {
+- (void)convertToRTL {
+    for (UIView *subview in self.subviews) {
         // Adjust the position
         subview.right = subview.superview.width - subview.x;
         
         // Adjust the struts if necessary
-        if (!(subview.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin) && (subview.autoresizingMask & UIViewAutoresizingFlexibleRightMargin))
-        {
+        if (!(subview.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin) && (subview.autoresizingMask & UIViewAutoresizingFlexibleRightMargin)) {
             // If the view is locked to the left side, lock it to the right side
             subview.autoresizingMask &= ~UIViewAutoresizingFlexibleRightMargin;
             subview.autoresizingMask |= UIViewAutoresizingFlexibleLeftMargin;
-        }
-        else if (!(subview.autoresizingMask & UIViewAutoresizingFlexibleRightMargin) && (subview.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin))
-        {
+        } else if (!(subview.autoresizingMask & UIViewAutoresizingFlexibleRightMargin) && (subview.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin)) {
             // If the view is locked to the right side, lock it to the left side
             subview.autoresizingMask &= ~UIViewAutoresizingFlexibleLeftMargin;
             subview.autoresizingMask |= UIViewAutoresizingFlexibleRightMargin;
         }
         
         // Switch the text alignment if necessary
-        if ([subview isKindOfClass:[UILabel class]])
-        {
+        if ([subview isKindOfClass:[UILabel class]]) {
             ((UILabel *)subview).textAlignment = NSTextAlignmentRight;
         }
     }
 }
 
-- (BOOL)isChildOfView:(UIView *)aView
-{
+- (BOOL)isChildOfView:(UIView *)aView {
     UIView *superview = self.superview;
-    while (superview)
-    {
-        if (superview == aView)
-        {
+    while (superview) {
+        if (superview == aView) {
             return YES;
         }
         superview = superview.superview;
@@ -360,13 +304,10 @@
     return NO;
 }
 
-- (BOOL)isChildOfViewType:(Class)aClass
-{
+- (BOOL)isChildOfViewType:(Class)aClass {
     UIView *superview = self.superview;
-    while (superview)
-    {
-        if ([superview isKindOfClass:aClass])
-        {
+    while (superview) {
+        if ([superview isKindOfClass:aClass]) {
             return YES;
         }
         superview = superview.superview;
@@ -374,33 +315,27 @@
     return NO;
 }
 
-- (void)centerHorizontally
-{
+- (void)centerHorizontally {
     [self centerHorizontallyInBounds:self.superview.bounds];
 }
 
-- (void)centerVertically
-{
+- (void)centerVertically {
     [self centerVerticallyInBounds:self.superview.bounds];
 }
 
-- (void)centerHorizontallyAndVertically
-{
+- (void)centerHorizontallyAndVertically {
     [self centerHorizontallyAndVerticallyInBounds:self.superview.bounds];
 }
 
-- (void)centerHorizontallyInBounds:(CGRect)bounds
-{
+- (void)centerHorizontallyInBounds:(CGRect)bounds {
     self.center = CGPointMake(bounds.size.width / 2., self.center.y);
 }
 
-- (void)centerVerticallyInBounds:(CGRect)bounds
-{
+- (void)centerVerticallyInBounds:(CGRect)bounds {
     self.center = CGPointMake(self.center.x, bounds.size.height / 2.);
 }
 
-- (void)centerHorizontallyAndVerticallyInBounds:(CGRect)bounds
-{
+- (void)centerHorizontallyAndVerticallyInBounds:(CGRect)bounds {
     self.center = CGPointMake(bounds.size.width / 2., bounds.size.height / 2.);
 }
 

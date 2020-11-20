@@ -9,7 +9,11 @@
 import UIKit
 
 @objc class CoverArtViewController: UIViewController {
-    private let coverArt = AsynchronousImageView()
+    private let coverArt: AsynchronousImageView = {
+        let imageView = AsynchronousImageView()
+        imageView.isLarge = true
+        return imageView
+    }()
     
     @objc var coverArtId: String? {
         get { return coverArt.coverArtId }
@@ -24,7 +28,6 @@ import UIKit
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        coverArt.isLarge = true
         view.addSubview(coverArt)
         coverArt.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()

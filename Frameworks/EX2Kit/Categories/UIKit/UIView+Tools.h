@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIView (Tools) 
 
 @property (nonatomic) CGFloat left;
@@ -24,7 +26,7 @@
 @property (nonatomic) CGFloat height;
 @property (nonatomic) CGSize size;
 
-@property (nonatomic, readonly) UIViewController *viewController;
+@property (nullable, nonatomic, readonly) UIViewController *viewController;
 - (CGSize)realSizeDidRotate;
 
 - (void)addLeftShadowWithWidth:(CGFloat)shadowWidth alpha:(CGFloat)shadowAlpha;
@@ -65,3 +67,5 @@
 - (void)centerHorizontallyAndVerticallyInBounds:(CGRect)bounds;
 
 @end
+
+NS_ASSUME_NONNULL_END

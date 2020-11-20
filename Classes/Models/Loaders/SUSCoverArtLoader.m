@@ -73,7 +73,7 @@ static void initialize_navigationBarImages() {
 }
 
 - (BOOL)isCoverArtCached {
-	return [self.dbQueue stringForQuery:@"SELECT id FROM coverArtCache WHERE id = ?", [self.coverArtId md5]] ? YES : NO;
+	return [self.dbQueue stringForQuery:@"SELECT id FROM coverArtCache WHERE id = ?", self.coverArtId.md5] ? YES : NO;
 }
 
 #pragma mark - Data loading
@@ -91,22 +91,23 @@ static void initialize_navigationBarImages() {
 - (NSURLRequest *)createRequest {
     @synchronized(_syncObject) {
         if (self.coverArtId && !settingsS.isOfflineMode) {
-            if (![self isCoverArtCached]) {
+            if (!self.isCoverArtCached) {
                 if (![_loadingImageNames containsObject:self.coverArtId]) {
                     // This art is not loading, so start loading it
                     [_loadingImageNames addObject:self.coverArtId];
-                    NSString *size = nil;
+                    CGFloat scale = UIScreen.mainScreen.scale;
+                    CGFloat size = 0.0;
                     if (self.isLarge) {
                         if (UIDevice.isIPad) {
-                            size = UIScreen.mainScreen.scale >= 2.0 ? @"1080" : @"540";
+                            size = scale * 1080;
                         } else {
-                            size = UIScreen.mainScreen.scale >= 2.0 ? @"640" : @"320";
+                            size = scale * 640;
                         }
                     } else {
-                        size = UIScreen.mainScreen.scale >= 2.0 ? @"120" : @"60";
+                        size = scale * 80;
                     }
-                    
-                    return [NSMutableURLRequest requestWithSUSAction:@"getCoverArt" parameters:@{@"id": n2N(self.coverArtId), @"size": n2N(size)}];
+                    NSString *sizeString = [NSString stringWithFormat:@"%d", (int)size];
+                    return [NSMutableURLRequest requestWithSUSAction:@"getCoverArt" parameters:@{@"id": self.coverArtId, @"size": sizeString}];
                 }
             }
         }
@@ -120,23 +121,20 @@ static void initialize_navigationBarImages() {
     }
     
     // Check to see if the data is a valid image. If so, use it; if not, use the default image.
-    if([UIImage imageWithData:self.receivedData]) {
+    if ([UIImage imageWithData:self.receivedData]) {
         DDLogVerbose(@"art loading completed for: %@", self.coverArtId);
         [self.dbQueue inDatabase:^(FMDatabase *db) {
-            [db executeUpdate:@"REPLACE INTO coverArtCache (id, data) VALUES (?, ?)", [self.coverArtId md5], self.receivedData];
+            [db executeUpdate:@"REPLACE INTO coverArtCache (id, data) VALUES (?, ?)", self.coverArtId.md5, self.receivedData];
         }];
-        
         [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CoverArtFinishedInternal object:self.coverArtId];
     } else {
         DDLogVerbose(@"art loading failed for: %@", self.coverArtId);
-        
         [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CoverArtFinishedInternal object:self.coverArtId];
     }
 }
 
 - (void)cancelLoad {
     [super cancelLoad];
-    
     @synchronized(_syncObject) {
         [_loadingImageNames removeObject:self.coverArtId];
     }
@@ -146,16 +144,13 @@ static void initialize_navigationBarImages() {
     @synchronized(_syncObject) {
         [_loadingImageNames removeObject:self.coverArtId];
     }
-    
     [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CoverArtFinishedInternal object:self.coverArtId];
-    
-//    [super informDelegateLoadingFailed:error];
 }
 
 #pragma mark - Internal Notifications
 
 - (void)coverArtDownloadFinished:(NSNotification *)notification {
-    if ([notification.object isKindOfClass:[NSString class]]) {
+    if ([notification.object isKindOfClass:NSString.class]) {
         if ([self.coverArtId isEqualToString:notification.object]) {
             // We can get deallocated inside informDelegateLoadingFinished, so grab the isLarge BOOL now
             BOOL large = self.isLarge;
@@ -171,7 +166,7 @@ static void initialize_navigationBarImages() {
 }
 
 - (void)coverArtDownloadFailed:(NSNotification *)notification {
-    if ([notification.object isKindOfClass:[NSString class]]) {
+    if ([notification.object isKindOfClass:NSString.class]) {
         if ([self.coverArtId isEqualToString:notification.object]) {
             // My art download failed, so notify my delegate
             [self informDelegateLoadingFailed:nil];

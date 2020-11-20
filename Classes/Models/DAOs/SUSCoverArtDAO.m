@@ -48,7 +48,7 @@
 #pragma mark - Public DAO methods
 
 - (UIImage *)coverArtImage {
-    NSData *imageData = [self.dbQueue dataForQuery:@"SELECT data FROM coverArtCache WHERE id = ?", [self.coverArtId md5]];
+    NSData *imageData = [self.dbQueue dataForQuery:@"SELECT data FROM coverArtCache WHERE id = ?", self.coverArtId.md5];
     return imageData ? [UIImage imageWithData:imageData] : self.defaultCoverArtImage;
 }
 

@@ -11,6 +11,7 @@ import SnapKit
 
 @objc class AlbumTableViewHeader: UIView {
     private let coverArtView = AsynchronousImageView()
+    private let coverArtButton = UIButton(type: .custom)
     private let artistLabel = AutoScrollingLabel()
     private let albumLabel = AutoScrollingLabel()
     private let tracksLabel = UILabel()
@@ -23,8 +24,8 @@ import SnapKit
             make.height.equalTo(100)
         }
         
-        coverArtView.coverArtId = album.coverArtId
         coverArtView.isLarge = true
+        coverArtView.coverArtId = album.coverArtId
         coverArtView.backgroundColor = .label
         addSubview(coverArtView)
         coverArtView.snp.makeConstraints { make in
@@ -32,6 +33,18 @@ import SnapKit
             make.leading.equalToSuperview().offset(10)
             make.top.equalToSuperview().offset(10)
             make.bottom.equalToSuperview().offset(-10)
+        }
+        
+        if let coverArtId = album.coverArtId {
+            coverArtButton.addClosure(for: .touchUpInside) { [unowned self] in
+                let controller = ModalCoverArtViewController()
+                controller.coverArtId = coverArtId
+                self.viewController?.present(controller, animated: true, completion: nil)
+            }
+        }
+        addSubview(coverArtButton)
+        coverArtButton.snp.makeConstraints { make in
+            make.leading.trailing.top.bottom.equalTo(coverArtView)
         }
         
         let labelContainer = UIView()
@@ -80,5 +93,65 @@ import SnapKit
     
     required init?(coder: NSCoder) {
         fatalError("unimplemented")
+    }
+}
+
+private class ModalCoverArtViewController: UIViewController {
+    private let closeButton = UIButton(type: .close)
+    
+    private let coverArt: AsynchronousImageView = {
+        let imageView = AsynchronousImageView()
+        imageView.isLarge = true
+        return imageView
+    }()
+    
+    var coverArtId: String? {
+        get { return coverArt.coverArtId }
+        set { coverArt.coverArtId = newValue }
+    }
+    
+    var image: UIImage? {
+        get { return coverArt.image }
+        set { coverArt.image = newValue }
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        view.setNeedsUpdateConstraints()
+    }
+    
+    override func updateViewConstraints() {
+        super.updateViewConstraints()
+        if UIApplication.orientation().isPortrait {
+            coverArt.snp.remakeConstraints { make in
+                make.width.equalToSuperview()
+                make.height.equalTo(coverArt.snp.width)
+                make.centerY.equalToSuperview()
+            }
+        } else {
+            coverArt.snp.remakeConstraints { make in
+                make.height.equalToSuperview()
+                make.width.equalTo(coverArt.snp.height)
+                make.centerX.equalToSuperview()
+            }
+        }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.overrideUserInterfaceStyle = .dark
+        view.backgroundColor = .systemBackground
+        
+        coverArt.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(coverArt)
+        
+        closeButton.addClosure(for: .touchUpInside) { [unowned self] in
+            self.dismiss(animated: true, completion: nil)
+        }
+        view.addSubview(closeButton)
+        closeButton.snp.makeConstraints { make in
+            make.leading.top.equalToSuperview().offset(10)
+        }
     }
 }

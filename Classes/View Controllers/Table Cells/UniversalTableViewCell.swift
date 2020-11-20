@@ -186,9 +186,9 @@ import SnapKit
         coverArtView.snp.remakeConstraints { make in
             if hideCoverArt { make.width.equalTo(0) }
             else { make.width.equalTo(coverArtView.snp.height) }
-            make.leading.equalTo(numberLabel.snp.trailing).offset(5)//10)
-            make.top.equalTo(headerLabel.snp.bottom).offset(5)//10)
-            make.bottom.equalToSuperview().offset(-5)//-10)
+            make.leading.equalTo(numberLabel.snp.trailing).offset(5)
+            make.top.equalTo(headerLabel.snp.bottom).offset(5)
+            make.bottom.equalToSuperview().offset(-5)
         }
     }
     
