@@ -204,18 +204,7 @@ static BOOL _isAllSongsLoading = NO;
 			[db executeUpdate:@"CREATE TABLE genres (genre TEXT UNIQUE)"];
 			[db executeUpdate:@"CREATE TABLE genresUnsorted (genre TEXT UNIQUE)"];
 			[db executeUpdate:@"CREATE TABLE genresLayout (md5 TEXT, genre TEXT, segs INTEGER, seg1 TEXT, seg2 TEXT, seg3 TEXT, seg4 TEXT, seg5 TEXT, seg6 TEXT, seg7 TEXT, seg8 TEXT, seg9 TEXT)"];
-			/*[databaseS.genresDb executeUpdate:@"CREATE UNIQUE INDEX genresLayout.md5 ON genresLayout (md5)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_genre ON genresLayout (genre)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg1 ON genresLayout (seg1)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg2 ON genresLayout (seg2)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg3 ON genresLayout (seg3)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg4 ON genresLayout (seg4)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg5 ON genresLayout (seg5)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg6 ON genresLayout (seg6)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg7 ON genresLayout (seg7)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg8 ON genresLayout (seg8)"];
-			 [databaseS.genresDb executeUpdate:@"CREATE INDEX genresLayout_seg9 ON genresLayout (seg9)"];*/
-            
+            [db executeUpdate:@"CREATE INDEX genresLayout_genre_seg1 ON genresLayout (genre, seg1)"];
             [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE genresSongs (md5 TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
 		}];
 	}
