@@ -167,6 +167,7 @@
 	self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	self.searchBar.delegate = self;
 	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.searchBar.searchBarStyle = UISearchBarStyleMinimal;
 	self.searchBar.placeholder = @"Song name";
 	[self.headerView addSubview:self.searchBar];
 	

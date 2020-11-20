@@ -11,12 +11,15 @@
 
 @class SUSServerPlaylistsDAO;
 
-@interface PlaylistsViewController : UITableViewController <SUSLoaderDelegate>
+@interface PlaylistsViewController : UIViewController <SUSLoaderDelegate>
 
-@property (nonatomic, strong) UIView *headerView;
+@property (strong) NSLayoutConstraint *tableViewTopConstraint;
+@property (strong) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) UIView *segmentControlContainer;
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) UIImageView *noPlaylistsScreen;
 @property (nonatomic) BOOL isNoPlaylistsScreenShowing;
+@property (nonatomic, strong) UIView *saveEditContainer;
 @property (nonatomic, strong) UILabel *savePlaylistLabel;
 @property (nonatomic, strong) UILabel *playlistCountLabel;
 @property (nonatomic, strong) UIButton *savePlaylistButton;

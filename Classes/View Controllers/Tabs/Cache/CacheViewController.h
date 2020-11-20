@@ -10,6 +10,7 @@
 
 @interface CacheViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>
 
+@property (strong) NSLayoutConstraint *tableViewTopConstraint;
 @property (strong) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIView *segmentControlContainer;
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;

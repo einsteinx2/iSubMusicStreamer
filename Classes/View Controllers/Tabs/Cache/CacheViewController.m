@@ -88,9 +88,6 @@
     
     self.view.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
 
-    self.tableView.y = 45;
-    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0);
-	
     self.segmentControlContainer = [[UIView alloc] init];
     self.segmentControlContainer.translatesAutoresizingMaskIntoConstraints = NO;
     
@@ -103,21 +100,27 @@
     [self.segmentControlContainer addSubview:self.segmentedControl];
     [self.view addSubview:self.segmentControlContainer];
     
-    NSLayoutConstraint *segContainerTop = [self.segmentControlContainer.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor];
-    segContainerTop.constant = 7;
-    segContainerTop.active = YES;
-    NSLayoutConstraint *segContainerLead = [self.segmentControlContainer.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor];
-    segContainerLead.constant = 5;
-    segContainerLead.active = YES;
-    NSLayoutConstraint *segContainerTrail = [self.segmentControlContainer.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor];
-    segContainerTrail.constant = -5;
-    segContainerTrail.active = YES;
+    [NSLayoutConstraint activateConstraints:@[
+        [self.segmentControlContainer.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor constant:7],
+        [self.segmentControlContainer.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:5],
+        [self.segmentControlContainer.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-5],
+        [self.segmentControlContainer.heightAnchor constraintEqualToConstant:36],
+        
+        [self.segmentedControl.topAnchor constraintEqualToAnchor:self.segmentControlContainer.topAnchor],
+        [self.segmentedControl.bottomAnchor constraintEqualToAnchor:self.segmentControlContainer.bottomAnchor],
+        [self.segmentedControl.leadingAnchor constraintEqualToAnchor:self.segmentControlContainer.leadingAnchor],
+        [self.segmentedControl.trailingAnchor constraintEqualToAnchor:self.segmentControlContainer.trailingAnchor]
+    ]];
     
-    [self.segmentedControl.topAnchor constraintEqualToAnchor:self.segmentControlContainer.topAnchor].active = YES;
-    [self.segmentedControl.bottomAnchor constraintEqualToAnchor:self.segmentControlContainer.bottomAnchor].active = YES;
-    [self.segmentedControl.leadingAnchor constraintEqualToAnchor:self.segmentControlContainer.leadingAnchor].active = YES;
-    [self.segmentedControl.trailingAnchor constraintEqualToAnchor:self.segmentControlContainer.trailingAnchor].active = YES;
-	
+    self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.tableViewTopConstraint = [self.tableView.topAnchor constraintEqualToAnchor:self.segmentControlContainer.bottomAnchor];
+    [NSLayoutConstraint activateConstraints:@[
+        self.tableViewTopConstraint,
+        [self.tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+        [self.tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [self.tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor]
+    ]];
+
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     [self.tableView registerClass:BlurredSectionHeader.class forHeaderFooterViewReuseIdentifier:BlurredSectionHeader.reuseId];
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
@@ -425,9 +428,11 @@
     UIView *headerView = [[UIView alloc] init];
     headerView.translatesAutoresizingMaskIntoConstraints = NO;
     self.tableView.tableHeaderView = headerView;
-    [headerView.centerXAnchor constraintEqualToAnchor:self.tableView.centerXAnchor].active = YES;
-    [headerView.widthAnchor constraintEqualToAnchor:self.tableView.widthAnchor].active = YES;
-    [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor].active = YES;
+    [NSLayoutConstraint activateConstraints:@[
+        [headerView.centerXAnchor constraintEqualToAnchor:self.tableView.centerXAnchor],
+        [headerView.widthAnchor constraintEqualToAnchor:self.tableView.widthAnchor],
+        [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor]
+    ]];
     
     // Create the play all and shuffle buttons and constrain to the container view
     __weak CacheViewController *weakSelf = self;
@@ -443,10 +448,12 @@
         }];
     }];
     [headerView addSubview:playAllAndShuffleHeader];
-    [playAllAndShuffleHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor].active = YES;
-    [playAllAndShuffleHeader.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor].active = YES;
-    [playAllAndShuffleHeader.topAnchor constraintEqualToAnchor:headerView.topAnchor].active = YES;
-    [playAllAndShuffleHeader.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor].active = YES;
+    [NSLayoutConstraint activateConstraints:@[
+        [playAllAndShuffleHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor],
+        [playAllAndShuffleHeader.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor],
+        [playAllAndShuffleHeader.topAnchor constraintEqualToAnchor:headerView.topAnchor],
+        [playAllAndShuffleHeader.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor]
+    ]];
     
     // Force re-layout using the constraints
     [self.tableView.tableHeaderView layoutIfNeeded];
@@ -456,23 +463,20 @@
 - (void)removeSaveEditButtons {
 	if (self.isSaveEditShowing == YES) {
 		self.isSaveEditShowing = NO;
-        [self.saveEditContainer removeFromSuperview];
-        self.saveEditContainer = nil;
-		[self.songsCountLabel removeFromSuperview]; 
-		self.songsCountLabel = nil;
-		[self.deleteSongsButton removeFromSuperview]; 
-		self.deleteSongsButton = nil;
-		[self.editSongsLabel removeFromSuperview]; 
-		self.editSongsLabel = nil;
-		[self.editSongsButton removeFromSuperview]; 
-		self.editSongsButton = nil;
-		[self.deleteSongsLabel removeFromSuperview]; 
-		self.deleteSongsLabel = nil;
-		[self.cacheSizeLabel removeFromSuperview]; 
-		self.cacheSizeLabel = nil;
+        [self.saveEditContainer removeFromSuperview]; self.saveEditContainer = nil;
+        [self.songsCountLabel removeFromSuperview]; self.songsCountLabel = nil;
+        [self.deleteSongsButton removeFromSuperview]; self.deleteSongsButton = nil;
+        [self.editSongsLabel removeFromSuperview]; self.editSongsLabel = nil;
+        [self.editSongsButton removeFromSuperview]; self.editSongsButton = nil;
+        [self.deleteSongsLabel removeFromSuperview]; self.deleteSongsLabel = nil;
+        [self.cacheSizeLabel removeFromSuperview]; self.cacheSizeLabel = nil;
+		
 		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCacheSizeLabel) object:nil];
         
         self.tableView.tableHeaderView = nil;
+        
+        self.tableViewTopConstraint.constant = 0;
+        [self.tableView setNeedsUpdateConstraints];
 	}
 }
 
@@ -485,12 +489,17 @@
 
         self.saveEditContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 44, self.tableView.width, 50)];
         self.saveEditContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        self.tableView.y = 45 + 50;
+//        self.tableView.y = 45 + 50;
         [self.view addSubview:self.saveEditContainer];
         
-        CGFloat halfWidth = self.saveEditContainer.width / 2.0;
+        self.tableViewTopConstraint.constant = 55;
+        [self.tableView setNeedsUpdateConstraints];
+        
+//        CGFloat halfWidth = self.saveEditContainer.width / 2.0;
+        CGFloat rightWidth = 100;
+        CGFloat leftWidth = self.saveEditContainer.width - rightWidth;
 
-		self.songsCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 34)];
+		self.songsCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, leftWidth, 34)];
 		self.songsCountLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
         self.songsCountLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
 		self.songsCountLabel.textAlignment = NSTextAlignmentCenter;
@@ -511,7 +520,7 @@
 		}
 		[self.saveEditContainer addSubview:self.songsCountLabel];
 		
-		self.cacheSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 33, halfWidth, 14)];
+		self.cacheSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 33, leftWidth, 14)];
 		self.cacheSizeLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
         self.cacheSizeLabel.textColor = UIColor.labelColor;
 		self.cacheSizeLabel.textAlignment = NSTextAlignmentCenter;
@@ -539,12 +548,12 @@
 		[self updateCacheSizeLabel];
 		
 		self.deleteSongsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.deleteSongsButton.frame = CGRectMake(0, 0, halfWidth, 50);
+		self.deleteSongsButton.frame = CGRectMake(0, 0, leftWidth, 50);
 		self.deleteSongsButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
 		[self.deleteSongsButton addTarget:self action:@selector(deleteSongsAction:) forControlEvents:UIControlEventTouchUpInside];
 		[self.saveEditContainer addSubview:self.deleteSongsButton];
 		
-		self.editSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(halfWidth, 0, halfWidth, 50)];
+		self.editSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(leftWidth, 0, rightWidth, 50)];
 		self.editSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
         self.editSongsLabel.textColor = UIColor.labelColor;
 		self.editSongsLabel.textAlignment = NSTextAlignmentCenter;
@@ -553,12 +562,12 @@
 		[self.saveEditContainer addSubview:self.editSongsLabel];
 		
 		self.editSongsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.editSongsButton.frame = CGRectMake(halfWidth, 0, halfWidth, 40);
+		self.editSongsButton.frame = CGRectMake(leftWidth, 0, rightWidth, 50);
 		self.editSongsButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
 		[self.editSongsButton addTarget:self action:@selector(editSongsAction:) forControlEvents:UIControlEventTouchUpInside];
 		[self.saveEditContainer addSubview:self.editSongsButton];
 		
-		self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 50)];
+		self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, leftWidth, 50)];
 		self.deleteSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
 		self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
         self.deleteSongsLabel.textColor = UIColor.labelColor;

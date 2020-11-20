@@ -24,12 +24,12 @@
                 <outlet property="dataSource" destination="-1" id="4"/>
                 <outlet property="delegate" destination="-1" id="5"/>
             </connections>
-            <point key="canvasLocation" x="100" y="3"/>
+            <point key="canvasLocation" x="-241" y="36"/>
         </tableView>
     </objects>
     <resources>
         <namedColor name="isubBackgroundColor">
-            <color red="0.79490262269973755" green="0.79490262269973755" blue="0.89403609154929575" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color white="0.94999998807907104" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </namedColor>
     </resources>
 </document>

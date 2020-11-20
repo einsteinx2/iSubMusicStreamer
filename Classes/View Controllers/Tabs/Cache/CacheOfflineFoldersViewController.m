@@ -83,9 +83,11 @@
     UIView *headerView = [[UIView alloc] init];
     headerView.translatesAutoresizingMaskIntoConstraints = NO;
     self.tableView.tableHeaderView = headerView;
-    [headerView.centerXAnchor constraintEqualToAnchor:self.tableView.centerXAnchor].active = YES;
-    [headerView.widthAnchor constraintEqualToAnchor:self.tableView.widthAnchor].active = YES;
-    [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor].active = YES;
+    [NSLayoutConstraint activateConstraints:@[
+        [headerView.centerXAnchor constraintEqualToAnchor:self.tableView.centerXAnchor],
+        [headerView.widthAnchor constraintEqualToAnchor:self.tableView.widthAnchor],
+        [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor]
+    ]];
     
     // Create the play all and shuffle buttons and constrain to the container view
     __weak CacheOfflineFoldersViewController *weakSelf = self;
@@ -101,10 +103,12 @@
         }];
     }];
     [headerView addSubview:playAllAndShuffleHeader];
-    [playAllAndShuffleHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor].active = YES;
-    [playAllAndShuffleHeader.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor].active = YES;
-    [playAllAndShuffleHeader.topAnchor constraintEqualToAnchor:headerView.topAnchor].active = YES;
-    [playAllAndShuffleHeader.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor].active = YES;
+    [NSLayoutConstraint activateConstraints:@[
+        [playAllAndShuffleHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor],
+        [playAllAndShuffleHeader.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor],
+        [playAllAndShuffleHeader.topAnchor constraintEqualToAnchor:headerView.topAnchor],
+        [playAllAndShuffleHeader.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor]
+    ]];
     
     // Force re-layout using the constraints
     [self.tableView.tableHeaderView layoutIfNeeded];
