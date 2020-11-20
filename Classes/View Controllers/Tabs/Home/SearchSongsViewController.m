@@ -170,6 +170,7 @@
 - (UITableViewCell *)createLoadingCell:(NSUInteger)row {
 	// This is the last cell and there could be more results, load the next 20 results;
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"NoReuse"];
+    cell.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
 	if (self.isMoreResults) {
 		cell.textLabel.text = @"Loading more results...";
         UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];

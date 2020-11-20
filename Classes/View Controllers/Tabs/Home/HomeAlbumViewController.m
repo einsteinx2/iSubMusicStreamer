@@ -114,19 +114,16 @@
 	} else if (indexPath.row == self.listOfAlbums.count) {
 		// This is the last cell and there could be more results, load the next 20 songs;
 		UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"HomeAlbumLoadCell"];
-
-		if (self.isMoreAlbums)
-		{
+        cell.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
+		if (self.isMoreAlbums) {
 			cell.textLabel.text = @"Loading more results...";
             UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
 			indicator.center = CGPointMake(300, 30);
 			[cell addSubview:indicator];
 			[indicator startAnimating];
-			
+            
 			[self loadMoreResults];
-		}
-		else 
-		{
+		} else {
 			cell.textLabel.text = @"No more results";
 		}
 		
