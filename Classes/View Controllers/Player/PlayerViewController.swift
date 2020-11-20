@@ -175,19 +175,19 @@ import SnapKit
             make.centerX.equalToSuperview()
         }
         
-        songNameLabel.font = .boldSystemFont(ofSize: 28)
+        songNameLabel.font = .boldSystemFont(ofSize: 22)
         songNameLabel.textColor = .label
         songInfoContainer.addSubview(songNameLabel)
         songNameLabel.snp.makeConstraints { make in
-            make.height.equalToSuperview().multipliedBy(2.0 / 3.0)
+            make.height.equalToSuperview().multipliedBy(0.8)
             make.leading.trailing.top.equalTo(songInfoContainer)
         }
         
-        artistNameLabel.font = .boldSystemFont(ofSize: 22)
+        artistNameLabel.font = .boldSystemFont(ofSize: 18)
         artistNameLabel.textColor = .secondaryLabel
         songInfoContainer.addSubview(artistNameLabel)
         artistNameLabel.snp.makeConstraints { make in
-            make.height.equalToSuperview().multipliedBy(1.0 / 3.0)
+            make.height.equalToSuperview().multipliedBy(0.45)
             make.leading.trailing.bottom.equalTo(songInfoContainer)
         }
         
