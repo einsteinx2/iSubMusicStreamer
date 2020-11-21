@@ -160,17 +160,9 @@ LOG_LEVEL_ISUB_DEFAULT
             [self showSettings];
 		}
 	} else {
-//        UITabBarAppearance *tabBarAppearance = [[UITabBarAppearance alloc] init];
-//        tabBarAppearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-        
-//        self.mainTabBarController.tabBar.standardAppearance = tabBarAppearance;
-//        [self.mainTabBarController.tabBar.standardAppearance configureWithOpaqueBackground];
         [UITabBar.appearance setBarTintColor:UIColor.blackColor];
         self.mainTabBarController.tabBar.translucent = NO;
         self.offlineTabBarController.tabBar.translucent = NO;
-        
-		// Setup the tabBarController
-        self.mainTabBarController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 
 		if (settingsS.isOfflineMode) {
 			self.currentTabBarController = self.offlineTabBarController;

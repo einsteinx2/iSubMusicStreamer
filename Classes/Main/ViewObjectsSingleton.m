@@ -12,6 +12,8 @@
 #import "SavedSettings.h"
 #import "EX2Kit.h"
 #import "MBProgressHUD.h"
+#import "CustomUITabBarController.h"
+#import "CustomUINavigationController.h"
 
 @interface ViewObjectsSingleton() <MBProgressHUDDelegate>
 @property (nullable, strong) MBProgressHUD *HUD;
@@ -111,6 +113,11 @@
     // Remember selected tab
     if (!settingsS.isOfflineMode) {
         [[NSUserDefaults standardUserDefaults] setInteger:appDelegateS.mainTabBarController.selectedIndex forKey:@"mainTabBarControllerSelectedIndex"];
+    }
+    
+    // Fix iOS bug customizing the more tab controller
+    if (appDelegateS.currentTabBarController == appDelegateS.mainTabBarController && ![viewController.navigationController isKindOfClass:CustomUINavigationController.class]) {
+        [CustomUITabBarController customizeMoreTabTableView:appDelegateS.mainTabBarController];
     }
 }
 

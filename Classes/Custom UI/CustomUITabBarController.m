@@ -12,6 +12,18 @@
 
 @implementation CustomUITabBarController
 
++ (void)customizeMoreTabTableView:(UITabBarController *)tabBarController {
+    // Customize more tab
+    tabBarController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+    UIViewController *moreController = tabBarController.moreNavigationController.topViewController;
+    if ([moreController.view isKindOfClass:UITableView.class]) {
+        UITableView *moreTableView = (UITableView *)moreController.view;
+        moreTableView.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
+        moreTableView.rowHeight = 65.0;
+        moreTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
+}
+
 - (BOOL)shouldAutorotate {
     if (settingsS.isRotationLockEnabled && UIDevice.currentDevice.orientation != UIDeviceOrientationPortrait) {
         return NO;
@@ -27,28 +39,8 @@
     [super viewDidLoad];
     
     [viewObjectsS orderMainTabBarController];
+    
+    [self.class customizeMoreTabTableView:self];
 }
-
-//- (void)viewWillLayoutSubviews {
-//    [super viewWillLayoutSubviews];
-//    
-//    CGRect tabBarFrame = self.tabBar.frame;
-//    tabBarFrame.size.height = 100;
-//    self.tabBar.frame = tabBarFrame;
-//}
-
-//- (void)viewDidLoad {
-//    [super viewDidLoad];
-//
-//    self.tabBar.backgroundImage = [[UIImage alloc] init];
-//    self.tabBar.barTintColor = UIColor.clearColor;
-//    self.tabBar.translucent = YES;
-//
-//    // Add blur effect
-//    UIVisualEffectView *blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
-//    blurView.frame = self.tabBar.bounds;
-//    blurView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//    [self.tabBar insertSubview:blurView atIndex:0];
-//}
 
 @end
