@@ -28,9 +28,7 @@
     [super viewDidLoad];
 	
 	self.isNothingPlayingScreenShowing = NO;
-	
-	self.tableView.separatorColor = [UIColor clearColor];
-	
+		
 	self.title = @"Now Playing";
 	//self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"gear.png"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsAction:)] autorelease];
 	
@@ -138,6 +136,11 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel songForIndex:indexPath.row]];
+}
+
+// NOTE: For some reason, in this controller and this controller only, it's ignoring the rowHeight property and this must be implemented
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 85.0;
 }
 
 #pragma mark - ISMSLoader delegate
