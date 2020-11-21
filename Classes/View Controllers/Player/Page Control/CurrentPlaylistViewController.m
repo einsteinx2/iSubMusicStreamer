@@ -57,6 +57,9 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)viewDidLoad  {
     [super viewDidLoad];
 		
+    self.title = @"Play Queue";
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(dismiss:)];
+    
     self.tableView.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
 	
     [self registerForNotifications];
@@ -465,6 +468,14 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
 		[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
 	}
+}
+
+- (void)dismiss:(id)sender {
+    if (self.navigationController) {
+        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 #pragma mark Table view data source

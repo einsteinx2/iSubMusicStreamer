@@ -604,7 +604,7 @@ import SnapKit
     }
     
     @objc private func showCurrentPlaylist() {
-        let controller = CurrentPlaylistViewController()
+        let controller = CustomUINavigationController(rootViewController: CurrentPlaylistViewController())
         present(controller, animated: true, completion: nil)
     }
     
