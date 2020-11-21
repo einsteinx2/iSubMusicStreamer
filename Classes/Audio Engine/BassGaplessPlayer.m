@@ -960,7 +960,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 	return self.currentStream.stream != 0;
 }
 
-- (QWORD)currentByteOffset
+- (NSUInteger)currentByteOffset
 {
 	return BASS_StreamGetFilePosition(self.currentStream.stream, BASS_FILEPOS_CURRENT) + self.startByteOffset;
 }

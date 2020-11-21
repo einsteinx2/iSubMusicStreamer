@@ -46,6 +46,7 @@
 // DAOs
 #import "SUSRootFoldersDAO.h"
 #import "ISMSSong+DAO.h"
+#import "ISMSBookmarkDAO.h"
 
 // Parsers
 #import "SearchXMLParser.h"
@@ -73,6 +74,7 @@
 #import "SavedSettings.h"
 #import "AudioEngine.h"
 #import "ISMSStreamManager.h"
+#import "DatabaseSingleton.h"
 
 /*
  * Frameworks
@@ -81,6 +83,8 @@
 #import "EX2Kit.h"
 #import "Flurry.h"
 #import "OBSlider.h"
+#import "FMDatabaseQueueAdditions.h"
+#import "FMDatabaseAdditions.h"
 
 #endif /* Common_Bridging_Header_h */
 

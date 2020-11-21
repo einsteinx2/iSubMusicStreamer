@@ -181,6 +181,8 @@
 		53404FFC11E94AA5004AEC41 /* controller-bookmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 53404FF811E94AA5004AEC41 /* controller-bookmark.png */; };
 		53404FFD11E94AA5004AEC41 /* controller-bookmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53404FF911E94AA5004AEC41 /* controller-bookmark@2x.png */; };
 		534050FB11E9966C004AEC41 /* LyricsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 534050F911E9966C004AEC41 /* LyricsViewController.m */; };
+		5340B8A6256968C400FD5D6D /* ISMSBookmarkDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 5340B8A5256968C400FD5D6D /* ISMSBookmarkDAO.m */; };
+		5340B8A7256968C400FD5D6D /* ISMSBookmarkDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 5340B8A5256968C400FD5D6D /* ISMSBookmarkDAO.m */; };
 		53493EF415FC69560059492E /* player-songinfo.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EF215FC69560059492E /* player-songinfo.png */; };
 		53493EF615FC69560059492E /* player-songinfo.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EF215FC69560059492E /* player-songinfo.png */; };
 		53493EF715FC69560059492E /* player-songinfo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EF315FC69560059492E /* player-songinfo@2x.png */; };
@@ -1173,6 +1175,8 @@
 		53404FF911E94AA5004AEC41 /* controller-bookmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-bookmark@2x.png"; path = "Images/Player Icons/controller-bookmark@2x.png"; sourceTree = "<group>"; };
 		534050F811E9966C004AEC41 /* LyricsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsViewController.h; sourceTree = "<group>"; };
 		534050F911E9966C004AEC41 /* LyricsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LyricsViewController.m; sourceTree = "<group>"; };
+		5340B8A4256968C400FD5D6D /* ISMSBookmarkDAO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSBookmarkDAO.h; sourceTree = "<group>"; };
+		5340B8A5256968C400FD5D6D /* ISMSBookmarkDAO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ISMSBookmarkDAO.m; sourceTree = "<group>"; };
 		53493EF215FC69560059492E /* player-songinfo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "player-songinfo.png"; path = "Images/Player Icons/player-songinfo.png"; sourceTree = "<group>"; };
 		53493EF315FC69560059492E /* player-songinfo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "player-songinfo@2x.png"; path = "Images/Player Icons/player-songinfo@2x.png"; sourceTree = "<group>"; };
 		53493EFA15FC699A0059492E /* ipad-menu-selected-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ipad-menu-selected-background.png"; path = "Images/ipad-menu-selected-background.png"; sourceTree = "<group>"; };
@@ -1322,7 +1326,6 @@
 		539799781163084200F41D8B /* loading-screen-image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "loading-screen-image.png"; path = "Images/Other/loading-screen-image.png"; sourceTree = "<group>"; };
 		5398F26A11DA61DA00007870 /* SettingsTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTabViewController.h; sourceTree = "<group>"; };
 		5398F26B11DA61DA00007870 /* SettingsTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTabViewController.m; sourceTree = "<group>"; };
-		5398F2B511DA8B1000007870 /* iPhoneStreamingPlayerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = iPhoneStreamingPlayerViewController.xib; sourceTree = "<group>"; };
 		53A2213411A8489900C1ACD4 /* cache-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cache-button.png"; path = "Images/Other/cache-button.png"; sourceTree = "<group>"; };
 		53A2213511A8489900C1ACD4 /* queue-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "queue-button.png"; path = "Images/Other/queue-button.png"; sourceTree = "<group>"; };
 		53A2BE22147DF09800E44822 /* EqualizerPointView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerPointView.h; sourceTree = "<group>"; };
@@ -1445,8 +1448,6 @@
 		53F4A072116FF48400BB8411 /* DebugViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugViewController.m; sourceTree = "<group>"; };
 		53F4A07A116FF7EE00BB8411 /* CurrentPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentPlaylistViewController.h; sourceTree = "<group>"; };
 		53F4A07B116FF7EE00BB8411 /* CurrentPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentPlaylistViewController.m; sourceTree = "<group>"; };
-		53F675AD113B048600822059 /* iPhoneStreamingPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhoneStreamingPlayerViewController.h; sourceTree = "<group>"; };
-		53F675AE113B048600822059 /* iPhoneStreamingPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iPhoneStreamingPlayerViewController.m; sourceTree = "<group>"; };
 		53F675D7113B092C00822059 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		53F675DB113B093900822059 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		53F675E1113B095900822059 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -2031,9 +2032,6 @@
 			isa = PBXGroup;
 			children = (
 				534B20E8256202CF007FF1D7 /* PlayerViewController.swift */,
-				53F675AD113B048600822059 /* iPhoneStreamingPlayerViewController.h */,
-				53F675AE113B048600822059 /* iPhoneStreamingPlayerViewController.m */,
-				5398F2B511DA8B1000007870 /* iPhoneStreamingPlayerViewController.xib */,
 				53752BE62562CEC500438636 /* Page Control */,
 				53752BEA2562CEDE00438636 /* EQ and Visualizer */,
 			);
@@ -2428,6 +2426,8 @@
 				53FE36CC1EA961720058B925 /* SUSServerPlaylistsDAO.m */,
 				53FE36D31EA961720058B925 /* SUSSubFolderDAO.h */,
 				53FE36D41EA961720058B925 /* SUSSubFolderDAO.m */,
+				5340B8A4256968C400FD5D6D /* ISMSBookmarkDAO.h */,
+				5340B8A5256968C400FD5D6D /* ISMSBookmarkDAO.m */,
 			);
 			path = DAOs;
 			sourceTree = "<group>";
@@ -3786,6 +3786,7 @@
 				53FE35251EA961540058B925 /* NSURL+QueryParameterDictionary.m in Sources */,
 				53FE35641EA961540058B925 /* UITableViewCell+TableView.m in Sources */,
 				53F4A07D116FF7EE00BB8411 /* CurrentPlaylistViewController.m in Sources */,
+				5340B8A6256968C400FD5D6D /* ISMSBookmarkDAO.m in Sources */,
 				53FE353A1EA961540058B925 /* UIButton+StretchBackground.m in Sources */,
 				53329652255F30220027C51A /* ClosureSleeve.swift in Sources */,
 				53FE35701EA961540058B925 /* UIViewController+IsVisible.m in Sources */,
@@ -4087,6 +4088,7 @@
 				53BC27FC139AF0DD00A825F1 /* CustomUITextView.m in Sources */,
 				53FE38061EA961970058B925 /* RXMLElement.m in Sources */,
 				53FE37721EA961720058B925 /* NSMutableURLRequest+SUS.m in Sources */,
+				5340B8A7256968C400FD5D6D /* ISMSBookmarkDAO.m in Sources */,
 				533295EF255EEFE50027C51A /* FMDatabaseQueueAdditions.m in Sources */,
 				53329653255F30220027C51A /* ClosureSleeve.swift in Sources */,
 				53FE354B1EA961540058B925 /* UIImage+Color.m in Sources */,

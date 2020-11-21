@@ -37,7 +37,7 @@
 @property BOOL isPlaying;
 @property (readonly) BOOL isStarted;
 @property (readonly) NSInteger bitRate;
-@property (readonly) QWORD currentByteOffset;
+@property (readonly) NSUInteger currentByteOffset;
 @property (readonly) double progress;
 @property (strong) BassStream *waitLoopStream;
 

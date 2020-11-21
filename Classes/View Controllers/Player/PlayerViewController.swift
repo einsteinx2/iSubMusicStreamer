@@ -8,10 +8,13 @@
 
 import UIKit
 import SnapKit
+import CocoaLumberjackSwift
 
 // TODO: Add bitrate and file type labels
 // TODO: Add bookmark button
 @objc class PlayerViewController: UIViewController {
+    static var ddLogLevel: DDLogLevel = .verbose
+    
     var currentSong: Song?
     
     private var notificationObservers = [NSObjectProtocol]()
@@ -39,6 +42,7 @@ import SnapKit
     // More Controls
     private let moreControlsStack = UIStackView()
     private let repeatButton = UIButton(type: .custom)
+    private let bookmarksButton = UIButton(type: .custom)
     private let equalizerButton = UIButton(type: .custom)
     private let shuffleButton = UIButton(type: .custom)
     
@@ -322,7 +326,7 @@ import SnapKit
         moreControlsStack.axis = .horizontal
         moreControlsStack.alignment = .center
         moreControlsStack.distribution = .equalCentering
-        moreControlsStack.addArrangedSubviews([repeatButton, equalizerButton, shuffleButton])
+        moreControlsStack.addArrangedSubviews([repeatButton, bookmarksButton, equalizerButton, shuffleButton])
         moreControlsStack.snp.makeConstraints { make in
             make.height.equalTo(50)
             make.leading.trailing.equalToSuperview()
@@ -337,6 +341,30 @@ import SnapKit
             default: break
             }
             self.updateRepeatButtonIcon()
+        }
+        
+        bookmarksButton.setImage(UIImage(named: "controller-bookmark"), for: .normal)
+        bookmarksButton.addClosure(for: .touchUpInside) { [unowned self] in
+            let position = UInt(self.progressSlider.value);
+            let bytePosition = UInt(AudioEngine.shared().player?.currentByteOffset ?? 0);
+            let song = self.currentSong
+            let alert = UIAlertController(title: "Create Bookmark", message: nil, preferredStyle: .alert)
+            alert.addTextField { textField in
+                textField.placeholder = "Bookmark name"
+            }
+            alert.addAction(UIAlertAction(title: "Save", style: .default) { action in
+                guard let song = song, let name = alert.textFields?.first?.text else {
+                    let errorAlert = UIAlertController(title: "Error", message: "Failed to create the bookmark, please try again.", preferredStyle: .alert)
+                    errorAlert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                    self.present(errorAlert, animated: true, completion: nil)
+                    return
+                }
+                
+                ISMSBookmarkDAO.createBookmark(for: song, name: name, bookmarkPosition: position, bytePosition: bytePosition)
+                self.updateBookmarkButton()
+            })
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
         
         let equalizerButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular, scale: .large)
@@ -552,6 +580,7 @@ import SnapKit
             artistNameLabel.text = nil
             progressSlider.value = 0
             downloadProgressView.isHidden = true
+            updateBookmarkButton()
             return
         }
         
@@ -561,6 +590,7 @@ import SnapKit
         artistNameLabel.text = song.artist
         progressSlider.maximumValue = song.duration?.floatValue ?? 0.0
         updateDownloadProgress(animated: false)
+        updateBookmarkButton()
     }
     
     private var previousDownloadProgress: CGFloat = 0.0;
@@ -655,6 +685,26 @@ import SnapKit
     
     private func updateEqualizerButton() {
         equalizerButton.tintColor = Settings.shared().isEqualizerOn ? .systemBlue : UIColor(white: 0.8, alpha: 1.0)
+    }
+    
+    private func updateBookmarkButton() {
+        var bookmarkCount: Int32 = 0
+        if let songId = self.currentSong?.songId {
+            Database.shared().bookmarksDbQueue?.inDatabase { db in
+                do {
+                    let result = try db.executeQuery("SELECT COUNT(*) FROM bookmarks WHERE songId = ?", values: [songId])
+                    if result.next() {
+                        bookmarkCount = result.int(forColumnIndex: 0)
+                    }
+                    result.close()
+                } catch {
+                    DDLogError("Failed to query the bookmark count: \(error)")
+                }
+            }
+        }
+        
+        let imageName = bookmarkCount > 0 ? "controller-bookmark-on" : "controller-bookmark"
+        bookmarksButton.setImage(UIImage(named: imageName), for: .normal)
     }
 }
 

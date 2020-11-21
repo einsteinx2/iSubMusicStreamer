@@ -13,30 +13,33 @@
 
 #define databaseS ((DatabaseSingleton *)[DatabaseSingleton sharedInstance])
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FMDatabase, FMDatabaseQueue, ISMSArtist, ISMSAlbum, ISMSSong, SUSQueueAllLoader;
 
+NS_SWIFT_NAME(Database)
 @interface DatabaseSingleton : NSObject 
 
 @property (strong) NSString *databaseFolderPath;
 
-@property (strong) FMDatabaseQueue *allAlbumsDbQueue;
-@property (strong) FMDatabaseQueue *allSongsDbQueue;
-@property (strong) FMDatabaseQueue *coverArtCacheDb540Queue;
-@property (strong) FMDatabaseQueue *coverArtCacheDb320Queue;
-@property (strong) FMDatabaseQueue *coverArtCacheDb60Queue;
-@property (strong) FMDatabaseQueue *albumListCacheDbQueue;
-@property (strong) FMDatabaseQueue *genresDbQueue;
-@property (strong) FMDatabaseQueue *currentPlaylistDbQueue;
-@property (strong) FMDatabaseQueue *localPlaylistsDbQueue;
-@property (strong) FMDatabaseQueue *songCacheDbQueue;
-@property (strong) FMDatabaseQueue *cacheQueueDbQueue;
-@property (strong) FMDatabaseQueue *lyricsDbQueue;
-@property (strong) FMDatabaseQueue *bookmarksDbQueue;
-@property (strong) FMDatabaseQueue *metadataDbQueue;
+@property (nullable, strong) FMDatabaseQueue *allAlbumsDbQueue;
+@property (nullable, strong) FMDatabaseQueue *allSongsDbQueue;
+@property (nullable, strong) FMDatabaseQueue *coverArtCacheDb540Queue;
+@property (nullable, strong) FMDatabaseQueue *coverArtCacheDb320Queue;
+@property (nullable, strong) FMDatabaseQueue *coverArtCacheDb60Queue;
+@property (nullable, strong) FMDatabaseQueue *albumListCacheDbQueue;
+@property (nullable, strong) FMDatabaseQueue *genresDbQueue;
+@property (nullable, strong) FMDatabaseQueue *currentPlaylistDbQueue;
+@property (nullable, strong) FMDatabaseQueue *localPlaylistsDbQueue;
+@property (nullable, strong) FMDatabaseQueue *songCacheDbQueue;
+@property (nullable, strong) FMDatabaseQueue *cacheQueueDbQueue;
+@property (nullable, strong) FMDatabaseQueue *lyricsDbQueue;
+@property (nullable, strong) FMDatabaseQueue *bookmarksDbQueue;
+@property (nullable, strong) FMDatabaseQueue *metadataDbQueue;
 
 @property (strong) SUSQueueAllLoader *queueAll;
 
-+ (instancetype)sharedInstance;
++ (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 + (void)setAllSongsToBackup;
 + (void)setAllSongsToNotBackup;
 
@@ -56,16 +59,16 @@
 - (void)createServerPlaylistTable:(NSString *)md5;
 - (void)removeServerPlaylistTable:(NSString *)md5;
 
-- (ISMSAlbum *)albumFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue;
-- (ISMSAlbum *)albumFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabase:(FMDatabase *)db;
+- (nullable ISMSAlbum *)albumFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue;
+- (nullable ISMSAlbum *)albumFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabase:(FMDatabase *)db;
 - (BOOL)insertAlbumIntoFolderCache:(ISMSAlbum *)anAlbum forId:(NSString *)folderId;
 - (BOOL)insertAlbum:(ISMSAlbum *)anAlbum intoTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue;
 - (BOOL)insertAlbum:(ISMSAlbum *)anAlbum intoTable:(NSString *)table inDatabase:(FMDatabase *)db;
 
 - (NSUInteger)serverPlaylistCount:(NSString *)md5;
 
-- (NSArray *)sectionInfoFromTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column;
-- (NSArray *)sectionInfoFromTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column;
+- (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column;
+- (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column;
 
 //- (void)queueSong:(ISMSSong *)aSong;
 - (void)queueAllSongs:(NSString *)folderId artist:(ISMSArtist *)theArtist;
@@ -77,5 +80,7 @@
 - (void)updateTableDefinitions;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif
