@@ -61,19 +61,17 @@
     [super viewDidLoad];
 	    
 	self.isNoChatMessagesScreenShowing = NO;
-	
-	self.tableView.separatorColor = [UIColor clearColor];
-	
+		
 	self.title = @"Chat";
 
 	// Create text input box in header
 	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 82)];
 	self.headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.headerView.backgroundColor = UIColor.lightGrayColor;
 	
 	self.textInput = [[CustomUITextView alloc] initWithFrame:CGRectMake(5, 5, 240, 72)];
 	self.textInput.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.textInput.font = [UIFont systemFontOfSize:16];
-	self.textInput.delegate = self;
 	[self.headerView addSubview:self.textInput];
 	
 	UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -191,57 +189,6 @@
 	
 	[self.tableView reloadData];
 	[self.refreshControl endRefreshing];
-}
-
-#pragma mark UITextView delegate
-
-- (void)textViewDidBeginEditing:(UITextView *)textView {
-	// Create overlay
-	self.chatMessageOverlay = [[UIView alloc] init];
-    if (UIDevice.isIPad) {
-		self.chatMessageOverlay.frame = CGRectMake(0, 82, 1024, 1024);
-    } else {
-		self.chatMessageOverlay.frame = CGRectMake(0, 82, 480, 480);
-    }
-    
-	self.chatMessageOverlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	self.chatMessageOverlay.backgroundColor = [UIColor colorWithWhite:0 alpha:.80];
-	self.chatMessageOverlay.alpha = 0.0;
-	[self.view addSubview:self.chatMessageOverlay];
-	
-	self.dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	self.dismissButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	[self.dismissButton addTarget:self action:@selector(doneSearching_Clicked:) forControlEvents:UIControlEventTouchUpInside];
-	self.dismissButton.frame = self.view.bounds;
-	self.dismissButton.enabled = NO;
-	[self.chatMessageOverlay addSubview:self.dismissButton];
-	
-	// Animate the segmented control on screen
-    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.chatMessageOverlay.alpha = 1;
-        self.dismissButton.enabled = YES;
-    } completion:nil];
-    
-	//Add the done button.
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneSearching_Clicked:)];
-}
-
-- (void)textViewDidEndEditing:(UITextView *)textView {
-	// Animate the segmented control off screen
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.chatMessageOverlay.alpha = 0;
-        self.dismissButton.enabled = NO;
-    } completion:nil];
-}
-
-- (void) doneSearching_Clicked:(id)sender  {
-	[self.textInput resignFirstResponder];
-	
-	if(musicS.showPlayerIcon) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-	} else {
-		self.navigationItem.rightBarButtonItem = nil;
-	}
 }
 
 #pragma mark Table view delegate

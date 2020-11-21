@@ -15,8 +15,6 @@
 
 @property (strong) UIView *headerView;
 @property (strong) CustomUITextView *textInput;
-@property (strong) UIView *chatMessageOverlay;
-@property (strong) UIButton *dismissButton;
 @property BOOL isNoChatMessagesScreenShowing;
 @property (strong) UIImageView *noChatMessagesScreen;
 @property (strong) NSMutableArray *chatMessages;

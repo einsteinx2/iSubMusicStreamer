@@ -15,12 +15,14 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier  {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])  {
+        self.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
+        
 		_userNameLabel = [[UILabel alloc] init];
 		_userNameLabel.frame = CGRectMake(0, 0, 320, 20);
 		_userNameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		_userNameLabel.textAlignment = NSTextAlignmentCenter; // default
-		_userNameLabel.backgroundColor = [UIColor blackColor];
-		_userNameLabel.alpha = .65;
+        _userNameLabel.backgroundColor = UIColor.systemGrayColor;
+//		_userNameLabel.alpha = .65;
         _userNameLabel.font = [UIFont boldSystemFontOfSize:10];
 		_userNameLabel.textColor = [UIColor whiteColor];
 		[self.contentView addSubview:_userNameLabel];
@@ -29,7 +31,7 @@
 		_messageLabel.frame = CGRectMake(5, 20, 310, 55);
 		_messageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		_messageLabel.textAlignment = NSTextAlignmentLeft; // default
-		_messageLabel.backgroundColor = [UIColor clearColor];
+        _messageLabel.textColor = UIColor.labelColor;
         _messageLabel.font = [UIFont systemFontOfSize:20];
 		_messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
 		_messageLabel.numberOfLines = 0;
