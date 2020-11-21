@@ -32,8 +32,13 @@
         // Save the playlist
         NSString *dbName = settingsS.isOfflineMode ? @"%@/offlineCurrentPlaylist.db" : @"%@/%@currentPlaylist.db";
         [db executeUpdate:@"ATTACH DATABASE ? AS ?", [NSString stringWithFormat:dbName, settingsS.databasePath, settingsS.urlString.md5], @"currentPlaylistDb"];
-        [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE bookmark%li (%@)", (long)bookmarkId, [ISMSSong standardSongColumnSchema]]];
-        [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO bookmark%li SELECT * FROM currentPlaylistDb.%@", (long)bookmarkId, table]];
+        // TODO: Do this when deleting instead of creating, needs testing first though
+        NSString *playlistTable = [NSString stringWithFormat:@"bookmark%li", (long)bookmarkId];
+        if ([db tableExists:playlistTable]) {
+            [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE %@", playlistTable]];
+        }
+        [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE %@ (%@)", playlistTable, [ISMSSong standardSongColumnSchema]]];
+        [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ SELECT * FROM currentPlaylistDb.%@", playlistTable, table]];
         
         [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
     }];
