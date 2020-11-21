@@ -8,6 +8,7 @@
 
 #import "CustomUITabBarController.h"
 #import "SavedSettings.h"
+#import "ViewObjectsSingleton.h"
 
 @implementation CustomUITabBarController
 
@@ -20,6 +21,12 @@
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskAll;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [viewObjectsS orderMainTabBarController];
 }
 
 //- (void)viewWillLayoutSubviews {

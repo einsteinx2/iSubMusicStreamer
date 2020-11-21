@@ -179,9 +179,6 @@ LOG_LEVEL_ISUB_DEFAULT
 			// Recover the tab order and load the main tabBarController
 			self.currentTabBarController = self.mainTabBarController;
             self.window.rootViewController = self.mainTabBarController;
-            if (!UIDevice.isIPad) {
-                [viewObjectsS orderMainTabBarController];
-            }
 		}
         
         [self.window makeKeyAndVisible];
