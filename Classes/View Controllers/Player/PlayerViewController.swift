@@ -566,7 +566,7 @@ import CocoaLumberjackSwift
             progressSlider.value = 0.0;
         } else {
             elapsedTimeLabel.text = NSString.formatTime(player.progress)
-            remainingTimeLabel.text = "-\(NSString.formatTime(player.progress - duration) ?? "0:00")"
+            remainingTimeLabel.text = "-\(NSString.formatTime(duration - player.progress) ?? "0:00")"
             progressSlider.value = Float(player.progress)
         }
     }
@@ -581,6 +581,7 @@ import CocoaLumberjackSwift
             progressSlider.value = 0
             downloadProgressView.isHidden = true
             updateBookmarkButton()
+            updateSlider()
             return
         }
         
@@ -591,6 +592,7 @@ import CocoaLumberjackSwift
         progressSlider.maximumValue = song.duration?.floatValue ?? 0.0
         updateDownloadProgress(animated: false)
         updateBookmarkButton()
+        updateSlider()
     }
     
     private var previousDownloadProgress: CGFloat = 0.0;
