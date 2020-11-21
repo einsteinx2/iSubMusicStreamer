@@ -73,7 +73,7 @@ import SnapKit
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        backgroundColor = UIColor(named: "isubBackgroundColor")
+        backgroundColor = .systemBackground
         
         headerLabel.textColor = .label
         headerLabel.backgroundColor = .systemGray
