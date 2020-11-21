@@ -45,8 +45,6 @@
 	self.title = @"Songs";
 
 	// Set defaults
-	self.isSearching = NO;
-	self.letUserSelectRow = YES;	
 	self.isProcessingArtists = YES;
 	
 	[self createDataModel];
@@ -57,11 +55,12 @@
 	
     // Add the pull to refresh view
     __weak AllSongsViewController *weakSelf = self;
-    self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
+    self.tableView.refreshControl = [[RefreshControl alloc] initWithHandler:^{
         [weakSelf reloadAction:nil];
     }];
     
     self.tableView.rowHeight = 65.0;
+    [self.tableView registerClass:BlurredSectionHeader.class forHeaderFooterViewReuseIdentifier:BlurredSectionHeader.reuseId];
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 }
 
@@ -102,7 +101,7 @@
                     self.tableView.tableHeaderView = nil;
                     [self.tableView reloadData];
                     
-                    [self.refreshControl endRefreshing];
+                    [self.tableView.refreshControl endRefreshing];
                 }]];
                 [alert addAction:[UIAlertAction actionWithTitle:@"Resume Load" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     [self showLoadingScreen];
@@ -111,7 +110,7 @@
                     self.tableView.tableHeaderView = nil;
                     [self.tableView reloadData];
                     
-                    [self.refreshControl endRefreshing];
+                    [self.tableView.refreshControl endRefreshing];
                 }]];
                 [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
                 [self presentViewController:alert animated:YES completion:nil];
@@ -127,7 +126,7 @@
                     self.tableView.tableHeaderView = nil;
                     [self.tableView reloadData];
                     
-                    [self.refreshControl endRefreshing];
+                    [self.tableView.refreshControl endRefreshing];
                 }]];
                 [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
                 [self presentViewController:alert animated:YES completion:nil];
@@ -148,37 +147,35 @@
 
 - (void)addCount {
 	// Build the search and reload view
-	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 90)];
+	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 110)];
 	
 	self.reloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	self.reloadButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	self.reloadButton.frame = CGRectMake(0, 0, 320, 40);
 	[self.headerView addSubview:self.reloadButton];
 	
-	self.countLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 5, 320, 30)];
+	self.countLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 9, 320, 30)];
 	self.countLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	self.countLabel.backgroundColor = [UIColor clearColor];
-	self.countLabel.textColor = [UIColor blackColor];
+    self.countLabel.textColor = UIColor.labelColor;
 	self.countLabel.textAlignment = NSTextAlignmentCenter;
 	self.countLabel.font = [UIFont boldSystemFontOfSize:30];
 	[self.headerView addSubview:self.countLabel];
-
-	self.searchBar = [[UISearchBar  alloc] initWithFrame:CGRectMake(0, 50, 320, 40)];
-	self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	self.searchBar.delegate = self;
-	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.searchBar.searchBarStyle = UISearchBarStyleMinimal;
-	self.searchBar.placeholder = @"Song name";
-	[self.headerView addSubview:self.searchBar];
 	
-	self.reloadTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 36, 320, 12)];
+	self.reloadTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, 320, 12)];
 	self.reloadTimeLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	self.reloadTimeLabel.backgroundColor = [UIColor clearColor];
-	self.reloadTimeLabel.textColor = [UIColor colorWithRed:176.0/255.0 green:181.0/255.0 blue:188.0/255.0 alpha:1];
+    self.reloadTimeLabel.textColor = UIColor.secondaryLabelColor;
 	self.reloadTimeLabel.textAlignment = NSTextAlignmentCenter;
     self.reloadTimeLabel.font = [UIFont systemFontOfSize:11];
 	[self.headerView addSubview:self.reloadTimeLabel];
 	
+    self.searchBar = [[UISearchBar  alloc] initWithFrame:CGRectMake(0, 61, 320, 40)];
+    self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.searchBar.delegate = self;
+    self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.searchBar.searchBarStyle = UISearchBarStyleMinimal;
+    self.searchBar.placeholder = @"Song name";
+    [self.headerView addSubview:self.searchBar];
+    
 	self.countLabel.text = [NSString stringWithFormat:@"%lu Songs", (unsigned long)self.dataModel.count];
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -293,19 +290,17 @@
 - (void)reloadAction:(id)sender {
 	if (!viewObjectsS.isArtistsLoading) {
         NSString *message = @"This could take a while if you have a big collection.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.\n\nNote: If you've added new artists or albums, you should reload the Folders and Albums tabs first.";
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Reload?"
-                                                                       message:message
-                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Reload?" message:message preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             [self showLoadingScreen];
-            
             [self.dataModel restartLoad];
             self.tableView.tableHeaderView = nil;
             [self.tableView reloadData];
-            
-            [self.refreshControl endRefreshing];
+            [self.tableView.refreshControl endRefreshing];
         }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [self.tableView.refreshControl endRefreshing];
+        }]];
         [self presentViewController:alert animated:YES completion:nil];
 	} else {
         if (settingsS.isPopupsEnabled) {
@@ -314,7 +309,7 @@
             [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
             [self presentViewController:alert animated:YES completion:nil];
         }
-		[self.refreshControl endRefreshing];
+		[self.tableView.refreshControl endRefreshing];
 	}
 }
 
@@ -333,24 +328,33 @@
 #pragma mark UISearchBar delegate
 
 - (void)createSearchOverlay {
-	self.searchOverlay = [[UIView alloc] init];
-	self.searchOverlay.frame = CGRectMake(0, 0, 480, 480);
-	self.searchOverlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	self.searchOverlay.backgroundColor = [UIColor colorWithWhite:0 alpha:.80];
-	self.searchOverlay.alpha = 0.0;
-	self.tableView.tableFooterView = self.searchOverlay;
-	
-	self.dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	self.dismissButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	[self.dismissButton addTarget:self action:@selector(doneSearching_Clicked:) forControlEvents:UIControlEventTouchUpInside];
-	self.dismissButton.frame = self.view.bounds;
-	self.dismissButton.enabled = NO;
-	[self.searchOverlay addSubview:self.dismissButton];
-	
-	// Animate the search overlay on screen
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+    UIBlurEffectStyle effectStyle = self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? UIBlurEffectStyleSystemUltraThinMaterialLight : UIBlurEffectStyleSystemUltraThinMaterialDark;
+    self.searchOverlay = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:effectStyle]];
+    self.searchOverlay.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    UIButton *dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    dismissButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [dismissButton addTarget:self action:@selector(searchBarSearchButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.searchOverlay.contentView addSubview:dismissButton];
+    
+    [self.view addSubview:self.searchOverlay];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [self.searchOverlay.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [self.searchOverlay.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        [self.searchOverlay.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:50],
+        [self.searchOverlay.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+        
+        [dismissButton.leadingAnchor constraintEqualToAnchor:self.searchOverlay.leadingAnchor],
+        [dismissButton.trailingAnchor constraintEqualToAnchor:self.searchOverlay.trailingAnchor],
+        [dismissButton.topAnchor constraintEqualToAnchor:self.searchOverlay.topAnchor],
+        [dismissButton.bottomAnchor constraintEqualToAnchor:self.searchOverlay.bottomAnchor]
+    ]];
+    
+    // Animate the search overlay on screen
+    self.searchOverlay.alpha = 0.0;
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.searchOverlay.alpha = 1;
-        self.dismissButton.enabled = YES;
     } completion:nil];
 }
 
@@ -359,7 +363,6 @@
 		// Animate the search overlay off screen
         [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             self.searchOverlay.alpha = 0;
-            self.dismissButton.enabled = NO;
         } completion:^(BOOL finished) {
             [self.searchOverlay removeFromSuperview];
             self.searchOverlay = nil;
@@ -368,42 +371,25 @@
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar  {
-	[self.tableView setContentOffset:CGPointMake(0, 50) animated:YES];
-	
-	if ([theSearchBar.text length] == 0)
-	{
+	if (theSearchBar.text.length == 0) {
 		[self createSearchOverlay];
-		
-		self.letUserSelectRow = NO;
-		self.tableView.scrollEnabled = NO;
 	}
 	
-	// Remove the index bar
 	self.isSearching = YES;
-	[self.tableView reloadData];
+    [self.tableView setContentOffset:CGPointMake(0, 56) animated:YES];
 	
 	//Add the done button.
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneSearching_Clicked:)];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(searchBarSearchButtonClicked:)];
 }
 
 - (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
-	if([searchText length] > 0) {
+	if(searchText.length > 0) {
 		[self hideSearchOverlay];
-		
-		self.isSearching = YES;
-		self.letUserSelectRow = YES;
-		self.tableView.scrollEnabled = YES;
 		[self.dataModel searchForSongName:searchText];
 	} else {
-		[self.tableView setContentOffset:CGPointMake(0, 50) animated:YES];
-		
+		[self.tableView setContentOffset:CGPointMake(0, 56) animated:YES];
 		[self createSearchOverlay];
-		
-		self.isSearching = NO;
-		self.letUserSelectRow = NO;
-		self.tableView.scrollEnabled = NO;
-		[databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db)
-		{
+		[databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
 			 [db executeUpdate:@"DROP TABLE allSongsSearch"];
 		}];
 	}
@@ -412,36 +398,24 @@
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)theSearchBar {
-	[self.searchBar resignFirstResponder];
-}
-
-- (void) doneSearching_Clicked:(id)sender  {
-	self.tableView.tableHeaderView = nil;
-	[self addCount];
-	
-	self.searchBar.text = @"";
-	[self.searchBar resignFirstResponder];
-	
-	self.isSearching = NO;
-	self.letUserSelectRow = YES;
-	self.navigationItem.leftBarButtonItem = nil;
-	self.tableView.scrollEnabled = YES;
-	
-	[self hideSearchOverlay];
-	
-	[self.tableView reloadData];
-	
-	[self.tableView setContentOffset:CGPointMake(0, 0) animated:YES];
+    self.searchBar.text = @"";
+    [self.searchBar resignFirstResponder];
+    [self hideSearchOverlay];
+    self.isSearching = NO;
+    
+    self.navigationItem.leftBarButtonItem = nil;
+    [self.tableView reloadData];
+    [self.tableView setContentOffset:CGPointMake(0, 56) animated:YES];
 }
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)theSearchBar {
-	[self hideSearchOverlay];
+    [theSearchBar resignFirstResponder];
 }
 
 #pragma mark UITableView delegate
 
 - (ISMSSong *)songAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.isSearching) {
+    if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
         return [self.dataModel songForPositionInSearch:(indexPath.row + 1)];
     } else {
         NSUInteger sectionStartIndex = [(ISMSIndex *)[self.dataModel.index objectAtIndexSafe:indexPath.section] position];
@@ -449,33 +423,33 @@
     }
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section  {
-    if (self.isSearching || self.dataModel.index.count == 0) return @"";
-	
-	NSString *title = @"";
-    if ([self.dataModel.index count] > section) {
-		title = [(ISMSIndex *)[self.dataModel.index objectAtIndexSafe:section] name];
-    }
-	
-	return title;
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return 0;
+    
+    return 60;
 }
 
-// Following 2 methods handle the right side index
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return nil;
+    
+    BlurredSectionHeader *sectionHeader = [tableView dequeueReusableHeaderFooterViewWithIdentifier:BlurredSectionHeader.reuseId];
+    sectionHeader.text = [(ISMSIndex *)[self.dataModel.index objectAtIndexSafe:section] name];
+    return sectionHeader;
+}
+
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView  {
-	if (self.isSearching) {
-		return nil;
-	} else {
-		NSMutableArray *titles = [NSMutableArray arrayWithCapacity:0];
-		[titles addObject:@"{search}"];
-		for (ISMSIndex *item in self.dataModel.index) {
-			[titles addObject:item.name];
-		}
-		return titles;
-	}
+	if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return nil;
+    
+    NSMutableArray *titles = [NSMutableArray arrayWithCapacity:0];
+    [titles addObject:@"{search}"];
+    for (ISMSIndex *item in self.dataModel.index) {
+        [titles addObject:item.name];
+    }
+    return titles;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index  {
-	if (self.isSearching) return -1;
+    if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return -1;
 	
 	if (index == 0) {
 		[tableView scrollRectToVisible:CGRectMake(0, 50, 320, 40) animated:NO];
@@ -485,23 +459,16 @@
 	return index - 1;
 }
 
-- (NSIndexPath *)tableView :(UITableView *)theTableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
-    return self.letUserSelectRow ? indexPath : nil;
-}
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView  {
-	if (self.isSearching) {
-		return 1;
-	} else {
-		NSUInteger count = [[self.dataModel index] count];
-		return count;
-	}
+    if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return 1;
+	
+    return self.dataModel.index.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if (self.isSearching) {
+	if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
 		return self.dataModel.searchCount;
-	} else if ([self.dataModel.index count] > section) {
+	} else if (self.dataModel.index.count > section) {
         return [(ISMSIndex *)[self.dataModel.index objectAtIndexSafe:section] count];
 	}
     return 0;

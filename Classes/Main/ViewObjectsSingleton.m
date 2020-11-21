@@ -139,7 +139,7 @@
 }
 
 - (void)orderMainTabBarController {
-	appDelegateS.currentTabBarController = appDelegateS.mainTabBarController;
+//	appDelegateS.currentTabBarController = appDelegateS.mainTabBarController;
 	appDelegateS.mainTabBarController.delegate = self;
 	
 	NSArray *savedTabsOrderArray = [[NSUserDefaults standardUserDefaults] arrayForKey:@"mainTabBarTabsOrder"];

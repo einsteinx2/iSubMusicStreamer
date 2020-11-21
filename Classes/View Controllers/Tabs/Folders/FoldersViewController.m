@@ -49,7 +49,7 @@
 		
 	// Add the pull to refresh view
     __weak FoldersViewController *weakSelf = self;
-    self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
+    self.tableView.refreshControl = [[RefreshControl alloc] initWithHandler:^{
         [weakSelf loadData:[settingsS rootFoldersSelectedFolderId]];
     }];
     
@@ -177,7 +177,7 @@
 - (void)cancelLoad {
 	[self.dataModel cancelLoad];
 	[viewObjectsS hideLoadingScreen];
-    [self.refreshControl endRefreshing];
+    [self.tableView.refreshControl endRefreshing];
 }
 
 - (void)loadData:(NSNumber *)folderId  {
@@ -194,7 +194,7 @@
 	// Hide the loading screen
 	[viewObjectsS hideLoadingScreen];
 	
-    [self.refreshControl endRefreshing];
+    [self.tableView.refreshControl endRefreshing];
     
     // Inform the user that the connection failed.
     // NOTE: Must call after a delay or the refresh control won't hide
@@ -208,7 +208,6 @@
 }
 
 - (void)loadingFinished:(SUSLoader *)theLoader {
-    //DLog(@"loadingFinished called");
     if (self.isCountShowing) {
 		[self updateCount];
     } else {
@@ -222,7 +221,7 @@
 	// Hide the loading screen
 	[viewObjectsS hideLoadingScreen];
 	
-    [self.refreshControl endRefreshing];
+    [self.tableView.refreshControl endRefreshing];
 }
 
 #pragma mark Folder Dropdown Delegate
@@ -232,10 +231,7 @@
         self.tableView.tableHeaderView.height += y;
         self.searchBar.y += y;
         self.tableView.tableHeaderView = self.tableView.tableHeaderView;
-//        for (int section = 0; section < self.dataModel.indexNames.count; section++) {
-//            UIView *sectionHeader = [self.tableView headerViewForSection:section];
-//            sectionHeader.y += y;
-//        }
+
         NSSet *visibleSections = [NSSet setWithArray:[[self.tableView indexPathsForVisibleRows] valueForKey:@"section"]];
         for (NSNumber *section in visibleSections) {
             UIView *sectionHeader = [self.tableView headerViewForSection:section.intValue];
@@ -304,38 +300,34 @@
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
     if (self.isSearching) return;
     
-    // Remove the index bar
     self.isSearching = YES;
     [self.dataModel clearSearchTable];
-    [self.tableView reloadData];
     
     [self.dropdown closeDropdownFast];
     [self.tableView setContentOffset:CGPointMake(0, 104) animated:YES];
     
-    if ([theSearchBar.text length] == 0) {
+    if (theSearchBar.text.length == 0) {
         [self createSearchOverlay];
-                
-//        self.letUserSelectRow = NO;
-        self.tableView.scrollEnabled = NO;
     }
     
-    //Add the done button.
+    // Add the done button.
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(searchBarSearchButtonClicked:)];
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    [searchBar resignFirstResponder];
 }
 
 - (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
     if (searchText.length > 0)  {
         [self hideSearchOverlay];
-        self.tableView.scrollEnabled = YES;
         [self.dataModel searchForFolderName:self.searchBar.text];
-        [self.tableView reloadData];
     } else {
         [self createSearchOverlay];
-        self.tableView.scrollEnabled = NO;
         [self.dataModel clearSearchTable];
-        [self.tableView reloadData];
         [self.tableView setContentOffset:CGPointMake(0, 104) animated:NO];
     }
+    [self.tableView reloadData];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)theSearchBar {
@@ -350,24 +342,35 @@
     [self.dataModel clearSearchTable];
     [self.tableView reloadData];
     [self.tableView setContentOffset:CGPointMake(0, 104) animated:YES];
-    self.tableView.scrollEnabled = YES;
 }
 
 - (void)createSearchOverlay {
-    self.searchOverlay = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemUltraThinMaterial]];//[[UIView alloc] init];
-    self.searchOverlay.frame = CGRectMake(0, 00, self.tableView.frame.size.width, self.tableView.frame.size.height);
-    self.searchOverlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.searchOverlay.alpha = 0.0;
-    self.tableView.tableFooterView = self.searchOverlay;
+    UIBlurEffectStyle effectStyle = self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? UIBlurEffectStyleSystemUltraThinMaterialLight : UIBlurEffectStyleSystemUltraThinMaterialDark;
+    self.searchOverlay = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:effectStyle]];
+    self.searchOverlay.translatesAutoresizingMaskIntoConstraints = NO;
     
     UIButton *dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    dismissButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    dismissButton.translatesAutoresizingMaskIntoConstraints = NO;
     [dismissButton addTarget:self action:@selector(searchBarSearchButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    dismissButton.frame =  self.searchOverlay.bounds;
     [self.searchOverlay.contentView addSubview:dismissButton];
     
+    [self.view addSubview:self.searchOverlay];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [self.searchOverlay.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [self.searchOverlay.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        [self.searchOverlay.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:50],
+        [self.searchOverlay.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+        
+        [dismissButton.leadingAnchor constraintEqualToAnchor:self.searchOverlay.leadingAnchor],
+        [dismissButton.trailingAnchor constraintEqualToAnchor:self.searchOverlay.trailingAnchor],
+        [dismissButton.topAnchor constraintEqualToAnchor:self.searchOverlay.topAnchor],
+        [dismissButton.bottomAnchor constraintEqualToAnchor:self.searchOverlay.bottomAnchor]
+    ]];
+    
     // Animate the search overlay on screen
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+    self.searchOverlay.alpha = 0.0;
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.searchOverlay.alpha = 1;
     } completion:nil];
 }
@@ -375,10 +378,10 @@
 - (void)hideSearchOverlay {
     if (self.searchOverlay) {
         // Animate the search overlay off screen
-        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             self.searchOverlay.alpha = 0;
         } completion:^(BOOL finished) {
-            self.tableView.tableFooterView = nil;
+            [self.searchOverlay removeFromSuperview];
             self.searchOverlay = nil;
         }];
     }
@@ -400,15 +403,14 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView  {
-//    if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
-//        return 1;
-//    }
-    return self.isSearching ? 1 : self.dataModel.indexNames.count;
+    if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
+        return 1;
+    }
     return self.dataModel.indexNames.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.isSearching) { //&& (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
+    if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
         return self.dataModel.searchCount;
 	} else if (self.dataModel.indexCounts.count > section) {
         return [[self.dataModel.indexCounts objectAtIndexSafe:section] intValue];
@@ -427,7 +429,7 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (self.isSearching) return nil; //&& (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return nil;
+    if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return nil;
     if (self.dataModel.indexNames.count == 0) return nil;
     
     BlurredSectionHeader *sectionHeader = [tableView dequeueReusableHeaderFooterViewWithIdentifier:BlurredSectionHeader.reuseId];
@@ -436,14 +438,14 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (self.isSearching) return 0; //&& (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return 0;
+    if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return 0;
     if (self.dataModel.indexNames.count == 0) return 0;
     
     return 60;
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView  {
-    if (self.isSearching) return nil;// && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return nil;
+    if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return nil;
 	
     NSMutableArray *titles = [NSMutableArray arrayWithCapacity:0];
 	[titles addObject:@"{search}"];
@@ -452,7 +454,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index  {
-    if (self.isSearching) return -1;// && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return -1;
+    if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return -1;
 	
     if (index == 0) {
         if (self.dropdown.folders == nil || [self.dropdown.folders count] == 2) {

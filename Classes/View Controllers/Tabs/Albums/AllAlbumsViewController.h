@@ -11,19 +11,18 @@
 
 @class ISMSAlbum, SUSAllAlbumsDAO, LoadingScreen, SUSAllSongsDAO;
 
-@interface AllAlbumsViewController : UITableViewController <UISearchBarDelegate, SUSLoaderDelegate>
+@interface AllAlbumsViewController : UIViewController <UISearchBarDelegate, SUSLoaderDelegate>
 
+@property (strong) IBOutlet UITableView *tableView;
 @property (strong) UIButton *reloadButton;
 @property (strong) UILabel *countLabel;
 @property (strong) UILabel *reloadTimeLabel;
 @property (strong) IBOutlet UISearchBar *searchBar;
-@property BOOL letUserSelectRow;
 @property (strong) NSURL *url;
 @property BOOL isAllAlbumsLoading;
 @property BOOL isProcessingArtists;
 @property BOOL isSearching;
-@property (strong) UIView *searchOverlay;
-@property (strong) UIButton *dismissButton;
+@property (strong) UIVisualEffectView *searchOverlay;
 @property (strong) SUSAllAlbumsDAO *dataModel;
 @property (strong) SUSAllSongsDAO *allSongsDataModel;
 @property (strong) UIView *headerView;
@@ -31,7 +30,6 @@
 @property (strong) LoadingScreen *loadingScreen;
 
 - (void)addCount;
-- (void)doneSearching_Clicked:(id)sender;
 - (void)showLoadingScreen;
 - (void)hideLoadingScreen;
 

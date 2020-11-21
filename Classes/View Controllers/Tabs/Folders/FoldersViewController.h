@@ -12,8 +12,9 @@
 
 @class ISMSArtist, SUSRootFoldersDAO, FolderDropdownControl;
 
-@interface FoldersViewController : UITableViewController <UISearchBarDelegate, SUSLoaderDelegate, FolderDropdownDelegate>
+@interface FoldersViewController : UIViewController <UISearchBarDelegate, SUSLoaderDelegate, FolderDropdownDelegate>
 
+@property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (nonatomic) BOOL isSearching;
 @property (nonatomic) BOOL isCountShowing;
 @property (nonatomic, strong) UIView *headerView;

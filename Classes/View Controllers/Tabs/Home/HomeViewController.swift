@@ -328,6 +328,12 @@ import SnapKit
 
 extension HomeViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        if traitCollection.userInterfaceStyle == .dark {
+            searchOverlay.effect = UIBlurEffect(style: .systemUltraThinMaterialLight)
+        } else {
+            searchOverlay.effect = UIBlurEffect(style: .systemUltraThinMaterialDark)
+        }
+        
         view.addSubview(searchOverlay)
         if Settings.shared().isNewSearchAPI {
             searchOverlay.snp.makeConstraints { make in
@@ -347,7 +353,7 @@ extension HomeViewController: UISearchBarDelegate {
             make.leading.trailing.top.bottom.equalToSuperview()
         }
         
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.2) {
             if Settings.shared().isNewSearchAPI {
                 self.searchSegment.isEnabled = true
                 self.searchSegment.alpha = 1
@@ -358,7 +364,7 @@ extension HomeViewController: UISearchBarDelegate {
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.2) {
             if Settings.shared().isNewSearchAPI {
                 self.searchSegment.isEnabled = false
                 self.searchSegment.alpha = 0
@@ -367,6 +373,7 @@ extension HomeViewController: UISearchBarDelegate {
             self.searchOverlay.alpha = 0
         } completion: { _ in
             self.searchOverlay.removeFromSuperview()
+            searchBar.resignFirstResponder()
         }
     }
     
