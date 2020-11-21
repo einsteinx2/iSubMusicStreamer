@@ -262,17 +262,16 @@ LOG_LEVEL_ISUB_DEFAULT
 		// Modify the header view to include the save and edit buttons
 		self.isPlaylistSaveEditShowing = YES;
         
-        self.saveEditContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 44, self.tableView.width, 50)];
+        self.saveEditContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 44, self.view.width, 50)];
         self.saveEditContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [self.view addSubview:self.saveEditContainer];
         
         self.tableViewTopConstraint.constant = 55;
         [self.tableView setNeedsUpdateConstraints];
         
-        CGFloat rightWidth = 100;
-        CGFloat leftWidth = self.saveEditContainer.width - rightWidth;
+        CGFloat halfWidth = self.saveEditContainer.width / 2.0;
 		
-		self.savePlaylistLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, leftWidth, 34)];
+		self.savePlaylistLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 34)];
 		self.savePlaylistLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
         self.savePlaylistLabel.textColor = UIColor.labelColor;
 		self.savePlaylistLabel.textAlignment = NSTextAlignmentCenter;
@@ -298,7 +297,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		}
 		[self.saveEditContainer addSubview:self.savePlaylistLabel];
 		
-		self.playlistCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 33, leftWidth, 16)];
+		self.playlistCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 33, halfWidth, 16)];
 		self.playlistCountLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
         self.playlistCountLabel.textColor = UIColor.labelColor;
 		self.playlistCountLabel.textAlignment = NSTextAlignmentCenter;
@@ -313,12 +312,12 @@ LOG_LEVEL_ISUB_DEFAULT
 		[self.saveEditContainer addSubview:self.playlistCountLabel];
 		
 		self.savePlaylistButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.savePlaylistButton.frame = CGRectMake(0, 0, leftWidth, 50);
+		self.savePlaylistButton.frame = CGRectMake(0, 0, halfWidth, 50);
 		self.savePlaylistButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
 		[self.savePlaylistButton addTarget:self action:@selector(savePlaylistAction:) forControlEvents:UIControlEventTouchUpInside];
 		[self.saveEditContainer addSubview:self.savePlaylistButton];
 		
-		self.editPlaylistLabel = [[UILabel alloc] initWithFrame:CGRectMake(leftWidth, 0, rightWidth, 50)];
+		self.editPlaylistLabel = [[UILabel alloc] initWithFrame:CGRectMake(halfWidth, 0, halfWidth, 50)];
 		self.editPlaylistLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
         self.editPlaylistLabel.textColor = UIColor.labelColor;
 		self.editPlaylistLabel.textAlignment = NSTextAlignmentCenter;
@@ -327,12 +326,12 @@ LOG_LEVEL_ISUB_DEFAULT
 		[self.saveEditContainer addSubview:self.editPlaylistLabel];
 		
 		self.editPlaylistButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.editPlaylistButton.frame = CGRectMake(leftWidth, 0, rightWidth, 50);
+		self.editPlaylistButton.frame = CGRectMake(halfWidth, 0, halfWidth, 50);
 		self.editPlaylistButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
 		[self.editPlaylistButton addTarget:self action:@selector(editPlaylistAction:) forControlEvents:UIControlEventTouchUpInside];
 		[self.saveEditContainer addSubview:self.editPlaylistButton];
 		
-		self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, leftWidth, 50)];
+		self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 50)];
 		self.deleteSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
 		self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
         self.deleteSongsLabel.textColor = UIColor.labelColor;

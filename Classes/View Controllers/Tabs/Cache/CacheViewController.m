@@ -487,7 +487,7 @@
 		// Modify the header view to include the save and edit buttons
 		self.isSaveEditShowing = YES;
 
-        self.saveEditContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 44, self.tableView.width, 50)];
+        self.saveEditContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 44, self.view.width, 50)];
         self.saveEditContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 //        self.tableView.y = 45 + 50;
         [self.view addSubview:self.saveEditContainer];
@@ -495,11 +495,9 @@
         self.tableViewTopConstraint.constant = 55;
         [self.tableView setNeedsUpdateConstraints];
         
-//        CGFloat halfWidth = self.saveEditContainer.width / 2.0;
-        CGFloat rightWidth = 100;
-        CGFloat leftWidth = self.saveEditContainer.width - rightWidth;
+        CGFloat halfWidth = self.saveEditContainer.width / 2.0;
 
-		self.songsCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, leftWidth, 34)];
+		self.songsCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 34)];
 		self.songsCountLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
         self.songsCountLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
 		self.songsCountLabel.textAlignment = NSTextAlignmentCenter;
@@ -520,7 +518,7 @@
 		}
 		[self.saveEditContainer addSubview:self.songsCountLabel];
 		
-		self.cacheSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 33, leftWidth, 14)];
+		self.cacheSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 33, halfWidth, 14)];
 		self.cacheSizeLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
         self.cacheSizeLabel.textColor = UIColor.labelColor;
 		self.cacheSizeLabel.textAlignment = NSTextAlignmentCenter;
@@ -548,12 +546,12 @@
 		[self updateCacheSizeLabel];
 		
 		self.deleteSongsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.deleteSongsButton.frame = CGRectMake(0, 0, leftWidth, 50);
+		self.deleteSongsButton.frame = CGRectMake(0, 0, halfWidth, 50);
 		self.deleteSongsButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
 		[self.deleteSongsButton addTarget:self action:@selector(deleteSongsAction:) forControlEvents:UIControlEventTouchUpInside];
 		[self.saveEditContainer addSubview:self.deleteSongsButton];
 		
-		self.editSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(leftWidth, 0, rightWidth, 50)];
+		self.editSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(halfWidth, 0, halfWidth, 50)];
 		self.editSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
         self.editSongsLabel.textColor = UIColor.labelColor;
 		self.editSongsLabel.textAlignment = NSTextAlignmentCenter;
@@ -562,12 +560,12 @@
 		[self.saveEditContainer addSubview:self.editSongsLabel];
 		
 		self.editSongsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.editSongsButton.frame = CGRectMake(leftWidth, 0, rightWidth, 50);
+		self.editSongsButton.frame = CGRectMake(halfWidth, 0, halfWidth, 50);
 		self.editSongsButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
 		[self.editSongsButton addTarget:self action:@selector(editSongsAction:) forControlEvents:UIControlEventTouchUpInside];
 		[self.saveEditContainer addSubview:self.editSongsButton];
 		
-		self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, leftWidth, 50)];
+		self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 50)];
 		self.deleteSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
 		self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
         self.deleteSongsLabel.textColor = UIColor.labelColor;
@@ -676,21 +674,6 @@
 			self.deleteSongsLabel.text = [NSString stringWithFormat:@"Delete %lu Songs", (unsigned long)selectedRowsCount];
         }
 	}
-}
-
-
-- (void)showDeleteToggle {
-//	// Show the delete toggle for already visible cells
-//	for (id cell in self.tableView.visibleCells) 
-//	{
-//		if ([cell respondsToSelector:@selector(deleteToggleImage)])
-//		{
-//			if ([[cell deleteToggleImage] respondsToSelector:@selector(setHidden:)])
-//			{
-//				[[cell deleteToggleImage] setHidden:NO];
-//			}
-//		}
-//	}
 }
 
 - (void)editSongsAction:(id)sender {
