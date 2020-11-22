@@ -74,31 +74,28 @@ import CocoaLumberjackSwift
         if UIApplication.orientation().isPortrait || UIDevice.isIPad() {
             coverArtPageControl.view.snp.remakeConstraints { make in
                 make.height.equalTo(coverArtPageControl.view.snp.width).offset(20)
-                if isShortScreen {
-                    make.top.equalToSuperview().offset(10)
-                    make.leading.equalToSuperview().offset(40)
-                    make.trailing.equalToSuperview().offset(-40)
-                } else {
-                    make.top.equalToSuperview().offset(20)
-                    make.leading.equalToSuperview().offset(20)
-                    make.trailing.equalToSuperview().offset(-20)
-                }
+                make.top.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().offset(-20)
             }
             
             verticalStackContainer.snp.remakeConstraints { make in
-                make.leading.equalTo(coverArtPageControl.view).offset(20)
-                make.trailing.equalTo(coverArtPageControl.view).offset(-20)
+                if UIDevice.isIPad() {
+                    make.width.equalTo(coverArtPageControl.view)
+                } else {
+                    make.width.equalTo(coverArtPageControl.view).multipliedBy(0.9)
+                }
+                make.centerX.equalTo(coverArtPageControl.view)
                 make.top.equalTo(coverArtPageControl.view.snp.bottom)
                 make.bottom.equalToSuperview()
             }
             
             verticalStack.snp.remakeConstraints { make in
                 make.leading.trailing.equalToSuperview()
-                if isShortScreen && Settings.shared().isJukeboxEnabled {
-                    make.height.equalToSuperview()
+                if isShortScreen || UIDevice.isIPad() {
+                    make.height.equalToSuperview().multipliedBy(0.9)
                     make.centerY.equalToSuperview()
                 } else {
-                    make.height.equalToSuperview().multipliedBy(0.8)
+                    make.height.equalToSuperview().multipliedBy(0.7)
                     make.centerY.equalToSuperview().offset(-20)
                 }
             }
@@ -115,27 +112,17 @@ import CocoaLumberjackSwift
             }
             
             verticalStackContainer.snp.remakeConstraints { make in
-                make.leading.equalTo(coverArtPageControl.view.snp.trailing).offset(20)
-                make.trailing.equalToSuperview().offset(-20)
+                make.leading.equalTo(coverArtPageControl.view.snp.trailing).offset(40)
+                make.trailing.equalToSuperview().offset(-40)
                 make.top.equalToSuperview()
                 make.bottom.equalToSuperview()
             }
             
             verticalStack.snp.remakeConstraints { make in
-                if isShortScreen && Settings.shared().isJukeboxEnabled {
-                    make.leading.trailing.equalToSuperview()
-                    make.height.equalToSuperview()
-                    make.centerY.equalToSuperview()
-                } else if isShortScreen {
-                    make.leading.trailing.equalToSuperview()
-                    make.height.equalToSuperview().multipliedBy(0.8)
-                    make.centerY.equalToSuperview().offset(-20)
-                } else {
-                    make.width.equalToSuperview().dividedBy(2)
-                    make.centerX.equalToSuperview()
-                    make.height.equalToSuperview().multipliedBy(0.8)
-                    make.centerY.equalToSuperview().offset(-20)
-                }
+                make.width.equalToSuperview().multipliedBy(0.75)
+                make.centerX.equalToSuperview()
+                make.height.equalToSuperview().multipliedBy(0.8)
+                make.centerY.equalToSuperview().offset(-20)
             }
         }
     }
@@ -166,7 +153,7 @@ import CocoaLumberjackSwift
         verticalStack.translatesAutoresizingMaskIntoConstraints = false
         verticalStack.addArrangedSubviews([songInfoContainer, progressBarContainer, controlsStack, moreControlsStack])
         verticalStack.axis = .vertical
-        verticalStack.distribution = .equalSpacing//.equalCentering
+        verticalStack.distribution = .equalSpacing
         verticalStackContainer.addSubview(verticalStack)
         
         //
@@ -175,7 +162,7 @@ import CocoaLumberjackSwift
         
         songInfoContainer.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(70)
+            make.height.equalTo(60)
             make.centerX.equalToSuperview()
         }
         
@@ -200,7 +187,7 @@ import CocoaLumberjackSwift
         //
         
         progressBarContainer.snp.makeConstraints { make in
-            make.height.equalTo(40)
+            make.height.equalTo(20)
             make.leading.trailing.equalToSuperview()
         }
 
@@ -249,7 +236,7 @@ import CocoaLumberjackSwift
         controlsStack.distribution = .equalCentering
         controlsStack.addArrangedSubviews([quickSkipBackButton, previousButton, playPauseButton, nextButton, quickSkipForwardButton])
         controlsStack.snp.makeConstraints { make in
-            make.height.equalTo(50)
+            make.height.equalTo(40)
             make.leading.trailing.equalToSuperview()
         }
         
@@ -328,7 +315,7 @@ import CocoaLumberjackSwift
         moreControlsStack.distribution = .equalCentering
         moreControlsStack.addArrangedSubviews([repeatButton, bookmarksButton, equalizerButton, shuffleButton])
         moreControlsStack.snp.makeConstraints { make in
-            make.height.equalTo(50)
+            make.height.equalTo(40)
             make.leading.trailing.equalToSuperview()
         }
         
@@ -394,7 +381,7 @@ import CocoaLumberjackSwift
         //
         
         jukeboxVolumeContainer.snp.makeConstraints { make in
-            make.height.equalTo(50)
+            make.height.equalTo(20)
         }
         
         jukeboxVolumeSlider.setThumbImage(UIImage(named: "controller-slider-thumb"), for: .normal)
@@ -411,6 +398,14 @@ import CocoaLumberjackSwift
             make.centerY.equalToSuperview()
         }
         updateJukeboxControls()
+        
+//        verticalStackContainer.backgroundColor = .white
+//        verticalStack.backgroundColor = .gray
+//        songInfoContainer.backgroundColor = .red
+//        progressBarContainer.backgroundColor = .blue
+//        controlsStack.backgroundColor = .red
+//        moreControlsStack.backgroundColor = .blue
+//        jukeboxVolumeContainer.backgroundColor = .red
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -682,6 +677,7 @@ import CocoaLumberjackSwift
         } else if !jukeboxEnabled && jukeboxVolumeContainer.superview != nil {
             // Remove the volume control
             verticalStack.removeArrangedSubview(jukeboxVolumeContainer)
+            jukeboxVolumeContainer.removeFromSuperview()
         }
     }
     
