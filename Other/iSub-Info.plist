@@ -57,7 +57,7 @@
 	<key>UIRequiresPersistentWiFi</key>
 	<true/>
 	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleBlackOpaque</string>
+	<string>UIStatusBarStyleDefault</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 </dict>
