@@ -10,8 +10,6 @@
 #import "SubsonicServerEditViewController.h"
 #import "SettingsTabViewController.h"
 #import "FoldersViewController.h"
-#import "iPadRootViewController.h"
-#import "MenuViewController.h"
 #import "SUSStatusLoader.h"
 #import "SUSAllSongsLoader.h"
 #import "iSubAppDelegate.h"
@@ -24,6 +22,7 @@
 #import "ISMSErrorDomain.h"
 #import "ISMSServer.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -120,7 +119,7 @@ LOG_LEVEL_ISUB_DEFAULT
     subsonicServerEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
 
     if (UIDevice.isIPad) {
-		[appDelegateS.ipadRootViewController presentViewController:subsonicServerEditViewController animated:YES completion:nil];
+		[appDelegateS.padRootViewController presentViewController:subsonicServerEditViewController animated:YES completion:nil];
     } else {
 		[self presentViewController:subsonicServerEditViewController animated:YES completion:nil];
     }
@@ -194,7 +193,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			settingsS.isOfflineMode = NO;
 			
 			if (UIDevice.isIPad) {
-				[appDelegateS.ipadRootViewController.menuViewController toggleOfflineMode];
+				[appDelegateS.padRootViewController.menuViewController toggleOfflineMode];
 			} else {
 				for (UIView *subview in appDelegateS.window.subviews) {
 					[subview removeFromSuperview];

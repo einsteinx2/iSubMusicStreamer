@@ -8,8 +8,6 @@
 
 #import "SubsonicServerEditViewController.h"
 #import "FoldersViewController.h"
-#import "iPadRootViewController.h"
-#import "MenuViewController.h"
 #import "SUSStatusLoader.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
@@ -17,6 +15,7 @@
 #import "ISMSErrorDomain.h"
 #import "ISMSServer.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation SubsonicServerEditViewController
 
@@ -233,7 +232,7 @@
 		[self dismissViewControllerAnimated:YES completion:nil];
 		
 		if (UIDevice.isIPad)
-			[appDelegateS.ipadRootViewController.menuViewController showHome];
+			[appDelegateS.padRootViewController.menuViewController showHome];
 				
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:0];
         userInfo[@"isVideoSupported"] = @(((SUSStatusLoader *)theLoader).isVideoSupported);

@@ -9,16 +9,7 @@
 #import "iSubAppDelegate.h"
 #import "ServerListViewController.h"
 #import "FoldersViewController.h"
-#import <CoreFoundation/CoreFoundation.h>
-#import <SystemConfiguration/SCNetworkReachability.h>
-#import <netinet/in.h>
-#import <netdb.h>
-#import <arpa/inet.h>
-#import "iPadRootViewController.h"
-#import "MenuViewController.h"
 #import "ISMSUpdateChecker.h"
-#import <MediaPlayer/MediaPlayer.h>
-#import <AVKit/AVKit.h>
 #import "UIViewController+PushViewControllerCustom.h"
 #import "SUSStatusLoader.h"
 #import "NSMutableURLRequest+SUS.h"
@@ -37,6 +28,13 @@
 #import "EX2Kit.h"
 #import "Swift.h"
 #import <UserNotifications/UserNotifications.h>
+#import <CoreFoundation/CoreFoundation.h>
+#import <SystemConfiguration/SCNetworkReachability.h>
+#import <netinet/in.h>
+#import <netdb.h>
+#import <arpa/inet.h>
+#import <AVKit/AVKit.h>
+#import <MediaPlayer/MediaPlayer.h>
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -151,9 +149,9 @@ LOG_LEVEL_ISUB_DEFAULT
     
 	// Create and display UI
 	if (UIDevice.isIPad) {
-		self.ipadRootViewController = [[iPadRootViewController alloc] initWithNibName:nil bundle:nil];
+		self.padRootViewController = [[PadRootViewController alloc] initWithNibName:nil bundle:nil];
 		[self.window setBackgroundColor:[UIColor clearColor]];
-        self.window.rootViewController = self.ipadRootViewController;
+        self.window.rootViewController = self.padRootViewController;
 		[self.window makeKeyAndVisible];
         
 		if (self.showIntro) {
@@ -263,7 +261,7 @@ LOG_LEVEL_ISUB_DEFAULT
         
         // On the iPad we need to reload the menu table to see the back button
         if (UIDevice.isIPad) {
-            [self.ipadRootViewController.menuViewController loadCellContents];
+            [self.padRootViewController.menuViewController loadCellContents];
         }
     }
     
@@ -572,7 +570,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[cacheQueueManagerS stopDownloadQueue];
 
     if (UIDevice.isIPad) {
-		[self.ipadRootViewController.menuViewController toggleOfflineMode];
+		[self.padRootViewController.menuViewController toggleOfflineMode];
     } else {
 		[self.mainTabBarController.view removeFromSuperview];
     }
@@ -600,7 +598,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[audioEngineS.player stop];
 	
     if (UIDevice.isIPad) {
-		[self.ipadRootViewController.menuViewController toggleOfflineMode];
+		[self.padRootViewController.menuViewController toggleOfflineMode];
     } else {
 		[self.offlineTabBarController.view removeFromSuperview];
     }
@@ -670,7 +668,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)showSettings {
 	if (UIDevice.isIPad) {
-		[self.ipadRootViewController.menuViewController showSettings];
+		[self.padRootViewController.menuViewController showSettings];
 	} else {
 		self.serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
 		self.serverListViewController.hidesBottomBarWhenPushed = YES;
@@ -702,7 +700,7 @@ LOG_LEVEL_ISUB_DEFAULT
 //
 //        if (UIDevice.isIPad)
 //        {
-//            [self.ipadRootViewController.menuViewController.playerHolder addSubview:self.moviePlayer.view];
+//            [self.padRootViewController.menuViewController.playerHolder addSubview:self.moviePlayer.view];
 //            self.moviePlayer.view.frame = self.moviePlayer.view.superview.bounds;
 //        }
 //        else

@@ -7,7 +7,6 @@
 //
 
 #import "UIViewController+PushViewControllerCustom.h"
-#import "iPadRootViewController.h"
 #import "iSubAppDelegate.h"
 #import "Defines.h"
 #import "EX2Kit.h"

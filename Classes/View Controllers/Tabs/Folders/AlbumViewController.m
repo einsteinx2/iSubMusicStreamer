@@ -9,7 +9,6 @@
 #import "AlbumViewController.h"
 #import "ModalAlbumArtViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
-#import "iPadRootViewController.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -181,7 +180,7 @@
 													   numberOfTracks:self.dataModel.songsCount
 														  albumLength:self.dataModel.folderLength];
         if (UIDevice.isIPad) {
-			[appDelegateS.ipadRootViewController presentViewController:largeArt animated:YES completion:nil];
+			[appDelegateS.padRootViewController presentViewController:largeArt animated:YES completion:nil];
         } else {
             [self presentViewController:largeArt animated:YES completion:nil];
         }

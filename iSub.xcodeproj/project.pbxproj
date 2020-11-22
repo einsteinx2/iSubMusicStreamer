@@ -18,14 +18,6 @@
 		5301583F15081B0A00B54CEF /* settings-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5301583915081B0A00B54CEF /* settings-tabbaricon@2x.png */; };
 		53030315116ADF8B00B0AF5D /* reload-table.png in Resources */ = {isa = PBXBuildFile; fileRef = 53030314116ADF8B00B0AF5D /* reload-table.png */; };
 		530388A9116571920043292D /* AllSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530388A8116571920043292D /* AllSongsViewController.m */; };
-		5304FC2D14F2F0D100A2AD42 /* iPadRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC1C14F2F0D100A2AD42 /* iPadRootViewController.m */; };
-		5304FC2F14F2F0D100A2AD42 /* iPadRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC1C14F2F0D100A2AD42 /* iPadRootViewController.m */; };
-		5304FC3014F2F0D100A2AD42 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC1E14F2F0D100A2AD42 /* MenuViewController.m */; };
-		5304FC3214F2F0D100A2AD42 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC1E14F2F0D100A2AD42 /* MenuViewController.m */; };
-		5304FC3C14F2F0D100A2AD42 /* MenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC2614F2F0D100A2AD42 /* MenuTableViewCell.m */; };
-		5304FC3E14F2F0D100A2AD42 /* MenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304FC2614F2F0D100A2AD42 /* MenuTableViewCell.m */; };
-		5304FC5214F2F59400A2AD42 /* glow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5304FC4A14F2F59400A2AD42 /* glow.png */; };
-		5304FC5414F2F59400A2AD42 /* glow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5304FC4A14F2F59400A2AD42 /* glow.png */; };
 		5305C2061157F4F800BC78F0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5305C2051157F4F800BC78F0 /* Default.png */; };
 		5306236D14D3295300D320A8 /* EqualizerPathView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306236C14D3295300D320A8 /* EqualizerPathView.m */; };
 		5306236F14D3295300D320A8 /* EqualizerPathView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306236C14D3295300D320A8 /* EqualizerPathView.m */; };
@@ -187,8 +179,6 @@
 		53493EF615FC69560059492E /* player-songinfo.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EF215FC69560059492E /* player-songinfo.png */; };
 		53493EF715FC69560059492E /* player-songinfo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EF315FC69560059492E /* player-songinfo@2x.png */; };
 		53493EF915FC69560059492E /* player-songinfo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EF315FC69560059492E /* player-songinfo@2x.png */; };
-		53493EFB15FC699A0059492E /* ipad-menu-selected-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EFA15FC699A0059492E /* ipad-menu-selected-background.png */; };
-		53493EFD15FC699A0059492E /* ipad-menu-selected-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EFA15FC699A0059492E /* ipad-menu-selected-background.png */; };
 		53493EFF15FC69C90059492E /* chat-page.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EFE15FC69C90059492E /* chat-page.png */; };
 		53493F0115FC69C90059492E /* chat-page.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EFE15FC69C90059492E /* chat-page.png */; };
 		53493F1415FC6A3A0059492E /* shuffle-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493F1215FC6A3A0059492E /* shuffle-small.png */; };
@@ -248,12 +238,6 @@
 		535CB58412E27A5400389DA1 /* default-album-art-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CB58312E27A5400389DA1 /* default-album-art-ipad.png */; };
 		53614ACA116432DA0088ABC0 /* ServerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53614AC8116432DA0088ABC0 /* ServerListViewController.m */; };
 		53614BD9116467420088ABC0 /* AllSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53614BD7116467420088ABC0 /* AllSongsViewController.xib */; };
-		53649DCD184DA90600E600EC /* Icon-120.png in Resources */ = {isa = PBXBuildFile; fileRef = 53649DCC184DA90600E600EC /* Icon-120.png */; };
-		53649DCF184DA90600E600EC /* Icon-120.png in Resources */ = {isa = PBXBuildFile; fileRef = 53649DCC184DA90600E600EC /* Icon-120.png */; };
-		53649DD2184DA99B00E600EC /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 53649DD0184DA99B00E600EC /* Icon-76.png */; };
-		53649DD4184DA99B00E600EC /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 53649DD0184DA99B00E600EC /* Icon-76.png */; };
-		53649DD5184DA99B00E600EC /* Icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53649DD1184DA99B00E600EC /* Icon-76@2x.png */; };
-		53649DD7184DA99B00E600EC /* Icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53649DD1184DA99B00E600EC /* Icon-76@2x.png */; };
 		536585811478920D00FE57A5 /* EqualizerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365857F1478920B00FE57A5 /* EqualizerViewController.m */; };
 		536585831478920D00FE57A5 /* EqualizerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365857F1478920B00FE57A5 /* EqualizerViewController.m */; };
 		5365859314789ADA00FE57A5 /* EqualizerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365859214789AD900FE57A5 /* EqualizerView.m */; };
@@ -274,12 +258,17 @@
 		536D616411442AA000DFCE56 /* controller-shuffle-on.png in Resources */ = {isa = PBXBuildFile; fileRef = 536D615F11442AA000DFCE56 /* controller-shuffle-on.png */; };
 		536D616511442AA000DFCE56 /* controller-shuffle.png in Resources */ = {isa = PBXBuildFile; fileRef = 536D616011442AA000DFCE56 /* controller-shuffle.png */; };
 		536D620B1144495400DFCE56 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 536D620A1144495400DFCE56 /* SystemConfiguration.framework */; };
-		536D624411444E4600DFCE56 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 536D624311444E4600DFCE56 /* Icon.png */; };
 		53752BEC2562CEF800438636 /* CoverArtViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53752BEB2562CEF800438636 /* CoverArtViewController.swift */; };
 		53752BED2562CEF800438636 /* CoverArtViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53752BEB2562CEF800438636 /* CoverArtViewController.swift */; };
 		5379DC4F1219E48800F426CD /* ChatUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5379DC491219E48800F426CD /* ChatUITableViewCell.m */; };
 		5379DC501219E48800F426CD /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5379DC4B1219E48800F426CD /* ChatViewController.m */; };
 		5379DC511219E48800F426CD /* ChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5379DC4C1219E48800F426CD /* ChatViewController.xib */; };
+		537B05B9256B03830008892C /* PadRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05B8256B03830008892C /* PadRootViewController.swift */; };
+		537B05BA256B03830008892C /* PadRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05B8256B03830008892C /* PadRootViewController.swift */; };
+		537B05BC256B04360008892C /* PadMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05BB256B04360008892C /* PadMenuViewController.swift */; };
+		537B05BD256B04360008892C /* PadMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05BB256B04360008892C /* PadMenuViewController.swift */; };
+		537B05BF256B0E4B0008892C /* PadMenuTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05BE256B0E4B0008892C /* PadMenuTableCell.swift */; };
+		537B05C0256B0E4B0008892C /* PadMenuTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05BE256B0E4B0008892C /* PadMenuTableCell.swift */; };
 		537DE2D9113F008C00875852 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 537DE2D8113F008C00875852 /* CoreFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		537E6C1E181208A200127E29 /* CustomUITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E6C1D181208A200127E29 /* CustomUITabBarController.m */; };
 		537E6C20181208A200127E29 /* CustomUITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E6C1D181208A200127E29 /* CustomUITabBarController.m */; };
@@ -297,7 +286,6 @@
 		537EF7B7182B2F2200968FE0 /* controller-slider-thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = 537EF7B3182B2F2200968FE0 /* controller-slider-thumb.png */; };
 		537EF7B9182B2F2200968FE0 /* controller-slider-thumb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 537EF7B4182B2F2200968FE0 /* controller-slider-thumb@2x.png */; };
 		537EF7BB182B2F2200968FE0 /* controller-slider-thumb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 537EF7B4182B2F2200968FE0 /* controller-slider-thumb@2x.png */; };
-		537FCC5412F8F7F400F1D996 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 537FCC5312F8F7F400F1D996 /* iTunesArtwork */; };
 		5381F8061E96FBFB00AAA9BD /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5381F8051E96FBFB00AAA9BD /* Photos.framework */; };
 		538229F611C98091003F1E23 /* CacheAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 538229F411C98091003F1E23 /* CacheAlbumViewController.m */; };
 		538229F711C98091003F1E23 /* CacheAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538229F511C98091003F1E23 /* CacheAlbumViewController.xib */; };
@@ -350,8 +338,6 @@
 		53AAF1C411DA983700447FF7 /* gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF1C311DA983700447FF7 /* gear@2x.png */; };
 		53AAF1D911DA9DB600447FF7 /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF1D811DA9DB600447FF7 /* background@2x.png */; };
 		53AAF1DE11DA9F0200447FF7 /* now-playing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF1DD11DA9F0200447FF7 /* now-playing@2x.png */; };
-		53AAF1E811DAA1BC00447FF7 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF1E711DAA1BC00447FF7 /* Icon@2x.png */; };
-		53AAF1EC11DAA21600447FF7 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF1EB11DAA21600447FF7 /* Icon-72.png */; };
 		53ABE3631165C83900197877 /* PlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ABE3611165C83900197877 /* PlayingViewController.m */; };
 		53ABE3641165C83900197877 /* PlayingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53ABE3621165C83900197877 /* PlayingViewController.xib */; };
 		53ABE4EF1166538500197877 /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 53ABE4EE1166538500197877 /* gear.png */; };
@@ -400,7 +386,6 @@
 		53BC26AE139AF0DD00A825F1 /* controller-repeat.png in Resources */ = {isa = PBXBuildFile; fileRef = 536D615E11442AA000DFCE56 /* controller-repeat.png */; };
 		53BC26AF139AF0DD00A825F1 /* controller-shuffle-on.png in Resources */ = {isa = PBXBuildFile; fileRef = 536D615F11442AA000DFCE56 /* controller-shuffle-on.png */; };
 		53BC26B0139AF0DD00A825F1 /* controller-shuffle.png in Resources */ = {isa = PBXBuildFile; fileRef = 536D616011442AA000DFCE56 /* controller-shuffle.png */; };
-		53BC26B1139AF0DD00A825F1 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 536D624311444E4600DFCE56 /* Icon.png */; };
 		53BC26B2139AF0DD00A825F1 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AA300311461A04003E57E3 /* background.png */; };
 		53BC26B3139AF0DD00A825F1 /* default-album-art-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 534E443E1155AD01000B4134 /* default-album-art-small.png */; };
 		53BC26B4139AF0DD00A825F1 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5305C2051157F4F800BC78F0 /* Default.png */; };
@@ -446,8 +431,6 @@
 		53BC26E6139AF0DD00A825F1 /* gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF1C311DA983700447FF7 /* gear@2x.png */; };
 		53BC26E7139AF0DD00A825F1 /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF1D811DA9DB600447FF7 /* background@2x.png */; };
 		53BC26E8139AF0DD00A825F1 /* now-playing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF1DD11DA9F0200447FF7 /* now-playing@2x.png */; };
-		53BC26E9139AF0DD00A825F1 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF1E711DAA1BC00447FF7 /* Icon@2x.png */; };
-		53BC26EA139AF0DD00A825F1 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF1EB11DAA21600447FF7 /* Icon-72.png */; };
 		53BC26EB139AF0DD00A825F1 /* current-server@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FDEE2511E822CC00FE3ECD /* current-server@2x.png */; };
 		53BC26EC139AF0DD00A825F1 /* default-album-art-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FDEE2711E823A100FE3ECD /* default-album-art-small@2x.png */; };
 		53BC26ED139AF0DD00A825F1 /* default-album-art@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FDEE2811E823A100FE3ECD /* default-album-art@2x.png */; };
@@ -525,7 +508,6 @@
 		53BC276B139AF0DD00A825F1 /* server-button-ubuntu.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CB48812E2664700389DA1 /* server-button-ubuntu.png */; };
 		53BC276C139AF0DD00A825F1 /* server-button-ubuntu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CB48912E2664700389DA1 /* server-button-ubuntu@2x.png */; };
 		53BC276D139AF0DD00A825F1 /* default-album-art-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CB58312E27A5400389DA1 /* default-album-art-ipad.png */; };
-		53BC2785139AF0DD00A825F1 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 537FCC5312F8F7F400F1D996 /* iTunesArtwork */; };
 		53BC2788139AF0DD00A825F1 /* folder-dropdown-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 53ADBBBA133525BD0098FAE6 /* folder-dropdown-arrow.png */; };
 		53BC2789139AF0DD00A825F1 /* folder-dropdown-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53ADBBBB133525BD0098FAE6 /* folder-dropdown-arrow@2x.png */; };
 		53BC278B139AF0DD00A825F1 /* controller-bookmark-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 535B726D134D0900003E0E1C /* controller-bookmark-ipad.png */; };
@@ -582,9 +564,6 @@
 		53BC2857139AF0DD00A825F1 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 537DE2D8113F008C00875852 /* CoreFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		53BC2858139AF0DD00A825F1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 536D620A1144495400DFCE56 /* SystemConfiguration.framework */; };
 		53BC285F139AF0DD00A825F1 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F7A127131B7F3B002C829D /* Security.framework */; };
-		53BC286C139AF17B00A825F1 /* Icon-72-Beta.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BC2869139AF17B00A825F1 /* Icon-72-Beta.png */; };
-		53BC286D139AF17B00A825F1 /* Icon-Beta.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BC286A139AF17B00A825F1 /* Icon-Beta.png */; };
-		53BC286E139AF17B00A825F1 /* Icon@2x-Beta.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BC286B139AF17B00A825F1 /* Icon@2x-Beta.png */; };
 		53BCC51B181387B300442E86 /* CustomUINavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BCC51A181387B300442E86 /* CustomUINavigationController.m */; };
 		53BCC51D181387B300442E86 /* CustomUINavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BCC51A181387B300442E86 /* CustomUINavigationController.m */; };
 		53C22CCF128EE81C00FFBA67 /* ModalAlbumArtViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C22CCE128EE81C00FFBA67 /* ModalAlbumArtViewController.m */; };
@@ -608,8 +587,6 @@
 		53C7FD94150F00C5008DA51C /* home-settings-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD7E150F00C5008DA51C /* home-settings-ipad@2x.png */; };
 		53C7FD95150F00C5008DA51C /* home-shuffle-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD7F150F00C5008DA51C /* home-shuffle-ipad@2x.png */; };
 		53C7FD97150F00C5008DA51C /* home-shuffle-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD7F150F00C5008DA51C /* home-shuffle-ipad@2x.png */; };
-		53C7FD99150F03D6008DA51C /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD98150F03D6008DA51C /* Icon-72@2x.png */; };
-		53C7FD9B150F03D6008DA51C /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD98150F03D6008DA51C /* Icon-72@2x.png */; };
 		53C7FD9E150F0EA9008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
 		53C7FDA0150F0EAF008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
 		53C7FDA5150F1DE7008DA51C /* home-support-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FDA1150F1DE7008DA51C /* home-support-ipad.png */; };
@@ -1059,13 +1036,6 @@
 		53030314116ADF8B00B0AF5D /* reload-table.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "reload-table.png"; path = "Images/Other/reload-table.png"; sourceTree = "<group>"; };
 		530388A7116571920043292D /* AllSongsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllSongsViewController.h; sourceTree = "<group>"; };
 		530388A8116571920043292D /* AllSongsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AllSongsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		5304FC1B14F2F0D100A2AD42 /* iPadRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPadRootViewController.h; sourceTree = "<group>"; };
-		5304FC1C14F2F0D100A2AD42 /* iPadRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iPadRootViewController.m; sourceTree = "<group>"; };
-		5304FC1D14F2F0D100A2AD42 /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
-		5304FC1E14F2F0D100A2AD42 /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
-		5304FC2514F2F0D100A2AD42 /* MenuTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuTableViewCell.h; sourceTree = "<group>"; };
-		5304FC2614F2F0D100A2AD42 /* MenuTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewCell.m; sourceTree = "<group>"; };
-		5304FC4A14F2F59400A2AD42 /* glow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = glow.png; sourceTree = "<group>"; };
 		5305C2051157F4F800BC78F0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Images/Other/Default.png; sourceTree = "<group>"; };
 		5306236B14D3295300D320A8 /* EqualizerPathView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerPathView.h; sourceTree = "<group>"; };
 		5306236C14D3295300D320A8 /* EqualizerPathView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EqualizerPathView.m; sourceTree = "<group>"; };
@@ -1179,7 +1149,6 @@
 		5340B8A5256968C400FD5D6D /* ISMSBookmarkDAO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ISMSBookmarkDAO.m; sourceTree = "<group>"; };
 		53493EF215FC69560059492E /* player-songinfo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "player-songinfo.png"; path = "Images/Player Icons/player-songinfo.png"; sourceTree = "<group>"; };
 		53493EF315FC69560059492E /* player-songinfo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "player-songinfo@2x.png"; path = "Images/Player Icons/player-songinfo@2x.png"; sourceTree = "<group>"; };
-		53493EFA15FC699A0059492E /* ipad-menu-selected-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ipad-menu-selected-background.png"; path = "Images/ipad-menu-selected-background.png"; sourceTree = "<group>"; };
 		53493EFE15FC69C90059492E /* chat-page.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "chat-page.png"; path = "Images/chat-page.png"; sourceTree = "<group>"; };
 		53493F1215FC6A3A0059492E /* shuffle-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shuffle-small.png"; path = "Images/Other/shuffle-small.png"; sourceTree = "<group>"; };
 		53493F1315FC6A3A0059492E /* shuffle-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shuffle-small@2x.png"; path = "Images/Other/shuffle-small@2x.png"; sourceTree = "<group>"; };
@@ -1237,9 +1206,6 @@
 		53614AC7116432DA0088ABC0 /* ServerListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerListViewController.h; sourceTree = "<group>"; };
 		53614AC8116432DA0088ABC0 /* ServerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerListViewController.m; sourceTree = "<group>"; };
 		53614BD7116467420088ABC0 /* AllSongsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllSongsViewController.xib; sourceTree = "<group>"; };
-		53649DCC184DA90600E600EC /* Icon-120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-120.png"; path = "Images/App Icons/Icon-120.png"; sourceTree = "<group>"; };
-		53649DD0184DA99B00E600EC /* Icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-76.png"; path = "Images/App Icons/Icon-76.png"; sourceTree = "<group>"; };
-		53649DD1184DA99B00E600EC /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-76@2x.png"; path = "Images/App Icons/Icon-76@2x.png"; sourceTree = "<group>"; };
 		5365857E1478920B00FE57A5 /* EqualizerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerViewController.h; sourceTree = "<group>"; };
 		5365857F1478920B00FE57A5 /* EqualizerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EqualizerViewController.m; sourceTree = "<group>"; };
 		5365859114789AD800FE57A5 /* EqualizerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerView.h; sourceTree = "<group>"; };
@@ -1261,7 +1227,6 @@
 		536D615F11442AA000DFCE56 /* controller-shuffle-on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-shuffle-on.png"; path = "Images/Player Icons/controller-shuffle-on.png"; sourceTree = "<group>"; };
 		536D616011442AA000DFCE56 /* controller-shuffle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-shuffle.png"; path = "Images/Player Icons/controller-shuffle.png"; sourceTree = "<group>"; };
 		536D620A1144495400DFCE56 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		536D624311444E4600DFCE56 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = "Images/App Icons/Icon.png"; sourceTree = "<group>"; };
 		53733C6414F88D62001D8104 /* AsynchronousImageViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsynchronousImageViewDelegate.h; sourceTree = "<group>"; };
 		53746678255AD19300DB9193 /* SUSLoaderDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SUSLoaderDelegate.h; sourceTree = "<group>"; };
 		53752BEB2562CEF800438636 /* CoverArtViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverArtViewController.swift; sourceTree = "<group>"; };
@@ -1270,6 +1235,9 @@
 		5379DC4A1219E48800F426CD /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
 		5379DC4B1219E48800F426CD /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		5379DC4C1219E48800F426CD /* ChatViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatViewController.xib; sourceTree = "<group>"; };
+		537B05B8256B03830008892C /* PadRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadRootViewController.swift; sourceTree = "<group>"; };
+		537B05BB256B04360008892C /* PadMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadMenuViewController.swift; sourceTree = "<group>"; };
+		537B05BE256B0E4B0008892C /* PadMenuTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadMenuTableCell.swift; sourceTree = "<group>"; };
 		537DE2D8113F008C00875852 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		537E6C1C181208A200127E29 /* CustomUITabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomUITabBarController.h; sourceTree = "<group>"; };
 		537E6C1D181208A200127E29 /* CustomUITabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUITabBarController.m; sourceTree = "<group>"; };
@@ -1281,7 +1249,6 @@
 		537E9A4814F4B84D006CB0BC /* controller-equalizer-on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-equalizer-on@2x.png"; path = "Images/Player Icons/controller-equalizer-on@2x.png"; sourceTree = "<group>"; };
 		537EF7B3182B2F2200968FE0 /* controller-slider-thumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-slider-thumb.png"; path = "Images/Player Icons/controller-slider-thumb.png"; sourceTree = "<group>"; };
 		537EF7B4182B2F2200968FE0 /* controller-slider-thumb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-slider-thumb@2x.png"; path = "Images/Player Icons/controller-slider-thumb@2x.png"; sourceTree = "<group>"; };
-		537FCC5312F8F7F400F1D996 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = "Images/App Icons/iTunesArtwork"; sourceTree = "<group>"; };
 		5381F8051E96FBFB00AAA9BD /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		538229F311C98091003F1E23 /* CacheAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheAlbumViewController.h; sourceTree = "<group>"; };
 		538229F411C98091003F1E23 /* CacheAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CacheAlbumViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -1343,8 +1310,6 @@
 		53AAF1C311DA983700447FF7 /* gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gear@2x.png"; path = "Images/Other/gear@2x.png"; sourceTree = "<group>"; };
 		53AAF1D811DA9DB600447FF7 /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "background@2x.png"; path = "Images/Other/background@2x.png"; sourceTree = "<group>"; };
 		53AAF1DD11DA9F0200447FF7 /* now-playing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "now-playing@2x.png"; path = "Images/Other/now-playing@2x.png"; sourceTree = "<group>"; };
-		53AAF1E711DAA1BC00447FF7 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images/App Icons/Icon@2x.png"; sourceTree = "<group>"; };
-		53AAF1EB11DAA21600447FF7 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "Images/App Icons/Icon-72.png"; sourceTree = "<group>"; };
 		53ABE3601165C83900197877 /* PlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayingViewController.h; sourceTree = "<group>"; };
 		53ABE3611165C83900197877 /* PlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PlayingViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		53ABE3621165C83900197877 /* PlayingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayingViewController.xib; sourceTree = "<group>"; };
@@ -1390,9 +1355,6 @@
 		53BBDB3B1491DD6600032114 /* OpenGLCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLCommon.h; sourceTree = "<group>"; };
 		53BBDB3C1491DE5600032114 /* ConstantsAndMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantsAndMacros.h; sourceTree = "<group>"; };
 		53BC2865139AF0DD00A825F1 /* iSub Beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iSub Beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		53BC2869139AF17B00A825F1 /* Icon-72-Beta.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72-Beta.png"; path = "Images/App Icons/Icon-72-Beta.png"; sourceTree = "<group>"; };
-		53BC286A139AF17B00A825F1 /* Icon-Beta.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Beta.png"; path = "Images/App Icons/Icon-Beta.png"; sourceTree = "<group>"; };
-		53BC286B139AF17B00A825F1 /* Icon@2x-Beta.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x-Beta.png"; path = "Images/App Icons/Icon@2x-Beta.png"; sourceTree = "<group>"; };
 		53BCC519181387B300442E86 /* CustomUINavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomUINavigationController.h; sourceTree = "<group>"; };
 		53BCC51A181387B300442E86 /* CustomUINavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUINavigationController.m; sourceTree = "<group>"; };
 		53BD84A52566F41F00F7A197 /* ISMSBassVisualType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSBassVisualType.h; sourceTree = "<group>"; };
@@ -1408,7 +1370,6 @@
 		53C7FD7D150F00C5008DA51C /* home-quick-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-ipad@2x.png"; path = "Images/Home Screen/home-quick-ipad@2x.png"; sourceTree = "<group>"; };
 		53C7FD7E150F00C5008DA51C /* home-settings-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-settings-ipad@2x.png"; path = "Images/Home Screen/home-settings-ipad@2x.png"; sourceTree = "<group>"; };
 		53C7FD7F150F00C5008DA51C /* home-shuffle-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-shuffle-ipad@2x.png"; path = "Images/Home Screen/home-shuffle-ipad@2x.png"; sourceTree = "<group>"; };
-		53C7FD98150F03D6008DA51C /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72@2x.png"; path = "Images/App Icons/Icon-72@2x.png"; sourceTree = "<group>"; };
 		53C7FD9C150F0E94008DA51C /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		53C7FDA1150F1DE7008DA51C /* home-support-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-support-ipad.png"; path = "Images/Home Screen/home-support-ipad.png"; sourceTree = "<group>"; };
 		53C7FDA2150F1DE7008DA51C /* home-support-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-support-ipad@2x.png"; path = "Images/Home Screen/home-support-ipad@2x.png"; sourceTree = "<group>"; };
@@ -1912,17 +1873,6 @@
 			isa = PBXGroup;
 			children = (
 				53493F2C15FC6BD90059492E /* KeychainAccessGroups.plist */,
-				537FCC5312F8F7F400F1D996 /* iTunesArtwork */,
-				536D624311444E4600DFCE56 /* Icon.png */,
-				53AAF1E711DAA1BC00447FF7 /* Icon@2x.png */,
-				53C7FD98150F03D6008DA51C /* Icon-72@2x.png */,
-				53AAF1EB11DAA21600447FF7 /* Icon-72.png */,
-				53BC2869139AF17B00A825F1 /* Icon-72-Beta.png */,
-				53BC286A139AF17B00A825F1 /* Icon-Beta.png */,
-				53BC286B139AF17B00A825F1 /* Icon@2x-Beta.png */,
-				53649DCC184DA90600E600EC /* Icon-120.png */,
-				53649DD0184DA99B00E600EC /* Icon-76.png */,
-				53649DD1184DA99B00E600EC /* Icon-76@2x.png */,
 				53493F1A15FC6AA60059492E /* iSub-Info-Beta.plist */,
 				53493F1C15FC6AA60059492E /* iSub-Info.plist */,
 				53493F3715FC6C3A0059492E /* BassEffectDefaultPresets.plist */,
@@ -1999,15 +1949,11 @@
 		531D39E1255AB23F000CB0DF /* iPad */ = {
 			isa = PBXGroup;
 			children = (
-				5304FC1B14F2F0D100A2AD42 /* iPadRootViewController.h */,
-				5304FC1C14F2F0D100A2AD42 /* iPadRootViewController.m */,
-				5304FC1D14F2F0D100A2AD42 /* MenuViewController.h */,
-				5304FC1E14F2F0D100A2AD42 /* MenuViewController.m */,
-				5304FC2514F2F0D100A2AD42 /* MenuTableViewCell.h */,
-				5304FC2614F2F0D100A2AD42 /* MenuTableViewCell.m */,
-				5304FC4A14F2F59400A2AD42 /* glow.png */,
 				537E9A0814F323EE006CB0BC /* UIViewController+PushViewControllerCustom.h */,
 				537E9A0914F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m */,
+				537B05B8256B03830008892C /* PadRootViewController.swift */,
+				537B05BB256B04360008892C /* PadMenuViewController.swift */,
+				537B05BE256B0E4B0008892C /* PadMenuTableCell.swift */,
 			);
 			path = iPad;
 			sourceTree = "<group>";
@@ -2560,7 +2506,6 @@
 				53ADBBBB133525BD0098FAE6 /* folder-dropdown-arrow@2x.png */,
 				53493EF215FC69560059492E /* player-songinfo.png */,
 				53493EF315FC69560059492E /* player-songinfo@2x.png */,
-				53493EFA15FC699A0059492E /* ipad-menu-selected-background.png */,
 				535CB2A612E2372B00389DA1 /* ubuntu-add-server.png */,
 				535CB2A712E2372B00389DA1 /* ubuntu-add-server@2x.png */,
 				535CB48612E2664700389DA1 /* server-button-subsonic.png */,
@@ -3216,10 +3161,8 @@
 				536D616311442AA000DFCE56 /* controller-repeat.png in Resources */,
 				536D616411442AA000DFCE56 /* controller-shuffle-on.png in Resources */,
 				536D616511442AA000DFCE56 /* controller-shuffle.png in Resources */,
-				536D624411444E4600DFCE56 /* Icon.png in Resources */,
 				53AA300411461A04003E57E3 /* background.png in Resources */,
 				534E443F1155AD01000B4134 /* default-album-art-small.png in Resources */,
-				53649DD2184DA99B00E600EC /* Icon-76.png in Resources */,
 				5305C2061157F4F800BC78F0 /* Default.png in Resources */,
 				53F0CD8211589F0A00A665CD /* progress-label-background.png in Resources */,
 				539797FE1162D4D200F41D8B /* AllAlbumsViewController.xib in Resources */,
@@ -3259,7 +3202,6 @@
 				5314C7B411D4157D000CA726 /* delete-button.png in Resources */,
 				533C65CE15ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */,
 				53FE35EE1EA961540058B925 /* table-fade-bottom.png in Resources */,
-				53649DCD184DA90600E600EC /* Icon-120.png in Resources */,
 				53AAF18911DA8D7500447FF7 /* albums-tabbaricon@2x.png in Resources */,
 				53AAF19311DA90D800447FF7 /* artists-tabbaricon@2x.png in Resources */,
 				53AAF19411DA90D800447FF7 /* bookmarks-tabbaricon@2x.png in Resources */,
@@ -3271,8 +3213,6 @@
 				53AAF1C411DA983700447FF7 /* gear@2x.png in Resources */,
 				53AAF1D911DA9DB600447FF7 /* background@2x.png in Resources */,
 				53AAF1DE11DA9F0200447FF7 /* now-playing@2x.png in Resources */,
-				53AAF1E811DAA1BC00447FF7 /* Icon@2x.png in Resources */,
-				53AAF1EC11DAA21600447FF7 /* Icon-72.png in Resources */,
 				53FDEE2611E822CC00FE3ECD /* current-server@2x.png in Resources */,
 				53FDEE2911E823A100FE3ECD /* default-album-art-small@2x.png in Resources */,
 				53FDEE2A11E823A100FE3ECD /* default-album-art@2x.png in Resources */,
@@ -3361,8 +3301,6 @@
 				535CB48C12E2664700389DA1 /* server-button-ubuntu.png in Resources */,
 				535CB48D12E2664700389DA1 /* server-button-ubuntu@2x.png in Resources */,
 				535CB58412E27A5400389DA1 /* default-album-art-ipad.png in Resources */,
-				53649DD5184DA99B00E600EC /* Icon-76@2x.png in Resources */,
-				537FCC5412F8F7F400F1D996 /* iTunesArtwork in Resources */,
 				53ADBBBC133525BD0098FAE6 /* folder-dropdown-arrow.png in Resources */,
 				53ADBBBD133525BD0098FAE6 /* folder-dropdown-arrow@2x.png in Resources */,
 				535B7274134D0900003E0E1C /* controller-bookmark-ipad.png in Resources */,
@@ -3377,9 +3315,6 @@
 				5353B83D134D8019005C589E /* upload-playlist@2x.png in Resources */,
 				533C659815ABB9B0003EAF29 /* ShuffleFolderPickerViewController.xib in Resources */,
 				536AB8121353DCF900DABD83 /* PlaylistSongsViewController.xib in Resources */,
-				53BC286C139AF17B00A825F1 /* Icon-72-Beta.png in Resources */,
-				53BC286D139AF17B00A825F1 /* Icon-Beta.png in Resources */,
-				53BC286E139AF17B00A825F1 /* Icon@2x-Beta.png in Resources */,
 				533C65DC15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */,
 				5306238C14D4BB7E00D320A8 /* controller-equalizer.png in Resources */,
 				5306238F14D4BB7E00D320A8 /* controller-equalizer@2x.png in Resources */,
@@ -3408,7 +3343,6 @@
 				53DE599D14F1A7B000206529 /* controller-extras-on@2x.png in Resources */,
 				53DE59A014F1A7B000206529 /* controller-forw30.png in Resources */,
 				53DE59A314F1A7B000206529 /* controller-forw30@2x.png in Resources */,
-				5304FC5214F2F59400A2AD42 /* glow.png in Resources */,
 				537E9A4114F4B5D1006CB0BC /* controller-speed-tab.png in Resources */,
 				537E9A4414F4B5D1006CB0BC /* controller-speed-tab@2x.png in Resources */,
 				537E9A4914F4B84D006CB0BC /* controller-equalizer-on.png in Resources */,
@@ -3423,7 +3357,6 @@
 				53C7FD8F150F00C5008DA51C /* home-quick-ipad@2x.png in Resources */,
 				53C7FD92150F00C5008DA51C /* home-settings-ipad@2x.png in Resources */,
 				53C7FD95150F00C5008DA51C /* home-shuffle-ipad@2x.png in Resources */,
-				53C7FD99150F03D6008DA51C /* Icon-72@2x.png in Resources */,
 				53C7FDA5150F1DE7008DA51C /* home-support-ipad.png in Resources */,
 				53FE35F11EA961540058B925 /* table-fade-bottom@2x.png in Resources */,
 				53C7FDA8150F1DE7008DA51C /* home-support-ipad@2x.png in Resources */,
@@ -3435,7 +3368,6 @@
 				530A5F9015167CBA0081A83A /* playing-cell-icon-white@2x.png in Resources */,
 				53493EF415FC69560059492E /* player-songinfo.png in Resources */,
 				53493EF715FC69560059492E /* player-songinfo@2x.png in Resources */,
-				53493EFB15FC699A0059492E /* ipad-menu-selected-background.png in Resources */,
 				53493EFF15FC69C90059492E /* chat-page.png in Resources */,
 				53493F1415FC6A3A0059492E /* shuffle-small.png in Resources */,
 				53493F1715FC6A3A0059492E /* shuffle-small@2x.png in Resources */,
@@ -3468,7 +3400,6 @@
 				53BC26AE139AF0DD00A825F1 /* controller-repeat.png in Resources */,
 				53BC26AF139AF0DD00A825F1 /* controller-shuffle-on.png in Resources */,
 				53BC26B0139AF0DD00A825F1 /* controller-shuffle.png in Resources */,
-				53BC26B1139AF0DD00A825F1 /* Icon.png in Resources */,
 				530738F51FAF6A72005C2650 /* Media.xcassets in Resources */,
 				53FE35F31EA961540058B925 /* table-fade-bottom@2x.png in Resources */,
 				53BC26B2139AF0DD00A825F1 /* background.png in Resources */,
@@ -3519,8 +3450,6 @@
 				53BC26E6139AF0DD00A825F1 /* gear@2x.png in Resources */,
 				53BC26E7139AF0DD00A825F1 /* background@2x.png in Resources */,
 				53BC26E8139AF0DD00A825F1 /* now-playing@2x.png in Resources */,
-				53BC26E9139AF0DD00A825F1 /* Icon@2x.png in Resources */,
-				53BC26EA139AF0DD00A825F1 /* Icon-72.png in Resources */,
 				53BC26EB139AF0DD00A825F1 /* current-server@2x.png in Resources */,
 				53BC26EC139AF0DD00A825F1 /* default-album-art-small@2x.png in Resources */,
 				53BC26ED139AF0DD00A825F1 /* default-album-art@2x.png in Resources */,
@@ -3581,7 +3510,6 @@
 				53BC2743139AF0DD00A825F1 /* controller-stop@2x.png in Resources */,
 				53FE35F01EA961540058B925 /* table-fade-bottom.png in Resources */,
 				53BC2745139AF0DD00A825F1 /* Default@2x.png in Resources */,
-				53649DD4184DA99B00E600EC /* Icon-76.png in Resources */,
 				537EF7BB182B2F2200968FE0 /* controller-slider-thumb@2x.png in Resources */,
 				53BC2752139AF0DD00A825F1 /* home-chat-ipad.png in Resources */,
 				53BC2753139AF0DD00A825F1 /* home-chat.png in Resources */,
@@ -3608,7 +3536,6 @@
 				53BC276C139AF0DD00A825F1 /* server-button-ubuntu@2x.png in Resources */,
 				53BC276D139AF0DD00A825F1 /* default-album-art-ipad.png in Resources */,
 				5333F01D182C5D17003CFB6F /* controller-volumeslider-thumb.png in Resources */,
-				53BC2785139AF0DD00A825F1 /* iTunesArtwork in Resources */,
 				53BC2788139AF0DD00A825F1 /* folder-dropdown-arrow.png in Resources */,
 				53BC2789139AF0DD00A825F1 /* folder-dropdown-arrow@2x.png in Resources */,
 				53FE35F91EA961540058B925 /* table-fade-top@2x.png in Resources */,
@@ -3616,7 +3543,6 @@
 				53BC278C139AF0DD00A825F1 /* controller-bookmark-on-ipad.png in Resources */,
 				53BC278D139AF0DD00A825F1 /* controller-repeat-all-ipad.png in Resources */,
 				53BC278E139AF0DD00A825F1 /* controller-repeat-ipad.png in Resources */,
-				53649DCF184DA90600E600EC /* Icon-120.png in Resources */,
 				533D181E255F72FF003F962C /* CacheOfflineFoldersViewController.xib in Resources */,
 				53BC278F139AF0DD00A825F1 /* controller-repeat-one-ipad.png in Resources */,
 				53BC2790139AF0DD00A825F1 /* controller-shuffle-ipad.png in Resources */,
@@ -3654,7 +3580,6 @@
 				53DE599F14F1A7B000206529 /* controller-extras-on@2x.png in Resources */,
 				53DE59A214F1A7B000206529 /* controller-forw30.png in Resources */,
 				53DE59A514F1A7B000206529 /* controller-forw30@2x.png in Resources */,
-				5304FC5414F2F59400A2AD42 /* glow.png in Resources */,
 				537E9A4314F4B5D1006CB0BC /* controller-speed-tab.png in Resources */,
 				537E9A4614F4B5D1006CB0BC /* controller-speed-tab@2x.png in Resources */,
 				537E9A4B14F4B84D006CB0BC /* controller-equalizer-on.png in Resources */,
@@ -3671,7 +3596,6 @@
 				53C7FD91150F00C5008DA51C /* home-quick-ipad@2x.png in Resources */,
 				53C7FD94150F00C5008DA51C /* home-settings-ipad@2x.png in Resources */,
 				53C7FD97150F00C5008DA51C /* home-shuffle-ipad@2x.png in Resources */,
-				53C7FD9B150F03D6008DA51C /* Icon-72@2x.png in Resources */,
 				53C7FDA7150F1DE7008DA51C /* home-support-ipad.png in Resources */,
 				53C7FDAA150F1DE7008DA51C /* home-support-ipad@2x.png in Resources */,
 				53C7FDAD150F1DE7008DA51C /* home-support.png in Resources */,
@@ -3682,14 +3606,12 @@
 				530A5F9215167CBA0081A83A /* playing-cell-icon-white@2x.png in Resources */,
 				53493EF615FC69560059492E /* player-songinfo.png in Resources */,
 				53493EF915FC69560059492E /* player-songinfo@2x.png in Resources */,
-				53493EFD15FC699A0059492E /* ipad-menu-selected-background.png in Resources */,
 				53493F0115FC69C90059492E /* chat-page.png in Resources */,
 				5333F021182C5D17003CFB6F /* controller-volumeslider-thumb@2x.png in Resources */,
 				53493F1615FC6A3A0059492E /* shuffle-small.png in Resources */,
 				53493F1915FC6A3A0059492E /* shuffle-small@2x.png in Resources */,
 				53493F3215FC6BD90059492E /* KeychainAccessGroups.plist in Resources */,
 				53493F3A15FC6C3B0059492E /* BassEffectDefaultPresets.plist in Resources */,
-				53649DD7184DA99B00E600EC /* Icon-76@2x.png in Resources */,
 				5349AD061613724D003603AF /* Default-568h@2x.png in Resources */,
 				53B65ABD16533E4800472DBF /* back-tabbaricon.png in Resources */,
 				53B65AC116533E4800472DBF /* back-tabbaricon@2x.png in Resources */,
@@ -3775,6 +3697,7 @@
 				531D3A1F255ABAAC000CB0DF /* SUSLoader.m in Sources */,
 				53FE35521EA961540058B925 /* UIImage+Reflection.m in Sources */,
 				53FE37C71EA961720058B925 /* SUSServerPlaylistsDAO.m in Sources */,
+				537B05BC256B04360008892C /* PadMenuViewController.swift in Sources */,
 				53FE37B51EA961720058B925 /* SUSQueueAllLoader.m in Sources */,
 				53FE34F51EA961540058B925 /* NSOrderedSet+Safe.m in Sources */,
 				53FE37881EA961720058B925 /* SavedSettings.m in Sources */,
@@ -3862,6 +3785,7 @@
 				5379DC4F1219E48800F426CD /* ChatUITableViewCell.m in Sources */,
 				5379DC501219E48800F426CD /* ChatViewController.m in Sources */,
 				53BB7ECA121B8D8F00BEE7E8 /* CustomUITextView.m in Sources */,
+				537B05B9256B03830008892C /* PadRootViewController.swift in Sources */,
 				53FE38041EA961970058B925 /* RXMLElement.m in Sources */,
 				53FE37701EA961720058B925 /* NSMutableURLRequest+SUS.m in Sources */,
 				53FE35491EA961540058B925 /* UIImage+Color.m in Sources */,
@@ -3905,6 +3829,7 @@
 				53FE38B61EA961C80058B925 /* ZKFileArchive.m in Sources */,
 				536585811478920D00FE57A5 /* EqualizerViewController.m in Sources */,
 				538C8FE125606299005D6CA9 /* RefreshControl.swift in Sources */,
+				537B05BF256B0E4B0008892C /* PadMenuTableCell.swift in Sources */,
 				53FE35431EA961540058B925 /* UIDevice+Hardware.m in Sources */,
 				5365859314789ADA00FE57A5 /* EqualizerView.m in Sources */,
 				53FE356A1EA961540058B925 /* UIView+SetNeedsLayoutSafe.m in Sources */,
@@ -3925,10 +3850,7 @@
 				53FE36FE1EA961720058B925 /* CacheSingleton.m in Sources */,
 				53E04947255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */,
 				53FE35041EA961540058B925 /* NSString+FileSize.m in Sources */,
-				5304FC2D14F2F0D100A2AD42 /* iPadRootViewController.m in Sources */,
 				53FE36F51EA961720058B925 /* BassStream.m in Sources */,
-				5304FC3014F2F0D100A2AD42 /* MenuViewController.m in Sources */,
-				5304FC3C14F2F0D100A2AD42 /* MenuTableViewCell.m in Sources */,
 				537E9A0A14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */,
 				53FE389E1EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53493F2715FC6AC40059492E /* main.m in Sources */,
@@ -4007,6 +3929,7 @@
 				53BC27BA139AF0DD00A825F1 /* DebugViewController.m in Sources */,
 				53FE37D81EA961720058B925 /* SUSSubFolderLoader.m in Sources */,
 				53FE35271EA961540058B925 /* NSURL+QueryParameterDictionary.m in Sources */,
+				537B05BD256B04360008892C /* PadMenuViewController.swift in Sources */,
 				53FE35661EA961540058B925 /* UITableViewCell+TableView.m in Sources */,
 				53BC27BB139AF0DD00A825F1 /* CurrentPlaylistViewController.m in Sources */,
 				53FE353C1EA961540058B925 /* UIButton+StretchBackground.m in Sources */,
@@ -4084,6 +4007,7 @@
 				53FE350F1EA961540058B925 /* NSString+hex.m in Sources */,
 				53BC27F8139AF0DD00A825F1 /* ChatUITableViewCell.m in Sources */,
 				53BC27F9139AF0DD00A825F1 /* ChatViewController.m in Sources */,
+				537B05BA256B03830008892C /* PadRootViewController.swift in Sources */,
 				533295F7255EEFE50027C51A /* FMTokenizers.m in Sources */,
 				53BC27FC139AF0DD00A825F1 /* CustomUITextView.m in Sources */,
 				53FE38061EA961970058B925 /* RXMLElement.m in Sources */,
@@ -4119,6 +4043,7 @@
 				53BC283D139AF0DD00A825F1 /* SearchAllViewController.m in Sources */,
 				53FE356F1EA961540058B925 /* UIView+Tools.m in Sources */,
 				53BC283E139AF0DD00A825F1 /* PagingScrollView.m in Sources */,
+				537B05C0256B0E4B0008892C /* PadMenuTableCell.swift in Sources */,
 				53FE37691EA961720058B925 /* MusicSingleton.m in Sources */,
 				53BC283F139AF0DD00A825F1 /* ShuffleFolderPickerViewController.m in Sources */,
 				53FE34DF1EA961540058B925 /* NSMutableDictionary+Safe.m in Sources */,
@@ -4148,10 +4073,7 @@
 				53FE37001EA961720058B925 /* CacheSingleton.m in Sources */,
 				53E04948255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */,
 				53FE35061EA961540058B925 /* NSString+FileSize.m in Sources */,
-				5304FC2F14F2F0D100A2AD42 /* iPadRootViewController.m in Sources */,
 				53FE36F71EA961720058B925 /* BassStream.m in Sources */,
-				5304FC3214F2F0D100A2AD42 /* MenuViewController.m in Sources */,
-				5304FC3E14F2F0D100A2AD42 /* MenuTableViewCell.m in Sources */,
 				537E9A0C14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */,
 				53FE38A01EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53493F2915FC6AC40059492E /* main.m in Sources */,

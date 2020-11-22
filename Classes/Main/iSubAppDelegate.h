@@ -16,7 +16,7 @@
 
 #define appDelegateS [iSubAppDelegate sharedInstance]
 
-@class BBSplitViewController, iPadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, SettingsViewController, FoldersViewController, AudioStreamer, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HTTPServer, ServerListViewController;
+@class BBSplitViewController, PadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, SettingsViewController, FoldersViewController, AudioStreamer, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HTTPServer, ServerListViewController;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -50,7 +50,7 @@ NS_SWIFT_NAME(AppDelegate)
 
 @property (strong) ServerListViewController *serverListViewController;
 
-@property (strong) iPadRootViewController *ipadRootViewController;
+@property (strong) PadRootViewController *padRootViewController;
 
 // Network connectivity objects and variables
 //

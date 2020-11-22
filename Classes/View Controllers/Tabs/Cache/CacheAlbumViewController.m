@@ -8,7 +8,6 @@
 
 #import "CacheAlbumViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
-#import "iPadRootViewController.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -214,7 +213,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 	// If the table is empty, pop back one view, otherwise reload the table data
 	if (self.listOfAlbums.count + self.listOfSongs.count == 0) {
 		if (UIDevice.isIPad) {
-            [appDelegateS.ipadRootViewController.currentContentNavigationController popToRootViewControllerAnimated:YES];
+            [appDelegateS.padRootViewController.currentContentNavigationController popToRootViewControllerAnimated:YES];
 		} else {
 			// Handle the moreNavigationController stupidity
 			if (appDelegateS.currentTabBarController.selectedIndex == 4) {
