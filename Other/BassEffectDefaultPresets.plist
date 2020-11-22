@@ -2,12 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <!-- Effect Type 1 -- Parametric Equalizer -->
+    <!-- Effect Type 1 - Parametric Equalizer -->
     <!-- values: (frequency, gain) -->
 	<!-- freq: 0 = 32, .11 = 64, .22 = 128, .33 = 256, .44 = 512, .55 = 1K, .66 = 2K, .77 = 4K, .88 = 8K, 1 = 16K -->
-	
 	<!-- gain: .5 = 0, .416 =  1, .33 =  2, .25 =  3, .16 =  4, .076 =  5, 0 =  6 -->
-	
 	<!-- gain: .5 = 0, .584 = -1, .67 = -2, .75 = -3, .84 = -4, .924 = -5, 1 = -6 -->
 	
     <key>1</key>
