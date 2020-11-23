@@ -354,7 +354,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
         // Song
         cell.hideCacheIndicator = YES;
         cell.hideNumberLabel = YES;
-        cell.hideCoverArt = NO;
+        cell.hideCoverArt = YES;
         cell.hideDurationLabel = NO;
         [cell updateWithModel:[self songAtIndexPath:indexPath]];
 	}
