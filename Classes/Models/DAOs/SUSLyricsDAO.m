@@ -55,7 +55,7 @@
 #pragma mark - ISMSLoader manager
 
 - (void)startLoad {
-//DLog(@"this shouldn't be called");
+    NSAssert(YES, @"SUSLyricsDAO startLoad should not be called");
 }
 
 - (void)cancelLoad {

@@ -22,31 +22,32 @@
         // Custom initialization
 		self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 300)];
 		self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.view.backgroundColor = UIColor.blackColor;
         		
-		_textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 45, 320, 255)];
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 45)];
+        titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        titleLabel.textColor = UIColor.whiteColor;
+        titleLabel.font = [UIFont boldSystemFontOfSize:30];
+        titleLabel.textAlignment = NSTextAlignmentCenter;
+        titleLabel.text = @"Lyrics";
+        [self.view addSubview:titleLabel];
+        
+		_textView = [[UITextView alloc] initWithFrame:CGRectMake(10, 45, 300, 255)];
 		_textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_textView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.8];
-		_textView.textColor = [UIColor whiteColor];
-        _textView.font = [UIFont systemFontOfSize:16.5];
+        _textView.backgroundColor = UIColor.blackColor;
+		_textView.textColor = UIColor.whiteColor;
+        _textView.font = [UIFont systemFontOfSize:18];
 		_textView.editable = NO;
         
 		[self updateLyricsLabel];
 		[self.view addSubview:_textView];
-		
-		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 45)];
-		titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		titleLabel.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.8];
-		titleLabel.textColor = [UIColor whiteColor];
-		titleLabel.font = [UIFont boldSystemFontOfSize:30];
-		titleLabel.textAlignment = NSTextAlignmentCenter;
-		titleLabel.text = @"Lyrics";
-		[self.view addSubview:titleLabel];
     }
     return self;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
+    [self updateLyricsLabel];
 	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateLyricsLabel) name:ISMSNotification_SongPlaybackStarted];
 	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateLyricsLabel) name:ISMSNotification_LyricsDownloaded];
 	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(updateLyricsLabel) name:ISMSNotification_LyricsFailed];
@@ -57,13 +58,9 @@
 	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_SongPlaybackStarted];
 	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_LyricsDownloaded];
 	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_LyricsFailed];
-	[NSNotificationCenter removeObserverOnMainThread:self name:@"hideSongInfoFast"];
-	[NSNotificationCenter removeObserverOnMainThread:self name:@"hideSongInfo"];
-	[self.dataModel cancelLoad];
 }
 
 - (void)dealloc {
-	_dataModel.delegate = nil;
     [NSNotificationCenter removeObserverOnMainThread:self];
 }
 
@@ -72,6 +69,10 @@
     NSString *lyrics = [self.dataModel lyricsForArtist:currentSong.artist andTitle:currentSong.title];
     if (!lyrics.hasValue) {
         lyrics = @"\n\nNo lyrics found";
+        
+        // Try to load the lyrics
+//        if (!self.dataModel.loader)
+//        [self.dataModel loadLyricsForArtist:currentSong.artist andTitle:currentSong.title];
     }
     self.textView.text = lyrics;
 }

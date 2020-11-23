@@ -11,12 +11,10 @@ import SnapKit
 
 class PageControlViewController: UIViewController {
     private let scrollView = UIScrollView()
-    private let pageContainer = UIView()
     private let pageControl = UIPageControl()
     private var pageControlUsed = false
-//    private let swipeDetector = UISwipeGestureRecognizer()
     
-    private let numberOfPages = 3
+    private let numberOfPages = 4
     private var viewControllers = [UIViewController]()
     
     private var coverArtViewController: CoverArtViewController?
@@ -27,6 +25,15 @@ class PageControlViewController: UIViewController {
     var coverArtImage: UIImage? {
         get { return coverArtViewController?.image }
         set { coverArtViewController?.image = newValue }
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        // Fix the scroll offset if the scrollview is resized during rotation
+        coordinator.animate { _ in
+            self.changePage()
+        }
     }
     
     override func viewDidLoad() {
@@ -49,13 +56,6 @@ class PageControlViewController: UIViewController {
             make.leading.trailing.top.equalToSuperview()
         }
         
-        pageContainer.isUserInteractionEnabled = true
-        scrollView.addSubview(pageContainer)
-        pageContainer.snp.makeConstraints { make in
-            make.leading.top.bottom.equalToSuperview()
-            make.trailing.equalToSuperview().priority(.low)
-        }
-        
         pageControl.numberOfPages = numberOfPages
         pageControl.currentPage = 0
         pageControl.addTarget(self, action: #selector(changePage), for: .valueChanged)
@@ -66,12 +66,6 @@ class PageControlViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
         
-//        swipeDetector.addTarget(self, action: #selector(test))
-//        swipeDetector.delegate = self;
-//        swipeDetector.direction = .right;
-//        scrollView.addGestureRecognizer(swipeDetector)
-//        scrollView.panGestureRecognizer.require(toFail: swipeDetector)
-        
         var prevController: UIViewController? = nil
         for index in 0..<numberOfPages {
             var controller: UIViewController? = nil
@@ -79,14 +73,11 @@ class PageControlViewController: UIViewController {
             case 0:
                 coverArtViewController = CoverArtViewController()
                 controller = coverArtViewController
-//            case 1:
-//                let playlistController = CurrentPlaylistBackgroundViewController(nibName: "CurrentPlaylistBackgroundViewController", bundle: nil)
-////                playlistController.playlistView.tableView.panGestureRecognizer.
-////                scrollView.panGestureRecognizer.require(toFail: playlistController.playlistView.tableView.panGestureRecognizer)
-//                controller = playlistController
             case 1:
-                controller = LyricsViewController(nibName: nil, bundle: nil)
+                controller = SongInfoViewController()
             case 2:
+                controller = LyricsViewController(nibName: nil, bundle: nil)
+            case 3:
                 controller = DebugViewController(nibName: "DebugViewController", bundle: nil)
             default: break
             }
@@ -94,7 +85,8 @@ class PageControlViewController: UIViewController {
             if let controller = controller {
                 viewControllers.append(controller)
     
-                pageContainer.addSubview(controller.view)
+                addChild(controller)
+                scrollView.addSubview(controller.view)
                 controller.view.snp.makeConstraints { make in
                     make.width.height.equalTo(view.snp.width)
                     if let prevController = prevController {
@@ -111,22 +103,14 @@ class PageControlViewController: UIViewController {
         }
     }
     
-//    @objc private func test() {
-//
-//    }
-    
     @objc private func changePage() {
         let page = pageControl.currentPage;
+        print("currentPage: \(pageControl.currentPage)")
         
         // update the scroll view to the appropriate page
-//        var frame = self.scrollView.bounds;
-//        frame.origin.x = frame.size.width * CGFloat(page);
-//        frame.origin.y = 0;
-//        let frame = CGRect(x: scrollView.bounds.width * CGFloat(page), y: 0, width: 0, height: 0)
-//        scrollView.scrollRectToVisible(frame, animated: true)
         scrollView.setContentOffset(CGPoint(x: scrollView.bounds.width * CGFloat(page), y: 0), animated: true)
         
-        // Set the boolean used when scrolls originate from the UIPageControl. See scrollViewDidScroll: above.
+        // Set the boolean used when scrolls originate from the UIPageControl. See scrollViewDidScroll.
         pageControlUsed = true
     }
 }
@@ -158,16 +142,3 @@ extension PageControlViewController: UIScrollViewDelegate {
         pageControlUsed = false
     }
 }
-
-//extension PageControlViewController: UIGestureRecognizerDelegate {
-//    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-//        return true
-//    }
-//    
-//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-//        if gestureRecognizer == swipeDetector && pageControl.currentPage > 0 {
-//            return false
-//        }
-//        return true
-//    }
-//}

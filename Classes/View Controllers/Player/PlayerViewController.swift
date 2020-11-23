@@ -140,6 +140,7 @@ import CocoaLumberjackSwift
         //
         
         coverArtPageControl.view.translatesAutoresizingMaskIntoConstraints = false
+        addChild(coverArtPageControl)
         view.addSubview(coverArtPageControl.view)
         
         

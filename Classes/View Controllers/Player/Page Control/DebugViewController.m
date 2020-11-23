@@ -15,40 +15,18 @@
 
 @implementation DebugViewController
 
-- (void)viewDidLoad  {
-    [super viewDidLoad];
-    	
-	self.currentSongProgress = 0.;
-	self.nextSongProgress = 0.;
-		
-    // Cache the song objects
-    [self cacheSongObjects];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(cacheSongObjects) name:ISMSNotification_SongPlaybackStarted];
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(cacheSongObjects) name:ISMSNotification_SongPlaybackEnded];
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(cacheSongObjects) name:ISMSNotification_CurrentPlaylistIndexChanged];
-    
-    // Set the fields
-    [self updateStats];
-}
-
-- (void)showStore {
-	[NSNotificationCenter postNotificationToMainThreadWithName:@"player show store"];
+    [self cacheSongObjects];
+    [self startUpdatingStats];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self];
-	
-	 self.currentSongProgressView = nil;
-	 self.nextSongLabel = nil;
-	 self.nextSongProgressView = nil;
-	
-	 self.songsCachedLabel = nil;
-	 self.cacheSizeLabel = nil;
-	 self.cacheSettingLabel = nil;
-	 self.cacheSettingSizeLabel = nil;
-	 self.freeSpaceLabel = nil;
-	
-	 self.songInfoToggleButton = nil;
+    [self stopUpdatingStats];
+    [NSNotificationCenter removeObserverOnMainThread:self];    
 }
 
 - (void)dealloc {
@@ -60,7 +38,9 @@
 	self.nextSong = playlistS.nextSong;
 }
 		 
-- (void)updateStats {
+- (void)startUpdatingStats {
+    [self stopUpdatingStats];
+    
 	if (!settingsS.isJukeboxEnabled) {
 		// Set the current song progress bar
         if (![self.currentSong isTempCached]) {
@@ -122,11 +102,11 @@
 	// Set the cache size label
 	self.cacheSizeLabel.text = [NSString formatFileSize:cacheS.cacheSize];
 	
-	[self performSelector:@selector(updateStats) withObject:nil afterDelay:1.0];
+	[self performSelector:@selector(startUpdatingStats) withObject:nil afterDelay:1.0];
 }
 
-- (IBAction)songInfoToggle {
-	[NSNotificationCenter postNotificationToMainThreadWithName:@"hideSongInfo"];
+- (void)stopUpdatingStats {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startUpdatingStats) object:nil];
 }
 
 @end

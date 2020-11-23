@@ -16,4 +16,5 @@
 @property (strong) UITextView *textView;
 
 - (void)updateLyricsLabel;
+
 @end

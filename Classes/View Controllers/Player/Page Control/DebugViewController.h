@@ -22,15 +22,9 @@
 @property (strong) IBOutlet UILabel *cacheSettingSizeLabel;
 @property (strong) IBOutlet UILabel *freeSpaceLabel;
 
-@property (strong) IBOutlet UIButton *songInfoToggleButton;
-
 @property (copy) ISMSSong *currentSong;
 @property (copy) ISMSSong *nextSong;
 @property float currentSongProgress;
 @property float nextSongProgress;
-
-- (IBAction)songInfoToggle;
-- (void)updateStats;
-- (void)cacheSongObjects;
 
 @end
