@@ -28,6 +28,8 @@ static dispatch_once_t _sharedSessionDispatchOnce = 0;
     dispatch_once(&_sharedSessionDispatchOnce, ^{
         _sharedSessionDelegate = [[SelfSignedCertURLSessionDelegate alloc] init];
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+        configuration.waitsForConnectivity = YES;
+        configuration.timeoutIntervalForResource = 60;
         _sharedSession = [NSURLSession sessionWithConfiguration:configuration delegate:_sharedSessionDelegate delegateQueue:nil];
     });
     return _sharedSession;

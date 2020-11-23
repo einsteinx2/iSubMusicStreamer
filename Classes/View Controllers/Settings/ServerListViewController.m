@@ -7,7 +7,6 @@
 //
 
 #import "ServerListViewController.h"
-#import "SubsonicServerEditViewController.h"
 #import "SettingsTabViewController.h"
 #import "FoldersViewController.h"
 #import "SUSStatusLoader.h"
@@ -53,7 +52,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	// Setup segmented control in the header view
 	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
-	self.headerView.backgroundColor = [UIColor colorWithWhite:.3 alpha:1];
+//	self.headerView.backgroundColor = [UIColor colorWithWhite:.3 alpha:1];
 	
 	self.segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Servers", @"Settings"]];
 	self.segmentedControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -115,13 +114,12 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)addAction:(id)sender {
 	viewObjectsS.serverToEdit = nil;
 	
-    SubsonicServerEditViewController *subsonicServerEditViewController = [[SubsonicServerEditViewController alloc] initWithNibName:@"SubsonicServerEditViewController" bundle:nil];
-    subsonicServerEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-
+    ServerEditViewController *serverEditViewController = [[ServerEditViewController alloc] init];
+    serverEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     if (UIDevice.isIPad) {
-		[appDelegateS.padRootViewController presentViewController:subsonicServerEditViewController animated:YES completion:nil];
+        [appDelegateS.padRootViewController presentViewController:serverEditViewController animated:YES completion:nil];
     } else {
-		[self presentViewController:subsonicServerEditViewController animated:YES completion:nil];
+        [self presentViewController:serverEditViewController animated:YES completion:nil];
     }
 }
 
@@ -130,9 +128,9 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)showServerEditScreen {
-    SubsonicServerEditViewController *subsonicServerEditViewController = [[SubsonicServerEditViewController alloc] initWithNibName:@"SubsonicServerEditViewController" bundle:nil];
-    subsonicServerEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:subsonicServerEditViewController animated:YES completion:nil];
+    ServerEditViewController *serverEditViewController = [[ServerEditViewController alloc] init];
+    serverEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:serverEditViewController animated:YES completion:nil];
 }
 
 - (void)switchServer:(NSNotification*)notification  {

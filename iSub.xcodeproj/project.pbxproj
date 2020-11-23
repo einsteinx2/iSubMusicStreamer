@@ -63,6 +63,10 @@
 		531D3A1F255ABAAC000CB0DF /* SUSLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A1E255ABAAC000CB0DF /* SUSLoader.m */; };
 		531D3A20255ABAAC000CB0DF /* SUSLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A1E255ABAAC000CB0DF /* SUSLoader.m */; };
 		531F166E126FA2E600F524BD /* HomeAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 531F166D126FA2E600F524BD /* HomeAlbumViewController.m */; };
+		53246AA3256C209E00E11EC4 /* ServerEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */; };
+		53246AA4256C209E00E11EC4 /* ServerEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */; };
+		53246AA9256C324500E11EC4 /* InsetTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA8256C324500E11EC4 /* InsetTextField.swift */; };
+		53246AAA256C324500E11EC4 /* InsetTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA8256C324500E11EC4 /* InsetTextField.swift */; };
 		5324C6C613345D75004E6C79 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5324C6C513345D75004E6C79 /* OBSlider.m */; };
 		5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
 		5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
@@ -141,8 +145,6 @@
 		533C65A115ABB9B3003EAF29 /* SearchAllViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65A515ABB9B3003EAF29 /* SearchAllViewController.xib */; };
 		533C65AD15ABB9C6003EAF29 /* ServerListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65B315ABB9C6003EAF29 /* ServerListViewController.xib */; };
 		533C65AF15ABB9C6003EAF29 /* ServerListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65B315ABB9C6003EAF29 /* ServerListViewController.xib */; };
-		533C65BB15ABB9CC003EAF29 /* SubsonicServerEditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65C115ABB9CC003EAF29 /* SubsonicServerEditViewController.xib */; };
-		533C65BD15ABB9CC003EAF29 /* SubsonicServerEditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65C115ABB9CC003EAF29 /* SubsonicServerEditViewController.xib */; };
 		533C65CE15ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65D415ABB9D6003EAF29 /* SettingsTabViewController.xib */; };
 		533C65D015ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65D415ABB9D6003EAF29 /* SettingsTabViewController.xib */; };
 		533C65D515ABB9F0003EAF29 /* DebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65DB15ABB9F0003EAF29 /* DebugViewController.xib */; };
@@ -524,7 +526,6 @@
 		53BC279D139AF0DD00A825F1 /* FoldersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* FoldersViewController.m */; };
 		53BC27A1139AF0DD00A825F1 /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F2D3EC113A338500107D63 /* AlbumViewController.m */; };
 		53BC27A5139AF0DD00A825F1 /* AsynchronousImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 533A2D06113C61CA00B3A376 /* AsynchronousImageView.m */; };
-		53BC27A7139AF0DD00A825F1 /* SubsonicServerEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53CED25D113E2FF100B09699 /* SubsonicServerEditViewController.m */; };
 		53BC27AC139AF0DD00A825F1 /* AllAlbumsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 539796E31162B68800F41D8B /* AllAlbumsViewController.m */; };
 		53BC27AE139AF0DD00A825F1 /* ServerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53614AC8116432DA0088ABC0 /* ServerListViewController.m */; };
 		53BC27B0139AF0DD00A825F1 /* AllSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530388A8116571920043292D /* AllSongsViewController.m */; };
@@ -596,7 +597,6 @@
 		53C7FDAD150F1DE7008DA51C /* home-support.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FDA3150F1DE7008DA51C /* home-support.png */; };
 		53C7FDAE150F1DE7008DA51C /* home-support@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FDA4150F1DE7008DA51C /* home-support@2x.png */; };
 		53C7FDB0150F1DE7008DA51C /* home-support@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FDA4150F1DE7008DA51C /* home-support@2x.png */; };
-		53CED25F113E2FF100B09699 /* SubsonicServerEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53CED25D113E2FF100B09699 /* SubsonicServerEditViewController.m */; };
 		53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D44F8415AA621A00CDD3B8 /* Accelerate.framework */; };
 		53D973FE255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */; };
 		53D973FF255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */; };
@@ -1072,6 +1072,8 @@
 		531D3A1E255ABAAC000CB0DF /* SUSLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SUSLoader.m; sourceTree = "<group>"; };
 		531F166C126FA2E600F524BD /* HomeAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeAlbumViewController.h; sourceTree = "<group>"; };
 		531F166D126FA2E600F524BD /* HomeAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeAlbumViewController.m; sourceTree = "<group>"; };
+		53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEditViewController.swift; sourceTree = "<group>"; };
+		53246AA8256C324500E11EC4 /* InsetTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetTextField.swift; sourceTree = "<group>"; };
 		5324C6C413345D75004E6C79 /* OBSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBSlider.h; sourceTree = "<group>"; };
 		5324C6C513345D75004E6C79 /* OBSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBSlider.m; sourceTree = "<group>"; };
 		532590FF14EE22C100DF4BDB /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -1268,7 +1270,6 @@
 		539148A72559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/EqualizerViewController.xib; sourceTree = "<group>"; };
 		539148A82559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SettingsTabViewController.xib; sourceTree = "<group>"; };
 		539148A92559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ServerListViewController.xib; sourceTree = "<group>"; };
-		539148AB2559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SubsonicServerEditViewController.xib; sourceTree = "<group>"; };
 		539148B22559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/HomeAlbumViewController.xib; sourceTree = "<group>"; };
 		539148B32559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SearchSongsViewController.xib; sourceTree = "<group>"; };
 		539148B42559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ShuffleFolderPickerViewController.xib; sourceTree = "<group>"; };
@@ -1374,8 +1375,6 @@
 		53C7FDA2150F1DE7008DA51C /* home-support-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-support-ipad@2x.png"; path = "Images/Home Screen/home-support-ipad@2x.png"; sourceTree = "<group>"; };
 		53C7FDA3150F1DE7008DA51C /* home-support.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-support.png"; path = "Images/Home Screen/home-support.png"; sourceTree = "<group>"; };
 		53C7FDA4150F1DE7008DA51C /* home-support@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-support@2x.png"; path = "Images/Home Screen/home-support@2x.png"; sourceTree = "<group>"; };
-		53CED25C113E2FF100B09699 /* SubsonicServerEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubsonicServerEditViewController.h; sourceTree = "<group>"; };
-		53CED25D113E2FF100B09699 /* SubsonicServerEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubsonicServerEditViewController.m; sourceTree = "<group>"; };
 		53D44F8415AA621A00CDD3B8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalTableViewCell.swift; sourceTree = "<group>"; };
 		53D97416255BFE9D00AABF7F /* iSub-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "iSub-Bridging-Header.h"; path = "Other/iSub-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -1996,9 +1995,7 @@
 				53614AC7116432DA0088ABC0 /* ServerListViewController.h */,
 				53614AC8116432DA0088ABC0 /* ServerListViewController.m */,
 				533C65B315ABB9C6003EAF29 /* ServerListViewController.xib */,
-				53CED25C113E2FF100B09699 /* SubsonicServerEditViewController.h */,
-				53CED25D113E2FF100B09699 /* SubsonicServerEditViewController.m */,
-				533C65C115ABB9CC003EAF29 /* SubsonicServerEditViewController.xib */,
+				53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -2192,6 +2189,7 @@
 				53BCC51A181387B300442E86 /* CustomUINavigationController.m */,
 				53329651255F30220027C51A /* ClosureSleeve.swift */,
 				534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */,
+				53246AA8256C324500E11EC4 /* InsetTextField.swift */,
 			);
 			path = "Custom UI";
 			sourceTree = "<group>";
@@ -3153,7 +3151,6 @@
 				533A2D84113C963300B3A376 /* controller-pause.png in Resources */,
 				533A2D85113C963300B3A376 /* controller-play.png in Resources */,
 				533A2D86113C963300B3A376 /* controller-previous.png in Resources */,
-				533C65BB15ABB9CC003EAF29 /* SubsonicServerEditViewController.xib in Resources */,
 				535A889A113F62DD00979783 /* default-album-art.png in Resources */,
 				536D612911441F5B00DFCE56 /* settings-page.png in Resources */,
 				536D616111442AA000DFCE56 /* controller-repeat-all.png in Resources */,
@@ -3391,7 +3388,6 @@
 				53BC26A5139AF0DD00A825F1 /* controller-pause.png in Resources */,
 				53BC26A6139AF0DD00A825F1 /* controller-play.png in Resources */,
 				53BC26A7139AF0DD00A825F1 /* controller-previous.png in Resources */,
-				533C65BD15ABB9CC003EAF29 /* SubsonicServerEditViewController.xib in Resources */,
 				53BC26AA139AF0DD00A825F1 /* default-album-art.png in Resources */,
 				53BC26AB139AF0DD00A825F1 /* settings-page.png in Resources */,
 				53BC26AC139AF0DD00A825F1 /* controller-repeat-all.png in Resources */,
@@ -3659,7 +3655,6 @@
 				53266BFA2562D4D0002C64BB /* PageControlViewController.swift in Sources */,
 				53FE37011EA961720058B925 /* DatabaseSingleton.m in Sources */,
 				533A2D07113C61CA00B3A376 /* AsynchronousImageView.m in Sources */,
-				53CED25F113E2FF100B09699 /* SubsonicServerEditViewController.m in Sources */,
 				53FE34E01EA961540058B925 /* NSNotificationCenter+MainThread.m in Sources */,
 				53FE37A61EA961720058B925 /* SUSDropdownFolderLoader.m in Sources */,
 				53FE36F21EA961720058B925 /* BassParamEqValue.m in Sources */,
@@ -3724,6 +3719,7 @@
 				53FE35881EA961540058B925 /* EX2NetworkIndicator.m in Sources */,
 				5388A3B4119899260049BA9E /* BookmarksViewController.m in Sources */,
 				53FE38B31EA961C80058B925 /* ZKDefs.m in Sources */,
+				53246AA9256C324500E11EC4 /* InsetTextField.swift in Sources */,
 				53FE38A11EA961C80058B925 /* ZKArchive.m in Sources */,
 				537E6C1E181208A200127E29 /* CustomUITabBarController.m in Sources */,
 				53FE388F1EA961C80058B925 /* NSData+ZKAdditions.m in Sources */,
@@ -3815,6 +3811,7 @@
 				53FE35C41EA961540058B925 /* EX2Kit.m in Sources */,
 				53D973FE255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
 				535B727E134D273B003E0E1C /* SearchAllViewController.m in Sources */,
+				53246AA3256C209E00E11EC4 /* ServerEditViewController.swift in Sources */,
 				53FE356D1EA961540058B925 /* UIView+Tools.m in Sources */,
 				533295FA255EEFE50027C51A /* FMResultSet.m in Sources */,
 				53FE37671EA961720058B925 /* MusicSingleton.m in Sources */,
@@ -3875,13 +3872,13 @@
 				53FE37CC1EA961720058B925 /* SUSServerPlaylistsLoader.m in Sources */,
 				53FE376C1EA961720058B925 /* NSError+ISMSError.m in Sources */,
 				53FE37121EA961720058B925 /* ISMSCacheQueueManager.m in Sources */,
+				53246AAA256C324500E11EC4 /* InsetTextField.swift in Sources */,
 				538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53FE38A91EA961C80058B925 /* ZKCDTrailer.m in Sources */,
 				53FE37511EA961720058B925 /* ISMSUpdateChecker.m in Sources */,
 				53FE34CA1EA961540058B925 /* NSMutableArray+Safe.m in Sources */,
 				53FE37031EA961720058B925 /* DatabaseSingleton.m in Sources */,
 				53BC27A5139AF0DD00A825F1 /* AsynchronousImageView.m in Sources */,
-				53BC27A7139AF0DD00A825F1 /* SubsonicServerEditViewController.m in Sources */,
 				53FE34E21EA961540058B925 /* NSNotificationCenter+MainThread.m in Sources */,
 				53FE37A81EA961720058B925 /* SUSDropdownFolderLoader.m in Sources */,
 				53FE36F41EA961720058B925 /* BassParamEqValue.m in Sources */,
@@ -4075,6 +4072,7 @@
 				53FE35061EA961540058B925 /* NSString+FileSize.m in Sources */,
 				53FE36F71EA961720058B925 /* BassStream.m in Sources */,
 				537E9A0C14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */,
+				53246AA4256C209E00E11EC4 /* ServerEditViewController.swift in Sources */,
 				53FE38A01EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53493F2915FC6AC40059492E /* main.m in Sources */,
 				533D1820255F72FF003F962C /* CacheOfflineFoldersViewController.m in Sources */,
@@ -4124,14 +4122,6 @@
 				539148A92559CBDF004AAC3F /* Base */,
 			);
 			name = ServerListViewController.xib;
-			sourceTree = "<group>";
-		};
-		533C65C115ABB9CC003EAF29 /* SubsonicServerEditViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				539148AB2559CBDF004AAC3F /* Base */,
-			);
-			name = SubsonicServerEditViewController.xib;
 			sourceTree = "<group>";
 		};
 		533C65D415ABB9D6003EAF29 /* SettingsTabViewController.xib */ = {

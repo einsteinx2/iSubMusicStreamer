@@ -28,7 +28,7 @@
     </objects>
     <resources>
         <namedColor name="isubBackgroundColor">
-            <color red="0.79490262269973755" green="0.79490262269973755" blue="0.89403609154929575" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.8666666666666667" green="0.8666666666666667" blue="0.8666666666666667" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

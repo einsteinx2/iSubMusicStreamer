@@ -8,15 +8,19 @@
 
 #import "SUSLoader.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface SUSStatusLoader : SUSLoader
 
-@property (strong) NSString *urlString;
-@property (strong) NSString *username;
-@property (strong) NSString *password;
+@property (nullable, strong) NSString *urlString;
+@property (nullable, strong) NSString *username;
+@property (nullable, strong) NSString *password;
 @property BOOL isNewSearchAPI;
 @property BOOL isVideoSupported;
 @property NSUInteger majorVersion;
 @property NSUInteger minorVersion;
-@property (copy) NSString *versionString;
+@property (nullable, copy) NSString *versionString;
+
+NS_ASSUME_NONNULL_END
 
 @end

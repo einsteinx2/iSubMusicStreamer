@@ -50,8 +50,10 @@
  */
 
 // Loaders
+#import "ISMSErrorDomain.h"
 #import "SUSServerShuffleLoader.h"
 #import "SUSQuickAlbumsLoader.h"
+#import "SUSStatusLoader.h"
 
 // DAOs
 #import "SUSRootFoldersDAO.h"
@@ -64,6 +66,7 @@
 // Models
 #import "ISMSArtist.h"
 #import "ISMSAlbum.h"
+#import "ISMSServer.h"
 
 /*
  * Extensions
