@@ -21,96 +21,78 @@
 
 #pragma mark - Lifecycle
 
-- (void)viewDidLoad 
-{
+- (void)viewDidLoad  {
     [super viewDidLoad];
 		
-	if (viewObjectsS.serverToEdit)
-	{
+	if (viewObjectsS.serverToEdit) {
 		self.urlField.text = viewObjectsS.serverToEdit.url;
 		self.usernameField.text = viewObjectsS.serverToEdit.username;
 		self.passwordField.text = viewObjectsS.serverToEdit.password;
-	}
+    } else {
+        [self.urlField becomeFirstResponder];
+    }
 }
 
 #pragma mark - Button handling
 
-- (BOOL)checkUrl:(NSString *)url
-{
-	if (url.length == 0)
-		return NO;
+- (BOOL)checkUrl:(NSString *)url {
+	if (url.length == 0) return NO;
 	
-	if ([[url substringFromIndex:(url.length - 1)] isEqualToString:@"/"])
-	{
+	if ([[url substringFromIndex:(url.length - 1)] isEqualToString:@"/"]) {
 		self.urlField.text = [url substringToIndex:([url length] - 1)];
 		return YES;
 	}
 	
-	if (url.length < 7)
-	{
+	if (url.length < 7) {
 		self.urlField.text = [NSString stringWithFormat:@"http://%@", url];
 		return YES;
-	}
-	else
-	{
-		if (![[url substringToIndex:7] isEqualToString:@"http://"])
-		{
+	} else {
+		if (![[url substringToIndex:7] isEqualToString:@"http://"]) {
 			BOOL addHttp = NO;
-			if (url.length >= 8)
-			{
-				if (![[url substringToIndex:8] isEqualToString:@"https://"])
+			if (url.length >= 8) {
+                if (![[url substringToIndex:8] isEqualToString:@"https://"]) {
 					addHttp = YES;
-			}
-			else 
-			{
+                }
+			} else {
 				addHttp = YES;
 			}
 			
-			if (addHttp)
+            if (addHttp) {
 				self.urlField.text = [NSString stringWithFormat:@"http://%@", url];
-			
+            }
+            
 			return YES;
 		}
 	}
-	
 	return YES;
 }
 
-- (BOOL)checkUsername:(NSString *)username
-{
+- (BOOL)checkUsername:(NSString *)username {
 	return username.length > 0;
 }
 
-- (BOOL)checkPassword:(NSString *)password
-{
+- (BOOL)checkPassword:(NSString *)password {
 	return password.length > 0;
 }
 
-- (IBAction)cancelButtonPressed:(id)sender
-{
+- (IBAction)cancelButtonPressed:(id)sender {
 	viewObjectsS.serverToEdit = nil;
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
 	
-	if (![[NSUserDefaults standardUserDefaults] objectForKey:@"servers"])
-	{
+	if (![[NSUserDefaults standardUserDefaults] objectForKey:@"servers"]) {
 		// Pop the view back
-		if (appDelegateS.currentTabBarController.selectedIndex == 4)
-		{
+		if (appDelegateS.currentTabBarController.selectedIndex == 4) {
 			[appDelegateS.currentTabBarController.moreNavigationController popToViewController:[appDelegateS.currentTabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
-		}
-		else
-		{
+		} else {
 			[(UINavigationController*)appDelegateS.currentTabBarController.selectedViewController popToRootViewControllerAnimated:YES];
 		}
 	}
 }
 
 
-- (IBAction)saveButtonPressed:(id)sender
-{
-	if (![self checkUrl:self.urlField.text])
-	{
+- (IBAction)saveButtonPressed:(id)sender {
+	if (![self checkUrl:self.urlField.text]) {
         NSString *message = @"The URL must be in the format: http://mywebsite.com:port/folder\n\nBoth the :port and /folder are optional";
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
                                                                        message:message
@@ -119,8 +101,7 @@
         [self presentViewController:alert animated:YES completion:nil];
 	}
 	
-	if (![self checkUsername:self.usernameField.text])
-	{
+	if (![self checkUsername:self.usernameField.text]) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
                                                                        message:@"Please enter a username"
                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -128,8 +109,7 @@
         [self presentViewController:alert animated:YES completion:nil];
 	}
 	
-	if (![self checkPassword:self.passwordField.text])
-	{
+	if (![self checkPassword:self.passwordField.text]) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
                                                                        message:@"Please enter a password"
                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -137,8 +117,7 @@
         [self presentViewController:alert animated:YES completion:nil];
 	}
 	
-	if ([self checkUrl:self.urlField.text] && [self checkUsername:self.usernameField.text] && [self checkPassword:self.passwordField.text])
-	{
+	if ([self checkUrl:self.urlField.text] && [self checkUsername:self.usernameField.text] && [self checkPassword:self.passwordField.text]) {
 		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Checking Server"];
         		
 		SUSStatusLoader *loader = [[SUSStatusLoader alloc] initWithDelegate:self];
@@ -151,13 +130,12 @@
 
 #pragma mark - Server URL Checker delegate
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error
-{
+- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
 	[viewObjectsS hideLoadingScreen];
 	
 	NSString *message = @"Either your username or password is incorrect. Please try again";
     if (error.code != ISMSErrorCode_IncorrectCredentials) {
-		message = [NSString stringWithFormat:@"Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\nError code %li:\n%@", (long)[error code], [error localizedDescription]];
+		message = [NSString stringWithFormat:@"Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\nError code %li:\n%@", (long)error.code, error.localizedDescription];
     }
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
                                                                    message:message
@@ -166,8 +144,7 @@
     [self presentViewController:alert animated:YES completion:nil];
 }	
 	
-- (void)loadingFinished:(SUSLoader *)theLoader
-{
+- (void)loadingFinished:(SUSLoader *)theLoader {
 	//DLog(@"server check passed");
 	[viewObjectsS hideLoadingScreen];
 	
@@ -177,11 +154,11 @@
 	theServer.password = self.passwordField.text;
 	theServer.type = SUBSONIC;
 	
-	if (!settingsS.serverList)
+    if (!settingsS.serverList) {
 		settingsS.serverList = [NSMutableArray arrayWithCapacity:1];
-	
-	if(viewObjectsS.serverToEdit)
-	{					
+    }
+    
+	if (viewObjectsS.serverToEdit) {
 		// Replace the entry in the server list
 		NSInteger index = [settingsS.serverList indexOfObject:viewObjectsS.serverToEdit];
 		[settingsS.serverList replaceObjectAtIndex:index withObject:theServer];
@@ -207,9 +184,7 @@
         userInfo[@"isVideoSupported"] = @(((SUSStatusLoader *)theLoader).isVideoSupported);
         userInfo[@"isNewSearchAPI"] = @(((SUSStatusLoader *)theLoader).isNewSearchAPI);
 		[NSNotificationCenter postNotificationToMainThreadWithName:@"switchServer" userInfo:userInfo];
-	}
-	else
-	{
+	} else {
 		// Create the entry in serverList
 		viewObjectsS.serverToEdit = theServer;
 		[settingsS.serverList addObject:viewObjectsS.serverToEdit];
@@ -231,32 +206,44 @@
 		
 		[self dismissViewControllerAnimated:YES completion:nil];
 		
-		if (UIDevice.isIPad)
+        if (UIDevice.isIPad) {
 			[appDelegateS.padRootViewController.menuViewController showHome];
-				
+        }
+        
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:0];
         userInfo[@"isVideoSupported"] = @(((SUSStatusLoader *)theLoader).isVideoSupported);
         userInfo[@"isNewSearchAPI"] = @(((SUSStatusLoader *)theLoader).isNewSearchAPI);
 
 		[NSNotificationCenter postNotificationToMainThreadWithName:@"switchServer" userInfo:userInfo];
 	}
-	
 }
 
 #pragma mark - UITextField delegate
 
 // This dismisses the keyboard when the "done" button is pressed
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
 	[self.urlField resignFirstResponder];
 	[self.usernameField resignFirstResponder];
 	[self.passwordField resignFirstResponder];
+    
+    if (textField == self.urlField) {
+        [self.usernameField becomeFirstResponder];
+    } else if (textField == self.usernameField) {
+        [self.passwordField becomeFirstResponder];
+    } else if (textField == self.passwordField) {
+        if (![self checkUrl:self.urlField.text]) {
+            [self.urlField becomeFirstResponder];
+        } else if (![self checkUsername:self.usernameField.text]) {
+            [self.usernameField becomeFirstResponder];
+        } else {
+            [self saveButtonPressed:nil];
+        }
+    }
 	return YES;
 }
 
 // This dismisses the keyboard when any area outside the keyboard is touched
-- (void) touchesBegan :(NSSet *) touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	[self.urlField resignFirstResponder];
 	[self.usernameField resignFirstResponder];
 	[self.passwordField resignFirstResponder];
