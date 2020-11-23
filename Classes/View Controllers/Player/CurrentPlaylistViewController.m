@@ -139,10 +139,6 @@ LOG_LEVEL_ISUB_DEFAULT
     [self selectRow];
 }
 
-- (void)showStore {
-	[NSNotificationCenter postNotificationToMainThreadWithName:@"player show store"];
-}
-
 - (void)viewWillAppear:(BOOL)animated  {
 	[super viewWillAppear:animated];
 	

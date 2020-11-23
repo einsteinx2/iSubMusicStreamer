@@ -207,7 +207,6 @@
 		53523D9011CD5889006AEA48 /* GenresAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53523D8E11CD5889006AEA48 /* GenresAlbumViewController.xib */; };
 		53523D9411CD61F7006AEA48 /* GenresArtistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53523D9211CD61F7006AEA48 /* GenresArtistViewController.m */; };
 		53523D9511CD61F7006AEA48 /* GenresArtistViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53523D9311CD61F7006AEA48 /* GenresArtistViewController.xib */; };
-		5353B839134D4D6C005C589E /* PagingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5353B838134D4D6C005C589E /* PagingScrollView.m */; };
 		5353B83C134D8019005C589E /* upload-playlist.png in Resources */ = {isa = PBXBuildFile; fileRef = 5353B83A134D8019005C589E /* upload-playlist.png */; };
 		5353B83D134D8019005C589E /* upload-playlist@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5353B83B134D8019005C589E /* upload-playlist@2x.png */; };
 		5358083811CEB5F200A09386 /* CacheQueueSongUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5358083711CEB5F200A09386 /* CacheQueueSongUITableViewCell.m */; };
@@ -269,6 +268,8 @@
 		537B05BD256B04360008892C /* PadMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05BB256B04360008892C /* PadMenuViewController.swift */; };
 		537B05BF256B0E4B0008892C /* PadMenuTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05BE256B0E4B0008892C /* PadMenuTableCell.swift */; };
 		537B05C0256B0E4B0008892C /* PadMenuTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05BE256B0E4B0008892C /* PadMenuTableCell.swift */; };
+		537B05C2256B40930008892C /* SongInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05C1256B40930008892C /* SongInfoViewController.swift */; };
+		537B05C3256B40930008892C /* SongInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05C1256B40930008892C /* SongInfoViewController.swift */; };
 		537DE2D9113F008C00875852 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 537DE2D8113F008C00875852 /* CoreFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		537E6C1E181208A200127E29 /* CustomUITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E6C1D181208A200127E29 /* CustomUITabBarController.m */; };
 		537E6C20181208A200127E29 /* CustomUITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E6C1D181208A200127E29 /* CustomUITabBarController.m */; };
@@ -313,7 +314,6 @@
 		539148D02559EB1D004AAC3F /* FlurryEmpty.m in Sources */ = {isa = PBXBuildFile; fileRef = 539148CE2559EB1D004AAC3F /* FlurryEmpty.m */; };
 		539148D12559EB1D004AAC3F /* FlurryEmpty.m in Sources */ = {isa = PBXBuildFile; fileRef = 539148CE2559EB1D004AAC3F /* FlurryEmpty.m */; };
 		539148E02559FEFD004AAC3F /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 539148DF2559FEFD004AAC3F /* Launch Screen.storyboard */; };
-		539148E12559FEFD004AAC3F /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 539148DF2559FEFD004AAC3F /* Launch Screen.storyboard */; };
 		539148F0255A0D56004AAC3F /* CellCachedIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 539148EF255A0D56004AAC3F /* CellCachedIndicatorView.m */; };
 		539148F1255A0D56004AAC3F /* CellCachedIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 539148EF255A0D56004AAC3F /* CellCachedIndicatorView.m */; };
 		539796E41162B68800F41D8B /* AllAlbumsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 539796E31162B68800F41D8B /* AllAlbumsViewController.m */; };
@@ -552,7 +552,6 @@
 		53BC282D139AF0DD00A825F1 /* FolderDropdownControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ADBBBF13352DB40098FAE6 /* FolderDropdownControl.m */; };
 		53BC283C139AF0DD00A825F1 /* FolderPickerDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 535B7269134CFB0A003E0E1C /* FolderPickerDialog.m */; };
 		53BC283D139AF0DD00A825F1 /* SearchAllViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 535B727C134D26E2003E0E1C /* SearchAllViewController.m */; };
-		53BC283E139AF0DD00A825F1 /* PagingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5353B838134D4D6C005C589E /* PagingScrollView.m */; };
 		53BC283F139AF0DD00A825F1 /* ShuffleFolderPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 536AB8001353B4F500DABD83 /* ShuffleFolderPickerViewController.m */; };
 		53BC2840139AF0DD00A825F1 /* PlaylistSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 536AB80F1353DCF700DABD83 /* PlaylistSongsViewController.m */; };
 		53BC2850139AF0DD00A825F1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -612,6 +611,7 @@
 		53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D97453255C51CA00AABF7F /* SwipeAction.swift */; };
 		53D97463255C74FB00AABF7F /* ISMSLocalPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D97462255C74FB00AABF7F /* ISMSLocalPlaylist.m */; };
 		53D97464255C74FB00AABF7F /* ISMSLocalPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D97462255C74FB00AABF7F /* ISMSLocalPlaylist.m */; };
+		53DA4E33256B600C0057D4C7 /* Launch Screen Beta.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 53DA4E31256B600B0057D4C7 /* Launch Screen Beta.storyboard */; };
 		53DE598314F1932C00206529 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DE598214F1932C00206529 /* CoreText.framework */; };
 		53DE598514F1933800206529 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DE598214F1932C00206529 /* CoreText.framework */; };
 		53DE598814F19BAF00206529 /* controller-extrabuttons-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 53DE598614F19BAF00206529 /* controller-extrabuttons-background.png */; };
@@ -1169,8 +1169,6 @@
 		53523D9111CD61F7006AEA48 /* GenresArtistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenresArtistViewController.h; sourceTree = "<group>"; };
 		53523D9211CD61F7006AEA48 /* GenresArtistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GenresArtistViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		53523D9311CD61F7006AEA48 /* GenresArtistViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GenresArtistViewController.xib; sourceTree = "<group>"; };
-		5353B837134D4D6C005C589E /* PagingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PagingScrollView.h; sourceTree = "<group>"; };
-		5353B838134D4D6C005C589E /* PagingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PagingScrollView.m; sourceTree = "<group>"; };
 		5353B83A134D8019005C589E /* upload-playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "upload-playlist.png"; path = "Images/Other/upload-playlist.png"; sourceTree = "<group>"; };
 		5353B83B134D8019005C589E /* upload-playlist@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "upload-playlist@2x.png"; path = "Images/Other/upload-playlist@2x.png"; sourceTree = "<group>"; };
 		5354914A11B03FC900928E0F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -1238,6 +1236,7 @@
 		537B05B8256B03830008892C /* PadRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadRootViewController.swift; sourceTree = "<group>"; };
 		537B05BB256B04360008892C /* PadMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadMenuViewController.swift; sourceTree = "<group>"; };
 		537B05BE256B0E4B0008892C /* PadMenuTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadMenuTableCell.swift; sourceTree = "<group>"; };
+		537B05C1256B40930008892C /* SongInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongInfoViewController.swift; sourceTree = "<group>"; };
 		537DE2D8113F008C00875852 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		537E6C1C181208A200127E29 /* CustomUITabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomUITabBarController.h; sourceTree = "<group>"; };
 		537E6C1D181208A200127E29 /* CustomUITabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUITabBarController.m; sourceTree = "<group>"; };
@@ -1388,6 +1387,7 @@
 		53D97453255C51CA00AABF7F /* SwipeAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeAction.swift; sourceTree = "<group>"; };
 		53D97461255C74FB00AABF7F /* ISMSLocalPlaylist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSLocalPlaylist.h; sourceTree = "<group>"; };
 		53D97462255C74FB00AABF7F /* ISMSLocalPlaylist.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ISMSLocalPlaylist.m; sourceTree = "<group>"; };
+		53DA4E31256B600B0057D4C7 /* Launch Screen Beta.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen Beta.storyboard"; sourceTree = "<group>"; };
 		53DE598214F1932C00206529 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		53DE598614F19BAF00206529 /* controller-extrabuttons-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-extrabuttons-background.png"; path = "Images/Player Icons/controller-extrabuttons-background.png"; sourceTree = "<group>"; };
 		53DE598714F19BAF00206529 /* controller-extrabuttons-background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-extrabuttons-background@2x.png"; path = "Images/Player Icons/controller-extrabuttons-background@2x.png"; sourceTree = "<group>"; };
@@ -1880,6 +1880,7 @@
 				539797F41162CEB100F41D8B /* Images */,
 				530738F31FAF6A72005C2650 /* Media.xcassets */,
 				539148DF2559FEFD004AAC3F /* Launch Screen.storyboard */,
+				53DA4E31256B600B0057D4C7 /* Launch Screen Beta.storyboard */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1978,6 +1979,8 @@
 			isa = PBXGroup;
 			children = (
 				534B20E8256202CF007FF1D7 /* PlayerViewController.swift */,
+				53F4A07A116FF7EE00BB8411 /* CurrentPlaylistViewController.h */,
+				53F4A07B116FF7EE00BB8411 /* CurrentPlaylistViewController.m */,
 				53752BE62562CEC500438636 /* Page Control */,
 				53752BEA2562CEDE00438636 /* EQ and Visualizer */,
 			);
@@ -2461,17 +2464,14 @@
 		53752BE62562CEC500438636 /* Page Control */ = {
 			isa = PBXGroup;
 			children = (
-				53F4A07A116FF7EE00BB8411 /* CurrentPlaylistViewController.h */,
-				53F4A07B116FF7EE00BB8411 /* CurrentPlaylistViewController.m */,
+				53266BF92562D4D0002C64BB /* PageControlViewController.swift */,
+				53752BEB2562CEF800438636 /* CoverArtViewController.swift */,
+				537B05C1256B40930008892C /* SongInfoViewController.swift */,
 				534050F811E9966C004AEC41 /* LyricsViewController.h */,
 				534050F911E9966C004AEC41 /* LyricsViewController.m */,
 				53F4A071116FF48400BB8411 /* DebugViewController.h */,
 				53F4A072116FF48400BB8411 /* DebugViewController.m */,
 				533C65DB15ABB9F0003EAF29 /* DebugViewController.xib */,
-				5353B837134D4D6C005C589E /* PagingScrollView.h */,
-				5353B838134D4D6C005C589E /* PagingScrollView.m */,
-				53752BEB2562CEF800438636 /* CoverArtViewController.swift */,
-				53266BF92562D4D0002C64BB /* PageControlViewController.swift */,
 			);
 			path = "Page Control";
 			sourceTree = "<group>";
@@ -3444,6 +3444,7 @@
 				53BC26E0139AF0DD00A825F1 /* bookmarks-tabbaricon@2x.png in Resources */,
 				53BC26E1139AF0DD00A825F1 /* cache-tabbaricon@2x.png in Resources */,
 				53BC26E2139AF0DD00A825F1 /* genres-tabbaricon@2x.png in Resources */,
+				53DA4E33256B600C0057D4C7 /* Launch Screen Beta.storyboard in Resources */,
 				53BC26E3139AF0DD00A825F1 /* playing-tabbaricon@2x.png in Resources */,
 				53BC26E4139AF0DD00A825F1 /* playlists-tabbaricon@2x.png in Resources */,
 				53BC26E5139AF0DD00A825F1 /* songs-tabbaricon@2x.png in Resources */,
@@ -3518,7 +3519,6 @@
 				53BC2759139AF0DD00A825F1 /* back.png in Resources */,
 				53BC275A139AF0DD00A825F1 /* back@2x.png in Resources */,
 				53BC275B139AF0DD00A825F1 /* Default-Portrait.png in Resources */,
-				539148E12559FEFD004AAC3F /* Launch Screen.storyboard in Resources */,
 				53BC275C139AF0DD00A825F1 /* Default-Landscape.png in Resources */,
 				53BC275D139AF0DD00A825F1 /* folders-tabbaricon.png in Resources */,
 				53BC275E139AF0DD00A825F1 /* folders-tabbaricon@2x.png in Resources */,
@@ -3787,6 +3787,7 @@
 				53BB7ECA121B8D8F00BEE7E8 /* CustomUITextView.m in Sources */,
 				537B05B9256B03830008892C /* PadRootViewController.swift in Sources */,
 				53FE38041EA961970058B925 /* RXMLElement.m in Sources */,
+				537B05C2256B40930008892C /* SongInfoViewController.swift in Sources */,
 				53FE37701EA961720058B925 /* NSMutableURLRequest+SUS.m in Sources */,
 				53FE35491EA961540058B925 /* UIImage+Color.m in Sources */,
 				531F166E126FA2E600F524BD /* HomeAlbumViewController.m in Sources */,
@@ -3816,7 +3817,6 @@
 				535B727E134D273B003E0E1C /* SearchAllViewController.m in Sources */,
 				53FE356D1EA961540058B925 /* UIView+Tools.m in Sources */,
 				533295FA255EEFE50027C51A /* FMResultSet.m in Sources */,
-				5353B839134D4D6C005C589E /* PagingScrollView.m in Sources */,
 				53FE37671EA961720058B925 /* MusicSingleton.m in Sources */,
 				536AB8021353B4F600DABD83 /* ShuffleFolderPickerViewController.m in Sources */,
 				53FE34DD1EA961540058B925 /* NSMutableDictionary+Safe.m in Sources */,
@@ -3977,6 +3977,7 @@
 				53FE358D1EA961540058B925 /* EX2Reachability.m in Sources */,
 				539148F1255A0D56004AAC3F /* CellCachedIndicatorView.m in Sources */,
 				53FE38AC1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
+				537B05C3256B40930008892C /* SongInfoViewController.swift in Sources */,
 				53FE351E1EA961540058B925 /* NSString+TrimmingAdditions.m in Sources */,
 				53FE37A21EA961720058B925 /* SUSChatLoader.m in Sources */,
 				53BC27E0139AF0DD00A825F1 /* CacheQueueSongUITableViewCell.m in Sources */,
@@ -4042,7 +4043,6 @@
 				53D973FF255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
 				53BC283D139AF0DD00A825F1 /* SearchAllViewController.m in Sources */,
 				53FE356F1EA961540058B925 /* UIView+Tools.m in Sources */,
-				53BC283E139AF0DD00A825F1 /* PagingScrollView.m in Sources */,
 				537B05C0256B0E4B0008892C /* PadMenuTableCell.swift in Sources */,
 				53FE37691EA961720058B925 /* MusicSingleton.m in Sources */,
 				53BC283F139AF0DD00A825F1 /* ShuffleFolderPickerViewController.m in Sources */,
@@ -4368,6 +4368,7 @@
 			baseConfigurationReference = 53F1412015FD550C004D00D5 /* buildnumber.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconBeta;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				DEFINES_MODULE = YES;
@@ -4413,6 +4414,7 @@
 			baseConfigurationReference = 53F1412015FD550C004D00D5 /* buildnumber.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconBeta;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				DEFINES_MODULE = YES;
@@ -4458,6 +4460,7 @@
 			baseConfigurationReference = 53F1412015FD550C004D00D5 /* buildnumber.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconBeta;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				DEFINES_MODULE = YES;
