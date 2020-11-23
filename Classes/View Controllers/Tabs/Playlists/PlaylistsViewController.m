@@ -238,41 +238,34 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)removeSaveEditButtons {
-	// Remove the save and edit buttons if showing
-	if (self.isPlaylistSaveEditShowing == YES) {
-        self.isPlaylistSaveEditShowing = NO;
-        [self.saveEditContainer removeFromSuperview]; self.saveEditContainer = nil;
-        [self.savePlaylistLabel removeFromSuperview]; self.savePlaylistLabel = nil;
-        [self.playlistCountLabel removeFromSuperview]; self.playlistCountLabel = nil;
-        [self.savePlaylistButton removeFromSuperview]; self.savePlaylistButton = nil;
-        [self.editPlaylistLabel removeFromSuperview]; self.editPlaylistLabel = nil;
-        [self.editPlaylistButton removeFromSuperview]; self.editPlaylistButton = nil;
-        [self.deleteSongsLabel removeFromSuperview]; self.deleteSongsLabel = nil;
-		        
-        self.tableView.tableHeaderView = nil;
-        
-        self.tableViewTopConstraint.constant = 0;
-        [self.tableView setNeedsUpdateConstraints];
-	}
+    if (!self.isPlaylistSaveEditShowing) return;
+    
+    self.isPlaylistSaveEditShowing = NO;
+    [self.saveEditContainer removeFromSuperview]; self.saveEditContainer = nil;
+    [self.savePlaylistLabel removeFromSuperview]; self.savePlaylistLabel = nil;
+    [self.playlistCountLabel removeFromSuperview]; self.playlistCountLabel = nil;
+    [self.savePlaylistButton removeFromSuperview]; self.savePlaylistButton = nil;
+    [self.editPlaylistLabel removeFromSuperview]; self.editPlaylistLabel = nil;
+    [self.editPlaylistButton removeFromSuperview]; self.editPlaylistButton = nil;
+    [self.deleteSongsLabel removeFromSuperview]; self.deleteSongsLabel = nil;
+            
+    self.tableView.tableHeaderView = nil;
+    
+    self.tableViewTopConstraint.constant = 0;
+    [self.tableView setNeedsUpdateConstraints];
 }
 
 
-- (void)addSaveEditButtons {
+- (void)addSaveEditButtons {    
 	if (self.isPlaylistSaveEditShowing == NO) {
-		// Modify the header view to include the save and edit buttons
 		self.isPlaylistSaveEditShowing = YES;
         
-        self.saveEditContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 44, self.view.width, 50)];
-        self.saveEditContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        self.saveEditContainer = [[UIView alloc] init];
+        self.saveEditContainer.translatesAutoresizingMaskIntoConstraints = NO;
         [self.view addSubview:self.saveEditContainer];
-        
-        self.tableViewTopConstraint.constant = 55;
-        [self.tableView setNeedsUpdateConstraints];
-        
-        CGFloat halfWidth = self.saveEditContainer.width / 2.0;
-		
-		self.savePlaylistLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 34)];
-		self.savePlaylistLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+        		
+        self.savePlaylistLabel = [[UILabel alloc] init];
+        self.savePlaylistLabel.translatesAutoresizingMaskIntoConstraints = NO;
         self.savePlaylistLabel.textColor = UIColor.labelColor;
 		self.savePlaylistLabel.textAlignment = NSTextAlignmentCenter;
 		self.savePlaylistLabel.font = [UIFont boldSystemFontOfSize:22];
@@ -297,8 +290,8 @@ LOG_LEVEL_ISUB_DEFAULT
 		}
 		[self.saveEditContainer addSubview:self.savePlaylistLabel];
 		
-		self.playlistCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 33, halfWidth, 16)];
-		self.playlistCountLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+        self.playlistCountLabel = [[UILabel alloc] init];
+        self.playlistCountLabel.translatesAutoresizingMaskIntoConstraints = NO;
         self.playlistCountLabel.textColor = UIColor.labelColor;
 		self.playlistCountLabel.textAlignment = NSTextAlignmentCenter;
 		self.playlistCountLabel.font = [UIFont boldSystemFontOfSize:12];
@@ -310,44 +303,79 @@ LOG_LEVEL_ISUB_DEFAULT
             }
 		}
 		[self.saveEditContainer addSubview:self.playlistCountLabel];
+        
+        self.deleteSongsLabel = [[UILabel alloc] init];
+        self.deleteSongsLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
+        self.deleteSongsLabel.textColor = UIColor.labelColor;
+        self.deleteSongsLabel.textAlignment = NSTextAlignmentCenter;
+        self.deleteSongsLabel.font = [UIFont boldSystemFontOfSize:22];
+        self.deleteSongsLabel.adjustsFontSizeToFitWidth = YES;
+        self.deleteSongsLabel.minimumScaleFactor = 12.0 / self.deleteSongsLabel.font.pointSize;
+        if (self.segmentedControl.selectedSegmentIndex == 0) {
+            self.deleteSongsLabel.text = @"Remove # Songs";
+        } else if (self.segmentedControl.selectedSegmentIndex == 1) {
+            self.deleteSongsLabel.text = @"Remove # Playlists";
+        }
+        self.deleteSongsLabel.hidden = YES;
+        [self.saveEditContainer addSubview:self.deleteSongsLabel];
 		
 		self.savePlaylistButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.savePlaylistButton.frame = CGRectMake(0, 0, halfWidth, 50);
-		self.savePlaylistButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+        self.savePlaylistButton.translatesAutoresizingMaskIntoConstraints = NO;
 		[self.savePlaylistButton addTarget:self action:@selector(savePlaylistAction:) forControlEvents:UIControlEventTouchUpInside];
 		[self.saveEditContainer addSubview:self.savePlaylistButton];
 		
-		self.editPlaylistLabel = [[UILabel alloc] initWithFrame:CGRectMake(halfWidth, 0, halfWidth, 50)];
-		self.editPlaylistLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
-        self.editPlaylistLabel.textColor = UIColor.labelColor;
+        self.editPlaylistLabel = [[UILabel alloc] init];
+        self.editPlaylistLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        self.editPlaylistLabel.textColor = UIColor.systemBlueColor;
 		self.editPlaylistLabel.textAlignment = NSTextAlignmentCenter;
 		self.editPlaylistLabel.font = [UIFont boldSystemFontOfSize:22];
 		self.editPlaylistLabel.text = @"Edit";
 		[self.saveEditContainer addSubview:self.editPlaylistLabel];
 		
 		self.editPlaylistButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.editPlaylistButton.frame = CGRectMake(halfWidth, 0, halfWidth, 50);
-		self.editPlaylistButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
+        self.editPlaylistButton.translatesAutoresizingMaskIntoConstraints = NO;
 		[self.editPlaylistButton addTarget:self action:@selector(editPlaylistAction:) forControlEvents:UIControlEventTouchUpInside];
 		[self.saveEditContainer addSubview:self.editPlaylistButton];
-		
-		self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 50)];
-		self.deleteSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-		self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
-        self.deleteSongsLabel.textColor = UIColor.labelColor;
-		self.deleteSongsLabel.textAlignment = NSTextAlignmentCenter;
-		self.deleteSongsLabel.font = [UIFont boldSystemFontOfSize:22];
-		self.deleteSongsLabel.adjustsFontSizeToFitWidth = YES;
-		self.deleteSongsLabel.minimumScaleFactor = 12.0 / self.deleteSongsLabel.font.pointSize;
-		if (self.segmentedControl.selectedSegmentIndex == 0) {
-			self.deleteSongsLabel.text = @"Remove # Songs";
-		} else if (self.segmentedControl.selectedSegmentIndex == 1) {
-			self.deleteSongsLabel.text = @"Remove # Playlists";
-		}
-		self.deleteSongsLabel.hidden = YES;
-		[self.saveEditContainer addSubview:self.deleteSongsLabel];
-		
-//		self.tableView.tableHeaderView = self.headerView;
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [self.saveEditContainer.widthAnchor constraintEqualToAnchor:self.view.widthAnchor],
+            [self.saveEditContainer.heightAnchor constraintEqualToConstant:50],
+            [self.saveEditContainer.topAnchor constraintEqualToAnchor:self.segmentControlContainer.bottomAnchor constant:8],
+            
+            [self.savePlaylistLabel.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.75],
+            [self.savePlaylistLabel.heightAnchor constraintEqualToAnchor:self.saveEditContainer.heightAnchor multiplier:0.666],
+            [self.savePlaylistLabel.leadingAnchor constraintEqualToAnchor:self.saveEditContainer.leadingAnchor],
+            [self.savePlaylistLabel.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+            
+            [self.playlistCountLabel.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.75],
+            [self.playlistCountLabel.heightAnchor constraintEqualToAnchor:self.saveEditContainer.heightAnchor multiplier:0.333],
+            [self.playlistCountLabel.leadingAnchor constraintEqualToAnchor:self.saveEditContainer.leadingAnchor],
+            [self.playlistCountLabel.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor constant:-4],
+            
+            [self.deleteSongsLabel.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.75],
+            [self.deleteSongsLabel.leadingAnchor constraintEqualToAnchor:self.saveEditContainer.leadingAnchor],
+            [self.deleteSongsLabel.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+            [self.deleteSongsLabel.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor],
+            
+            [self.savePlaylistButton.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.75],
+            [self.savePlaylistButton.leadingAnchor constraintEqualToAnchor:self.saveEditContainer.leadingAnchor],
+            [self.savePlaylistButton.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+            [self.savePlaylistButton.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor],
+            
+            [self.editPlaylistLabel.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.25],
+            [self.editPlaylistLabel.trailingAnchor constraintEqualToAnchor:self.saveEditContainer.trailingAnchor],
+            [self.editPlaylistLabel.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+            [self.editPlaylistLabel.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor],
+            
+            [self.editPlaylistButton.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.25],
+            [self.editPlaylistButton.trailingAnchor constraintEqualToAnchor:self.saveEditContainer.trailingAnchor],
+            [self.editPlaylistButton.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+            [self.editPlaylistButton.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor],
+        ]];
+        
+        self.tableViewTopConstraint.constant = 58;
+        [self.tableView setNeedsUpdateConstraints];
 	} else {
 		if (self.segmentedControl.selectedSegmentIndex == 0) {
             if (self.currentPlaylistCount == 1) {
@@ -523,7 +551,8 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (self.isEditing) {
             [self setEditing:NO animated:YES];
             [self hideDeleteButton];
-            self.editPlaylistLabel.backgroundColor = [UIColor clearColor];
+            self.editPlaylistLabel.backgroundColor = UIColor.clearColor;
+            self.editPlaylistLabel.textColor = UIColor.systemBlueColor;
             self.editPlaylistLabel.text = @"Edit";
             
             // Reload the table to correct the numbers
@@ -534,6 +563,7 @@ LOG_LEVEL_ISUB_DEFAULT
         } else {
             [self setEditing:YES animated:YES];
 			self.editPlaylistLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
+            self.editPlaylistLabel.textColor = UIColor.labelColor;
 			self.editPlaylistLabel.text = @"Done";
 			[self showDeleteButton];
 		}
@@ -542,14 +572,15 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (self.isEditing) {
             [self setEditing:NO animated:YES];
             [self hideDeleteButton];
-            self.editPlaylistLabel.backgroundColor = [UIColor clearColor];
-            self.editPlaylistLabel.text = @"Edit";
+            self.editPlaylistLabel.backgroundColor = UIColor.clearColor;
+            self.editPlaylistLabel.textColor = UIColor.systemBlueColor;
             
             // Reload the table to correct the numbers
             [self.tableView reloadData];
         } else {
             [self setEditing:YES animated:YES];
 			self.editPlaylistLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
+            self.editPlaylistLabel.textColor = UIColor.labelColor;
 			self.editPlaylistLabel.text = @"Done";
 			[self showDeleteButton];
 		}

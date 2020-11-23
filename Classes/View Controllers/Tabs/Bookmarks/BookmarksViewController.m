@@ -139,21 +139,17 @@
 }
 
 - (void)addSaveEditButtons:(NSUInteger)bookmarksCount {
-    if (self.isSaveEditShowing) return;
+    [self removeSaveEditButtons];
     
     self.isSaveEditShowing = YES;
     
-    // Add the header
-    self.saveEditContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 50)];
-    self.saveEditContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.saveEditContainer = [[UIView alloc] init];
+    self.saveEditContainer.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:self.saveEditContainer];
-    
-    CGFloat halfWidth = self.saveEditContainer.width / 2.0;
-    
-    self.bookmarkCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 50)];
-    self.bookmarkCountLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-    self.bookmarkCountLabel.backgroundColor = [UIColor clearColor];
-    self.bookmarkCountLabel.textColor = [UIColor whiteColor];
+        
+    self.bookmarkCountLabel = [[UILabel alloc] init];
+    self.bookmarkCountLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.bookmarkCountLabel.textColor = UIColor.labelColor;
     self.bookmarkCountLabel.textAlignment = NSTextAlignmentCenter;
     self.bookmarkCountLabel.font = [UIFont boldSystemFontOfSize:22];
     if (bookmarksCount == 1)
@@ -162,31 +158,10 @@
         self.bookmarkCountLabel.text = [NSString stringWithFormat:@"%lu Bookmarks", (unsigned long)bookmarksCount];
     [self.saveEditContainer addSubview:self.bookmarkCountLabel];
     
-    self.deleteBookmarksButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.deleteBookmarksButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-    self.deleteBookmarksButton.frame = CGRectMake(0, 0, halfWidth, 50);
-    [self.deleteBookmarksButton addTarget:self action:@selector(deleteBookmarksAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.saveEditContainer addSubview:self.deleteBookmarksButton];
-    
-    self.editBookmarksLabel = [[UILabel alloc] initWithFrame:CGRectMake(halfWidth, 0, halfWidth, 50)];
-    self.editBookmarksLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
-    self.editBookmarksLabel.backgroundColor = [UIColor clearColor];
-    self.editBookmarksLabel.textColor = [UIColor whiteColor];
-    self.editBookmarksLabel.textAlignment = NSTextAlignmentCenter;
-    self.editBookmarksLabel.font = [UIFont boldSystemFontOfSize:22];
-    self.editBookmarksLabel.text = @"Edit";
-    [self.saveEditContainer addSubview:self.editBookmarksLabel];
-    
-    self.editBookmarksButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.editBookmarksButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
-    self.editBookmarksButton.frame = CGRectMake(halfWidth, 0, halfWidth, 40);
-    [self.editBookmarksButton addTarget:self action:@selector(editBookmarksAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.saveEditContainer addSubview:self.editBookmarksButton];
-    
-    self.deleteBookmarksLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 50)];
-    self.deleteBookmarksLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+    self.deleteBookmarksLabel = [[UILabel alloc] init];
+    self.deleteBookmarksLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.deleteBookmarksLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
-    self.deleteBookmarksLabel.textColor = [UIColor whiteColor];
+    self.deleteBookmarksLabel.textColor = UIColor.labelColor;
     self.deleteBookmarksLabel.textAlignment = NSTextAlignmentCenter;
     self.deleteBookmarksLabel.font = [UIFont boldSystemFontOfSize:22];
     self.deleteBookmarksLabel.adjustsFontSizeToFitWidth = YES;
@@ -195,7 +170,56 @@
     self.deleteBookmarksLabel.hidden = YES;
     [self.saveEditContainer addSubview:self.deleteBookmarksLabel];
     
-    self.tableViewTopConstraint.constant = 50.0;
+    self.deleteBookmarksButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.deleteBookmarksButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.deleteBookmarksButton addTarget:self action:@selector(deleteBookmarksAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.saveEditContainer addSubview:self.deleteBookmarksButton];
+    
+    self.editBookmarksLabel = [[UILabel alloc] init];
+    self.editBookmarksLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.editBookmarksLabel.textColor = UIColor.systemBlueColor;
+    self.editBookmarksLabel.textAlignment = NSTextAlignmentCenter;
+    self.editBookmarksLabel.font = [UIFont boldSystemFontOfSize:22];
+    self.editBookmarksLabel.text = @"Edit";
+    [self.saveEditContainer addSubview:self.editBookmarksLabel];
+    
+    self.editBookmarksButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.editBookmarksButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.editBookmarksButton addTarget:self action:@selector(editBookmarksAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.saveEditContainer addSubview:self.editBookmarksButton];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [self.saveEditContainer.widthAnchor constraintEqualToAnchor:self.view.widthAnchor],
+        [self.saveEditContainer.heightAnchor constraintEqualToConstant:50],
+        [self.saveEditContainer.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+        
+        [self.bookmarkCountLabel.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.75],
+        [self.bookmarkCountLabel.leadingAnchor constraintEqualToAnchor:self.saveEditContainer.leadingAnchor],
+        [self.bookmarkCountLabel.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+        [self.bookmarkCountLabel.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor],
+        
+        [self.deleteBookmarksLabel.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.75],
+        [self.deleteBookmarksLabel.leadingAnchor constraintEqualToAnchor:self.saveEditContainer.leadingAnchor],
+        [self.deleteBookmarksLabel.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+        [self.deleteBookmarksLabel.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor],
+        
+        [self.deleteBookmarksButton.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.75],
+        [self.deleteBookmarksButton.leadingAnchor constraintEqualToAnchor:self.saveEditContainer.leadingAnchor],
+        [self.deleteBookmarksButton.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+        [self.deleteBookmarksButton.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor],
+        
+        [self.editBookmarksLabel.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.25],
+        [self.editBookmarksLabel.trailingAnchor constraintEqualToAnchor:self.saveEditContainer.trailingAnchor],
+        [self.editBookmarksLabel.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+        [self.editBookmarksLabel.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor],
+        
+        [self.editBookmarksButton.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.25],
+        [self.editBookmarksButton.trailingAnchor constraintEqualToAnchor:self.saveEditContainer.trailingAnchor],
+        [self.editBookmarksButton.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+        [self.editBookmarksButton.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor],
+    ]];
+    
+    self.tableViewTopConstraint.constant = 50;
     [self.tableView setNeedsUpdateConstraints];
 }
 
@@ -253,12 +277,14 @@
 	if (self.isEditing == NO) {
         [self setEditing:YES animated:YES];
 		self.editBookmarksLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
+        self.editBookmarksLabel.textColor = UIColor.labelColor;
 		self.editBookmarksLabel.text = @"Done";
 		[self showDeleteButton];
     } else {
         [self setEditing:NO animated:YES];
 		[self hideDeleteButton];
-		self.editBookmarksLabel.backgroundColor = [UIColor clearColor];
+        self.editBookmarksLabel.backgroundColor = UIColor.clearColor;
+        self.editBookmarksLabel.textColor = UIColor.systemBlueColor;
 		self.editBookmarksLabel.text = @"Edit";
 		
 		// Reload the table

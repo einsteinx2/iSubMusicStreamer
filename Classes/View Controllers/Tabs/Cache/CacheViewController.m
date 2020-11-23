@@ -461,126 +461,154 @@
 }
 
 - (void)removeSaveEditButtons {
-	if (self.isSaveEditShowing == YES) {
-		self.isSaveEditShowing = NO;
-        [self.saveEditContainer removeFromSuperview]; self.saveEditContainer = nil;
-        [self.songsCountLabel removeFromSuperview]; self.songsCountLabel = nil;
-        [self.deleteSongsButton removeFromSuperview]; self.deleteSongsButton = nil;
-        [self.editSongsLabel removeFromSuperview]; self.editSongsLabel = nil;
-        [self.editSongsButton removeFromSuperview]; self.editSongsButton = nil;
-        [self.deleteSongsLabel removeFromSuperview]; self.deleteSongsLabel = nil;
-        [self.cacheSizeLabel removeFromSuperview]; self.cacheSizeLabel = nil;
-		
-		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCacheSizeLabel) object:nil];
-        
-        self.tableView.tableHeaderView = nil;
-        
-        self.tableViewTopConstraint.constant = 0;
-        [self.tableView setNeedsUpdateConstraints];
-	}
+    if (!self.isSaveEditShowing) return;
+    
+    self.isSaveEditShowing = NO;
+    [self.saveEditContainer removeFromSuperview]; self.saveEditContainer = nil;
+    [self.songsCountLabel removeFromSuperview]; self.songsCountLabel = nil;
+    [self.deleteSongsButton removeFromSuperview]; self.deleteSongsButton = nil;
+    [self.editSongsLabel removeFromSuperview]; self.editSongsLabel = nil;
+    [self.editSongsButton removeFromSuperview]; self.editSongsButton = nil;
+    [self.deleteSongsLabel removeFromSuperview]; self.deleteSongsLabel = nil;
+    [self.cacheSizeLabel removeFromSuperview]; self.cacheSizeLabel = nil;
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCacheSizeLabel) object:nil];
+    
+    self.tableView.tableHeaderView = nil;
+    
+    self.tableViewTopConstraint.constant = 0;
+    [self.tableView setNeedsUpdateConstraints];
 }
 
 - (void)addSaveEditButtons {
 	[self removeSaveEditButtons];
 	
-	if (self.isSaveEditShowing == NO) {
-		// Modify the header view to include the save and edit buttons
-		self.isSaveEditShowing = YES;
-
-        self.saveEditContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 44, self.view.width, 50)];
-        self.saveEditContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//        self.tableView.y = 45 + 50;
-        [self.view addSubview:self.saveEditContainer];
-        
-        self.tableViewTopConstraint.constant = 55;
-        [self.tableView setNeedsUpdateConstraints];
-        
-        CGFloat halfWidth = self.saveEditContainer.width / 2.0;
-
-		self.songsCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 34)];
-		self.songsCountLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-        self.songsCountLabel.textColor = UIColor.labelColor;//[UIColor whiteColor];
-		self.songsCountLabel.textAlignment = NSTextAlignmentCenter;
-		self.songsCountLabel.font = [UIFont boldSystemFontOfSize:22];
-		if (self.segmentedControl.selectedSegmentIndex == 0) {
-			NSUInteger cachedSongsCount = [databaseS.songCacheDbQueue intForQuery:@"SELECT COUNT(*) FROM cachedSongs WHERE finished = 'YES' AND md5 != ''"];
-            if ([databaseS.songCacheDbQueue intForQuery:@"SELECT COUNT(*) FROM cachedSongs WHERE finished = 'YES' AND md5 != ''"] == 1) {
-				self.songsCountLabel.text = [NSString stringWithFormat:@"1 Song"];
-            } else {
-				self.songsCountLabel.text = [NSString stringWithFormat:@"%lu Songs", (unsigned long)cachedSongsCount];
-            }
-		} else if (self.segmentedControl.selectedSegmentIndex == 1) {
-            if (self.cacheQueueCount == 1) {
-				self.songsCountLabel.text = [NSString stringWithFormat:@"1 Song"];
-            } else {
-				self.songsCountLabel.text = [NSString stringWithFormat:@"%lu Songs", (unsigned long)self.cacheQueueCount];
-            }
-		}
-		[self.saveEditContainer addSubview:self.songsCountLabel];
-		
-		self.cacheSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 33, halfWidth, 14)];
-		self.cacheSizeLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-        self.cacheSizeLabel.textColor = UIColor.labelColor;
-		self.cacheSizeLabel.textAlignment = NSTextAlignmentCenter;
-		self.cacheSizeLabel.font = [UIFont boldSystemFontOfSize:12];
-		if (self.segmentedControl.selectedSegmentIndex == 0) {
-            if (cacheS.cacheSize <= 0) {
-				self.cacheSizeLabel.text = @"";
-            } else {
-				self.cacheSizeLabel.text = [NSString formatFileSize:cacheS.cacheSize];
-            }
-		} else if (self.segmentedControl.selectedSegmentIndex == 1) {
-			/*unsigned long long combinedSize = 0;
-			FMResultSet *result = [databaseS.cacheQueueDb executeQuery:@"SELECT size FROM cacheQueue"];
-			while ([result next])
-			{
-				combinedSize += [result longLongIntForColumnIndex:0];
-			}
-			[result close];
-			cacheSizeLabel.text = [NSString formatFileSize:combinedSize];*/
-			
-			self.cacheSizeLabel.text = @"";
-		}
-		[self.saveEditContainer addSubview:self.cacheSizeLabel];
-		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCacheSizeLabel) object:nil];
-		[self updateCacheSizeLabel];
-		
-		self.deleteSongsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.deleteSongsButton.frame = CGRectMake(0, 0, halfWidth, 50);
-		self.deleteSongsButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-		[self.deleteSongsButton addTarget:self action:@selector(deleteSongsAction:) forControlEvents:UIControlEventTouchUpInside];
-		[self.saveEditContainer addSubview:self.deleteSongsButton];
-		
-		self.editSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(halfWidth, 0, halfWidth, 50)];
-		self.editSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
-        self.editSongsLabel.textColor = UIColor.labelColor;
-		self.editSongsLabel.textAlignment = NSTextAlignmentCenter;
-		self.editSongsLabel.font = [UIFont boldSystemFontOfSize:22];
-		self.editSongsLabel.text = @"Edit";
-		[self.saveEditContainer addSubview:self.editSongsLabel];
-		
-		self.editSongsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		self.editSongsButton.frame = CGRectMake(halfWidth, 0, halfWidth, 50);
-		self.editSongsButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin;
-		[self.editSongsButton addTarget:self action:@selector(editSongsAction:) forControlEvents:UIControlEventTouchUpInside];
-		[self.saveEditContainer addSubview:self.editSongsButton];
-		
-		self.deleteSongsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, halfWidth, 50)];
-		self.deleteSongsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-		self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
-        self.deleteSongsLabel.textColor = UIColor.labelColor;
-		self.deleteSongsLabel.textAlignment = NSTextAlignmentCenter;
-		self.deleteSongsLabel.font = [UIFont boldSystemFontOfSize:22];
-		self.deleteSongsLabel.adjustsFontSizeToFitWidth = YES;
-		self.deleteSongsLabel.minimumScaleFactor = 12.0 / self.deleteSongsLabel.font.pointSize;
-		self.deleteSongsLabel.text = @"Delete # Songs";
-		self.deleteSongsLabel.hidden = YES;
-		[self.saveEditContainer addSubview:self.deleteSongsLabel];
-        
-        if (self.segmentedControl.selectedSegmentIndex == 0) {
-            [self addHeader];
+    self.isSaveEditShowing = YES;
+    
+    self.saveEditContainer = [[UIView alloc] init];
+    self.saveEditContainer.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:self.saveEditContainer];
+    
+    self.songsCountLabel = [[UILabel alloc] init];
+    self.songsCountLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.songsCountLabel.textColor = UIColor.labelColor;
+    self.songsCountLabel.textAlignment = NSTextAlignmentCenter;
+    self.songsCountLabel.font = [UIFont boldSystemFontOfSize:22];
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        NSUInteger cachedSongsCount = [databaseS.songCacheDbQueue intForQuery:@"SELECT COUNT(*) FROM cachedSongs WHERE finished = 'YES' AND md5 != ''"];
+        if ([databaseS.songCacheDbQueue intForQuery:@"SELECT COUNT(*) FROM cachedSongs WHERE finished = 'YES' AND md5 != ''"] == 1) {
+            self.songsCountLabel.text = [NSString stringWithFormat:@"1 Song"];
+        } else {
+            self.songsCountLabel.text = [NSString stringWithFormat:@"%lu Songs", (unsigned long)cachedSongsCount];
         }
-	}
+    } else if (self.segmentedControl.selectedSegmentIndex == 1) {
+        if (self.cacheQueueCount == 1) {
+            self.songsCountLabel.text = [NSString stringWithFormat:@"1 Song"];
+        } else {
+            self.songsCountLabel.text = [NSString stringWithFormat:@"%lu Songs", (unsigned long)self.cacheQueueCount];
+        }
+    }
+    [self.saveEditContainer addSubview:self.songsCountLabel];
+    
+    self.cacheSizeLabel = [[UILabel alloc] init];
+    self.cacheSizeLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.cacheSizeLabel.textColor = UIColor.labelColor;
+    self.cacheSizeLabel.textAlignment = NSTextAlignmentCenter;
+    self.cacheSizeLabel.font = [UIFont boldSystemFontOfSize:12];
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        if (cacheS.cacheSize <= 0) {
+            self.cacheSizeLabel.text = @"";
+        } else {
+            self.cacheSizeLabel.text = [NSString formatFileSize:cacheS.cacheSize];
+        }
+    } else if (self.segmentedControl.selectedSegmentIndex == 1) {
+        /*unsigned long long combinedSize = 0;
+        FMResultSet *result = [databaseS.cacheQueueDb executeQuery:@"SELECT size FROM cacheQueue"];
+        while ([result next])
+        {
+            combinedSize += [result longLongIntForColumnIndex:0];
+        }
+        [result close];
+        cacheSizeLabel.text = [NSString formatFileSize:combinedSize];*/
+        
+        self.cacheSizeLabel.text = @"";
+    }
+    [self.saveEditContainer addSubview:self.cacheSizeLabel];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCacheSizeLabel) object:nil];
+    [self updateCacheSizeLabel];
+    
+    self.deleteSongsLabel = [[UILabel alloc] init];
+    self.deleteSongsLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.deleteSongsLabel.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:.5];
+    self.deleteSongsLabel.textColor = UIColor.labelColor;
+    self.deleteSongsLabel.textAlignment = NSTextAlignmentCenter;
+    self.deleteSongsLabel.font = [UIFont boldSystemFontOfSize:22];
+    self.deleteSongsLabel.adjustsFontSizeToFitWidth = YES;
+    self.deleteSongsLabel.minimumScaleFactor = 12.0 / self.deleteSongsLabel.font.pointSize;
+    self.deleteSongsLabel.text = @"Delete # Songs";
+    self.deleteSongsLabel.hidden = YES;
+    [self.saveEditContainer addSubview:self.deleteSongsLabel];
+    
+    self.deleteSongsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.deleteSongsButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.deleteSongsButton addTarget:self action:@selector(deleteSongsAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.saveEditContainer addSubview:self.deleteSongsButton];
+    
+    self.editSongsLabel = [[UILabel alloc] init];
+    self.editSongsLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.editSongsLabel.textColor = UIColor.systemBlueColor;//UIColor.labelColor;
+    self.editSongsLabel.textAlignment = NSTextAlignmentCenter;
+    self.editSongsLabel.font = [UIFont boldSystemFontOfSize:22];
+    self.editSongsLabel.text = @"Edit";
+    [self.saveEditContainer addSubview:self.editSongsLabel];
+    
+    self.editSongsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.editSongsButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.editSongsButton addTarget:self action:@selector(editSongsAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.saveEditContainer addSubview:self.editSongsButton];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [self.saveEditContainer.widthAnchor constraintEqualToAnchor:self.view.widthAnchor],
+        [self.saveEditContainer.heightAnchor constraintEqualToConstant:50],
+        [self.saveEditContainer.topAnchor constraintEqualToAnchor:self.segmentControlContainer.bottomAnchor constant:8],
+        
+        [self.songsCountLabel.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.75],
+        [self.songsCountLabel.heightAnchor constraintEqualToAnchor:self.saveEditContainer.heightAnchor multiplier:0.666],
+        [self.songsCountLabel.leadingAnchor constraintEqualToAnchor:self.saveEditContainer.leadingAnchor],
+        [self.songsCountLabel.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+        
+        [self.cacheSizeLabel.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.75],
+        [self.cacheSizeLabel.heightAnchor constraintEqualToAnchor:self.saveEditContainer.heightAnchor multiplier:0.333],
+        [self.cacheSizeLabel.leadingAnchor constraintEqualToAnchor:self.saveEditContainer.leadingAnchor],
+        [self.cacheSizeLabel.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor constant:-4],
+        
+        [self.deleteSongsLabel.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.75],
+        [self.deleteSongsLabel.leadingAnchor constraintEqualToAnchor:self.saveEditContainer.leadingAnchor],
+        [self.deleteSongsLabel.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+        [self.deleteSongsLabel.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor],
+        
+        [self.deleteSongsButton.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.75],
+        [self.deleteSongsButton.leadingAnchor constraintEqualToAnchor:self.saveEditContainer.leadingAnchor],
+        [self.deleteSongsButton.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+        [self.deleteSongsButton.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor],
+        
+        [self.editSongsLabel.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.25],
+        [self.editSongsLabel.trailingAnchor constraintEqualToAnchor:self.saveEditContainer.trailingAnchor],
+        [self.editSongsLabel.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+        [self.editSongsLabel.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor],
+        
+        [self.editSongsButton.widthAnchor constraintEqualToAnchor:self.saveEditContainer.widthAnchor multiplier:0.25],
+        [self.editSongsButton.trailingAnchor constraintEqualToAnchor:self.saveEditContainer.trailingAnchor],
+        [self.editSongsButton.topAnchor constraintEqualToAnchor:self.saveEditContainer.topAnchor],
+        [self.editSongsButton.bottomAnchor constraintEqualToAnchor:self.saveEditContainer.bottomAnchor],
+    ]];
+    
+    self.tableViewTopConstraint.constant = 58;
+    [self.tableView setNeedsUpdateConstraints];
+    
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        [self addHeader];
+    }
 }
 
 - (void)removeNoSongsScreen {
@@ -681,12 +709,14 @@
 		if (!self.isEditing) {
             [self setEditing:YES animated:YES];
 			self.editSongsLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
+            self.editSongsLabel.textColor = UIColor.labelColor;
 			self.editSongsLabel.text = @"Done";
 			[self showDeleteButton];
         } else {
             [self setEditing:NO animated:YES];
 			[self hideDeleteButton];
-			self.editSongsLabel.backgroundColor = [UIColor clearColor];
+			self.editSongsLabel.backgroundColor = UIColor.clearColor;
+            self.editSongsLabel.textColor = UIColor.systemBlueColor;
 			self.editSongsLabel.text = @"Edit";
 			
 			// Reload the table
@@ -700,12 +730,14 @@
             
             [self setEditing:YES animated:YES];
 			self.editSongsLabel.backgroundColor = [UIColor colorWithRed:0.008 green:.46 blue:.933 alpha:1];
+            self.editSongsLabel.textColor = UIColor.labelColor;
 			self.editSongsLabel.text = @"Done";
 			[self showDeleteButton];
 		} else {
             [self setEditing:NO animated:YES];
 			[self hideDeleteButton];
-			self.editSongsLabel.backgroundColor = [UIColor clearColor];
+			self.editSongsLabel.backgroundColor = UIColor.clearColor;
+            self.editSongsLabel.textColor = UIColor.systemBlueColor;
 			self.editSongsLabel.text = @"Edit";
             
             // Start updating table again
