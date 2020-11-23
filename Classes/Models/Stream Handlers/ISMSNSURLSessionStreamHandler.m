@@ -111,8 +111,6 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)startConnection {
-    NSAssert(NSThread.isMainThread, @"startConnection must be called from the main thread");
-    
     self.dataTask = [self.session dataTaskWithRequest:self.request];
     [self.dataTask resume];
     self.isDownloading = YES;
@@ -122,13 +120,15 @@ LOG_LEVEL_ISUB_DEFAULT
         self.mySong.isPartiallyCached = YES;
     }
     
-    [EX2NetworkIndicator usingNetwork];
-    
-    if ([self.delegate respondsToSelector:@selector(ISMSStreamHandlerStarted:)]) {
-        [self.delegate ISMSStreamHandlerStarted:self];
-    }
-    
-    [self startTimeOutTimer];
+    [EX2Dispatch runInMainThreadAndWaitUntilDone:YES block:^{
+        [EX2NetworkIndicator usingNetwork];
+        
+        if ([self.delegate respondsToSelector:@selector(ISMSStreamHandlerStarted:)]) {
+            [self.delegate ISMSStreamHandlerStarted:self];
+        }
+        
+        [self startTimeOutTimer];
+    }];
 }
 
 // Cancel the download
