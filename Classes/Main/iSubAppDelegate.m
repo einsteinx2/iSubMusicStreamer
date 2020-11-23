@@ -418,17 +418,6 @@ LOG_LEVEL_ISUB_DEFAULT
     return nil;
 }
 
-- (void)startRedirectingLogToFile {
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *documentsDirectory = [paths objectAtIndexSafe:0];
-	NSString *logPath = [documentsDirectory stringByAppendingPathComponent:@"console.log"];
-	freopen([logPath cStringUsingEncoding:NSASCIIStringEncoding],"a+",stderr);
-}
-
-- (void)stopRedirectingLogToFile {
-	freopen("/dev/tty","w",stderr);
-}
-
 - (void)batteryStateChanged:(NSNotification *)notification {
 	if (UIDevice.currentDevice.batteryState == UIDeviceBatteryStateCharging || UIDevice.currentDevice.batteryState == UIDeviceBatteryStateFull) {
         UIApplication.sharedApplication.idleTimerDisabled = YES;

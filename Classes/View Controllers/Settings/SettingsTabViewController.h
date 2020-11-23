@@ -66,6 +66,8 @@
 @property (nonatomic, strong) IBOutlet UISegmentedControl *maxVideoBitrateWifiSegmentedControl;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *maxVideoBitrate3GSegmentedControl;
 @property (nonatomic, strong) NSDate *loadedTime;
+@property (nonatomic, strong) IBOutlet UIButton *resetAlbumArtCacheButton;
+@property (nonatomic, strong) IBOutlet UIButton *shareLogsButton;
 
 @property (nonatomic, strong) IBOutletCollection(UISwitch) NSArray *switches;
 
@@ -79,6 +81,7 @@
 - (IBAction)updateScrobblePercentLabel;
 - (IBAction)updateScrobblePercentSetting;
 - (IBAction)resetAlbumArtCacheAction;
+- (IBAction)shareAppLogsAction;
 - (void)textFieldDidChange:(UITextField *)textField;
 
 - (void)popFoldersTab;

@@ -83,9 +83,6 @@ NS_SWIFT_NAME(AppDelegate)
 
 - (void)batteryStateChanged:(nullable NSNotification *)notification;
 
-- (void)startRedirectingLogToFile;
-- (void)stopRedirectingLogToFile;
-
 - (void)checkServer;
 
 - (NSString *)zipAllLogFiles;

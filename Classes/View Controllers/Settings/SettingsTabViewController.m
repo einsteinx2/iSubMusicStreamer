@@ -20,6 +20,8 @@
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
 
+LOG_LEVEL_ISUB_DEFAULT
+
 @implementation SettingsTabViewController
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -137,6 +139,9 @@
     }
     
     self.autoDeleteCacheSwitch.x -= 10.;
+    
+    self.resetAlbumArtCacheButton.layer.cornerRadius = 8;
+    self.shareLogsButton.layer.cornerRadius = 8;
 }
 
 - (void)cachingTypeToggle
@@ -519,6 +524,21 @@
 	[databaseS resetCoverArtCache];
 	[viewObjectsS hideLoadingScreen];
 	[self popFoldersTab];
+}
+
+- (IBAction)shareAppLogsAction {
+    NSString *path = [appDelegateS zipAllLogFiles];
+    NSURL *pathURL = [NSURL fileURLWithPath:path];
+    UIActivityViewController *shareSheet = [[UIActivityViewController alloc] initWithActivityItems:@[pathURL] applicationActivities:nil];
+    shareSheet.completionWithItemsHandler = ^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError) {
+        // Delete the zip file since we're done with it
+        NSError *error = nil;
+        BOOL success = [NSFileManager.defaultManager removeItemAtURL:pathURL error:&error];
+        if (!success || error) {
+            DDLogError(@"Failed to remove log file at path %@ with error: %@", path, error.localizedDescription);
+        }
+    };
+    [self presentViewController:shareSheet animated:YES completion:nil];
 }
 
 - (void)popFoldersTab
