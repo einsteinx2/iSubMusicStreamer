@@ -263,7 +263,11 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	if ([settingsS.urlString isEqualToString:aServer.url] && [settingsS.username isEqualToString:aServer.username] && [settingsS.password isEqualToString:aServer.password]) {
 		UIImageView *currentServerMarker = [[UIImageView alloc] init];
-		currentServerMarker.image = [UIImage imageNamed:@"current-server.png"];
+        if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
+            currentServerMarker.image = [[UIImage imageNamed:@"current-server.png"] imageWithTint:UIColor.whiteColor];
+        } else {
+            currentServerMarker.image = [UIImage imageNamed:@"current-server.png"];
+        }
 		[cell.contentView addSubview:currentServerMarker];
 		
 		currentServerMarker.frame = CGRectMake(3, 12, 26, 26);
