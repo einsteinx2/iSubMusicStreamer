@@ -13,6 +13,7 @@ class PageControlViewController: UIViewController {
     private let scrollView = UIScrollView()
     private let pageControl = UIPageControl()
     private var pageControlUsed = false
+    private var isRotating = false
     
     private let numberOfPages = 4
     private var viewControllers = [UIViewController]()
@@ -31,8 +32,11 @@ class PageControlViewController: UIViewController {
         super.viewWillTransition(to: size, with: coordinator)
         
         // Fix the scroll offset if the scrollview is resized during rotation
+        isRotating = true
         coordinator.animate { _ in
             self.changePage()
+        } completion: { _ in
+            self.isRotating = false
         }
     }
     
@@ -105,7 +109,6 @@ class PageControlViewController: UIViewController {
     
     @objc private func changePage() {
         let page = pageControl.currentPage;
-        print("currentPage: \(pageControl.currentPage)")
         
         // update the scroll view to the appropriate page
         scrollView.setContentOffset(CGPoint(x: scrollView.bounds.width * CGFloat(page), y: 0), animated: true)
@@ -120,10 +123,7 @@ extension PageControlViewController: UIScrollViewDelegate {
         // We don't want a "feedback loop" between the UIPageControl and the scroll delegate in
         // which a scroll event generated from the user hitting the page control triggers updates from
         // the delegate method. We use a boolean to disable the delegate logic when the page control is used.
-        if pageControlUsed  {
-            // Send a notification so the playlist view hides the edit controls
-            NotificationCenter.postNotificationToMainThread(name: "hideEditControls")
-            
+        if pageControlUsed || isRotating {
             // do nothing - the scroll was initiated from the page control, not the user dragging
             return;
         }
