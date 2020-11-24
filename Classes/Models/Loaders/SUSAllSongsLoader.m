@@ -362,7 +362,9 @@ static BOOL _isAllSongsLoading = NO;
 		// Create the section info array
         sectionInfo = [databaseS sectionInfoFromTable:@"allSongs" inDatabaseQueue:databaseS.allSongsDbQueue withColumn:@"title"];
 		[databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
-			[db executeUpdate:@"DROP TABLE allSongsIndexCache"];
+            if ([db tableExists:@"allSongsIndexCache"]) {
+                [db executeUpdate:@"DROP TABLE allSongsIndexCache"];
+            }
 			[db executeUpdate:@"CREATE TABLE allSongsIndexCache (name TEXT, position INTEGER, count INTEGER)"];
 			for (int i = 0; i < sectionInfo.count; i++) {
 				@autoreleasepool {
