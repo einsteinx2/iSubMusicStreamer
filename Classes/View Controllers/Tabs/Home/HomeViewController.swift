@@ -126,6 +126,11 @@ import SnapKit
                 self.loadQuickAlbums(modifier: "random", title: action.title ?? "")
             })
             sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            if let popoverPresentationController = sheet.popoverPresentationController {
+                // Fix exception on iPad
+                popoverPresentationController.sourceView = self.quickAlbumsButton
+                popoverPresentationController.sourceRect = self.quickAlbumsButton.bounds
+            }
             present(sheet, animated: true, completion: nil)
         }
         
