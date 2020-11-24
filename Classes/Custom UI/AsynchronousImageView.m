@@ -59,8 +59,21 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (self.coverArtDAO.isCoverArtCached) {
 			self.image = self.coverArtDAO.coverArtImage;
 		} else {
-			self.image = self.coverArtDAO.defaultCoverArtImage;
-			if (_coverArtId && self.isLarge) {
+            BOOL usedSmallCoverArt = NO;
+            if (self.isLarge) {
+                // Try and use the small cover art temporarily
+                SUSCoverArtDAO *coverArtDAOSmall = [[SUSCoverArtDAO alloc] initWithDelegate:self coverArtId:self.coverArtId isLarge:NO];
+                if (coverArtDAOSmall.isCoverArtCached) {
+                    self.image = coverArtDAOSmall.coverArtImage;
+                    usedSmallCoverArt = YES;
+                } else {
+                    self.image = self.coverArtDAO.defaultCoverArtImage;
+                }
+            } else {
+                self.image = self.coverArtDAO.defaultCoverArtImage;
+            }
+			
+			if (_coverArtId && self.isLarge && !usedSmallCoverArt) {
                 self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
 				self.activityIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 				self.activityIndicator.center = CGPointMake(self.width/2, self.height/2);

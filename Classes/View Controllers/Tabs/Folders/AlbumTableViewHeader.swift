@@ -24,7 +24,9 @@ import SnapKit
             make.height.equalTo(100)
         }
         
-        coverArtView.isLarge = true
+        // NOTE: Set to false because scaling down very large images causes flickering
+        //       when the view is scaled while dismissing a modal view
+        coverArtView.isLarge = false
         coverArtView.coverArtId = album.coverArtId
         coverArtView.backgroundColor = .label
         addSubview(coverArtView)
@@ -56,7 +58,7 @@ import SnapKit
         }
         
         artistLabel.text = album.artistName
-        artistLabel.font = .boldSystemFont(ofSize: 17)
+        artistLabel.font = .boldSystemFont(ofSize: 18)
         artistLabel.textColor = .label
         labelContainer.addSubview(artistLabel)
         artistLabel.snp.makeConstraints { make in
@@ -65,7 +67,7 @@ import SnapKit
         }
         
         albumLabel.text = album.title
-        albumLabel.font = .systemFont(ofSize: 14)
+        albumLabel.font = .systemFont(ofSize: 16)
         albumLabel.textColor = .label
         labelContainer.addSubview(albumLabel)
         albumLabel.snp.makeConstraints { make in
@@ -80,7 +82,7 @@ import SnapKit
             finalString += " • \(durationString) minutes"
         }
         tracksLabel.text = finalString
-        tracksLabel.font = .systemFont(ofSize: 12)
+        tracksLabel.font = .systemFont(ofSize: 14)
         tracksLabel.adjustsFontSizeToFitWidth = true
         tracksLabel.minimumScaleFactor = 0.5
         tracksLabel.textColor = .secondaryLabel
