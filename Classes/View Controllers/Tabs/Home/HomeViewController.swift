@@ -263,7 +263,7 @@ import SnapKit
         let loader = SUSQuickAlbumsLoader { _, error, loader in
             ViewObjects.shared().hideLoadingScreen()
             if let error = error {
-                if Settings.shared().isPopupsEnabled {
+                if Settings.shared().isPopupsEnabled && (error as NSError).code != NSURLErrorCancelled {
                     let alert = UIAlertController(title: "Error", message: "There was an error grabbing the album list.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
                     self.present(alert, animated: true, completion: nil)
