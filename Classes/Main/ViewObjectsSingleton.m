@@ -15,6 +15,8 @@
 #import "CustomUITabBarController.h"
 #import "CustomUINavigationController.h"
 
+#define HUD_GRACE_TIME 0.5
+
 @interface ViewObjectsSingleton() <MBProgressHUDDelegate>
 @property (nullable, strong) MBProgressHUD *HUD;
 @property BOOL isLoadingScreenShowing;
@@ -38,17 +40,18 @@
 
 - (void)showLoadingScreen:(UIView *)view withMessage:(NSString *)message {
 	if (self.isLoadingScreenShowing) {
-        self.HUD.labelText = message ? message : self.HUD.labelText;
+        self.HUD.label.text = message ? message : self.HUD.label.text;
 		return;
     }
 	
 	self.isLoadingScreenShowing = YES;
 	
 	self.HUD = [[MBProgressHUD alloc] initWithView:view];
+    self.HUD.graceTime = HUD_GRACE_TIME;
 	[appDelegateS.window addSubview:self.HUD];
 	self.HUD.delegate = self;
-	self.HUD.labelText = message ? message : @"Loading";
-	[self.HUD show:YES];
+    self.HUD.label.text = message ? message : @"Loading";
+    [self.HUD showAnimated:YES];
 }
 
 - (void)showAlbumLoadingScreenOnMainWindowNotification:(NSNotification *)notification {
@@ -66,32 +69,36 @@
 	
 	self.HUD = [[MBProgressHUD alloc] initWithView:appDelegateS.window];
 	self.HUD.userInteractionEnabled = YES;
+    self.HUD.graceTime = HUD_GRACE_TIME;
 	
 	// TODO: verify on iPad
 	UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	cancelButton.bounds = CGRectMake(0, 0, 1024, 1024);
-	cancelButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    cancelButton.translatesAutoresizingMaskIntoConstraints = NO;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
     if ([sender respondsToSelector:@selector(cancelLoad)]) {
         [cancelButton addTarget:sender action:@selector(cancelLoad) forControlEvents:UIControlEventTouchUpInside];
     }
 #pragma clang diagnostic pop
-	[self.HUD addSubview:cancelButton];
+    [self.HUD.bezelView addSubview:cancelButton];
+    [NSLayoutConstraint activateConstraints:@[
+        [cancelButton.leadingAnchor constraintEqualToAnchor:self.HUD.bezelView.leadingAnchor],
+        [cancelButton.trailingAnchor constraintEqualToAnchor:self.HUD.bezelView.trailingAnchor],
+        [cancelButton.topAnchor constraintEqualToAnchor:self.HUD.bezelView.topAnchor],
+        [cancelButton.bottomAnchor constraintEqualToAnchor:self.HUD.bezelView.bottomAnchor]
+    ]];
 	
 	[appDelegateS.window addSubview:self.HUD];
 	self.HUD.delegate = self;
-	self.HUD.labelText = @"Loading";
-	self.HUD.detailsLabelText = @"tap to cancel";
-	[self.HUD show:YES];
+    self.HUD.label.text = @"Loading";
+    self.HUD.detailsLabel.text = @"tap to cancel";
+    [self.HUD showAnimated:YES];
 }
 	
 - (void)hideLoadingScreen {
 	if (!self.isLoadingScreenShowing) return;
-	
 	self.isLoadingScreenShowing = NO;
-	
-	[self.HUD hide:YES];
+    [self.HUD hideAnimated:YES];
 }
 
 - (UIColor *)currentDarkColor {
