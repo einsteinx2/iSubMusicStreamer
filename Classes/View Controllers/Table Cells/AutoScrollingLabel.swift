@@ -94,16 +94,43 @@ private let labelGap = 25.0
             make.leading.equalTo(label1.snp.trailing).offset(labelGap)
         }
 
-        // Background colors for debugging autolayout
-//        backgroundColor = .darkGray
-//        scrollView.backgroundColor = .red
-//        contentView.backgroundColor = .blue
-//        label1.backgroundColor = .green
-//        label2.backgroundColor = .cyan
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification.rawValue)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification.rawValue)
     }
     
     required init?(coder: NSCoder) {
         fatalError("unsupported")
+    }
+    
+    deinit {
+        stopScrolling()
+        NotificationCenter.removeObserverOnMainThread(self)
+    }
+    
+    @objc private func didEnterBackground() {
+        print("TEST auto scroll label did enter background")
+        stopScrolling()
+    }
+    
+    @objc private func willEnterForeground() {
+        print("TEST auto scroll label will enter foreground")
+        if autoScroll {
+            startScrolling()
+        }
+    }
+    
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window == nil {
+            // If the view leaves the window, stop and reset all scrolling
+            stopScrolling()
+        } else {
+            // Force the labels to re-layout or it won't always animate
+            label1.setNeedsLayout()
+            label2.setNeedsLayout()
+            label1.layoutIfNeeded()
+            label2.layoutIfNeeded()
+        }
     }
     
     override func layoutSubviews() {
@@ -141,7 +168,7 @@ private let labelGap = 25.0
             // if animation starts before the view is fully displayed like in a table cell
             // which means we need to reschedule with the same delay instead of the longer repeat delay
             let didAnimate = Date().timeIntervalSince(startTime) > (delay + duration) * 0.9
-            let repeatDelay = didAnimate ? delay * 5 : delay
+            let repeatDelay = didAnimate ? delay * 2.5 : delay
             
             // Reset scroll view before the next run
             resetScrollView()
@@ -158,7 +185,7 @@ private let labelGap = 25.0
         scrollView.contentOffset = .zero
     }
     
-    @objc func startScrolling(delay: TimeInterval = 2.5) {
+    @objc func startScrolling(delay: TimeInterval = 2) {
         createAnimator(delay: delay)
         animator?.startAnimation(afterDelay: delay)
     }
@@ -167,23 +194,5 @@ private let labelGap = 25.0
         animator?.stopAnimation(true)
         animator = nil
         resetScrollView()
-    }
-    
-    deinit {
-        stopScrolling()
-    }
-    
-    override func didMoveToWindow() {
-        super.didMoveToWindow()
-        if window == nil {
-            // If the view leaves the window, stop and reset all scrolling
-            stopScrolling()
-        } else {
-            // Force the labels to re-layout or it won't always animate
-            label1.setNeedsLayout()
-            label2.setNeedsLayout()
-            label1.layoutIfNeeded()
-            label2.layoutIfNeeded()
-        }
     }
 }
