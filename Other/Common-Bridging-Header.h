@@ -26,8 +26,6 @@
 #import "SearchAllViewController.h"
 #import "HomeAlbumViewController.h"
 #import "CurrentPlaylistViewController.h"
-#import "LyricsViewController.h"
-#import "DebugViewController.h"
 #import "EqualizerViewController.h"
 #import "ServerListViewController.h"
 #import "CacheViewController.h"
@@ -59,6 +57,7 @@
 #import "SUSRootFoldersDAO.h"
 #import "ISMSSong+DAO.h"
 #import "ISMSBookmarkDAO.h"
+#import "SUSLyricsDAO.h"
 
 // Parsers
 #import "SearchXMLParser.h"
@@ -88,6 +87,7 @@
 #import "AudioEngine.h"
 #import "ISMSStreamManager.h"
 #import "DatabaseSingleton.h"
+#import "CacheSingleton.h"
 
 /*
  * Frameworks

@@ -67,6 +67,10 @@
 		53246AA4256C209E00E11EC4 /* ServerEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */; };
 		53246AA9256C324500E11EC4 /* InsetTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA8256C324500E11EC4 /* InsetTextField.swift */; };
 		53246AAA256C324500E11EC4 /* InsetTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA8256C324500E11EC4 /* InsetTextField.swift */; };
+		53246AB3256C918500E11EC4 /* LyricsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB2256C918500E11EC4 /* LyricsViewController.swift */; };
+		53246AB4256C918500E11EC4 /* LyricsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB2256C918500E11EC4 /* LyricsViewController.swift */; };
+		53246AB6256C975600E11EC4 /* CacheStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB5256C975600E11EC4 /* CacheStatusViewController.swift */; };
+		53246AB7256C975600E11EC4 /* CacheStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB5256C975600E11EC4 /* CacheStatusViewController.swift */; };
 		5324C6C613345D75004E6C79 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5324C6C513345D75004E6C79 /* OBSlider.m */; };
 		5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; };
 		5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; };
@@ -147,8 +151,6 @@
 		533C65AF15ABB9C6003EAF29 /* ServerListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65B315ABB9C6003EAF29 /* ServerListViewController.xib */; };
 		533C65CE15ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65D415ABB9D6003EAF29 /* SettingsTabViewController.xib */; };
 		533C65D015ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65D415ABB9D6003EAF29 /* SettingsTabViewController.xib */; };
-		533C65D515ABB9F0003EAF29 /* DebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65DB15ABB9F0003EAF29 /* DebugViewController.xib */; };
-		533C65D715ABB9F0003EAF29 /* DebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65DB15ABB9F0003EAF29 /* DebugViewController.xib */; };
 		533C65DC15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */; };
 		533C65DE15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */; };
 		533C65E315ABBA09003EAF29 /* AlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65E915ABBA09003EAF29 /* AlbumViewController.xib */; };
@@ -174,7 +176,6 @@
 		53404FFB11E94AA5004AEC41 /* controller-bookmark-on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53404FF711E94AA5004AEC41 /* controller-bookmark-on@2x.png */; };
 		53404FFC11E94AA5004AEC41 /* controller-bookmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 53404FF811E94AA5004AEC41 /* controller-bookmark.png */; };
 		53404FFD11E94AA5004AEC41 /* controller-bookmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53404FF911E94AA5004AEC41 /* controller-bookmark@2x.png */; };
-		534050FB11E9966C004AEC41 /* LyricsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 534050F911E9966C004AEC41 /* LyricsViewController.m */; };
 		5340B8A6256968C400FD5D6D /* ISMSBookmarkDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 5340B8A5256968C400FD5D6D /* ISMSBookmarkDAO.m */; };
 		5340B8A7256968C400FD5D6D /* ISMSBookmarkDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 5340B8A5256968C400FD5D6D /* ISMSBookmarkDAO.m */; };
 		53493EF415FC69560059492E /* player-songinfo.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EF215FC69560059492E /* player-songinfo.png */; };
@@ -531,7 +532,6 @@
 		53BC27B0139AF0DD00A825F1 /* AllSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530388A8116571920043292D /* AllSongsViewController.m */; };
 		53BC27B3139AF0DD00A825F1 /* PlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ABE3611165C83900197877 /* PlayingViewController.m */; };
 		53BC27B6139AF0DD00A825F1 /* PlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ABE54111665B6B00197877 /* PlaylistsViewController.m */; };
-		53BC27BA139AF0DD00A825F1 /* DebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4A072116FF48400BB8411 /* DebugViewController.m */; };
 		53BC27BB139AF0DD00A825F1 /* CurrentPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4A07B116FF7EE00BB8411 /* CurrentPlaylistViewController.m */; };
 		53BC27C4139AF0DD00A825F1 /* BookmarksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5388A3B2119899260049BA9E /* BookmarksViewController.m */; };
 		53BC27CC139AF0DD00A825F1 /* LoadingScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B5298911AD9B79005776B5 /* LoadingScreen.m */; };
@@ -542,7 +542,6 @@
 		53BC27DE139AF0DD00A825F1 /* GenresArtistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53523D9211CD61F7006AEA48 /* GenresArtistViewController.m */; };
 		53BC27E0139AF0DD00A825F1 /* CacheQueueSongUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5358083711CEB5F200A09386 /* CacheQueueSongUITableViewCell.m */; };
 		53BC27E2139AF0DD00A825F1 /* SettingsTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5398F26B11DA61DA00007870 /* SettingsTabViewController.m */; };
-		53BC27E5139AF0DD00A825F1 /* LyricsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 534050F911E9966C004AEC41 /* LyricsViewController.m */; };
 		53BC27F8139AF0DD00A825F1 /* ChatUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5379DC491219E48800F426CD /* ChatUITableViewCell.m */; };
 		53BC27F9139AF0DD00A825F1 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5379DC4B1219E48800F426CD /* ChatViewController.m */; };
 		53BC27FC139AF0DD00A825F1 /* CustomUITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BB7EC9121B8D8F00BEE7E8 /* CustomUITextView.m */; };
@@ -636,7 +635,6 @@
 		53E04948255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E04946255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift */; };
 		53F0CD8211589F0A00A665CD /* progress-label-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F0CD8111589F0A00A665CD /* progress-label-background.png */; };
 		53F2D3EE113A338500107D63 /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F2D3EC113A338500107D63 /* AlbumViewController.m */; };
-		53F4A074116FF48400BB8411 /* DebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4A072116FF48400BB8411 /* DebugViewController.m */; };
 		53F4A07D116FF7EE00BB8411 /* CurrentPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4A07B116FF7EE00BB8411 /* CurrentPlaylistViewController.m */; };
 		53F675D8113B092C00822059 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675D7113B092C00822059 /* MediaPlayer.framework */; };
 		53F675DC113B093900822059 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675DB113B093900822059 /* CFNetwork.framework */; };
@@ -1074,6 +1072,8 @@
 		531F166D126FA2E600F524BD /* HomeAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeAlbumViewController.m; sourceTree = "<group>"; };
 		53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEditViewController.swift; sourceTree = "<group>"; };
 		53246AA8256C324500E11EC4 /* InsetTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetTextField.swift; sourceTree = "<group>"; };
+		53246AB2256C918500E11EC4 /* LyricsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsViewController.swift; sourceTree = "<group>"; };
+		53246AB5256C975600E11EC4 /* CacheStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheStatusViewController.swift; sourceTree = "<group>"; };
 		5324C6C413345D75004E6C79 /* OBSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBSlider.h; sourceTree = "<group>"; };
 		5324C6C513345D75004E6C79 /* OBSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBSlider.m; sourceTree = "<group>"; };
 		532590FF14EE22C100DF4BDB /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -1145,8 +1145,6 @@
 		53404FF711E94AA5004AEC41 /* controller-bookmark-on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-bookmark-on@2x.png"; path = "Images/Player Icons/controller-bookmark-on@2x.png"; sourceTree = "<group>"; };
 		53404FF811E94AA5004AEC41 /* controller-bookmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-bookmark.png"; path = "Images/Player Icons/controller-bookmark.png"; sourceTree = "<group>"; };
 		53404FF911E94AA5004AEC41 /* controller-bookmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-bookmark@2x.png"; path = "Images/Player Icons/controller-bookmark@2x.png"; sourceTree = "<group>"; };
-		534050F811E9966C004AEC41 /* LyricsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsViewController.h; sourceTree = "<group>"; };
-		534050F911E9966C004AEC41 /* LyricsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LyricsViewController.m; sourceTree = "<group>"; };
 		5340B8A4256968C400FD5D6D /* ISMSBookmarkDAO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSBookmarkDAO.h; sourceTree = "<group>"; };
 		5340B8A5256968C400FD5D6D /* ISMSBookmarkDAO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ISMSBookmarkDAO.m; sourceTree = "<group>"; };
 		53493EF215FC69560059492E /* player-songinfo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "player-songinfo.png"; path = "Images/Player Icons/player-songinfo.png"; sourceTree = "<group>"; };
@@ -1266,7 +1264,6 @@
 		538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		538E5253255A31F2000DF682 /* UIApplication+Orientiation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Orientiation.h"; sourceTree = "<group>"; };
 		538E5254255A31F2000DF682 /* UIApplication+Orientiation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Orientiation.m"; sourceTree = "<group>"; };
-		539148A62559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/DebugViewController.xib; sourceTree = "<group>"; };
 		539148A72559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/EqualizerViewController.xib; sourceTree = "<group>"; };
 		539148A82559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SettingsTabViewController.xib; sourceTree = "<group>"; };
 		539148A92559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ServerListViewController.xib; sourceTree = "<group>"; };
@@ -1404,8 +1401,6 @@
 		53F1412015FD550C004D00D5 /* buildnumber.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = buildnumber.xcconfig; path = Other/buildnumber.xcconfig; sourceTree = "<group>"; };
 		53F2D3EB113A338500107D63 /* AlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumViewController.h; sourceTree = "<group>"; };
 		53F2D3EC113A338500107D63 /* AlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AlbumViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		53F4A071116FF48400BB8411 /* DebugViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugViewController.h; sourceTree = "<group>"; };
-		53F4A072116FF48400BB8411 /* DebugViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugViewController.m; sourceTree = "<group>"; };
 		53F4A07A116FF7EE00BB8411 /* CurrentPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentPlaylistViewController.h; sourceTree = "<group>"; };
 		53F4A07B116FF7EE00BB8411 /* CurrentPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentPlaylistViewController.m; sourceTree = "<group>"; };
 		53F675D7113B092C00822059 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -2465,11 +2460,8 @@
 				53266BF92562D4D0002C64BB /* PageControlViewController.swift */,
 				53752BEB2562CEF800438636 /* CoverArtViewController.swift */,
 				537B05C1256B40930008892C /* SongInfoViewController.swift */,
-				534050F811E9966C004AEC41 /* LyricsViewController.h */,
-				534050F911E9966C004AEC41 /* LyricsViewController.m */,
-				53F4A071116FF48400BB8411 /* DebugViewController.h */,
-				53F4A072116FF48400BB8411 /* DebugViewController.m */,
-				533C65DB15ABB9F0003EAF29 /* DebugViewController.xib */,
+				53246AB2256C918500E11EC4 /* LyricsViewController.swift */,
+				53246AB5256C975600E11EC4 /* CacheStatusViewController.swift */,
 			);
 			path = "Page Control";
 			sourceTree = "<group>";
@@ -3177,7 +3169,6 @@
 				53191DF01167CFDC00E1C08A /* current-server.png in Resources */,
 				530AD58E116913AC00AD2540 /* now-playing.png in Resources */,
 				53030315116ADF8B00B0AF5D /* reload-table.png in Resources */,
-				533C65D515ABB9F0003EAF29 /* DebugViewController.xib in Resources */,
 				53B8A1FB11704E100005AA86 /* play-all-note.png in Resources */,
 				5388A3B5119899260049BA9E /* BookmarksViewController.xib in Resources */,
 				5388A42C1198AD840049BA9E /* selected.png in Resources */,
@@ -3417,7 +3408,6 @@
 				53BC26C3139AF0DD00A825F1 /* current-server.png in Resources */,
 				53BC26C5139AF0DD00A825F1 /* now-playing.png in Resources */,
 				53BC26C6139AF0DD00A825F1 /* reload-table.png in Resources */,
-				533C65D715ABB9F0003EAF29 /* DebugViewController.xib in Resources */,
 				53BC26CB139AF0DD00A825F1 /* play-all-note.png in Resources */,
 				53BC26CC139AF0DD00A825F1 /* BookmarksViewController.xib in Resources */,
 				53BC26CD139AF0DD00A825F1 /* selected.png in Resources */,
@@ -3656,6 +3646,7 @@
 				53FE37011EA961720058B925 /* DatabaseSingleton.m in Sources */,
 				533A2D07113C61CA00B3A376 /* AsynchronousImageView.m in Sources */,
 				53FE34E01EA961540058B925 /* NSNotificationCenter+MainThread.m in Sources */,
+				53246AB6256C975600E11EC4 /* CacheStatusViewController.swift in Sources */,
 				53FE37A61EA961720058B925 /* SUSDropdownFolderLoader.m in Sources */,
 				53FE36F21EA961720058B925 /* BassParamEqValue.m in Sources */,
 				53FE351F1EA961540058B925 /* NSString+URLEncode.m in Sources */,
@@ -3699,7 +3690,6 @@
 				538C8FEA2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53FE37401EA961720058B925 /* ISMSSong.m in Sources */,
 				53FE35161EA961540058B925 /* NSString+SHA1.m in Sources */,
-				53F4A074116FF48400BB8411 /* DebugViewController.m in Sources */,
 				53FE37D61EA961720058B925 /* SUSSubFolderLoader.m in Sources */,
 				53FE35251EA961540058B925 /* NSURL+QueryParameterDictionary.m in Sources */,
 				53FE35641EA961540058B925 /* UITableViewCell+TableView.m in Sources */,
@@ -3755,6 +3745,7 @@
 				53FE353D1EA961540058B925 /* UIColor+ColorWithHex.m in Sources */,
 				53FE35EB1EA961540058B925 /* SnappySlider.m in Sources */,
 				53FE370A1EA961720058B925 /* ISMSAlbum.m in Sources */,
+				53246AB3256C918500E11EC4 /* LyricsViewController.swift in Sources */,
 				53FE37B21EA961720058B925 /* SUSNowPlayingLoader.m in Sources */,
 				53FE34D11EA961540058B925 /* NSData+Gzip.m in Sources */,
 				53FE38AD1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
@@ -3774,7 +3765,6 @@
 				53FE37AF1EA961720058B925 /* SUSNowPlayingDAO.m in Sources */,
 				53FE35461EA961540058B925 /* UIDevice+Software.m in Sources */,
 				53FE37D31EA961720058B925 /* SUSSubFolderDAO.m in Sources */,
-				534050FB11E9966C004AEC41 /* LyricsViewController.m in Sources */,
 				53FE37C11EA961720058B925 /* SUSScrobbleLoader.m in Sources */,
 				53FE38A41EA961C80058B925 /* ZKCDHeader.m in Sources */,
 				53FE350D1EA961540058B925 /* NSString+hex.m in Sources */,
@@ -3898,6 +3888,7 @@
 				53FE354E1EA961540058B925 /* UIImage+Cropping.m in Sources */,
 				53FE37271EA961720058B925 /* ISMSNotificationNames.m in Sources */,
 				53FE35331EA961540058B925 /* CALayer+SublayerWithName.m in Sources */,
+				53246AB7256C975600E11EC4 /* CacheStatusViewController.swift in Sources */,
 				53FE34EE1EA961540058B925 /* NSObject+UserInfo.m in Sources */,
 				53FE370F1EA961720058B925 /* ISMSArtist.m in Sources */,
 				53FE35511EA961540058B925 /* UIImage+CustomStretch.m in Sources */,
@@ -3923,7 +3914,6 @@
 				53FE378A1EA961720058B925 /* SavedSettings.m in Sources */,
 				53FE37421EA961720058B925 /* ISMSSong.m in Sources */,
 				53FE35181EA961540058B925 /* NSString+SHA1.m in Sources */,
-				53BC27BA139AF0DD00A825F1 /* DebugViewController.m in Sources */,
 				53FE37D81EA961720058B925 /* SUSSubFolderLoader.m in Sources */,
 				53FE35271EA961540058B925 /* NSURL+QueryParameterDictionary.m in Sources */,
 				537B05BD256B04360008892C /* PadMenuViewController.swift in Sources */,
@@ -3997,9 +3987,9 @@
 				53FE35001EA961540058B925 /* NSString+compareWithoutIndefiniteArticles.m in Sources */,
 				53FE35D51EA961540058B925 /* EX2LargerTouchScrollView.m in Sources */,
 				53FE37B11EA961720058B925 /* SUSNowPlayingDAO.m in Sources */,
+				53246AB4256C918500E11EC4 /* LyricsViewController.swift in Sources */,
 				53FE35481EA961540058B925 /* UIDevice+Software.m in Sources */,
 				53FE37D51EA961720058B925 /* SUSSubFolderDAO.m in Sources */,
-				53BC27E5139AF0DD00A825F1 /* LyricsViewController.m in Sources */,
 				53FE37C31EA961720058B925 /* SUSScrobbleLoader.m in Sources */,
 				53FE38A61EA961C80058B925 /* ZKCDHeader.m in Sources */,
 				53FE350F1EA961540058B925 /* NSString+hex.m in Sources */,
@@ -4130,14 +4120,6 @@
 				539148A82559CBDF004AAC3F /* Base */,
 			);
 			name = SettingsTabViewController.xib;
-			sourceTree = "<group>";
-		};
-		533C65DB15ABB9F0003EAF29 /* DebugViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				539148A62559CBDF004AAC3F /* Base */,
-			);
-			name = DebugViewController.xib;
 			sourceTree = "<group>";
 		};
 		533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */ = {

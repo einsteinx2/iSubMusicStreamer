@@ -9,17 +9,15 @@
 import UIKit
 import SnapKit
 
-@objc class SongInfoViewController: UIViewController {
-    let titleLabel = UILabel()
-    let scrollView = UIScrollView()
+class SongInfoViewController: UIViewController {
     let stackView = UIStackView()
-    
     var realTimeBitrateLabel: UILabel?
     
     override func viewDidLoad() {
         view.backgroundColor = .black
         
-        titleLabel.textColor = UIColor.white
+        let titleLabel = UILabel()
+        titleLabel.textColor = .white
         titleLabel.font = .boldSystemFont(ofSize: 30)
         titleLabel.textAlignment = .center;
         titleLabel.text = "Song Info";
@@ -29,6 +27,7 @@ import SnapKit
             make.leading.trailing.top.equalToSuperview()
         }
         
+        let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = true
         scrollView.showsHorizontalScrollIndicator = false
         view.addSubview(scrollView)

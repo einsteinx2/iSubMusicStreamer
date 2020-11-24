@@ -80,9 +80,9 @@ class PageControlViewController: UIViewController {
             case 1:
                 controller = SongInfoViewController()
             case 2:
-                controller = LyricsViewController(nibName: nil, bundle: nil)
+                controller = LyricsViewController()
             case 3:
-                controller = DebugViewController(nibName: "DebugViewController", bundle: nil)
+                controller = CacheStatusViewController()
             default: break
             }
             

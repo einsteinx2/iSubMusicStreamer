@@ -13,6 +13,9 @@
 
 #define cacheS ((CacheSingleton *)[CacheSingleton sharedInstance])
 
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(Cache)
 @interface CacheSingleton : NSObject
 
 //@property (retain) NSTimer *cacheCheckTimer;
@@ -22,7 +25,7 @@
 @property (readonly) unsigned long long freeSpace;
 @property (readonly) NSUInteger numberOfCachedSongs;
 
-+ (instancetype)sharedInstance;
++ (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 + (void)setAllCachedSongsToBackup;
 + (void)setAllCachedSongsToNotBackup;
 
@@ -33,5 +36,7 @@
 - (void)findCacheSize;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

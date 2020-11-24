@@ -8,16 +8,18 @@
 
 #import "SUSLoaderManager.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SUSLyricsLoader, FMDatabase;
 @interface SUSLyricsDAO : NSObject <SUSLoaderDelegate, SUSLoaderManager>
 
-@property (weak) NSObject <SUSLoaderDelegate> *delegate;
-@property (strong) SUSLyricsLoader *loader;
+@property (nullable, weak) NSObject <SUSLoaderDelegate> *delegate;
+@property (nullable, strong) SUSLyricsLoader *loader;
 
-- (instancetype)initWithDelegate:(NSObject <SUSLoaderDelegate> *)theDelegate;
-- (NSString *)loadLyricsForArtist:(NSString *)artist andTitle:(NSString *)title;
-
-#pragma mark - Public DAO Methods
-- (NSString *)lyricsForArtist:(NSString *)artist andTitle:(NSString *)title;
+- (instancetype)initWithDelegate:(nullable NSObject <SUSLoaderDelegate> *)theDelegate;
+- (NSString *)loadLyricsForArtist:(nullable NSString *)artist andTitle:(nullable NSString *)title;
+- (nullable NSString *)lyricsForArtist:(nullable NSString *)artist andTitle:(nullable NSString *)title;
 
 @end
+
+NS_ASSUME_NONNULL_END
