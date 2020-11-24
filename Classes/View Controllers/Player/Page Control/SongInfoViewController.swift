@@ -75,7 +75,7 @@ class SongInfoViewController: UIViewController {
         func createTitleLabel(text: String) -> UILabel {
             let titleLabel = UILabel()
             titleLabel.textColor = .white
-            titleLabel.font = .boldSystemFont(ofSize: 22)
+            titleLabel.font = .boldSystemFont(ofSize: 20)
             titleLabel.numberOfLines = 1
             titleLabel.text = text
             return titleLabel
@@ -84,7 +84,7 @@ class SongInfoViewController: UIViewController {
         func createInfoLabel(text: String) -> UILabel {
             let infoLabel = UILabel()
             infoLabel.textColor = .lightGray
-            infoLabel.font = .systemFont(ofSize: 18)
+            infoLabel.font = .systemFont(ofSize: 16)
             infoLabel.numberOfLines = 0
             infoLabel.lineBreakMode = .byCharWrapping
             infoLabel.text = text
@@ -92,10 +92,14 @@ class SongInfoViewController: UIViewController {
         }
         
         if let song = PlayQueue.shared().currentSong() {
+//            if let path = song.path {
+//                stackView.addArrangedSubview(createTitleLabel(text: "File Name"))
+//                let filename = (path as NSString).lastPathComponent
+//                stackView.addArrangedSubview(createInfoLabel(text: filename))
+//            }
             if let path = song.path {
-                stackView.addArrangedSubview(createTitleLabel(text: "File Name"))
-                let filename = (path as NSString).lastPathComponent
-                stackView.addArrangedSubview(createInfoLabel(text: filename))
+                stackView.addArrangedSubview(createTitleLabel(text: "File Path"))
+                stackView.addArrangedSubview(createInfoLabel(text: path))
             }
             if let suffix = song.suffix {
                 stackView.addArrangedSubview(createTitleLabel(text: "Original File Type"))
@@ -152,7 +156,7 @@ class SongInfoViewController: UIViewController {
         stopUpdatingRealtimeBitrate()
         if let realTimeBitrateLabel = realTimeBitrateLabel {
             if let player = AudioEngine.shared().player, let bitrate = AudioEngine.shared().player?.bitRate, bitrate > 0, player.isPlaying {
-                realTimeBitrateLabel.text = "\(bitrate)"
+                realTimeBitrateLabel.text = "\(bitrate) Kbps"
             } else {
                 realTimeBitrateLabel.text = "Unknown"
             }

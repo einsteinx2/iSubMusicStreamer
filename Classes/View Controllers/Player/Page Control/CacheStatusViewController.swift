@@ -31,7 +31,7 @@ class CacheStatusViewController: UIViewController {
     private func makeInfoLabel(text: String) -> UILabel {
         let label = UILabel()
         label.textColor = .white
-        label.font = .systemFont(ofSize: 14)
+        label.font = .systemFont(ofSize: 16)
         label.text = text
         return label
     }
@@ -99,7 +99,7 @@ class CacheStatusViewController: UIViewController {
                                                 makeInfoLabel(text: "Free Space:")])
         containerView.addSubview(infoTitleStackView)
         infoTitleStackView.snp.makeConstraints { make in
-            make.width.equalTo(110)
+            make.width.equalTo(115)
             make.leading.bottom.equalToSuperview()
             make.top.equalTo(progressBarStackView.snp.bottom).offset(20)
         }

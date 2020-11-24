@@ -31,7 +31,7 @@ class LyricsViewController: UIViewController {
         
         textView.backgroundColor = .black
         textView.textColor = .white
-        textView.font = .systemFont(ofSize: 18)
+        textView.font = .systemFont(ofSize: 16)
         textView.isEditable = false
         view.addSubview(textView)
         textView.snp.makeConstraints { make in

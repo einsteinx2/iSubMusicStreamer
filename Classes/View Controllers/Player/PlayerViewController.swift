@@ -171,7 +171,7 @@ import CocoaLumberjackSwift
         songNameLabel.textColor = .label
         songInfoContainer.addSubview(songNameLabel)
         songNameLabel.snp.makeConstraints { make in
-            make.height.equalToSuperview().multipliedBy(0.8)
+            make.height.equalToSuperview().multipliedBy(0.6)
             make.leading.trailing.top.equalTo(songInfoContainer)
         }
         
@@ -179,7 +179,7 @@ import CocoaLumberjackSwift
         artistNameLabel.textColor = .secondaryLabel
         songInfoContainer.addSubview(artistNameLabel)
         artistNameLabel.snp.makeConstraints { make in
-            make.height.equalToSuperview().multipliedBy(0.45)
+            make.height.equalToSuperview().multipliedBy(0.4)
             make.leading.trailing.bottom.equalTo(songInfoContainer)
         }
         
@@ -194,7 +194,7 @@ import CocoaLumberjackSwift
 
         elapsedTimeLabel.textColor = .label
         elapsedTimeLabel.font = .systemFont(ofSize: 14)
-        elapsedTimeLabel.textAlignment = .left
+        elapsedTimeLabel.textAlignment = .right
         progressBarContainer.addSubview(elapsedTimeLabel)
         elapsedTimeLabel.snp.makeConstraints { make in
             make.width.equalTo(50)
@@ -203,7 +203,7 @@ import CocoaLumberjackSwift
 
         remainingTimeLabel.textColor = .label
         remainingTimeLabel.font = .systemFont(ofSize: 14)
-        remainingTimeLabel.textAlignment = .right
+        remainingTimeLabel.textAlignment = .left
         progressBarContainer.addSubview(remainingTimeLabel)
         remainingTimeLabel.snp.makeConstraints { make in
             make.width.equalTo(50)
@@ -219,7 +219,7 @@ import CocoaLumberjackSwift
         }
         setupProgressSlider()
         
-        downloadProgressView.backgroundColor = UIColor.systemGray5.withAlphaComponent(0.7)
+        downloadProgressView.backgroundColor = UIColor.systemGray4
         progressBarContainer.insertSubview(downloadProgressView, belowSubview: progressSlider)
         downloadProgressView.snp.makeConstraints { make in
             make.width.equalTo(0)
