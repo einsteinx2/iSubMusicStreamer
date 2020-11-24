@@ -539,25 +539,27 @@ private class HomeSongInfoButton: UIView {
         super.init(frame: CGRect.zero)
         
         layer.borderWidth = 2
-        layer.borderColor = UIColor.systemGray5.cgColor
+        layer.borderColor = UIColor.systemGray4.cgColor
         
+        coverArt.layer.borderWidth = layer.borderWidth
+        coverArt.layer.borderColor = layer.borderColor
         addSubview(coverArt)
         coverArt.snp.makeConstraints { make in
             make.width.equalTo(coverArt.snp.height)
             make.leading.top.bottom.equalToSuperview()
         }
         
-        songLabel.font = .boldSystemFont(ofSize: 20)
+        songLabel.font = .boldSystemFont(ofSize: 18)
         songLabel.textColor = .label
         addSubview(songLabel)
         songLabel.snp.makeConstraints { make in
             make.height.equalToSuperview().dividedBy(2)
-            make.leading.equalTo(coverArt.snp.trailing).offset(5)
-            make.trailing.equalToSuperview().offset(-5)
+            make.leading.equalTo(coverArt.snp.trailing).offset(7)
+            make.trailing.equalToSuperview().offset(-7)
             make.top.equalToSuperview().offset(5)
         }
         
-        artistLabel.font = .systemFont(ofSize: 18)
+        artistLabel.font = .systemFont(ofSize: 16)
         artistLabel.textColor = .secondaryLabel
         addSubview(artistLabel)
         artistLabel.snp.makeConstraints { make in
@@ -590,7 +592,7 @@ private class HomeSongInfoButton: UIView {
             songLabel.text = song.title
             artistLabel.text = song.artist
         } else {
-            coverArt.image = UIImage(named: "default-album-art")
+            coverArt.image = UIImage(named: "default-album-art-small")
             songLabel.text = nil
             artistLabel.text = nil
         }
