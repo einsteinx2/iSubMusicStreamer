@@ -275,12 +275,8 @@ import CocoaLumberjackSwift
         nextButton.addClosure(for: .touchUpInside) {
             Music.shared().nextSong()
         }
-        
-        let seconds = Settings.shared().quickSkipNumberOfSeconds
-        let quickSkipTitle = seconds < 60 ? "\(seconds)s" : "\(seconds/60)m"
 
         quickSkipBackButton.setBackgroundImage(UIImage(named: "controller-back30"), for: .normal)
-        quickSkipBackButton.setTitle(quickSkipTitle, for: .normal)
         quickSkipBackButton.setTitleColor(.darkGray, for: .normal)
         quickSkipBackButton.titleLabel?.font = .systemFont(ofSize: 8)
         quickSkipBackButton.titleEdgeInsets.left = 6
@@ -292,7 +288,6 @@ import CocoaLumberjackSwift
         }
         
         quickSkipForwardButton.setBackgroundImage(UIImage(named: "controller-forw30"), for: .normal)
-        quickSkipForwardButton.setTitle(quickSkipTitle, for: .normal)
         quickSkipForwardButton.setTitleColor(.darkGray, for: .normal)
         quickSkipForwardButton.titleLabel?.font = .systemFont(ofSize: 8)
         quickSkipForwardButton.titleEdgeInsets.right = 6
@@ -306,6 +301,8 @@ import CocoaLumberjackSwift
                 Flurry.logEvent("QuickSkip")
             }
         }
+        
+        updateQuickSkipButtons()
         
         //
         // More Controls
@@ -436,6 +433,10 @@ import CocoaLumberjackSwift
         
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: ISMSNotification_JukeboxDisabled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: ISMSNotification_JukeboxEnabled)
+        
+        if UIDevice.isIPad() {
+            NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateQuickSkipButtons), name: ISMSNotification_QuickSkipSecondsSettingChanged)
+        }
         
         notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackEnded) { [unowned self] _ in
             self.playPauseButton.setImage(UIImage(named: "controller-play"), for: .normal)
@@ -704,6 +705,13 @@ import CocoaLumberjackSwift
         
         let imageName = bookmarkCount > 0 ? "controller-bookmark-on" : "controller-bookmark"
         bookmarksButton.setImage(UIImage(named: imageName), for: .normal)
+    }
+    
+    @objc private func updateQuickSkipButtons() {
+        let seconds = Settings.shared().quickSkipNumberOfSeconds
+        let quickSkipTitle = seconds < 60 ? "\(seconds)s" : "\(seconds/60)m"
+        quickSkipBackButton.setTitle(quickSkipTitle, for: .normal)
+        quickSkipForwardButton.setTitle(quickSkipTitle, for: .normal)
     }
 }
 

@@ -94,7 +94,6 @@
 	self.segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Cached", @"Downloading"]];
     self.segmentedControl.translatesAutoresizingMaskIntoConstraints = NO;
 	[self.segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-	self.segmentedControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	self.segmentedControl.selectedSegmentIndex = 0;
 
     [self.segmentControlContainer addSubview:self.segmentedControl];

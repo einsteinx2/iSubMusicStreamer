@@ -75,3 +75,5 @@ extern NSString * const ISMSNotification_ShowDeleteButton;
 extern NSString * const ISMSNotification_HideDeleteButton;
 
 extern NSString * const ISMSNotification_CachedSongDeleted;
+
+extern NSString * const ISMSNotification_QuickSkipSecondsSettingChanged;

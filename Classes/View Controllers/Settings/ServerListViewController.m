@@ -33,8 +33,11 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)viewDidLoad  {
     [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
     	
 	self.tableView.allowsSelectionDuringEditing = YES;
+    self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
 	
 	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:@"reloadServerList"];
 	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(showSaveButton) name:@"showSaveButton"];
@@ -50,18 +53,36 @@ LOG_LEVEL_ISUB_DEFAULT
 		[self addAction:nil];
     }
 	
-	// Setup segmented control in the header view
-	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
-//	self.headerView.backgroundColor = [UIColor colorWithWhite:.3 alpha:1];
-	
-	self.segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Servers", @"Settings"]];
-	self.segmentedControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	[self.segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-	self.segmentedControl.frame = CGRectMake(5, 2, 310, 36);
-	self.segmentedControl.selectedSegmentIndex = 0;
-	[self.headerView addSubview:self.segmentedControl];
-	
-	self.tableView.tableHeaderView = self.headerView;
+    self.segmentControlContainer = [[UIView alloc] init];
+    self.segmentControlContainer.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    self.segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Servers", @"Settings"]];
+    self.segmentedControl.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
+    self.segmentedControl.selectedSegmentIndex = 0;
+
+    [self.segmentControlContainer addSubview:self.segmentedControl];
+    [self.view addSubview:self.segmentControlContainer];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [self.segmentControlContainer.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor constant:7],
+        [self.segmentControlContainer.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:5],
+        [self.segmentControlContainer.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-5],
+        [self.segmentControlContainer.heightAnchor constraintEqualToConstant:36],
+        
+        [self.segmentedControl.topAnchor constraintEqualToAnchor:self.segmentControlContainer.topAnchor],
+        [self.segmentedControl.bottomAnchor constraintEqualToAnchor:self.segmentControlContainer.bottomAnchor],
+        [self.segmentedControl.leadingAnchor constraintEqualToAnchor:self.segmentControlContainer.leadingAnchor],
+        [self.segmentedControl.trailingAnchor constraintEqualToAnchor:self.segmentControlContainer.trailingAnchor]
+    ]];
+    
+    self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [self.tableView.topAnchor constraintEqualToAnchor:self.segmentControlContainer.bottomAnchor constant:7],
+        [self.tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+        [self.tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [self.tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor]
+    ]];
 }
 
 - (void)reloadTable {
@@ -95,7 +116,24 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.navigationItem.rightBarButtonItem = nil;
 		self.settingsTabViewController = [[SettingsTabViewController alloc] initWithNibName:@"SettingsTabViewController" bundle:nil];
 		self.settingsTabViewController.parentController = self;
-		self.tableView.tableFooterView = self.settingsTabViewController.view;
+        if (UIDevice.isIPad) {
+            UIView *settingsView = self.settingsTabViewController.view;
+            UIView *settingsContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.width, settingsView.height)];
+            settingsContainer.backgroundColor = settingsView.backgroundColor;
+            [settingsContainer addSubview:self.settingsTabViewController.view];
+            
+            settingsView.translatesAutoresizingMaskIntoConstraints = NO;
+            [NSLayoutConstraint activateConstraints:@[
+                [settingsView.widthAnchor constraintEqualToConstant:400],
+                [settingsView.heightAnchor constraintEqualToAnchor:settingsContainer.heightAnchor],
+                [settingsView.topAnchor constraintEqualToAnchor:settingsContainer.topAnchor],
+                [settingsView.centerXAnchor constraintEqualToAnchor:settingsContainer.centerXAnchor]
+            ]];
+            self.tableView.tableFooterView = settingsContainer;
+        } else {
+            self.tableView.tableFooterView = self.settingsTabViewController.view;
+        }
+		
 		[self.tableView reloadData];
 	}
 }
@@ -103,10 +141,8 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)setEditing:(BOOL)editing animated:(BOOL)animate {
     [super setEditing:editing animated:animate];
     if (editing) {
-		self.isEditing = YES;
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addAction:)];
     } else {
-		self.isEditing = NO;
 		[self showSaveButton];
     }
 }

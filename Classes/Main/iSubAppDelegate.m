@@ -9,7 +9,6 @@
 #import "iSubAppDelegate.h"
 #import "ServerListViewController.h"
 #import "FoldersViewController.h"
-#import "ISMSUpdateChecker.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "SUSStatusLoader.h"
 #import "NSMutableURLRequest+SUS.h"
@@ -281,10 +280,6 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)checkServer {
-    //DLog(@"urlString: %@", settingsS.urlString);
-	ISMSUpdateChecker *updateChecker = [[ISMSUpdateChecker alloc] init];
-	[updateChecker checkForUpdate];
-
     // Check if the subsonic URL is valid by attempting to access the ping.view page, 
 	// if it's not then display an alert and allow user to change settings if they want.
 	// This is in case the user is, for instance, connected to a wifi network but does not 

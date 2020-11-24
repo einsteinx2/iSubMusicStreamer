@@ -11,12 +11,11 @@
 
 @class SettingsTabViewController;
 
-@interface ServerListViewController : UITableViewController <SUSLoaderDelegate>
+@interface ServerListViewController : UIViewController <SUSLoaderDelegate>
 
-@property (nonatomic) BOOL isEditing;
-@property (nonatomic, strong) UIView *headerView;
+@property (nonatomic, strong) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) UIView *segmentControlContainer;
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
-//@property (nonatomic, copy) NSString *theNewRedirectionUrl;
 @property (nonatomic, strong) SettingsTabViewController *settingsTabViewController;
 
 - (void)addAction:(id)sender;

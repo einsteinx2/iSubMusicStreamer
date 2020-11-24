@@ -859,8 +859,6 @@
 		53FE37481EA961720058B925 /* ISMSStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE366F1EA961720058B925 /* ISMSStreamHandler.m */; };
 		53FE37491EA961720058B925 /* ISMSStreamManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36721EA961720058B925 /* ISMSStreamManager.m */; };
 		53FE374B1EA961720058B925 /* ISMSStreamManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36721EA961720058B925 /* ISMSStreamManager.m */; };
-		53FE374F1EA961720058B925 /* ISMSUpdateChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36761EA961720058B925 /* ISMSUpdateChecker.m */; };
-		53FE37511EA961720058B925 /* ISMSUpdateChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36761EA961720058B925 /* ISMSUpdateChecker.m */; };
 		53FE37581EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
 		53FE375A1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
 		53FE375E1EA961720058B925 /* JukeboxSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36801EA961720058B925 /* JukeboxSingleton.m */; };
@@ -1633,8 +1631,6 @@
 		53FE36701EA961720058B925 /* ISMSStreamHandlerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSStreamHandlerDelegate.h; sourceTree = "<group>"; };
 		53FE36711EA961720058B925 /* ISMSStreamManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSStreamManager.h; sourceTree = "<group>"; };
 		53FE36721EA961720058B925 /* ISMSStreamManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSStreamManager.m; sourceTree = "<group>"; };
-		53FE36751EA961720058B925 /* ISMSUpdateChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSUpdateChecker.h; sourceTree = "<group>"; };
-		53FE36761EA961720058B925 /* ISMSUpdateChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSUpdateChecker.m; sourceTree = "<group>"; };
 		53FE367B1EA961720058B925 /* iSubBassGaplessPlayerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSubBassGaplessPlayerDelegate.h; sourceTree = "<group>"; };
 		53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSubBassGaplessPlayerDelegate.m; sourceTree = "<group>"; };
 		53FE367F1EA961720058B925 /* JukeboxSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JukeboxSingleton.h; sourceTree = "<group>"; };
@@ -2216,8 +2212,6 @@
 				53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */,
 				53FE36581EA961720058B925 /* ISMSNotificationNames.h */,
 				53FE36591EA961720058B925 /* ISMSNotificationNames.m */,
-				53FE36751EA961720058B925 /* ISMSUpdateChecker.h */,
-				53FE36761EA961720058B925 /* ISMSUpdateChecker.m */,
 				53FE36901EA961720058B925 /* NSString+cleanCredentialsForLog.h */,
 				53FE36911EA961720058B925 /* NSString+cleanCredentialsForLog.m */,
 				53FE36A11EA961720058B925 /* SearchXMLParser.h */,
@@ -3639,7 +3633,6 @@
 				53FE376A1EA961720058B925 /* NSError+ISMSError.m in Sources */,
 				53FE37101EA961720058B925 /* ISMSCacheQueueManager.m in Sources */,
 				53FE38A71EA961C80058B925 /* ZKCDTrailer.m in Sources */,
-				53FE374F1EA961720058B925 /* ISMSUpdateChecker.m in Sources */,
 				53FE34C81EA961540058B925 /* NSMutableArray+Safe.m in Sources */,
 				533295EA255EEFE50027C51A /* FMDatabaseQueue.m in Sources */,
 				53266BFA2562D4D0002C64BB /* PageControlViewController.swift in Sources */,
@@ -3865,7 +3858,6 @@
 				53246AAA256C324500E11EC4 /* InsetTextField.swift in Sources */,
 				538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53FE38A91EA961C80058B925 /* ZKCDTrailer.m in Sources */,
-				53FE37511EA961720058B925 /* ISMSUpdateChecker.m in Sources */,
 				53FE34CA1EA961540058B925 /* NSMutableArray+Safe.m in Sources */,
 				53FE37031EA961720058B925 /* DatabaseSingleton.m in Sources */,
 				53BC27A5139AF0DD00A825F1 /* AsynchronousImageView.m in Sources */,

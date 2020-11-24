@@ -25,12 +25,11 @@ LOG_LEVEL_ISUB_DEFAULT
 @implementation SettingsTabViewController
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad 
-{
+- (void)viewDidLoad  {
     [super viewDidLoad];
 	
 	// Fix for UISwitch/UISegment bug in iOS 4.3 beta 1 and 2
-	//
+	// TODO: Confirm this is no longer an issue (presumably not lol)
 	self.loadedTime = [NSDate date];
 		
 	// Set version label
@@ -39,8 +38,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.versionLabel.text = [NSString stringWithFormat:@"iSub %@ build %@", build, version];
 	
 	// Hide elements
-	if (UIDevice.isIPad)
-	{
+	if (UIDevice.isIPad) {
 		self.swipeCellsLabel.hidden = self.tapHoldCellsLabel.hidden = YES;
 		self.enableSwipeSwitch.hidden = self.enableTapAndHoldSwitch.hidden = YES;
 		self.enableSwipeSwitch.enabled = self.enableTapAndHoldSwitch.enabled = NO;
@@ -54,38 +52,21 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	// Main Settings
 	self.enableScrobblingSwitch.on = settingsS.isScrobbleEnabled;
-	
-	//scrobblePercentSlider.value = [[appDelegateS.settingsDictionary objectForKey:@"scrobblePercentSetting"] floatValue];
 	self.scrobblePercentSlider.value = settingsS.scrobblePercent;
 	[self updateScrobblePercentLabel];
-	
-	self.manualOfflineModeSwitch.on = settingsS.isForceOfflineMode;
-	
-	self.checkUpdatesSwitch.on = settingsS.isUpdateCheckEnabled;
-	
+    self.manualOfflineModeSwitch.on = settingsS.isForceOfflineMode;
 	self.autoReloadArtistSwitch.on = settingsS.isAutoReloadArtistsEnabled;
-
 	self.disablePopupsSwitch.on = !settingsS.isPopupsEnabled;
-	
 	self.disableRotationSwitch.on = settingsS.isRotationLockEnabled;
-	
 	self.disableScreenSleepSwitch.on = !settingsS.isScreenSleepEnabled;
-	
 	self.enableBasicAuthSwitch.on = settingsS.isBasicAuthEnabled;
-    
     self.disableCellUsageSwitch.on = settingsS.isDisableUsageOver3G;
-	
 	self.enableSongsTabSwitch.on = settingsS.isSongsTabEnabled;
-//DLog(@"isSongsTabEnabled: %i", settingsS.isSongsTabEnabled);
-	
 	self.recoverSegmentedControl.selectedSegmentIndex = settingsS.recoverSetting;
-	
 	self.maxBitrateWifiSegmentedControl.selectedSegmentIndex = settingsS.maxBitrateWifi;
 	self.maxBitrate3GSegmentedControl.selectedSegmentIndex = settingsS.maxBitrate3G;
-		
 	self.enableSwipeSwitch.on = settingsS.isSwipeEnabled;
 	self.enableTapAndHoldSwitch.on = settingsS.isTapAndHoldEnabled;
-	
 	self.enableLockScreenArt.on = settingsS.isLockScreenArtEnabled;
 	
 	// Cache Settings
@@ -108,13 +89,10 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self cachingTypeToggle];
 	
 	self.autoDeleteCacheSwitch.on = settingsS.isAutoDeleteCacheEnabled;
-	
 	self.autoDeleteCacheTypeSegmentedControl.selectedSegmentIndex = settingsS.autoDeleteCacheType;
-	
 	self.cacheSongCellColorSegmentedControl.selectedSegmentIndex = settingsS.cachedSongCellColorType;
-	
-	switch (settingsS.quickSkipNumberOfSeconds) 
-	{
+    
+	switch (settingsS.quickSkipNumberOfSeconds) {
 		case 5: self.quickSkipSegmentControl.selectedSegmentIndex = 0; break;
 		case 15: self.quickSkipSegmentControl.selectedSegmentIndex = 1; break;
 		case 30: self.quickSkipSegmentControl.selectedSegmentIndex = 2; break;
@@ -132,30 +110,18 @@ LOG_LEVEL_ISUB_DEFAULT
     self.maxVideoBitrate3GSegmentedControl.selectedSegmentIndex = settingsS.maxVideoBitrate3G;
     self.maxVideoBitrateWifiSegmentedControl.selectedSegmentIndex = settingsS.maxVideoBitrateWifi;
     
-    // Fix switch positions for iOS 7
-    for (UISwitch *sw in self.switches)
-    {
-        sw.x += 5.;
-    }
-    
-    self.autoDeleteCacheSwitch.x -= 10.;
-    
     self.resetAlbumArtCacheButton.layer.cornerRadius = 8;
     self.shareLogsButton.layer.cornerRadius = 8;
 }
 
-- (void)cachingTypeToggle
-{
-	if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 0)
-	{
+- (void)cachingTypeToggle {
+	if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 0) {
 		self.cacheSpaceLabel1.text = @"Minimum free space:";
 		//self.cacheSpaceLabel2.text = [settings formatFileSize:[[appDelegateS.settingsDictionary objectForKey:@"minFreeSpace"] unsignedLongLongValue]];
 		self.cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.minFreeSpace];
 		//self.cacheSpaceSlider.value = [[appDelegateS.settingsDictionary objectForKey:@"minFreeSpace"] floatValue] / totalSpace;
 		self.cacheSpaceSlider.value = (float)settingsS.minFreeSpace / self.totalSpace;
-	}
-	else if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 1)
-	{
+	} else if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 1) {
 		self.cacheSpaceLabel1.text = @"Maximum cache size:";
 		//self.cacheSpaceLabel2.text = [settings formatFileSize:[[appDelegateS.settingsDictionary objectForKey:@"maxCacheSize"] unsignedLongLongValue]];
 		self.cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.maxCacheSize];
@@ -164,39 +130,24 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 }
 
-- (IBAction)segmentAction:(id)sender
-{
-	if ([[NSDate date] timeIntervalSinceDate:self.loadedTime] > 0.5)
-	{
-		if (sender == self.recoverSegmentedControl)
-		{
+- (IBAction)segmentAction:(id)sender {
+	if ([[NSDate date] timeIntervalSinceDate:self.loadedTime] > 0.5) {
+		if (sender == self.recoverSegmentedControl) {
 			settingsS.recoverSetting = self.recoverSegmentedControl.selectedSegmentIndex;
-		}
-		else if (sender == self.maxBitrateWifiSegmentedControl)
-		{
+		} else if (sender == self.maxBitrateWifiSegmentedControl) {
 			settingsS.maxBitrateWifi = self.maxBitrateWifiSegmentedControl.selectedSegmentIndex;
 		}
-		else if (sender == self.maxBitrate3GSegmentedControl)
-		{
+		else if (sender == self.maxBitrate3GSegmentedControl) {
 			settingsS.maxBitrate3G = self.maxBitrate3GSegmentedControl.selectedSegmentIndex;
-		}
-		else if (sender == self.cachingTypeSegmentedControl)
-		{
+		} else if (sender == self.cachingTypeSegmentedControl) {
 			settingsS.cachingType = self.cachingTypeSegmentedControl.selectedSegmentIndex;
 			[self cachingTypeToggle];
-		}
-		else if (sender == self.autoDeleteCacheTypeSegmentedControl)
-		{
+		} else if (sender == self.autoDeleteCacheTypeSegmentedControl) {
 			settingsS.autoDeleteCacheType = self.autoDeleteCacheTypeSegmentedControl.selectedSegmentIndex;
-		}
-		else if (sender == self.cacheSongCellColorSegmentedControl)
-		{
+		} else if (sender == self.cacheSongCellColorSegmentedControl) {
 			settingsS.cachedSongCellColorType = self.cacheSongCellColorSegmentedControl.selectedSegmentIndex;
-		}
-		else if (sender == self.quickSkipSegmentControl)
-		{
-			switch (self.quickSkipSegmentControl.selectedSegmentIndex) 
-			{
+		} else if (sender == self.quickSkipSegmentControl) {
+			switch (self.quickSkipSegmentControl.selectedSegmentIndex)  {
 				case 0: settingsS.quickSkipNumberOfSeconds = 5; break;
 				case 1: settingsS.quickSkipNumberOfSeconds = 15; break;
 				case 2: settingsS.quickSkipNumberOfSeconds = 30; break;
@@ -209,24 +160,20 @@ LOG_LEVEL_ISUB_DEFAULT
 				default: break;
 			}
 			
-//			if (UIDevice.isIPad)
-//				[appDelegateS.padRootViewController.menuViewController.playerController quickSecondsSetLabels];
-		}
-        else if (sender == self.maxVideoBitrate3GSegmentedControl)
-        {
+            if (UIDevice.isIPad) {
+                // Update the quick skip buttons in the player with the new values on iPad since player is always visible
+                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_QuickSkipSecondsSettingChanged];
+            }
+		} else if (sender == self.maxVideoBitrate3GSegmentedControl) {
             settingsS.maxVideoBitrate3G = self.maxVideoBitrate3GSegmentedControl.selectedSegmentIndex;
-        }
-        else if (sender == self.maxVideoBitrateWifiSegmentedControl)
-        {
+        } else if (sender == self.maxVideoBitrateWifiSegmentedControl) {
             settingsS.maxVideoBitrateWifi = self.maxVideoBitrateWifiSegmentedControl.selectedSegmentIndex;
         }
 	}
 }
 
-- (void)toggleCacheControlsVisibility
-{
-	if (self.enableSongCachingSwitch.on)
-	{
+- (void)toggleCacheControlsVisibility {
+	if (self.enableSongCachingSwitch.on) {
 		self.enableNextSongCacheLabel.alpha = 1;
 		self.enableNextSongCacheSwitch.enabled = YES;
 		self.enableNextSongCacheSwitch.alpha = 1;
@@ -245,15 +192,12 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.cacheSpaceSlider.alpha = 1;
 		self.cacheSpaceDescLabel.alpha = 1;
 		
-		if (!self.enableNextSongCacheSwitch.on)
-		{
+		if (!self.enableNextSongCacheSwitch.on) {
 			self.enableNextSongPartialCacheLabel.alpha = .5;
 			self.enableNextSongPartialCacheSwitch.enabled = NO;
 			self.enableNextSongPartialCacheSwitch.alpha = .5;
 		}
-	}
-	else
-	{
+	} else {
 		self.enableNextSongCacheLabel.alpha = .5;
 		self.enableNextSongCacheSwitch.enabled = NO;
 		self.enableNextSongCacheSwitch.alpha = .5;
@@ -274,40 +218,27 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 }
 
-- (IBAction)switchAction:(id)sender
-{
-	if ([[NSDate date] timeIntervalSinceDate:self.loadedTime] > 0.5)
-	{
-		if (sender == self.manualOfflineModeSwitch)
-		{
+- (IBAction)switchAction:(id)sender {
+	if ([[NSDate date] timeIntervalSinceDate:self.loadedTime] > 0.5) {
+		if (sender == self.manualOfflineModeSwitch) {
 			settingsS.isForceOfflineMode = self.manualOfflineModeSwitch.on;
-			if (self.manualOfflineModeSwitch.on)
-			{
+			if (self.manualOfflineModeSwitch.on) {
 				[appDelegateS enterOfflineModeForce];
-			}
-			else
-			{
+			} else {
 				[appDelegateS enterOnlineModeForce];
 			}
 			
 			// Handle the moreNavigationController stupidity
-			if (appDelegateS.currentTabBarController.selectedIndex == 4)
-			{
+			if (appDelegateS.currentTabBarController.selectedIndex == 4) {
 				[appDelegateS.currentTabBarController.moreNavigationController popToViewController:[appDelegateS.currentTabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
-			}
-			else
-			{
+			} else {
 				[(UINavigationController*)appDelegateS.currentTabBarController.selectedViewController popToRootViewControllerAnimated:YES];
 			}
 		}
-		else if (sender == self.enableScrobblingSwitch)
-		{
+		else if (sender == self.enableScrobblingSwitch) {
 			settingsS.isScrobbleEnabled = self.enableScrobblingSwitch.on;
-		}
-        else if (sender == self.enableManualCachingOnWWANSwitch)
-        {
-            if (self.enableManualCachingOnWWANSwitch.on)
-            {
+		} else if (sender == self.enableManualCachingOnWWANSwitch) {
+            if (self.enableManualCachingOnWWANSwitch.on) {
                 // Prompt the warning
                 NSString *message = @"This feature can use a large amount of data. Please be sure to monitor your data plan usage to avoid overage charges from your wireless provider.";
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning"
@@ -321,26 +252,17 @@ LOG_LEVEL_ISUB_DEFAULT
                     [self.enableManualCachingOnWWANSwitch setOn:NO animated:YES];
                 }]];
                 [self presentViewController:alert animated:YES completion:nil];
-            }
-            else
-            {
+            } else {
                 settingsS.isManualCachingOnWWANEnabled = NO;
             }
-        }
-		else if (sender == self.enableSongCachingSwitch)
-		{
+        } else if (sender == self.enableSongCachingSwitch) {
 			settingsS.isSongCachingEnabled = self.enableSongCachingSwitch.on;
 			[self toggleCacheControlsVisibility];
-		}
-		else if (sender == self.enableNextSongCacheSwitch)
-		{
+		} else if (sender == self.enableNextSongCacheSwitch) {
 			settingsS.isNextSongCacheEnabled = self.enableNextSongCacheSwitch.on;
 			[self toggleCacheControlsVisibility];
-		}
-		else if (sender == self.enableNextSongPartialCacheSwitch)
-		{
-            if (self.enableNextSongPartialCacheSwitch.on)
-            {
+		} else if (sender == self.enableNextSongPartialCacheSwitch) {
+            if (self.enableNextSongPartialCacheSwitch.on) {
                 // Prompt the warning
                 NSString *message = @"Due to changes in Subsonic, this will cause audio corruption if transcoding is enabled.\n\nIf you're not sure what that means, choose cancel.";
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning"
@@ -354,16 +276,11 @@ LOG_LEVEL_ISUB_DEFAULT
                     [self.enableNextSongPartialCacheSwitch setOn:NO animated:YES];
                 }]];
                 [self presentViewController:alert animated:YES completion:nil];
-            }
-            else
-            {
+            } else {
                 settingsS.isPartialCacheNextSong = NO;
             }
-		}
-        else if (sender == self.enableBackupCacheSwitch)
-		{
-            if (self.enableBackupCacheSwitch.on)
-            {
+		} else if (sender == self.enableBackupCacheSwitch) {
+            if (self.enableBackupCacheSwitch.on) {
                 // Prompt the warning
                 NSString *message = @"This setting can take up a large amount of space on your computer or iCloud storage. Are you sure you want to backup your cached songs?";
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning"
@@ -377,66 +294,41 @@ LOG_LEVEL_ISUB_DEFAULT
                     [self.enableBackupCacheSwitch setOn:NO animated:YES];
                 }]];
                 [self presentViewController:alert animated:YES completion:nil];
-            }
-            else
-            {
+            } else {
                 settingsS.isBackupCacheEnabled = NO;
             }
-		}
-		else if (sender == self.autoDeleteCacheSwitch)
-		{
+		} else if (sender == self.autoDeleteCacheSwitch) {
 			settingsS.isAutoDeleteCacheEnabled = self.autoDeleteCacheSwitch.on;
-		}
-		else if (sender == self.checkUpdatesSwitch)
-		{
-			settingsS.isUpdateCheckEnabled = self.checkUpdatesSwitch.on;
-		}
-		else if (sender == self.enableSwipeSwitch)
-		{
+		} else if (sender == self.enableSwipeSwitch) {
 			settingsS.isSwipeEnabled = self.enableSwipeSwitch.on;
-		}
-		else if (sender == self.enableTapAndHoldSwitch)
-		{
+		} else if (sender == self.enableTapAndHoldSwitch) {
 			settingsS.isTapAndHoldEnabled = self.enableTapAndHoldSwitch.on;
-		}
-		else if (sender == self.autoReloadArtistSwitch)
-		{
+		} else if (sender == self.autoReloadArtistSwitch) {
 			settingsS.isAutoReloadArtistsEnabled = self.autoReloadArtistSwitch.on;
-		}
-		else if (sender == self.disablePopupsSwitch)
-		{
+		} else if (sender == self.disablePopupsSwitch) {
 			settingsS.isPopupsEnabled = !self.disablePopupsSwitch.on;
-		}
-		else if (sender == self.enableSongsTabSwitch)
-		{
-			if (self.enableSongsTabSwitch.on)
-			{
+		} else if (sender == self.enableSongsTabSwitch) {
+			if (self.enableSongsTabSwitch.on) {
 				settingsS.isSongsTabEnabled = YES;
-				
-				if (UIDevice.isIPad)
-				{
+				if (UIDevice.isIPad) {
 					[appDelegateS.padRootViewController.menuViewController loadCellContents];
-				}
-				else
-				{
+				} else {
 					NSMutableArray *controllers = [NSMutableArray arrayWithArray:appDelegateS.mainTabBarController.viewControllers];
 					[controllers addObject:appDelegateS.allAlbumsNavigationController];
 					[controllers addObject:appDelegateS.allSongsNavigationController];
 					[controllers addObject:appDelegateS.genresNavigationController];
 					appDelegateS.mainTabBarController.viewControllers = controllers;
 				}
-				
 				[databaseS setupAllSongsDb];
-			}
-			else
-			{
+			} else {
 				settingsS.isSongsTabEnabled = NO;
 
-				if (UIDevice.isIPad)
+                if (UIDevice.isIPad) {
 					[appDelegateS.padRootViewController.menuViewController loadCellContents];
-				else
+                } else {
 					[viewObjectsS orderMainTabBarController];
-				
+                }
+                
 				[databaseS.allAlbumsDbQueue close];
 				databaseS.allAlbumsDbQueue = nil;
 				[databaseS.allSongsDbQueue close];
@@ -444,53 +336,34 @@ LOG_LEVEL_ISUB_DEFAULT
 				[databaseS.genresDbQueue close];
 				databaseS.genresDbQueue = nil;
 			}
-		}
-		else if (sender == self.disableRotationSwitch)
-		{
+		} else if (sender == self.disableRotationSwitch) {
 			settingsS.isRotationLockEnabled = self.disableRotationSwitch.on;
-		}
-		else if (sender == self.disableScreenSleepSwitch)
-		{
+		} else if (sender == self.disableScreenSleepSwitch) {
 			settingsS.isScreenSleepEnabled = !self.disableScreenSleepSwitch.on;
 			[UIApplication sharedApplication].idleTimerDisabled = self.disableScreenSleepSwitch.on;
-		}
-		else if (sender == self.enableBasicAuthSwitch)
-		{
+		} else if (sender == self.enableBasicAuthSwitch) {
 			settingsS.isBasicAuthEnabled = self.enableBasicAuthSwitch.on;
-		}
-		else if (sender == self.enableLockScreenArt)
-		{
+		} else if (sender == self.enableLockScreenArt) {
 			settingsS.isLockScreenArtEnabled = self.enableLockScreenArt.on;
-		}
-        else if (sender == self.disableCellUsageSwitch)
-        {
+		} else if (sender == self.disableCellUsageSwitch) {
             settingsS.isDisableUsageOver3G = self.disableCellUsageSwitch.on;
             
             BOOL handleStupidity = NO;
-            if (!settingsS.isOfflineMode && settingsS.isDisableUsageOver3G && !EX2Reachability.isWifi)
-            {
+            if (!settingsS.isOfflineMode && settingsS.isDisableUsageOver3G && !EX2Reachability.isWifi) {
                 // We're on 3G and we just disabled use on 3G, so go offline
                 [appDelegateS enterOfflineModeForce];
-                
                 handleStupidity = YES;
-            }
-            else if (settingsS.isOfflineMode && !settingsS.isDisableUsageOver3G && !EX2Reachability.isWifi)
-            {
+            } else if (settingsS.isOfflineMode && !settingsS.isDisableUsageOver3G && !EX2Reachability.isWifi) {
                 // We're on 3G and we just enabled use on 3G, so go online if we're offline
                 [appDelegateS enterOfflineModeForce];
-                
                 handleStupidity = YES;
             }
             
-            if (handleStupidity)
-            {
+            if (handleStupidity) {
                 // Handle the moreNavigationController stupidity
-                if (appDelegateS.currentTabBarController.selectedIndex == 4)
-                {
+                if (appDelegateS.currentTabBarController.selectedIndex == 4) {
                     [appDelegateS.currentTabBarController.moreNavigationController popToViewController:[appDelegateS.currentTabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
-                }
-                else
-                {
+                } else {
                     [(UINavigationController*)appDelegateS.currentTabBarController.selectedViewController popToRootViewControllerAnimated:YES];
                 }
             }
@@ -498,8 +371,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 }
 
-- (IBAction)resetAlbumArtCacheAction
-{
+- (IBAction)resetAlbumArtCacheAction {
     NSString *message = @"Are you sure you want to do this? This will clear all saved album art.";
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Reset Album Art Cache"
                                                                    message:message
@@ -512,15 +384,13 @@ LOG_LEVEL_ISUB_DEFAULT
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)resetFolderCache
-{
+- (void)resetFolderCache {
 	[databaseS resetFolderCache];
 	[viewObjectsS hideLoadingScreen];
 	[self popFoldersTab];
 }
 
-- (void)resetAlbumArtCache
-{
+- (void)resetAlbumArtCache {
 	[databaseS resetCoverArtCache];
 	[viewObjectsS hideLoadingScreen];
 	[self popFoldersTab];
@@ -541,61 +411,45 @@ LOG_LEVEL_ISUB_DEFAULT
     [self presentViewController:shareSheet animated:YES completion:nil];
 }
 
-- (void)popFoldersTab
-{
-	if (UIDevice.isIPad)
+- (void)popFoldersTab {
+    if (UIDevice.isIPad) {
 		[appDelegateS.artistsNavigationController popToRootViewControllerAnimated:NO];
-	else
+    } else {
 		[appDelegateS.rootViewController.navigationController popToRootViewControllerAnimated:NO];
+    }
 }
 
-- (void)updateCacheSpaceSlider
-{
+- (void)updateCacheSpaceSlider {
 	self.cacheSpaceSlider.value = ((double)[self.cacheSpaceLabel2.text fileSizeFromFormat] / (double)self.totalSpace);
 }
 
-- (IBAction)updateMinFreeSpaceLabel
-{
+- (IBAction)updateMinFreeSpaceLabel {
 	self.cacheSpaceLabel2.text = [NSString formatFileSize:(unsigned long long int) (self.cacheSpaceSlider.value * self.totalSpace)];
 }
 
-- (IBAction)updateMinFreeSpaceSetting
-{
-	if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 0)
-	{
+- (IBAction)updateMinFreeSpaceSetting {
+	if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 0) {
 		// Check if the user is trying to assing a higher min free space than is available space - 50MB
-		if (self.cacheSpaceSlider.value * self.totalSpace > self.freeSpace - 52428800)
-		{
+		if (self.cacheSpaceSlider.value * self.totalSpace > self.freeSpace - 52428800) {
 			settingsS.minFreeSpace = self.freeSpace - 52428800;
 			self.cacheSpaceSlider.value = ((float)settingsS.minFreeSpace / (float)self.totalSpace); // Leave 50MB space
-		}
-		else if (self.cacheSpaceSlider.value * self.totalSpace < 52428800)
-		{
+		} else if (self.cacheSpaceSlider.value * self.totalSpace < 52428800) {
 			settingsS.minFreeSpace = 52428800;
 			self.cacheSpaceSlider.value = ((float)settingsS.minFreeSpace / (float)self.totalSpace); // Leave 50MB space
-		}
-		else 
-		{
+		} else {
 			settingsS.minFreeSpace = (unsigned long long int) (self.cacheSpaceSlider.value * (float)self.totalSpace);
 		}
 		//cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.minFreeSpace];
-	}
-	else if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 1)
-	{
+	} else if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 1) {
 		
 		// Check if the user is trying to assign a larger max cache size than there is available space - 50MB
-		if (self.cacheSpaceSlider.value * self.totalSpace > self.freeSpace - 52428800)
-		{
+		if (self.cacheSpaceSlider.value * self.totalSpace > self.freeSpace - 52428800) {
 			settingsS.maxCacheSize = self.freeSpace - 52428800;
 			self.cacheSpaceSlider.value = ((float)settingsS.maxCacheSize / (float)self.totalSpace); // Leave 50MB space
-		}
-		else if (self.cacheSpaceSlider.value * self.totalSpace < 52428800)
-		{
+		} else if (self.cacheSpaceSlider.value * self.totalSpace < 52428800) {
 			settingsS.maxCacheSize = 52428800;
 			self.cacheSpaceSlider.value = ((float)settingsS.maxCacheSize / (float)self.totalSpace); // Leave 50MB space
-		}
-		else
-		{
+		} else {
 			settingsS.maxCacheSize = (unsigned long long int) (self.cacheSpaceSlider.value * self.totalSpace);
 		}
 		//cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.maxCacheSize];
@@ -603,30 +457,25 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self updateMinFreeSpaceLabel];
 }
 
-- (IBAction)revertMinFreeSpaceSlider
-{
+- (IBAction)revertMinFreeSpaceSlider {
 	self.cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.minFreeSpace];
 	self.cacheSpaceSlider.value = (float)settingsS.minFreeSpace / self.totalSpace;
 }
 
-- (IBAction)updateScrobblePercentLabel
-{
+- (IBAction)updateScrobblePercentLabel {
 	NSUInteger percentInt = self.scrobblePercentSlider.value * 100;
 	self.scrobblePercentLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)percentInt];
 }
 
-- (IBAction)updateScrobblePercentSetting;
-{
+- (IBAction)updateScrobblePercentSetting {
 	settingsS.scrobblePercent = self.scrobblePercentSlider.value;
 }
 
-- (void)dealloc 
-{
+- (void)dealloc {
 	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
 	UITableView *tableView = (UITableView *)self.view.superview;
 	CGRect rect = CGRectMake(0, 500, 320, 5);
 	[tableView scrollRectToVisible:rect animated:NO];
@@ -635,31 +484,15 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 // This dismisses the keyboard when the "done" button is pressed
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
 	[self updateMinFreeSpaceSetting];
 	[textField resignFirstResponder];
 	return YES;
 }
 
-- (void)textFieldDidChange:(UITextField *)textField
-{
+- (void)textFieldDidChange:(UITextField *)textField {
 	[self updateCacheSpaceSlider];
 //DLog(@"file size: %llu   formatted: %@", [textField.text fileSizeFromFormat], [NSString formatFileSize:[textField.text fileSizeFromFormat]]);
-}
-
-// Fix for panel sliding on iPad while using sliders
-- (IBAction)touchDown:(id)sender
-{
-//    appDelegateS.padRootViewController.stackScrollViewController.isSlidingEnabled = NO;
-}
-- (IBAction)touchUpInside:(id)sender
-{
-//    appDelegateS.padRootViewController.stackScrollViewController.isSlidingEnabled = YES;
-}
-- (IBAction)touchUpOutside:(id)sender
-{
-//    appDelegateS.padRootViewController.stackScrollViewController.isSlidingEnabled = YES;
 }
 
 @end

@@ -13,7 +13,6 @@
 @property (nonatomic, strong) UIViewController *parentController;
 @property (nonatomic, strong) IBOutlet UILabel *versionLabel;
 @property (nonatomic, strong) IBOutlet UISwitch *manualOfflineModeSwitch;
-@property (nonatomic, strong) IBOutlet UISwitch *checkUpdatesSwitch;
 @property (nonatomic, strong) IBOutlet UISwitch *autoReloadArtistSwitch;
 @property (nonatomic, strong) IBOutlet UISwitch *disablePopupsSwitch;
 @property (nonatomic, strong) IBOutlet UISwitch *disableRotationSwitch;
