@@ -23,7 +23,7 @@ class CacheStatusViewController: UIViewController {
     private func makeTitleLabel(text: String) -> UILabel {
         let label = UILabel()
         label.textColor = .white
-        label.font = .boldSystemFont(ofSize: 22)
+        label.font = .boldSystemFont(ofSize: 20)
         label.text = text
         return label
     }
@@ -31,7 +31,7 @@ class CacheStatusViewController: UIViewController {
     private func makeInfoLabel(text: String) -> UILabel {
         let label = UILabel()
         label.textColor = .white
-        label.font = .systemFont(ofSize: 18)
+        label.font = .systemFont(ofSize: 14)
         label.text = text
         return label
     }
@@ -78,13 +78,11 @@ class CacheStatusViewController: UIViewController {
             make.leading.trailing.top.equalTo(containerView)
         }
         
-        currentSongProgressBar.progress = 0.5
         currentSongProgressBar.trackTintColor = .darkGray
         currentSongProgressBar.snp.makeConstraints { make in
             make.width.equalToSuperview()
         }
         
-        nextSongProgressBar.progress = 0.5
         nextSongProgressBar.trackTintColor = .darkGray
         nextSongProgressBar.snp.makeConstraints { make in
             make.width.equalToSuperview()
@@ -101,7 +99,7 @@ class CacheStatusViewController: UIViewController {
                                                 makeInfoLabel(text: "Free Space:")])
         containerView.addSubview(infoTitleStackView)
         infoTitleStackView.snp.makeConstraints { make in
-            make.width.equalTo(135)
+            make.width.equalTo(110)
             make.leading.bottom.equalToSuperview()
             make.top.equalTo(progressBarStackView.snp.bottom).offset(20)
         }
@@ -147,24 +145,24 @@ class CacheStatusViewController: UIViewController {
         
         if Settings.shared().isJukeboxEnabled {
             currentSongProgressBar.progress = 0
-            currentSongProgressBar.alpha = 0.2
+            currentSongProgressBar.alpha = 0.5
             nextSongProgressBar.progress = 0
-            nextSongProgressBar.alpha = 0.2
+            nextSongProgressBar.alpha = 0.5
         } else {
             if let currentSong = currentSong, !currentSong.isTempCached {
                 currentSongProgressBar.progress = Float(currentSong.downloadProgress)
                 currentSongProgressBar.alpha = 1
             } else {
                 currentSongProgressBar.progress = 0
-                currentSongProgressBar.alpha = 0.2
+                currentSongProgressBar.alpha = 0.5
             }
             
             if let nextSong = nextSong, !nextSong.isTempCached {
                 nextSongProgressBar.progress = Float(nextSong.downloadProgress)
                 nextSongProgressBar.alpha = 1
             } else {
-                currentSongProgressBar.progress = 0
-                currentSongProgressBar.alpha = 0.2
+                nextSongProgressBar.progress = 0
+                nextSongProgressBar.alpha = 0.5
             }
         }
         
