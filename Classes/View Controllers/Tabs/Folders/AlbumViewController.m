@@ -68,7 +68,7 @@
         [weakSelf.dataModel startLoad];
     }];
     
-    self.tableView.rowHeight = 65.0;
+    self.tableView.rowHeight = Defines.rowHeight;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorColor = UIColor.clearColor;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
@@ -231,10 +231,16 @@
     } else {
         // Song
         cell.hideSecondaryLabel = NO;
-        cell.hideNumberLabel = YES;
         cell.hideCoverArt = YES;
         cell.hideDurationLabel = NO;
-        [cell updateWithModel:[self.dataModel songForTableViewRow:indexPath.row]];
+        ISMSSong *song = [self.dataModel songForTableViewRow:indexPath.row];
+        [cell updateWithModel:song];
+        if (song.track == nil || song.track.intValue == 0) {
+            cell.hideNumberLabel = YES;
+        } else {
+            cell.hideNumberLabel = NO;
+            cell.number = song.track.intValue;
+        }
     }
     return cell;
 }

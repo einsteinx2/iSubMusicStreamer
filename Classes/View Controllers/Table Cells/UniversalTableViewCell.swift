@@ -59,7 +59,7 @@ import SnapKit
     }
     
     @objc var hideCoverArt: Bool = false {
-        didSet { if oldValue != hideCoverArt { makeCoverArtConstraints() } }
+        didSet { if oldValue != hideCoverArt { makeCoverArtConstraints(); makePrimaryLabelConstraints() } }
     }
     
     @objc var hideSecondaryLabel: Bool = false {
@@ -95,11 +95,11 @@ import SnapKit
         contentView.addSubview(coverArtView)
         
         primaryLabel.textColor = .label
-        primaryLabel.font = .boldSystemFont(ofSize: 17)
+        primaryLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall() ? 16 : 17)
         contentView.addSubview(primaryLabel)
         
         secondaryLabel.textColor = .secondaryLabel
-        secondaryLabel.font = .systemFont(ofSize: 14)
+        secondaryLabel.font = .systemFont(ofSize: UIDevice.isSmall() ? 13 : 14)
         contentView.addSubview(secondaryLabel)
         
         durationLabel.textColor = .secondaryLabel
@@ -199,7 +199,7 @@ import SnapKit
         coverArtView.snp.remakeConstraints { make in
             if hideCoverArt { make.width.equalTo(0) }
             else { make.width.equalTo(coverArtView.snp.height) }
-            make.leading.equalTo(numberLabel.snp.trailing).offset(5)
+            make.leading.equalTo(numberLabel.snp.trailing).offset(hideCoverArt ? 0 : 5)
             make.top.equalTo(headerLabel.snp.bottom).offset(5)
             make.bottom.equalToSuperview().offset(-5)
         }
@@ -209,16 +209,12 @@ import SnapKit
         primaryLabel.snp.remakeConstraints { make in
             if hideSecondaryLabel {
                 make.height.equalTo(coverArtView).multipliedBy(0.66)
-                make.top.equalTo(headerLabel.snp.bottom).offset(10)
             } else {
-                make.top.equalTo(headerLabel.snp.bottom).offset(10)
                 make.bottom.equalTo(secondaryLabel.snp.top)
             }
-            make.leading.equalTo(coverArtView.snp.trailing).offset(hideCoverArt ? 0 : 10)
+            make.leading.equalTo(coverArtView.snp.trailing).offset(hideCoverArt ? 5 : 10)
             make.trailing.equalTo(durationLabel.snp.leading).offset(-10)
-            
-            
-//            make.bottom.equalTo(secondaryLabel.snp.top)
+            make.top.equalTo(headerLabel.snp.bottom).offset(UIDevice.isSmall() ? 5 : 10)
         }
     }
     
@@ -228,8 +224,7 @@ import SnapKit
             else { make.height.equalTo(coverArtView).multipliedBy(0.33) }
             make.leading.equalTo(primaryLabel)
             make.trailing.equalTo(primaryLabel)
-//            make.top.equalTo(primaryLabel.snp.bottom)
-            make.bottom.equalToSuperview().offset(-10)
+            make.bottom.equalToSuperview().offset(UIDevice.isSmall() ? -5 : -10)
         }
     }
     

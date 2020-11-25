@@ -25,19 +25,10 @@ import SnapKit
         
         loadCellContents()
         
-//        playerController.vie
-//        playerController.view.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-//        playerController.view.layer.anchorPoint = CGPoint(x: 0.6, y: 0.35)
-//        playerController.view.layer.transform = CATransform3DMakeScale(0.8, 0.8, 1.0)
         view.addSubview(playerController.view)
         playerController.view.snp.makeConstraints { make in
-            make.height.equalTo(500)//750)
+            make.height.equalTo(500)
             make.leading.trailing.bottom.equalToSuperview()
-            
-//            make.height.equalTo(600.0 * (1.0 / 0.8))
-//            make.width.equalToSuperview().multipliedBy(1.0 / 0.8)
-//            make.centerX.equalToSuperview()
-//            make.bottom.equalToSuperview()
         }
         
         view.addSubview(tableContainer)

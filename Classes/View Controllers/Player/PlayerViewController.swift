@@ -56,10 +56,6 @@ import CocoaLumberjackSwift
     private let jukeboxVolumeContainer = UIView()
     private let jukeboxVolumeSlider = UISlider()
     
-    private var isShortScreen: Bool {
-        return (UIApplication.orientation().isPortrait ? UIScreen.main.bounds.size.height : UIScreen.main.bounds.size.width) < 700
-    }
-    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.equalizerButton.isHidden = UIApplication.orientation().isPortrait
@@ -89,7 +85,7 @@ import CocoaLumberjackSwift
             
             verticalStack.snp.remakeConstraints { make in
                 make.leading.trailing.equalToSuperview()
-                if isShortScreen || UIDevice.isIPad() {
+                if UIDevice.isSmall() || UIDevice.isIPad() {
                     make.height.equalToSuperview().multipliedBy(0.9)
                     make.centerY.equalToSuperview()
                 } else {
@@ -102,7 +98,7 @@ import CocoaLumberjackSwift
                 make.width.equalTo(coverArtPageControl.view.snp.height).offset(-20)
                 make.top.equalToSuperview().offset(20)
                 make.bottom.equalToSuperview().offset(-20)
-                if isShortScreen {
+                if UIDevice.isSmall() {
                     make.leading.equalToSuperview().offset(20)
                 } else {
                     make.centerX.equalToSuperview().multipliedBy(0.5)

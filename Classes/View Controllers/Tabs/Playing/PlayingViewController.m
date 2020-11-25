@@ -41,7 +41,7 @@
         [weakSelf.dataModel startLoad];
     }];
     
-    self.tableView.rowHeight = 85.0;
+    self.tableView.rowHeight = Defines.tallRowHeight;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
         
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
@@ -140,7 +140,7 @@
 
 // NOTE: For some reason, in this controller and this controller only, it's ignoring the rowHeight property and this must be implemented
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 85.0;
+    return Defines.tallRowHeight;
 }
 
 #pragma mark - ISMSLoader delegate

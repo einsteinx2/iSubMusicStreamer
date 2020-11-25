@@ -55,7 +55,7 @@
         [weakSelf reloadAction:nil];
     }];
     
-    self.tableView.rowHeight = 65.0;
+    self.tableView.rowHeight = Defines.rowHeight;
     [self.tableView registerClass:BlurredSectionHeader.class forHeaderFooterViewReuseIdentifier:BlurredSectionHeader.reuseId];
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 }
@@ -343,7 +343,7 @@
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return 0;
     if (self.dataModel.index.count == 0) return 0;
     
-    return 60;
+    return Defines.rowHeight - 5;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {

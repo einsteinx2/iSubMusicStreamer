@@ -38,7 +38,7 @@
 		self.navigationItem.rightBarButtonItem = nil;
 	}
     
-    self.tableView.rowHeight = 65.0;
+    self.tableView.rowHeight = Defines.rowHeight;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 }
 

@@ -27,7 +27,7 @@ import SnapKit
         // In order for the blur to work correctly it must be the background view
         backgroundView = blurView
         
-        label.font = .boldSystemFont(ofSize: 42)
+        label.font = .boldSystemFont(ofSize: UIDevice.isSmall() ? 36 : 42)
         label.textColor = .label
         contentView.addSubview(label)
         label.snp.makeConstraints { make in

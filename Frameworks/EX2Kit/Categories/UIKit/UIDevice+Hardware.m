@@ -12,11 +12,18 @@
 #import <net/if_dl.h>
 
 #import "UIDevice+Hardware.h"
+#import "UIApplication+Orientiation.h"
 
 @implementation UIDevice (Hardware)
 
 + (BOOL)isIPad {
     return UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad;
+}
+
++ (BOOL)isSmall {
+    // Should match iPhone SE 2nd Edition and iPhone 6/7/8 (all phones with home buttons)
+    CGSize screenSize = UIScreen.mainScreen.bounds.size;
+    return (UIInterfaceOrientationIsPortrait(UIApplication.orientation) ? screenSize.height : screenSize.width) < 700;
 }
 
 /*

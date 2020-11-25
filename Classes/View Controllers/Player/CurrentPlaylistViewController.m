@@ -130,7 +130,7 @@ LOG_LEVEL_ISUB_DEFAULT
     
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
-    self.tableView.rowHeight = 65.0;
+    self.tableView.rowHeight = Defines.rowHeight;
     
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(hideEditControls) name:@"hideEditControls"];
 	

@@ -990,6 +990,8 @@
 		53FE67A5256DD0F00015FC83 /* GCDWebServerDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE678B256DD0F00015FC83 /* GCDWebServerDataRequest.m */; };
 		53FE67A6256DD0F00015FC83 /* GCDWebServerFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE678C256DD0F00015FC83 /* GCDWebServerFileRequest.m */; };
 		53FE67A7256DD0F00015FC83 /* GCDWebServerFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE678C256DD0F00015FC83 /* GCDWebServerFileRequest.m */; };
+		53FE67AC256DE9600015FC83 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FE67AB256DE9600015FC83 /* Defines.swift */; };
+		53FE67AD256DE9600015FC83 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FE67AB256DE9600015FC83 /* Defines.swift */; };
 		D0EA476C19DE449A0083CE05 /* UIView+AutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476B19DE449A0083CE05 /* UIView+AutoLayout.m */; };
 		D0EA476E19DE449A0083CE05 /* UIView+AutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476B19DE449A0083CE05 /* UIView+AutoLayout.m */; };
 /* End PBXBuildFile section */
@@ -1794,6 +1796,7 @@
 		53FE678B256DD0F00015FC83 /* GCDWebServerDataRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerDataRequest.m; sourceTree = "<group>"; };
 		53FE678C256DD0F00015FC83 /* GCDWebServerFileRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileRequest.m; sourceTree = "<group>"; };
 		53FE678D256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerURLEncodedFormRequest.h; sourceTree = "<group>"; };
+		53FE67AB256DE9600015FC83 /* Defines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
 		D0EA476A19DE449A0083CE05 /* UIView+AutoLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AutoLayout.h"; sourceTree = "<group>"; };
 		D0EA476B19DE449A0083CE05 /* UIView+AutoLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AutoLayout.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2216,6 +2219,7 @@
 				536C994C16619F5D005A73C6 /* ViewObjectsSingleton.h */,
 				536C994B16619F5D005A73C6 /* ViewObjectsSingleton.m */,
 				534B20E52561E444007FF1D7 /* LockScreenAudioControls.swift */,
+				53FE67AB256DE9600015FC83 /* Defines.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -3789,6 +3793,7 @@
 				53FE36EF1EA961720058B925 /* BassGaplessPlayer.m in Sources */,
 				533D181F255F72FF003F962C /* CacheOfflineFoldersViewController.m in Sources */,
 				53FE37161EA961720058B925 /* ISMSChatMessage.m in Sources */,
+				53FE67AC256DE9600015FC83 /* Defines.swift in Sources */,
 				53FE38BC1EA961C80058B925 /* ZKLog.m in Sources */,
 				53FE358E1EA961540058B925 /* EX2RingBuffer.m in Sources */,
 				53FE34E31EA961540058B925 /* NSNull+CleanString.m in Sources */,
@@ -4033,6 +4038,7 @@
 				53FE38971EA961C80058B925 /* NSDictionary+ZKAdditions.m in Sources */,
 				53FE371B1EA961720058B925 /* SUSCoverArtLoader.m in Sources */,
 				53FE36FD1EA961720058B925 /* BassWrapper.m in Sources */,
+				53FE67AD256DE9600015FC83 /* Defines.swift in Sources */,
 				531D3A20255ABAAC000CB0DF /* SUSLoader.m in Sources */,
 				53FE35541EA961540058B925 /* UIImage+Reflection.m in Sources */,
 				53FE37C91EA961720058B925 /* SUSServerPlaylistsDAO.m in Sources */,

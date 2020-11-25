@@ -9,6 +9,7 @@
 #import "CustomUITabBarController.h"
 #import "SavedSettings.h"
 #import "ViewObjectsSingleton.h"
+#import "Swift.h"
 
 @implementation CustomUITabBarController
 
@@ -19,7 +20,7 @@
     if ([moreController.view isKindOfClass:UITableView.class]) {
         UITableView *moreTableView = (UITableView *)moreController.view;
         moreTableView.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
-        moreTableView.rowHeight = 65.0;
+        moreTableView.rowHeight = Defines.rowHeight;
         moreTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }
 }

@@ -67,7 +67,7 @@
     [self.tableView.tableHeaderView layoutIfNeeded];
     self.tableView.tableHeaderView = self.tableView.tableHeaderView;
 	
-    self.tableView.rowHeight = 65.0;
+    self.tableView.rowHeight = Defines.rowHeight;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 }
 
@@ -256,12 +256,18 @@
     } else {
         // Song
         UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-        cell.hideNumberLabel = YES;
         cell.hideCoverArt = YES;
         cell.hideDurationLabel = NO;
         cell.hideSecondaryLabel = NO;
         NSString *md5 = [listOfSongs objectAtIndexSafe:(indexPath.row - listOfAlbums.count)];
-        [cell updateWithModel:[ISMSSong songFromGenreDbQueue:md5]];
+        ISMSSong *song = [ISMSSong songFromGenreDbQueue:md5];
+        [cell updateWithModel:song];
+        if (song.track == nil || song.track.intValue == 0) {
+            cell.hideNumberLabel = YES;
+        } else {
+            cell.hideNumberLabel = NO;
+            cell.number = song.track.intValue;
+        }
         return cell;
     }
 }

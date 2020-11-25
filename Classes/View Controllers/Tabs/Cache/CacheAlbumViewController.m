@@ -60,7 +60,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
     
     self.title = self.artistName;
 
-    self.tableView.rowHeight = 65.0;
+    self.tableView.rowHeight = Defines.rowHeight;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 }
 
@@ -353,10 +353,16 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 	} else {
         // Song
         cell.hideCacheIndicator = YES;
-        cell.hideNumberLabel = YES;
         cell.hideCoverArt = YES;
         cell.hideDurationLabel = NO;
-        [cell updateWithModel:[self songAtIndexPath:indexPath]];
+        ISMSSong *song = [self songAtIndexPath:indexPath];
+        [cell updateWithModel:song];
+        if (song.track == nil || song.track.intValue == 0) {
+            cell.hideNumberLabel = YES;
+        } else {
+            cell.hideNumberLabel = NO;
+            cell.number = song.track.intValue;
+        }
 	}
     return cell;
 }
