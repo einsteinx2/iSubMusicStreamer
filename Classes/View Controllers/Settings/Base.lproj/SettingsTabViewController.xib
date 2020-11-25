@@ -666,12 +666,12 @@
                     <rect key="frame" x="49" y="938" width="261" height="32"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <segments>
+                        <segment title="192"/>
                         <segment title="512"/>
                         <segment title="1024"/>
                         <segment title="1536"/>
                         <segment title="2048"/>
                         <segment title="4096"/>
-                        <segment title="8192"/>
                     </segments>
                     <connections>
                         <action selector="segmentAction:" destination="-1" eventType="valueChanged" id="292"/>
