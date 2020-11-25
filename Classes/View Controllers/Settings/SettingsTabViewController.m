@@ -110,7 +110,9 @@ LOG_LEVEL_ISUB_DEFAULT
     self.maxVideoBitrate3GSegmentedControl.selectedSegmentIndex = settingsS.maxVideoBitrate3G;
     self.maxVideoBitrateWifiSegmentedControl.selectedSegmentIndex = settingsS.maxVideoBitrateWifi;
     
+    self.resetAlbumArtCacheButton.backgroundColor = UIColor.whiteColor;
     self.resetAlbumArtCacheButton.layer.cornerRadius = 8;
+    self.shareLogsButton.backgroundColor = UIColor.whiteColor;
     self.shareLogsButton.layer.cornerRadius = 8;
 }
 
@@ -400,6 +402,11 @@ LOG_LEVEL_ISUB_DEFAULT
     NSString *path = [appDelegateS zipAllLogFiles];
     NSURL *pathURL = [NSURL fileURLWithPath:path];
     UIActivityViewController *shareSheet = [[UIActivityViewController alloc] initWithActivityItems:@[pathURL] applicationActivities:nil];
+    if (shareSheet.popoverPresentationController) {
+        // Fix exception on iPad
+        shareSheet.popoverPresentationController.sourceView = self.shareLogsButton;
+        shareSheet.popoverPresentationController.sourceRect = self.shareLogsButton.bounds;
+    }
     shareSheet.completionWithItemsHandler = ^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError) {
         // Delete the zip file since we're done with it
         NSError *error = nil;

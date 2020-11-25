@@ -598,19 +598,18 @@ import CocoaLumberjackSwift
         downloadProgressView.isHidden = false
         
         func remakeConstraints() {
-            do {
-                try ObjC.perform {
-                    self.downloadProgressView.snp.remakeConstraints { make in
+            self.downloadProgressView.snp.remakeConstraints { make in
+                do {
+                    try ObjC.perform {
                         make.width.equalTo(self.progressSlider).multipliedBy(currentSong.downloadProgress).offset(10)
                         make.leading.equalTo(self.progressSlider).offset(-5)
                         make.top.equalTo(self.progressSlider).offset(-3)
                         make.bottom.equalTo(self.progressSlider).offset(3)
                     }
+                } catch {
+                    DDLogError("Failed to update constraints for download progress: \(error)")
                 }
-            } catch {
-                DDLogError("Failed to update constraints for download progress: \(error)")
             }
-            
         }
         
         // Set the width based on the download progress + leading/trailing offset size
