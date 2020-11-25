@@ -131,14 +131,21 @@ private let labelGap = 25.0
             // Force the labels to re-layout or it won't always animate
             label1.setNeedsLayout()
             label2.setNeedsLayout()
+            scrollView.setNeedsLayout()
             label1.layoutIfNeeded()
             label2.layoutIfNeeded()
+            scrollView.layoutIfNeeded()
         }
     }
     
     override func layoutSubviews() {
         stopScrolling()
-        scrollView.layoutSubviews()
+        label1.setNeedsLayout()
+        label2.setNeedsLayout()
+        scrollView.setNeedsLayout()
+        label1.layoutIfNeeded()
+        label2.layoutIfNeeded()
+        scrollView.layoutIfNeeded()
         
         // Must call super AFTER updating scroll view or it will layout incorrectly
         super.layoutSubviews()
