@@ -41,15 +41,11 @@ import UIKit
     }
     
     @objc static func download(model: TableCellModel) -> UIContextualAction {
-        return download(handler: {
-            model.download()
-        })
+        return download(handler: model.download)
     }
     
     @objc static func queue(model: TableCellModel) -> UIContextualAction {
-        return queue(handler: {
-            model.queue()
-        })
+        return queue(handler: model.queue)
     }
     
     @objc static func download(handler: @escaping () -> ()) -> UIContextualAction {
