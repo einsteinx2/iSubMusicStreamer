@@ -14,6 +14,7 @@
 #define Common_Bridging_Header_h
 
 #import "Defines.h"
+#import "ObjcExceptionCatcher.h"
 
 /*
  * User Interface Components
