@@ -53,6 +53,7 @@ private let labelGap = 25.0
         set {
             label1.text = newValue
             label2.text = newValue
+            invalidateIntrinsicContentSize()
             if self.window != nil {
                 stopScrolling()
                 if autoScroll {
@@ -60,6 +61,10 @@ private let labelGap = 25.0
                 }
             }
         }
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        return label1.intrinsicContentSize
     }
     
     override init(frame: CGRect) {

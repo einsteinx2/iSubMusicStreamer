@@ -166,7 +166,8 @@ import CocoaLumberjackSwift
         songInfoContainer.addSubview(songNameLabel)
         songNameLabel.snp.makeConstraints { make in
             make.height.equalToSuperview().multipliedBy(0.6)
-            make.leading.trailing.top.equalTo(songInfoContainer)
+            make.width.lessThanOrEqualToSuperview()
+            make.centerX.top.equalToSuperview()
         }
         
         artistNameLabel.font = .boldSystemFont(ofSize: 18)
@@ -174,7 +175,8 @@ import CocoaLumberjackSwift
         songInfoContainer.addSubview(artistNameLabel)
         artistNameLabel.snp.makeConstraints { make in
             make.height.equalToSuperview().multipliedBy(0.4)
-            make.leading.trailing.bottom.equalTo(songInfoContainer)
+            make.width.lessThanOrEqualToSuperview()
+            make.centerX.bottom.equalToSuperview()
         }
         
         //
