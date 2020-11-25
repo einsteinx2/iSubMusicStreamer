@@ -84,7 +84,12 @@ LOG_LEVEL_ISUB_DEFAULT
     // Don't turn on console logging for adhoc or release builds
     [DDLog addLogger:[DDOSLogger sharedInstance]];
 #endif
+    // Use local time zone when formatting dates for logger
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [dateFormatter setDateFormat:@"yyyy/MM/dd HH:mm:ss:SSS"];
 	DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
+    fileLogger.logFormatter = [[DDLogFileFormatterDefault alloc] initWithDateFormatter:dateFormatter];
 	fileLogger.rollingFrequency = 60 * 60 * 24; // 24 hour rolling
 	fileLogger.logFileManager.maximumNumberOfLogFiles = 7;
 	[DDLog addLogger:fileLogger];
@@ -378,23 +383,10 @@ LOG_LEVEL_ISUB_DEFAULT
     return fileNameToUse;
 }
 
-//- (NSString *)applicationLogForCrashManager:(BITCrashManager *)crashManager
-//{
-//    NSString *logsFolder = [settingsS.cachesPath stringByAppendingPathComponent:@"Logs"];
-//	NSString *fileNameToUse = [self latestLogFileName];
-//	
-//	if (fileNameToUse)
-//	{
-//		NSString *logPath = [logsFolder stringByAppendingPathComponent:fileNameToUse];
-//		NSString *contents = [[NSString alloc] initWithContentsOfFile:logPath encoding:NSUTF8StringEncoding error:nil];
-//		//DLog(@"Sending contents with length %u from path %@", contents.length, logPath);
-//		return contents;
-//	}
-//	
-//	return nil;
-//}
-
 - (NSString *)zipAllLogFiles {
+    // Flush all logs to disk
+    [DDLog flushLog];
+    
     NSString *zipFileName = @"iSub Logs.zip";
     NSString *zipFilePath = [settingsS.cachesPath stringByAppendingPathComponent:zipFileName];
     NSString *logsFolder = [settingsS.cachesPath stringByAppendingPathComponent:@"Logs"];
