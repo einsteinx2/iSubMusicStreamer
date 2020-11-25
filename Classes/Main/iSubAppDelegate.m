@@ -736,24 +736,31 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)playerViewController:(AVPlayerViewController *)playerViewController willEndFullScreenPresentationWithAnimationCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    // Clean up the player controller
-    DDLogVerbose(@"TEST player ended full screen presentation");
-    [playerViewController.player pause];
-    playerViewController.player.rate = 0.0;
-    playerViewController.player = nil;
-    self.videoPlayerController = nil;
-    
-    // Clean up proxy server
-    [self.hlsProxyServer stop];
-    self.hlsProxyServer = nil;
-    
-    // Clean up audio session
-    // TODO: Figure out where to put this, currently it always prints this error: Deactivating an audio session that has running I/O. All I/O should be stopped or paused prior to deactivating the audio session.
-//    NSError *error = nil;
-//    [AVAudioSession.sharedInstance setActive:NO error:&error];
-//    if (error) {
-//        DDLogError(@"Failed to deactivate audio session for video playback: %@", error.localizedDescription);
-//    }
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        // Do nothing
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        // If the window has been dismissed (superview is nil), clean up the player controller
+        if (!playerViewController.view.superview) {
+            // Clean up the player controller
+            DDLogVerbose(@"TEST player ended full screen presentation");
+            [playerViewController.player pause];
+            playerViewController.player.rate = 0.0;
+            playerViewController.player = nil;
+            self.videoPlayerController = nil;
+            
+            // Clean up proxy server
+            [self.hlsProxyServer stop];
+            self.hlsProxyServer = nil;
+            
+            // Clean up audio session
+            // TODO: Figure out where to put this, currently it always prints this error: Deactivating an audio session that has running I/O. All I/O should be stopped or paused prior to deactivating the audio session.
+//            NSError *error = nil;
+//            [AVAudioSession.sharedInstance setActive:NO error:&error];
+//            if (error) {
+//                DDLogError(@"Failed to deactivate audio session for video playback: %@", error.localizedDescription);
+//            }
+        }
+    }];
 }
 
 @end
