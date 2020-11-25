@@ -60,8 +60,6 @@
 @property (nonatomic, strong) IBOutlet UISegmentedControl *secondsToBufferSegmentControl;
 @property (nonatomic, strong) IBOutlet UISwitch *enableLockScreenArt;
 @property (nonatomic, strong) IBOutlet UILabel *enableLockArtLabel;
-@property (nonatomic, strong) IBOutlet UILabel *swipeCellsLabel;
-@property (nonatomic, strong) IBOutlet UILabel *tapHoldCellsLabel;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *maxVideoBitrateWifiSegmentedControl;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *maxVideoBitrate3GSegmentedControl;
 @property (nonatomic, strong) NSDate *loadedTime;

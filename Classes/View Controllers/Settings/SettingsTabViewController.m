@@ -37,19 +37,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	NSString *build = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
 	self.versionLabel.text = [NSString stringWithFormat:@"iSub %@ build %@", build, version];
 	
-	// Hide elements
-	if (UIDevice.isIPad) {
-		self.swipeCellsLabel.hidden = self.tapHoldCellsLabel.hidden = YES;
-		self.enableSwipeSwitch.hidden = self.enableTapAndHoldSwitch.hidden = YES;
-		self.enableSwipeSwitch.enabled = self.enableTapAndHoldSwitch.enabled = NO;
-		
-		CGFloat y = self.autoReloadArtistSwitch.y;
-		for (UIView *view in self.view.subviews)
-		{
-			if (view.y > y+10.) view.y -= 70.;
-		}
-	}
-	
 	// Main Settings
 	self.enableScrobblingSwitch.on = settingsS.isScrobbleEnabled;
 	self.scrobblePercentSlider.value = settingsS.scrobblePercent;
