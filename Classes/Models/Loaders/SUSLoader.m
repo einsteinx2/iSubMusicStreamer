@@ -30,6 +30,7 @@ static dispatch_once_t _sharedSessionDispatchOnce = 0;
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
         configuration.waitsForConnectivity = YES;
         configuration.timeoutIntervalForResource = 60;
+        configuration.timeoutIntervalForRequest = 240;
         _sharedSession = [NSURLSession sessionWithConfiguration:configuration delegate:_sharedSessionDelegate delegateQueue:nil];
     });
     return _sharedSession;
