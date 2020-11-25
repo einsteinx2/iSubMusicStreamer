@@ -108,12 +108,10 @@ private let labelGap = 25.0
     }
     
     @objc private func didEnterBackground() {
-        print("TEST auto scroll label did enter background")
         stopScrolling()
     }
     
     @objc private func willEnterForeground() {
-        print("TEST auto scroll label will enter foreground")
         if autoScroll {
             startScrolling()
         }

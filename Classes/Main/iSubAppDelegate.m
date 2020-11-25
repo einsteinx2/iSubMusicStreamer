@@ -32,8 +32,6 @@
 #import <netinet/in.h>
 #import <netdb.h>
 #import <arpa/inet.h>
-#import <AVKit/AVKit.h>
-#import <MediaPlayer/MediaPlayer.h>
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -669,47 +667,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark Movie Playing
 
-- (void)createMoviePlayer {
-//    if (!self.moviePlayer)
-//    {
-//        self.moviePlayer = [[MPMoviePlayerController alloc] init];
-//
-//        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(moviePlayerExitedFullscreen:) name:MPMoviePlayerDidExitFullscreenNotification object:self.moviePlayer];
-//        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:self.moviePlayer];
-//
-//        self.moviePlayer.controlStyle = MPMovieControlStyleDefault;
-//        self.moviePlayer.shouldAutoplay = YES;
-//        self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
-//        self.moviePlayer.allowsAirPlay = YES;
-//
-//        if (UIDevice.isIPad)
-//        {
-//            [self.padRootViewController.menuViewController.playerHolder addSubview:self.moviePlayer.view];
-//            self.moviePlayer.view.frame = self.moviePlayer.view.superview.bounds;
-//        }
-//        else
-//        {
-//            [self.mainTabBarController presentViewController:self.moviePlayer animated:YES completion:nil];
-////            [self.mainTabBarController.view addSubview:self.moviePlayer.view];
-////            self.moviePlayer.view.frame = CGRectZero;
-//        }
-//
-//        [self.moviePlayer setFullscreen:YES animated:YES];
-//    }
-}
-
-- (void)removeMoviePlayer
-{
-//    if (self.moviePlayer)
-//    {
-//        [NSNotificationCenter removeObserverOnMainThread:self name:MPMoviePlayerDidExitFullscreenNotification object:self.moviePlayer];
-//        [NSNotificationCenter removeObserverOnMainThread:self name:MPMoviePlayerPlaybackDidFinishNotification object:self.moviePlayer];
-//
-//        // Dispose of any existing movie player
-//        [self.moviePlayer stop];
-//        [self.moviePlayer.view removeFromSuperview];
-//        self.moviePlayer = nil;
-//    }
+- (void)removeMoviePlayer {
     if (self.videoPlayerController) {
         [self.videoPlayerController dismissViewControllerAnimated:YES completion:^{
             self.videoPlayerController = nil;
@@ -725,86 +683,86 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)playVideo:(ISMSSong *)aSong {
-    if (!aSong.isVideo || !settingsS.isVideoSupported)
+    if (!aSong.isVideo || !settingsS.isVideoSupported) {
         return;
-    
-    if (UIDevice.isIPad)
-    {
-        // Turn off repeat one so user doesn't get stuck
-        if (playlistS.repeatMode == ISMSRepeatMode_RepeatOne)
-            playlistS.repeatMode = ISMSRepeatMode_Normal;
     }
+    
+//    if (UIDevice.isIPad) {
+//        // Turn off repeat one so user doesn't get stuck
+//        if (playlistS.repeatMode == ISMSRepeatMode_RepeatOne) {
+//            playlistS.repeatMode = ISMSRepeatMode_Normal;
+//        }
+//    }
     
     [self playSubsonicVideo:aSong bitrates:settingsS.currentVideoBitrates];
 }
 
-// TODO: Fix video playback
 - (void)playSubsonicVideo:(ISMSSong *)aSong bitrates:(NSArray *)bitrates {
     [audioEngineS.player stop];
     
-    if (!aSong.songId || !bitrates)
+    if (!aSong.songId || !bitrates) {
         return;
+    }
+
+    // If we're on HTTPS, use our proxy to allow for playback from a self signed server
+    // TODO: Right now we always use the proxy server as even if it's http, if the server has https enabled, it will forward requests there. In the future, it would be better to first test if it's possible to play without the proxy even with https (in case they are using a legit SSL cert) and then also enable picture in picture mode and airplay.
+    self.hlsProxyServer = [[HLSReverseProxyServer alloc] init];
+    [self.hlsProxyServer start];
 
     NSDictionary *parameters = @{ @"id" : aSong.songId, @"bitRate" : bitrates };
     NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"hls" parameters:parameters];
+    NSString *urlString = [NSString stringWithFormat:@"http://localhost:%lu%@?%@", self.hlsProxyServer.port, request.URL.relativePath, request.URL.query];
+    NSString *originUrlString = [NSString stringWithFormat:@"%@://%@:%@%@", request.URL.scheme, request.URL.host, request.URL.port, request.URL.path];
+    urlString = [NSString stringWithFormat:@"%@&__hls_origin_url=%@", urlString, originUrlString];
+    DDLogVerbose(@"TEST HLS urlString: %@", urlString);
 
-    // If we're on HTTPS, use our proxy to allow for playback from a self signed server
-    NSString *host = request.URL.absoluteString;
-//    host = [host.lowercaseString hasPrefix:@"https"] ? [NSString stringWithFormat:@"http://localhost:%u%@", self.hlsProxyServer.listeningPort, request.URL.relativePath] : host;
-    NSString *urlString = [NSString stringWithFormat:@"%@?%@", host, [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]];
-    DDLogVerbose(@"HLS urlString: %@", urlString);
-
+    AVPlayer *player = [AVPlayer playerWithURL:[NSURL URLWithString:urlString]];
+    player.allowsExternalPlayback = NO; // Disable AirPlay since it won't work with the proxy server
     self.videoPlayerController = [[AVPlayerViewController alloc] init];
-    self.videoPlayerController.player = [AVPlayer playerWithURL:[NSURL URLWithString:urlString]];
-    self.videoPlayerController.allowsPictureInPicturePlayback = YES;
+    self.videoPlayerController.delegate = self;
+    self.videoPlayerController.player = player;
+    self.videoPlayerController.allowsPictureInPicturePlayback = NO;
     self.videoPlayerController.entersFullScreenWhenPlaybackBegins = YES;
     self.videoPlayerController.exitsFullScreenWhenPlaybackEnds = YES;
-    [UIApplication.keyWindow.rootViewController presentViewController:self.videoPlayerController animated:YES completion:nil];
-    
-//    [self createMoviePlayer];
-
-//    [self.moviePlayer stop]; // Doing this to prevent potential crash
-//    self.moviePlayer.contentURL = [NSURL URLWithString:urlString];
-//    //[moviePlayer prepareToPlay];
-//    [self.moviePlayer play];
+    [UIApplication.keyWindow.rootViewController presentViewController:self.videoPlayerController animated:YES completion:^{
+        // Start audio session
+        NSError *error = nil;
+        [AVAudioSession.sharedInstance setActive:YES error:&error];
+        if (error) {
+            DDLogError(@"Failed to activate audio session for video playback: %@", error.localizedDescription);
+        }
+        
+        // Allow audio playback when mute switch is on
+        [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback mode:AVAudioSessionModeMoviePlayback options:0 error:&error];
+        if (error) {
+            DDLogError(@"Failed to set audio session category/mode for video playback: %@", error.localizedDescription);
+        }
+        
+        // Auto-start playback
+        [player play];
+    }];
 }
 
-//- (void)moviePlayerExitedFullscreen:(NSNotification *)notification
-//{
-//    // Hack to fix broken navigation bar positioning
-//    UIWindow *window = [UIApplication keyWindow];
-//    UIView *view = [window.subviews lastObject];
-//    if (view)
-//    {
-//        [view removeFromSuperview];
-//        [window addSubview:view];
+- (void)playerViewController:(AVPlayerViewController *)playerViewController willEndFullScreenPresentationWithAnimationCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    // Clean up the player controller
+    DDLogVerbose(@"TEST player ended full screen presentation");
+    [playerViewController.player pause];
+    playerViewController.player.rate = 0.0;
+    playerViewController.player = nil;
+    self.videoPlayerController = nil;
+    
+    // Clean up proxy server
+    [self.hlsProxyServer stop];
+    self.hlsProxyServer = nil;
+    
+    // Clean up audio session
+    // TODO: Figure out where to put this, currently it always prints this error: Deactivating an audio session that has running I/O. All I/O should be stopped or paused prior to deactivating the audio session.
+//    NSError *error = nil;
+//    [AVAudioSession.sharedInstance setActive:NO error:&error];
+//    if (error) {
+//        DDLogError(@"Failed to deactivate audio session for video playback: %@", error.localizedDescription);
 //    }
-//    
-//    if (!UIDevice.isIPad)
-//    {
-//        [self removeMoviePlayer];
-//    }
-//}
-//
-//- (void)moviePlayBackDidFinish:(NSNotification *)notification
-//{
-//    DDLogVerbose(@"userInfo: %@", notification.userInfo);
-//    if (notification.userInfo)
-//    {
-//        NSNumber *reason = [notification.userInfo objectForKey:MPMoviePlayerPlaybackDidFinishReasonUserInfoKey];
-//        if (reason && reason.integerValue == MPMovieFinishReasonPlaybackEnded)
-//        {
-//            // Playback ended normally, so start the next item
-//            [playlistS incrementIndex];
-//            [musicS playSongAtPosition:playlistS.currentIndex];
-//        }
-//    }
-//    else
-//    {
-//        //[self removeMoviePlayer];
-//    }
-//}
-
+}
 
 @end
 

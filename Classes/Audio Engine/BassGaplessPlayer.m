@@ -681,11 +681,15 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
         {
             [self.streamQueue removeAllObjects];
         }
+        
+        NSError *audioSessionError = nil;
+        [AVAudioSession.sharedInstance setActive:NO error:&audioSessionError];
+        if (audioSessionError) {
+            DDLogError(@"Failed to deactivate audio session for audio playback: %@", audioSessionError.localizedDescription);
+        }
 		
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_BassFreed];		
 	}
-    
-    [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_BassInitialized];
 }
 
 - (BOOL)testStreamForSong:(ISMSSong *)aSong
@@ -792,6 +796,17 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 {
     if (!aSong)
         return;
+    
+    NSError *audioSessionError = nil;
+    [AVAudioSession.sharedInstance setActive:YES error:&audioSessionError];
+    if (audioSessionError) {
+        DDLogError(@"Failed to activate audio session for audio playback: %@", audioSessionError.localizedDescription);
+    }
+    
+    [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback mode:AVAudioSessionModeDefault options:0 error:&audioSessionError];
+    if (audioSessionError) {
+        DDLogError(@"Failed to set audio session category/mode for audio playback: %@", audioSessionError.localizedDescription);
+    }
     
 	[EX2Dispatch runInQueue:_streamGcdQueue waitUntilDone:NO block:^
 	 {

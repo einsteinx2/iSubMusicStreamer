@@ -680,30 +680,30 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="287">
-                    <rect key="frame" x="48" y="968" width="262" height="30"/>
+                    <rect key="frame" x="48" y="967" width="262" height="32"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <segments>
-                        <segment title="64"/>
-                        <segment title="256"/>
                         <segment title="512"/>
                         <segment title="1024"/>
                         <segment title="1536"/>
                         <segment title="2048"/>
+                        <segment title="4096"/>
+                        <segment title="8192"/>
                     </segments>
                     <connections>
                         <action selector="segmentAction:" destination="-1" eventType="valueChanged" id="293"/>
                     </connections>
                 </segmentedControl>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="288">
-                    <rect key="frame" x="49" y="1005" width="261" height="30"/>
+                    <rect key="frame" x="49" y="1004" width="261" height="32"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <segments>
-                        <segment title="64"/>
-                        <segment title="256"/>
                         <segment title="512"/>
                         <segment title="1024"/>
                         <segment title="1536"/>
                         <segment title="2048"/>
+                        <segment title="4096"/>
+                        <segment title="8192"/>
                     </segments>
                     <connections>
                         <action selector="segmentAction:" destination="-1" eventType="valueChanged" id="292"/>

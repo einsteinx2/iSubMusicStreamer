@@ -178,6 +178,8 @@
 		53404FFD11E94AA5004AEC41 /* controller-bookmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53404FF911E94AA5004AEC41 /* controller-bookmark@2x.png */; };
 		5340B8A6256968C400FD5D6D /* ISMSBookmarkDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 5340B8A5256968C400FD5D6D /* ISMSBookmarkDAO.m */; };
 		5340B8A7256968C400FD5D6D /* ISMSBookmarkDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 5340B8A5256968C400FD5D6D /* ISMSBookmarkDAO.m */; };
+		5347A1E4256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5347A1E3256D866A00BFB70A /* HLSReverseProxyServer.swift */; };
+		5347A1E5256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5347A1E3256D866A00BFB70A /* HLSReverseProxyServer.swift */; };
 		53493EF415FC69560059492E /* player-songinfo.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EF215FC69560059492E /* player-songinfo.png */; };
 		53493EF615FC69560059492E /* player-songinfo.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EF215FC69560059492E /* player-songinfo.png */; };
 		53493EF715FC69560059492E /* player-songinfo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53493EF315FC69560059492E /* player-songinfo@2x.png */; };
@@ -962,6 +964,32 @@
 		53FE38BB1EA961C80058B925 /* ZKLFHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE387D1EA961C80058B925 /* ZKLFHeader.m */; };
 		53FE38BC1EA961C80058B925 /* ZKLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE387F1EA961C80058B925 /* ZKLog.m */; };
 		53FE38BE1EA961C80058B925 /* ZKLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE387F1EA961C80058B925 /* ZKLog.m */; };
+		53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6772256DD0F00015FC83 /* GCDWebServerResponse.m */; };
+		53FE678F256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6772256DD0F00015FC83 /* GCDWebServerResponse.m */; };
+		53FE6790256DD0F00015FC83 /* GCDWebServerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6775256DD0F00015FC83 /* GCDWebServerRequest.m */; };
+		53FE6791256DD0F00015FC83 /* GCDWebServerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6775256DD0F00015FC83 /* GCDWebServerRequest.m */; };
+		53FE6792256DD0F00015FC83 /* GCDWebServerFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6778256DD0F00015FC83 /* GCDWebServerFunctions.m */; };
+		53FE6793256DD0F00015FC83 /* GCDWebServerFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6778256DD0F00015FC83 /* GCDWebServerFunctions.m */; };
+		53FE6794256DD0F00015FC83 /* GCDWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6779256DD0F00015FC83 /* GCDWebServer.m */; };
+		53FE6795256DD0F00015FC83 /* GCDWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6779256DD0F00015FC83 /* GCDWebServer.m */; };
+		53FE6796256DD0F00015FC83 /* GCDWebServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE677A256DD0F00015FC83 /* GCDWebServerConnection.m */; };
+		53FE6797256DD0F00015FC83 /* GCDWebServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE677A256DD0F00015FC83 /* GCDWebServerConnection.m */; };
+		53FE6798256DD0F00015FC83 /* GCDWebServerErrorResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE677F256DD0F00015FC83 /* GCDWebServerErrorResponse.m */; };
+		53FE6799256DD0F00015FC83 /* GCDWebServerErrorResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE677F256DD0F00015FC83 /* GCDWebServerErrorResponse.m */; };
+		53FE679A256DD0F00015FC83 /* GCDWebServerFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6781256DD0F00015FC83 /* GCDWebServerFileResponse.m */; };
+		53FE679B256DD0F00015FC83 /* GCDWebServerFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6781256DD0F00015FC83 /* GCDWebServerFileResponse.m */; };
+		53FE679C256DD0F00015FC83 /* GCDWebServerDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6782256DD0F00015FC83 /* GCDWebServerDataResponse.m */; };
+		53FE679D256DD0F00015FC83 /* GCDWebServerDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6782256DD0F00015FC83 /* GCDWebServerDataResponse.m */; };
+		53FE679E256DD0F00015FC83 /* GCDWebServerStreamedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6784256DD0F00015FC83 /* GCDWebServerStreamedResponse.m */; };
+		53FE679F256DD0F00015FC83 /* GCDWebServerStreamedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6784256DD0F00015FC83 /* GCDWebServerStreamedResponse.m */; };
+		53FE67A0256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6789256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m */; };
+		53FE67A1256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6789256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m */; };
+		53FE67A2256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE678A256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m */; };
+		53FE67A3256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE678A256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m */; };
+		53FE67A4256DD0F00015FC83 /* GCDWebServerDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE678B256DD0F00015FC83 /* GCDWebServerDataRequest.m */; };
+		53FE67A5256DD0F00015FC83 /* GCDWebServerDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE678B256DD0F00015FC83 /* GCDWebServerDataRequest.m */; };
+		53FE67A6256DD0F00015FC83 /* GCDWebServerFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE678C256DD0F00015FC83 /* GCDWebServerFileRequest.m */; };
+		53FE67A7256DD0F00015FC83 /* GCDWebServerFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE678C256DD0F00015FC83 /* GCDWebServerFileRequest.m */; };
 		D0EA476C19DE449A0083CE05 /* UIView+AutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476B19DE449A0083CE05 /* UIView+AutoLayout.m */; };
 		D0EA476E19DE449A0083CE05 /* UIView+AutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EA476B19DE449A0083CE05 /* UIView+AutoLayout.m */; };
 /* End PBXBuildFile section */
@@ -1145,6 +1173,7 @@
 		53404FF911E94AA5004AEC41 /* controller-bookmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-bookmark@2x.png"; path = "Images/Player Icons/controller-bookmark@2x.png"; sourceTree = "<group>"; };
 		5340B8A4256968C400FD5D6D /* ISMSBookmarkDAO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSBookmarkDAO.h; sourceTree = "<group>"; };
 		5340B8A5256968C400FD5D6D /* ISMSBookmarkDAO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ISMSBookmarkDAO.m; sourceTree = "<group>"; };
+		5347A1E3256D866A00BFB70A /* HLSReverseProxyServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HLSReverseProxyServer.swift; sourceTree = "<group>"; };
 		53493EF215FC69560059492E /* player-songinfo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "player-songinfo.png"; path = "Images/Player Icons/player-songinfo.png"; sourceTree = "<group>"; };
 		53493EF315FC69560059492E /* player-songinfo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "player-songinfo@2x.png"; path = "Images/Player Icons/player-songinfo@2x.png"; sourceTree = "<group>"; };
 		53493EFE15FC69C90059492E /* chat-page.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "chat-page.png"; path = "Images/chat-page.png"; sourceTree = "<group>"; };
@@ -1737,6 +1766,34 @@
 		53FE387D1EA961C80058B925 /* ZKLFHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKLFHeader.m; sourceTree = "<group>"; };
 		53FE387E1EA961C80058B925 /* ZKLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZKLog.h; sourceTree = "<group>"; };
 		53FE387F1EA961C80058B925 /* ZKLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKLog.m; sourceTree = "<group>"; };
+		53FE6770256DD0F00015FC83 /* GCDWebServerFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFunctions.h; sourceTree = "<group>"; };
+		53FE6771256DD0F00015FC83 /* GCDWebServerPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerPrivate.h; sourceTree = "<group>"; };
+		53FE6772256DD0F00015FC83 /* GCDWebServerResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerResponse.m; sourceTree = "<group>"; };
+		53FE6773256DD0F00015FC83 /* GCDWebServerConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerConnection.h; sourceTree = "<group>"; };
+		53FE6774256DD0F00015FC83 /* GCDWebServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServer.h; sourceTree = "<group>"; };
+		53FE6775256DD0F00015FC83 /* GCDWebServerRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerRequest.m; sourceTree = "<group>"; };
+		53FE6776256DD0F00015FC83 /* GCDWebServerHTTPStatusCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerHTTPStatusCodes.h; sourceTree = "<group>"; };
+		53FE6777256DD0F00015FC83 /* GCDWebServerResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerResponse.h; sourceTree = "<group>"; };
+		53FE6778256DD0F00015FC83 /* GCDWebServerFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFunctions.m; sourceTree = "<group>"; };
+		53FE6779256DD0F00015FC83 /* GCDWebServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServer.m; sourceTree = "<group>"; };
+		53FE677A256DD0F00015FC83 /* GCDWebServerConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerConnection.m; sourceTree = "<group>"; };
+		53FE677B256DD0F00015FC83 /* GCDWebServerRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerRequest.h; sourceTree = "<group>"; };
+		53FE677D256DD0F00015FC83 /* GCDWebServerFileResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFileResponse.h; sourceTree = "<group>"; };
+		53FE677E256DD0F00015FC83 /* GCDWebServerStreamedResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerStreamedResponse.h; sourceTree = "<group>"; };
+		53FE677F256DD0F00015FC83 /* GCDWebServerErrorResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerErrorResponse.m; sourceTree = "<group>"; };
+		53FE6780256DD0F00015FC83 /* GCDWebServerDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerDataResponse.h; sourceTree = "<group>"; };
+		53FE6781256DD0F00015FC83 /* GCDWebServerFileResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileResponse.m; sourceTree = "<group>"; };
+		53FE6782256DD0F00015FC83 /* GCDWebServerDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerDataResponse.m; sourceTree = "<group>"; };
+		53FE6783256DD0F00015FC83 /* GCDWebServerErrorResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerErrorResponse.h; sourceTree = "<group>"; };
+		53FE6784256DD0F00015FC83 /* GCDWebServerStreamedResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerStreamedResponse.m; sourceTree = "<group>"; };
+		53FE6786256DD0F00015FC83 /* GCDWebServerDataRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerDataRequest.h; sourceTree = "<group>"; };
+		53FE6787256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerMultiPartFormRequest.h; sourceTree = "<group>"; };
+		53FE6788256DD0F00015FC83 /* GCDWebServerFileRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFileRequest.h; sourceTree = "<group>"; };
+		53FE6789256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerURLEncodedFormRequest.m; sourceTree = "<group>"; };
+		53FE678A256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerMultiPartFormRequest.m; sourceTree = "<group>"; };
+		53FE678B256DD0F00015FC83 /* GCDWebServerDataRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerDataRequest.m; sourceTree = "<group>"; };
+		53FE678C256DD0F00015FC83 /* GCDWebServerFileRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileRequest.m; sourceTree = "<group>"; };
+		53FE678D256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerURLEncodedFormRequest.h; sourceTree = "<group>"; };
 		D0EA476A19DE449A0083CE05 /* UIView+AutoLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AutoLayout.h"; sourceTree = "<group>"; };
 		D0EA476B19DE449A0083CE05 /* UIView+AutoLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AutoLayout.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1879,6 +1936,7 @@
 			isa = PBXGroup;
 			children = (
 				533D18D225602526003F962C /* Lumberjack.xcodeproj */,
+				53FE676E256DD0F00015FC83 /* GCDWebServer */,
 				53FE33CE1EA961540058B925 /* EX2Kit */,
 				53FE38551EA961C80058B925 /* ZipKit */,
 				53FE38011EA961970058B925 /* RaptureXML */,
@@ -2216,6 +2274,7 @@
 				53FE36911EA961720058B925 /* NSString+cleanCredentialsForLog.m */,
 				53FE36A11EA961720058B925 /* SearchXMLParser.h */,
 				53FE36A21EA961720058B925 /* SearchXMLParser.m */,
+				5347A1E3256D866A00BFB70A /* HLSReverseProxyServer.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3009,6 +3068,66 @@
 			path = MacFUSE;
 			sourceTree = "<group>";
 		};
+		53FE676E256DD0F00015FC83 /* GCDWebServer */ = {
+			isa = PBXGroup;
+			children = (
+				53FE676F256DD0F00015FC83 /* Core */,
+				53FE677C256DD0F00015FC83 /* Responses */,
+				53FE6785256DD0F00015FC83 /* Requests */,
+			);
+			name = GCDWebServer;
+			path = Frameworks/GCDWebServer/GCDWebServer;
+			sourceTree = "<group>";
+		};
+		53FE676F256DD0F00015FC83 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				53FE6770256DD0F00015FC83 /* GCDWebServerFunctions.h */,
+				53FE6771256DD0F00015FC83 /* GCDWebServerPrivate.h */,
+				53FE6772256DD0F00015FC83 /* GCDWebServerResponse.m */,
+				53FE6773256DD0F00015FC83 /* GCDWebServerConnection.h */,
+				53FE6774256DD0F00015FC83 /* GCDWebServer.h */,
+				53FE6775256DD0F00015FC83 /* GCDWebServerRequest.m */,
+				53FE6776256DD0F00015FC83 /* GCDWebServerHTTPStatusCodes.h */,
+				53FE6777256DD0F00015FC83 /* GCDWebServerResponse.h */,
+				53FE6778256DD0F00015FC83 /* GCDWebServerFunctions.m */,
+				53FE6779256DD0F00015FC83 /* GCDWebServer.m */,
+				53FE677A256DD0F00015FC83 /* GCDWebServerConnection.m */,
+				53FE677B256DD0F00015FC83 /* GCDWebServerRequest.h */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		53FE677C256DD0F00015FC83 /* Responses */ = {
+			isa = PBXGroup;
+			children = (
+				53FE677D256DD0F00015FC83 /* GCDWebServerFileResponse.h */,
+				53FE677E256DD0F00015FC83 /* GCDWebServerStreamedResponse.h */,
+				53FE677F256DD0F00015FC83 /* GCDWebServerErrorResponse.m */,
+				53FE6780256DD0F00015FC83 /* GCDWebServerDataResponse.h */,
+				53FE6781256DD0F00015FC83 /* GCDWebServerFileResponse.m */,
+				53FE6782256DD0F00015FC83 /* GCDWebServerDataResponse.m */,
+				53FE6783256DD0F00015FC83 /* GCDWebServerErrorResponse.h */,
+				53FE6784256DD0F00015FC83 /* GCDWebServerStreamedResponse.m */,
+			);
+			path = Responses;
+			sourceTree = "<group>";
+		};
+		53FE6785256DD0F00015FC83 /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+				53FE6786256DD0F00015FC83 /* GCDWebServerDataRequest.h */,
+				53FE6787256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.h */,
+				53FE6788256DD0F00015FC83 /* GCDWebServerFileRequest.h */,
+				53FE6789256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m */,
+				53FE678A256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m */,
+				53FE678B256DD0F00015FC83 /* GCDWebServerDataRequest.m */,
+				53FE678C256DD0F00015FC83 /* GCDWebServerFileRequest.m */,
+				53FE678D256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.h */,
+			);
+			path = Requests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -3624,6 +3743,7 @@
 			files = (
 				1D3623260D0F684500981E51 /* iSubAppDelegate.m in Sources */,
 				28C286E10D94DF7D0034E888 /* FoldersViewController.m in Sources */,
+				53FE67A4256DD0F00015FC83 /* GCDWebServerDataRequest.m in Sources */,
 				53F2D3EE113A338500107D63 /* AlbumViewController.m in Sources */,
 				53FE375E1EA961720058B925 /* JukeboxSingleton.m in Sources */,
 				53FE36F81EA961720058B925 /* BassVisualizer.m in Sources */,
@@ -3635,7 +3755,9 @@
 				53FE38A71EA961C80058B925 /* ZKCDTrailer.m in Sources */,
 				53FE34C81EA961540058B925 /* NSMutableArray+Safe.m in Sources */,
 				533295EA255EEFE50027C51A /* FMDatabaseQueue.m in Sources */,
+				53FE6796256DD0F00015FC83 /* GCDWebServerConnection.m in Sources */,
 				53266BFA2562D4D0002C64BB /* PageControlViewController.swift in Sources */,
+				5347A1E4256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */,
 				53FE37011EA961720058B925 /* DatabaseSingleton.m in Sources */,
 				533A2D07113C61CA00B3A376 /* AsynchronousImageView.m in Sources */,
 				53FE34E01EA961540058B925 /* NSNotificationCenter+MainThread.m in Sources */,
@@ -3688,7 +3810,9 @@
 				53FE35641EA961540058B925 /* UITableViewCell+TableView.m in Sources */,
 				53F4A07D116FF7EE00BB8411 /* CurrentPlaylistViewController.m in Sources */,
 				5340B8A6256968C400FD5D6D /* ISMSBookmarkDAO.m in Sources */,
+				53FE67A6256DD0F00015FC83 /* GCDWebServerFileRequest.m in Sources */,
 				53FE353A1EA961540058B925 /* UIButton+StretchBackground.m in Sources */,
+				53FE6790256DD0F00015FC83 /* GCDWebServerRequest.m in Sources */,
 				53329652255F30220027C51A /* ClosureSleeve.swift in Sources */,
 				53FE35701EA961540058B925 /* UIViewController+IsVisible.m in Sources */,
 				53329648255F2E770027C51A /* PlayAllAndShuffleHeader.swift in Sources */,
@@ -3715,6 +3839,7 @@
 				53FE34C51EA961540058B925 /* NSArray+Safe.m in Sources */,
 				53FE35221EA961540058B925 /* NSString+Validation.m in Sources */,
 				538229F611C98091003F1E23 /* CacheAlbumViewController.m in Sources */,
+				53FE6798256DD0F00015FC83 /* GCDWebServerErrorResponse.m in Sources */,
 				53FE37731EA961720058B925 /* NSString+cleanCredentialsForLog.m in Sources */,
 				53FE35C71EA961540058B925 /* EX2Dispatch.m in Sources */,
 				53FE37A31EA961720058B925 /* SUSCoverArtDAO.m in Sources */,
@@ -3723,6 +3848,7 @@
 				539148D02559EB1D004AAC3F /* FlurryEmpty.m in Sources */,
 				53FE36E31EA961720058B925 /* AudioEngine.m in Sources */,
 				533295F0255EEFE50027C51A /* FMDatabase.m in Sources */,
+				53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
 				534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
 				53523D8F11CD5889006AEA48 /* GenresAlbumViewController.m in Sources */,
 				53FE35281EA961540058B925 /* NSURL+SkipBackupAttribute.m in Sources */,
@@ -3734,6 +3860,7 @@
 				53FE38AA1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
 				53FE351C1EA961540058B925 /* NSString+TrimmingAdditions.m in Sources */,
 				53FE37A01EA961720058B925 /* SUSChatLoader.m in Sources */,
+				53FE67A2256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m in Sources */,
 				5358083811CEB5F200A09386 /* CacheQueueSongUITableViewCell.m in Sources */,
 				53FE353D1EA961540058B925 /* UIColor+ColorWithHex.m in Sources */,
 				53FE35EB1EA961540058B925 /* SnappySlider.m in Sources */,
@@ -3746,10 +3873,13 @@
 				53D9743A255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */,
 				533295F6255EEFE50027C51A /* FMTokenizers.m in Sources */,
 				534B20E025619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */,
+				53FE679C256DD0F00015FC83 /* GCDWebServerDataResponse.m in Sources */,
 				53FE379A1EA961720058B925 /* SUSAllSongsLoader.m in Sources */,
+				53FE6794256DD0F00015FC83 /* GCDWebServer.m in Sources */,
 				53FE35071EA961540058B925 /* NSString+Gzip.m in Sources */,
 				53FE37C41EA961720058B925 /* SUSServerPlaylist.m in Sources */,
 				53FE35581EA961540058B925 /* UIImage+Tint.m in Sources */,
+				53FE67A0256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
 				5398F26D11DA61DA00007870 /* SettingsTabViewController.m in Sources */,
 				53FE36E61EA961720058B925 /* BassEffectDAO.m in Sources */,
 				533295F2255EEFE50027C51A /* FMDatabase+InMemoryOnDiskIO.m in Sources */,
@@ -3778,9 +3908,12 @@
 				53C22CCF128EE81C00FFBA67 /* ModalAlbumArtViewController.m in Sources */,
 				53FE352E1EA961540058B925 /* CALayer+ImageFromLayer.m in Sources */,
 				53FE37761EA961720058B925 /* PlaylistSingleton.m in Sources */,
+				53FE679A256DD0F00015FC83 /* GCDWebServerFileResponse.m in Sources */,
 				5324C6C613345D75004E6C79 /* OBSlider.m in Sources */,
 				53FE38861EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */,
+				53FE6792256DD0F00015FC83 /* GCDWebServerFunctions.m in Sources */,
 				53FE355B1EA961540058B925 /* UIImageView+ImageAnimated.m in Sources */,
+				53FE679E256DD0F00015FC83 /* GCDWebServerStreamedResponse.m in Sources */,
 				533295EC255EEFE50027C51A /* FMDatabaseAdditions.m in Sources */,
 				538E5255255A31F2000DF682 /* UIApplication+Orientiation.m in Sources */,
 				53FE35551EA961540058B925 /* UIImage+RoundedImage.m in Sources */,
@@ -3860,6 +3993,7 @@
 				53FE38A91EA961C80058B925 /* ZKCDTrailer.m in Sources */,
 				53FE34CA1EA961540058B925 /* NSMutableArray+Safe.m in Sources */,
 				53FE37031EA961720058B925 /* DatabaseSingleton.m in Sources */,
+				53FE6799256DD0F00015FC83 /* GCDWebServerErrorResponse.m in Sources */,
 				53BC27A5139AF0DD00A825F1 /* AsynchronousImageView.m in Sources */,
 				53FE34E21EA961540058B925 /* NSNotificationCenter+MainThread.m in Sources */,
 				53FE37A81EA961720058B925 /* SUSDropdownFolderLoader.m in Sources */,
@@ -3873,6 +4007,7 @@
 				53BCC51D181387B300442E86 /* CustomUINavigationController.m in Sources */,
 				53FE35361EA961540058B925 /* UIBezierPath+Smoothing.m in Sources */,
 				53BC27AC139AF0DD00A825F1 /* AllAlbumsViewController.m in Sources */,
+				53FE679F256DD0F00015FC83 /* GCDWebServerStreamedResponse.m in Sources */,
 				533295F5255EEFE50027C51A /* FMDatabase+FTS3.m in Sources */,
 				53FE389A1EA961C80058B925 /* NSFileHandle+ZKAdditions.m in Sources */,
 				53BC27AE139AF0DD00A825F1 /* ServerListViewController.m in Sources */,
@@ -3910,6 +4045,7 @@
 				53FE35271EA961540058B925 /* NSURL+QueryParameterDictionary.m in Sources */,
 				537B05BD256B04360008892C /* PadMenuViewController.swift in Sources */,
 				53FE35661EA961540058B925 /* UITableViewCell+TableView.m in Sources */,
+				53FE6793256DD0F00015FC83 /* GCDWebServerFunctions.m in Sources */,
 				53BC27BB139AF0DD00A825F1 /* CurrentPlaylistViewController.m in Sources */,
 				53FE353C1EA961540058B925 /* UIButton+StretchBackground.m in Sources */,
 				53FE35721EA961540058B925 /* UIViewController+IsVisible.m in Sources */,
@@ -3929,6 +4065,7 @@
 				53FE38911EA961C80058B925 /* NSData+ZKAdditions.m in Sources */,
 				53FE37AE1EA961720058B925 /* SUSLyricsLoader.m in Sources */,
 				53752BED2562CEF800438636 /* CoverArtViewController.swift in Sources */,
+				53FE678F256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
 				53BC27CC139AF0DD00A825F1 /* LoadingScreen.m in Sources */,
 				53BC27CE139AF0DD00A825F1 /* GenresViewController.m in Sources */,
 				53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */,
@@ -3946,6 +4083,8 @@
 				534B20EA256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
 				53FE35391EA961540058B925 /* UIButton+Colors.m in Sources */,
 				53FE34D61EA961540058B925 /* NSData+Hash.m in Sources */,
+				53FE67A7256DD0F00015FC83 /* GCDWebServerFileRequest.m in Sources */,
+				5347A1E5256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */,
 				539148D12559EB1D004AAC3F /* FlurryEmpty.m in Sources */,
 				53FE36E51EA961720058B925 /* AudioEngine.m in Sources */,
 				53BC27DD139AF0DD00A825F1 /* GenresAlbumViewController.m in Sources */,
@@ -3957,6 +4096,7 @@
 				539148F1255A0D56004AAC3F /* CellCachedIndicatorView.m in Sources */,
 				53FE38AC1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
 				537B05C3256B40930008892C /* SongInfoViewController.swift in Sources */,
+				53FE679D256DD0F00015FC83 /* GCDWebServerDataResponse.m in Sources */,
 				53FE351E1EA961540058B925 /* NSString+TrimmingAdditions.m in Sources */,
 				53FE37A21EA961720058B925 /* SUSChatLoader.m in Sources */,
 				53BC27E0139AF0DD00A825F1 /* CacheQueueSongUITableViewCell.m in Sources */,
@@ -3977,6 +4117,7 @@
 				53BC27E2139AF0DD00A825F1 /* SettingsTabViewController.m in Sources */,
 				53FE36E81EA961720058B925 /* BassEffectDAO.m in Sources */,
 				53FE35001EA961540058B925 /* NSString+compareWithoutIndefiniteArticles.m in Sources */,
+				53FE67A3256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m in Sources */,
 				53FE35D51EA961540058B925 /* EX2LargerTouchScrollView.m in Sources */,
 				53FE37B11EA961720058B925 /* SUSNowPlayingDAO.m in Sources */,
 				53246AB4256C918500E11EC4 /* LyricsViewController.swift in Sources */,
@@ -3984,6 +4125,7 @@
 				53FE37D51EA961720058B925 /* SUSSubFolderDAO.m in Sources */,
 				53FE37C31EA961720058B925 /* SUSScrobbleLoader.m in Sources */,
 				53FE38A61EA961C80058B925 /* ZKCDHeader.m in Sources */,
+				53FE6791256DD0F00015FC83 /* GCDWebServerRequest.m in Sources */,
 				53FE350F1EA961540058B925 /* NSString+hex.m in Sources */,
 				53BC27F8139AF0DD00A825F1 /* ChatUITableViewCell.m in Sources */,
 				53BC27F9139AF0DD00A825F1 /* ChatViewController.m in Sources */,
@@ -4015,6 +4157,7 @@
 				53FE35D21EA961540058B925 /* EX2InfinitePagingScrollView.m in Sources */,
 				53BC282D139AF0DD00A825F1 /* FolderDropdownControl.m in Sources */,
 				53FE38B21EA961C80058B925 /* ZKDataArchive.m in Sources */,
+				53FE6795256DD0F00015FC83 /* GCDWebServer.m in Sources */,
 				53FE38941EA961C80058B925 /* NSDate+ZKAdditions.m in Sources */,
 				53BC283C139AF0DD00A825F1 /* FolderPickerDialog.m in Sources */,
 				53FE34DC1EA961540058B925 /* NSFileHandle+Hash.m in Sources */,
@@ -4037,8 +4180,10 @@
 				5365859514789ADA00FE57A5 /* EqualizerView.m in Sources */,
 				533295F3255EEFE50027C51A /* FMDatabase+InMemoryOnDiskIO.m in Sources */,
 				53FE356C1EA961540058B925 /* UIView+SetNeedsLayoutSafe.m in Sources */,
+				53FE679B256DD0F00015FC83 /* GCDWebServerFileResponse.m in Sources */,
 				53FE37391EA961720058B925 /* ISMSServer.m in Sources */,
 				53FE378D1EA961720058B925 /* SearchXMLParser.m in Sources */,
+				53FE67A5256DD0F00015FC83 /* GCDWebServerDataRequest.m in Sources */,
 				53A2BE26147DF09800E44822 /* EqualizerPointView.m in Sources */,
 				53FE35751EA961540058B925 /* UIViewController+Tools.m in Sources */,
 				5306236F14D3295300D320A8 /* EqualizerPathView.m in Sources */,
@@ -4057,8 +4202,10 @@
 				53246AA4256C209E00E11EC4 /* ServerEditViewController.swift in Sources */,
 				53FE38A01EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53493F2915FC6AC40059492E /* main.m in Sources */,
+				53FE6797256DD0F00015FC83 /* GCDWebServerConnection.m in Sources */,
 				533D1820255F72FF003F962C /* CacheOfflineFoldersViewController.m in Sources */,
 				536C994F16619F5D005A73C6 /* ViewObjectsSingleton.m in Sources */,
+				53FE67A1256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
 				53FE375A1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

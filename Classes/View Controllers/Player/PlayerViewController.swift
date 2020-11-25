@@ -12,9 +12,7 @@ import CocoaLumberjackSwift
 
 // TODO: Add bitrate and file type labels
 // TODO: Add bookmark button
-@objc class PlayerViewController: UIViewController {
-    static var ddLogLevel: DDLogLevel = .verbose
-    
+@objc class PlayerViewController: UIViewController {    
     var currentSong: Song?
     
     private var notificationObservers = [NSObjectProtocol]()

@@ -418,12 +418,12 @@
 
 - (NSArray *)currentVideoBitrates {
     switch (EX2Reachability.isWifi ? self.maxVideoBitrateWifi : self.maxVideoBitrate3G) {
-        case 0: return @[@60];
-        case 1: return @[@256, @60];
-        case 2: return @[@512, @256, @60];
-        case 3: return @[@1024, @512, @256, @60];
-        case 4: return @[@1536, @1024, @512, @256, @60];
-        case 5: return @[@2048, @1536, @1024, @512, @256, @60];
+        case 0: return @[@512];
+        case 1: return @[@1024, @512];
+        case 2: return @[@1536, @1024, @512];
+        case 3: return @[@2048, @1536, @1024, @512];
+        case 4: return @[@4096, @2048, @1536, @1024, @512];
+        case 5: return @[@"8192@1920x1080", @4096, @2048, @1536, @1024, @512];
         default: return nil;
     }
 }

@@ -83,8 +83,6 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)setup {	
-	[[AVAudioSession sharedInstance] setActive:YES error:nil];
-	
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(handleInterruption:) name:AVAudioSessionInterruptionNotification object:AVAudioSession.sharedInstance];
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(handleRouteChange:) name:AVAudioSessionRouteChangeNotification object:AVAudioSession.sharedInstance];
     

@@ -9,21 +9,20 @@
 #ifndef iSub_iSubAppDelegate_h
 #define iSub_iSubAppDelegate_h
 
-#import <MessageUI/MessageUI.h>
-
 #import "SUSLoaderDelegate.h"
 #import "EX2Kit.h"
+#import <AVKit/AVKit.h>
 
 #define appDelegateS [iSubAppDelegate sharedInstance]
 
-@class BBSplitViewController, PadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, SettingsViewController, FoldersViewController, AudioStreamer, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HTTPServer, ServerListViewController;
+@class BBSplitViewController, PadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, SettingsViewController, FoldersViewController, AudioStreamer, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HLSReverseProxyServer, ServerListViewController;
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppDelegate)
-@interface iSubAppDelegate : NSObject <UIApplicationDelegate, SUSLoaderDelegate>
+@interface iSubAppDelegate : NSObject <UIApplicationDelegate, SUSLoaderDelegate, AVPlayerViewControllerDelegate>
 
-@property (nullable, strong) HTTPServer *hlsProxyServer;
+//@property (nullable, strong) HTTPServer *hlsProxyServer;
 
 @property (nullable,  strong) SUSStatusLoader *statusLoader;
 
@@ -65,8 +64,8 @@ NS_SWIFT_NAME(AppDelegate)
 
 @property (nullable, strong) NSURL *referringAppUrl;
 
-//@property (strong) MPMoviePlayerController *moviePlayer;
 @property (nullable, strong) AVPlayerViewController *videoPlayerController;
+@property (nullable, strong) HLSReverseProxyServer *hlsProxyServer;
 
 - (void)backToReferringApp;
 
