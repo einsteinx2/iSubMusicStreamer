@@ -42,7 +42,6 @@
 // Views
 #import "AsynchronousImageView.h"
 #import "CellCachedIndicatorView.h"
-#import "FolderPickerDialog.h"
 
 /*
  * Data Models

@@ -109,8 +109,6 @@
 		533C658C15ABB9A9003EAF29 /* HomeAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C659015ABB9A9003EAF29 /* HomeAlbumViewController.xib */; };
 		533C659115ABB9AD003EAF29 /* SearchSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C659715ABB9AD003EAF29 /* SearchSongsViewController.xib */; };
 		533C659315ABB9AD003EAF29 /* SearchSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C659715ABB9AD003EAF29 /* SearchSongsViewController.xib */; };
-		533C659815ABB9B0003EAF29 /* ShuffleFolderPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C659E15ABB9B0003EAF29 /* ShuffleFolderPickerViewController.xib */; };
-		533C659A15ABB9B0003EAF29 /* ShuffleFolderPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C659E15ABB9B0003EAF29 /* ShuffleFolderPickerViewController.xib */; };
 		533C659F15ABB9B3003EAF29 /* SearchAllViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65A515ABB9B3003EAF29 /* SearchAllViewController.xib */; };
 		533C65A115ABB9B3003EAF29 /* SearchAllViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65A515ABB9B3003EAF29 /* SearchAllViewController.xib */; };
 		533C65AD15ABB9C6003EAF29 /* ServerListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65B315ABB9C6003EAF29 /* ServerListViewController.xib */; };
@@ -171,7 +169,6 @@
 		5359C859256EA8FE00C8F8DC /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359C858256EA8FE00C8F8DC /* ObjC.swift */; };
 		5359C85A256EA8FE00C8F8DC /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359C858256EA8FE00C8F8DC /* ObjC.swift */; };
 		535A889A113F62DD00979783 /* default-album-art.png in Resources */ = {isa = PBXBuildFile; fileRef = 535A8899113F62DD00979783 /* default-album-art.png */; };
-		535B726A134CFB0E003E0E1C /* FolderPickerDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 535B7269134CFB0A003E0E1C /* FolderPickerDialog.m */; };
 		535B727E134D273B003E0E1C /* SearchAllViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 535B727C134D26E2003E0E1C /* SearchAllViewController.m */; };
 		535CA9C712DBCA9000389DA1 /* folders-tabbaricon.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CA9C512DBCA9000389DA1 /* folders-tabbaricon.png */; };
 		535CA9C812DBCA9000389DA1 /* folders-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CA9C612DBCA9000389DA1 /* folders-tabbaricon@2x.png */; };
@@ -197,7 +194,6 @@
 		5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D21EA92D1A00B1C242 /* libxml2.tbd */; };
 		5367C6D51EA92D2400B1C242 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D41EA92D2400B1C242 /* libz.tbd */; };
 		5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D61EA92D3000B1C242 /* libSystem.tbd */; };
-		536AB8021353B4F600DABD83 /* ShuffleFolderPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 536AB8001353B4F500DABD83 /* ShuffleFolderPickerViewController.m */; };
 		536AB8111353DCF900DABD83 /* PlaylistSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 536AB80F1353DCF700DABD83 /* PlaylistSongsViewController.m */; };
 		536AB8121353DCF900DABD83 /* PlaylistSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536AB8101353DCF700DABD83 /* PlaylistSongsViewController.xib */; };
 		536B5D5E11C8183D00CC1D69 /* LoadingScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536B5D5D11C8183D00CC1D69 /* LoadingScreen.xib */; };
@@ -456,9 +452,7 @@
 		53BC2815139AF0DD00A825F1 /* ModalAlbumArtViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C22CCE128EE81C00FFBA67 /* ModalAlbumArtViewController.m */; };
 		53BC282C139AF0DD00A825F1 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5324C6C513345D75004E6C79 /* OBSlider.m */; };
 		53BC282D139AF0DD00A825F1 /* FolderDropdownControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ADBBBF13352DB40098FAE6 /* FolderDropdownControl.m */; };
-		53BC283C139AF0DD00A825F1 /* FolderPickerDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 535B7269134CFB0A003E0E1C /* FolderPickerDialog.m */; };
 		53BC283D139AF0DD00A825F1 /* SearchAllViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 535B727C134D26E2003E0E1C /* SearchAllViewController.m */; };
-		53BC283F139AF0DD00A825F1 /* ShuffleFolderPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 536AB8001353B4F500DABD83 /* ShuffleFolderPickerViewController.m */; };
 		53BC2840139AF0DD00A825F1 /* PlaylistSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 536AB80F1353DCF700DABD83 /* PlaylistSongsViewController.m */; };
 		53BC2850139AF0DD00A825F1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		53BC2851139AF0DD00A825F1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -1061,8 +1055,6 @@
 		5359C854256EA8C400C8F8DC /* ObjcExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjcExceptionCatcher.h; sourceTree = "<group>"; };
 		5359C858256EA8FE00C8F8DC /* ObjC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjC.swift; sourceTree = "<group>"; };
 		535A8899113F62DD00979783 /* default-album-art.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default-album-art.png"; path = "Images/Other/default-album-art.png"; sourceTree = "<group>"; };
-		535B7268134CFB08003E0E1C /* FolderPickerDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderPickerDialog.h; sourceTree = "<group>"; };
-		535B7269134CFB0A003E0E1C /* FolderPickerDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FolderPickerDialog.m; sourceTree = "<group>"; };
 		535B727B134D26D6003E0E1C /* SearchAllViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchAllViewController.h; sourceTree = "<group>"; };
 		535B727C134D26E2003E0E1C /* SearchAllViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchAllViewController.m; sourceTree = "<group>"; };
 		535CA9C512DBCA9000389DA1 /* folders-tabbaricon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "folders-tabbaricon.png"; path = "Images/Tab Bar Icons/folders-tabbaricon.png"; sourceTree = "<group>"; };
@@ -1090,8 +1082,6 @@
 		5367C6D21EA92D1A00B1C242 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		5367C6D41EA92D2400B1C242 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		5367C6D61EA92D3000B1C242 /* libSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.tbd; path = usr/lib/libSystem.tbd; sourceTree = SDKROOT; };
-		536AB7FF1353B4F500DABD83 /* ShuffleFolderPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShuffleFolderPickerViewController.h; sourceTree = "<group>"; };
-		536AB8001353B4F500DABD83 /* ShuffleFolderPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShuffleFolderPickerViewController.m; sourceTree = "<group>"; };
 		536AB80F1353DCF700DABD83 /* PlaylistSongsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PlaylistSongsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		536AB8101353DCF700DABD83 /* PlaylistSongsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistSongsViewController.xib; sourceTree = "<group>"; };
 		536B5D5D11C8183D00CC1D69 /* LoadingScreen.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingScreen.xib; sourceTree = "<group>"; };
@@ -1139,7 +1129,6 @@
 		539148A92559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ServerListViewController.xib; sourceTree = "<group>"; };
 		539148B22559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/HomeAlbumViewController.xib; sourceTree = "<group>"; };
 		539148B32559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SearchSongsViewController.xib; sourceTree = "<group>"; };
-		539148B42559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ShuffleFolderPickerViewController.xib; sourceTree = "<group>"; };
 		539148B52559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SearchAllViewController.xib; sourceTree = "<group>"; };
 		539148B62559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AlbumViewController.xib; sourceTree = "<group>"; };
 		539148B92559E597004AAC3F /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
@@ -1889,21 +1878,16 @@
 			isa = PBXGroup;
 			children = (
 				538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */,
+				534B20D925619936007FF1D7 /* HomeViewController.xib */,
 				531F166C126FA2E600F524BD /* HomeAlbumViewController.h */,
 				531F166D126FA2E600F524BD /* HomeAlbumViewController.m */,
 				533C659015ABB9A9003EAF29 /* HomeAlbumViewController.xib */,
 				53B9D0B11279FAEF00CAB0E0 /* SearchSongsViewController.h */,
 				53B9D0B21279FAEF00CAB0E0 /* SearchSongsViewController.m */,
 				533C659715ABB9AD003EAF29 /* SearchSongsViewController.xib */,
-				535B7268134CFB08003E0E1C /* FolderPickerDialog.h */,
-				535B7269134CFB0A003E0E1C /* FolderPickerDialog.m */,
-				536AB7FF1353B4F500DABD83 /* ShuffleFolderPickerViewController.h */,
-				536AB8001353B4F500DABD83 /* ShuffleFolderPickerViewController.m */,
-				533C659E15ABB9B0003EAF29 /* ShuffleFolderPickerViewController.xib */,
 				535B727B134D26D6003E0E1C /* SearchAllViewController.h */,
 				535B727C134D26E2003E0E1C /* SearchAllViewController.m */,
 				533C65A515ABB9B3003EAF29 /* SearchAllViewController.xib */,
-				534B20D925619936007FF1D7 /* HomeViewController.xib */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -3165,7 +3149,6 @@
 				533C659F15ABB9B3003EAF29 /* SearchAllViewController.xib in Resources */,
 				5353B83C134D8019005C589E /* upload-playlist.png in Resources */,
 				5353B83D134D8019005C589E /* upload-playlist@2x.png in Resources */,
-				533C659815ABB9B0003EAF29 /* ShuffleFolderPickerViewController.xib in Resources */,
 				536AB8121353DCF900DABD83 /* PlaylistSongsViewController.xib in Resources */,
 				533C65DC15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */,
 				5306239414D4BCAD00D320A8 /* eqView.png in Resources */,
@@ -3343,7 +3326,6 @@
 				533C65A115ABB9B3003EAF29 /* SearchAllViewController.xib in Resources */,
 				53BC2793139AF0DD00A825F1 /* upload-playlist.png in Resources */,
 				53BC2794139AF0DD00A825F1 /* upload-playlist@2x.png in Resources */,
-				533C659A15ABB9B0003EAF29 /* ShuffleFolderPickerViewController.xib in Resources */,
 				53BC2796139AF0DD00A825F1 /* PlaylistSongsViewController.xib in Resources */,
 				533C65DE15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */,
 				5306239614D4BCAD00D320A8 /* eqView.png in Resources */,
@@ -3592,7 +3574,6 @@
 				53ADBBC013352DB40098FAE6 /* FolderDropdownControl.m in Sources */,
 				53FE38B01EA961C80058B925 /* ZKDataArchive.m in Sources */,
 				53FE38921EA961C80058B925 /* NSDate+ZKAdditions.m in Sources */,
-				535B726A134CFB0E003E0E1C /* FolderPickerDialog.m in Sources */,
 				53FE34DA1EA961540058B925 /* NSFileHandle+Hash.m in Sources */,
 				53FE35C41EA961540058B925 /* EX2Kit.m in Sources */,
 				53D973FE255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
@@ -3601,7 +3582,6 @@
 				53FE356D1EA961540058B925 /* UIView+Tools.m in Sources */,
 				533295FA255EEFE50027C51A /* FMResultSet.m in Sources */,
 				53FE37671EA961720058B925 /* MusicSingleton.m in Sources */,
-				536AB8021353B4F600DABD83 /* ShuffleFolderPickerViewController.m in Sources */,
 				53FE34DD1EA961540058B925 /* NSMutableDictionary+Safe.m in Sources */,
 				53FE373D1EA961720058B925 /* ISMSSong+DAO.m in Sources */,
 				53FE37461EA961720058B925 /* ISMSStreamHandler.m in Sources */,
@@ -3831,7 +3811,6 @@
 				53FE38B21EA961C80058B925 /* ZKDataArchive.m in Sources */,
 				53FE6795256DD0F00015FC83 /* GCDWebServer.m in Sources */,
 				53FE38941EA961C80058B925 /* NSDate+ZKAdditions.m in Sources */,
-				53BC283C139AF0DD00A825F1 /* FolderPickerDialog.m in Sources */,
 				53FE34DC1EA961540058B925 /* NSFileHandle+Hash.m in Sources */,
 				53FE35C61EA961540058B925 /* EX2Kit.m in Sources */,
 				53D973FF255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
@@ -3839,7 +3818,6 @@
 				53FE356F1EA961540058B925 /* UIView+Tools.m in Sources */,
 				537B05C0256B0E4B0008892C /* PadMenuTableCell.swift in Sources */,
 				53FE37691EA961720058B925 /* MusicSingleton.m in Sources */,
-				53BC283F139AF0DD00A825F1 /* ShuffleFolderPickerViewController.m in Sources */,
 				53FE34DF1EA961540058B925 /* NSMutableDictionary+Safe.m in Sources */,
 				53FE373F1EA961720058B925 /* ISMSSong+DAO.m in Sources */,
 				53FE37481EA961720058B925 /* ISMSStreamHandler.m in Sources */,
@@ -3899,14 +3877,6 @@
 				539148B32559CBE0004AAC3F /* Base */,
 			);
 			name = SearchSongsViewController.xib;
-			sourceTree = "<group>";
-		};
-		533C659E15ABB9B0003EAF29 /* ShuffleFolderPickerViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				539148B42559CBE0004AAC3F /* Base */,
-			);
-			name = ShuffleFolderPickerViewController.xib;
 			sourceTree = "<group>";
 		};
 		533C65A515ABB9B3003EAF29 /* SearchAllViewController.xib */ = {

@@ -142,14 +142,26 @@ import SnapKit
                 if folders.count == 2 {
                     self.performServerShuffle(notification: nil)
                 } else {
-                    var height = 65.0 + Double(folders.count * 44)
-                    if height > 300.0 {
-                        height = 300.0
+                    let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                    sheet.addAction(UIAlertAction(title: "All Folders", style: .default) { action in
+                        let userInfo = ["folderId": -1]
+                        NotificationCenter.postNotificationToMainThread(name: "performServerShuffle", userInfo: userInfo)
+                    })
+                    for (folderId, name) in folders {
+                        if let folderId = folderId as? NSNumber, let name = name as? String, folderId != -1 {
+                            sheet.addAction(UIAlertAction(title: name, style: .default) { action in
+                                let userInfo = ["folderId": folderId]
+                                NotificationCenter.postNotificationToMainThread(name: "performServerShuffle", userInfo: userInfo)
+                            })
+                        }
                     }
-                    
-                    let folderPicker = FolderPickerDialog(frame: CGRect(x: 0, y: 0, width: 300, height: height))
-                    folderPicker.titleLabel.text = "Folder to Shuffle"
-                    folderPicker.show()
+                    sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                    if let popoverPresentationController = sheet.popoverPresentationController {
+                        // Fix exception on iPad
+                        popoverPresentationController.sourceView = self.serverShuffleButton
+                        popoverPresentationController.sourceRect = self.serverShuffleButton.bounds
+                    }
+                    present(sheet, animated: true, completion: nil)
                 }
             }
         }
