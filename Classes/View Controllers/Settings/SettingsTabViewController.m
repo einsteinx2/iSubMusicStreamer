@@ -33,9 +33,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.loadedTime = [NSDate date];
 		
 	// Set version label
-	NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleVersionKey];
-	NSString *build = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-	self.versionLabel.text = [NSString stringWithFormat:@"iSub %@ build %@", build, version];
+    NSString *version = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"];
+    NSString *build = [NSBundle.mainBundle.infoDictionary objectForKey:(NSString*)kCFBundleVersionKey];
+	self.versionLabel.text = [NSString stringWithFormat:@"iSub %@ build %@", version, build];
 	
 	// Main Settings
 	self.enableScrobblingSwitch.on = settingsS.isScrobbleEnabled;

@@ -94,6 +94,11 @@ LOG_LEVEL_ISUB_DEFAULT
 	fileLogger.logFileManager.maximumNumberOfLogFiles = 7;
 	[DDLog addLogger:fileLogger];
     
+    // Log system information
+    NSString *version = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"];
+    NSString *build = [NSBundle.mainBundle.infoDictionary objectForKey:(NSString*)kCFBundleVersionKey];
+    DDLogInfo(@"\n---------------------------------\niSub %@ build %@ launched\n---------------------------------", version, build);
+    
 	// Setup network reachability notifications
 	self.wifiReach = [EX2Reachability reachabilityForLocalWiFi];
 	[self.wifiReach startNotifier];
