@@ -29,5 +29,6 @@
 - (BOOL)toggleEqualizer;
 - (NSArray *)equalizerValues;
 - (void)createVolumeFx;
+- (void)createLimiterFx;
 
 @end

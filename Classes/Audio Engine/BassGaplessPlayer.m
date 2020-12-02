@@ -839,15 +839,18 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 				 self.visualizer.channel = self.outStream;
 				 self.equalizer.channel = self.outStream;
                  
-                 // Add gain amplification
-				 [self.equalizer createVolumeFx];
-                 
 				 // Prepare the EQ
                  // This will load the values, and if the EQ was previously enabled, will automatically
                  // add the EQ values to the stream
 				 BassEffectDAO *effectDAO = [[BassEffectDAO alloc] initWithType:BassEffectType_ParametricEQ];
                  [effectDAO selectPresetId:effectDAO.selectedPresetId];
 				 
+                 // Add gain amplification
+                 [self.equalizer createVolumeFx];
+                 
+                 // Add limiter to prevent distortion
+                 [self.equalizer createLimiterFx];
+                 
 				 // Add the stream to the queue
                  @synchronized(self.streamQueue)
                  {
