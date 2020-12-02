@@ -13,6 +13,9 @@ import CocoaLumberjackSwift
 // TODO: Add bitrate and file type labels
 // TODO: Add bookmark button
 @objc class PlayerViewController: UIViewController {    
+    let iconDefaultColor = UIColor(white: 0.8, alpha: 1.0)
+    let iconActivatedColor = UIColor.systemBlue
+    
     var currentSong: Song?
     
     private var notificationObservers = [NSObjectProtocol]()
@@ -237,7 +240,9 @@ import CocoaLumberjackSwift
             make.leading.trailing.equalToSuperview()
         }
         
-        playPauseButton.setImage(UIImage(named: "controller-play"), for: .normal)
+        let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
+        playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
+        playPauseButton.tintColor = iconDefaultColor
         playPauseButton.addClosure(for: .touchUpInside) { [unowned self] in
             if Settings.shared().isJukeboxEnabled {
                 if Jukebox.shared().isPlaying {
@@ -256,7 +261,9 @@ import CocoaLumberjackSwift
             }
         }
         
-        previousButton.setImage(UIImage(named: "controller-previous"), for: .normal)
+        let previousButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
+        previousButton.setImage(UIImage(systemName: "backward.end.fill", withConfiguration: previousButtonConfig), for: .normal)
+        previousButton.tintColor = iconDefaultColor
         previousButton.addClosure(for: .touchUpInside) {
             if let player = AudioEngine.shared().player, player.progress > 10.0 {
                 // If we're more than 10 seconds into the song, restart it
@@ -267,15 +274,19 @@ import CocoaLumberjackSwift
             }
         }
         
-        nextButton.setImage(UIImage(named: "controller-next"), for: .normal)
+        let nextButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
+        nextButton.setImage(UIImage(systemName: "forward.end.fill", withConfiguration: nextButtonConfig), for: .normal)
+        nextButton.tintColor = iconDefaultColor
         nextButton.addClosure(for: .touchUpInside) {
             Music.shared().nextSong()
         }
 
-        quickSkipBackButton.setBackgroundImage(UIImage(named: "controller-back30"), for: .normal)
+        let quickSkipBackButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
+        quickSkipBackButton.setBackgroundImage(UIImage(systemName: "backward.fill", withConfiguration: quickSkipBackButtonConfig), for: .normal)
+        quickSkipBackButton.tintColor = iconDefaultColor
         quickSkipBackButton.setTitleColor(.darkGray, for: .normal)
-        quickSkipBackButton.titleLabel?.font = .systemFont(ofSize: 8)
-        quickSkipBackButton.titleEdgeInsets.left = 6
+        quickSkipBackButton.titleLabel?.font = .systemFont(ofSize: 7)
+        quickSkipBackButton.titleEdgeInsets.left = 21
         quickSkipBackButton.addClosure(for: .touchUpInside) { [unowned self] in
             let value = self.progressSlider.value - Float(Settings.shared().quickSkipNumberOfSeconds);
             self.progressSlider.value = value > 0.0 ? value : 0.0;
@@ -283,10 +294,12 @@ import CocoaLumberjackSwift
             Flurry.logEvent("QuickSkip")
         }
         
-        quickSkipForwardButton.setBackgroundImage(UIImage(named: "controller-forw30"), for: .normal)
+        let quickSkipForwardButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
+        quickSkipForwardButton.setBackgroundImage(UIImage(systemName: "forward.fill", withConfiguration: quickSkipForwardButtonConfig), for: .normal)
+        quickSkipForwardButton.tintColor = iconDefaultColor
         quickSkipForwardButton.setTitleColor(.darkGray, for: .normal)
-        quickSkipForwardButton.titleLabel?.font = .systemFont(ofSize: 8)
-        quickSkipForwardButton.titleEdgeInsets.right = 6
+        quickSkipForwardButton.titleLabel?.font = .systemFont(ofSize: 7)
+        quickSkipForwardButton.titleEdgeInsets.right = 20
         quickSkipForwardButton.addClosure(for: .touchUpInside) { [unowned self] in
             let value = self.progressSlider.value + Float(Settings.shared().quickSkipNumberOfSeconds)
             if value >= self.progressSlider.maximumValue {
@@ -313,7 +326,6 @@ import CocoaLumberjackSwift
             make.leading.trailing.equalToSuperview()
         }
         
-        updateRepeatButtonIcon()
         repeatButton.addClosure(for: .touchUpInside) { [unowned self] in
             switch PlayQueue.shared().repeatMode {
             case ISMSRepeatMode_Normal: PlayQueue.shared().repeatMode = ISMSRepeatMode_RepeatOne
@@ -323,8 +335,8 @@ import CocoaLumberjackSwift
             }
             self.updateRepeatButtonIcon()
         }
+        updateRepeatButtonIcon()
         
-        bookmarksButton.setImage(UIImage(named: "controller-bookmark"), for: .normal)
         bookmarksButton.addClosure(for: .touchUpInside) { [unowned self] in
             let position = UInt(self.progressSlider.value);
             let bytePosition = UInt(AudioEngine.shared().player?.currentByteOffset ?? 0);
@@ -347,6 +359,7 @@ import CocoaLumberjackSwift
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
+        updateBookmarkButton()
         
         let equalizerButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular, scale: .large)
         equalizerButton.setImage(UIImage(systemName: "slider.vertical.3", withConfiguration: equalizerButtonConfig), for: .normal)
@@ -360,7 +373,8 @@ import CocoaLumberjackSwift
         }
         updateEqualizerButton()
         
-        updateShuffleButtonIcon()
+        let shuffleButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
+        shuffleButton.setImage(UIImage(systemName: "shuffle", withConfiguration: shuffleButtonConfig), for: .normal)
         shuffleButton.addClosure(for: .touchUpInside) { [unowned self] in
             let message = PlayQueue.shared().isShuffle ? "Unshuffling" : "Shuffling"
             ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: message)
@@ -369,6 +383,7 @@ import CocoaLumberjackSwift
             }
             self.updateShuffleButtonIcon()
         }
+        updateShuffleButtonIcon()
         
         //
         // Jukebox
@@ -435,13 +450,19 @@ import CocoaLumberjackSwift
         }
         
         notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackEnded) { [unowned self] _ in
-            self.playPauseButton.setImage(UIImage(named: "controller-play"), for: .normal)
+            let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
+            self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
+            self.playPauseButton.tintColor = self.iconDefaultColor
         })
         notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackPaused, object: nil) { [unowned self] _ in
-            self.playPauseButton.setImage(UIImage(named: "controller-play"), for: .normal)
+            let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
+            self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
+            self.playPauseButton.tintColor = self.iconDefaultColor
         })
         notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackStarted, object: nil) { [unowned self] _ in
-            self.playPauseButton.setImage(UIImage(named: "controller-pause"), for: .normal)
+            let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
+            self.playPauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: playButtonConfig), for: .normal)
+            self.playPauseButton.tintColor = self.iconDefaultColor
         })
         
         notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_CurrentPlaylistShuffleToggled) { [unowned self] _ in
@@ -598,17 +619,23 @@ import CocoaLumberjackSwift
         downloadProgressView.isHidden = false
         
         func remakeConstraints() {
-            self.downloadProgressView.snp.remakeConstraints { make in
-                do {
-                    try ObjC.perform {
-                        make.width.equalTo(self.progressSlider).multipliedBy(currentSong.downloadProgress).offset(10)
-                        make.leading.equalTo(self.progressSlider).offset(-5)
-                        make.top.equalTo(self.progressSlider).offset(-3)
-                        make.bottom.equalTo(self.progressSlider).offset(3)
+            do {
+                try ObjC.perform {
+                    self.downloadProgressView.snp.remakeConstraints { make in
+                        do {
+                            try ObjC.perform {
+                                make.width.equalTo(self.progressSlider).multipliedBy(currentSong.downloadProgress).offset(10)
+                                make.leading.equalTo(self.progressSlider).offset(-5)
+                                make.top.equalTo(self.progressSlider).offset(-3)
+                                make.bottom.equalTo(self.progressSlider).offset(3)
+                            }
+                        } catch {
+                            DDLogError("Failed to update constraints for download progress: \(error)")
+                        }
                     }
-                } catch {
-                    DDLogError("Failed to update constraints for download progress: \(error)")
                 }
+            } catch {
+                DDLogError("Failed to update constraints for download progress: \(error)")
             }
         }
         
@@ -642,17 +669,18 @@ import CocoaLumberjackSwift
     private func updateRepeatButtonIcon() {
         let imageName: String
         switch PlayQueue.shared().repeatMode {
-        case ISMSRepeatMode_RepeatOne: imageName = "controller-repeat-one"
-        case ISMSRepeatMode_RepeatAll: imageName = "controller-repeat-all"
-        default: imageName = "controller-repeat"
+        case ISMSRepeatMode_RepeatOne: imageName = "repeat.1"
+        case ISMSRepeatMode_RepeatAll: imageName = "repeat"
+        default: imageName = "repeat"
         }
         
-        repeatButton.setImage(UIImage(named: imageName), for: .normal)
+        let config = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
+        repeatButton.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
+        repeatButton.tintColor = PlayQueue.shared().repeatMode == ISMSRepeatMode_Normal ? iconDefaultColor : iconActivatedColor
     }
     
     private func updateShuffleButtonIcon() {
-        let imageName = PlayQueue.shared().isShuffle ? "controller-shuffle-on" : "controller-shuffle"
-        shuffleButton.setImage(UIImage(named: imageName), for: .normal)
+        shuffleButton.tintColor = PlayQueue.shared().isShuffle ? iconActivatedColor : iconDefaultColor
     }
     
     @objc private func updateJukeboxControls() {
@@ -660,17 +688,19 @@ import CocoaLumberjackSwift
         equalizerButton.isHidden = jukeboxEnabled
 //        view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor : UIColor(named: "isubBackgroundColor")
         
+        let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
+        self.playPauseButton.tintColor = self.iconDefaultColor
         if jukeboxEnabled {
             if Jukebox.shared().isPlaying {
-                self.playPauseButton.setImage(UIImage(named: "controller-stop"), for: .normal)
+                self.playPauseButton.setImage(UIImage(systemName: "stop.fill", withConfiguration: playButtonConfig), for: .normal)
             } else {
-                self.playPauseButton.setImage(UIImage(named: "controller-play"), for: .normal)
+                self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
             }
         } else {
             if AudioEngine.shared().player?.isPlaying ?? false {
-                self.playPauseButton.setImage(UIImage(named: "controller-pause"), for: .normal)
+                self.playPauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: playButtonConfig), for: .normal)
             } else {
-                self.playPauseButton.setImage(UIImage(named: "controller-play"), for: .normal)
+                self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
             }
         }
         
@@ -686,7 +716,7 @@ import CocoaLumberjackSwift
     }
     
     private func updateEqualizerButton() {
-        equalizerButton.tintColor = Settings.shared().isEqualizerOn ? .systemBlue : UIColor(white: 0.8, alpha: 1.0)
+        equalizerButton.tintColor = Settings.shared().isEqualizerOn ? iconActivatedColor : iconDefaultColor
     }
     
     private func updateBookmarkButton() {
@@ -705,8 +735,11 @@ import CocoaLumberjackSwift
             }
         }
         
-        let imageName = bookmarkCount > 0 ? "controller-bookmark-on" : "controller-bookmark"
-        bookmarksButton.setImage(UIImage(named: imageName), for: .normal)
+        let imageName = bookmarkCount > 0 ? "bookmark.fill" : "bookmark"
+        let tintColor = bookmarkCount > 0 ? iconActivatedColor : iconDefaultColor
+        let config = UIImage.SymbolConfiguration(pointSize: 21, weight: .light, scale: .large)
+        bookmarksButton.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
+        bookmarksButton.tintColor = tintColor
     }
     
     @objc private func updateQuickSkipButtons() {
