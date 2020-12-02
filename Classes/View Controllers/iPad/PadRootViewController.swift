@@ -41,20 +41,18 @@ import SnapKit
         }
     }
     
-    func switchContentViewController(controller: UIViewController) {
+    func switchContentViewController(controller: UINavigationController) {
         // Remove current content view controller
         currentContentNavigationController?.view.removeFromSuperview()
         currentContentNavigationController?.removeFromParent()
-        currentContentNavigationController = nil
         
         // Add new content view controller
-        let navController = CustomUINavigationController(rootViewController: controller)
-        addChild(navController)
-        rootView.addSubview(navController.view)
-        navController.view.snp.makeConstraints { make in
+        addChild(controller)
+        rootView.addSubview(controller.view)
+        controller.view.snp.makeConstraints { make in
             make.leading.equalTo(menuViewController.view.snp.trailing)
             make.trailing.top.bottom.equalToSuperview()
         }
-        currentContentNavigationController = navController
+        currentContentNavigationController = controller
     }
 }
