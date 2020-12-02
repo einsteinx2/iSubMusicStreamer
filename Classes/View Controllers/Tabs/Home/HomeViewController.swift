@@ -56,10 +56,10 @@ import SnapKit
                 make.bottom.equalToSuperview().offset(-10)
             }
             verticalStack.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(20)
-                make.trailing.equalToSuperview().offset(-20)
+                make.leading.equalToSuperview().offset(UIDevice.isIPad() ? 50 : 20)
+                make.trailing.equalToSuperview().offset(UIDevice.isIPad() ? -50 : -20)
                 make.centerY.equalToSuperview().offset(15)
-                make.height.equalToSuperview().multipliedBy(0.75)
+                make.height.equalToSuperview().multipliedBy(UIDevice.isIPad() ? 0.50 : 0.75)
             }
             songInfoButton.snp.remakeConstraints { make in
                 make.height.equalTo(80)
@@ -244,6 +244,10 @@ import SnapKit
         searchSegment.selectedSegmentIndex = 3
         searchSegmentContainer.addSubview(searchSegment)
         
+        if UIDevice.isIPad() {
+            songInfoButton.isHidden = true
+            songInfoButton.isUserInteractionEnabled = false
+        }
         songInfoButton.translatesAutoresizingMaskIntoConstraints = false
         songInfoButton.setAction { [unowned self] in
             self.nowPlayingAction(sender: nil)
