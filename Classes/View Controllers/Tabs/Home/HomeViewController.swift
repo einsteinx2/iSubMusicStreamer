@@ -108,6 +108,8 @@ import SnapKit
         super.viewDidLoad()
         
         title = "Home"
+        // Not sure why, but it's necessary to set this on the navigation item only in this controller
+        navigationItem.title = "Home"
         
         registerNotifications()
         
