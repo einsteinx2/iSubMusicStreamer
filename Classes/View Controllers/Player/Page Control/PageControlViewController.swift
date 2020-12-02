@@ -78,9 +78,9 @@ class PageControlViewController: UIViewController {
                 coverArtViewController = CoverArtViewController()
                 controller = coverArtViewController
             case 1:
-                controller = SongInfoViewController()
-            case 2:
                 controller = LyricsViewController()
+            case 2:
+                controller = SongInfoViewController()
             case 3:
                 controller = CacheStatusViewController()
             default: break
