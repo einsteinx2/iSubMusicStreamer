@@ -196,6 +196,13 @@ private let labelGap = 25.0
     }
     
     @objc func startScrolling(delay: TimeInterval = 2) {
+        // Prevent iOS from killing the app for overusing the CPU in the background
+        // NOTE: While the notification listeners stop the animation when the app enters
+        //       the backgorund, whenever the song would change, it would kick off the
+        //       animations again which would short-circuit and eat up CPU.
+        //       This check prevents any animation while in the background.
+        guard UIApplication.shared.applicationState != .background else { return }
+        
         createAnimator(delay: delay)
         animator?.startAnimation(afterDelay: delay)
     }
