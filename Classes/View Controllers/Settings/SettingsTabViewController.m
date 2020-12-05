@@ -62,7 +62,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.enableNextSongCacheSwitch.on = settingsS.isNextSongCacheEnabled;
 	self.enableNextSongPartialCacheSwitch.on = settingsS.isPartialCacheNextSong;
     self.enableBackupCacheSwitch.on = settingsS.isBackupCacheEnabled;
-		
+    [self.cacheSpaceSlider setThumbImage:[[UIImage imageNamed:@"controller-slider-thumb"] imageWithTintColor:UIColor.blackColor] forState:UIControlStateNormal];
 	self.totalSpace = cacheS.totalSpace;
 	self.freeSpace = cacheS.freeSpace;
 	self.freeSpaceLabel.text = [NSString stringWithFormat:@"Free space: %@", [NSString formatFileSize:self.freeSpace]];
@@ -106,16 +106,12 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)cachingTypeToggle {
 	if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 0) {
 		self.cacheSpaceLabel1.text = @"Minimum free space:";
-		//self.cacheSpaceLabel2.text = [settings formatFileSize:[[appDelegateS.settingsDictionary objectForKey:@"minFreeSpace"] unsignedLongLongValue]];
 		self.cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.minFreeSpace];
-		//self.cacheSpaceSlider.value = [[appDelegateS.settingsDictionary objectForKey:@"minFreeSpace"] floatValue] / totalSpace;
-		self.cacheSpaceSlider.value = (float)settingsS.minFreeSpace / self.totalSpace;
+		self.cacheSpaceSlider.value = ((float)settingsS.minFreeSpace / self.totalSpace);
 	} else if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 1) {
 		self.cacheSpaceLabel1.text = @"Maximum cache size:";
-		//self.cacheSpaceLabel2.text = [settings formatFileSize:[[appDelegateS.settingsDictionary objectForKey:@"maxCacheSize"] unsignedLongLongValue]];
 		self.cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.maxCacheSize];
-		//self.cacheSpaceSlider.value = [[appDelegateS.settingsDictionary objectForKey:@"maxCacheSize"] floatValue] / totalSpace;
-		self.cacheSpaceSlider.value = (float)settingsS.maxCacheSize / self.totalSpace;
+		self.cacheSpaceSlider.value = ((float)settingsS.maxCacheSize / self.totalSpace);
 	}
 }
 
