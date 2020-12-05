@@ -160,11 +160,11 @@ import CocoaLumberjackSwift
         
         songInfoContainer.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(60)
+            make.height.equalTo(UIDevice.isSmall() || UIDevice.isIPad() ? 45 : 60)
             make.centerX.equalToSuperview()
         }
         
-        songNameLabel.font = .boldSystemFont(ofSize: 22)
+        songNameLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall() || UIDevice.isIPad() ? 20 : 22)
         songNameLabel.textColor = .label
         songInfoContainer.addSubview(songNameLabel)
         songNameLabel.snp.makeConstraints { make in
@@ -173,7 +173,7 @@ import CocoaLumberjackSwift
             make.centerX.top.equalToSuperview()
         }
         
-        artistNameLabel.font = .boldSystemFont(ofSize: 18)
+        artistNameLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall() || UIDevice.isIPad() ? 18 : 16)
         artistNameLabel.textColor = .secondaryLabel
         songInfoContainer.addSubview(artistNameLabel)
         artistNameLabel.snp.makeConstraints { make in
@@ -193,19 +193,15 @@ import CocoaLumberjackSwift
 
         elapsedTimeLabel.textColor = .label
         elapsedTimeLabel.font = .systemFont(ofSize: 14)
-        elapsedTimeLabel.textAlignment = .right
         progressBarContainer.addSubview(elapsedTimeLabel)
         elapsedTimeLabel.snp.makeConstraints { make in
-            make.width.equalTo(50)
             make.leading.centerY.equalToSuperview()
         }
 
         remainingTimeLabel.textColor = .label
         remainingTimeLabel.font = .systemFont(ofSize: 14)
-        remainingTimeLabel.textAlignment = .left
         progressBarContainer.addSubview(remainingTimeLabel)
         remainingTimeLabel.snp.makeConstraints { make in
-            make.width.equalTo(50)
             make.trailing.centerY.equalToSuperview()
         }
 
@@ -281,12 +277,11 @@ import CocoaLumberjackSwift
             Music.shared().nextSong()
         }
 
-        let quickSkipBackButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
-        quickSkipBackButton.setBackgroundImage(UIImage(systemName: "backward.fill", withConfiguration: quickSkipBackButtonConfig), for: .normal)
+        let quickSkipBackButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .light, scale: .large)
+        quickSkipBackButton.setBackgroundImage(UIImage(systemName: "gobackward", withConfiguration: quickSkipBackButtonConfig), for: .normal)
         quickSkipBackButton.tintColor = iconDefaultColor
-        quickSkipBackButton.setTitleColor(.darkGray, for: .normal)
-        quickSkipBackButton.titleLabel?.font = .systemFont(ofSize: 7)
-        quickSkipBackButton.titleEdgeInsets.left = 21
+        quickSkipBackButton.setTitleColor(iconDefaultColor, for: .normal)
+        quickSkipBackButton.titleLabel?.font = .systemFont(ofSize: 10)
         quickSkipBackButton.addClosure(for: .touchUpInside) { [unowned self] in
             let value = self.progressSlider.value - Float(Settings.shared().quickSkipNumberOfSeconds);
             self.progressSlider.value = value > 0.0 ? value : 0.0;
@@ -294,12 +289,11 @@ import CocoaLumberjackSwift
             Flurry.logEvent("QuickSkip")
         }
         
-        let quickSkipForwardButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
-        quickSkipForwardButton.setBackgroundImage(UIImage(systemName: "forward.fill", withConfiguration: quickSkipForwardButtonConfig), for: .normal)
+        let quickSkipForwardButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .light, scale: .large)
+        quickSkipForwardButton.setBackgroundImage(UIImage(systemName: "goforward", withConfiguration: quickSkipForwardButtonConfig), for: .normal)
         quickSkipForwardButton.tintColor = iconDefaultColor
-        quickSkipForwardButton.setTitleColor(.darkGray, for: .normal)
-        quickSkipForwardButton.titleLabel?.font = .systemFont(ofSize: 7)
-        quickSkipForwardButton.titleEdgeInsets.right = 20
+        quickSkipForwardButton.setTitleColor(iconDefaultColor, for: .normal)
+        quickSkipForwardButton.titleLabel?.font = .systemFont(ofSize: 10)
         quickSkipForwardButton.addClosure(for: .touchUpInside) { [unowned self] in
             let value = self.progressSlider.value + Float(Settings.shared().quickSkipNumberOfSeconds)
             if value >= self.progressSlider.maximumValue {
