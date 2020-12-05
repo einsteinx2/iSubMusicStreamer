@@ -92,14 +92,14 @@ class CacheStatusViewController: UIViewController {
         infoTitleStackView.axis = .vertical
         infoTitleStackView.distribution = .equalSpacing
         infoTitleStackView.spacing = 3
-        let cacheSizeTitle = Settings.shared().cachingType == ISMSCachingType_minSpace.rawValue ? "Cache Used:" : "Max Cache Size:"
+        let cacheSizeTitle = Settings.shared().cachingType == ISMSCachingType_minSpace.rawValue ? "Min Free Space:" : "Max Cache Size:"
         infoTitleStackView.addArrangedSubviews([makeInfoLabel(text: "Songs Cached:"),
                                                 makeInfoLabel(text: "Cache Used:"),
                                                 makeInfoLabel(text: cacheSizeTitle),
                                                 makeInfoLabel(text: "Free Space:")])
         containerView.addSubview(infoTitleStackView)
         infoTitleStackView.snp.makeConstraints { make in
-            make.width.equalTo(115)
+            make.width.equalTo(130)
             make.leading.bottom.equalToSuperview()
             make.top.equalTo(progressBarStackView.snp.bottom).offset(20)
         }
