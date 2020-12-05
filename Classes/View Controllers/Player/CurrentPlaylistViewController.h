@@ -10,13 +10,14 @@
 
 @interface CurrentPlaylistViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
-@property (strong) UITableView *tableView;
-@property (strong) UIView *headerView;
-@property (strong) UILabel *savePlaylistLabel;
-@property (strong) UILabel *deleteSongsLabel;
-@property (strong) UILabel *playlistCountLabel;
-@property (strong) UIButton *savePlaylistButton;
-@property (strong) UILabel *editPlaylistLabel;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIView *saveEditContainer;
+@property (nonatomic, strong) UILabel *savePlaylistLabel;
+@property (nonatomic, strong) UILabel *deleteSongsLabel;
+@property (nonatomic, strong) UILabel *playlistCountLabel;
+@property (nonatomic, strong) UIButton *savePlaylistButton;
+@property (nonatomic, strong) UILabel *editPlaylistLabel;
+@property (nonatomic, strong) UIButton *editPlaylistButton;
 
 //NSTimer *songHighlightTimer;
 

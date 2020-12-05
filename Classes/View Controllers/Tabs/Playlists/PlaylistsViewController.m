@@ -485,7 +485,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		
 		UITableViewScrollPosition scrollPosition = UITableViewScrollPositionNone;
         if (playlistS.currentIndex > minScrollRow) {
-			scrollPosition = UITableViewScrollPositionMiddle;
+			scrollPosition = UITableViewScrollPositionTop;
         }
 		
 		if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
@@ -558,7 +558,7 @@ LOG_LEVEL_ISUB_DEFAULT
             // Reload the table to correct the numbers
             [self.tableView reloadData];
             if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
-                [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+                [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
             }
         } else {
             [self setEditing:YES animated:YES];
@@ -940,7 +940,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
 		[self.tableView reloadData];
 		if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
-			[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+			[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
 		}
 	}
 }
@@ -1026,10 +1026,10 @@ LOG_LEVEL_ISUB_DEFAULT
 			[tableView scrollRectToVisible:CGRectMake(0, 0, 320, 40) animated:NO];
 		} else if (index == self.numberOfSectionIndexes - 1) {
 			NSInteger row = self.currentPlaylistCount - 1;
-			[tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+			[tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
 		} else {
 			NSInteger row = self.currentPlaylistCount / self.numberOfSectionIndexes * index;
-			[tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+			[tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
 			return -1;		
 		}
 	}
@@ -1117,7 +1117,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		
 		// Highlight the current playing song
 		if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
-			[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+			[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
 		}
 		
         if (!settingsS.isJukeboxEnabled) {

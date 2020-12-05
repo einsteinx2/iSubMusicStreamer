@@ -160,7 +160,7 @@ import CocoaLumberjackSwift
         
         songInfoContainer.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(UIDevice.isSmall() || UIDevice.isIPad() ? 45 : 60)
+            make.height.equalTo(UIDevice.isSmall() || UIDevice.isIPad() ? 50 : 60)
             make.centerX.equalToSuperview()
         }
         
