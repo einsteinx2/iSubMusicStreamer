@@ -175,6 +175,8 @@ class CacheStatusViewController: UIViewController {
             cacheSizeLabel.text = NSString.formatFileSize(Settings.shared().minFreeSpace)
         }
         freeSpaceLabel.text = NSString.formatFileSize(Cache.shared().freeSpace)
+        
+        perform(#selector(startUpdatingStats), with: nil, afterDelay: 1.0)
     }
     
     private func stopUpdatingStats() {
