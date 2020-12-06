@@ -44,11 +44,11 @@
             // TODO: Stop using a dictionary for this
             [root iterate:@"nowPlaying.entry" usingBlock:^(RXMLElement *e) {
                 NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-                [dict setObjectSafe:[[ISMSSong alloc] initWithRXMLElement:e] forKey:@"song"];
-                [dict setObjectSafe:[e attribute:@"username"] forKey:@"username"];
-                [dict setObjectSafe:[e attribute:@"minutesAgo"] forKey:@"minutesAgo"];
-                [dict setObjectSafe:[e attribute:@"playerId"] forKey:@"playerId"];
-                [dict setObjectSafe:[e attribute:@"playerName"] forKey:@"playerName"];
+                dict[@"song"] = [[ISMSSong alloc] initWithRXMLElement:e];
+                dict[@"username"] = [e attribute:@"username"];
+                dict[@"minutesAgo"] = [e attribute:@"minutesAgo"];
+                dict[@"playerId"] = [e attribute:@"playerId"];
+                dict[@"playerName"] = [e attribute:@"playerName"];
                 [songDicts addObject:dict];
             }];
             self.nowPlayingSongDicts = songDicts;

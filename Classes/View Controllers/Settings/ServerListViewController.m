@@ -116,7 +116,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.navigationItem.rightBarButtonItem = nil;
 		self.settingsTabViewController = [[SettingsTabViewController alloc] initWithNibName:@"SettingsTabViewController" bundle:nil];
 		self.settingsTabViewController.parentController = self;
-        if (UIDevice.isIPad) {
+        if (UIDevice.isPad) {
             UIView *settingsView = self.settingsTabViewController.view;
             UIView *settingsContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.width, settingsView.height)];
             settingsContainer.backgroundColor = settingsView.backgroundColor;
@@ -152,7 +152,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
     ServerEditViewController *serverEditViewController = [[ServerEditViewController alloc] init];
     serverEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-    if (UIDevice.isIPad) {
+    if (UIDevice.isPad) {
         [appDelegateS.padRootViewController presentViewController:serverEditViewController animated:YES completion:nil];
     } else {
         [self presentViewController:serverEditViewController animated:YES completion:nil];
@@ -194,7 +194,7 @@ LOG_LEVEL_ISUB_DEFAULT
     settingsS.uuid = viewObjectsS.serverToEdit.uuid;
     settingsS.lastQueryId = viewObjectsS.serverToEdit.lastQueryId;
     		
-	if (self == [[self.navigationController viewControllers] objectAtIndexSafe:0] && !UIDevice.isIPad) {
+	if (self == [[self.navigationController viewControllers] objectAtIndexSafe:0] && !UIDevice.isPad) {
 		[self.navigationController.view removeFromSuperview];
 	} else {
 		[self.navigationController popToRootViewControllerAnimated:YES];
@@ -226,7 +226,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (settingsS.isOfflineMode) {
 			settingsS.isOfflineMode = NO;
 			
-			if (UIDevice.isIPad) {
+			if (UIDevice.isPad) {
 				[appDelegateS.padRootViewController.menuViewController toggleOfflineMode];
 			} else {
 				for (UIView *subview in appDelegateS.window.subviews) {
@@ -242,7 +242,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		[databaseS setupDatabases];
 		
 		// Reset the tabs
-        if (!UIDevice.isIPad) {
+        if (!UIDevice.isPad) {
 			[appDelegateS.rootViewController.navigationController popToRootViewControllerAnimated:NO];
         }
         

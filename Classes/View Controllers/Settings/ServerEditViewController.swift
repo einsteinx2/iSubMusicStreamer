@@ -320,7 +320,7 @@ extension ServerEditViewController: SUSLoaderDelegate {
             
             self.dismiss(animated: true, completion: nil)
             
-            if UIDevice.isIPad() {
+            if UIDevice.isPad() {
                 AppDelegate.shared().padRootViewController.menuViewController.showHome()
             }
             

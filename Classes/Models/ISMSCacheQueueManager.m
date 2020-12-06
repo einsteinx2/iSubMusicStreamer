@@ -23,6 +23,7 @@
 #import "ISMSStreamManager.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "EX2SlidingNotification.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 

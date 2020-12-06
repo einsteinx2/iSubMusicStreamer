@@ -28,7 +28,7 @@
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-        if (!UIDevice.isIPad && self.isNoChatMessagesScreenShowing) {
+        if (!UIDevice.isPad && self.isNoChatMessagesScreenShowing) {
             if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
                 CGAffineTransform translate = CGAffineTransformMakeTranslation(0.0, -160.0);
                 self.noChatMessagesScreen.transform = translate;
@@ -147,7 +147,7 @@
 		
 		[self.view addSubview:self.noChatMessagesScreen];
 		
-		if (!UIDevice.isIPad) {
+		if (!UIDevice.isPad) {
 			if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 				CGAffineTransform translate = CGAffineTransformMakeTranslation(0.0, 42.0);
 				CGAffineTransform scale = CGAffineTransformMakeScale(0.75, 0.75);

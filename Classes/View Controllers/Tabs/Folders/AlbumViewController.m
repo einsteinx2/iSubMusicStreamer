@@ -7,7 +7,6 @@
 //
 
 #import "AlbumViewController.h"
-#import "ModalAlbumArtViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
@@ -172,20 +171,6 @@
 }
 
 #pragma mark Actions
-
-- (IBAction)expandCoverArt:(id)sender {
-	if (self.myAlbum.coverArtId) {
-		ModalAlbumArtViewController *largeArt = nil;
-		largeArt = [[ModalAlbumArtViewController alloc] initWithAlbum:self.myAlbum
-													   numberOfTracks:self.dataModel.songsCount
-														  albumLength:self.dataModel.folderLength];
-        if (UIDevice.isIPad) {
-			[appDelegateS.padRootViewController presentViewController:largeArt animated:YES completion:nil];
-        } else {
-            [self presentViewController:largeArt animated:YES completion:nil];
-        }
-	}
-}
 
 - (IBAction)nowPlayingAction:(id)sender {
     PlayerViewController *playerViewController = [[PlayerViewController alloc] init];

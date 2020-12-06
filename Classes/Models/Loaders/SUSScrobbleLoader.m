@@ -10,6 +10,7 @@
 #import "NSMutableURLRequest+SUS.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Defines.h"
 
 @implementation SUSScrobbleLoader
 

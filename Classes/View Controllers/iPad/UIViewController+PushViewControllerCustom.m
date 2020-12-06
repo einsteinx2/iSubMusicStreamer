@@ -24,7 +24,7 @@
 
 - (void)showPlayer {
 	// Show the player
-	if (UIDevice.isIPad) {
+	if (UIDevice.isPad) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
 	} else {
         PlayerViewController *playerViewController = [[PlayerViewController alloc] init];

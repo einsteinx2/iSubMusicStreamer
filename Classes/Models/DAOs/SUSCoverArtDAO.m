@@ -40,7 +40,7 @@
 - (FMDatabaseQueue *)dbQueue
 {
 	if (self.isLarge)
-		return UIDevice.isIPad ? databaseS.coverArtCacheDb540Queue : databaseS.coverArtCacheDb320Queue;
+		return UIDevice.isPad ? databaseS.coverArtCacheDb540Queue : databaseS.coverArtCacheDb320Queue;
 	else
 		return databaseS.coverArtCacheDb60Queue;
 }

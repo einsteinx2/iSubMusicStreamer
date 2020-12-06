@@ -10,12 +10,11 @@
 #define iSub_iSubAppDelegate_h
 
 #import "SUSLoaderDelegate.h"
-#import "EX2Kit.h"
 #import <AVKit/AVKit.h>
 
 #define appDelegateS [iSubAppDelegate sharedInstance]
 
-@class BBSplitViewController, PadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, SettingsViewController, FoldersViewController, AudioStreamer, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HLSReverseProxyServer, ServerListViewController;
+@class BBSplitViewController, PadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, SettingsViewController, FoldersViewController, AudioStreamer, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HLSReverseProxyServer, ServerListViewController, EX2Reachability;
 
 NS_ASSUME_NONNULL_BEGIN
 

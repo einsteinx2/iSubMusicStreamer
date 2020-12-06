@@ -38,7 +38,7 @@
 #pragma mark Rotation handling
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    if (!UIDevice.isIPad && self.isNoSongsScreenShowing) {
+    if (!UIDevice.isPad && self.isNoSongsScreenShowing) {
         [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
             if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
                 self.noSongsScreen.transform = CGAffineTransformTranslate(self.noSongsScreen.transform, 0.0, 110.0);
@@ -646,7 +646,7 @@
 		
 		[self.view addSubview:self.noSongsScreen];
 		
-		if (!UIDevice.isIPad) {
+		if (!UIDevice.isPad) {
 			if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 				self.noSongsScreen.transform = CGAffineTransformTranslate(self.noSongsScreen.transform, 0.0, 23.0);
 			}

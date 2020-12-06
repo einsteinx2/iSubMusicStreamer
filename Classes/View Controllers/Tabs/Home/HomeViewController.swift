@@ -45,7 +45,7 @@ import SnapKit
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
-        if UIApplication.orientation().isPortrait || UIDevice.isIPad() {
+        if UIApplication.orientation().isPortrait || UIDevice.isPad() {
             for button in buttons {
                 button.showLabel()
             }
@@ -56,10 +56,10 @@ import SnapKit
                 make.bottom.equalToSuperview().offset(-10)
             }
             verticalStack.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(UIDevice.isIPad() ? 50 : 20)
-                make.trailing.equalToSuperview().offset(UIDevice.isIPad() ? -50 : -20)
+                make.leading.equalToSuperview().offset(UIDevice.isPad() ? 50 : 20)
+                make.trailing.equalToSuperview().offset(UIDevice.isPad() ? -50 : -20)
                 make.centerY.equalToSuperview().offset(15)
-                make.height.equalToSuperview().multipliedBy(UIDevice.isIPad() ? 0.50 : 0.75)
+                make.height.equalToSuperview().multipliedBy(UIDevice.isPad() ? 0.50 : 0.75)
             }
             songInfoButton.snp.remakeConstraints { make in
                 make.height.equalTo(80)
@@ -244,7 +244,7 @@ import SnapKit
         searchSegment.selectedSegmentIndex = 3
         searchSegmentContainer.addSubview(searchSegment)
         
-        if UIDevice.isIPad() {
+        if UIDevice.isPad() {
             songInfoButton.isHidden = true
             songInfoButton.isUserInteractionEnabled = false
         }
@@ -403,7 +403,7 @@ extension HomeViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         
-        var query = searchBar.text?.trimmingLeadingAndTrailingWhitespace() ?? ""
+        var query = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         var parameters = [String: String]()
         var action = ""
         if Settings.shared().isNewSearchAPI {

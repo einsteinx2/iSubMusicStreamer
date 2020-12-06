@@ -24,6 +24,4 @@
 
 - (void)cancelLoad;
 
-- (IBAction)expandCoverArt:(id)sender;
-
 @end

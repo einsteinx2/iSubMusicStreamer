@@ -68,7 +68,7 @@ import CocoaLumberjackSwift
     override func updateViewConstraints() {
         super.updateViewConstraints()
         updateDownloadProgress(animated: false)
-        if UIApplication.orientation().isPortrait || UIDevice.isIPad() {
+        if UIApplication.orientation().isPortrait || UIDevice.isPad() {
             coverArtPageControl.view.snp.remakeConstraints { make in
                 make.height.equalTo(coverArtPageControl.view.snp.width).offset(20)
                 make.top.leading.equalToSuperview().offset(20)
@@ -76,7 +76,7 @@ import CocoaLumberjackSwift
             }
             
             verticalStackContainer.snp.remakeConstraints { make in
-                if UIDevice.isIPad() {
+                if UIDevice.isPad() {
                     make.width.equalTo(coverArtPageControl.view)
                 } else {
                     make.width.equalTo(coverArtPageControl.view).multipliedBy(0.9)
@@ -88,7 +88,7 @@ import CocoaLumberjackSwift
             
             verticalStack.snp.remakeConstraints { make in
                 make.leading.trailing.equalToSuperview()
-                if UIDevice.isSmall() || UIDevice.isIPad() {
+                if UIDevice.isSmall() || UIDevice.isPad() {
                     make.height.equalToSuperview().multipliedBy(0.9)
                     make.centerY.equalToSuperview()
                 } else {
@@ -160,11 +160,11 @@ import CocoaLumberjackSwift
         
         songInfoContainer.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(UIDevice.isSmall() || UIDevice.isIPad() ? 50 : 60)
+            make.height.equalTo(UIDevice.isSmall() || UIDevice.isPad() ? 50 : 60)
             make.centerX.equalToSuperview()
         }
         
-        songNameLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall() || UIDevice.isIPad() ? 20 : 22)
+        songNameLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall() || UIDevice.isPad() ? 20 : 22)
         songNameLabel.textColor = .label
         songInfoContainer.addSubview(songNameLabel)
         songNameLabel.snp.makeConstraints { make in
@@ -173,7 +173,7 @@ import CocoaLumberjackSwift
             make.centerX.top.equalToSuperview()
         }
         
-        artistNameLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall() || UIDevice.isIPad() ? 18 : 16)
+        artistNameLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall() || UIDevice.isPad() ? 18 : 16)
         artistNameLabel.textColor = .secondaryLabel
         songInfoContainer.addSubview(artistNameLabel)
         artistNameLabel.snp.makeConstraints { make in
@@ -359,7 +359,7 @@ import CocoaLumberjackSwift
         equalizerButton.setImage(UIImage(systemName: "slider.vertical.3", withConfiguration: equalizerButtonConfig), for: .normal)
         equalizerButton.addClosure(for: .touchUpInside) { [unowned self] in
             let controller = EqualizerViewController(nibName: "EqualizerViewController", bundle: nil)
-            if UIDevice.isIPad() {
+            if UIDevice.isPad() {
                 self.present(controller, animated: true, completion: nil)
             } else {
                 self.navigationController?.pushViewController(controller, animated: true)
@@ -439,7 +439,7 @@ import CocoaLumberjackSwift
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: ISMSNotification_JukeboxDisabled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: ISMSNotification_JukeboxEnabled)
         
-        if UIDevice.isIPad() {
+        if UIDevice.isPad() {
             NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateQuickSkipButtons), name: ISMSNotification_QuickSkipSecondsSettingChanged)
         }
         

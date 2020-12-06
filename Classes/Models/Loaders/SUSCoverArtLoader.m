@@ -66,7 +66,7 @@ static void initialize_navigationBarImages() {
 
 - (FMDatabaseQueue *)dbQueue {
 	if (self.isLarge) {
-		return UIDevice.isIPad ? databaseS.coverArtCacheDb540Queue : databaseS.coverArtCacheDb320Queue;
+		return UIDevice.isPad ? databaseS.coverArtCacheDb540Queue : databaseS.coverArtCacheDb320Queue;
 	} else {
 		return databaseS.coverArtCacheDb60Queue;
 	}
@@ -98,7 +98,7 @@ static void initialize_navigationBarImages() {
                     CGFloat scale = UIScreen.mainScreen.scale;
                     CGFloat size = 0.0;
                     if (self.isLarge) {
-                        if (UIDevice.isIPad) {
+                        if (UIDevice.isPad) {
                             size = scale * 1080;
                         } else {
                             size = scale * 640;

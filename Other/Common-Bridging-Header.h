@@ -67,6 +67,9 @@
 #import "ISMSAlbum.h"
 #import "ISMSServer.h"
 
+// Utils
+#import "EX2Dispatch.h"
+
 /*
  * Extensions
  */
@@ -74,6 +77,10 @@
 #import "UIViewController+PushViewControllerCustom.h"
 #import "NSString+time.h"
 #import "NSMutableURLRequest+SUS.h"
+#import "UIApplication+Helper.h"
+#import "UIDevice+Info.h"
+#import "NSNotificationCenter+MainThread.h"
+#import "NSString+FileSize.h"
 
 /*
  * Singletons
@@ -93,7 +100,6 @@
  * Frameworks
  */
 
-#import "EX2Kit.h"
 #import "Flurry.h"
 #import "OBSlider.h"
 #import "FMDatabaseQueueAdditions.h"

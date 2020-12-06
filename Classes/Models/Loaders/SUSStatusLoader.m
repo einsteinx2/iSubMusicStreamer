@@ -13,8 +13,6 @@
 #import "Defines.h"
 #import "EX2Kit.h"
 
-LOG_LEVEL_ISUB_DEFAULT
-
 @implementation SUSStatusLoader
 
 - (SUSLoaderType)type {

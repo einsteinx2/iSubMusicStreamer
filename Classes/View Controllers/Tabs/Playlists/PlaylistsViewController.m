@@ -44,7 +44,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        if (UIDevice.isIPad) return;
+        if (UIDevice.isPad) return;
         
         if (UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
             self.noPlaylistsScreen.transform = CGAffineTransformTranslate(self.noPlaylistsScreen.transform, 0.0, -23.0);
@@ -450,7 +450,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	[self.view addSubview:self.noPlaylistsScreen];
 	
-	if (!UIDevice.isIPad) {
+	if (!UIDevice.isPad) {
 		if (UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 			//noPlaylistsScreen.transform = CGAffineTransformScale(noPlaylistsScreen.transform, 0.75, 0.75);
 			self.noPlaylistsScreen.transform = CGAffineTransformTranslate(self.noPlaylistsScreen.transform, 0.0, 23.0);

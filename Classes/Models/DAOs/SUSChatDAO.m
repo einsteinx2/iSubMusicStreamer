@@ -11,6 +11,7 @@
 #import "NSError+ISMSError.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "EX2Kit.h"
+#import "Defines.h"
 
 @implementation SUSChatDAO
 

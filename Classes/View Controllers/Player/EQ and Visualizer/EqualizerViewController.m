@@ -10,6 +10,7 @@
 #import "EqualizerView.h"
 #import "EqualizerPointView.h"
 #import "EqualizerPathView.h"
+#import "SnappySlider.h"
 #import "Flurry.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
@@ -36,7 +37,7 @@
                 }
             }
             
-            if (!UIDevice.isIPad) {
+            if (!UIDevice.isPad) {
                 self.controlsContainer.alpha = 1.0;
                 self.controlsContainer.userInteractionEnabled = YES;
                 
@@ -56,7 +57,7 @@
             
             UIApplication.sharedApplication.idleTimerDisabled = YES;
             
-            if (!UIDevice.isIPad) {
+            if (!UIDevice.isPad) {
                 self.controlsContainer.alpha = 0.0;
                 self.controlsContainer.userInteractionEnabled = NO;
                 
@@ -141,7 +142,7 @@
 	self.lastGainValue = self.gainSlider.value;
 	self.gainBoostAmountLabel.text = [NSString stringWithFormat:@"%.1fx", self.gainSlider.value];
 	
-	if (UIDevice.isIPad) {
+	if (UIDevice.isPad) {
 		self.gainSlider.y += 7;
 		self.gainBoostLabel.y += 7;
 		self.gainBoostAmountLabel.y += 7;
@@ -155,7 +156,7 @@
     self.savePresetButton.x -= 5.;
     self.deletePresetButton.x -= 5.;
 	
-	if (UIInterfaceOrientationIsLandscape(UIApplication.orientation) && !UIDevice.isIPad) {
+	if (UIInterfaceOrientationIsLandscape(UIApplication.orientation) && !UIDevice.isPad) {
 		self.controlsContainer.alpha = 0.0;
 		self.controlsContainer.userInteractionEnabled = NO;
 		
@@ -205,7 +206,7 @@
 		
 	[self createEqViews];
 	
-	if (!UIDevice.isIPad && UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
+	if (!UIDevice.isPad && UIInterfaceOrientationIsLandscape(UIApplication.orientation)) {
 		self.equalizerPath.alpha = 0.0;
 		
 		for (EqualizerPointView *view in self.equalizerPointViews) {
@@ -465,7 +466,7 @@
 	else if ([touchedView isKindOfClass:[EqualizerView class]]) {
 		/*if ([touch tapCount] == 1)
 		{
-			if (!UIDevice.isIPad && UIInterfaceOrientationIsLandscape(UIApplication.orientation))
+			if (!UIDevice.isPad && UIInterfaceOrientationIsLandscape(UIApplication.orientation))
 			{
 				[self showLandscapeVisualizerButtons];
 			}
@@ -478,7 +479,7 @@
 			[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(type:) object:nil];
 			
 			// Only create EQ points in portrait mode when EQ is visible
-			if (UIDevice.isIPad || UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
+			if (UIDevice.isPad || UIInterfaceOrientationIsPortrait(UIApplication.orientation)) {
 				// add a point
 				//DLog(@"double tap, adding point");
 				

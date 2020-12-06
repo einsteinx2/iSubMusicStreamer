@@ -115,7 +115,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	}];
 	
 	// Setup music player cover art cache database
-	if (UIDevice.isIPad)
+	if (UIDevice.isPad)
 	{
 		// Only load large album art DB if this is an iPad
 		path = [NSString stringWithFormat:@"%@/coverArtCache540.db", self.databaseFolderPath];
@@ -622,7 +622,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	
 	// Clear the player cover art
-	FMDatabaseQueue *dbQueue = UIDevice.isIPad ? self.coverArtCacheDb540Queue : self.coverArtCacheDb320Queue;
+	FMDatabaseQueue *dbQueue = UIDevice.isPad ? self.coverArtCacheDb540Queue : self.coverArtCacheDb320Queue;
 	[dbQueue inDatabase:^(FMDatabase *db)
 	{
 		[db executeUpdate:@"DROP TABLE IF EXISTS coverArtCache"];

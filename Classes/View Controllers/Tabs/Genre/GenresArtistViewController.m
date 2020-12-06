@@ -85,7 +85,7 @@
 	// Start the player	
 	[musicS playSongAtPosition:0];
 	
-	if (UIDevice.isIPad) {
+	if (UIDevice.isPad) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
 	} else {
         PlayerViewController *playerViewController = [[PlayerViewController alloc] init];

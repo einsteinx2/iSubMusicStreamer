@@ -212,7 +212,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 	
 	// If the table is empty, pop back one view, otherwise reload the table data
 	if (self.listOfAlbums.count + self.listOfSongs.count == 0) {
-		if (UIDevice.isIPad) {
+		if (UIDevice.isPad) {
             [appDelegateS.padRootViewController.currentContentNavigationController popToRootViewControllerAnimated:YES];
 		} else {
 			// Handle the moreNavigationController stupidity
@@ -278,7 +278,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 	[EX2Dispatch runInMainThreadAndWaitUntilDone:NO block:^ {
         [viewObjectsS hideLoadingScreen];
         [musicS playSongAtPosition:0];
-        if (UIDevice.isIPad) {
+        if (UIDevice.isPad) {
             [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
         } else {
             PlayerViewController *playerViewController = [[PlayerViewController alloc] init];

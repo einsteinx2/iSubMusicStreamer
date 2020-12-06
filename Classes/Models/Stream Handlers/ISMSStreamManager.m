@@ -286,7 +286,10 @@ LOG_LEVEL_ISUB_DEFAULT
             DDLogInfo(@"[ISMSStreamManager] Removing song from cached songs table: %@", handler.mySong);
             [handler.mySong removeFromCachedSongsTableDbQueue];
         }
-        [self.handlerStack removeObjectAtIndexSafe:index];
+        
+        if (index < self.handlerStack.count) {
+            [self.handlerStack removeObjectAtIndex:index];
+        }
 	}
 	
 	[self saveHandlerStack];

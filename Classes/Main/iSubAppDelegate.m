@@ -26,6 +26,7 @@
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
+#import "EX2SlidingNotification.h"
 #import <UserNotifications/UserNotifications.h>
 #import <CoreFoundation/CoreFoundation.h>
 #import <SystemConfiguration/SCNetworkReachability.h>
@@ -74,7 +75,7 @@ LOG_LEVEL_ISUB_DEFAULT
     
     // Adjust the window to the correct size before anything else loads to prevent various sizing/positioning issues
     // NOTE: This is still needed, probably due to the old school XIB file used for the main window
-    if (!UIDevice.isIPad) {
+    if (!UIDevice.isPad) {
         CGSize screenSize = UIScreen.mainScreen.preferredMode.size;
         CGFloat screenScale = UIScreen.mainScreen.scale;
         self.window.size = CGSizeMake(screenSize.width / screenScale, screenSize.height / screenScale);
@@ -156,7 +157,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self loadFlurryAnalytics];
     
 	// Create and display UI
-	if (UIDevice.isIPad) {
+	if (UIDevice.isPad) {
 		self.padRootViewController = [[PadRootViewController alloc] initWithNibName:nil bundle:nil];
 		[self.window setBackgroundColor:[UIColor clearColor]];
         self.window.rootViewController = self.padRootViewController;
@@ -252,7 +253,7 @@ LOG_LEVEL_ISUB_DEFAULT
         self.referringAppUrl = [NSURL URLWithString:[queryParameters objectForKey:@"ref"]];
         
         // On the iPad we need to reload the menu table to see the back button
-        if (UIDevice.isIPad) {
+        if (UIDevice.isPad) {
             [self.padRootViewController.menuViewController loadCellContents];
         }
     }
@@ -347,7 +348,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	if (isSessionStarted) {
 		// Send the firmware version
-        [Flurry logEvent:@"DeviceInfo" withParameters:@{@"FirmwareVersion": UIDevice.currentDevice.completeVersionString, @"HardwareVersion": UIDevice.currentDevice.platform}];
+        [Flurry logEvent:@"DeviceInfo" withParameters:@{@"FirmwareVersion": UIDevice.completeVersionString, @"HardwareVersion": UIDevice.platform}];
 	}
 }
 
@@ -533,7 +534,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[streamManagerS cancelAllStreams];
 	[cacheQueueManagerS stopDownloadQueue];
 
-    if (UIDevice.isIPad) {
+    if (UIDevice.isPad) {
 		[self.padRootViewController.menuViewController toggleOfflineMode];
     } else {
 		[self.mainTabBarController.view removeFromSuperview];
@@ -542,7 +543,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[databaseS closeAllDatabases];
 	[databaseS setupDatabases];
 	
-	if (UIDevice.isIPad) {
+	if (UIDevice.isPad) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
 	} else {
 		self.currentTabBarController = self.offlineTabBarController;
@@ -561,7 +562,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	[audioEngineS.player stop];
 	
-    if (UIDevice.isIPad) {
+    if (UIDevice.isPad) {
 		[self.padRootViewController.menuViewController toggleOfflineMode];
     } else {
 		[self.offlineTabBarController.view removeFromSuperview];
@@ -572,7 +573,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self checkServer];
 	[cacheQueueManagerS startDownloadQueue];
 	
-	if (UIDevice.isIPad) {
+	if (UIDevice.isPad) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
 	} else {
 		[viewObjectsS orderMainTabBarController];
@@ -631,7 +632,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)showSettings {
-	if (UIDevice.isIPad) {
+	if (UIDevice.isPad) {
 		[self.padRootViewController.menuViewController showSettings];
 	} else {
 		self.serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
@@ -669,7 +670,7 @@ LOG_LEVEL_ISUB_DEFAULT
         return;
     }
     
-//    if (UIDevice.isIPad) {
+//    if (UIDevice.isPad) {
 //        // Turn off repeat one so user doesn't get stuck
 //        if (playlistS.repeatMode == ISMSRepeatMode_RepeatOne) {
 //            playlistS.repeatMode = ISMSRepeatMode_Normal;

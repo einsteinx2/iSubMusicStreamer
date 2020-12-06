@@ -17,6 +17,7 @@
 #import "SUSCoverArtDAO.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "EX2SlidingNotification.h"
 #import <MediaPlayer/MediaPlayer.h>
 
 LOG_LEVEL_ISUB_DEFAULT
@@ -196,7 +197,7 @@ double startSongSeconds = 0.0;
 #pragma mark Helper Methods
 
 - (BOOL)showPlayerIcon {
-    return !UIDevice.isIPad;
+    return !UIDevice.isPad;
 }
 
 - (void)showPlayer {

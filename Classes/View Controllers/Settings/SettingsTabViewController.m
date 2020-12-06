@@ -145,7 +145,7 @@ LOG_LEVEL_ISUB_DEFAULT
 				default: break;
 			}
 			
-            if (UIDevice.isIPad) {
+            if (UIDevice.isPad) {
                 // Update the quick skip buttons in the player with the new values on iPad since player is always visible
                 [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_QuickSkipSecondsSettingChanged];
             }
@@ -295,7 +295,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		} else if (sender == self.enableSongsTabSwitch) {
 			if (self.enableSongsTabSwitch.on) {
 				settingsS.isSongsTabEnabled = YES;
-				if (UIDevice.isIPad) {
+				if (UIDevice.isPad) {
 					[appDelegateS.padRootViewController.menuViewController loadCellContents];
 				} else {
 					NSMutableArray *controllers = [NSMutableArray arrayWithArray:appDelegateS.mainTabBarController.viewControllers];
@@ -308,7 +308,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			} else {
 				settingsS.isSongsTabEnabled = NO;
 
-                if (UIDevice.isIPad) {
+                if (UIDevice.isPad) {
 					[appDelegateS.padRootViewController.menuViewController loadCellContents];
                 } else {
 					[viewObjectsS orderMainTabBarController];
@@ -402,7 +402,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)popFoldersTab {
-    if (UIDevice.isIPad) {
+    if (UIDevice.isPad) {
 		[appDelegateS.artistsNavigationController popToRootViewControllerAnimated:NO];
     } else {
 		[appDelegateS.rootViewController.navigationController popToRootViewControllerAnimated:NO];

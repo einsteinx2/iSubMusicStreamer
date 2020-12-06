@@ -12,6 +12,7 @@
 #import "NSError+ISMSError.h"
 #import "ISMSAlbum.h"
 #import "EX2Kit.h"
+#import "Defines.h"
 
 @implementation SUSQuickAlbumsLoader
 
