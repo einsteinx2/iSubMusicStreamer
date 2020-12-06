@@ -62,8 +62,15 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 
     self.tableView.rowHeight = Defines.rowHeight;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
+    
+    // Sort the subfolders in the same way that Subsonic sorts them (indefinite articles)
+    [self.listOfAlbums sortUsingComparator:^NSComparisonResult(NSArray* _Nonnull obj1, NSArray* _Nonnull obj2) {
+        NSString *name1 = [obj1 objectAtIndexSafe:1];
+        NSString *name2 = [obj2 objectAtIndexSafe:1];
+        return [name1 caseInsensitiveCompareWithoutIndefiniteArticles:name2];
+    }];
+    [self.tableView reloadData];
 }
-
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -125,7 +132,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
     if (self.listOfAlbums.count > 10) {
         __block NSArray *secInfo = nil;
         [databaseS.albumListCacheDbQueue inDatabase:^(FMDatabase *db) {
-            [db executeUpdate:@"DROP TABLE IF EXSITS albumIndex"];
+            [db executeUpdate:@"DROP TABLE IF EXISTS albumIndex"];
             [db executeUpdate:@"CREATE TEMP TABLE albumIndex (album TEXT)"];
             
             [db beginTransaction];
