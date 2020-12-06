@@ -748,13 +748,15 @@ LOG_LEVEL_ISUB_DEFAULT
     
     for (NSNumber *index in rowIndexes) {
         NSString *playlistId = [[self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:[index intValue]] playlistId];
-        NSDictionary *parameters = [NSDictionary dictionaryWithObject:n2N(playlistId) forKey:@"id"];
-        DDLogVerbose(@"parameters: %@", parameters);
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"deletePlaylist" parameters:parameters];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"deletePlaylist" parameters:@{@"id": n2N(playlistId)}];
         NSURLSessionDataTask *dataTask = [self.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
             if (error) {
                 // TODO: Handle error
             }
+            [EX2Dispatch runInMainThreadAsync:^{
+                [viewObjectsS hideLoadingScreen];
+                [self segmentAction:nil];
+            }];
         }];
         [dataTask resume];
     }
