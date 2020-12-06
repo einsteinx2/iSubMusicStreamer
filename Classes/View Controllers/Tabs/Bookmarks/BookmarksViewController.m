@@ -73,7 +73,7 @@
 	
     self.navigationItem.rightBarButtonItem = nil;
 	if (musicS.showPlayerIcon) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 	}
 	
 	self.tableView.tableHeaderView = nil;
@@ -92,7 +92,7 @@
 		self.noBookmarksScreen.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
 		self.noBookmarksScreen.frame = CGRectMake(40, 100, 240, 180);
 		self.noBookmarksScreen.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-		self.noBookmarksScreen.image = [UIImage imageNamed:@"loading-screen-image.png"];
+		self.noBookmarksScreen.image = [UIImage imageNamed:@"loading-screen-image"];
 		self.noBookmarksScreen.alpha = .80;
 		
 		UILabel *textLabel = [[UILabel alloc] init];

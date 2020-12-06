@@ -26,13 +26,13 @@ import SnapKit
     private let topRowStack = UIStackView()
     private let bottomRowStack = UIStackView()
     private let verticalStack = UIStackView()
-
-    private let quickAlbumsButton = HomeViewButton(icon: UIImage(named: "home-quick-ipad"), title: "Quick\nAlbums")
-    private let serverShuffleButton = HomeViewButton(icon: UIImage(named: "home-shuffle-ipad"), title: "Server\nShuffle")
-    private let jukeboxButton = HomeViewButton(icon: UIImage(named: "home-jukebox-off-ipad"), title: "Jukebox\nMode OFF")
-    private let settingsButton = HomeViewButton(icon: UIImage(named: "home-settings-ipad"), title: "App\nSettings")
+    
+    private let quickAlbumsButton = HomeViewButton(icon: UIImage(named: "home-quick"), title: "Quick\nAlbums")
+    private let serverShuffleButton = HomeViewButton(icon: UIImage(named: "home-shuffle"), title: "Server\nShuffle")
+    private let jukeboxButton = HomeViewButton(icon: UIImage(named: "home-jukebox-off"), title: "Jukebox\nMode OFF")
+    private let settingsButton = HomeViewButton(icon: UIImage(named: "home-settings"), title: "App\nSettings")
     private let spacerButton = HomeViewButton(icon: nil, title: "")
-    private let chatButton = HomeViewButton(icon: UIImage(named: "home-chat-ipad"), title: "Server\nChat")
+    private let chatButton = HomeViewButton(icon: UIImage(named: "home-chat"), title: "Server\nChat")
     private var buttons: [HomeViewButton] {
         return [quickAlbumsButton, serverShuffleButton, jukeboxButton, settingsButton, spacerButton, chatButton]
     }
@@ -168,14 +168,14 @@ import SnapKit
         
         jukeboxButton.setAction { [unowned self] in
             if Settings.shared().isJukeboxEnabled {
-                self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-off-ipad"))
+                self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-off"))
                 Settings.shared().isJukeboxEnabled = false
                 AppDelegate.shared().window.backgroundColor = ViewObjects.shared().windowColor
                 NotificationCenter.postNotificationToMainThread(name: ISMSNotification_JukeboxDisabled)
                 Flurry.logEvent("JukeboxDisabled")
             } else {
                 AudioEngine.shared().player?.stop()
-                self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-on-ipad"))
+                self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-on"))
                 Settings.shared().isJukeboxEnabled = true
                 Jukebox.shared().getInfo()
                 AppDelegate.shared().window.backgroundColor = ViewObjects.shared().jukeboxColor
@@ -258,9 +258,9 @@ import SnapKit
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addURLRefBackButton()
-        navigationItem.rightBarButtonItem = Music.shared().showPlayerIcon ? UIBarButtonItem(image: UIImage(named: "now-playing"), style: .plain, target: self, action: #selector(nowPlayingAction(sender:))) : nil
+        navigationItem.rightBarButtonItem = Music.shared().showPlayerIcon ? UIBarButtonItem(image: UIImage(systemName: "music.quarternote.3"), style: .plain, target: self, action: #selector(nowPlayingAction(sender:))) : nil
         
-        let jukeboxImageName = Settings.shared().isJukeboxEnabled ? "home-jukebox-on-ipad" : "home-jukebox-off-ipad"
+        let jukeboxImageName = Settings.shared().isJukeboxEnabled ? "home-jukebox-on" : "home-jukebox-off"
         jukeboxButton.setIcon(image: UIImage(named: jukeboxImageName))
         
         searchSegment.alpha = 0.0
@@ -332,7 +332,7 @@ import SnapKit
     }
     
     @objc private func jukeboxOff() {
-        jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-off-ipad"))
+        jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-off"))
         initSongInfo()
     }
     

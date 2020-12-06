@@ -289,7 +289,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[detailsLabel setText:[NSString stringWithFormat:@"username: %@", aServer.username]];
 	[cell.contentView addSubview:detailsLabel];
 	
-    UIImage *typeImage = [UIImage imageNamed:@"server-subsonic.png"];
+    UIImage *typeImage = [UIImage imageNamed:@"server-subsonic"];
 
 	UIImageView *serverType = [[UIImageView alloc] initWithImage:typeImage];
 	serverType.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
@@ -298,9 +298,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	if ([settingsS.urlString isEqualToString:aServer.url] && [settingsS.username isEqualToString:aServer.username] && [settingsS.password isEqualToString:aServer.password]) {
 		UIImageView *currentServerMarker = [[UIImageView alloc] init];
         if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
-            currentServerMarker.image = [[UIImage imageNamed:@"current-server.png"] imageWithTint:UIColor.whiteColor];
+            currentServerMarker.image = [[UIImage imageNamed:@"current-server"] imageWithTint:UIColor.whiteColor];
         } else {
-            currentServerMarker.image = [UIImage imageNamed:@"current-server.png"];
+            currentServerMarker.image = [UIImage imageNamed:@"current-server"];
         }
 		[cell.contentView addSubview:currentServerMarker];
 		

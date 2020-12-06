@@ -12,24 +12,13 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */; };
 		28C286E10D94DF7D0034E888 /* FoldersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* FoldersViewController.m */; };
-		5301583D15081B0A00B54CEF /* settings-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5301583915081B0A00B54CEF /* settings-tabbaricon@2x.png */; };
-		5301583F15081B0A00B54CEF /* settings-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5301583915081B0A00B54CEF /* settings-tabbaricon@2x.png */; };
 		530388A9116571920043292D /* AllSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530388A8116571920043292D /* AllSongsViewController.m */; };
 		5306236D14D3295300D320A8 /* EqualizerPathView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306236C14D3295300D320A8 /* EqualizerPathView.m */; };
 		5306236F14D3295300D320A8 /* EqualizerPathView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306236C14D3295300D320A8 /* EqualizerPathView.m */; };
-		5306239714D4BCAD00D320A8 /* eqView@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5306239314D4BCAD00D320A8 /* eqView@2x.png */; };
-		5306239914D4BCAD00D320A8 /* eqView@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5306239314D4BCAD00D320A8 /* eqView@2x.png */; };
 		530738F41FAF6A72005C2650 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 530738F31FAF6A72005C2650 /* Media.xcassets */; };
 		530738F51FAF6A72005C2650 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 530738F31FAF6A72005C2650 /* Media.xcassets */; };
-		530A5F881516703F0081A83A /* playing-cell-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 530A5F841516703F0081A83A /* playing-cell-icon@2x.png */; };
-		530A5F8A1516703F0081A83A /* playing-cell-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 530A5F841516703F0081A83A /* playing-cell-icon@2x.png */; };
-		530A5F9015167CBA0081A83A /* playing-cell-icon-white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 530A5F8C15167CBA0081A83A /* playing-cell-icon-white@2x.png */; };
-		530A5F9215167CBA0081A83A /* playing-cell-icon-white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 530A5F8C15167CBA0081A83A /* playing-cell-icon-white@2x.png */; };
 		530B417211B607A200743C09 /* CacheViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530B417011B607A200743C09 /* CacheViewController.m */; };
 		530B417311B607A200743C09 /* CacheViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 530B417111B607A200743C09 /* CacheViewController.xib */; };
-		530B960711E8EC86002EA08E /* loading-screen-image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 530B960611E8EC86002EA08E /* loading-screen-image@2x.png */; };
-		530B960911E8ED33002EA08E /* settings-page@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 530B960811E8ED33002EA08E /* settings-page@2x.png */; };
-		5314B4EF126FD20300CDB511 /* home-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5314B4ED126FD20300CDB511 /* home-tabbaricon@2x.png */; };
 		531D3A01255AB5F6000CB0DF /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 531D39FF255AB5F6000CB0DF /* MainWindow.xib */; };
 		531D3A02255AB5F6000CB0DF /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 531D39FF255AB5F6000CB0DF /* MainWindow.xib */; };
 		531D3A03255AB5F6000CB0DF /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 531D3A00255AB5F6000CB0DF /* MainWindow-iPad.xib */; };
@@ -130,8 +119,6 @@
 		5359C859256EA8FE00C8F8DC /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359C858256EA8FE00C8F8DC /* ObjC.swift */; };
 		5359C85A256EA8FE00C8F8DC /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359C858256EA8FE00C8F8DC /* ObjC.swift */; };
 		535B727E134D273B003E0E1C /* SearchAllViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 535B727C134D26E2003E0E1C /* SearchAllViewController.m */; };
-		535CA9C812DBCA9000389DA1 /* folders-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CA9C612DBCA9000389DA1 /* folders-tabbaricon@2x.png */; };
-		535CB22512E0014A00389DA1 /* server-subsonic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CB22112E0014A00389DA1 /* server-subsonic@2x.png */; };
 		53614ACA116432DA0088ABC0 /* ServerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53614AC8116432DA0088ABC0 /* ServerListViewController.m */; };
 		53614BD9116467420088ABC0 /* AllSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53614BD7116467420088ABC0 /* AllSongsViewController.xib */; };
 		536585811478920D00FE57A5 /* EqualizerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365857F1478920B00FE57A5 /* EqualizerViewController.m */; };
@@ -165,8 +152,6 @@
 		537E6C20181208A200127E29 /* CustomUITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E6C1D181208A200127E29 /* CustomUITabBarController.m */; };
 		537E9A0A14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E9A0914F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m */; };
 		537E9A0C14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E9A0914F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m */; };
-		537EF7B9182B2F2200968FE0 /* controller-slider-thumb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 537EF7B4182B2F2200968FE0 /* controller-slider-thumb@2x.png */; };
-		537EF7BB182B2F2200968FE0 /* controller-slider-thumb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 537EF7B4182B2F2200968FE0 /* controller-slider-thumb@2x.png */; };
 		5381F8061E96FBFB00AAA9BD /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5381F8051E96FBFB00AAA9BD /* Photos.framework */; };
 		538229F611C98091003F1E23 /* CacheAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 538229F411C98091003F1E23 /* CacheAlbumViewController.m */; };
 		538229F711C98091003F1E23 /* CacheAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538229F511C98091003F1E23 /* CacheAlbumViewController.xib */; };
@@ -199,34 +184,18 @@
 		53A2BE26147DF09800E44822 /* EqualizerPointView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A2BE23147DF09800E44822 /* EqualizerPointView.m */; };
 		53A2BE28147DF13600E44822 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A2BE27147DF13600E44822 /* OpenGLES.framework */; };
 		53A2BE2A147DF14600E44822 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A2BE27147DF13600E44822 /* OpenGLES.framework */; };
-		53AAF18911DA8D7500447FF7 /* albums-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF18811DA8D7500447FF7 /* albums-tabbaricon@2x.png */; };
-		53AAF19311DA90D800447FF7 /* artists-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF18C11DA90D800447FF7 /* artists-tabbaricon@2x.png */; };
-		53AAF19411DA90D800447FF7 /* bookmarks-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF18D11DA90D800447FF7 /* bookmarks-tabbaricon@2x.png */; };
-		53AAF19511DA90D800447FF7 /* cache-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF18E11DA90D800447FF7 /* cache-tabbaricon@2x.png */; };
-		53AAF19611DA90D800447FF7 /* genres-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF18F11DA90D800447FF7 /* genres-tabbaricon@2x.png */; };
-		53AAF19711DA90D800447FF7 /* playing-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF19011DA90D800447FF7 /* playing-tabbaricon@2x.png */; };
-		53AAF19811DA90D800447FF7 /* playlists-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF19111DA90D800447FF7 /* playlists-tabbaricon@2x.png */; };
-		53AAF19911DA90D800447FF7 /* songs-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF19211DA90D800447FF7 /* songs-tabbaricon@2x.png */; };
-		53AAF1DE11DA9F0200447FF7 /* now-playing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF1DD11DA9F0200447FF7 /* now-playing@2x.png */; };
 		53ABE3631165C83900197877 /* PlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ABE3611165C83900197877 /* PlayingViewController.m */; };
 		53ABE3641165C83900197877 /* PlayingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53ABE3621165C83900197877 /* PlayingViewController.xib */; };
 		53ABE54311665B6B00197877 /* PlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ABE54111665B6B00197877 /* PlaylistsViewController.m */; };
 		53ABE54411665B6B00197877 /* PlaylistsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53ABE54211665B6B00197877 /* PlaylistsViewController.xib */; };
-		53ADBBBD133525BD0098FAE6 /* folder-dropdown-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53ADBBBB133525BD0098FAE6 /* folder-dropdown-arrow@2x.png */; };
 		53ADBBC013352DB40098FAE6 /* FolderDropdownControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ADBBBF13352DB40098FAE6 /* FolderDropdownControl.m */; };
-		53B20E3012C2A60D00A90DD9 /* home-chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20E2D12C2A60D00A90DD9 /* home-chat@2x.png */; };
 		53B38C12147593FA00CD8A99 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B38C11147593F900CD8A99 /* AVFoundation.framework */; };
 		53B38C141475940700CD8A99 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B38C11147593F900CD8A99 /* AVFoundation.framework */; };
 		53B5298A11AD9B79005776B5 /* LoadingScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B5298911AD9B79005776B5 /* LoadingScreen.m */; };
 		53B52BA511ADE0A6005776B5 /* GenresViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B52BA311ADE0A6005776B5 /* GenresViewController.m */; };
 		53B52BA611ADE0A6005776B5 /* GenresViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53B52BA411ADE0A6005776B5 /* GenresViewController.xib */; };
-		53B65ABF16533E4800472DBF /* back-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B65ABA16533E4800472DBF /* back-tabbaricon@2x.png */; };
-		53B65AC116533E4800472DBF /* back-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B65ABA16533E4800472DBF /* back-tabbaricon@2x.png */; };
 		53B9D0B41279FAEF00CAB0E0 /* SearchSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B9D0B21279FAEF00CAB0E0 /* SearchSongsViewController.m */; };
 		53BB7ECA121B8D8F00BEE7E8 /* CustomUITextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BB7EC9121B8D8F00BEE7E8 /* CustomUITextView.m */; };
-		53BB7FB6121B97BA00BEE7E8 /* chat-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB7FB4121B97BA00BEE7E8 /* chat-tabbaricon@2x.png */; };
-		53BB800B121B9CA200BEE7E8 /* comment-write-pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB8009121B9CA200BEE7E8 /* comment-write-pressed@2x.png */; };
-		53BB800C121B9CA200BEE7E8 /* comment-write@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB800A121B9CA200BEE7E8 /* comment-write@2x.png */; };
 		53BC26B6139AF0DD00A825F1 /* AllAlbumsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 539797FD1162D4D200F41D8B /* AllAlbumsViewController.xib */; };
 		53BC26B9139AF0DD00A825F1 /* AllSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53614BD7116467420088ABC0 /* AllSongsViewController.xib */; };
 		53BC26BB139AF0DD00A825F1 /* PlayingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53ABE3621165C83900197877 /* PlayingViewController.xib */; };
@@ -238,34 +207,7 @@
 		53BC26D7139AF0DD00A825F1 /* CacheAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538229F511C98091003F1E23 /* CacheAlbumViewController.xib */; };
 		53BC26D8139AF0DD00A825F1 /* GenresAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53523D8E11CD5889006AEA48 /* GenresAlbumViewController.xib */; };
 		53BC26D9139AF0DD00A825F1 /* GenresArtistViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53523D9311CD61F7006AEA48 /* GenresArtistViewController.xib */; };
-		53BC26DE139AF0DD00A825F1 /* albums-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF18811DA8D7500447FF7 /* albums-tabbaricon@2x.png */; };
-		53BC26DF139AF0DD00A825F1 /* artists-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF18C11DA90D800447FF7 /* artists-tabbaricon@2x.png */; };
-		53BC26E0139AF0DD00A825F1 /* bookmarks-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF18D11DA90D800447FF7 /* bookmarks-tabbaricon@2x.png */; };
-		53BC26E1139AF0DD00A825F1 /* cache-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF18E11DA90D800447FF7 /* cache-tabbaricon@2x.png */; };
-		53BC26E2139AF0DD00A825F1 /* genres-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF18F11DA90D800447FF7 /* genres-tabbaricon@2x.png */; };
-		53BC26E3139AF0DD00A825F1 /* playing-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF19011DA90D800447FF7 /* playing-tabbaricon@2x.png */; };
-		53BC26E4139AF0DD00A825F1 /* playlists-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF19111DA90D800447FF7 /* playlists-tabbaricon@2x.png */; };
-		53BC26E5139AF0DD00A825F1 /* songs-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF19211DA90D800447FF7 /* songs-tabbaricon@2x.png */; };
-		53BC26E8139AF0DD00A825F1 /* now-playing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AAF1DD11DA9F0200447FF7 /* now-playing@2x.png */; };
-		53BC26EB139AF0DD00A825F1 /* current-server@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FDEE2511E822CC00FE3ECD /* current-server@2x.png */; };
-		53BC26EC139AF0DD00A825F1 /* default-album-art-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FDEE2711E823A100FE3ECD /* default-album-art-small@2x.png */; };
-		53BC26ED139AF0DD00A825F1 /* default-album-art@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FDEE2811E823A100FE3ECD /* default-album-art@2x.png */; };
-		53BC26F5139AF0DD00A825F1 /* loading-screen-image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 530B960611E8EC86002EA08E /* loading-screen-image@2x.png */; };
-		53BC26F6139AF0DD00A825F1 /* settings-page@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 530B960811E8ED33002EA08E /* settings-page@2x.png */; };
 		53BC270B139AF0DD00A825F1 /* ChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5379DC4C1219E48800F426CD /* ChatViewController.xib */; };
-		53BC270F139AF0DD00A825F1 /* chat-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB7FB4121B97BA00BEE7E8 /* chat-tabbaricon@2x.png */; };
-		53BC2710139AF0DD00A825F1 /* comment-write-pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB8009121B9CA200BEE7E8 /* comment-write-pressed@2x.png */; };
-		53BC2711139AF0DD00A825F1 /* comment-write@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53BB800A121B9CA200BEE7E8 /* comment-write@2x.png */; };
-		53BC2714139AF0DD00A825F1 /* home-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5314B4ED126FD20300CDB511 /* home-tabbaricon@2x.png */; };
-		53BC272E139AF0DD00A825F1 /* home-jukebox-off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F8CC661297949A007BDC0E /* home-jukebox-off@2x.png */; };
-		53BC2731139AF0DD00A825F1 /* home-jukebox-on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F8CC691297949A007BDC0E /* home-jukebox-on@2x.png */; };
-		53BC273A139AF0DD00A825F1 /* home-quick@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F8CC721297949A007BDC0E /* home-quick@2x.png */; };
-		53BC273D139AF0DD00A825F1 /* home-settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F8CC751297949A007BDC0E /* home-settings@2x.png */; };
-		53BC2740139AF0DD00A825F1 /* home-shuffle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F8CC781297949A007BDC0E /* home-shuffle@2x.png */; };
-		53BC2754139AF0DD00A825F1 /* home-chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53B20E2D12C2A60D00A90DD9 /* home-chat@2x.png */; };
-		53BC275E139AF0DD00A825F1 /* folders-tabbaricon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CA9C612DBCA9000389DA1 /* folders-tabbaricon@2x.png */; };
-		53BC2762139AF0DD00A825F1 /* server-subsonic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 535CB22112E0014A00389DA1 /* server-subsonic@2x.png */; };
-		53BC2789139AF0DD00A825F1 /* folder-dropdown-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53ADBBBB133525BD0098FAE6 /* folder-dropdown-arrow@2x.png */; };
 		53BC2796139AF0DD00A825F1 /* PlaylistSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536AB8101353DCF700DABD83 /* PlaylistSongsViewController.xib */; };
 		53BC279C139AF0DD00A825F1 /* iSubAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* iSubAppDelegate.m */; };
 		53BC279D139AF0DD00A825F1 /* FoldersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* FoldersViewController.m */; };
@@ -308,18 +250,6 @@
 		53BCC51B181387B300442E86 /* CustomUINavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BCC51A181387B300442E86 /* CustomUINavigationController.m */; };
 		53BCC51D181387B300442E86 /* CustomUINavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53BCC51A181387B300442E86 /* CustomUINavigationController.m */; };
 		53C22CCF128EE81C00FFBA67 /* ModalAlbumArtViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C22CCE128EE81C00FFBA67 /* ModalAlbumArtViewController.m */; };
-		53C7FD80150F00C5008DA51C /* home-chat-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD78150F00C5008DA51C /* home-chat-ipad@2x.png */; };
-		53C7FD82150F00C5008DA51C /* home-chat-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD78150F00C5008DA51C /* home-chat-ipad@2x.png */; };
-		53C7FD83150F00C5008DA51C /* home-jukebox-off-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD79150F00C5008DA51C /* home-jukebox-off-ipad@2x.png */; };
-		53C7FD85150F00C5008DA51C /* home-jukebox-off-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD79150F00C5008DA51C /* home-jukebox-off-ipad@2x.png */; };
-		53C7FD86150F00C5008DA51C /* home-jukebox-on-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD7A150F00C5008DA51C /* home-jukebox-on-ipad@2x.png */; };
-		53C7FD88150F00C5008DA51C /* home-jukebox-on-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD7A150F00C5008DA51C /* home-jukebox-on-ipad@2x.png */; };
-		53C7FD8F150F00C5008DA51C /* home-quick-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD7D150F00C5008DA51C /* home-quick-ipad@2x.png */; };
-		53C7FD91150F00C5008DA51C /* home-quick-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD7D150F00C5008DA51C /* home-quick-ipad@2x.png */; };
-		53C7FD92150F00C5008DA51C /* home-settings-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD7E150F00C5008DA51C /* home-settings-ipad@2x.png */; };
-		53C7FD94150F00C5008DA51C /* home-settings-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD7E150F00C5008DA51C /* home-settings-ipad@2x.png */; };
-		53C7FD95150F00C5008DA51C /* home-shuffle-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD7F150F00C5008DA51C /* home-shuffle-ipad@2x.png */; };
-		53C7FD97150F00C5008DA51C /* home-shuffle-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7FD7F150F00C5008DA51C /* home-shuffle-ipad@2x.png */; };
 		53C7FD9E150F0EA9008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
 		53C7FDA0150F0EAF008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
 		53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D44F8415AA621A00CDD3B8 /* Accelerate.framework */; };
@@ -355,14 +285,6 @@
 		53F8917D1EB1354B00B3F131 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5381F8051E96FBFB00AAA9BD /* Photos.framework */; };
 		53F8917E1EB137E900B3F131 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675E7113B096400822059 /* AudioToolbox.framework */; };
 		53F8917F1EB137F300B3F131 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675E7113B096400822059 /* AudioToolbox.framework */; };
-		53F8CC7D1297949A007BDC0E /* home-jukebox-off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F8CC661297949A007BDC0E /* home-jukebox-off@2x.png */; };
-		53F8CC801297949A007BDC0E /* home-jukebox-on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F8CC691297949A007BDC0E /* home-jukebox-on@2x.png */; };
-		53F8CC891297949A007BDC0E /* home-quick@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F8CC721297949A007BDC0E /* home-quick@2x.png */; };
-		53F8CC8C1297949A007BDC0E /* home-settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F8CC751297949A007BDC0E /* home-settings@2x.png */; };
-		53F8CC8F1297949A007BDC0E /* home-shuffle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53F8CC781297949A007BDC0E /* home-shuffle@2x.png */; };
-		53FDEE2611E822CC00FE3ECD /* current-server@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FDEE2511E822CC00FE3ECD /* current-server@2x.png */; };
-		53FDEE2911E823A100FE3ECD /* default-album-art-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FDEE2711E823A100FE3ECD /* default-album-art-small@2x.png */; };
-		53FDEE2A11E823A100FE3ECD /* default-album-art@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FDEE2811E823A100FE3ECD /* default-album-art@2x.png */; };
 		53FE34C51EA961540058B925 /* NSArray+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33DE1EA961540058B925 /* NSArray+Safe.m */; };
 		53FE34C71EA961540058B925 /* NSArray+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33DE1EA961540058B925 /* NSArray+Safe.m */; };
 		53FE34C81EA961540058B925 /* NSMutableArray+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE33E01EA961540058B925 /* NSMutableArray+Safe.m */; };
@@ -739,21 +661,14 @@
 		28C286DF0D94DF7D0034E888 /* FoldersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoldersViewController.h; sourceTree = "<group>"; };
 		28C286E00D94DF7D0034E888 /* FoldersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoldersViewController.m; sourceTree = "<group>"; };
 		28F335F01007B36200424DE2 /* FoldersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FoldersViewController.xib; sourceTree = "<group>"; };
-		5301583915081B0A00B54CEF /* settings-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "settings-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/settings-tabbaricon@2x.png"; sourceTree = "<group>"; };
 		530388A7116571920043292D /* AllSongsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllSongsViewController.h; sourceTree = "<group>"; };
 		530388A8116571920043292D /* AllSongsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AllSongsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		5306236B14D3295300D320A8 /* EqualizerPathView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerPathView.h; sourceTree = "<group>"; };
 		5306236C14D3295300D320A8 /* EqualizerPathView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EqualizerPathView.m; sourceTree = "<group>"; };
-		5306239314D4BCAD00D320A8 /* eqView@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "eqView@2x.png"; path = "Images/Player Icons/eqView@2x.png"; sourceTree = "<group>"; };
 		530738F31FAF6A72005C2650 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
-		530A5F841516703F0081A83A /* playing-cell-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "playing-cell-icon@2x.png"; path = "Images/Other/playing-cell-icon@2x.png"; sourceTree = "<group>"; };
-		530A5F8C15167CBA0081A83A /* playing-cell-icon-white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "playing-cell-icon-white@2x.png"; path = "Images/Other/playing-cell-icon-white@2x.png"; sourceTree = "<group>"; };
 		530B416F11B607A200743C09 /* CacheViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CacheViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		530B417011B607A200743C09 /* CacheViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CacheViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		530B417111B607A200743C09 /* CacheViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CacheViewController.xib; sourceTree = "<group>"; };
-		530B960611E8EC86002EA08E /* loading-screen-image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "loading-screen-image@2x.png"; path = "Images/Other/loading-screen-image@2x.png"; sourceTree = "<group>"; };
-		530B960811E8ED33002EA08E /* settings-page@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "settings-page@2x.png"; path = "Images/Other/settings-page@2x.png"; sourceTree = "<group>"; };
-		5314B4ED126FD20300CDB511 /* home-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/home-tabbaricon@2x.png"; sourceTree = "<group>"; };
 		531D39FF255AB5F6000CB0DF /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		531D3A00255AB5F6000CB0DF /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		531D3A14255ABA20000CB0DF /* DDSocialDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDSocialDialog.h; sourceTree = "<group>"; };
@@ -829,8 +744,6 @@
 		5359C858256EA8FE00C8F8DC /* ObjC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjC.swift; sourceTree = "<group>"; };
 		535B727B134D26D6003E0E1C /* SearchAllViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchAllViewController.h; sourceTree = "<group>"; };
 		535B727C134D26E2003E0E1C /* SearchAllViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchAllViewController.m; sourceTree = "<group>"; };
-		535CA9C612DBCA9000389DA1 /* folders-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "folders-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/folders-tabbaricon@2x.png"; sourceTree = "<group>"; };
-		535CB22112E0014A00389DA1 /* server-subsonic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "server-subsonic@2x.png"; path = "Images/Other/server-subsonic@2x.png"; sourceTree = "<group>"; };
 		53614AC7116432DA0088ABC0 /* ServerListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerListViewController.h; sourceTree = "<group>"; };
 		53614AC8116432DA0088ABC0 /* ServerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerListViewController.m; sourceTree = "<group>"; };
 		53614BD7116467420088ABC0 /* AllSongsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllSongsViewController.xib; sourceTree = "<group>"; };
@@ -864,7 +777,6 @@
 		537E6C1D181208A200127E29 /* CustomUITabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUITabBarController.m; sourceTree = "<group>"; };
 		537E9A0814F323EE006CB0BC /* UIViewController+PushViewControllerCustom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PushViewControllerCustom.h"; sourceTree = "<group>"; };
 		537E9A0914F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PushViewControllerCustom.m"; sourceTree = "<group>"; };
-		537EF7B4182B2F2200968FE0 /* controller-slider-thumb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "controller-slider-thumb@2x.png"; path = "Images/Player Icons/controller-slider-thumb@2x.png"; sourceTree = "<group>"; };
 		5381F8051E96FBFB00AAA9BD /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		538229F311C98091003F1E23 /* CacheAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheAlbumViewController.h; sourceTree = "<group>"; };
 		538229F411C98091003F1E23 /* CacheAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CacheAlbumViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -904,15 +816,6 @@
 		53A2BE22147DF09800E44822 /* EqualizerPointView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerPointView.h; sourceTree = "<group>"; };
 		53A2BE23147DF09800E44822 /* EqualizerPointView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EqualizerPointView.m; sourceTree = "<group>"; };
 		53A2BE27147DF13600E44822 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		53AAF18811DA8D7500447FF7 /* albums-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "albums-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/albums-tabbaricon@2x.png"; sourceTree = "<group>"; };
-		53AAF18C11DA90D800447FF7 /* artists-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "artists-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/artists-tabbaricon@2x.png"; sourceTree = "<group>"; };
-		53AAF18D11DA90D800447FF7 /* bookmarks-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bookmarks-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/bookmarks-tabbaricon@2x.png"; sourceTree = "<group>"; };
-		53AAF18E11DA90D800447FF7 /* cache-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cache-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/cache-tabbaricon@2x.png"; sourceTree = "<group>"; };
-		53AAF18F11DA90D800447FF7 /* genres-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "genres-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/genres-tabbaricon@2x.png"; sourceTree = "<group>"; };
-		53AAF19011DA90D800447FF7 /* playing-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "playing-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/playing-tabbaricon@2x.png"; sourceTree = "<group>"; };
-		53AAF19111DA90D800447FF7 /* playlists-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "playlists-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/playlists-tabbaricon@2x.png"; sourceTree = "<group>"; };
-		53AAF19211DA90D800447FF7 /* songs-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "songs-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/songs-tabbaricon@2x.png"; sourceTree = "<group>"; };
-		53AAF1DD11DA9F0200447FF7 /* now-playing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "now-playing@2x.png"; path = "Images/Other/now-playing@2x.png"; sourceTree = "<group>"; };
 		53ABE3601165C83900197877 /* PlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayingViewController.h; sourceTree = "<group>"; };
 		53ABE3611165C83900197877 /* PlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PlayingViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		53ABE3621165C83900197877 /* PlayingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayingViewController.xib; sourceTree = "<group>"; };
@@ -920,24 +823,18 @@
 		53ABE54111665B6B00197877 /* PlaylistsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PlaylistsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		53ABE54211665B6B00197877 /* PlaylistsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaylistsViewController.xib; sourceTree = "<group>"; };
 		53ABE54511665B8500197877 /* PlaylistSongsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistSongsViewController.h; sourceTree = "<group>"; };
-		53ADBBBB133525BD0098FAE6 /* folder-dropdown-arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "folder-dropdown-arrow@2x.png"; path = "Images/Other/folder-dropdown-arrow@2x.png"; sourceTree = "<group>"; };
 		53ADBBBE13352DB40098FAE6 /* FolderDropdownControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderDropdownControl.h; sourceTree = "<group>"; };
 		53ADBBBF13352DB40098FAE6 /* FolderDropdownControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FolderDropdownControl.m; sourceTree = "<group>"; };
-		53B20E2D12C2A60D00A90DD9 /* home-chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-chat@2x.png"; path = "Images/Home Screen/home-chat@2x.png"; sourceTree = "<group>"; };
 		53B38C11147593F900CD8A99 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		53B5298811AD9B79005776B5 /* LoadingScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingScreen.h; sourceTree = "<group>"; };
 		53B5298911AD9B79005776B5 /* LoadingScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingScreen.m; sourceTree = "<group>"; };
 		53B52BA211ADE0A6005776B5 /* GenresViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenresViewController.h; sourceTree = "<group>"; };
 		53B52BA311ADE0A6005776B5 /* GenresViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenresViewController.m; sourceTree = "<group>"; };
 		53B52BA411ADE0A6005776B5 /* GenresViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GenresViewController.xib; sourceTree = "<group>"; };
-		53B65ABA16533E4800472DBF /* back-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "back-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/back-tabbaricon@2x.png"; sourceTree = "<group>"; };
 		53B9D0B11279FAEF00CAB0E0 /* SearchSongsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchSongsViewController.h; sourceTree = "<group>"; };
 		53B9D0B21279FAEF00CAB0E0 /* SearchSongsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchSongsViewController.m; sourceTree = "<group>"; };
 		53BB7EC8121B8D8F00BEE7E8 /* CustomUITextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomUITextView.h; sourceTree = "<group>"; };
 		53BB7EC9121B8D8F00BEE7E8 /* CustomUITextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUITextView.m; sourceTree = "<group>"; };
-		53BB7FB4121B97BA00BEE7E8 /* chat-tabbaricon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "chat-tabbaricon@2x.png"; path = "Images/Tab Bar Icons/chat-tabbaricon@2x.png"; sourceTree = "<group>"; };
-		53BB8009121B9CA200BEE7E8 /* comment-write-pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "comment-write-pressed@2x.png"; path = "Images/Other/comment-write-pressed@2x.png"; sourceTree = SOURCE_ROOT; };
-		53BB800A121B9CA200BEE7E8 /* comment-write@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "comment-write@2x.png"; path = "Images/Other/comment-write@2x.png"; sourceTree = SOURCE_ROOT; };
 		53BBDB3B1491DD6600032114 /* OpenGLCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLCommon.h; sourceTree = "<group>"; };
 		53BBDB3C1491DE5600032114 /* ConstantsAndMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantsAndMacros.h; sourceTree = "<group>"; };
 		53BC2865139AF0DD00A825F1 /* iSub Beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iSub Beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -946,12 +843,6 @@
 		53BD84A52566F41F00F7A197 /* ISMSBassVisualType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSBassVisualType.h; sourceTree = "<group>"; };
 		53C22CCD128EE81C00FFBA67 /* ModalAlbumArtViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalAlbumArtViewController.h; sourceTree = "<group>"; };
 		53C22CCE128EE81C00FFBA67 /* ModalAlbumArtViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalAlbumArtViewController.m; sourceTree = "<group>"; };
-		53C7FD78150F00C5008DA51C /* home-chat-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-chat-ipad@2x.png"; path = "Images/Home Screen/home-chat-ipad@2x.png"; sourceTree = "<group>"; };
-		53C7FD79150F00C5008DA51C /* home-jukebox-off-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-jukebox-off-ipad@2x.png"; path = "Images/Home Screen/home-jukebox-off-ipad@2x.png"; sourceTree = "<group>"; };
-		53C7FD7A150F00C5008DA51C /* home-jukebox-on-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-jukebox-on-ipad@2x.png"; path = "Images/Home Screen/home-jukebox-on-ipad@2x.png"; sourceTree = "<group>"; };
-		53C7FD7D150F00C5008DA51C /* home-quick-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick-ipad@2x.png"; path = "Images/Home Screen/home-quick-ipad@2x.png"; sourceTree = "<group>"; };
-		53C7FD7E150F00C5008DA51C /* home-settings-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-settings-ipad@2x.png"; path = "Images/Home Screen/home-settings-ipad@2x.png"; sourceTree = "<group>"; };
-		53C7FD7F150F00C5008DA51C /* home-shuffle-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-shuffle-ipad@2x.png"; path = "Images/Home Screen/home-shuffle-ipad@2x.png"; sourceTree = "<group>"; };
 		53C7FD9C150F0E94008DA51C /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		53D44F8415AA621A00CDD3B8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalTableViewCell.swift; sourceTree = "<group>"; };
@@ -980,14 +871,6 @@
 		53F675E1113B095900822059 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		53F675E7113B096400822059 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		53F7A127131B7F3B002C829D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		53F8CC661297949A007BDC0E /* home-jukebox-off@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-jukebox-off@2x.png"; path = "Images/Home Screen/home-jukebox-off@2x.png"; sourceTree = "<group>"; };
-		53F8CC691297949A007BDC0E /* home-jukebox-on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-jukebox-on@2x.png"; path = "Images/Home Screen/home-jukebox-on@2x.png"; sourceTree = "<group>"; };
-		53F8CC721297949A007BDC0E /* home-quick@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-quick@2x.png"; path = "Images/Home Screen/home-quick@2x.png"; sourceTree = "<group>"; };
-		53F8CC751297949A007BDC0E /* home-settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-settings@2x.png"; path = "Images/Home Screen/home-settings@2x.png"; sourceTree = "<group>"; };
-		53F8CC781297949A007BDC0E /* home-shuffle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-shuffle@2x.png"; path = "Images/Home Screen/home-shuffle@2x.png"; sourceTree = "<group>"; };
-		53FDEE2511E822CC00FE3ECD /* current-server@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "current-server@2x.png"; path = "Images/Other/current-server@2x.png"; sourceTree = "<group>"; };
-		53FDEE2711E823A100FE3ECD /* default-album-art-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default-album-art-small@2x.png"; path = "Images/Other/default-album-art-small@2x.png"; sourceTree = "<group>"; };
-		53FDEE2811E823A100FE3ECD /* default-album-art@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default-album-art@2x.png"; path = "Images/Other/default-album-art@2x.png"; sourceTree = "<group>"; };
 		53FE33D01EA961540058B925 /* EX2Categories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2Categories.h; sourceTree = "<group>"; };
 		53FE33D21EA961540058B925 /* EX2FoundationCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2FoundationCategories.h; sourceTree = "<group>"; };
 		53FE33D41EA961540058B925 /* NSArray+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Additions.h"; sourceTree = "<group>"; };
@@ -1449,7 +1332,6 @@
 				53493F1C15FC6AA60059492E /* iSub-Info.plist */,
 				53493F3715FC6C3A0059492E /* BassEffectDefaultPresets.plist */,
 				53F1412015FD550C004D00D5 /* buildnumber.xcconfig */,
-				539797F41162CEB100F41D8B /* Images */,
 				530738F31FAF6A72005C2650 /* Media.xcassets */,
 				539148DF2559FEFD004AAC3F /* Launch Screen.storyboard */,
 				53DA4E31256B600B0057D4C7 /* Launch Screen Beta.storyboard */,
@@ -2061,76 +1943,6 @@
 			path = "EQ and Visualizer";
 			sourceTree = "<group>";
 		};
-		539797F41162CEB100F41D8B /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				530A5F841516703F0081A83A /* playing-cell-icon@2x.png */,
-				530A5F8C15167CBA0081A83A /* playing-cell-icon-white@2x.png */,
-				53ADBBBB133525BD0098FAE6 /* folder-dropdown-arrow@2x.png */,
-				53F8C76012971572007BDC0E /* Home tab */,
-				53AAF1BE11DA913000447FF7 /* Player Icons */,
-				53AAF1A411DA910400447FF7 /* Tab Bar Icons */,
-				535CB22112E0014A00389DA1 /* server-subsonic@2x.png */,
-				53AAF1DD11DA9F0200447FF7 /* now-playing@2x.png */,
-				53FDEE2511E822CC00FE3ECD /* current-server@2x.png */,
-				530B960611E8EC86002EA08E /* loading-screen-image@2x.png */,
-				53FDEE2711E823A100FE3ECD /* default-album-art-small@2x.png */,
-				53FDEE2811E823A100FE3ECD /* default-album-art@2x.png */,
-				530B960811E8ED33002EA08E /* settings-page@2x.png */,
-				53BB8009121B9CA200BEE7E8 /* comment-write-pressed@2x.png */,
-				53BB800A121B9CA200BEE7E8 /* comment-write@2x.png */,
-			);
-			name = Images;
-			sourceTree = "<group>";
-		};
-		53AAF1A411DA910400447FF7 /* Tab Bar Icons */ = {
-			isa = PBXGroup;
-			children = (
-				53B65ABA16533E4800472DBF /* back-tabbaricon@2x.png */,
-				535CA9C612DBCA9000389DA1 /* folders-tabbaricon@2x.png */,
-				5314B4ED126FD20300CDB511 /* home-tabbaricon@2x.png */,
-				53AAF18C11DA90D800447FF7 /* artists-tabbaricon@2x.png */,
-				53AAF18811DA8D7500447FF7 /* albums-tabbaricon@2x.png */,
-				53AAF19211DA90D800447FF7 /* songs-tabbaricon@2x.png */,
-				53AAF19111DA90D800447FF7 /* playlists-tabbaricon@2x.png */,
-				53AAF19011DA90D800447FF7 /* playing-tabbaricon@2x.png */,
-				53AAF18D11DA90D800447FF7 /* bookmarks-tabbaricon@2x.png */,
-				53AAF18F11DA90D800447FF7 /* genres-tabbaricon@2x.png */,
-				53AAF18E11DA90D800447FF7 /* cache-tabbaricon@2x.png */,
-				53BB7FB4121B97BA00BEE7E8 /* chat-tabbaricon@2x.png */,
-				5301583915081B0A00B54CEF /* settings-tabbaricon@2x.png */,
-			);
-			name = "Tab Bar Icons";
-			sourceTree = "<group>";
-		};
-		53AAF1BE11DA913000447FF7 /* Player Icons */ = {
-			isa = PBXGroup;
-			children = (
-				5306239314D4BCAD00D320A8 /* eqView@2x.png */,
-				537EF7B4182B2F2200968FE0 /* controller-slider-thumb@2x.png */,
-			);
-			name = "Player Icons";
-			sourceTree = "<group>";
-		};
-		53F8C76012971572007BDC0E /* Home tab */ = {
-			isa = PBXGroup;
-			children = (
-				53B20E2D12C2A60D00A90DD9 /* home-chat@2x.png */,
-				53F8CC661297949A007BDC0E /* home-jukebox-off@2x.png */,
-				53F8CC691297949A007BDC0E /* home-jukebox-on@2x.png */,
-				53F8CC721297949A007BDC0E /* home-quick@2x.png */,
-				53F8CC751297949A007BDC0E /* home-settings@2x.png */,
-				53F8CC781297949A007BDC0E /* home-shuffle@2x.png */,
-				53C7FD78150F00C5008DA51C /* home-chat-ipad@2x.png */,
-				53C7FD79150F00C5008DA51C /* home-jukebox-off-ipad@2x.png */,
-				53C7FD7A150F00C5008DA51C /* home-jukebox-on-ipad@2x.png */,
-				53C7FD7D150F00C5008DA51C /* home-quick-ipad@2x.png */,
-				53C7FD7E150F00C5008DA51C /* home-settings-ipad@2x.png */,
-				53C7FD7F150F00C5008DA51C /* home-shuffle-ipad@2x.png */,
-			);
-			name = "Home tab";
-			sourceTree = "<group>";
-		};
 		53FE33CE1EA961540058B925 /* EX2Kit */ = {
 			isa = PBXGroup;
 			children = (
@@ -2633,60 +2445,21 @@
 				53523D9011CD5889006AEA48 /* GenresAlbumViewController.xib in Resources */,
 				53523D9511CD61F7006AEA48 /* GenresArtistViewController.xib in Resources */,
 				533C65CE15ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */,
-				53AAF18911DA8D7500447FF7 /* albums-tabbaricon@2x.png in Resources */,
-				53AAF19311DA90D800447FF7 /* artists-tabbaricon@2x.png in Resources */,
-				53AAF19411DA90D800447FF7 /* bookmarks-tabbaricon@2x.png in Resources */,
-				53AAF19511DA90D800447FF7 /* cache-tabbaricon@2x.png in Resources */,
-				53AAF19611DA90D800447FF7 /* genres-tabbaricon@2x.png in Resources */,
-				53AAF19711DA90D800447FF7 /* playing-tabbaricon@2x.png in Resources */,
-				53AAF19811DA90D800447FF7 /* playlists-tabbaricon@2x.png in Resources */,
-				53AAF19911DA90D800447FF7 /* songs-tabbaricon@2x.png in Resources */,
-				53AAF1DE11DA9F0200447FF7 /* now-playing@2x.png in Resources */,
-				53FDEE2611E822CC00FE3ECD /* current-server@2x.png in Resources */,
-				53FDEE2911E823A100FE3ECD /* default-album-art-small@2x.png in Resources */,
-				53FDEE2A11E823A100FE3ECD /* default-album-art@2x.png in Resources */,
-				530B960711E8EC86002EA08E /* loading-screen-image@2x.png in Resources */,
-				530B960911E8ED33002EA08E /* settings-page@2x.png in Resources */,
-				537EF7B9182B2F2200968FE0 /* controller-slider-thumb@2x.png in Resources */,
 				5379DC511219E48800F426CD /* ChatViewController.xib in Resources */,
-				53BB7FB6121B97BA00BEE7E8 /* chat-tabbaricon@2x.png in Resources */,
-				53BB800B121B9CA200BEE7E8 /* comment-write-pressed@2x.png in Resources */,
-				53BB800C121B9CA200BEE7E8 /* comment-write@2x.png in Resources */,
 				533C658A15ABB9A9003EAF29 /* HomeAlbumViewController.xib in Resources */,
-				5314B4EF126FD20300CDB511 /* home-tabbaricon@2x.png in Resources */,
 				533C659115ABB9AD003EAF29 /* SearchSongsViewController.xib in Resources */,
 				530738F41FAF6A72005C2650 /* Media.xcassets in Resources */,
-				53F8CC7D1297949A007BDC0E /* home-jukebox-off@2x.png in Resources */,
 				531D3A01255AB5F6000CB0DF /* MainWindow.xib in Resources */,
-				53F8CC801297949A007BDC0E /* home-jukebox-on@2x.png in Resources */,
 				53FE35E21EA961540058B925 /* EX2SlidingNotification.xib in Resources */,
-				53F8CC891297949A007BDC0E /* home-quick@2x.png in Resources */,
-				53F8CC8C1297949A007BDC0E /* home-settings@2x.png in Resources */,
-				53F8CC8F1297949A007BDC0E /* home-shuffle@2x.png in Resources */,
-				53B20E3012C2A60D00A90DD9 /* home-chat@2x.png in Resources */,
 				533D181D255F72FF003F962C /* CacheOfflineFoldersViewController.xib in Resources */,
-				535CA9C812DBCA9000389DA1 /* folders-tabbaricon@2x.png in Resources */,
-				535CB22512E0014A00389DA1 /* server-subsonic@2x.png in Resources */,
-				53ADBBBD133525BD0098FAE6 /* folder-dropdown-arrow@2x.png in Resources */,
 				533C659F15ABB9B3003EAF29 /* SearchAllViewController.xib in Resources */,
 				536AB8121353DCF900DABD83 /* PlaylistSongsViewController.xib in Resources */,
 				533C65DC15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */,
-				5306239714D4BCAD00D320A8 /* eqView@2x.png in Resources */,
 				532B552714D641C500B8AA67 /* ModalAlbumArtViewController.xib in Resources */,
-				5301583D15081B0A00B54CEF /* settings-tabbaricon@2x.png in Resources */,
-				53C7FD80150F00C5008DA51C /* home-chat-ipad@2x.png in Resources */,
-				53C7FD83150F00C5008DA51C /* home-jukebox-off-ipad@2x.png in Resources */,
-				53C7FD86150F00C5008DA51C /* home-jukebox-on-ipad@2x.png in Resources */,
-				53C7FD8F150F00C5008DA51C /* home-quick-ipad@2x.png in Resources */,
-				53C7FD92150F00C5008DA51C /* home-settings-ipad@2x.png in Resources */,
-				53C7FD95150F00C5008DA51C /* home-shuffle-ipad@2x.png in Resources */,
-				530A5F881516703F0081A83A /* playing-cell-icon@2x.png in Resources */,
-				530A5F9015167CBA0081A83A /* playing-cell-icon-white@2x.png in Resources */,
 				539148E02559FEFD004AAC3F /* Launch Screen.storyboard in Resources */,
 				53493F3015FC6BD90059492E /* KeychainAccessGroups.plist in Resources */,
 				53D97433255C0BDE00AABF7F /* FoldersViewController.xib in Resources */,
 				53493F3815FC6C3A0059492E /* BassEffectDefaultPresets.plist in Resources */,
-				53B65ABF16533E4800472DBF /* back-tabbaricon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2710,60 +2483,21 @@
 				53BC26D8139AF0DD00A825F1 /* GenresAlbumViewController.xib in Resources */,
 				53BC26D9139AF0DD00A825F1 /* GenresArtistViewController.xib in Resources */,
 				533C65D015ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */,
-				53BC26DE139AF0DD00A825F1 /* albums-tabbaricon@2x.png in Resources */,
-				53BC26DF139AF0DD00A825F1 /* artists-tabbaricon@2x.png in Resources */,
-				53BC26E0139AF0DD00A825F1 /* bookmarks-tabbaricon@2x.png in Resources */,
-				53BC26E1139AF0DD00A825F1 /* cache-tabbaricon@2x.png in Resources */,
-				53BC26E2139AF0DD00A825F1 /* genres-tabbaricon@2x.png in Resources */,
 				53DA4E33256B600C0057D4C7 /* Launch Screen Beta.storyboard in Resources */,
-				53BC26E3139AF0DD00A825F1 /* playing-tabbaricon@2x.png in Resources */,
-				53BC26E4139AF0DD00A825F1 /* playlists-tabbaricon@2x.png in Resources */,
-				53BC26E5139AF0DD00A825F1 /* songs-tabbaricon@2x.png in Resources */,
-				53BC26E8139AF0DD00A825F1 /* now-playing@2x.png in Resources */,
-				53BC26EB139AF0DD00A825F1 /* current-server@2x.png in Resources */,
-				53BC26EC139AF0DD00A825F1 /* default-album-art-small@2x.png in Resources */,
-				53BC26ED139AF0DD00A825F1 /* default-album-art@2x.png in Resources */,
-				53BC26F5139AF0DD00A825F1 /* loading-screen-image@2x.png in Resources */,
-				53BC26F6139AF0DD00A825F1 /* settings-page@2x.png in Resources */,
 				531D3A02255AB5F6000CB0DF /* MainWindow.xib in Resources */,
 				53BC270B139AF0DD00A825F1 /* ChatViewController.xib in Resources */,
-				53BC270F139AF0DD00A825F1 /* chat-tabbaricon@2x.png in Resources */,
-				53BC2710139AF0DD00A825F1 /* comment-write-pressed@2x.png in Resources */,
-				53BC2711139AF0DD00A825F1 /* comment-write@2x.png in Resources */,
 				533C658C15ABB9A9003EAF29 /* HomeAlbumViewController.xib in Resources */,
-				53BC2714139AF0DD00A825F1 /* home-tabbaricon@2x.png in Resources */,
 				533C659315ABB9AD003EAF29 /* SearchSongsViewController.xib in Resources */,
-				53BC272E139AF0DD00A825F1 /* home-jukebox-off@2x.png in Resources */,
-				53BC2731139AF0DD00A825F1 /* home-jukebox-on@2x.png in Resources */,
-				53BC273A139AF0DD00A825F1 /* home-quick@2x.png in Resources */,
-				53BC273D139AF0DD00A825F1 /* home-settings@2x.png in Resources */,
-				53BC2740139AF0DD00A825F1 /* home-shuffle@2x.png in Resources */,
-				537EF7BB182B2F2200968FE0 /* controller-slider-thumb@2x.png in Resources */,
-				53BC2754139AF0DD00A825F1 /* home-chat@2x.png in Resources */,
 				531D3A04255AB5F6000CB0DF /* MainWindow-iPad.xib in Resources */,
-				53BC275E139AF0DD00A825F1 /* folders-tabbaricon@2x.png in Resources */,
-				53BC2762139AF0DD00A825F1 /* server-subsonic@2x.png in Resources */,
-				53BC2789139AF0DD00A825F1 /* folder-dropdown-arrow@2x.png in Resources */,
 				533D181E255F72FF003F962C /* CacheOfflineFoldersViewController.xib in Resources */,
 				533C65A115ABB9B3003EAF29 /* SearchAllViewController.xib in Resources */,
 				53BC2796139AF0DD00A825F1 /* PlaylistSongsViewController.xib in Resources */,
 				533C65DE15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */,
-				5306239914D4BCAD00D320A8 /* eqView@2x.png in Resources */,
 				532B552914D641C500B8AA67 /* ModalAlbumArtViewController.xib in Resources */,
 				534B20DB25619936007FF1D7 /* HomeViewController.xib in Resources */,
-				5301583F15081B0A00B54CEF /* settings-tabbaricon@2x.png in Resources */,
-				53C7FD82150F00C5008DA51C /* home-chat-ipad@2x.png in Resources */,
-				53C7FD85150F00C5008DA51C /* home-jukebox-off-ipad@2x.png in Resources */,
 				53FE35E41EA961540058B925 /* EX2SlidingNotification.xib in Resources */,
-				53C7FD88150F00C5008DA51C /* home-jukebox-on-ipad@2x.png in Resources */,
-				53C7FD91150F00C5008DA51C /* home-quick-ipad@2x.png in Resources */,
-				53C7FD94150F00C5008DA51C /* home-settings-ipad@2x.png in Resources */,
-				53C7FD97150F00C5008DA51C /* home-shuffle-ipad@2x.png in Resources */,
-				530A5F8A1516703F0081A83A /* playing-cell-icon@2x.png in Resources */,
-				530A5F9215167CBA0081A83A /* playing-cell-icon-white@2x.png in Resources */,
 				53493F3215FC6BD90059492E /* KeychainAccessGroups.plist in Resources */,
 				53493F3A15FC6C3B0059492E /* BassEffectDefaultPresets.plist in Resources */,
-				53B65AC116533E4800472DBF /* back-tabbaricon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

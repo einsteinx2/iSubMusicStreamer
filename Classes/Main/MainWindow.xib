@@ -49,7 +49,7 @@
             <viewControllers>
                 <navigationController title="Home" id="163" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="9" title="Home" image="home-tabbaricon.png" id="164"/>
+                    <tabBarItem key="tabBarItem" tag="9" title="Home" image="tabbaricon-home" id="164"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="167">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -65,7 +65,7 @@
                 </navigationController>
                 <navigationController id="27" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" title="Folders" image="folders-tabbaricon.png" id="28"/>
+                    <tabBarItem key="tabBarItem" title="Folders" image="tabbaricon-folders" id="28"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="31">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -81,7 +81,7 @@
                 </navigationController>
                 <navigationController id="69" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="3" title="Playlists" image="playlists-tabbaricon.png" id="70"/>
+                    <tabBarItem key="tabBarItem" tag="3" title="Playlists" image="tabbaricon-playlists" id="70"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="73">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -97,7 +97,7 @@
                 </navigationController>
                 <navigationController id="100" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="7" title="Cache" image="cache-tabbaricon.png" id="101"/>
+                    <tabBarItem key="tabBarItem" tag="7" title="Cache" image="tabbaricon-cache" id="101"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="104">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -113,7 +113,7 @@
                 </navigationController>
                 <navigationController id="35" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="1" title="Albums" image="albums-tabbaricon.png" id="36"/>
+                    <tabBarItem key="tabBarItem" tag="1" title="Albums" image="tabbaricon-albums" id="36"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="39">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -129,7 +129,7 @@
                 </navigationController>
                 <navigationController id="53" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="2" title="Songs" image="songs-tabbaricon.png" id="54"/>
+                    <tabBarItem key="tabBarItem" tag="2" title="Songs" image="tabbaricon-songs" id="54"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="57">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -145,7 +145,7 @@
                 </navigationController>
                 <navigationController title="Bookmarks" id="86" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="4" title="Bookmarks" image="bookmarks-tabbaricon.png" id="90"/>
+                    <tabBarItem key="tabBarItem" tag="4" title="Bookmarks" image="tabbaricon-bookmarks" id="90"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="88">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -159,7 +159,7 @@
                 </navigationController>
                 <navigationController id="64" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="5" title="Playing" image="playing-tabbaricon.png" id="65"/>
+                    <tabBarItem key="tabBarItem" tag="5" title="Playing" image="tabbaricon-playing" id="65"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="68">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -175,7 +175,7 @@
                 </navigationController>
                 <navigationController id="93" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="6" title="Genres" image="genres-tabbaricon.png" id="94"/>
+                    <tabBarItem key="tabBarItem" tag="6" title="Genres" image="tabbaricon-genres" id="94"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="97">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -191,7 +191,7 @@
                 </navigationController>
                 <navigationController id="156" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="8" title="Chat" image="chat-tabbaricon.png" id="157"/>
+                    <tabBarItem key="tabBarItem" tag="8" title="Chat" image="tabbaricon-chat" id="157"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="160">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -222,7 +222,7 @@
             <viewControllers>
                 <navigationController id="120" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" title="Folders" image="folders-tabbaricon.png" id="121"/>
+                    <tabBarItem key="tabBarItem" title="Folders" image="tabbaricon-folders" id="121"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="124">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -238,7 +238,7 @@
                 </navigationController>
                 <navigationController id="125" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" title="Genres" image="genres-tabbaricon.png" id="126"/>
+                    <tabBarItem key="tabBarItem" title="Genres" image="tabbaricon-genres" id="126"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="129">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -254,7 +254,7 @@
                 </navigationController>
                 <navigationController id="130" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" title="Playlists" image="playing-tabbaricon.png" id="131"/>
+                    <tabBarItem key="tabBarItem" title="Playlists" image="tabbaricon-playing" id="131"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="134">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -270,7 +270,7 @@
                 </navigationController>
                 <navigationController id="135" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" title="Bookmarks" image="bookmarks-tabbaricon.png" id="136"/>
+                    <tabBarItem key="tabBarItem" title="Bookmarks" image="tabbaricon-bookmarks" id="136"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="139">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -292,16 +292,16 @@
         </tabBarController>
     </objects>
     <resources>
-        <image name="albums-tabbaricon.png" width="30" height="30"/>
-        <image name="bookmarks-tabbaricon.png" width="30" height="30"/>
-        <image name="cache-tabbaricon.png" width="30" height="30"/>
-        <image name="chat-tabbaricon.png" width="30" height="30"/>
-        <image name="folders-tabbaricon.png" width="30" height="30"/>
-        <image name="genres-tabbaricon.png" width="30" height="30"/>
-        <image name="home-tabbaricon.png" width="30" height="30"/>
-        <image name="playing-tabbaricon.png" width="30" height="30"/>
-        <image name="playlists-tabbaricon.png" width="30" height="30"/>
-        <image name="songs-tabbaricon.png" width="30" height="30"/>
+        <image name="tabbaricon-albums" width="30" height="30"/>
+        <image name="tabbaricon-bookmarks" width="30" height="30"/>
+        <image name="tabbaricon-cache" width="30" height="30"/>
+        <image name="tabbaricon-chat" width="30" height="30"/>
+        <image name="tabbaricon-folders" width="30" height="30"/>
+        <image name="tabbaricon-genres" width="30" height="30"/>
+        <image name="tabbaricon-home" width="30" height="30"/>
+        <image name="tabbaricon-playing" width="30" height="30"/>
+        <image name="tabbaricon-playlists" width="30" height="30"/>
+        <image name="tabbaricon-songs" width="30" height="30"/>
         <systemColor name="darkTextColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

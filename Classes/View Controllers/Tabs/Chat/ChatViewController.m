@@ -78,8 +78,8 @@
 	sendButton.frame = CGRectMake(252, 11, 60, 60);
 	sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 	[sendButton addTarget:self action:@selector(sendButtonAction) forControlEvents:UIControlEventTouchUpInside];
-	[sendButton setImage:[UIImage imageNamed:@"comment-write.png"] forState:UIControlStateNormal];
-	[sendButton setImage:[UIImage imageNamed:@"comment-write-pressed.png"] forState:UIControlStateHighlighted];
+	[sendButton setImage:[UIImage imageNamed:@"comment-write"] forState:UIControlStateNormal];
+	[sendButton setImage:[UIImage imageNamed:@"comment-write-pressed"] forState:UIControlStateHighlighted];
 	[self.headerView addSubview:sendButton];
 	
 	self.tableView.tableHeaderView = self.headerView;
@@ -110,7 +110,7 @@
     
     self.navigationItem.rightBarButtonItem = nil;
 	if (musicS.showPlayerIcon) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 	}
 		
 	[self loadData];
@@ -132,7 +132,7 @@
 		self.noChatMessagesScreen.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
 		self.noChatMessagesScreen.frame = CGRectMake(40, 100, 240, 180);
 		self.noChatMessagesScreen.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-		self.noChatMessagesScreen.image = [UIImage imageNamed:@"loading-screen-image.png"];
+		self.noChatMessagesScreen.image = [UIImage imageNamed:@"loading-screen-image"];
 		self.noChatMessagesScreen.alpha = .80;
 		
 		UILabel *textLabel = [[UILabel alloc] init];
@@ -246,7 +246,7 @@
 		[self.textInput resignFirstResponder];
 
 		if (musicS.showPlayerIcon) {
-			self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
+			self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 		} else {
 			self.navigationItem.rightBarButtonItem = nil;
 		}

@@ -143,7 +143,7 @@
     
     self.navigationItem.rightBarButtonItem = nil;
     if (musicS.showPlayerIcon) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 	}    
 }
 
@@ -292,7 +292,7 @@
 		self.noSongsScreen.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
 		self.noSongsScreen.frame = CGRectMake(40, 100, 240, 180);
 		self.noSongsScreen.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-		self.noSongsScreen.image = [UIImage imageNamed:@"loading-screen-image.png"];
+		self.noSongsScreen.image = [UIImage imageNamed:@"loading-screen-image"];
 		self.noSongsScreen.alpha = .80;
 		self.noSongsScreen.userInteractionEnabled = YES;
 		

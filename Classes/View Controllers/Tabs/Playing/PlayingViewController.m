@@ -59,7 +59,7 @@
 	
     self.navigationItem.rightBarButtonItem = nil;
 	if (musicS.showPlayerIcon) {
-		UIImage *playingImage = [UIImage imageNamed:@"now-playing.png"];
+		UIImage *playingImage = [UIImage systemImageNamed:@"music.quarternote.3"];
 		UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithImage:playingImage style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 		self.navigationItem.rightBarButtonItem = buttonItem;
 	}
@@ -171,7 +171,7 @@
 			self.nothingPlayingScreen.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
 			self.nothingPlayingScreen.frame = CGRectMake(40, 100, 240, 180);
 			self.nothingPlayingScreen.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-			self.nothingPlayingScreen.image = [UIImage imageNamed:@"loading-screen-image.png"];
+			self.nothingPlayingScreen.image = [UIImage imageNamed:@"loading-screen-image"];
 			self.nothingPlayingScreen.alpha = .80;
 			
 			UILabel *textLabel = [[UILabel alloc] init];

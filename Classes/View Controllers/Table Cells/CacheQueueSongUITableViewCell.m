@@ -92,26 +92,6 @@
 	self.artistNameLabel.frame = newFrame;
 }
 
-- (void)toggleDelete {
-    if (!self.md5)
-        return;
-    
-//	if (self.isDelete)
-//	{
-//		[viewObjectsS.multiDeleteList removeObject:self.md5];
-//		[NSNotificationCenter postNotificationToMainThreadWithName:@"hideDeleteButton"];
-//		self.deleteToggleImage.image = [UIImage imageNamed:@"unselected.png"];
-//	}
-//	else
-//	{
-//		[viewObjectsS.multiDeleteList addObject:self.md5];
-//		[NSNotificationCenter postNotificationToMainThreadWithName:@"showDeleteButton"];
-//		self.deleteToggleImage.image = [UIImage imageNamed:@"selected.png"];
-//	}
-//	
-//	self.isDelete = !self.isDelete;
-}
-
 #pragma mark - Scrolling
 
 - (void)scrollLabels {

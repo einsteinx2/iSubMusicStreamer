@@ -164,7 +164,7 @@ LOG_LEVEL_ISUB_DEFAULT
     
     self.navigationItem.rightBarButtonItem = nil;
 	if (musicS.showPlayerIcon) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"now-playing.png"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 	}
 	
     // Reload the data in case it changed
@@ -417,7 +417,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.noPlaylistsScreen.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
 	self.noPlaylistsScreen.frame = CGRectMake(40, 100, 240, 180);
 	self.noPlaylistsScreen.center = CGPointMake(self.view.frame.size.width / 2, self.view.frame.size.height / 2);
-	self.noPlaylistsScreen.image = [UIImage imageNamed:@"loading-screen-image.png"];
+	self.noPlaylistsScreen.image = [UIImage imageNamed:@"loading-screen-image"];
 	self.noPlaylistsScreen.alpha = .80;
 	self.noPlaylistsScreen.userInteractionEnabled = YES;
 	

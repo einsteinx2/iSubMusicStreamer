@@ -87,29 +87,29 @@ import SnapKit
         cellContents.removeAll()
         
         if AppDelegate.shared().referringAppUrl != nil {
-            cellContents.append((imageName: "back-tabbaricon", text: "Back"))
+            cellContents.append((imageName: "tabbaricon-back", text: "Back"))
         }
         
         if Settings.shared().isOfflineMode {
-            cellContents.append((imageName: "settings-tabbaricon", text: "Settings"))
-            cellContents.append((imageName: "folders-tabbaricon", text: "Folders"))
-            cellContents.append((imageName: "genres-tabbaricon", text: "Genres"))
-            cellContents.append((imageName: "playlists-tabbaricon", text: "Playlists"))
-            cellContents.append((imageName: "bookmarks-tabbaricon", text: "Bookmarks"))
+            cellContents.append((imageName: "tabbaricon-settings", text: "Settings"))
+            cellContents.append((imageName: "tabbaricon-folders", text: "Folders"))
+            cellContents.append((imageName: "tabbaricon-genres", text: "Genres"))
+            cellContents.append((imageName: "tabbaricon-playlists", text: "Playlists"))
+            cellContents.append((imageName: "tabbaricon-bookmarks", text: "Bookmarks"))
         } else {
-            cellContents.append((imageName: "settings-tabbaricon", text: "Settings"))
-            cellContents.append((imageName: "home-tabbaricon", text: "Home"))
-            cellContents.append((imageName: "folders-tabbaricon", text: "Folders"))
-            cellContents.append((imageName: "playlists-tabbaricon", text: "Playlists"))
-            cellContents.append((imageName: "cache-tabbaricon", text: "Cache"))
-            cellContents.append((imageName: "bookmarks-tabbaricon", text: "Bookmarks"))
-            cellContents.append((imageName: "playing-tabbaricon", text: "Playing"))
-            cellContents.append((imageName: "chat-tabbaricon", text: "Chat"))
+            cellContents.append((imageName: "tabbaricon-settings", text: "Settings"))
+            cellContents.append((imageName: "tabbaricon-home", text: "Home"))
+            cellContents.append((imageName: "tabbaricon-folders", text: "Folders"))
+            cellContents.append((imageName: "tabbaricon-playlists", text: "Playlists"))
+            cellContents.append((imageName: "tabbaricon-cache", text: "Cache"))
+            cellContents.append((imageName: "tabbaricon-bookmarks", text: "Bookmarks"))
+            cellContents.append((imageName: "tabbaricon-playing", text: "Playing"))
+            cellContents.append((imageName: "tabbaricon-chat", text: "Chat"))
             
             if Settings.shared().isSongsTabEnabled {
-                cellContents.append((imageName: "genres-tabbaricon", text: "Genres"))
-                cellContents.append((imageName: "albums-tabbaricon", text: "Albums"))
-                cellContents.append((imageName: "songs-tabbaricon", text: "Songs"))
+                cellContents.append((imageName: "tabbaricon-genres", text: "Genres"))
+                cellContents.append((imageName: "tabbaricon-albums", text: "Albums"))
+                cellContents.append((imageName: "tabbaricon-songs", text: "Songs"))
             }
         }
         

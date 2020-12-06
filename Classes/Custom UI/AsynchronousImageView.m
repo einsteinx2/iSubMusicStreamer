@@ -97,7 +97,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		}
 		[self loadImageFromURLString:[musicS.coverArtUrl absoluteString]];
 	} else  {
-		self.image = [UIImage imageNamed:@"default-album-art.png"];
+		self.image = [UIImage imageNamed:@"default-album-art"];
 	}*/
 }
 
