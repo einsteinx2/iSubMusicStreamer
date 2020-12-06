@@ -102,7 +102,7 @@ LOG_LEVEL_ISUB_DEFAULT
     self.title = @"Playlists";
 	
     if (settingsS.isOfflineMode) {
-		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"gear.png"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsAction:)];
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"gearshape.fill"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsAction:)];
     }
     
     self.segmentControlContainer = [[UIView alloc] init];

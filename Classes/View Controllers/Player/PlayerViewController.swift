@@ -130,7 +130,7 @@ import CocoaLumberjackSwift
         view.overrideUserInterfaceStyle = .dark
         view.backgroundColor = UIColor(named: "isubBackgroundColor")
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image:  UIImage(named: "player-overlay"), style: .plain, target: self, action: #selector(showCurrentPlaylist))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image:  UIImage(systemName: "list.number"), style: .plain, target: self, action: #selector(showCurrentPlaylist))
         
         //
         // Cover art
@@ -583,7 +583,7 @@ import CocoaLumberjackSwift
         guard let song = PlayQueue.shared().currentSong() else {
             currentSong = nil
             coverArtPageControl.coverArtId = nil
-            coverArtPageControl.coverArtImage = UIImage(named: "default-album-art-ipad")
+            coverArtPageControl.coverArtImage = UIImage(named: "default-album-art")
             songNameLabel.text = nil
             artistNameLabel.text = nil
             progressSlider.value = 0

@@ -48,23 +48,18 @@ LOG_LEVEL_ISUB_DEFAULT
 			UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
 //			headerView.backgroundColor = viewObjectsS.darkNormal;
 			
-			UIImageView *sendImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"upload-playlist.png"]];
-			sendImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-			sendImage.frame = CGRectMake(23, 11, 24, 24);
-			[headerView addSubview:sendImage];
-			
-			UILabel *sendLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 320, 50)];
+			UILabel *sendLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
 			sendLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
 			sendLabel.backgroundColor = [UIColor clearColor];
             sendLabel.textColor = UIColor.labelColor;
 			sendLabel.textAlignment = NSTextAlignmentCenter;
-			sendLabel.font = [UIFont boldSystemFontOfSize:30];
+			sendLabel.font = [UIFont boldSystemFontOfSize:24];
 			sendLabel.text = @"Save to Server";
 			[headerView addSubview:sendLabel];
 			
 			UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			sendButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-			sendButton.frame = CGRectMake(0, 0, 320, 40);
+			sendButton.frame = CGRectMake(0, 0, 320, 50);
 			[sendButton addTarget:self action:@selector(uploadPlaylistAction:) forControlEvents:UIControlEventTouchUpInside];
 			[headerView addSubview:sendButton];
 			

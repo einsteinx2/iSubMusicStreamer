@@ -30,7 +30,6 @@
 	self.isNothingPlayingScreenShowing = NO;
 		
 	self.title = @"Now Playing";
-	//self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"gear.png"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsAction:)] autorelease];
 	
 	self.dataModel = [[SUSNowPlayingDAO alloc] initWithDelegate:self];
 	

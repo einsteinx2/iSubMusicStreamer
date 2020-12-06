@@ -53,11 +53,7 @@
 }
 
 - (UIImage *)defaultCoverArtImage {
-    if (self.isLarge) {
-		return UIDevice.isIPad ? [UIImage imageNamed:@"default-album-art-ipad"] : [UIImage imageNamed:@"default-album-art"];
-    } else {
-		return [UIImage imageNamed:@"default-album-art-small"];
-    }
+    return self.isLarge ? [UIImage imageNamed:@"default-album-art"] : [UIImage imageNamed:@"default-album-art-small"];
 }
 
 - (BOOL)isCoverArtCached {
@@ -66,8 +62,8 @@
 }
 
 - (void)downloadArtIfNotExists {
-	if (self.coverArtId) {
-		if (!self.isCoverArtCached) [self startLoad];
+	if (self.coverArtId && !self.isCoverArtCached) {
+		[self startLoad];
 	}
 }
 

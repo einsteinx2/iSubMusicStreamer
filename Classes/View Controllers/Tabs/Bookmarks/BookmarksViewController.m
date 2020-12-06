@@ -50,7 +50,7 @@
 	self.title = @"Bookmarks";
 	
     if (settingsS.isOfflineMode) {
-		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"gear.png"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsAction:)];
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"gearshape.fill"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsAction:)];
     }
     
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
