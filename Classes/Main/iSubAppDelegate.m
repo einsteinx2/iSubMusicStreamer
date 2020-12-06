@@ -93,6 +93,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	fileLogger.rollingFrequency = 60 * 60 * 24; // 24 hour rolling
 	fileLogger.logFileManager.maximumNumberOfLogFiles = 7;
 	[DDLog addLogger:fileLogger];
+    [Defines setupDefaultLogLevel];
     
     // Log system information
     NSString *version = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"];
@@ -112,7 +113,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
     // Request authorization to send background notifications
     [UNUserNotificationCenter.currentNotificationCenter requestAuthorizationWithOptions:UNAuthorizationOptionAlert|UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error) {
-        DDLogVerbose(@"Request for local notifications granted: %@", NSStringFromBOOL(granted));
+        DDLogInfo(@"[iSubAppDelegate] Request for local notifications granted: %@", NSStringFromBOOL(granted));
     }];
     
 	// Handle offline mode
@@ -198,9 +199,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(removeMoviePlayer) name:ISMSNotification_RemoveMoviePlayer];
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(jukeboxToggled) name:ISMSNotification_JukeboxDisabled];
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(jukeboxToggled) name:ISMSNotification_JukeboxEnabled];
-    
-    [self startHLSProxy];
-    
+        
 	// Recover current state if player was interrupted
 	[ISMSStreamManager sharedInstance];
 	[musicS resumeSong];
@@ -218,23 +217,9 @@ LOG_LEVEL_ISUB_DEFAULT
     }
 }
 
-// TODO: Fix video playback
-- (void)startHLSProxy {
-//    self.hlsProxyServer = [[HTTPServer alloc] init];
-//    self.hlsProxyServer.connectionClass = [HLSProxyConnection class];
-//
-//    NSError *error;
-//	BOOL success = [self.hlsProxyServer start:&error];
-//
-//	if(!success)
-//	{
-//		DDLogError(@"Error starting HLS proxy server: %@", error);
-//	}
-}
-
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
     // Handle being openned by a URL
-    DDLogVerbose(@"url host: %@ path components: %@", url.host, url.pathComponents );
+    DDLogVerbose(@"[iSubAppDelegate] url host: %@ path components: %@", url.host, url.pathComponents );
     
     if (url.host) {
         if ([[url.host lowercaseString] isEqualToString:@"play"]) {
@@ -313,7 +298,7 @@ LOG_LEVEL_ISUB_DEFAULT
         [viewObjectsS hideLoadingScreen];
         
         if (!settingsS.isOfflineMode) {
-            DDLogVerbose(@"Loading failed for loading type %i, entering offline mode. Error: %@", theLoader.type, error);
+            DDLogVerbose(@"[iSubAppDelegate] Loading failed for loading type %i, entering offline mode. Error: %@", theLoader.type, error);
             [self enterOfflineMode];
         }
         
@@ -602,7 +587,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (currentReachabilityStatus == NotReachable) {
 		// Change over to offline mode
 		if (!settingsS.isOfflineMode) {
-            DDLogVerbose(@"Reachability changed to NotReachable, prompting to go to offline mode");
+            DDLogVerbose(@"[iSubAppDelegate] Reachability changed to NotReachable, prompting to go to offline mode");
 			[self enterOfflineMode];
 		}
 	} else if (currentReachabilityStatus == ReachableViaWWAN && settingsS.isDisableUsageOver3G) {
@@ -711,7 +696,6 @@ LOG_LEVEL_ISUB_DEFAULT
     NSString *urlString = [NSString stringWithFormat:@"http://localhost:%lu%@?%@", self.hlsProxyServer.port, request.URL.relativePath, request.URL.query];
     NSString *originUrlString = [NSString stringWithFormat:@"%@://%@:%@%@", request.URL.scheme, request.URL.host, request.URL.port, request.URL.path];
     urlString = [NSString stringWithFormat:@"%@&__hls_origin_url=%@", urlString, originUrlString];
-    DDLogVerbose(@"TEST HLS urlString: %@", urlString);
 
     AVPlayer *player = [AVPlayer playerWithURL:[NSURL URLWithString:urlString]];
     player.allowsExternalPlayback = NO; // Disable AirPlay since it won't work with the proxy server
@@ -726,13 +710,13 @@ LOG_LEVEL_ISUB_DEFAULT
         NSError *error = nil;
         [AVAudioSession.sharedInstance setActive:YES error:&error];
         if (error) {
-            DDLogError(@"Failed to activate audio session for video playback: %@", error.localizedDescription);
+            DDLogError(@"[iSubAppDelegate] Failed to activate audio session for video playback: %@", error.localizedDescription);
         }
         
         // Allow audio playback when mute switch is on
         [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback mode:AVAudioSessionModeMoviePlayback options:0 error:&error];
         if (error) {
-            DDLogError(@"Failed to set audio session category/mode for video playback: %@", error.localizedDescription);
+            DDLogError(@"[iSubAppDelegate] Failed to set audio session category/mode for video playback: %@", error.localizedDescription);
         }
         
         // Auto-start playback
@@ -747,7 +731,6 @@ LOG_LEVEL_ISUB_DEFAULT
         // If the window has been dismissed (superview is nil), clean up the player controller
         if (!playerViewController.view.superview) {
             // Clean up the player controller
-            DDLogVerbose(@"TEST player ended full screen presentation");
             [playerViewController.player pause];
             playerViewController.player.rate = 0.0;
             playerViewController.player = nil;
@@ -762,7 +745,7 @@ LOG_LEVEL_ISUB_DEFAULT
 //            NSError *error = nil;
 //            [AVAudioSession.sharedInstance setActive:NO error:&error];
 //            if (error) {
-//                DDLogError(@"Failed to deactivate audio session for video playback: %@", error.localizedDescription);
+//                DDLogError(@"[iSubAppDelegate] Failed to deactivate audio session for video playback: %@", error.localizedDescription);
 //            }
         }
     }];

@@ -71,8 +71,8 @@ import CocoaLumberjackSwift
               return completion(GCDWebServerErrorResponse(statusCode: 500))
             }
             
-            DDLogVerbose("HLS playlist data size: \(data.count)")
-            DDLogVerbose("HLS playlist content: \(String(data: data, encoding: .utf8) ?? "")")
+            DDLogInfo("[HLSReverseProxyServer] HLS playlist data size: \(data.count)")
+            DDLogVerbose("[HLSReverseProxyServer] HLS playlist content: \(String(data: data, encoding: .utf8) ?? "")")
 
             let playlistData = self.reverseProxyPlaylist(with: data, forOriginURL: originURL)
             let contentType = response.mimeType ?? "application/x-mpegurl"
@@ -98,7 +98,7 @@ import CocoaLumberjackSwift
               return completion(GCDWebServerErrorResponse(statusCode: 500))
             }
             
-            DDLogVerbose("HLS segment data size: \(data.count)")
+            DDLogInfo("[HLSReverseProxyServer] HLS segment data size: \(data.count)")
 
             let contentType = response.mimeType ?? "video/mp2t"
             completion(GCDWebServerDataResponse(data: data, contentType: contentType))
@@ -120,7 +120,7 @@ import CocoaLumberjackSwift
         }
         
         let url = URL(string: urlString)
-        DDLogVerbose("originURL: \(url?.absoluteString ?? "")")
+        DDLogVerbose("[HLSReverseProxyServer] originURL: \(url?.absoluteString ?? "")")
         return url
     }
 
@@ -181,7 +181,7 @@ import CocoaLumberjackSwift
         }
 
         let absoluteURL = URL(string: scheme + "://" + host + ":\(originPort)" + path)?.standardized
-        DDLogVerbose("absoluteURL: \(absoluteURL?.absoluteString ?? "")")
+        DDLogVerbose("[HLSReverseProxyServer] absoluteURL: \(absoluteURL?.absoluteString ?? "")")
         return absoluteURL
     }
 }

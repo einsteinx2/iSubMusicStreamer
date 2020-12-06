@@ -252,12 +252,11 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
         SUSDropdownFolderLoader *theLoader = (SUSDropdownFolderLoader *)loader;
         if (success) {
             self.folders = theLoader.updatedfolders;
-            DDLogVerbose(@"%@", self.folders);
-            DDLogVerbose(@"%@", theLoader.updatedfolders);
             [SUSRootFoldersDAO setFolderDropdownFolders:self.folders];
         } else {
             // TODO: Handle error
             // failed.  how to report this to the user?
+            DDLogError(@"[FolderDropdownControl] failed to update folders: %@", error.localizedDescription);
         }
     }];
     [loader startLoad];

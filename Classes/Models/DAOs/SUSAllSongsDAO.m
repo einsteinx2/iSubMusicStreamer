@@ -111,7 +111,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		NSString *query = @"INSERT INTO allSongsNameSearch SELECT ROWID FROM allSongs WHERE title LIKE ? LIMIT 100";
 		[db executeUpdate:query, [NSString stringWithFormat:@"%%%@%%", name]];
 		if ([db hadError])
-			DDLogError(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+			DDLogError(@"[SUSAllSongsDAO] Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
 	}];
 }
 

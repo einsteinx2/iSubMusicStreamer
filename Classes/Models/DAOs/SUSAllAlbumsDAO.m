@@ -121,7 +121,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		[db executeUpdate:query, [NSString stringWithFormat:@"%%%@%%", name]];
 		//if ([db hadError])
 		//DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-        DDLogVerbose(@"allAlbumsNameSearch count: %i", [db intForQuery:@"SELECT count(*) FROM allAlbumsNameSearch"]);
+        DDLogVerbose(@"[SUSAllAlbumsDAO] allAlbumsNameSearch count: %i", [db intForQuery:@"SELECT count(*) FROM allAlbumsNameSearch"]);
 	}];
 }
 

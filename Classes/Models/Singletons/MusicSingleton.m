@@ -161,20 +161,20 @@ double startSongSeconds = 0.0;
 }
 
 - (void)prevSong {
-	DDLogVerbose(@"[MusicSingleton] prevSong called");
+    DDLogInfo(@"[MusicSingleton] prevSong called");
 	if (audioEngineS.player.progress > 10.0) {
 		// Past 10 seconds in the song, so restart playback instead of changing songs
-		DDLogVerbose(@"[MusicSingleton] prevSong Past 10 seconds in the song, so restart playback instead of changing songs, calling playSongAtPosition:%lu", (unsigned long)playlistS.currentIndex);
+        DDLogInfo(@"[MusicSingleton] prevSong Past 10 seconds in the song, so restart playback instead of changing songs, calling playSongAtPosition:%lu", (unsigned long)playlistS.currentIndex);
 		[self playSongAtPosition:playlistS.currentIndex];
 	} else {
 		// Within first 10 seconds, go to previous song
-		DDLogVerbose(@"[MusicSingleton] prevSong within first 10 seconds, so go to previous, calling playSongAtPosition:%lu", (unsigned long)playlistS.prevIndex);
+        DDLogInfo(@"[MusicSingleton] prevSong within first 10 seconds, so go to previous, calling playSongAtPosition:%lu", (unsigned long)playlistS.prevIndex);
 		[self playSongAtPosition:playlistS.prevIndex];
 	}
 }
 
 - (void)nextSong {
-	DDLogVerbose(@"[MusicSingleton] nextSong called, calling playSongAtPosition:%lu", (unsigned long)playlistS.nextIndex);
+    DDLogInfo(@"[MusicSingleton] nextSong called, calling playSongAtPosition:%lu", (unsigned long)playlistS.nextIndex);
 	[self playSongAtPosition:playlistS.nextIndex];
 }
 

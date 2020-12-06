@@ -203,7 +203,7 @@ LOG_LEVEL_ISUB_DEFAULT
             
             if (!handler.mySong.isFullyCached && !handler.mySong.isTempCached && !([cacheQueueManagerS.currentQueuedSong isEqualToSong:handler.mySong] && cacheQueueManagerS.isQueueDownloading))
             {
-                DDLogVerbose(@"Removing song from cached songs table: %@", handler.mySong);
+                DDLogInfo(@"[ISMSStreamManager] Removing song from cached songs table: %@", handler.mySong);
                 [handler.mySong removeFromCachedSongsTableDbQueue];
             }
 			//[handler.mySong removeFromCachedSongsTableDbQueue];
@@ -283,7 +283,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		ISMSStreamHandler *handler = [self.handlerStack objectAtIndex:index];
 		if (!handler.mySong.isFullyCached && !handler.mySong.isTempCached && !([cacheQueueManagerS.currentQueuedSong isEqualToSong:handler.mySong] && cacheQueueManagerS.isQueueDownloading))
         {
-            DDLogVerbose(@"Removing song from cached songs table: %@", handler.mySong);
+            DDLogInfo(@"[ISMSStreamManager] Removing song from cached songs table: %@", handler.mySong);
             [handler.mySong removeFromCachedSongsTableDbQueue];
         }
         [self.handlerStack removeObjectAtIndexSafe:index];
@@ -381,7 +381,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (!handler)
 		return;
 	
-	DDLogVerbose(@"[ISMSStreamManager] starting handler, handlerStack: %@", self.handlerStack);
+    DDLogInfo(@"[ISMSStreamManager] starting handler, handlerStack: %@", self.handlerStack);
 	
 	[self startHandler:handler resume:NO];
 }
@@ -408,7 +408,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		handler.delegate = self;
 	}
 	
-	DDLogVerbose(@"[ISMSStreamManager] load handler stack, handlerStack: %@", self.handlerStack);
+    DDLogInfo(@"[ISMSStreamManager] load handler stack, handlerStack: %@", self.handlerStack);
 
 }
 
@@ -506,7 +506,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			}
 		}
 		
-		DDLogVerbose(@"[ISMSStreamManager] fill stream queue, handlerStack: %@", self.handlerStack);
+        DDLogInfo(@"[ISMSStreamManager] fill stream queue, handlerStack: %@", self.handlerStack);
 	}
 }
 
@@ -652,7 +652,7 @@ LOG_LEVEL_ISUB_DEFAULT
                 [handler.mySong removeFromCacheQueueDbQueue];
             }
             
-            DDLogVerbose(@"Marking isFullyCached = YES for %@", handler.mySong);
+            DDLogInfo(@"[ISMSStreamManager] Marking isFullyCached = YES for %@", handler.mySong);
 			handler.mySong.isFullyCached = YES;
 		}
 		
@@ -689,7 +689,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		// Resume any handlers that were downloading when iSub closed
 		if (handler.isDownloading && !handler.isTempCache)
 		{
-			DDLogVerbose(@"[ISMSStreamManager] resuming starting handler");
+            DDLogInfo(@"[ISMSStreamManager] resuming starting handler");
 			[handler start:YES];
 		}
 	}

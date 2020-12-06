@@ -12,19 +12,18 @@
 #import "ISMSNotificationNames.h"
 
 #ifdef BETA
+    // Log everything in beta builds unless SILENT is enabled, then log nothing (NSLogs and files using LOG_LEVEL_ISUB_DEBUG only)
     #ifdef SILENT
-        #define LOG_LEVEL_ISUB_DEFAULT static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
+        #define LOG_LEVEL_ISUB_DEFAULT static const DDLogLevel ddLogLevel = DDLogLevelOff;
     #else
-        #define LOG_LEVEL_ISUB_DEFAULT static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
+        #define LOG_LEVEL_ISUB_DEFAULT static const DDLogLevel ddLogLevel = DDLogLevelAll;
     #endif
 #else
-    #define LOG_LEVEL_ISUB_DEFAULT static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
+    // Only log DDLogInfo, DDLogWarning, and DDLogError in release builds for privacy and to reduce log spam for every API call
+    #define LOG_LEVEL_ISUB_DEFAULT static const DDLogLevel ddLogLevel = DDLogLevelInfo;
 #endif
 
-#ifdef BETA
-    #define LOG_LEVEL_ISUB_DEBUG static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
-#else
-    #define LOG_LEVEL_ISUB_DEBUG static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
-#endif
+// Log everything even on release builds
+#define LOG_LEVEL_ISUB_DEBUG static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 
 #endif

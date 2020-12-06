@@ -395,7 +395,7 @@ LOG_LEVEL_ISUB_DEFAULT
         NSError *error = nil;
         BOOL success = [NSFileManager.defaultManager removeItemAtURL:pathURL error:&error];
         if (!success || error) {
-            DDLogError(@"Failed to remove log file at path %@ with error: %@", path, error.localizedDescription);
+            DDLogError(@"[SettingsTabViewController] Failed to remove log file at path %@ with error: %@", path, error.localizedDescription);
         }
     };
     [self presentViewController:shareSheet animated:YES completion:nil];

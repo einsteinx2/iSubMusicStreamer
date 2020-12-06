@@ -84,7 +84,7 @@ LOG_LEVEL_ISUB_DEFAULT
 //            NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"stream" parameters:@{@"id": n2N(currentSong.songId)} byteOffset:0];
 //            if ([[NSURLConnection alloc] initWithRequest:request delegate:self])
 //            {
-//                DDLogVerbose(@"notified Subsonic about cached song %@", currentSong.title);
+//                DDLogInfo(@"[SocialSingleton] notified Subsonic about cached song %@", currentSong.title);
 //            }
 //		}
 //	}
@@ -110,7 +110,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)scrobbleSong:(ISMSSong*)aSong isSubmission:(BOOL)isSubmission {
 	if (settingsS.isScrobbleEnabled && !settingsS.isOfflineMode) {
 		SUSScrobbleLoader *loader = [[SUSScrobbleLoader alloc] initWithCallbackBlock:^(BOOL success, NSError *error, SUSLoader *loader) {
-            DDLogVerbose(@"Scrobble successfully completed for song: %@", aSong.title);
+            DDLogInfo(@"[SocialSingleton] Scrobble successfully completed for song: %@", aSong.title);
         }];
         loader.aSong = aSong;
         loader.isSubmission = isSubmission;

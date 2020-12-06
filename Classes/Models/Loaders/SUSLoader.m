@@ -76,12 +76,11 @@ static dispatch_once_t _sharedSessionDispatchOnce = 0;
     self.dataTask = [[self.class sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
             // Inform the delegate that loading failed
-            DDLogError(@"loader type: %i failed: %@", self.type, error.localizedDescription);
+            DDLogError(@"[SUSLoader] loader type: %i failed: %@", self.type, error.localizedDescription);
             [self informDelegateLoadingFailed:error];
         } else {
             self.receivedData = data;
-            
-            DDLogVerbose(@"loader type: %i response:\n%@", self.type, [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+            DDLogVerbose(@"[SUSLoader] loader type: %i response:\n%@", self.type, [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
             [self processResponse];
         }
     }];

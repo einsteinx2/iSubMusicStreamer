@@ -624,12 +624,12 @@ import CocoaLumberjackSwift
                                 make.bottom.equalTo(self.progressSlider).offset(3)
                             }
                         } catch {
-                            DDLogError("Failed to update constraints for download progress: \(error)")
+                            DDLogError("[PlayerViewController] Failed to update constraints for download progress: \(error)")
                         }
                     }
                 }
             } catch {
-                DDLogError("Failed to update constraints for download progress: \(error)")
+                DDLogError("[PlayerViewController] Failed to update constraints for download progress: \(error)")
             }
         }
         
@@ -724,7 +724,7 @@ import CocoaLumberjackSwift
                     }
                     result.close()
                 } catch {
-                    DDLogError("Failed to query the bookmark count: \(error)")
+                    DDLogError("[PlayerViewController] Failed to query the bookmark count: \(error)")
                 }
             }
         }

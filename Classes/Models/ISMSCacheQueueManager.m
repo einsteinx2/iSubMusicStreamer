@@ -24,7 +24,7 @@
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 
-LOG_LEVEL_ISUB_DEBUG
+LOG_LEVEL_ISUB_DEFAULT
 
 #define maxNumOfReconnects 5
 
@@ -63,7 +63,7 @@ LOG_LEVEL_ISUB_DEBUG
 		return;
     }
     
-    DDLogVerbose(@"[ISMSCacheQueueManager] starting download queue for: %@", self.currentQueuedSong);
+    DDLogInfo(@"[ISMSCacheQueueManager] starting download queue for: %@", self.currentQueuedSong);
 	
 	// For simplicity sake, just make sure we never go under 25 MB and let the cache check process take care of the rest
 	if (cacheS.freeSpace <= 25 * 1024 * 1024) {
@@ -88,7 +88,7 @@ LOG_LEVEL_ISUB_DEBUG
 	
 	// Check if the song is fully cached and if so, remove it from the queue and return
 	if (self.currentQueuedSong.isFullyCached) {
-		DDLogVerbose(@"[ISMSCacheQueueManager] Marking %@ as downloaded because it's already fully cached", self.currentQueuedSong.title);
+        DDLogInfo(@"[ISMSCacheQueueManager] Marking %@ as downloaded because it's already fully cached", self.currentQueuedSong.title);
 		
 		// Mark it as downloaded
 		//self.currentQueuedSong.isDownloaded = YES;
@@ -126,7 +126,7 @@ LOG_LEVEL_ISUB_DEBUG
 	// Create the stream handler
 	ISMSStreamHandler *handler = [streamManagerS handlerForSong:self.currentQueuedSong];
 	if (handler) {
-		DDLogVerbose(@"[ISMSCacheQueueManager] stealing %@ from stream manager", handler.mySong.title);
+        DDLogInfo(@"[ISMSCacheQueueManager] stealing %@ from stream manager", handler.mySong.title);
 		
 		// It's in the stream queue so steal the handler
 		self.currentStreamHandler = handler;
@@ -136,7 +136,7 @@ LOG_LEVEL_ISUB_DEBUG
 			[self.currentStreamHandler start:YES];
 		}
 	} else {
-		DDLogVerbose(@"[ISMSCacheQueueManager] CQ creating download handler for %@", self.currentQueuedSong.title);
+        DDLogInfo(@"[ISMSCacheQueueManager] CQ creating download handler for %@", self.currentQueuedSong.title);
 		self.currentStreamHandler = [[ISMSNSURLSessionStreamHandler alloc] initWithSong:self.currentQueuedSong isTemp:NO delegate:self];
 		self.currentStreamHandler.partialPrecacheSleep = NO;
 		[self.currentStreamHandler start];
@@ -261,7 +261,7 @@ LOG_LEVEL_ISUB_DEBUG
 		[self stopDownloadQueue];
 	}
     
-    DDLogVerbose(@"finished download took %f seconds", [[NSDate date] timeIntervalSinceDate:start]);
+    DDLogInfo(@"[ISMSCacheQueueManager] finished download took %f seconds", [[NSDate date] timeIntervalSinceDate:start]);
 }
 
 #pragma mark Singleton methods

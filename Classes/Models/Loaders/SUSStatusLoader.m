@@ -38,9 +38,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [super startLoad];
 }
 
-- (void)processResponse {
-    DDLogVerbose(@"SUSStatusLoader: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
-    
+- (void)processResponse {    
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
     if (!root.isValid) {
         NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];

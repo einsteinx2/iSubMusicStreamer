@@ -15,6 +15,8 @@
 #import "ISMSSong+DAO.h"
 #import "Swift.h"
 
+LOG_LEVEL_ISUB_DEFAULT
+
 @interface JukeboxXMLParserDelegate : NSObject <NSXMLParserDelegate>
 @property NSUInteger currentIndex;
 @property BOOL isPlaying;
@@ -233,6 +235,8 @@
 }
 
 - (void)subsonicErrorCode:(NSString *)errorCode message:(NSString *)message {
+    DDLogError(@"[JukeboxSingleton] subsonic error %@: %@", errorCode, message);
+    
     [EX2Dispatch runInMainThreadAsync:^{
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Subsonic Error" message:message preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];

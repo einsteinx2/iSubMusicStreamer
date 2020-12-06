@@ -122,13 +122,13 @@ static void initialize_navigationBarImages() {
     
     // Check to see if the data is a valid image. If so, use it; if not, use the default image.
     if ([UIImage imageWithData:self.receivedData]) {
-        DDLogVerbose(@"art loading completed for: %@", self.coverArtId);
+        DDLogInfo(@"[SUSCoverArtLoader] art loading completed for: %@", self.coverArtId);
         [self.dbQueue inDatabase:^(FMDatabase *db) {
             [db executeUpdate:@"REPLACE INTO coverArtCache (id, data) VALUES (?, ?)", self.coverArtId.md5, self.receivedData];
         }];
         [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CoverArtFinishedInternal object:self.coverArtId];
     } else {
-        DDLogVerbose(@"art loading failed for: %@", self.coverArtId);
+        DDLogError(@"[SUSCoverArtLoader] art loading failed for: %@", self.coverArtId);
         [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CoverArtFinishedInternal object:self.coverArtId];
     }
 }

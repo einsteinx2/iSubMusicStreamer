@@ -136,7 +136,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
-    DDLogVerbose(@"[AsynchronousImageView] async cover art loading failed");
+    DDLogError(@"[AsynchronousImageView] async cover art loading failed");
     
 	[self.activityIndicator removeFromSuperview];
 	self.activityIndicator = nil;
@@ -148,7 +148,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)loadingFinished:(SUSLoader *)theLoader {
-    DDLogVerbose(@"[AsynchronousImageView] async cover art loading finished for: %@", self.coverArtId);
+    DDLogInfo(@"[AsynchronousImageView] async cover art loading finished for: %@", self.coverArtId);
     
 	[self.activityIndicator removeFromSuperview];
 	self.activityIndicator = nil;

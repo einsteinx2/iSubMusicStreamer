@@ -521,7 +521,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
                     [query appendFormat:@" AND seg%i = ? ", i];
                 }
                 
-                DDLogVerbose(@"query: %@, parameter: %@", query, newSegments);
+                DDLogVerbose(@"[CacheAlbumViewController] query: %@, parameter: %@", query, newSegments);
                 NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:0];
                 [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
                     FMResultSet *result = [db executeQuery:query withArgumentsInArray:newSegments];
@@ -534,7 +534,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
                     [result close];
                 }];
                 
-                DDLogVerbose(@"songMd5s: %@", songMd5s);
+                DDLogVerbose(@"[CacheAlbumViewController] songMd5s: %@", songMd5s);
                 for (NSString *md5 in songMd5s) {
                     @autoreleasepool {
                         [ISMSSong removeSongFromCacheDbQueueByMD5:md5];

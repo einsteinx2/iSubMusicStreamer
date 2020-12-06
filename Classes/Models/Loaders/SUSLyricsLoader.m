@@ -71,7 +71,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[databaseS.lyricsDbQueue inDatabase:^(FMDatabase *db) {
 		 [db executeUpdate:@"INSERT INTO lyrics (artist, title, lyrics) VALUES (?, ?, ?)", self.artist, self.title, self.loadedLyrics];
          if ([db hadError]) {
-             DDLogError(@"Err inserting lyrics %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+             DDLogError(@"[SUSLyricsLoader] Err inserting lyrics %d: %@", [db lastErrorCode], [db lastErrorMessage]);
          }
 	 }];
 }

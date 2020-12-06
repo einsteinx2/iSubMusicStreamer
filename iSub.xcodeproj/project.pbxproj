@@ -1036,10 +1036,6 @@
 		53FE36381EA961710058B925 /* CacheSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheSingleton.m; sourceTree = "<group>"; };
 		53FE36391EA961710058B925 /* DatabaseSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseSingleton.h; sourceTree = "<group>"; };
 		53FE363A1EA961710058B925 /* DatabaseSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseSingleton.m; sourceTree = "<group>"; };
-		53FE363B1EA961710058B925 /* HLSProxyConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HLSProxyConnection.h; sourceTree = "<group>"; };
-		53FE363C1EA961710058B925 /* HLSProxyConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HLSProxyConnection.m; sourceTree = "<group>"; };
-		53FE363D1EA961710058B925 /* HLSProxyResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HLSProxyResponse.h; sourceTree = "<group>"; };
-		53FE363E1EA961720058B925 /* HLSProxyResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HLSProxyResponse.m; sourceTree = "<group>"; };
 		53FE363F1EA961720058B925 /* ISMSAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSAlbum.h; sourceTree = "<group>"; };
 		53FE36401EA961720058B925 /* ISMSAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSAlbum.m; sourceTree = "<group>"; };
 		53FE36411EA961720058B925 /* ISMSArtist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSArtist.h; sourceTree = "<group>"; };
@@ -1842,10 +1838,6 @@
 				53FE36721EA961720058B925 /* ISMSStreamManager.m */,
 				53E04936255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.h */,
 				53E04937255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m */,
-				53FE363C1EA961710058B925 /* HLSProxyConnection.m */,
-				53FE363B1EA961710058B925 /* HLSProxyConnection.h */,
-				53FE363D1EA961710058B925 /* HLSProxyResponse.h */,
-				53FE363E1EA961720058B925 /* HLSProxyResponse.m */,
 			);
 			path = "Stream Handlers";
 			sourceTree = "<group>";
@@ -3202,6 +3194,7 @@
 					"-ObjC",
 				);
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG ADHOC";
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -3290,6 +3283,7 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isubbetarewrite;
 				PRODUCT_NAME = "iSub Beta";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG BETA";
 				SWIFT_OBJC_BRIDGING_HEADER = "Other/iSub_Beta-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -3336,6 +3330,7 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isubbetarewrite;
 				PRODUCT_NAME = "iSub Beta";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG ADHOC BETA";
 				SWIFT_OBJC_BRIDGING_HEADER = "Other/iSub_Beta-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -3380,6 +3375,7 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.einsteinx2.isubbetarewrite;
 				PRODUCT_NAME = "iSub Beta";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "RELEASE BETA";
 				SWIFT_OBJC_BRIDGING_HEADER = "Other/iSub_Beta-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
@@ -3448,6 +3444,7 @@
 					"-ObjC",
 				);
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -3514,6 +3511,7 @@
 					"-ObjC",
 				);
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = RELEASE;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";

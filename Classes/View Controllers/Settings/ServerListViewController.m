@@ -395,7 +395,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
         
-    DDLogError(@"server verification failed, hiding loading screen");
+    DDLogError(@"[ServerListViewController] server verification failed, hiding loading screen");
     [viewObjectsS hideLoadingScreen];
 }
 
@@ -412,7 +412,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	[self switchServer:nil];
     
-    DDLogVerbose(@"server verification passed, hiding loading screen");
+    DDLogInfo(@"[ServerListViewController] server verification passed, hiding loading screen");
     [viewObjectsS hideLoadingScreen];
 }
 
