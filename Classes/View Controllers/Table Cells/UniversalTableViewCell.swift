@@ -17,7 +17,7 @@ import SnapKit
     private let headerLabel = UILabel()
     private let cachedIndicator = CellCachedIndicatorView()
     private let numberLabel = UILabel()
-    private let coverArtView = AsynchronousImageView()
+    private let coverArtView = AsyncImageView()
     private let primaryLabel = UILabel()
     private let secondaryLabel = UILabel()
     private let durationLabel = UILabel()

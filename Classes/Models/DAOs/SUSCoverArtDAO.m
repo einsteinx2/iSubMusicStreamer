@@ -47,13 +47,17 @@
 
 #pragma mark - Public DAO methods
 
-- (UIImage *)coverArtImage {
-    NSData *imageData = [self.dbQueue dataForQuery:@"SELECT data FROM coverArtCache WHERE id = ?", self.coverArtId.md5];
-    return imageData ? [UIImage imageWithData:imageData] : self.defaultCoverArtImage;
++ (UIImage *)defaultCoverArtImage:(BOOL)isLarge {
+    return isLarge ? [UIImage imageNamed:@"default-album-art"] : [UIImage imageNamed:@"default-album-art-small"];
 }
 
 - (UIImage *)defaultCoverArtImage {
-    return self.isLarge ? [UIImage imageNamed:@"default-album-art"] : [UIImage imageNamed:@"default-album-art-small"];
+    return [self.class defaultCoverArtImage:self.isLarge];
+}
+
+- (UIImage *)coverArtImage {
+    NSData *imageData = [self.dbQueue dataForQuery:@"SELECT data FROM coverArtCache WHERE id = ?", self.coverArtId.md5];
+    return imageData ? [UIImage imageWithData:imageData] : self.defaultCoverArtImage;
 }
 
 - (BOOL)isCoverArtCached {

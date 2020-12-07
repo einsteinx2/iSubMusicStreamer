@@ -16,7 +16,6 @@
 #import "DatabaseSingleton.h"
 #import "EX2Kit.h"
 #import "Swift.h"
-#import "AsynchronousImageView.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
 

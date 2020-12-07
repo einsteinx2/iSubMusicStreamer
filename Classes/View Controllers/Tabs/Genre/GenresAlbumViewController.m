@@ -19,7 +19,6 @@
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
-#import "AsynchronousImageView.h"
 
 @implementation GenresAlbumViewController
 

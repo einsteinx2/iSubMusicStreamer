@@ -9,11 +9,7 @@
 import UIKit
 
 class CoverArtViewController: UIViewController {
-    private let coverArt: AsynchronousImageView = {
-        let imageView = AsynchronousImageView()
-        imageView.isLarge = true
-        return imageView
-    }()
+    private let coverArt = AsyncImageView(isLarge: true)
     
     @objc var coverArtId: String? {
         get { return coverArt.coverArtId }

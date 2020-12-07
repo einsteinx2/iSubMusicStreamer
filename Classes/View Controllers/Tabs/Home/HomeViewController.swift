@@ -548,7 +548,7 @@ private class HomeViewButton: UIView {
 }
 
 private class HomeSongInfoButton: UIView {
-    private let coverArt = AsynchronousImageView()
+    private let coverArt = AsyncImageView()
     private let artistLabel = AutoScrollingLabel()
     private let songLabel = AutoScrollingLabel()
     private let button = UIButton(type: .custom)

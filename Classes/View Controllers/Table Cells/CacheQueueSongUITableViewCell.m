@@ -7,10 +7,10 @@
 //
 
 #import "CacheQueueSongUITableViewCell.h"
-#import "AsynchronousImageView.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation CacheQueueSongUITableViewCell
 
@@ -20,7 +20,7 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
 		_md5 = nil;
 		
-		_coverArtView = [[AsynchronousImageView alloc] init];
+		_coverArtView = [[AsyncImageView alloc] init];
 		_coverArtView.isLarge = NO;
 		[self.contentView addSubview:_coverArtView];
 		
@@ -60,10 +60,6 @@
 	}
 	
 	return self;
-}
-
-- (void)dealloc {
-	_coverArtView.delegate = nil;
 }
 
 - (void)layoutSubviews {

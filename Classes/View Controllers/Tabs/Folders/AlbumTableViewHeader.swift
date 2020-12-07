@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 @objc class AlbumTableViewHeader: UIView {
-    private let coverArtView = AsynchronousImageView()
+    private let coverArtView = AsyncImageView()
     private let coverArtButton = UIButton(type: .custom)
     private let artistLabel = AutoScrollingLabel()
     private let albumLabel = AutoScrollingLabel()
@@ -101,11 +101,7 @@ import SnapKit
 private class ModalCoverArtViewController: UIViewController {
     private let closeButton = UIButton(type: .close)
     
-    private let coverArt: AsynchronousImageView = {
-        let imageView = AsynchronousImageView()
-        imageView.isLarge = true
-        return imageView
-    }()
+    private let coverArt = AsyncImageView(isLarge: true)
     
     var coverArtId: String? {
         get { return coverArt.coverArtId }

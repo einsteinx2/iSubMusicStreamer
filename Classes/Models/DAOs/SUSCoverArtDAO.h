@@ -9,22 +9,28 @@
 #import <UIKit/UIKit.h>
 #import "SUSLoaderManager.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FMDatabase, SUSCoverArtLoader;
+NS_SWIFT_NAME(CoverArtDAO)
 @interface SUSCoverArtDAO : NSObject <SUSLoaderDelegate, SUSLoaderManager>
 
-@property (weak) NSObject<SUSLoaderDelegate> *delegate;
-@property (strong) SUSCoverArtLoader *loader;
+@property (nullable, weak) NSObject<SUSLoaderDelegate> *delegate;
+@property (nullable, strong) SUSCoverArtLoader *loader;
 
-@property (copy) NSString *coverArtId;
+@property (nullable, copy) NSString *coverArtId;
 @property BOOL isLarge;
 
-- (UIImage *)coverArtImage;
++ (UIImage *)defaultCoverArtImage:(BOOL)isLarge;
 - (UIImage *)defaultCoverArtImage;
+- (UIImage *)coverArtImage;
 @property (readonly) BOOL isCoverArtCached;
 
-- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate;
-- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate coverArtId:(NSString *)artId isLarge:(BOOL)large;
+- (instancetype)initWithDelegate:(nullable NSObject<SUSLoaderDelegate> *)theDelegate;
+- (instancetype)initWithDelegate:(nullable NSObject<SUSLoaderDelegate> *)delegate coverArtId:(NSString *)artId isLarge:(BOOL)large;
 
 - (void)downloadArtIfNotExists;
 
 @end
+
+NS_ASSUME_NONNULL_END

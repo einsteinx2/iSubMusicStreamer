@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@class AsynchronousImageView;
+@class AsyncImageView;
 
 @interface CacheQueueSongUITableViewCell : UITableViewCell
 
-@property (strong) AsynchronousImageView *coverArtView;
+@property (strong) AsyncImageView *coverArtView;
 @property (strong) UILabel *cacheInfoLabel;
 @property (strong) UIScrollView *nameScrollView;
 @property (strong) UILabel *songNameLabel;
