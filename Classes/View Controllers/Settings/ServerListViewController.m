@@ -22,6 +22,7 @@
 #import "ISMSServer.h"
 #import "EX2Kit.h"
 #import "Swift.h"
+#import "Reachability.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 

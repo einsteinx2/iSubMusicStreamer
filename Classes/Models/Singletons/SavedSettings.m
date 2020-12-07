@@ -16,6 +16,7 @@
 #import "ISMSCacheQueueManager.h"
 #import "ISMSServer.h"
 #import "EX2Kit.h"
+#import "iSubAppDelegate.h"
 
 // Test server details
 #define DEFAULT_SERVER_TYPE SUBSONIC
@@ -386,7 +387,7 @@
 }
 
 - (NSInteger)currentMaxBitrate {
-    switch (EX2Reachability.isWifi ? self.maxBitrateWifi : self.maxBitrate3G) {
+    switch (appDelegateS.isWifi ? self.maxBitrateWifi : self.maxBitrate3G) {
         case 0: return 64;
         case 1: return 96;
         case 2: return 128;
@@ -417,7 +418,7 @@
 }
 
 - (NSArray *)currentVideoBitrates {
-    if (EX2Reachability.isWifi) {
+    if (appDelegateS.isWifi) {
         switch (self.maxVideoBitrateWifi) {
             case 0: return @[@512];
             case 1: return @[@1024, @512];
@@ -437,18 +438,6 @@
             case 5: return @[@4096, @2048, @1536, @1024, @512, @192];
             default: return nil;
         }
-    }
-}
-
-- (NSInteger)currentMaxVideoBitrate {
-    switch (EX2Reachability.isWifi ? self.maxVideoBitrateWifi : self.maxVideoBitrate3G) {
-        case 0: return 60;
-        case 1: return 256;
-        case 2: return 512;
-        case 3: return 1024;
-        case 4: return 1536;
-        case 5: return 2048;
-        default: return 0;
     }
 }
 
@@ -503,7 +492,7 @@
     [_userDefaults setBool:isManualCachingOnWWANEnabled forKey:@"isManualCachingOnWWANEnabled"];
     [_userDefaults synchronize];
     
-    if (!EX2Reachability.isWifi) {
+    if (!appDelegateS.isWifi) {
         isManualCachingOnWWANEnabled ? [cacheQueueManagerS startDownloadQueue] : [cacheQueueManagerS stopDownloadQueue];
     }
 }

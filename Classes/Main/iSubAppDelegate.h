@@ -14,7 +14,7 @@
 
 #define appDelegateS [iSubAppDelegate sharedInstance]
 
-@class BBSplitViewController, PadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, SettingsViewController, FoldersViewController, AudioStreamer, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HLSReverseProxyServer, ServerListViewController, EX2Reachability;
+@class BBSplitViewController, PadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, SettingsViewController, FoldersViewController, AudioStreamer, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HLSReverseProxyServer, ServerListViewController, Reachability;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -52,7 +52,7 @@ NS_SWIFT_NAME(AppDelegate)
 
 // Network connectivity objects and variables
 //
-@property (strong) EX2Reachability *wifiReach;
+@property (strong) Reachability *wifiReach;
 @property (readonly) BOOL isWifi;
 
 // Multitasking stuff

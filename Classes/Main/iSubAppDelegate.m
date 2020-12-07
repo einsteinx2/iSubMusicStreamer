@@ -27,9 +27,9 @@
 #import "EX2Kit.h"
 #import "Swift.h"
 #import "EX2SlidingNotification.h"
+#import "Reachability.h"
 #import <UserNotifications/UserNotifications.h>
 #import <CoreFoundation/CoreFoundation.h>
-#import <SystemConfiguration/SCNetworkReachability.h>
 #import <netinet/in.h>
 #import <netdb.h>
 #import <arpa/inet.h>
@@ -66,7 +66,7 @@ LOG_LEVEL_ISUB_DEFAULT
     
     // Start the save defaults timer and mem cache initial defaults
 	[settingsS setupSaveState];
-    
+        
     // Run the one time actions
     [self oneTimeRun];
     
@@ -102,11 +102,11 @@ LOG_LEVEL_ISUB_DEFAULT
     DDLogInfo(@"\n---------------------------------\niSub %@ build %@ launched\n---------------------------------", version, build);
     
 	// Setup network reachability notifications
-	self.wifiReach = [EX2Reachability reachabilityForLocalWiFi];
+	self.wifiReach = [Reachability reachabilityForInternetConnection];
 	[self.wifiReach startNotifier];
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reachabilityChanged:) name:EX2ReachabilityNotification_ReachabilityChanged];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification];
 	[self.wifiReach currentReachabilityStatus];
-	
+    
 	// Check battery state and register for notifications
 	UIDevice.currentDevice.batteryMonitoringEnabled = YES;
 	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(batteryStateChanged:) name:@"UIDeviceBatteryStateDidChangeNotification" object:UIDevice.currentDevice];
@@ -554,7 +554,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)enterOnlineModeForce {
-	if ([self.wifiReach currentReachabilityStatus] == NotReachable) return;
+	if (self.wifiReach.currentReachabilityStatus == NotReachable) return;
 	
 	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_EnteringOnlineMode];
     

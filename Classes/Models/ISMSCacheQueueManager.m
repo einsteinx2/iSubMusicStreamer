@@ -24,6 +24,7 @@
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "EX2SlidingNotification.h"
+#import "iSubAppDelegate.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -60,7 +61,7 @@ LOG_LEVEL_ISUB_DEFAULT
     	
 	// Check if there's another queued song and that were are on Wifi
 	self.currentQueuedSong = self.currentQueuedSongInDb;
-	if (!self.currentQueuedSong || (!EX2Reachability.isWifi && !settingsS.isManualCachingOnWWANEnabled) || settingsS.isOfflineMode) {
+	if (!self.currentQueuedSong || (!appDelegateS.isWifi && !settingsS.isManualCachingOnWWANEnabled) || settingsS.isOfflineMode) {
 		return;
     }
     

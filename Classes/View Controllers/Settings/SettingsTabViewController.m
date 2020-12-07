@@ -334,11 +334,11 @@ LOG_LEVEL_ISUB_DEFAULT
             settingsS.isDisableUsageOver3G = self.disableCellUsageSwitch.on;
             
             BOOL handleStupidity = NO;
-            if (!settingsS.isOfflineMode && settingsS.isDisableUsageOver3G && !EX2Reachability.isWifi) {
+            if (!settingsS.isOfflineMode && settingsS.isDisableUsageOver3G && !appDelegateS.isWifi) {
                 // We're on 3G and we just disabled use on 3G, so go offline
                 [appDelegateS enterOfflineModeForce];
                 handleStupidity = YES;
-            } else if (settingsS.isOfflineMode && !settingsS.isDisableUsageOver3G && !EX2Reachability.isWifi) {
+            } else if (settingsS.isOfflineMode && !settingsS.isDisableUsageOver3G && !appDelegateS.isWifi) {
                 // We're on 3G and we just enabled use on 3G, so go online if we're offline
                 [appDelegateS enterOfflineModeForce];
                 handleStupidity = YES;
