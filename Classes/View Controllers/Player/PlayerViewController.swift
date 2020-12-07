@@ -420,6 +420,10 @@ import CocoaLumberjackSwift
         updateJukeboxControls()
         updateEqualizerButton()
         registerForNotifications()
+        
+        if Settings.shared().isJukeboxEnabled {
+            Jukebox.shared().getInfo()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -436,6 +440,7 @@ import CocoaLumberjackSwift
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_CurrentPlaylistShuffleToggled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_ShowPlayer)
         
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: ISMSNotification_JukeboxSongInfo)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: ISMSNotification_JukeboxDisabled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: ISMSNotification_JukeboxEnabled)
         
@@ -610,7 +615,7 @@ import CocoaLumberjackSwift
             return
         }
         
-        downloadProgressView.isHidden = false
+        downloadProgressView.isHidden = Settings.shared().isJukeboxEnabled
         
         func remakeConstraints() {
             do {
@@ -698,15 +703,26 @@ import CocoaLumberjackSwift
             }
         }
         
-        if jukeboxEnabled && jukeboxVolumeContainer.superview == nil {
-            // Add the volume control
+        if jukeboxEnabled {
+            // Update the jukebox volume slider position
             jukeboxVolumeSlider.value = Jukebox.shared().gain
-            verticalStack.addArrangedSubview(jukeboxVolumeContainer)
+            
+            // Add the volume control if needed
+            if jukeboxVolumeContainer.superview == nil {
+                verticalStack.addArrangedSubview(jukeboxVolumeContainer)
+            }
         } else if !jukeboxEnabled && jukeboxVolumeContainer.superview != nil {
             // Remove the volume control
             verticalStack.removeArrangedSubview(jukeboxVolumeContainer)
             jukeboxVolumeContainer.removeFromSuperview()
         }
+        
+        // Enable/disable UI
+        quickSkipBackButton.isHidden = jukeboxEnabled
+        quickSkipForwardButton.isHidden = jukeboxEnabled
+        progressSlider.isEnabled = !jukeboxEnabled
+        progressSlider.alpha = jukeboxEnabled ? 0.5 : 1.0
+        downloadProgressView.isHidden = jukeboxEnabled
     }
     
     private func updateEqualizerButton() {
