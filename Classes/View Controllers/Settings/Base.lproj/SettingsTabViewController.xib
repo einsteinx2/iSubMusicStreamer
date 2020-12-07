@@ -46,6 +46,7 @@
                 <outlet property="maxBitrateWifiSegmentedControl" destination="6" id="141"/>
                 <outlet property="maxVideoBitrate3GSegmentedControl" destination="288" id="295"/>
                 <outlet property="maxVideoBitrateWifiSegmentedControl" destination="287" id="294"/>
+                <outlet property="openSourceLicensesButton" destination="LHh-a7-je3" id="uBw-Q5-Nkz"/>
                 <outlet property="quickSkipSegmentControl" destination="236" id="239"/>
                 <outlet property="recoverSegmentedControl" destination="5" id="13"/>
                 <outlet property="resetAlbumArtCacheButton" destination="208" id="P8e-za-qnc"/>
@@ -75,7 +76,7 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="1">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="1900"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="1998"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Resume playback after interruption?" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="4">
@@ -734,11 +735,38 @@
                         <outlet property="delegate" destination="-1" id="228"/>
                     </connections>
                 </textField>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Open Source" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="pZu-Ee-CkA">
+                    <rect key="frame" x="0.0" y="1857" width="320" height="22"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                    <size key="shadowOffset" width="0.0" height="0.0"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LHh-a7-je3">
+                    <rect key="frame" x="10" y="1927" width="297" height="37"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" title="View Licences">
+                        <color key="titleColor" systemColor="systemBlueColor"/>
+                    </state>
+                    <connections>
+                        <action selector="viewOpenSourceLicensesAction" destination="-1" eventType="touchUpInside" id="AWd-8K-6iN"/>
+                    </connections>
+                </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.60000002384185791" contentMode="left" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="3" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="WMB-qf-jXv">
+                    <rect key="frame" x="10" y="1875" width="300" height="53"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <string key="text">iSub Music Streamer utilizes various open source components. The list of components and their licenses is available to view below.</string>
+                    <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-530" y="-2"/>
+            <point key="canvasLocation" x="-531.20000000000005" y="41.379310344827587"/>
         </view>
     </objects>
     <resources>

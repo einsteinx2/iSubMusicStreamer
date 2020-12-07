@@ -98,8 +98,12 @@ LOG_LEVEL_ISUB_DEFAULT
     
     self.resetAlbumArtCacheButton.backgroundColor = UIColor.whiteColor;
     self.resetAlbumArtCacheButton.layer.cornerRadius = 8;
+    
     self.shareLogsButton.backgroundColor = UIColor.whiteColor;
     self.shareLogsButton.layer.cornerRadius = 8;
+    
+    self.openSourceLicensesButton.backgroundColor = UIColor.whiteColor;
+    self.openSourceLicensesButton.layer.cornerRadius = 8;
 }
 
 - (void)cachingTypeToggle {
@@ -398,6 +402,12 @@ LOG_LEVEL_ISUB_DEFAULT
         }
     };
     [self presentViewController:shareSheet animated:YES completion:nil];
+}
+
+- (IBAction)viewOpenSourceLicensesAction {
+    LicensesViewController *controller = [[LicensesViewController alloc] init];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 - (void)popFoldersTab {

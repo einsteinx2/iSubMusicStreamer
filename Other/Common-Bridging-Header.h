@@ -40,7 +40,6 @@
 #import "CacheOfflineFoldersViewController.h"
 
 // Views
-#import "AsynchronousImageView.h"
 #import "CellCachedIndicatorView.h"
 
 /*

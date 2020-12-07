@@ -248,6 +248,10 @@
 		53C3AB65257DA71000B35B99 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB63257DA71000B35B99 /* Reachability.m */; };
 		53C3AB6D257DB7D200B35B99 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB6C257DB7D200B35B99 /* AsyncImageView.swift */; };
 		53C3AB6E257DB7D200B35B99 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB6C257DB7D200B35B99 /* AsyncImageView.swift */; };
+		53C3AB70257DD38400B35B99 /* open_source_licenses.html in Resources */ = {isa = PBXBuildFile; fileRef = 53C3AB6F257DD38400B35B99 /* open_source_licenses.html */; };
+		53C3AB71257DD38400B35B99 /* open_source_licenses.html in Resources */ = {isa = PBXBuildFile; fileRef = 53C3AB6F257DD38400B35B99 /* open_source_licenses.html */; };
+		53C3AB73257DDA1000B35B99 /* LicensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB72257DDA1000B35B99 /* LicensesViewController.swift */; };
+		53C3AB74257DDA1000B35B99 /* LicensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB72257DDA1000B35B99 /* LicensesViewController.swift */; };
 		53C7FD9E150F0EA9008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
 		53C7FDA0150F0EAF008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
 		53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D44F8415AA621A00CDD3B8 /* Accelerate.framework */; };
@@ -765,6 +769,8 @@
 		53C3AB5F257DA71000B35B99 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Frameworks/Reachability/Reachability/Reachability.h; sourceTree = "<group>"; };
 		53C3AB63257DA71000B35B99 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Frameworks/Reachability/Reachability/Reachability.m; sourceTree = "<group>"; };
 		53C3AB6C257DB7D200B35B99 /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
+		53C3AB6F257DD38400B35B99 /* open_source_licenses.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = open_source_licenses.html; sourceTree = "<group>"; };
+		53C3AB72257DDA1000B35B99 /* LicensesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicensesViewController.swift; sourceTree = "<group>"; };
 		53C7FD9C150F0E94008DA51C /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		53D44F8415AA621A00CDD3B8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalTableViewCell.swift; sourceTree = "<group>"; };
@@ -1164,6 +1170,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				53C3AB6F257DD38400B35B99 /* open_source_licenses.html */,
 				53493F2C15FC6BD90059492E /* KeychainAccessGroups.plist */,
 				53493F1A15FC6AA60059492E /* iSub-Info-Beta.plist */,
 				53493F1C15FC6AA60059492E /* iSub-Info.plist */,
@@ -1237,6 +1244,7 @@
 				531D39E3255AB26B000CB0DF /* Player */,
 				531D39E1255AB23F000CB0DF /* iPad */,
 				53329647255F2E770027C51A /* PlayAllAndShuffleHeader.swift */,
+				53C3AB72257DDA1000B35B99 /* LicensesViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -2167,6 +2175,7 @@
 				539148E02559FEFD004AAC3F /* Launch Screen.storyboard in Resources */,
 				53493F3015FC6BD90059492E /* KeychainAccessGroups.plist in Resources */,
 				53D97433255C0BDE00AABF7F /* FoldersViewController.xib in Resources */,
+				53C3AB70257DD38400B35B99 /* open_source_licenses.html in Resources */,
 				53493F3815FC6C3A0059492E /* BassEffectDefaultPresets.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2204,6 +2213,7 @@
 				534B20DB25619936007FF1D7 /* HomeViewController.xib in Resources */,
 				53FE35E41EA961540058B925 /* EX2SlidingNotification.xib in Resources */,
 				53493F3215FC6BD90059492E /* KeychainAccessGroups.plist in Resources */,
+				53C3AB71257DD38400B35B99 /* open_source_licenses.html in Resources */,
 				53493F3A15FC6C3B0059492E /* BassEffectDefaultPresets.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2266,6 +2276,7 @@
 				530388A9116571920043292D /* AllSongsViewController.m in Sources */,
 				53FE37251EA961720058B925 /* ISMSNotificationNames.m in Sources */,
 				53FE370D1EA961720058B925 /* ISMSArtist.m in Sources */,
+				53C3AB73257DDA1000B35B99 /* LicensesViewController.swift in Sources */,
 				53FE37B81EA961720058B925 /* SUSQuickAlbumsLoader.m in Sources */,
 				53FE36EC1EA961720058B925 /* BassEqualizer.m in Sources */,
 				53ABE3631165C83900197877 /* PlayingViewController.m in Sources */,
@@ -2477,6 +2488,7 @@
 				53FE37181EA961720058B925 /* ISMSChatMessage.m in Sources */,
 				53FE38BE1EA961C80058B925 /* ZKLog.m in Sources */,
 				53FE35901EA961540058B925 /* EX2RingBuffer.m in Sources */,
+				53C3AB74257DDA1000B35B99 /* LicensesViewController.swift in Sources */,
 				53FE34E51EA961540058B925 /* NSNull+CleanString.m in Sources */,
 				53FE38971EA961C80058B925 /* NSDictionary+ZKAdditions.m in Sources */,
 				53FE371B1EA961720058B925 /* SUSCoverArtLoader.m in Sources */,

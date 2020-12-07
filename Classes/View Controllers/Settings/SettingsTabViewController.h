@@ -10,7 +10,6 @@
 
 @interface SettingsTabViewController : UIViewController <UITextFieldDelegate>
 
-@property (nonatomic, strong) UIViewController *parentController;
 @property (nonatomic, strong) IBOutlet UILabel *versionLabel;
 @property (nonatomic, strong) IBOutlet UISwitch *manualOfflineModeSwitch;
 @property (nonatomic, strong) IBOutlet UISwitch *autoReloadArtistSwitch;
@@ -65,6 +64,7 @@
 @property (nonatomic, strong) NSDate *loadedTime;
 @property (nonatomic, strong) IBOutlet UIButton *resetAlbumArtCacheButton;
 @property (nonatomic, strong) IBOutlet UIButton *shareLogsButton;
+@property (nonatomic, strong) IBOutlet UIButton *openSourceLicensesButton;
 
 @property (nonatomic, strong) IBOutletCollection(UISwitch) NSArray *switches;
 
@@ -79,6 +79,7 @@
 - (IBAction)updateScrobblePercentSetting;
 - (IBAction)resetAlbumArtCacheAction;
 - (IBAction)shareAppLogsAction;
+- (IBAction)viewOpenSourceLicensesAction;
 - (void)textFieldDidChange:(UITextField *)textField;
 
 - (void)popFoldersTab;

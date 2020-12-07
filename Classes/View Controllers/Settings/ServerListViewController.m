@@ -101,7 +101,8 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)segmentAction:(id)sender {
-	self.settingsTabViewController.parentController = nil;
+    [self.settingsTabViewController removeFromParentViewController];
+    [self.settingsTabViewController.view removeFromSuperview];
 	self.settingsTabViewController = nil;
 	
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
@@ -116,7 +117,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		[self setEditing:NO animated:NO];
 		self.navigationItem.rightBarButtonItem = nil;
 		self.settingsTabViewController = [[SettingsTabViewController alloc] initWithNibName:@"SettingsTabViewController" bundle:nil];
-		self.settingsTabViewController.parentController = self;
+        [self addChildViewController:self.settingsTabViewController];
         if (UIDevice.isPad) {
             UIView *settingsView = self.settingsTabViewController.view;
             UIView *settingsContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.width, settingsView.height)];
