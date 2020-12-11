@@ -17,6 +17,9 @@
 #import "ISMSServer.h"
 #import "EX2Kit.h"
 #import "iSubAppDelegate.h"
+#import "Defines.h"
+
+LOG_LEVEL_ISUB_DEFAULT
 
 // Test server details
 #define DEFAULT_SERVER_TYPE SUBSONIC
@@ -820,6 +823,23 @@
 - (void)setIsCacheSizeTableFinished:(BOOL)isCacheSizeTableFinished {
     [_userDefaults setBool:isCacheSizeTableFinished forKey:@"isCacheSizeTableFinished"];
     [_userDefaults synchronize];
+}
+
+- (void)logAppSettings {
+    NSArray *keysToSkip = @[@"handlerStack", @"rootFolders", @"password", @"servers", @"url", @"username"];
+    NSMutableDictionary *settings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] mutableCopy];
+    
+    NSMutableArray *keysToDelete = [[NSMutableArray alloc] initWithCapacity:20];
+    for (NSString *key in settings.allKeys) {
+        for (NSString *keyToSkip in keysToSkip) {
+            if ([key containsString:keyToSkip]) {
+                [keysToDelete addObject:key];
+            }
+        }
+    }
+    [settings removeObjectsForKeys:keysToDelete];
+    
+    DDLogInfo(@"App Settings:\n%@", settings);
 }
 
 #pragma mark - Singleton methods

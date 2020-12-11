@@ -109,6 +109,9 @@ NS_SWIFT_NAME(Settings)
 - (void)loadState;
 - (void)saveState;
 
+// Log all app settings except for some unnecessary or sensitive information such as the username, password, and server URL
+- (void)logAppSettings;
+
 + (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
 @end

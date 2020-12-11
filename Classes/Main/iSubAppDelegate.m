@@ -375,6 +375,9 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (NSString *)zipAllLogFiles {
+    // Log the app settings, excluding sensitive info
+    [settingsS logAppSettings];
+    
     // Flush all logs to disk
     [DDLog flushLog];
     
