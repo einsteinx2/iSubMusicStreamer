@@ -8,6 +8,8 @@
 
 import UIKit
 
+// Haptic info: https://medium.com/@sdrzn/make-your-ios-app-feel-better-a-comprehensive-guide-over-taptic-engine-and-haptic-feedback-724dec425f10
+
 @objc final class SwipeAction: NSObject {
     @objc static func downloadAndQueueConfig(model: TableCellModel) -> UISwipeActionsConfiguration {
         let actions = model.isCached ? [queue(model: model)] : [download(model: model), queue(model: model)];
@@ -51,6 +53,8 @@ import UIKit
     @objc static func download(handler: @escaping () -> ()) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Download") { _, _, completionHandler in
             handler()
+            SlidingNotification.showOnMainWindow(message: "Added to download queue", duration: 1.0)
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
             completionHandler(true)
         }
         action.backgroundColor = .systemBlue
@@ -60,6 +64,8 @@ import UIKit
     @objc static func queue(handler: @escaping () -> ()) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Queue") { _, _, completionHandler in
             handler()
+            SlidingNotification.showOnMainWindow(message: "Added to play queue", duration: 1.0)
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
             completionHandler(true)
         }
         action.backgroundColor = .systemGreen
@@ -69,6 +75,7 @@ import UIKit
     @objc static func delete(handler: @escaping () -> ()) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Delete") { _, _, completionHandler in
             handler()
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
             completionHandler(true)
         }
         action.backgroundColor = .systemRed

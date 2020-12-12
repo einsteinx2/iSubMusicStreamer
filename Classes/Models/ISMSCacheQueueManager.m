@@ -23,8 +23,8 @@
 #import "ISMSStreamManager.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
-#import "EX2SlidingNotification.h"
 #import "iSubAppDelegate.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -194,7 +194,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		// Retry connection after a delay to prevent a tight loop
 		[self performSelector:@selector(resumeDownloadQueue:) withObject:nil afterDelay:2.0];
 	} else {
-		[[EX2SlidingNotification slidingNotificationOnTopViewWithMessage:NSLocalizedString(@"Song failed to download", @"Download manager, download failed message") image:nil] showAndHideSlidingNotification];
+        [SlidingNotification showOnMainWindowWithMessage:NSLocalizedString(@"Song failed to download", @"Download manager, download failed message")];
 		
 		// Tried max number of times so remove
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CacheQueueSongFailed];

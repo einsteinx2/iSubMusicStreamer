@@ -12,5 +12,6 @@
 
 + (UIInterfaceOrientation)orientation;
 + (UIWindow *)keyWindow;
++ (CGFloat)statusBarHeight;
 
 @end

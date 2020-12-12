@@ -9,6 +9,8 @@
 import UIKit
 import SnapKit
 
+// Blur effect types info: https://pspdfkit.com/blog/2020/blur-effect-materials-on-ios/
+
 @objc final class BlurredSectionHeader: UITableViewHeaderFooterView {
     @objc static let reuseId = "BlurredSectionHeader"
     

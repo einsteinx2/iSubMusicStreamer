@@ -254,6 +254,8 @@
 		53C3AB74257DDA1000B35B99 /* LicensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB72257DDA1000B35B99 /* LicensesViewController.swift */; };
 		53C7FD9E150F0EA9008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
 		53C7FDA0150F0EAF008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
+		53CF64F725843ADA00BD47DC /* SlidingNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF64F625843ADA00BD47DC /* SlidingNotification.swift */; };
+		53CF64F825843ADA00BD47DC /* SlidingNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF64F625843ADA00BD47DC /* SlidingNotification.swift */; };
 		53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D44F8415AA621A00CDD3B8 /* Accelerate.framework */; };
 		53D973FE255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */; };
 		53D973FF255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */; };
@@ -331,10 +333,6 @@
 		53FE35901EA961540058B925 /* EX2RingBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE346E1EA961540058B925 /* EX2RingBuffer.m */; };
 		53FE35C71EA961540058B925 /* EX2Dispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE349C1EA961540058B925 /* EX2Dispatch.m */; };
 		53FE35C91EA961540058B925 /* EX2Dispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE349C1EA961540058B925 /* EX2Dispatch.m */; };
-		53FE35DF1EA961540058B925 /* EX2SlidingNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34AD1EA961540058B925 /* EX2SlidingNotification.m */; };
-		53FE35E11EA961540058B925 /* EX2SlidingNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34AD1EA961540058B925 /* EX2SlidingNotification.m */; };
-		53FE35E21EA961540058B925 /* EX2SlidingNotification.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53FE34AE1EA961540058B925 /* EX2SlidingNotification.xib */; };
-		53FE35E41EA961540058B925 /* EX2SlidingNotification.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53FE34AE1EA961540058B925 /* EX2SlidingNotification.xib */; };
 		53FE35EB1EA961540058B925 /* SnappySlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34B41EA961540058B925 /* SnappySlider.m */; };
 		53FE35ED1EA961540058B925 /* SnappySlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34B41EA961540058B925 /* SnappySlider.m */; };
 		53FE360B1EA961670058B925 /* libbass.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36031EA961670058B925 /* libbass.a */; };
@@ -772,6 +770,7 @@
 		53C3AB6F257DD38400B35B99 /* open_source_licenses.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = open_source_licenses.html; sourceTree = "<group>"; };
 		53C3AB72257DDA1000B35B99 /* LicensesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicensesViewController.swift; sourceTree = "<group>"; };
 		53C7FD9C150F0E94008DA51C /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		53CF64F625843ADA00BD47DC /* SlidingNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingNotification.swift; sourceTree = "<group>"; };
 		53D44F8415AA621A00CDD3B8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalTableViewCell.swift; sourceTree = "<group>"; };
 		53D97416255BFE9D00AABF7F /* iSub-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "iSub-Bridging-Header.h"; path = "Other/iSub-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -844,9 +843,6 @@
 		53FE34961EA961540058B925 /* EX2Kit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2Kit.h; sourceTree = "<group>"; };
 		53FE349B1EA961540058B925 /* EX2Dispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2Dispatch.h; sourceTree = "<group>"; };
 		53FE349C1EA961540058B925 /* EX2Dispatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2Dispatch.m; sourceTree = "<group>"; };
-		53FE34AC1EA961540058B925 /* EX2SlidingNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2SlidingNotification.h; sourceTree = "<group>"; };
-		53FE34AD1EA961540058B925 /* EX2SlidingNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EX2SlidingNotification.m; sourceTree = "<group>"; };
-		53FE34AE1EA961540058B925 /* EX2SlidingNotification.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EX2SlidingNotification.xib; sourceTree = "<group>"; };
 		53FE34B31EA961540058B925 /* SnappySlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnappySlider.h; sourceTree = "<group>"; };
 		53FE34B41EA961540058B925 /* SnappySlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SnappySlider.m; sourceTree = "<group>"; };
 		53FE35FB1EA961670058B925 /* bass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bass.h; sourceTree = "<group>"; };
@@ -1486,10 +1482,8 @@
 				53329651255F30220027C51A /* ClosureSleeve.swift */,
 				534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */,
 				53246AA8256C324500E11EC4 /* InsetTextField.swift */,
-				53FE34AC1EA961540058B925 /* EX2SlidingNotification.h */,
-				53FE34AD1EA961540058B925 /* EX2SlidingNotification.m */,
-				53FE34AE1EA961540058B925 /* EX2SlidingNotification.xib */,
 				53C3AB6C257DB7D200B35B99 /* AsyncImageView.swift */,
+				53CF64F625843ADA00BD47DC /* SlidingNotification.swift */,
 			);
 			path = "Custom UI";
 			sourceTree = "<group>";
@@ -2167,7 +2161,6 @@
 				533C659115ABB9AD003EAF29 /* SearchSongsViewController.xib in Resources */,
 				530738F41FAF6A72005C2650 /* Media.xcassets in Resources */,
 				531D3A01255AB5F6000CB0DF /* MainWindow.xib in Resources */,
-				53FE35E21EA961540058B925 /* EX2SlidingNotification.xib in Resources */,
 				533D181D255F72FF003F962C /* CacheOfflineFoldersViewController.xib in Resources */,
 				533C659F15ABB9B3003EAF29 /* SearchAllViewController.xib in Resources */,
 				536AB8121353DCF900DABD83 /* PlaylistSongsViewController.xib in Resources */,
@@ -2211,7 +2204,6 @@
 				53BC2796139AF0DD00A825F1 /* PlaylistSongsViewController.xib in Resources */,
 				533C65DE15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */,
 				534B20DB25619936007FF1D7 /* HomeViewController.xib in Resources */,
-				53FE35E41EA961540058B925 /* EX2SlidingNotification.xib in Resources */,
 				53493F3215FC6BD90059492E /* KeychainAccessGroups.plist in Resources */,
 				53C3AB71257DD38400B35B99 /* open_source_licenses.html in Resources */,
 				53493F3A15FC6C3B0059492E /* BassEffectDefaultPresets.plist in Resources */,
@@ -2312,7 +2304,6 @@
 				53FE35191EA961540058B925 /* NSString+Time.m in Sources */,
 				53FE37491EA961720058B925 /* ISMSStreamManager.m in Sources */,
 				53FE388C1EA961C80058B925 /* GMAppleDouble.m in Sources */,
-				53FE35DF1EA961540058B925 /* EX2SlidingNotification.m in Sources */,
 				53FE35881EA961540058B925 /* EX2NetworkIndicator.m in Sources */,
 				5388A3B4119899260049BA9E /* BookmarksViewController.m in Sources */,
 				53FE38B31EA961C80058B925 /* ZKDefs.m in Sources */,
@@ -2435,6 +2426,7 @@
 				53752BEC2562CEF800438636 /* CoverArtViewController.swift in Sources */,
 				536C994D16619F5D005A73C6 /* ViewObjectsSingleton.m in Sources */,
 				53FE37581EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */,
+				53CF64F725843ADA00BD47DC /* SlidingNotification.swift in Sources */,
 				53C3AB6D257DB7D200B35B99 /* AsyncImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2511,7 +2503,6 @@
 				533295F1255EEFE50027C51A /* FMDatabase.m in Sources */,
 				53FE374B1EA961720058B925 /* ISMSStreamManager.m in Sources */,
 				53FE388E1EA961C80058B925 /* GMAppleDouble.m in Sources */,
-				53FE35E11EA961540058B925 /* EX2SlidingNotification.m in Sources */,
 				53FE358A1EA961540058B925 /* EX2NetworkIndicator.m in Sources */,
 				53BC27C4139AF0DD00A825F1 /* BookmarksViewController.m in Sources */,
 				53FE38B51EA961C80058B925 /* ZKDefs.m in Sources */,
@@ -2528,6 +2519,7 @@
 				534B20E72561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
 				53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */,
 				533295FB255EEFE50027C51A /* FMResultSet.m in Sources */,
+				53CF64F825843ADA00BD47DC /* SlidingNotification.swift in Sources */,
 				53FE34C71EA961540058B925 /* NSArray+Safe.m in Sources */,
 				53BC27D7139AF0DD00A825F1 /* CacheAlbumViewController.m in Sources */,
 				53EA2DE3257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,

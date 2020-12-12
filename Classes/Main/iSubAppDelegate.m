@@ -26,7 +26,6 @@
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
-#import "EX2SlidingNotification.h"
 #import "Reachability.h"
 #import <UserNotifications/UserNotifications.h>
 #import <CoreFoundation/CoreFoundation.h>
@@ -597,7 +596,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	} else if (currentReachabilityStatus == ReachableViaWWAN && settingsS.isDisableUsageOver3G) {
         if (!settingsS.isOfflineMode) {
 			[self enterOfflineModeForce];
-            [[EX2SlidingNotification slidingNotificationOnMainWindowWithMessage:@"You have chosen to disable usage over cellular in settings and are no longer on Wifi. Entering offline mode." image:nil] showAndHideSlidingNotification];
+            [SlidingNotification showOnMainWindowWithMessage:@"You have chosen to disable usage over cellular in settings and are no longer on Wifi. Entering offline mode."];
 		}
     } else {
 		[self checkServer];

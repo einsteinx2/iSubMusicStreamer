@@ -21,4 +21,8 @@
     return nil;
 }
 
++ (CGFloat)statusBarHeight {
+    return self.keyWindow.windowScene.statusBarManager.statusBarFrame.size.height;
+}
+
 @end

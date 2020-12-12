@@ -17,7 +17,7 @@
 #import "SUSCoverArtDAO.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
-#import "EX2SlidingNotification.h"
+#import "Swift.h"
 #import <MediaPlayer/MediaPlayer.h>
 
 LOG_LEVEL_ISUB_DEFAULT
@@ -144,7 +144,7 @@ double startSongSeconds = 0.0;
 	if (settingsS.isJukeboxEnabled) {
         if (currentSong.isVideo) {
             currentSong = nil;
-            [EX2SlidingNotification slidingNotificationOnMainWindowWithMessage:@"Cannot play videos in Jukebox mode." image:nil];
+            [SlidingNotification showOnMainWindowWithMessage:@"Cannot play videos in Jukebox mode."];
         } else {
             [jukeboxS playSongAtPosition:@(position)];
         }
