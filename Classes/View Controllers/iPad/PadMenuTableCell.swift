@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PadMenuTableCell: UITableViewCell {
+final class PadMenuTableCell: UITableViewCell {
     static let reuseId = "PadMenuTableCell"
     
     private let indicatorLabel = UILabel()

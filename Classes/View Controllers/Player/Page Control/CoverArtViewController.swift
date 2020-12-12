@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CoverArtViewController: UIViewController {
+final class CoverArtViewController: UIViewController {
     private let coverArt = AsyncImageView(isLarge: true)
     
     @objc var coverArtId: String? {

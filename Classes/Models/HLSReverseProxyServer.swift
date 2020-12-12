@@ -3,7 +3,7 @@
 import Foundation
 import CocoaLumberjackSwift
 
-@objc class HLSReverseProxyServer: NSObject {
+@objc final class HLSReverseProxyServer: NSObject {
     static let originURLKey = "__hls_origin_url"
 
     private let webServer = GCDWebServer()

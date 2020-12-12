@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-@objc class AlbumTableViewHeader: UIView {
+@objc final class AlbumTableViewHeader: UIView {
     private let coverArtView = AsyncImageView()
     private let coverArtButton = UIButton(type: .custom)
     private let artistLabel = AutoScrollingLabel()
@@ -98,7 +98,7 @@ import SnapKit
     }
 }
 
-private class ModalCoverArtViewController: UIViewController {
+private final class ModalCoverArtViewController: UIViewController {
     private let closeButton = UIButton(type: .close)
     
     private let coverArt = AsyncImageView(isLarge: true)

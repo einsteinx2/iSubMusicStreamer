@@ -9,7 +9,7 @@
 import UIKit
 import CocoaLumberjackSwift
 
-@objc class ServerEditViewController: UIViewController {    
+@objc final class ServerEditViewController: UIViewController {    
     let backgroundImageView = UIImageView(image: UIImage(named: "settings-page"))
     let urlField = InsetTextField(inset: 5)
     let usernameField = InsetTextField(inset: 5)

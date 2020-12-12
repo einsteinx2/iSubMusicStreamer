@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc class SwipeAction: NSObject {
+@objc final class SwipeAction: NSObject {
     @objc static func downloadAndQueueConfig(model: TableCellModel) -> UISwipeActionsConfiguration {
         let actions = model.isCached ? [queue(model: model)] : [download(model: model), queue(model: model)];
         let config = UISwipeActionsConfiguration(actions: actions)

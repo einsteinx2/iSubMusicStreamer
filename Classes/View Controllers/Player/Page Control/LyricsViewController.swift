@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class LyricsViewController: UIViewController {
+final class LyricsViewController: UIViewController {
     private let dataModel = SUSLyricsDAO()
     private let textView = UITextView()
     

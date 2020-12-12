@@ -10,7 +10,7 @@ import UIKit
 import WebKit
 import SnapKit
 
-@objc class LicensesViewController: UIViewController {
+@objc final class LicensesViewController: UIViewController {
     let webView = WKWebView()
     
     override func viewDidLoad() {

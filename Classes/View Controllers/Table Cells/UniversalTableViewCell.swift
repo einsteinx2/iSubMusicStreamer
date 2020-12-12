@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-@objc public class UniversalTableViewCell: UITableViewCell {
+@objc final class UniversalTableViewCell: UITableViewCell {
     @objc static let reuseId = "UniversalTableViewCell"
     
     private var tableCellModel: TableCellModel?

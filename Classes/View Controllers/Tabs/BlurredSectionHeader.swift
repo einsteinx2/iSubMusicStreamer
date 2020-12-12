@@ -9,11 +9,11 @@
 import UIKit
 import SnapKit
 
-@objc class BlurredSectionHeader: UITableViewHeaderFooterView {
+@objc final class BlurredSectionHeader: UITableViewHeaderFooterView {
     @objc static let reuseId = "BlurredSectionHeader"
     
     // TODO: Fix looks gray against black background
-    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
     private let label = UILabel()
     
     @objc var text: String? {

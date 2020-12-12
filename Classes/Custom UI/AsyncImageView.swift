@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import CocoaLumberjackSwift
 
-@objc class AsyncImageView: UIImageView {
+@objc final class AsyncImageView: UIImageView {
     @objc var isLarge: Bool = false
     @objc var coverArtId: String? = nil {
         didSet {

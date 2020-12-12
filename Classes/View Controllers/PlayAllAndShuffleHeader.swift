@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-@objc class PlayAllAndShuffleHeader: UIView {
+@objc final class PlayAllAndShuffleHeader: UIView {
     private let playAllButton = UIButton(type: .custom)
     private let shuffleButton = UIButton(type: .custom)
     

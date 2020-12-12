@@ -11,7 +11,7 @@ import SnapKit
 
 private let labelGap = 25.0
 
-@objc class AutoScrollingLabel: UIView {
+@objc final class AutoScrollingLabel: UIView {
     private let scrollView = UIScrollView()
     private let label1 = UILabel()
     private let label2 = UILabel()

@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-@objc class PadRootViewController: UIViewController {
+@objc final class PadRootViewController: UIViewController {
     private let rootView = UIView()
     @objc let menuViewController = PadMenuViewController()
     @objc var currentContentNavigationController: UINavigationController?

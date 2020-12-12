@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CacheStatusViewController: UIViewController {
+final class CacheStatusViewController: UIViewController {
     let currentSongProgressBar = UIProgressView(progressViewStyle: .default)
     let nextSongProgressBar = UIProgressView(progressViewStyle: .default)
         

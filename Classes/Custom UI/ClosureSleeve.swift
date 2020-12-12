@@ -12,7 +12,7 @@
 import UIKit
 
 // Simple wrapper for closure/blocks to "objectify" them allowing them to be used for things that require a selector
-@objc class ClosureSleeve: NSObject {
+@objc final class ClosureSleeve: NSObject {
     let closure: ()->()
     
     init(closure: @escaping ()->()) {

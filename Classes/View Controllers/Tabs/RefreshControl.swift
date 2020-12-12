@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc class RefreshControl: UIRefreshControl {
+@objc final class RefreshControl: UIRefreshControl {
     @objc init(handler: @escaping () -> ()) {
         super.init()
         let attributes = [NSAttributedString.Key.foregroundColor: UIColor.label, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]

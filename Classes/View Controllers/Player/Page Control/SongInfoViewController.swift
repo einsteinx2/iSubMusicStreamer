@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class SongInfoViewController: UIViewController {
+final class SongInfoViewController: UIViewController {
     let stackView = UIStackView()
     var realTimeBitrateLabel: UILabel?
     

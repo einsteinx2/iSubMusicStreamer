@@ -12,7 +12,7 @@ import CocoaLumberjackSwift
 
 // TODO: Add bitrate and file type labels
 // TODO: Add bookmark button
-@objc class PlayerViewController: UIViewController {    
+@objc final class PlayerViewController: UIViewController {    
     let iconDefaultColor = UIColor(white: 0.8, alpha: 1.0)
     let iconActivatedColor = UIColor.systemBlue
     

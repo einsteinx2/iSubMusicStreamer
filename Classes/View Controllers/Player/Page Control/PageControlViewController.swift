@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class PageControlViewController: UIViewController {
+final class PageControlViewController: UIViewController {
     private let scrollView = UIScrollView()
     private let pageControl = UIPageControl()
     private var pageControlUsed = false

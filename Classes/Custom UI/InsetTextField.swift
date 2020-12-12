@@ -9,7 +9,7 @@
 import UIKit
 
 // Example from: https://stackoverflow.com/a/43986796/299262
-class InsetTextField: UITextField {
+final class InsetTextField: UITextField {
     let inset: CGFloat
     
     init(inset: CGFloat = 5) {

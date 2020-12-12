@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-@objc class PadMenuViewController: UIViewController {
+@objc final class PadMenuViewController: UIViewController {
     private let tableContainer = UIView()
     private let tableView = UITableView(frame: .zero, style: .plain)
     private let playerController = PlayerViewController()

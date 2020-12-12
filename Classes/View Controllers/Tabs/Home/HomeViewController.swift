@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-@objc class HomeViewController: UIViewController {
+@objc final class HomeViewController: UIViewController {
     private var quickAlbumsLoader: SUSQuickAlbumsLoader?
     private var serverShuffleLoader: SUSServerShuffleLoader?
     private var dataTask: URLSessionDataTask?
@@ -482,7 +482,7 @@ extension HomeViewController: UISearchBarDelegate {
     }
 }
 
-private class HomeViewButton: UIView {
+private final class HomeViewButton: UIView {
     private let button = UIButton(type: .custom)
     private let label = UILabel()
     
@@ -547,7 +547,7 @@ private class HomeViewButton: UIView {
     }
 }
 
-private class HomeSongInfoButton: UIView {
+private final class HomeSongInfoButton: UIView {
     private let coverArt = AsyncImageView()
     private let artistLabel = AutoScrollingLabel()
     private let songLabel = AutoScrollingLabel()

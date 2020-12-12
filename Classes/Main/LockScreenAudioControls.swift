@@ -9,8 +9,8 @@
 import UIKit
 import MediaPlayer
 
-@objc class LockScreenAudioControls: NSObject {
-    @objc class func setup() {
+@objc final class LockScreenAudioControls: NSObject {
+    @objc static func setup() {
         
         // Enable lock screen controls
         UIApplication.shared.beginReceivingRemoteControlEvents()
