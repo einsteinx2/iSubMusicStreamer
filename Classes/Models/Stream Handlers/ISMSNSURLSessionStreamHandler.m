@@ -54,7 +54,6 @@ LOG_LEVEL_ISUB_DEFAULT
     
     self.totalBytesTransferred = 0;
     self.bytesTransferred = 0;
-    self.byteOffset = 0;
     
     // Create the file handle
     self.fileHandle = [NSFileHandle fileHandleForWritingAtPath:self.filePath];

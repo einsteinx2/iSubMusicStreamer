@@ -562,18 +562,7 @@ LOG_LEVEL_ISUB_DEFAULT
     ISMSSong *currentSong = playlistS.currentSong;
 	if ([handler.mySong isEqualToSong:playlistS.currentSong])
 	{
-		[audioEngineS startSong:currentSong atIndex:playlistS.currentIndex withOffsetInBytes:@0 orSeconds:@0];
-		
-		// Only for temp cached files
-		if (handler.isTempCache)
-		{
-			// TODO: get rid of this ugly hack
-            [EX2Dispatch runInMainThreadAfterDelay:1.0 block:^{
-                //DLog(@"byteOffset: %llu   secondsOffset: %f", handler.byteOffset, handler.secondsOffset);
-                audioEngineS.player.startByteOffset = (NSUInteger)handler.byteOffset;
-                audioEngineS.player.startSecondsOffset = handler.secondsOffset;
-            }];
-		}
+        [audioEngineS startSong:currentSong atIndex:playlistS.currentIndex withOffsetInBytes:@(handler.byteOffset) orSeconds:@(handler.secondsOffset)];
 	}
 	
 	[self saveHandlerStack];

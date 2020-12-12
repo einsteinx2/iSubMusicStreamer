@@ -857,28 +857,35 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                      [self.streamQueue addObject:userInfo];
                  }
 				 
-				 // Skip to the byte offset
-				 if (byteOffset)
-				 {
-					 self.startByteOffset = (NSInteger)byteOffset.unsignedLongLongValue;
-                     self.ringBuffer.totalBytesDrained = byteOffset.unsignedLongLongValue;
-					 
-					 if (seconds)
-					 {
-						 [self seekToPositionInSeconds:seconds.doubleValue fadeVolume:NO];
-					 }
-					 else
-					 {
-						 if (self.startByteOffset > 0)
-							 [self seekToPositionInBytes:self.startByteOffset fadeVolume:NO];
-					 }
-				 }
-				 else if (seconds)
-				 {
-					 self.startSecondsOffset = seconds.doubleValue;
-					 if (self.startSecondsOffset > 0.0)
-						 [self seekToPositionInSeconds:self.startSecondsOffset fadeVolume:NO];
-				 }
+                 if (aSong.isTempCached) {
+                     // If temp cached, just set the offset but don't actually seek
+                     self.startByteOffset = (NSInteger)byteOffset.unsignedLongLongValue;
+                     self.startSecondsOffset = seconds.doubleValue;
+                 } else {
+                     // Skip to the byte offset
+                     if (byteOffset)
+                     {
+                         self.startByteOffset = (NSInteger)byteOffset.unsignedLongLongValue;
+                         self.ringBuffer.totalBytesDrained = byteOffset.unsignedLongLongValue;
+                         
+                         if (seconds)
+                         {
+                             [self seekToPositionInSeconds:seconds.doubleValue fadeVolume:NO];
+                         }
+                         else
+                         {
+                             if (self.startByteOffset > 0)
+                                 [self seekToPositionInBytes:self.startByteOffset fadeVolume:NO];
+                         }
+                     }
+                     else if (seconds)
+                     {
+                         self.startSecondsOffset = seconds.doubleValue;
+                         if (self.startSecondsOffset > 0.0)
+                             [self seekToPositionInSeconds:self.startSecondsOffset fadeVolume:NO];
+                     }
+                 }
+				 
 				 
 				 // Start filling the ring buffer
                  [self keepRingBufferFilled];

@@ -48,12 +48,13 @@ import CocoaLumberjackSwift
     private let shuffleButton = UIButton(type: .custom)
     
     // Progress bar
-    private var progressDisplayLink: CADisplayLink!
+    private var progressDisplayLink: CADisplayLink?
     private let progressBarContainer = UIView()
     private let elapsedTimeLabel = UILabel()
     private let remainingTimeLabel = UILabel()
     private let downloadProgressView = UIView()
     private let progressSlider = OBSlider()
+    private var lastSeekTime = Date()
     
     // Jukebox
     private let jukeboxVolumeContainer = UIView()
@@ -193,15 +194,23 @@ import CocoaLumberjackSwift
 
         elapsedTimeLabel.textColor = .label
         elapsedTimeLabel.font = .systemFont(ofSize: 14)
+        elapsedTimeLabel.textAlignment = .right
+        elapsedTimeLabel.adjustsFontSizeToFitWidth = true
+        elapsedTimeLabel.minimumScaleFactor = 0.5
         progressBarContainer.addSubview(elapsedTimeLabel)
         elapsedTimeLabel.snp.makeConstraints { make in
+            make.width.equalTo(40)
             make.leading.centerY.equalToSuperview()
         }
 
         remainingTimeLabel.textColor = .label
         remainingTimeLabel.font = .systemFont(ofSize: 14)
+        remainingTimeLabel.textAlignment = .left
+        remainingTimeLabel.adjustsFontSizeToFitWidth = true
+        remainingTimeLabel.minimumScaleFactor = 0.5
         progressBarContainer.addSubview(remainingTimeLabel)
         remainingTimeLabel.snp.makeConstraints { make in
+            make.width.equalTo(40)
             make.trailing.centerY.equalToSuperview()
         }
 
@@ -217,6 +226,7 @@ import CocoaLumberjackSwift
         downloadProgressView.backgroundColor = UIColor.systemGray4
         progressBarContainer.insertSubview(downloadProgressView, belowSubview: progressSlider)
         downloadProgressView.snp.makeConstraints { make in
+//            make.width.equalTo(0)
             make.width.equalTo(0)
             make.leading.equalTo(progressSlider).offset(-5)
             make.top.equalTo(progressSlider).offset(-3)
@@ -484,33 +494,27 @@ import CocoaLumberjackSwift
     
     private func startUpdatingSlider() {
         guard progressDisplayLink == nil else {
-            progressDisplayLink.isPaused = false
+            progressDisplayLink?.isPaused = false
             return
         }
         
         progressDisplayLink = CADisplayLink(target: self, selector: #selector(updateSlider))
-        progressDisplayLink.isPaused = false
-        progressDisplayLink.add(to: .main, forMode: .default)
+        progressDisplayLink?.isPaused = false
+        progressDisplayLink?.add(to: .main, forMode: .default)
     }
     
     private func stopUpdatingSlider() {
         guard progressDisplayLink != nil else { return }
         
-        progressDisplayLink.isPaused = true
-        progressDisplayLink.remove(from: .main, forMode: .default)
+        progressDisplayLink?.isPaused = true
+        progressDisplayLink?.remove(from: .main, forMode: .default)
         progressDisplayLink = nil
     }
     
     private func setupProgressSlider() {
         // Started seeking
         progressSlider.addClosure(for: .touchDown) { [unowned self] in
-            print("slider touch down")
-            self.progressDisplayLink.isPaused = true
-        }
-        
-        // During seeking
-        progressSlider.addClosure(for: .valueChanged) { //[unowned self] in
-            print("slider value changed")
+            self.progressDisplayLink?.isPaused = true
         }
 
         // End Seeking
@@ -521,30 +525,33 @@ import CocoaLumberjackSwift
     
     @objc private func seekedAction() {
         guard let currentSong = currentSong, let player = AudioEngine.shared().player else {
-            self.progressDisplayLink.isPaused = false
+            self.progressDisplayLink?.isPaused = false
             return
         }
         
+        lastSeekTime = Date()
+        
         // TOOD: Why is this multipled by 128?
         let byteOffset = BassWrapper.estimateBitrate(player.currentStream) * 128 * UInt(progressSlider.value)
+        let secondsOffset = progressSlider.value
         if currentSong.isTempCached {
             player.stop()
             
             AudioEngine.shared().startByteOffset = byteOffset
-            AudioEngine.shared().startSecondsOffset = UInt(progressSlider.value)
+            AudioEngine.shared().startSecondsOffset = UInt(secondsOffset)
             
             StreamManager.shared().removeStream(at: 0)
-            StreamManager.shared().queueStream(for: currentSong, isTempCache: true, isStartDownload: true)
+            StreamManager.shared().queueStream(for: currentSong, byteOffset: UInt64(byteOffset), secondsOffset: Double(secondsOffset), at: 0, isTempCache: true, isStartDownload: true)
             if StreamManager.shared().handlerStack.count > 1 {
                 if let handler = StreamManager.shared().handlerStack.firstObject as? ISMSStreamHandler {
                     handler.start()
                 }
             }
-            self.progressDisplayLink.isPaused = false
+            self.progressDisplayLink?.isPaused = false
         } else {
             if currentSong.isFullyCached || byteOffset < currentSong.localFileSize {
                 player.seekToPosition(inSeconds: Double(progressSlider.value), fadeVolume: true)
-                self.progressDisplayLink.isPaused = false
+                self.progressDisplayLink?.isPaused = false
             } else {
                 let message = "You are trying to skip further than the song has cached. You can do this, but the song won't be cached. Or you can wait a little bit for the cache to catch up."
                 let alert = UIAlertController(title: "Past Cache Point", message: message, preferredStyle: .alert)
@@ -560,17 +567,22 @@ import CocoaLumberjackSwift
                             handler.start()
                         }
                     }
-                    self.progressDisplayLink.isPaused = false
+                    self.progressDisplayLink?.isPaused = false
                 })
                 alert.addAction(UIAlertAction(title: "Wait", style: .cancel) { _ in
-                    self.progressDisplayLink.isPaused = false
+                    self.progressDisplayLink?.isPaused = false
                 })
             }
         }
     }
     
     @objc private func updateSlider() {
-        guard let currentSong = currentSong, let player = AudioEngine.shared().player else { return }
+        guard let currentSong = currentSong, let player = AudioEngine.shared().player, let progressDisplayLink = progressDisplayLink else { return }
+        
+        // Prevent temporary movement after seeking temp cached song
+        if currentSong.isTempCached && Date().timeIntervalSince(lastSeekTime) < 5.0 && player.progress == 0.0 {
+            return
+        }
         
         let duration = currentSong.duration?.doubleValue ?? 0.0
         if Settings.shared().isJukeboxEnabled {
@@ -580,7 +592,17 @@ import CocoaLumberjackSwift
         } else {
             elapsedTimeLabel.text = NSString.formatTime(player.progress)
             remainingTimeLabel.text = "-\(NSString.formatTime(duration - player.progress) ?? "0:00")"
-            progressSlider.value = Float(player.progress)
+            
+            // Only animate when it's moving forward
+            let value = Float(player.progress)
+            if value < progressSlider.value {
+                progressSlider.value = value
+            } else {
+                let actualFramesPerSecond = 1 / (progressDisplayLink.targetTimestamp - progressDisplayLink.timestamp)
+                UIView.animate(withDuration: progressDisplayLink.duration * actualFramesPerSecond) {
+                    self.progressSlider.setValue(value, animated: true)
+                }
+            }
         }
     }
     
@@ -617,21 +639,24 @@ import CocoaLumberjackSwift
         
         downloadProgressView.isHidden = Settings.shared().isJukeboxEnabled
         
-        func remakeConstraints() {
+        let width = currentSong.downloadProgress == 0 ? 0 : self.progressSlider.frame.width + 6
+        guard width != self.downloadProgressView.frame.width else {
+            return
+        }
+        
+        func updateConstraints() {
             do {
                 try ObjC.perform {
-                    self.downloadProgressView.snp.remakeConstraints { make in
+                    self.downloadProgressView.snp.updateConstraints { make in
                         do {
                             try ObjC.perform {
-                                make.width.equalTo(self.progressSlider).multipliedBy(currentSong.downloadProgress).offset(10)
-                                make.leading.equalTo(self.progressSlider).offset(-5)
-                                make.top.equalTo(self.progressSlider).offset(-3)
-                                make.bottom.equalTo(self.progressSlider).offset(3)
+                                make.width.equalTo(width)
                             }
                         } catch {
                             DDLogError("[PlayerViewController] Failed to update constraints for download progress: \(error)")
                         }
                     }
+                    self.downloadProgressView.superview?.layoutIfNeeded()
                 }
             } catch {
                 DDLogError("[PlayerViewController] Failed to update constraints for download progress: \(error)")
@@ -641,10 +666,10 @@ import CocoaLumberjackSwift
         // Set the width based on the download progress + leading/trailing offset size
         if animated && currentSong.downloadProgress > previousDownloadProgress {
             // If it's longer, animate it
-            UIView.animate(withDuration: 1.0, delay: 0.0, options: .curveEaseOut, animations: remakeConstraints, completion: nil)
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: updateConstraints, completion: nil)
         } else {
             // If it's shorter, it's probably starting a new song so don't animate
-            remakeConstraints()
+            updateConstraints()
         }
         
         previousDownloadProgress = currentSong.downloadProgress
@@ -653,7 +678,7 @@ import CocoaLumberjackSwift
     @objc private func startUpdatingDownloadProgress() {
         stopUpdatingDownloadProgress()
         updateDownloadProgress(animated: true)
-        perform(#selector(startUpdatingDownloadProgress), with: nil, afterDelay: 1.0)
+        perform(#selector(startUpdatingDownloadProgress), with: nil, afterDelay: 0.2)
     }
     
     private func stopUpdatingDownloadProgress() {

@@ -30,7 +30,7 @@ unsigned long long startSongBytes = 0;
 double startSongSeconds = 0.0;
 - (void)startSongAtOffsetInBytes:(unsigned long long)bytes andSeconds:(double)seconds {
 	// Only allowed to manipulate BASS from the main thread
-	if (![NSThread mainThread]) return;
+	if (!NSThread.mainThread) return;
 
     //DLog(@"starting song at offset");
 	

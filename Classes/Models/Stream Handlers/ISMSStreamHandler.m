@@ -12,6 +12,11 @@
 #import "Defines.h"
 #import "EX2Kit.h"
 
+@interface ISMSStreamHandler() {
+    unsigned long long _byteOffset;
+}
+@end
+
 @implementation ISMSStreamHandler
 
 - (void)setup
@@ -248,6 +253,14 @@
 {
 	//return [NSString stringWithFormat:@"%@: title: %@, songId: %@", [super description], title, songId];
 	return [NSString stringWithFormat:@"%@  title: %@", [super description], self.mySong.title];
+}
+
+- (unsigned long long)byteOffset {
+    return _byteOffset;
+}
+
+- (void)setByteOffset:(unsigned long long)byteOffset {
+    _byteOffset = byteOffset;
 }
 
 @end
