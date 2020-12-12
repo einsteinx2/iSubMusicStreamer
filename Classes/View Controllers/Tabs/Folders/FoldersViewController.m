@@ -39,7 +39,8 @@
 	[self createDataModel];
 	
 	self.title = @"Folders";
-		
+    self.view.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
+    
 	//Set defaults
 	self.isSearching = NO;
 	self.isCountShowing = NO;
@@ -121,6 +122,7 @@
 	
 	self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 157)];
 	self.headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.headerView.backgroundColor = self.view.backgroundColor;
 	
 	self.countLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 9, 320, 30)];
 	self.countLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
