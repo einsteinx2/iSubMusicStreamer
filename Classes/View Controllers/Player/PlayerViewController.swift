@@ -748,6 +748,10 @@ import CocoaLumberjackSwift
         progressSlider.isEnabled = !jukeboxEnabled
         progressSlider.alpha = jukeboxEnabled ? 0.5 : 1.0
         downloadProgressView.isHidden = jukeboxEnabled
+        title = jukeboxEnabled ? "Jukebox Mode" : ""
+        if UIDevice.isPad() {
+            view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor.withAlphaComponent(0.5) : UIColor(named: "isubBackgroundColor")
+        }
     }
     
     private func updateEqualizerButton() {
