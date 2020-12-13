@@ -90,6 +90,11 @@ LOG_LEVEL_ISUB_DEFAULT
 		case 1200: self.quickSkipSegmentControl.selectedSegmentIndex = 8; break;
 		default: break;
 	}
+    
+    // Fix cut off text on small devices
+    if (UIDevice.isSmall) {
+        [self.quickSkipSegmentControl setTitleTextAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:11]} forState:UIControlStateNormal];
+    }
 	
 	[self.cacheSpaceLabel2 addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     
