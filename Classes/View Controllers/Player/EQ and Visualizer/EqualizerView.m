@@ -262,7 +262,12 @@ typedef struct {
 						y++;
 					else if (y > v)
 						y--;
-					specbuf[y * specWidth + x] = palette[abs(y - specHeight / 2) * 2 + 1];
+                    
+                    int specbufIndex = y * specWidth + x;
+                    int palletIndex = abs(y - specHeight / 2) * 2 + 1;
+                    if (specbufIndex > 0 && specbufIndex < specbufLength && palletIndex >= 0 && palletIndex < palletLength) {
+                        specbuf[specbufIndex] = palette[palletIndex];
+                    }
 				} while (y!=v);
 			}
 			break;
@@ -280,12 +285,20 @@ typedef struct {
                 }
                 if (x && (y1 = (y + y1) / 2)) { // interpolate from previous to make the display smoother
                     while (--y1 >= 0) {
-                        specbuf[(specHeight - 1 - y1) * specWidth + x * 2 - 1] = palette[y1 + 1];
+                        int specbufIndex = (specHeight - 1 - y1) * specWidth + x * 2 - 1;
+                        int palletIndex = y1 + 1;
+                        if (specbufIndex > 0 && specbufIndex < specbufLength && palletIndex >= 0 && palletIndex < palletLength) {
+                            specbuf[specbufIndex] = palette[palletIndex];
+                        }
                     }
                 }
 				y1 = y;
                 while (--y >= 0) {
-                    specbuf[(specHeight - 1 - y) * specWidth + x * 2] = palette[y + 1]; // draw level
+                    int specbufIndex = (specHeight - 1 - y) * specWidth + x * 2;
+                    int palletIndex = y + 1;
+                    if (specbufIndex > 0 && specbufIndex < specbufLength && palletIndex >= 0 && palletIndex < palletLength) {
+                        specbuf[specbufIndex] = palette[palletIndex]; // draw level
+                    }
                 }
 			}
 			break;
@@ -317,7 +330,12 @@ typedef struct {
                 
 				while (--y >= 0) {
 					for (y1 = 0; y1 < specWidth / BANDS - 2; y1++) {
-						specbuf[(specHeight - 1 - y) * specWidth + x * (specWidth / BANDS) + y1] = palette[y + 1]; // draw bar
+                        int specbufIndex = (specHeight - 1 - y) * specWidth + x * (specWidth / BANDS) + y1;
+                        int palletIndex = y + 1;
+                        if (specbufIndex > 0 && specbufIndex < specbufLength && palletIndex >= 0 && palletIndex < palletLength) {
+                            specbuf[specbufIndex] = palette[y + 1]; // draw bar
+                        }
+						
 					}
 				}
 			}
@@ -328,19 +346,28 @@ typedef struct {
                 if (y > 127) {
 					y = 127; // cap it
                 }
-                if (specHeight - 1 + y > 0 && specHeight - 1 + y < palletLength) {
-                    specbuf[(specHeight - 1 - x) * specWidth + specpos] = palette[specHeight - 1 + y]; // plot it
+                int specbufIndex = (specHeight - 1 - x) * specWidth + specpos;
+                int paletteIndex = specHeight - 1 + y;
+                if (specbufIndex > 0 && specbufIndex < specbufLength && paletteIndex >= 0 && paletteIndex < palletLength) {
+                    specbuf[specbufIndex] = palette[paletteIndex]; // plot it
                 }
 			}
             
 			// move marker onto next position
 			specpos = (specpos + 1) % specWidth;
 			for (x = 0; x < specHeight; x++) {
-				specbuf[x * specWidth + specpos] = palette[specHeight+126];
-				
-//                if (UIScreen.mainScreen.scale >= 2.0 && specpos + 1 < specWidth) {
+                int specbufIndex = x * specWidth + specpos;
+                int paletteIndex = specHeight + 126;
+                if (specbufIndex > 0 && specbufIndex < specbufLength && paletteIndex >= 0 && paletteIndex < palletLength) {
+                    specbuf[specbufIndex] = palette[paletteIndex];
+                }
+                
                 if (specpos + 1 < specWidth) {
-					specbuf[x * specWidth + specpos + 1] = palette[specHeight+126];
+                    specbufIndex = x * specWidth + specpos + 1;
+                    paletteIndex = specHeight + 126;
+                    if (specbufIndex > 0 && specbufIndex < specbufLength && paletteIndex >= 0 && paletteIndex < palletLength) {
+                        specbuf[specbufIndex] = palette[paletteIndex];
+                    }
                 }
 			}
 			break;
