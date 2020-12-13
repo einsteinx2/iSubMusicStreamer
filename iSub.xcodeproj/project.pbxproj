@@ -254,6 +254,7 @@
 		53C3AB74257DDA1000B35B99 /* LicensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB72257DDA1000B35B99 /* LicensesViewController.swift */; };
 		53C7FD9E150F0EA9008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
 		53C7FDA0150F0EAF008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
+		53CB016825864D5200E2DF10 /* NSFileManager+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38671EA961C80058B925 /* NSFileManager+ZKAdditions.m */; };
 		53CF64F725843ADA00BD47DC /* SlidingNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF64F625843ADA00BD47DC /* SlidingNotification.swift */; };
 		53CF64F825843ADA00BD47DC /* SlidingNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF64F625843ADA00BD47DC /* SlidingNotification.swift */; };
 		53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D44F8415AA621A00CDD3B8 /* Accelerate.framework */; };
@@ -2392,6 +2393,7 @@
 				533295FA255EEFE50027C51A /* FMResultSet.m in Sources */,
 				53FE37671EA961720058B925 /* MusicSingleton.m in Sources */,
 				53EA2DE2257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
+				53CB016825864D5200E2DF10 /* NSFileManager+ZKAdditions.m in Sources */,
 				53FE373D1EA961720058B925 /* ISMSSong+DAO.m in Sources */,
 				53FE37461EA961720058B925 /* ISMSStreamHandler.m in Sources */,
 				533295F8255EEFE50027C51A /* FMDatabasePool.m in Sources */,
