@@ -61,14 +61,14 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.enableNextSongCacheSwitch.on = settingsS.isNextSongCacheEnabled;
 	self.enableNextSongPartialCacheSwitch.on = settingsS.isPartialCacheNextSong;
     self.enableBackupCacheSwitch.on = settingsS.isBackupCacheEnabled;
-    [self.cacheSpaceSlider setThumbImage:[[UIImage imageNamed:@"controller-slider-thumb"] imageWithTintColor:UIColor.blackColor] forState:UIControlStateNormal];
+    [self.cacheSpaceSlider setThumbImage:[UIImage imageNamed:@"controller-slider-thumb"] forState:UIControlStateNormal];
 	self.totalSpace = cacheS.totalSpace;
 	self.freeSpace = cacheS.freeSpace;
 	self.freeSpaceLabel.text = [NSString stringWithFormat:@"Free space: %@", [NSString formatFileSize:self.freeSpace]];
 	self.totalSpaceLabel.text = [NSString stringWithFormat:@"Total space: %@", [NSString formatFileSize:self.totalSpace]];
 	float percentFree = (float) self.freeSpace / (float) self.totalSpace;
 	CGRect frame = self.freeSpaceBackground.frame;
-	frame.size.width = frame.size.width * percentFree;
+	frame.size.width *= percentFree;
 	self.freeSpaceBackground.frame = frame;
 	self.cachingTypeSegmentedControl.selectedSegmentIndex = settingsS.cachingType;
 	[self toggleCacheControlsVisibility];
