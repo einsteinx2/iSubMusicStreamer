@@ -58,6 +58,8 @@
             UIApplication.sharedApplication.idleTimerDisabled = YES;
             
             if (!UIDevice.isPad) {
+                [self dismissPicker];
+                
                 self.controlsContainer.alpha = 0.0;
                 self.controlsContainer.userInteractionEnabled = NO;
                 
@@ -571,21 +573,28 @@
 }
 
 - (void)showPresetPicker:(id)sender {
-    self.overlay = [[UIView alloc] init];
-	self.overlay.frame = self.view.frame;
-	self.overlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	self.overlay.backgroundColor = [UIColor colorWithWhite:0 alpha:.80];
-	self.overlay.alpha = 0.0;
-	[self.view insertSubview:self.overlay belowSubview:self.controlsContainer];
-	
-	self.dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	self.dismissButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	[self.dismissButton addTarget:self action:@selector(dismissPicker) forControlEvents:UIControlEventTouchUpInside];
-    self.dismissButton.frame = self.equalizerView.frame;//self.view.bounds;
-	self.dismissButton.enabled = NO;
-	[self.overlay addSubview:self.dismissButton];
-    
-    if (!self.presetPicker) {
+    if (!self.isPresetPickerShowing) {
+        self.isPresetPickerShowing = YES;
+        
+        self.overlay = [[UIView alloc] init];
+        self.overlay.translatesAutoresizingMaskIntoConstraints = NO;
+        self.overlay.backgroundColor = [UIColor colorWithWhite:0 alpha:.80];
+        self.overlay.alpha = 0.0;
+        [self.view insertSubview:self.overlay belowSubview:self.controlsContainer];
+        [NSLayoutConstraint activateConstraints:@[
+            [self.overlay.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [self.overlay.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [self.overlay.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [self.overlay.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+        ]];
+        
+        self.dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.dismissButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.dismissButton addTarget:self action:@selector(dismissPicker) forControlEvents:UIControlEventTouchUpInside];
+        self.dismissButton.frame = self.equalizerView.frame;
+        self.dismissButton.enabled = NO;
+        [self.overlay addSubview:self.dismissButton];
+        
         self.presetPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height - self.equalizerView.height)];
         self.presetPicker.dataSource = self;
         self.presetPicker.delegate = self;
@@ -597,31 +606,33 @@
         [self.view bringSubviewToFront:self.overlay];
         [self.view bringSubviewToFront:self.presetPickerBlurView];
         [self updatePresetPicker];
+        
+        [UIView animateWithDuration:.3 delay:0. options:UIViewAnimationOptionCurveEaseOut animations:^{
+            self.overlay.alpha = 1;
+            self.dismissButton.enabled = YES;
+            self.presetPickerBlurView.y = self.equalizerView.height;
+        } completion:nil];
     }
-    
-    [UIView animateWithDuration:.3 delay:0. options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.overlay.alpha = 1;
-        self.dismissButton.enabled = YES;
-        self.presetPickerBlurView.y = self.equalizerView.height;
-    } completion:nil];
-    
-	self.isPresetPickerShowing = YES;
 }
 
 - (void)dismissPicker {
-	[self.presetPicker resignFirstResponder];
-    if (self.overlay) {
+    if (self.isPresetPickerShowing) {
+        [self.presetPicker resignFirstResponder];
 		[UIView animateWithDuration:.3 delay:0. options:UIViewAnimationOptionCurveEaseOut animations:^{
             self.overlay.alpha = 0;
             self.dismissButton.enabled = NO;
             self.presetPickerBlurView.y = self.view.height;
 //            self.presetPicker.y = self.view.height;
         } completion:^(BOOL finished) {
+            [self.presetPicker removeFromSuperview];
+            self.presetPicker = nil;
             [self.presetPickerBlurView removeFromSuperview];
             self.presetPickerBlurView = nil;
-            self.presetPicker = nil;
+            [self.dismissButton removeFromSuperview];
+            self.dismissButton = nil;
             [self.overlay removeFromSuperview];
             self.overlay = nil;
+            self.isPresetPickerShowing = NO;
         }];
 	}
 }
