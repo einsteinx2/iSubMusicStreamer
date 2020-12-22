@@ -15,17 +15,9 @@
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
-#import "ISMSAlbum.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
-
-@interface SUSSubFolderDAO (Private) 
-- (NSUInteger)findFirstAlbumRow;
-- (NSUInteger)findFirstSongRow;
-- (NSUInteger)findAlbumsCount;
-- (NSUInteger)findSongsCount;
-- (NSUInteger)findFolderLength;
-@end
+#import "Swift.h"
 
 @implementation SUSSubFolderDAO
 
@@ -37,31 +29,28 @@
     _albumsCount = [self findAlbumsCount];
     _songsCount = [self findSongsCount];
     _folderLength = [self findFolderLength];
-	//DLog(@"albumsCount: %i", albumsCount);
-	//DLog(@"songsCount: %i", songsCount);
 }
 
-- (instancetype)init
-{
-    if ((self = [super init])) {
+- (instancetype)init {
+    if (self = [super init]) {
 		[self setup];
     }
     return self;
 }
 
-- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate {
-    if ((self = [super init])) {
-		self.delegate = theDelegate;
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate {
+    if (self = [super init]) {
+		_delegate = delegate;
 		[self setup];
     }
     return self;
 }
 
-- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate andId:(NSString *)folderId andArtist:(ISMSArtist *)anArtist {
-	if ((self = [super init])) {
-		self.delegate = theDelegate;
-        self.myId = folderId;
-		self.myArtist = anArtist;
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate andId:(NSString *)folderId andFolderArtist:(ISMSFolderArtist *)folderArtist {
+	if (self = [super init]) {
+		_delegate = delegate;
+        _folderId = folderId;
+		_folderArtist = folderArtist;
 		[self setup];
     }
     return self;
@@ -79,47 +68,38 @@
 #pragma mark - Private DB Methods
 
 - (NSUInteger)findFirstAlbumRow {
-    return [self.dbQueue intForQuery:@"SELECT rowid FROM albumsCache WHERE folderId = ? LIMIT 1", [self.myId md5]];
+    return [self.dbQueue intForQuery:@"SELECT rowid FROM albumsCache WHERE folderId = ? LIMIT 1", self.folderId.md5];
 }
 
 - (NSUInteger)findFirstSongRow {
-    return [self.dbQueue intForQuery:@"SELECT rowid FROM songsCache WHERE folderId = ? LIMIT 1", [self.myId md5]];
+    return [self.dbQueue intForQuery:@"SELECT rowid FROM songsCache WHERE folderId = ? LIMIT 1", self.folderId.md5];
 }
 
 - (NSUInteger)findAlbumsCount {
-    return [self.dbQueue intForQuery:@"SELECT count FROM albumsCacheCount WHERE folderId = ?", [self.myId md5]];
+    return [self.dbQueue intForQuery:@"SELECT count FROM albumsCacheCount WHERE folderId = ?", self.folderId.md5];
 }
 
 - (NSUInteger)findSongsCount {
-    return [self.dbQueue intForQuery:@"SELECT count FROM songsCacheCount WHERE folderId = ?", [self.myId md5]];
+    return [self.dbQueue intForQuery:@"SELECT count FROM songsCacheCount WHERE folderId = ?", self.folderId.md5];
 }
 
 - (NSUInteger)findFolderLength {
-    return [self.dbQueue intForQuery:@"SELECT length FROM folderLength WHERE folderId = ?", [self.myId md5]];
+    return [self.dbQueue intForQuery:@"SELECT length FROM folderLength WHERE folderId = ?", self.folderId.md5];
 }
 
-- (ISMSAlbum *)findAlbumForDbRow:(NSUInteger)row
-{
-    __block ISMSAlbum *anAlbum = nil;
-	
+- (ISMSFolderAlbum *)findFolderAlbumForDbRow:(NSUInteger)row {
+    __block ISMSFolderAlbum *folderAlbum = nil;
 	[self.dbQueue inDatabase:^(FMDatabase *db) {
 		FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM albumsCache WHERE ROWID = %lu", (unsigned long)row]];
-		[result next];
-		if ([db hadError]) {
+        if ([result next]) {
+            folderAlbum = [[ISMSFolderAlbum alloc] initWithResult:result];
+        } else if ([db hadError]) {
             // TODO: Handle error
             //DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-		} else {
-			anAlbum = [[ISMSAlbum alloc] init];
-			anAlbum.title = [result stringForColumn:@"title"];
-			anAlbum.albumId = [result stringForColumn:@"albumId"];
-			anAlbum.coverArtId = [result stringForColumn:@"coverArtId"];
-			anAlbum.artistName = [result stringForColumn:@"artistName"];
-			anAlbum.artistId = [result stringForColumn:@"artistId"];
 		}
 		[result close];
 	}];
-	
-	return anAlbum;
+	return folderAlbum;
 }
 
 - (ISMSSong *)findSongForDbRow:(NSUInteger)row {
@@ -167,15 +147,13 @@
     return self.albumsCount + self.songsCount;
 }
 
-- (ISMSAlbum *)albumForTableViewRow:(NSUInteger)row {
+- (ISMSFolderAlbum *)folderAlbumForTableViewRow:(NSUInteger)row {
     NSUInteger dbRow = self.albumStartRow + row;
-    
-    return [self findAlbumForDbRow:dbRow];
+    return [self findFolderAlbumForDbRow:dbRow];
 }
 
 - (ISMSSong *)songForTableViewRow:(NSUInteger)row {
     NSUInteger dbRow = self.songStartRow + (row - self.albumsCount);
-    
     return [self findSongForDbRow:dbRow];
 }
 
@@ -198,10 +176,8 @@
 			sectionInfo = [databaseS sectionInfoFromTable:@"albumIndex" inDatabase:db withColumn:@"title"];
 			[db executeUpdate:@"DROP TABLE IF EXISTS albumIndex"];
 		}];
-		
 		return [sectionInfo count] < 2 ? nil : sectionInfo;
 	}
-	
 	return nil;
 }
 
@@ -213,8 +189,8 @@
 
 - (void)startLoad {
     self.loader = [[SUSSubFolderLoader alloc] initWithDelegate:self];
-    self.loader.myId = self.myId;
-    self.loader.myArtist = self.myArtist;
+    self.loader.folderId = self.folderId;
+    self.loader.folderArtist = self.folderArtist;
     [self.loader startLoad];
 }
 

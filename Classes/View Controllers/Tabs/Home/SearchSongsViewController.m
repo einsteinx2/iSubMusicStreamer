@@ -8,9 +8,8 @@
 
 #import "SearchSongsViewController.h"
 #import "ServerListViewController.h"
-#import "AlbumViewController.h"
+#import "FolderAlbumViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
-#import "SearchXMLParser.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -19,8 +18,6 @@
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
-#import "ISMSArtist.h"
-#import "ISMSAlbum.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -79,11 +76,11 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	if (self.searchType == ISMSSearchSongsSearchType_Artists) {
-		return self.listOfArtists.count + 1;
+		return self.folderArtists.count + 1;
 	} else if (self.searchType == ISMSSearchSongsSearchType_Albums) {
-		return self.listOfAlbums.count + 1;
+		return self.folderAlbums.count + 1;
 	} else {
-		return self.listOfSongs.count + 1;
+		return self.songs.count + 1;
 	}
 }
 
@@ -138,22 +135,22 @@
             [xmlParser setDelegate:parserDelegate];
             [xmlParser parse];
             if (self.searchType == ISMSSearchSongsSearchType_Artists) {
-                if (parserDelegate.listOfArtists.count == 0) {
+                if (parserDelegate.folderArtists.count == 0) {
                     self.isMoreResults = NO;
                 } else {
-                    [self.listOfArtists addObjectsFromArray:parserDelegate.listOfArtists];
+                    [self.folderArtists addObjectsFromArray:parserDelegate.folderArtists];
                 }
             } else if (self.searchType == ISMSSearchSongsSearchType_Albums) {
-                if (parserDelegate.listOfAlbums.count == 0) {
+                if (parserDelegate.folderAlbums.count == 0) {
                     self.isMoreResults = NO;
                 } else {
-                    [self.listOfAlbums addObjectsFromArray:parserDelegate.listOfAlbums];
+                    [self.folderAlbums addObjectsFromArray:parserDelegate.folderAlbums];
                 }
             } else if (self.searchType == ISMSSearchSongsSearchType_Songs) {
-                if (parserDelegate.listOfSongs.count == 0) {
+                if (parserDelegate.songs.count == 0) {
                     self.isMoreResults = NO;
                 } else {
-                    [self.listOfSongs addObjectsFromArray:parserDelegate.listOfSongs];
+                    [self.songs addObjectsFromArray:parserDelegate.songs];
                 }
             }
             
@@ -182,7 +179,7 @@
 		
 		[self loadMoreResults];
 	} else {
-		if (self.listOfArtists.count > 0 || self.listOfAlbums.count > 0 || self.listOfSongs.count > 0) {
+		if (self.folderArtists.count > 0 || self.folderAlbums.count > 0 || self.songs.count > 0) {
 			cell.textLabel.text = @"No more search results";
 		} else {
 			cell.textLabel.text = @"No results";
@@ -193,40 +190,40 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (self.searchType == ISMSSearchSongsSearchType_Artists) {
-		if (indexPath.row < self.listOfArtists.count) {
+		if (indexPath.row < self.folderArtists.count) {
             // Artist
             UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
             cell.hideNumberLabel = YES;
             cell.hideCoverArt = YES;
             cell.hideSecondaryLabel = YES;
             cell.hideDurationLabel = YES;
-            [cell updateWithModel:[self.listOfArtists objectAtIndexSafe:indexPath.row]];
+            [cell updateWithModel:[self.folderArtists objectAtIndexSafe:indexPath.row]];
             return cell;
-		} else if (indexPath.row == self.listOfArtists.count) {
+		} else if (indexPath.row == self.folderArtists.count) {
 			return [self createLoadingCell:indexPath.row];
 		}
 	} else if (self.searchType == ISMSSearchSongsSearchType_Albums) {
-		if (indexPath.row < self.listOfAlbums.count) {
+		if (indexPath.row < self.folderAlbums.count) {
             // Album
             UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
             cell.hideNumberLabel = YES;
             cell.hideCoverArt = NO;
             cell.hideDurationLabel = YES;
-            [cell updateWithModel:[self.listOfAlbums objectAtIndexSafe:indexPath.row]];
+            [cell updateWithModel:[self.folderAlbums objectAtIndexSafe:indexPath.row]];
             return cell;
-		} else if (indexPath.row == [self.listOfAlbums count]) {
+		} else if (indexPath.row == [self.folderAlbums count]) {
 			return [self createLoadingCell:indexPath.row];
 		}
 	} else {
-		if (indexPath.row < self.listOfSongs.count) {
+		if (indexPath.row < self.songs.count) {
             // Song
             UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
             cell.hideNumberLabel = YES;
             cell.hideCoverArt = NO;
             cell.hideDurationLabel = NO;
-            [cell updateWithModel:[self.listOfSongs objectAtIndexSafe:indexPath.row]];
+            [cell updateWithModel:[self.songs objectAtIndexSafe:indexPath.row]];
             return cell;
-		} else if (indexPath.row == self.listOfSongs.count) {
+		} else if (indexPath.row == self.songs.count) {
 			return [self createLoadingCell:indexPath.row];
 		}
 	}
@@ -242,21 +239,21 @@
 	if (!indexPath) return;
 	
 	if (self.searchType == ISMSSearchSongsSearchType_Artists) {
-		if (indexPath.row != self.listOfArtists.count) {
-			ISMSArtist *anArtist = [self.listOfArtists objectAtIndexSafe:indexPath.row];
-			AlbumViewController *albumView = [[AlbumViewController alloc] initWithArtist:anArtist orAlbum:nil];
+		if (indexPath.row != self.folderArtists.count) {
+			ISMSFolderArtist *folderArtist = [self.folderArtists objectAtIndexSafe:indexPath.row];
+			FolderAlbumViewController *albumView = [[FolderAlbumViewController alloc] initWithFolderArtist:folderArtist orFolderAlbum:nil];
 			[self pushViewControllerCustom:albumView];
 			return;
 		}
 	} else if (self.searchType == ISMSSearchSongsSearchType_Albums) {
-		if (indexPath.row != self.listOfAlbums.count) {
-			ISMSAlbum *anAlbum = [self.listOfAlbums objectAtIndexSafe:indexPath.row];
-			AlbumViewController *albumView = [[AlbumViewController alloc] initWithArtist:nil orAlbum:anAlbum];
+		if (indexPath.row != self.folderAlbums.count) {
+			ISMSFolderAlbum *folderAlbum = [self.folderAlbums objectAtIndexSafe:indexPath.row];
+            FolderAlbumViewController *albumView = [[FolderAlbumViewController alloc] initWithFolderArtist:nil orFolderAlbum:folderAlbum];
 			[self pushViewControllerCustom:albumView];
 			return;
 		}
 	} else {
-		if (indexPath.row != self.listOfSongs.count) {
+		if (indexPath.row != self.songs.count) {
 			// Clear the current playlist
 			if (settingsS.isJukeboxEnabled) {
 				[databaseS resetJukeboxPlaylist];
@@ -267,7 +264,7 @@
 			
 			// Add the songs to the playlist 
 			NSMutableArray *songIds = [[NSMutableArray alloc] init];
-			for (ISMSSong *aSong in self.listOfSongs) {
+			for (ISMSSong *aSong in self.songs) {
 				@autoreleasepool {
 					[aSong addToCurrentPlaylistDbQueue];
 					
@@ -305,16 +302,16 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.searchType == ISMSSearchSongsSearchType_Artists) {
-        if (indexPath.row != self.listOfArtists.count) {
-            return [SwipeAction downloadAndQueueConfigWithModel:[self.listOfArtists objectAtIndexSafe:indexPath.row]];
+        if (indexPath.row != self.folderArtists.count) {
+            return [SwipeAction downloadAndQueueConfigWithModel:[self.folderArtists objectAtIndexSafe:indexPath.row]];
         }
     } else if (self.searchType == ISMSSearchSongsSearchType_Albums) {
-        if (indexPath.row != self.listOfAlbums.count) {
-            return [SwipeAction downloadAndQueueConfigWithModel:[self.listOfAlbums objectAtIndexSafe:indexPath.row]];
+        if (indexPath.row != self.folderAlbums.count) {
+            return [SwipeAction downloadAndQueueConfigWithModel:[self.folderAlbums objectAtIndexSafe:indexPath.row]];
         }
     } else {
-        if (indexPath.row != self.listOfSongs.count) {
-            return [SwipeAction downloadAndQueueConfigWithModel:[self.listOfSongs objectAtIndexSafe:indexPath.row]];
+        if (indexPath.row != self.songs.count) {
+            return [SwipeAction downloadAndQueueConfigWithModel:[self.songs objectAtIndexSafe:indexPath.row]];
         }
     }
     return nil;

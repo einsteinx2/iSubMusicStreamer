@@ -7,7 +7,7 @@
 //
 
 #import "HomeAlbumViewController.h"
-#import "AlbumViewController.h"
+#import "FolderAlbumViewController.h"
 #import "ServerListViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "SUSQuickAlbumsLoader.h"
@@ -15,8 +15,6 @@
 #import "Defines.h"
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
-#import "ISMSArtist.h"
-#import "ISMSAlbum.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 
@@ -79,12 +77,12 @@
 }	
 
 - (void)loadingFinished:(SUSLoader *)theLoader {
-    if (self.loader.listOfAlbums.count == 0) {
+    if (self.loader.folderAlbums.count == 0) {
         // There are no more songs
 		self.isMoreAlbums = NO;
     } else {
         // Add the new results to the list of songs
-        [self.listOfAlbums addObjectsFromArray:self.loader.listOfAlbums];
+        [self.folderAlbums addObjectsFromArray:self.loader.folderAlbums];
     }
     
     // Reload the table
@@ -98,20 +96,20 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
-	return self.listOfAlbums.count + 1;
+	return self.folderAlbums.count + 1;
 }
 
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
-	if (indexPath.row < self.listOfAlbums.count) {
+	if (indexPath.row < self.folderAlbums.count) {
         UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
         cell.hideDurationLabel = YES;
-        [cell updateWithModel:[self.listOfAlbums objectAtIndexSafe:indexPath.row]];
+        [cell updateWithModel:[self.folderAlbums objectAtIndexSafe:indexPath.row]];
         return cell;
-	} else if (indexPath.row == self.listOfAlbums.count) {
+	} else if (indexPath.row == self.folderAlbums.count) {
 		// This is the last cell and there could be more results, load the next 20 songs;
 		UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"HomeAlbumLoadCell"];
         cell.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
@@ -137,9 +135,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (!indexPath) return;
 	
-	if (indexPath.row != self.listOfAlbums.count) {
-		ISMSAlbum *anAlbum = [self.listOfAlbums objectAtIndexSafe:indexPath.row];
-		AlbumViewController *albumViewController = [[AlbumViewController alloc] initWithArtist:nil orAlbum:anAlbum];
+	if (indexPath.row != self.folderAlbums.count) {
+		ISMSFolderAlbum *folderAlbum = [self.folderAlbums objectAtIndexSafe:indexPath.row];
+		FolderAlbumViewController *albumViewController = [[FolderAlbumViewController alloc] initWithFolderArtist:nil orFolderAlbum:folderAlbum];
 		[self pushViewControllerCustom:albumViewController];
 	} else {
 		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -147,8 +145,8 @@
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row != self.listOfAlbums.count) {
-        return [SwipeAction downloadAndQueueConfigWithModel:[self.listOfAlbums objectAtIndexSafe:indexPath.row]];
+    if (indexPath.row != self.folderAlbums.count) {
+        return [SwipeAction downloadAndQueueConfigWithModel:[self.folderAlbums objectAtIndexSafe:indexPath.row]];
     }
     return nil;
 }

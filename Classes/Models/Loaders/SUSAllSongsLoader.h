@@ -11,7 +11,7 @@
 #define READ_BUFFER_AMOUNT 400
 #define WRITE_BUFFER_AMOUNT 400
 
-@class ISMSArtist, ISMSAlbum, SUSRootFoldersDAO;
+@class ISMSFolderArtist, ISMSFolderAlbum, SUSRootFoldersDAO;
 
 @interface SUSAllSongsLoader : SUSLoader
 
@@ -28,8 +28,8 @@
 @property NSUInteger totalAlbumsProcessed;
 @property NSUInteger totalSongsProcessed;
 
-@property (strong) ISMSArtist *currentArtist;
-@property (strong) ISMSAlbum *currentAlbum;
+@property (strong) ISMSFolderArtist *currentFolderArtist;
+@property (strong) ISMSFolderAlbum *currentFolderAlbum;
 @property (strong) SUSRootFoldersDAO *rootFolders;
 @property (strong) NSDate *notificationTimeArtist;
 @property (strong) NSDate *notificationTimeAlbum;

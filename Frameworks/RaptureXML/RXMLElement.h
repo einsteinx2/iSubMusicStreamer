@@ -35,6 +35,8 @@
 #import <libxml/xpath.h>
 #import <libxml/xpathInternals.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface RXMLDocHolder : NSObject {
     xmlDocPtr doc_;
 }
@@ -76,8 +78,8 @@
 + (instancetype)elementFromHTMLFilePath:(NSString *)fullPath;
 + (instancetype)elementFromHTMLData:(NSData *)data;
 
-- (NSString *)attribute:(NSString *)attributeName;
-- (NSString *)attribute:(NSString *)attributeName inNamespace:(NSString *)ns;
+- (nullable NSString *)attribute:(NSString *)attributeName;
+- (nullable NSString *)attribute:(NSString *)attributeName inNamespace:(NSString *)ns;
 
 - (NSArray *)attributeNames;
 
@@ -87,19 +89,19 @@
 - (double)attributeAsDouble:(NSString *)attributeName;
 - (double)attributeAsDouble:(NSString *)attributeName inNamespace:(NSString *)ns;
 
-- (RXMLElement *)child:(NSString *)tag;
-- (RXMLElement *)child:(NSString *)tag inNamespace:(NSString *)ns;
+- (nullable RXMLElement *)child:(NSString *)tag;
+- (nullable RXMLElement *)child:(NSString *)tag inNamespace:(NSString *)ns;
 
-- (NSArray *)children:(NSString *)tag;
-- (NSArray *)children:(NSString *)tag inNamespace:(NSString *)ns;
-- (NSArray *)childrenWithRootXPath:(NSString *)xpath;
+- (nullable NSArray *)children:(NSString *)tag;
+- (nullable NSArray *)children:(NSString *)tag inNamespace:(NSString *)ns;
+- (nullable NSArray *)childrenWithRootXPath:(NSString *)xpath;
 
 - (void)iterate:(NSString *)query usingBlock:(void (^)(RXMLElement *))blk;
 - (void)iterateWithRootXPath:(NSString *)xpath usingBlock:(void (^)(RXMLElement *))blk;
 - (void)iterateElements:(NSArray *)elements usingBlock:(void (^)(RXMLElement *))blk;
 
-@property (nonatomic, strong) RXMLDocHolder *xmlDoc;
-@property (nonatomic, readonly) NSString *tag;
+@property (nullable, nonatomic, strong) RXMLDocHolder *xmlDoc;
+@property (nullable, nonatomic, readonly) NSString *tag;
 @property (nonatomic, readonly) NSString *text;
 @property (nonatomic, readonly) NSString *xml;
 @property (nonatomic, readonly) NSString *innerXml;
@@ -111,3 +113,4 @@
 
 typedef void (^RXMLBlock)(RXMLElement *element);
 
+NS_ASSUME_NONNULL_END

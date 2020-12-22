@@ -10,57 +10,45 @@
 #import "SUSAllSongsLoader.h"
 #import "FMDatabaseQueueAdditions.h"
 #import "DatabaseSingleton.h"
-#import "ISMSAlbum.h"
 #import "ISMSIndex.h"
 #import "Defines.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
 @implementation SUSAllAlbumsDAO
 
-- (FMDatabaseQueue *)dbQueue
-{
+- (FMDatabaseQueue *)dbQueue {
     return databaseS.allAlbumsDbQueue; 
 }
 
 #pragma mark - Private Methods
 
-- (NSUInteger)allAlbumsCount
-{
+- (NSUInteger)allAlbumsCount {
 	NSUInteger value = 0;
-	
-	if ([self.dbQueue tableExists:@"allAlbumsCount"] && [self.dbQueue intForQuery:@"SELECT COUNT(*) FROM allAlbumsCount"] > 0)
-	{
+	if ([self.dbQueue tableExists:@"allAlbumsCount"] && [self.dbQueue intForQuery:@"SELECT COUNT(*) FROM allAlbumsCount"] > 0) {
 		value = [self.dbQueue intForQuery:@"SELECT count FROM allAlbumsCount LIMIT 1"];
 	}
-	
 	return value;
 }
 
-- (NSUInteger)allAlbumsSearchCount
-{
+- (NSUInteger)allAlbumsSearchCount {
 	__block NSUInteger value;
-	[self.dbQueue inDatabase:^(FMDatabase *db)
-	{
+	[self.dbQueue inDatabase:^(FMDatabase *db) {
 		[db executeUpdate:@"CREATE TEMPORARY TABLE IF NOT EXISTS allAlbumsNameSearch (rowIdInAllAlbums INTEGER)"];
 		value = [db intForQuery:@"SELECT count(*) FROM allAlbumsNameSearch"];
-		
-	//DLog(@"allAlbumsNameSearch count: %i   value: %i", [db intForQuery:@"SELECT count(*) FROM allAlbumsNameSearch"], value);
+        //DLog(@"allAlbumsNameSearch count: %i   value: %i", [db intForQuery:@"SELECT count(*) FROM allAlbumsNameSearch"], value);
 	}];
 	return value;
 }
 
-- (NSArray *)allAlbumsIndex
-{
+- (NSArray *)allAlbumsIndex {
 	__block NSMutableArray *indexItems = [NSMutableArray arrayWithCapacity:0];
-	[self.dbQueue inDatabase:^(FMDatabase *db)
-	{
+	[self.dbQueue inDatabase:^(FMDatabase *db) {
 		FMResultSet *result = [db executeQuery:@"SELECT * FROM allAlbumsIndexCache"];
-		while ([result next])
-		{
-			@autoreleasepool 
-			{
+		while ([result next]) {
+			@autoreleasepool  {
 				ISMSIndex *item = [[ISMSIndex alloc] init];
 				item.name = [result stringForColumn:@"name"];
 				item.position = [result intForColumn:@"position"];
@@ -70,48 +58,34 @@ LOG_LEVEL_ISUB_DEFAULT
 		}
 		[result close];
 	}];
-	return [NSArray arrayWithArray:indexItems];
+	return indexItems;
 }
 
-- (ISMSAlbum *)allAlbumsAlbumForPosition:(NSUInteger)position
-{
-	__block ISMSAlbum *anAlbum = nil;
-	[self.dbQueue inDatabase:^(FMDatabase *db)
-	{		
-		FMResultSet *result = [db executeQuery:@"SELECT * FROM allAlbums WHERE ROWID = ?", @(position)];
-		if ([result next])
-		{
-			anAlbum = [[ISMSAlbum alloc] init];
-			anAlbum.title = [result stringForColumn:@"title"];
-			anAlbum.albumId = [result stringForColumn:@"albumId"];
-			anAlbum.coverArtId = [result stringForColumn:@"coverArtId"];
-			anAlbum.artistName = [result stringForColumn:@"artistName"];
-			anAlbum.artistId = [result stringForColumn:@"artistId"];
+- (ISMSFolderAlbum *)allAlbumsFolderAlbumForPosition:(NSUInteger)position {
+	__block ISMSFolderAlbum *folderAlbum = nil;
+	[self.dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM allAlbums WHERE ROWID = ?", @(position)];
+		if ([result next]) {
+            folderAlbum = [[ISMSFolderAlbum alloc] initWithResult:result];
 		}
 		[result close];
 	}];
-		
-	return anAlbum;
+	return folderAlbum;
 }
 
-- (ISMSAlbum *)allAlbumsAlbumForPositionInSearch:(NSUInteger)position
-{
+- (ISMSFolderAlbum *)allAlbumsFolderAlbumForPositionInSearch:(NSUInteger)position {
 	NSUInteger rowId = [self.dbQueue intForQuery:@"SELECT rowIdInAllAlbums FROM allAlbumsNameSearch WHERE ROWID = ?", @(position)];
-	return [self allAlbumsAlbumForPosition:rowId];
+	return [self allAlbumsFolderAlbumForPosition:rowId];
 }
 
-- (void)allAlbumsClearSearch
-{
-	[self.dbQueue inDatabase:^(FMDatabase *db)
-	{
+- (void)allAlbumsClearSearch {
+	[self.dbQueue inDatabase:^(FMDatabase *db) {
 		[db executeUpdate:@"DELETE FROM allAlbumsNameSearch"];
 	}];
 }
 
-- (void)allAlbumsPerformSearch:(NSString *)name
-{
-	[self.dbQueue inDatabase:^(FMDatabase *db)
-	{
+- (void)allAlbumsPerformSearch:(NSString *)name {
+	[self.dbQueue inDatabase:^(FMDatabase *db) {
 		// Inialize the search DB
 		[db executeUpdate:@"DROP TABLE IF EXISTS allAlbumsNameSearch"];
 		[db executeUpdate:@"CREATE TEMPORARY TABLE allAlbumsNameSearch (rowIdInAllAlbums INTEGER)"];
@@ -125,70 +99,49 @@ LOG_LEVEL_ISUB_DEFAULT
 	}];
 }
 
-- (BOOL)allAlbumsIsDataLoaded
-{
-	BOOL isLoaded = NO;
-
-	if ([self.dbQueue intForQuery:@"SELECT COUNT(*) FROM allAlbumsCount"] > 0)
-	{
-		isLoaded = YES;
-	}
-	
-	return isLoaded;
+- (BOOL)allAlbumsIsDataLoaded {
+    return [self.dbQueue intForQuery:@"SELECT COUNT(*) FROM allAlbumsCount"] > 0;
 }
 
 #pragma mark - Public DAO Methods
 
-- (NSUInteger)count
-{
-	if ([SUSAllSongsLoader isLoading])
-		return 0;
-	
+- (NSUInteger)count {
+	if ([SUSAllSongsLoader isLoading]) return 0;
+    
 	return [self allAlbumsCount];
 }
 
-- (NSUInteger)searchCount
-{
+- (NSUInteger)searchCount {
 	return [self allAlbumsSearchCount];
 }
 
-- (NSArray *)index
-{
-	if ([SUSAllSongsLoader isLoading])
-		return nil;
+- (NSArray *)index {
+	if ([SUSAllSongsLoader isLoading]) return nil;
 	
-	if (index == nil)
-	{
+	if (index == nil) {
 		index = [self allAlbumsIndex];
 	}
-	
 	return index;
 }
 
-- (ISMSAlbum *)albumForPosition:(NSUInteger)position
-{
-	return [self allAlbumsAlbumForPosition:position];
+- (ISMSFolderAlbum *)folderAlbumForPosition:(NSUInteger)position {
+	return [self allAlbumsFolderAlbumForPosition:position];
 }
 
-- (ISMSAlbum *)albumForPositionInSearch:(NSUInteger)position
-{
-	return [self allAlbumsAlbumForPositionInSearch:position];
+- (ISMSFolderAlbum *)folderAlbumForPositionInSearch:(NSUInteger)position {
+	return [self allAlbumsFolderAlbumForPositionInSearch:position];
 }
 
-- (void)clearSearchTable
-{
+- (void)clearSearchTable {
 	[self allAlbumsClearSearch];
 }
 
-- (void)searchForAlbumName:(NSString *)name
-{
+- (void)searchForAlbumName:(NSString *)name {
 	[self allAlbumsPerformSearch:name];
 }
 
-- (BOOL)isDataLoaded
-{
+- (BOOL)isDataLoaded {
 	return [self allAlbumsIsDataLoaded];
 }
-
 
 @end

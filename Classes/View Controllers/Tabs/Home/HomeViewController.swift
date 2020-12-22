@@ -290,7 +290,7 @@ import SnapKit
                 let controller = HomeAlbumViewController(nibName: "HomeAlbumViewController", bundle: nil)
                 controller.modifier = modifier
                 controller.title = title
-                controller.listOfAlbums = loader.listOfAlbums
+                controller.folderAlbums = loader.folderAlbums
                 self.pushCustom(controller)
             }
             self.quickAlbumsLoader = nil
@@ -447,9 +447,9 @@ extension HomeViewController: UISearchBarDelegate {
                         
                         if Settings.shared().isNewSearchAPI && self.searchSegment.selectedSegmentIndex == 3 {
                             let controller = SearchAllViewController(nibName: "SearchAllViewController", bundle: nil)
-                            controller.listOfArtists = parser.listOfArtists
-                            controller.listOfAlbums = parser.listOfAlbums
-                            controller.listOfSongs = parser.listOfSongs
+                            controller.folderArtists = parser.folderArtists
+                            controller.folderAlbums = parser.folderAlbums
+                            controller.songs = parser.songs
                             controller.query = query
                             self.pushCustom(controller)
                         } else {
@@ -457,16 +457,16 @@ extension HomeViewController: UISearchBarDelegate {
                             controller.title = "Search"
                             if Settings.shared().isNewSearchAPI {
                                 if self.searchSegment.selectedSegmentIndex == 0 {
-                                    controller.listOfArtists = NSMutableArray(array: parser.listOfArtists)
+                                    controller.folderArtists = NSMutableArray(array: parser.folderArtists)
                                 } else if self.searchSegment.selectedSegmentIndex == 1 {
-                                    controller.listOfAlbums = NSMutableArray(array: parser.listOfAlbums)
+                                    controller.folderAlbums = NSMutableArray(array: parser.folderAlbums)
                                 } else if self.searchSegment.selectedSegmentIndex == 2 {
-                                    controller.listOfSongs = NSMutableArray(array: parser.listOfSongs)
+                                    controller.songs = NSMutableArray(array: parser.songs)
                                 }
                                 controller.searchType = ISMSSearchSongsSearchType(rawValue: ISMSSearchSongsSearchType.RawValue(self.searchSegment.selectedSegmentIndex))
                                 controller.query = query
                             } else {
-                                controller.listOfSongs = NSMutableArray(array: parser.listOfSongs)
+                                controller.songs = NSMutableArray(array: parser.songs)
                                 controller.searchType = ISMSSearchSongsSearchType_Songs
                                 controller.query = query
                             }

@@ -19,6 +19,7 @@
 #import "ISMSStreamManager.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -776,106 +777,66 @@ LOG_LEVEL_ISUB_DEFAULT
 	}];
 }
 
-- (ISMSAlbum *)albumFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue
-{
-	__block ISMSAlbum *anAlbum = nil;
-	
-	[dbQueue inDatabase:^(FMDatabase *db)
-	{
-		anAlbum = [self albumFromDbRow:row inTable:table inDatabase:db];
+- (ISMSFolderAlbum *)folderAlbumFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue {
+	__block ISMSFolderAlbum *folderAlbum = nil;
+	[dbQueue inDatabase:^(FMDatabase *db) {
+        folderAlbum = [self folderAlbumFromDbRow:row inTable:table inDatabase:db];
 	}];
-	
-	return anAlbum;
+	return folderAlbum;
 }
 
-- (ISMSAlbum *)albumFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabase:(FMDatabase *)db
-{
+- (ISMSFolderAlbum *)folderAlbumFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabase:(FMDatabase *)db {
 	row++;
-	ISMSAlbum *anAlbum = nil;
-	
+	ISMSFolderAlbum *folderAlbum = nil;
 	FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE ROWID = %lu", table, (unsigned long)row]];
-	if ([db hadError]) 
-	{
-	//DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-	}
-	else
-	{
-		if ([result next])
-		{
-			anAlbum = [[ISMSAlbum alloc] init];
-
-			if ([result stringForColumn:@"title"] != nil)
-				anAlbum.title = [NSString stringWithString:[result stringForColumn:@"title"]];
-			if ([result stringForColumn:@"albumId"] != nil)
-				anAlbum.albumId = [NSString stringWithString:[result stringForColumn:@"albumId"]];
-			if ([result stringForColumn:@"coverArtId"] != nil)
-				anAlbum.coverArtId = [NSString stringWithString:[result stringForColumn:@"coverArtId"]];
-			if ([result stringForColumn:@"artistName"] != nil)
-				anAlbum.artistName = [NSString stringWithString:[result stringForColumn:@"artistName"]];
-			if ([result stringForColumn:@"artistId"] != nil)
-				anAlbum.artistId = [NSString stringWithString:[result stringForColumn:@"artistId"]];
-		}
+	if ([db hadError]) {
+        //DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+	} else if ([result next]) {
+        folderAlbum = [[ISMSFolderAlbum alloc] initWithResult:result];
 	}
 	[result close];
-	
-	return anAlbum;
+	return folderAlbum;
 }
 
-- (NSUInteger)serverPlaylistCount:(NSString *)md5
-{
+- (NSUInteger)serverPlaylistCount:(NSString *)md5 {
 	NSString *query = [NSString stringWithFormat:@"SELECT count(*) FROM splaylist%@", md5];
 	return [self.localPlaylistsDbQueue intForQuery:query];
 }
 
-- (BOOL)insertAlbumIntoFolderCache:(ISMSAlbum *)anAlbum forId:(NSString *)folderId
-{
+- (BOOL)insertFolderAlbumIntoFolderCache:(ISMSFolderAlbum *)folderAlbum forId:(NSString *)folderId {
 	__block BOOL hadError;
-	
-	[self.albumListCacheDbQueue inDatabase:^(FMDatabase *db)
-	{
-		[db executeUpdate:@"INSERT INTO albumsCache (folderId, title, albumId, coverArtId, artistName, artistId) VALUES (?, ?, ?, ?, ?, ?)", [folderId md5], anAlbum.title, anAlbum.albumId, anAlbum.coverArtId, anAlbum.artistName, anAlbum.artistId];
-		
+	[self.albumListCacheDbQueue inDatabase:^(FMDatabase *db) {
+		[db executeUpdate:@"INSERT INTO albumsCache (folderId, title, albumId, coverArtId, artistName, artistId) VALUES (?, ?, ?, ?, ?, ?)", folderId.md5, folderAlbum.title, folderAlbum.folderId, folderAlbum.coverArtId, folderAlbum.folderArtistName, folderAlbum.folderArtistId];
 		hadError = [db hadError];
-		
-		if (hadError)
-            DDLogError(@"[DatabaseSingleton] Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+        if (hadError) {
+            DDLogError(@"[DatabaseSingleton] Err %d: %@", db.lastErrorCode, db.lastErrorMessage);
+        }
 	}];
-	
 	return !hadError;
 }
 
-- (BOOL)insertAlbum:(ISMSAlbum *)anAlbum intoTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue
-{
+- (BOOL)insertFolderAlbum:(ISMSFolderAlbum *)folderAlbum intoTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue {
 	__block BOOL success;
-	
-	[dbQueue inDatabase:^(FMDatabase *db)
-	{
-		success = [self insertAlbum:anAlbum intoTable:table inDatabase:db];
+	[dbQueue inDatabase:^(FMDatabase *db) {
+		success = [self insertFolderAlbum:folderAlbum intoTable:table inDatabase:db];
 	}];
-	
 	return success;
 }
 
-- (BOOL)insertAlbum:(ISMSAlbum *)anAlbum intoTable:(NSString *)table inDatabase:(FMDatabase *)db
-{
-	[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ (title, albumId, coverArtId, artistName, artistId) VALUES (?, ?, ?, ?, ?)", table], anAlbum.title, anAlbum.albumId, anAlbum.coverArtId, anAlbum.artistName, anAlbum.artistId];
-	
-	if ([db hadError]) {
-	//DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+- (BOOL)insertFolderAlbum:(ISMSFolderAlbum *)folderAlbum intoTable:(NSString *)table inDatabase:(FMDatabase *)db {
+	[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ (title, albumId, coverArtId, artistName, artistId) VALUES (?, ?, ?, ?, ?)", table], folderAlbum.title, folderAlbum.folderId, folderAlbum.coverArtId, folderAlbum.folderArtistName, folderAlbum.folderArtistId];
+    BOOL hadError = db.hadError;
+    if (hadError) {
+        //DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
 	}
-	
-	return ![db hadError];
+	return !hadError;
 }
 
-- (NSArray *)sectionInfoFromTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column
-{
+- (NSArray *)sectionInfoFromTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column {
 	__block NSArray *sectionInfo;
-	
-	[dbQueue inDatabase:^(FMDatabase *db)
-	{
+	[dbQueue inDatabase:^(FMDatabase *db) {
 		sectionInfo = [self sectionInfoFromTable:table inDatabase:db withColumn:column];
 	}];
-	
 	return sectionInfo;
 }
 
@@ -926,42 +887,25 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 
-- (void)downloadAllSongs:(NSString *)folderId artist:(ISMSArtist *)theArtist
+- (void)downloadAllSongs:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist
 {
 	// Show loading screen
     [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowAlbumLoadingScreenOnMainWindow userInfo:@{@"sender":self.queueAll}];
 	
 	// Download all the songs
-	[self.queueAll cacheData:folderId artist:theArtist];
+	[self.queueAll cacheData:folderId folderArtist:folderArtist];
 }
 
-- (void)queueAllSongs:(NSString *)folderId artist:(ISMSArtist *)theArtist
+- (void)queueAllSongs:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist
 {
 	// Show loading screen
     [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowAlbumLoadingScreenOnMainWindow userInfo:@{@"sender":self.queueAll}];
 	
 	// Queue all the songs
-	[self.queueAll queueData:folderId artist:theArtist];
+	[self.queueAll queueData:folderId folderArtist:folderArtist];
 }
 
-/*- (void)queueSong:(ISMSSong *)aSong
-{
-	if (settingsS.isJukeboxEnabled)
-	{
-		[aSong insertIntoTable:@"jukeboxCurrentPlaylist" inDatabaseQueue:self.currentPlaylistDbQueue];
-		[jukeboxS jukeboxAddSong:aSong.songId];
-	}
-	else
-	{
-		[aSong insertIntoTable:@"currentPlaylist" inDatabaseQueue:self.currentPlaylistDbQueue];
-		if (playlistS.isShuffle)
-			[aSong insertIntoTable:@"shufflePlaylist" inDatabaseQueue:self.currentPlaylistDbQueue];
-	}
-	
-	[streamManagerS fillStreamQueue:audioEngineS.player.isStarted];
-}*/
-
-- (void)playAllSongs:(NSString *)folderId artist:(ISMSArtist *)theArtist
+- (void)playAllSongs:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist
 {
 	// Show loading screen
     [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowAlbumLoadingScreenOnMainWindow userInfo:@{@"sender":self.queueAll}];
@@ -981,10 +925,10 @@ LOG_LEVEL_ISUB_DEFAULT
 	playlistS.isShuffle = NO;
 	
 	// Queue all the songs
-	[self.queueAll playAllData:folderId artist:theArtist];
+	[self.queueAll playAllData:folderId folderArtist:folderArtist];
 }
 
-- (void)shuffleAllSongs:(NSString *)folderId artist:(ISMSArtist *)theArtist
+- (void)shuffleAllSongs:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist
 {
 	// Show loading screen
     [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowAlbumLoadingScreenOnMainWindow userInfo:@{@"sender":self.queueAll}];
@@ -1004,7 +948,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	playlistS.isShuffle = YES;
 	
 	// Queue all the songs
-	[self.queueAll shuffleData:folderId artist:theArtist];
+	[self.queueAll shuffleData:folderId folderArtist:folderArtist];
 }
 
 - (void)shufflePlaylist

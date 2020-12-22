@@ -8,14 +8,14 @@
 
 #import "SUSLoader.h"
 
-@class ISMSArtist;
+@class ISMSFolderArtist;
 @interface SUSSubFolderLoader : SUSLoader
 
-@property (nonatomic) NSUInteger albumsCount;
+@property (nonatomic) NSUInteger folderAlbumsCount;
 @property (nonatomic) NSUInteger songsCount;
 @property (nonatomic) NSUInteger folderLength;
 
-@property (copy) NSString *myId;
-@property (copy) ISMSArtist *myArtist;
+@property (copy) NSString *folderId;
+@property (copy) ISMSFolderArtist *folderArtist;
 
 @end

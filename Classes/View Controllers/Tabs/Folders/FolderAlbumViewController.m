@@ -6,7 +6,7 @@
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "AlbumViewController.h"
+#import "FolderAlbumViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
@@ -15,35 +15,34 @@
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "SUSSubFolderDAO.h"
-#import "ISMSArtist.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import <MediaPlayer/MediaPlayer.h>
 
-@implementation AlbumViewController
+@implementation FolderAlbumViewController
 
 #pragma mark Lifecycle
 
-- (AlbumViewController *)initWithArtist:(ISMSArtist *)anArtist orAlbum:(ISMSAlbum *)anAlbum {
-	if (anArtist == nil && anAlbum == nil) return nil;
+- (instancetype)initWithFolderArtist:(ISMSFolderArtist *)folderArtist orFolderAlbum:(ISMSFolderAlbum *)folderAlbum {
+	if (folderArtist == nil && folderAlbum == nil) return nil;
 	
-	if (self = [super initWithNibName:@"AlbumViewController" bundle:nil]) {
+	if (self = [super initWithNibName:@"FolderAlbumViewController" bundle:nil]) {
 		self.sectionInfo = nil;
 		
-		if (anArtist != nil) {
-			self.title = anArtist.name;
-			self.myId = anArtist.artistId;
-			self.myArtist = anArtist;
-			self.myAlbum = nil;
+		if (folderArtist != nil) {
+			self.title = folderArtist.name;
+			self.folderId = folderArtist.folderId;
+			self.folderArtist = folderArtist;
+			self.folderAlbum = nil;
 		} else {
-			self.title = anAlbum.title;
-			self.myId = anAlbum.albumId;
-			self.myArtist = [ISMSArtist artistWithName:anAlbum.artistName andArtistId:anAlbum.artistId];
-			self.myAlbum = anAlbum;
+			self.title = folderAlbum.title;
+			self.folderId = folderAlbum.folderId;
+            self.folderArtist = folderAlbum.folderArtist;
+			self.folderAlbum = folderAlbum;
 		}
 		
-		self.dataModel = [[SUSSubFolderDAO alloc] initWithDelegate:self andId:self.myId andArtist:self.myArtist];
+		self.dataModel = [[SUSSubFolderDAO alloc] initWithDelegate:self andId:self.folderId andFolderArtist:self.folderArtist];
 		
         if (self.dataModel.hasLoaded) {
             [self.tableView reloadData];
@@ -61,7 +60,7 @@
     [super viewDidLoad];
     				
     // Add the pull to refresh view
-    __weak AlbumViewController *weakSelf = self;
+    __weak FolderAlbumViewController *weakSelf = self;
     self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
         [viewObjectsS showAlbumLoadingScreen:weakSelf.view sender:weakSelf];
         [weakSelf.dataModel startLoad];
@@ -130,11 +129,11 @@
         ]];
         
         // Create the play all and shuffle buttons and constrain to the container view
-        __weak AlbumViewController *weakSelf = self;
+        __weak FolderAlbumViewController *weakSelf = self;
         PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
-            [databaseS playAllSongs:weakSelf.myId artist:weakSelf.myArtist];
+            [databaseS playAllSongs:weakSelf.folderId folderArtist:weakSelf.folderArtist];
         } shuffleHandler:^{
-            [databaseS shuffleAllSongs:weakSelf.myId artist:weakSelf.myArtist];
+            [databaseS shuffleAllSongs:weakSelf.folderId folderArtist:weakSelf.folderArtist];
         }];
         [headerView addSubview:playAllAndShuffleHeader];
         [NSLayoutConstraint activateConstraints:@[
@@ -145,7 +144,7 @@
         
         if (self.dataModel.songsCount > 0) {
             // Create the album header view and constrain to the container view
-            AlbumTableViewHeader *albumHeader = [[AlbumTableViewHeader alloc] initWithAlbum:self.myAlbum tracks:self.dataModel.songsCount duration:self.dataModel.folderLength];
+            AlbumTableViewHeader *albumHeader = [[AlbumTableViewHeader alloc] initWithFolderAlbum:self.folderAlbum tracks:self.dataModel.songsCount duration:self.dataModel.folderLength];
             [headerView addSubview:albumHeader];
             [NSLayoutConstraint activateConstraints:@[
                 [albumHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor],
@@ -212,7 +211,7 @@
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
         cell.hideDurationLabel = YES;
-        [cell updateWithModel:[self.dataModel albumForTableViewRow:indexPath.row]];
+        [cell updateWithModel:[self.dataModel folderAlbumForTableViewRow:indexPath.row]];
     } else {
         // Song
         cell.hideSecondaryLabel = NO;
@@ -234,9 +233,9 @@
 	if (!indexPath) return;
 	
     if (indexPath.row < self.dataModel.albumsCount) {
-        ISMSAlbum *anAlbum = [self.dataModel albumForTableViewRow:indexPath.row];
-        AlbumViewController *albumViewController = [[AlbumViewController alloc] initWithArtist:nil orAlbum:anAlbum];
-        [self pushViewControllerCustom:albumViewController];
+        ISMSFolderAlbum *folderAlbum = [self.dataModel folderAlbumForTableViewRow:indexPath.row];
+        FolderAlbumViewController *folderAlbumViewController = [[FolderAlbumViewController alloc] initWithFolderArtist:nil orFolderAlbum:folderAlbum];
+        [self pushViewControllerCustom:folderAlbumViewController];
     } else {
         ISMSSong *playedSong = [self.dataModel playSongAtTableViewRow:indexPath.row];
         if (!playedSong.isVideo) {
@@ -247,7 +246,7 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.dataModel.albumsCount) {
-        return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel albumForTableViewRow:indexPath.row]];
+        return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel folderAlbumForTableViewRow:indexPath.row]];
     } else {
         ISMSSong *song = [self.dataModel songForTableViewRow:indexPath.row];
         if (!song.isVideo) {

@@ -16,9 +16,9 @@
 #import "JukeboxSingleton.h"
 #import "ISMSStreamManager.h"
 #import "NSError+ISMSError.h"
-#import "ISMSArtist.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @interface SUSQueueAllLoader()
 @property (strong) NSData *receivedData;
@@ -105,11 +105,11 @@
                 [self.folderIds removeObjectAtIndex:0];
             }
             
-            for (NSInteger i = self.listOfAlbums.count - 1; i >= 0; i--) {
-                NSString *albumId = [[self.listOfAlbums objectAtIndexSafe:i] albumId];
-                [self.folderIds insertObject:albumId atIndex:0];
+            for (NSInteger i = self.listOfFolderAlbums.count - 1; i >= 0; i--) {
+                NSString *folderId = [(ISMSFolderAlbum *)[self.listOfFolderAlbums objectAtIndexSafe:i] folderId];
+                [self.folderIds insertObject:folderId atIndex:0];
             }
-            [self.listOfAlbums removeAllObjects];
+            [self.listOfFolderAlbums removeAllObjects];
             
             self.receivedData = nil;
             
@@ -126,7 +126,7 @@
     [dataTask resume];
 }
 
-- (void)loadData:(NSString *)folderId artist:(ISMSArtist *)theArtist {
+- (void)loadData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist {
     if (!folderId) {
         [self informDelegateLoadingFailed:[NSError errorWithISMSCode:ISMSErrorCode_CouldNotCreateConnection]];
         return;
@@ -134,12 +134,12 @@
     
     self.folderIds = [NSMutableArray arrayWithCapacity:0];
     self.listOfSongs = [NSMutableArray arrayWithCapacity:0];
-    self.listOfAlbums = [NSMutableArray arrayWithCapacity:0];
+    self.listOfFolderAlbums = [NSMutableArray arrayWithCapacity:0];
     
     self.isCancelled = NO;
     
     [self.folderIds addObject:folderId];
-    self.myArtist = theArtist;
+    self.folderArtist = folderArtist;
         
     if (settingsS.isJukeboxEnabled) {
         self.currentPlaylist = @"jukeboxCurrentPlaylist";
@@ -152,32 +152,32 @@
     [self loadAlbumFolder];
 }
 
-- (void)queueData:(NSString *)folderId artist:(ISMSArtist *)theArtist {
+- (void)queueData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist {
     self.isQueue = YES;
     self.isShuffleButton = NO;
     self.doShowPlayer = NO;
-    [self loadData:folderId artist:theArtist];
+    [self loadData:folderId folderArtist:folderArtist];
 }
 
-- (void)cacheData:(NSString *)folderId artist:(ISMSArtist *)theArtist {
+- (void)cacheData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist {
     self.isQueue = NO;
     self.isShuffleButton = NO;
     self.doShowPlayer = NO;
-    [self loadData:folderId artist:theArtist];
+    [self loadData:folderId folderArtist:folderArtist];
 }
 
-- (void)playAllData:(NSString *)folderId artist:(ISMSArtist *)theArtist {
+- (void)playAllData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist {
     self.isQueue = YES;
     self.isShuffleButton = NO;
     self.doShowPlayer = YES;
-    [self loadData:folderId artist:theArtist];
+    [self loadData:folderId folderArtist:folderArtist];
 }
 
-- (void)shuffleData:(NSString *)folderId artist:(ISMSArtist *)theArtist {
+- (void)shuffleData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist {
     self.isQueue = YES;
     self.isShuffleButton = YES;
     self.doShowPlayer = YES;
-    [self loadData:folderId artist:theArtist];
+    [self loadData:folderId folderArtist:folderArtist];
 }
 
 - (void)process {
@@ -194,9 +194,9 @@
         } else {
             [root iterate:@"directory.child" usingBlock: ^(RXMLElement *e) {
                 if ([[e attribute:@"isDir"] boolValue]) {
-                    ISMSAlbum *anAlbum = [[ISMSAlbum alloc] initWithRXMLElement:e artistId:self.myArtist.artistId artistName:self.myArtist.name];
-                    if (![anAlbum.title isEqualToString:@".AppleDouble"]) {
-                        [self.listOfAlbums addObject:anAlbum];
+                    ISMSFolderAlbum *folderAlbum = [[ISMSFolderAlbum alloc] initWithElement:e folderArtistId:self.folderArtist.folderId folderArtistName:self.folderArtist.name];
+                    if (![folderAlbum.title isEqualToString:@".AppleDouble"]) {
+                        [self.listOfFolderAlbums addObject:folderAlbum];
                     }
                 } else {
                     ISMSSong *aSong = [[ISMSSong alloc] initWithRXMLElement:e];

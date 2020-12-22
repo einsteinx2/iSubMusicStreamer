@@ -14,10 +14,9 @@
 #import "DatabaseSingleton.h"
 #import "NSError+ISMSError.h"
 #import "SUSRootFoldersDAO.h"
-#import "ISMSArtist.h"
-#import "ISMSAlbum.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @interface SUSAllSongsLoader()
 @property (strong) NSData *receivedData;
@@ -223,25 +222,25 @@ static BOOL _isAllSongsLoading = NO;
 	}
 	
 	if (self.iteration == -1) {
-		self.currentArtist = [self.rootFolders artistForPosition:self.currentRow];
-		[self sendArtistNotification:self.currentArtist.name];
+		self.currentFolderArtist = [self.rootFolders folderArtistForPosition:self.currentRow];
+		[self sendArtistNotification:self.currentFolderArtist.name];
 	} else {
         if (self.iteration == 0) {
-			self.currentAlbum = [databaseS albumFromDbRow:self.currentRow inTable:@"allAlbumsUnsorted" inDatabaseQueue:databaseS.allAlbumsDbQueue];
+			self.currentFolderAlbum = [databaseS folderAlbumFromDbRow:self.currentRow inTable:@"allAlbumsUnsorted" inDatabaseQueue:databaseS.allAlbumsDbQueue];
         } else {
-			self.currentAlbum = [databaseS albumFromDbRow:self.currentRow inTable:[NSString stringWithFormat:@"subalbums%ld", (long)self.iteration] inDatabaseQueue:databaseS.allAlbumsDbQueue];
+			self.currentFolderAlbum = [databaseS folderAlbumFromDbRow:self.currentRow inTable:[NSString stringWithFormat:@"subalbums%ld", (long)self.iteration] inDatabaseQueue:databaseS.allAlbumsDbQueue];
         }
 		
-		self.currentArtist = [ISMSArtist artistWithName:self.currentAlbum.artistName andArtistId:self.currentAlbum.artistId];
+        self.currentFolderArtist = [[ISMSFolderArtist alloc] initWithId:self.currentFolderAlbum.folderArtistName name:self.currentFolderAlbum.folderArtistId];
 		
-		[self sendAlbumNotification:self.currentAlbum.title];
+		[self sendAlbumNotification:self.currentFolderAlbum.title];
 	}
 	
 	NSString *dirId = nil;
     if (self.iteration == -1) {
-		dirId = [self.currentArtist.artistId copy];
+		dirId = [self.currentFolderArtist.folderId copy];
     } else {
-		dirId = [self.currentAlbum.albumId copy];
+		dirId = [self.currentFolderAlbum.folderId copy];
     }
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"getMusicDirectory" parameters:@{@"id": n2N(dirId)}];
@@ -500,13 +499,13 @@ static NSString *kName_Error = @"error";
                     @autoreleasepool {
                         if ([[child attribute:@"isDir"] isEqualToString:@"true"]) {
                             // Initialize the Album
-                            ISMSAlbum *anAlbum = [[ISMSAlbum alloc] initWithRXMLElement:child artistId:self.currentArtist.artistId artistName:self.currentArtist.name];
+                            ISMSFolderAlbum *folderAlbum = [[ISMSFolderAlbum alloc] initWithElement:child folderArtist:self.currentFolderArtist];
                             
                             // Skip if it's .AppleDouble, otherwise process it
-                            if (![anAlbum.title isEqualToString:@".AppleDouble"]) {
+                            if (![folderAlbum.title isEqualToString:@".AppleDouble"]) {
                                 if (self.iteration == -1) {
                                     // Add the album to the allAlbums table
-                                    [databaseS insertAlbum:anAlbum intoTable:@"allAlbumsTemp" inDatabaseQueue:databaseS.allAlbumsDbQueue];
+                                    [databaseS insertFolderAlbum:folderAlbum intoTable:@"allAlbumsTemp" inDatabaseQueue:databaseS.allAlbumsDbQueue];
                                     self.tempAlbumsCount++;
                                     self.totalAlbumsProcessed++;
                                     
@@ -521,13 +520,13 @@ static NSString *kName_Error = @"error";
                                     }
                                 } else {
                                     //Add album object to the subalbums table to be processed in the next iteration
-                                    [databaseS insertAlbum:anAlbum intoTable:[NSString stringWithFormat:@"subalbums%ld", (long)(self.iteration + 1)] inDatabaseQueue:databaseS.allAlbumsDbQueue];
+                                    [databaseS insertFolderAlbum:folderAlbum intoTable:[NSString stringWithFormat:@"subalbums%ld", (long)(self.iteration + 1)] inDatabaseQueue:databaseS.allAlbumsDbQueue];
                                 }
                             }
                             
                             // Update the loading screen message
                             if (self.iteration == -1) {
-                                [self sendAlbumNotification:anAlbum.title];
+                                [self sendAlbumNotification:folderAlbum.title];
                             }
                         } else {
                             // Initialize the Song

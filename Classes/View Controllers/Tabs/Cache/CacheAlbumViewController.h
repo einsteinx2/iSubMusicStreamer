@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class ISMSFolderAlbum, ISMSSong;
 @interface CacheAlbumViewController : UITableViewController 
 
 @property (nonatomic, copy) NSString *artistName;
-@property (nonatomic, strong) NSMutableArray *listOfAlbums;
-@property (nonatomic, strong) NSMutableArray *listOfSongs;
+@property (nonatomic, strong) NSMutableArray<NSArray*> *albums;
+@property (nonatomic, strong) NSMutableArray<NSArray*> *songs;
 @property (nonatomic, strong) NSArray *sectionInfo;
 @property (nonatomic, strong) NSArray *segments;
 

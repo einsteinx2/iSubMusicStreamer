@@ -8,7 +8,7 @@
 
 #import "AllAlbumsViewController.h"
 #import "ServerListViewController.h"
-#import "AlbumViewController.h"
+#import "FolderAlbumViewController.h"
 #import "FoldersViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "LoadingScreen.h"
@@ -23,9 +23,6 @@
 #import "DatabaseSingleton.h"
 #import "SUSAllAlbumsDAO.h"
 #import "SUSAllSongsDAO.h"
-#import "ISMSArtist.h"
-#import "ISMSAlbum.h"
-#import "ISMSIndex.h"
 #import "ISMSIndex.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -330,12 +327,12 @@
 
 #pragma mark Tableview methods
 
-- (ISMSAlbum *)albumAtIndexPath:(NSIndexPath *)indexPath {
+- (ISMSFolderAlbum *)folderAlbumAtIndexPath:(NSIndexPath *)indexPath {
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
-        return [self.dataModel albumForPositionInSearch:(indexPath.row + 1)];
+        return [self.dataModel folderAlbumForPositionInSearch:(indexPath.row + 1)];
     } else {
         NSUInteger sectionStartIndex = [(ISMSIndex *)[self.dataModel.index objectAtIndexSafe:indexPath.section] position];
-        return [self.dataModel albumForPosition:(sectionStartIndex + indexPath.row + 1)];
+        return [self.dataModel folderAlbumForPosition:(sectionStartIndex + indexPath.row + 1)];
     }
 }
 
@@ -392,7 +389,7 @@
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
     cell.hideNumberLabel = YES;
     cell.hideDurationLabel = YES;
-    [cell updateWithModel:[self albumAtIndexPath:indexPath]];
+    [cell updateWithModel:[self folderAlbumAtIndexPath:indexPath]];
     return cell;
 }
 
@@ -400,11 +397,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	if (!indexPath) return;
 	
-    [self pushViewControllerCustom:[[AlbumViewController alloc] initWithArtist:nil orAlbum:[self albumAtIndexPath:indexPath]]];
+    [self pushViewControllerCustom:[[FolderAlbumViewController alloc] initWithFolderArtist:nil orFolderAlbum:[self folderAlbumAtIndexPath:indexPath]]];
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSObject<ISMSTableCellModel> *model = [self albumAtIndexPath:indexPath];
+    NSObject<ISMSTableCellModel> *model = [self folderAlbumAtIndexPath:indexPath];
     return [SwipeAction downloadAndQueueConfigWithModel:model];
 }
 

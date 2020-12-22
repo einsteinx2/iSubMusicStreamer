@@ -8,10 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@class FMDatabase, ISMSAlbum;
+@class FMDatabase, ISMSFolderAlbum;
 
-@interface SUSAllAlbumsDAO : NSObject
-{
+@interface SUSAllAlbumsDAO : NSObject {
 	__strong NSArray *index;
 }
 
@@ -21,9 +20,9 @@
 
 - (NSArray *)index;
 
-- (ISMSAlbum *)albumForPosition:(NSUInteger)position;
+- (ISMSFolderAlbum *)folderAlbumForPosition:(NSUInteger)position;
 - (void)clearSearchTable;
 - (void)searchForAlbumName:(NSString *)name;
-- (ISMSAlbum *)albumForPositionInSearch:(NSUInteger)position;
+- (ISMSFolderAlbum *)folderAlbumForPositionInSearch:(NSUInteger)position;
 
 @end

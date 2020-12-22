@@ -8,7 +8,7 @@
 
 #import "FoldersViewController.h"
 #import "ServerListViewController.h"
-#import "AlbumViewController.h"
+#import "FolderAlbumViewController.h"
 #import "FolderDropdownControl.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "SUSAllSongsLoader.h"
@@ -19,7 +19,6 @@
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
 #import "SUSRootFoldersDAO.h"
-#import "ISMSArtist.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import <QuartzCore/QuartzCore.h>
@@ -391,14 +390,14 @@
 
 #pragma mark TableView
 
-- (ISMSArtist *)artistAtIndexPath:(NSIndexPath *)indexPath {
+- (ISMSFolderArtist *)folderArtistAtIndexPath:(NSIndexPath *)indexPath {
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
-        return [self.dataModel artistForPositionInSearch:(indexPath.row + 1)];
+        return [self.dataModel folderArtistForPositionInSearch:(indexPath.row + 1)];
     } else {
         NSArray *indexPositions = self.dataModel.indexPositions;
         if (indexPositions.count > indexPath.section) {
             NSUInteger sectionStartIndex = [[indexPositions objectAtIndexSafe:indexPath.section] intValue];
-            return [self.dataModel artistForPosition:(sectionStartIndex + indexPath.row)];
+            return [self.dataModel folderArtistForPosition:(sectionStartIndex + indexPath.row)];
         }
         return nil;
     }
@@ -426,7 +425,7 @@
     cell.hideCoverArt = YES;
     cell.hideSecondaryLabel = YES;
     cell.hideDurationLabel = YES;
-    [cell updateWithModel:[self artistAtIndexPath:indexPath]];
+    [cell updateWithModel:[self folderArtistAtIndexPath:indexPath]];
 	return cell;
 }
 
@@ -471,11 +470,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	if (!indexPath) return;
-    [self pushViewControllerCustom:[[AlbumViewController alloc] initWithArtist:[self artistAtIndexPath:indexPath] orAlbum:nil]];
+    [self pushViewControllerCustom:[[FolderAlbumViewController alloc] initWithFolderArtist:[self folderArtistAtIndexPath:indexPath] orFolderAlbum:nil]];
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSObject<ISMSTableCellModel> *model = [self artistAtIndexPath:indexPath];
+    NSObject<ISMSTableCellModel> *model = [self folderArtistAtIndexPath:indexPath];
     return [SwipeAction downloadAndQueueConfigWithModel:model];
 }
 

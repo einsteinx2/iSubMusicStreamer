@@ -8,7 +8,7 @@
 
 #import "SUSLoaderManager.h"
 
-@class ISMSArtist, FMDatabase, SUSRootFoldersLoader;
+@class ISMSFolderArtist, FMDatabase, SUSRootFoldersLoader;
 
 @interface SUSRootFoldersDAO : NSObject <SUSLoaderManager, SUSLoaderDelegate>
 {		
@@ -38,10 +38,10 @@
 
 - (instancetype)initWithDelegate:(id <SUSLoaderDelegate>)theDelegate;
 
-- (ISMSArtist *)artistForPosition:(NSUInteger)position;
+- (ISMSFolderArtist *)folderArtistForPosition:(NSUInteger)position;
 - (void)clearSearchTable;
 - (void)searchForFolderName:(NSString *)name;
-- (ISMSArtist *)artistForPositionInSearch:(NSUInteger)position;
+- (ISMSFolderArtist *)folderArtistForPositionInSearch:(NSUInteger)position;
 
 - (void)startLoad;
 - (void)cancelLoad;

@@ -10,9 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class ISMSFolderAlbum;
 @interface SUSQuickAlbumsLoader : SUSLoader
 
-@property (nullable, strong) NSMutableArray *listOfAlbums;
+@property (nullable, strong) NSMutableArray<ISMSFolderAlbum*> *folderAlbums;
 @property (nullable, strong) NSString *modifier;
 @property NSUInteger offset;
 

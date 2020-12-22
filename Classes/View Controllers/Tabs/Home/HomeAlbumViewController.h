@@ -9,13 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "SUSLoaderDelegate.h"
 
-@class ISMSArtist, ISMSAlbum, SUSQuickAlbumsLoader;
-
+@class SUSQuickAlbumsLoader, ISMSFolderAlbum;
 @interface HomeAlbumViewController : UITableViewController <SUSLoaderDelegate>
 
 @property (nonatomic, strong) SUSQuickAlbumsLoader *loader;
 
-@property (nonatomic, strong) NSMutableArray *listOfAlbums;
+@property (nonatomic, strong) NSMutableArray<ISMSFolderAlbum*> *folderAlbums;
 @property (nonatomic, copy) NSString *modifier;
 @property (nonatomic) NSUInteger offset;
 @property (nonatomic) BOOL isMoreAlbums;

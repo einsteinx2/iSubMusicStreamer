@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SUSLoader.h"
 
-@class ISMSSong, ISMSAlbum, SUSAllSongsDAO, LoadingScreen;
+@class SUSAllSongsDAO, LoadingScreen;
 
 @interface AllSongsViewController : UIViewController <UISearchBarDelegate, SUSLoaderDelegate> 
 

@@ -24,7 +24,6 @@
 #import "CustomUINavigationController.h"
 #import "ChatViewController.h"
 #import "SearchSongsViewController.h"
-#import "SearchAllViewController.h"
 #import "HomeAlbumViewController.h"
 #import "CurrentPlaylistViewController.h"
 #import "EqualizerViewController.h"
@@ -60,11 +59,9 @@
 #import "SUSCoverArtDAO.h"
 
 // Parsers
-#import "SearchXMLParser.h"
+#import "RXMLElement.h"
 
 // Models
-#import "ISMSArtist.h"
-#import "ISMSAlbum.h"
 #import "ISMSServer.h"
 
 // Utils
@@ -81,6 +78,7 @@
 #import "UIDevice+Info.h"
 #import "NSNotificationCenter+MainThread.h"
 #import "NSString+FileSize.h"
+#import "NSString+Clean.h"
 
 /*
  * Singletons

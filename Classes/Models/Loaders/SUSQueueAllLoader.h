@@ -7,8 +7,8 @@
 //
 
 #import "SUSLoader.h"
-#import "ISMSAlbum.h"
 
+@class ISMSFolderArtist, ISMSFolderAlbum, ISMSSong;
 @interface SUSQueueAllLoader : SUSLoader
 
 @property BOOL isQueue;
@@ -19,18 +19,18 @@
 @property (copy) NSString *currentPlaylist;
 @property (copy) NSString *shufflePlaylist;
 
-@property (strong) ISMSArtist *myArtist;
+@property (strong) ISMSFolderArtist *folderArtist;
 
-@property (strong) NSMutableArray *folderIds;
+@property (strong) NSMutableArray<NSString*> *folderIds;
 
-@property (strong) NSMutableArray *listOfAlbums;
-@property (strong) NSMutableArray *listOfSongs;
+@property (strong) NSMutableArray<ISMSFolderAlbum*> *listOfFolderAlbums;
+@property (strong) NSMutableArray<ISMSSong*> *listOfSongs;
 
-- (void)loadData:(NSString *)folderId artist:(ISMSArtist *)theArtist;// isQueue:(BOOL)queue;
+- (void)loadData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;
 
-- (void)queueData:(NSString *)folderId artist:(ISMSArtist *)theArtist;
-- (void)cacheData:(NSString *)folderId artist:(ISMSArtist *)theArtist;
-- (void)playAllData:(NSString *)folderId artist:(ISMSArtist *)theArtist;
-- (void)shuffleData:(NSString *)folderId artist:(ISMSArtist *)theArtist;
+- (void)queueData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;
+- (void)cacheData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;
+- (void)playAllData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;
+- (void)shuffleData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;
 
 @end

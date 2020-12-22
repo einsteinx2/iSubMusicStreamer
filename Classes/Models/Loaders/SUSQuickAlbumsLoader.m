@@ -10,9 +10,9 @@
 #import "NSMutableURLRequest+SUS.h"
 #import "RXMLElement.h"
 #import "NSError+ISMSError.h"
-#import "ISMSAlbum.h"
 #import "EX2Kit.h"
 #import "Defines.h"
+#import "Swift.h"
 
 @implementation SUSQuickAlbumsLoader
 
@@ -42,14 +42,14 @@
             NSString *message = [error attribute:@"message"];
             [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
         } else {
-            NSMutableArray *albums = [[NSMutableArray alloc] init];
+            NSMutableArray *folderAlbums = [[NSMutableArray alloc] init];
             [root iterate:@"albumList.album" usingBlock:^(RXMLElement *e) {
-                ISMSAlbum *album = [[ISMSAlbum alloc] initWithRXMLElement:e];
-                if (![album.title isEqualToString:@".AppleDouble"]) {
-                    [albums addObject:album];
+                ISMSFolderAlbum *folderAlbum = [[ISMSFolderAlbum alloc] initWithElement:e];
+                if (![folderAlbum.title isEqualToString:@".AppleDouble"]) {
+                    [folderAlbums addObject:folderAlbum];
                 }
             }];
-            self.listOfAlbums = albums;
+            self.folderAlbums = folderAlbums;
             
             // Notify the delegate that the loading is finished
             [self informDelegateLoadingFinished];

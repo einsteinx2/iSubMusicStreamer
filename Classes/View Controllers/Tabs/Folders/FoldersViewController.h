@@ -10,7 +10,7 @@
 #import "FolderDropdownDelegate.h"
 #import "SUSLoader.h"
 
-@class ISMSArtist, SUSRootFoldersDAO, FolderDropdownControl;
+@class SUSRootFoldersDAO, FolderDropdownControl;
 
 @interface FoldersViewController : UIViewController <UISearchBarDelegate, SUSLoaderDelegate, FolderDropdownDelegate>
 

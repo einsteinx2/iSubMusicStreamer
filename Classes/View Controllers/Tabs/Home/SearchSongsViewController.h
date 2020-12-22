@@ -23,14 +23,14 @@ typedef enum {
 	ISMSSearchSongsSearchType_Songs
 } ISMSSearchSongsSearchType;
 
-@class ISMSArtist, ISMSAlbum, ISMSSong;
+@class ISMSFolderArtist, ISMSFolderAlbum, ISMSSong;
 @interface SearchSongsViewController : UITableViewController 
 
 @property (nullable, copy) NSString *query;
 @property ISMSSearchSongsSearchType searchType;
-@property (nullable, strong) NSMutableArray<ISMSArtist*> *listOfArtists;
-@property (nullable, strong) NSMutableArray<ISMSAlbum*> *listOfAlbums;
-@property (nullable, strong) NSMutableArray<ISMSSong*> *listOfSongs;
+@property (nullable, strong) NSMutableArray<ISMSFolderArtist*> *folderArtists;
+@property (nullable, strong) NSMutableArray<ISMSFolderAlbum*> *folderAlbums;
+@property (nullable, strong) NSMutableArray<ISMSSong*> *songs;
 @property NSUInteger offset;
 @property BOOL isMoreResults;
 @property BOOL isLoading;

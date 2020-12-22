@@ -7,7 +7,6 @@
 //
 
 #import "SUSServerShuffleLoader.h"
-#import "SearchXMLParser.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "SavedSettings.h"
 #import "PlaylistSingleton.h"
@@ -15,6 +14,7 @@
 #import "JukeboxSingleton.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation SUSServerShuffleLoader
 
@@ -48,8 +48,8 @@
         [databaseS resetCurrentPlaylistDb];
     }
     
-    for (ISMSSong *aSong in parserDelegate.listOfSongs) {
-        [aSong addToCurrentPlaylistDbQueue];
+    for (ISMSSong *song in parserDelegate.songs) {
+        [song addToCurrentPlaylistDbQueue];
     }
     
     playlistS.isShuffle = NO;    

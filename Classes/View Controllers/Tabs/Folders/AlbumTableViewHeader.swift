@@ -16,9 +16,12 @@ import SnapKit
     private let albumLabel = AutoScrollingLabel()
     private let tracksLabel = UILabel()
     
-    @objc init(album: Album, tracks: Int, duration: Double) {
+    @objc init(folderAlbum: FolderAlbum, tracks: Int, duration: Double) {
         super.init(frame: CGRect.zero)
-        
+        setup(coverArtId: folderAlbum.coverArtId, artistName: folderAlbum.folderArtistName, title: folderAlbum.title, tracks: tracks, duration: duration)
+    }
+    
+    private func setup(coverArtId: String?, artistName: String, title: String, tracks: Int, duration: Double) {
         backgroundColor = UIColor(named: "isubBackgroundColor")
         snp.makeConstraints { make in
             make.height.equalTo(100)
@@ -27,7 +30,7 @@ import SnapKit
         // NOTE: Set to false because scaling down very large images causes flickering
         //       when the view is scaled while dismissing a modal view
         coverArtView.isLarge = false
-        coverArtView.coverArtId = album.coverArtId
+        coverArtView.coverArtId = coverArtId
         coverArtView.backgroundColor = .label
         addSubview(coverArtView)
         coverArtView.snp.makeConstraints { make in
@@ -37,7 +40,7 @@ import SnapKit
             make.bottom.equalToSuperview().offset(-10)
         }
         
-        if let coverArtId = album.coverArtId {
+        if let coverArtId = coverArtId {
             coverArtButton.addClosure(for: .touchUpInside) { [unowned self] in
                 let controller = ModalCoverArtViewController()
                 controller.coverArtId = coverArtId
@@ -57,7 +60,7 @@ import SnapKit
             make.top.bottom.equalTo(coverArtView)
         }
         
-        artistLabel.text = album.artistName
+        artistLabel.text = artistName
         artistLabel.font = .boldSystemFont(ofSize: 18)
         artistLabel.textColor = .label
         labelContainer.addSubview(artistLabel)
@@ -66,7 +69,7 @@ import SnapKit
             make.height.equalToSuperview().multipliedBy(0.27)
         }
         
-        albumLabel.text = album.title
+        albumLabel.text = title
         albumLabel.font = .systemFont(ofSize: 16)
         albumLabel.textColor = .label
         labelContainer.addSubview(albumLabel)
