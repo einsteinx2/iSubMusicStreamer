@@ -21,105 +21,76 @@ LOG_LEVEL_ISUB_DEFAULT
 
 @implementation CacheSingleton
 
-- (unsigned long long)totalSpace
-{
-	NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:settingsS.songCachePath error:NULL];
+- (unsigned long long)totalSpace {
+	NSDictionary *attributes = [NSFileManager.defaultManager attributesOfFileSystemForPath:settingsS.songCachePath error:NULL];
     return [attributes[NSFileSystemSize] unsignedLongLongValue];
 }
 
-- (unsigned long long)freeSpace
-{
+- (unsigned long long)freeSpace {
 	NSString *path = settingsS.cachesPath;
-	NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:path error:NULL];
+	NSDictionary *attributes = [NSFileManager.defaultManager attributesOfFileSystemForPath:path error:NULL];
 	return [attributes[NSFileSystemFreeSize] unsignedLongLongValue];
 }
 
-- (void)startCacheCheckTimerWithInterval:(NSTimeInterval)interval
-{
+- (void)startCacheCheckTimerWithInterval:(NSTimeInterval)interval {
 	self.cacheCheckInterval = interval;
 	[self stopCacheCheckTimer];
-	
 	[self checkCache];
 }
 
-- (void)stopCacheCheckTimer
-{
+- (void)stopCacheCheckTimer {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(checkCache) object:nil];
 }
 
-- (NSUInteger)numberOfCachedSongs
-{
+- (NSUInteger)numberOfCachedSongs {
 	return [databaseS.songCacheDbQueue intForQuery:@"SELECT COUNT(*) FROM cachedSongs WHERE finished = 'YES'"];
 }
 
-//
 // If the available space has dropped below the max cache size since last app load, adjust it.
-//
-- (void)adjustCacheSize
-{
+- (void)adjustCacheSize {
 	// Only adjust if the user is using max cache size as option
-	if (settingsS.cachingType == ISMSCachingType_maxSize)
-	{
+	if (settingsS.cachingType == ISMSCachingType_maxSize) {
 		unsigned long long possibleSize = self.freeSpace + self.cacheSize;
 		unsigned long long maxCacheSize = settingsS.maxCacheSize;
-		
-		NSLog(@"adjustCacheSize:  possibleSize = %llu  maxCacheSize = %llu", possibleSize, maxCacheSize);
-		
-		if (possibleSize < maxCacheSize)
-		{
+		DDLogInfo(@"[CacheSingleton] adjustCacheSize:  possibleSize = %llu  maxCacheSize = %llu", possibleSize, maxCacheSize);
+		if (possibleSize < maxCacheSize) {
 			// Set the max cache size to 25MB less than the free space
 			settingsS.maxCacheSize = possibleSize - (25 * 1024 * 1024);
 		}
 	}
 }
 
-- (void)removeOldestCachedSongs
-{		
+- (void)removeOldestCachedSongs {
 	NSString *songMD5 = nil;
-	
-	if (settingsS.cachingType == ISMSCachingType_minSpace)
-	{
+	if (settingsS.cachingType == ISMSCachingType_minSpace) {
 		// Remove the oldest songs based on either oldest played or oldest cached until free space is more than minFreeSpace
-		while (self.freeSpace < settingsS.minFreeSpace)
-		{
-			@autoreleasepool 
-			{
-				if (settingsS.autoDeleteCacheType == 0)
+		while (self.freeSpace < settingsS.minFreeSpace) {
+			@autoreleasepool {
+                if (settingsS.autoDeleteCacheType == 0) {
 					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY playedDate ASC LIMIT 1"];
-				else
+                } else {
 					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY cachedDate ASC LIMIT 1"];
-				//DLog(@"removing %@", songMD5);
+                }
+                DDLogInfo(@"[CacheSingleton] removeOldestCachedSongs: min space removing %@", songMD5);
 				[ISMSSong removeSongFromCacheDbQueueByMD5:songMD5];	
 			}
 		}
-	}
-	else if (settingsS.cachingType == ISMSCachingType_maxSize)
-	{
+	} else if (settingsS.cachingType == ISMSCachingType_maxSize) {
 		// Remove the oldest songs based on either oldest played or oldest cached until cache size is less than maxCacheSize
 		unsigned long long size = self.cacheSize;
-		while (size > settingsS.maxCacheSize)
-		{
-			@autoreleasepool 
-			{
-				if (settingsS.autoDeleteCacheType == 0)
-				{
+		while (size > settingsS.maxCacheSize) {
+			@autoreleasepool  {
+				if (settingsS.autoDeleteCacheType == 0) {
 					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY playedDate ASC LIMIT 1"];
-				}
-				else
-				{
+				} else {
 					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY cachedDate ASC LIMIT 1"];
 				}
-				//songSize = [databaseS.songCacheDbQueue intForQuery:@"SELECT size FROM cachedSongs WHERE md5 = ?", songMD5];
-				ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:songMD5];
-				// Determine the name of the file we are downloading.
-				//DLog(@"currentSongObject.path: %@", currentSongObject.path);
+				ISMSSong *song = [ISMSSong songFromCacheDbQueue:songMD5];
+				NSString *songPath = [settingsS.songCachePath stringByAppendingPathComponent:song.path.md5];
+				unsigned long long songSize = [[NSFileManager.defaultManager attributesOfItemAtPath:songPath error:NULL] fileSize];
                 
-				NSString *songPath = [settingsS.songCachePath stringByAppendingPathComponent:aSong.path.md5];
-				unsigned long long songSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:songPath error:NULL] fileSize];
-				
-				//DLog(@"removing %@", songMD5);
+                DDLogInfo(@"[CacheSingleton] removeOldestCachedSongs: max size removing %@", song);
 				[ISMSSong removeSongFromCacheDbQueueByMD5:songMD5];
-				
 				size -= songSize;
 			}
 		}
@@ -127,24 +98,19 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	[self findCacheSize];
 	
-	if (!cacheQueueManagerS.isQueueDownloading)
+    if (!cacheQueueManagerS.isQueueDownloading) {
 		[cacheQueueManagerS startDownloadQueue];
+    }
 }
 
-- (void)findCacheSize
-{
-    [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-    {
+- (void)findCacheSize {
+    [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
         unsigned long long size = [[db stringForQuery:@"SELECT sum(size) FROM sizesSongs"] longLongValue];
-        
         FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'NO'"];
-        
-        while ([result next])
-        {
+        while ([result next]) {
             NSString *path = [settingsS.songCachePath stringByAppendingPathComponent:[result stringForColumn:@"md5"]];
-            NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+            NSDictionary *attr = [NSFileManager.defaultManager attributesOfItemAtPath:path error:nil];
             size += [attr fileSize];
-//            DDLogInfo(@"[CacheSingleton] Added %llu to size for partially downloaded song", [attr fileSize]);
         }
         
         DDLogInfo(@"[CacheSingleton] Total cache size was found to be: %llu", size);
@@ -152,7 +118,7 @@ LOG_LEVEL_ISUB_DEFAULT
         
     }];
 //	unsigned long long size = 0;
-//	NSFileManager *fileManager = [NSFileManager defaultManager];
+//	NSFileManager *fileManager = NSFileManager.defaultManager;
 //	NSArray *subpaths = [fileManager subpathsAtPath:settingsS.songCachePath];
 //	for (NSString *path in subpaths) 
 //	{
@@ -166,22 +132,18 @@ LOG_LEVEL_ISUB_DEFAULT
 	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CacheSizeChecked];
 }
 
-- (void)checkCache
-{
+- (void)checkCache {
 	[self findCacheSize];
 	
 	// Adjust the cache size if needed
 	[self adjustCacheSize];
 	
-	if (settingsS.cachingType == ISMSCachingType_minSpace && settingsS.isSongCachingEnabled)
-	{		
+	if (settingsS.cachingType == ISMSCachingType_minSpace && settingsS.isSongCachingEnabled) {
 		// Check to see if the free space left is lower than the setting
-		if (self.freeSpace < settingsS.minFreeSpace)
-		{
+		if (self.freeSpace < settingsS.minFreeSpace) {
 			// Check to see if the cache size + free space is still less than minFreeSpace
 			unsigned long long size = self.cacheSize;
-			if (size + self.freeSpace < settingsS.minFreeSpace)
-			{
+			if (size + self.freeSpace < settingsS.minFreeSpace) {
 				// Looks like even removing all of the cache will not be enough so turn off caching
 				settingsS.isSongCachingEnabled = NO;
                 
@@ -191,16 +153,11 @@ LOG_LEVEL_ISUB_DEFAULT
                                                                         preferredStyle:UIAlertControllerStyleAlert];
                 [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
                 [UIApplication.keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
-			}
-			else
-			{
+			} else {
 				// Remove the oldest cached songs until freeSpace > minFreeSpace or pop the free space low alert
-				if (settingsS.isAutoDeleteCacheEnabled)
-				{
+				if (settingsS.isAutoDeleteCacheEnabled) {
 					[self removeOldestCachedSongs];
-				}
-				else
-				{
+				} else {
                     NSString *message = @"Free space is running low. Delete some cached songs or lower the minimum free space setting.";
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notice"
                                                                                    message:message
@@ -210,20 +167,13 @@ LOG_LEVEL_ISUB_DEFAULT
 				}
 			}
 		}
-	}
-	else if (settingsS.cachingType == ISMSCachingType_maxSize && settingsS.isSongCachingEnabled)
-	{		
+	} else if (settingsS.cachingType == ISMSCachingType_maxSize && settingsS.isSongCachingEnabled) {
 		// Check to see if the cache size is higher than the max
-		if (self.cacheSize > settingsS.maxCacheSize)
-		{
-			if (settingsS.isAutoDeleteCacheEnabled)
-			{
-				[self removeOldestCachedSongs];
-			}
-			else
-			{
+		if (self.cacheSize > settingsS.maxCacheSize) {
+			if (settingsS.isAutoDeleteCacheEnabled) {
+                [self removeOldestCachedSongs];
+			} else {
 				settingsS.isSongCachingEnabled = NO;
-                
                 NSString *message = @"The song cache is full. Automatic song caching has been disabled.\n\nYou can re-enable it in the Settings menu (tap the gear on the Home tab, tap Settings at the top)";
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notice"
                                                                                message:message
@@ -239,77 +189,60 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self performSelector:@selector(checkCache) withObject:nil afterDelay:self.cacheCheckInterval];
 }
 
-- (void)clearTempCache
-{
+- (void)clearTempCache {
 	// Clear the temp cache directory
-	[[NSFileManager defaultManager] removeItemAtPath:settingsS.tempCachePath error:NULL];
-	[[NSFileManager defaultManager] createDirectoryAtPath:settingsS.tempCachePath withIntermediateDirectories:YES attributes:nil error:NULL];
+	[NSFileManager.defaultManager removeItemAtPath:settingsS.tempCachePath error:NULL];
+	[NSFileManager.defaultManager createDirectoryAtPath:settingsS.tempCachePath withIntermediateDirectories:YES attributes:nil error:NULL];
 	streamManagerS.lastTempCachedSong = nil;
 }
 
-#pragma mark - Singleton methods
+#pragma mark Singleton methods
 			
-- (void)setup
-{
-	NSFileManager *defaultManager = [NSFileManager defaultManager];
+- (void)setup {
+	NSFileManager *defaultManager = NSFileManager.defaultManager;
         
 	// Make sure songCache directory exists, if not create it
-	if (![defaultManager fileExistsAtPath:settingsS.songCachePath])
-	{
+	if (![defaultManager fileExistsAtPath:settingsS.songCachePath]) {
         // First check to see if it's in the old Library/Caches location
         NSString *oldPath = [settingsS.cachesPath stringByAppendingPathComponent:@"songCache"];
-        if ([defaultManager fileExistsAtPath:oldPath])
-        {
+        if ([defaultManager fileExistsAtPath:oldPath]) {
             // It exists there, so move it to the new location
             NSError *error;
             [defaultManager moveItemAtPath:oldPath toPath:settingsS.songCachePath error:&error];
-            
-            if (error)
-            {
+            if (error) {
                 DDLogError(@"[CacheSingleton] Error moving cache path from %@ to %@", oldPath, settingsS.songCachePath);
-            }
-            else
-            {
+            } else {
                 DDLogInfo(@"[CacheSingleton] Moved cache path from %@ to %@", oldPath, settingsS.songCachePath);
                 
                 // Now set all of the files to not be backed up
-                if (!settingsS.isBackupCacheEnabled)
-                {
+                if (!settingsS.isBackupCacheEnabled) {
                     NSArray *cachedSongNames = [defaultManager contentsOfDirectoryAtPath:settingsS.songCachePath error:nil];
-                    for (NSString *songName in cachedSongNames)
-                    {
+                    for (NSString *songName in cachedSongNames) {
                         NSURL *fileUrl = [NSURL fileURLWithPath:[settingsS.songCachePath stringByAppendingPathComponent:songName]];
                         [fileUrl addSkipBackupAttribute];
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             // It doesn't exist in the old location, so just create it in the new one
             [defaultManager createDirectoryAtPath:settingsS.songCachePath withIntermediateDirectories:YES attributes:nil error:NULL];
         }
 	}
     
     // Rename any cache files that still have extensions
-    NSDirectoryEnumerator *direnum = [[NSFileManager defaultManager] enumeratorAtPath:settingsS.songCachePath];
+    NSDirectoryEnumerator *direnum = [NSFileManager.defaultManager enumeratorAtPath:settingsS.songCachePath];
     NSString *filename;
-    while ((filename = [direnum nextObject]))
-    {
+    while ((filename = direnum.nextObject)) {
         // Check if it contains an extension
         NSRange range = [filename rangeOfString:@"."];
-        if (range.location != NSNotFound)
-        {
+        if (range.location != NSNotFound) {
             NSString *filenameNew = [[filename componentsSeparatedByString:@"."] firstObject];
             DDLogInfo(@"[CacheSingleton] Moving filename: %@ to new filename: %@", filename, filenameNew);
-            if (filenameNew)
-            {
+            if (filenameNew) {
                 NSString *fromPath = [settingsS.songCachePath stringByAppendingPathComponent:filename];
                 NSString *toPath = [settingsS.songCachePath stringByAppendingPathComponent:filenameNew];
                 NSError *error;
-                
-                if (![[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:&error])
-                {
+                if (![NSFileManager.defaultManager moveItemAtPath:fromPath toPath:toPath error:&error]) {
                     DDLogError(@"[CacheSingleton] ERROR Moving filename: %@ to new filename: %@", filename, filenameNew);
                 }
             }
@@ -326,8 +259,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self performSelector:@selector(checkCache) withObject:nil afterDelay:0.05];
 }
 
-+ (instancetype)sharedInstance
-{
++ (instancetype)sharedInstance {
     static CacheSingleton *sharedInstance = nil;
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{
@@ -337,12 +269,9 @@ LOG_LEVEL_ISUB_DEFAULT
     return sharedInstance;
 }
 
-+ (void) setAllCachedSongsToBackup
-{
-    NSFileManager *defaultManager = [NSFileManager defaultManager];
-    
++ (void) setAllCachedSongsToBackup {
     // Now set all of the files to be backed up
-    NSArray *cachedSongNames = [defaultManager contentsOfDirectoryAtPath:settingsS.songCachePath error:nil];
+    NSArray *cachedSongNames = [NSFileManager.defaultManager contentsOfDirectoryAtPath:settingsS.songCachePath error:nil];
     for (NSString *songName in cachedSongNames)
     {
         NSURL *fileUrl = [NSURL fileURLWithPath:[settingsS.songCachePath stringByAppendingPathComponent:songName]];
@@ -350,12 +279,9 @@ LOG_LEVEL_ISUB_DEFAULT
     }
 }
 
-+ (void) setAllCachedSongsToNotBackup
-{
-    NSFileManager *defaultManager = [NSFileManager defaultManager];
-    
++ (void) setAllCachedSongsToNotBackup {
     // Now set all of the files to be backed up
-    NSArray *cachedSongNames = [defaultManager contentsOfDirectoryAtPath:settingsS.songCachePath error:nil];
+    NSArray *cachedSongNames = [NSFileManager.defaultManager contentsOfDirectoryAtPath:settingsS.songCachePath error:nil];
     for (NSString *songName in cachedSongNames)
     {
         NSURL *fileUrl = [NSURL fileURLWithPath:[settingsS.songCachePath stringByAppendingPathComponent:songName]];
@@ -363,6 +289,5 @@ LOG_LEVEL_ISUB_DEFAULT
         [fileUrl addSkipBackupAttribute];
     }
 }
-
 
 @end

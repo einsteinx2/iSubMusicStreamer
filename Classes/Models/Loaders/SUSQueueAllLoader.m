@@ -194,7 +194,7 @@
         } else {
             [root iterate:@"directory.child" usingBlock: ^(RXMLElement *e) {
                 if ([[e attribute:@"isDir"] boolValue]) {
-                    ISMSFolderAlbum *folderAlbum = [[ISMSFolderAlbum alloc] initWithElement:e folderArtistId:self.folderArtist.folderId folderArtistName:self.folderArtist.name];
+                    ISMSFolderAlbum *folderAlbum = [[ISMSFolderAlbum alloc] initWithElement:e folderArtist:self.folderArtist];
                     if (![folderAlbum.title isEqualToString:@".AppleDouble"]) {
                         [self.listOfFolderAlbums addObject:folderAlbum];
                     }

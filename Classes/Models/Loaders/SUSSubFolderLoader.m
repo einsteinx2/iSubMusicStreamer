@@ -51,7 +51,7 @@ LOG_LEVEL_ISUB_DEFAULT
             NSMutableArray *folderAlbums = [[NSMutableArray alloc] initWithCapacity:0];
             [root iterate:@"directory.child" usingBlock: ^(RXMLElement *e) {
                 if ([[e attribute:@"isDir"] boolValue]) {
-                    ISMSFolderAlbum *folderAlbum = [[ISMSFolderAlbum alloc] initWithElement:e folderArtistId:self.folderArtist.folderId folderArtistName:self.folderArtist.name];
+                    ISMSFolderAlbum *folderAlbum = [[ISMSFolderAlbum alloc] initWithElement:e folderArtist:self.folderArtist];
                     if (![folderAlbum.title isEqualToString:@".AppleDouble"]) {
                         [folderAlbums addObject:folderAlbum];
                     }

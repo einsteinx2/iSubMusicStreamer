@@ -35,7 +35,6 @@ NS_SWIFT_NAME(Database)
 @property (nullable, strong) FMDatabaseQueue *cacheQueueDbQueue;
 @property (nullable, strong) FMDatabaseQueue *lyricsDbQueue;
 @property (nullable, strong) FMDatabaseQueue *bookmarksDbQueue;
-@property (nullable, strong) FMDatabaseQueue *metadataDbQueue;
 
 @property (strong) SUSQueueAllLoader *queueAll;
 
@@ -44,7 +43,6 @@ NS_SWIFT_NAME(Database)
 + (void)setAllSongsToNotBackup;
 
 - (void)setupDatabases;
-- (void)setCurrentMetadataDatabase;
 - (void)closeAllDatabases;
 - (void)resetCoverArtCache;
 - (void)resetFolderCache;
