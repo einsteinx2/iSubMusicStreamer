@@ -8,9 +8,7 @@
 
 import Foundation
 
-@objc(ISMSTagArtist) final class TagArtist: NSObject, NSSecureCoding, NSCopying {
-    static let supportsSecureCoding = true
-    
+@objc(ISMSTagArtist) final class TagArtist: NSObject, NSCopying {
     @objc(artistId) let id: String
     @objc let name: String
     @objc let coverArtId: String?
@@ -23,15 +21,6 @@ import Foundation
         self.coverArtId = coverArtId
         self.artistImageUrl = artistImageUrl
         self.albumCount = albumCount
-        super.init()
-    }
-    
-    @objc init(attributeDict: [String: String]) {
-        self.id = attributeDict["id"] ?? ""
-        self.name = attributeDict["name"] ?? ""
-        self.coverArtId = attributeDict["coverArt"]
-        self.artistImageUrl = attributeDict["artistImageUrl"]
-        self.albumCount = Int(attributeDict["albumCount"] ?? "0") ?? 0
         super.init()
     }
     
@@ -52,35 +41,21 @@ import Foundation
         self.albumCount = result.long(forColumn: "albumCount")
     }
     
-    @objc init?(coder: NSCoder) {
-        self.id = coder.decodeObject(forKey: "id") as? String ?? ""
-        self.name = coder.decodeObject(forKey: "name") as? String ?? ""
-        self.coverArtId = coder.decodeObject(forKey: "coverArtId") as? String
-        self.artistImageUrl = coder.decodeObject(forKey: "artistImageUrl") as? String
-        self.albumCount = coder.decodeInteger(forKey: "albumCount")
-        super.init()
-    }
-    
-    @objc func encode(with coder: NSCoder) {
-        coder.encode(id, forKey: "id")
-        coder.encode(name, forKey: "name")
-        coder.encode(coverArtId, forKey: "coverArtId")
-        coder.encode(artistImageUrl, forKey: "artistImageUrl")
-        coder.encode(albumCount, forKey: "albumCount")
-    }
-    
     @objc func copy(with zone: NSZone? = nil) -> Any {
         return TagArtist(id: id, name: name, coverArtId: coverArtId, artistImageUrl: artistImageUrl, albumCount: albumCount)
     }
     
     @objc override var description: String {
-        return "\(super.description): id: \(id), name: \(name)"
+        return "\(super.description): id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), artistImageUrl: \(artistImageUrl ?? "nil"), albumCount: \(albumCount)"
     }
 }
 
 @objc extension TagArtist: TableCellModel {
     var primaryLabelText: String? { return name }
-    var secondaryLabelText: String? { return albumCount == 1 ? "1 Album" : "\(albumCount) Albums" }
+    var secondaryLabelText: String? {
+        guard albumCount > 0 else { return nil }
+        return albumCount == 1 ? "1 Album" : "\(albumCount) Albums"
+    }
     var durationLabelText: String? { return nil }
     var isCached: Bool { return false }
     func download() {

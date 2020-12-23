@@ -276,6 +276,12 @@
 		53CF64F725843ADA00BD47DC /* SlidingNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF64F625843ADA00BD47DC /* SlidingNotification.swift */; };
 		53CF64F825843ADA00BD47DC /* SlidingNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF64F625843ADA00BD47DC /* SlidingNotification.swift */; };
 		53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D44F8415AA621A00CDD3B8 /* Accelerate.framework */; };
+		53D4FC91259403CD00C6F1AE /* SUSTagAlbumLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D4FC90259403CD00C6F1AE /* SUSTagAlbumLoader.m */; };
+		53D4FC92259403CD00C6F1AE /* SUSTagAlbumLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D4FC90259403CD00C6F1AE /* SUSTagAlbumLoader.m */; };
+		53D4FC98259404CF00C6F1AE /* SUSTagAlbumDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D4FC97259404CF00C6F1AE /* SUSTagAlbumDAO.m */; };
+		53D4FC99259404CF00C6F1AE /* SUSTagAlbumDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D4FC97259404CF00C6F1AE /* SUSTagAlbumDAO.m */; };
+		53D4FC9C259406BE00C6F1AE /* TagAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D4FC9B259406BE00C6F1AE /* TagAlbumViewController.m */; };
+		53D4FC9D259406BE00C6F1AE /* TagAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D4FC9B259406BE00C6F1AE /* TagAlbumViewController.m */; };
 		53D973FE255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */; };
 		53D973FF255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */; };
 		53D97406255BFD9100AABF7F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 53D97405255BFD9100AABF7F /* SnapKit */; };
@@ -799,6 +805,12 @@
 		53C7FD9C150F0E94008DA51C /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		53CF64F625843ADA00BD47DC /* SlidingNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingNotification.swift; sourceTree = "<group>"; };
 		53D44F8415AA621A00CDD3B8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		53D4FC8F259403CD00C6F1AE /* SUSTagAlbumLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SUSTagAlbumLoader.h; sourceTree = "<group>"; };
+		53D4FC90259403CD00C6F1AE /* SUSTagAlbumLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SUSTagAlbumLoader.m; sourceTree = "<group>"; };
+		53D4FC96259404CF00C6F1AE /* SUSTagAlbumDAO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SUSTagAlbumDAO.h; sourceTree = "<group>"; };
+		53D4FC97259404CF00C6F1AE /* SUSTagAlbumDAO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SUSTagAlbumDAO.m; sourceTree = "<group>"; };
+		53D4FC9A259406BE00C6F1AE /* TagAlbumViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TagAlbumViewController.h; sourceTree = "<group>"; };
+		53D4FC9B259406BE00C6F1AE /* TagAlbumViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TagAlbumViewController.m; sourceTree = "<group>"; };
 		53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalTableViewCell.swift; sourceTree = "<group>"; };
 		53D97416255BFE9D00AABF7F /* iSub-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "iSub-Bridging-Header.h"; path = "Other/iSub-Bridging-Header.h"; sourceTree = "<group>"; };
 		53D97417255BFE9E00AABF7F /* iSub_Beta-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "iSub_Beta-Bridging-Header.h"; path = "Other/iSub_Beta-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -1246,6 +1258,8 @@
 				530A16A22592CA2E00E9294E /* ArtistsViewController.xib */,
 				530A16B72592DFC700E9294E /* TagArtistViewController.h */,
 				530A16B82592DFC700E9294E /* TagArtistViewController.m */,
+				53D4FC9A259406BE00C6F1AE /* TagAlbumViewController.h */,
+				53D4FC9B259406BE00C6F1AE /* TagAlbumViewController.m */,
 			);
 			path = Artists;
 			sourceTree = "<group>";
@@ -1672,6 +1686,8 @@
 				530A169125929C6900E9294E /* SUSRootArtistsLoader.m */,
 				530A16AF2592D98000E9294E /* SUSTagArtistLoader.h */,
 				530A16B02592D98000E9294E /* SUSTagArtistLoader.m */,
+				53D4FC8F259403CD00C6F1AE /* SUSTagAlbumLoader.h */,
+				53D4FC90259403CD00C6F1AE /* SUSTagAlbumLoader.m */,
 			);
 			path = Loaders;
 			sourceTree = "<group>";
@@ -1705,6 +1721,8 @@
 				530A169D2592C59600E9294E /* SUSRootArtistsDAO.m */,
 				530A16B32592DD0400E9294E /* SUSTagArtistDAO.h */,
 				530A16B42592DD0400E9294E /* SUSTagArtistDAO.m */,
+				53D4FC96259404CF00C6F1AE /* SUSTagAlbumDAO.h */,
+				53D4FC97259404CF00C6F1AE /* SUSTagAlbumDAO.m */,
 			);
 			path = DAOs;
 			sourceTree = "<group>";
@@ -2299,6 +2317,7 @@
 				53FE37971EA961720058B925 /* SUSAllSongsDAO.m in Sources */,
 				53BCC51B181387B300442E86 /* CustomUINavigationController.m in Sources */,
 				539796E41162B68800F41D8B /* AllAlbumsViewController.m in Sources */,
+				53D4FC98259404CF00C6F1AE /* SUSTagAlbumDAO.m in Sources */,
 				53FE38981EA961C80058B925 /* NSFileHandle+ZKAdditions.m in Sources */,
 				53614ACA116432DA0088ABC0 /* ServerListViewController.m in Sources */,
 				530A169E2592C59600E9294E /* SUSRootArtistsDAO.m in Sources */,
@@ -2331,6 +2350,7 @@
 				53FE35251EA961540058B925 /* NSURL+QueryParameterDictionary.m in Sources */,
 				53F4A07D116FF7EE00BB8411 /* CurrentPlaylistViewController.m in Sources */,
 				5340B8A6256968C400FD5D6D /* ISMSBookmarkDAO.m in Sources */,
+				53D4FC9C259406BE00C6F1AE /* TagAlbumViewController.m in Sources */,
 				53FE67A6256DD0F00015FC83 /* GCDWebServerFileRequest.m in Sources */,
 				53FE6790256DD0F00015FC83 /* GCDWebServerRequest.m in Sources */,
 				53329652255F30220027C51A /* ClosureSleeve.swift in Sources */,
@@ -2364,6 +2384,7 @@
 				53EA2DD4257D6A2C0003F38D /* UIDevice+Info.m in Sources */,
 				530A16952592A94C00E9294E /* SUSRootArtistsLoader.m in Sources */,
 				533295F0255EEFE50027C51A /* FMDatabase.m in Sources */,
+				53D4FC91259403CD00C6F1AE /* SUSTagAlbumLoader.m in Sources */,
 				53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
 				534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
 				53523D8F11CD5889006AEA48 /* GenresAlbumViewController.m in Sources */,
@@ -2509,6 +2530,7 @@
 				53FE679F256DD0F00015FC83 /* GCDWebServerStreamedResponse.m in Sources */,
 				533295F5255EEFE50027C51A /* FMDatabase+FTS3.m in Sources */,
 				53FE389A1EA961C80058B925 /* NSFileHandle+ZKAdditions.m in Sources */,
+				53D4FC99259404CF00C6F1AE /* SUSTagAlbumDAO.m in Sources */,
 				53BC27AE139AF0DD00A825F1 /* ServerListViewController.m in Sources */,
 				53BC27B0139AF0DD00A825F1 /* AllSongsViewController.m in Sources */,
 				530A169F2592C59600E9294E /* SUSRootArtistsDAO.m in Sources */,
@@ -2541,6 +2563,7 @@
 				53FE35271EA961540058B925 /* NSURL+QueryParameterDictionary.m in Sources */,
 				537B05BD256B04360008892C /* PadMenuViewController.swift in Sources */,
 				53FE6793256DD0F00015FC83 /* GCDWebServerFunctions.m in Sources */,
+				53D4FC9D259406BE00C6F1AE /* TagAlbumViewController.m in Sources */,
 				53BC27BB139AF0DD00A825F1 /* CurrentPlaylistViewController.m in Sources */,
 				53FE38BB1EA961C80058B925 /* ZKLFHeader.m in Sources */,
 				53FE37D21EA961720058B925 /* SUSStatusLoader.m in Sources */,
@@ -2574,6 +2597,7 @@
 				53FE37A51EA961720058B925 /* SUSCoverArtDAO.m in Sources */,
 				530A16942592A94C00E9294E /* SUSRootArtistsLoader.m in Sources */,
 				534B20EA256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
+				53D4FC92259403CD00C6F1AE /* SUSTagAlbumLoader.m in Sources */,
 				53FE67A7256DD0F00015FC83 /* GCDWebServerFileRequest.m in Sources */,
 				5347A1E5256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */,
 				539148D12559EB1D004AAC3F /* FlurryEmpty.m in Sources */,

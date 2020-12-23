@@ -37,8 +37,12 @@
 
 #pragma mark Properties
 
++ (FMDatabaseQueue *)dbQueue {
+    return databaseS.serverDbQueue;
+}
+
 - (FMDatabaseQueue *)dbQueue {
-    return databaseS.albumListCacheDbQueue;
+    return databaseS.serverDbQueue;
 }
 
 - (NSString *)tableModifier {
@@ -182,7 +186,7 @@
 #pragma mark Public DAO Methods
 
 + (void)setFolderDropdownFolders:(NSDictionary *)artists {
-    [databaseS.albumListCacheDbQueue inDatabase:^(FMDatabase *db) {
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
         [db executeUpdate:@"DROP TABLE IF EXISTS rootArtistDropdownCache"];
         [db executeUpdate:@"CREATE TABLE rootArtistDropdownCache (id INTEGER, name TEXT)"];
         
@@ -193,10 +197,10 @@
 }
 
 + (NSDictionary *)folderDropdownFolders {
-    if (![databaseS.albumListCacheDbQueue tableExists:@"rootFolderDropdownCache"]) return nil;
+    if (![self.dbQueue tableExists:@"rootFolderDropdownCache"]) return nil;
     
     __block NSMutableDictionary *folders = [NSMutableDictionary dictionaryWithCapacity:0];
-    [databaseS.albumListCacheDbQueue inDatabase:^(FMDatabase *db) {
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *result = [db executeQuery:@"SELECT * FROM rootArtistDropdownCache"];
         while ([result next]) {
             @autoreleasepool  {

@@ -1,12 +1,12 @@
 //
-//  SUSTagArtistLoader.m
+//  SUSTagAlbumLoader.m
 //  iSub
 //
-//  Created by Benjamin Baron on 12/22/20.
+//  Created by Benjamin Baron on 12/23/20.
 //  Copyright © 2020 Ben Baron. All rights reserved.
 //
 
-#import "SUSTagArtistLoader.h"
+#import "SUSTagAlbumLoader.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "RXMLElement.h"
 #import "FMDatabaseQueueAdditions.h"
@@ -19,16 +19,16 @@
 
 LOG_LEVEL_ISUB_DEFAULT
 
-@implementation SUSTagArtistLoader
+@implementation SUSTagAlbumLoader
 
 #pragma mark Loader Methods
 
 - (SUSLoaderType)type {
-    return SUSLoaderType_TagArtist;
+    return SUSLoaderType_TagAlbum;
 }
 
 - (NSURLRequest *)createRequest {
-    return [NSMutableURLRequest requestWithSUSAction:@"getArtist" parameters:@{@"id": n2N(self.artistId)}];
+    return [NSMutableURLRequest requestWithSUSAction:@"getAlbum" parameters:@{@"id": n2N(self.albumId)}];
 }
 
 - (void)processResponse {
@@ -45,9 +45,14 @@ LOG_LEVEL_ISUB_DEFAULT
         } else {
             [self resetDb];
             
-            [root iterate:@"artist.album" usingBlock: ^(RXMLElement *e) {
-                ISMSTagAlbum *tagAlbum = [[ISMSTagAlbum alloc] initWithElement:e];
-                [self insertAlbumIntoTagAlbumCache:tagAlbum];
+            [root iterate:@"album.song" usingBlock: ^(RXMLElement *e) {
+                ISMSSong *song = [[ISMSSong alloc] initWithRXMLElement:e];
+                if (song.path && (settingsS.isVideoSupported || !song.isVideo)) {
+                    // Fix for pdfs showing in directory listing
+                    if (![song.suffix.lowercaseString isEqualToString:@"pdf"]) {
+                        [self insertSongIntoAlbumCache:song];
+                    }
+                }
             }];
                         
             // Notify the delegate that the loading is finished
@@ -65,26 +70,26 @@ LOG_LEVEL_ISUB_DEFAULT
 - (BOOL)resetDb {
     __block BOOL hadError;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"DELETE FROM tagAlbum WHERE albumId = ?", self.artistId];
+        [db executeUpdate:@"DELETE FROM tagSong WHERE albumId = ?", self.albumId];
         
         hadError = db.hadError;
         if (hadError) {
-            DDLogError(@"[SUSSubFolderLoader] Error resetting tagAlbum cache tables %d: %@", db.lastErrorCode, db.lastErrorMessage);
+            DDLogError(@"[SUSTagAlbumLoader] Error resetting tagSong cache tables %d: %@", db.lastErrorCode, db.lastErrorMessage);
         }
     }];
     return !hadError;
 }
 
-- (BOOL)insertAlbumIntoTagAlbumCache:(ISMSTagAlbum *)tagAlbum {
+- (BOOL)insertSongIntoAlbumCache:(ISMSSong *)song {
     __block BOOL hadError;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"INSERT INTO tagAlbum (artistId, albumId, name, coverArtId, tagArtistName, songCount, duration, playCount, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", self.artistId, tagAlbum.albumId, tagAlbum.name, tagAlbum.coverArtId, tagAlbum.tagArtistName, @(tagAlbum.songCount), @(tagAlbum.duration), @(tagAlbum.playCount), @(tagAlbum.year)];
+        [db executeUpdate:@"INSERT INTO tagSong (albumId, songId) VALUES (?, ?)", self.albumId, song.songId];
         hadError = db.hadError;
         if (hadError) {
-            DDLogError(@"[SUSTagArtistLoader] Error inserting tagAlbum %d: %@", db.lastErrorCode, db.lastErrorMessage);
+            DDLogError(@"[SUSTagAlbumLoader] Error inserting song %d: %@", db.lastErrorCode, db.lastErrorMessage);
         }
     }];
-    return !hadError;
+    return !hadError && [song updateMetadataCache];
 }
 
 @end

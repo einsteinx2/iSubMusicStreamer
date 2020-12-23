@@ -8,7 +8,7 @@
 
 #import "SUSLoaderManager.h"
 
-@class FMDatabase, ISMSTagArtist, ISMSTagAlbum, ISMSSong, SUSTagArtistLoader;
+@class FMDatabase, ISMSTagArtist, ISMSTagAlbum, SUSTagArtistLoader;
 
 @interface SUSTagArtistDAO: NSObject <SUSLoaderDelegate, SUSLoaderManager>
 

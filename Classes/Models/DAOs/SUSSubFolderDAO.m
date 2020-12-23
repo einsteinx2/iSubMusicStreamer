@@ -19,19 +19,22 @@
 #import "EX2Kit.h"
 #import "Swift.h"
 
+LOG_LEVEL_ISUB_DEFAULT
+
 @implementation SUSSubFolderDAO
 
 #pragma mark Lifecycle
 
 - (void)setup {
-    _albumStartRow = [self findFirstAlbumRow];
-    _songStartRow = [self findFirstSongRow];
-    _albumsCount = [self findAlbumsCount];
-    _songsCount = [self findSongsCount];
-    _folderLength = [self findFolderLength];
+    _albumStartRow = [self.dbQueue intForQuery:@"SELECT rowid FROM folderAlbum WHERE folderId = ? LIMIT 1", self.folderId];
+    _songStartRow = [self.dbQueue intForQuery:@"SELECT rowid FROM folderSong WHERE folderId = ? LIMIT 1", self.folderId];
+    _albumsCount = [self.dbQueue intForQuery:@"SELECT subfolderCount FROM folderMetadata WHERE folderId = ? LIMIT 1", self.folderId];
+    _songsCount = [self.dbQueue intForQuery:@"SELECT songCount FROM folderMetadata WHERE folderId = ? LIMIT 1", self.folderId];
+    _folderLength = [self.dbQueue intForQuery:@"SELECT duration FROM folderMetadata WHERE folderId = ? LIMIT 1", self.folderId];
 }
 
 - (instancetype)init {
+    NSAssert(NO, @"[SUSSubFolderDAO] init should never be called");
     if (self = [super init]) {
 		[self setup];
     }
@@ -39,6 +42,7 @@
 }
 
 - (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate {
+    NSAssert(NO, @"[SUSSubFolderDAO] initWithDelegate should never be called");
     if (self = [super init]) {
 		_delegate = delegate;
 		[self setup];
@@ -62,76 +66,7 @@
 }
 
 - (FMDatabaseQueue *)dbQueue {
-	return databaseS.albumListCacheDbQueue;
-}
-
-#pragma mark Private DB Methods
-
-- (NSUInteger)findFirstAlbumRow {
-    return [self.dbQueue intForQuery:@"SELECT rowid FROM folderAlbum WHERE folderId = ? LIMIT 1", self.folderId];
-}
-
-- (NSUInteger)findFirstSongRow {
-    return [self.dbQueue intForQuery:@"SELECT rowid FROM folderSong WHERE folderId = ? LIMIT 1", self.folderId];
-}
-
-- (NSUInteger)findAlbumsCount {
-    return [self.dbQueue intForQuery:@"SELECT subfolderCount FROM folderMetadata WHERE folderId = ? LIMIT 1", self.folderId];
-}
-
-- (NSUInteger)findSongsCount {
-    return [self.dbQueue intForQuery:@"SELECT songCount FROM folderMetadata WHERE folderId = ? LIMIT 1", self.folderId];
-}
-
-- (NSUInteger)findFolderLength {
-    return [self.dbQueue intForQuery:@"SELECT duration FROM folderMetadata WHERE folderId = ? LIMIT 1", self.folderId];
-}
-
-- (ISMSFolderAlbum *)findFolderAlbumForDbRow:(NSUInteger)row {
-    __block ISMSFolderAlbum *folderAlbum = nil;
-	[self.dbQueue inDatabase:^(FMDatabase *db) {
-		FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM folderAlbum WHERE ROWID = %lu", (unsigned long)row]];
-        if ([result next]) {
-            folderAlbum = [[ISMSFolderAlbum alloc] initWithResult:result];
-        } else if ([db hadError]) {
-            // TODO: Handle error
-            //DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-		}
-		[result close];
-	}];
-	return folderAlbum;
-}
-
-- (ISMSSong *)findSongForDbRow:(NSUInteger)row {
-	return [ISMSSong songFromDbRow:row-1 inTable:@"folderSong" inDatabaseQueue:self.dbQueue];
-}
-
-- (ISMSSong *)playSongAtDbRow:(NSUInteger)row {
-	// Clear the current playlist
-	if (settingsS.isJukeboxEnabled) {
-		[databaseS resetJukeboxPlaylist];
-		[jukeboxS clearRemotePlaylist];
-	} else {
-		[databaseS resetCurrentPlaylistDb];
-	}
-	
-	// Add the songs to the playlist
-	for (NSInteger i = self.albumsCount; i < self.totalCount; i++) {
-		@autoreleasepool  {
-			ISMSSong *aSong = [self songForTableViewRow:i];
-			//DLog(@"song parentId: %@", aSong.parentId);
-			//DLog(@"adding song to playlist: %@", aSong);
-			[aSong addToCurrentPlaylistDbQueue];
-		}
-	}
-	
-	// Set player defaults
-	playlistS.isShuffle = NO;
-    
-    [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
-	
-	// Start the song
-	return [musicS playSongAtPosition:(row - self.songStartRow)];
+	return databaseS.serverDbQueue;
 }
 
 #pragma mark Public DAO Methods
@@ -149,17 +84,50 @@
 
 - (ISMSFolderAlbum *)folderAlbumForTableViewRow:(NSUInteger)row {
     NSUInteger dbRow = self.albumStartRow + row;
-    return [self findFolderAlbumForDbRow:dbRow];
+    __block ISMSFolderAlbum *folderAlbum = nil;
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM folderAlbum WHERE ROWID = %lu", (unsigned long)dbRow]];
+        if ([result next]) {
+            folderAlbum = [[ISMSFolderAlbum alloc] initWithResult:result];
+        } else if (db.hadError) {
+            // TODO: Handle error
+            DDLogError(@"[SUSSubFolderDAO] Error reading folderAlbum %d: %@", db.lastErrorCode, db.lastErrorMessage);
+        }
+        [result close];
+    }];
+    return folderAlbum;
 }
 
 - (ISMSSong *)songForTableViewRow:(NSUInteger)row {
     NSUInteger dbRow = self.songStartRow + (row - self.albumsCount);
-    return [self findSongForDbRow:dbRow];
+    return [ISMSSong songFromDbRow:dbRow-1 inTable:@"folderSong"];
 }
 
 - (ISMSSong *)playSongAtTableViewRow:(NSUInteger)row {
 	NSUInteger dbRow = self.songStartRow + (row - self.albumsCount);
-	return [self playSongAtDbRow:dbRow];
+    
+    // Clear the current playlist
+    if (settingsS.isJukeboxEnabled) {
+        [databaseS resetJukeboxPlaylist];
+        [jukeboxS clearRemotePlaylist];
+    } else {
+        [databaseS resetCurrentPlaylistDb];
+    }
+    
+    // Add the songs to the playlist
+    for (NSInteger i = self.albumsCount; i < self.totalCount; i++) {
+        @autoreleasepool  {
+            [[self songForTableViewRow:i] addToCurrentPlaylistDbQueue];
+        }
+    }
+    
+    // Set player defaults
+    playlistS.isShuffle = NO;
+    
+    [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+    
+    // Start the song
+    return [musicS playSongAtPosition:(dbRow - self.songStartRow)];
 }
 
 - (NSArray *)sectionInfo {

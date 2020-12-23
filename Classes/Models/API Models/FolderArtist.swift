@@ -8,9 +8,7 @@
 
 import Foundation
 
-@objc(ISMSFolderArtist) final class FolderArtist: NSObject, NSSecureCoding, NSCopying {
-    static var supportsSecureCoding = true
-    
+@objc(ISMSFolderArtist) final class FolderArtist: NSObject, NSCopying {
     @objc(folderId) let id: String
     @objc let name: String
     
@@ -30,17 +28,6 @@ import Foundation
         self.id = element.attribute("id")?.clean() ?? ""
         self.name = element.attribute("name")?.clean() ?? ""
         super.init()
-    }
-    
-    @objc init?(coder: NSCoder) {
-        self.id = coder.decodeObject(forKey: "id") as? String ?? ""
-        self.name = coder.decodeObject(forKey: "name") as? String ?? ""
-        super.init()
-    }
-    
-    @objc func encode(with coder: NSCoder) {
-        coder.encode(id, forKey: "id")
-        coder.encode(name, forKey: "name")
     }
     
     @objc func copy(with zone: NSZone? = nil) -> Any {

@@ -31,10 +31,10 @@
 	[self.dbQueue inDatabase:^(FMDatabase *db) {
 		if (settingsS.isJukeboxEnabled) {
 			[db executeUpdate:@"DROP TABLE jukeboxCurrentPlaylist"];
-			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE jukeboxCurrentPlaylist (%@)", [ISMSSong standardSongColumnSchema]]];	
+			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE jukeboxCurrentPlaylist (%@)", ISMSSong.standardSongColumnSchema]];	
 		} else {
 			[db executeUpdate:@"DROP TABLE currentPlaylist"];
-			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE currentPlaylist (%@)", [ISMSSong standardSongColumnSchema]]];	
+			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE currentPlaylist (%@)", ISMSSong.standardSongColumnSchema]];	
 		}
 	}];
 }
@@ -43,10 +43,10 @@
 	[self.dbQueue inDatabase:^(FMDatabase *db) {
 		if (settingsS.isJukeboxEnabled) {
 			[db executeUpdate:@"DROP TABLE jukeboxShufflePlaylist"];
-			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE jukeboxShufflePlaylist (%@)", [ISMSSong standardSongColumnSchema]]];	
+			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE jukeboxShufflePlaylist (%@)", ISMSSong.standardSongColumnSchema]];	
 		} else {
 			[db executeUpdate:@"DROP TABLE shufflePlaylist"];
-			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE shufflePlaylist (%@)", [ISMSSong standardSongColumnSchema]]];	
+			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE shufflePlaylist (%@)", ISMSSong.standardSongColumnSchema]];	
 		}
 	}];
 }
@@ -65,7 +65,7 @@
 			} else {
 				[self.dbQueue inDatabase:^(FMDatabase *db) {
 					[db executeUpdate:@"DROP TABLE IF EXISTS jukeboxTemp"];
-					[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE jukeboxTemp(%@)", [ISMSSong standardSongColumnSchema]]];
+					[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE jukeboxTemp(%@)", ISMSSong.standardSongColumnSchema]];
 					
 					for (NSNumber *index in indexesMut.reverseObjectEnumerator) {
 						@autoreleasepool {
@@ -87,7 +87,7 @@
 				} else {
 					[self.dbQueue inDatabase:^(FMDatabase *db) {
 						[db executeUpdate:@"DROP TABLE IF EXISTS shuffleTemp"];
-						[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE shuffleTemp(%@)", [ISMSSong standardSongColumnSchema]]];
+						[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE shuffleTemp(%@)", ISMSSong.standardSongColumnSchema]];
 						
 						for (NSNumber *index in indexesMut.reverseObjectEnumerator) {
 							@autoreleasepool {
@@ -107,7 +107,7 @@
 				} else {
 					[self.dbQueue inDatabase:^(FMDatabase *db) {
 						[db executeUpdate:@"DROP TABLE currentTemp"];
-						[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE currentTemp(%@)", [ISMSSong standardSongColumnSchema]]];
+						[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE currentTemp(%@)", ISMSSong.standardSongColumnSchema]];
 						
 						for (NSNumber *index in indexesMut.reverseObjectEnumerator) {
 							@autoreleasepool {

@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import CocoaLumberjackSwift
 
 @objc final class HomeViewController: UIViewController {
     private var quickAlbumsLoader: SUSQuickAlbumsLoader?
@@ -412,7 +413,7 @@ extension HomeViewController: UISearchBarDelegate {
             if query.canBeConverted(to: .isoLatin1) {
                 query += "*"
             }
-            
+
             action = "search2"
             parameters = ["query": query, "artistCount": "0", "albumCount": "0", "songCount": "0"]
             switch searchSegment.selectedSegmentIndex {
@@ -440,10 +441,8 @@ extension HomeViewController: UISearchBarDelegate {
                             self.present(alert, animated: true, completion: nil)
                         }
                     } else if let data = data {
-                        let xmlParser = XMLParser(data: data)
-                        let parser = SearchXMLParser()
-                        xmlParser.delegate = parser
-                        xmlParser.parse()
+                        DDLogVerbose("search results: \(String(data: data, encoding: .utf8)!)")
+                        let parser = SearchXMLParser(data: data)
                         
                         if Settings.shared().isNewSearchAPI && self.searchSegment.selectedSegmentIndex == 3 {
                             let controller = SearchAllViewController(nibName: "SearchAllViewController", bundle: nil)

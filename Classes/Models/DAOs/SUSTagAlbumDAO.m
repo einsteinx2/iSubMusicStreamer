@@ -1,13 +1,13 @@
 //
-//  SUSTagArtistDAO.m
+//  SUSTagAlbumDAO.m
 //  iSub
 //
-//  Created by Benjamin Baron on 12/22/20.
+//  Created by Benjamin Baron on 12/23/20.
 //  Copyright © 2020 Ben Baron. All rights reserved.
 //
 
-#import "SUSTagArtistDAO.h"
-#import "SUSTagArtistLoader.h"
+#import "SUSTagAlbumDAO.h"
+#import "SUSTagAlbumLoader.h"
 #import "MusicSingleton.h"
 #import "FMDatabaseQueueAdditions.h"
 #import "SavedSettings.h"
@@ -19,19 +19,17 @@
 #import "EX2Kit.h"
 #import "Swift.h"
 
-LOG_LEVEL_ISUB_DEFAULT
-
-@implementation SUSTagArtistDAO
+@implementation SUSTagAlbumDAO
 
 #pragma mark Lifecycle
 
 - (void)setup {
-    _albumStartRow = [self.dbQueue intForQuery:@"SELECT ROWID FROM tagAlbum WHERE artistId = ? LIMIT 1", self.tagArtist.artistId];
-    _albumsCount = [self.dbQueue intForQuery:@"SELECT count(*) FROM tagAlbum WHERE artistId = ?", self.tagArtist.artistId];
+    _songStartRow = [self.dbQueue intForQuery:@"SELECT ROWID FROM tagSong WHERE albumId = ? LIMIT 1", self.tagAlbum.albumId];
+    _songsCount = [self.dbQueue intForQuery:@"SELECT count(*) FROM tagSong WHERE albumId = ?", self.tagAlbum.albumId];
 }
 
 - (instancetype)init {
-    NSAssert(NO, @"[SUSTagArtistDAO] init should never be called");
+    NSAssert(NO, @"[SUSTagAlbumDAO] init should never be called");
     if (self = [super init]) {
         [self setup];
     }
@@ -39,7 +37,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate {
-    NSAssert(NO, @"[SUSTagArtistDAO] initWithDelegate should never be called");
+    NSAssert(NO, @"[SUSTagAlbumDAO] initWithDelegate should never be called");
     if (self = [super init]) {
         _delegate = delegate;
         [self setup];
@@ -47,10 +45,10 @@ LOG_LEVEL_ISUB_DEFAULT
     return self;
 }
 
-- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate andTagArtist:(ISMSTagArtist *)tagArtist {
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate andTagAlbum:(ISMSTagAlbum *)tagAlbum {
     if (self = [super init]) {
         _delegate = delegate;
-        _tagArtist = tagArtist;
+        _tagAlbum = tagAlbum;
         [self setup];
     }
     return self;
@@ -68,26 +66,42 @@ LOG_LEVEL_ISUB_DEFAULT
 #pragma mark Public DAO Methods
 
 - (BOOL)hasLoaded {
-    if (self.albumsCount > 0)
+    if (self.songsCount > 0)
         return YES;
     
     return NO;
 }
 
-- (ISMSTagAlbum *)tagAlbumForTableViewRow:(NSUInteger)row {
-    NSUInteger dbRow = self.albumStartRow + row;
-    __block ISMSTagAlbum *tagAlbum = nil;
-    [self.dbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM tagAlbum WHERE ROWID = %lu", (unsigned long)dbRow]];
-        if ([result next]) {
-            tagAlbum = [[ISMSTagAlbum alloc] initWithResult:result];
-        } else if (db.hadError) {
-            // TODO: Handle error
-            DDLogError(@"[SUSTagArtistDAO] Failed to read album for table row - %d: %@", db.lastErrorCode, db.lastErrorMessage);
+- (ISMSSong *)songForTableViewRow:(NSUInteger)row {
+    NSUInteger dbRow = self.songStartRow + row;
+    return [ISMSSong songFromDbRow:dbRow-1 inTable:@"tagSong"];
+}
+
+- (ISMSSong *)playSongAtTableViewRow:(NSUInteger)row {
+    NSUInteger dbRow = self.songStartRow + row;
+    
+    // Clear the current playlist
+    if (settingsS.isJukeboxEnabled) {
+        [databaseS resetJukeboxPlaylist];
+        [jukeboxS clearRemotePlaylist];
+    } else {
+        [databaseS resetCurrentPlaylistDb];
+    }
+    
+    // Add the songs to the playlist
+    for (int i = 0; i < self.songsCount; i++) {
+        @autoreleasepool  {
+            [[self songForTableViewRow:i] addToCurrentPlaylistDbQueue];
         }
-        [result close];
-    }];
-    return tagAlbum;
+    }
+    
+    // Set player defaults
+    playlistS.isShuffle = NO;
+    
+    [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+    
+    // Start the song
+    return [musicS playSongAtPosition:(dbRow - self.songStartRow)];
 }
 
 #pragma mark Loader Manager Methods
@@ -97,8 +111,8 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)startLoad {
-    self.loader = [[SUSTagArtistLoader alloc] initWithDelegate:self];
-    self.loader.artistId = self.tagArtist.artistId;
+    self.loader = [[SUSTagAlbumLoader alloc] initWithDelegate:self];
+    self.loader.albumId = self.tagAlbum.albumId;
     [self.loader startLoad];
 }
 

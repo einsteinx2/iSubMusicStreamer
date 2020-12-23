@@ -18,13 +18,15 @@
 
 - (instancetype)initWithRXMLElement:(RXMLElement *)element {
     if (self = [super init]) {
-        _title = [[element attribute:@"title"] cleanString];
         _songId = [[element attribute:@"id"] cleanString];
-        _parentId = [[element attribute:@"parent"] cleanString];
+        _title = [[element attribute:@"title"] cleanString];
         _artist = [[element attribute:@"artist"] cleanString];
         _album = [[element attribute:@"album"] cleanString];
         _genre = [[element attribute:@"genre"] cleanString];
         _coverArtId = [[element attribute:@"coverArt"] cleanString];
+        _parentId = [[element attribute:@"parent"] cleanString];
+        _tagArtistId = [[element attribute:@"artistId"] cleanString];
+        _tagAlbumId = [[element attribute:@"albumId"] cleanString];
         _path = [[element attribute:@"path"] cleanString];
         _suffix = [[element attribute:@"suffix"] cleanString];
         _transcodedSuffix = [[element attribute:@"transcodedSuffix"] cleanString];
@@ -38,14 +40,14 @@
         NSString *trackString = [element attribute:@"track"];
         if(trackString) _track = @(trackString.intValue);
         
+        NSString *discNumberString = [element attribute:@"discNumber"];
+        if (discNumberString) _discNumber = @(discNumberString.longLongValue);
+        
         NSString *yearString = [element attribute:@"year"];
         if(yearString) _year = @(yearString.intValue);
         
         NSString *sizeString = [element attribute:@"size"];
         if (sizeString) _size = @(sizeString.longLongValue);
-        
-        NSString *discNumberString = [element attribute:@"discNumber"];
-        if (discNumberString) _discNumber = @(discNumberString.longLongValue);
         
         _isVideo = [[element attribute:@"isVideo"] boolValue];
     }
@@ -55,25 +57,30 @@
 
 - (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict {
 	if (self = [super init]) {
+        _songId = [[attributeDict objectForKey:@"id"] cleanString];
 		_title = [[attributeDict objectForKey:@"title"] cleanString];
-		_songId = [[attributeDict objectForKey:@"id"] cleanString];
-		_parentId = [[attributeDict objectForKey:@"parent"] cleanString];
-		_artist = [[attributeDict objectForKey:@"artist"] cleanString];
-		_album = [[attributeDict objectForKey:@"album"] cleanString];
-		_genre = [[attributeDict objectForKey:@"genre"] cleanString];
-		_coverArtId = [[attributeDict objectForKey:@"coverArt"] cleanString];
-		_path = [[attributeDict objectForKey:@"path"] cleanString];
-		_suffix = [[attributeDict objectForKey:@"suffix"] cleanString];
-		_transcodedSuffix = [[attributeDict objectForKey:@"transcodedSuffix"] cleanString];
+        _artist = [[attributeDict objectForKey:@"artist"] cleanString];
+        _album = [[attributeDict objectForKey:@"album"] cleanString];
+        _genre = [[attributeDict objectForKey:@"genre"] cleanString];
+        _coverArtId = [[attributeDict objectForKey:@"coverArt"] cleanString];
+        _parentId = [[attributeDict objectForKey:@"parent"] cleanString];
+        _tagArtistId = [[attributeDict objectForKey:@"artistId"] cleanString];
+        _tagAlbumId = [[attributeDict objectForKey:@"albumId"] cleanString];
+        _path = [[attributeDict objectForKey:@"path"] cleanString];
+        _suffix = [[attributeDict objectForKey:@"suffix"] cleanString];
+        _transcodedSuffix = [[attributeDict objectForKey:@"transcodedSuffix"] cleanString];
         
         NSString *durationString = [attributeDict objectForKey:@"duration"];
-		if(durationString) _duration = @(durationString.intValue);
+        if(durationString) _duration = @(durationString.intValue);
         
         NSString *bitRateString = [attributeDict objectForKey:@"bitRate"];
-		if(bitRateString) _bitRate = @(bitRateString.intValue);
-        
+        if(bitRateString) _bitRate = @(bitRateString.intValue);
+		
         NSString *trackString = [attributeDict objectForKey:@"track"];
-		if(trackString) _track = @(trackString.intValue);
+        if(trackString) _track = @(trackString.intValue);
+        
+        NSString *discNumberString = [attributeDict objectForKey:@"discNumber"];
+        if(discNumberString) _discNumber = @(discNumberString.intValue);
         
         NSString *yearString = [attributeDict objectForKey:@"year"];
 		if(yearString) _year = @(yearString.intValue);
@@ -92,46 +99,49 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
+    [encoder encodeObject:self.songId forKey:@"songId"];
 	[encoder encodeObject:self.title forKey:@"title"];
-	[encoder encodeObject:self.songId forKey:@"songId"];
-	[encoder encodeObject:self.parentId forKey:@"parentId"];
-	[encoder encodeObject:self.artist forKey:@"artist"];
-	[encoder encodeObject:self.album forKey:@"album"];
-	[encoder encodeObject:self.genre forKey:@"genre"];
-	[encoder encodeObject:self.coverArtId forKey:@"coverArtId"];
+    [encoder encodeObject:self.artist forKey:@"artist"];
+    [encoder encodeObject:self.album forKey:@"album"];
+    [encoder encodeObject:self.genre forKey:@"genre"];
+    [encoder encodeObject:self.coverArtId forKey:@"coverArtId"];
+    [encoder encodeObject:self.parentId forKey:@"parentId"];
+    [encoder encodeObject:self.tagArtistId forKey:@"tagArtistId"];
+    [encoder encodeObject:self.tagAlbumId forKey:@"tagAlbumId"];
 	[encoder encodeObject:self.path forKey:@"path"];
 	[encoder encodeObject:self.suffix forKey:@"suffix"];
 	[encoder encodeObject:self.transcodedSuffix forKey:@"transcodedSuffix"];
 	[encoder encodeObject:self.duration forKey:@"duration"];
 	[encoder encodeObject:self.bitRate forKey:@"bitRate"];
 	[encoder encodeObject:self.track forKey:@"track"];
+    [encoder encodeObject:self.discNumber forKey:@"discNumber"];
 	[encoder encodeObject:self.year forKey:@"year"];
 	[encoder encodeObject:self.size forKey:@"size"];
     [encoder encodeBool:self.isVideo forKey:@"isVideo"];
-    [encoder encodeObject:self.discNumber forKey:@"discNumber"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)decoder {
 	if (self = [super init]) {
-        _title = [decoder decodeObjectForKey:@"title"];
         _songId = [decoder decodeObjectForKey:@"songId"];
-        _parentId = [decoder decodeObjectForKey:@"parentId"];
+        _title = [decoder decodeObjectForKey:@"title"];
         _artist = [decoder decodeObjectForKey:@"artist"];
         _album = [decoder decodeObjectForKey:@"album"];
         _genre = [decoder decodeObjectForKey:@"genre"];
         _coverArtId = [decoder decodeObjectForKey:@"coverArtId"];
+        _parentId = [decoder decodeObjectForKey:@"parentId"];
+        _tagArtistId = [decoder decodeObjectForKey:@"tagArtistId"];
+        _tagAlbumId = [decoder decodeObjectForKey:@"tagAlbumId"];
         _path = [decoder decodeObjectForKey:@"path"];
         _suffix = [decoder decodeObjectForKey:@"suffix"];
         _transcodedSuffix = [decoder decodeObjectForKey:@"transcodedSuffix"];
         _duration = [decoder decodeObjectForKey:@"duration"];
         _bitRate = [decoder decodeObjectForKey:@"bitRate"];
         _track = [decoder decodeObjectForKey:@"track"];
+        _discNumber = [decoder decodeObjectForKey:@"discNumber"];
         _year = [decoder decodeObjectForKey:@"year"];
         _size = [decoder decodeObjectForKey:@"size"];
         _isVideo = [decoder decodeBoolForKey:@"isVideo"];
-        _discNumber = [decoder decodeObjectForKey:@"discNumber"];
 	}
-	
 	return self;
 }
 
@@ -139,24 +149,25 @@
 	ISMSSong *newSong = [[ISMSSong alloc] init];
 
 	// Can directly assign because properties have "copy" type
+    newSong.songId = self.songId;
 	newSong.title = self.title;
-	newSong.songId = self.songId;
-	newSong.parentId = self.parentId;
 	newSong.artist = self.artist;
 	newSong.album = self.album;
-	newSong.genre = self.genre;
+    newSong.genre = self.genre;
 	newSong.coverArtId = self.coverArtId;
+    newSong.parentId = self.parentId;
+    newSong.tagArtistId = self.tagArtistId;
+    newSong.tagAlbumId = self.tagAlbumId;
 	newSong.path = self.path;
 	newSong.suffix = self.suffix;
 	newSong.transcodedSuffix = self.transcodedSuffix;
 	newSong.duration = self.duration;
 	newSong.bitRate = self.bitRate;
 	newSong.track = self.track;
+    newSong.discNumber = self.discNumber;
 	newSong.year = self.year;
 	newSong.size = self.size;
     newSong.isVideo = self.isVideo;
-    newSong.discNumber = self.discNumber;
-	
 	return newSong;
 }
 

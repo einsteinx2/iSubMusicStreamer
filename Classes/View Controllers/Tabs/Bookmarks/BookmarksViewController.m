@@ -426,7 +426,7 @@
 		NSString *table = playlistS.isShuffle ? shufTable : currTable;
 		
 		[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
-			[db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
+			[db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
 			[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO currentPlaylistDb.%@ SELECT * FROM bookmark%lu", table, (unsigned long)bookmarkId]];
 			[db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
 		}];
@@ -511,7 +511,7 @@
     NSInteger toRow = toIndexPath.row + 1;
     
     [databaseS.bookmarksDb executeUpdate:@"DROP TABLE bookmarksTemp"];
-    [databaseS.bookmarksDb executeUpdate:[NSString stringWithFormat:@"CREATE TABLE bookmarks (bookmarkId INTEGER PRIMARY KEY, playlistIndex INTEGER, name TEXT, position INTEGER, %@, bytes INTEGER)", [ISMSSong standardSongColumnSchema]]];
+    [databaseS.bookmarksDb executeUpdate:[NSString stringWithFormat:@"CREATE TABLE bookmarks (bookmarkId INTEGER PRIMARY KEY, playlistIndex INTEGER, name TEXT, position INTEGER, %@, bytes INTEGER)", ISMSSong.standardSongColumnSchema]];
         
     if (fromRow < toRow) {
         [databaseS.bookmarksDb executeUpdate:@"INSERT INTO bookmarksTemp SELECT * FROM bookmarks WHERE ROWID < ?", [NSNumber numberWithInt:fromRow]];

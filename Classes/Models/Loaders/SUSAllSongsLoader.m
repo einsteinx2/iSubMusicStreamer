@@ -90,7 +90,7 @@ static BOOL _isAllSongsLoading = NO;
 		self.iteration = -1;
 		
 		self.currentRow = [databaseS.allAlbumsDbQueue intForQuery:@"SELECT artistNum FROM resumeLoad"];
-		self.artistCount = [databaseS.albumListCacheDbQueue intForQuery:@"SELECT count FROM rootFolderCount_all LIMIT 1"];
+		self.artistCount = [databaseS.serverDbQueue intForQuery:@"SELECT count FROM rootFolderCount_all LIMIT 1"];
 		
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_AllSongsLoadingArtists];
 		
@@ -139,7 +139,7 @@ static BOOL _isAllSongsLoading = NO;
 	
 	[databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
 		[db executeUpdate:@"DROP TABLE IF EXISTS allSongsTemp"];
-		NSString *query = [NSString stringWithFormat:@"CREATE TEMPORARY TABLE allSongsTemp (%@)", [ISMSSong standardSongColumnSchema]];
+		NSString *query = [NSString stringWithFormat:@"CREATE TEMPORARY TABLE allSongsTemp (%@)", ISMSSong.standardSongColumnSchema];
 		[db executeUpdate:query];
 	}];
 	
@@ -151,7 +151,7 @@ static BOOL _isAllSongsLoading = NO;
 		[db executeUpdate:@"CREATE TEMPORARY TABLE genresLayoutTemp (md5 TEXT, genre TEXT, segs INTEGER, seg1 TEXT, seg2 TEXT, seg3 TEXT, seg4 TEXT, seg5 TEXT, seg6 TEXT, seg7 TEXT, seg8 TEXT, seg9 TEXT)"];
         
         [db executeUpdate:@"DROP TABLE IF EXISTS genresSongsTemp"];
-        [db executeUpdate:[NSString stringWithFormat:@"CREATE TEMPORARY TABLE genresSongsTemp (md5 TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
+        [db executeUpdate:[NSString stringWithFormat:@"CREATE TEMPORARY TABLE genresSongsTemp (md5 TEXT, %@)", ISMSSong.standardSongColumnSchema]];
 	}];
 }
 
@@ -188,10 +188,10 @@ static BOOL _isAllSongsLoading = NO;
 			// Create allSongs tables
 			[db executeUpdate:@"CREATE TABLE resumeLoad (albumNum INTEGER, iteration INTEGER)"];
 			[db executeUpdate:@"INSERT INTO resumeLoad (albumNum, iteration) VALUES (1, 0)"];
-			NSString *query = [NSString stringWithFormat:@"CREATE VIRTUAL TABLE allSongs USING FTS3 (%@, tokenize=porter)", [ISMSSong standardSongColumnSchema]];
+			NSString *query = [NSString stringWithFormat:@"CREATE VIRTUAL TABLE allSongs USING FTS3 (%@, tokenize=porter)", ISMSSong.standardSongColumnSchema];
 			[db executeUpdate:query];
 			
-			query = [NSString stringWithFormat:@"CREATE TABLE allSongsUnsorted (%@)", [ISMSSong standardSongColumnSchema]];
+			query = [NSString stringWithFormat:@"CREATE TABLE allSongsUnsorted (%@)", ISMSSong.standardSongColumnSchema];
 			[db executeUpdate:query];
 			//[db executeUpdate:@"CREATE INDEX allSongsUnsorted_title ON allSongsUnsorted (title ASC)"];
 			[db executeUpdate:@"CREATE TABLE allSongsCount (count INTEGER)"];
@@ -204,7 +204,7 @@ static BOOL _isAllSongsLoading = NO;
 			[db executeUpdate:@"CREATE TABLE genresUnsorted (genre TEXT UNIQUE)"];
 			[db executeUpdate:@"CREATE TABLE genresLayout (md5 TEXT, genre TEXT, segs INTEGER, seg1 TEXT, seg2 TEXT, seg3 TEXT, seg4 TEXT, seg5 TEXT, seg6 TEXT, seg7 TEXT, seg8 TEXT, seg9 TEXT)"];
             [db executeUpdate:@"CREATE INDEX genresLayout_genre_seg1 ON genresLayout (genre, seg1)"];
-            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE genresSongs (md5 TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE genresSongs (md5 TEXT, %@)", ISMSSong.standardSongColumnSchema]];
 		}];
 	}
 }
@@ -270,7 +270,7 @@ static BOOL _isAllSongsLoading = NO;
 		
 		[databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
 			[db executeUpdate:@"DROP TABLE IF EXISTS allSongs"];
-			NSString *query = [NSString stringWithFormat:@"CREATE VIRTUAL TABLE allSongs USING FTS3 (%@, tokenize=porter)", [ISMSSong standardSongColumnSchema]];
+			NSString *query = [NSString stringWithFormat:@"CREATE VIRTUAL TABLE allSongs USING FTS3 (%@, tokenize=porter)", ISMSSong.standardSongColumnSchema];
 			[db executeUpdate:query];
 			[db executeUpdate:@"INSERT INTO allSongs SELECT * FROM allSongsUnsorted ORDER BY title COLLATE NOCASE"];
 		}];
@@ -570,7 +570,7 @@ static NSString *kName_Error = @"error";
                                         [databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
                                              [db executeUpdate:@"INSERT INTO allSongsUnsorted SELECT * FROM allSongsTemp"];
                                              [db executeUpdate:@"DROP TABLE IF EXISTS allSongsTemp"];
-                                             NSString *query = [NSString stringWithFormat:@"CREATE TEMPORARY TABLE allSongsTemp (%@)", [ISMSSong standardSongColumnSchema]];
+                                             NSString *query = [NSString stringWithFormat:@"CREATE TEMPORARY TABLE allSongsTemp (%@)", ISMSSong.standardSongColumnSchema];
                                              [db executeUpdate:query];
                                          }];
                                         self.tempSongsCount = 0;
@@ -611,7 +611,7 @@ static NSString *kName_Error = @"error";
                                                      // Flush songs
                                                      [db executeUpdate:@"INSERT OR IGNORE INTO genresSongs SELECT * FROM genresSongsTemp"];
                                                      [db executeUpdate:@"DROP TABLE IF EXISTS genresSongsTemp"];
-                                                     [db executeUpdate:[NSString stringWithFormat:@"CREATE TEMPORARY TABLE genresSongsTemp (md5 TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
+                                                     [db executeUpdate:[NSString stringWithFormat:@"CREATE TEMPORARY TABLE genresSongsTemp (md5 TEXT, %@)", ISMSSong.standardSongColumnSchema]];
                                                      
                                                      // Flush the records to disk
                                                      [db executeUpdate:@"INSERT OR IGNORE INTO genresLayout SELECT * FROM genresLayoutTemp"];
@@ -665,7 +665,7 @@ static NSString *kName_Error = @"error";
 				[databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
 					[db executeUpdate:@"INSERT INTO allSongsUnsorted SELECT * FROM allSongsTemp"];
 					[db executeUpdate:@"DROP TABLE IF EXISTS allSongsTemp"];
-					NSString *query = [NSString stringWithFormat:@"CREATE TEMPORARY TABLE allSongsTemp (%@)", [ISMSSong standardSongColumnSchema]];
+					NSString *query = [NSString stringWithFormat:@"CREATE TEMPORARY TABLE allSongsTemp (%@)", ISMSSong.standardSongColumnSchema];
 					[db executeUpdate:query];
 				}];
 				self.tempSongsCount = 0;
@@ -680,7 +680,7 @@ static NSString *kName_Error = @"error";
                     // Flush songs
                     [db executeUpdate:@"INSERT OR IGNORE INTO genresSongs SELECT * FROM genresSongsTemp"];
                     [db executeUpdate:@"DROP TABLE IF EXISTS genresSongsTemp"];
-                    [db executeUpdate:[NSString stringWithFormat:@"CREATE TEMPORARY TABLE genresSongsTemp (md5 TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
+                    [db executeUpdate:[NSString stringWithFormat:@"CREATE TEMPORARY TABLE genresSongsTemp (md5 TEXT, %@)", ISMSSong.standardSongColumnSchema]];
 					
 					// Flush the records to disk
 					[db executeUpdate:@"INSERT OR IGNORE INTO genresLayout SELECT * FROM genresLayoutTemp"];
@@ -730,7 +730,7 @@ static NSString *kName_Error = @"error";
 				[databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
 					[db executeUpdate:@"INSERT INTO allSongsUnsorted SELECT * FROM allSongsTemp"];
 					[db executeUpdate:@"DROP TABLE IF EXISTS allSongsTemp"];
-					NSString *query = [NSString stringWithFormat:@"CREATE TEMPORARY TABLE allSongsTemp (%@)", [ISMSSong standardSongColumnSchema]];
+					NSString *query = [NSString stringWithFormat:@"CREATE TEMPORARY TABLE allSongsTemp (%@)", ISMSSong.standardSongColumnSchema];
 					[db executeUpdate:query];
 				}];
 				self.tempSongsCount = 0;
@@ -743,7 +743,7 @@ static NSString *kName_Error = @"error";
                     
                     [db executeUpdate:@"INSERT OR IGNORE INTO genresSongs SELECT * FROM genresSongsTemp"];
                     [db executeUpdate:@"DROP TABLE IF EXISTS genresSongsTemp"];
-                    [db executeUpdate:[NSString stringWithFormat:@"CREATE TEMPORARY TABLE genresSongsTemp (md5 TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
+                    [db executeUpdate:[NSString stringWithFormat:@"CREATE TEMPORARY TABLE genresSongsTemp (md5 TEXT, %@)", ISMSSong.standardSongColumnSchema]];
 					
 					[db executeUpdate:@"INSERT INTO genresLayout SELECT * FROM genresLayoutTemp"];
 					[db executeUpdate:@"DROP TABLE IF EXISTS genresLayoutTemp"];

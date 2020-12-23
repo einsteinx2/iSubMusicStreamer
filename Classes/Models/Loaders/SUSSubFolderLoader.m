@@ -89,13 +89,12 @@ LOG_LEVEL_ISUB_DEFAULT
 #pragma mark Private DB Methods
 
 - (FMDatabaseQueue *)dbQueue {
-    return databaseS.albumListCacheDbQueue;
+    return databaseS.serverDbQueue;
 }
 
 - (BOOL)resetDb {
     __block BOOL hadError;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        //Initialize the arrays.
         [db beginTransaction];
         [db executeUpdate:@"DELETE FROM folderAlbum WHERE folderId = ?", self.folderId];
         [db executeUpdate:@"DELETE FROM folderSong WHERE folderId = ?", self.folderId];
@@ -113,7 +112,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (BOOL)insertFolderAlbumIntoFolderCache:(ISMSFolderAlbum *)folderAlbum {
     __block BOOL hadError;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"INSERT INTO folderAlbum (folderId, title, subfolderId, coverArtId, folderArtistId, folderArtistName) VALUES (?, ?, ?, ?, ?, ?)", self.folderId, folderAlbum.title, folderAlbum.folderId, folderAlbum.coverArtId, folderAlbum.folderArtistId, folderAlbum.folderArtistName];
+        [db executeUpdate:@"INSERT INTO folderAlbum (folderId, subfolderId, title, coverArtId, folderArtistId, folderArtistName, tagAlbumName, playCount, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", self.folderId, folderAlbum.folderId, folderAlbum.title, folderAlbum.coverArtId, folderAlbum.folderArtistId, folderAlbum.folderArtistName, folderAlbum.tagAlbumName, @(folderAlbum.playCount), @(folderAlbum.year)];
         
         hadError = db.hadError;
         if (hadError) {
@@ -123,17 +122,17 @@ LOG_LEVEL_ISUB_DEFAULT
     return !hadError;
 }
 
-- (BOOL)insertSongIntoFolderCache:(ISMSSong *)aSong {
+- (BOOL)insertSongIntoFolderCache:(ISMSSong *)song {
     __block BOOL hadError;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO folderSong (folderId, %@) VALUES (?, %@)", [ISMSSong standardSongColumnNames], [ISMSSong standardSongColumnQMarks]], self.folderId, aSong.title, aSong.songId, aSong.artist, aSong.album, aSong.genre, aSong.coverArtId, aSong.path, aSong.suffix, aSong.transcodedSuffix, aSong.duration, aSong.bitRate, aSong.track, aSong.year, aSong.size, aSong.parentId, NSStringFromBOOL(aSong.isVideo), aSong.discNumber];
-        
+        [db executeUpdate:@"INSERT INTO folderSong (folderId, songId) VALUES (?, ?)", self.folderId, song.songId];
         hadError = db.hadError;
         if (hadError) {
             DDLogError(@"[SUSSubFolderLoader] Error inserting song %d: %@", db.lastErrorCode, db.lastErrorMessage);
         }
     }];
-    return !hadError;
+    return !hadError && [song updateMetadataCache];
+    
 }
 
 - (BOOL)insertFolderMetadata {

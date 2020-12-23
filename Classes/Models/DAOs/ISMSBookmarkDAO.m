@@ -19,7 +19,7 @@
 + (void)createBookmarkForSong:(ISMSSong *)song name:(NSString *)name bookmarkPosition:(NSUInteger)position bytePosition:(NSUInteger)bytePosition {
     // TODO: somehow this is saving the incorrect playlist index sometimes
     [databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
-        NSString *query = [NSString stringWithFormat:@"INSERT INTO bookmarks (playlistIndex, name, position, %@, bytes) VALUES (?, ?, ?, %@, ?)", [ISMSSong standardSongColumnNames], [ISMSSong standardSongColumnQMarks]];
+        NSString *query = [NSString stringWithFormat:@"INSERT INTO bookmarks (playlistIndex, name, position, %@, bytes) VALUES (?, ?, ?, %@, ?)", [ISMSSong standardSongColumnNames], ISMSSong.standardSongColumnQMarks];
         [db executeUpdate:query, @(playlistS.currentIndex), name, @(position), song.title, song.songId, song.artist, song.album, song.genre, song.coverArtId, song.path, song.suffix, song.transcodedSuffix, song.duration, song.bitRate, song.track, song.year, song.size, song.parentId, @(song.isVideo), song.discNumber, @(bytePosition)];
 
         NSInteger bookmarkId = [db intForQuery:@"SELECT MAX(bookmarkId) FROM bookmarks"];
@@ -37,7 +37,7 @@
         if ([db tableExists:playlistTable]) {
             [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE %@", playlistTable]];
         }
-        [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE %@ (%@)", playlistTable, [ISMSSong standardSongColumnSchema]]];
+        [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE %@ (%@)", playlistTable, ISMSSong.standardSongColumnSchema]];
         [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ SELECT * FROM currentPlaylistDb.%@", playlistTable, table]];
         
         [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];

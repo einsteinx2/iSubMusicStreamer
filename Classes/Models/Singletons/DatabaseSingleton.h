@@ -20,14 +20,17 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Database)
 @interface DatabaseSingleton : NSObject 
 
-@property (strong) NSString *databaseFolderPath;
+// Per server DB queue, contains only records specific to the active server
+@property (nullable, strong) FMDatabaseQueue *serverDbQueue;
+
+// Shared DB queue, contains data shared between all servers like the lyrics cache
+@property (nullable, strong) FMDatabaseQueue *sharedDbQueue;
 
 @property (nullable, strong) FMDatabaseQueue *allAlbumsDbQueue;
 @property (nullable, strong) FMDatabaseQueue *allSongsDbQueue;
 @property (nullable, strong) FMDatabaseQueue *coverArtCacheDb540Queue;
 @property (nullable, strong) FMDatabaseQueue *coverArtCacheDb320Queue;
 @property (nullable, strong) FMDatabaseQueue *coverArtCacheDb60Queue;
-@property (nullable, strong) FMDatabaseQueue *albumListCacheDbQueue;
 @property (nullable, strong) FMDatabaseQueue *genresDbQueue;
 @property (nullable, strong) FMDatabaseQueue *currentPlaylistDbQueue;
 @property (nullable, strong) FMDatabaseQueue *localPlaylistsDbQueue;

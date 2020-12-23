@@ -311,12 +311,36 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark - Document Folder Paths
 
+- (void)createDirectoryIfNotExists:(NSString *)path {
+    if (![NSFileManager.defaultManager fileExistsAtPath:path]) {
+        NSError *error = nil;
+        [NSFileManager.defaultManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error];
+        if (error) {
+            DDLogError(@"[SavedSettings] Failed to create path %@, %@", path, error.localizedDescription);
+        }
+    }
+}
+
 - (NSString *)documentsPath {
     return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
 }
 
+- (NSString *)applicationSupportPath {
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"iSub"];
+    [self createDirectoryIfNotExists:path];
+    return path;
+}
+
 - (NSString *)databasePath {
-	return [self.documentsPath stringByAppendingPathComponent:@"database"];
+	NSString *path = [self.documentsPath stringByAppendingPathComponent:@"database"];
+    [self createDirectoryIfNotExists:path];
+    return path;
+}
+
+- (NSString *)updatedDatabasePath {
+    NSString *path = [self.applicationSupportPath stringByAppendingPathComponent:@"database"];
+    [self createDirectoryIfNotExists:path];
+    return path;
 }
 
 - (NSString *)cachesPath {
@@ -324,11 +348,15 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (NSString *)songCachePath {
-	return [self.documentsPath stringByAppendingPathComponent:@"songCache"];
+	NSString *path = [self.documentsPath stringByAppendingPathComponent:@"songCache"];
+    [self createDirectoryIfNotExists:path];
+    return path;
 }
 
 - (NSString *)tempCachePath {
-	return [self.documentsPath stringByAppendingPathComponent:@"tempCache"];
+	NSString *path = [self.documentsPath stringByAppendingPathComponent:@"tempCache"];
+    [self createDirectoryIfNotExists:path];
+    return path;
 }
 
 #pragma mark - Root Folders Settings

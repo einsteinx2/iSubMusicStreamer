@@ -104,7 +104,9 @@ NS_SWIFT_NAME(Settings)
 
 // Document Paths
 - (NSString *)documentsPath;
+- (NSString *)applicationSupportPath;
 - (NSString *)databasePath;
+- (NSString *)updatedDatabasePath;
 - (NSString *)cachesPath;
 - (NSString *)songCachePath;
 - (NSString *)tempCachePath;

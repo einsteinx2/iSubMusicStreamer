@@ -886,7 +886,7 @@ LOG_LEVEL_ISUB_DEFAULT
                     [db executeUpdate:@"INSERT INTO localPlaylists (playlist, md5) VALUES (?, ?)", name, name.md5];
                     [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", name.md5, ISMSSong.standardSongColumnSchema]];
                     
-                    [db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
+                    [db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
                     if (db.hadError) { DDLogError(@"[PlaylistsViewController] Err attaching the currentPlaylistDb %d: %@", db.lastErrorCode, db.lastErrorMessage); }
                     [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", name.md5, table]];
                     [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
@@ -921,7 +921,7 @@ LOG_LEVEL_ISUB_DEFAULT
                 [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE playlist%@", name.md5]];
                 [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", name.md5, ISMSSong.standardSongColumnSchema]];
                 
-                [db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
+                [db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
                 if (db.hadError) { DDLogError(@"[PlaylistsViewController] Err attaching the currentPlaylistDb %d: %@", db.lastErrorCode, db.lastErrorMessage); }
                 [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", name.md5, table]];
                 [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
@@ -1081,7 +1081,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			NSString *table = playlistS.isShuffle ? shufTable : currTable;
 						
 			[db executeUpdate:@"DROP TABLE moveTemp"];
-			NSString *query = [NSString stringWithFormat:@"CREATE TABLE moveTemp (%@)", [ISMSSong standardSongColumnSchema]];
+			NSString *query = [NSString stringWithFormat:@"CREATE TABLE moveTemp (%@)", ISMSSong.standardSongColumnSchema];
 			[db executeUpdate:query];
 			
 			if (fromRow < toRow) {

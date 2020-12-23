@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc(ISMSFolderAlbum) class FolderAlbum: NSObject, NSSecureCoding, NSCopying {
+@objc(ISMSFolderAlbum) class FolderAlbum: NSObject, NSCopying {
     static var supportsSecureCoding = true
 
     @objc(folderId) let id: String
@@ -17,29 +17,24 @@ import Foundation
     @objc let parentFolderId: String
     @objc let folderArtistId: String
     @objc let folderArtistName: String
+    @objc let tagAlbumName: String?
+    @objc let playCount: Int
+    @objc let year: Int
     
     @objc var folderArtist: FolderArtist {
         return FolderArtist(id: folderArtistId, name: folderArtistName)
     }
     
-    @objc init(id: String, title: String, coverArtId: String?, parentFolderId: String, folderArtistId: String, folderArtistName: String) {
+    @objc init(id: String, title: String, coverArtId: String?, parentFolderId: String, folderArtistId: String, folderArtistName: String, tagAlbumName: String?, playCount: Int, year: Int) {
         self.id = id
         self.title = title
         self.coverArtId = coverArtId
         self.parentFolderId = parentFolderId
         self.folderArtistId = folderArtistId
         self.folderArtistName = folderArtistName
-        super.init()
-    }
-    
-    @objc init(attributeDict: [String: String]) {
-        self.id = attributeDict["id"]?.clean() ?? ""
-        self.title = attributeDict["title"]?.clean() ?? ""
-        self.coverArtId = attributeDict["coverArt"]?.clean()
-        self.parentFolderId = attributeDict["parent"]?.clean() ?? ""
-        // TODO: Figure out what to do with this artist ID
-        self.folderArtistId = attributeDict["parent"]?.clean() ?? ""
-        self.folderArtistName = attributeDict["artist"]?.clean() ?? ""
+        self.tagAlbumName = tagAlbumName
+        self.playCount = playCount
+        self.year = year
         super.init()
     }
     
@@ -49,8 +44,13 @@ import Foundation
         self.coverArtId = element.attribute("coverArt")?.clean()
         self.parentFolderId = element.attribute("parent")?.clean() ?? ""
         // TODO: Figure out what to do with this artist ID
+        // TODO: Maybe make this optional
         self.folderArtistId = element.attribute("parent")?.clean() ?? ""
+        // TODO: Maybe make this optional
         self.folderArtistName = element.attribute("artist")?.clean() ?? ""
+        self.tagAlbumName = element.attribute("artist")?.clean()
+        self.playCount = Int(element.attribute("playCount") ?? "0") ?? 0
+        self.year = Int(element.attribute("year") ?? "0") ?? 0
         super.init()
     }
     
@@ -61,6 +61,9 @@ import Foundation
         self.parentFolderId = element.attribute("parent")?.clean() ?? ""
         self.folderArtistId = folderArtist.id
         self.folderArtistName = folderArtist.name
+        self.tagAlbumName = element.attribute("artist")?.clean()
+        self.playCount = Int(element.attribute("playCount") ?? "0") ?? 0
+        self.year = Int(element.attribute("year") ?? "0") ?? 0
         super.init()
     }
     
@@ -71,34 +74,18 @@ import Foundation
         self.parentFolderId = result.string(forColumn: "folderId") ?? ""
         self.folderArtistId = result.string(forColumn: "folderArtistId") ?? ""
         self.folderArtistName = result.string(forColumn: "folderArtistName") ?? ""
+        self.tagAlbumName = result.string(forColumn: "tagAlbumName")
+        self.playCount = result.long(forColumn: "playCount")
+        self.year = result.long(forColumn: "year")
         super.init()
-    }
-    
-    @objc required init?(coder: NSCoder) {
-        self.id = coder.decodeObject(forKey: "id") as? String ?? ""
-        self.title = coder.decodeObject(forKey: "title") as? String ?? ""
-        self.coverArtId = coder.decodeObject(forKey: "coverArtId") as? String
-        self.parentFolderId = coder.decodeObject(forKey: "parentFolderId") as? String ?? ""
-        self.folderArtistId = coder.decodeObject(forKey: "folderArtistId") as? String ?? ""
-        self.folderArtistName = coder.decodeObject(forKey: "folderArtistName") as? String ?? ""
-        super.init()
-    }
-    
-    @objc func encode(with coder: NSCoder) {
-        coder.encode(id, forKey: "id")
-        coder.encode(title, forKey: "title")
-        coder.encode(coverArtId, forKey: "coverArtId")
-        coder.encode(parentFolderId, forKey: "parentFolderId")
-        coder.encode(folderArtistId, forKey: "folderArtistId")
-        coder.encode(folderArtistName, forKey: "folderArtistName")
     }
     
     @objc func copy(with zone: NSZone? = nil) -> Any {
-        return FolderAlbum(id: id, title: title, coverArtId: coverArtId, parentFolderId: parentFolderId, folderArtistId: folderArtistId, folderArtistName: folderArtistName)
+        return FolderAlbum(id: id, title: title, coverArtId: coverArtId, parentFolderId: parentFolderId, folderArtistId: folderArtistId, folderArtistName: folderArtistName, tagAlbumName: tagAlbumName, playCount: playCount, year: year)
     }
     
     @objc override var description: String {
-        return "\(super.description): id: \(id) title: \(title) coverArtId: \(coverArtId ?? "") parentFolderId: \(parentFolderId) folderArtistId: \(folderArtistId) folderArtistName: \(folderArtistName)"
+        return "\(super.description): id: \(id), title: \(title), coverArtId: \(coverArtId ?? "nil"), parentFolderId: \(parentFolderId), folderArtistId: \(folderArtistId), folderArtistName: \(folderArtistName), tagAlbumName: \(tagAlbumName ?? "nil"), playCount: \(playCount), year: \(year)"
     }
 }
 

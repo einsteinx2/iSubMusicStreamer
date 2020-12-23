@@ -108,7 +108,7 @@
 #pragma mark Database Methods
 
 - (FMDatabaseQueue *)dbQueue {
-    return databaseS.albumListCacheDbQueue;
+    return databaseS.serverDbQueue;
 }
 
 - (NSString *)tableModifier {

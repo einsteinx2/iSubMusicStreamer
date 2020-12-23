@@ -412,10 +412,11 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    ISMSTagArtist *tagArtist = [self tagArtistAtIndexPath:indexPath];
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
     cell.hideNumberLabel = YES;
     cell.hideCoverArt = NO;
-    cell.hideSecondaryLabel = NO;
+    cell.hideSecondaryLabel = (tagArtist.secondaryLabelText == nil);
     cell.hideDurationLabel = YES;
     [cell updateWithModel:[self tagArtistAtIndexPath:indexPath]];
     return cell;

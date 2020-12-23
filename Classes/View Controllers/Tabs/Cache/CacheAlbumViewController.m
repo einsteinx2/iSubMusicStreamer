@@ -316,7 +316,10 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
                                     coverArtId:coverArtId
                                 parentFolderId:@""
                                 folderArtistId:@""
-                              folderArtistName:self.artistName];
+                              folderArtistName:self.artistName
+                                  tagAlbumName:nil
+                                     playCount:0
+                                          year:0];
 }
 
 - (ISMSSong *)songAtIndexPath:(NSIndexPath *)indexPath {

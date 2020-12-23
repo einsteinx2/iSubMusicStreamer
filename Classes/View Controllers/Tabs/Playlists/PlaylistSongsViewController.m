@@ -318,7 +318,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	NSString *currTableName = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 	NSString *playTableName = [NSString stringWithFormat:@"%@%@", self.isLocalPlaylist ? @"playlist" : @"splaylist", self.md5];
 	[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-		 [db executeUpdate:@"ATTACH DATABASE ? AS ?", [databaseS.databaseFolderPath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
+		 [db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
 		 if ([db hadError]) { DDLogError(@"[PlaylistSongsViewController] Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
 		 
 		 [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ SELECT * FROM %@", currTableName, playTableName]];

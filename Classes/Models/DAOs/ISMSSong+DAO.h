@@ -32,7 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)insertIntoTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue;
 - (BOOL)insertIntoServerPlaylistWithPlaylistId:(NSString *)md5;
-- (BOOL)insertIntoFolderCacheForFolderId:(NSString *)folderId;
 - (BOOL)insertIntoGenreTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue;
 - (BOOL)insertIntoGenreTable:(NSString *)table inDatabase:(FMDatabase *)db;
 - (BOOL)insertIntoCachedSongsTableDbQueue;
@@ -50,9 +49,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)isCurrentPlayingSong;
 
+// Read song from any table by joining against the shared song metadata table
++ (nullable ISMSSong *)songFromDbRow:(NSUInteger)row inTable:(NSString *)table;
+
+// Insert or update the shared song metadata
+- (BOOL)updateMetadataCache;
+
 + (NSString *)standardSongColumnSchema;
 + (NSString *)standardSongColumnNames;
 + (NSString *)standardSongColumnQMarks;
+
++ (NSString *)updatedStandardSongColumnSchema;
++ (NSString *)updatedStandardSongColumnNames;
++ (NSString *)updatedStandardSongColumnQMarks;
 
 @end
 

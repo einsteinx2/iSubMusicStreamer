@@ -15,23 +15,27 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Song)
 @interface ISMSSong : NSObject <ISMSTableCellModel, NSSecureCoding, NSCopying>
 
-@property (nullable, copy) NSString *title;
 @property (nullable, copy) NSString *songId;
-@property (nullable, copy) NSString *parentId;
+@property (nullable, copy) NSString *title;
 @property (nullable, copy) NSString *artist;
 @property (nullable, copy) NSString *album;
 @property (nullable, copy) NSString *genre;
 @property (nullable, copy) NSString *coverArtId;
+@property (nullable, copy) NSString *parentId; // Parent folder
+@property (nullable, copy) NSString *tagArtistId;
+@property (nullable, copy) NSString *tagAlbumId;
 @property (nullable, copy) NSString *path;
 @property (nullable, copy) NSString *suffix;
 @property (nullable, copy) NSString *transcodedSuffix;
 @property (nullable, copy) NSNumber *duration;
 @property (nullable, copy) NSNumber *bitRate;
 @property (nullable, copy) NSNumber *track;
+@property (nullable, copy) NSNumber *discNumber;
 @property (nullable, copy) NSNumber *year;
 @property (nullable, copy) NSNumber *size;
-@property (nullable, copy) NSNumber *discNumber;
 @property BOOL isVideo;
+
+
 
 - (nullable NSString *)localSuffix;
 - (nullable NSString *)localPath;

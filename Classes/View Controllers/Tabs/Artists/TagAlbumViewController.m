@@ -1,12 +1,12 @@
 //
-//  TagArtistViewController.m
+//  TagAlbumViewController.m
 //  iSub
 //
-//  Created by Benjamin Baron on 12/22/20.
+//  Created by Benjamin Baron on 12/23/20.
 //  Copyright © 2020 Ben Baron. All rights reserved.
 //
 
-#import "TagArtistViewController.h"
+#import "TagAlbumViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
@@ -14,25 +14,25 @@
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
-#import "SUSTagArtistDAO.h"
+#import "SUSTagAlbumDAO.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
-#import "TagAlbumViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 
-@implementation TagArtistViewController
+@implementation TagAlbumViewController
 
 #pragma mark Lifecycle
 
-- (instancetype)initWithTagArtist:(ISMSTagArtist *)tagArtist {
-    if (tagArtist == nil) return nil;
+- (instancetype)initWithTagAlbum:(ISMSTagAlbum *)tagAlbum {
+    if (tagAlbum == nil) return nil;
     
     if (self = [super init]) {
-        self.title = tagArtist.name;
-        self.tagArtist = tagArtist;
+        self.sectionInfo = nil;
+        self.title = tagAlbum.name;
+        self.tagAlbum = tagAlbum;
         
-        self.dataModel = [[SUSTagArtistDAO alloc] initWithDelegate:self andTagArtist:tagArtist];
+        self.dataModel = [[SUSTagAlbumDAO alloc] initWithDelegate:self andTagAlbum:tagAlbum];
         
         if (self.dataModel.hasLoaded) {
             [self.tableView reloadData];
@@ -50,7 +50,7 @@
     [super viewDidLoad];
                     
     // Add the pull to refresh view
-    __weak TagArtistViewController *weakSelf = self;
+    __weak TagAlbumViewController *weakSelf = self;
     self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
         [viewObjectsS showAlbumLoadingScreen:weakSelf.view sender:weakSelf];
         [weakSelf.dataModel startLoad];
@@ -169,30 +169,61 @@
 
 #pragma mark Table view methods
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
-    return self.dataModel.albumsCount;
+// Following 2 methods handle the right side index
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView  {
+    NSMutableArray *indexes = [[NSMutableArray alloc] init];
+    for (int i = 0; i < self.sectionInfo.count; i++)
+    {
+        [indexes addObject:[[self.sectionInfo objectAtIndexSafe:i] firstObject]];
+    }
+    return indexes;
 }
 
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index  {
+    NSUInteger row = [[[self.sectionInfo objectAtIndexSafe:index] objectAtIndexSafe:1] intValue];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+    [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    
+    return -1;
+}
+
+// Customize the number of rows in the table view.
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
+    return self.dataModel.songsCount;
+}
+
+// Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
     cell.hideSecondaryLabel = NO;
-    cell.hideNumberLabel = YES;
-    cell.hideCoverArt = NO;
-    cell.hideDurationLabel = YES;
-    [cell updateWithModel:[self.dataModel tagAlbumForTableViewRow:indexPath.row]];
+    cell.hideCoverArt = YES;
+    cell.hideDurationLabel = NO;
+    ISMSSong *song = [self.dataModel songForTableViewRow:indexPath.row];
+    [cell updateWithModel:song];
+    if (song.track == nil || song.track.intValue == 0) {
+        cell.hideNumberLabel = YES;
+    } else {
+        cell.hideNumberLabel = NO;
+        cell.number = song.track.intValue;
+    }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (!indexPath) return;
     
-    ISMSTagAlbum *tagAlbum = [self.dataModel tagAlbumForTableViewRow:indexPath.row];
-    TagAlbumViewController *controller = [[TagAlbumViewController alloc] initWithTagAlbum:tagAlbum];
-    [self pushViewControllerCustom:controller];
+    ISMSSong *playedSong = [self.dataModel playSongAtTableViewRow:indexPath.row];
+    if (!playedSong.isVideo) {
+        [self showPlayer];
+    }
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel tagAlbumForTableViewRow:indexPath.row]];
+    ISMSSong *song = [self.dataModel songForTableViewRow:indexPath.row];
+    if (!song.isVideo) {
+        return [SwipeAction downloadAndQueueConfigWithModel:song];
+    }
+    return nil;
 }
 
 #pragma mark - ISMSLoader delegate
