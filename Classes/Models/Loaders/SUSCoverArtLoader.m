@@ -30,7 +30,7 @@ static void initialize_navigationBarImages() {
 #define ISMSNotification_CoverArtFinishedInternal @"ISMS cover art finished internal notification"
 #define ISMSNotification_CoverArtFailedInternal @"ISMS cover art failed internal notification"
 
-#pragma mark - Lifecycle
+#pragma mark Lifecycle
 
 - (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate>*)delegate coverArtId:(NSString *)artId isLarge:(BOOL)large {
 	if ((self = [super initWithDelegate:delegate])) {
@@ -62,7 +62,7 @@ static void initialize_navigationBarImages() {
     return SUSLoaderType_CoverArt;
 }
 
-#pragma mark - Properties
+#pragma mark Properties
 
 - (FMDatabaseQueue *)dbQueue {
 	if (self.isLarge) {
@@ -76,7 +76,7 @@ static void initialize_navigationBarImages() {
 	return [self.dbQueue stringForQuery:@"SELECT id FROM coverArtCache WHERE id = ?", self.coverArtId.md5] ? YES : NO;
 }
 
-#pragma mark - Data loading
+#pragma mark Data loading
 
 - (BOOL)downloadArtIfNotExists {
 	if (self.coverArtId) {
@@ -147,7 +147,7 @@ static void initialize_navigationBarImages() {
     [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CoverArtFinishedInternal object:self.coverArtId];
 }
 
-#pragma mark - Internal Notifications
+#pragma mark Internal Notifications
 
 - (void)coverArtDownloadFinished:(NSNotification *)notification {
     if ([notification.object isKindOfClass:NSString.class]) {

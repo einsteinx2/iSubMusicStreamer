@@ -25,6 +25,10 @@
 		530A167D2592767400E9294E /* SearchXMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A167B2592767400E9294E /* SearchXMLParser.swift */; };
 		530A167F259277E700E9294E /* SearchAllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A167E259277E700E9294E /* SearchAllViewController.swift */; };
 		530A1680259277E700E9294E /* SearchAllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A167E259277E700E9294E /* SearchAllViewController.swift */; };
+		530A168E259299C800E9294E /* TagArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A168D259299C800E9294E /* TagArtist.swift */; };
+		530A168F259299C800E9294E /* TagArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A168D259299C800E9294E /* TagArtist.swift */; };
+		530A16942592A94C00E9294E /* SUSArtistsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A169125929C6900E9294E /* SUSArtistsLoader.m */; };
+		530A16952592A94C00E9294E /* SUSArtistsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A169125929C6900E9294E /* SUSArtistsLoader.m */; };
 		530B417211B607A200743C09 /* CacheViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530B417011B607A200743C09 /* CacheViewController.m */; };
 		530B417311B607A200743C09 /* CacheViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 530B417111B607A200743C09 /* CacheViewController.xib */; };
 		531D3A01255AB5F6000CB0DF /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 531D39FF255AB5F6000CB0DF /* MainWindow.xib */; };
@@ -599,6 +603,9 @@
 		530A1678259255D200E9294E /* FolderAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAlbum.swift; sourceTree = "<group>"; };
 		530A167B2592767400E9294E /* SearchXMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchXMLParser.swift; sourceTree = "<group>"; };
 		530A167E259277E700E9294E /* SearchAllViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAllViewController.swift; sourceTree = "<group>"; };
+		530A168D259299C800E9294E /* TagArtist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagArtist.swift; sourceTree = "<group>"; };
+		530A169025929C6900E9294E /* SUSArtistsLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SUSArtistsLoader.h; sourceTree = "<group>"; };
+		530A169125929C6900E9294E /* SUSArtistsLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SUSArtistsLoader.m; sourceTree = "<group>"; };
 		530B416F11B607A200743C09 /* CacheViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CacheViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		530B417011B607A200743C09 /* CacheViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CacheViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		530B417111B607A200743C09 /* CacheViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CacheViewController.xib; sourceTree = "<group>"; };
@@ -1590,6 +1597,7 @@
 				53FE36481EA961720058B925 /* ISMSChatMessage.m */,
 				530A16722592468C00E9294E /* FolderArtist.swift */,
 				530A1678259255D200E9294E /* FolderAlbum.swift */,
+				530A168D259299C800E9294E /* TagArtist.swift */,
 				53FE366A1EA961720058B925 /* ISMSSong.h */,
 				53FE366B1EA961720058B925 /* ISMSSong.m */,
 			);
@@ -1632,6 +1640,8 @@
 				53FE36C61EA961720058B925 /* SUSRootFoldersLoader.m */,
 				53FE36C71EA961720058B925 /* SUSScrobbleLoader.h */,
 				53FE36C81EA961720058B925 /* SUSScrobbleLoader.m */,
+				530A169025929C6900E9294E /* SUSArtistsLoader.h */,
+				530A169125929C6900E9294E /* SUSArtistsLoader.m */,
 			);
 			path = Loaders;
 			sourceTree = "<group>";
@@ -2319,6 +2329,7 @@
 				539148D02559EB1D004AAC3F /* FlurryEmpty.m in Sources */,
 				53FE36E31EA961720058B925 /* AudioEngine.m in Sources */,
 				53EA2DD4257D6A2C0003F38D /* UIDevice+Info.m in Sources */,
+				530A16952592A94C00E9294E /* SUSArtistsLoader.m in Sources */,
 				533295F0255EEFE50027C51A /* FMDatabase.m in Sources */,
 				53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
 				534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
@@ -2348,6 +2359,7 @@
 				5398F26D11DA61DA00007870 /* SettingsTabViewController.m in Sources */,
 				53FE36E61EA961720058B925 /* BassEffectDAO.m in Sources */,
 				533295F2255EEFE50027C51A /* FMDatabase+InMemoryOnDiskIO.m in Sources */,
+				530A168E259299C800E9294E /* TagArtist.swift in Sources */,
 				53FE34FE1EA961540058B925 /* NSString+CompareWithoutIndefiniteArticles.m in Sources */,
 				53FE37AF1EA961720058B925 /* SUSNowPlayingDAO.m in Sources */,
 				53FE37D31EA961720058B925 /* SUSSubFolderDAO.m in Sources */,
@@ -2521,6 +2533,7 @@
 				53EA2DE3257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
 				53FE35C91EA961540058B925 /* EX2Dispatch.m in Sources */,
 				53FE37A51EA961720058B925 /* SUSCoverArtDAO.m in Sources */,
+				530A16942592A94C00E9294E /* SUSArtistsLoader.m in Sources */,
 				534B20EA256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
 				53FE67A7256DD0F00015FC83 /* GCDWebServerFileRequest.m in Sources */,
 				5347A1E5256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */,
@@ -2550,6 +2563,7 @@
 				53FE36E81EA961720058B925 /* BassEffectDAO.m in Sources */,
 				53FE35001EA961540058B925 /* NSString+CompareWithoutIndefiniteArticles.m in Sources */,
 				53FE67A3256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m in Sources */,
+				530A168F259299C800E9294E /* TagArtist.swift in Sources */,
 				53FE37B11EA961720058B925 /* SUSNowPlayingDAO.m in Sources */,
 				53246AB4256C918500E11EC4 /* LyricsViewController.swift in Sources */,
 				53FE37D51EA961720058B925 /* SUSSubFolderDAO.m in Sources */,

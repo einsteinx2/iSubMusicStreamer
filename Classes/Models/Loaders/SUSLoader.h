@@ -25,7 +25,8 @@ typedef enum {
     SUSLoaderType_QuickAlbums    = 12,
     SUSLoaderType_DropdownFolder = 13,
     SUSLoaderType_ServerShuffle  = 14,
-    SUSLoaderType_Scrobble       = 15
+    SUSLoaderType_Scrobble       = 15,
+    SUSLoaderType_Artists        = 16
 } SUSLoaderType;
 
 @class SUSLoader;

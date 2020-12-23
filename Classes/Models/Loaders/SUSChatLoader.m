@@ -14,13 +14,9 @@
 
 @implementation SUSChatLoader
 
-#pragma mark - Lifecycle
-
 - (SUSLoaderType)type {
     return SUSLoaderType_Chat;
 }
-
-#pragma mark - Loader Methods
 
 - (NSURLRequest *)createRequest {
     return [NSMutableURLRequest requestWithSUSAction:@"getChatMessages" parameters:nil];

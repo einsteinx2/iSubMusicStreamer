@@ -58,11 +58,11 @@ import Foundation
     }
     
     @objc init(result: FMResultSet) {
-        self.id = result.string(forColumn: "albumId") ?? ""
+        self.id = result.string(forColumn: "subfolderId") ?? ""
         self.title = result.string(forColumn: "title") ?? ""
         self.coverArtId = result.string(forColumn: "coverArtId")
-        self.folderArtistId = result.string(forColumn: "artistId") ?? ""
-        self.folderArtistName = result.string(forColumn: "artistName") ?? ""
+        self.folderArtistId = result.string(forColumn: "folderArtistId") ?? ""
+        self.folderArtistName = result.string(forColumn: "folderArtistName") ?? ""
         super.init()
     }
     

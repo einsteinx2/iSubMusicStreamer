@@ -15,13 +15,9 @@
 
 @implementation SUSNowPlayingLoader
 
-#pragma mark - Lifecycle
-
 - (SUSLoaderType)type {
     return SUSLoaderType_NowPlaying;
 }
-
-#pragma mark - Loader Methods
 
 - (NSURLRequest *)createRequest {
 	return [NSMutableURLRequest requestWithSUSAction:@"getNowPlaying" parameters:nil];

@@ -264,10 +264,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	__block BOOL hadError;
 	[databaseS.albumListCacheDbQueue inDatabase:^(FMDatabase *db)
 	{
-		[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO songsCache (folderId, %@) VALUES (?, %@)", [ISMSSong standardSongColumnNames], [ISMSSong standardSongColumnQMarks]], [folderId md5], self.title, self.songId, self.artist, self.album, self.genre, self.coverArtId, self.path, self.suffix, self.transcodedSuffix, self.duration, self.bitRate, self.track, self.year, self.size, self.parentId, NSStringFromBOOL(self.isVideo), self.discNumber];
-        
-        DDLogInfo(@"[ISMSSong+DAO] Added to songsCache with folderCache: %@", self.discNumber);
-
+		[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO folderSong (folderId, %@) VALUES (?, %@)", [ISMSSong standardSongColumnNames], [ISMSSong standardSongColumnQMarks]], folderId, self.title, self.songId, self.artist, self.album, self.genre, self.coverArtId, self.path, self.suffix, self.transcodedSuffix, self.duration, self.bitRate, self.track, self.year, self.size, self.parentId, NSStringFromBOOL(self.isVideo), self.discNumber];
 		
 		hadError = [db hadError];
 		if (hadError)

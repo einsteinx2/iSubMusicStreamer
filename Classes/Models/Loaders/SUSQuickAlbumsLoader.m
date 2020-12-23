@@ -16,13 +16,9 @@
 
 @implementation SUSQuickAlbumsLoader
 
-#pragma mark - Lifecycle
-
 - (SUSLoaderType)type {
     return SUSLoaderType_QuickAlbums;
 }
-
-#pragma mark - Loader Methods
 
 - (NSURLRequest *)createRequest {
 	NSDictionary *parameters = @{@"size":@"20", @"type":n2N(self.modifier), @"offset":[NSString stringWithFormat:@"%lu", (unsigned long)self.offset]};

@@ -113,9 +113,8 @@ LOG_LEVEL_ISUB_DEFAULT
             size += [attr fileSize];
         }
         
-        DDLogInfo(@"[CacheSingleton] Total cache size was found to be: %llu", size);
+        DDLogVerbose(@"[CacheSingleton] Total cache size was found to be: %llu", size);
         self->_cacheSize = size;
-        
     }];
 //	unsigned long long size = 0;
 //	NSFileManager *fileManager = NSFileManager.defaultManager;

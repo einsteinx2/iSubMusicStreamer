@@ -21,7 +21,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 @implementation SUSSubFolderLoader
 
-#pragma mark - Loader Methods
+#pragma mark Loader Methods
 
 - (SUSLoaderType)type {
     return SUSLoaderType_SubFolders;
@@ -44,16 +44,16 @@ LOG_LEVEL_ISUB_DEFAULT
             [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
         } else {
             [self resetDb];
-            self.folderAlbumsCount = 0;
-            self.songsCount = 0;
-            self.folderLength = 0;
+            self.subfolderCount = 0;
+            self.songCount = 0;
+            self.duration = 0;
             
-            NSMutableArray *folderAlbums = [[NSMutableArray alloc] initWithCapacity:0];
+            NSMutableArray *subfolders = [[NSMutableArray alloc] initWithCapacity:0];
             [root iterate:@"directory.child" usingBlock: ^(RXMLElement *e) {
                 if ([[e attribute:@"isDir"] boolValue]) {
                     ISMSFolderAlbum *folderAlbum = [[ISMSFolderAlbum alloc] initWithElement:e folderArtist:self.folderArtist];
                     if (![folderAlbum.title isEqualToString:@".AppleDouble"]) {
-                        [folderAlbums addObject:folderAlbum];
+                        [subfolders addObject:folderAlbum];
                     }
                 } else {
                     ISMSSong *aSong = [[ISMSSong alloc] initWithRXMLElement:e];
@@ -61,26 +61,24 @@ LOG_LEVEL_ISUB_DEFAULT
                         // Fix for pdfs showing in directory listing
                         if (![aSong.suffix.lowercaseString isEqualToString:@"pdf"]) {
                             [self insertSongIntoFolderCache:aSong];
-                            self.songsCount++;
-                            self.folderLength += [aSong.duration intValue];
+                            self.songCount++;
+                            self.duration += aSong.duration.intValue;
                         }
                     }
                 }
             }];
             
             // Hack for Subsonic 4.7 breaking alphabetical order
-            [folderAlbums sortUsingComparator:^NSComparisonResult(ISMSFolderAlbum *obj1, ISMSFolderAlbum *obj2) {
+            [subfolders sortUsingComparator:^NSComparisonResult(ISMSFolderAlbum *obj1, ISMSFolderAlbum *obj2) {
                 return [obj1.title caseInsensitiveCompareWithoutIndefiniteArticles:obj2.title];
             }];
-            for (ISMSFolderAlbum *folderAlbum in folderAlbums) {
+            for (ISMSFolderAlbum *folderAlbum in subfolders) {
                 [self insertFolderAlbumIntoFolderCache:folderAlbum];
             }
-            self.folderAlbumsCount = folderAlbums.count;
+            self.subfolderCount = subfolders.count;
             //
             
-            [self insertFolderAlbumsCount];
-            [self insertSongsCount];
-            [self insertFolderLength];
+            [self insertFolderMetadata];
             
             // Notify the delegate that the loading is finished
             [self informDelegateLoadingFinished];
@@ -88,7 +86,7 @@ LOG_LEVEL_ISUB_DEFAULT
     }
 }
 
-#pragma mark - Private DB Methods
+#pragma mark Private DB Methods
 
 - (FMDatabaseQueue *)dbQueue {
     return databaseS.albumListCacheDbQueue;
@@ -99,17 +97,14 @@ LOG_LEVEL_ISUB_DEFAULT
     [self.dbQueue inDatabase:^(FMDatabase *db) {
         //Initialize the arrays.
         [db beginTransaction];
-        NSString *md5 = self.folderId.md5;
-        [db executeUpdate:@"DELETE FROM albumsCache WHERE folderId = ?", md5];
-        [db executeUpdate:@"DELETE FROM songsCache WHERE folderId = ?", md5];
-        [db executeUpdate:@"DELETE FROM albumsCacheCount WHERE folderId = ?", md5];
-        [db executeUpdate:@"DELETE FROM songsCacheCount WHERE folderId = ?", md5];
-        [db executeUpdate:@"DELETE FROM folderLength WHERE folderId = ?", md5];
+        [db executeUpdate:@"DELETE FROM folderAlbum WHERE folderId = ?", self.folderId];
+        [db executeUpdate:@"DELETE FROM folderSong WHERE folderId = ?", self.folderId];
+        [db executeUpdate:@"DELETE FROM folderMetadata WHERE folderId = ?", self.folderId];
         [db commit];
         
         hadError = db.hadError;
         if (hadError) {
-            DDLogError(@"[SUSSubFolderLoader] Err %d: %@", db.lastErrorCode, db.lastErrorMessage);
+            DDLogError(@"[SUSSubFolderLoader] Error resetting subfolder cache tables %d: %@", db.lastErrorCode, db.lastErrorMessage);
         }
     }];
     return !hadError;
@@ -118,11 +113,11 @@ LOG_LEVEL_ISUB_DEFAULT
 - (BOOL)insertFolderAlbumIntoFolderCache:(ISMSFolderAlbum *)folderAlbum {
     __block BOOL hadError;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"INSERT INTO albumsCache (folderId, title, albumId, coverArtId, artistName, artistId) VALUES (?, ?, ?, ?, ?, ?)", self.folderId.md5, folderAlbum.title, folderAlbum.folderId, folderAlbum.coverArtId, folderAlbum.folderArtistName, folderAlbum.folderArtistId];
+        [db executeUpdate:@"INSERT INTO folderAlbum (folderId, title, subfolderId, coverArtId, folderArtistId, folderArtistName) VALUES (?, ?, ?, ?, ?, ?)", self.folderId, folderAlbum.title, folderAlbum.folderId, folderAlbum.coverArtId, folderAlbum.folderArtistId, folderAlbum.folderArtistName];
         
         hadError = db.hadError;
         if (hadError) {
-            DDLogError(@"[SUSSubFolderLoader] Err %d: %@", db.lastErrorCode, db.lastErrorMessage);
+            DDLogError(@"[SUSSubFolderLoader] Error inserting folder %d: %@", db.lastErrorCode, db.lastErrorMessage);
         }
     }];
     return !hadError;
@@ -131,50 +126,24 @@ LOG_LEVEL_ISUB_DEFAULT
 - (BOOL)insertSongIntoFolderCache:(ISMSSong *)aSong {
     __block BOOL hadError;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO songsCache (folderId, %@) VALUES (?, %@)", [ISMSSong standardSongColumnNames], [ISMSSong standardSongColumnQMarks]], self.folderId.md5, aSong.title, aSong.songId, aSong.artist, aSong.album, aSong.genre, aSong.coverArtId, aSong.path, aSong.suffix, aSong.transcodedSuffix, aSong.duration, aSong.bitRate, aSong.track, aSong.year, aSong.size, aSong.parentId, NSStringFromBOOL(aSong.isVideo), aSong.discNumber];
+        [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO folderSong (folderId, %@) VALUES (?, %@)", [ISMSSong standardSongColumnNames], [ISMSSong standardSongColumnQMarks]], self.folderId, aSong.title, aSong.songId, aSong.artist, aSong.album, aSong.genre, aSong.coverArtId, aSong.path, aSong.suffix, aSong.transcodedSuffix, aSong.duration, aSong.bitRate, aSong.track, aSong.year, aSong.size, aSong.parentId, NSStringFromBOOL(aSong.isVideo), aSong.discNumber];
         
         hadError = db.hadError;
         if (hadError) {
-            DDLogError(@"[SUSSubFolderLoader] Err inserting song %d: %@", db.lastErrorCode, db.lastErrorMessage);
+            DDLogError(@"[SUSSubFolderLoader] Error inserting song %d: %@", db.lastErrorCode, db.lastErrorMessage);
         }
     }];
     return !hadError;
 }
 
-- (BOOL)insertFolderAlbumsCount {
+- (BOOL)insertFolderMetadata {
     __block BOOL hadError;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"INSERT INTO albumsCacheCount (folderId, count) VALUES (?, ?)", self.folderId.md5, @(self.folderAlbumsCount)];
+        [db executeUpdate:@"INSERT INTO folderMetadata (folderId, subfolderCount, songCount, duration) VALUES (?, ?, ?, ?)", self.folderId, @(self.subfolderCount), @(self.songCount), @(self.duration)];
         
         hadError = db.hadError;
         if (hadError) {
-            DDLogError(@"[SUSSubFolderLoader] Err inserting album count %d: %@", db.lastErrorCode, db.lastErrorMessage);
-        }
-    }];
-    return !hadError;
-}
-
-- (BOOL)insertSongsCount {
-    __block BOOL hadError;
-    [self.dbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"INSERT INTO songsCacheCount (folderId, count) VALUES (?, ?)", self.folderId.md5, @(self.songsCount)];
-        
-        hadError = db.hadError;
-        if (hadError) {
-            DDLogError(@"[SUSSubFolderLoader] Err inserting song count %d: %@", db.lastErrorCode, db.lastErrorMessage);
-        }
-    }];
-    return !hadError;
-}
-
-- (BOOL)insertFolderLength {
-    __block BOOL hadError;
-    [self.dbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"INSERT INTO folderLength (folderId, length) VALUES (?, ?)", self.folderId.md5, @(self.folderLength)];
-        
-        hadError = db.hadError;
-        if (hadError) {
-            DDLogError(@"[SUSSubFolderLoader] Err inserting folder length %d: %@", db.lastErrorCode, db.lastErrorMessage);
+            DDLogError(@"[SUSSubFolderLoader] Error inserting folder metadata %d: %@", db.lastErrorCode, db.lastErrorMessage);
         }
     }];
     return !hadError;

@@ -321,25 +321,7 @@
 	_indexCounts = nil;
 	
 	// Force all subfolders to reload
-	[self.dbQueue inDatabase:^(FMDatabase *db) {
-		[db executeUpdate:@"DROP TABLE IF EXISTS albumListCache"];
-		[db executeUpdate:@"DROP TABLE IF EXISTS albumsCache"];
-        [db executeUpdate:@"DROP TABLE IF EXISTS songsCache"];
-		[db executeUpdate:@"DROP TABLE IF EXISTS albumsCacheCount"];
-		[db executeUpdate:@"DROP TABLE IF EXISTS songsCacheCount"];
-		[db executeUpdate:@"DROP TABLE IF EXISTS folderLength"];
-		[db executeUpdate:@"CREATE TABLE albumListCache (id TEXT PRIMARY KEY, data BLOB)"];
-		[db executeUpdate:@"CREATE TABLE albumsCache (folderId TEXT, title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
-		[db executeUpdate:@"CREATE INDEX albumsCache_folderId ON albumsCache (folderId)"];
-		[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE songsCache (folderId TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
-		[db executeUpdate:@"CREATE INDEX songsCache_folderId ON songsCache (folderId)"];
-		[db executeUpdate:@"CREATE TABLE albumsCacheCount (folderId TEXT, count INTEGER)"];
-		[db executeUpdate:@"CREATE INDEX albumsCacheCount_folderId ON albumsCacheCount (folderId)"];
-		[db executeUpdate:@"CREATE TABLE songsCacheCount (folderId TEXT, count INTEGER)"];
-		[db executeUpdate:@"CREATE INDEX songsCacheCount_folderId ON songsCacheCount (folderId)"];
-		[db executeUpdate:@"CREATE TABLE folderLength (folderId TEXT, length INTEGER)"];
-		[db executeUpdate:@"CREATE INDEX folderLength_folderId ON folderLength (folderId)"];
-	}];
+    [databaseS resetFolderCache];
 	
 	if ([self.delegate respondsToSelector:@selector(loadingFinished:)]) {
 		[self.delegate loadingFinished:nil];

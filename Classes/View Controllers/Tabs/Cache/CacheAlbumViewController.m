@@ -128,35 +128,36 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
     self.tableView.tableHeaderView = self.tableView.tableHeaderView;
     
     // Create the section index
-    if (self.albums.count > 10) {
-        __block NSArray *secInfo = nil;
-        [databaseS.albumListCacheDbQueue inDatabase:^(FMDatabase *db) {
-            [db executeUpdate:@"DROP TABLE IF EXISTS albumIndex"];
-            [db executeUpdate:@"CREATE TEMP TABLE albumIndex (album TEXT)"];
-            
-            [db beginTransaction];
-            for (NSNumber *rowId in self.albums) {
-                @autoreleasepool {
-                    [db executeUpdate:@"INSERT INTO albumIndex SELECT title FROM albumsCache WHERE rowid = ?", rowId];
-                }
-            }
-            [db commit];
-            
-            secInfo = [databaseS sectionInfoFromTable:@"albumIndex" inDatabase:db withColumn:@"album"];
-            [db executeUpdate:@"DROP TABLE IF EXISTS albumIndex"];
-        }];
-        
-        if (secInfo) {
-            self.sectionInfo = [NSArray arrayWithArray:secInfo];
-            if ([self.sectionInfo count] < 5) {
-                self.sectionInfo = nil;
-            } else {
-                [self.tableView reloadData];
-            }
-        } else {
-            self.sectionInfo = nil;
-        }
-    }
+    // TODO: This is not correct for cached albums, queries need to be rewritten
+//    if (self.albums.count > 10) {
+//        __block NSArray *secInfo = nil;
+//        [databaseS.albumListCacheDbQueue inDatabase:^(FMDatabase *db) {
+//            [db executeUpdate:@"DROP TABLE IF EXISTS albumIndex"];
+//            [db executeUpdate:@"CREATE TEMP TABLE albumIndex (album TEXT)"];
+//
+//            [db beginTransaction];
+//            for (NSNumber *rowId in self.albums) {
+//                @autoreleasepool {
+//                    [db executeUpdate:@"INSERT INTO albumIndex SELECT title FROM folderAlbum WHERE rowid = ?", rowId];
+//                }
+//            }
+//            [db commit];
+//
+//            secInfo = [databaseS sectionInfoFromTable:@"albumIndex" inDatabase:db withColumn:@"album"];
+//            [db executeUpdate:@"DROP TABLE IF EXISTS albumIndex"];
+//        }];
+//
+//        if (secInfo) {
+//            self.sectionInfo = [NSArray arrayWithArray:secInfo];
+//            if ([self.sectionInfo count] < 5) {
+//                self.sectionInfo = nil;
+//            } else {
+//                [self.tableView reloadData];
+//            }
+//        } else {
+//            self.sectionInfo = nil;
+//        }
+//    }
 }
 
 - (void)cachedSongDeleted {

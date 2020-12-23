@@ -226,9 +226,9 @@ static BOOL _isAllSongsLoading = NO;
 		[self sendArtistNotification:self.currentFolderArtist.name];
 	} else {
         if (self.iteration == 0) {
-			self.currentFolderAlbum = [databaseS folderAlbumFromDbRow:self.currentRow inTable:@"allAlbumsUnsorted" inDatabaseQueue:databaseS.allAlbumsDbQueue];
+			self.currentFolderAlbum = [self folderAlbumFromDbRow:self.currentRow inTable:@"allAlbumsUnsorted" inDatabaseQueue:databaseS.allAlbumsDbQueue];
         } else {
-			self.currentFolderAlbum = [databaseS folderAlbumFromDbRow:self.currentRow inTable:[NSString stringWithFormat:@"subalbums%ld", (long)self.iteration] inDatabaseQueue:databaseS.allAlbumsDbQueue];
+			self.currentFolderAlbum = [self folderAlbumFromDbRow:self.currentRow inTable:[NSString stringWithFormat:@"subalbums%ld", (long)self.iteration] inDatabaseQueue:databaseS.allAlbumsDbQueue];
         }
 		
         self.currentFolderArtist = [[ISMSFolderArtist alloc] initWithId:self.currentFolderAlbum.folderArtistName name:self.currentFolderAlbum.folderArtistId];
@@ -476,6 +476,30 @@ static BOOL _isAllSongsLoading = NO;
 	}
 }
 
+- (BOOL)insertFolderAlbum:(ISMSFolderAlbum *)folderAlbum intoTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue {
+    __block BOOL success;
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ (title, albumId, coverArtId, artistName, artistId) VALUES (?, ?, ?, ?, ?)", table], folderAlbum.title, folderAlbum.folderId, folderAlbum.coverArtId, folderAlbum.folderArtistName, folderAlbum.folderArtistId];
+        success = !db.hadError;
+    }];
+    return success;
+}
+
+- (ISMSFolderAlbum *)folderAlbumFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue {
+    row++;
+    __block ISMSFolderAlbum *folderAlbum = nil;
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE ROWID = %lu", table, (unsigned long)row]];
+        if ([db hadError]) {
+            //DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+        } else if ([result next]) {
+            folderAlbum = [[ISMSFolderAlbum alloc] initWithResult:result];
+        }
+        [result close];
+    }];
+    return folderAlbum;
+}
+
 #pragma mark Connection Delegate
 
 static NSString *kName_Directory = @"directory";
@@ -505,7 +529,7 @@ static NSString *kName_Error = @"error";
                             if (![folderAlbum.title isEqualToString:@".AppleDouble"]) {
                                 if (self.iteration == -1) {
                                     // Add the album to the allAlbums table
-                                    [databaseS insertFolderAlbum:folderAlbum intoTable:@"allAlbumsTemp" inDatabaseQueue:databaseS.allAlbumsDbQueue];
+                                    [self insertFolderAlbum:folderAlbum intoTable:@"allAlbumsTemp" inDatabaseQueue:databaseS.allAlbumsDbQueue];
                                     self.tempAlbumsCount++;
                                     self.totalAlbumsProcessed++;
                                     
@@ -520,7 +544,7 @@ static NSString *kName_Error = @"error";
                                     }
                                 } else {
                                     //Add album object to the subalbums table to be processed in the next iteration
-                                    [databaseS insertFolderAlbum:folderAlbum intoTable:[NSString stringWithFormat:@"subalbums%ld", (long)(self.iteration + 1)] inDatabaseQueue:databaseS.allAlbumsDbQueue];
+                                    [self insertFolderAlbum:folderAlbum intoTable:[NSString stringWithFormat:@"subalbums%ld", (long)(self.iteration + 1)] inDatabaseQueue:databaseS.allAlbumsDbQueue];
                                 }
                             }
                             

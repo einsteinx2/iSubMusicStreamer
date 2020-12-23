@@ -15,7 +15,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FMDatabase, FMDatabaseQueue, ISMSFolderArtist, ISMSFolderAlbum, ISMSSong, SUSQueueAllLoader;
+@class FMDatabase, FMDatabaseQueue, ISMSFolderArtist, ISMSSong, SUSQueueAllLoader;
 
 NS_SWIFT_NAME(Database)
 @interface DatabaseSingleton : NSObject 
@@ -57,18 +57,11 @@ NS_SWIFT_NAME(Database)
 - (void)createServerPlaylistTable:(NSString *)md5;
 - (void)removeServerPlaylistTable:(NSString *)md5;
 
-- (nullable ISMSFolderAlbum *)folderAlbumFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue;
-- (nullable ISMSFolderAlbum *)folderAlbumFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabase:(FMDatabase *)db;
-- (BOOL)insertFolderAlbumIntoFolderCache:(ISMSFolderAlbum *)folderAlbum forId:(NSString *)folderId;
-- (BOOL)insertFolderAlbum:(ISMSFolderAlbum *)folderAlbum intoTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue;
-- (BOOL)insertFolderAlbum:(ISMSFolderAlbum *)folderAlbum intoTable:(NSString *)table inDatabase:(FMDatabase *)db;
-
 - (NSUInteger)serverPlaylistCount:(NSString *)md5;
 
 - (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column;
 - (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column;
 
-//- (void)queueSong:(ISMSSong *)aSong;
 - (void)queueAllSongs:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;
 - (void)downloadAllSongs:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;
 - (void)playAllSongs:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;

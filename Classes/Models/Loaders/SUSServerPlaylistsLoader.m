@@ -14,14 +14,10 @@
 
 @implementation SUSServerPlaylistsLoader
 
-#pragma mark - Lifecycle
-
 - (SUSLoaderType)type
 {
     return SUSLoaderType_ServerPlaylist;
 }
-
-#pragma mark - Loader Methods
 
 - (NSURLRequest *)createRequest {
     return [NSMutableURLRequest requestWithSUSAction:@"getPlaylists" parameters:nil];
