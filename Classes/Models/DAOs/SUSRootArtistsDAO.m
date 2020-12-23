@@ -311,8 +311,8 @@
     _indexPositions = nil;
     _indexCounts = nil;
     
-    // Force all subfolders to reload
-    [databaseS resetFolderCache];
+    // Force all albums to reload
+    [databaseS resetAlbumCache];
     
     if ([self.delegate respondsToSelector:@selector(loadingFinished:)]) {
         [self.delegate loadingFinished:nil];

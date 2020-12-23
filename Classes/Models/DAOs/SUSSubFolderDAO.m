@@ -21,7 +21,7 @@
 
 @implementation SUSSubFolderDAO
 
-#pragma mark - Lifecycle
+#pragma mark Lifecycle
 
 - (void)setup {
     _albumStartRow = [self findFirstAlbumRow];
@@ -65,7 +65,7 @@
 	return databaseS.albumListCacheDbQueue;
 }
 
-#pragma mark - Private DB Methods
+#pragma mark Private DB Methods
 
 - (NSUInteger)findFirstAlbumRow {
     return [self.dbQueue intForQuery:@"SELECT rowid FROM folderAlbum WHERE folderId = ? LIMIT 1", self.folderId];
@@ -134,7 +134,7 @@
 	return [musicS playSongAtPosition:(row - self.songStartRow)];
 }
 
-#pragma mark - Public DAO Methods
+#pragma mark Public DAO Methods
 
 - (BOOL)hasLoaded {
     if (self.albumsCount > 0 || self.songsCount > 0)
@@ -181,7 +181,7 @@
 	return nil;
 }
 
-#pragma mark - Loader Manager Methods
+#pragma mark Loader Manager Methods
 
 - (void)restartLoad {
     [self startLoad];
@@ -200,7 +200,7 @@
     self.loader = nil;
 }
 
-#pragma mark - Loader Delegate Methods
+#pragma mark Loader Delegate Methods
 
 - (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
 	self.loader.delegate = nil;

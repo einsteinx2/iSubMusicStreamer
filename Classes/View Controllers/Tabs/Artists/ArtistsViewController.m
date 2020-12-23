@@ -8,7 +8,7 @@
 
 #import "ArtistsViewController.h"
 #import "ServerListViewController.h"
-#import "FolderAlbumViewController.h"
+#import "TagArtistViewController.h"
 #import "FolderDropdownControl.h"
 #import "UIViewController+PushViewControllerCustom.h"
 #import "iSubAppDelegate.h"
@@ -382,7 +382,7 @@
 
 #pragma mark TableView
 
-- (ISMSTagArtist *)folderArtistAtIndexPath:(NSIndexPath *)indexPath {
+- (ISMSTagArtist *)tagArtistAtIndexPath:(NSIndexPath *)indexPath {
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
         return [self.dataModel tagArtistForPositionInSearch:(indexPath.row + 1)];
     } else {
@@ -417,7 +417,7 @@
     cell.hideCoverArt = NO;
     cell.hideSecondaryLabel = NO;
     cell.hideDurationLabel = YES;
-    [cell updateWithModel:[self folderArtistAtIndexPath:indexPath]];
+    [cell updateWithModel:[self tagArtistAtIndexPath:indexPath]];
     return cell;
 }
 
@@ -462,11 +462,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
     if (!indexPath) return;
-//    [self pushViewControllerCustom:[[FolderAlbumViewController alloc] initWithFolderArtist:[self folderArtistAtIndexPath:indexPath] orFolderAlbum:nil]];
+    [self pushViewControllerCustom:[[TagArtistViewController alloc] initWithTagArtist:[self tagArtistAtIndexPath:indexPath]]];
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSObject<ISMSTableCellModel> *model = [self folderArtistAtIndexPath:indexPath];
+    NSObject<ISMSTableCellModel> *model = [self tagArtistAtIndexPath:indexPath];
     return [SwipeAction downloadAndQueueConfigWithModel:model];
 }
 

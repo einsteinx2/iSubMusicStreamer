@@ -314,6 +314,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
     return [[ISMSFolderAlbum alloc] initWithId:@""
                                          title:title ? title : @""
                                     coverArtId:coverArtId
+                                parentFolderId:@""
                                 folderArtistId:@""
                               folderArtistName:self.artistName];
 }

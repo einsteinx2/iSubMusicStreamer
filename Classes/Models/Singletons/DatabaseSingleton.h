@@ -46,6 +46,7 @@ NS_SWIFT_NAME(Database)
 - (void)closeAllDatabases;
 - (void)resetCoverArtCache;
 - (void)resetFolderCache;
+- (void)resetAlbumCache;
 - (void)resetLocalPlaylistsDb;
 - (void)resetCurrentPlaylistDb;
 - (void)resetCurrentPlaylist;

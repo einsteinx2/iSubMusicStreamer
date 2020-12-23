@@ -9,7 +9,7 @@
 import Foundation
 
 @objc(ISMSTagArtist) final class TagArtist: NSObject, NSSecureCoding, NSCopying {
-    static var supportsSecureCoding = true
+    static let supportsSecureCoding = true
     
     @objc(artistId) let id: String
     @objc let name: String

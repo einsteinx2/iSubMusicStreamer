@@ -406,6 +406,21 @@ LOG_LEVEL_ISUB_DEFAULT
     }];
 }
 
+- (void)resetAlbumCache {
+    [self.albumListCacheDbQueue inDatabase:^(FMDatabase *db) {
+        // Drop tables
+        [db executeUpdate:@"DROP TABLE IF EXISTS tagAlbum"];
+        [db executeUpdate:@"DROP TABLE IF EXISTS tagSong"];
+        
+        // Re-create tables
+        [db executeUpdate:@"CREATE TABLE tagAlbum (artistId TEXT, albumId TEXT, name TEXT, coverArtId TEXT, tagArtistId TEXT, tagArtistName TEXT, songCount INTEGER, duration INTEGER, playCount INTEGER, year INTEGER)"];
+        [db executeUpdate:@"CREATE INDEX tagAlbum_artistId ON tagAlbum (artistId)"];
+        
+//        [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE tagSong (albumId TEXT, %@)", [ISMSSong standardSongColumnSchema]]];
+//        [db executeUpdate:@"CREATE INDEX tagSong_folderId ON tagSong (albumId)"];
+    }];
+}
+
 - (void)resetLocalPlaylistsDb {
 	[self.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
 		// Get the table names
