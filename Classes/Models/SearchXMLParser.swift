@@ -7,28 +7,55 @@
 //
 
 import Foundation
+import CocoaLumberjackSwift
 
-@objc class SearchXMLParser: NSObject, XMLParserDelegate {
+@objc class SearchXMLParser: NSObject {
     @objc private(set) var folderArtists = [FolderArtist]()
     @objc private(set) var folderAlbums = [FolderAlbum]()
     @objc private(set) var songs = [Song]()
     
-    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        if elementName == "match" || elementName == "song" {
-            if attributeDict["isVideo"] != "true" {
-                let song = Song(attributeDict: attributeDict)
-                if song.path != nil {
-                    songs.append(song)
+    @objc init(data: Data) {
+        super.init()
+        
+        let root = RXMLElement(fromXMLData: data)
+        if !root.isValid {
+            // TODO: Handle this error in the UI
+            DDLogError("[SearchXMLParser] Error parsing search results: \(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))")
+        } else {
+            if let error = root.child("error"), error.isValid {
+                // TODO: Handle this error in the UI
+                let code = Int(error.attribute("code") ?? "-1") ?? -1
+                let message = error.attribute("message") ?? "no message"
+                DDLogError("[SearchXMLParser] Subsonic error: \(NSError(ismsCode: code, message: message))")
+            } else {
+                if Settings.shared().isNewSearchAPI {
+                    root.iterate("searchResult2.artist") { element in
+                        self.folderArtists.append(FolderArtist(element: element))
+                    }
+                    root.iterate("searchResult2.album") { element in
+                        self.folderAlbums.append(FolderAlbum(element: element))
+                    }
+                    root.iterate("searchResult2.song") { element in
+                        let isVideo = element.attribute("isVideo")
+                        if isVideo != "true" {
+                            let song = Song(rxmlElement: element)
+                            if song.path != nil {
+                                self.songs.append(song)
+                            }
+                        }
+                    }
+                } else {
+                    root.iterate("searchResult.match") { element in
+                        let isVideo = element.attribute("isVideo")
+                        if isVideo != "true" {
+                            let song = Song(rxmlElement: element)
+                            if song.path != nil {
+                                self.songs.append(song)
+                            }
+                        }
+                    }
                 }
             }
-        } else if elementName == "album" {
-            folderAlbums.append(FolderAlbum(attributeDict: attributeDict))
-        } else if elementName == "artist" {
-            folderArtists.append(FolderArtist(attributeDict: attributeDict))
         }
-    }
-    
-    func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
-        // TODO: Handle error
     }
 }

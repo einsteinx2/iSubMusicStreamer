@@ -35,11 +35,7 @@
 }
 
 - (void)processResponse {
-    // TODO: Refactor this with RaptureXML
-    SearchXMLParser *parserDelegate = [[SearchXMLParser alloc] init];
-    NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:self.receivedData];
-    [xmlParser setDelegate:parserDelegate];
-    [xmlParser parse];
+    SearchXMLParser *parser = [[SearchXMLParser alloc] initWithData:self.receivedData];
     
     if (settingsS.isJukeboxEnabled) {
         [databaseS resetJukeboxPlaylist];
@@ -48,7 +44,7 @@
         [databaseS resetCurrentPlaylistDb];
     }
     
-    for (ISMSSong *song in parserDelegate.songs) {
+    for (ISMSSong *song in parser.songs) {
         [song addToCurrentPlaylistDbQueue];
     }
     

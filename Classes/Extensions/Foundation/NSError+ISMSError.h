@@ -9,12 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "ISMSErrorDomain.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSError (ISMSError)
 
-+ (NSString *)descriptionFromISMSCode:(NSUInteger)code;
++ (nullable NSString *)descriptionFromISMSCode:(NSUInteger)code;
 
 + (NSError *)errorWithISMSCode:(NSInteger)code;
 + (NSError *)errorWithISMSCode:(NSInteger)code extraAttributes:(NSDictionary *)attributes;
 + (NSError *)errorWithISMSCode:(NSInteger)code message:(NSString *)message;
 
 @end
+
+NS_ASSUME_NONNULL_END

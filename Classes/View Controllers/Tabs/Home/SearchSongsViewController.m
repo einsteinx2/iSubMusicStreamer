@@ -23,6 +23,8 @@
 #import "Swift.h"
 #import "SUSLoader.h"
 
+LOG_LEVEL_ISUB_DEFAULT
+
 @implementation SearchSongsViewController
 
 #pragma mark View lifecycle
@@ -52,8 +54,10 @@
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 	
-	[self.connection cancel];
-	self.connection = nil;
+    if (self.isLoading) {
+        [self.dataTask cancel];
+        self.dataTask = nil;
+    }
 }
 
 - (void) settingsAction:(id)sender  {
@@ -118,7 +122,7 @@
 	}
     
     NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:action parameters:parameters];
-    NSURLSessionDataTask *dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    self.dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
             [EX2Dispatch runInMainThreadAsync:^{
                 if (settingsS.isPopupsEnabled) {
@@ -130,27 +134,26 @@
                 self.isLoading = NO;
             }];
         } else {
-            SearchXMLParser *parserDelegate = [[SearchXMLParser alloc] init];
-            NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:self.receivedData];
-            [xmlParser setDelegate:parserDelegate];
-            [xmlParser parse];
+            DDLogVerbose(@"additional search results: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+            SearchXMLParser *parser = [[SearchXMLParser alloc] initWithData:data];
+            
             if (self.searchType == ISMSSearchSongsSearchType_Artists) {
-                if (parserDelegate.folderArtists.count == 0) {
+                if (parser.folderArtists.count == 0) {
                     self.isMoreResults = NO;
                 } else {
-                    [self.folderArtists addObjectsFromArray:parserDelegate.folderArtists];
+                    [self.folderArtists addObjectsFromArray:parser.folderArtists];
                 }
             } else if (self.searchType == ISMSSearchSongsSearchType_Albums) {
-                if (parserDelegate.folderAlbums.count == 0) {
+                if (parser.folderAlbums.count == 0) {
                     self.isMoreResults = NO;
                 } else {
-                    [self.folderAlbums addObjectsFromArray:parserDelegate.folderAlbums];
+                    [self.folderAlbums addObjectsFromArray:parser.folderAlbums];
                 }
             } else if (self.searchType == ISMSSearchSongsSearchType_Songs) {
-                if (parserDelegate.songs.count == 0) {
+                if (parser.songs.count == 0) {
                     self.isMoreResults = NO;
                 } else {
-                    [self.songs addObjectsFromArray:parserDelegate.songs];
+                    [self.songs addObjectsFromArray:parser.songs];
                 }
             }
             
@@ -161,7 +164,7 @@
             }];
         }
     }];
-    [dataTask resume];
+    [self.dataTask resume];
 }
 
 - (UITableViewCell *)createLoadingCell:(NSUInteger)row {

@@ -79,6 +79,7 @@
 #import "NSNotificationCenter+MainThread.h"
 #import "NSString+FileSize.h"
 #import "NSString+Clean.h"
+#import "NSError+ISMSError.h"
 
 /*
  * Singletons

@@ -113,41 +113,23 @@
 
 - (instancetype)initWithCoder:(NSCoder *)decoder {
 	if (self = [super init]) {
-		// Check if this object is using the new encoding
-		if ([decoder containsValueForKey:@"songId"]) {
-			_title = [[decoder decodeObjectForKey:@"title"] copy];
-			_songId = [[decoder decodeObjectForKey:@"songId"] copy];
-			_parentId = [[decoder decodeObjectForKey:@"parentId"] copy];
-			_artist = [[decoder decodeObjectForKey:@"artist"] copy];
-			_album = [[decoder decodeObjectForKey:@"album"] copy];
-			_genre = [[decoder decodeObjectForKey:@"genre"] copy];
-			_coverArtId = [[decoder decodeObjectForKey:@"coverArtId"] copy];
-			_path = [[decoder decodeObjectForKey:@"path"] copy];
-			_suffix = [[decoder decodeObjectForKey:@"suffix"] copy];
-			_transcodedSuffix = [[decoder decodeObjectForKey:@"transcodedSuffix"] copy];
-			_duration =[[decoder decodeObjectForKey:@"duration"] copy];
-			_bitRate = [[decoder decodeObjectForKey:@"bitRate"] copy];
-			_track = [[decoder decodeObjectForKey:@"track"] copy];
-			_year = [[decoder decodeObjectForKey:@"year"] copy];
-			_size = [[decoder decodeObjectForKey:@"size"] copy];
-            _isVideo = [decoder decodeBoolForKey:@"isVideo"];
-            _discNumber = [decoder decodeObjectForKey:@"discNumber"];
-		} else {
-			_title = [[decoder decodeObject] copy];
-			_songId = [[decoder decodeObject] copy];
-			_artist = [[decoder decodeObject] copy];
-			_album = [[decoder decodeObject] copy];
-			_genre = [[decoder decodeObject] copy];
-			_coverArtId = [[decoder decodeObject] copy];
-			_path = [[decoder decodeObject] copy];
-			_suffix = [[decoder decodeObject] copy];
-			_transcodedSuffix = [[decoder decodeObject] copy];
-			_duration = [[decoder decodeObject] copy];
-			_bitRate = [[decoder decodeObject] copy];
-			_track = [[decoder decodeObject] copy];
-			_year = [[decoder decodeObject] copy];
-			_size = [[decoder decodeObject] copy];
-		}
+        _title = [decoder decodeObjectForKey:@"title"];
+        _songId = [decoder decodeObjectForKey:@"songId"];
+        _parentId = [decoder decodeObjectForKey:@"parentId"];
+        _artist = [decoder decodeObjectForKey:@"artist"];
+        _album = [decoder decodeObjectForKey:@"album"];
+        _genre = [decoder decodeObjectForKey:@"genre"];
+        _coverArtId = [decoder decodeObjectForKey:@"coverArtId"];
+        _path = [decoder decodeObjectForKey:@"path"];
+        _suffix = [decoder decodeObjectForKey:@"suffix"];
+        _transcodedSuffix = [decoder decodeObjectForKey:@"transcodedSuffix"];
+        _duration = [decoder decodeObjectForKey:@"duration"];
+        _bitRate = [decoder decodeObjectForKey:@"bitRate"];
+        _track = [decoder decodeObjectForKey:@"track"];
+        _year = [decoder decodeObjectForKey:@"year"];
+        _size = [decoder decodeObjectForKey:@"size"];
+        _isVideo = [decoder decodeBoolForKey:@"isVideo"];
+        _discNumber = [decoder decodeObjectForKey:@"discNumber"];
 	}
 	
 	return self;
