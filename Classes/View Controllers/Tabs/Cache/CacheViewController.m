@@ -1069,7 +1069,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
             }
         }
         
-        CacheAlbumViewController *cacheAlbumViewController = [[CacheAlbumViewController alloc] initWithNibName:@"CacheAlbumViewController" bundle:nil];
+        CacheAlbumViewController *cacheAlbumViewController = [[CacheAlbumViewController alloc] init];
         cacheAlbumViewController.artistName = name;
         cacheAlbumViewController.albums = [NSMutableArray arrayWithCapacity:1];
         cacheAlbumViewController.songs = [NSMutableArray arrayWithCapacity:1];

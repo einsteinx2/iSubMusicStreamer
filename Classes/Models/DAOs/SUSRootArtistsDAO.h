@@ -1,17 +1,17 @@
 //
-//  SUSRootFoldersDAO.h
+//  SUSRootArtistsDAO.h
 //  iSub
 //
-//  Created by Ben Baron on 8/21/11.
-//  Copyright 2011 Ben Baron. All rights reserved.
+//  Created by Benjamin Baron on 12/22/20.
+//  Copyright © 2020 Ben Baron. All rights reserved.
 //
 
 #import "SUSLoaderManager.h"
 
-@class ISMSFolderArtist, FMDatabase, SUSRootFoldersLoader;
+@class ISMSTagArtist, FMDatabase, SUSRootArtistsLoader;
 
-@interface SUSRootFoldersDAO : NSObject <SUSLoaderManager, SUSLoaderDelegate> {		
-	NSUInteger _tempRecordCount;
+@interface SUSRootArtistsDAO : NSObject <SUSLoaderManager, SUSLoaderDelegate> {
+    NSUInteger _tempRecordCount;
     NSArray *_indexNames;
     NSArray *_indexPositions;
     NSArray *_indexCounts;
@@ -19,7 +19,7 @@
 
 @property (weak) id<SUSLoaderDelegate> delegate;
 
-@property (strong) SUSRootFoldersLoader *loader;
+@property (strong) SUSRootArtistsLoader *loader;
 
 @property (readonly) NSUInteger count;
 @property (readonly) NSUInteger searchCount;
@@ -30,17 +30,17 @@
 - (NSString *)tableModifier;
 
 @property (strong) NSNumber *selectedFolderId;
-@property (readonly) BOOL isRootFolderIdCached;
+@property (readonly) BOOL isRootArtistFolderIdCached;
 
 + (void)setFolderDropdownFolders:(NSDictionary *)folders;
 + (NSDictionary *)folderDropdownFolders;
 
 - (instancetype)initWithDelegate:(id <SUSLoaderDelegate>)delegate;
 
-- (ISMSFolderArtist *)folderArtistForPosition:(NSUInteger)position;
+- (ISMSTagArtist *)tagArtistForPosition:(NSUInteger)position;
 - (void)clearSearchTable;
-- (void)searchForFolderName:(NSString *)name;
-- (ISMSFolderArtist *)folderArtistForPositionInSearch:(NSUInteger)position;
+- (void)searchForArtistName:(NSString *)name;
+- (ISMSTagArtist *)tagArtistForPositionInSearch:(NSUInteger)position;
 
 - (void)startLoad;
 - (void)cancelLoad;

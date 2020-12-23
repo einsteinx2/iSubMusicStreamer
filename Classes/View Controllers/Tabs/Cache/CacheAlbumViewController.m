@@ -382,7 +382,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
     if (indexPath.row < self.albums.count) {
         NSUInteger segment = self.segments.count + 1;
         
-        CacheAlbumViewController *cacheAlbumViewController = [[CacheAlbumViewController alloc] initWithNibName:@"CacheAlbumViewController" bundle:nil];
+        CacheAlbumViewController *cacheAlbumViewController = [[CacheAlbumViewController alloc] init];
         cacheAlbumViewController.artistName = [[self.albums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
         cacheAlbumViewController.albums = [NSMutableArray arrayWithCapacity:1];
         cacheAlbumViewController.songs = [NSMutableArray arrayWithCapacity:1];

@@ -33,7 +33,7 @@
             NSString *message = [error attribute:@"message"];
             [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
         } else {
-            NSMutableDictionary *musicFolders = [@{@-1: @"All Folders"} mutableCopy];
+            NSMutableDictionary *musicFolders = [@{@-1: @"All Media Folders"} mutableCopy];
             [root iterate:@"musicFolders.musicFolder" usingBlock:^(RXMLElement *e) {
                 NSNumber *folderId = @([[e attribute:@"id"] intValue]);
                 musicFolders[folderId] = [e attribute:@"name"];

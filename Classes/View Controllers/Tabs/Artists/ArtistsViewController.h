@@ -1,18 +1,18 @@
 //
-//  FoldersViewController.h
+//  ArtistsViewController.h
 //  iSub
 //
-//  Created by Ben Baron on 2/27/10.
-//  Copyright Ben Baron 2010. All rights reserved.
+//  Created by Benjamin Baron on 12/22/20.
+//  Copyright © 2020 Ben Baron. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "FolderDropdownDelegate.h"
 #import "SUSLoader.h"
 
-@class SUSRootFoldersDAO, FolderDropdownControl;
+@class SUSRootArtistsDAO, FolderDropdownControl;
 
-@interface FoldersViewController : UIViewController <UISearchBarDelegate, SUSLoaderDelegate, FolderDropdownDelegate>
+@interface ArtistsViewController : UIViewController <UISearchBarDelegate, SUSLoaderDelegate, FolderDropdownDelegate>
 
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (nonatomic) BOOL isSearching;
@@ -23,7 +23,7 @@
 @property (nonatomic, strong) UILabel *countLabel;
 @property (nonatomic, strong) UILabel *reloadTimeLabel;
 @property (nonatomic, strong) FolderDropdownControl *dropdown;
-@property (nonatomic, strong) SUSRootFoldersDAO *dataModel;
+@property (nonatomic, strong) SUSRootArtistsDAO *dataModel;
 
 // Loader Delegate Methods
 - (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error;

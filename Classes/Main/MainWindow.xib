@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -76,6 +76,22 @@
                             <extendedEdge key="edgesForExtendedLayout"/>
                             <toolbarItems/>
                             <navigationItem key="navigationItem" title="Item" id="30"/>
+                        </viewController>
+                    </viewControllers>
+                </navigationController>
+                <navigationController id="NDw-13-tef" userLabel="Artists" customClass="CustomUINavigationController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <tabBarItem key="tabBarItem" tag="10" title="Artists" image="tabbaricon-folders" id="0Fw-Pp-Aqn"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="rUE-Sh-cZs">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <viewControllers>
+                        <viewController nibName="FoldersViewController" id="Nal-cZ-RF8" customClass="ArtistsViewController">
+                            <extendedEdge key="edgesForExtendedLayout"/>
+                            <toolbarItems/>
+                            <navigationItem key="navigationItem" title="Item" id="7CC-hh-uXt"/>
                         </viewController>
                     </viewControllers>
                 </navigationController>

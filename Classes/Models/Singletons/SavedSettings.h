@@ -47,6 +47,10 @@ NS_SWIFT_NAME(Settings)
 @property (nullable, strong) NSDate *rootFoldersReloadTime;
 @property (nullable, strong) NSNumber *rootFoldersSelectedFolderId;
 
+// Root Artists Settings
+@property (nullable, strong) NSDate *rootArtistsReloadTime;
+@property (nullable, strong) NSNumber *rootArtistsSelectedFolderId;
+
 @property BOOL isForceOfflineMode;
 @property NSInteger recoverSetting;
 @property NSInteger maxBitrateWifi;

@@ -23,9 +23,9 @@
 
 #pragma mark Lifecycle
 
-- (instancetype)initWithDelegate:(id <SUSLoaderDelegate>)theDelegate {
+- (instancetype)initWithDelegate:(id <SUSLoaderDelegate>)delegate {
     if ((self = [super init])) {
-		_delegate = theDelegate;
+		_delegate = delegate;
     }    
     return self;
 }

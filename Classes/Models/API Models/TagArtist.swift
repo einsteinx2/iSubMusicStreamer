@@ -11,7 +11,7 @@ import Foundation
 @objc(ISMSTagArtist) final class TagArtist: NSObject, NSSecureCoding, NSCopying {
     static var supportsSecureCoding = true
     
-    @objc(folderId) let id: String
+    @objc(artistId) let id: String
     @objc let name: String
     @objc let coverArtId: String?
     @objc let artistImageUrl: String?
@@ -44,6 +44,14 @@ import Foundation
         super.init()
     }
     
+    @objc init(result: FMResultSet) {
+        self.id = result.string(forColumn: "id") ?? ""
+        self.name = result.string(forColumn: "name") ?? ""
+        self.coverArtId = result.string(forColumn: "coverArtId")
+        self.artistImageUrl = result.string(forColumn: "artistImageUrl")
+        self.albumCount = result.long(forColumn: "albumCount")
+    }
+    
     @objc init?(coder: NSCoder) {
         self.id = coder.decodeObject(forKey: "id") as? String ?? ""
         self.name = coder.decodeObject(forKey: "name") as? String ?? ""
@@ -72,7 +80,7 @@ import Foundation
 
 @objc extension TagArtist: TableCellModel {
     var primaryLabelText: String? { return name }
-    var secondaryLabelText: String? { return nil }
+    var secondaryLabelText: String? { return albumCount == 1 ? "1 Album" : "\(albumCount) Albums" }
     var durationLabelText: String? { return nil }
     var isCached: Bool { return false }
     func download() {

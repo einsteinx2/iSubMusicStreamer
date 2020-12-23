@@ -27,8 +27,14 @@
 		530A1680259277E700E9294E /* SearchAllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A167E259277E700E9294E /* SearchAllViewController.swift */; };
 		530A168E259299C800E9294E /* TagArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A168D259299C800E9294E /* TagArtist.swift */; };
 		530A168F259299C800E9294E /* TagArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A168D259299C800E9294E /* TagArtist.swift */; };
-		530A16942592A94C00E9294E /* SUSArtistsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A169125929C6900E9294E /* SUSArtistsLoader.m */; };
-		530A16952592A94C00E9294E /* SUSArtistsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A169125929C6900E9294E /* SUSArtistsLoader.m */; };
+		530A16942592A94C00E9294E /* SUSRootArtistsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A169125929C6900E9294E /* SUSRootArtistsLoader.m */; };
+		530A16952592A94C00E9294E /* SUSRootArtistsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A169125929C6900E9294E /* SUSRootArtistsLoader.m */; };
+		530A169E2592C59600E9294E /* SUSRootArtistsDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A169D2592C59600E9294E /* SUSRootArtistsDAO.m */; };
+		530A169F2592C59600E9294E /* SUSRootArtistsDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A169D2592C59600E9294E /* SUSRootArtistsDAO.m */; };
+		530A16A62592CA2E00E9294E /* ArtistsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 530A16A22592CA2E00E9294E /* ArtistsViewController.xib */; };
+		530A16A72592CA2E00E9294E /* ArtistsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 530A16A22592CA2E00E9294E /* ArtistsViewController.xib */; };
+		530A16AA2592CA5000E9294E /* ArtistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A16A92592CA5000E9294E /* ArtistsViewController.m */; };
+		530A16AB2592CA5000E9294E /* ArtistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A16A92592CA5000E9294E /* ArtistsViewController.m */; };
 		530B417211B607A200743C09 /* CacheViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530B417011B607A200743C09 /* CacheViewController.m */; };
 		530B417311B607A200743C09 /* CacheViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 530B417111B607A200743C09 /* CacheViewController.xib */; };
 		531D3A01255AB5F6000CB0DF /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 531D39FF255AB5F6000CB0DF /* MainWindow.xib */; };
@@ -91,8 +97,6 @@
 		533C65D015ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65D415ABB9D6003EAF29 /* SettingsTabViewController.xib */; };
 		533C65DC15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */; };
 		533C65DE15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */; };
-		533C65E315ABBA09003EAF29 /* FolderAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65E915ABBA09003EAF29 /* FolderAlbumViewController.xib */; };
-		533C65E515ABBA09003EAF29 /* FolderAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65E915ABBA09003EAF29 /* FolderAlbumViewController.xib */; };
 		533D181D255F72FF003F962C /* CacheOfflineFoldersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533D181A255F72FE003F962C /* CacheOfflineFoldersViewController.xib */; };
 		533D181E255F72FF003F962C /* CacheOfflineFoldersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533D181A255F72FE003F962C /* CacheOfflineFoldersViewController.xib */; };
 		533D181F255F72FF003F962C /* CacheOfflineFoldersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 533D181C255F72FF003F962C /* CacheOfflineFoldersViewController.m */; };
@@ -137,7 +141,6 @@
 		5367C6D51EA92D2400B1C242 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D41EA92D2400B1C242 /* libz.tbd */; };
 		5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D61EA92D3000B1C242 /* libSystem.tbd */; };
 		536AB8111353DCF900DABD83 /* PlaylistSongsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 536AB80F1353DCF700DABD83 /* PlaylistSongsViewController.m */; };
-		536AB8121353DCF900DABD83 /* PlaylistSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536AB8101353DCF700DABD83 /* PlaylistSongsViewController.xib */; };
 		536B5D5E11C8183D00CC1D69 /* LoadingScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536B5D5D11C8183D00CC1D69 /* LoadingScreen.xib */; };
 		536C994D16619F5D005A73C6 /* ViewObjectsSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 536C994B16619F5D005A73C6 /* ViewObjectsSingleton.m */; };
 		536C994F16619F5D005A73C6 /* ViewObjectsSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 536C994B16619F5D005A73C6 /* ViewObjectsSingleton.m */; };
@@ -162,7 +165,6 @@
 		537E9A0C14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E9A0914F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m */; };
 		5381F8061E96FBFB00AAA9BD /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5381F8051E96FBFB00AAA9BD /* Photos.framework */; };
 		538229F611C98091003F1E23 /* CacheAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 538229F411C98091003F1E23 /* CacheAlbumViewController.m */; };
-		538229F711C98091003F1E23 /* CacheAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538229F511C98091003F1E23 /* CacheAlbumViewController.xib */; };
 		5388A3B4119899260049BA9E /* BookmarksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5388A3B2119899260049BA9E /* BookmarksViewController.m */; };
 		5388A3B5119899260049BA9E /* BookmarksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5388A3B3119899260049BA9E /* BookmarksViewController.xib */; };
 		538C8FE125606299005D6CA9 /* RefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE025606299005D6CA9 /* RefreshControl.swift */; };
@@ -212,11 +214,9 @@
 		53BC26D1139AF0DD00A825F1 /* GenresViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53B52BA411ADE0A6005776B5 /* GenresViewController.xib */; };
 		53BC26D2139AF0DD00A825F1 /* CacheViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 530B417111B607A200743C09 /* CacheViewController.xib */; };
 		53BC26D6139AF0DD00A825F1 /* LoadingScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536B5D5D11C8183D00CC1D69 /* LoadingScreen.xib */; };
-		53BC26D7139AF0DD00A825F1 /* CacheAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538229F511C98091003F1E23 /* CacheAlbumViewController.xib */; };
 		53BC26D8139AF0DD00A825F1 /* GenresAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53523D8E11CD5889006AEA48 /* GenresAlbumViewController.xib */; };
 		53BC26D9139AF0DD00A825F1 /* GenresArtistViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53523D9311CD61F7006AEA48 /* GenresArtistViewController.xib */; };
 		53BC270B139AF0DD00A825F1 /* ChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5379DC4C1219E48800F426CD /* ChatViewController.xib */; };
-		53BC2796139AF0DD00A825F1 /* PlaylistSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536AB8101353DCF700DABD83 /* PlaylistSongsViewController.xib */; };
 		53BC279C139AF0DD00A825F1 /* iSubAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* iSubAppDelegate.m */; };
 		53BC279D139AF0DD00A825F1 /* FoldersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* FoldersViewController.m */; };
 		53BC27A1139AF0DD00A825F1 /* FolderAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F2D3EC113A338500107D63 /* FolderAlbumViewController.m */; };
@@ -604,8 +604,13 @@
 		530A167B2592767400E9294E /* SearchXMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchXMLParser.swift; sourceTree = "<group>"; };
 		530A167E259277E700E9294E /* SearchAllViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAllViewController.swift; sourceTree = "<group>"; };
 		530A168D259299C800E9294E /* TagArtist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagArtist.swift; sourceTree = "<group>"; };
-		530A169025929C6900E9294E /* SUSArtistsLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SUSArtistsLoader.h; sourceTree = "<group>"; };
-		530A169125929C6900E9294E /* SUSArtistsLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SUSArtistsLoader.m; sourceTree = "<group>"; };
+		530A169025929C6900E9294E /* SUSRootArtistsLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SUSRootArtistsLoader.h; sourceTree = "<group>"; };
+		530A169125929C6900E9294E /* SUSRootArtistsLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SUSRootArtistsLoader.m; sourceTree = "<group>"; };
+		530A169C2592C59600E9294E /* SUSRootArtistsDAO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SUSRootArtistsDAO.h; sourceTree = "<group>"; };
+		530A169D2592C59600E9294E /* SUSRootArtistsDAO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SUSRootArtistsDAO.m; sourceTree = "<group>"; };
+		530A16A22592CA2E00E9294E /* ArtistsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArtistsViewController.xib; sourceTree = "<group>"; };
+		530A16A82592CA5000E9294E /* ArtistsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArtistsViewController.h; sourceTree = "<group>"; };
+		530A16A92592CA5000E9294E /* ArtistsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ArtistsViewController.m; sourceTree = "<group>"; };
 		530B416F11B607A200743C09 /* CacheViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CacheViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		530B417011B607A200743C09 /* CacheViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CacheViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		530B417111B607A200743C09 /* CacheViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CacheViewController.xib; sourceTree = "<group>"; };
@@ -689,7 +694,6 @@
 		5367C6D41EA92D2400B1C242 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		5367C6D61EA92D3000B1C242 /* libSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.tbd; path = usr/lib/libSystem.tbd; sourceTree = SDKROOT; };
 		536AB80F1353DCF700DABD83 /* PlaylistSongsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PlaylistSongsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		536AB8101353DCF700DABD83 /* PlaylistSongsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistSongsViewController.xib; sourceTree = "<group>"; };
 		536B5D5D11C8183D00CC1D69 /* LoadingScreen.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingScreen.xib; sourceTree = "<group>"; };
 		536C994B16619F5D005A73C6 /* ViewObjectsSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewObjectsSingleton.m; sourceTree = "<group>"; };
 		536C994C16619F5D005A73C6 /* ViewObjectsSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewObjectsSingleton.h; sourceTree = "<group>"; };
@@ -713,7 +717,6 @@
 		5381F8051E96FBFB00AAA9BD /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		538229F311C98091003F1E23 /* CacheAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheAlbumViewController.h; sourceTree = "<group>"; };
 		538229F411C98091003F1E23 /* CacheAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CacheAlbumViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		538229F511C98091003F1E23 /* CacheAlbumViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CacheAlbumViewController.xib; sourceTree = "<group>"; };
 		5388A3B1119899260049BA9E /* BookmarksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = BookmarksViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		5388A3B2119899260049BA9E /* BookmarksViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BookmarksViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		5388A3B3119899260049BA9E /* BookmarksViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BookmarksViewController.xib; sourceTree = "<group>"; };
@@ -728,7 +731,6 @@
 		539148B22559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/HomeAlbumViewController.xib; sourceTree = "<group>"; };
 		539148B32559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SearchSongsViewController.xib; sourceTree = "<group>"; };
 		539148B52559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SearchAllViewController.xib; sourceTree = "<group>"; };
-		539148B62559CBE0004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/FolderAlbumViewController.xib; sourceTree = "<group>"; };
 		539148B92559E597004AAC3F /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		539148C42559EAAF004AAC3F /* libFlurry_11.1.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_11.1.1.a; sourceTree = "<group>"; };
 		539148C72559EAC5004AAC3F /* Flurry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
@@ -1221,6 +1223,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		530A16A02592CA0C00E9294E /* Artists */ = {
+			isa = PBXGroup;
+			children = (
+				530A16A82592CA5000E9294E /* ArtistsViewController.h */,
+				530A16A92592CA5000E9294E /* ArtistsViewController.m */,
+				530A16A22592CA2E00E9294E /* ArtistsViewController.xib */,
+			);
+			path = Artists;
+			sourceTree = "<group>";
+		};
 		531D39DD255AB1D4000CB0DF /* Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -1331,7 +1343,6 @@
 				53ADBBBF13352DB40098FAE6 /* FolderDropdownControl.m */,
 				53F2D3EB113A338500107D63 /* FolderAlbumViewController.h */,
 				53F2D3EC113A338500107D63 /* FolderAlbumViewController.m */,
-				533C65E915ABBA09003EAF29 /* FolderAlbumViewController.xib */,
 				53329640255F2B960027C51A /* AlbumTableViewHeader.swift */,
 			);
 			path = Folders;
@@ -1342,6 +1353,7 @@
 			children = (
 				531D39E6255AB2A5000CB0DF /* Home */,
 				531D39E7255AB2B6000CB0DF /* Folders */,
+				530A16A02592CA0C00E9294E /* Artists */,
 				531D39EB255AB300000CB0DF /* Playlists */,
 				531D39EF255AB344000CB0DF /* Cache */,
 				531D39E9255AB2E0000CB0DF /* Albums */,
@@ -1384,7 +1396,6 @@
 				53ABE54211665B6B00197877 /* PlaylistsViewController.xib */,
 				53ABE54511665B8500197877 /* PlaylistSongsViewController.h */,
 				536AB80F1353DCF700DABD83 /* PlaylistSongsViewController.m */,
-				536AB8101353DCF700DABD83 /* PlaylistSongsViewController.xib */,
 			);
 			path = Playlists;
 			sourceTree = "<group>";
@@ -1436,7 +1447,6 @@
 				533D181A255F72FE003F962C /* CacheOfflineFoldersViewController.xib */,
 				538229F311C98091003F1E23 /* CacheAlbumViewController.h */,
 				538229F411C98091003F1E23 /* CacheAlbumViewController.m */,
-				538229F511C98091003F1E23 /* CacheAlbumViewController.xib */,
 			);
 			path = Cache;
 			sourceTree = "<group>";
@@ -1640,8 +1650,8 @@
 				53FE36C61EA961720058B925 /* SUSRootFoldersLoader.m */,
 				53FE36C71EA961720058B925 /* SUSScrobbleLoader.h */,
 				53FE36C81EA961720058B925 /* SUSScrobbleLoader.m */,
-				530A169025929C6900E9294E /* SUSArtistsLoader.h */,
-				530A169125929C6900E9294E /* SUSArtistsLoader.m */,
+				530A169025929C6900E9294E /* SUSRootArtistsLoader.h */,
+				530A169125929C6900E9294E /* SUSRootArtistsLoader.m */,
 			);
 			path = Loaders;
 			sourceTree = "<group>";
@@ -1671,6 +1681,8 @@
 				53FE36D41EA961720058B925 /* SUSSubFolderDAO.m */,
 				5340B8A4256968C400FD5D6D /* ISMSBookmarkDAO.h */,
 				5340B8A5256968C400FD5D6D /* ISMSBookmarkDAO.m */,
+				530A169C2592C59600E9294E /* SUSRootArtistsDAO.h */,
+				530A169D2592C59600E9294E /* SUSRootArtistsDAO.m */,
 			);
 			path = DAOs;
 			sourceTree = "<group>";
@@ -2143,7 +2155,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				533C65E315ABBA09003EAF29 /* FolderAlbumViewController.xib in Resources */,
 				539797FE1162D4D200F41D8B /* AllAlbumsViewController.xib in Resources */,
 				533C65AD15ABB9C6003EAF29 /* ServerListViewController.xib in Resources */,
 				53614BD9116467420088ABC0 /* AllSongsViewController.xib in Resources */,
@@ -2155,8 +2166,8 @@
 				534B20DA25619936007FF1D7 /* HomeViewController.xib in Resources */,
 				531D3A03255AB5F6000CB0DF /* MainWindow-iPad.xib in Resources */,
 				536B5D5E11C8183D00CC1D69 /* LoadingScreen.xib in Resources */,
-				538229F711C98091003F1E23 /* CacheAlbumViewController.xib in Resources */,
 				53523D9011CD5889006AEA48 /* GenresAlbumViewController.xib in Resources */,
+				530A16A62592CA2E00E9294E /* ArtistsViewController.xib in Resources */,
 				53523D9511CD61F7006AEA48 /* GenresArtistViewController.xib in Resources */,
 				533C65CE15ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */,
 				5379DC511219E48800F426CD /* ChatViewController.xib in Resources */,
@@ -2166,7 +2177,6 @@
 				531D3A01255AB5F6000CB0DF /* MainWindow.xib in Resources */,
 				533D181D255F72FF003F962C /* CacheOfflineFoldersViewController.xib in Resources */,
 				533C659F15ABB9B3003EAF29 /* SearchAllViewController.xib in Resources */,
-				536AB8121353DCF900DABD83 /* PlaylistSongsViewController.xib in Resources */,
 				533C65DC15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */,
 				539148E02559FEFD004AAC3F /* Launch Screen.storyboard in Resources */,
 				53493F3015FC6BD90059492E /* KeychainAccessGroups.plist in Resources */,
@@ -2180,7 +2190,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				533C65E515ABBA09003EAF29 /* FolderAlbumViewController.xib in Resources */,
 				53D97436255C0BDE00AABF7F /* FoldersViewController.xib in Resources */,
 				530738F51FAF6A72005C2650 /* Media.xcassets in Resources */,
 				53BC26B6139AF0DD00A825F1 /* AllAlbumsViewController.xib in Resources */,
@@ -2192,8 +2201,8 @@
 				53BC26D1139AF0DD00A825F1 /* GenresViewController.xib in Resources */,
 				53BC26D2139AF0DD00A825F1 /* CacheViewController.xib in Resources */,
 				53BC26D6139AF0DD00A825F1 /* LoadingScreen.xib in Resources */,
-				53BC26D7139AF0DD00A825F1 /* CacheAlbumViewController.xib in Resources */,
 				53BC26D8139AF0DD00A825F1 /* GenresAlbumViewController.xib in Resources */,
+				530A16A72592CA2E00E9294E /* ArtistsViewController.xib in Resources */,
 				53BC26D9139AF0DD00A825F1 /* GenresArtistViewController.xib in Resources */,
 				533C65D015ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */,
 				53DA4E33256B600C0057D4C7 /* Launch Screen Beta.storyboard in Resources */,
@@ -2204,7 +2213,6 @@
 				531D3A04255AB5F6000CB0DF /* MainWindow-iPad.xib in Resources */,
 				533D181E255F72FF003F962C /* CacheOfflineFoldersViewController.xib in Resources */,
 				533C65A115ABB9B3003EAF29 /* SearchAllViewController.xib in Resources */,
-				53BC2796139AF0DD00A825F1 /* PlaylistSongsViewController.xib in Resources */,
 				533C65DE15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */,
 				534B20DB25619936007FF1D7 /* HomeViewController.xib in Resources */,
 				53493F3215FC6BD90059492E /* KeychainAccessGroups.plist in Resources */,
@@ -2270,6 +2278,7 @@
 				539796E41162B68800F41D8B /* AllAlbumsViewController.m in Sources */,
 				53FE38981EA961C80058B925 /* NSFileHandle+ZKAdditions.m in Sources */,
 				53614ACA116432DA0088ABC0 /* ServerListViewController.m in Sources */,
+				530A169E2592C59600E9294E /* SUSRootArtistsDAO.m in Sources */,
 				530388A9116571920043292D /* AllSongsViewController.m in Sources */,
 				53FE37251EA961720058B925 /* ISMSNotificationNames.m in Sources */,
 				53C3AB73257DDA1000B35B99 /* LicensesViewController.swift in Sources */,
@@ -2329,7 +2338,7 @@
 				539148D02559EB1D004AAC3F /* FlurryEmpty.m in Sources */,
 				53FE36E31EA961720058B925 /* AudioEngine.m in Sources */,
 				53EA2DD4257D6A2C0003F38D /* UIDevice+Info.m in Sources */,
-				530A16952592A94C00E9294E /* SUSArtistsLoader.m in Sources */,
+				530A16952592A94C00E9294E /* SUSRootArtistsLoader.m in Sources */,
 				533295F0255EEFE50027C51A /* FMDatabase.m in Sources */,
 				53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
 				534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
@@ -2415,6 +2424,7 @@
 				5306236D14D3295300D320A8 /* EqualizerPathView.m in Sources */,
 				53FE35101EA961540058B925 /* NSString+MD5.m in Sources */,
 				53FE36E91EA961720058B925 /* BassEffectValue.m in Sources */,
+				530A16AA2592CA5000E9294E /* ArtistsViewController.m in Sources */,
 				533295EE255EEFE50027C51A /* FMDatabaseQueueAdditions.m in Sources */,
 				5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
 				533295F4255EEFE50027C51A /* FMDatabase+FTS3.m in Sources */,
@@ -2474,6 +2484,7 @@
 				53FE389A1EA961C80058B925 /* NSFileHandle+ZKAdditions.m in Sources */,
 				53BC27AE139AF0DD00A825F1 /* ServerListViewController.m in Sources */,
 				53BC27B0139AF0DD00A825F1 /* AllSongsViewController.m in Sources */,
+				530A169F2592C59600E9294E /* SUSRootArtistsDAO.m in Sources */,
 				5359C85A256EA8FE00C8F8DC /* ObjC.swift in Sources */,
 				53FE37271EA961720058B925 /* ISMSNotificationNames.m in Sources */,
 				53246AB7256C975600E11EC4 /* CacheStatusViewController.swift in Sources */,
@@ -2533,7 +2544,7 @@
 				53EA2DE3257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
 				53FE35C91EA961540058B925 /* EX2Dispatch.m in Sources */,
 				53FE37A51EA961720058B925 /* SUSCoverArtDAO.m in Sources */,
-				530A16942592A94C00E9294E /* SUSArtistsLoader.m in Sources */,
+				530A16942592A94C00E9294E /* SUSRootArtistsLoader.m in Sources */,
 				534B20EA256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
 				53FE67A7256DD0F00015FC83 /* GCDWebServerFileRequest.m in Sources */,
 				5347A1E5256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */,
@@ -2619,6 +2630,7 @@
 				53A2BE26147DF09800E44822 /* EqualizerPointView.m in Sources */,
 				5306236F14D3295300D320A8 /* EqualizerPathView.m in Sources */,
 				53FE35121EA961540058B925 /* NSString+MD5.m in Sources */,
+				530A16AB2592CA5000E9294E /* ArtistsViewController.m in Sources */,
 				53FE36EB1EA961720058B925 /* BassEffectValue.m in Sources */,
 				5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
 				53FE37211EA961720058B925 /* ISMSIndex.m in Sources */,
@@ -2690,14 +2702,6 @@
 				539148A72559CBDF004AAC3F /* Base */,
 			);
 			name = EqualizerViewController.xib;
-			sourceTree = "<group>";
-		};
-		533C65E915ABBA09003EAF29 /* FolderAlbumViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				539148B62559CBE0004AAC3F /* Base */,
-			);
-			name = FolderAlbumViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

@@ -47,7 +47,11 @@ import CocoaLumberjackSwift
         coverArtDAO?.delegate = nil
         coverArtDAO = nil
         
-        guard let coverArtId = coverArtId else { return }
+        guard let coverArtId = coverArtId else {
+            // Set default cover art
+            image = CoverArtDAO.defaultCoverArtImage(isLarge)
+            return
+        }
         
         let dao = CoverArtDAO(delegate: self, coverArtId: coverArtId, isLarge: isLarge)
         if dao.isCoverArtCached {

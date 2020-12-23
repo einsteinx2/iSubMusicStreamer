@@ -27,7 +27,7 @@
 - (instancetype)initWithFolderArtist:(ISMSFolderArtist *)folderArtist orFolderAlbum:(ISMSFolderAlbum *)folderAlbum {
 	if (folderArtist == nil && folderAlbum == nil) return nil;
 	
-	if (self = [super initWithNibName:@"FolderAlbumViewController" bundle:nil]) {
+    if (self = [super init]) {
 		self.sectionInfo = nil;
 		
 		if (folderArtist != nil) {

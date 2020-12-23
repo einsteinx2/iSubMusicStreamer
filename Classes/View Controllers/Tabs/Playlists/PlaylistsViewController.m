@@ -1192,13 +1192,13 @@ LOG_LEVEL_ISUB_DEFAULT
     }
     else if (self.segmentedControl.selectedSegmentIndex == 1)
     {
-        PlaylistSongsViewController *playlistSongsViewController = [[PlaylistSongsViewController alloc] initWithNibName:@"PlaylistSongsViewController" bundle:nil];
+        PlaylistSongsViewController *playlistSongsViewController = [[PlaylistSongsViewController alloc] init];
         playlistSongsViewController.md5 = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT md5 FROM localPlaylists WHERE ROWID = ?", @(indexPath.row + 1)];
         [self pushViewControllerCustom:playlistSongsViewController];
     }
     else if (self.segmentedControl.selectedSegmentIndex == 2)
     {
-        PlaylistSongsViewController *playlistSongsViewController = [[PlaylistSongsViewController alloc] initWithNibName:@"PlaylistSongsViewController" bundle:nil];
+        PlaylistSongsViewController *playlistSongsViewController = [[PlaylistSongsViewController alloc] init];
         SUSServerPlaylist *playlist = [self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:indexPath.row];
         playlistSongsViewController.md5 = [playlist.playlistName md5];
         playlistSongsViewController.serverPlaylist = playlist;

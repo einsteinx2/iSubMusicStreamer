@@ -11,6 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Defines.h"
 #import "SUSRootFoldersDAO.h"
+#import "SUSRootArtistsDAO.h"
 #import "EX2Kit.h"
 
 LOG_LEVEL_ISUB_DEFAULT
@@ -51,7 +52,7 @@ LOG_LEVEL_ISUB_DEFAULT
         _selectedFolderLabel.textColor = _textColor;
 		_selectedFolderLabel.textAlignment = NSTextAlignmentCenter;
         _selectedFolderLabel.font = [UIFont boldSystemFontOfSize:20];
-		_selectedFolderLabel.text = @"All Folders";
+		_selectedFolderLabel.text = @"All Media Folders";
 		[self addSubview:_selectedFolderLabel];
 		
 		UIView *arrowImageView = [[UIView alloc] initWithFrame:CGRectMake(193, 12, 18, 18)];
@@ -109,8 +110,8 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
 	// Sort by folder name
 	[sortedValues sortUsingFunction:folderSort2 context:NULL];
 	
-	// Add All Folders again
-	NSArray *keyValuePair = @[@"-1", @"All Folders"];
+	// Add "All Media Folders" again
+	NSArray *keyValuePair = @[@"-1", @"All Media Folders"];
 	[sortedValues insertObject:keyValuePair atIndex:0];
 	
 	// Process the names and create the labels/buttons
@@ -253,6 +254,7 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
         if (success) {
             self.folders = theLoader.updatedfolders;
             [SUSRootFoldersDAO setFolderDropdownFolders:self.folders];
+            [SUSRootArtistsDAO setFolderDropdownFolders:self.folders];
         } else {
             // TODO: Handle error
             // failed.  how to report this to the user?

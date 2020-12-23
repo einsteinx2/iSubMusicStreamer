@@ -143,7 +143,7 @@ import SnapKit
                     self.performServerShuffle(notification: nil)
                 } else {
                     let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                    sheet.addAction(UIAlertAction(title: "All Folders", style: .default) { action in
+                    sheet.addAction(UIAlertAction(title: "All Media Folders", style: .default) { action in
                         let userInfo = ["folderId": -1]
                         NotificationCenter.postNotificationToMainThread(name: "performServerShuffle", userInfo: userInfo)
                     })

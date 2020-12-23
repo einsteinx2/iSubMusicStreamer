@@ -1,5 +1,5 @@
 //
-//  SUSArtistsLoader.m
+//  SUSRootArtistsLoader.m
 //  iSub
 //
 //  Created by Benjamin Baron on 12/22/20.
@@ -14,11 +14,12 @@
 #import "DatabaseSingleton.h"
 #import "NSError+ISMSError.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation SUSRootArtistsLoader
 
 - (SUSLoaderType)type {
-    return SUSLoaderType_Artists;
+    return SUSLoaderType_RootArtists;
 }
 
 #pragma mark Data loading
@@ -29,12 +30,12 @@
         parameters = @{@"musicFolderId": n2N([self.selectedFolderId stringValue])};
     }
     
-    return [NSMutableURLRequest requestWithSUSAction:@"getIndexes" parameters:parameters];
+    return [NSMutableURLRequest requestWithSUSAction:@"getArtists" parameters:parameters];
 }
 
 - (void)processResponse {
     // Clear the database
-    [self resetArtistCache];
+    [self resetRootArtistCache];
     
     RXMLElement *root = [[RXMLElement alloc] initFromXMLData:self.receivedData];
     if (!root.isValid) {
@@ -59,15 +60,9 @@
                     // Create the artist object and add it to the
                     // array for this section if not named .AppleDouble
                     if (![[artist attribute:@"name"] isEqualToString:@".AppleDouble"]) {
-                        // Parse the top level folder
-                        NSString *artistId = [artist attribute:@"id"];
-                        NSString *name = [[artist attribute:@"name"] cleanString];
-                        NSString *coverArtId = [artist attribute:@"coverArtId"];
-                        NSString *artistImageUrl = [artist attribute:@"artistImageUrl"];
-                        NSNumber *albumCount = @([artist attribute:@"albumCount"].integerValue);
-                        
                         // Add the artist to the DB
-                        if ([self addArtistToMainCache:artistId name:name coverArtId:coverArtId artistImageUrl:artistImageUrl albumCount:albumCount]) {
+                        ISMSTagArtist *tagArtist = [[ISMSTagArtist alloc] initWithElement:artist];
+                        if ([self addRootArtistToMainCache:tagArtist]) {
                             rowCount++;
                             sectionCount++;
                         }
@@ -75,14 +70,14 @@
                 }
                 
                 NSString *indexName = [[e attribute:@"name"] cleanString];
-                [self addArtistIndexToCache:rowIndex count:sectionCount name:indexName];
+                [self addRootArtistIndexToCache:rowIndex count:sectionCount name:indexName];
             }];
             
             // Update the count
-            [self artistUpdateCount];
+            [self rootArtistUpdateCount];
             
             // Save the reload time
-            [settingsS setRootFoldersReloadTime:[NSDate date]];
+            [settingsS setRootArtistsReloadTime:[NSDate date]];
             
             // Notify the delegate that the loading is finished
             [self informDelegateLoadingFinished];
@@ -106,56 +101,56 @@
     return tableModifier;
 }
 
-- (NSUInteger)artistUpdateCount {
+- (NSUInteger)rootArtistUpdateCount {
     __block NSNumber *folderCount = nil;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-         NSString *query = [NSString stringWithFormat:@"DELETE FROM artistCount%@", self.tableModifier];
+         NSString *query = [NSString stringWithFormat:@"DELETE FROM rootArtistCount%@", self.tableModifier];
          [db executeUpdate:query];
          
-         query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM artistCache%@", self.tableModifier];
+         query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM rootArtistCache%@", self.tableModifier];
          folderCount = @([db intForQuery:query]);
          
-         query = [NSString stringWithFormat:@"INSERT INTO artistCount%@ VALUES (?)", self.tableModifier];
+         query = [NSString stringWithFormat:@"INSERT INTO rootArtistCount%@ VALUES (?)", self.tableModifier];
          [db executeUpdate:query, folderCount];
          
      }];
     return [folderCount intValue];
 }
 
-- (void)resetArtistCache {
+- (void)resetRootArtistCache {
     [self.dbQueue inDatabase:^(FMDatabase *db) {
          // Delete the old tables
-         [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS artistIndexCache%@", self.tableModifier]];
-         [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS artistNameCache%@", self.tableModifier]];
-         [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS artistCount%@", self.tableModifier]];
+         [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS rootArtistIndexCache%@", self.tableModifier]];
+         [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS rootArtistCache%@", self.tableModifier]];
+         [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS rootArtistCount%@", self.tableModifier]];
          
          // Create the new tables
          NSString *query;
-         query = @"CREATE TABLE artistIndexCache%@ (name TEXT PRIMARY KEY, position INTEGER, count INTEGER)";
+         query = @"CREATE TABLE rootArtistIndexCache%@ (name TEXT PRIMARY KEY, position INTEGER, count INTEGER)";
          [db executeUpdate:[NSString stringWithFormat:query, self.tableModifier]];
-         query = @"CREATE VIRTUAL TABLE artistCache%@ USING FTS3 (id TEXT PRIMARY KEY, name TEXT, coverArtId TEXT, artistImageUrl TEXT, albumCount INTEGER, tokenize=porter)";
+         query = @"CREATE VIRTUAL TABLE rootArtistCache%@ USING FTS3 (id TEXT PRIMARY KEY, name TEXT, coverArtId TEXT, artistImageUrl TEXT, albumCount INTEGER, tokenize=porter)";
          [db executeUpdate:[NSString stringWithFormat:query, self.tableModifier]];
-         query = @"CREATE TABLE artistCount%@ (count INTEGER)";
+         query = @"CREATE TABLE rootArtistCount%@ (count INTEGER)";
          [db executeUpdate:[NSString stringWithFormat:query, self.tableModifier]];
      }];
 }
 
-- (BOOL)addArtistIndexToCache:(NSUInteger)position count:(NSUInteger)artistCount name:(NSString*)name {
+- (BOOL)addRootArtistIndexToCache:(NSUInteger)position count:(NSUInteger)artistCount name:(NSString*)name {
     __block BOOL hadError;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-         NSString *query = [NSString stringWithFormat:@"INSERT INTO artistIndexCache%@ VALUES (?, ?, ?)", self.tableModifier];
+         NSString *query = [NSString stringWithFormat:@"INSERT INTO rootArtistIndexCache%@ VALUES (?, ?, ?)", self.tableModifier];
          [db executeUpdate:query, name, @(position), @(artistCount)];
          hadError = [db hadError];
      }];
     return !hadError;
 }
 
-- (BOOL)addArtistToMainCache:(NSString *)artistId name:(NSString *)name coverArtId:(NSString *)coverArtId artistImageUrl:(NSString *)artistImageUrl albumCount:(NSNumber *)albumCount {
+- (BOOL)addRootArtistToMainCache:(ISMSTagArtist *)tagArtist {
     __block BOOL hadError = NO;
-    if (artistId && name) {
+    if (tagArtist.artistId && tagArtist.name) {
         [self.dbQueue inDatabase:^(FMDatabase *db) {
-             NSString *query = [NSString stringWithFormat:@"INSERT INTO artistCache%@ VALUES (?, ?, ?, ?, ?)", self.tableModifier];
-             [db executeUpdate:query, artistId, name, coverArtId, artistImageUrl, albumCount];
+             NSString *query = [NSString stringWithFormat:@"INSERT INTO rootArtistCache%@ VALUES (?, ?, ?, ?, ?)", self.tableModifier];
+             [db executeUpdate:query, tagArtist.artistId, tagArtist.name, tagArtist.coverArtId, tagArtist.artistImageUrl, @(tagArtist.albumCount)];
              hadError = [db hadError];
          }];
     }

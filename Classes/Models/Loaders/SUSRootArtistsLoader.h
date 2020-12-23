@@ -1,5 +1,5 @@
 //
-//  SUSArtistsLoader.h
+//  SUSRootArtistsLoader.h
 //  iSub
 //
 //  Created by Benjamin Baron on 12/22/20.
@@ -8,7 +8,7 @@
 
 #import "SUSLoader.h"
 
-@interface SUSArtistsLoader : SUSLoader
+@interface SUSRootArtistsLoader : SUSLoader
 
 @property NSUInteger tempRecordCount;
 @property (strong) NSNumber *selectedFolderId;
