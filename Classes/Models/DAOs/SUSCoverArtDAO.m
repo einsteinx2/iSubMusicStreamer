@@ -37,12 +37,12 @@
 
 #pragma mark - Private DB Methods
 
-- (FMDatabaseQueue *)dbQueue
-{
-	if (self.isLarge)
-		return UIDevice.isPad ? databaseS.coverArtCacheDb540Queue : databaseS.coverArtCacheDb320Queue;
-	else
-		return databaseS.coverArtCacheDb60Queue;
+- (FMDatabaseQueue *)dbQueue {
+    return databaseS.serverDbQueue;
+}
+
+- (NSString *)table {
+    return self.isLarge ? @"coverArtCacheLarge" : @"coverArtCacheSmall";
 }
 
 #pragma mark - Public DAO methods
@@ -56,13 +56,15 @@
 }
 
 - (UIImage *)coverArtImage {
-    NSData *imageData = [self.dbQueue dataForQuery:@"SELECT data FROM coverArtCache WHERE id = ?", self.coverArtId.md5];
+    NSString *query = [NSString stringWithFormat:@"SELECT data FROM %@ WHERE id = ?", self.table];
+    NSData *imageData = [self.dbQueue dataForQuery:query, self.coverArtId];
     return imageData ? [UIImage imageWithData:imageData] : self.defaultCoverArtImage;
 }
 
 - (BOOL)isCoverArtCached {
 	if (!self.coverArtId) return NO;
-    return [self.dbQueue stringForQuery:@"SELECT id FROM coverArtCache WHERE id = ?", [self.coverArtId md5]] ? YES : NO;
+    NSString *query = [NSString stringWithFormat:@"SELECT count(*) FROM %@ WHERE id = ?", self.table];
+    return [self.dbQueue intForQuery:query, self.coverArtId] > 0;
 }
 
 - (void)downloadArtIfNotExists {

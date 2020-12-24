@@ -65,15 +65,17 @@ static void initialize_navigationBarImages() {
 #pragma mark Properties
 
 - (FMDatabaseQueue *)dbQueue {
-	if (self.isLarge) {
-		return UIDevice.isPad ? databaseS.coverArtCacheDb540Queue : databaseS.coverArtCacheDb320Queue;
-	} else {
-		return databaseS.coverArtCacheDb60Queue;
-	}
+    return databaseS.serverDbQueue;
+}
+
+- (NSString *)table {
+    return self.isLarge ? @"coverArtCacheLarge" : @"coverArtCacheSmall";
 }
 
 - (BOOL)isCoverArtCached {
-	return [self.dbQueue stringForQuery:@"SELECT id FROM coverArtCache WHERE id = ?", self.coverArtId.md5] ? YES : NO;
+    if (!self.coverArtId) return NO;
+    NSString *query = [NSString stringWithFormat:@"SELECT count(*) FROM %@ WHERE id = ?", self.table];
+    return [self.dbQueue intForQuery:query, self.coverArtId] > 0;
 }
 
 #pragma mark Data loading
@@ -124,7 +126,8 @@ static void initialize_navigationBarImages() {
     if ([UIImage imageWithData:self.receivedData]) {
         DDLogInfo(@"[SUSCoverArtLoader] art loading completed for: %@", self.coverArtId);
         [self.dbQueue inDatabase:^(FMDatabase *db) {
-            [db executeUpdate:@"REPLACE INTO coverArtCache (id, data) VALUES (?, ?)", self.coverArtId.md5, self.receivedData];
+            NSString *query = [NSString stringWithFormat:@"REPLACE INTO %@ (id, data) VALUES (?, ?)", self.table];
+            [db executeUpdate:query, self.coverArtId, self.receivedData];
         }];
         [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CoverArtFinishedInternal object:self.coverArtId];
     } else {

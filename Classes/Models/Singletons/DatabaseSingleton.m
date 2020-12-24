@@ -73,12 +73,17 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)setupServerDatabase {
-    // NOTE: Table creation is handled in the resetFolderCache method
+    
+    //
+    // Folder and album cache
+    //
+    
     NSString *path = [NSString stringWithFormat:@"%@/%@.db", settingsS.updatedDatabasePath, settingsS.urlString.md5];
     self.serverDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
     __block BOOL shouldResetFolderCache = NO;
     [self.serverDbQueue inDatabase:^(FMDatabase *db)  {
-        [db executeUpdate:@"PRAGMA cache_size = 1"];
+        // TODO: Determine the best cache size, for now leave it at the default
+//        [db executeUpdate:@"PRAGMA cache_size = 1"];
         
         // Create shared song table for other tables to join. This now allows all other tables that store songs to just store the song ID
         if (![db tableExists:@"song"]) {
@@ -92,52 +97,28 @@ LOG_LEVEL_ISUB_DEFAULT
         [self resetFolderCache];
         [self resetAlbumCache];
     }
+    
+    //
+    // Cover art cache
+    //
+    
+    [self.serverDbQueue inDatabase:^(FMDatabase * _Nonnull db) {
+        if (![db tableExists:@"coverArtCacheSmall"]) {
+            [db executeUpdate:@"CREATE TABLE coverArtCacheSmall (id TEXT PRIMARY KEY, data BLOB)"];
+        }
+        
+        if (![db tableExists:@"coverArtCacheLarge"]) {
+            [db executeUpdate:@"CREATE TABLE coverArtCacheLarge (id TEXT PRIMARY KEY, data BLOB)"];
+        }
+        
+        if (![db tableExists:@"artistArtCache"]) {
+            [db executeUpdate:@"CREATE TABLE artistArtCache (id TEXT PRIMARY KEY, data BLOB)"];
+        }
+    }];
 }
 
 - (void)setupSharedDatabase {
     
-}
-
-// TODO: Don't share cover art cache between servers as IDs can overlap
-- (void)setupCoverArtDatabases {
-    // Setup music player cover art cache database
-    if (UIDevice.isPad) {
-        // Only load large album art DB if this is an iPad
-        NSString *path = [NSString stringWithFormat:@"%@/coverArtCache540.db", settingsS.databasePath];
-        self.coverArtCacheDb540Queue = [FMDatabaseQueue databaseQueueWithPath:path];
-        [self.coverArtCacheDb540Queue inDatabase:^(FMDatabase *db) {
-            [db executeUpdate:@"PRAGMA cache_size = 1"];
-            
-            if (![db tableExists:@"coverArtCache"])  {
-                [db executeUpdate:@"CREATE TABLE coverArtCache (id TEXT PRIMARY KEY, data BLOB)"];
-            }
-        }];
-        [self setNoBackupFlagForDatabaseAtPath:path];
-    } else {
-        // Only load small album art DB if this is not an iPad
-        NSString *path = [NSString stringWithFormat:@"%@/coverArtCache320.db", settingsS.databasePath];
-        self.coverArtCacheDb320Queue = [FMDatabaseQueue databaseQueueWithPath:path];
-        [self.coverArtCacheDb320Queue inDatabase:^(FMDatabase *db)  {
-            [db executeUpdate:@"PRAGMA cache_size = 1"];
-            
-            if (![db tableExists:@"coverArtCache"]) {
-                [db executeUpdate:@"CREATE TABLE coverArtCache (id TEXT PRIMARY KEY, data BLOB)"];
-            }
-        }];
-        [self setNoBackupFlagForDatabaseAtPath:path];
-    }
-    
-    // Setup album cell cover art cache database
-    NSString *path = [NSString stringWithFormat:@"%@/coverArtCache60.db", settingsS.databasePath];
-    self.coverArtCacheDb60Queue = [FMDatabaseQueue databaseQueueWithPath:path];
-    [self.coverArtCacheDb60Queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"PRAGMA cache_size = 1"];
-        
-        if (![db tableExists:@"coverArtCache"]) {
-            [db executeUpdate:@"CREATE TABLE coverArtCache (id TEXT PRIMARY KEY, data BLOB)"];
-        }
-    }];
-    [self setNoBackupFlagForDatabaseAtPath:path];
 }
 
 - (void)setupPlaylistDatabases {
@@ -474,9 +455,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self.allAlbumsDbQueue close]; self.allAlbumsDbQueue = nil;
 	[self.allSongsDbQueue close]; self.allSongsDbQueue = nil;
 	[self.genresDbQueue close]; self.genresDbQueue = nil;
-	[self.coverArtCacheDb540Queue close]; self.coverArtCacheDb540Queue = nil;
-	[self.coverArtCacheDb320Queue close]; self.coverArtCacheDb320Queue = nil;
-	[self.coverArtCacheDb60Queue close]; self.coverArtCacheDb60Queue = nil;
 	[self.currentPlaylistDbQueue close]; self.currentPlaylistDbQueue = nil;
 	[self.localPlaylistsDbQueue close]; self.localPlaylistsDbQueue = nil;
 	[self.songCacheDbQueue close]; self.songCacheDbQueue = nil;
@@ -486,16 +464,14 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)resetCoverArtCache {
 	// Clear the table cell cover art	
-	[self.coverArtCacheDb60Queue inDatabase:^(FMDatabase *db) {
-		[db executeUpdate:@"DROP TABLE IF EXISTS coverArtCache"];
-		[db executeUpdate:@"CREATE TABLE coverArtCache (id TEXT PRIMARY KEY, data BLOB)"];
-	}];
-	
-	// Clear the player cover art
-	FMDatabaseQueue *dbQueue = UIDevice.isPad ? self.coverArtCacheDb540Queue : self.coverArtCacheDb320Queue;
-	[dbQueue inDatabase:^(FMDatabase *db) {
-		[db executeUpdate:@"DROP TABLE IF EXISTS coverArtCache"];
-		[db executeUpdate:@"CREATE TABLE coverArtCache (id TEXT PRIMARY KEY, data BLOB)"];
+	[self.serverDbQueue inDatabase:^(FMDatabase *db) {
+        // Empty the tables
+		[db executeUpdate:@"DELETE FROM coverArtCacheSmall"];
+        [db executeUpdate:@"DELETE FROM coverArtCacheLarge"];
+        [db executeUpdate:@"DELETE FROM artistArtCache"];
+        
+        // Free up the disk space
+        [db executeUpdate:@"VACUUM"];
 	}];
 }
 

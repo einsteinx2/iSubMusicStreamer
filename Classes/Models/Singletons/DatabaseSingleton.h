@@ -28,9 +28,6 @@ NS_SWIFT_NAME(Database)
 
 @property (nullable, strong) FMDatabaseQueue *allAlbumsDbQueue;
 @property (nullable, strong) FMDatabaseQueue *allSongsDbQueue;
-@property (nullable, strong) FMDatabaseQueue *coverArtCacheDb540Queue;
-@property (nullable, strong) FMDatabaseQueue *coverArtCacheDb320Queue;
-@property (nullable, strong) FMDatabaseQueue *coverArtCacheDb60Queue;
 @property (nullable, strong) FMDatabaseQueue *genresDbQueue;
 @property (nullable, strong) FMDatabaseQueue *currentPlaylistDbQueue;
 @property (nullable, strong) FMDatabaseQueue *localPlaylistsDbQueue;
