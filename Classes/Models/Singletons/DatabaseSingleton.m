@@ -696,15 +696,15 @@ LOG_LEVEL_ISUB_DEFAULT
 	return sections;
 }
 
-- (NSArray *)sectionInfoFromTableWithItemOrderColumn:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column {
+- (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column {
     __block NSArray *sectionInfo;
     [dbQueue inDatabase:^(FMDatabase *db) {
-        sectionInfo = [self sectionInfoFromTableWithItemOrderColumn:table inDatabase:db withColumn:column];
+        sectionInfo = [self sectionInfoFromOrderColumnTable:table inDatabase:db withColumn:column];
     }];
     return sectionInfo;
 }
 
-- (NSArray *)sectionInfoFromTableWithItemOrderColumn:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column {
+- (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column {
     NSArray *sectionTitles = @[@"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z"];
     NSMutableArray *sections = [[NSMutableArray alloc] init];
     

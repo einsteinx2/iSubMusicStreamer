@@ -41,32 +41,46 @@ final class TagArtistLoader: SUSLoader {
             if let error = root.child("error"), error.isValid {
                 informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
             } else {
-                resetDb()
-                var albumOrder = 0
-                root.iterate("artist.album") { element in
-                    let tagAlbum = TagAlbum(element: element)
-                    self.tagAlbums.append(tagAlbum)
-                    self.cacheAlbum(tagAlbum: tagAlbum, itemOrder: albumOrder)
-                    albumOrder += 1
+                if resetDb(artistId: artistId) {
+                    var albumOrder = 0
+                    root.iterate("artist.album") { element in
+                        let tagAlbum = TagAlbum(element: element)
+                        if self.cacheAlbum(artistId: self.artistId, tagAlbum: tagAlbum, itemOrder: albumOrder) {
+                            self.tagAlbums.append(tagAlbum)
+                            albumOrder += 1
+                        } else {
+                            self.informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                            return
+                        }
+                    }
+                    informDelegateLoadingFinished()
+                } else {
+                    informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
                 }
-                informDelegateLoadingFinished()
             }
         }
     }
     
-    private func resetDb() {
+    private func resetDb(artistId: String) -> Bool {
+        var success = true
         Database.shared().serverDbQueue?.inDatabase { db in
             if !db.executeUpdate("DELETE FROM tagAlbum WHERE artistId = ?", artistId) {
-                DDLogError("[TagArtistLoader] Error resetting tagAlbum cache table \(db.lastErrorCode()): \(db.lastErrorMessage())")
+                DDLogError("[TagArtistLoader] Error resetting tagAlbum cache table for artistId \(artistId) - \(db.lastErrorCode()): \(db.lastErrorMessage())")
+                success = false
             }
         }
+        return success
     }
     
-    private func cacheAlbum(tagAlbum: TagAlbum, itemOrder: Int) {
+    private func cacheAlbum(artistId: String, tagAlbum: TagAlbum, itemOrder: Int) -> Bool {
+        var success = true
         Database.shared().serverDbQueue?.inDatabase { db in
-            if !db.executeUpdate("INSERT INTO tagAlbum (artistId, albumId, itemOrder, name, coverArtId, tagArtistName, songCount, duration, playCount, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", artistId, tagAlbum.id, itemOrder, tagAlbum.name, tagAlbum.coverArtId ?? NSNull(), tagAlbum.tagArtistName ?? NSNull(), tagAlbum.songCount, tagAlbum.duration, tagAlbum.playCount, tagAlbum.year) {
+            let query = "INSERT INTO tagAlbum (artistId, albumId, itemOrder, name, coverArtId, tagArtistName, songCount, duration, playCount, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            success = db.executeUpdate(query, artistId, tagAlbum.id, itemOrder, tagAlbum.name, tagAlbum.coverArtId ?? NSNull(), tagAlbum.tagArtistName ?? NSNull(), tagAlbum.songCount, tagAlbum.duration, tagAlbum.playCount, tagAlbum.year)
+            if !success {
                 DDLogError("[TagArtistLoader] Error caching tagAlbum \(db.lastErrorCode()): \(db.lastErrorMessage())")
             }
         }
+        return success
     }
 }

@@ -41,40 +41,53 @@ final class TagAlbumLoader: SUSLoader {
             if let error = root.child("error"), error.isValid {
                 informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
             } else {
-                resetDb()
-                var songOrder = 0
-                root.iterate("album.song") { element in
-                    let song = Song(rxmlElement: element)
-                    if song.path != nil && (Settings.shared().isVideoSupported || !song.isVideo) {
-                        // Fix for pdfs showing in directory listing
-                        // TODO: See if this is still necessary
-                        if song.suffix?.lowercased() != "pdf" {
-                            self.songs.append(song)
-                            self.cacheSong(song: song, itemOrder: songOrder)
-                            songOrder += 1
+                if resetDb(albumId: albumId) {
+                    var songOrder = 0
+                    root.iterate("album.song") { element in
+                        let song = Song(rxmlElement: element)
+                        if song.path != nil && (Settings.shared().isVideoSupported || !song.isVideo) {
+                            // Fix for pdfs showing in directory listing
+                            // TODO: See if this is still necessary
+                            if song.suffix?.lowercased() != "pdf" {
+                                if self.cacheSong(albumId: self.albumId, song: song, itemOrder: songOrder) {
+                                    self.songs.append(song)
+                                    songOrder += 1
+                                } else {
+                                    self.informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                                    return
+                                }
+                            }
                         }
                     }
+                    informDelegateLoadingFinished()
+                } else {
+                    informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
                 }
-                informDelegateLoadingFinished()
             }
         }
     }
     
-    private func resetDb() {
+    private func resetDb(albumId: String) -> Bool {
+        var success = true
         Database.shared().serverDbQueue?.inDatabase { db in
             if !db.executeUpdate("DELETE FROM tagSong WHERE albumId = ?", albumId) {
-                DDLogError("[TagAlbumLoader] Error resetting tagSong cache table \(db.lastErrorCode()): \(db.lastErrorMessage())")
+                DDLogError("[TagAlbumLoader] Error resetting tagSong cache table for albumId \(albumId) - \(db.lastErrorCode()): \(db.lastErrorMessage())")
+                success = false
             }
         }
+        return success
     }
     
-    private func cacheSong(song: Song, itemOrder: Int) {
+    private func cacheSong(albumId: String, song: Song, itemOrder: Int) -> Bool {
+        var success = true
         Database.shared().serverDbQueue?.inDatabase { db in
-            if !db.executeUpdate("INSERT INTO tagSong (albumId, itemOrder, songId) VALUES (?, ?, ?)", albumId, itemOrder, song.songId ?? NSNull()) {
+            let query = "INSERT INTO tagSong (albumId, itemOrder, songId) VALUES (?, ?, ?)"
+            success = db.executeUpdate(query, albumId, itemOrder, song.songId ?? NSNull())
+            if !success {
                 DDLogError("[TagAlbumLoader] Error caching song \(db.lastErrorCode()): \(db.lastErrorMessage())")
             }
         }
-        song.updateMetadataCache()
+        return success && song.updateMetadataCache()
     }
 }
 

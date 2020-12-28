@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SUSLoaderDelegate.h"
 
-@class ISMSFolderArtist, ISMSFolderAlbum, SUSSubFolderDAO;
+@class ISMSFolderArtist, ISMSFolderAlbum, SubfolderDAO;
 
 @interface FolderAlbumViewController : UITableViewController <SUSLoaderDelegate>
 
@@ -18,7 +18,7 @@
 @property (nonatomic, strong) ISMSFolderArtist *folderArtist;
 @property (nonatomic, strong) ISMSFolderAlbum *folderAlbum;
 @property (nonatomic, strong) NSArray *sectionInfo;
-@property (nonatomic, strong) SUSSubFolderDAO *dataModel;
+@property (nonatomic, strong) SubfolderDAO *dataModel;
 
 - (instancetype)initWithFolderArtist:(ISMSFolderArtist *)folderArtist orFolderAlbum:(ISMSFolderAlbum *)folderAlbum;
 

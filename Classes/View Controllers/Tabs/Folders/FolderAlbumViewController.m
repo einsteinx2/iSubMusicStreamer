@@ -14,7 +14,6 @@
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
-#import "SUSSubFolderDAO.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -28,21 +27,17 @@
 	if (folderArtist == nil && folderAlbum == nil) return nil;
 	
     if (self = [super init]) {
-		self.sectionInfo = nil;
-		
 		if (folderArtist != nil) {
 			self.title = folderArtist.name;
-			self.folderId = folderArtist.folderId;
-			self.folderArtist = folderArtist;
-			self.folderAlbum = nil;
+			_folderId = folderArtist.folderId;
+			_folderArtist = folderArtist;
 		} else {
 			self.title = folderAlbum.title;
-			self.folderId = folderAlbum.folderId;
-            self.folderArtist = folderAlbum.folderArtist;
-			self.folderAlbum = folderAlbum;
+			_folderId = folderAlbum.folderId;
+            _folderArtist = folderAlbum.folderArtist;
+			_folderAlbum = folderAlbum;
 		}
-		
-		self.dataModel = [[SUSSubFolderDAO alloc] initWithDelegate:self andId:self.folderId andFolderArtist:self.folderArtist];
+        _dataModel = [[SubfolderDAO alloc] initWithFolderId:_folderId folderArtist:_folderArtist delegate:self];
 		
         if (self.dataModel.hasLoaded) {
             [self.tableView reloadData];
@@ -115,7 +110,7 @@
 
 // Autolayout solution described here: https://medium.com/@aunnnn/table-header-view-with-autolayout-13de4cfc4343
 - (void)addHeaderAndIndex {
-	if (self.dataModel.songsCount == 0 && self.dataModel.albumsCount == 0) {
+	if (self.dataModel.songCount == 0 && self.dataModel.subfolderCount == 0) {
 		self.tableView.tableHeaderView = nil;
     } else {
         // Create the container view and constrain it to the table
@@ -142,9 +137,9 @@
             [playAllAndShuffleHeader.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor]
         ]];
         
-        if (self.dataModel.songsCount > 0) {
+        if (self.dataModel.songCount > 0) {
             // Create the album header view and constrain to the container view
-            AlbumTableViewHeader *albumHeader = [[AlbumTableViewHeader alloc] initWithFolderAlbum:self.folderAlbum tracks:self.dataModel.songsCount duration:self.dataModel.duration];
+            AlbumTableViewHeader *albumHeader = [[AlbumTableViewHeader alloc] initWithFolderAlbum:self.folderAlbum tracks:self.dataModel.songCount duration:self.dataModel.duration];
             [headerView addSubview:albumHeader];
             [NSLayoutConstraint activateConstraints:@[
                 [albumHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor],
@@ -199,25 +194,25 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
-	return self.dataModel.totalCount;
+	return self.dataModel.subfolderCount + self.dataModel.songCount;
 }
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-    if (indexPath.row < self.dataModel.albumsCount) {
+    if (indexPath.row < self.dataModel.subfolderCount) {
         // Album
         cell.hideSecondaryLabel = YES;
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
         cell.hideDurationLabel = YES;
-        [cell updateWithModel:[self.dataModel folderAlbumForTableViewRow:indexPath.row]];
+        [cell updateWithModel:[self.dataModel folderAlbumWithRow:indexPath.row]];
     } else {
         // Song
         cell.hideSecondaryLabel = NO;
         cell.hideCoverArt = YES;
         cell.hideDurationLabel = NO;
-        ISMSSong *song = [self.dataModel songForTableViewRow:indexPath.row];
+        ISMSSong *song = [self.dataModel songWithRow:indexPath.row];
         [cell updateWithModel:song];
         if (song.track == nil || song.track.intValue == 0) {
             cell.hideNumberLabel = YES;
@@ -232,12 +227,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (!indexPath) return;
 	
-    if (indexPath.row < self.dataModel.albumsCount) {
-        ISMSFolderAlbum *folderAlbum = [self.dataModel folderAlbumForTableViewRow:indexPath.row];
+    if (indexPath.row < self.dataModel.subfolderCount) {
+        ISMSFolderAlbum *folderAlbum = [self.dataModel folderAlbumWithRow:indexPath.row];
         FolderAlbumViewController *folderAlbumViewController = [[FolderAlbumViewController alloc] initWithFolderArtist:nil orFolderAlbum:folderAlbum];
         [self pushViewControllerCustom:folderAlbumViewController];
     } else {
-        ISMSSong *playedSong = [self.dataModel playSongAtTableViewRow:indexPath.row];
+        ISMSSong *playedSong = [self.dataModel playSongWithRow:indexPath.row];
         if (!playedSong.isVideo) {
             [self showPlayer];
         }
@@ -245,10 +240,10 @@
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row < self.dataModel.albumsCount) {
-        return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel folderAlbumForTableViewRow:indexPath.row]];
+    if (indexPath.row < self.dataModel.subfolderCount) {
+        return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel folderAlbumWithRow:indexPath.row]];
     } else {
-        ISMSSong *song = [self.dataModel songForTableViewRow:indexPath.row];
+        ISMSSong *song = [self.dataModel songWithRow:indexPath.row];
         if (!song.isVideo) {
             return [SwipeAction downloadAndQueueConfigWithModel:song];
         }
@@ -256,7 +251,7 @@
     return nil;
 }
 
-#pragma mark - ISMSLoader delegate
+#pragma mark ISMSLoader delegate
 
 - (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
     if (settingsS.isPopupsEnabled) {

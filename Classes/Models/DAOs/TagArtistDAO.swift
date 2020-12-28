@@ -16,8 +16,8 @@ import CocoaLumberjackSwift
     
     @objc weak var delegate: SUSLoaderDelegate?
     
-    @objc var hasLoaded: Bool { return tagAlbums.count > 0 }
-    @objc var albumCount: Int { return tagAlbums.count }
+    @objc var hasLoaded: Bool { tagAlbums.count > 0 }
+    @objc var albumCount: Int { tagAlbums.count }
     
     @objc init(artistId: String, delegate: SUSLoaderDelegate?) {
         self.artistId = artistId
@@ -42,7 +42,7 @@ import CocoaLumberjackSwift
                     tagAlbums.append(TagAlbum(result: result))
                 }
             } else {
-                DDLogError("[SUSTagArtistDAO] Failed to read albums for artistId \(artistId)")
+                DDLogError("[TagArtistDAO] Failed to read albums for artistId \(artistId)")
             }
         }
     }

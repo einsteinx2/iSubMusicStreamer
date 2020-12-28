@@ -35,4 +35,7 @@
 #define ISMSErrorCode_CouldNotReachServer		8
 #define ISMSErrorDesc_CouldNotReachServer		@"Could not reach the server"
 
+#define ISMSErrorCode_Database                  9
+#define ISMSErrorDesc_Database                  @"Problem working with local database"
+
 #endif

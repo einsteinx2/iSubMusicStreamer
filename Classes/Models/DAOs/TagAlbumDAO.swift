@@ -16,8 +16,8 @@ import CocoaLumberjackSwift
 
     @objc weak var delegate: SUSLoaderDelegate?
 
-    @objc var hasLoaded: Bool { return songs.count > 0 }
-    @objc var songCount: Int { return songs.count }
+    @objc var hasLoaded: Bool { songs.count > 0 }
+    @objc var songCount: Int { songs.count }
 
     @objc init(albumId: String, delegate: SUSLoaderDelegate?) {
         self.albumId = albumId
@@ -45,8 +45,15 @@ import CocoaLumberjackSwift
         
         // Add the songs to the playlist
         Database.shared().serverDbQueue?.inDatabase { db in
-            if !db.executeUpdate("INSERT INTO currentPlaylist SELECT songId, itemOrder FROM folderSong WHERE folderId = ? ORDER BY itemOrder ASC", albumId) {
-                DDLogError("[SUSTagAlbumDAO] Error inserting album \(albumId)'s songs into current playlist \(db.lastErrorCode()): \(db.lastErrorMessage())");
+            let query = """
+                INSERT INTO currentPlaylist
+                SELECT songId, itemOrder
+                FROM tagSong
+                WHERE albumId = ?
+                ORDER BY itemOrder ASC
+            """
+            if !db.executeUpdate(query, albumId) {
+                DDLogError("[TagAlbumDAO] Error inserting album \(albumId)'s songs into current playlist \(db.lastErrorCode()): \(db.lastErrorMessage())");
             }
         }
         
@@ -74,7 +81,7 @@ import CocoaLumberjackSwift
                     songs.append(Song(result: result))
                 }
             } else {
-                DDLogError("[SUSTagAlbumDAO] Failed to read songs for albumId \(albumId)")
+                DDLogError("[TagAlbumDAO] Failed to read songs for albumId \(albumId)")
             }
         }
     }

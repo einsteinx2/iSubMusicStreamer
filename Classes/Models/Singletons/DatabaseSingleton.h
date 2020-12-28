@@ -63,8 +63,8 @@ NS_SWIFT_NAME(Database)
 - (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column;
 - (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column;
 
-- (NSArray *)sectionInfoFromTableWithItemOrderColumn:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column;
-- (NSArray *)sectionInfoFromTableWithItemOrderColumn:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column;
+- (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column NS_SWIFT_NAME(sectionInfoFromOrderColumnTable(_:databaseQueue:column:));
+- (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column NS_SWIFT_NAME(sectionInfoFromOrderColumnTable(_:database:column:));
 
 - (void)queueAllSongs:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;
 - (void)downloadAllSongs:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;

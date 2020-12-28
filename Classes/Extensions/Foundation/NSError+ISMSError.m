@@ -19,6 +19,7 @@
         case ISMSErrorCode_NotASubsonicServer: return ISMSErrorDesc_NotASubsonicServer;
         case ISMSErrorCode_NotXML: return ISMSErrorDesc_NotXML;
         case ISMSErrorCode_CouldNotCreateConnection: return ISMSErrorDesc_CouldNotCreateConnection;
+        case ISMSErrorCode_Database: return ISMSErrorDesc_Database;
         default: return nil;
     }
 }
