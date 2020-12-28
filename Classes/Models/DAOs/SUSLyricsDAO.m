@@ -27,7 +27,7 @@
 }
 
 - (FMDatabaseQueue *)dbQueue {
-	return databaseS.lyricsDbQueue;
+	return databaseS.sharedDbQueue;
 }
 
 #pragma mark - Public DAO Methods

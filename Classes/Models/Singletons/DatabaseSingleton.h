@@ -15,7 +15,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FMDatabase, FMDatabaseQueue, ISMSFolderArtist, ISMSSong, SUSQueueAllLoader;
+@class FMDatabase, FMDatabaseQueue, ISMSFolderArtist, ISMSSong;
 
 NS_SWIFT_NAME(Database)
 @interface DatabaseSingleton : NSObject 
@@ -33,10 +33,7 @@ NS_SWIFT_NAME(Database)
 @property (nullable, strong) FMDatabaseQueue *localPlaylistsDbQueue;
 @property (nullable, strong) FMDatabaseQueue *songCacheDbQueue;
 @property (nullable, strong) FMDatabaseQueue *cacheQueueDbQueue;
-@property (nullable, strong) FMDatabaseQueue *lyricsDbQueue;
 @property (nullable, strong) FMDatabaseQueue *bookmarksDbQueue;
-
-@property (strong) SUSQueueAllLoader *queueAll;
 
 + (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 + (void)setAllSongsToBackup;
@@ -44,6 +41,7 @@ NS_SWIFT_NAME(Database)
 
 - (void)setupDatabases;
 - (void)closeAllDatabases;
+
 - (void)resetCoverArtCache;
 - (void)resetFolderCache;
 - (void)resetAlbumCache;
@@ -55,10 +53,10 @@ NS_SWIFT_NAME(Database)
 
 - (void)setupAllSongsDb;
 
-- (void)createServerPlaylistTable:(NSString *)md5;
-- (void)removeServerPlaylistTable:(NSString *)md5;
+- (void)createServerPlaylistTable:(NSInteger)playlistId;
+- (void)removeServerPlaylistTable:(NSInteger)playlistId;
 
-- (NSUInteger)serverPlaylistCount:(NSString *)md5;
+- (NSUInteger)serverPlaylistCount:(NSInteger)playlistId;
 
 - (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column;
 - (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column;
@@ -66,10 +64,6 @@ NS_SWIFT_NAME(Database)
 - (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column NS_SWIFT_NAME(sectionInfoFromOrderColumnTable(_:databaseQueue:column:));
 - (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column NS_SWIFT_NAME(sectionInfoFromOrderColumnTable(_:database:column:));
 
-- (void)queueAllSongs:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;
-- (void)downloadAllSongs:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;
-- (void)playAllSongs:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;
-- (void)shuffleAllSongs:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist;
 - (void)shufflePlaylist;
 
 - (void)updateTableDefinitions;

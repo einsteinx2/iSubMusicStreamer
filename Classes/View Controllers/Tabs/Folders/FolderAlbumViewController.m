@@ -34,10 +34,9 @@
 		} else {
 			self.title = folderAlbum.title;
 			_folderId = folderAlbum.folderId;
-            _folderArtist = folderAlbum.folderArtist;
 			_folderAlbum = folderAlbum;
 		}
-        _dataModel = [[SubfolderDAO alloc] initWithFolderId:_folderId folderArtist:_folderArtist delegate:self];
+        _dataModel = [[SubfolderDAO alloc] initWithFolderId:_folderId delegate:self];
 		
         if (self.dataModel.hasLoaded) {
             [self.tableView reloadData];
@@ -126,9 +125,9 @@
         // Create the play all and shuffle buttons and constrain to the container view
         __weak FolderAlbumViewController *weakSelf = self;
         PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
-            [databaseS playAllSongs:weakSelf.folderId folderArtist:weakSelf.folderArtist];
+            [SongLoader playAllWithFolderId:weakSelf.folderId];
         } shuffleHandler:^{
-            [databaseS shuffleAllSongs:weakSelf.folderId folderArtist:weakSelf.folderArtist];
+            [SongLoader shuffleAllWithFolderId:weakSelf.folderId];
         }];
         [headerView addSubview:playAllAndShuffleHeader];
         [NSLayoutConstraint activateConstraints:@[

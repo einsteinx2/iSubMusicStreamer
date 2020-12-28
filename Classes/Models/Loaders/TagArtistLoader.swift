@@ -21,7 +21,7 @@ final class TagArtistLoader: SUSLoader {
         super.init()
     }
     
-    init(artistId: String, callback: @escaping SUSLoaderCallback) {
+    init(artistId: String, callback: @escaping LoaderCallback) {
         self.artistId = artistId
         super.init(callback: callback)
     }

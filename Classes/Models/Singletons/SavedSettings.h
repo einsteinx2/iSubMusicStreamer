@@ -12,7 +12,7 @@
 #import "BassEffectDAO.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "Defines.h"
 #import "ISMSBassVisualType.h"
 
@@ -35,13 +35,15 @@ NS_SWIFT_NAME(Settings)
 
 // Server Login Settings
 @property (nullable, strong) NSMutableArray *serverList;
-@property (nullable, copy) NSString *serverType;
-@property (nullable, copy) NSString *urlString;
-@property (nullable, copy) NSString *username;
-@property (nullable, copy) NSString *password;
+@property (copy) NSString *serverType;
+@property (copy) NSString *urlString;
+@property (copy) NSString *username;
+@property (copy) NSString *password;
 @property (nullable, copy) NSString *uuid;
 @property (nullable, copy) NSString *lastQueryId;
 @property (nullable, copy) NSString *sessionId;
+
+@property (readonly) NSString *urlStringFilesystemSafe;
 
 // Root Folders Settings
 @property (nullable, strong) NSDate *rootFoldersReloadTime;

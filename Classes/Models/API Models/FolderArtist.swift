@@ -39,6 +39,6 @@ import Foundation
     var durationLabelText: String? { return nil }
     var coverArtId: String? { return nil }
     var isCached: Bool { return false }
-    func download() { Database.shared().downloadAllSongs(id, folderArtist: self) }
-    func queue() { Database.shared().queueAllSongs(id, folderArtist: self) }
+    func download() { SongLoader.downloadAll(folderId: id) }
+    func queue() { SongLoader.queueAll(folderId: id) }
 }

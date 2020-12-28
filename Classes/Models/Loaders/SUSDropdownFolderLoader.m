@@ -29,9 +29,7 @@
     } else {
         RXMLElement *error = [root child:@"error"];
         if (error.isValid) {
-            NSInteger code = [[error attribute:@"code"] integerValue];
-            NSString *message = [error attribute:@"message"];
-            [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
+            [self informDelegateLoadingFailed:[NSError errorWithSubsonicXMLResponse:error]];
         } else {
             NSMutableDictionary *musicFolders = [@{@-1: @"All Media Folders"} mutableCopy];
             [root iterate:@"musicFolders.musicFolder" usingBlock:^(RXMLElement *e) {

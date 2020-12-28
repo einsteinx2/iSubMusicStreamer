@@ -15,6 +15,7 @@
 @property BOOL isLarge;
 
 - (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate coverArtId:(NSString *)artId isLarge:(BOOL)large;
+- (instancetype)initWithCallback:(LoaderCallback)callback coverArtId:(NSString *)artId isLarge:(BOOL)large;
 - (BOOL)downloadArtIfNotExists;
 
 @end

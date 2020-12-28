@@ -10,7 +10,7 @@
 #import "ISMSStreamHandler.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "JukeboxSingleton.h"
 #import "ISMSStreamManager.h"
 #import "ISMSCacheQueueManager.h"

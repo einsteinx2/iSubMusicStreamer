@@ -31,9 +31,7 @@
     } else {
         RXMLElement *error = [root child:@"error"];
         if (error.isValid) {
-            NSInteger code = [[error attribute:@"code"] integerValue];
-            NSString *message = [error attribute:@"message"];
-            [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
+            [self informDelegateLoadingFailed:[NSError errorWithSubsonicXMLResponse:error]];
         } else {
             NSMutableArray *tempArray = [NSMutableArray arrayWithCapacity:0];
             [root iterate:@"playlists.playlist" usingBlock:^(RXMLElement *e) {

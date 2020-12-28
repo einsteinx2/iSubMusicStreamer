@@ -52,6 +52,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)isCurrentPlayingSong;
 
+// Read song from any table with an itemOrder column by joining against the shared song metadata table
++ (ISMSSong *)songAtPosition:(NSUInteger)itemOrder inTable:(NSString *)table;
+
 // Read song from any table by joining against the shared song metadata table
 + (nullable ISMSSong *)songFromDbRow:(NSUInteger)row inTable:(NSString *)table;
 

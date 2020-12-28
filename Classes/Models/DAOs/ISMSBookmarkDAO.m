@@ -9,7 +9,7 @@
 #import "ISMSBookmarkDAO.h"
 #import "FMDatabaseQueueAdditions.h"
 #import "DatabaseSingleton.h"
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "SavedSettings.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"

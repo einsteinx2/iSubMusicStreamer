@@ -92,12 +92,6 @@ import Foundation
     }
     var durationLabelText: String? { return nil }
     var isCached: Bool { return false }
-    func download() {
-//        Database.shared().downloadAllSongs(id, folderArtist: self)
-        fatalError("NOT IMPLEMENTED YET")
-    }
-    func queue() {
-//        Database.shared().queueAllSongs(id, folderArtist: self)
-        fatalError("NOT IMPLEMENTED YET")
-    }
+    func download() { SongLoader.downloadAll(tagAlbumId: id) }
+    func queue() { SongLoader.queueAll(tagAlbumId: id) }
 }

@@ -40,19 +40,21 @@ static dispatch_once_t _sharedSessionDispatchOnce = 0;
     // Optionally override in subclass
 }
 
-- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate {
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate {
     if (self = [super init]) {
         [self setup];
-        _delegate = theDelegate;
+        _delegate = delegate;
     }
     
     return self;
 }
 
-- (instancetype)initWithCallbackBlock:(SUSLoaderCallback)theBlock {
+- (instancetype)initWithCallback:(LoaderCallback)callback {
     if (self = [super init]) {
         [self setup];
-        _callbackBlock = [theBlock copy];
+        if (callback) {
+            _callback = [callback copy];
+        }
     }
     
     return self;
@@ -116,8 +118,8 @@ static dispatch_once_t _sharedSessionDispatchOnce = 0;
             [self.delegate loadingFailed:self withError:error];
         }
         
-        if (self.callbackBlock) {
-            self.callbackBlock(NO, error, self);
+        if (self.callback) {
+            self.callback(NO, error);
         }
         
         [self cleanup];
@@ -131,8 +133,8 @@ static dispatch_once_t _sharedSessionDispatchOnce = 0;
             
         }
 
-        if (self.callbackBlock) {
-            self.callbackBlock(YES, nil, self);
+        if (self.callback) {
+            self.callback(YES, nil);
         }
 
         [self cleanup];

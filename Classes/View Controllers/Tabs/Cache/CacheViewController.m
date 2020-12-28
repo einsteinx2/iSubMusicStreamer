@@ -17,7 +17,7 @@
 #import "FMDatabaseQueueAdditions.h"
 #import "Flurry.h"
 #import "SavedSettings.h"
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "MusicSingleton.h"
 #import "CacheSingleton.h"
 #import "DatabaseSingleton.h"

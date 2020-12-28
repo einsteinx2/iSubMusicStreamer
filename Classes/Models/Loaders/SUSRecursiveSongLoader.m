@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Ben Baron. All rights reserved.
 //
 
-#import "SUSQueueAllLoader.h"
+#import "SUSRecursiveSongLoader.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "RXMLElement.h"
 #import "AudioEngine.h"
@@ -20,16 +20,16 @@
 #import "EX2Kit.h"
 #import "Swift.h"
 
-@interface SUSQueueAllLoader()
+@interface SUSRecursiveSongLoader()
 @property (strong) NSData *receivedData;
 @end
 
-@implementation SUSQueueAllLoader
+@implementation SUSRecursiveSongLoader
 
 @synthesize receivedData;
 
 - (void)startLoad {
-    [NSException raise:NSInternalInconsistencyException format:@"must use loadData:artist:"];
+    [NSException raise:NSInternalInconsistencyException format:@"must use loadData:"];
 }
 
 - (void)cancelLoad {
@@ -126,7 +126,7 @@
     [dataTask resume];
 }
 
-- (void)loadData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist {
+- (void)loadData:(NSString *)folderId {
     if (!folderId) {
         [self informDelegateLoadingFailed:[NSError errorWithISMSCode:ISMSErrorCode_CouldNotCreateConnection]];
         return;
@@ -139,7 +139,6 @@
     self.isCancelled = NO;
     
     [self.folderIds addObject:folderId];
-    self.folderArtist = folderArtist;
         
     if (settingsS.isJukeboxEnabled) {
         self.currentPlaylist = @"jukeboxCurrentPlaylist";
@@ -152,32 +151,32 @@
     [self loadAlbumFolder];
 }
 
-- (void)queueData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist {
+- (void)queueData:(NSString *)folderId {
     self.isQueue = YES;
     self.isShuffleButton = NO;
     self.doShowPlayer = NO;
-    [self loadData:folderId folderArtist:folderArtist];
+    [self loadData:folderId];
 }
 
-- (void)cacheData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist {
+- (void)cacheData:(NSString *)folderId {
     self.isQueue = NO;
     self.isShuffleButton = NO;
     self.doShowPlayer = NO;
-    [self loadData:folderId folderArtist:folderArtist];
+    [self loadData:folderId];
 }
 
-- (void)playAllData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist {
+- (void)playAllData:(NSString *)folderId {
     self.isQueue = YES;
     self.isShuffleButton = NO;
     self.doShowPlayer = YES;
-    [self loadData:folderId folderArtist:folderArtist];
+    [self loadData:folderId];
 }
 
-- (void)shuffleData:(NSString *)folderId folderArtist:(ISMSFolderArtist *)folderArtist {
+- (void)shuffleData:(NSString *)folderId {
     self.isQueue = YES;
     self.isShuffleButton = YES;
     self.doShowPlayer = YES;
-    [self loadData:folderId folderArtist:folderArtist];
+    [self loadData:folderId];
 }
 
 - (void)process {
@@ -188,13 +187,11 @@
     } else {
         RXMLElement *error = [root child:@"error"];
         if (error.isValid) {
-            NSInteger code = [[error attribute:@"code"] integerValue];
-            NSString *message = [error attribute:@"message"];
-            [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
+            [self informDelegateLoadingFailed:[NSError errorWithSubsonicXMLResponse:error]];
         } else {
             [root iterate:@"directory.child" usingBlock: ^(RXMLElement *e) {
                 if ([[e attribute:@"isDir"] boolValue]) {
-                    ISMSFolderAlbum *folderAlbum = [[ISMSFolderAlbum alloc] initWithElement:e folderArtist:self.folderArtist];
+                    ISMSFolderAlbum *folderAlbum = [[ISMSFolderAlbum alloc] initWithElement:e];
                     if (![folderAlbum.title isEqualToString:@".AppleDouble"]) {
                         [self.listOfFolderAlbums addObject:folderAlbum];
                     }

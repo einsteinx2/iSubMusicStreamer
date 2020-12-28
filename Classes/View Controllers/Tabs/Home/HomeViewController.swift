@@ -279,7 +279,8 @@ import CocoaLumberjackSwift
     
     private func loadQuickAlbums(modifier: String, title: String) {
         ViewObjects.shared().showAlbumLoadingScreen(AppDelegate.shared().window, sender: self)
-        let loader = SUSQuickAlbumsLoader { _, error, loader in
+        let loader = SUSQuickAlbumsLoader()
+        loader.callback = { _, error in
             ViewObjects.shared().hideLoadingScreen()
             if let error = error {
                 if Settings.shared().isPopupsEnabled && (error as NSError).code != NSURLErrorCancelled {
@@ -287,7 +288,7 @@ import CocoaLumberjackSwift
                     alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 }
-            } else if let loader = loader as? SUSQuickAlbumsLoader {
+            } else {
                 let controller = HomeAlbumViewController(nibName: "HomeAlbumViewController", bundle: nil)
                 controller.modifier = modifier
                 controller.title = title
@@ -303,7 +304,8 @@ import CocoaLumberjackSwift
     
     @objc private func performServerShuffle(notification: Notification?) {
         ViewObjects.shared().showAlbumLoadingScreen(AppDelegate.shared().window, sender: self)
-        let loader = SUSServerShuffleLoader { success, _, loader in
+        let loader = SUSServerShuffleLoader()
+        loader.callback = { success, _ in
             ViewObjects.shared().hideLoadingScreen()
             if success {
                 Music.shared().playSong(atPosition: 0)

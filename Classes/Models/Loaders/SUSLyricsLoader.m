@@ -37,9 +37,7 @@ LOG_LEVEL_ISUB_DEFAULT
     } else {
         RXMLElement *error = [root child:@"error"];
         if (error.isValid) {
-            NSInteger code = [[error attribute:@"code"] integerValue];
-            NSString *message = [error attribute:@"message"];
-            [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
+            [self informDelegateLoadingFailed:[NSError errorWithSubsonicXMLResponse:error]];
             
             [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_LyricsFailed];
         } else {
@@ -68,7 +66,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)insertLyricsIntoDb {
-	[databaseS.lyricsDbQueue inDatabase:^(FMDatabase *db) {
+	[databaseS.sharedDbQueue inDatabase:^(FMDatabase *db) {
 		 [db executeUpdate:@"INSERT INTO lyrics (artist, title, lyrics) VALUES (?, ?, ?)", self.artist, self.title, self.loadedLyrics];
          if ([db hadError]) {
              DDLogError(@"[SUSLyricsLoader] Err inserting lyrics %d: %@", [db lastErrorCode], [db lastErrorMessage]);

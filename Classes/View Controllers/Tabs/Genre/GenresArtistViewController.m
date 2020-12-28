@@ -13,7 +13,7 @@
 #import "Defines.h"
 #import "FMDatabaseQueueAdditions.h"
 #import "SavedSettings.h"
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"

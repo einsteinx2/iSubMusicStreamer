@@ -36,12 +36,12 @@ typedef enum {
 NS_ASSUME_NONNULL_BEGIN
 
 // Loader callback block, make sure to always check success bool, not error, as error can be nil when success is NO
-typedef void (^SUSLoaderCallback)(BOOL success, NSError * _Nullable error, SUSLoader *loader);
+typedef void (^LoaderCallback)(BOOL success, NSError * _Nullable error);
 
 @interface SUSLoader : NSObject
 
 @property (nullable, weak) NSObject<SUSLoaderDelegate> *delegate;
-@property (nullable, copy) SUSLoaderCallback callbackBlock NS_SWIFT_NAME(callback);
+@property (nullable, copy) LoaderCallback callback;
 
 @property (readonly) SUSLoaderType type;
 
@@ -50,8 +50,8 @@ typedef void (^SUSLoaderCallback)(BOOL success, NSError * _Nullable error, SUSLo
 + (NSURLSession *)sharedSession;
 
 - (void)setup; // Override this
-- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate;
-- (instancetype)initWithCallbackBlock:(SUSLoaderCallback)theBlock NS_SWIFT_NAME(init(callback:));
+- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate;
+- (instancetype)initWithCallback:(nullable LoaderCallback)callback;
 
 - (void)startLoad;
 - (void)cancelLoad;

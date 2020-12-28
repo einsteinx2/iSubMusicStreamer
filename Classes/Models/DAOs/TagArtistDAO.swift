@@ -50,9 +50,9 @@ import CocoaLumberjackSwift
 
 @objc extension TagArtistDAO: SUSLoaderManager {
     func startLoad() {
-        loader = TagArtistLoader(artistId: artistId) { [unowned self] success, error, _ in
-            tagAlbums = self.loader?.tagAlbums ?? [TagAlbum]()
-            self.loader = nil
+        loader = TagArtistLoader(artistId: artistId) { [unowned self] success, error in
+            tagAlbums = loader?.tagAlbums ?? [TagAlbum]()
+            loader = nil
             
             if success {
                 delegate?.loadingFinished(nil)

@@ -104,58 +104,54 @@
 
 // Autolayout solution described here: https://medium.com/@aunnnn/table-header-view-with-autolayout-13de4cfc4343
 - (void)addHeaderAndIndex {
-//    if (self.dataModel.songsCount == 0 && self.dataModel.albumsCount == 0) {
-//        self.tableView.tableHeaderView = nil;
-//    } else {
-//        // Create the container view and constrain it to the table
-//        UIView *headerView = [[UIView alloc] init];
-//        headerView.translatesAutoresizingMaskIntoConstraints = NO;
-//        self.tableView.tableHeaderView = headerView;
-//        [NSLayoutConstraint activateConstraints:@[
-//            [headerView.centerXAnchor constraintEqualToAnchor:self.tableView.centerXAnchor],
-//            [headerView.widthAnchor constraintEqualToAnchor:self.tableView.widthAnchor],
-//            [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor]
-//        ]];
-//
-//        // Create the play all and shuffle buttons and constrain to the container view
-//        __weak FolderAlbumViewController *weakSelf = self;
-//        PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
-//            [databaseS playAllSongs:weakSelf.folderId folderArtist:weakSelf.folderArtist];
-//        } shuffleHandler:^{
-//            [databaseS shuffleAllSongs:weakSelf.folderId folderArtist:weakSelf.folderArtist];
-//        }];
-//        [headerView addSubview:playAllAndShuffleHeader];
-//        [NSLayoutConstraint activateConstraints:@[
-//            [playAllAndShuffleHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor],
-//            [playAllAndShuffleHeader.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor],
-//            [playAllAndShuffleHeader.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor]
-//        ]];
-//
-//        if (self.dataModel.songsCount > 0) {
-//            // Create the album header view and constrain to the container view
-//            AlbumTableViewHeader *albumHeader = [[AlbumTableViewHeader alloc] initWithFolderAlbum:self.folderAlbum tracks:self.dataModel.songsCount duration:self.dataModel.folderLength];
-//            [headerView addSubview:albumHeader];
-//            [NSLayoutConstraint activateConstraints:@[
-//                [albumHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor],
-//                [albumHeader.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor],
-//                [albumHeader.topAnchor constraintEqualToAnchor:headerView.topAnchor]
-//            ]];
-//
-//            // Constrain the buttons below the album header
-//            [playAllAndShuffleHeader.topAnchor constraintEqualToAnchor:albumHeader.bottomAnchor].active = YES;
-//        } else {
-//            // Play All and Shuffle buttons only
-//            [playAllAndShuffleHeader.topAnchor constraintEqualToAnchor:headerView.topAnchor].active = YES;
-//        }
-//
-//        // Force re-layout using the constraints
-//        [self.tableView.tableHeaderView layoutIfNeeded];
-//        self.tableView.tableHeaderView = self.tableView.tableHeaderView;
-//    }
-//
-//    self.sectionInfo = self.dataModel.sectionInfo;
-//    if (self.sectionInfo)
-//        [self.tableView reloadData];
+    if (self.dataModel.songCount == 0) {
+        self.tableView.tableHeaderView = nil;
+    } else {
+        // Create the container view and constrain it to the table
+        UIView *headerView = [[UIView alloc] init];
+        headerView.translatesAutoresizingMaskIntoConstraints = NO;
+        self.tableView.tableHeaderView = headerView;
+        [NSLayoutConstraint activateConstraints:@[
+            [headerView.centerXAnchor constraintEqualToAnchor:self.tableView.centerXAnchor],
+            [headerView.widthAnchor constraintEqualToAnchor:self.tableView.widthAnchor],
+            [headerView.topAnchor constraintEqualToAnchor:self.tableView.topAnchor]
+        ]];
+
+        // Create the play all and shuffle buttons and constrain to the container view
+        __weak TagAlbumViewController *weakSelf = self;
+        PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
+            [SongLoader playAllWithTagAlbumId:weakSelf.tagAlbum.albumId];
+        } shuffleHandler:^{
+            [SongLoader shuffleAllWithTagAlbumId:weakSelf.tagAlbum.albumId];
+        }];
+        [headerView addSubview:playAllAndShuffleHeader];
+        [NSLayoutConstraint activateConstraints:@[
+            [playAllAndShuffleHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor],
+            [playAllAndShuffleHeader.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor],
+            [playAllAndShuffleHeader.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor]
+        ]];
+
+        if (self.dataModel.songCount > 0) {
+            // Create the album header view and constrain to the container view
+            AlbumTableViewHeader *albumHeader = [[AlbumTableViewHeader alloc] initWithTagAlbum:self.tagAlbum];
+            [headerView addSubview:albumHeader];
+            [NSLayoutConstraint activateConstraints:@[
+                [albumHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor],
+                [albumHeader.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor],
+                [albumHeader.topAnchor constraintEqualToAnchor:headerView.topAnchor]
+            ]];
+
+            // Constrain the buttons below the album header
+            [playAllAndShuffleHeader.topAnchor constraintEqualToAnchor:albumHeader.bottomAnchor].active = YES;
+        } else {
+            // Play All and Shuffle buttons only
+            [playAllAndShuffleHeader.topAnchor constraintEqualToAnchor:headerView.topAnchor].active = YES;
+        }
+
+        // Force re-layout using the constraints
+        [self.tableView.tableHeaderView layoutIfNeeded];
+        self.tableView.tableHeaderView = self.tableView.tableHeaderView;
+    }
 }
 
 #pragma mark Actions

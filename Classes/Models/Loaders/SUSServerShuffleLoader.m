@@ -9,7 +9,7 @@
 #import "SUSServerShuffleLoader.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "SavedSettings.h"
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
 #import "ISMSSong+DAO.h"

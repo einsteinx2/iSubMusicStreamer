@@ -11,7 +11,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define playlistS ((PlaylistSingleton *)[PlaylistSingleton sharedInstance])
+#define playlistS ((PlayQueueSingleton *)[PlayQueueSingleton sharedInstance])
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,7 +23,7 @@ typedef enum {
 
 @class ISMSSong, FMDatabase;
 NS_SWIFT_NAME(PlayQueue)
-@interface PlaylistSingleton : NSObject {
+@interface PlayQueueSingleton : NSObject {
 	NSInteger shuffleIndex;
 	NSInteger normalIndex;
 	ISMSRepeatMode repeatMode;

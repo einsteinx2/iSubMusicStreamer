@@ -89,7 +89,7 @@ import CocoaLumberjackSwift
 
 @objc extension TagAlbumDAO: SUSLoaderManager {
     func startLoad() {
-        loader = TagAlbumLoader(albumId: albumId) { [unowned self] success, error, _ in
+        loader = TagAlbumLoader(albumId: albumId) { [unowned self] success, error in
             songs = self.loader?.songs ?? [Song]()
             self.loader = nil
 

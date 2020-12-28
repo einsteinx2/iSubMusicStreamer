@@ -8,13 +8,13 @@
 
 #import "SocialSingleton.h"
 #import "BassGaplessPlayer.h"
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "ISMSStreamManager.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "SUSScrobbleLoader.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "ISMSStreamManager.h"
 #import "ISMSSong+DAO.h"
 #import "ISMSServer.h"
@@ -109,7 +109,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)scrobbleSong:(ISMSSong*)aSong isSubmission:(BOOL)isSubmission {
 	if (settingsS.isScrobbleEnabled && !settingsS.isOfflineMode) {
-		SUSScrobbleLoader *loader = [[SUSScrobbleLoader alloc] initWithCallbackBlock:^(BOOL success, NSError *error, SUSLoader *loader) {
+		SUSScrobbleLoader *loader = [[SUSScrobbleLoader alloc] initWithCallback:^(BOOL success, NSError *error) {
             DDLogInfo(@"[SocialSingleton] Scrobble successfully completed for song: %@", aSong.title);
         }];
         loader.aSong = aSong;

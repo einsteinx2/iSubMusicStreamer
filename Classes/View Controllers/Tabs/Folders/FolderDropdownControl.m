@@ -249,10 +249,11 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
 }
 
 - (void)updateFolders {
-    SUSDropdownFolderLoader *loader = [[SUSDropdownFolderLoader alloc] initWithCallbackBlock:^(BOOL success, NSError *error, SUSLoader *loader) {
-        SUSDropdownFolderLoader *theLoader = (SUSDropdownFolderLoader *)loader;
+    SUSDropdownFolderLoader *loader = [[SUSDropdownFolderLoader alloc] init];
+    __weak SUSDropdownFolderLoader *weakLoader = loader;
+    loader.callback = ^(BOOL success, NSError *error) {
         if (success) {
-            self.folders = theLoader.updatedfolders;
+            self.folders = weakLoader.updatedfolders;
             [SUSRootFoldersDAO setFolderDropdownFolders:self.folders];
             [SUSRootArtistsDAO setFolderDropdownFolders:self.folders];
         } else {
@@ -260,7 +261,7 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
             // failed.  how to report this to the user?
             DDLogError(@"[FolderDropdownControl] failed to update folders: %@", error.localizedDescription);
         }
-    }];
+    };
     [loader startLoad];
     
     // Save the default

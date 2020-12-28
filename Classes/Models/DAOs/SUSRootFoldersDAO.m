@@ -66,7 +66,10 @@
 }
 
 - (NSUInteger)rootFolderCount {
-	NSString *query = [NSString stringWithFormat:@"SELECT count FROM rootFolderCount%@ LIMIT 1", self.tableModifier];
+    NSString *table = [NSString stringWithFormat:@"rootFolderCount%@", self.tableModifier];
+    if (![self.dbQueue tableExists:table]) return 0;
+    
+	NSString *query = [NSString stringWithFormat:@"SELECT count FROM %@ LIMIT 1", table];
 	return [self.dbQueue intForQuery:query];
 }
 
@@ -76,9 +79,12 @@
 }
 
 - (NSArray *)rootFolderIndexNames {
+    NSString *table = [NSString stringWithFormat:@"rootFolderIndexCache%@", self.tableModifier];
+    if (![self.dbQueue tableExists:table]) return [[NSArray alloc] init];
+    
 	__block NSMutableArray *names = [NSMutableArray arrayWithCapacity:0];
 	[self.dbQueue inDatabase:^(FMDatabase *db) {
-		NSString *query = [NSString stringWithFormat:@"SELECT * FROM rootFolderIndexCache%@", self.tableModifier];
+		NSString *query = [NSString stringWithFormat:@"SELECT * FROM %@", table];
 		FMResultSet *result = [db executeQuery:query];
 		while ([result next]) {
 			NSString *name = [result stringForColumn:@"name"];
@@ -90,9 +96,12 @@
 }
 
 - (NSArray *)rootFolderIndexPositions {
+    NSString *table = [NSString stringWithFormat:@"rootFolderIndexCache%@", self.tableModifier];
+    if (![self.dbQueue tableExists:table]) return [[NSArray alloc] init];
+    
 	__block NSMutableArray *positions = [NSMutableArray arrayWithCapacity:0];
 	[self.dbQueue inDatabase:^(FMDatabase *db) {
-		NSString *query = [NSString stringWithFormat:@"SELECT * FROM rootFolderIndexCache%@", self.tableModifier];
+		NSString *query = [NSString stringWithFormat:@"SELECT position FROM %@", table];
 		FMResultSet *result = [db executeQuery:query];
 		while ([result next]) {
 			@autoreleasepool {
@@ -106,9 +115,12 @@
 }
 
 - (NSArray *)rootFolderIndexCounts {
+    NSString *table = [NSString stringWithFormat:@"rootFolderIndexCache%@", self.tableModifier];
+    if (![self.dbQueue tableExists:table]) return [[NSArray alloc] init];
+    
 	__block NSMutableArray *counts = [NSMutableArray arrayWithCapacity:0];
 	[self.dbQueue inDatabase:^(FMDatabase *db) {
-		NSString *query = [NSString stringWithFormat:@"SELECT * FROM rootFolderIndexCache%@", self.tableModifier];
+		NSString *query = [NSString stringWithFormat:@"SELECT count FROM %@", table];
 		FMResultSet *result = [db executeQuery:query];
 		while ([result next]) {
 			@autoreleasepool {
@@ -124,7 +136,7 @@
 - (ISMSFolderArtist *)rootFolderArtistForPosition:(NSUInteger)position {
 	__block ISMSFolderArtist *folderArtist = nil;
 	[self.dbQueue inDatabase:^(FMDatabase *db) {
-		NSString *query = [NSString stringWithFormat:@"SELECT * FROM rootFolderNameCache%@ WHERE ROWID = ?", self.tableModifier];
+		NSString *query = [NSString stringWithFormat:@"SELECT name, id FROM rootFolderNameCache%@ WHERE ROWID = ?", self.tableModifier];
 		FMResultSet *result = [db executeQuery:query, @(position)];
 		while ([result next]) {
 			@autoreleasepool {
@@ -141,7 +153,7 @@
 - (ISMSFolderArtist *)rootFolderArtistForPositionInSearch:(NSUInteger)position {
 	__block ISMSFolderArtist *folderArtist = nil;
 	[self.dbQueue inDatabase:^(FMDatabase *db) {
-		NSString *query = @"SELECT * FROM rootFolderNameSearch WHERE ROWID = ?";
+		NSString *query = @"SELECT name, id FROM rootFolderNameSearch WHERE ROWID = ?";
 		FMResultSet *result = [db executeQuery:query, @(position)];
 		while ([result next]) {
 			@autoreleasepool  {

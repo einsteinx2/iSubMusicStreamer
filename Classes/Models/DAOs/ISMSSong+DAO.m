@@ -8,13 +8,13 @@
 
 #import "ISMSSong+DAO.h"
 #import "FMDatabaseQueueAdditions.h"
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "ISMSCacheQueueManager.h"
 #import "ISMSStreamManager.h"
 #import "BassGaplessPlayer.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
 #import "ISMSStreamManager.h"
@@ -25,12 +25,9 @@ LOG_LEVEL_ISUB_DEFAULT
 
 @implementation ISMSSong (DAO)
 
-- (BOOL)fileExists
-{
+- (BOOL)fileExists {
 	// Filesystem check
-	BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:self.currentPath]; 
-	//DLog(@"fileExists: %@  at path: %@", NSStringFromBOOL(fileExists), self.currentPath);
-	return fileExists;
+	return [[NSFileManager defaultManager] fileExistsAtPath:self.currentPath];
 	
 	// Database check
 	//return [self.db stringForQuery:@"SELECT md5 FROM cachedSongs WHERE md5 = ?", [self.path md5]] ? YES : NO;
@@ -127,6 +124,21 @@ LOG_LEVEL_ISUB_DEFAULT
         return [[ISMSSong alloc] initWithResult:result];
     }
 	return nil;
+}
+
++ (ISMSSong *)songAtPosition:(NSUInteger)itemOrder inTable:(NSString *)table {
+    __block ISMSSong *song = nil;
+    [databaseS.serverDbQueue inDatabase:^(FMDatabase *db) {
+        NSString *query = [NSString stringWithFormat:@"SELECT song.* FROM %@ JOIN song ON %@.songId = song.songId WHERE %@.itemOrder = %lu", table, table, table, (unsigned long)itemOrder];
+        FMResultSet *result = [db executeQuery:query];
+        if (db.hadError) {
+            DDLogError(@"[ISMSSong+DAO] Error selecting song at position %lu in table %@ - %d: %@", (unsigned long)itemOrder, table, db.lastErrorCode, db.lastErrorMessage);
+        } else {
+            song = [ISMSSong songFromDbResult:result];
+        }
+        [result close];
+    }];
+    return song;
 }
 
 + (ISMSSong *)songFromDbRow:(NSUInteger)row inTable:(NSString *)table {

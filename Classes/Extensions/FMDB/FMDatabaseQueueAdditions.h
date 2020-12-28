@@ -8,6 +8,7 @@
 
 #import "FMDatabaseAdditions.h"
 #import "FMDatabaseQueue.h"
+#import "FMDatabase+Vacuum.h"
 
 @interface FMDatabaseQueue (Additions)
 

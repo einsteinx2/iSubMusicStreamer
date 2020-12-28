@@ -9,7 +9,7 @@
 #import "iSubBassGaplessPlayerDelegate.h"
 #import "BassGaplessPlayer.h"
 #import "ISMSStreamHandler.h"
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "MusicSingleton.h"
 #import "SocialSingleton.h"
 #import "ISMSStreamManager.h"

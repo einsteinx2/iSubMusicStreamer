@@ -32,11 +32,8 @@
         [self informDelegateLoadingFailed:error];
     } else {
         RXMLElement *error = [root child:@"error"];
-        if (error.isValid)
-        {
-            NSInteger code = [[error attribute:@"code"] integerValue];
-            NSString *message = [error attribute:@"message"];
-            [self informDelegateLoadingFailed:[NSError errorWithISMSCode:code message:message]];
+        if (error.isValid) {
+            [self informDelegateLoadingFailed:[NSError errorWithSubsonicXMLResponse:error]];
         } else {
             NSMutableArray *folderAlbums = [[NSMutableArray alloc] init];
             [root iterate:@"albumList.album" usingBlock:^(RXMLElement *e) {

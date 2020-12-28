@@ -9,22 +9,22 @@
 import Foundation
 import CocoaLumberjackSwift
 
+typealias FolderAlbumHandler = (_ folderAlbum: FolderAlbum) -> ()
+typealias SongHandler = (_ song: Song) -> ()
+
 final class SubfolderLoader: SUSLoader {
     override var type: SUSLoaderType { return SUSLoaderType_SubFolders }
     
     let folderId: String
-    let folderArtist: FolderArtist // TODO: Get rid of this hack
     private(set) var folderMetadata: FolderMetadata?
     
-    init(folderId: String, folderArtist: FolderArtist) {
-        self.folderId = folderId
-        self.folderArtist = folderArtist
-        super.init()
-    }
+    var onProcessFolderAlbum: FolderAlbumHandler?
+    var onProcessSong: SongHandler?
     
-    init(folderId: String, folderArtist: FolderArtist, callback: @escaping SUSLoaderCallback) {
+    init(folderId: String, callback: LoaderCallback? = nil, folderAlbumHandler: FolderAlbumHandler? = nil, songHandler: SongHandler? = nil) {
         self.folderId = folderId
-        self.folderArtist = folderArtist
+        self.onProcessFolderAlbum = folderAlbumHandler
+        self.onProcessSong = songHandler
         super.init(callback: callback)
     }
     
@@ -49,9 +49,12 @@ final class SubfolderLoader: SUSLoader {
                     var subfolders = [FolderAlbum]()//NSMutableArray()
                     root.iterate("directory.child") { element in
                         if element.attribute("isDir") == "true" {
-                            let folderAlbum = FolderAlbum(element: element, folderArtist: self.folderArtist)
+                            let folderAlbum = FolderAlbum(element: element)
                             if folderAlbum.title != ".AppleDouble" {
                                 subfolders.append(folderAlbum)
+                                
+                                // Optionally the client can do something with the folder album object
+                                self.onProcessFolderAlbum?(folderAlbum)
                             }
                         } else {
                             let song = Song(rxmlElement: element)
@@ -62,6 +65,9 @@ final class SubfolderLoader: SUSLoader {
                                     if self.cacheSong(folderId: self.folderId, song: song, itemOrder: songCount) {
                                         songCount += 1
                                         duration += song.duration?.intValue ?? 0
+                                        
+                                        // Optionally the client can do something with the song object
+                                        self.onProcessSong?(song)
                                     } else {
                                         self.informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
                                         return
@@ -140,8 +146,8 @@ final class SubfolderLoader: SUSLoader {
     private func cacheFolder(folderId: String, folderAlbum: FolderAlbum, itemOrder: Int) -> Bool {
         var success = true
         Database.shared().serverDbQueue?.inDatabase { db in
-            let query = "INSERT INTO folderAlbum (folderId, subfolderId, itemOrder, title, coverArtId, folderArtistId, folderArtistName, tagAlbumName, playCount, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            success = db.executeUpdate(query, folderId, folderAlbum.id, itemOrder, folderAlbum.title, folderAlbum.coverArtId ?? NSNull(),folderAlbum.folderArtistId, folderAlbum.folderArtistName, folderAlbum.tagAlbumName ?? NSNull(), folderAlbum.playCount, folderAlbum.year)
+            let query = "INSERT INTO folderAlbum (folderId, subfolderId, itemOrder, title, coverArtId, tagArtistName, tagAlbumName, playCount, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            success = db.executeUpdate(query, folderId, folderAlbum.id, itemOrder, folderAlbum.title, folderAlbum.coverArtId ?? NSNull(), folderAlbum.tagArtistName ?? NSNull(), folderAlbum.tagAlbumName ?? NSNull(), folderAlbum.playCount, folderAlbum.year)
             if !success {
                 DDLogError("[SubfolderLoader] Error caching folderAlbum \(db.lastErrorCode()): \(db.lastErrorMessage())")
             }

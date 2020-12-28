@@ -11,7 +11,6 @@ import CocoaLumberjackSwift
 
 @objc final class SubfolderDAO: NSObject {
     private let folderId: String
-    private let folderArtist: FolderArtist
     private var loader: SubfolderLoader?
     private var metadata: FolderMetadata?
     
@@ -22,9 +21,8 @@ import CocoaLumberjackSwift
     @objc var songCount: Int { metadata?.songCount ?? 0 }
     @objc var duration: Int { metadata?.duration ?? 0 }
     
-    @objc init(folderId: String, folderArtist: FolderArtist, delegate: SUSLoaderDelegate?) {
+    @objc init(folderId: String, delegate: SUSLoaderDelegate?) {
         self.folderId = folderId
-        self.folderArtist = folderArtist
         self.delegate = delegate
         super.init()
         metadata = folderMetadata(folderId: folderId)
@@ -126,9 +124,9 @@ import CocoaLumberjackSwift
 
 @objc extension SubfolderDAO: SUSLoaderManager {
     func startLoad() {
-        loader = SubfolderLoader(folderId: folderId, folderArtist: folderArtist) { [unowned self] success, error, _ in
-            metadata = self.loader?.folderMetadata
-            self.loader = nil
+        loader = SubfolderLoader(folderId: folderId) { [unowned self] success, error in
+            metadata = loader?.folderMetadata
+            loader = nil
             if success {
                 delegate?.loadingFinished(nil)
             } else {

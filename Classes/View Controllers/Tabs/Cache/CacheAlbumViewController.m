@@ -13,7 +13,7 @@
 #import "Defines.h"
 #import "FMDatabaseQueueAdditions.h"
 #import "SavedSettings.h"
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
@@ -315,11 +315,20 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
                                          title:title ? title : @""
                                     coverArtId:coverArtId
                                 parentFolderId:@""
-                                folderArtistId:@""
-                              folderArtistName:self.artistName
+                                 tagArtistName:self.artistName
                                   tagAlbumName:nil
                                      playCount:0
                                           year:0];
+    
+//    return [[ISMSFolderAlbum alloc] initWithId:@""
+//                                         title:title ? title : @""
+//                                    coverArtId:coverArtId
+//                                parentFolderId:@""
+//                                folderArtistId:@""
+//                              folderArtistName:self.artistName
+//                                  tagAlbumName:nil
+//                                     playCount:0
+//                                          year:0];
 }
 
 - (ISMSSong *)songAtIndexPath:(NSIndexPath *)indexPath {

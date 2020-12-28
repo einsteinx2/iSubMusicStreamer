@@ -6,7 +6,7 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "FMDatabaseQueueAdditions.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
@@ -17,39 +17,15 @@
 #import "EX2Kit.h"
 #import <MediaPlayer/MediaPlayer.h>
 
-@implementation PlaylistSingleton
+@implementation PlayQueueSingleton
 
 #pragma mark Private DB Methods
 
 - (FMDatabaseQueue *)dbQueue {
-	return databaseS.currentPlaylistDbQueue;
+	return databaseS.serverDbQueue;
 }
 
 #pragma mark Public DAO Methods
-
-- (void)resetCurrentPlaylist {
-	[self.dbQueue inDatabase:^(FMDatabase *db) {
-		if (settingsS.isJukeboxEnabled) {
-			[db executeUpdate:@"DROP TABLE jukeboxCurrentPlaylist"];
-			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE jukeboxCurrentPlaylist (%@)", ISMSSong.standardSongColumnSchema]];	
-		} else {
-			[db executeUpdate:@"DROP TABLE currentPlaylist"];
-			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE currentPlaylist (%@)", ISMSSong.standardSongColumnSchema]];	
-		}
-	}];
-}
-
-- (void)resetShufflePlaylist {
-	[self.dbQueue inDatabase:^(FMDatabase *db) {
-		if (settingsS.isJukeboxEnabled) {
-			[db executeUpdate:@"DROP TABLE jukeboxShufflePlaylist"];
-			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE jukeboxShufflePlaylist (%@)", ISMSSong.standardSongColumnSchema]];	
-		} else {
-			[db executeUpdate:@"DROP TABLE shufflePlaylist"];
-			[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE shufflePlaylist (%@)", ISMSSong.standardSongColumnSchema]];	
-		}
-	}];
-}
 
 - (void)deleteSongs:(NSArray *)indexes {
 	@autoreleasepool {
@@ -61,7 +37,7 @@
 		
 		if (settingsS.isJukeboxEnabled) {
 			if (indexesMut.count == self.count) {
-				[self resetCurrentPlaylist];
+				[databaseS resetCurrentPlaylist];
 			} else {
 				[self.dbQueue inDatabase:^(FMDatabase *db) {
 					[db executeUpdate:@"DROP TABLE IF EXISTS jukeboxTemp"];
@@ -168,7 +144,7 @@
     } else {
         table = self.isShuffle ? @"shufflePlaylist" : @"currentPlaylist";
     }
-    return [ISMSSong songFromDbRow:index inTable:table inDatabaseQueue:self.dbQueue];
+    return [ISMSSong songAtPosition:index inTable:table];
 }
 
 - (ISMSSong *)prevSong {
@@ -378,7 +354,7 @@
 		self.shuffleIndex = 0;
 		self.isShuffle = YES;
 		
-		[self resetShufflePlaylist];
+		[databaseS resetShufflePlaylist];
 		[currentSong addToShufflePlaylistDbQueue];
 		
 		[self.dbQueue inDatabase:^(FMDatabase *db) {
@@ -411,7 +387,7 @@
 }
 
 + (instancetype)sharedInstance {
-    static PlaylistSingleton *sharedInstance = nil;
+    static PlayQueueSingleton *sharedInstance = nil;
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{
 		sharedInstance = [[self alloc] init];

@@ -7,10 +7,10 @@
 //
 
 #import "SavedSettings.h"
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "BassGaplessPlayer.h"
 #import "AudioEngine.h"
-#import "PlaylistSingleton.h"
+#import "PlayQueueSingleton.h"
 #import "DatabaseSingleton.h"
 #import "CacheSingleton.h"
 #import "ISMSCacheQueueManager.h"
@@ -307,6 +307,21 @@ LOG_LEVEL_ISUB_DEFAULT
     NSString *key = [NSString stringWithFormat:@"sessionId%@", self.urlString.md5];
     [_userDefaults setObject:sessionId forKey:key];
     [_userDefaults synchronize];
+}
+
+- (NSString *)urlStringFilesystemSafe {
+    NSURL *url = [NSURL URLWithString:self.urlString];
+    NSMutableString *urlStringFilesystemSafe = [NSMutableString stringWithFormat:@"%@", url.host];
+    unsigned long port = url.port.unsignedLongValue;
+    if (port != 0 && port != 80) {
+        [urlStringFilesystemSafe appendFormat:@"_%lu", port];
+    }
+    for (NSString *pathComponent in url.pathComponents) {
+        if (![pathComponent containsString:@"/"]) {
+            [urlStringFilesystemSafe appendFormat:@"_%@", pathComponent];
+        }
+    }
+    return urlStringFilesystemSafe;
 }
 
 #pragma mark - Document Folder Paths
