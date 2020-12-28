@@ -60,7 +60,7 @@ LOG_LEVEL_ISUB_DEFAULT
                     if (aSong.path && (settingsS.isVideoSupported || !aSong.isVideo)) {
                         // Fix for pdfs showing in directory listing
                         if (![aSong.suffix.lowercaseString isEqualToString:@"pdf"]) {
-                            [self insertSongIntoFolderCache:aSong];
+                            [self insertSongIntoFolderCache:aSong itemOrder:self.songCount];
                             self.songCount++;
                             self.duration += aSong.duration.intValue;
                         }
@@ -72,8 +72,10 @@ LOG_LEVEL_ISUB_DEFAULT
             [subfolders sortUsingComparator:^NSComparisonResult(ISMSFolderAlbum *obj1, ISMSFolderAlbum *obj2) {
                 return [obj1.title caseInsensitiveCompareWithoutIndefiniteArticles:obj2.title];
             }];
+            NSUInteger albumOrder = 0;
             for (ISMSFolderAlbum *folderAlbum in subfolders) {
-                [self insertFolderAlbumIntoFolderCache:folderAlbum];
+                [self insertFolderAlbumIntoFolderCache:folderAlbum itemOrder:albumOrder];
+                albumOrder++;
             }
             self.subfolderCount = subfolders.count;
             //
@@ -109,10 +111,10 @@ LOG_LEVEL_ISUB_DEFAULT
     return !hadError;
 }
 
-- (BOOL)insertFolderAlbumIntoFolderCache:(ISMSFolderAlbum *)folderAlbum {
+- (BOOL)insertFolderAlbumIntoFolderCache:(ISMSFolderAlbum *)folderAlbum itemOrder:(NSUInteger)itemOrder {
     __block BOOL hadError;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"INSERT INTO folderAlbum (folderId, subfolderId, title, coverArtId, folderArtistId, folderArtistName, tagAlbumName, playCount, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", self.folderId, folderAlbum.folderId, folderAlbum.title, folderAlbum.coverArtId, folderAlbum.folderArtistId, folderAlbum.folderArtistName, folderAlbum.tagAlbumName, @(folderAlbum.playCount), @(folderAlbum.year)];
+        [db executeUpdate:@"INSERT INTO folderAlbum (folderId, subfolderId, itemOrder, title, coverArtId, folderArtistId, folderArtistName, tagAlbumName, playCount, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", self.folderId, folderAlbum.folderId, @(itemOrder), folderAlbum.title, folderAlbum.coverArtId, folderAlbum.folderArtistId, folderAlbum.folderArtistName, folderAlbum.tagAlbumName, @(folderAlbum.playCount), @(folderAlbum.year)];
         
         hadError = db.hadError;
         if (hadError) {
@@ -122,10 +124,10 @@ LOG_LEVEL_ISUB_DEFAULT
     return !hadError;
 }
 
-- (BOOL)insertSongIntoFolderCache:(ISMSSong *)song {
+- (BOOL)insertSongIntoFolderCache:(ISMSSong *)song itemOrder:(NSUInteger)itemOrder {
     __block BOOL hadError;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"INSERT INTO folderSong (folderId, songId) VALUES (?, ?)", self.folderId, song.songId];
+        [db executeUpdate:@"INSERT INTO folderSong (folderId, itemOrder, songId) VALUES (?, ?, ?)", self.folderId, @(itemOrder), song.songId];
         hadError = db.hadError;
         if (hadError) {
             DDLogError(@"[SUSSubFolderLoader] Error inserting song %d: %@", db.lastErrorCode, db.lastErrorMessage);

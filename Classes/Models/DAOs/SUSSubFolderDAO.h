@@ -8,28 +8,25 @@
 
 #import "SUSLoaderManager.h"
 
-@class FMDatabase, ISMSFolderArtist, ISMSFolderAlbum, ISMSSong, SUSSubFolderLoader;
+@class FMDatabase, ISMSFolderArtist, ISMSFolderAlbum, ISMSFolderMetadata, ISMSSong, SUSSubFolderLoader;
 
 @interface SUSSubFolderDAO : NSObject <SUSLoaderDelegate, SUSLoaderManager>
 
-@property NSUInteger albumStartRow;
-@property NSUInteger songStartRow;
-@property NSUInteger albumsCount;
-@property NSUInteger songsCount;
+@property (readonly) NSUInteger albumsCount;
+@property (readonly) NSUInteger songsCount;
+@property (readonly) NSUInteger duration;
 
 @property (weak) NSObject<SUSLoaderDelegate> *delegate;
 @property (strong) SUSSubFolderLoader *loader;
 
-@property (copy) NSString *folderId;
 @property (copy) ISMSFolderArtist *folderArtist;
+@property (strong) ISMSFolderMetadata *folderMetadata;
 
 @property (readonly) NSUInteger totalCount;
 @property (readonly) BOOL hasLoaded;
-@property (readonly) NSUInteger folderLength;
 
 - (NSArray *)sectionInfo;
 
-- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate;
 - (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate andId:(NSString *)folderId andFolderArtist:(ISMSFolderArtist *)folderArtist;
 
 - (ISMSFolderAlbum *)folderAlbumForTableViewRow:(NSUInteger)row;

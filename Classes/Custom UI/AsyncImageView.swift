@@ -87,7 +87,7 @@ import CocoaLumberjackSwift
 }
 
 extension AsyncImageView: SUSLoaderDelegate {
-    func loadingFinished(_ loader: SUSLoader!) {
+    func loadingFinished(_ loader: SUSLoader?) {
         DDLogInfo("[AsyncImageView] async cover art loading finished for: \(coverArtId ?? "nil")")
         activityIndicator?.removeFromSuperview()
         activityIndicator = nil
@@ -95,7 +95,7 @@ extension AsyncImageView: SUSLoaderDelegate {
         coverArtDAO = nil
     }
     
-    func loadingFailed(_ loader: SUSLoader!, withError error: Error!) {
+    func loadingFailed(_ loader: SUSLoader?, withError error: Error?) {
         DDLogError("[AsyncImageView] async cover art loading failed: \(error?.localizedDescription ?? "unknown error")")
         activityIndicator?.removeFromSuperview()
         activityIndicator = nil

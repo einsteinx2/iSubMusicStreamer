@@ -108,33 +108,25 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 }
 
-+ (ISMSSong *)songFromDbResult:(FMResultSet *)result {
-	ISMSSong *song = nil;
-	if ([result next]) {
-        song = [[ISMSSong alloc] init];
-        song.songId = [result stringForColumn:@"songId"];
-        song.title = [result stringForColumn:@"title"];
-        song.artist = [result stringForColumn:@"artist"];
-        song.album = [result stringForColumn:@"album"];
-        song.genre = [result stringForColumn:@"genre"];
-        song.coverArtId = [result stringForColumn:@"coverArtId"];
-        song.parentId = [result stringForColumn:@"parentId"];
-        song.tagArtistId = [result stringForColumn:@"tagArtistId"];
-        song.tagAlbumId = [result stringForColumn:@"tagAlbumId"];
-        song.path = [result stringForColumn:@"path"];
-        song.suffix = [result stringForColumn:@"suffix"];
-        song.transcodedSuffix = [result stringForColumn:@"transcodedSuffix"];
-        song.duration = @([result intForColumn:@"duration"]);
-        song.bitRate = @([result intForColumn:@"bitRate"]);
-        song.track = @([result intForColumn:@"track"]);
-        if ([result stringForColumn:@"discNumber"]) {
-            song.discNumber = @([result intForColumn:@"discNumber"]);
+- (nullable instancetype)initWithSongId:(NSString *)songId {
+    __block ISMSSong *song = nil;
+    [databaseS.serverDbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM song WHERE songId = ?", songId];
+        if (db.hadError) {
+            DDLogError(@"[ISMSSong+DAO] Error selecting song using songId %@ - %d: %@", songId, db.lastErrorCode, db.lastErrorMessage);
+        } else {
+            song = [ISMSSong songFromDbResult:result];
         }
-        song.year = @([result intForColumn:@"year"]);
-        song.size = @([result intForColumn:@"size"]);
-        song.isVideo = [result boolForColumn:@"isVideo"];
-	}
-	return song;
+        [result close];
+    }];
+    return song;
+}
+
++ (ISMSSong *)songFromDbResult:(FMResultSet *)result {
+	if ([result next]) {
+        return [[ISMSSong alloc] initWithResult:result];
+    }
+	return nil;
 }
 
 + (ISMSSong *)songFromDbRow:(NSUInteger)row inTable:(NSString *)table {

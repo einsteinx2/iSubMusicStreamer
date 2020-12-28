@@ -11,7 +11,7 @@
 @protocol SUSLoaderManager <NSObject>
 
 @required
-- (instancetype)initWithDelegate:(NSObject <SUSLoaderDelegate> *)theDelegate;
+//- (instancetype)initWithDelegate:(NSObject <SUSLoaderDelegate> *)theDelegate;
 - (void)startLoad;
 - (void)cancelLoad;
 

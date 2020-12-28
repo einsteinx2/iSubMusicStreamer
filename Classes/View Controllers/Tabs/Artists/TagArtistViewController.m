@@ -14,7 +14,7 @@
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
-#import "SUSTagArtistDAO.h"
+//#import "SUSTagArtistDAO.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -32,7 +32,8 @@
         self.title = tagArtist.name;
         self.tagArtist = tagArtist;
         
-        self.dataModel = [[SUSTagArtistDAO alloc] initWithDelegate:self andTagArtist:tagArtist];
+//        self.dataModel = [[SUSTagArtistDAO alloc] initWithDelegate:self andTagArtist:tagArtist];
+        self.dataModel = [[TagArtistDAO alloc] initWithArtistId:tagArtist.artistId delegate:self];
         
         if (self.dataModel.hasLoaded) {
             [self.tableView reloadData];
@@ -170,7 +171,7 @@
 #pragma mark Table view methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
-    return self.dataModel.albumsCount;
+    return self.dataModel.albumCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -179,20 +180,23 @@
     cell.hideNumberLabel = YES;
     cell.hideCoverArt = NO;
     cell.hideDurationLabel = YES;
-    [cell updateWithModel:[self.dataModel tagAlbumForTableViewRow:indexPath.row]];
+    [cell updateWithModel:[self.dataModel tagAlbumWithRow:indexPath.row]];
+//    [cell updateWithModel:[self.dataModel tagAlbumForTableViewRow:indexPath.row]];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (!indexPath) return;
     
-    ISMSTagAlbum *tagAlbum = [self.dataModel tagAlbumForTableViewRow:indexPath.row];
+//    ISMSTagAlbum *tagAlbum = [self.dataModel tagAlbumForTableViewRow:indexPath.row];
+    ISMSTagAlbum *tagAlbum = [self.dataModel tagAlbumWithRow:indexPath.row];
     TagAlbumViewController *controller = [[TagAlbumViewController alloc] initWithTagAlbum:tagAlbum];
     [self pushViewControllerCustom:controller];
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel tagAlbumForTableViewRow:indexPath.row]];
+//    return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel tagAlbumForTableViewRow:indexPath.row]];
+    return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel tagAlbumWithRow:indexPath.row]];
 }
 
 #pragma mark - ISMSLoader delegate

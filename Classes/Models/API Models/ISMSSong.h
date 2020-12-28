@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class RXMLElement;
+@class RXMLElement, FMResultSet;
 NS_SWIFT_NAME(Song)
 @interface ISMSSong : NSObject <ISMSTableCellModel, NSSecureCoding, NSCopying>
 
@@ -52,6 +52,8 @@ NS_SWIFT_NAME(Song)
 
 - (instancetype)initWithRXMLElement:(RXMLElement *)element;
 - (instancetype)initWithAttributeDict:(NSDictionary *)attributeDict;
+
+- (instancetype)initWithResult:(FMResultSet *)result;
 
 - (BOOL)isEqualToSong:(ISMSSong	*)otherSong;
 

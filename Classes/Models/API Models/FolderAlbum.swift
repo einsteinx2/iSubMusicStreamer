@@ -9,8 +9,6 @@
 import Foundation
 
 @objc(ISMSFolderAlbum) class FolderAlbum: NSObject, NSCopying {
-    static var supportsSecureCoding = true
-
     @objc(folderId) let id: String
     @objc let title: String
     @objc let coverArtId: String?

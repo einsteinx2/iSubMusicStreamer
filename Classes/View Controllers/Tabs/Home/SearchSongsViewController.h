@@ -34,7 +34,7 @@ typedef enum {
 @property NSUInteger offset;
 @property BOOL isMoreResults;
 @property BOOL isLoading;
-@property (strong) NSURLSessionDataTask *dataTask;
+@property (nullable, strong) NSURLSessionDataTask *dataTask;
 
 @end
 

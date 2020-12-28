@@ -11,6 +11,7 @@
 #import "SavedSettings.h"
 #import "EX2Kit.h"
 #import "ISMSSong+DAO.h"
+#import "FMResultSet.h"
 #import <sys/stat.h>
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -52,6 +53,33 @@
         _isVideo = [[element attribute:@"isVideo"] boolValue];
     }
     
+    return self;
+}
+
+- (instancetype)initWithResult:(FMResultSet *)result {
+    if (self = [super init]) {
+        _songId = [result stringForColumn:@"songId"];
+        _title = [result stringForColumn:@"title"];
+        _artist = [result stringForColumn:@"artist"];
+        _album = [result stringForColumn:@"album"];
+        _genre = [result stringForColumn:@"genre"];
+        _coverArtId = [result stringForColumn:@"coverArtId"];
+        _parentId = [result stringForColumn:@"parentId"];
+        _tagArtistId = [result stringForColumn:@"tagArtistId"];
+        _tagAlbumId = [result stringForColumn:@"tagAlbumId"];
+        _path = [result stringForColumn:@"path"];
+        _suffix = [result stringForColumn:@"suffix"];
+        _transcodedSuffix = [result stringForColumn:@"transcodedSuffix"];
+        _duration = @([result intForColumn:@"duration"]);
+        _bitRate = @([result intForColumn:@"bitRate"]);
+        _track = @([result intForColumn:@"track"]);
+        if ([result stringForColumn:@"discNumber"]) {
+            _discNumber = @([result intForColumn:@"discNumber"]);
+        }
+        _year = @([result intForColumn:@"year"]);
+        _size = @([result intForColumn:@"size"]);
+        _isVideo = [result boolForColumn:@"isVideo"];
+    }
     return self;
 }
 

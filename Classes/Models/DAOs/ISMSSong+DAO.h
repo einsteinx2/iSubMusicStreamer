@@ -20,6 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) BOOL fileExists;
 @property (nullable, assign) NSDate *playedDate;
 
+// Load song from database using song ID (eventually replace all initializers below with this one)
+- (nullable instancetype)initWithSongId:(NSString *)songId;
+
 + (nullable ISMSSong *)songFromDbResult:(FMResultSet *)result;
 + (nullable ISMSSong *)songFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabase:(FMDatabase *)db;
 + (nullable ISMSSong *)songFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue;

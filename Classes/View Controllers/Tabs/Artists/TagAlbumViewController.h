@@ -9,14 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "SUSLoaderDelegate.h"
 
-@class ISMSTagAlbum, SUSTagAlbumDAO;
+@class ISMSTagAlbum, TagAlbumDAO;
 
 @interface TagAlbumViewController : UITableViewController <SUSLoaderDelegate>
 
 @property (nonatomic) BOOL isReloading;
 @property (nonatomic, strong) ISMSTagAlbum *tagAlbum;
 @property (nonatomic, strong) NSArray *sectionInfo;
-@property (nonatomic, strong) SUSTagAlbumDAO *dataModel;
+@property (nonatomic, strong) TagAlbumDAO *dataModel;
 
 - (instancetype)initWithTagAlbum:(ISMSTagAlbum *)tagAlbum;
 

@@ -13,11 +13,11 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-+ (NSString *)md5:(NSString *)str {
-	if (str.length > 0) {
-		const char *cStr = [str UTF8String];
++ (NSString *)md5:(NSString *)string {
+	if (string.length > 0) {
+		const char *cString = string.UTF8String;
 		unsigned char result[16];
-		CC_MD5( cStr, (CC_LONG)strlen(cStr), result );
+		CC_MD5(cString, (CC_LONG)strlen(cString), result);
 		return [NSString stringWithFormat:
 			@"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
 			result[0], result[1], result[2], result[3], 
@@ -32,7 +32,7 @@
 #pragma clang diagnostic pop
 
 - (NSString *)md5 {
-	return [NSString md5:self];
+	return [self.class md5:self];
 }
 
 @end

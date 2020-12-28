@@ -56,14 +56,14 @@
 }
 
 - (UIImage *)coverArtImage {
-    NSString *query = [NSString stringWithFormat:@"SELECT data FROM %@ WHERE id = ?", self.table];
+    NSString *query = [NSString stringWithFormat:@"SELECT data FROM %@ WHERE coverArtId = ?", self.table];
     NSData *imageData = [self.dbQueue dataForQuery:query, self.coverArtId];
     return imageData ? [UIImage imageWithData:imageData] : self.defaultCoverArtImage;
 }
 
 - (BOOL)isCoverArtCached {
 	if (!self.coverArtId) return NO;
-    NSString *query = [NSString stringWithFormat:@"SELECT count(*) FROM %@ WHERE id = ?", self.table];
+    NSString *query = [NSString stringWithFormat:@"SELECT count(*) FROM %@ WHERE coverArtId = ?", self.table];
     return [self.dbQueue intForQuery:query, self.coverArtId] > 0;
 }
 

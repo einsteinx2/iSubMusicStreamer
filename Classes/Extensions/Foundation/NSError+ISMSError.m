@@ -10,6 +10,7 @@
 #import "SUSErrorDomain.h"
 #import "EX2Kit.h"
 #import "Defines.h"
+#import "RXMLElement.h"
 
 @implementation NSError (ISMSError)
 
@@ -20,6 +21,12 @@
         case ISMSErrorCode_CouldNotCreateConnection: return ISMSErrorDesc_CouldNotCreateConnection;
         default: return nil;
     }
+}
+
++ (NSError *)errorWithSubsonicXMLResponse:(RXMLElement *)element {
+    NSInteger code = [[element attribute:@"code"] integerValue];
+    NSString *message = [element attribute:@"message"];
+    return [NSError errorWithISMSCode:code message:message];
 }
 
 + (NSError *)errorWithISMSCode:(NSInteger)code {

@@ -231,11 +231,11 @@ extension ServerEditViewController: UITextFieldDelegate {
 }
 
 extension ServerEditViewController: SUSLoaderDelegate {
-    func loadingFailed(_ loader: SUSLoader!, withError error: Error!) {
+    func loadingFailed(_ loader: SUSLoader?, withError error: Error?) {
         ViewObjects.shared().hideLoadingScreen()
         
         var message = "Unknown error occured, please try again."
-        if error != nil {
+        if let error = error {
             let nsError = error as NSError
             if nsError.code != ISMSErrorCode_IncorrectCredentials {
                 message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\nError code \(nsError.code):\n\(nsError.localizedDescription)"
@@ -248,7 +248,7 @@ extension ServerEditViewController: SUSLoaderDelegate {
         present(alert, animated: true, completion: nil)
     }
     
-    func loadingFinished(_ loader: SUSLoader!) {
+    func loadingFinished(_ loader: SUSLoader?) {
         ViewObjects.shared().hideLoadingScreen()
         
         let server = Server()

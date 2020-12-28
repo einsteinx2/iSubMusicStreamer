@@ -74,7 +74,7 @@ static void initialize_navigationBarImages() {
 
 - (BOOL)isCoverArtCached {
     if (!self.coverArtId) return NO;
-    NSString *query = [NSString stringWithFormat:@"SELECT count(*) FROM %@ WHERE id = ?", self.table];
+    NSString *query = [NSString stringWithFormat:@"SELECT count(*) FROM %@ WHERE coverArtId = ?", self.table];
     return [self.dbQueue intForQuery:query, self.coverArtId] > 0;
 }
 
@@ -126,7 +126,7 @@ static void initialize_navigationBarImages() {
     if ([UIImage imageWithData:self.receivedData]) {
         DDLogInfo(@"[SUSCoverArtLoader] art loading completed for: %@", self.coverArtId);
         [self.dbQueue inDatabase:^(FMDatabase *db) {
-            NSString *query = [NSString stringWithFormat:@"REPLACE INTO %@ (id, data) VALUES (?, ?)", self.table];
+            NSString *query = [NSString stringWithFormat:@"REPLACE INTO %@ (coverArtId, data) VALUES (?, ?)", self.table];
             [db executeUpdate:query, self.coverArtId, self.receivedData];
         }];
         [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CoverArtFinishedInternal object:self.coverArtId];

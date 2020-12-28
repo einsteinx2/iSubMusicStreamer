@@ -8,11 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSMutableURLRequest (SUS)
 
-+ (NSMutableURLRequest *)requestWithSUSAction:(NSString *)action urlString:(NSString *)url username:(NSString *)user password:(NSString *)pass parameters:(NSDictionary *)parameters byteOffset:(NSUInteger)offset;
-+ (NSMutableURLRequest *)requestWithSUSAction:(NSString *)action urlString:(NSString *)url username:(NSString *)user password:(NSString *)pass parameters:(NSDictionary *)parameters;
-+ (NSMutableURLRequest *)requestWithSUSAction:(NSString *)action parameters:(NSDictionary *)parameters byteOffset:(NSUInteger)offset;
-+ (NSMutableURLRequest *)requestWithSUSAction:(NSString *)action parameters:(NSDictionary *)parameters;
++ (NSMutableURLRequest *)requestWithSUSAction:(NSString *)action urlString:(NSString *)url username:(NSString *)user password:(NSString *)pass parameters:(nullable NSDictionary *)parameters byteOffset:(NSUInteger)offset;
++ (NSMutableURLRequest *)requestWithSUSAction:(NSString *)action urlString:(NSString *)url username:(NSString *)user password:(NSString *)pass parameters:(nullable NSDictionary *)parameters;
++ (NSMutableURLRequest *)requestWithSUSAction:(NSString *)action parameters:(nullable NSDictionary *)parameters byteOffset:(NSUInteger)offset;
++ (NSMutableURLRequest *)requestWithSUSAction:(NSString *)action parameters:(nullable NSDictionary *)parameters;
 
 @end
+
+NS_ASSUME_NONNULL_END

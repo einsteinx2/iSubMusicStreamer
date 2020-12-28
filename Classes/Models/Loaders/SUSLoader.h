@@ -41,7 +41,7 @@ typedef void (^SUSLoaderCallback)(BOOL success, NSError * _Nullable error, SUSLo
 @interface SUSLoader : NSObject
 
 @property (nullable, weak) NSObject<SUSLoaderDelegate> *delegate;
-@property (nullable, copy) SUSLoaderCallback callbackBlock;
+@property (nullable, copy) SUSLoaderCallback callbackBlock NS_SWIFT_NAME(callback);
 
 @property (readonly) SUSLoaderType type;
 
@@ -51,7 +51,7 @@ typedef void (^SUSLoaderCallback)(BOOL success, NSError * _Nullable error, SUSLo
 
 - (void)setup; // Override this
 - (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)theDelegate;
-- (instancetype)initWithCallbackBlock:(SUSLoaderCallback)theBlock;
+- (instancetype)initWithCallbackBlock:(SUSLoaderCallback)theBlock NS_SWIFT_NAME(init(callback:));
 
 - (void)startLoad;
 - (void)cancelLoad;

@@ -144,7 +144,7 @@
         
         if (self.dataModel.songsCount > 0) {
             // Create the album header view and constrain to the container view
-            AlbumTableViewHeader *albumHeader = [[AlbumTableViewHeader alloc] initWithFolderAlbum:self.folderAlbum tracks:self.dataModel.songsCount duration:self.dataModel.folderLength];
+            AlbumTableViewHeader *albumHeader = [[AlbumTableViewHeader alloc] initWithFolderAlbum:self.folderAlbum tracks:self.dataModel.songsCount duration:self.dataModel.duration];
             [headerView addSubview:albumHeader];
             [NSLayoutConstraint activateConstraints:@[
                 [albumHeader.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor],

@@ -25,37 +25,16 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark Lifecycle
 
-- (void)setup {
-    _albumStartRow = [self.dbQueue intForQuery:@"SELECT rowid FROM folderAlbum WHERE folderId = ? LIMIT 1", self.folderId];
-    _songStartRow = [self.dbQueue intForQuery:@"SELECT rowid FROM folderSong WHERE folderId = ? LIMIT 1", self.folderId];
-    _albumsCount = [self.dbQueue intForQuery:@"SELECT subfolderCount FROM folderMetadata WHERE folderId = ? LIMIT 1", self.folderId];
-    _songsCount = [self.dbQueue intForQuery:@"SELECT songCount FROM folderMetadata WHERE folderId = ? LIMIT 1", self.folderId];
-    _folderLength = [self.dbQueue intForQuery:@"SELECT duration FROM folderMetadata WHERE folderId = ? LIMIT 1", self.folderId];
-}
-
 - (instancetype)init {
     NSAssert(NO, @"[SUSSubFolderDAO] init should never be called");
-    if (self = [super init]) {
-		[self setup];
-    }
-    return self;
-}
-
-- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate {
-    NSAssert(NO, @"[SUSSubFolderDAO] initWithDelegate should never be called");
-    if (self = [super init]) {
-		_delegate = delegate;
-		[self setup];
-    }
-    return self;
+    return nil;
 }
 
 - (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate andId:(NSString *)folderId andFolderArtist:(ISMSFolderArtist *)folderArtist {
 	if (self = [super init]) {
 		_delegate = delegate;
-        _folderId = folderId;
 		_folderArtist = folderArtist;
-		[self setup];
+        _folderMetadata = [self folderMetadataForFolderId:folderId];
     }
     return self;
 }
@@ -69,24 +48,51 @@ LOG_LEVEL_ISUB_DEFAULT
 	return databaseS.serverDbQueue;
 }
 
+- (ISMSFolderMetadata *)folderMetadataForFolderId:(NSString *)folderId {
+    __block ISMSFolderMetadata *folderMetadata = nil;
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM folderMetadata WHERE folderId = ?", folderId];
+        if ([result next]) {
+            folderMetadata = [[ISMSFolderMetadata alloc] initWithResult:result];
+        } else if (db.hadError) {
+            // TODO: Handle error
+            DDLogError(@"[SUSSubFolderDAO] Error reading folderMetadata %d: %@", db.lastErrorCode, db.lastErrorMessage);
+        }
+        [result close];
+    }];
+    return folderMetadata;
+}
+
 #pragma mark Public DAO Methods
 
 - (BOOL)hasLoaded {
-    if (self.albumsCount > 0 || self.songsCount > 0)
+    if (self.folderMetadata.subfolderCount > 0 || self.folderMetadata.songCount > 0)
         return YES;
     
     return NO;
 }
 
 - (NSUInteger)totalCount {
-    return self.albumsCount + self.songsCount;
+    return self.folderMetadata.subfolderCount + self.folderMetadata.songCount;
+}
+
+- (NSUInteger)albumsCount {
+    return self.folderMetadata.subfolderCount;
+}
+
+- (NSUInteger)songsCount {
+    return self.folderMetadata.songCount;
+}
+
+- (NSUInteger)duration {
+    return self.folderMetadata.duration;
 }
 
 - (ISMSFolderAlbum *)folderAlbumForTableViewRow:(NSUInteger)row {
-    NSUInteger dbRow = self.albumStartRow + row;
+    NSUInteger itemOrder = row;
     __block ISMSFolderAlbum *folderAlbum = nil;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM folderAlbum WHERE ROWID = %lu", (unsigned long)dbRow]];
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM folderAlbum WHERE folderId = ? AND itemOrder = ?", self.folderMetadata.folderId, @(itemOrder)];
         if ([result next]) {
             folderAlbum = [[ISMSFolderAlbum alloc] initWithResult:result];
         } else if (db.hadError) {
@@ -99,13 +105,17 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (ISMSSong *)songForTableViewRow:(NSUInteger)row {
-    NSUInteger dbRow = self.songStartRow + (row - self.albumsCount);
-    return [ISMSSong songFromDbRow:dbRow-1 inTable:@"folderSong"];
+    NSUInteger itemOrder = row - self.folderMetadata.subfolderCount;
+    __block ISMSSong *song = nil;
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *result = [db executeQuery:@"SELECT song.* FROM folderSong JOIN song ON folderSong.songId = song.songId WHERE folderSong.folderId = ? AND folderSong.itemOrder = ?", self.folderMetadata.folderId, @(itemOrder)];
+        song = [ISMSSong songFromDbResult:result];
+        [result close];
+    }];
+    return song;
 }
 
 - (ISMSSong *)playSongAtTableViewRow:(NSUInteger)row {
-	NSUInteger dbRow = self.songStartRow + (row - self.albumsCount);
-    
     // Clear the current playlist
     if (settingsS.isJukeboxEnabled) {
         [databaseS resetJukeboxPlaylist];
@@ -115,11 +125,13 @@ LOG_LEVEL_ISUB_DEFAULT
     }
     
     // Add the songs to the playlist
-    for (NSInteger i = self.albumsCount; i < self.totalCount; i++) {
-        @autoreleasepool  {
-            [[self songForTableViewRow:i] addToCurrentPlaylistDbQueue];
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+        [db executeUpdate:@"INSERT INTO currentPlaylist SELECT songId, itemOrder FROM folderSong WHERE folderId = ? ORDER BY itemOrder ASC", self.folderMetadata.folderId];
+        if (db.hadError) {
+            // TODO: Handle error
+            DDLogError(@"[SUSSubFolderDAO] Error inserting folder %@'s songs into current playlist %d: %@", self.folderMetadata.folderId, db.lastErrorCode, db.lastErrorMessage);
         }
-    }
+    }];
     
     // Set player defaults
     playlistS.isShuffle = NO;
@@ -127,24 +139,25 @@ LOG_LEVEL_ISUB_DEFAULT
     [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
     
     // Start the song
-    return [musicS playSongAtPosition:(dbRow - self.songStartRow)];
+    return [musicS playSongAtPosition:(self.folderMetadata.subfolderCount - row)];
 }
 
+// TODO: Run EXPLAIN QUERY PATH on the query used in sectionInfoFromTableWithOrderColumn to confirm the title index works and doesn't need to be an FTS3 index
 - (NSArray *)sectionInfo {
 	// Create the section index
-	if (self.albumsCount > 10) {
+	if (self.folderMetadata.subfolderCount > 10) {
 		__block NSArray *sectionInfo;
 		[self.dbQueue inDatabase:^(FMDatabase *db) {
 			[db executeUpdate:@"DROP TABLE IF EXISTS folderIndex"];
-			[db executeUpdate:@"CREATE TEMPORARY TABLE folderIndex (title TEXT)"];
+			[db executeUpdate:@"CREATE TEMPORARY TABLE folderIndex (title TEXT, order INTEGER)"];
 			
-			[db executeUpdate:@"INSERT INTO folderIndex SELECT title FROM folderAlbum WHERE rowid >= ? LIMIT ?", @(self.albumStartRow), @(self.albumsCount)];
+			[db executeUpdate:@"INSERT INTO folderIndex SELECT title, order FROM folderAlbum WHERE folderId = ?", self.folderMetadata.folderId];
 			[db executeUpdate:@"CREATE INDEX folderIndex_title ON folderIndex (title)"];
             
-			sectionInfo = [databaseS sectionInfoFromTable:@"folderIndex" inDatabase:db withColumn:@"title"];
+			sectionInfo = [databaseS sectionInfoFromTableWithItemOrderColumn:@"folderIndex" inDatabase:db withColumn:@"title"];
 			[db executeUpdate:@"DROP TABLE folderIndex"];
 		}];
-		return [sectionInfo count] < 2 ? nil : sectionInfo;
+		return sectionInfo.count < 2 ? nil : sectionInfo;
 	}
 	return nil;
 }
@@ -157,7 +170,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)startLoad {
     self.loader = [[SUSSubFolderLoader alloc] initWithDelegate:self];
-    self.loader.folderId = self.folderId;
+    self.loader.folderId = self.folderMetadata.folderId;
     self.loader.folderArtist = self.folderArtist;
     [self.loader startLoad];
 }
@@ -180,11 +193,11 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)loadingFinished:(SUSLoader *)theLoader {
-	self.loader.delegate = nil;
-	self.loader = nil;
+    self.folderMetadata = [self folderMetadataForFolderId:self.loader.folderId];
 	
-    [self setup];
-	
+    self.loader.delegate = nil;
+    self.loader = nil;
+    
 	if ([self.delegate respondsToSelector:@selector(loadingFinished:)]) {
 		[self.delegate loadingFinished:nil];
 	}

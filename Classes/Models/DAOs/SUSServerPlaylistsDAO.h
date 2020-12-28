@@ -14,8 +14,10 @@
 @property (weak) NSObject <SUSLoaderDelegate> *delegate;
 @property (strong) SUSServerPlaylistsLoader *loader;
 
-#pragma mark - Public DAO Methods
+#pragma mark Public DAO Methods
 
 @property (strong) NSArray *serverPlaylists;
+
+- (instancetype)initWithDelegate:(NSObject <SUSLoaderDelegate> *)theDelegate;
 
 @end

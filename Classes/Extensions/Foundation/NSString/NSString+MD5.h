@@ -10,7 +10,7 @@
 
 @interface NSString (MD5)
 
-+ (NSString *)md5:(NSString *)str;
++ (NSString *)md5:(NSString *)string;
 - (NSString *)md5;
 
 @end

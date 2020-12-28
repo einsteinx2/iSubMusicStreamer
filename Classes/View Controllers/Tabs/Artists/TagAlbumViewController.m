@@ -14,7 +14,6 @@
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
-#import "SUSTagAlbumDAO.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -32,7 +31,7 @@
         self.title = tagAlbum.name;
         self.tagAlbum = tagAlbum;
         
-        self.dataModel = [[SUSTagAlbumDAO alloc] initWithDelegate:self andTagAlbum:tagAlbum];
+        self.dataModel = [[TagAlbumDAO alloc] initWithAlbumId:tagAlbum.albumId delegate:self];
         
         if (self.dataModel.hasLoaded) {
             [self.tableView reloadData];
@@ -189,7 +188,7 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
-    return self.dataModel.songsCount;
+    return self.dataModel.songCount;
 }
 
 // Customize the appearance of table view cells.
@@ -198,7 +197,7 @@
     cell.hideSecondaryLabel = NO;
     cell.hideCoverArt = YES;
     cell.hideDurationLabel = NO;
-    ISMSSong *song = [self.dataModel songForTableViewRow:indexPath.row];
+    ISMSSong *song = [self.dataModel songWithRow:indexPath.row];
     [cell updateWithModel:song];
     if (song.track == nil || song.track.intValue == 0) {
         cell.hideNumberLabel = YES;
@@ -212,14 +211,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (!indexPath) return;
     
-    ISMSSong *playedSong = [self.dataModel playSongAtTableViewRow:indexPath.row];
+    ISMSSong *playedSong = [self.dataModel playSongWithRow:indexPath.row];
     if (!playedSong.isVideo) {
         [self showPlayer];
     }
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ISMSSong *song = [self.dataModel songForTableViewRow:indexPath.row];
+    ISMSSong *song = [self.dataModel songWithRow:indexPath.row];
     if (!song.isVideo) {
         return [SwipeAction downloadAndQueueConfigWithModel:song];
     }

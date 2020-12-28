@@ -8,11 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SUSLoader;
 @protocol SUSLoaderDelegate <NSObject>
 
 @required
-- (void)loadingFailed:(SUSLoader *)loader withError:(NSError *)error;
-- (void)loadingFinished:(SUSLoader *)loader;
+- (void)loadingFailed:(nullable SUSLoader *)loader withError:(nullable NSError *)error;
+- (void)loadingFinished:(nullable SUSLoader *)loader;
 
 @end
+
+NS_ASSUME_NONNULL_END

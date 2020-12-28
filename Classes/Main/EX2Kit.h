@@ -39,6 +39,7 @@
 #import "NSString+CompareWithoutIndefiniteArticles.h"
 #import "NSString+Hex.h"
 #import "NSString+MD5.h"
+#import "NSString+SHA1.h"
 #import "NSString+Time.h"
 #import "NSString+URLEncode.h"
 #import "GTMNSString+HTML.h"

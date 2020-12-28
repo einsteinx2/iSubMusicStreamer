@@ -18,12 +18,6 @@ import Foundation
         super.init()
     }
     
-    @objc init(attributeDict: [String: String]) {
-        self.id = attributeDict["id"] ?? ""
-        self.name = attributeDict["name"] ?? ""
-        super.init()
-    }
-    
     @objc init(element: RXMLElement) {
         self.id = element.attribute("id")?.clean() ?? ""
         self.name = element.attribute("name")?.clean() ?? ""

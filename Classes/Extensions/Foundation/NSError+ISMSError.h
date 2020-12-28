@@ -11,9 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class RXMLElement;
 @interface NSError (ISMSError)
 
 + (nullable NSString *)descriptionFromISMSCode:(NSUInteger)code;
+
++ (NSError *)errorWithSubsonicXMLResponse:(RXMLElement *)element;
 
 + (NSError *)errorWithISMSCode:(NSInteger)code;
 + (NSError *)errorWithISMSCode:(NSInteger)code extraAttributes:(NSDictionary *)attributes;
