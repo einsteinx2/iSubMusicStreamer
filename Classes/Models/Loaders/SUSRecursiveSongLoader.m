@@ -93,9 +93,9 @@
             // Add the songs
             for (ISMSSong *aSong in self.listOfSongs) {
                 if (self.isQueue) {
-                    [aSong addToCurrentPlaylistDbQueue];
+                    [aSong addToCurrentPlayQueue];
                 } else {
-                    [aSong addToCacheQueueDbQueue];
+                    [aSong addToDownloadQueue];
                 }
             }
             [self.listOfSongs removeAllObjects];

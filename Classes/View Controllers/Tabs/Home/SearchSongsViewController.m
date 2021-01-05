@@ -269,7 +269,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			NSMutableArray *songIds = [[NSMutableArray alloc] init];
 			for (ISMSSong *aSong in self.songs) {
 				@autoreleasepool {
-					[aSong addToCurrentPlaylistDbQueue];
+					[aSong addToCurrentPlayQueue];
 					
 					// In jukebox mode, collect the song ids to send to the server
                     if (settingsS.isJukeboxEnabled) {
@@ -286,7 +286,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			}
 			
 			// Set player defaults
-			playlistS.isShuffle = NO;
+			playQueueS.isShuffle = NO;
 			
             [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
             

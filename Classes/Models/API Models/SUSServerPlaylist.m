@@ -63,9 +63,9 @@
                             ISMSSong *aSong = [[ISMSSong alloc] initWithRXMLElement:e];
                             [aSong insertIntoServerPlaylistWithPlaylistId:md5];
                             if (isDownload) {
-                                [aSong addToCacheQueueDbQueue];
+                                [aSong addToDownloadQueue];
                             } else {
-                                [aSong addToCurrentPlaylistDbQueue];
+                                [aSong addToCurrentPlayQueue];
                             }
                         }];
                     }

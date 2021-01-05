@@ -10,6 +10,4 @@
 
 @interface CustomUITabBarController : UITabBarController
 
-+ (void)customizeMoreTabTableView:(UITabBarController *)tabBarController;
-
 @end

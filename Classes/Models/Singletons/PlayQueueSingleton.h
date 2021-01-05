@@ -11,7 +11,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define playlistS ((PlayQueueSingleton *)[PlayQueueSingleton sharedInstance])
+#define playQueueS ((PlayQueueSingleton *)[PlayQueueSingleton sharedInstance])
 
 NS_ASSUME_NONNULL_BEGIN
 

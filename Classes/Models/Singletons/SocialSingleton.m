@@ -79,7 +79,7 @@ LOG_LEVEL_ISUB_DEFAULT
 //	if (!settingsS.isOfflineMode) {
 //		// If this song wasn't just cached, then notify Subsonic of the playback
 //		ISMSSong *lastCachedSong = streamManagerS.lastCachedSong;
-//		ISMSSong *currentSong = playlistS.currentSong;
+//		ISMSSong *currentSong = playQueueS.currentSong;
 //		if (![lastCachedSong isEqualToSong:currentSong]) {
 //            NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"stream" parameters:@{@"id": n2N(currentSong.songId)} byteOffset:0];
 //            if ([[NSURLConnection alloc] initWithRequest:request delegate:self])
@@ -94,7 +94,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)scrobbleSongAsSubmission {
 	if (settingsS.isScrobbleEnabled && !settingsS.isOfflineMode) {
-		ISMSSong *currentSong = playlistS.currentSong;
+		ISMSSong *currentSong = playQueueS.currentSong;
 		[self scrobbleSong:currentSong isSubmission:YES];
 	}
 }
@@ -102,7 +102,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)scrobbleSongAsPlaying {
 	// If scrobbling is enabled, send "now playing" call
 	if (settingsS.isScrobbleEnabled && !settingsS.isOfflineMode) {
-		ISMSSong *currentSong = playlistS.currentSong;
+		ISMSSong *currentSong = playQueueS.currentSong;
 		[self scrobbleSong:currentSong isSubmission:NO];
 	}
 }

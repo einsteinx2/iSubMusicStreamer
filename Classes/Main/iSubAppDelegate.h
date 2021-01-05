@@ -29,9 +29,7 @@ NS_SWIFT_NAME(AppDelegate)
 
 @property (strong) SettingsViewController *settingsViewController;
 @property (strong) IBOutlet UIImageView *background;
-@property (strong) UITabBarController *currentTabBarController;
 @property (strong) IBOutlet UITabBarController *mainTabBarController;
-@property (strong) IBOutlet UITabBarController *offlineTabBarController;
 @property (strong) IBOutlet UINavigationController *homeNavigationController;
 @property (strong) IBOutlet UINavigationController *playerNavigationController;
 @property (strong) IBOutlet UINavigationController *artistsNavigationController;

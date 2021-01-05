@@ -121,11 +121,6 @@
     if (!settingsS.isOfflineMode) {
         [[NSUserDefaults standardUserDefaults] setInteger:appDelegateS.mainTabBarController.selectedIndex forKey:@"mainTabBarControllerSelectedIndex"];
     }
-    
-    // Fix iOS bug customizing the more tab controller
-    if (appDelegateS.currentTabBarController == appDelegateS.mainTabBarController && ![viewController.navigationController isKindOfClass:CustomUINavigationController.class]) {
-        [CustomUITabBarController customizeMoreTabTableView:appDelegateS.mainTabBarController];
-    }
 }
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
@@ -150,66 +145,6 @@
     }
     [NSUserDefaults.standardUserDefaults setObject:savedTabsOrder forKey:@"mainTabBarTabsOrder"];
 	[NSUserDefaults.standardUserDefaults synchronize];
-}
-
-- (void)orderMainTabBarController {
-//	appDelegateS.currentTabBarController = appDelegateS.mainTabBarController;
-	appDelegateS.mainTabBarController.delegate = self;
-	
-	NSArray *savedTabsOrderArray = [[NSUserDefaults standardUserDefaults] arrayForKey:@"mainTabBarTabsOrder"];
-	
-	// If this is an old device, remove Albums and Songs tabs
-	if (!settingsS.isSongsTabEnabled) {
-		NSMutableArray *tabs = [[NSMutableArray alloc] init];
-		for (UIViewController *controller in appDelegateS.mainTabBarController.viewControllers) {
-			if (controller.tabBarItem.tag != 1 && controller.tabBarItem.tag != 2 && controller.tabBarItem.tag != 6) {
-				[tabs addObject:controller];
-			}
-		}
-		appDelegateS.mainTabBarController.viewControllers = tabs;
-		
-		tabs = [[NSMutableArray alloc] init];
-		for (NSNumber *tag in savedTabsOrderArray) {
-			if (tag.intValue != 1 && tag.intValue != 2 && tag.intValue != 6) {
-				[tabs addObject:tag];
-			}
-		}
-		savedTabsOrderArray = tabs;
-	}
-	
-	NSUInteger count = appDelegateS.mainTabBarController.viewControllers.count;
-	if (savedTabsOrderArray.count == count) {
-		BOOL needsReordering = NO;
-		
-		NSMutableDictionary *tabsOrderDictionary = [[NSMutableDictionary alloc] initWithCapacity:count];
-		for (int i = 0; i < count; i ++) {
-			NSNumber *tag = @([[[appDelegateS.mainTabBarController.viewControllers objectAtIndexSafe:i] tabBarItem] tag]);
-			[tabsOrderDictionary setObject:@(i) forKey:[tag stringValue]];
-			
-			if (!needsReordering && ![(NSNumber *)[savedTabsOrderArray objectAtIndexSafe:i] isEqualToNumber:tag]) {
-				needsReordering = YES;
-			}
-		}
-		
-		if (needsReordering) {
-			NSMutableArray *tabsViewControllers = [[NSMutableArray alloc] initWithCapacity:count];
-			for (int i = 0; i < count; i ++) {
-				[tabsViewControllers addObject:[appDelegateS.mainTabBarController.viewControllers objectAtIndexSafe:[(NSNumber *)[tabsOrderDictionary objectForKey:[(NSNumber *)[savedTabsOrderArray objectAtIndexSafe:i] stringValue]] intValue]]];
-			}
-			
-			appDelegateS.mainTabBarController.viewControllers = [NSArray arrayWithArray:tabsViewControllers];
-		}
-	}
-    
-    appDelegateS.mainTabBarController.moreNavigationController.delegate = self;
-    
-    if ([NSUserDefaults.standardUserDefaults integerForKey:@"mainTabBarControllerSelectedIndex"]) {
-        if ([NSUserDefaults.standardUserDefaults integerForKey:@"mainTabBarControllerSelectedIndex"] == 2147483647) {
-            appDelegateS.mainTabBarController.selectedViewController = appDelegateS.mainTabBarController.moreNavigationController;
-        } else {
-            appDelegateS.mainTabBarController.selectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"mainTabBarControllerSelectedIndex"];
-        }
-    }
 }
 
 - (void)setup {

@@ -37,7 +37,7 @@ double startSongSeconds = 0.0;
 	// Destroy the streamer to start a new song
 	[audioEngineS.player stop];
 	
-	ISMSSong *currentSong = playlistS.currentSong;
+	ISMSSong *currentSong = playQueueS.currentSong;
 	
     if (!currentSong) return;
 	
@@ -54,8 +54,8 @@ double startSongSeconds = 0.0;
 - (void)startSongAtOffsetInSeconds2 {
     [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_RemoveMoviePlayer];
 	
-	ISMSSong *currentSong = playlistS.currentSong;
-    NSUInteger currentIndex = playlistS.currentIndex;
+	ISMSSong *currentSong = playQueueS.currentSong;
+    NSUInteger currentIndex = playQueueS.currentIndex;
 	
 	if (!currentSong) return;
     
@@ -76,7 +76,7 @@ double startSongSeconds = 0.0;
 			//[streamManagerS fillStreamQueue:audioEngineS.player.isStarted];
         }
 	} else if (!currentSong.isFullyCached && settingsS.isOfflineMode) {
-		[self playSongAtPosition:playlistS.nextIndex];
+		[self playSongAtPosition:playQueueS.nextIndex];
 	} else {
 		if ([cacheQueueManagerS.currentQueuedSong isEqualToSong:currentSong]) {
 			// The cache queue is downloading this song, remove it before continuing
@@ -133,8 +133,8 @@ double startSongSeconds = 0.0;
 }
 
 - (ISMSSong *)playSongAtPosition:(NSInteger)position {
-	playlistS.currentIndex = position;
-    ISMSSong *currentSong = playlistS.currentSong;
+	playQueueS.currentIndex = position;
+    ISMSSong *currentSong = playQueueS.currentSong;
  
     if (!currentSong.isVideo) {
         // Remove the video player if this is not a video
@@ -149,7 +149,7 @@ double startSongSeconds = 0.0;
             [jukeboxS playSongAtPosition:@(position)];
         }
 	} else {
-		[streamManagerS removeAllStreamsExceptForSong:playlistS.currentSong];
+		[streamManagerS removeAllStreamsExceptForSong:playQueueS.currentSong];
         
         if (currentSong.isVideo) {
             [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_PlayVideo userInfo:@{@"song":currentSong}];
@@ -165,23 +165,23 @@ double startSongSeconds = 0.0;
     DDLogInfo(@"[MusicSingleton] prevSong called");
 	if (audioEngineS.player.progress > 10.0) {
 		// Past 10 seconds in the song, so restart playback instead of changing songs
-        DDLogInfo(@"[MusicSingleton] prevSong Past 10 seconds in the song, so restart playback instead of changing songs, calling playSongAtPosition:%lu", (unsigned long)playlistS.currentIndex);
-		[self playSongAtPosition:playlistS.currentIndex];
+        DDLogInfo(@"[MusicSingleton] prevSong Past 10 seconds in the song, so restart playback instead of changing songs, calling playSongAtPosition:%lu", (unsigned long)playQueueS.currentIndex);
+		[self playSongAtPosition:playQueueS.currentIndex];
 	} else {
 		// Within first 10 seconds, go to previous song
-        DDLogInfo(@"[MusicSingleton] prevSong within first 10 seconds, so go to previous, calling playSongAtPosition:%lu", (unsigned long)playlistS.prevIndex);
-		[self playSongAtPosition:playlistS.prevIndex];
+        DDLogInfo(@"[MusicSingleton] prevSong within first 10 seconds, so go to previous, calling playSongAtPosition:%lu", (unsigned long)playQueueS.prevIndex);
+		[self playSongAtPosition:playQueueS.prevIndex];
 	}
 }
 
 - (void)nextSong {
-    DDLogInfo(@"[MusicSingleton] nextSong called, calling playSongAtPosition:%lu", (unsigned long)playlistS.nextIndex);
-	[self playSongAtPosition:playlistS.nextIndex];
+    DDLogInfo(@"[MusicSingleton] nextSong called, calling playSongAtPosition:%lu", (unsigned long)playQueueS.nextIndex);
+	[self playSongAtPosition:playQueueS.nextIndex];
 }
 
 // Resume song after iSub shuts down
 - (void)resumeSong {
-	ISMSSong *currentSong = playlistS.currentSong;
+	ISMSSong *currentSong = playQueueS.currentSong;
 		
     //DLog(@"isRecover: %@  currentSong: %@", NSStringFromBOOL(settingsS.isRecover), currentSong);
     //DLog(@"byteOffset: %llu   seekTime: %f\n   ", settingsS.byteOffset, settingsS.seekTime);
@@ -210,7 +210,7 @@ double startSongSeconds = 0.0;
 - (void)updateLockScreenInfo {
     NSMutableDictionary *trackInfo = [NSMutableDictionary dictionaryWithCapacity:10];
     
-    ISMSSong *currentSong = playlistS.currentSong;
+    ISMSSong *currentSong = playQueueS.currentSong;
     if (currentSong.title)
         [trackInfo setObject:currentSong.title forKey:MPMediaItemPropertyTitle];
     if (currentSong.album)
@@ -221,10 +221,10 @@ double startSongSeconds = 0.0;
         [trackInfo setObject:currentSong.genre forKey:MPMediaItemPropertyGenre];
     if (currentSong.duration)
         [trackInfo setObject:currentSong.duration forKey:MPMediaItemPropertyPlaybackDuration];
-    NSNumber *trackIndex = @(playlistS.currentIndex);
+    NSNumber *trackIndex = @(playQueueS.currentIndex);
     if (trackIndex)
         [trackInfo setObject:trackIndex forKey:MPNowPlayingInfoPropertyPlaybackQueueIndex];
-    NSNumber *playlistCount = @(playlistS.count);
+    NSNumber *playlistCount = @(playQueueS.count);
     if (playlistCount)
         [trackInfo setObject:playlistCount forKey:MPNowPlayingInfoPropertyPlaybackQueueCount];
     NSNumber *progress = @(audioEngineS.player.progress);

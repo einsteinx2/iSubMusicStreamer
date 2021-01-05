@@ -26,12 +26,14 @@ NS_SWIFT_NAME(Database)
 // Shared DB queue, contains data shared between all servers like the lyrics cache
 @property (nullable, strong) FMDatabaseQueue *sharedDbQueue;
 
+// Shared offline songs DB queue, contains data related to songs downloaded for offline use
+// NOTE: This is a separate database so that it can be excluded from iCloud backups
+@property (nullable, strong) FMDatabaseQueue *offlineSongsDbQueue;
+
 @property (nullable, strong) FMDatabaseQueue *allAlbumsDbQueue;
 @property (nullable, strong) FMDatabaseQueue *allSongsDbQueue;
-@property (nullable, strong) FMDatabaseQueue *genresDbQueue;
 @property (nullable, strong) FMDatabaseQueue *currentPlaylistDbQueue;
 @property (nullable, strong) FMDatabaseQueue *localPlaylistsDbQueue;
-@property (nullable, strong) FMDatabaseQueue *songCacheDbQueue;
 @property (nullable, strong) FMDatabaseQueue *cacheQueueDbQueue;
 @property (nullable, strong) FMDatabaseQueue *bookmarksDbQueue;
 

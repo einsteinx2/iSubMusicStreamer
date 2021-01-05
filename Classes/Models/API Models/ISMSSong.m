@@ -243,8 +243,7 @@
 }
 
 - (NSString *)localPath {
-    NSString *fileName = self.path.md5;    
-    return fileName ? [settingsS.songCachePath stringByAppendingPathComponent:fileName] : nil;
+    return self.path ? [settingsS.songCachePath stringByAppendingPathComponent:self.path] : nil;
 }
 
 - (NSString *)localTempPath {
@@ -307,7 +306,7 @@
 - (NSString *)secondaryLabelText { return self.artist; }
 - (NSString *)durationLabelText { return [NSString formatTime:[self.duration floatValue]]; }
 - (BOOL)isCached { return self.isFullyCached; }
-- (void)download { [self addToCacheQueueDbQueue]; }
-- (void)queue { [self addToCurrentPlaylistDbQueue]; }
+- (void)download { [self addToDownloadQueue]; }
+- (void)queue { [self addToCurrentPlayQueue]; }
 
 @end

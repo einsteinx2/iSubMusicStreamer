@@ -293,7 +293,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		[databaseS resetCurrentPlaylistDb];
 	}
 	
-	playlistS.isShuffle = NO;
+	playQueueS.isShuffle = NO;
 	
 	/*for (int i = 0; i < self.playlistCount; i++)
 	{
@@ -309,7 +309,7 @@ LOG_LEVEL_ISUB_DEFAULT
 				aSong = [ISMSSong songFromServerPlaylistId:self.md5 row:i];
 			}
 			
-			[aSong addToCurrentPlaylistDbQueue];
+			[aSong addToCurrentPlayQueue];
 		}
 	}*/
 	

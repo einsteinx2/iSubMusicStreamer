@@ -30,7 +30,7 @@ fileprivate var albumLoader: TagAlbumLoader?
     @objc static func downloadAll(tagAlbumId: String) {
         albumLoader = TagAlbumLoader(albumId: tagAlbumId) { success, error in
             if success {
-                albumLoader?.songs.forEach { $0.addToCacheQueueDbQueue() }
+                albumLoader?.songs.forEach { $0.addToDownloadQueue() }
             }
             downloadCallback(success: success, error: error)
         }
@@ -157,7 +157,7 @@ fileprivate var albumLoader: TagAlbumLoader?
     private static func queueTagAlbum(tagAlbumId: String, callback: @escaping LoaderCallback) {
         albumLoader = TagAlbumLoader(albumId: tagAlbumId) { success, error in
             if success {
-                albumLoader?.songs.forEach { $0.addToCurrentPlaylistDbQueue() }
+                albumLoader?.songs.forEach { $0.addToCurrentPlayQueue() }
             }
             callback(success, error)
         }

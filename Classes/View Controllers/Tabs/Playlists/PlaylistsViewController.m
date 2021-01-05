@@ -220,7 +220,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)updateCurrentPlaylistCount {
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
-		self.currentPlaylistCount = playlistS.count;
+		self.currentPlaylistCount = playQueueS.count;
 
         if (self.currentPlaylistCount == 1) {
 			self.playlistCountLabel.text = [NSString stringWithFormat:@"1 song"];
@@ -461,7 +461,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)segmentAction:(id)sender {
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
 		// Get the current playlist count
-		self.currentPlaylistCount = [playlistS count];
+		self.currentPlaylistCount = [playQueueS count];
 
 		// Clear the edit stuff if they switch tabs in the middle of editing
 		[self removeEditControls];
@@ -484,12 +484,12 @@ LOG_LEVEL_ISUB_DEFAULT
         }
 		
 		UITableViewScrollPosition scrollPosition = UITableViewScrollPositionNone;
-        if (playlistS.currentIndex > minScrollRow) {
+        if (playQueueS.currentIndex > minScrollRow) {
 			scrollPosition = UITableViewScrollPositionTop;
         }
 		
-		if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
-			[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:scrollPosition];
+		if (playQueueS.currentIndex >= 0 && playQueueS.currentIndex < self.currentPlaylistCount) {
+			[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playQueueS.currentIndex inSection:0] animated:NO scrollPosition:scrollPosition];
 		}
 		
 		// Remove the no playlists overlay screen if it's showing
@@ -557,8 +557,8 @@ LOG_LEVEL_ISUB_DEFAULT
             
             // Reload the table to correct the numbers
             [self.tableView reloadData];
-            if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
-                [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
+            if (playQueueS.currentIndex >= 0 && playQueueS.currentIndex < self.currentPlaylistCount) {
+                [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playQueueS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
             }
         } else {
             [self setEditing:YES animated:YES];
@@ -656,7 +656,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:self.currentPlaylistCount];
 	NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 	NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-	NSString *table = playlistS.isShuffle ? shufTable : currTable;
+	NSString *table = playQueueS.isShuffle ? shufTable : currTable;
 	
 	[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
 		 for (int i = 0; i < self.currentPlaylistCount; i++) {
@@ -706,7 +706,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)deleteCurrentPlaylistSongsAtRowIndexes:(NSArray<NSNumber*> *)rowIndexes {
     
-    [playlistS deleteSongs:rowIndexes];
+    [playQueueS deleteSongs:rowIndexes];
     [self updateCurrentPlaylistCount];
     
 //        [self.tableView deleteRowsAtIndexPaths:self.tableView.indexPathsForSelectedRows withRowAnimation:UITableViewRowAnimationRight];
@@ -880,7 +880,7 @@ LOG_LEVEL_ISUB_DEFAULT
                 NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
                 NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
                 NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-                NSString *table = playlistS.isShuffle ? shufTable : currTable;
+                NSString *table = playQueueS.isShuffle ? shufTable : currTable;
                 
                 [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
                     [db executeUpdate:@"INSERT INTO localPlaylists (playlist, md5) VALUES (?, ?)", name, name.md5];
@@ -915,7 +915,7 @@ LOG_LEVEL_ISUB_DEFAULT
             NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", settingsS.urlString.md5];
             NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
             NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-            NSString *table = playlistS.isShuffle ? shufTable : currTable;
+            NSString *table = playQueueS.isShuffle ? shufTable : currTable;
             
             [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
                 [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE playlist%@", name.md5]];
@@ -941,8 +941,8 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)selectRow {
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
 		[self.tableView reloadData];
-		if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
-			[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
+		if (playQueueS.currentIndex >= 0 && playQueueS.currentIndex < self.currentPlaylistCount) {
+			[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playQueueS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
 		}
 	}
 }
@@ -1078,7 +1078,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
 			NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 			NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-			NSString *table = playlistS.isShuffle ? shufTable : currTable;
+			NSString *table = playQueueS.isShuffle ? shufTable : currTable;
 						
 			[db executeUpdate:@"DROP TABLE moveTemp"];
 			NSString *query = [NSString stringWithFormat:@"CREATE TABLE moveTemp (%@)", ISMSSong.standardSongColumnSchema];
@@ -1108,19 +1108,19 @@ LOG_LEVEL_ISUB_DEFAULT
 		}
 		
 		// Correct the value of currentPlaylistPosition
-		if (fromIndexPath.row == playlistS.currentIndex) {
-			playlistS.currentIndex = toIndexPath.row;
+		if (fromIndexPath.row == playQueueS.currentIndex) {
+			playQueueS.currentIndex = toIndexPath.row;
 		} else  {
-			if (fromIndexPath.row < playlistS.currentIndex && toIndexPath.row >= playlistS.currentIndex) {
-				playlistS.currentIndex = playlistS.currentIndex - 1;
-			} else if (fromIndexPath.row > playlistS.currentIndex && toIndexPath.row <= playlistS.currentIndex) {
-				playlistS.currentIndex = playlistS.currentIndex + 1;
+			if (fromIndexPath.row < playQueueS.currentIndex && toIndexPath.row >= playQueueS.currentIndex) {
+				playQueueS.currentIndex = playQueueS.currentIndex - 1;
+			} else if (fromIndexPath.row > playQueueS.currentIndex && toIndexPath.row <= playQueueS.currentIndex) {
+				playQueueS.currentIndex = playQueueS.currentIndex + 1;
 			}
 		}
 		
 		// Highlight the current playing song
-		if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
-			[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
+		if (playQueueS.currentIndex >= 0 && playQueueS.currentIndex < self.currentPlaylistCount) {
+			[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playQueueS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
 		}
 		
         if (!settingsS.isJukeboxEnabled) {
@@ -1154,7 +1154,7 @@ LOG_LEVEL_ISUB_DEFAULT
         cell.hideDurationLabel = NO;
         cell.hideSecondaryLabel = NO;
         cell.number = indexPath.row + 1;
-        [cell updateWithModel:[playlistS songForIndex:indexPath.row]];
+        [cell updateWithModel:[playQueueS songForIndex:indexPath.row]];
 	} else if (self.segmentedControl.selectedSegmentIndex == 1) {
         // Local playlist
         cell.hideNumberLabel = YES;
@@ -1217,7 +1217,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.segmentedControl.selectedSegmentIndex == 0) {
         // Current Playlist
-        ISMSSong *song = [playlistS songForIndex:indexPath.row];
+        ISMSSong *song = [playQueueS songForIndex:indexPath.row];
         if (!song.isVideo) {
             return [SwipeAction downloadQueueAndDeleteConfigWithModel:song deleteHandler:^{
                 [self deleteCurrentPlaylistSongsAtRowIndexes:@[@(indexPath.row)]];

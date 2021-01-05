@@ -240,7 +240,7 @@
 }
 
 - (void)loadPlayAllPlaylist:(BOOL)shuffle {
-    playlistS.isShuffle = NO;
+    playQueueS.isShuffle = NO;
 	
 	if (settingsS.isJukeboxEnabled) {
 		[databaseS resetJukeboxPlaylist];
@@ -264,15 +264,15 @@
 	for (NSString *md5 in songMd5s) {
 		@autoreleasepool {
 			ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:md5];
-			[aSong addToCurrentPlaylistDbQueue];
+			[aSong addToCurrentPlayQueue];
 		}
 	}
 	
 	if (shuffle) {
-		playlistS.isShuffle = YES;
+		playQueueS.isShuffle = YES;
 		[databaseS shufflePlaylist];
 	} else {
-		playlistS.isShuffle = NO;
+		playQueueS.isShuffle = NO;
 	}
 	
     if (settingsS.isJukeboxEnabled) {
@@ -909,7 +909,9 @@
     __block ISMSSong *song;
     [databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue ORDER BY ROWID ASC LIMIT 1 OFFSET ?", @(indexPath.row)];
-        song = [ISMSSong songFromDbResult:result];
+        if ([result next]) {
+            song = [[ISMSSong alloc] initWithResult:result];
+        }
         [result close];
     }];
     return song;
@@ -1005,8 +1007,10 @@
         __block NSDate *cachedDate;
         [databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
             FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue ORDER BY ROWID ASC LIMIT 1 OFFSET ?", @(indexPath.row)];
-            song = [ISMSSong songFromDbResult:result];
-            cachedDate = [NSDate dateWithTimeIntervalSince1970:[result doubleForColumn:@"cachedDate"]];
+            if ([result next]) {
+                song = [[ISMSSong alloc] initWithResult:result];
+                cachedDate = [NSDate dateWithTimeIntervalSince1970:[result doubleForColumn:@"cachedDate"]];
+            }
             [result close];
         }];
         
@@ -1166,7 +1170,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 
                 for (NSString *md5 in songMd5s) {
                     @autoreleasepool {
-                        [[ISMSSong songFromCacheDbQueue:md5] addToCurrentPlaylistDbQueue];
+                        [[ISMSSong songFromCacheDbQueue:md5] addToCurrentPlayQueue];
                     }
                 }
 
@@ -1214,9 +1218,9 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
     } else {
         ISMSSong *song = [self songForIndexPath:indexPath];
         return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
-            [song addToCurrentPlaylistDbQueue];
+            [song addToCurrentPlayQueue];
         } deleteHandler:^{
-            [song removeFromCacheQueueDbQueue];
+            [song removeFromDownloadQueue];
             [self reloadTable];
         }];
     }

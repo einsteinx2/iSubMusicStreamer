@@ -39,19 +39,16 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (ISMSSong *)currentQueuedSongInDb {
-	__block ISMSSong *aSong = nil;
+	__block ISMSSong *song = nil;
 	[databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
-		 FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue WHERE finished = 'NO' ORDER BY ROWID ASC LIMIT 1"];
-		 if ([db hadError]) {
-			 //DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-		 } else {
-			 aSong = [ISMSSong songFromDbResult:result];
-		 }
-		 
-		 [result close]; 
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue WHERE finished = 'NO' ORDER BY ROWID ASC LIMIT 1"];
+        if ([result next]) {
+            song = [[ISMSSong alloc] initWithResult:result];
+        }
+        [result close];
 	 }];
 	
-	return aSong;
+	return song;
 }
 
 // Start downloading the file specified in the text field.
@@ -80,7 +77,7 @@ LOG_LEVEL_ISUB_DEFAULT
     // Check if this is a video
     if (self.currentQueuedSong.isVideo) {
         // Remove from the queue
-        [self.currentQueuedSong removeFromCacheQueueDbQueue];
+        [self.currentQueuedSong removeFromDownloadQueue];
         
         // Continue the queue
 		[self startDownloadQueue];
@@ -96,7 +93,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		//self.currentQueuedSong.isDownloaded = YES;
 		
 		// The song is fully cached, so delete it from the cache queue database
-		[self.currentQueuedSong removeFromCacheQueueDbQueue];
+		[self.currentQueuedSong removeFromDownloadQueue];
 		
 		// Notify any tables
 		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:self.currentQueuedSong.songId forKey:@"songId"];
@@ -170,7 +167,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (self.isQueueDownloading)
 		[self stopDownloadQueue];
 	
-	[self.currentQueuedSong removeFromCacheQueueDbQueue];
+	[self.currentQueuedSong removeFromDownloadQueue];
 	
 	if (!self.isQueueDownloading)
 		[self startDownloadQueue];
@@ -198,7 +195,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		
 		// Tried max number of times so remove
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CacheQueueSongFailed];
-		[self.currentQueuedSong removeFromCacheQueueDbQueue];
+		[self.currentQueuedSong removeFromDownloadQueue];
 		self.currentStreamHandler = nil;
 		[self startDownloadQueue];
 	}
@@ -246,7 +243,7 @@ LOG_LEVEL_ISUB_DEFAULT
         self.currentQueuedSong.isFullyCached = YES;
 		
 		// Remove the song from the cache queue
-		[self.currentQueuedSong removeFromCacheQueueDbQueue];
+		[self.currentQueuedSong removeFromDownloadQueue];
 		self.currentQueuedSong = nil;
         		
 		// Remove the stream handler

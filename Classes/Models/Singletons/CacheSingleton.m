@@ -43,7 +43,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (NSUInteger)numberOfCachedSongs {
-	return [databaseS.songCacheDbQueue intForQuery:@"SELECT COUNT(*) FROM cachedSongs WHERE finished = 'YES'"];
+	return [databaseS.offlineSongsDbQueue intForQuery:@"SELECT COUNT(*) FROM offlineSongs WHERE finished = 1"];
 }
 
 // If the available space has dropped below the max cache size since last app load, adjust it.
@@ -61,18 +61,26 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)removeOldestCachedSongs {
-	NSString *songMD5 = nil;
 	if (settingsS.cachingType == ISMSCachingType_minSpace) {
 		// Remove the oldest songs based on either oldest played or oldest cached until free space is more than minFreeSpace
 		while (self.freeSpace < settingsS.minFreeSpace) {
 			@autoreleasepool {
-                if (settingsS.autoDeleteCacheType == 0) {
-					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY playedDate ASC LIMIT 1"];
-                } else {
-					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY cachedDate ASC LIMIT 1"];
+                NSString *orderByField = settingsS.autoDeleteCacheType == 0 ? @"playedDate" : @"cachedDate";
+                __block NSString *urlStringFilesystemSafe = nil;
+                __block NSString *songId = nil;
+                [databaseS.offlineSongsDbQueue inDatabase:^(FMDatabase *db) {
+                    NSString *query = [NSString stringWithFormat:@"SELECT urlStringFilesystemSafe, songId FROM offlineSong WHERE finished = 1 ORDER BY %@ ASC LIMIT 1", orderByField];
+                    FMResultSet *result = [db executeQuery:query];
+                    if ([result next]) {
+                        urlStringFilesystemSafe = [result stringForColumn:@"urlStringFilesystemSafe"];
+                        songId = [result stringForColumn:@"songId"];
+                    }
+                }];
+                
+                if (urlStringFilesystemSafe && songId) {
+                    DDLogInfo(@"[CacheSingleton] removeOldestCachedSongs: min space removing songId %@", songId);
+                    [ISMSSong removeFromOfflineSongsWithUrlStringFilesystemSafe:urlStringFilesystemSafe songId:songId];
                 }
-                DDLogInfo(@"[CacheSingleton] removeOldestCachedSongs: min space removing %@", songMD5);
-				[ISMSSong removeSongFromCacheDbQueueByMD5:songMD5];	
 			}
 		}
 	} else if (settingsS.cachingType == ISMSCachingType_maxSize) {
@@ -80,17 +88,23 @@ LOG_LEVEL_ISUB_DEFAULT
 		unsigned long long size = self.cacheSize;
 		while (size > settingsS.maxCacheSize) {
 			@autoreleasepool  {
-				if (settingsS.autoDeleteCacheType == 0) {
-					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY playedDate ASC LIMIT 1"];
-				} else {
-					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY cachedDate ASC LIMIT 1"];
-				}
-				ISMSSong *song = [ISMSSong songFromCacheDbQueue:songMD5];
-				NSString *songPath = [settingsS.songCachePath stringByAppendingPathComponent:song.path.md5];
+                NSString *orderByField = settingsS.autoDeleteCacheType == 0 ? @"playedDate" : @"cachedDate";
+                __block NSString *urlStringFilesystemSafe = nil;
+                __block NSString *songId = nil;
+                [databaseS.offlineSongsDbQueue inDatabase:^(FMDatabase *db) {
+                    NSString *query = [NSString stringWithFormat:@"SELECT urlStringFilesystemSafe, songId FROM offlineSong WHERE finished = 1 ORDER BY %@ ASC LIMIT 1", orderByField];
+                    FMResultSet *result = [db executeQuery:query];
+                    if ([result next]) {
+                        urlStringFilesystemSafe = [result stringForColumn:@"urlStringFilesystemSafe"];
+                        songId = [result stringForColumn:@"songId"];
+                    }
+                }];
+                ISMSSong *song = [ISMSSong downloadedSongWithUrlStringFilesystemSafe:urlStringFilesystemSafe songId:songId];
+                NSString *songPath = [settingsS.songCachePath stringByAppendingPathComponent:song.path];
 				unsigned long long songSize = [[NSFileManager.defaultManager attributesOfItemAtPath:songPath error:NULL] fileSize];
                 
                 DDLogInfo(@"[CacheSingleton] removeOldestCachedSongs: max size removing %@", song);
-				[ISMSSong removeSongFromCacheDbQueueByMD5:songMD5];
+                [ISMSSong removeFromOfflineSongsWithUrlStringFilesystemSafe:urlStringFilesystemSafe songId:songId];
 				size -= songSize;
 			}
 		}
@@ -104,8 +118,8 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)findCacheSize {
-    [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-        unsigned long long size = [[db stringForQuery:@"SELECT sum(size) FROM sizesSongs"] longLongValue];
+    [databaseS.offlineSongsDbQueue inDatabase:^(FMDatabase *db) {
+        unsigned long long size = [[db stringForQuery:@"SELECT sum(size) FROM offlineSong"] longLongValue];
         FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'NO'"];
         while ([result next]) {
             NSString *path = [settingsS.songCachePath stringByAppendingPathComponent:[result stringForColumn:@"md5"]];

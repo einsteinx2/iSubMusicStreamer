@@ -204,9 +204,9 @@ LOG_LEVEL_ISUB_DEFAULT
             if (!handler.mySong.isFullyCached && !handler.mySong.isTempCached && !([cacheQueueManagerS.currentQueuedSong isEqualToSong:handler.mySong] && cacheQueueManagerS.isQueueDownloading))
             {
                 DDLogInfo(@"[ISMSStreamManager] Removing song from cached songs table: %@", handler.mySong);
-                [handler.mySong removeFromCachedSongsTableDbQueue];
+                [handler.mySong removeFromOfflineSongs];
             }
-			//[handler.mySong removeFromCachedSongsTableDbQueue];
+			//[handler.mySong removeFromOfflineSongs];
 		}
 	}
 	
@@ -284,7 +284,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (!handler.mySong.isFullyCached && !handler.mySong.isTempCached && !([cacheQueueManagerS.currentQueuedSong isEqualToSong:handler.mySong] && cacheQueueManagerS.isQueueDownloading))
         {
             DDLogInfo(@"[ISMSStreamManager] Removing song from cached songs table: %@", handler.mySong);
-            [handler.mySong removeFromCachedSongsTableDbQueue];
+            [handler.mySong removeFromOfflineSongs];
         }
         
         if (index < self.handlerStack.count) {
@@ -501,7 +501,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	{
 		for (int i = 0; i < numStreamsToQueue; i++)
 		{
-			ISMSSong *aSong = [playlistS songForIndex:[playlistS indexForOffsetFromCurrentIndex:i]];
+			ISMSSong *aSong = [playQueueS songForIndex:[playQueueS indexForOffsetFromCurrentIndex:i]];
 			if (aSong && !aSong.isVideo && ![self isSongInQueue:aSong] && ![self.lastTempCachedSong isEqualToSong:aSong] && !aSong.isFullyCached && !settingsS.isOfflineMode && ![cacheQueueManagerS.currentQueuedSong isEqualToSong:aSong])
 			{
 				// Queue the song for download
@@ -531,13 +531,13 @@ LOG_LEVEL_ISUB_DEFAULT
 	// TODO: Fix this logic, it's wrong
 	// Verify that the last song is not constantly retrying to connect, 
 	// so the current song can download and play
-	[self removeStreamForSong:playlistS.prevSong];
+	[self removeStreamForSong:playQueueS.prevSong];
 }
 
 - (void)currentPlaylistOrderChanged
 {
-	ISMSSong *currentSong = playlistS.currentSong;
-	ISMSSong *nextSong = playlistS.nextSong;
+	ISMSSong *currentSong = playQueueS.currentSong;
+	ISMSSong *nextSong = playQueueS.nextSong;
 	NSMutableArray *songsToSkip = [NSMutableArray arrayWithCapacity:2];
 	if (currentSong) [songsToSkip addObject:currentSong];
 	if (nextSong) [songsToSkip addObject:nextSong];
@@ -559,10 +559,10 @@ LOG_LEVEL_ISUB_DEFAULT
 	// Update the last cached song
 	self.lastCachedSong = handler.mySong;
     
-    ISMSSong *currentSong = playlistS.currentSong;
-	if ([handler.mySong isEqualToSong:playlistS.currentSong])
+    ISMSSong *currentSong = playQueueS.currentSong;
+	if ([handler.mySong isEqualToSong:playQueueS.currentSong])
 	{
-        [audioEngineS startSong:currentSong atIndex:playlistS.currentIndex withOffsetInBytes:@(handler.byteOffset) orSeconds:@(handler.secondsOffset)];
+        [audioEngineS startSong:currentSong atIndex:playQueueS.currentIndex withOffsetInBytes:@(handler.byteOffset) orSeconds:@(handler.secondsOffset)];
 	}
 	
 	[self saveHandlerStack];
@@ -641,7 +641,7 @@ LOG_LEVEL_ISUB_DEFAULT
             if ([cacheQueueManagerS isSongInQueue:handler.mySong])
             {
                 //handler.mySong.isDownloaded = YES;
-                [handler.mySong removeFromCacheQueueDbQueue];
+                [handler.mySong removeFromDownloadQueue];
             }
             
             DDLogInfo(@"[ISMSStreamManager] Marking isFullyCached = YES for %@", handler.mySong);

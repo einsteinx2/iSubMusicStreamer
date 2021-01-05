@@ -13,18 +13,6 @@
 
 @implementation CustomUITabBarController
 
-+ (void)customizeMoreTabTableView:(UITabBarController *)tabBarController {
-    // Customize more tab
-    tabBarController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-    UIViewController *moreController = tabBarController.moreNavigationController.topViewController;
-    if ([moreController.view isKindOfClass:UITableView.class]) {
-        UITableView *moreTableView = (UITableView *)moreController.view;
-        moreTableView.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
-        moreTableView.rowHeight = Defines.rowHeight;
-        moreTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    }
-}
-
 - (BOOL)shouldAutorotate {
     if (settingsS.isRotationLockEnabled && UIDevice.currentDevice.orientation != UIDeviceOrientationPortrait) {
         return NO;

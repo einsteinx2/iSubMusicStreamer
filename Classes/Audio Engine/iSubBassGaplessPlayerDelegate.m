@@ -61,7 +61,7 @@
 - (void)bassSongEndedCalled:(BassGaplessPlayer*)player
 {
     // Increment current playlist index
-    [playlistS incrementIndex];
+    [playQueueS incrementIndex];
     
     // Clear the social post status
     [socialS playerClearSocial];
@@ -74,17 +74,17 @@
 
 - (NSUInteger)bassIndexAtOffset:(NSInteger)offset fromIndex:(NSUInteger)index player:(BassGaplessPlayer *)player
 {
-    return [playlistS indexForOffset:offset fromIndex:index];
+    return [playQueueS indexForOffset:offset fromIndex:index];
 }
 
 - (ISMSSong *)bassSongForIndex:(NSUInteger)index player:(BassGaplessPlayer *)player
 {
-    return [playlistS songForIndex:index];
+    return [playQueueS songForIndex:index];
 }
 
 - (NSUInteger)bassCurrentPlaylistIndex:(BassGaplessPlayer *)player
 {
-    return playlistS.currentIndex;
+    return playQueueS.currentIndex;
 }
 
 - (void)bassRetrySongAtIndex:(NSUInteger)index player:(BassGaplessPlayer*)player;
@@ -108,7 +108,7 @@
 - (void)bassFailedToCreateNextStreamForIndex:(NSUInteger)index player:(BassGaplessPlayer *)player
 {
     // The song ended, and we tried to make the next stream but it failed
-    ISMSSong *aSong = [playlistS songForIndex:index];
+    ISMSSong *aSong = [playQueueS songForIndex:index];
     ISMSStreamHandler *handler = [streamManagerS handlerForSong:aSong];
     if (!handler.isDownloading || handler.isDelegateNotifiedToStartPlayback)
     {

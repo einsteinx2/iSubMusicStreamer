@@ -23,605 +23,397 @@
 
 LOG_LEVEL_ISUB_DEFAULT
 
+// TODO: Add any missing error handling to all database accesses
 @implementation ISMSSong (DAO)
 
+#pragma mark Properties
+
+- (BOOL)isFullyCached {
+    return [databaseS.offlineSongsDbQueue boolForQuery:@"SELECT finished FROM offlineSongs WHERE urlStringFilesystemSafe = ? AND songId = ?", settingsS.urlStringFilesystemSafe, self.songId];
+}
+
+- (void)setIsFullyCached:(BOOL)isFullyCached {
+	NSAssert(isFullyCached, @"Can not set isFullyCached to NO");
+    
+    if (isFullyCached) {
+        [databaseS.offlineSongsDbQueue inDatabase:^(FMDatabase *db) {
+            [db executeUpdate:@"UPDATE offlineSong SET finished = 1, cachedDate = ?, size = ? WHERE urlStringFilesystemSafe = ? AND songId = ?", [NSDate date], @(self.localFileSize), settingsS.urlStringFilesystemSafe, self.songId];
+        }];
+        
+        [self addToOfflineSongFolderLayout];
+        [self removeFromDownloadQueue];
+    }
+}
+
+- (CGFloat)downloadProgress {
+    CGFloat downloadProgress = 0;
+    if (self.isFullyCached) {
+        downloadProgress = 1;
+    } else {
+        CGFloat bitrate = (CGFloat)self.estimatedBitrate;
+        if (audioEngineS.player.isPlaying) {
+            bitrate = [BassWrapper estimateBitrate:audioEngineS.player.currentStream];
+        }
+        
+        CGFloat seconds = [self.duration floatValue];
+        if (self.transcodedSuffix) {
+            // This is a transcode, so we'll want to use the actual bitrate if possible
+            if ([playQueueS.currentSong isEqualToSong:self]) {
+                // This is the current playing song, so see if BASS has an actual bitrate for it
+                if (audioEngineS.player.bitRate > 0) {
+                    // Bass has a non-zero bitrate, so use that for the calculation
+                    // convert to bytes per second, multiply by number of seconds
+                    bitrate = (CGFloat)audioEngineS.player.bitRate;
+                    seconds = [self.duration floatValue];
+                }
+            }
+        }
+        double totalSize = BytesForSecondsAtBitrate(bitrate, seconds);
+        downloadProgress = (double)self.localFileSize / totalSize;
+    }
+    
+    // Keep within bounds
+    downloadProgress = downloadProgress < 0. ? 0. : downloadProgress;
+    downloadProgress = downloadProgress > 1. ? 1. : downloadProgress;
+    
+    // The song hasn't started downloading yet
+    return downloadProgress;
+}
+
 - (BOOL)fileExists {
-	// Filesystem check
-	return [[NSFileManager defaultManager] fileExistsAtPath:self.currentPath];
-	
-	// Database check
-	//return [self.db stringForQuery:@"SELECT md5 FROM cachedSongs WHERE md5 = ?", [self.path md5]] ? YES : NO;
+    // Filesystem check
+    return [[NSFileManager defaultManager] fileExistsAtPath:self.currentPath];
+    
+    // Database check
+    //return [self.db stringForQuery:@"SELECT md5 FROM cachedSongs WHERE md5 = ?", [self.path md5]] ? YES : NO;
 }
 
-- (BOOL)isPartiallyCached
-{
-	__block BOOL isPartiallyCached;
-    [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-	{
-		 isPartiallyCached = [db stringForQuery:@"SELECT md5 FROM cachedSongs WHERE md5 = ? AND finished = 'NO'", [self.path md5]] ? YES : NO;
-	}];
-	return isPartiallyCached; 
+- (NSDate *)playedDate {
+    NSString *query = @"SELECT playedDate FROM offlineSong WHERE urlStringFilesystemSafe = ? AND songId = ?";
+    return [databaseS.offlineSongsDbQueue dateForQuery:query, settingsS.urlStringFilesystemSafe, self.songId];
 }
 
-- (void)setIsPartiallyCached:(BOOL)isPartiallyCached
-{
-	assert(isPartiallyCached && "Can not set isPartiallyCached to to NO");
-	if (isPartiallyCached)
-	{
-		[self insertIntoCachedSongsTableDbQueue];
-	}
+- (void)setPlayedDate:(NSDate *)playedDate {
+    [databaseS.offlineSongsDbQueue inDatabase:^(FMDatabase *db) {
+        NSString *query = @"UPDATE cachedSongs SET playedDate = ? WHERE urlStringFilesystemSafe = ? AND songId = ?";
+        [db executeUpdate:query, playedDate, settingsS.urlStringFilesystemSafe, self.songId];
+    }];
 }
 
-- (BOOL)isFullyCached
-{	
-	__block BOOL isFullyCached;
-	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-	{
-		isFullyCached = [[db stringForQuery:@"SELECT finished FROM cachedSongs WHERE md5 = ?", [self.path md5]] boolValue];
-	}];
-	return isFullyCached;
+- (BOOL)isCurrentPlayingSong {
+    if (settingsS.isJukeboxEnabled) {
+        return jukeboxS.isPlaying && [self isEqualToSong:playQueueS.currentSong];
+    } else {
+        return [self isEqualToSong:audioEngineS.player.currentStream.song];
+    }
 }
 
-- (void)setIsFullyCached:(BOOL)isFullyCached
-{
-	assert(isFullyCached && "Can not set isFullyCached to NO");
-	if (isFullyCached)
-	{
-		//DLog(@"%@: UPDATE cachedSongs SET finished = 'YES', cachedDate = %llu WHERE md5 = '%@'", self.title, (unsigned long long)[[NSDate date] timeIntervalSince1970], [self.path md5]);
-		[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-		{
-			[db executeUpdate:@"UPDATE cachedSongs SET finished = 'YES', cachedDate = ? WHERE md5 = ?", @((unsigned long long)[[NSDate date] timeIntervalSince1970]), [self.path md5]];
-            
-            // get the file path so we can check its size
-            NSString *path = [settingsS.songCachePath stringByAppendingPathComponent:self.path.md5];
-            
-            // get the attributes dictionary
-            NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
-            [db executeUpdate:@"REPLACE INTO sizesSongs VALUES (?, ?)", self.path.md5, attr[NSFileSize]];
-            DDLogInfo(@"[ISMSSong+DAO] Size for song \"%@\" successfully added to database on cache completion", self.title);
-		}];
-		
-		[self insertIntoCachedSongsLayoutDbQueue];
-		
-		// Setup the genre table entries
-		if (self.genre)
-		{
-			// Check if the genre has a table in the database yet, if not create it and add the new genre to the genres table
-			[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-			{
-				NSString *genre = [db stringForQuery:@"SELECT genre FROM genres WHERE genre = ?", self.genre];
-				if (!genre) {						
-					[db executeUpdate:@"INSERT OR IGNORE INTO genres (genre) VALUES (?)", self.genre];
-					if ([db hadError])
-                        DDLogError(@"[ISMSSong+DAO] Err adding the genre %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-				}
-			}];
-			
-			// Insert the song object into the appropriate genresSongs table
-			[self insertIntoGenreTable:@"genresSongs" inDatabaseQueue:databaseS.songCacheDbQueue];
-		}
-		
-		[self removeFromCacheQueueDbQueue];
-	}
-}
+#pragma mark Retrieve
 
 - (nullable instancetype)initWithSongId:(NSString *)songId {
     __block ISMSSong *song = nil;
     [databaseS.serverDbQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *result = [db executeQuery:@"SELECT * FROM song WHERE songId = ?", songId];
-        if (db.hadError) {
+        if ([result next]) {
+            song = [[ISMSSong alloc] initWithResult:result];
+        } else if (db.hadError) {
             DDLogError(@"[ISMSSong+DAO] Error selecting song using songId %@ - %d: %@", songId, db.lastErrorCode, db.lastErrorMessage);
-        } else {
-            song = [ISMSSong songFromDbResult:result];
         }
         [result close];
     }];
     return song;
 }
 
-+ (ISMSSong *)songFromDbResult:(FMResultSet *)result {
-	if ([result next]) {
-        return [[ISMSSong alloc] initWithResult:result];
-    }
-	return nil;
-}
-
-+ (ISMSSong *)songAtPosition:(NSUInteger)itemOrder inTable:(NSString *)table {
++ (ISMSSong *)songAtPosition:(NSUInteger)itemOrder inTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue {
     __block ISMSSong *song = nil;
-    [databaseS.serverDbQueue inDatabase:^(FMDatabase *db) {
+    [dbQueue inDatabase:^(FMDatabase *db) {
         NSString *query = [NSString stringWithFormat:@"SELECT song.* FROM %@ JOIN song ON %@.songId = song.songId WHERE %@.itemOrder = %lu", table, table, table, (unsigned long)itemOrder];
         FMResultSet *result = [db executeQuery:query];
-        if (db.hadError) {
+        if ([result next]) {
+            song = [[ISMSSong alloc] initWithResult:result];
+        } else if (db.hadError) {
             DDLogError(@"[ISMSSong+DAO] Error selecting song at position %lu in table %@ - %d: %@", (unsigned long)itemOrder, table, db.lastErrorCode, db.lastErrorMessage);
-        } else {
-            song = [ISMSSong songFromDbResult:result];
         }
         [result close];
     }];
     return song;
 }
 
-+ (ISMSSong *)songFromDbRow:(NSUInteger)row inTable:(NSString *)table {
-    row++;
-    __block ISMSSong *song = nil;
-    [databaseS.serverDbQueue inDatabase:^(FMDatabase *db) {
-        NSString *query = [NSString stringWithFormat:@"SELECT song.* FROM %@ JOIN song ON %@.songId = song.songId WHERE %@.ROWID = %lu", table, table, table, (unsigned long)row];
-        FMResultSet *result = [db executeQuery:query];
-        if (db.hadError) {
-            DDLogError(@"[ISMSSong+DAO] Error selecting song at row %lu in table %@ - %d: %@", (unsigned long)row, table, db.lastErrorCode, db.lastErrorMessage);
-        } else {
-            song = [ISMSSong songFromDbResult:result];
-        }
-        [result close];
-    }];
-    return song;
-}
-
-+ (ISMSSong *)songFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue {
-	__block ISMSSong *aSong;
-	[dbQueue inDatabase:^(FMDatabase *db)
-	{
-		aSong = [ISMSSong songFromDbRow:row inTable:table inDatabase:db];
-	}];
-	return aSong;
-}
-
-+ (ISMSSong *)songFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabase:(FMDatabase *)db {
-	row++;
-	ISMSSong *aSong = nil;
-	//DLog(@"query: %@", [NSString stringWithFormat:@"SELECT * FROM %@ WHERE ROWID = %i", table, row]);
-	FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE ROWID = %lu", table, (unsigned long)row]];
-	if ([db hadError])
-	{
-	//DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-	}
-	else
-	{
-		aSong = [ISMSSong songFromDbResult:result];
-	}
-	[result close];
-
-	return aSong;
-    
-//    row++;
-//    ISMSSong *song = nil;
-//    NSString *query = [NSString stringWithFormat:@"SELECT song.* FROM %@ JOIN song ON %@.songId = song.songId WHERE %@.ROWID = %lu", table, table, table, (unsigned long)row];
-//    FMResultSet *result = [db executeQuery:query];
-//    if (db.hadError) {
-//        DDLogError(@"[ISMSSong+DAO] Error selecting song at row %lu in table %@ - %d: %@", (unsigned long)row, table, db.lastErrorCode, db.lastErrorMessage);
-//    } else {
-//        song = [ISMSSong songFromDbResult:result];
-//    }
-//    [result close];
-//    return song;
-}
-
-+ (ISMSSong *)songFromAllSongsDb:(NSUInteger)row inTable:(NSString *)table
-{
-	return [ISMSSong songFromDbRow:row inTable:table inDatabaseQueue:databaseS.allSongsDbQueue];
-}
-
-+ (ISMSSong *)songFromServerPlaylistId:(NSString *)md5 row:(NSUInteger)row
-{
-	NSString *table = [NSString stringWithFormat:@"splaylist%@", md5];
-	return [ISMSSong songFromDbRow:row inTable:table inDatabaseQueue:databaseS.localPlaylistsDbQueue];
-}
-
-+ (ISMSSong *)songFromDbForMD5:(NSString *)md5 inTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue
-{
-	__block ISMSSong *aSong;
-	[dbQueue inDatabase:^(FMDatabase *db)
-	{
-		aSong = [ISMSSong songFromDbForMD5:md5 inTable:table inDatabase:db];
-	}];
-	return aSong;
-}
-
-+ (ISMSSong *)songFromDbForMD5:(NSString *)md5 inTable:(NSString *)table inDatabase:(FMDatabase *)db
-{
-	ISMSSong *aSong = nil;
-	FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE md5 = ?", table], md5];
-	if ([db hadError]) 
-	{
-	//DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-	}
-	else
-	{
-		aSong = [ISMSSong songFromDbResult:result];
-	}
-	[result close];
-	
-	return aSong;
-}
-
-+ (ISMSSong *)songFromGenreDb:(FMDatabase *)db md5:(NSString *)md5
-{
-	return [ISMSSong songFromDbForMD5:md5 inTable:@"genresSongs" inDatabase:db];
-}
-
-+ (ISMSSong *)songFromGenreDbQueue:(NSString *)md5
-{
-	FMDatabaseQueue *dbQueue = settingsS.isOfflineMode ? databaseS.songCacheDbQueue : databaseS.genresDbQueue;
-	return [ISMSSong songFromDbForMD5:md5 inTable:@"genresSongs" inDatabaseQueue:dbQueue];
-}
-
-+ (ISMSSong *)songFromCacheDb:(FMDatabase *)db md5:(NSString *)md5
-{
-	return [self songFromDbForMD5:md5 inTable:@"cachedSongs" inDatabase:db];
-}
-
-+ (ISMSSong *)songFromCacheDbQueue:(NSString *)md5
-{
-	return [self songFromDbForMD5:md5 inTable:@"cachedSongs" inDatabaseQueue:databaseS.songCacheDbQueue];
-}
-
-- (BOOL)insertIntoTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue
-{
-	__block BOOL success;
-	[dbQueue inDatabase:^(FMDatabase *db)
-	{
-		success = [self insertIntoTable:table inDatabase:db];
-	}];
-	return success;
-}
-
-- (BOOL)insertIntoTable:(NSString *)table inDatabase:(FMDatabase *)db
-{
-	[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)", table, [ISMSSong standardSongColumnNames], ISMSSong.standardSongColumnQMarks], self.title, self.songId, self.artist, self.album, self.genre, self.coverArtId, self.path, self.suffix, self.transcodedSuffix, self.duration, self.bitRate, self.track, self.year, self.size, self.parentId, NSStringFromBOOL(self.isVideo), self.discNumber];
-	
-	if ([db hadError]) 
-	{
-	//DLog(@"Err inserting song %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-	}
-	
-	return ![db hadError];
-}
-
-- (BOOL)insertIntoServerPlaylistWithPlaylistId:(NSString *)md5
-{
-	NSString *table = [NSString stringWithFormat:@"splaylist%@", md5];
-	return [self insertIntoTable:table inDatabaseQueue:databaseS.localPlaylistsDbQueue];
-}
-
-- (BOOL)insertIntoGenreTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue
-{	
-	__block BOOL hadError;
-	[dbQueue inDatabase:^(FMDatabase *db)
-	{
-		hadError = [self insertIntoGenreTable:table inDatabase:db];
-	}];
-	
-	return !hadError;
-}
-
-- (BOOL)insertIntoGenreTable:(NSString *)table inDatabase:(FMDatabase *)db
-{
-	BOOL hadError;
-	[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ (md5, %@) VALUES (?, %@)", table, [ISMSSong standardSongColumnNames], ISMSSong.standardSongColumnQMarks], [self.path md5], self.title, self.songId, self.artist, self.album, self.genre, self.coverArtId, self.path, self.suffix, self.transcodedSuffix, self.duration, self.bitRate, self.track, self.year, self.size, self.parentId, NSStringFromBOOL(self.isVideo), self.discNumber];
-    
-    hadError = [db hadError];
-    if (hadError)
-    {
-        DDLogError(@"[ISMSSong+DAO] Err inserting song into genre table %d: %@", [db lastErrorCode], [db lastErrorMessage]);
++ (ISMSSong *)songAtPositionInCurrentPlayQueue:(NSUInteger)itemOrder {
+    NSString *table;
+    if (settingsS.isJukeboxEnabled) {
+        table = playQueueS.isShuffle ? @"jukeboxShufflePlaylist" : @"jukeboxCurrentPlaylist";
+    } else {
+        table = playQueueS.isShuffle ? @"shufflePlaylist" : @"currentPlaylist";
     }
-	
-	return !hadError;
+    return [ISMSSong songAtPosition:itemOrder inTable:table inDatabaseQueue:databaseS.serverDbQueue];
 }
 
-- (BOOL)insertIntoCachedSongsTableDbQueue
-{
-	__block BOOL hadError;
-	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-	{
-		BOOL success = [db executeUpdate:[NSString stringWithFormat:@"REPLACE INTO cachedSongs (md5, finished, cachedDate, playedDate, %@) VALUES (?, 'NO', ?, 0, %@)",  [ISMSSong standardSongColumnNames], ISMSSong.standardSongColumnQMarks], [self.path md5], @((unsigned long long)[[NSDate date] timeIntervalSince1970]), self.title, self.songId, self.artist, self.album, self.genre, self.coverArtId, self.path, self.suffix, self.transcodedSuffix, self.duration, self.bitRate, self.track, self.year, self.size, self.parentId, NSStringFromBOOL(self.isVideo), self.discNumber];
-        
-        DDLogInfo(@"[ISMSSong+DAO] Inserted into cachedSongs with discNumber: %@ and insert was successful? %d", self.discNumber, success);
-		
-		hadError = [db hadError];
-		if (hadError) 
-		{
-		//DLog(@"Err inserting song into cached songs table %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-		}
++ (ISMSSong *)songAtPosition:(NSUInteger)itemOrder fromServerPlaylistId:(NSUInteger)playlistId {
+	NSString *table = [NSString stringWithFormat:@"splaylist%lu", (unsigned long)playlistId];
+    return [ISMSSong songAtPosition:itemOrder inTable:table inDatabaseQueue:databaseS.serverDbQueue];
+}
+
++ (ISMSSong *)downloadedSongWithUrlStringFilesystemSafe:(NSString *)urlStringFilesystemSafe songId:(NSString *)songId {
+    __block ISMSSong *song = nil;
+    [databaseS.offlineSongsDbQueue inDatabase:^(FMDatabase *db) {
+        NSString *query = @"SELECT song.* FROM offlineSong JOIN song ON offlineSong.songId = song.songId WHERE offlineSong.urlStringFilesystemSafe = ? AND offlineSong.songId = ?";
+        FMResultSet *result = [db executeQuery:query, urlStringFilesystemSafe, songId];
+        if ([result next]) {
+            song = [[ISMSSong alloc] initWithResult:result];
+        } else if (db.hadError) {
+            DDLogError(@"[ISMSSong+DAO] Error selecting song from offline songs table - %d: %@", db.lastErrorCode, db.lastErrorMessage);
+        }
+        [result close];
+    }];
+    return song;
+}
+
++ (ISMSSong *)songAtPositionInDownloadQueue:(NSUInteger)itemOrder {
+    return [self songAtPosition:itemOrder inTable:@"downloadQueue" inDatabaseQueue:databaseS.serverDbQueue];
+}
+
+#pragma mark Store and Delete
+
+- (BOOL)addToOfflineSongs {
+	__block BOOL hadError = NO;
+	[databaseS.offlineSongsDbQueue inDatabase:^(FMDatabase *db) {
+        NSString *query = @"REPLACE INTO offlineSong (urlStringFilesystemSafe, songId, finished, pinned, size, cachedDate, playedDate) VALUES (?, ?, 0, 0, 0, ?, 0)";
+        if (![db executeUpdate:query, settingsS.urlStringFilesystemSafe, self.songId, [NSDate date]]) {
+            hadError = YES;
+            DDLogError(@"[ISMSSong+DAO] Error inserting into offlineSong table - %d: %@", db.lastErrorCode, db.lastErrorMessage);
+        }
 	}];
 	return !hadError;
 }
 
-- (BOOL)removeFromCachedSongsTableDbQueue
-{
-	return [ISMSSong removeSongFromCacheDbQueueByMD5:[self.path md5]];
-	
-	// TODO: Figure out why the fuck I was doing this instead of calling the class method
-	// this causes an orphaned file to be created whenever a stream is canceled part-way done
-	/*DLog(@"removing %@ from cachedSongs", self.title);
-	[self.db executeUpdate:@"DELETE FROM cachedSongs WHERE md5 = ?", [self.path md5]];
-	
-	if ([self.db hadError]) 
-	{
-	//DLog(@"Err removing song from cached songs table %d: %@", [self.db lastErrorCode], [self.db lastErrorMessage]);
-	}
-	
-	return ![self.db hadError];*/
-}
-
-- (BOOL)removeFromCacheQueueDbQueue
-{
-	__block BOOL hadError;
-	[databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db)
-	{
-		[db executeUpdate:@"DELETE FROM cacheQueue WHERE md5 = ?", [self.path md5]];
-		
-		hadError = [db hadError];
-		if (hadError) 
-		{
-		//DLog(@"Err removing song from cache queue table %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-		}
-	}];
-	return !hadError;
-}
-
-- (BOOL)addToCacheQueueDbQueue
-{	
-	__block BOOL hadError;
-	__block NSString *md5;
-	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-	{
-		md5 = [db stringForQuery:@"SELECT md5 FROM cachedSongs WHERE md5 = ? AND finished = 'YES'", [self.path md5]];
-		hadError = [db hadError];
-	}];
-	
-	if (hadError)
-		return NO;
-	
-	if (!md5)
-	{
-		[databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db)
-		{
-			BOOL success = [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO cacheQueue (md5, finished, cachedDate, playedDate, %@) VALUES (?, ?, ?, ?, %@)", [ISMSSong standardSongColumnNames], ISMSSong.standardSongColumnQMarks], [self.path md5], @"NO", @((unsigned long long)[[NSDate date] timeIntervalSince1970]), @0, self.title, self.songId, self.artist, self.album, self.genre, self.coverArtId, self.path, self.suffix, self.transcodedSuffix, self.duration, self.bitRate, self.track, self.year, self.size, self.parentId, NSStringFromBOOL(self.isVideo), self.discNumber];
+- (BOOL)addToOfflineSongFolderLayout {
+    // Save the offline view layout info
+    __block BOOL hadError = NO;
+    NSArray *pathComponents = [self.path componentsSeparatedByString:@"/"];
+    NSString *urlStringFilesystemSafe = settingsS.urlStringFilesystemSafe;
+    NSString *songId = self.songId;
+    [databaseS.offlineSongsDbQueue inDatabase:^(FMDatabase * _Nonnull db) {
+        if ([db beginTransaction]) {
+            for (int i = 0; i < pathComponents.count; i++) {
+                NSString *query = @"INSERT INTO offlineSongFolderLayout (urlStringFilesystemSafe, songId, level, pathSegment) VALUES (?, ?, ?, ?)";
+                if (![db executeUpdate:query, urlStringFilesystemSafe, songId, @(i), pathComponents[i]]) {
+                    hadError = YES;
+                    break;
+                }
+            }
             
-            DDLogInfo(@"[ISMSSong+DAO] Added to cacheQueue with discNumber: %@ and insert was successful? %d", self.discNumber, success);
-			
-			hadError = [db hadError];
-			if (hadError)
-			{
-			//DLog(@"Err adding song to cache queue %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-			}
-		}];
-	}
-
-	if (!cacheQueueManagerS.isQueueDownloading)
-	{
-		// Make sure this is called from the main thread
-		if ([NSThread isMainThread])
-			[cacheQueueManagerS startDownloadQueue];
-		else
-			[EX2Dispatch runInMainThreadAndWaitUntilDone:NO block:^{ [cacheQueueManagerS startDownloadQueue]; }];
-	}
-	
-	return !hadError;
+            if (!hadError) {
+                if (![db commit]) {
+                    hadError = YES;
+                }
+            }
+        } else {
+            hadError = YES;
+        }
+        
+        if (hadError) {
+            [db rollback];
+            DDLogError(@"[Song+DAO] Failed to update offline songs folder layout - %d: %@", db.lastErrorCode, db.lastErrorMessage);
+        }
+    }];
+    return !hadError;
 }
 
-- (BOOL)addToCurrentPlaylistDbQueue
-{
-	BOOL success = YES;
-	
-	if (settingsS.isJukeboxEnabled)
-	{
-		if (![self insertIntoTable:@"jukeboxCurrentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue])
-			success = NO;
-
-		if (playlistS.isShuffle)
-		{
-			if (![self insertIntoTable:@"jukeboxShufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue])
-				success = NO;
-		}
-		
-		[jukeboxS addSong:self.songId];
-	}
-	else
-	{
-		if (![self insertIntoTable:@"currentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue])
-			success = NO;
-
-		if (playlistS.isShuffle)
-		{
-			if (![self insertIntoTable:@"shufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue])
-				success = NO;
-		}
-		
-		[streamManagerS fillStreamQueue:audioEngineS.player.isStarted];
-	}
-	
-	return success;
-}
-
-- (BOOL)addToShufflePlaylistDbQueue
-{
-	BOOL success = YES;
-	
-	if (settingsS.isJukeboxEnabled)
-	{
-		if (![self insertIntoTable:@"jukeboxShufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue])
-			success = NO;
-		
-		[jukeboxS addSong:self.songId];
-	}
-	else
-	{
-		if (![self insertIntoTable:@"shufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue])
-			success = NO;
-		
-		[streamManagerS fillStreamQueue:audioEngineS.player.isStarted];
-	}
-	
-	return success;
-}
-
-- (BOOL)insertIntoCachedSongsLayoutDbQueue
-{
-	// Save the offline view layout info
-	NSArray *splitPath = [self.path componentsSeparatedByString:@"/"];
-	
-	__block BOOL hadError = YES;
-	
-	if ([splitPath count] <= 9)
-	{
-		NSMutableArray *segments = [[NSMutableArray alloc] initWithArray:splitPath];
-		while ([segments count] < 9)
-		{
-			[segments addObject:@""];
-		}
-		
-		NSString *query = @"INSERT INTO cachedSongsLayout (md5, genre, segs, seg1, seg2, seg3, seg4, seg5, seg6, seg7, seg8, seg9) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-		[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-		{
-			[db executeUpdate:query, [self.path md5], self.genre, @(splitPath.count), [segments objectAtIndexSafe:0], [segments objectAtIndexSafe:1], [segments objectAtIndexSafe:2], [segments objectAtIndexSafe:3], [segments objectAtIndexSafe:4], [segments objectAtIndexSafe:5], [segments objectAtIndexSafe:6], [segments objectAtIndexSafe:7], [segments objectAtIndexSafe:8]];
-			hadError = [db hadError];
-		}];
-	}
-    
-	return !hadError;
-}
-
-+ (BOOL)removeSongFromCacheDbQueueByMD5:(NSString *)md5
-{
-	// Check if we're deleting the song that's currently playing. If so, stop the player.
-	if (playlistS.currentSong && !settingsS.isJukeboxEnabled && [[playlistS.currentSong.path md5] isEqualToString:md5])
-	{
-		//DLog(@"stopping the player before deleting the file");
+// TODO: Refactor this to share code with class method
+- (BOOL)removeFromOfflineSongs {
+    // Check if we're deleting the song that's currently playing. If so, stop the player.
+    // TODO: Make sure currentSong check takes into account server url somehow
+    if (playQueueS.currentSong && !settingsS.isJukeboxEnabled && [playQueueS.currentSong isEqualToSong:self]) {
         [audioEngineS.player stop];
-	}
-		
-	__block BOOL hadError = NO;	
-	
-	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-	{
-		// Get the song info
-		FMResultSet *result = [db executeQuery:@"SELECT genre FROM cachedSongs WHERE md5 = ?", md5];
-		[result next];
-		NSString *genre = nil;
-		if ([result stringForColumnIndex:0] != nil)
-			genre = [NSString stringWithString:[result stringForColumn:@"genre"]];
-		[result close];
-		if ([db hadError])
-			hadError = YES;
-		
-		// Delete the row from the cachedSongs and genresSongs
-		[db executeUpdate:@"DELETE FROM cachedSongs WHERE md5 = ?", md5];
-		if ([db hadError])
-			hadError = YES;
-		[db executeUpdate:@"DELETE FROM cachedSongsLayout WHERE md5 = ?", md5];
-		if ([db hadError])
-			hadError = YES;
-		[db executeUpdate:@"DELETE FROM genresSongs WHERE md5 = ?", md5];
-		if ([db hadError])
-			hadError = YES;
-        [db executeUpdate:@"DELETE FROM sizesSongs WHERE md5 = ?", md5];
-		if ([db hadError])
-			hadError = YES;
-		
-		// Clean up genres table
-		NSString *genreTest = [db stringForQuery:@"SELECT genre FROM genresSongs WHERE genre = ? LIMIT 1", genre];
-		if (!genreTest)
-		{
-            DDLogInfo(@"[ISMSSong+DAO] deleting from genres table");
-			[db executeUpdate:@"DELETE FROM genres WHERE genre = ?", genre];
-			if ([db hadError]) hadError = YES;
-			[db executeUpdate:@"DROP TABLE IF EXISTS genresTemp"];
-			[db executeUpdate:@"CREATE TABLE genresTemp (genre TEXT)"];
-			if ([db hadError]) hadError = YES;
-            DDLogInfo(@"[ISMSSong+DAO] created genres temp, error %i", hadError);
-			[db executeUpdate:@"INSERT INTO genresTemp SELECT * FROM genres"];
-			if ([db hadError]) hadError = YES;
-			[db executeUpdate:@"DROP TABLE genres"];
-			if ([db hadError]) hadError = YES;
-			[db executeUpdate:@"ALTER TABLE genresTemp RENAME TO genres"];
-			if ([db hadError]) hadError = YES;
-            DDLogInfo(@"[ISMSSong+DAO] renamed genrestemp to genres, error %i", hadError);
-			[db executeUpdate:@"CREATE UNIQUE INDEX genreNames ON genres (genre)"];
-			if ([db hadError]) hadError = YES;
-		}
+    }
+    
+    __block BOOL hadError = NO;
+    NSString *urlStringFilesystemSafe = settingsS.urlStringFilesystemSafe;
+    NSString *songId = self.songId;
+    [databaseS.offlineSongsDbQueue inDatabase:^(FMDatabase *db) {
+        NSArray *queries = @[@"DELETE FROM offlineSong WHERE urlStringFilesystemSafe = ? AND songId = ?",
+                             @"DELETE FROM offlineSongFolderLayout WHERE urlStringFilesystemSafe = ? AND songId = ?",
+                             @"DELETE FROM song WHERE urlStringFilesystemSafe = ? AND songId = ?"];
+        
+        if ([db beginTransaction]) {
+            for (NSString *query in queries) {
+                if (![db executeUpdate:query, urlStringFilesystemSafe, songId]) {
+                    hadError = YES;
+                    break;
+                }
+            }
+            
+            if (!hadError) {
+                if (![db commit]) {
+                    hadError = YES;
+                }
+            }
+        } else {
+            hadError = YES;
+        }
+        
+        if (hadError) {
+            [db rollback];
+            DDLogError(@"[Song+DAO] Failed to delete offline song from db - %d - %@", db.lastErrorCode, db.lastErrorMessage);
+        }
+    }];
+    
+    // Delete the song from disk
+    NSError *error = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:self.localPath error:&error];
+    if (error) {
+        DDLogError(@"[Song+DAO] Failed to delete offline song from disk - %@", error);
+        hadError = YES;
+    }
+    
+    // TODO: Why is this here?
+    if (!cacheQueueManagerS.isQueueDownloading)
+        [cacheQueueManagerS startDownloadQueue];
+    
+    return !hadError;
+}
+
++ (BOOL)removeFromOfflineSongsWithUrlStringFilesystemSafe:(NSString *)urlStringFilesystemSafe songId:(NSString *)songId {
+    // Check if we're deleting the song that's currently playing. If so, stop the player.
+    if (!settingsS.isJukeboxEnabled && [settingsS.urlStringFilesystemSafe isEqualToString:urlStringFilesystemSafe] && [songId isEqualToString:playQueueS.currentSong.songId]) {
+        [audioEngineS.player stop];
+    }
+    
+    NSString *path = [databaseS.offlineSongsDbQueue stringForQuery:@"SELECT path FROM song WHERE urlStringFilesystemSafe = ? AND songId = ?", urlStringFilesystemSafe, songId];
+    
+    __block BOOL hadError = NO;
+    [databaseS.offlineSongsDbQueue inDatabase:^(FMDatabase *db) {
+        NSArray *queries = @[@"DELETE FROM offlineSong WHERE urlStringFilesystemSafe = ? AND songId = ?",
+                             @"DELETE FROM offlineSongFolderLayout WHERE urlStringFilesystemSafe = ? AND songId = ?",
+                             @"DELETE FROM song WHERE urlStringFilesystemSafe = ? AND songId = ?"];
+        
+        if ([db beginTransaction]) {
+            for (NSString *query in queries) {
+                if (![db executeUpdate:query, urlStringFilesystemSafe, songId]) {
+                    hadError = YES;
+                    break;
+                }
+            }
+            
+            if (!hadError) {
+                if (![db commit]) {
+                    hadError = YES;
+                }
+            }
+        } else {
+            hadError = YES;
+        }
+        
+        if (hadError) {
+            [db rollback];
+            DDLogError(@"[Song+DAO] Failed to delete offline song from db - %d - %@", db.lastErrorCode, db.lastErrorMessage);
+        }
+    }];
+    
+    // Delete the song from disk
+    NSError *error = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+    if (error) {
+        DDLogError(@"[Song+DAO] Failed to delete offline song from disk - %@", error);
+        hadError = YES;
+    }
+    
+    // TODO: Why is this here?
+    if (!cacheQueueManagerS.isQueueDownloading)
+        [cacheQueueManagerS startDownloadQueue];
+    
+    return !hadError;
+}
+
+- (BOOL)addToDownloadQueue {
+    if (self.isFullyCached) return NO;
+    
+    __block BOOL hadError = NO;
+    [databaseS.serverDbQueue inDatabase:^(FMDatabase *db) {
+        NSUInteger itemOrder = [db intForQuery:@"SELECT MAX(itemOrder) + 1 FROM downloadQueue"];
+        NSString *query = @"INSERT OR IGNORE INTO downloadQueue (songId, itemOrder) VALUES (?, ?)";
+        [db executeUpdate:query, self.songId, @(itemOrder)];
+    }];
+    
+    if (!hadError && !cacheQueueManagerS.isQueueDownloading) {
+        // TODO: Confirm if this actually needs to be on the main thread now (I don't think it does)
+        [EX2Dispatch runInMainThreadAsync:^{
+            [cacheQueueManagerS startDownloadQueue];
+        }];
+    }
+    
+    return !hadError;
+}
+
+// TODO: Adjust itemOrder of all other items
+- (BOOL)removeFromDownloadQueue {
+	__block BOOL hadError;
+	[databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
+        if (![db executeUpdate:@"DELETE FROM downloadQueue WHERE songId = ?", self.songId]) {
+            hadError = YES;
+            DDLogError(@"[ISMSSong+DAO] Error removing song from download queue table - %d: %@", db.lastErrorCode, db.lastErrorMessage);
+        }
 	}];
-	 
-	// Delete the song from disk
-	NSString *fileName = [settingsS.songCachePath stringByAppendingPathComponent:md5];
-	//TODO://///// REWRITE TO CATCH THIS NSFILEMANAGER ERROR ///////////
-	[[NSFileManager defaultManager] removeItemAtPath:fileName error:NULL];
-	
-	if (!cacheQueueManagerS.isQueueDownloading)
-		[cacheQueueManagerS startDownloadQueue];
-	
 	return !hadError;
 }
 
-- (CGFloat)downloadProgress
-{
-	CGFloat downloadProgress = 0.;
-	
-	if (self.isFullyCached)
-		downloadProgress = 1.;
-	
-	if (self.isPartiallyCached)
-	{		
-		CGFloat bitrate = (CGFloat)self.estimatedBitrate;
-		if (audioEngineS.player.isPlaying)
-		{
-			bitrate = [BassWrapper estimateBitrate:audioEngineS.player.currentStream];
-		}
-		
-		CGFloat seconds = [self.duration floatValue];
-		if (self.transcodedSuffix)
-		{
-			// This is a transcode, so we'll want to use the actual bitrate if possible
-			if ([playlistS.currentSong isEqualToSong:self])
-			{
-				// This is the current playing song, so see if BASS has an actual bitrate for it
-				if (audioEngineS.player.bitRate > 0)
-				{
-					// Bass has a non-zero bitrate, so use that for the calculation
-					// convert to bytes per second, multiply by number of seconds
-					bitrate = (CGFloat)audioEngineS.player.bitRate;
-					seconds = [self.duration floatValue];
-					
-				}
-			}
-		}
-		double totalSize = BytesForSecondsAtBitrate(bitrate, seconds);
-		downloadProgress = (double)self.localFileSize / totalSize;		
-	}
-	
-	// Keep within bounds
-	downloadProgress = downloadProgress < 0. ? 0. : downloadProgress;
-	downloadProgress = downloadProgress > 1. ? 1. : downloadProgress;
-	
-	// The song hasn't started downloading yet
-	return downloadProgress;
+// TODO: Also add to current playlist when in shuffle mode so song is there when exiting shuffle mode
+- (BOOL)addToCurrentPlayQueue {
+    NSString *table;
+    if (settingsS.isJukeboxEnabled) {
+        table = playQueueS.isShuffle ? @"jukeboxShufflePlaylist" : @"jukeboxCurrentPlaylist";
+    } else {
+        table = playQueueS.isShuffle ? @"shufflePlaylist" : @"currentPlaylist";
+    }
+    
+    __block BOOL hadError = NO;
+    [databaseS.serverDbQueue inDatabase:^(FMDatabase * _Nonnull db) {
+        NSUInteger itemOrder = [db intForQuery:[NSString stringWithFormat:@"SELECT MAX(itemOrder) + 1 FROM %@", table]];
+        NSString *query = [NSString stringWithFormat:@"INSERT INTO %@ (songId, itemOrder) VALUES (?, ?)", table];
+        if (![db executeUpdate:query, self.songId, @(itemOrder)]) {
+            hadError = YES;
+        }
+    }];
+    
+    if (!hadError) {
+        if (settingsS.isJukeboxEnabled) {
+            [jukeboxS addSong:self.songId];
+        } else {
+            [streamManagerS fillStreamQueue:audioEngineS.player.isStarted];
+        }
+    }
+    
+    return !hadError;
 }
 
-- (NSDate *)playedDate
-{
-	__block NSDate *playedDate;
-	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-	{
-		NSUInteger playedTime = [db intForQuery:@"SELECT playedDate FROM cachedSongs WHERE md5 = ?", self.path.md5];
-		playedDate = [NSDate dateWithTimeIntervalSince1970:playedTime];
-	}];
-	return playedDate; 
-}
-
-- (void)setPlayedDate:(NSDate *)playedDate
-{
-	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db)
-	{
-		NSString *query = @"UPDATE cachedSongs SET playedDate = ? WHERE md5 = ?";
-		[db executeUpdate:query, @((unsigned long long)[playedDate timeIntervalSince1970]), self.path.md5];
-	}];
+- (BOOL)addToShufflePlayQueue {
+    NSString *table = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
+    
+    __block BOOL hadError = NO;
+    [databaseS.serverDbQueue inDatabase:^(FMDatabase * _Nonnull db) {
+        NSUInteger itemOrder = [db intForQuery:[NSString stringWithFormat:@"SELECT MAX(itemOrder) + 1 FROM %@", table]];
+        NSString *query = [NSString stringWithFormat:@"INSERT INTO %@ (songId, itemOrder) VALUES (?, ?)", table];
+        if (![db executeUpdate:query, self.songId, @(itemOrder)]) {
+            hadError = YES;
+        }
+    }];
+    
+    if (!hadError) {
+        if (settingsS.isJukeboxEnabled) {
+            [jukeboxS addSong:self.songId];
+        } else {
+            [streamManagerS fillStreamQueue:audioEngineS.player.isStarted];
+        }
+    }
+    
+    return !hadError;
 }
 
 - (BOOL)updateMetadataCache {
     __block BOOL hadError;
     [databaseS.serverDbQueue inDatabase:^(FMDatabase *db) {
-        NSString *query = [NSString stringWithFormat:@"REPLACE INTO song (%@) VALUES (%@)", ISMSSong.updatedStandardSongColumnNames, ISMSSong.updatedStandardSongColumnQMarks];
+        NSString *query = [NSString stringWithFormat:@"REPLACE INTO song (%@) VALUES (%@)", ISMSSong.standardSongColumnNames, ISMSSong.standardSongColumnQMarks];
         [db executeUpdate:query, self.songId, self.title, self.artist, self.album, self.genre, self.coverArtId, self.parentId, self.tagArtistId, self.tagAlbumId, self.path, self.suffix, self.transcodedSuffix, self.duration, self.bitRate, self.track, self.discNumber, self.year, self.size, @(self.isVideo)];
         hadError = db.hadError;
         if (hadError) {
@@ -631,43 +423,29 @@ LOG_LEVEL_ISUB_DEFAULT
     return !hadError;
 }
 
-+ (NSString *)standardSongColumnSchema
-{
-	return @"title TEXT, songId TEXT, artist TEXT, album TEXT, genre TEXT, coverArtId TEXT, path TEXT, suffix TEXT, transcodedSuffix TEXT, duration INTEGER, bitRate INTEGER, track INTEGER, year INTEGER, size INTEGER, parentId TEXT, isVideo TEXT, discNumber INTEGER";
+- (BOOL)updateOfflineMetadataCache {
+    __block BOOL hadError;
+    [databaseS.offlineSongsDbQueue inDatabase:^(FMDatabase *db) {
+        NSString *query = [NSString stringWithFormat:@"REPLACE INTO song (urlStringFilesystemSafe, %@) VALUES (%@)", ISMSSong.standardSongColumnNames, ISMSSong.standardSongColumnQMarks];
+        [db executeUpdate:query, settingsS.urlStringFilesystemSafe, self.songId, self.title, self.artist, self.album, self.genre, self.coverArtId, self.parentId, self.tagArtistId, self.tagAlbumId, self.path, self.suffix, self.transcodedSuffix, self.duration, self.bitRate, self.track, self.discNumber, self.year, self.size, @(self.isVideo)];
+        hadError = db.hadError;
+        if (hadError) {
+            DDLogError(@"[ISMSSong+DAO] Error inserting song %d: %@", db.lastErrorCode, db.lastErrorMessage);
+        }
+    }];
+    return !hadError;
 }
 
-+ (NSString *)standardSongColumnNames
-{
-	return @"title, songId, artist, album, genre, coverArtId, path, suffix, transcodedSuffix, duration, bitRate, track, year, size, parentId, isVideo, discNumber";
-}
-
-+ (NSString *)standardSongColumnQMarks
-{
-	return @"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
-}
-
-+ (NSString *)updatedStandardSongColumnSchema {
++ (NSString *)standardSongColumnSchema {
     return @"songId TEXT, title TEXT, artist TEXT, album TEXT, genre TEXT, coverArtId TEXT, parentId TEXT, tagArtistId TEXT, tagAlbumId TEXT, path TEXT, suffix TEXT, transcodedSuffix TEXT, duration INTEGER, bitRate INTEGER, track INTEGER, discNumber INTEGER, year INTEGER, size INTEGER, isVideo INTEGER";
 }
 
-+ (NSString *)updatedStandardSongColumnNames {
++ (NSString *)standardSongColumnNames {
     return @"songId, title, artist, album, genre, coverArtId, parentId, tagArtistId, tagAlbumId, path, suffix, transcodedSuffix, duration, bitRate, track, discNumber, year, size, isVideo";
 }
 
-+ (NSString *)updatedStandardSongColumnQMarks {
++ (NSString *)standardSongColumnQMarks {
     return @"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
-}
-
-- (BOOL)isCurrentPlayingSong
-{
-	if (settingsS.isJukeboxEnabled)
-	{
-		return jukeboxS.isPlaying && [self isEqualToSong:playlistS.currentSong];
-	}
-	else
-	{
-		return [self isEqualToSong:audioEngineS.player.currentStream.song];
-	}
 }
 
 @end

@@ -107,10 +107,10 @@
 	
 	// Add the song to the empty playlist
 	ISMSSong *aSong = [self songForIndex:index];
-	[aSong addToCurrentPlaylistDbQueue];
+	[aSong addToCurrentPlayQueue];
 	
 	// Set player defaults
-	playlistS.isShuffle = NO;
+	playQueueS.isShuffle = NO;
     
     [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
 	

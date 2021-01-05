@@ -42,7 +42,7 @@
     
     [EX2Dispatch runInBackgroundAfterDelay:0.05 block:^{
         for (int i = 0; i < self.count; i++) {
-            [[ISMSSong songFromDbRow:i inTable:self.databaseTable inDatabaseQueue:databaseS.localPlaylistsDbQueue] addToCacheQueueDbQueue];
+            [[ISMSSong songFromDbRow:i inTable:self.databaseTable inDatabaseQueue:databaseS.localPlaylistsDbQueue] addToDownloadQueue];
         }
         
         [EX2Dispatch runInMainThreadAsync:^{
@@ -56,7 +56,7 @@
     
     [EX2Dispatch runInBackgroundAfterDelay:0.05 block:^{
         for (int i = 0; i < self.count; i++) {
-            [[ISMSSong songFromDbRow:i inTable:self.databaseTable inDatabaseQueue:databaseS.localPlaylistsDbQueue] addToCurrentPlaylistDbQueue];
+            [[ISMSSong songFromDbRow:i inTable:self.databaseTable inDatabaseQueue:databaseS.localPlaylistsDbQueue] addToCurrentPlayQueue];
         }
         
         [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];

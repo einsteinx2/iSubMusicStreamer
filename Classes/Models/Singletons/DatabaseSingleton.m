@@ -24,68 +24,31 @@ LOG_LEVEL_ISUB_DEFAULT
 
 @implementation DatabaseSingleton
 
-- (void)setupAllSongsDb {
-	NSString *urlStringMd5 = [[settingsS urlString] md5];
-	
-	// Setup the allAlbums database
-	NSString *path = [NSString stringWithFormat:@"%@/%@allAlbums.db", settingsS.databasePath, urlStringMd5];
-	self.allAlbumsDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
-	[self.allAlbumsDbQueue inDatabase:^(FMDatabase *db) {
-		[db  executeUpdate:@"PRAGMA cache_size = 1"];
-	}];
-	
-	// Setup the allSongs database
-	path = [NSString stringWithFormat:@"%@/%@allSongs.db", settingsS.databasePath, urlStringMd5];
-	self.allSongsDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
-	[self.allSongsDbQueue inDatabase:^(FMDatabase *db)  {
-		[db  executeUpdate:@"PRAGMA cache_size = 1"];
-	}];
-	
-	// Setup the Genres database
-	path = [NSString stringWithFormat:@"%@/%@genres.db", settingsS.databasePath, urlStringMd5];
-	self.genresDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
-	[self.genresDbQueue inDatabase:^(FMDatabase *db) {
-		[db  executeUpdate:@"PRAGMA cache_size = 1"];
-	}];
-}
-
 - (void)setupDatabases {
     DDLogVerbose(@"[DatabaseSingleton] Database path: %@", settingsS.databasePath);
     DDLogVerbose(@"[DatabaseSingleton] Updated database path: %@", settingsS.updatedDatabasePath);
     DDLogVerbose(@"[DatabaseSingleton] Database prefix: %@", settingsS.urlStringFilesystemSafe);
-		
-	// Only load Albums, Songs, and Genre databases if the user explicitly enabled them
-	if (settingsS.isSongsTabEnabled) {
-		[self setupAllSongsDb];
-	}
     
     [self setupServerDatabase];
     [self setupSharedDatabase];
+    [self setupOfflineSongsDatabase];
 	
-//    [self setupCoverArtDatabases];
-//    [self setupPlaylistDatabases];
-//    [self setupSongCacheDatabases];
-//    [self setupLyricsDatabase];
-//    [self setupBookmarksDatabase];
-	
+
 	[self updateTableDefinitions];
 }
 
 - (void)setupServerDatabase {
+    NSString *path = [[settingsS.updatedDatabasePath stringByAppendingPathComponent:settingsS.urlStringFilesystemSafe] stringByAppendingPathExtension:@"db"];
+    self.serverDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
     
     //
     // Folder and album cache
     //
     
-    NSString *path = [[settingsS.updatedDatabasePath stringByAppendingPathComponent:settingsS.urlStringFilesystemSafe] stringByAppendingPathExtension:@"db"];
-    self.serverDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
     [self.serverDbQueue inDatabase:^(FMDatabase *db)  {
-        // TODO: Determine the best cache size, for now leave it at the default
-//        [db executeUpdate:@"PRAGMA cache_size = 1"];
-        
         // Shared song table for other tables to join. This now allows all other tables that store songs to just store the song ID
         if (![db tableExists:@"song"]) {
-            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE song (%@, UNIQUE(songId))", ISMSSong.updatedStandardSongColumnSchema]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE song (%@, UNIQUE(songId))", ISMSSong.standardSongColumnSchema]];
         }
         
         //
@@ -169,126 +132,100 @@ LOG_LEVEL_ISUB_DEFAULT
             [db executeUpdate:@"CREATE INDEX jukeboxShufflePlaylist__itemOrder ON jukeboxShufflePlaylist (itemOrder)"];
         }
         
-        if (![db tableExists:@"localPlaylists"]) {
-            [db executeUpdate:@"CREATE TABLE localPlaylists (playlistId INTEGER PRIMARY KEY, playlistName TEXT, createdAt REAL, lastPlayed REAL)"];
+        if (![db tableExists:@"localPlaylist"]) {
+            [db executeUpdate:@"CREATE TABLE localPlaylist (playlistId INTEGER PRIMARY KEY, playlistName TEXT, createdAt REAL, lastPlayed REAL)"];
+        }
+    }];
+    
+    //
+    // Offline Downloads
+    //
+    
+    [self.serverDbQueue inDatabase:^(FMDatabase * _Nonnull db) {
+        if (![db tableExists:@"downloadQueue"]) {
+            [db executeUpdate:@"CREATE TABLE downloadQueue (songId TEXT, itemOrder INTEGER)"];
+            [db executeUpdate:@"CREATE INDEX downloadQueue__itemOrder ON downloadQueue (itemOrder)"];
         }
     }];
 }
 
 - (void)setupSharedDatabase {
+    NSString *path = [settingsS.updatedDatabasePath stringByAppendingPathComponent:@"shared.db"];
+    self.sharedDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
+    
+    
+    
     //
     // Lyrics
     //
     
-    NSString *path = [settingsS.updatedDatabasePath stringByAppendingPathComponent:@"shared.db"];
-    self.sharedDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
     [self.sharedDbQueue inDatabase:^(FMDatabase *db) {
-//        [db executeUpdate:@"PRAGMA cache_size = 1"];
-        
         if (![db tableExists:@"lyrics"]) {
             [db executeUpdate:@"CREATE TABLE lyrics (artist TEXT, title TEXT, lyrics TEXT)"];
-            [db executeUpdate:@"CREATE INDEX lyrics_artistTitle ON lyrics (artist, title)"];
+            [db executeUpdate:@"CREATE INDEX lyrics__artist_title ON lyrics (artist, title)"];
         }
     }];
 }
 
-- (void)setupSongCacheDatabases {
-    NSString *path = [NSString stringWithFormat:@"%@/shared.db", settingsS.updatedDatabasePath];
-    self.songCacheDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
-    [self.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"PRAGMA cache_size = 1"];
-        
-        if (![db tableExists:@"cachedSongs"]) {
-            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE cachedSongs (md5 TEXT UNIQUE, finished TEXT, cachedDate INTEGER, playedDate INTEGER, %@)", ISMSSong.standardSongColumnSchema]];
-            [db executeUpdate:@"CREATE INDEX cachedSongs_cachedDate ON cachedSongs (cachedDate DESC)"];
-            [db executeUpdate:@"CREATE INDEX cachedSongs_playedDate ON cachedSongs (playedDate DESC)"];
-        } else if(![db columnExists:@"discNumber" inTableWithName:@"cachedSongs"]) {
-            DDLogInfo(@"[DatabaseSingleton] Added column discNumber on table cachedSongs");
-            [db executeUpdate:@"ALTER TABLE cachedSongs ADD COLUMN discNumber INTEGER"];
-        }
-        
-        [db executeUpdate:@"CREATE INDEX IF NOT EXISTS cachedSongs_md5 ON cachedSongs (md5)"];
-        if (![db tableExists:@"cachedSongsLayout"]) {
-            [db executeUpdate:@"CREATE TABLE cachedSongsLayout (md5 TEXT UNIQUE, genre TEXT, segs INTEGER, seg1 TEXT, seg2 TEXT, seg3 TEXT, seg4 TEXT, seg5 TEXT, seg6 TEXT, seg7 TEXT, seg8 TEXT, seg9 TEXT)"];
-            [db executeUpdate:@"CREATE INDEX cachedSongsLayout_genreLayout ON cachedSongsLayout (genre)"];
-            [db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg1 ON cachedSongsLayout (seg1)"];
-            [db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg2 ON cachedSongsLayout (seg2)"];
-            [db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg3 ON cachedSongsLayout (seg3)"];
-            [db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg4 ON cachedSongsLayout (seg4)"];
-            [db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg5 ON cachedSongsLayout (seg5)"];
-            [db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg6 ON cachedSongsLayout (seg6)"];
-            [db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg7 ON cachedSongsLayout (seg7)"];
-            [db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg8 ON cachedSongsLayout (seg8)"];
-            [db executeUpdate:@"CREATE INDEX cachedSongsLayout_seg9 ON cachedSongsLayout (seg9)"];
-        }
-        
-        DDLogInfo(@"[DatabaseSingleton] checking if genres table exists");
-        if (![db tableExists:@"genres"]) {
-            DDLogInfo(@"[DatabaseSingleton] doesn't exist, creating genres table");
-            [db executeUpdate:@"CREATE TABLE genres(genre TEXT UNIQUE)"];
-        }
-        
-        if (![db tableExists:@"genresSongs"]) {
-            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE genresSongs (md5 TEXT UNIQUE, %@)", ISMSSong.standardSongColumnSchema]];
-            [db executeUpdate:@"CREATE INDEX genresSongs_genre ON genresSongs (genre)"];
-        } else if(![db columnExists:@"discNumber" inTableWithName:@"genresSongs"]) {
-            [db executeUpdate:@"ALTER TABLE genresSongs ADD COLUMN discNumber INTEGER"];
-        }
-        
-        if (![db tableExists:@"sizesSongs"])
-        {
-            [db executeUpdate:@"CREATE TABLE sizesSongs(md5 TEXT UNIQUE, size INTEGER)"];
-        }
-    }];
-    [self setNoBackupFlagForDatabaseAtPath:path];
+- (void)setupOfflineSongsDatabase {
+    NSString *path = [settingsS.updatedDatabasePath stringByAppendingPathComponent:@"offlineSongs.db"];
+    self.offlineSongsDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
+    [self setNoBackupFlagForPath:path];
     
-    path = [settingsS.databasePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@cacheQueue.db", settingsS.urlString.md5]];
-    self.cacheQueueDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
-    [self.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"PRAGMA cache_size = 1"];
-        
-        if (![db tableExists:@"cacheQueue"]) {
-            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE cacheQueue (md5 TEXT UNIQUE, finished TEXT, cachedDate INTEGER, playedDate INTEGER, %@)", ISMSSong.standardSongColumnSchema]];
-            //[cacheQueueDb executeUpdate:@"CREATE INDEX cacheQueue_queueDate ON cacheQueue (cachedDate DESC)"];
-        } else if(![db columnExists:@"discNumber" inTableWithName:@"cacheQueue"]) {
-            [db executeUpdate:@"ALTER TABLE cacheQueue ADD COLUMN discNumber INTEGER"];
-        }
-    }];
-    [self setNoBackupFlagForDatabaseAtPath:path];
+    //
+    // Offline Songs
+    //
     
-    if (!settingsS.isCacheSizeTableFinished) {
-        // Do this in the background to prevent locking up the main thread for large caches
-        [EX2Dispatch runInBackgroundAsync:^{
-             NSMutableArray *cachedSongs = [NSMutableArray arrayWithCapacity:0];
-             [self.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-                 FMResultSet *result = [db executeQuery:@"SELECT * FROM cachedSongs WHERE finished = 'YES'"];
-                 ISMSSong *song;
-                 do {
-                     song = [ISMSSong songFromDbResult:result];
-                     if (song) {
-                         [cachedSongs addObject:song];
-                     }
-                 }
-                 while (song);
-             }];
-             
-             for (ISMSSong *song in cachedSongs) {
-                 @autoreleasepool {
-                     NSString *filePath = [settingsS.songCachePath stringByAppendingPathComponent:song.path.md5];
-                     NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
-                     if (attr) {
-                         // Do this in individual blocks to prevent locking up the database which could also lock up the UI
-                         [self.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-                              [db executeUpdate:@"INSERT OR IGNORE INTO sizesSongs VALUES(?, ?)", song.songId, attr[NSFileSize]];
-                          }];
-                         DDLogInfo(@"[DatabaseSingleton] Added %@ to the size table (%llu)", song.title, [attr fileSize]);
-                     }
-                 }
-             }
-             
-             settingsS.isCacheSizeTableFinished = YES;
-         }];
-    }
+    [self.offlineSongsDbQueue inDatabase:^(FMDatabase *db) {
+        // Shared song table for other tables to join. This now allows all other tables that store songs to just store the song ID
+        if (![db tableExists:@"song"]) {
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE song (urlStringFilesystemSafe TEXT, %@, PRIMARY KEY(urlStringFilesystemSafe, songId))", ISMSSong.standardSongColumnSchema]];
+        }
+        
+        // Main downloaded songs table with list of automatically and manually downloaded songs
+        if (![db tableExists:@"offlineSong"]) {
+            [db executeUpdate:@"CREATE TABLE offlineSong (urlStringFilesystemSafe TEXT, songId TEXT, finished INTEGER, pinned INTEGER, size INTEGER, cachedDate REAL, playedDate REAL, PRIMARY KEY(urlStringFilesystemSafe, songId))"];
+        }
+        
+        // Lookup table to display cached songs as if we're browsing the folders
+        if (![db tableExists:@"offlineSongFolderLayout"]) {
+            [db executeUpdate:@"CREATE TABLE offlineSongFolderLayout (urlStringFilesystemSafe TEXT, songId TEXT, level INTEGER, pathComponent TEXT, PRIMARY KEY(urlStringFilesystemSafe, songId))"];
+            [db executeUpdate:@"CREATE INDEX offlineSongFolderLayout__level_pathComponent ON offlineSongFolderLayout (level, pathComponent)"];
+        }
+        
+//        // Metadata required to display songs by folder
+//        // NOTE: Can't use LIKE queries because they're case-insensitive (can be turned off with a PRAGMA,
+//        //       but that's database-wide and we don't want case sensitivity in other searches).
+//        //
+//        //       Also, FTS (full text search) can't be used because it's also case insensitive and is fuzzy
+//        //       for better searching text. So trying to search `LIKE "/First path/Second path/%" to get exact
+//        //       matches won't work reliably.
+//        //
+//        //       So there are only two options:
+//        //       1. Load all song paths into memory and basically do "full table scan" searches in memory
+//        //       2. Store the path split into individually indexed columns like this
+//        //       3. Create a lookup table like (songId, segmentNumber, segmentValue) so that an unlimited number of
+//        //
+//        //       It feels really hacky, especially the hard limit on
+//        if (![db tableExists:@"offlineSongFolderMetadata"]) {
+//            [db executeUpdate:@"CREATE TABLE offlineSongFolderMetadata (urlStringFilesystemSafe TEXT, songId TEXT, segs INTEGER, seg1 TEXT, seg2 TEXT, seg3 TEXT, seg4 TEXT, seg5 TEXT, seg6 TEXT, seg7 TEXT, seg8 TEXT, seg9 TEXT, PRIMARY KEY(urlStringFilesystemSafe, songId))"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg1 ON offlineSongFolderMetadata (seg1)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg2 ON offlineSongFolderMetadata (seg2)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg3 ON offlineSongFolderMetadata (seg3)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg4 ON offlineSongFolderMetadata (seg4)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg5 ON offlineSongFolderMetadata (seg5)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg6 ON offlineSongFolderMetadata (seg6)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg7 ON offlineSongFolderMetadata (seg7)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg8 ON offlineSongFolderMetadata (seg8)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg9 ON offlineSongFolderMetadata (seg9)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg9 ON offlineSongFolderMetadata (seg10)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg9 ON offlineSongFolderMetadata (seg11)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg9 ON offlineSongFolderMetadata (seg12)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg9 ON offlineSongFolderMetadata (seg13)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg9 ON offlineSongFolderMetadata (seg14)"];
+//            [db executeUpdate:@"CREATE INDEX offlineSongFolderMetadata__seg9 ON offlineSongFolderMetadata (seg15)"];
+//        }
+    }];
 }
 
 - (void)setupBookmarksDatabase {
@@ -322,10 +259,10 @@ LOG_LEVEL_ISUB_DEFAULT
             [db executeUpdate:@"CREATE INDEX bookmarks_songId ON bookmarks (songId)"];
         }
     }];
-    [self setNoBackupFlagForDatabaseAtPath:path];
+    [self setNoBackupFlagForPath:path];
 }
 
-- (void)setNoBackupFlagForDatabaseAtPath:(NSString *)path {
+- (void)setNoBackupFlagForPath:(NSString *)path {
     // Set the no backup flag as per the user's settings
     NSURL *url = [NSURL fileURLWithPath:path];
     if (settingsS.isBackupCacheEnabled) {
@@ -343,122 +280,18 @@ LOG_LEVEL_ISUB_DEFAULT
     // TODO: Move data from old offline databases into offline prefixed tables in the shared db queue
 
     // TODO: Delete old database files
-    
-//    // Add parentId column to tables if necessary
-//    NSArray *parentIdDatabaseQueues = @[self.albumListCacheDbQueue, self.currentPlaylistDbQueue, self.currentPlaylistDbQueue, self.currentPlaylistDbQueue, self.currentPlaylistDbQueue, self.songCacheDbQueue, self.songCacheDbQueue, self.cacheQueueDbQueue];
-//    NSArray *parentIdTables = @[@"songsCache", @"currentPlaylist", @"shufflePlaylist", @"jukeboxCurrentPlaylist", @"jukeboxShufflePlaylist", @"cachedSongs", @"genresSongs", @"cacheQueue"];
-//    NSString *parentIdColumnName = @"parentId";
-//    NSString *isVideoColumnName = @"isVideo";
-//    for (int i = 0; i < [parentIdDatabaseQueues count]; i++)
-//    {
-//        FMDatabaseQueue *dbQueue = [parentIdDatabaseQueues objectAtIndexSafe:i];
-//        NSString *table = [parentIdTables objectAtIndexSafe:i];
-//
-//        [dbQueue inDatabase:^(FMDatabase *db)
-//        {
-//            if (![db columnExists:parentIdColumnName inTableWithName:table])
-//            {
-//                NSString *query = [NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ TEXT", table, parentIdColumnName];
-//                [db executeUpdate:query];
-//            }
-//
-//            if (![db columnExists:isVideoColumnName inTableWithName:table])
-//            {
-//                NSString *query = [NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ TEXT", table, isVideoColumnName];
-//                [db executeUpdate:query];
-//            }
-//        }];
-//    }
-//
-//    // Add parentId to all playlist and splaylist tables
-//    [self.localPlaylistsDbQueue inDatabase:^(FMDatabase *db)
-//    {
-//        NSMutableArray *playlistTableNames = [NSMutableArray arrayWithCapacity:0];
-//        NSString *query = @"SELECT name FROM sqlite_master WHERE type = 'table'";
-//        FMResultSet *result = [db executeQuery:query];
-//        while ([result next])
-//        {
-//            @autoreleasepool
-//            {
-//                NSString *tableName = [result stringForColumnIndex:0];
-//                if ([tableName length] > 8)
-//                {
-//                    NSString *tableNameSubstring = [tableName substringToIndex:8];
-//                    if ([tableNameSubstring isEqualToString:@"playlist"] ||
-//                        [tableNameSubstring isEqualToString:@"splaylis"])
-//                    {
-//                        [playlistTableNames addObject:tableName];
-//                    }
-//                }
-//            }
-//        }
-//        [result close];
-//
-//        for (NSString *table in playlistTableNames)
-//        {
-//            if (![db columnExists:parentIdColumnName inTableWithName:table])
-//            {
-//                NSString *query = [NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ TEXT", table, parentIdColumnName];
-//                [db executeUpdate:query];
-//            }
-//
-//            if (![db columnExists:isVideoColumnName inTableWithName:table])
-//            {
-//                NSString *query = [NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ TEXT", table, isVideoColumnName];
-//                [db executeUpdate:query];
-//            }
-//        }
-//    }];
-//
-//    // Update the bookmarks table to new format
-//    [self.bookmarksDbQueue inDatabase:^(FMDatabase *db)
-//    {
-//        if (![db columnExists:@"bookmarkId" inTableWithName:@"bookmarks"])
-//        {
-//            // Create the new table
-//            [db executeUpdate:@"DROP TABLE IF EXISTS bookmarksTemp"];
-//            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE bookmarksTemp (bookmarkId INTEGER PRIMARY KEY, playlistIndex INTEGER, name TEXT, position INTEGER, %@, bytes INTEGER)", ISMSSong.standardSongColumnSchema]];
-//
-//            // Move the records
-//            [db executeUpdate:@"INSERT INTO bookmarksTemp (playlistIndex, name, position, title, songId, artist, album, genre, coverArtId, path, suffix, transcodedSuffix, duration, bitRate, track, year, size) SELECT 0, name, position, title, songId, artist, album, genre, coverArtId, path, suffix, transcodedSuffix, duration, bitRate, track, year, size FROM bookmarks"];
-//
-//            // Swap the tables
-//            [db executeUpdate:@"DROP TABLE IF EXISTS bookmarks"];
-//            [db executeUpdate:@"ALTER TABLE bookmarksTemp RENAME TO bookmarks"];
-//            [db executeUpdate:@"CREATE INDEX bookmarks_songId ON bookmarks (songId)"];
-//        }
-//
-//        if(![db columnExists:@"discNumber" inTableWithName:@"bookmarks"])
-//        {
-//            [db executeUpdate:@"ALTER TABLE bookmarks ADD COLUMN discNumber INTEGER"];
-//        }
-//    }];
-//
-//    [self.songCacheDbQueue inDatabase:^(FMDatabase *db)
-//     {
-//         if (![db tableExists:@"genresTableFixed"])
-//         {
-//             [db executeUpdate:@"DROP TABLE IF EXISTS genresTemp"];
-//             [db executeUpdate:@"CREATE TABLE genresTemp (genre TEXT)"];
-//             [db executeUpdate:@"INSERT INTO genresTemp SELECT * FROM genres"];
-//             [db executeUpdate:@"DROP TABLE genres"];
-//             [db executeUpdate:@"ALTER TABLE genresTemp RENAME TO genres"];
-//             [db executeUpdate:@"CREATE UNIQUE INDEX genreNames ON genres (genre)"];
-//             [db executeUpdate:@"CREATE TABLE genresTableFixed (a INTEGER)"];
-//         }
-//     }];
 }
 
 - (void)closeAllDatabases {
     [self.serverDbQueue close]; self.serverDbQueue = nil;
     [self.sharedDbQueue close]; self.sharedDbQueue = nil;
+    [self.offlineSongsDbQueue close]; self.offlineSongsDbQueue = nil;
     
 	[self.allAlbumsDbQueue close]; self.allAlbumsDbQueue = nil;
 	[self.allSongsDbQueue close]; self.allSongsDbQueue = nil;
 	[self.genresDbQueue close]; self.genresDbQueue = nil;
 	[self.currentPlaylistDbQueue close]; self.currentPlaylistDbQueue = nil;
 	[self.localPlaylistsDbQueue close]; self.localPlaylistsDbQueue = nil;
-	[self.songCacheDbQueue close]; self.songCacheDbQueue = nil;
 	[self.cacheQueueDbQueue close]; self.cacheQueueDbQueue = nil;
 	[self.bookmarksDbQueue close]; self.bookmarksDbQueue = nil;	
 }
@@ -660,8 +493,8 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)shufflePlaylist {
 	@autoreleasepool {
-		playlistS.currentIndex = 0;
-		playlistS.isShuffle = YES;
+		playQueueS.currentIndex = 0;
+		playQueueS.isShuffle = YES;
 		
 		[self resetShufflePlaylist];
 		

@@ -138,13 +138,7 @@
 }
 
 - (ISMSSong *)songForIndex:(NSUInteger)index {
-    NSString *table;
-    if (settingsS.isJukeboxEnabled) {
-        table = self.isShuffle ? @"jukeboxShufflePlaylist" : @"jukeboxCurrentPlaylist";
-    } else {
-        table = self.isShuffle ? @"shufflePlaylist" : @"currentPlaylist";
-    }
-    return [ISMSSong songAtPosition:index inTable:table];
+    return [ISMSSong songAtPositionInCurrentPlayQueue:index];
 }
 
 - (ISMSSong *)prevSong {
@@ -355,7 +349,7 @@
 		self.isShuffle = YES;
 		
 		[databaseS resetShufflePlaylist];
-		[currentSong addToShufflePlaylistDbQueue];
+		[currentSong addToShufflePlayQueue];
 		
 		[self.dbQueue inDatabase:^(FMDatabase *db) {
 			if (settingsS.isJukeboxEnabled) {

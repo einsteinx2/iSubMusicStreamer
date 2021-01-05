@@ -43,10 +43,8 @@ import CocoaLumberjackSwift
             
             if UserDefaults.standard.object(forKey: "servers") != nil {
                 // Pop the view back
-                let currentTabBarController = AppDelegate.shared().currentTabBarController
-                if currentTabBarController.selectedIndex == 4 && currentTabBarController.moreNavigationController.viewControllers.count >= 2 {
-                    currentTabBarController.moreNavigationController.popToViewController(currentTabBarController.moreNavigationController.viewControllers[1], animated: true)
-                } else if let navController = currentTabBarController.selectedViewController as? UINavigationController {
+                let mainTabBarController = AppDelegate.shared().mainTabBarController
+                if let navController = mainTabBarController.selectedViewController as? UINavigationController {
                     navController.popToRootViewController(animated: true)
                 }
             }

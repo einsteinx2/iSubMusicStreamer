@@ -71,7 +71,6 @@ NS_SWIFT_NAME(Settings)
 @property BOOL isAutoDeleteCacheEnabled;
 @property NSInteger autoDeleteCacheType;
 @property NSInteger cachedSongCellColorType;
-@property BOOL isSongsTabEnabled;
 @property BOOL isAutoReloadArtistsEnabled;
 @property float scrobblePercent;
 @property BOOL isScrobbleEnabled;
@@ -96,7 +95,6 @@ NS_SWIFT_NAME(Settings)
 @property BOOL isEqualizerOn;
 @property NSUInteger oneTimeRunIncrementor;
 @property BOOL isDisableUsageOver3G;
-@property BOOL isCacheSizeTableFinished;
 
 // State Saving
 @property BOOL isRecover;

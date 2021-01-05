@@ -55,7 +55,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)showPlayer {
     PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
     playerViewController.hidesBottomBarWhenPushed = YES;
-    [(UINavigationController*)self.currentTabBarController.selectedViewController pushViewController:playerViewController animated:YES];
+    [(UINavigationController*)self.mainTabBarController.selectedViewController pushViewController:playerViewController animated:YES];
 }
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
@@ -168,15 +168,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	} else {
         [UITabBar.appearance setBarTintColor:UIColor.blackColor];
         self.mainTabBarController.tabBar.translucent = NO;
-        self.offlineTabBarController.tabBar.translucent = NO;
 
 		if (settingsS.isOfflineMode) {
-			self.currentTabBarController = self.offlineTabBarController;
-            self.window.rootViewController = self.offlineTabBarController;
-		} else {
-			// Recover the tab order and load the main tabBarController
-			self.currentTabBarController = self.mainTabBarController;
-            self.window.rootViewController = self.mainTabBarController;
+            // TODO: Handle offline mode
 		}
         
         [self.window makeKeyAndVisible];
@@ -228,7 +222,7 @@ LOG_LEVEL_ISUB_DEFAULT
                     [audioEngineS.player playPause];
                 }
             } else {
-                [musicS playSongAtPosition:playlistS.currentIndex];
+                [musicS playSongAtPosition:playQueueS.currentIndex];
             }
         } else if ([[url.host lowercaseString] isEqualToString:@"pause"]) {
             if (audioEngineS.player.isPlaying) {
@@ -238,12 +232,12 @@ LOG_LEVEL_ISUB_DEFAULT
             if (audioEngineS.player) {
                 [audioEngineS.player playPause];
             } else {
-                [musicS playSongAtPosition:playlistS.currentIndex];
+                [musicS playSongAtPosition:playQueueS.currentIndex];
             }
         } else if ([[url.host lowercaseString] isEqualToString:@"next"]) {
-            [musicS playSongAtPosition:playlistS.nextIndex];
+            [musicS playSongAtPosition:playQueueS.nextIndex];
         } else if ([[url.host lowercaseString] isEqualToString:@"prev"]) {
-            [musicS playSongAtPosition:playlistS.prevIndex];
+            [musicS playSongAtPosition:playQueueS.prevIndex];
         }
     }
     
@@ -548,8 +542,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (UIDevice.isPad) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
 	} else {
-		self.currentTabBarController = self.offlineTabBarController;
-        self.window.rootViewController = self.offlineTabBarController;
+		// TODO: Handle offline mode
 	}
 	
 	[musicS updateLockScreenInfo];
@@ -567,7 +560,7 @@ LOG_LEVEL_ISUB_DEFAULT
     if (UIDevice.isPad) {
 		[self.padRootViewController.menuViewController toggleOfflineMode];
     } else {
-		[self.offlineTabBarController.view removeFromSuperview];
+		// TODO: Handle offline mode
     }
     
 	[databaseS closeAllDatabases];
@@ -639,14 +632,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	} else {
 		self.serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
 		self.serverListViewController.hidesBottomBarWhenPushed = YES;
-		
-		if (self.currentTabBarController.selectedIndex >= 4) {
-			[self.currentTabBarController.moreNavigationController pushViewController:self.serverListViewController animated:YES];
-		} else if (self.currentTabBarController.selectedIndex == NSNotFound) {
-			[self.currentTabBarController.moreNavigationController pushViewController:self.serverListViewController animated:YES];
-		} else {
-			[(UINavigationController*)self.currentTabBarController.selectedViewController pushViewController:self.serverListViewController animated:YES];
-		}
+        [(UINavigationController*)self.mainTabBarController.selectedViewController pushViewController:self.serverListViewController animated:YES];
 	}
 }
 
@@ -674,8 +660,8 @@ LOG_LEVEL_ISUB_DEFAULT
     
 //    if (UIDevice.isPad) {
 //        // Turn off repeat one so user doesn't get stuck
-//        if (playlistS.repeatMode == ISMSRepeatMode_RepeatOne) {
-//            playlistS.repeatMode = ISMSRepeatMode_Normal;
+//        if (playQueueS.repeatMode == ISMSRepeatMode_RepeatOne) {
+//            playQueueS.repeatMode = ISMSRepeatMode_Normal;
 //        }
 //    }
     

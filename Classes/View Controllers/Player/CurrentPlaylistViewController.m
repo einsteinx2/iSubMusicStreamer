@@ -201,7 +201,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)updateCurrentPlaylistCount {
-	self.currentPlaylistCount = [playlistS count];
+	self.currentPlaylistCount = [playQueueS count];
 		
     if (self.currentPlaylistCount == 1) {
 		self.playlistCountLabel.text = [NSString stringWithFormat:@"1 song"];
@@ -220,8 +220,8 @@ LOG_LEVEL_ISUB_DEFAULT
         
         // Reload the table to correct the numbers
         [self.tableView reloadData];
-        if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
-            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
+        if (playQueueS.currentIndex >= 0 && playQueueS.currentIndex < self.currentPlaylistCount) {
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playQueueS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
         }
     } else {
         // Deelect all the rows
@@ -322,7 +322,7 @@ LOG_LEVEL_ISUB_DEFAULT
             [self showDeleteButton];
 		} else {
 			// Delete action
-            [playlistS deleteSongs:selectedRowIndexes];
+            [playQueueS deleteSongs:selectedRowIndexes];
 			[self updateCurrentPlaylistCount];
             [self.tableView deleteRowsAtIndexPaths:self.tableView.indexPathsForSelectedRows withRowAnimation:UITableViewRowAnimationAutomatic];
             [self updateTableCellNumbers];
@@ -332,7 +332,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		}
 		
 		// Fix the playlist count
-		NSUInteger songCount = playlistS.count;
+		NSUInteger songCount = playQueueS.count;
         if (songCount == 1) {
 			self.playlistCountLabel.text = [NSString stringWithFormat:@"1 song"];
         } else {
@@ -352,7 +352,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:self.currentPlaylistCount];
 	NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 	NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-	NSString *table = playlistS.isShuffle ? shufTable : currTable;
+	NSString *table = playQueueS.isShuffle ? shufTable : currTable;
 	
 	[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
 		 for (int i = 0; i < self.currentPlaylistCount; i++) {
@@ -432,7 +432,7 @@ LOG_LEVEL_ISUB_DEFAULT
                 NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
                 NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
                 NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-                NSString *table = playlistS.isShuffle ? shufTable : currTable;
+                NSString *table = playQueueS.isShuffle ? shufTable : currTable;
                 
                 [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
                     [db executeUpdate:@"INSERT INTO localPlaylists (playlist, md5) VALUES (?, ?)", name, name.md5];
@@ -467,7 +467,7 @@ LOG_LEVEL_ISUB_DEFAULT
             NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", settingsS.urlString.md5];
             NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
             NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-            NSString *table = playlistS.isShuffle ? shufTable : currTable;
+            NSString *table = playQueueS.isShuffle ? shufTable : currTable;
             
             [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
                 [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE playlist%@", name.md5]];
@@ -492,8 +492,8 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)selectRow {
 	[self.tableView reloadData];
-	if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
-		[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
+	if (playQueueS.currentIndex >= 0 && playQueueS.currentIndex < self.currentPlaylistCount) {
+		[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playQueueS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
 	}
 }
 
@@ -516,13 +516,13 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	ISMSSong *aSong;
 	if (settingsS.isJukeboxEnabled) {
-        if (playlistS.isShuffle) {
+        if (playQueueS.isShuffle) {
 			aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"jukeboxShufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
         } else {
             aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"jukeboxCurrentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
         }
 	} else {
-        if (playlistS.isShuffle) {
+        if (playQueueS.isShuffle) {
 			aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"shufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
         } else {
 			aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"currentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
@@ -551,7 +551,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
 		 NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 		 NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-		 NSString *table = playlistS.isShuffle ? shufTable : currTable;
+		 NSString *table = playQueueS.isShuffle ? shufTable : currTable;
 		 		 
 		 [db executeUpdate:@"DROP TABLE moveTemp"];
 		 NSString *query = [NSString stringWithFormat:@"CREATE TABLE moveTemp (%@)", ISMSSong.standardSongColumnSchema];
@@ -581,13 +581,13 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 	
 	// Correct the value of currentPlaylistPosition
-	if (fromIndexPath.row == playlistS.currentIndex) {
-		playlistS.currentIndex = toIndexPath.row;
+	if (fromIndexPath.row == playQueueS.currentIndex) {
+		playQueueS.currentIndex = toIndexPath.row;
 	} else {
-		if (fromIndexPath.row < playlistS.currentIndex && toIndexPath.row >= playlistS.currentIndex) {
-			playlistS.currentIndex = playlistS.currentIndex - 1;
-		} else if (fromIndexPath.row > playlistS.currentIndex && toIndexPath.row <= playlistS.currentIndex) {
-			playlistS.currentIndex = playlistS.currentIndex + 1;
+		if (fromIndexPath.row < playQueueS.currentIndex && toIndexPath.row >= playQueueS.currentIndex) {
+			playQueueS.currentIndex = playQueueS.currentIndex - 1;
+		} else if (fromIndexPath.row > playQueueS.currentIndex && toIndexPath.row <= playQueueS.currentIndex) {
+			playQueueS.currentIndex = playQueueS.currentIndex + 1;
 		}
 	}
 	
@@ -624,10 +624,10 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ISMSSong *song = [playlistS songForIndex:indexPath.row];
+    ISMSSong *song = [playQueueS songForIndex:indexPath.row];
     if (!song.isVideo) {
         return [SwipeAction downloadQueueAndDeleteConfigWithModel:song deleteHandler:^{
-            [playlistS deleteSongs:@[@(indexPath.row)]];
+            [playQueueS deleteSongs:@[@(indexPath.row)]];
             [self updateCurrentPlaylistCount];
             [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         }];

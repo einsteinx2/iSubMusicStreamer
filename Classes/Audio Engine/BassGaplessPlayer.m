@@ -922,7 +922,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 				 {
 					 DDLogError(@"[BassGaplessPlayer] Stream for song %@ failed, file is not on disk, so calling retrying the song", userInfo.song.title);
 					 // File was removed, most likely because the decryption failed, so start again normally
-					 [aSong removeFromCachedSongsTableDbQueue];
+					 [aSong removeFromOfflineSongs];
                      
                      [self.delegate bassRetrySongAtIndex:self.currentPlaylistIndex player:self];
 				 }
@@ -948,7 +948,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 			 }
 			 else
 			 {
-				 [aSong removeFromCachedSongsTableDbQueue];
+				 [aSong removeFromOfflineSongs];
                  
                  [self.delegate bassRetrySongAtIndex:self.currentPlaylistIndex player:self];
 			 }

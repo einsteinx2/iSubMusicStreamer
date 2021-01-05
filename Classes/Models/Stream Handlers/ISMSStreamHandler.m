@@ -108,7 +108,7 @@
 	if (self.isPartialPrecacheSleeping)
 		self.partialPrecacheSleep = NO;
 	
-	if ([self.mySong isEqualToSong:playlistS.currentSong])
+	if ([self.mySong isEqualToSong:playQueueS.currentSong])
 		self.isCurrentSong = YES;
 }
 

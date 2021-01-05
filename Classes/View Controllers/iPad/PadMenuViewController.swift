@@ -93,7 +93,6 @@ import SnapKit
         if Settings.shared().isOfflineMode {
             cellContents.append((imageName: "tabbaricon-settings", text: "Settings"))
             cellContents.append((imageName: "tabbaricon-folders", text: "Folders"))
-            cellContents.append((imageName: "tabbaricon-genres", text: "Genres"))
             cellContents.append((imageName: "tabbaricon-playlists", text: "Playlists"))
             cellContents.append((imageName: "tabbaricon-bookmarks", text: "Bookmarks"))
         } else {
@@ -105,12 +104,6 @@ import SnapKit
             cellContents.append((imageName: "tabbaricon-bookmarks", text: "Bookmarks"))
             cellContents.append((imageName: "tabbaricon-playing", text: "Playing"))
             cellContents.append((imageName: "tabbaricon-chat", text: "Chat"))
-            
-            if Settings.shared().isSongsTabEnabled {
-                cellContents.append((imageName: "tabbaricon-genres", text: "Genres"))
-                cellContents.append((imageName: "tabbaricon-albums", text: "Albums"))
-                cellContents.append((imageName: "tabbaricon-songs", text: "Songs"))
-            }
         }
         
         tableView.reloadData()
@@ -157,20 +150,13 @@ import SnapKit
                     cachedTabs["CacheOfflineFoldersViewController"] = controller
                 }
             case 2:
-                if let cachedController = cachedTabs["GenresViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: GenresViewController(nibName: "GenresViewController", bundle: nil))
-                    cachedTabs["GenresViewController"] = controller
-                }
-            case 3:
                 if let cachedController = cachedTabs["PlaylistsViewController"] {
                     controller = cachedController
                 } else {
                     controller = CustomUINavigationController(rootViewController: PlaylistsViewController(nibName: "PlaylistsViewController", bundle: nil))
                     cachedTabs["PlaylistsViewController"] = controller
                 }
-            case 4:
+            case 3:
                 if let cachedController = cachedTabs["BookmarksViewController"] {
                     controller = cachedController
                 } else {
@@ -236,27 +222,6 @@ import SnapKit
                 } else {
                     controller = CustomUINavigationController(rootViewController: ChatViewController(nibName: "ChatViewController", bundle: nil))
                     cachedTabs["ChatViewController"] = controller
-                }
-            case 8:
-                if let cachedController = cachedTabs["GenresViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: GenresViewController(nibName: "GenresViewController", bundle: nil))
-                    cachedTabs["GenresViewController"] = controller
-                }
-            case 9:
-                if let cachedController = cachedTabs["AllAlbumsViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: AllAlbumsViewController(nibName: "AllAlbumsViewController", bundle: nil))
-                    cachedTabs["AllAlbumsViewController"] = controller
-                }
-            case 10:
-                if let cachedController = cachedTabs["AllSongsViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: AllSongsViewController(nibName: "AllSongsViewController", bundle: nil))
-                    cachedTabs["AllSongsViewController"] = controller
                 }
             default: controller = nil
             }

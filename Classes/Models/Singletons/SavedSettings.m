@@ -54,16 +54,16 @@ LOG_LEVEL_ISUB_DEFAULT
     }
     
 	_isShuffle = [_userDefaults boolForKey:@"isShuffle"];
-	playlistS.isShuffle = _isShuffle;
+	playQueueS.isShuffle = _isShuffle;
 	
 	_normalPlaylistIndex = [_userDefaults integerForKey:@"normalPlaylistIndex"];
-	playlistS.normalIndex = _normalPlaylistIndex;
+	playQueueS.normalIndex = _normalPlaylistIndex;
 	
 	_shufflePlaylistIndex = [_userDefaults integerForKey:@"shufflePlaylistIndex"];
-	playlistS.shuffleIndex = _shufflePlaylistIndex;
+	playQueueS.shuffleIndex = _shufflePlaylistIndex;
     
 	_repeatMode = (ISMSRepeatMode)[_userDefaults integerForKey:@"repeatMode"];
-	playlistS.repeatMode = _repeatMode;
+	playQueueS.repeatMode = _repeatMode;
 	
 	_bitRate = [_userDefaults integerForKey:@"bitRate"];
 	_byteOffset = self.byteOffset;
@@ -99,26 +99,26 @@ LOG_LEVEL_ISUB_DEFAULT
 			isDefaultsDirty = YES;
 		}
 		
-		if (playlistS.isShuffle != _isShuffle) {
-			_isShuffle = playlistS.isShuffle;
+		if (playQueueS.isShuffle != _isShuffle) {
+			_isShuffle = playQueueS.isShuffle;
 			[_userDefaults setBool:_isShuffle forKey:@"isShuffle"];
 			isDefaultsDirty = YES;
 		}
 		
-		if (playlistS.normalIndex != _normalPlaylistIndex) {
-			_normalPlaylistIndex = playlistS.normalIndex;
+		if (playQueueS.normalIndex != _normalPlaylistIndex) {
+			_normalPlaylistIndex = playQueueS.normalIndex;
 			[_userDefaults setInteger:_normalPlaylistIndex forKey:@"normalPlaylistIndex"];
 			isDefaultsDirty = YES;
 		}
 		
-		if (playlistS.shuffleIndex != _shufflePlaylistIndex) {
-			_shufflePlaylistIndex = playlistS.shuffleIndex;
+		if (playQueueS.shuffleIndex != _shufflePlaylistIndex) {
+			_shufflePlaylistIndex = playQueueS.shuffleIndex;
 			[_userDefaults setInteger:_shufflePlaylistIndex forKey:@"shufflePlaylistIndex"];
 			isDefaultsDirty = YES;
 		}
 		
-		if (playlistS.repeatMode != _repeatMode) {
-			_repeatMode = playlistS.repeatMode;
+		if (playQueueS.repeatMode != _repeatMode) {
+			_repeatMode = playQueueS.repeatMode;
 			[_userDefaults setInteger:_repeatMode forKey:@"repeatMode"];
 			isDefaultsDirty = YES;
 		}
@@ -617,15 +617,6 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
 }
 
-- (BOOL)isSongsTabEnabled {
-    return [_userDefaults boolForKey:@"enableSongsTabSetting"];
-}
-
-- (void)setIsSongsTabEnabled:(BOOL)isSongsTabEnabled {
-    [_userDefaults setBool:isSongsTabEnabled forKey:@"enableSongsTabSetting"];
-    [_userDefaults synchronize];
-}
-
 - (BOOL)isAutoReloadArtistsEnabled {
     return [_userDefaults boolForKey:@"autoReloadArtistsSetting"];
 }
@@ -879,14 +870,14 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
 }
 
-- (BOOL)isCacheSizeTableFinished {
-    return [_userDefaults boolForKey:@"isCacheSizeTableFinished"];
-}
-
-- (void)setIsCacheSizeTableFinished:(BOOL)isCacheSizeTableFinished {
-    [_userDefaults setBool:isCacheSizeTableFinished forKey:@"isCacheSizeTableFinished"];
-    [_userDefaults synchronize];
-}
+//- (BOOL)isCacheSizeTableFinished {
+//    return [_userDefaults boolForKey:@"isCacheSizeTableFinished"];
+//}
+//
+//- (void)setIsCacheSizeTableFinished:(BOOL)isCacheSizeTableFinished {
+//    [_userDefaults setBool:isCacheSizeTableFinished forKey:@"isCacheSizeTableFinished"];
+//    [_userDefaults synchronize];
+//}
 
 - (void)logAppSettings {
     NSArray *keysToSkip = @[@"handlerStack", @"rootFolders", @"password", @"servers", @"url", @"username"];

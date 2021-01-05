@@ -371,9 +371,11 @@
     __block int position = 0;
     [databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *result = [db executeQuery:@"SELECT * FROM bookmarks WHERE bookmarkId = ?", [self.bookmarkIds objectAtIndexSafe:indexPath.row]];
-        song = [ISMSSong songFromDbResult:result];
-        name = [result stringForColumn:@"name"];
-        position = [result intForColumn:@"position"];
+        if ([result next]) {
+            song = [[ISMSSong alloc] initWithResult:result];
+            name = [result stringForColumn:@"name"];
+            position = [result intForColumn:@"position"];
+        }
         [result close];
     }];
     
@@ -399,7 +401,7 @@
 	} else {
 		[databaseS resetCurrentPlaylistDb];
 	}
-	playlistS.isShuffle = NO;
+	playQueueS.isShuffle = NO;
 	
 	__block NSUInteger bookmarkId = 0;
 	__block NSUInteger playlistIndex = 0;
@@ -409,11 +411,13 @@
 	
 	[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
 		FMResultSet *result = [db executeQuery:@"SELECT * FROM bookmarks WHERE bookmarkId = ?", [self.bookmarkIds objectAtIndexSafe:indexPath.row]];
-		aSong = [ISMSSong songFromDbResult:result];
-		bookmarkId = [result intForColumn:@"bookmarkId"];
-		playlistIndex = [result intForColumn:@"playlistIndex"];
-		offsetSeconds = [result intForColumn:@"position"];
-		offsetBytes = [result intForColumn:@"bytes"];
+        if ([result next]) {
+            aSong = [[ISMSSong alloc] initWithResult:result];
+            bookmarkId = [result intForColumn:@"bookmarkId"];
+            playlistIndex = [result intForColumn:@"playlistIndex"];
+            offsetSeconds = [result intForColumn:@"position"];
+            offsetBytes = [result intForColumn:@"bytes"];
+        }
 		[result close];
 	}];
 		
@@ -423,7 +427,7 @@
 		NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
 		NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 		NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-		NSString *table = playlistS.isShuffle ? shufTable : currTable;
+		NSString *table = playQueueS.isShuffle ? shufTable : currTable;
 		
 		[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
 			[db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
@@ -435,10 +439,10 @@
 			[jukeboxS replacePlaylistWithLocal];
         }
 	} else {
-		[aSong addToCurrentPlaylistDbQueue];
+		[aSong addToCurrentPlayQueue];
 	}
 	
-	playlistS.currentIndex = playlistIndex;
+	playQueueS.currentIndex = playlistIndex;
 	
 	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
 		
@@ -486,7 +490,9 @@
     __block ISMSSong *song = nil;
     [databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *result = [db executeQuery:@"SELECT * FROM bookmarks WHERE bookmarkId = ?", [self.bookmarkIds objectAtIndexSafe:indexPath.row]];
-        song = [ISMSSong songFromDbResult:result];
+        if ([result next]) {
+            song = [[ISMSSong alloc] initWithResult:result];
+        }
         [result close];
     }];
     return [SwipeAction downloadQueueAndDeleteConfigWithModel:song deleteHandler:^{

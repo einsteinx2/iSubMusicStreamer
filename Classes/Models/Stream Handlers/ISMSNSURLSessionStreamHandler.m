@@ -96,7 +96,7 @@ LOG_LEVEL_ISUB_DEFAULT
     }
     
     self.bitrate = self.mySong.estimatedBitrate;
-    if ([self.mySong isEqualToSong:playlistS.currentSong]) {
+    if ([self.mySong isEqualToSong:playQueueS.currentSong]) {
         self.isCurrentSong = YES;
     }
     
@@ -117,7 +117,7 @@ LOG_LEVEL_ISUB_DEFAULT
     DDLogInfo(@"[ISMSNSURLSessionStreamHandler] Stream handler startConnectionInternalSuccess for %@", self.mySong);
 
     if (!self.isTempCache) {
-        self.mySong.isPartiallyCached = YES;
+        [self.mySong addToOfflineSongs];
     }
     
     [EX2Dispatch runInMainThreadAndWaitUntilDone:YES block:^{

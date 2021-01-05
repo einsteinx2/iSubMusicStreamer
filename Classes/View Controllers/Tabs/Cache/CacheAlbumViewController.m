@@ -222,12 +222,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 		if (UIDevice.isPad) {
             [appDelegateS.padRootViewController.currentContentNavigationController popToRootViewControllerAnimated:YES];
 		} else {
-			// Handle the moreNavigationController stupidity
-			if (appDelegateS.currentTabBarController.selectedIndex == 4) {
-				[appDelegateS.currentTabBarController.moreNavigationController popToViewController:[appDelegateS.currentTabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
-			} else {
-				[(UINavigationController*)appDelegateS.currentTabBarController.selectedViewController popToRootViewControllerAnimated:YES];
-			}
+            [(UINavigationController*)appDelegateS.mainTabBarController.selectedViewController popToRootViewControllerAnimated:YES];
 		}
 	} else {
 		[self.tableView reloadData];
@@ -265,19 +260,19 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 	for (NSString *md5 in songMd5s) {
 		@autoreleasepool {
 			ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:md5];
-			[aSong addToCurrentPlaylistDbQueue];
+			[aSong addToCurrentPlayQueue];
 		}
 	}
 	
 	if (shuffle) {
-		playlistS.isShuffle = YES;
+		playQueueS.isShuffle = YES;
 		
 		[databaseS resetShufflePlaylist];
 		[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
 			[db executeUpdate:@"INSERT INTO shufflePlaylist SELECT * FROM currentPlaylist ORDER BY RANDOM()"];
 		}];
 	} else {
-		playlistS.isShuffle = NO;
+		playQueueS.isShuffle = NO;
 	}
 			
 	// Must do UI stuff in main thread
@@ -476,10 +471,10 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
         }
         for (NSArray *song in self.songs) {
             ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:[song objectAtIndexSafe:0]];
-            [aSong addToCurrentPlaylistDbQueue];
+            [aSong addToCurrentPlayQueue];
         }
                     
-        playlistS.isShuffle = NO;
+        playQueueS.isShuffle = NO;
         
         [musicS playSongAtPosition:a];
         
@@ -520,7 +515,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
                 for (NSString *md5 in songMd5s) {
                     @autoreleasepool {
                         ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:md5];
-                        [aSong addToCurrentPlaylistDbQueue];
+                        [aSong addToCurrentPlayQueue];
                     }
                 }
                 
@@ -580,7 +575,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
     } else {
         NSString *md5 = [[self.songs objectAtIndexSafe:(indexPath.row - self.albums.count)] firstObject];
         return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
-            [[ISMSSong songFromCacheDbQueue:md5] addToCurrentPlaylistDbQueue];
+            [[ISMSSong songFromCacheDbQueue:md5] addToCurrentPlayQueue];
             [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
         } deleteHandler:^{
             [ISMSSong removeSongFromCacheDbQueueByMD5:md5];

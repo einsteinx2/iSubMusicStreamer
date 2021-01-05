@@ -143,9 +143,9 @@ import Foundation
     
     private func handleSong(song: Song) {
         if isQueue {
-            song.addToCurrentPlaylistDbQueue()
+            song.addToCurrentPlayQueue()
         } else if isDownload {
-            song.addToCacheQueueDbQueue()
+            song.addToDownloadQueue()
         }
     }
     

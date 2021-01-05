@@ -39,8 +39,6 @@ NS_SWIFT_NAME(ViewObjects)
 
 + (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
-- (void)orderMainTabBarController;
-
 - (void)showLoadingScreenOnMainWindowWithMessage:(nullable NSString *)message;
 - (void)showLoadingScreen:(UIView *)view withMessage:(nullable NSString *)message;
 - (void)showAlbumLoadingScreenOnMainWindowWithSender:(id)sender;

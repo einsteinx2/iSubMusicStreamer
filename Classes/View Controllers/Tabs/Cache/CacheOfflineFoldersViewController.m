@@ -166,7 +166,7 @@
 }
 
 - (void)loadPlayAllPlaylist:(BOOL)shuffle {
-    playlistS.isShuffle = NO;
+    playQueueS.isShuffle = NO;
 	
     [databaseS resetCurrentPlaylistDb];
 	
@@ -185,15 +185,15 @@
 	for (NSString *md5 in songMd5s) {
 		@autoreleasepool {
 			ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:md5];
-			[aSong addToCurrentPlaylistDbQueue];
+			[aSong addToCurrentPlayQueue];
 		}
 	}
 	
 	if (shuffle) {
-		playlistS.isShuffle = YES;
+		playQueueS.isShuffle = YES;
 		[databaseS shufflePlaylist];
 	} else {
-		playlistS.isShuffle = NO;
+		playQueueS.isShuffle = NO;
 	}
     
 	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
@@ -476,7 +476,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 
             for (NSString *md5 in songMd5s) {
                 @autoreleasepool {
-                    [[ISMSSong songFromCacheDbQueue:md5] addToCurrentPlaylistDbQueue];
+                    [[ISMSSong songFromCacheDbQueue:md5] addToCurrentPlayQueue];
                 }
             }
 

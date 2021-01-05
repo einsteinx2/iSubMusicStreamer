@@ -29,13 +29,10 @@
 #import "EqualizerViewController.h"
 #import "ServerListViewController.h"
 #import "CacheViewController.h"
-#import "GenresViewController.h"
 #import "PlaylistsViewController.h"
 #import "BookmarksViewController.h"
 #import "FoldersViewController.h"
 #import "PlayingViewController.h"
-#import "AllAlbumsViewController.h"
-#import "AllSongsViewController.h"
 #import "CacheOfflineFoldersViewController.h"
 
 // Views

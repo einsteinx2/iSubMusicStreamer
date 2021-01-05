@@ -45,10 +45,10 @@
     }
     
     for (ISMSSong *song in parser.songs) {
-        [song addToCurrentPlaylistDbQueue];
+        [song addToCurrentPlayQueue];
     }
     
-    playlistS.isShuffle = NO;    
+    playQueueS.isShuffle = NO;    
     
     [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
     [self informDelegateLoadingFinished];
