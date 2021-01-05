@@ -324,6 +324,29 @@ LOG_LEVEL_ISUB_DEFAULT
     return urlStringFilesystemSafe;
 }
 
+- (NSString *)serverId {
+    // Get a URL object for the current server URL string (this is never nil)
+    NSURL *url = [NSURL URLWithString:self.urlString];
+    
+    // Start with the host as-is, but without the protocol
+    NSMutableString *serverId = [NSMutableString stringWithFormat:@"%@", url.host];
+    
+    // Add the port if not 80
+    unsigned long port = url.port.unsignedLongValue;
+    if (port != 0 && port != 80) {
+        [serverId appendFormat:@"_%lu", port];
+    }
+    
+    // Add the paths, underscore separated and skipping the first slash
+    for (NSString *pathComponent in url.pathComponents) {
+        if (![pathComponent containsString:@"/"]) {
+            [serverId appendFormat:@"_%@", pathComponent];
+        }
+    }
+    
+    return serverId;
+}
+
 #pragma mark - Document Folder Paths
 
 - (void)createDirectoryIfNotExists:(NSString *)path {

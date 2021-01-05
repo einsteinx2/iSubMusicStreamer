@@ -106,7 +106,7 @@ final class SubfolderLoader: SUSLoader {
     
     private func resetDb() -> Bool {
         var success = true
-        Database.shared().serverDbQueue?.inDatabase { db in
+        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             if db.beginTransaction() {
                 if !db.executeUpdate("DELETE FROM folderAlbum WHERE folderId = ?", folderId) {
                     DDLogError("[SubfolderLoader] Error resetting tagSong cache table for folderId \(folderId), failed to delete from folderAlbum - \(db.lastErrorCode()): \(db.lastErrorMessage())")
@@ -145,7 +145,7 @@ final class SubfolderLoader: SUSLoader {
     
     private func cacheFolder(folderId: String, folderAlbum: FolderAlbum, itemOrder: Int) -> Bool {
         var success = true
-        Database.shared().serverDbQueue?.inDatabase { db in
+        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             let query = "INSERT INTO folderAlbum (folderId, subfolderId, itemOrder, title, coverArtId, tagArtistName, tagAlbumName, playCount, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
             success = db.executeUpdate(query, folderId, folderAlbum.id, itemOrder, folderAlbum.title, folderAlbum.coverArtId ?? NSNull(), folderAlbum.tagArtistName ?? NSNull(), folderAlbum.tagAlbumName ?? NSNull(), folderAlbum.playCount, folderAlbum.year)
             if !success {
@@ -157,7 +157,7 @@ final class SubfolderLoader: SUSLoader {
     
     private func cacheSong(folderId: String, song: Song, itemOrder: Int) -> Bool {
         var success = true
-        Database.shared().serverDbQueue?.inDatabase { db in
+        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             let query = "INSERT INTO folderSong (folderId, itemOrder, songId) VALUES (?, ?, ?)"
             success = db.executeUpdate(query, folderId, itemOrder, song.songId ?? NSNull())
             if !success {
@@ -169,7 +169,7 @@ final class SubfolderLoader: SUSLoader {
     
     private func cacheMetadata(metadata: FolderMetadata) -> Bool {
         var success = true
-        Database.shared().serverDbQueue?.inDatabase { db in
+        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             let query = "INSERT INTO folderMetadata (folderId, subfolderCount, songCount, duration) VALUES (?, ?, ?, ?)"
             success = db.executeUpdate(query, metadata.folderId, metadata.subfolderCount, metadata.songCount, metadata.duration)
             if !success {

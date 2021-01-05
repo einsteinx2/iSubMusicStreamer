@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FMDatabase, FMDatabaseQueue, ISMSFolderArtist, ISMSSong;
 
-NS_SWIFT_NAME(Database)
+NS_SWIFT_NAME(DatabaseOld)
 @interface DatabaseSingleton : NSObject 
 
 // Per server DB queue, contains only records specific to the active server

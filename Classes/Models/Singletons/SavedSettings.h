@@ -45,6 +45,11 @@ NS_SWIFT_NAME(Settings)
 
 @property (readonly) NSString *urlStringFilesystemSafe;
 
+// Server ID (server URL in format "host_port_path" skipping port if 80, skipping protocol, skipping initial / in path)
+// I.e. https://plex:4041 is "plex_4041", http://test.subsonic.org is "test.subsonic.org", http://test.com:8080/subsonic is "test.com_8080_subsonic"
+// This gives a somewhat unique ID that can be used in DB records to distinguish different servers and is still human readable for filesystem use
+@property (readonly) NSString *serverId;
+
 // Root Folders Settings
 @property (nullable, strong) NSDate *rootFoldersReloadTime;
 @property (nullable, strong) NSNumber *rootFoldersSelectedFolderId;

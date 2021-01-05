@@ -761,7 +761,7 @@ import CocoaLumberjackSwift
     private func updateBookmarkButton() {
         var bookmarkCount: Int32 = 0
         if let songId = self.currentSong?.songId {
-            Database.shared().bookmarksDbQueue?.inDatabase { db in
+            DatabaseOld.shared().bookmarksDbQueue?.inDatabase { db in
                 do {
                     let result = try db.executeQuery("SELECT COUNT(*) FROM bookmarks WHERE songId = ?", values: [songId])
                     if result.next() {

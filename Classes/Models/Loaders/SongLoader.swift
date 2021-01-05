@@ -131,7 +131,7 @@ fileprivate var albumLoader: TagAlbumLoader?
             if Settings.shared().isJukeboxEnabled {
                 Jukebox.shared().clearRemotePlaylist()
             }
-            Database.shared().shufflePlaylist()
+            DatabaseOld.shared().shufflePlaylist()
             if Settings.shared().isJukeboxEnabled {
                 Jukebox.shared().replacePlaylistWithLocal()
             } else {
@@ -149,7 +149,7 @@ fileprivate var albumLoader: TagAlbumLoader?
         if Settings.shared().isJukeboxEnabled {
             Jukebox.shared().clearPlaylist()
         } else {
-            Database.shared().resetCurrentPlaylistDb()
+            DatabaseOld.shared().resetCurrentPlaylistDb()
         }
         PlayQueue.shared().isShuffle = false
     }

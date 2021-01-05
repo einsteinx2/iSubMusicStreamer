@@ -36,7 +36,7 @@ import CocoaLumberjackSwift
     
     private func loadTagAlbums() {
         tagAlbums.removeAll()
-        Database.shared().serverDbQueue?.inDatabase { db in
+        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             if let result = db.executeQuery("SELECT * FROM tagAlbum WHERE artistId = ? ORDER BY itemOrder ASC", artistId) {
                 while result.next() {
                     tagAlbums.append(TagAlbum(result: result))

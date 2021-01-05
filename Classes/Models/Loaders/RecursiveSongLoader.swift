@@ -164,7 +164,7 @@ import Foundation
 //            }
 //
 //            if isShuffle {
-//                Database.shared().shufflePlaylist()
+//                DatabaseOld.shared().shufflePlaylist()
 //            }
 //
 //            if Settings.shared().isJukeboxEnabled {

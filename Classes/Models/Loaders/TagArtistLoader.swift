@@ -63,7 +63,7 @@ final class TagArtistLoader: SUSLoader {
     
     private func resetDb(artistId: String) -> Bool {
         var success = true
-        Database.shared().serverDbQueue?.inDatabase { db in
+        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             if !db.executeUpdate("DELETE FROM tagAlbum WHERE artistId = ?", artistId) {
                 DDLogError("[TagArtistLoader] Error resetting tagAlbum cache table for artistId \(artistId) - \(db.lastErrorCode()): \(db.lastErrorMessage())")
                 success = false
@@ -74,7 +74,7 @@ final class TagArtistLoader: SUSLoader {
     
     private func cacheAlbum(artistId: String, tagAlbum: TagAlbum, itemOrder: Int) -> Bool {
         var success = true
-        Database.shared().serverDbQueue?.inDatabase { db in
+        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             let query = "INSERT INTO tagAlbum (artistId, albumId, itemOrder, name, coverArtId, tagArtistName, songCount, duration, playCount, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
             success = db.executeUpdate(query, artistId, tagAlbum.id, itemOrder, tagAlbum.name, tagAlbum.coverArtId ?? NSNull(), tagAlbum.tagArtistName ?? NSNull(), tagAlbum.songCount, tagAlbum.duration, tagAlbum.playCount, tagAlbum.year)
             if !success {

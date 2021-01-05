@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "GRDB",
+        "repositoryURL": "https://github.com/groue/GRDB.swift.git",
+        "state": {
+          "branch": null,
+          "revision": "2a917823ed2511ec5cb21a83f8a4f389e45d7038",
+          "version": "5.2.0"
+        }
+      },
+      {
         "package": "SnapKit",
         "repositoryURL": "https://github.com/SnapKit/SnapKit.git",
         "state": {

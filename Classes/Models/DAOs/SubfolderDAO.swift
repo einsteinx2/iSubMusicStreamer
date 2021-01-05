@@ -34,7 +34,7 @@ import CocoaLumberjackSwift
     
     private func folderMetadata(folderId: String) -> FolderMetadata? {
         var folderMetadata: FolderMetadata?
-        Database.shared().serverDbQueue?.inDatabase { db in
+        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             if let result = db.executeQuery("SELECT * FROM folderMetadata WHERE folderId = ?", folderId), result.next() {
                 folderMetadata = FolderMetadata(result: result)
             } else if db.hadError() {
@@ -46,7 +46,7 @@ import CocoaLumberjackSwift
     
     @objc func folderAlbum(row: Int) -> FolderAlbum? {
         var folderAlbum: FolderAlbum?
-        Database.shared().serverDbQueue?.inDatabase { db in
+        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             if let result = db.executeQuery("SELECT * FROM folderAlbum WHERE folderId = ? AND itemOrder = ?", folderId, row), result.next() {
                 folderAlbum = FolderAlbum(result: result)
             } else if db.hadError() {
@@ -58,7 +58,7 @@ import CocoaLumberjackSwift
     
     @objc func song(row: Int) -> Song? {
         var song: Song?
-        Database.shared().serverDbQueue?.inDatabase { db in
+        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             let query = """
                 SELECT song.*
                 FROM folderSong
@@ -77,14 +77,14 @@ import CocoaLumberjackSwift
     @objc func playSong(row: Int) -> Song? {
         // Clear the current playlist
         if Settings.shared().isJukeboxEnabled {
-            Database.shared().resetJukeboxPlaylist()
+            DatabaseOld.shared().resetJukeboxPlaylist()
             Jukebox.shared().clearRemotePlaylist()
         } else {
-            Database.shared().resetCurrentPlaylistDb()
+            DatabaseOld.shared().resetCurrentPlaylistDb()
         }
         
         // Add the songs to the playlist
-        Database.shared().serverDbQueue?.inDatabase { db in
+        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             let query = """
                 INSERT INTO currentPlaylist
                 SELECT songId, itemOrder
@@ -109,12 +109,12 @@ import CocoaLumberjackSwift
     @objc func sectionInfo() -> [Any]? {
         if let metadata = metadata, metadata.subfolderCount > 10 {
             var sectionInfo: [Any]?
-            Database.shared().serverDbQueue?.inDatabase { db in
+            DatabaseOld.shared().serverDbQueue?.inDatabase { db in
                 _ = db.executeUpdate("DROP TABLE IF EXISTS folderIndex")
                 _ = db.executeUpdate("CREATE TEMPORARY TABLE folderIndex (title TEXT, order INTEGER)")
                 _ = db.executeUpdate("INSERT INTO folderIndex SELECT title, order FROM folderAlbum WHERE folderId = ?", folderId)
                 _ = db.executeUpdate("CREATE INDEX folderIndex_title ON folderIndex (title)")
-                sectionInfo = Database.shared().sectionInfoFromOrderColumnTable("folderIndex", database: db, column: "title")
+                sectionInfo = DatabaseOld.shared().sectionInfoFromOrderColumnTable("folderIndex", database: db, column: "title")
             }
             return sectionInfo
         }

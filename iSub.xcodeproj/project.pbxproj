@@ -171,6 +171,14 @@
 		538229F611C98091003F1E23 /* CacheAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 538229F411C98091003F1E23 /* CacheAlbumViewController.m */; };
 		5388A3B4119899260049BA9E /* BookmarksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5388A3B2119899260049BA9E /* BookmarksViewController.m */; };
 		5388A3B5119899260049BA9E /* BookmarksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5388A3B3119899260049BA9E /* BookmarksViewController.xib */; };
+		5389477D25A4E6F60078FBAF /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5389477925A4E6F60078FBAF /* FileSystem.swift */; };
+		5389477E25A4E6F60078FBAF /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5389477925A4E6F60078FBAF /* FileSystem.swift */; };
+		5389478025A4E7170078FBAF /* MediaFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5389477F25A4E7170078FBAF /* MediaFolder.swift */; };
+		5389478125A4E7170078FBAF /* MediaFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5389477F25A4E7170078FBAF /* MediaFolder.swift */; };
+		5389478425A4E72E0078FBAF /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5389478325A4E72E0078FBAF /* Store.swift */; };
+		5389478525A4E72E0078FBAF /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5389478325A4E72E0078FBAF /* Store.swift */; };
+		5389478825A4E7700078FBAF /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 5389478725A4E7700078FBAF /* GRDB */; };
+		5389478A25A4E7880078FBAF /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 5389478925A4E7880078FBAF /* GRDB */; };
 		538C8FE125606299005D6CA9 /* RefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE025606299005D6CA9 /* RefreshControl.swift */; };
 		538C8FE225606299005D6CA9 /* RefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE025606299005D6CA9 /* RefreshControl.swift */; };
 		538C8FE725609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE625609F4F005D6CA9 /* BlurredSectionHeader.swift */; };
@@ -751,6 +759,9 @@
 		5388A3B1119899260049BA9E /* BookmarksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = BookmarksViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		5388A3B2119899260049BA9E /* BookmarksViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BookmarksViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		5388A3B3119899260049BA9E /* BookmarksViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BookmarksViewController.xib; sourceTree = "<group>"; };
+		5389477925A4E6F60078FBAF /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
+		5389477F25A4E7170078FBAF /* MediaFolder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaFolder.swift; sourceTree = "<group>"; };
+		5389478325A4E72E0078FBAF /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		538C8FE025606299005D6CA9 /* RefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshControl.swift; sourceTree = "<group>"; };
 		538C8FE625609F4F005D6CA9 /* BlurredSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurredSectionHeader.swift; sourceTree = "<group>"; };
 		538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -1118,6 +1129,7 @@
 				5349DF87161E408A0044A781 /* Accelerate.framework in Frameworks */,
 				53F8917F1EB137F300B3F131 /* AudioToolbox.framework in Frameworks */,
 				53B38C141475940700CD8A99 /* AVFoundation.framework in Frameworks */,
+				5389478825A4E7700078FBAF /* GRDB in Frameworks */,
 				53F675DC113B093900822059 /* CFNetwork.framework in Frameworks */,
 				537DE2D9113F008C00875852 /* CoreFoundation.framework in Frameworks */,
 				2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */,
@@ -1158,6 +1170,7 @@
 				53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */,
 				53F8917E1EB137E900B3F131 /* AudioToolbox.framework in Frameworks */,
 				53B38C12147593FA00CD8A99 /* AVFoundation.framework in Frameworks */,
+				5389478A25A4E7880078FBAF /* GRDB in Frameworks */,
 				53BC2854139AF0DD00A825F1 /* CFNetwork.framework in Frameworks */,
 				53BC2857139AF0DD00A825F1 /* CoreFoundation.framework in Frameworks */,
 				53BC2852139AF0DD00A825F1 /* CoreGraphics.framework in Frameworks */,
@@ -1567,6 +1580,8 @@
 		531D39F8255AB50E000CB0DF /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				5389478225A4E72E0078FBAF /* Data Store */,
+				5389477925A4E6F60078FBAF /* FileSystem.swift */,
 				531D3A0D255AB755000CB0DF /* Stream Handlers */,
 				531D3A0B255AB642000CB0DF /* DAOs */,
 				531D39FE255AB5B8000CB0DF /* Loaders */,
@@ -1660,6 +1675,7 @@
 				530A16AC2592D22100E9294E /* TagAlbum.swift */,
 				53FE366A1EA961720058B925 /* ISMSSong.h */,
 				53FE366B1EA961720058B925 /* ISMSSong.m */,
+				5389477F25A4E7170078FBAF /* MediaFolder.swift */,
 			);
 			path = "API Models";
 			sourceTree = "<group>";
@@ -1845,6 +1861,14 @@
 				53BD84A52566F41F00F7A197 /* ISMSBassVisualType.h */,
 			);
 			path = "EQ and Visualizer";
+			sourceTree = "<group>";
+		};
+		5389478225A4E72E0078FBAF /* Data Store */ = {
+			isa = PBXGroup;
+			children = (
+				5389478325A4E72E0078FBAF /* Store.swift */,
+			);
+			path = "Data Store";
 			sourceTree = "<group>";
 		};
 		53D4FCAB259944B500C6F1AE /* Swift extensions */ = {
@@ -2127,6 +2151,7 @@
 			name = "iSub Release";
 			packageProductDependencies = (
 				53D97409255BFDE900AABF7F /* SnapKit */,
+				5389478725A4E7700078FBAF /* GRDB */,
 			);
 			productName = iSubTESTING;
 			productReference = 1D6058910D05DD3D006BFB54 /* iSub.app */;
@@ -2149,6 +2174,7 @@
 			name = "iSub Beta";
 			packageProductDependencies = (
 				53D97405255BFD9100AABF7F /* SnapKit */,
+				5389478925A4E7880078FBAF /* GRDB */,
 			);
 			productName = iSubTESTING;
 			productReference = 53BC2865139AF0DD00A825F1 /* iSub Beta.app */;
@@ -2186,6 +2212,7 @@
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			packageReferences = (
 				53D97404255BFD9100AABF7F /* XCRemoteSwiftPackageReference "SnapKit" */,
+				5389478625A4E7700078FBAF /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 			);
 			projectDirPath = "";
 			projectReferences = (
@@ -2324,6 +2351,7 @@
 				1D3623260D0F684500981E51 /* iSubAppDelegate.m in Sources */,
 				28C286E10D94DF7D0034E888 /* FoldersViewController.m in Sources */,
 				53FE67A4256DD0F00015FC83 /* GCDWebServerDataRequest.m in Sources */,
+				5389478425A4E72E0078FBAF /* Store.swift in Sources */,
 				53D4FCBC25997B4200C6F1AE /* SubfolderDAO.swift in Sources */,
 				5359C859256EA8FE00C8F8DC /* ObjC.swift in Sources */,
 				53F2D3EE113A338500107D63 /* FolderAlbumViewController.m in Sources */,
@@ -2375,6 +2403,7 @@
 				530A16B92592DFC700E9294E /* TagArtistViewController.m in Sources */,
 				53FE38951EA961C80058B925 /* NSDictionary+ZKAdditions.m in Sources */,
 				53FE37191EA961720058B925 /* SUSCoverArtLoader.m in Sources */,
+				5389478025A4E7170078FBAF /* MediaFolder.swift in Sources */,
 				53FE36FB1EA961720058B925 /* BassWrapper.m in Sources */,
 				531D3A1F255ABAAC000CB0DF /* SUSLoader.m in Sources */,
 				53FE37C71EA961720058B925 /* SUSServerPlaylistsDAO.m in Sources */,
@@ -2467,6 +2496,7 @@
 				530A16AD2592D22100E9294E /* TagAlbum.swift in Sources */,
 				53FE38041EA961970058B925 /* RXMLElement.m in Sources */,
 				537B05C2256B40930008892C /* SongInfoViewController.swift in Sources */,
+				5389477D25A4E6F60078FBAF /* FileSystem.swift in Sources */,
 				53FE37701EA961720058B925 /* NSMutableURLRequest+SUS.m in Sources */,
 				531F166E126FA2E600F524BD /* HomeAlbumViewController.m in Sources */,
 				53B9D0B41279FAEF00CAB0E0 /* SearchSongsViewController.m in Sources */,
@@ -2544,6 +2574,7 @@
 				53BC279C139AF0DD00A825F1 /* iSubAppDelegate.m in Sources */,
 				53BC279D139AF0DD00A825F1 /* FoldersViewController.m in Sources */,
 				53BC27A1139AF0DD00A825F1 /* FolderAlbumViewController.m in Sources */,
+				5389478525A4E72E0078FBAF /* Store.swift in Sources */,
 				53D4FCBD25997B4200C6F1AE /* SubfolderDAO.swift in Sources */,
 				53FE37601EA961720058B925 /* JukeboxSingleton.m in Sources */,
 				53329649255F2E770027C51A /* PlayAllAndShuffleHeader.swift in Sources */,
@@ -2595,6 +2626,7 @@
 				530A16BA2592DFC700E9294E /* TagArtistViewController.m in Sources */,
 				53FE34E51EA961540058B925 /* NSNull+CleanString.m in Sources */,
 				53FE38971EA961C80058B925 /* NSDictionary+ZKAdditions.m in Sources */,
+				5389478125A4E7170078FBAF /* MediaFolder.swift in Sources */,
 				53FE371B1EA961720058B925 /* SUSCoverArtLoader.m in Sources */,
 				53FE36FD1EA961720058B925 /* BassWrapper.m in Sources */,
 				53FE67AD256DE9600015FC83 /* Defines.swift in Sources */,
@@ -2687,6 +2719,7 @@
 				530A16AE2592D22100E9294E /* TagAlbum.swift in Sources */,
 				533295F7255EEFE50027C51A /* FMTokenizers.m in Sources */,
 				53BC27FC139AF0DD00A825F1 /* CustomUITextView.m in Sources */,
+				5389477E25A4E6F60078FBAF /* FileSystem.swift in Sources */,
 				53FE38061EA961970058B925 /* RXMLElement.m in Sources */,
 				53FE37721EA961720058B925 /* NSMutableURLRequest+SUS.m in Sources */,
 				5340B8A7256968C400FD5D6D /* ISMSBookmarkDAO.m in Sources */,
@@ -3317,6 +3350,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		5389478625A4E7700078FBAF /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDB.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.2.0;
+			};
+		};
 		53D97404255BFD9100AABF7F /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -3328,6 +3369,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5389478725A4E7700078FBAF /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5389478625A4E7700078FBAF /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
+		};
+		5389478925A4E7880078FBAF /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5389478625A4E7700078FBAF /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
+		};
 		53D97405255BFD9100AABF7F /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 53D97404255BFD9100AABF7F /* XCRemoteSwiftPackageReference "SnapKit" */;

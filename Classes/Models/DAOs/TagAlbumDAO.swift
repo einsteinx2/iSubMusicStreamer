@@ -37,14 +37,14 @@ import CocoaLumberjackSwift
     @objc func playSong(row: Int) -> Song? {
         // Clear the current playlist
         if Settings.shared().isJukeboxEnabled {
-            Database.shared().resetJukeboxPlaylist()
+            DatabaseOld.shared().resetJukeboxPlaylist()
             Jukebox.shared().clearRemotePlaylist()
         } else {
-            Database.shared().resetCurrentPlaylistDb()
+            DatabaseOld.shared().resetCurrentPlaylistDb()
         }
         
         // Add the songs to the playlist
-        Database.shared().serverDbQueue?.inDatabase { db in
+        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             let query = """
                 INSERT INTO currentPlaylist
                 SELECT songId, itemOrder
@@ -68,7 +68,7 @@ import CocoaLumberjackSwift
 
     private func loadSongs() {
         songs.removeAll()
-        Database.shared().serverDbQueue?.inDatabase { db in
+        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             let query = """
                 SELECT song.*
                 FROM tagSong
