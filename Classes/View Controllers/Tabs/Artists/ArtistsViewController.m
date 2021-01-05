@@ -28,7 +28,7 @@
 
 - (void)createDataModel {
     self.dataModel = [[SUSRootArtistsDAO alloc] initWithDelegate:self];
-    self.dataModel.selectedFolderId = [settingsS rootArtistsSelectedFolderId];
+    self.dataModel.selectedFolderId = settingsS.rootArtistsSelectedFolderId.integerValue;
 }
 
 - (void)viewDidLoad  {
@@ -49,7 +49,7 @@
     // Add the pull to refresh view
     __weak ArtistsViewController *weakSelf = self;
     self.tableView.refreshControl = [[RefreshControl alloc] initWithHandler:^{
-        [weakSelf loadData:[settingsS rootArtistsSelectedFolderId]];
+        [weakSelf loadData:settingsS.rootArtistsSelectedFolderId.integerValue];
     }];
     
     [self.tableView registerClass:BlurredSectionHeader.class forHeaderFooterViewReuseIdentifier:BlurredSectionHeader.reuseId];
@@ -82,7 +82,7 @@
     
     if (!viewObjectsS.isArtistsLoading) {
         if (![self.dataModel isRootArtistFolderIdCached]) {
-            [self loadData:[settingsS rootArtistsSelectedFolderId]];
+            [self loadData:settingsS.rootArtistsSelectedFolderId.integerValue];
         }
     }
     
@@ -138,12 +138,12 @@
     
     self.dropdown = [[FolderDropdownControl alloc] initWithFrame:CGRectMake(50, 61, 220, 40)];
     self.dropdown.delegate = self;
-    NSDictionary *dropdownFolders = [SUSRootArtistsDAO folderDropdownFolders];
-    if (dropdownFolders != nil) {
-        self.dropdown.folders = dropdownFolders;
-    } else {
-        self.dropdown.folders = [NSDictionary dictionaryWithObject:@"All Media Folders" forKey:@-1];
-    }
+//    NSDictionary *dropdownFolders = [SUSRootArtistsDAO folderDropdownFolders];
+//    if (dropdownFolders != nil) {
+//        self.dropdown.folders = dropdownFolders;
+//    } else {
+//        self.dropdown.folders = [NSDictionary dictionaryWithObject:@"All Media Folders" forKey:@-1];
+//    }
     [self.dropdown selectFolderWithId:self.dataModel.selectedFolderId];
     [self.headerView addSubview:self.dropdown];
     
@@ -180,11 +180,11 @@
     [self.tableView.refreshControl endRefreshing];
 }
 
-- (void)loadData:(NSNumber *)folderId  {
+- (void)loadData:(NSInteger)mediaFolderId  {
     [self.dropdown updateFolders];
     viewObjectsS.isArtistsLoading = YES;
     [viewObjectsS showAlbumLoadingScreen:appDelegateS.window sender:self];
-    self.dataModel.selectedFolderId = folderId;
+    self.dataModel.selectedFolderId = mediaFolderId;
     [self.dataModel startLoad];
 }
 
@@ -240,20 +240,18 @@
     } completion:nil];
 }
 
-- (void)folderDropdownSelectFolder:(NSNumber *)folderId {
-    [self.dropdown selectFolderWithId:folderId];
-     
+- (void)folderDropdownSelectFolder:(NSInteger)mediaFolderId {
     // Save the default
-    settingsS.rootArtistsSelectedFolderId = folderId;
+    settingsS.rootArtistsSelectedFolderId = @(mediaFolderId);
     
     // Reload the data
-    self.dataModel.selectedFolderId = folderId;
+    self.dataModel.selectedFolderId = mediaFolderId;
     self.isSearching = NO;
     if ([self.dataModel isRootArtistFolderIdCached]) {
         [self.tableView reloadData];
         [self updateCount];
     } else {
-        [self loadData:folderId];
+        [self loadData:mediaFolderId];
     }
 }
 
@@ -263,7 +261,7 @@
         [self.tableView reloadData];
         [self removeCount];
     }
-    [self folderDropdownSelectFolder:@-1];
+    [self folderDropdownSelectFolder:-1];
 }
 
 - (void)updateFolders {
@@ -273,7 +271,7 @@
 #pragma mark Button handling methods
 
 - (void)reloadAction:(id)sender {
-    [self loadData:[settingsS rootArtistsSelectedFolderId]];
+    [self loadData:settingsS.rootArtistsSelectedFolderId.integerValue];
 }
 
 - (void)settingsAction:(id)sender {
@@ -451,11 +449,8 @@
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return -1;
     
     if (index == 0) {
-        if (self.dropdown.folders == nil || [self.dropdown.folders count] == 2) {
-            [self.tableView setContentOffset:CGPointMake(0, 104) animated:NO];
-        } else {
-            [self.tableView setContentOffset:CGPointMake(0, 54) animated:NO];
-        }
+        CGFloat yOffset = self.dropdown.hasMultipleMediaFolders ? 54 : 104;
+        [self.tableView setContentOffset:CGPointMake(0, yOffset) animated:NO];
         return -1;
     }
     return index - 1;

@@ -11,6 +11,6 @@
 @interface SUSRootArtistsLoader : SUSLoader
 
 @property NSUInteger tempRecordCount;
-@property (strong) NSNumber *selectedFolderId;
+@property NSInteger selectedFolderId;
 
 @end

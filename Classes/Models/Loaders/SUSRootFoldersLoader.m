@@ -14,6 +14,7 @@
 #import "DatabaseSingleton.h"
 #import "NSError+ISMSError.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation SUSRootFoldersLoader
 
@@ -25,8 +26,8 @@
 
 - (NSURLRequest *)createRequest {
     NSDictionary *parameters = nil;
-	if (self.selectedFolderId != nil && [self.selectedFolderId intValue] != -1) {
-        parameters = @{@"musicFolderId": n2N([self.selectedFolderId stringValue])};
+	if (self.selectedFolderId != MediaFolder.allFoldersId) {
+        parameters = @{@"musicFolderId": [NSString stringWithFormat:@"%ld", (long)self.selectedFolderId]};
 	}
     
     return [NSMutableURLRequest requestWithSUSAction:@"getIndexes" parameters:parameters];
@@ -112,8 +113,8 @@
 - (NSString *)tableModifier {
     NSString *tableModifier = @"_all";
     
-    if (self.selectedFolderId != nil && [self.selectedFolderId intValue] != -1) {
-        tableModifier = [NSString stringWithFormat:@"_%@", [self.selectedFolderId stringValue]];
+    if (self.selectedFolderId != MediaFolder.allFoldersId) {
+        tableModifier = [NSString stringWithFormat:@"_%ld", (long)self.selectedFolderId];
     }
     
     return tableModifier;

@@ -25,12 +25,4 @@
 @property (nonatomic, strong) FolderDropdownControl *dropdown;
 @property (nonatomic, strong) SUSRootArtistsDAO *dataModel;
 
-// Loader Delegate Methods
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error;
-- (void)loadingFinished:(SUSLoader *)theLoader;
-
-// FolderDropdown Delegate Methods
-- (void)folderDropdownMoveViewsY:(float)y;
-- (void)folderDropdownSelectFolder:(NSNumber *)folderId;
-
 @end

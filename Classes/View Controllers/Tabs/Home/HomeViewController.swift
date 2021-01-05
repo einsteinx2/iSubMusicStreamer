@@ -12,7 +12,7 @@ import CocoaLumberjackSwift
 
 @objc final class HomeViewController: UIViewController {
     private var quickAlbumsLoader: SUSQuickAlbumsLoader?
-    private var serverShuffleLoader: SUSServerShuffleLoader?
+    private var serverShuffleLoader: ServerShuffleLoader?
     private var dataTask: URLSessionDataTask?
     
     private let searchBarContainer = UIView()
@@ -97,7 +97,6 @@ import CocoaLumberjackSwift
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxOff), name: ISMSNotification_JukeboxDisabled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(initSongInfo), name: ISMSNotification_SongPlaybackStarted)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(initSongInfo), name: ISMSNotification_ServerSwitched)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(performServerShuffle(notification:)), name: "performServerShuffle")
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification.rawValue)
     }
     
@@ -138,21 +137,20 @@ import CocoaLumberjackSwift
         }
         
         serverShuffleButton.setAction { [unowned self] in
-            let folders = SUSRootFoldersDAO.folderDropdownFolders()
-            if let folders = folders {
-                if folders.count == 2 {
-                    self.performServerShuffle(notification: nil)
+            let mediaFolders = Store.shared.mediaFolders()
+            if mediaFolders.count > 0 {
+                // 2 media folders means the "All Media Folders" option plus one folder aka only 1 actual media folder
+                if mediaFolders.count == 2 {
+                    performServerShuffle(mediaFolderId: MediaFolder.allFoldersId)
                 } else {
                     let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                     sheet.addAction(UIAlertAction(title: "All Media Folders", style: .default) { action in
-                        let userInfo = ["folderId": -1]
-                        NotificationCenter.postNotificationToMainThread(name: "performServerShuffle", userInfo: userInfo)
+                        performServerShuffle(mediaFolderId: MediaFolder.allFoldersId)
                     })
-                    for (folderId, name) in folders {
-                        if let folderId = folderId as? NSNumber, let name = name as? String, folderId != -1 {
-                            sheet.addAction(UIAlertAction(title: name, style: .default) { action in
-                                let userInfo = ["folderId": folderId]
-                                NotificationCenter.postNotificationToMainThread(name: "performServerShuffle", userInfo: userInfo)
+                    for mediaFolder in mediaFolders {
+                        if mediaFolder.id != MediaFolder.allFoldersId {
+                            sheet.addAction(UIAlertAction(title: mediaFolder.name, style: .default) { action in
+                                performServerShuffle(mediaFolderId: mediaFolder.id)
                             })
                         }
                     }
@@ -302,9 +300,9 @@ import CocoaLumberjackSwift
         loader.startLoad()
     }
     
-    @objc private func performServerShuffle(notification: Notification?) {
+    private func performServerShuffle(mediaFolderId: Int) {
         ViewObjects.shared().showAlbumLoadingScreen(AppDelegate.shared().window, sender: self)
-        let loader = SUSServerShuffleLoader()
+        let loader = ServerShuffleLoader()
         loader.callback = { success, _ in
             ViewObjects.shared().hideLoadingScreen()
             if success {
@@ -319,7 +317,7 @@ import CocoaLumberjackSwift
             }
             self.serverShuffleLoader = nil
         }
-        loader.folderId = notification?.userInfo?["folderId"] as? NSNumber
+        loader.mediaFolderId = mediaFolderId
         loader.startLoad()
         serverShuffleLoader = loader
     }

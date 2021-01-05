@@ -11,27 +11,13 @@
 
 @interface FolderDropdownControl : UIView
 
-@property (nonatomic, strong) CALayer *arrowImage;
-@property (nonatomic) CGFloat sizeIncrease;
-@property (nonatomic, strong) NSMutableDictionary *updatedfolders;	
-@property (nonatomic, strong) UILabel *selectedFolderLabel;
-@property (nonatomic, strong) NSMutableArray *labels;
-@property (nonatomic, strong) NSDictionary *folders;
-@property (nonatomic) BOOL isOpen;
-@property (nonatomic, strong) NSNumber *selectedFolderId;
-@property (nonatomic, strong) UIButton *dropdownButton;
-
-// Colors
-@property (nonatomic, strong) UIColor *borderColor;
-@property (nonatomic, strong) UIColor *textColor;
-@property (nonatomic, strong) UIColor *lightColor;
-@property (nonatomic, strong) UIColor *darkColor;
-
 @property (nonatomic, weak) id<FolderDropdownDelegate> delegate;
 
-- (void)selectFolderWithId:(NSNumber *)folderId;
+- (void)selectFolderWithId:(NSInteger)folderId;
 - (void)updateFolders;
 - (void)closeDropdown;
 - (void)closeDropdownFast;
+
+- (BOOL)hasMultipleMediaFolders;
 
 @end

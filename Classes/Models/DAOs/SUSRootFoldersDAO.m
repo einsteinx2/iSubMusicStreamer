@@ -15,7 +15,7 @@
 #import "Swift.h"
 
 @interface SUSRootFoldersDAO() {
-    NSNumber *_selectedFolderId;
+    NSInteger _selectedFolderId;
 }
 @end
 
@@ -26,6 +26,7 @@
 - (instancetype)initWithDelegate:(id <SUSLoaderDelegate>)delegate {
     if ((self = [super init])) {
 		_delegate = delegate;
+        _selectedFolderId = -1;
     }    
     return self;
 }
@@ -47,8 +48,8 @@
 
 - (NSString *)tableModifier {
 	NSString *tableModifier = @"_all";
-	if (self.selectedFolderId != nil && [self.selectedFolderId intValue] != -1) {
-		tableModifier = [NSString stringWithFormat:@"_%@", [self.selectedFolderId stringValue]];
+	if (self.selectedFolderId != -1) {
+		tableModifier = [NSString stringWithFormat:@"_%ld", (long)self.selectedFolderId];
 	}
 	return tableModifier;
 }
@@ -206,48 +207,15 @@
 
 #pragma mark Public DAO Methods
 
-+ (void)setFolderDropdownFolders:(NSDictionary *)folders {
-    [self.dbQueue inDatabase:^(FMDatabase *db) {
-		[db executeUpdate:@"DROP TABLE IF EXISTS rootFolderDropdownCache"];
-		[db executeUpdate:@"CREATE TABLE rootFolderDropdownCache (id INTEGER, name TEXT)"];
-		
-		for (NSNumber *folderId in folders.allKeys) {
-			[db executeUpdate:@"INSERT INTO rootFolderDropdownCache VALUES (?, ?)", folderId, folders[folderId]];
-		}
-	}];
+- (NSInteger)selectedFolderId {
+    return _selectedFolderId;
 }
 
-+ (NSDictionary *)folderDropdownFolders {
-    if (![self.dbQueue tableExists:@"rootFolderDropdownCache"]) return nil;
-	
-	__block NSMutableDictionary *folders = [NSMutableDictionary dictionaryWithCapacity:0];
-	[self.dbQueue inDatabase:^(FMDatabase *db) {
-		FMResultSet *result = [db executeQuery:@"SELECT * FROM rootFolderDropdownCache"];
-		while ([result next]) {
-			@autoreleasepool  {
-				NSNumber *folderId = @([result intForColumn:@"id"]);
-				NSString *folderName = [result stringForColumn:@"name"];
-				[folders setObject:folderName forKey:folderId];
-			}
-		}
-		[result close];
-	}];
-	return folders;
-}
-
-- (NSNumber *)selectedFolderId {
-	@synchronized(self) {
-        return _selectedFolderId ? _selectedFolderId : @(-1);
-	}
-}
-
-- (void)setSelectedFolderId:(NSNumber *)selectedFolderId {
-	@synchronized(self) {
-		_selectedFolderId = selectedFolderId;
-		_indexNames = nil;
-		_indexCounts = nil;
-		_indexPositions = nil;
-	}
+- (void)setSelectedFolderId:(NSInteger)selectedFolderId {
+    _selectedFolderId = selectedFolderId;
+    _indexNames = nil;
+    _indexCounts = nil;
+    _indexPositions = nil;
 }
 
 - (BOOL)isRootFolderIdCached {

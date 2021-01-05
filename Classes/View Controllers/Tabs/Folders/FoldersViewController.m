@@ -29,7 +29,7 @@
 
 - (void)createDataModel {
 	self.dataModel = [[SUSRootFoldersDAO alloc] initWithDelegate:self];
-	self.dataModel.selectedFolderId = [settingsS rootFoldersSelectedFolderId];
+	self.dataModel.selectedFolderId = settingsS.rootFoldersSelectedFolderId.integerValue;
 }
 
 - (void)viewDidLoad  {
@@ -50,7 +50,7 @@
 	// Add the pull to refresh view
     __weak FoldersViewController *weakSelf = self;
     self.tableView.refreshControl = [[RefreshControl alloc] initWithHandler:^{
-        [weakSelf loadData:[settingsS rootFoldersSelectedFolderId]];
+        [weakSelf loadData:settingsS.rootFoldersSelectedFolderId.integerValue];
     }];
     
     [self.tableView registerClass:BlurredSectionHeader.class forHeaderFooterViewReuseIdentifier:BlurredSectionHeader.reuseId];
@@ -83,7 +83,7 @@
 	
 	if (![SUSAllSongsLoader isLoading] && !viewObjectsS.isArtistsLoading) {
 		if (![self.dataModel isRootFolderIdCached]) {
-			[self loadData:[settingsS rootFoldersSelectedFolderId]];
+			[self loadData:settingsS.rootFoldersSelectedFolderId.integerValue];
 		}
 	}
 	
@@ -139,12 +139,12 @@
 	
     self.dropdown = [[FolderDropdownControl alloc] initWithFrame:CGRectMake(50, 61, 220, 40)];
     self.dropdown.delegate = self;
-    NSDictionary *dropdownFolders = [SUSRootFoldersDAO folderDropdownFolders];
-    if (dropdownFolders != nil) {
-        self.dropdown.folders = dropdownFolders;
-    } else {
-        self.dropdown.folders = [NSDictionary dictionaryWithObject:@"All Media Folders" forKey:@-1];
-    }
+//    NSDictionary *dropdownFolders = [SUSRootFoldersDAO folderDropdownFolders];
+//    if (dropdownFolders != nil) {
+//        self.dropdown.folders = dropdownFolders;
+//    } else {
+//        self.dropdown.folders = [NSDictionary dictionaryWithObject:@"All Media Folders" forKey:@-1];
+//    }
     [self.dropdown selectFolderWithId:self.dataModel.selectedFolderId];
     [self.headerView addSubview:self.dropdown];
     
@@ -181,11 +181,11 @@
     [self.tableView.refreshControl endRefreshing];
 }
 
-- (void)loadData:(NSNumber *)folderId  {
+- (void)loadData:(NSInteger)mediaFolderId  {
     [self.dropdown updateFolders];
 	viewObjectsS.isArtistsLoading = YES;
 	[viewObjectsS showAlbumLoadingScreen:appDelegateS.window sender:self];
-	self.dataModel.selectedFolderId = folderId;
+	self.dataModel.selectedFolderId = mediaFolderId;
 	[self.dataModel startLoad];
 }
 
@@ -241,11 +241,9 @@
     } completion:nil];
 }
 
-- (void)folderDropdownSelectFolder:(NSNumber *)folderId {
-	[self.dropdown selectFolderWithId:folderId];
-	 
+- (void)folderDropdownSelectFolder:(NSInteger)folderId {
 	// Save the default
-	settingsS.rootFoldersSelectedFolderId = folderId;
+	settingsS.rootFoldersSelectedFolderId = @(folderId);
 	
 	// Reload the data
 	self.dataModel.selectedFolderId = folderId;
@@ -264,7 +262,7 @@
 		[self.tableView reloadData];
 		[self removeCount];
 	}
-	[self folderDropdownSelectFolder:@-1];
+	[self folderDropdownSelectFolder:-1];
 }
 
 - (void)updateFolders {
@@ -275,7 +273,7 @@
 
 - (void)reloadAction:(id)sender {
 	if (!SUSAllSongsLoader.isLoading) {
-		[self loadData:[settingsS rootFoldersSelectedFolderId]];
+		[self loadData:settingsS.rootFoldersSelectedFolderId.integerValue];
 	} else if (settingsS.isPopupsEnabled) {
         NSString *message = @"You cannot reload the Artists tab while the Albums or Songs tabs are loading";
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Please Wait" message:message preferredStyle:UIAlertControllerStyleAlert];
@@ -458,11 +456,8 @@
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return -1;
 	
     if (index == 0) {
-        if (self.dropdown.folders == nil || [self.dropdown.folders count] == 2) {
-			[self.tableView setContentOffset:CGPointMake(0, 104) animated:NO];
-        } else {
-			[self.tableView setContentOffset:CGPointMake(0, 54) animated:NO];
-        }
+        CGFloat yOffset = self.dropdown.hasMultipleMediaFolders ? 54 : 104;
+        [self.tableView setContentOffset:CGPointMake(0, yOffset) animated:NO];
 		return -1;
     }
 	return index - 1;

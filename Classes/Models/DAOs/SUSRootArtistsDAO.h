@@ -29,11 +29,8 @@
 
 - (NSString *)tableModifier;
 
-@property (strong) NSNumber *selectedFolderId;
-@property (readonly) BOOL isRootArtistFolderIdCached;
-
-+ (void)setFolderDropdownFolders:(NSDictionary *)folders;
-+ (NSDictionary *)folderDropdownFolders;
+@property NSInteger selectedFolderId;
+@property (readonly) BOOL isRootArtistFolderIdCached; 
 
 - (instancetype)initWithDelegate:(id <SUSLoaderDelegate>)delegate;
 

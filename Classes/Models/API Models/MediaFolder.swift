@@ -10,6 +10,8 @@ import Foundation
 import GRDB
 
 @objc final class MediaFolder: NSObject, Codable {
+    @objc static let allFoldersId = -1
+    
     @objc(mediaFolderId) let id: Int
     @objc let name: String
     

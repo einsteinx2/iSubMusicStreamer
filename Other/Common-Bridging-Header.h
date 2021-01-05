@@ -47,7 +47,6 @@
 
 // Loaders
 #import "ISMSErrorDomain.h"
-#import "SUSServerShuffleLoader.h"
 #import "SUSQuickAlbumsLoader.h"
 #import "SUSStatusLoader.h"
 

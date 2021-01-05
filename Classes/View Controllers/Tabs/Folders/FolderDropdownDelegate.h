@@ -12,6 +12,6 @@
 @optional
 - (void)folderDropdownMoveViewsY:(float)y;
 - (void)folderDropdownViewsFinishedMoving;
-- (void)folderDropdownSelectFolder:(NSNumber *)folderId;
+- (void)folderDropdownSelectFolder:(NSInteger)mediaFolderId;
 
 @end

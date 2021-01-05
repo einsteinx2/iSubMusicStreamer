@@ -6,6 +6,48 @@
 //  Copyright © 2021 Ben Baron. All rights reserved.
 //
 
+// -----------------------------
+// Data Architecture Explanation
+// -----------------------------
+//
+// Goals:
+// 1. All default data accesses should be O(1) when possible
+// 2. Any additional time to process or sort data should be done during network loading when possible
+// 3. In use cases that are non-default (i.e. optional sorting or searching within a list of items),
+//    then it's acceptable to require a small loading delay to provide the functionality
+//
+// At first, it may seem like the iSub database architecture is convoluted compared to
+// standard convention. For example, rather than simple access methods that return
+// arrays of objects, all data access is organized to load record-by-record.
+//
+// While it's true that this is non-standard and less "clean" of an architecture
+// than would normally be used, the benefit to this approach is that no matter how
+// large the media library is, the access time is always O(1) rather than O(N).
+//
+// Now O(N) may not seem so bad at first, but with Subsonic media libraries, it's not
+// uncommon to have 10s or even 100s of thousands of items to display in a given view.
+//
+// Take the use case of a user with all of their album folders in the main folder list.
+// They may have 100,000 folders, meaning that if it were done in the usual way, every
+// time the Folder list is displayed, we would need to load 100,000 records into memory
+// before we can display anything. On mobile devices especially, this is non-trivial and
+// will cause a delay before the first records are shown which scales with the size of
+// the library.
+//
+// iSub was first designed for the iPhone 3G, so having O(1) load time was especially
+// important. Even with the latest iPhone models, there is still a perceivable delay
+// when loading large data sets.
+//
+// One of iSub's main goals is high-performance, specifically providing the same
+// performance regardless of whether the server contains 100 songs or a million songs.
+// Since the library is server based, the potential size is effectively
+// unlimited. If iSub were built to play local files only, or if it were connected to a
+// developer controlled library of music like Spotify or Apple Music, it could be
+// architected more cleanly, but since the library layout is not known and of potentially
+// unlimited size, the decision has been made to intentially complicate the data model
+// layer to achieve instant loading times of all views after initially loaded from the network.
+
+
 import Foundation
 import GRDB
 import CocoaLumberjackSwift
@@ -33,7 +75,7 @@ fileprivate let debugPrintAllQueries = false
         // Shared configuration for all databases
         var config = Configuration()
         if debugPrintAllQueries {
-            // Prints all SQL statements
+            // Print all SQL statements
             config.prepareDatabase { db in
                 db.trace { DDLogDebug($0) }
             }
@@ -41,7 +83,7 @@ fileprivate let debugPrintAllQueries = false
         
         do {
             // Server DB
-            let serverDbPath = FileSystem.databaseDirectory.appendingPathComponent(Settings.shared().serverId + ".db").path
+            let serverDbPath = FileSystem.databaseDirectory.appendingPathComponent(Settings.shared().serverId + "_grdb.db").path
             serverDb = try DatabasePool(path: serverDbPath, configuration: config)
             
             // Shared DB
@@ -56,6 +98,7 @@ fileprivate let debugPrintAllQueries = false
         }
         
         // Migrate database schema to latest
+        migrate()
     }
     
     @objc(closeAllDatabases) func close() {
@@ -166,6 +209,10 @@ fileprivate let debugPrintAllQueries = false
             DDLogError("Failed to insert media folders: \(error)")
         }
     }
+    
+    // MARK: Tag Artists
+    
+    
 }
 
 extension MediaFolder: FetchableRecord, PersistableRecord {

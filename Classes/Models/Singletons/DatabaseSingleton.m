@@ -69,6 +69,9 @@ LOG_LEVEL_ISUB_DEFAULT
 //    [self setupBookmarksDatabase];
 	
 	[self updateTableDefinitions];
+    
+    
+    [Store.shared setupDatabases];
 }
 
 - (void)setupServerDatabase {
@@ -460,7 +463,10 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self.localPlaylistsDbQueue close]; self.localPlaylistsDbQueue = nil;
 	[self.songCacheDbQueue close]; self.songCacheDbQueue = nil;
 	[self.cacheQueueDbQueue close]; self.cacheQueueDbQueue = nil;
-	[self.bookmarksDbQueue close]; self.bookmarksDbQueue = nil;	
+	[self.bookmarksDbQueue close]; self.bookmarksDbQueue = nil;
+    
+    
+    [Store.shared closeAllDatabases];
 }
 
 - (void)resetCoverArtCache {

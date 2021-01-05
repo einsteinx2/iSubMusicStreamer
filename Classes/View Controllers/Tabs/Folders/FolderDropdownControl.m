@@ -7,20 +7,36 @@
 //
 
 #import "FolderDropdownControl.h"
-#import "SUSDropdownFolderLoader.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Defines.h"
 #import "SUSRootFoldersDAO.h"
-#import "SUSRootArtistsDAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
 #define HEIGHT 40
 
 @interface FolderDropdownControl() {
-    __strong NSDictionary *_folders;
+    NSArray<MediaFolder*> *_mediaFolders;
 }
+@property (nonatomic, strong) NSArray<MediaFolder*> *mediaFolders;
+@property (nonatomic) NSInteger selectedFolderId;
+
+@property (nonatomic, strong) CALayer *arrowImage;
+@property (nonatomic) CGFloat sizeIncrease;
+@property (nonatomic, strong) UILabel *selectedFolderLabel;
+@property (nonatomic, strong) NSMutableData *receivedData;
+@property (nonatomic, strong) NSURLConnection *connection;
+@property (nonatomic, strong) NSMutableArray *labels;
+@property (nonatomic) BOOL isOpen;
+
+@property (nonatomic, strong) UIButton *dropdownButton;
+
+// Colors
+@property (nonatomic, strong) UIColor *borderColor;
+@property (nonatomic, strong) UIColor *labelTextColor;
+@property (nonatomic, strong) UIColor *labelBackgroundColor;
 @end
 
 @implementation FolderDropdownControl
@@ -28,130 +44,116 @@ LOG_LEVEL_ISUB_DEFAULT
 // TODO: Redraw border color after switching between light/dark mode
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-		_selectedFolderId = @-1;
-		_folders = [SUSRootFoldersDAO folderDropdownFolders];
-		_labels = [[NSMutableArray alloc] init];
-		_isOpen = NO;
+        _selectedFolderId = -1;
+        _mediaFolders = [Store.shared mediaFolders];
+        _labels = [[NSMutableArray alloc] init];
+        _isOpen = NO;
         _borderColor = UIColor.systemGrayColor;
-        _textColor   = UIColor.labelColor;
-        _lightColor  = [UIColor colorNamed:@"isubBackgroundColor"];
-        _darkColor   = [UIColor colorNamed:@"isubBackgroundColor"];
-		
-		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		self.userInteractionEnabled = YES;
+        _labelTextColor = UIColor.labelColor;
+        _labelBackgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
+        
+        self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        self.userInteractionEnabled = YES;
         self.backgroundColor = UIColor.systemGray5Color;
-		self.layer.borderColor = _borderColor.CGColor;
-		self.layer.borderWidth = 2.0;
-		self.layer.cornerRadius = 8;
-		self.layer.masksToBounds = YES;
-		
-		_selectedFolderLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, self.frame.size.width - 10, HEIGHT)];
-		_selectedFolderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		_selectedFolderLabel.userInteractionEnabled = YES;
-		_selectedFolderLabel.backgroundColor = [UIColor clearColor];
-        _selectedFolderLabel.textColor = _textColor;
-		_selectedFolderLabel.textAlignment = NSTextAlignmentCenter;
+        self.layer.borderColor = _borderColor.CGColor;
+        self.layer.borderWidth = 2.0;
+        self.layer.cornerRadius = 8;
+        self.layer.masksToBounds = YES;
+        
+        _selectedFolderLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, self.frame.size.width - 10, HEIGHT)];
+        _selectedFolderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        _selectedFolderLabel.userInteractionEnabled = YES;
+        _selectedFolderLabel.backgroundColor = [UIColor clearColor];
+        _selectedFolderLabel.textColor = _labelTextColor;
+        _selectedFolderLabel.textAlignment = NSTextAlignmentCenter;
         _selectedFolderLabel.font = [UIFont boldSystemFontOfSize:20];
-		_selectedFolderLabel.text = @"All Media Folders";
-		[self addSubview:_selectedFolderLabel];
-		
-		UIView *arrowImageView = [[UIView alloc] initWithFrame:CGRectMake(193, 12, 18, 18)];
-		arrowImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-		[self addSubview:arrowImageView];
-		
-		_arrowImage = [[CALayer alloc] init];
-		_arrowImage.frame = CGRectMake(0, 0, 18, 18);
-		_arrowImage.contentsGravity = kCAGravityResizeAspect;
-		_arrowImage.contents = (id)[UIImage imageNamed:@"folder-dropdown-arrow"].CGImage;
-		[[arrowImageView layer] addSublayer:_arrowImage];
-		
-		_dropdownButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 220, HEIGHT)];
-		_dropdownButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		[_dropdownButton addTarget:self action:@selector(toggleDropdown:) forControlEvents:UIControlEventTouchUpInside];
+        _selectedFolderLabel.text = @"All Media Folders";
+        [self addSubview:_selectedFolderLabel];
+        
+        UIView *arrowImageView = [[UIView alloc] initWithFrame:CGRectMake(193, 12, 18, 18)];
+        arrowImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [self addSubview:arrowImageView];
+        
+        _arrowImage = [[CALayer alloc] init];
+        _arrowImage.frame = CGRectMake(0, 0, 18, 18);
+        _arrowImage.contentsGravity = kCAGravityResizeAspect;
+        _arrowImage.contents = (id)[UIImage imageNamed:@"folder-dropdown-arrow"].CGImage;
+        [[arrowImageView layer] addSublayer:_arrowImage];
+        
+        _dropdownButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 220, HEIGHT)];
+        _dropdownButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [_dropdownButton addTarget:self action:@selector(toggleDropdown:) forControlEvents:UIControlEventTouchUpInside];
         _dropdownButton.accessibilityLabel = _selectedFolderLabel.text;
         _dropdownButton.accessibilityHint = @"Switches folders";
-		[self addSubview:_dropdownButton];
-		
-		[self updateFolders];
+        [self addSubview:_dropdownButton];
+        
+        [self updateFolders];
     }
     return self;
 }
 
-NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
-    NSString *folder1 = [(NSArray*)keyVal1 objectAtIndexSafe:1];
-	NSString *folder2 = [(NSArray*)keyVal2 objectAtIndexSafe:1];
-	return [folder1 caseInsensitiveCompare:folder2];
+- (NSUInteger)indexOfMediaFolderId:(NSInteger)mediaFolderId {
+    return [self.mediaFolders indexOfObjectWithOptions:NSEnumerationConcurrent passingTest:^BOOL(MediaFolder * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.mediaFolderId == mediaFolderId) {
+            *stop = YES;
+            return YES;
+        }
+        return NO;
+    }];
 }
 
-- (NSDictionary *)folders {
-	return _folders;
+- (NSArray<MediaFolder*> *)mediaFolders {
+    return _mediaFolders;
 }
 
-- (void)setFolders:(NSDictionary *)namesAndIds {
-	// Set the property
-	_folders = namesAndIds;
-	
-	// Remove old labels
-	for (UILabel *label in self.labels) {
-		[label removeFromSuperview];
-	}
-	[self.labels removeAllObjects];
-	
-	self.sizeIncrease = _folders.count * HEIGHT;
-	
-	NSMutableArray *sortedValues = [NSMutableArray arrayWithCapacity:_folders.count];
-	for (NSNumber *key in _folders.allKeys) {
-		if ([key intValue] != -1) {
-			NSArray *keyValuePair = @[ key, _folders[key] ];
-			[sortedValues addObject:keyValuePair];
-		}
-	}
-	
-	// Sort by folder name
-	[sortedValues sortUsingFunction:folderSort2 context:NULL];
-	
-	// Add "All Media Folders" again
-	NSArray *keyValuePair = @[@"-1", @"All Media Folders"];
-	[sortedValues insertObject:keyValuePair atIndex:0];
-	
-	// Process the names and create the labels/buttons
-	for (int i = 0; i < [sortedValues count]; i++) {
-		NSString *folder   = [[sortedValues objectAtIndexSafe:i] objectAtIndexSafe:1];
-		NSUInteger tag     = [[[sortedValues objectAtIndexSafe:i] objectAtIndexSafe:0] intValue];
-		CGRect labelFrame  = CGRectMake(0, (i + 1) * HEIGHT, self.frame.size.width, HEIGHT);
-		CGRect buttonFrame = CGRectMake(0, 0, labelFrame.size.width, labelFrame.size.height);
-		
-		UILabel *folderLabel = [[UILabel alloc] initWithFrame:labelFrame];
-		folderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		folderLabel.userInteractionEnabled = YES;
-		//folderLabel.alpha = 0.0;
-		if (i % 2 == 0)
-			folderLabel.backgroundColor = self.lightColor;
-		else
-			folderLabel.backgroundColor = self.darkColor;
-		folderLabel.textColor = self.textColor;
-		folderLabel.textAlignment = NSTextAlignmentCenter;
-        folderLabel.font = [UIFont boldSystemFontOfSize:20];
-		folderLabel.text = folder;
-		folderLabel.tag = tag;
-        folderLabel.isAccessibilityElement = NO;
-		[self addSubview:folderLabel];
-		[self.labels addObject:folderLabel];
-		
-		UIButton *folderButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		folderButton.frame = buttonFrame;
-		folderButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        folderButton.accessibilityLabel = folderLabel.text;
-		[folderButton addTarget:self action:@selector(selectFolder:) forControlEvents:UIControlEventTouchUpInside];
-		[folderLabel addSubview:folderButton];
-        folderButton.isAccessibilityElement = self.isOpen;
-	}
+- (void)setMediaFolders:(NSArray<MediaFolder*> *)mediaFolders {
+    // Set the property
+    _mediaFolders = mediaFolders;
     
-    self.selectedFolderLabel.text = [self.folders objectForKey:self.selectedFolderId];
+    // Remove old labels
+    for (UILabel *label in self.labels) {
+        [label removeFromSuperview];
+    }
+    [self.labels removeAllObjects];
+    
+    self.sizeIncrease = mediaFolders.count * HEIGHT;
+    
+    // Process the names and create the labels/buttons
+    for (int i = 0; i < mediaFolders.count; i++) {
+        MediaFolder *mediaFolder = mediaFolders[i];
+        CGRect labelFrame  = CGRectMake(0, (i + 1) * HEIGHT, self.frame.size.width, HEIGHT);
+        CGRect buttonFrame = CGRectMake(0, 0, labelFrame.size.width, labelFrame.size.height);
+        
+        UILabel *folderLabel = [[UILabel alloc] initWithFrame:labelFrame];
+        folderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        folderLabel.userInteractionEnabled = YES;
+        folderLabel.backgroundColor = self.labelBackgroundColor;
+        folderLabel.textColor = self.labelTextColor;
+        folderLabel.textAlignment = NSTextAlignmentCenter;
+        folderLabel.font = [UIFont boldSystemFontOfSize:20];
+        folderLabel.text = mediaFolder.name;
+        folderLabel.tag = mediaFolder.mediaFolderId;
+        folderLabel.isAccessibilityElement = NO;
+        [self addSubview:folderLabel];
+        [self.labels addObject:folderLabel];
+        
+        UIButton *folderButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        folderButton.frame = buttonFrame;
+        folderButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        folderButton.accessibilityLabel = folderLabel.text;
+        [folderButton addTarget:self action:@selector(selectFolder:) forControlEvents:UIControlEventTouchUpInside];
+        [folderLabel addSubview:folderButton];
+        folderButton.isAccessibilityElement = self.isOpen;
+    }
+    
+    NSUInteger index = [self indexOfMediaFolderId:self.selectedFolderId];
+    if (index != NSNotFound) {
+        self.selectedFolderLabel.text = mediaFolders[index].name;
+    }
 }
 
 - (void)toggleDropdown:(id)sender {
-	if (self.isOpen) {
+    if (self.isOpen) {
         // Close it
         [UIView animateWithDuration:.25 animations:^{
             self.height -= self.sizeIncrease;
@@ -163,31 +165,31 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
                  [self.delegate folderDropdownViewsFinishedMoving];
              }
          }];
-		
-		[CATransaction begin];
-		[CATransaction setAnimationDuration:.25];
-		self.arrowImage.transform = CATransform3DMakeRotation((M_PI / 180.0) * 0.0f, 0.0f, 0.0f, 1.0f);
-		[CATransaction commit];
+        
+        [CATransaction begin];
+        [CATransaction setAnimationDuration:.25];
+        self.arrowImage.transform = CATransform3DMakeRotation((M_PI / 180.0) * 0.0f, 0.0f, 0.0f, 1.0f);
+        [CATransaction commit];
     } else {
         // Open it
-		[UIView animateWithDuration:.25 animations:^{
-			self.height += self.sizeIncrease;
+        [UIView animateWithDuration:.25 animations:^{
+            self.height += self.sizeIncrease;
             if ([self.delegate respondsToSelector:@selector(folderDropdownMoveViewsY:)]) {
                 [self.delegate folderDropdownMoveViewsY:self.sizeIncrease];
             }
-		} completion:^(BOOL finished) {
+        } completion:^(BOOL finished) {
             if ([self.delegate respondsToSelector:@selector(folderDropdownViewsFinishedMoving)]) {
                 [self.delegate folderDropdownViewsFinishedMoving];
             }
-		}];
-				
-		[CATransaction begin];
-		[CATransaction setAnimationDuration:.25];
-		self.arrowImage.transform = CATransform3DMakeRotation((M_PI / 180.0) * -60.0f, 0.0f, 0.0f, 1.0f);
-		[CATransaction commit];
-	}
-	
-	self.isOpen = !self.isOpen;
+        }];
+                
+        [CATransaction begin];
+        [CATransaction setAnimationDuration:.25];
+        self.arrowImage.transform = CATransform3DMakeRotation((M_PI / 180.0) * -60.0f, 0.0f, 0.0f, 1.0f);
+        [CATransaction commit];
+    }
+    
+    self.isOpen = !self.isOpen;
     
     // Remove accessibility when not visible
     for (UILabel *label in self.labels) {
@@ -202,60 +204,68 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
 }
 
 - (void)closeDropdown {
-	if (self.isOpen) {
-		[self toggleDropdown:nil];
-	}
+    if (self.isOpen) {
+        [self toggleDropdown:nil];
+    }
 }
 
 - (void)closeDropdownFast {
-	if (self.isOpen) {
-		self.isOpen = NO;
-		
-		self.height -= self.sizeIncrease;
+    if (self.isOpen) {
+        self.isOpen = NO;
+        
+        self.height -= self.sizeIncrease;
         if ([self.delegate respondsToSelector:@selector(folderDropdownMoveViewsY:)]) {
             [self.delegate folderDropdownMoveViewsY:-self.sizeIncrease];
         }
-		
-		self.arrowImage.transform = CATransform3DMakeRotation((M_PI / 180.0) * 0.0f, 0.0f, 0.0f, 1.0f);
-		
+        
+        self.arrowImage.transform = CATransform3DMakeRotation((M_PI / 180.0) * 0.0f, 0.0f, 0.0f, 1.0f);
+        
         if ([self.delegate respondsToSelector:@selector(folderDropdownViewsFinishedMoving)]) {
             [self.delegate folderDropdownViewsFinishedMoving];
         }
-	}
+    }
 }
 
 - (void)selectFolder:(id)sender {
-	UIButton *button = (UIButton *)sender;
-	UILabel  *label  = (UILabel *)button.superview;
-	
-	//DLog(@"Folder selected: %@ -- %i", label.text, label.tag);
-	
-	self.selectedFolderId = @(label.tag);
-	self.selectedFolderLabel.text = [self.folders objectForKey:self.selectedFolderId];
+    UIButton *button = (UIButton *)sender;
+    UILabel  *label  = (UILabel *)button.superview;
+    NSUInteger index = [self indexOfMediaFolderId:label.tag];
+    if (index == NSNotFound) {
+        return;
+    }
+    
+    //DLog(@"Folder selected: %@ -- %i", label.text, label.tag);
+    
+    self.selectedFolderId = label.tag;
+    self.selectedFolderLabel.text = self.mediaFolders[index].name;
     self.dropdownButton.accessibilityLabel = self.selectedFolderLabel.text;
-	//[self toggleDropdown:nil];
-	[self closeDropdownFast];
-	
-	// Call the delegate method
+    //[self toggleDropdown:nil];
+    [self closeDropdownFast];
+    
+    // Call the delegate method
     if ([self.delegate respondsToSelector:@selector(folderDropdownSelectFolder:)]) {
         [self.delegate folderDropdownSelectFolder:self.selectedFolderId];
     }
 }
 
-- (void)selectFolderWithId:(NSNumber *)folderId {
-	self.selectedFolderId = folderId;
-	self.selectedFolderLabel.text = [self.folders objectForKey:self.selectedFolderId];
+- (void)selectFolderWithId:(NSInteger)folderId {
+    NSUInteger index = [self indexOfMediaFolderId:folderId];
+    if (index == NSNotFound) {
+        return;
+    }
+    
+    self.selectedFolderId = folderId;
+    self.selectedFolderLabel.text = self.mediaFolders[index].name;
     self.dropdownButton.accessibilityLabel = self.selectedFolderLabel.text;
 }
 
 - (void)updateFolders {
-    SUSDropdownFolderLoader *loader = [[SUSDropdownFolderLoader alloc] init];
-    __weak SUSDropdownFolderLoader *weakLoader = loader;
-    loader.callback = ^(BOOL success, NSError *error) {
+    DropdownFolderLoader *loader = [[DropdownFolderLoader alloc] init];
+    __weak DropdownFolderLoader *weakLoader = loader;
+    loader.callback = ^(BOOL success, NSError * _Nullable error) {
         if (success) {
-            self.folders = weakLoader.updatedfolders;
-            [SUSRootFoldersDAO setFolderDropdownFolders:self.folders];
-            [SUSRootArtistsDAO setFolderDropdownFolders:self.folders];
+            self.mediaFolders = weakLoader.mediaFolders;
+            [Store.shared addWithMediaFolders:self.mediaFolders];
         } else {
             // TODO: Handle error
             // failed.  how to report this to the user?
@@ -263,9 +273,11 @@ NSInteger folderSort2(id keyVal1, id keyVal2, void *context) {
         }
     };
     [loader startLoad];
-    
-    // Save the default
-    [SUSRootFoldersDAO setFolderDropdownFolders:self.folders];
+}
+
+- (BOOL)hasMultipleMediaFolders {
+    // There will always be "All Media Folders" and at least one folder, so just check if there are more than 2 items in the array
+    return self.mediaFolders.count > 2;
 }
 
 @end
