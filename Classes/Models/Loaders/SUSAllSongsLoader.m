@@ -13,7 +13,6 @@
 #import "SavedSettings.h"
 #import "DatabaseSingleton.h"
 #import "NSError+ISMSError.h"
-#import "SUSRootFoldersDAO.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -73,7 +72,7 @@ static BOOL _isAllSongsLoading = NO;
 	[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:[NSString stringWithFormat:@"%@isAllSongsLoading", settingsS.urlString]];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
-	self.rootFolders = [[SUSRootFoldersDAO alloc] init];
+//	self.rootFolders = [[RootFoldersDAO alloc] init];
 	
 	// Check to see if we need to create the tables
 	if ((![databaseS.allAlbumsDbQueue tableExists:@"resumeLoad"] && ![databaseS.allSongsDbQueue tableExists:@"resumeLoad"]) ||

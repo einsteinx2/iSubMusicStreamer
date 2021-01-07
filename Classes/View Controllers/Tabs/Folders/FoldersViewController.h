@@ -10,7 +10,7 @@
 #import "FolderDropdownDelegate.h"
 #import "SUSLoader.h"
 
-@class SUSRootFoldersDAO, FolderDropdownControl;
+@class RootFoldersDAO, FolderDropdownControl;
 
 @interface FoldersViewController : UIViewController <UISearchBarDelegate, SUSLoaderDelegate, FolderDropdownDelegate>
 
@@ -23,6 +23,6 @@
 @property (nonatomic, strong) UILabel *countLabel;
 @property (nonatomic, strong) UILabel *reloadTimeLabel;
 @property (nonatomic, strong) FolderDropdownControl *dropdown;
-@property (nonatomic, strong) SUSRootFoldersDAO *dataModel;
+@property (nonatomic, strong) RootFoldersDAO *dataModel;
 
 @end

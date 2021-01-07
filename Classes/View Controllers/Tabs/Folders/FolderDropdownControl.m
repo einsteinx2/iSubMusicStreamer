@@ -9,7 +9,6 @@
 #import "FolderDropdownControl.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Defines.h"
-#import "SUSRootFoldersDAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 

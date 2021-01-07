@@ -111,22 +111,6 @@ LOG_LEVEL_ISUB_DEFAULT
         if (![db tableExists:@"folderMetadata"]) {
             [db executeUpdate:@"CREATE TABLE folderMetadata (folderId TEXT PRIMARY KEY, subfolderCount INTEGER, songCount INTEGER, duration INTEGER)"];
         }
-        
-        //
-        // Tag-based browsing
-        //
-        
-        // Cached albums table from tag-based browsing
-        if (![db tableExists:@"tagAlbum"]) {
-            [db executeUpdate:@"CREATE TABLE tagAlbum (artistId TEXT, albumId TEXT, itemOrder INTEGER, name TEXT, coverArtId TEXT, tagArtistName TEXT, songCount INTEGER, duration INTEGER, playCount INTEGER, year INTEGER, genre TEXT)"];
-            [db executeUpdate:@"CREATE INDEX tagAlbum__artistId_itemOrder ON tagAlbum (artistId, itemOrder)"];
-        }
-        
-        // Cached Song IDs table from tag-based browsing
-        if (![db tableExists:@"tagSong"]) {
-            [db executeUpdate:@"CREATE TABLE tagSong (albumId TEXT, itemOrder INTEGER, songId TEXT)"];
-            [db executeUpdate:@"CREATE INDEX tagSong__albumId_itemOrder ON tagSong (albumId, itemOrder)"];
-        }
     }];
     
     //

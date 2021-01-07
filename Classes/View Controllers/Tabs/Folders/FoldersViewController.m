@@ -18,7 +18,6 @@
 #import "Flurry.h"
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
-#import "SUSRootFoldersDAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import <QuartzCore/QuartzCore.h>
@@ -28,8 +27,8 @@
 #pragma mark - Lifecycle
 
 - (void)createDataModel {
-	self.dataModel = [[SUSRootFoldersDAO alloc] initWithDelegate:self];
-	self.dataModel.selectedFolderId = settingsS.rootFoldersSelectedFolderId.integerValue;
+    NSInteger mediaFolderId = settingsS.rootFoldersSelectedFolderId.integerValue;
+    self.dataModel = [[RootFoldersDAO alloc] initWithDelegate:self mediaFolderId:mediaFolderId];
 }
 
 - (void)viewDidLoad  {
@@ -57,7 +56,7 @@
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
     self.tableView.rowHeight = Defines.rowHeight;
 	
-    if (self.dataModel.isRootFolderIdCached) {
+    if (self.dataModel.isCached) {
 		[self addCount];
         [self.tableView setContentOffset:CGPointMake(0, 0) animated:NO];
     }
@@ -82,7 +81,7 @@
 	}
 	
 	if (![SUSAllSongsLoader isLoading] && !viewObjectsS.isArtistsLoading) {
-		if (![self.dataModel isRootFolderIdCached]) {
+		if (!self.dataModel.isCached) {
 			[self loadData:settingsS.rootFoldersSelectedFolderId.integerValue];
 		}
 	}
@@ -145,7 +144,7 @@
 //    } else {
 //        self.dropdown.folders = [NSDictionary dictionaryWithObject:@"All Media Folders" forKey:@-1];
 //    }
-    [self.dropdown selectFolderWithId:self.dataModel.selectedFolderId];
+    [self.dropdown selectFolderWithId:self.dataModel.mediaFolderId];
     [self.headerView addSubview:self.dropdown];
     
 	self.searchBar = [[UISearchBar  alloc] initWithFrame:CGRectMake(0, 111, 320, 40)];
@@ -185,7 +184,7 @@
     [self.dropdown updateFolders];
 	viewObjectsS.isArtistsLoading = YES;
 	[viewObjectsS showAlbumLoadingScreen:appDelegateS.window sender:self];
-	self.dataModel.selectedFolderId = mediaFolderId;
+	self.dataModel.mediaFolderId = mediaFolderId;
 	[self.dataModel startLoad];
 }
 
@@ -246,9 +245,9 @@
 	settingsS.rootFoldersSelectedFolderId = @(folderId);
 	
 	// Reload the data
-	self.dataModel.selectedFolderId = folderId;
+	self.dataModel.mediaFolderId = folderId;
 	self.isSearching = NO;
-	if ([self.dataModel isRootFolderIdCached]) {
+	if (self.dataModel.isCached) {
 		[self.tableView reloadData];
 		[self updateCount];
 	} else {
@@ -258,7 +257,7 @@
 
 - (void)serverSwitched {
 	[self createDataModel];
-	if (![self.dataModel isRootFolderIdCached]) {
+	if (!self.dataModel.isCached) {
 		[self.tableView reloadData];
 		[self removeCount];
 	}
@@ -300,7 +299,7 @@
     if (self.isSearching) return;
     
     self.isSearching = YES;
-    [self.dataModel clearSearchTable];
+    [self.dataModel clearSearch];
     
     [self.dropdown closeDropdownFast];
     [self.tableView setContentOffset:CGPointMake(0, 104) animated:YES];
@@ -318,12 +317,12 @@
 }
 
 - (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
+    [self.dataModel clearSearch];
     if (searchText.length > 0)  {
         [self hideSearchOverlay];
-        [self.dataModel searchForFolderName:self.searchBar.text];
+        [self.dataModel searchWithName:self.searchBar.text];
     } else {
         [self createSearchOverlay];
-        [self.dataModel clearSearchTable];
         [self.tableView setContentOffset:CGPointMake(0, 104) animated:NO];
     }
     [self.tableView reloadData];
@@ -338,7 +337,7 @@
     self.isSearching = NO;
     
     self.navigationItem.leftBarButtonItem = nil;
-    [self.dataModel clearSearchTable];
+    [self.dataModel clearSearch];
     [self.tableView reloadData];
     [self.tableView setContentOffset:CGPointMake(0, 104) animated:YES];
 }
@@ -390,14 +389,9 @@
 
 - (ISMSFolderArtist *)folderArtistAtIndexPath:(NSIndexPath *)indexPath {
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
-        return [self.dataModel folderArtistForPositionInSearch:(indexPath.row + 1)];
+        return [self.dataModel folderArtistInSearchWithIndexPath:indexPath];
     } else {
-        NSArray *indexPositions = self.dataModel.indexPositions;
-        if (indexPositions.count > indexPath.section) {
-            NSUInteger sectionStartIndex = [[indexPositions objectAtIndexSafe:indexPath.section] intValue];
-            return [self.dataModel folderArtistForPosition:(sectionStartIndex + indexPath.row)];
-        }
-        return nil;
+        return [self.dataModel folderArtistWithIndexPath:indexPath];
     }
 }
 
@@ -405,14 +399,14 @@
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
         return 1;
     }
-    return self.dataModel.indexNames.count;
+    return self.dataModel.tableSections.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
         return self.dataModel.searchCount;
-	} else if (self.dataModel.indexCounts.count > section) {
-        return [[self.dataModel.indexCounts objectAtIndexSafe:section] intValue];
+	} else if (self.dataModel.tableSections.count > section) {
+        return self.dataModel.tableSections[section].itemCount;
 	}
     return 0;
 }
@@ -429,16 +423,16 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return nil;
-    if (self.dataModel.indexNames.count == 0) return nil;
+    if (section >= self.dataModel.tableSections.count) return nil;
     
     BlurredSectionHeader *sectionHeader = [tableView dequeueReusableHeaderFooterViewWithIdentifier:BlurredSectionHeader.reuseId];
-    sectionHeader.text = [self.dataModel.indexNames objectAtIndexSafe:section];
+    sectionHeader.text = self.dataModel.tableSections[section].name;
     return sectionHeader;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return 0;
-    if (self.dataModel.indexNames.count == 0) return 0;
+    if (section >= self.dataModel.tableSections.count) return 0;
     
     return Defines.rowHeight - 5;
 }
@@ -448,7 +442,9 @@
 	
     NSMutableArray *titles = [NSMutableArray arrayWithCapacity:0];
 	[titles addObject:@"{search}"];
-	[titles addObjectsFromArray:[self.dataModel indexNames]];
+    for (TableSection *section in self.dataModel.tableSections) {
+        [titles addObject:section.name];
+    }
 	return titles;
 }
 

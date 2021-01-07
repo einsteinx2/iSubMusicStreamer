@@ -416,7 +416,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return nil;
-    if (self.dataModel.tableSections.count <= section) return nil;
+    if (section >= self.dataModel.tableSections.count) return nil;
     
     BlurredSectionHeader *sectionHeader = [tableView dequeueReusableHeaderFooterViewWithIdentifier:BlurredSectionHeader.reuseId];
     sectionHeader.text = self.dataModel.tableSections[section].name;
@@ -425,7 +425,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return 0;
-    if (self.dataModel.tableSections.count <= section) return 0;
+    if (section >= self.dataModel.tableSections.count) return 0;
     
     return Defines.rowHeight - 5;
 }

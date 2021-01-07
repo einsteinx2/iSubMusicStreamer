@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc(ISMSFolderAlbum) class FolderAlbum: NSObject, NSCopying {
+@objc(ISMSFolderAlbum) class FolderAlbum: NSObject, NSCopying, Codable {
     @objc(folderId) let id: Int
     @objc let title: String
     @objc let coverArtId: String?
