@@ -265,7 +265,8 @@ LOG_LEVEL_ISUB_DEFAULT
     loader.callback = ^(BOOL success, NSError * _Nullable error) {
         if (success) {
             self.mediaFolders = weakLoader.mediaFolders;
-            [Store.shared addWithMediaFolders:self.mediaFolders];
+            (void)[Store.shared deleteMediaFolders];
+            (void)[Store.shared addWithMediaFolders:self.mediaFolders];
         } else {
             // TODO: Handle error
             // failed.  how to report this to the user?

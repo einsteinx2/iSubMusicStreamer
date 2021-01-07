@@ -9,8 +9,11 @@
 import UIKit
 import SnapKit
 import CocoaLumberjackSwift
+import Resolver
 
 @objc final class HomeViewController: UIViewController {
+    @Injected private var store: Store
+    
     private var quickAlbumsLoader: SUSQuickAlbumsLoader?
     private var serverShuffleLoader: ServerShuffleLoader?
     private var dataTask: URLSessionDataTask?
@@ -137,7 +140,7 @@ import CocoaLumberjackSwift
         }
         
         serverShuffleButton.setAction { [unowned self] in
-            let mediaFolders = Store.shared.mediaFolders()
+            let mediaFolders = store.mediaFolders()
             if mediaFolders.count > 0 {
                 // 2 media folders means the "All Media Folders" option plus one folder aka only 1 actual media folder
                 if mediaFolders.count == 2 {

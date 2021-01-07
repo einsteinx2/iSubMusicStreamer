@@ -419,15 +419,6 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark - Root Artists Settings
 
-- (NSDate *)rootArtistsReloadTime {
-    return [_userDefaults objectForKey:[NSString stringWithFormat:@"%@rootArtistsReloadTime", self.urlString]];
-}
-
-- (void)setRootArtistsReloadTime:(NSDate *)reloadTime {
-    [_userDefaults setObject:reloadTime forKey:[NSString stringWithFormat:@"%@rootArtistsReloadTime", self.urlString]];
-    [_userDefaults synchronize];
-}
-
 - (NSNumber *)rootArtistsSelectedFolderId {
     return [_userDefaults objectForKey:[NSString stringWithFormat:@"%@rootArtistsSelectedFolder", self.urlString]];
 }

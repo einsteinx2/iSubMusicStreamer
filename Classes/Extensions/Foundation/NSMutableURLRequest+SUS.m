@@ -72,7 +72,10 @@ static NSSet *setOfVersions = nil;
 				} else if ([value isKindOfClass:[NSString class]]) {
 					// handle single value for key
 					[postString appendFormat:@"&%@=%@", [key URLQueryEncodeString], [(NSString*)value URLQueryEncodeString]];
-				}
+                } else if ([value isKindOfClass:[NSNumber class]]) {
+                    // Convert numbers to strings
+                    [postString appendFormat:@"&%@=%@", [key URLQueryEncodeString], [[(NSNumber *)value stringValue] URLQueryEncodeString]];
+                }
 			}
 		}
 	}

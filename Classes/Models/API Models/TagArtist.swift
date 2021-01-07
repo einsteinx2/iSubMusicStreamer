@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc(ISMSTagArtist) final class TagArtist: NSObject, NSCopying {
+@objc(ISMSTagArtist) final class TagArtist: NSObject, NSCopying, Codable {
     @objc(artistId) let id: String
     @objc let name: String
     @objc let coverArtId: String?

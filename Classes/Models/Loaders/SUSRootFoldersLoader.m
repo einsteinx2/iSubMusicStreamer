@@ -134,7 +134,7 @@
          
      }];
     return [folderCount intValue];
-}
+} 
 
 - (void)resetRootFolderCache {
     [self.dbQueue inDatabase:^(FMDatabase *db) {

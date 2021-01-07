@@ -17,7 +17,6 @@
 #import "Flurry.h"
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
-#import "SUSRootArtistsDAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import <QuartzCore/QuartzCore.h>
@@ -27,8 +26,8 @@
 #pragma mark - Lifecycle
 
 - (void)createDataModel {
-    self.dataModel = [[SUSRootArtistsDAO alloc] initWithDelegate:self];
-    self.dataModel.selectedFolderId = settingsS.rootArtistsSelectedFolderId.integerValue;
+    NSInteger mediaFolderId = settingsS.rootArtistsSelectedFolderId.integerValue;
+    self.dataModel = [[RootArtistsDAO alloc] initWithDelegate:self mediaFolderId:mediaFolderId];
 }
 
 - (void)viewDidLoad  {
@@ -56,7 +55,7 @@
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
     self.tableView.rowHeight = Defines.rowHeight;
     
-    if (self.dataModel.isRootArtistFolderIdCached) {
+    if (self.dataModel.isCached) {
         [self addCount];
         [self.tableView setContentOffset:CGPointMake(0, 0) animated:NO];
     }
@@ -81,7 +80,7 @@
     }
     
     if (!viewObjectsS.isArtistsLoading) {
-        if (![self.dataModel isRootArtistFolderIdCached]) {
+        if (!self.dataModel.isCached) {
             [self loadData:settingsS.rootArtistsSelectedFolderId.integerValue];
         }
     }
@@ -107,7 +106,7 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     [formatter setTimeStyle:NSDateFormatterShortStyle];
-    self.reloadTimeLabel.text = [NSString stringWithFormat:@"last reload: %@", [formatter stringFromDate:[settingsS rootArtistsReloadTime]]];
+    self.reloadTimeLabel.text = [NSString stringWithFormat:@"last reload: %@", [formatter stringFromDate:self.dataModel.reloadDate]];
 }
 
 - (void)removeCount {
@@ -144,7 +143,7 @@
 //    } else {
 //        self.dropdown.folders = [NSDictionary dictionaryWithObject:@"All Media Folders" forKey:@-1];
 //    }
-    [self.dropdown selectFolderWithId:self.dataModel.selectedFolderId];
+    [self.dropdown selectFolderWithId:self.dataModel.mediaFolderId];
     [self.headerView addSubview:self.dropdown];
     
     self.searchBar = [[UISearchBar  alloc] initWithFrame:CGRectMake(0, 111, 320, 40)];
@@ -184,7 +183,7 @@
     [self.dropdown updateFolders];
     viewObjectsS.isArtistsLoading = YES;
     [viewObjectsS showAlbumLoadingScreen:appDelegateS.window sender:self];
-    self.dataModel.selectedFolderId = mediaFolderId;
+    self.dataModel.mediaFolderId = mediaFolderId;
     [self.dataModel startLoad];
 }
 
@@ -245,9 +244,9 @@
     settingsS.rootArtistsSelectedFolderId = @(mediaFolderId);
     
     // Reload the data
-    self.dataModel.selectedFolderId = mediaFolderId;
+    self.dataModel.mediaFolderId = mediaFolderId;
     self.isSearching = NO;
-    if ([self.dataModel isRootArtistFolderIdCached]) {
+    if (self.dataModel.isCached) {
         [self.tableView reloadData];
         [self updateCount];
     } else {
@@ -257,7 +256,7 @@
 
 - (void)serverSwitched {
     [self createDataModel];
-    if (![self.dataModel isRootArtistFolderIdCached]) {
+    if (!self.dataModel.isCached) {
         [self.tableView reloadData];
         [self removeCount];
     }
@@ -292,7 +291,7 @@
     if (self.isSearching) return;
     
     self.isSearching = YES;
-    [self.dataModel clearSearchTable];
+    [self.dataModel clearSearch];
     
     [self.dropdown closeDropdownFast];
     [self.tableView setContentOffset:CGPointMake(0, 104) animated:YES];
@@ -310,12 +309,12 @@
 }
 
 - (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
+    [self.dataModel clearSearch];
     if (searchText.length > 0)  {
         [self hideSearchOverlay];
-        [self.dataModel searchForArtistName:self.searchBar.text];
+        [self.dataModel searchWithName:self.searchBar.text];
     } else {
         [self createSearchOverlay];
-        [self.dataModel clearSearchTable];
         [self.tableView setContentOffset:CGPointMake(0, 104) animated:NO];
     }
     [self.tableView reloadData];
@@ -330,7 +329,7 @@
     self.isSearching = NO;
     
     self.navigationItem.leftBarButtonItem = nil;
-    [self.dataModel clearSearchTable];
+    [self.dataModel clearSearch];
     [self.tableView reloadData];
     [self.tableView setContentOffset:CGPointMake(0, 104) animated:YES];
 }
@@ -382,14 +381,9 @@
 
 - (ISMSTagArtist *)tagArtistAtIndexPath:(NSIndexPath *)indexPath {
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
-        return [self.dataModel tagArtistForPositionInSearch:(indexPath.row + 1)];
+        return [self.dataModel tagArtistInSearchWithIndexPath:indexPath];
     } else {
-        NSArray *indexPositions = self.dataModel.indexPositions;
-        if (indexPositions.count > indexPath.section) {
-            NSUInteger sectionStartIndex = [[indexPositions objectAtIndexSafe:indexPath.section] intValue];
-            return [self.dataModel tagArtistForPosition:(sectionStartIndex + indexPath.row)];
-        }
-        return nil;
+        return [self.dataModel tagArtistWithIndexPath:indexPath];
     }
 }
 
@@ -397,14 +391,14 @@
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
         return 1;
     }
-    return self.dataModel.indexNames.count;
+    return self.dataModel.tableSections.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) {
         return self.dataModel.searchCount;
-    } else if (self.dataModel.indexCounts.count > section) {
-        return [[self.dataModel.indexCounts objectAtIndexSafe:section] intValue];
+    } else if (self.dataModel.tableSections.count > section) {
+        return self.dataModel.tableSections[section].itemCount;        
     }
     return 0;
 }
@@ -422,16 +416,16 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return nil;
-    if (self.dataModel.indexNames.count == 0) return nil;
+    if (self.dataModel.tableSections.count <= section) return nil;
     
     BlurredSectionHeader *sectionHeader = [tableView dequeueReusableHeaderFooterViewWithIdentifier:BlurredSectionHeader.reuseId];
-    sectionHeader.text = [self.dataModel.indexNames objectAtIndexSafe:section];
+    sectionHeader.text = self.dataModel.tableSections[section].name;
     return sectionHeader;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if (self.isSearching && (self.dataModel.searchCount > 0 || self.searchBar.text.length > 0)) return 0;
-    if (self.dataModel.indexNames.count == 0) return 0;
+    if (self.dataModel.tableSections.count <= section) return 0;
     
     return Defines.rowHeight - 5;
 }
@@ -441,7 +435,9 @@
     
     NSMutableArray *titles = [NSMutableArray arrayWithCapacity:0];
     [titles addObject:@"{search}"];
-    [titles addObjectsFromArray:[self.dataModel indexNames]];
+    for (TableSection *section in self.dataModel.tableSections) {
+        [titles addObject:section.name];
+    }
     return titles;
 }
 
@@ -459,6 +455,20 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
     if (!indexPath) return;
     [self pushViewControllerCustom:[[TagArtistViewController alloc] initWithTagArtist:[self tagArtistAtIndexPath:indexPath]]];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (!self.isSearching || !self.dataModel.shouldContinueSearch || self.dataModel.searchCount == 0 || self.searchBar.text.length == 0) return;
+    
+    // If we're searching and we've reached the last cell, continue the search
+    if (indexPath.row == self.dataModel.searchCount - 1) {
+        [EX2Dispatch runInBackgroundAsync:^{
+            [self.dataModel continueSearch];
+            [EX2Dispatch runInMainThreadAsync:^{
+                [tableView reloadData];
+            }];
+        }];
+    }
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -6,51 +6,10 @@
 //  Copyright © 2021 Ben Baron. All rights reserved.
 //
 
-// -----------------------------
-// Data Architecture Explanation
-// -----------------------------
-//
-// Goals:
-// 1. All default data accesses should be O(1) when possible
-// 2. Any additional time to process or sort data should be done during network loading when possible
-// 3. In use cases that are non-default (i.e. optional sorting or searching within a list of items),
-//    then it's acceptable to require a small loading delay to provide the functionality
-//
-// At first, it may seem like the iSub database architecture is convoluted compared to
-// standard convention. For example, rather than simple access methods that return
-// arrays of objects, all data access is organized to load record-by-record.
-//
-// While it's true that this is non-standard and less "clean" of an architecture
-// than would normally be used, the benefit to this approach is that no matter how
-// large the media library is, the access time is always O(1) rather than O(N).
-//
-// Now O(N) may not seem so bad at first, but with Subsonic media libraries, it's not
-// uncommon to have 10s or even 100s of thousands of items to display in a given view.
-//
-// Take the use case of a user with all of their album folders in the main folder list.
-// They may have 100,000 folders, meaning that if it were done in the usual way, every
-// time the Folder list is displayed, we would need to load 100,000 records into memory
-// before we can display anything. On mobile devices especially, this is non-trivial and
-// will cause a delay before the first records are shown which scales with the size of
-// the library.
-//
-// iSub was first designed for the iPhone 3G, so having O(1) load time was especially
-// important. Even with the latest iPhone models, there is still a perceivable delay
-// when loading large data sets.
-//
-// One of iSub's main goals is high-performance, specifically providing the same
-// performance regardless of whether the server contains 100 songs or a million songs.
-// Since the library is server based, the potential size is effectively
-// unlimited. If iSub were built to play local files only, or if it were connected to a
-// developer controlled library of music like Spotify or Apple Music, it could be
-// architected more cleanly, but since the library layout is not known and of potentially
-// unlimited size, the decision has been made to intentially complicate the data model
-// layer to achieve instant loading times of all views after initially loaded from the network.
-
-
 import Foundation
 import GRDB
 import CocoaLumberjackSwift
+import Resolver
 
 // Enable this to debug queries
 fileprivate let debugPrintAllQueries = false
@@ -58,8 +17,8 @@ fileprivate let debugPrintAllQueries = false
 // Make available to Obj-C
 @objc final class Store: NSObject {
     
-    // Once the app is 100% Swift, switch to dependency injection with Resolver
-    @objc static let shared = Store()
+    // Temporary accessor for Objective-C classes using Resolver under the hood
+    @objc static var shared: Store { Resolver.main.resolve() }
     
     // Per server database, contains only records specific to the active server
     private var serverDb: DatabasePool!
@@ -122,10 +81,48 @@ fileprivate let debugPrintAllQueries = false
             
             // Initial schema creation
             migrator.registerMigration("initialSchema") { db in
+                //
                 // MediaFolder
+                //
+                
                 try db.create(table: MediaFolder.databaseTableName) { t in
-                    t.column("id", .integer).notNull()
+                    t.column("id", .integer).notNull().unique()
                     t.column("name", .text).notNull()
+                }
+                
+                //
+                // Tag Artist
+                //
+                
+                // Shared table of unique artist records
+                try db.create(table: TagArtist.databaseTableName) { t in
+                    t.column("id", .text).notNull().primaryKey()
+                    t.column("name", .text).notNull().indexed()
+                    t.column("coverArtId", .text)
+                    t.column("artistImageUrl", .text)
+                    t.column("albumCount", .integer).notNull()
+                }
+                
+                // Cache of tag artist IDs for each media folder for display
+                try db.create(table: "tagArtistList") { t in
+                    t.autoIncrementedPrimaryKey("rowid")
+                    t.column("mediaFolderId", .integer).notNull()
+                    t.column("tagArtistId", .integer).notNull().indexed()
+                }
+                
+                // Cache of section indexes for display
+                try db.create(table: "tagArtistTableSection") { t in
+                    t.column("mediaFolderId", .integer).notNull().indexed()
+                    t.column("name", .text).notNull()
+                    t.column("position", .integer).notNull()
+                    t.column("itemCount", .integer).notNull()
+                }
+                
+                // Cache of tag artist loading metadata for display
+                try db.create(table: "tagArtistListMetadata") { t in
+                    t.column("mediaFolderId", .integer).notNull().unique()
+                    t.column("itemCount", .integer).notNull()
+                    t.column("reloadDate", .datetime).notNull()
                 }
             }
             
@@ -180,7 +177,7 @@ fileprivate let debugPrintAllQueries = false
     @objc func mediaFolders() -> [MediaFolder] {
         do {
             return try serverDb.read { db in
-                try MediaFolder.selectAll(db)                
+                try MediaFolder.all().fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select all media folders: \(error)")
@@ -188,41 +185,187 @@ fileprivate let debugPrintAllQueries = false
         }
     }
     
-    @objc func deleteMusicFolders() {
+    @objc func deleteMediaFolders() -> Bool {
         do {
             return try serverDb.write { db in
                 try MediaFolder.deleteAll(db)
+                return true
             }
         } catch {
             DDLogError("Failed to delete all media folders: \(error)")
+            return false
         }
     }
     
-    @objc func add(mediaFolders: [MediaFolder]) {
+    @objc func add(mediaFolders: [MediaFolder]) -> Bool {
         do {
             return try serverDb.write { db in
                 for mediaFolder in mediaFolders {
                     try mediaFolder.insert(db)
                 }
+                return true
             }
         } catch {
             DDLogError("Failed to insert media folders: \(error)")
+            return false
         }
     }
     
     // MARK: Tag Artists
     
+    @objc func resetTagArtistCache(mediaFolderId: Int) {
+        do {
+            try serverDb.write { db in
+                try db.execute(literal: "DELETE FROM tagArtistList WHERE mediaFolderId = \(mediaFolderId)")
+                try db.execute(literal: "DELETE FROM tagArtistTableSection WHERE mediaFolderId = \(mediaFolderId)")
+                try db.execute(literal: "DELETE FROM tagArtistListMetadata WHERE mediaFolderId = \(mediaFolderId)")
+            }
+        } catch {
+            DDLogError("Failed to reset tag artist caches: \(error)")
+        }
+    }
     
+    @objc func tagArtistIds(mediaFolderId: Int) -> [String] {
+        do {
+            return try serverDb.read { db in
+                let sql: SQLLiteral = """
+                    SELECT tagArtistId
+                    FROM tagArtistList
+                    WHERE mediaFolderId = \(mediaFolderId)
+                    ORDER BY rowid ASC
+                    """
+                return try SQLRequest<String>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select tag artist IDs for media folder \(mediaFolderId): \(error)")
+            return []
+        }
+    }
+    
+    @objc func tagArtist(id: String) -> TagArtist? {
+        do {
+            return try serverDb.read { db in
+                try TagArtist.filter(key: id).fetchOne(db)
+            }
+        } catch {
+            DDLogError("Failed to select tag artist \(id): \(error)")
+            return nil
+        }
+    }
+    
+    @objc func add(tagArtist: TagArtist, mediaFolderId: Int) -> Bool {
+        do {
+            return try serverDb.write { db in
+                // Insert or update shared artist record
+                try tagArtist.save(db)
+                
+                // Insert artist id into list cache
+                let sql: SQLLiteral = """
+                    INSERT INTO tagArtistList
+                    (mediaFolderId, tagArtistId)
+                    VALUES (\(mediaFolderId), \(tagArtist.id))
+                    """
+                try db.execute(literal: sql)
+                return true
+            }
+        } catch {
+            DDLogError("Failed to insert tag artist \(tagArtist) in media folder \(mediaFolderId): \(error)")
+            return false
+        }
+    }
+    
+    @objc func tagArtistSections(mediaFolderId: Int) -> [TableSection] {
+        do {
+            return try serverDb.read { db in
+                let sql: SQLLiteral = """
+                    SELECT *
+                    FROM tagArtistTableSection
+                    WHERE mediaFolderId = \(mediaFolderId)
+                    """
+                return try SQLRequest<TableSection>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select tag artist table sections for media folder \(mediaFolderId): \(error)")
+            return [TableSection]()
+        }
+    }
+    
+    @objc func add(tagArtistSection section: TableSection) -> Bool {
+        do {
+            return try serverDb.write { db in
+                // Insert artist id into list cache
+                let sql: SQLLiteral = """
+                    INSERT INTO tagArtistTableSection
+                    (mediaFolderId, name, position, itemCount)
+                    VALUES (\(section.mediaFolderId), \(section.name), \(section.position), \(section.itemCount))
+                    """
+                try db.execute(literal: sql)
+                return true
+            }
+        } catch {
+            DDLogError("Failed to insert tag artist section \(section) in media folder \(section.mediaFolderId): \(error)")
+            return false
+        }
+    }
+    
+    @objc func tagArtistMetadata(mediaFolderId: Int) -> RootListMetadata? {
+        do {
+            return try serverDb.read { db in
+                let sql: SQLLiteral = """
+                    SELECT *
+                    FROM tagArtistListMetadata
+                    WHERE mediaFolderId = \(mediaFolderId)
+                    """
+                return try SQLRequest<RootListMetadata>(literal: sql).fetchOne(db)
+            }
+        } catch {
+            DDLogError("Failed to select tag artist metadata for media folder \(mediaFolderId): \(error)")
+            return nil
+        }
+    }
+    
+    @objc func add(tagArtistListMetadata metadata: RootListMetadata) -> Bool {
+        do {
+            return try serverDb.write { db in
+                let sql: SQLLiteral = """
+                    INSERT INTO tagArtistListMetadata
+                    (mediaFolderId, itemCount, reloadDate)
+                    VALUES (\(metadata.mediaFolderId), \(metadata.itemCount), \(metadata.reloadDate))
+                    """
+                try db.execute(literal: sql)
+                return true
+            }
+        } catch {
+            DDLogError("Failed to insert tag artist list metadata in media folder \(metadata.mediaFolderId): \(error)")
+            return false
+        }
+    }
+    
+    // Returns a list of matching tag artist IDs
+    @objc func search(tagArtistName name: String, mediaFolderId: Int, offset: Int, limit: Int) -> [String] {
+        do {
+            return try serverDb.read { db in
+                let searchTerm = "%\(name)%"
+                let sql: SQLLiteral = """
+                    SELECT tagArtistId
+                    FROM tagArtistList
+                    JOIN \(TagArtist.self)
+                    ON tagArtistList.tagArtistId = \(TagArtist.self).id
+                    WHERE tagArtistList.mediaFolderId = \(mediaFolderId)
+                    AND \(TagArtist.self).name LIKE \(searchTerm)
+                    LIMIT \(limit) OFFSET \(offset)
+                    """
+                DDLogVerbose("TEST ARTIST SEARCH QUERY:\n\(sql)\n")
+                return try SQLRequest<String>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to search for tag artist \(name) in media folder \(mediaFolderId): \(error)")
+            return []
+        }
+    }
 }
 
-extension MediaFolder: FetchableRecord, PersistableRecord {
-    static func selectAll(_ db: Database) throws -> [MediaFolder] {
-        let request = SQLRequest<MediaFolder>("SELECT * FROM \(self)")
-        return try request.fetchAll(db)
-    }
-    
-    static func deleteAll(_ db: Database) throws {
-        let query: SQLLiteral = "DELETE FROM \(self)"
-        try db.execute(literal: query)
-    }
-}
+extension MediaFolder: FetchableRecord, PersistableRecord { }
+extension TableSection: FetchableRecord, PersistableRecord { }
+extension RootListMetadata: FetchableRecord, PersistableRecord { }
+extension TagArtist: FetchableRecord, PersistableRecord { }

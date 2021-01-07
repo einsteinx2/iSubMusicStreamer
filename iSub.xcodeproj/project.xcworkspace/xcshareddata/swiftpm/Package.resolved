@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "Resolver",
+        "repositoryURL": "https://github.com/hmlongco/Resolver.git",
+        "state": {
+          "branch": null,
+          "revision": "f1f7c1040b3fb0029324a7b2bcc3d64b435840ac",
+          "version": "1.3.0"
+        }
+      },
+      {
         "package": "SnapKit",
         "repositoryURL": "https://github.com/SnapKit/SnapKit.git",
         "state": {
