@@ -10,7 +10,7 @@ import Foundation
 
 @objc(ISMSFolderAlbum) class FolderAlbum: NSObject, NSCopying, Codable {
     @objc(folderId) let id: Int
-    @objc let title: String
+    @objc let name: String
     @objc let coverArtId: String?
     @objc let parentFolderId: Int
     @objc let tagArtistName: String?
@@ -18,9 +18,9 @@ import Foundation
     @objc let playCount: Int
     @objc let year: Int
     
-    @objc init(id: Int, title: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int) {
+    @objc init(id: Int, name: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int) {
         self.id = id
-        self.title = title
+        self.name = name
         self.coverArtId = coverArtId
         self.parentFolderId = parentFolderId
         self.tagArtistName = tagArtistName
@@ -32,7 +32,7 @@ import Foundation
     
     @objc init(element: RXMLElement) {
         self.id = element.attribute("id").intXML
-        self.title = element.attribute("title").stringXML
+        self.name = element.attribute("title").stringXML
         self.coverArtId = element.attribute("coverArt").stringXMLOptional
         self.parentFolderId = element.attribute("parent").intXML
         self.tagArtistName = element.attribute("artist").stringXMLOptional
@@ -44,7 +44,7 @@ import Foundation
     
     @objc init(result: FMResultSet) {
         self.id = (result.string(forColumn: "subfolderId") ?? "").intXML
-        self.title = result.string(forColumn: "title") ?? ""
+        self.name = result.string(forColumn: "title") ?? ""
         self.coverArtId = result.string(forColumn: "coverArtId")
         self.parentFolderId = (result.string(forColumn: "folderId") ?? "").intXML
         self.tagArtistName = result.string(forColumn: "tagArtistName")
@@ -55,16 +55,16 @@ import Foundation
     }
     
     @objc func copy(with zone: NSZone? = nil) -> Any {
-        return FolderAlbum(id: id, title: title, coverArtId: coverArtId, parentFolderId: parentFolderId, tagArtistName: tagArtistName, tagAlbumName: tagAlbumName, playCount: playCount, year: year)
+        return FolderAlbum(id: id, name: name, coverArtId: coverArtId, parentFolderId: parentFolderId, tagArtistName: tagArtistName, tagAlbumName: tagAlbumName, playCount: playCount, year: year)
     }
     
     @objc override var description: String {
-        return "\(super.description): id: \(id), title: \(title), coverArtId: \(coverArtId ?? "nil"), parentFolderId: \(parentFolderId), tagArtistName: \(tagArtistName ?? "nil"), tagAlbumName: \(tagAlbumName ?? "nil"), playCount: \(playCount), year: \(year)"
+        return "\(super.description): id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), parentFolderId: \(parentFolderId), tagArtistName: \(tagArtistName ?? "nil"), tagAlbumName: \(tagAlbumName ?? "nil"), playCount: \(playCount), year: \(year)"
     }
 }
 
 @objc extension FolderAlbum: TableCellModel {
-    var primaryLabelText: String? { return title }
+    var primaryLabelText: String? { return name }
     var secondaryLabelText: String? { return nil }
     var durationLabelText: String? { return nil }
     var isCached: Bool { return false }

@@ -8,28 +8,33 @@
 
 import Foundation
 import CocoaLumberjackSwift
+import Resolver
 
 typealias FolderAlbumHandler = (_ folderAlbum: FolderAlbum) -> ()
-typealias SongHandler = (_ song: Song) -> ()
+typealias SongHandler = (_ song: NewSong) -> ()
 
 final class SubfolderLoader: SUSLoader {
+    @Injected private var store: Store
+    
     override var type: SUSLoaderType { return SUSLoaderType_SubFolders }
     
-    let folderId: Int
+    let parentFolderId: Int
     private(set) var folderMetadata: FolderMetadata?
+    private(set) var folderAlbumIds = [Int]()
+    private(set) var songIds = [Int]()
     
     var onProcessFolderAlbum: FolderAlbumHandler?
     var onProcessSong: SongHandler?
     
-    init(folderId: Int, callback: LoaderCallback? = nil, folderAlbumHandler: FolderAlbumHandler? = nil, songHandler: SongHandler? = nil) {
-        self.folderId = folderId
+    init(parentFolderId: Int, callback: LoaderCallback? = nil, folderAlbumHandler: FolderAlbumHandler? = nil, songHandler: SongHandler? = nil) {
+        self.parentFolderId = parentFolderId
         self.onProcessFolderAlbum = folderAlbumHandler
         self.onProcessSong = songHandler
         super.init(callback: callback)
     }
     
     override func createRequest() -> URLRequest {
-        return NSMutableURLRequest(susAction: "getMusicDirectory", parameters: ["id": folderId]) as URLRequest
+        return NSMutableURLRequest(susAction: "getMusicDirectory", parameters: ["id": parentFolderId]) as URLRequest
     }
     
     override func processResponse() {
@@ -42,29 +47,32 @@ final class SubfolderLoader: SUSLoader {
             if let error = root.child("error"), error.isValid {
                 informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
             } else {
-                if resetDb() {
+                if store.resetFolderAlbumCache(parentFolderId: parentFolderId) {
                     var songCount = 0
                     var duration = 0
                     
-                    var subfolders = [FolderAlbum]()//NSMutableArray()
+                    var folderAlbums = [FolderAlbum]()
+                    folderAlbumIds.removeAll()
+                    songIds.removeAll()
                     root.iterate("directory.child") { element in
                         if element.attribute("isDir") == "true" {
                             let folderAlbum = FolderAlbum(element: element)
-                            if folderAlbum.title != ".AppleDouble" {
-                                subfolders.append(folderAlbum)
+                            if folderAlbum.name != ".AppleDouble" {
+                                folderAlbums.append(folderAlbum)
                                 
                                 // Optionally the client can do something with the folder album object
                                 self.onProcessFolderAlbum?(folderAlbum)
                             }
                         } else {
-                            let song = Song(rxmlElement: element)
-                            if song.path != nil && (Settings.shared().isVideoSupported || !song.isVideo) {
+                            let song = NewSong(element: element)
+                            if song.path != "" && (Settings.shared().isVideoSupported || !song.isVideo) {
                                 // Fix for pdfs showing in directory listing
                                 // TODO: See if this is still necessary
-                                if song.suffix?.lowercased() != "pdf" {
-                                    if self.cacheSong(folderId: String(self.folderId), song: song, itemOrder: songCount) {
+                                if song.suffix.lowercased() != "pdf" {
+                                    if self.store.add(folderSong: song) {
+                                        self.songIds.append(song.id)
                                         songCount += 1
-                                        duration += song.duration?.intValue ?? 0
+                                        duration += song.duration
                                         
                                         // Optionally the client can do something with the song object
                                         self.onProcessSong?(song)
@@ -78,19 +86,20 @@ final class SubfolderLoader: SUSLoader {
                     }
                     
                     // Hack for Subsonic 4.7 breaking alphabetical order
-                    subfolders.sort { $0.title.caseInsensitiveCompare($1.title) != .orderedDescending }
-                    var subfolderCount = 0
-                    for folderAlbum in subfolders {
-                        if cacheFolder(folderId: String(folderId), folderAlbum: folderAlbum, itemOrder: subfolderCount) {
-                            subfolderCount += 1
+                    folderAlbums.sort { $0.name.caseInsensitiveCompare($1.name) != .orderedDescending }
+                    var folderCount = 0
+                    for folderAlbum in folderAlbums {
+                        if store.add(folderAlbum: folderAlbum) {
+                            self.folderAlbumIds.append(folderAlbum.id)
+                            folderCount += 1
                         } else {
                             informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
                             return
                         }
                     }
                     
-                    let metadata = FolderMetadata(folderId: folderId, subfolderCount: subfolderCount, songCount: songCount, duration: duration)
-                    if !cacheMetadata(metadata: metadata) {
+                    let metadata = FolderMetadata(parentFolderId: parentFolderId, folderCount: folderCount, songCount: songCount, duration: duration)
+                    if !store.add(folderMetadata: metadata) {
                         informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
                         return
                     }
@@ -102,80 +111,5 @@ final class SubfolderLoader: SUSLoader {
                 }
             }
         }
-    }
-    
-    private func resetDb() -> Bool {
-        var success = true
-        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
-            if db.beginTransaction() {
-                if !db.executeUpdate("DELETE FROM folderAlbum WHERE folderId = ?", folderId) {
-                    DDLogError("[SubfolderLoader] Error resetting tagSong cache table for folderId \(folderId), failed to delete from folderAlbum - \(db.lastErrorCode()): \(db.lastErrorMessage())")
-                    db.rollback()
-                    success = false
-                    return
-                }
-                
-                if !db.executeUpdate("DELETE FROM folderSong WHERE folderId = ?", folderId) {
-                    DDLogError("[SubfolderLoader] Error resetting tagSong cache table for folderId \(folderId), failed to delete from folderSong - \(db.lastErrorCode()): \(db.lastErrorMessage())")
-                    db.rollback()
-                    success = false
-                    return
-                }
-                
-                if !db.executeUpdate("DELETE FROM folderMetadata WHERE folderId = ?", folderId) {
-                    DDLogError("[SubfolderLoader] Error resetting tagSong cache table for folderId \(folderId), failed to delete from folderMetadata - \(db.lastErrorCode()): \(db.lastErrorMessage())")
-                    db.rollback()
-                    success = false
-                    return
-                }
-                
-                if !db.commit() {
-                    DDLogError("[SubfolderLoader] Error resetting tagSong cache table for folderId \(folderId), failed to delete from folderMetadata - \(db.lastErrorCode()): \(db.lastErrorMessage())")
-                    db.rollback()
-                    success = false
-                    return
-                }
-            } else {
-                DDLogError("[SubfolderLoader] Error resetting tagSong cache table for folderId \(folderId), failed to commit transaction - \(db.lastErrorCode()): \(db.lastErrorMessage())")
-                success = false
-            }
-        }
-        return success
-    }
-    
-    private func cacheFolder(folderId: String, folderAlbum: FolderAlbum, itemOrder: Int) -> Bool {
-        var success = true
-        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
-            let query = "INSERT INTO folderAlbum (folderId, subfolderId, itemOrder, title, coverArtId, tagArtistName, tagAlbumName, playCount, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            success = db.executeUpdate(query, folderId, folderAlbum.id, itemOrder, folderAlbum.title, folderAlbum.coverArtId ?? NSNull(), folderAlbum.tagArtistName ?? NSNull(), folderAlbum.tagAlbumName ?? NSNull(), folderAlbum.playCount, folderAlbum.year)
-            if !success {
-                DDLogError("[SubfolderLoader] Error caching folderAlbum \(db.lastErrorCode()): \(db.lastErrorMessage())")
-            }
-        }
-        return success
-    }
-    
-    private func cacheSong(folderId: String, song: Song, itemOrder: Int) -> Bool {
-        var success = true
-        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
-            let query = "INSERT INTO folderSong (folderId, itemOrder, songId) VALUES (?, ?, ?)"
-            success = db.executeUpdate(query, folderId, itemOrder, song.songId ?? NSNull())
-            if !success {
-                DDLogError("[SubfolderLoader] Error caching song \(db.lastErrorCode()): \(db.lastErrorMessage())")
-            }
-        }
-        return success && song.updateMetadataCache()
-    }
-    
-    private func cacheMetadata(metadata: FolderMetadata) -> Bool {
-        var success = true
-        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
-            let query = "INSERT INTO folderMetadata (folderId, subfolderCount, songCount, duration) VALUES (?, ?, ?, ?)"
-            success = db.executeUpdate(query, metadata.folderId, metadata.subfolderCount, metadata.songCount, metadata.duration)
-            if !success {
-                DDLogError("[SubfolderLoader] Error caching metadata \(db.lastErrorCode()): \(db.lastErrorMessage())")
-            }
-        }
-        return success
     }
 }

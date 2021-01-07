@@ -77,43 +77,6 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)setupServerDatabase {
     
     //
-    // Folder and album cache
-    //
-    
-    NSString *path = [[settingsS.updatedDatabasePath stringByAppendingPathComponent:settingsS.urlStringFilesystemSafe] stringByAppendingPathExtension:@"db"];
-    self.serverDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
-    [self.serverDbQueue inDatabase:^(FMDatabase *db)  {
-        // TODO: Determine the best cache size, for now leave it at the default
-//        [db executeUpdate:@"PRAGMA cache_size = 1"];
-        
-        // Shared song table for other tables to join. This now allows all other tables that store songs to just store the song ID
-        if (![db tableExists:@"song"]) {
-            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE song (%@, UNIQUE(songId))", ISMSSong.updatedStandardSongColumnSchema]];
-        }
-        
-        //
-        // Folder-based  browsing
-        //
-        
-        // Cached albums table from folder-based browsing
-        if (![db tableExists:@"folderAlbum"]) {
-            [db executeUpdate:@"CREATE TABLE folderAlbum (folderId TEXT, subfolderId TEXT, itemOrder INTEGER, title TEXT, coverArtId TEXT, tagArtistName TEXT, tagAlbumName TEXT, playCount INTEGER, year INTEGER)"];
-            [db executeUpdate:@"CREATE INDEX folderAlbum__folderId_itemOrder ON folderAlbum (folderId, itemOrder)"];
-        }
-        
-        // Cached song IDs table from folder-based browsing
-        if (![db tableExists:@"folderSong"]) {
-            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE folderSong (folderId TEXT, itemOrder INTEGER, songId TEXT)"]];
-            [db executeUpdate:@"CREATE INDEX folderSong__folderId_itemOrder ON folderSong (folderId, itemOrder)"];
-        }
-        
-        // Cached "album" metadata from folder-based browsing
-        if (![db tableExists:@"folderMetadata"]) {
-            [db executeUpdate:@"CREATE TABLE folderMetadata (folderId TEXT PRIMARY KEY, subfolderCount INTEGER, songCount INTEGER, duration INTEGER)"];
-        }
-    }];
-    
-    //
     // Cover art cache
     //
     

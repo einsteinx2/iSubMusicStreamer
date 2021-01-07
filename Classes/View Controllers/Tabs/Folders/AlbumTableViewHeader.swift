@@ -18,15 +18,15 @@ import SnapKit
     
     @objc init(folderAlbum: FolderAlbum, tracks: Int, duration: Double) {
         super.init(frame: CGRect.zero)
-        setup(coverArtId: folderAlbum.coverArtId, artistName: folderAlbum.tagArtistName, title: folderAlbum.title, tracks: tracks, duration: duration)
+        setup(coverArtId: folderAlbum.coverArtId, artistName: folderAlbum.tagArtistName, name: folderAlbum.name, tracks: tracks, duration: duration)
     }
     
     @objc init(tagAlbum: TagAlbum) {
         super.init(frame: CGRect.zero)
-        setup(coverArtId: tagAlbum.coverArtId, artistName: tagAlbum.tagArtistName, title: tagAlbum.name, tracks: tagAlbum.songCount, duration: Double(tagAlbum.duration))
+        setup(coverArtId: tagAlbum.coverArtId, artistName: tagAlbum.tagArtistName, name: tagAlbum.name, tracks: tagAlbum.songCount, duration: Double(tagAlbum.duration))
     }
     
-    private func setup(coverArtId: String?, artistName: String?, title: String, tracks: Int, duration: Double) {
+    private func setup(coverArtId: String?, artistName: String?, name: String, tracks: Int, duration: Double) {
         backgroundColor = UIColor(named: "isubBackgroundColor")
         snp.makeConstraints { make in
             make.height.equalTo(100)
@@ -74,7 +74,7 @@ import SnapKit
             make.height.equalToSuperview().multipliedBy(0.27)
         }
         
-        albumLabel.text = title
+        albumLabel.text = name
         albumLabel.font = .systemFont(ofSize: 16)
         albumLabel.textColor = .label
         labelContainer.addSubview(albumLabel)

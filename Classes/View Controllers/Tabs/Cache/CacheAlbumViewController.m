@@ -309,12 +309,12 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 
 - (ISMSFolderAlbum *)folderAlbumAtIndexPath:(NSIndexPath *)indexPath {
     NSString *md5 = [[self.albums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:0];
-    NSString *title = [[self.albums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
+    NSString *name = [[self.albums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
     NSString *coverArtId = [databaseS.songCacheDbQueue stringForQuery:@"SELECT coverArtId FROM cachedSongs WHERE md5 = ?", md5];
-    return [[ISMSFolderAlbum alloc] initWithId:@""
-                                         title:title ? title : @""
+    return [[ISMSFolderAlbum alloc] initWithId:0
+                                         name:name ?: @""
                                     coverArtId:coverArtId
-                                parentFolderId:@""
+                                parentFolderId:0
                                  tagArtistName:self.artistName
                                   tagAlbumName:nil
                                      playCount:0
@@ -497,7 +497,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
             [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
             [EX2Dispatch runInBackgroundAsync:^{
                 NSMutableArray *newSegments = [NSMutableArray arrayWithArray:self.segments];
-                [newSegments addObject:folderAlbum.title];
+                [newSegments addObject:folderAlbum.name];
                 
                 NSUInteger segment = [newSegments count];
                 
@@ -534,7 +534,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
             [viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Deleting"];
             [EX2Dispatch runInBackgroundAsync:^{
                 NSMutableArray *newSegments = [NSMutableArray arrayWithArray:self.segments];
-                [newSegments addObject:folderAlbum.title];
+                [newSegments addObject:folderAlbum.name];
                 
                 NSUInteger segment = [newSegments count];
 

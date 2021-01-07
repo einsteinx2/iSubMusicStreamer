@@ -14,7 +14,7 @@ import Resolver
 @objc final class HomeViewController: UIViewController {
     @Injected private var store: Store
     
-    private var quickAlbumsLoader: SUSQuickAlbumsLoader?
+    private var quickAlbumsLoader: QuickAlbumsLoader?
     private var serverShuffleLoader: ServerShuffleLoader?
     private var dataTask: URLSessionDataTask?
     
@@ -280,7 +280,7 @@ import Resolver
     
     private func loadQuickAlbums(modifier: String, title: String) {
         ViewObjects.shared().showAlbumLoadingScreen(AppDelegate.shared().window, sender: self)
-        let loader = SUSQuickAlbumsLoader()
+        let loader = QuickAlbumsLoader()
         loader.callback = { _, error in
             ViewObjects.shared().hideLoadingScreen()
             if let error = error {
@@ -293,7 +293,7 @@ import Resolver
                 let controller = HomeAlbumViewController(nibName: "HomeAlbumViewController", bundle: nil)
                 controller.modifier = modifier
                 controller.title = title
-                controller.folderAlbums = loader.folderAlbums
+                controller.folderAlbums = NSMutableArray(array: loader.folderAlbums)
                 self.pushCustom(controller)
             }
             self.quickAlbumsLoader = nil

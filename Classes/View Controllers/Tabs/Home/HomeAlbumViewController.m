@@ -10,7 +10,6 @@
 #import "FolderAlbumViewController.h"
 #import "ServerListViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
-#import "SUSQuickAlbumsLoader.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "SavedSettings.h"
@@ -58,7 +57,7 @@
 	self.isLoading = YES;
 	self.offset += 20;
     
-    self.loader = [[SUSQuickAlbumsLoader alloc] initWithDelegate:self];
+    self.loader = [[QuickAlbumsLoader alloc] initWithDelegate:self];
     self.loader.modifier = self.modifier;
     self.loader.offset = self.offset;
     [self.loader startLoad];
@@ -98,7 +97,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
 	return self.folderAlbums.count + 1;
 }
-
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {

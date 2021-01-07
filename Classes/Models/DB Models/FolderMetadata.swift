@@ -8,23 +8,16 @@
 
 import Foundation
 
-struct FolderMetadata {
-    let folderId: Int
-    let subfolderCount: Int
+struct FolderMetadata: Codable {
+    let parentFolderId: Int
+    let folderCount: Int
     let songCount: Int
     let duration: Int
     
-    init(folderId: Int, subfolderCount: Int, songCount: Int, duration: Int) {
-        self.folderId = folderId
-        self.subfolderCount = subfolderCount
+    init(parentFolderId: Int, folderCount: Int, songCount: Int, duration: Int) {
+        self.parentFolderId = parentFolderId
+        self.folderCount = folderCount
         self.songCount = songCount
         self.duration = duration
-    }
-    
-    init(result: FMResultSet) {
-        self.folderId = result.long(forColumn: "folderId")
-        self.subfolderCount = result.long(forColumn: "subfolderCount")
-        self.songCount = result.long(forColumn: "songCount")
-        self.duration = result.long(forColumn: "duration")
     }
 }

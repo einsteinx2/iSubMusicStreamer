@@ -85,6 +85,8 @@ fileprivate let debugPrintAllQueries = false
                 try TagArtist.createInitialSchema(db)
                 try TagAlbum.createInitialSchema(db)
                 try FolderArtist.createInitialSchema(db)
+                try FolderAlbum.createInitialSchema(db)
+                try FolderMetadata.createInitialSchema(db)
                 try NewSong.createInitialSchema(db)
             }
             

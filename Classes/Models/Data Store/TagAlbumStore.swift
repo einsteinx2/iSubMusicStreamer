@@ -31,8 +31,8 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
             t.column(TagAlbum.Column.tagArtistName, .text)
             t.column(TagAlbum.Column.songCount, .integer).notNull()
             t.column(TagAlbum.Column.duration, .integer).notNull()
-            t.column(TagAlbum.Column.playCount, .integer).notNull()
-            t.column(TagAlbum.Column.year, .integer).notNull()
+            t.column(TagAlbum.Column.playCount, .integer)
+            t.column(TagAlbum.Column.year, .integer)
             t.column(TagAlbum.Column.genre, .text)
         }
         
@@ -53,7 +53,7 @@ extension Store {
                 return true
             }
         } catch {
-            DDLogError("Failed to reset tag artist caches: \(error)")
+            DDLogError("Failed to delete tag albums for tag artist \(tagArtistId): \(error)")
             return false
         }
     }
@@ -150,10 +150,10 @@ extension Store {
     func add(tagSong song: NewSong) -> Bool {
         do {
             return try serverDb.write { db in
-                // Insert or update shared artist record
+                // Insert or update shared song record
                 try song.save(db)
                 
-                // Insert artist id into list cache
+                // Insert song id into list cache
                 let sql: SQLLiteral = """
                     INSERT INTO tagSongList
                     (tagAlbumId, songId)

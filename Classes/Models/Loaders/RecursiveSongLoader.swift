@@ -85,7 +85,7 @@ import Foundation
         
         folderIds.remove(at: 0)
         
-        subfolderLoader = SubfolderLoader(folderId: folderId, callback: { [unowned self] success, error in
+        subfolderLoader = SubfolderLoader(parentFolderId: folderId, callback: { [unowned self] success, error in
             if success {
                 self.subfolderLoader = nil
                 self.loadNextFolder()
@@ -142,12 +142,13 @@ import Foundation
 //        }
     }
     
-    private func handleSong(song: Song) {
-        if isQueue {
-            song.addToCurrentPlaylistDbQueue()
-        } else if isDownload {
-            song.addToCacheQueueDbQueue()
-        }
+    private func handleSong(song: NewSong) {
+        fatalError("implement this")
+//        if isQueue {
+//            song.addToCurrentPlaylistDbQueue()
+//        } else if isDownload {
+//            song.addToCacheQueueDbQueue()
+//        }
     }
     
     private func loadingFailed(success: Bool, error: Error?) {

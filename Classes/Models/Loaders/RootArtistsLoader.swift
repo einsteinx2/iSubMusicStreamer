@@ -33,8 +33,9 @@ final class RootArtistsLoader: SUSLoader {
     override func processResponse() {
         guard let receivedData = receivedData else { return }
         
-        var sections = [TableSection]()
-        var artistIds = [Int]()
+        metadata = nil
+        tableSections.removeAll()
+        tagArtistIds.removeAll()
         let root = RXMLElement(fromXMLData: receivedData)
         if !root.isValid {
             informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
@@ -54,7 +55,7 @@ final class RootArtistsLoader: SUSLoader {
                             // Add the artist to the DB
                             let tagArtist = TagArtist(element: artist)
                             if self.store.add(tagArtist: tagArtist, mediaFolderId: self.mediaFolderId) {
-                                artistIds.append(tagArtist.id)
+                                self.tagArtistIds.append(tagArtist.id)
                                 rowCount += 1
                                 sectionCount += 1
                             }
@@ -65,7 +66,7 @@ final class RootArtistsLoader: SUSLoader {
                                                    position: rowIndex,
                                                    itemCount: sectionCount)
                         if self.store.add(tagArtistSection: section) {
-                            sections.append(section)
+                            self.tableSections.append(section)
                         }
                     }
                     
@@ -74,8 +75,6 @@ final class RootArtistsLoader: SUSLoader {
                     _ = store.add(tagArtistListMetadata: metadata)
                     
                     self.metadata = metadata
-                    self.tableSections = sections
-                    self.tagArtistIds = artistIds
                     informDelegateLoadingFinished()
                 } else {
                     informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))

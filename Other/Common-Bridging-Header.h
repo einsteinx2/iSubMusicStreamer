@@ -47,7 +47,6 @@
 
 // Loaders
 #import "ISMSErrorDomain.h"
-#import "SUSQuickAlbumsLoader.h"
 #import "SUSStatusLoader.h"
 
 // DAOs

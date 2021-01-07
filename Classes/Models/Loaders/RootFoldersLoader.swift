@@ -14,9 +14,9 @@ final class RootFoldersLoader: SUSLoader {
     
     var mediaFolderId = MediaFolder.allFoldersId
     
-    var metadata: RootListMetadata?
-    var tableSections = [TableSection]()
-    var folderArtistIds = [Int]()
+    private(set) var metadata: RootListMetadata?
+    private(set) var tableSections = [TableSection]()
+    private(set) var folderArtistIds = [Int]()
     
     // MARK: SUSLoader Overrides
     
@@ -33,8 +33,9 @@ final class RootFoldersLoader: SUSLoader {
     override func processResponse() {
         guard let receivedData = receivedData else { return }
         
-        var sections = [TableSection]()
-        var folderIds = [Int]()
+        metadata = nil
+        tableSections.removeAll()
+        folderArtistIds.removeAll()
         let root = RXMLElement(fromXMLData: receivedData)
         if !root.isValid {
             informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
@@ -52,7 +53,7 @@ final class RootFoldersLoader: SUSLoader {
                     root.iterate("indexes.shortcut") { e in
                         let shortcut = FolderArtist(element: e)
                         if self.store.add(folderArtist: shortcut, mediaFolderId: self.mediaFolderId) {
-                            folderIds.append(shortcut.id)
+                            self.folderArtistIds.append(shortcut.id)
                             rowCount += 1
                             sectionCount += 1
                         }
@@ -63,7 +64,7 @@ final class RootFoldersLoader: SUSLoader {
                                                    position: rowIndex,
                                                    itemCount: sectionCount)
                         if store.add(folderArtistSection: section) {
-                            sections.append(section)
+                            self.tableSections.append(section)
                         }
                     }
                     
@@ -76,7 +77,7 @@ final class RootFoldersLoader: SUSLoader {
                             let folderArtist = FolderArtist(element: artist)
                             // Prevent inserting .AppleDouble folders
                             if folderArtist.name != ".AppleDouble" && self.store.add(folderArtist: folderArtist, mediaFolderId: self.mediaFolderId) {
-                                folderIds.append(folderArtist.id)
+                                self.folderArtistIds.append(folderArtist.id)
                                 rowCount += 1
                                 sectionCount += 1
                             }
@@ -87,7 +88,7 @@ final class RootFoldersLoader: SUSLoader {
                                                    position: rowIndex,
                                                    itemCount: sectionCount)
                         if self.store.add(folderArtistSection: section) {
-                            sections.append(section)
+                            self.tableSections.append(section)
                         }
                     }
                     
@@ -96,8 +97,6 @@ final class RootFoldersLoader: SUSLoader {
                     _ = store.add(folderArtistListMetadata: metadata)
                     
                     self.metadata = metadata
-                    self.tableSections = sections
-                    self.folderArtistIds = folderIds
                     informDelegateLoadingFinished()
                 } else {
                     informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))

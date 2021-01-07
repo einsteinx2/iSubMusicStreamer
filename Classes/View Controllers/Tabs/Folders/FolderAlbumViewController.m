@@ -32,11 +32,11 @@
 			_folderId = folderArtist.folderId;
 			_folderArtist = folderArtist;
 		} else {
-			self.title = folderAlbum.title;
+			self.title = folderAlbum.name;
 			_folderId = folderAlbum.folderId;
 			_folderAlbum = folderAlbum;
 		}
-        _dataModel = [[SubfolderDAO alloc] initWithFolderId:_folderId delegate:self];
+        _dataModel = [[SubfolderDAO alloc] initWithParentFolderId:_folderId delegate:self];
 		
         if (self.dataModel.hasLoaded) {
             [self.tableView reloadData];
@@ -109,7 +109,7 @@
 
 // Autolayout solution described here: https://medium.com/@aunnnn/table-header-view-with-autolayout-13de4cfc4343
 - (void)addHeaderAndIndex {
-	if (self.dataModel.songCount == 0 && self.dataModel.subfolderCount == 0) {
+	if (self.dataModel.songCount == 0 && self.dataModel.folderCount == 0) {
 		self.tableView.tableHeaderView = nil;
     } else {
         // Create the container view and constrain it to the table
@@ -158,9 +158,9 @@
         self.tableView.tableHeaderView = self.tableView.tableHeaderView;
     }
 	
-	self.sectionInfo = self.dataModel.sectionInfo;
-	if (self.sectionInfo)
-		[self.tableView reloadData];
+//	self.sectionInfo = self.dataModel.sectionInfo;
+//	if (self.sectionInfo)
+//		[self.tableView reloadData];
 }
 
 #pragma mark Actions
@@ -173,51 +173,55 @@
 
 #pragma mark Table view methods
 
-// Following 2 methods handle the right side index
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView  {
-	NSMutableArray *indexes = [[NSMutableArray alloc] init];
-	for (int i = 0; i < self.sectionInfo.count; i++)
-	{
-		[indexes addObject:[[self.sectionInfo objectAtIndexSafe:i] firstObject]];
-	}
-	return indexes;
-}
+//// Following 2 methods handle the right side index
+//- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView  {
+//	NSMutableArray *indexes = [[NSMutableArray alloc] init];
+//	for (int i = 0; i < self.sectionInfo.count; i++)
+//	{
+//		[indexes addObject:[[self.sectionInfo objectAtIndexSafe:i] firstObject]];
+//	}
+//	return indexes;
+//}
+//
+//- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index  {
+//	NSUInteger row = [[[self.sectionInfo objectAtIndexSafe:index] objectAtIndexSafe:1] intValue];
+//	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+//	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+//
+//	return -1;
+//}
 
-- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index  {
-	NSUInteger row = [[[self.sectionInfo objectAtIndexSafe:index] objectAtIndexSafe:1] intValue];
-	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
-	
-	return -1;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
 }
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
-	return self.dataModel.subfolderCount + self.dataModel.songCount;
+    return section == 0 ? self.dataModel.folderCount : self.dataModel.songCount;
 }
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-    if (indexPath.row < self.dataModel.subfolderCount) {
+    if (indexPath.section == 0) {
         // Album
         cell.hideSecondaryLabel = YES;
         cell.hideNumberLabel = YES;
         cell.hideCoverArt = NO;
         cell.hideDurationLabel = YES;
-        [cell updateWithModel:[self.dataModel folderAlbumWithRow:indexPath.row]];
+        [cell updateWithModel:[self.dataModel folderAlbumWithIndexPath:indexPath]];
     } else {
         // Song
         cell.hideSecondaryLabel = NO;
         cell.hideCoverArt = YES;
         cell.hideDurationLabel = NO;
-        ISMSSong *song = [self.dataModel songWithRow:indexPath.row];
+        NewSong *song = [self.dataModel songWithIndexPath:indexPath];
         [cell updateWithModel:song];
-        if (song.track == nil || song.track.intValue == 0) {
+        if (song.track == 0) {
             cell.hideNumberLabel = YES;
         } else {
             cell.hideNumberLabel = NO;
-            cell.number = song.track.intValue;
+            cell.number = song.track;
         }
     }
     return cell;
@@ -226,8 +230,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (!indexPath) return;
 	
-    if (indexPath.row < self.dataModel.subfolderCount) {
-        ISMSFolderAlbum *folderAlbum = [self.dataModel folderAlbumWithRow:indexPath.row];
+    if (indexPath.row < self.dataModel.folderCount) {
+        ISMSFolderAlbum *folderAlbum = [self.dataModel folderAlbumWithIndexPath:indexPath];
         FolderAlbumViewController *folderAlbumViewController = [[FolderAlbumViewController alloc] initWithFolderArtist:nil orFolderAlbum:folderAlbum];
         [self pushViewControllerCustom:folderAlbumViewController];
     } else {
@@ -239,10 +243,10 @@
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row < self.dataModel.subfolderCount) {
-        return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel folderAlbumWithRow:indexPath.row]];
+    if (indexPath.row < self.dataModel.folderCount) {
+        return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel folderAlbumWithIndexPath:indexPath]];
     } else {
-        ISMSSong *song = [self.dataModel songWithRow:indexPath.row];
+        NewSong *song = [self.dataModel songWithIndexPath:indexPath];
         if (!song.isVideo) {
             return [SwipeAction downloadAndQueueConfigWithModel:song];
         }
