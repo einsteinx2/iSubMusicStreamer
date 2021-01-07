@@ -86,43 +86,96 @@ fileprivate let debugPrintAllQueries = false
                 //
                 
                 try db.create(table: MediaFolder.databaseTableName) { t in
-                    t.column("id", .integer).notNull().unique()
-                    t.column("name", .text).notNull()
+                    t.column(MediaFolder.Column.id, .integer).notNull().primaryKey()
+                    t.column(MediaFolder.Column.name, .text).notNull()
                 }
                 
                 //
-                // Tag Artist
+                // TagArtist
                 //
                 
                 // Shared table of unique artist records
                 try db.create(table: TagArtist.databaseTableName) { t in
-                    t.column("id", .text).notNull().primaryKey()
-                    t.column("name", .text).notNull().indexed()
-                    t.column("coverArtId", .text)
-                    t.column("artistImageUrl", .text)
-                    t.column("albumCount", .integer).notNull()
+                    t.column(TagArtist.Column.id, .integer).notNull().primaryKey()
+                    t.column(TagArtist.Column.name, .text).notNull().indexed()
+                    t.column(TagArtist.Column.coverArtId, .text)
+                    t.column(TagArtist.Column.artistImageUrl, .text)
+                    t.column(TagArtist.Column.albumCount, .integer).notNull()
                 }
                 
                 // Cache of tag artist IDs for each media folder for display
-                try db.create(table: "tagArtistList") { t in
-                    t.autoIncrementedPrimaryKey("rowid")
-                    t.column("mediaFolderId", .integer).notNull()
-                    t.column("tagArtistId", .integer).notNull().indexed()
+                try db.create(table: TagArtist.Table.tagArtistList) { t in
+                    t.autoIncrementedPrimaryKey(Column.rowID).notNull()
+                    t.column(TagArtist.RelatedColumn.mediaFolderId, .integer).notNull().indexed()
+                    t.column(TagArtist.RelatedColumn.tagArtistId, .integer).notNull()
                 }
                 
                 // Cache of section indexes for display
-                try db.create(table: "tagArtistTableSection") { t in
-                    t.column("mediaFolderId", .integer).notNull().indexed()
-                    t.column("name", .text).notNull()
-                    t.column("position", .integer).notNull()
-                    t.column("itemCount", .integer).notNull()
+                try db.create(table: TagArtist.Table.tagArtistTableSection) { t in
+                    t.column(TableSection.Column.mediaFolderId, .integer).notNull().indexed()
+                    t.column(TableSection.Column.name, .text).notNull()
+                    t.column(TableSection.Column.position, .integer).notNull()
+                    t.column(TableSection.Column.itemCount, .integer).notNull()
                 }
                 
                 // Cache of tag artist loading metadata for display
-                try db.create(table: "tagArtistListMetadata") { t in
-                    t.column("mediaFolderId", .integer).notNull().unique()
-                    t.column("itemCount", .integer).notNull()
-                    t.column("reloadDate", .datetime).notNull()
+                try db.create(table: TagArtist.Table.tagArtistListMetadata) { t in
+                    t.column(RootListMetadata.Column.mediaFolderId, .integer).notNull().primaryKey()
+                    t.column(RootListMetadata.Column.itemCount, .integer).notNull()
+                    t.column(RootListMetadata.Column.reloadDate, .datetime).notNull()
+                }
+                
+                //
+                // TagAlbum
+                //
+                
+                // Shared table of unique album records
+                try db.create(table: TagAlbum.databaseTableName) { t in
+                    t.column(TagAlbum.Column.id, .integer).notNull().primaryKey()
+                    t.column(TagAlbum.Column.name, .text).notNull()
+                    t.column(TagAlbum.Column.coverArtId, .text)
+                    t.column(TagAlbum.Column.tagArtistId, .integer).indexed()
+                    t.column(TagAlbum.Column.tagArtistName, .text)
+                    t.column(TagAlbum.Column.songCount, .integer).notNull()
+                    t.column(TagAlbum.Column.duration, .integer).notNull()
+                    t.column(TagAlbum.Column.playCount, .integer).notNull()
+                    t.column(TagAlbum.Column.year, .integer).notNull()
+                    t.column(TagAlbum.Column.genre, .text)
+                }
+                
+                // Cache of song IDs for each tag album for display
+                try db.create(table: TagAlbum.Table.tagSongList) { t in
+                    t.autoIncrementedPrimaryKey(Column.rowID).notNull()
+                    t.column(TagAlbum.RelatedColumn.tagAlbumId, .integer).notNull().indexed()
+                    t.column(TagAlbum.RelatedColumn.songId, .integer).notNull()
+                }
+                
+                //
+                // Song
+                //
+                
+                // Shared table of unique song records
+                try db.create(table: NewSong.databaseTableName) { t in
+                    t.column(NewSong.Column.id, .integer).notNull().primaryKey()
+                    t.column(NewSong.Column.title, .text).notNull()
+                    t.column(NewSong.Column.coverArtId, .text)
+                    t.column(NewSong.Column.parentFolderId, .integer)
+                    t.column(NewSong.Column.tagArtistName, .text)
+                    t.column(NewSong.Column.tagAlbumName, .text)
+                    t.column(NewSong.Column.playCount, .integer)
+                    t.column(NewSong.Column.year, .integer)
+                    t.column(NewSong.Column.tagArtistId, .integer)
+                    t.column(NewSong.Column.tagAlbumId, .integer)
+                    t.column(NewSong.Column.genre, .text)
+                    t.column(NewSong.Column.path, .text).notNull()
+                    t.column(NewSong.Column.suffix, .text).notNull()
+                    t.column(NewSong.Column.transcodedSuffix, .text)
+                    t.column(NewSong.Column.duration, .integer).notNull()
+                    t.column(NewSong.Column.bitrate, .integer).notNull()
+                    t.column(NewSong.Column.track, .integer).notNull()
+                    t.column(NewSong.Column.discNumber, .integer)
+                    t.column(NewSong.Column.size, .integer).notNull()
+                    t.column(NewSong.Column.isVideo, .boolean).notNull()
                 }
             }
             
@@ -211,30 +264,32 @@ fileprivate let debugPrintAllQueries = false
         }
     }
     
-    // MARK: Tag Artists
+    // MARK: TagArtist
     
-    @objc func resetTagArtistCache(mediaFolderId: Int) {
+    func deleteTagArtists(mediaFolderId: Int) -> Bool {
         do {
-            try serverDb.write { db in
+            return try serverDb.write { db in
                 try db.execute(literal: "DELETE FROM tagArtistList WHERE mediaFolderId = \(mediaFolderId)")
                 try db.execute(literal: "DELETE FROM tagArtistTableSection WHERE mediaFolderId = \(mediaFolderId)")
                 try db.execute(literal: "DELETE FROM tagArtistListMetadata WHERE mediaFolderId = \(mediaFolderId)")
+                return true
             }
         } catch {
             DDLogError("Failed to reset tag artist caches: \(error)")
+            return false
         }
     }
     
-    @objc func tagArtistIds(mediaFolderId: Int) -> [String] {
+    func tagArtistIds(mediaFolderId: Int) -> [Int] {
         do {
             return try serverDb.read { db in
                 let sql: SQLLiteral = """
                     SELECT tagArtistId
                     FROM tagArtistList
                     WHERE mediaFolderId = \(mediaFolderId)
-                    ORDER BY rowid ASC
+                    ORDER BY \(Column.rowID) ASC
                     """
-                return try SQLRequest<String>(literal: sql).fetchAll(db)
+                return try SQLRequest<Int>(literal: sql).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select tag artist IDs for media folder \(mediaFolderId): \(error)")
@@ -242,7 +297,7 @@ fileprivate let debugPrintAllQueries = false
         }
     }
     
-    @objc func tagArtist(id: String) -> TagArtist? {
+    func tagArtist(id: Int) -> TagArtist? {
         do {
             return try serverDb.read { db in
                 try TagArtist.filter(key: id).fetchOne(db)
@@ -253,7 +308,7 @@ fileprivate let debugPrintAllQueries = false
         }
     }
     
-    @objc func add(tagArtist: TagArtist, mediaFolderId: Int) -> Bool {
+    func add(tagArtist: TagArtist, mediaFolderId: Int) -> Bool {
         do {
             return try serverDb.write { db in
                 // Insert or update shared artist record
@@ -274,7 +329,7 @@ fileprivate let debugPrintAllQueries = false
         }
     }
     
-    @objc func tagArtistSections(mediaFolderId: Int) -> [TableSection] {
+    func tagArtistSections(mediaFolderId: Int) -> [TableSection] {
         do {
             return try serverDb.read { db in
                 let sql: SQLLiteral = """
@@ -290,7 +345,7 @@ fileprivate let debugPrintAllQueries = false
         }
     }
     
-    @objc func add(tagArtistSection section: TableSection) -> Bool {
+    func add(tagArtistSection section: TableSection) -> Bool {
         do {
             return try serverDb.write { db in
                 // Insert artist id into list cache
@@ -308,7 +363,7 @@ fileprivate let debugPrintAllQueries = false
         }
     }
     
-    @objc func tagArtistMetadata(mediaFolderId: Int) -> RootListMetadata? {
+    func tagArtistMetadata(mediaFolderId: Int) -> RootListMetadata? {
         do {
             return try serverDb.read { db in
                 let sql: SQLLiteral = """
@@ -324,7 +379,7 @@ fileprivate let debugPrintAllQueries = false
         }
     }
     
-    @objc func add(tagArtistListMetadata metadata: RootListMetadata) -> Bool {
+    func add(tagArtistListMetadata metadata: RootListMetadata) -> Bool {
         do {
             return try serverDb.write { db in
                 let sql: SQLLiteral = """
@@ -342,7 +397,7 @@ fileprivate let debugPrintAllQueries = false
     }
     
     // Returns a list of matching tag artist IDs
-    @objc func search(tagArtistName name: String, mediaFolderId: Int, offset: Int, limit: Int) -> [String] {
+    func search(tagArtistName name: String, mediaFolderId: Int, offset: Int, limit: Int) -> [Int] {
         do {
             return try serverDb.read { db in
                 let searchTerm = "%\(name)%"
@@ -356,16 +411,235 @@ fileprivate let debugPrintAllQueries = false
                     LIMIT \(limit) OFFSET \(offset)
                     """
                 DDLogVerbose("TEST ARTIST SEARCH QUERY:\n\(sql)\n")
-                return try SQLRequest<String>(literal: sql).fetchAll(db)
+                return try SQLRequest<Int>(literal: sql).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to search for tag artist \(name) in media folder \(mediaFolderId): \(error)")
             return []
         }
     }
+    
+    // MARK: TagAlbum
+    
+    func deleteTagAlbums(tagArtistId: Int) -> Bool {
+        do {
+            return try serverDb.write { db in
+                try db.execute(literal: "DELETE FROM \(TagAlbum.self) WHERE tagArtistId = \(tagArtistId)")
+                return true
+            }
+        } catch {
+            DDLogError("Failed to reset tag artist caches: \(error)")
+            return false
+        }
+    }
+    
+    // TODO: Complete this query when needed for UI
+//    func tagAlbumIds(mediaFolderId: Int, orderBy: TagAlbum.Column = .name) -> [String] {
+//        do {
+//            return try serverDb.read { db in
+//                let sql: SQLLiteral = """
+//                    SELECT id
+//                    FROM \(TagAlbum.self)
+//                    JOIN
+//                    WHERE mediaFolderId = \(mediaFolderId)
+//                    ORDER BY \(orderBy) ASC
+//                    """
+//                return try SQLRequest<String>(literal: sql).fetchAll(db)
+//            }
+//        } catch {
+//            DDLogError("Failed to select tag album IDs for media folder \(mediaFolderId) ordered by \(orderBy): \(error)")
+//            return []
+//        }
+//    }
+    
+    func tagAlbumIds(tagArtistId: Int, orderBy: TagAlbum.Column = .name) -> [Int] {
+        do {
+            return try serverDb.read { db in
+                let sql: SQLLiteral = """
+                    SELECT id
+                    FROM \(TagAlbum.self)
+                    WHERE tagArtistId = \(tagArtistId)
+                    ORDER BY \(orderBy) ASC
+                    """
+                return try SQLRequest<Int>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select tag album IDs for tag artist ID \(tagArtistId) ordered by \(orderBy): \(error)")
+            return []
+        }
+    }
+    
+    func tagAlbum(id: Int) -> TagAlbum? {
+        do {
+            return try serverDb.read { db in
+                try TagAlbum.filter(key: id).fetchOne(db)
+            }
+        } catch {
+            DDLogError("Failed to select tag album \(id): \(error)")
+            return nil
+        }
+    }
+    
+    func add(tagAlbum: TagAlbum) -> Bool {
+        do {
+            return try serverDb.write { db in
+                // Insert or update shared album record
+                try tagAlbum.save(db)
+                return true
+            }
+        } catch {
+            DDLogError("Failed to insert tag album \(tagAlbum): \(error)")
+            return false
+        }
+    }
+    
+    func songIds(tagAlbumId: Int) -> [Int] {
+        do {
+            return try serverDb.read { db in
+                let sql: SQLLiteral = """
+                    SELECT songId
+                    FROM tagSongList
+                    WHERE tagAlbumId = \(tagAlbumId)
+                    ORDER BY \(Column.rowID) ASC
+                    """
+                return try SQLRequest<Int>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select song IDs for tag album ID \(tagAlbumId): \(error)")
+            return []
+        }
+    }
+    
+    func deleteTagSongs(tagAlbumId: Int) -> Bool {
+        do {
+            return try serverDb.write { db in
+                try db.execute(literal: "DELETE FROM tagSongList WHERE tagAlbumId = \(tagAlbumId)")
+                return true
+            }
+        } catch {
+            DDLogError("Failed to reset tag album song cache: \(error)")
+            return false
+        }
+    }
+    
+    func add(tagSong song: NewSong) -> Bool {
+        do {
+            return try serverDb.write { db in
+                // Insert or update shared artist record
+                try song.save(db)
+                
+                // Insert artist id into list cache
+                let sql: SQLLiteral = """
+                    INSERT INTO tagSongList
+                    (tagAlbumId, songId)
+                    VALUES (\(song.tagAlbumId), \(song.id))
+                    """
+                try db.execute(literal: sql)
+                return true
+            }
+        } catch {
+            DDLogError("Failed to insert tag song \(song) in tag album \(song.tagAlbumId): \(error)")
+            return false
+        }
+    }
+    
+    // MARK: Song
+    
+    func song(id: Int) -> NewSong? {
+        do {
+            return try serverDb.read { db in
+                try NewSong.filter(key: id).fetchOne(db)
+            }
+        } catch {
+            DDLogError("Failed to select song \(id): \(error)")
+            return nil
+        }
+    }
+    
+    func add(song: NewSong) -> Bool {
+        do {
+            return try serverDb.write { db in
+                // Insert or update shared song record
+                try song.save(db)
+                return true
+            }
+        } catch {
+            DDLogError("Failed to insert song \(song): \(error)")
+            return false
+        }
+    }
 }
 
-extension MediaFolder: FetchableRecord, PersistableRecord { }
-extension TableSection: FetchableRecord, PersistableRecord { }
-extension RootListMetadata: FetchableRecord, PersistableRecord { }
-extension TagArtist: FetchableRecord, PersistableRecord { }
+extension TableDefinition {
+    @discardableResult
+    func column(_ columnExpression: ColumnExpression, _ type: Database.ColumnType? = nil) -> ColumnDefinition {
+        self.column(columnExpression.name, type)
+    }
+    
+    @discardableResult
+    func column(_ column: Column, _ type: Database.ColumnType? = nil) -> ColumnDefinition {
+        self.column(column.name, type)
+    }
+    
+    @discardableResult
+    public func autoIncrementedPrimaryKey(_ columnExpression: ColumnExpression, onConflict conflictResolution: Database.ConflictResolution? = nil) -> ColumnDefinition {
+        self.autoIncrementedPrimaryKey(columnExpression.name, onConflict: conflictResolution)
+    }
+    
+    @discardableResult
+    public func autoIncrementedPrimaryKey(_ column: Column, onConflict conflictResolution: Database.ConflictResolution? = nil) -> ColumnDefinition {
+        self.autoIncrementedPrimaryKey(column.name, onConflict: conflictResolution)
+    }
+}
+
+extension MediaFolder: FetchableRecord, PersistableRecord {
+    enum Column: String, ColumnExpression {
+        case id, name
+    }
+}
+
+extension TableSection: FetchableRecord, PersistableRecord {
+    enum Column: String, ColumnExpression {
+        case mediaFolderId, name, position, itemCount
+    }
+}
+
+extension RootListMetadata: FetchableRecord, PersistableRecord {
+    enum Column: String, ColumnExpression {
+        case mediaFolderId, itemCount, reloadDate
+    }
+}
+
+extension TagArtist: FetchableRecord, PersistableRecord {
+    struct Table {
+        static let tagArtistList = "tagArtistList"
+        static let tagArtistTableSection = "tagArtistTableSection"
+        static let tagArtistListMetadata = "tagArtistListMetadata"
+    }
+    enum Column: String, ColumnExpression {
+        case id, name, coverArtId, artistImageUrl, albumCount
+    }
+    enum RelatedColumn: String, ColumnExpression {
+        case mediaFolderId, tagArtistId
+    }
+}
+
+extension TagAlbum: FetchableRecord, PersistableRecord {
+    struct Table {
+        static let tagSongList = "tagSongList"
+    }
+    enum Column: String, ColumnExpression {
+        case id, name, coverArtId, tagArtistId, tagArtistName, songCount, duration, playCount, year, genre
+    }
+    enum RelatedColumn: String, ColumnExpression {
+        case tagAlbumId, songId
+    }
+}
+
+extension NewSong: FetchableRecord, PersistableRecord {
+    static var databaseTableName: String = "song"
+    
+    enum Column: String, ColumnExpression {
+        case id, title, coverArtId, parentFolderId, tagArtistName, tagAlbumName, playCount, year, tagArtistId, tagAlbumId, genre, path, suffix, transcodedSuffix, duration, bitrate, track, discNumber, size, isVideo
+    }
+}

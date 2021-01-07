@@ -31,7 +31,7 @@
         self.title = tagAlbum.name;
         self.tagAlbum = tagAlbum;
         
-        self.dataModel = [[TagAlbumDAO alloc] initWithAlbumId:tagAlbum.albumId delegate:self];
+        self.dataModel = [[TagAlbumDAO alloc] initWithTagAlbumId:tagAlbum.albumId delegate:self];
         
         if (self.dataModel.hasLoaded) {
             [self.tableView reloadData];
@@ -193,13 +193,13 @@
     cell.hideSecondaryLabel = NO;
     cell.hideCoverArt = YES;
     cell.hideDurationLabel = NO;
-    ISMSSong *song = [self.dataModel songWithRow:indexPath.row];
+    NewSong *song = [self.dataModel songWithIndexPath:indexPath];
     [cell updateWithModel:song];
-    if (song.track == nil || song.track.intValue == 0) {
+    if (song.track == 0) {
         cell.hideNumberLabel = YES;
     } else {
         cell.hideNumberLabel = NO;
-        cell.number = song.track.intValue;
+        cell.number = song.track;
     }
     return cell;
 }
@@ -214,7 +214,7 @@
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ISMSSong *song = [self.dataModel songWithRow:indexPath.row];
+    NewSong *song = [self.dataModel songWithIndexPath:indexPath];
     if (!song.isVideo) {
         return [SwipeAction downloadAndQueueConfigWithModel:song];
     }

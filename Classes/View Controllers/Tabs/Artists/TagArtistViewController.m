@@ -31,9 +31,7 @@
     if (self = [super init]) {
         self.title = tagArtist.name;
         self.tagArtist = tagArtist;
-        
-//        self.dataModel = [[SUSTagArtistDAO alloc] initWithDelegate:self andTagArtist:tagArtist];
-        self.dataModel = [[TagArtistDAO alloc] initWithArtistId:tagArtist.artistId delegate:self];
+        self.dataModel = [[TagArtistDAO alloc] initWithTagArtistId:tagArtist.artistId delegate:self];
         
         if (self.dataModel.hasLoaded) {
             [self.tableView reloadData];
@@ -180,23 +178,20 @@
     cell.hideNumberLabel = YES;
     cell.hideCoverArt = NO;
     cell.hideDurationLabel = YES;
-    [cell updateWithModel:[self.dataModel tagAlbumWithRow:indexPath.row]];
-//    [cell updateWithModel:[self.dataModel tagAlbumForTableViewRow:indexPath.row]];
+    [cell updateWithModel:[self.dataModel tagAlbumWithIndexPath:indexPath]];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (!indexPath) return;
     
-//    ISMSTagAlbum *tagAlbum = [self.dataModel tagAlbumForTableViewRow:indexPath.row];
-    ISMSTagAlbum *tagAlbum = [self.dataModel tagAlbumWithRow:indexPath.row];
+    ISMSTagAlbum *tagAlbum = [self.dataModel tagAlbumWithIndexPath:indexPath];
     TagAlbumViewController *controller = [[TagAlbumViewController alloc] initWithTagAlbum:tagAlbum];
     [self pushViewControllerCustom:controller];
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel tagAlbumForTableViewRow:indexPath.row]];
-    return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel tagAlbumWithRow:indexPath.row]];
+    return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel tagAlbumWithIndexPath:indexPath]];
 }
 
 #pragma mark - ISMSLoader delegate

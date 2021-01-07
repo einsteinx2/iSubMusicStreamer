@@ -15,13 +15,13 @@ typealias SongHandler = (_ song: Song) -> ()
 final class SubfolderLoader: SUSLoader {
     override var type: SUSLoaderType { return SUSLoaderType_SubFolders }
     
-    let folderId: String
+    let folderId: Int
     private(set) var folderMetadata: FolderMetadata?
     
     var onProcessFolderAlbum: FolderAlbumHandler?
     var onProcessSong: SongHandler?
     
-    init(folderId: String, callback: LoaderCallback? = nil, folderAlbumHandler: FolderAlbumHandler? = nil, songHandler: SongHandler? = nil) {
+    init(folderId: Int, callback: LoaderCallback? = nil, folderAlbumHandler: FolderAlbumHandler? = nil, songHandler: SongHandler? = nil) {
         self.folderId = folderId
         self.onProcessFolderAlbum = folderAlbumHandler
         self.onProcessSong = songHandler
@@ -62,7 +62,7 @@ final class SubfolderLoader: SUSLoader {
                                 // Fix for pdfs showing in directory listing
                                 // TODO: See if this is still necessary
                                 if song.suffix?.lowercased() != "pdf" {
-                                    if self.cacheSong(folderId: self.folderId, song: song, itemOrder: songCount) {
+                                    if self.cacheSong(folderId: String(self.folderId), song: song, itemOrder: songCount) {
                                         songCount += 1
                                         duration += song.duration?.intValue ?? 0
                                         
@@ -81,7 +81,7 @@ final class SubfolderLoader: SUSLoader {
                     subfolders.sort { $0.title.caseInsensitiveCompare($1.title) != .orderedDescending }
                     var subfolderCount = 0
                     for folderAlbum in subfolders {
-                        if cacheFolder(folderId: folderId, folderAlbum: folderAlbum, itemOrder: subfolderCount) {
+                        if cacheFolder(folderId: String(folderId), folderAlbum: folderAlbum, itemOrder: subfolderCount) {
                             subfolderCount += 1
                         } else {
                             informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))

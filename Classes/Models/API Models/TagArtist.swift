@@ -9,13 +9,13 @@
 import Foundation
 
 @objc(ISMSTagArtist) final class TagArtist: NSObject, NSCopying, Codable {
-    @objc(artistId) let id: String
+    @objc(artistId) let id: Int
     @objc let name: String
     @objc let coverArtId: String?
     @objc let artistImageUrl: String?
     @objc let albumCount: Int
     
-    @objc init(id: String, name: String, coverArtId: String?, artistImageUrl: String?, albumCount: Int) {
+    @objc init(id: Int, name: String, coverArtId: String?, artistImageUrl: String?, albumCount: Int) {
         self.id = id
         self.name = name
         self.coverArtId = coverArtId
@@ -25,20 +25,12 @@ import Foundation
     }
     
     @objc init(element: RXMLElement) {
-        self.id = element.attribute("id")?.clean() ?? ""
-        self.name = element.attribute("name")?.clean() ?? ""
-        self.coverArtId = element.attribute("coverArt")?.clean()
-        self.artistImageUrl = element.attribute("artistImageUrl")?.clean()
-        self.albumCount = Int(element.attribute("albumCount") ?? "0") ?? 0
+        self.id = element.attribute("id").intXML
+        self.name = element.attribute("name").stringXML
+        self.coverArtId = element.attribute("coverArt").stringXMLOptional
+        self.artistImageUrl = element.attribute("artistImageUrl").stringXMLOptional
+        self.albumCount = element.attribute("albumCount").intXML
         super.init()
-    }
-    
-    @objc init(result: FMResultSet) {
-        self.id = result.string(forColumn: "id") ?? ""
-        self.name = result.string(forColumn: "name") ?? ""
-        self.coverArtId = result.string(forColumn: "coverArtId")
-        self.artistImageUrl = result.string(forColumn: "artistImageUrl")
-        self.albumCount = result.long(forColumn: "albumCount")
     }
     
     @objc func copy(with zone: NSZone? = nil) -> Any {

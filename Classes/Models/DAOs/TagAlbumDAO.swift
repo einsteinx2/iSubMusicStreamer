@@ -8,89 +8,79 @@
 
 import Foundation
 import CocoaLumberjackSwift
+import Resolver
 
 @objc final class TagAlbumDAO: NSObject {
-    private let albumId: String
+    @Injected private var store: Store
+    
+    private let tagAlbumId: Int
     private var loader: TagAlbumLoader?
-    private var songs = [Song]()
+    private var songIds = [Int]()
 
     @objc weak var delegate: SUSLoaderDelegate?
 
-    @objc var hasLoaded: Bool { songs.count > 0 }
-    @objc var songCount: Int { songs.count }
+    @objc var hasLoaded: Bool { songIds.count > 0 }
+    @objc var songCount: Int { songIds.count }
 
-    @objc init(albumId: String, delegate: SUSLoaderDelegate?) {
-        self.albumId = albumId
+    @objc init(tagAlbumId: Int, delegate: SUSLoaderDelegate?) {
+        self.tagAlbumId = tagAlbumId
         self.delegate = delegate
         super.init()
-        loadSongs()
+        loadFromCache()
     }
 
     deinit {
         loader?.cancelLoad()
+        loader?.callback = nil
     }
 
-    @objc func song(row: Int) -> Song {
-        return songs[row]
+    @objc func song(indexPath: IndexPath) -> NewSong? {
+        guard indexPath.row < songIds.count else { return nil }
+        return store.song(id: songIds[indexPath.row])
     }
     
     @objc func playSong(row: Int) -> Song? {
-        // Clear the current playlist
-        if Settings.shared().isJukeboxEnabled {
-            DatabaseOld.shared().resetJukeboxPlaylist()
-            Jukebox.shared().clearRemotePlaylist()
-        } else {
-            DatabaseOld.shared().resetCurrentPlaylistDb()
-        }
-        
-        // Add the songs to the playlist
-        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
-            let query = """
-                INSERT INTO currentPlaylist
-                SELECT songId, itemOrder
-                FROM tagSong
-                WHERE albumId = ?
-                ORDER BY itemOrder ASC
-            """
-            if !db.executeUpdate(query, albumId) {
-                DDLogError("[TagAlbumDAO] Error inserting album \(albumId)'s songs into current playlist \(db.lastErrorCode()): \(db.lastErrorMessage())");
-            }
-        }
-        
-        // Set player defaults
-        PlayQueue.shared().isShuffle = false
-        
-        NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistSongsQueued)
-        
-        // Start the song
-        return Music.shared().playSong(atPosition: row)
+        fatalError("implement this")
+//        // Clear the current playlist
+//        if Settings.shared().isJukeboxEnabled {
+//            DatabaseOld.shared().resetJukeboxPlaylist()
+//            Jukebox.shared().clearRemotePlaylist()
+//        } else {
+//            DatabaseOld.shared().resetCurrentPlaylistDb()
+//        }
+//
+//        // Add the songs to the playlist
+//        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
+//            let query = """
+//                INSERT INTO currentPlaylist
+//                SELECT songId, itemOrder
+//                FROM tagSong
+//                WHERE albumId = ?
+//                ORDER BY itemOrder ASC
+//            """
+//            if !db.executeUpdate(query, tagAlbumId) {
+//                DDLogError("[TagAlbumDAO] Error inserting album \(tagAlbumId)'s songs into current playlist \(db.lastErrorCode()): \(db.lastErrorMessage())");
+//            }
+//        }
+//
+//        // Set player defaults
+//        PlayQueue.shared().isShuffle = false
+//
+//        NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistSongsQueued)
+//
+//        // Start the song
+//        return Music.shared().playSong(atPosition: row)
     }
-
-    private func loadSongs() {
-        songs.removeAll()
-        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
-            let query = """
-                SELECT song.*
-                FROM tagSong
-                JOIN song ON tagSong.songId = song.songId
-                WHERE tagSong.albumId = ?
-                ORDER BY tagSong.itemOrder ASC
-            """
-            if let result = db.executeQuery(query, albumId) {
-                while result.next() {
-                    songs.append(Song(result: result))
-                }
-            } else {
-                DDLogError("[TagAlbumDAO] Failed to read songs for albumId \(albumId)")
-            }
-        }
+    
+    private func loadFromCache() {
+        songIds = store.songIds(tagAlbumId: tagAlbumId)
     }
 }
 
 @objc extension TagAlbumDAO: SUSLoaderManager {
     func startLoad() {
-        loader = TagAlbumLoader(albumId: albumId) { [unowned self] success, error in
-            songs = self.loader?.songs ?? [Song]()
+        loader = TagAlbumLoader(tagAlbumId: tagAlbumId) { [unowned self] success, error in
+            songIds = self.loader?.songIds ?? []
             self.loader = nil
 
             if success {

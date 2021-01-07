@@ -9,18 +9,18 @@
 import Foundation
 
 @objc(ISMSFolderArtist) final class FolderArtist: NSObject, NSCopying {
-    @objc(folderId) let id: String
+    @objc(folderId) let id: Int
     @objc let name: String
     
-    @objc init(id: String, name: String) {
+    @objc init(id: Int, name: String) {
         self.id = id
         self.name = name
         super.init()
     }
     
     @objc init(element: RXMLElement) {
-        self.id = element.attribute("id")?.clean() ?? ""
-        self.name = element.attribute("name")?.clean() ?? ""
+        self.id =  element.attribute("id").intXML
+        self.name = element.attribute("name").stringXML
         super.init()
     }
     

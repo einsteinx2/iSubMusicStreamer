@@ -16,7 +16,7 @@ final class RootArtistsLoader: SUSLoader {
     
     var metadata: RootListMetadata?
     var tableSections = [TableSection]()
-    var tagArtistIds = [String]()
+    var tagArtistIds = [Int]()
     
     // MARK: SUSLoader Overrides
     
@@ -33,11 +33,8 @@ final class RootArtistsLoader: SUSLoader {
     override func processResponse() {
         guard let receivedData = receivedData else { return }
         
-        // Clear the database
-        store.resetTagArtistCache(mediaFolderId: mediaFolderId)
-        
         var sections = [TableSection]()
-        var artistIds = [String]()
+        var artistIds = [Int]()
         let root = RXMLElement(fromXMLData: receivedData)
         if !root.isValid {
             informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
@@ -46,39 +43,43 @@ final class RootArtistsLoader: SUSLoader {
             if let error = error, error.isValid {
                 informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
             } else {
-                var rowCount = 0
-                var sectionCount = 0
-                var rowIndex = 0
-                root.iterate("artists.index") { e in
-                    sectionCount = 0
-                    rowIndex = rowCount
-                    e.iterate("artist") { artist in
-                        // Add the artist to the DB
-                        let tagArtist = TagArtist(element: artist)
-                        if self.store.add(tagArtist: tagArtist, mediaFolderId: self.mediaFolderId) {
-                            artistIds.append(tagArtist.id)
-                            rowCount += 1
-                            sectionCount += 1
+                if store.deleteTagArtists(mediaFolderId: mediaFolderId) {
+                    var rowCount = 0
+                    var sectionCount = 0
+                    var rowIndex = 0
+                    root.iterate("artists.index") { e in
+                        sectionCount = 0
+                        rowIndex = rowCount
+                        e.iterate("artist") { artist in
+                            // Add the artist to the DB
+                            let tagArtist = TagArtist(element: artist)
+                            if self.store.add(tagArtist: tagArtist, mediaFolderId: self.mediaFolderId) {
+                                artistIds.append(tagArtist.id)
+                                rowCount += 1
+                                sectionCount += 1
+                            }
+                        }
+                        
+                        let section = TableSection(mediaFolderId: self.mediaFolderId,
+                                                   name: e.attribute("name").stringXML,
+                                                   position: rowIndex,
+                                                   itemCount: sectionCount)
+                        if self.store.add(tagArtistSection: section) {
+                            sections.append(section)
                         }
                     }
                     
-                    let section = TableSection(mediaFolderId: self.mediaFolderId,
-                                               name: e.attribute("name").cleanXML,
-                                               position: rowIndex,
-                                               itemCount: sectionCount)
-                    if self.store.add(tagArtistSection: section) {
-                        sections.append(section)
-                    }
+                    // Update the metadata
+                    let metadata = RootListMetadata(mediaFolderId: mediaFolderId, itemCount: rowCount, reloadDate: Date())
+                    _ = store.add(tagArtistListMetadata: metadata)
+                    
+                    self.metadata = metadata
+                    self.tableSections = sections
+                    self.tagArtistIds = artistIds
+                    informDelegateLoadingFinished()
+                } else {
+                    informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
                 }
-                
-                // Update the metadata
-                let metadata = RootListMetadata(mediaFolderId: mediaFolderId, itemCount: rowCount, reloadDate: Date())
-                _ = store.add(tagArtistListMetadata: metadata)
-                
-                self.metadata = metadata
-                self.tableSections = sections
-                self.tagArtistIds = artistIds
-                informDelegateLoadingFinished()
             }
         }
     }

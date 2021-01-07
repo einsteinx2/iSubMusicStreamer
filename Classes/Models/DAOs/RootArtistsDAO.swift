@@ -29,8 +29,8 @@ import Resolver
     @objc var reloadDate: Date? { metadata?.reloadDate }
     
     private var loader: RootArtistsLoader?
-    private var tagArtistIds = [String]()
-    private var searchTagArtistIds = [String]()
+    private var tagArtistIds = [Int]()
+    private var searchTagArtistIds = [Int]()
     private let searchLimit = 100
     private var searchName: String?
     @objc private(set) var shouldContinueSearch = true

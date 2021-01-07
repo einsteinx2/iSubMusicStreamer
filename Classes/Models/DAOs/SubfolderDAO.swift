@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjackSwift
 
 @objc final class SubfolderDAO: NSObject {
-    private let folderId: String
+    private let folderId: Int
     private var loader: SubfolderLoader?
     private var metadata: FolderMetadata?
     
@@ -21,7 +21,7 @@ import CocoaLumberjackSwift
     @objc var songCount: Int { metadata?.songCount ?? 0 }
     @objc var duration: Int { metadata?.duration ?? 0 }
     
-    @objc init(folderId: String, delegate: SUSLoaderDelegate?) {
+    @objc init(folderId: Int, delegate: SUSLoaderDelegate?) {
         self.folderId = folderId
         self.delegate = delegate
         super.init()
@@ -32,7 +32,7 @@ import CocoaLumberjackSwift
         loader?.cancelLoad()
     }
     
-    private func folderMetadata(folderId: String) -> FolderMetadata? {
+    private func folderMetadata(folderId: Int) -> FolderMetadata? {
         var folderMetadata: FolderMetadata?
         DatabaseOld.shared().serverDbQueue?.inDatabase { db in
             if let result = db.executeQuery("SELECT * FROM folderMetadata WHERE folderId = ?", folderId), result.next() {

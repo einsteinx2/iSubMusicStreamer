@@ -20,17 +20,17 @@ import Foundation
     private var isLoading = false
     private var isCancelled = false
     
-    private var folderIds = [String]()
-    private var artistIds = [String]()
+    private var folderIds = [Int]()
+    private var tagArtistIds = [Int]()
     
-    @objc init(folderId: String, callback: LoaderCallback?) {
+    @objc init(folderId: Int, callback: LoaderCallback?) {
         self.folderIds.append(folderId)
         self.callback = callback
         super.init()
     }
     
-    @objc init(tagArtistId: String, callback: LoaderCallback?) {
-        self.artistIds.append(tagArtistId)
+    @objc init(tagArtistId: Int, callback: LoaderCallback?) {
+        self.tagArtistIds.append(tagArtistId)
         self.callback = callback
         super.init()
     }
@@ -69,7 +69,7 @@ import Foundation
         
         if folderIds.count > 0 {
             loadNextFolder()
-        } else if artistIds.count > 0 {
+        } else if tagArtistIds.count > 0 {
             loadNextArtist()
         } else {
             isLoading = false
@@ -99,18 +99,18 @@ import Foundation
     }
     
     private func loadNextArtist() {
-        guard !isCancelled, let artistId = artistIds.first else {
+        guard !isCancelled, let tagArtistId = tagArtistIds.first else {
             finishLoad()
             return
         }
         
-        artistIds.remove(at: 0)
+        tagArtistIds.remove(at: 0)
         
-        tagArtistLoader = TagArtistLoader(artistId: artistId) { [unowned self] success, error in
+        tagArtistLoader = TagArtistLoader(tagArtistId: tagArtistId) { [unowned self] success, error in
             if success {
-                if let tagAlbums = self.tagArtistLoader?.tagAlbums {
+                if let tagAlbumIds = self.tagArtistLoader?.tagAlbumIds {
                     self.tagArtistLoader = nil
-                    self.loadAlbums(tagAlbums: tagAlbums)
+                    self.loadAlbums(tagAlbumIds: tagAlbumIds)
                     self.loadNextArtist()
                 } else {
                     // This should never happen
@@ -123,22 +123,23 @@ import Foundation
         tagArtistLoader?.startLoad()
     }
     
-    private func loadAlbums(tagAlbums: [TagAlbum]) {
-        tagAlbums.forEach { tagAlbum in
-            tagAlbumLoader = TagAlbumLoader(albumId: tagAlbum.id) { [unowned self] success, error in
-                if success {
-                    if let songs = self.tagAlbumLoader?.songs {
-                        self.tagAlbumLoader = nil
-                        songs.forEach { self.handleSong(song: $0) }
-                    } else {
-                        // This should never happen
-                        self.loadingFailed(success: success, error: nil)
-                    }
-                } else {
-                    self.loadingFailed(success: success, error: error)
-                }
-            }
-        }
+    private func loadAlbums(tagAlbumIds: [Int]) {
+        fatalError("implement this")
+//        tagAlbumIds.forEach { tagAlbumId in
+//            tagAlbumLoader = TagAlbumLoader(tagAlbumId: tagAlbumId) { [unowned self] success, error in
+//                if success {
+//                    if let songs = self.tagAlbumLoader?.songs {
+//                        self.tagAlbumLoader = nil
+//                        songs.forEach { self.handleSong(song: $0) }
+//                    } else {
+//                        // This should never happen
+//                        self.loadingFailed(success: success, error: nil)
+//                    }
+//                } else {
+//                    self.loadingFailed(success: success, error: error)
+//                }
+//            }
+//        }
     }
     
     private func handleSong(song: Song) {

@@ -8,8 +8,8 @@
 
 import Foundation
 
-@objc(ISMSTagAlbum) final class TagAlbum: NSObject, NSCopying {
-    @objc(albumId) let id: String
+@objc(ISMSTagAlbum) final class TagAlbum: NSObject, NSCopying, Codable {
+    @objc(albumId) let id: Int
     @objc let name: String
     @objc let coverArtId: String?
     @objc let tagArtistId: String?
@@ -20,12 +20,7 @@ import Foundation
     @objc let year: Int
     @objc let genre: String?
     
-    // TODO: Grab from the database
-//    @objc var tagArtist: TagArtist {
-//
-//    }
-    
-    @objc init(id: String, name: String, coverArtId: String?, tagArtistId: String?, tagArtistName: String?, songCount: Int, duration: Int, playCount: Int, year: Int, genre: String?) {
+    @objc init(id: Int, name: String, coverArtId: String?, tagArtistId: String?, tagArtistName: String?, songCount: Int, duration: Int, playCount: Int, year: Int, genre: String?) {
         self.id = id
         self.name = name
         self.coverArtId = coverArtId
@@ -40,30 +35,16 @@ import Foundation
     }
     
     @objc init(element: RXMLElement) {
-        self.id = element.attribute("id")?.clean() ?? ""
-        self.name = element.attribute("name")?.clean() ?? ""
-        self.coverArtId = element.attribute("coverArt")?.clean()
-        self.tagArtistId = element.attribute("artistId")?.clean()
-        self.tagArtistName = element.attribute("artist")?.clean()
-        self.songCount = Int(element.attribute("songCount") ?? "0") ?? 0
-        self.duration = Int(element.attribute("duration") ?? "0") ?? 0
-        self.playCount = Int(element.attribute("playCount") ?? "0") ?? 0
-        self.year = Int(element.attribute("year") ?? "0") ?? 0
-        self.genre = element.attribute("genre")?.clean()
-        super.init()
-    }
-    
-    @objc init(result: FMResultSet) {
-        self.id = result.string(forColumn: "albumId") ?? ""
-        self.name = result.string(forColumn: "name") ?? ""
-        self.coverArtId = result.string(forColumn: "coverArtId")
-        self.tagArtistId = result.string(forColumn: "artistId")
-        self.tagArtistName = result.string(forColumn: "tagArtistName")
-        self.songCount = result.long(forColumn: "songCount")
-        self.duration = result.long(forColumn: "duration")
-        self.playCount = result.long(forColumn: "playCount")
-        self.year = result.long(forColumn: "year")
-        self.genre = result.string(forColumn: "genre")
+        self.id = element.attribute("id").intXML
+        self.name = element.attribute("name").stringXML
+        self.coverArtId = element.attribute("coverArt").stringXMLOptional
+        self.tagArtistId = element.attribute("artistId").stringXMLOptional
+        self.tagArtistName = element.attribute("artist").stringXMLOptional
+        self.songCount = element.attribute("songCount").intXML
+        self.duration = element.attribute("duration").intXML
+        self.playCount = element.attribute("playCount").intXML
+        self.year = element.attribute("year").intXML
+        self.genre = element.attribute("genre").stringXML
         super.init()
     }
     

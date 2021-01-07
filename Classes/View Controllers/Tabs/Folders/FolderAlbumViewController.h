@@ -14,7 +14,7 @@
 @interface FolderAlbumViewController : UITableViewController <SUSLoaderDelegate>
 
 @property (nonatomic) BOOL isReloading;
-@property (nonatomic, copy) NSString *folderId;
+@property (nonatomic) NSInteger folderId;
 @property (nonatomic, strong) ISMSFolderArtist *folderArtist;
 @property (nonatomic, strong) ISMSFolderAlbum *folderAlbum;
 @property (nonatomic, strong) NSArray *sectionInfo;

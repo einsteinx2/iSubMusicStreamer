@@ -8,32 +8,35 @@
 
 import Foundation
 import CocoaLumberjackSwift
+import Resolver
 
 final class TagArtistLoader: SUSLoader {
+    @Injected private var store: Store
+    
     override var type: SUSLoaderType { return SUSLoaderType_TagArtist }
     
-    let artistId: String
+    let tagArtistId: Int
     
-    private(set) var tagAlbums = [TagAlbum]()
+    var tagAlbumIds = [Int]()
     
-    init(artistId: String) {
-        self.artistId = artistId
+    init(tagArtistId: Int) {
+        self.tagArtistId = tagArtistId
         super.init()
     }
     
-    init(artistId: String, callback: @escaping LoaderCallback) {
-        self.artistId = artistId
+    init(tagArtistId: Int, callback: @escaping LoaderCallback) {
+        self.tagArtistId = tagArtistId
         super.init(callback: callback)
     }
     
     override func createRequest() -> URLRequest {
-        return NSMutableURLRequest(susAction: "getArtist", parameters: ["id": artistId]) as URLRequest
+        return NSMutableURLRequest(susAction: "getArtist", parameters: ["id": tagArtistId]) as URLRequest
     }
     
     override func processResponse() {
         guard let receivedData = receivedData else { return }
         
-        tagAlbums.removeAll()
+        tagAlbumIds.removeAll()
         let root = RXMLElement(fromXMLData: receivedData)
         if !root.isValid {
             informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
@@ -41,12 +44,12 @@ final class TagArtistLoader: SUSLoader {
             if let error = root.child("error"), error.isValid {
                 informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
             } else {
-                if resetDb(artistId: artistId) {
+                if store.deleteTagAlbums(tagArtistId: tagArtistId) {
                     var albumOrder = 0
                     root.iterate("artist.album") { element in
                         let tagAlbum = TagAlbum(element: element)
-                        if self.cacheAlbum(artistId: self.artistId, tagAlbum: tagAlbum, itemOrder: albumOrder) {
-                            self.tagAlbums.append(tagAlbum)
+                        if self.store.add(tagAlbum: tagAlbum) {
+                            self.tagAlbumIds.append(tagAlbum.id)
                             albumOrder += 1
                         } else {
                             self.informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
@@ -59,28 +62,5 @@ final class TagArtistLoader: SUSLoader {
                 }
             }
         }
-    }
-    
-    private func resetDb(artistId: String) -> Bool {
-        var success = true
-        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
-            if !db.executeUpdate("DELETE FROM tagAlbum WHERE artistId = ?", artistId) {
-                DDLogError("[TagArtistLoader] Error resetting tagAlbum cache table for artistId \(artistId) - \(db.lastErrorCode()): \(db.lastErrorMessage())")
-                success = false
-            }
-        }
-        return success
-    }
-    
-    private func cacheAlbum(artistId: String, tagAlbum: TagAlbum, itemOrder: Int) -> Bool {
-        var success = true
-        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
-            let query = "INSERT INTO tagAlbum (artistId, albumId, itemOrder, name, coverArtId, tagArtistName, songCount, duration, playCount, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            success = db.executeUpdate(query, artistId, tagAlbum.id, itemOrder, tagAlbum.name, tagAlbum.coverArtId ?? NSNull(), tagAlbum.tagArtistName ?? NSNull(), tagAlbum.songCount, tagAlbum.duration, tagAlbum.playCount, tagAlbum.year)
-            if !success {
-                DDLogError("[TagArtistLoader] Error caching tagAlbum \(db.lastErrorCode()): \(db.lastErrorMessage())")
-            }
-        }
-        return success
     }
 }

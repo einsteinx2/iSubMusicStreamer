@@ -8,50 +8,46 @@
 
 import Foundation
 import CocoaLumberjackSwift
+import Resolver
 
 @objc final class TagArtistDAO: NSObject {
-    private let artistId: String
+    @Injected private var store: Store
+    
+    private let tagArtistId: Int
     private var loader: TagArtistLoader?
-    private var tagAlbums = [TagAlbum]()
+    private var tagAlbumIds = [Int]()
     
     @objc weak var delegate: SUSLoaderDelegate?
     
-    @objc var hasLoaded: Bool { tagAlbums.count > 0 }
-    @objc var albumCount: Int { tagAlbums.count }
+    @objc var hasLoaded: Bool { tagAlbumIds.count > 0 }
+    @objc var albumCount: Int { tagAlbumIds.count }
     
-    @objc init(artistId: String, delegate: SUSLoaderDelegate?) {
-        self.artistId = artistId
+    @objc init(tagArtistId: Int, delegate: SUSLoaderDelegate?) {
+        self.tagArtistId = tagArtistId
         self.delegate = delegate
         super.init()
-        loadTagAlbums()
+        loadFromCache()
     }
     
     deinit {
         loader?.cancelLoad()
+        loader?.callback = nil
     }
     
-    @objc func tagAlbum(row: Int) -> TagAlbum {
-        return tagAlbums[row]
+    @objc func tagAlbum(indexPath: IndexPath) -> TagAlbum? {
+        guard indexPath.row < tagAlbumIds.count else { return nil }
+        return store.tagAlbum(id: tagAlbumIds[indexPath.row])
     }
     
-    private func loadTagAlbums() {
-        tagAlbums.removeAll()
-        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
-            if let result = db.executeQuery("SELECT * FROM tagAlbum WHERE artistId = ? ORDER BY itemOrder ASC", artistId) {
-                while result.next() {
-                    tagAlbums.append(TagAlbum(result: result))
-                }
-            } else {
-                DDLogError("[TagArtistDAO] Failed to read albums for artistId \(artistId)")
-            }
-        }
+    private func loadFromCache() {
+        tagAlbumIds = store.tagAlbumIds(tagArtistId: tagArtistId, orderBy: .year)
     }
 }
 
 @objc extension TagArtistDAO: SUSLoaderManager {
     func startLoad() {
-        loader = TagArtistLoader(artistId: artistId) { [unowned self] success, error in
-            tagAlbums = loader?.tagAlbums ?? [TagAlbum]()
+        loader = TagArtistLoader(tagArtistId: tagArtistId) { [unowned self] success, error in
+            tagAlbumIds = loader?.tagAlbumIds ?? [Int]()
             loader = nil
             
             if success {

@@ -79,6 +79,7 @@
 #import "NSString+FileSize.h"
 #import "NSString+Clean.h"
 #import "NSError+ISMSError.h"
+#import "NSString+MD5.h"
 
 /*
  * Singletons

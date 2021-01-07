@@ -9,16 +9,16 @@
 import Foundation
 
 @objc(ISMSFolderAlbum) class FolderAlbum: NSObject, NSCopying {
-    @objc(folderId) let id: String
+    @objc(folderId) let id: Int
     @objc let title: String
     @objc let coverArtId: String?
-    @objc let parentFolderId: String
+    @objc let parentFolderId: Int
     @objc let tagArtistName: String?
     @objc let tagAlbumName: String?
     @objc let playCount: Int
     @objc let year: Int
     
-    @objc init(id: String, title: String, coverArtId: String?, parentFolderId: String, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int) {
+    @objc init(id: Int, title: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int) {
         self.id = id
         self.title = title
         self.coverArtId = coverArtId
@@ -31,22 +31,22 @@ import Foundation
     }
     
     @objc init(element: RXMLElement) {
-        self.id = element.attribute("id")?.clean() ?? ""
-        self.title = element.attribute("title")?.clean() ?? ""
-        self.coverArtId = element.attribute("coverArt")?.clean()
-        self.parentFolderId = element.attribute("parent")?.clean() ?? ""
-        self.tagArtistName = element.attribute("artist")?.clean()
-        self.tagAlbumName = element.attribute("artist")?.clean()
-        self.playCount = Int(element.attribute("playCount") ?? "0") ?? 0
-        self.year = Int(element.attribute("year") ?? "0") ?? 0
+        self.id = element.attribute("id").intXML
+        self.title = element.attribute("title").stringXML
+        self.coverArtId = element.attribute("coverArt").stringXMLOptional
+        self.parentFolderId = element.attribute("parent").intXML
+        self.tagArtistName = element.attribute("artist").stringXMLOptional
+        self.tagAlbumName = element.attribute("artist").stringXMLOptional
+        self.playCount = element.attribute("playCount").intXML
+        self.year = element.attribute("year").intXML
         super.init()
     }
     
     @objc init(result: FMResultSet) {
-        self.id = result.string(forColumn: "subfolderId") ?? ""
+        self.id = (result.string(forColumn: "subfolderId") ?? "").intXML
         self.title = result.string(forColumn: "title") ?? ""
         self.coverArtId = result.string(forColumn: "coverArtId")
-        self.parentFolderId = result.string(forColumn: "folderId") ?? ""
+        self.parentFolderId = (result.string(forColumn: "folderId") ?? "").intXML
         self.tagArtistName = result.string(forColumn: "tagArtistName")
         self.tagAlbumName = result.string(forColumn: "tagAlbumName")
         self.playCount = result.long(forColumn: "playCount")

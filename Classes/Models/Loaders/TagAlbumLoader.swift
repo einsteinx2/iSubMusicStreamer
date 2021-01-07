@@ -8,32 +8,35 @@
 
 import Foundation
 import CocoaLumberjackSwift
+import Resolver
 
 final class TagAlbumLoader: SUSLoader {
+    @Injected private var store: Store
+
     override var type: SUSLoaderType { return SUSLoaderType_TagAlbum }
     
-    let albumId: String
+    let tagAlbumId: Int
     
-    private(set) var songs = [Song]()
+    private(set) var songIds = [Int]()
     
-    init(albumId: String) {
-        self.albumId = albumId
+    init(tagAlbumId: Int) {
+        self.tagAlbumId = tagAlbumId
         super.init()
     }
     
-    init(albumId: String, callback: @escaping LoaderCallback) {
-        self.albumId = albumId
+    init(tagAlbumId: Int, callback: @escaping LoaderCallback) {
+        self.tagAlbumId = tagAlbumId
         super.init(callback: callback)
     }
     
     override func createRequest() -> URLRequest {
-        return NSMutableURLRequest(susAction: "getAlbum", parameters: ["id": albumId]) as URLRequest
+        return NSMutableURLRequest(susAction: "getAlbum", parameters: ["id": tagAlbumId]) as URLRequest
     }
     
     override func processResponse() {
         guard let receivedData = receivedData else { return }
         
-        songs.removeAll()
+        songIds.removeAll()
         let root = RXMLElement(fromXMLData: receivedData)
         if !root.isValid {
             informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
@@ -41,16 +44,16 @@ final class TagAlbumLoader: SUSLoader {
             if let error = root.child("error"), error.isValid {
                 informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
             } else {
-                if resetDb(albumId: albumId) {
+                if store.deleteTagSongs(tagAlbumId: tagAlbumId) {
                     var songOrder = 0
                     root.iterate("album.song") { element in
-                        let song = Song(rxmlElement: element)
-                        if song.path != nil && (Settings.shared().isVideoSupported || !song.isVideo) {
+                        let song = NewSong(element: element)
+                        if song.path != "" && (Settings.shared().isVideoSupported || !song.isVideo) {
                             // Fix for pdfs showing in directory listing
                             // TODO: See if this is still necessary
-                            if song.suffix?.lowercased() != "pdf" {
-                                if self.cacheSong(albumId: self.albumId, song: song, itemOrder: songOrder) {
-                                    self.songs.append(song)
+                            if song.suffix.lowercased() != "pdf" {
+                                if self.store.add(tagSong: song) {
+                                    self.songIds.append(song.id)
                                     songOrder += 1
                                 } else {
                                     self.informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
@@ -66,28 +69,4 @@ final class TagAlbumLoader: SUSLoader {
             }
         }
     }
-    
-    private func resetDb(albumId: String) -> Bool {
-        var success = true
-        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
-            if !db.executeUpdate("DELETE FROM tagSong WHERE albumId = ?", albumId) {
-                DDLogError("[TagAlbumLoader] Error resetting tagSong cache table for albumId \(albumId) - \(db.lastErrorCode()): \(db.lastErrorMessage())")
-                success = false
-            }
-        }
-        return success
-    }
-    
-    private func cacheSong(albumId: String, song: Song, itemOrder: Int) -> Bool {
-        var success = true
-        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
-            let query = "INSERT INTO tagSong (albumId, itemOrder, songId) VALUES (?, ?, ?)"
-            success = db.executeUpdate(query, albumId, itemOrder, song.songId ?? NSNull())
-            if !success {
-                DDLogError("[TagAlbumLoader] Error caching song \(db.lastErrorCode()): \(db.lastErrorMessage())")
-            }
-        }
-        return success && song.updateMetadataCache()
-    }
 }
-
