@@ -12,7 +12,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(Server)
 @interface ISMSServer : NSObject <NSSecureCoding>
 
 @property (nullable, copy) NSString *url;

@@ -416,78 +416,78 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)showSavePlaylistAlert {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Save Playlist" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.placeholder = @"Playlist name";
-    }];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSString *name = [[[alert textFields] firstObject] text];
-        if (self.savePlaylistLocal || settingsS.isOfflineMode) {
-            // Check if the playlist exists, if not create the playlist table and add the entry to localPlaylists table
-            NSString *test = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT md5 FROM localPlaylists WHERE md5 = ?", name.md5];
-            if (test) {
-                // If it exists, ask to overwrite
-                [self showOverwritePlaylistAlert:name];
-            } else {
-                NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
-                NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-                NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-                NSString *table = playlistS.isShuffle ? shufTable : currTable;
-                
-                [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-                    [db executeUpdate:@"INSERT INTO localPlaylists (playlist, md5) VALUES (?, ?)", name, name.md5];
-                    [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", name.md5, ISMSSong.standardSongColumnSchema]];
-                    
-                    [db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
-                    if (db.hadError) { DDLogError(@"[CurrentPlaylistViewController] Err attaching the currentPlaylistDb %d: %@", db.lastErrorCode, db.lastErrorMessage); }
-                    [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", name.md5, table]];
-                    [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
-                }];
-            }
-        } else {
-            NSString *tableName = [NSString stringWithFormat:@"splaylist%@", name.md5];
-            if ([databaseS.localPlaylistsDbQueue tableExists:tableName]) {
-                // If it exists, ask to overwrite
-                [self showOverwritePlaylistAlert:name];
-            } else {
-                [self uploadPlaylist:name];
-            }
-        }
-    }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-    [self presentViewController:alert animated:YES completion:nil];
+//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Save Playlist" message:nil preferredStyle:UIAlertControllerStyleAlert];
+//    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+//        textField.placeholder = @"Playlist name";
+//    }];
+//    [alert addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        NSString *name = [[[alert textFields] firstObject] text];
+//        if (self.savePlaylistLocal || settingsS.isOfflineMode) {
+//            // Check if the playlist exists, if not create the playlist table and add the entry to localPlaylists table
+//            NSString *test = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT md5 FROM localPlaylists WHERE md5 = ?", name.md5];
+//            if (test) {
+//                // If it exists, ask to overwrite
+//                [self showOverwritePlaylistAlert:name];
+//            } else {
+//                NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
+//                NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
+//                NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
+//                NSString *table = playlistS.isShuffle ? shufTable : currTable;
+//                
+//                [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
+//                    [db executeUpdate:@"INSERT INTO localPlaylists (playlist, md5) VALUES (?, ?)", name, name.md5];
+//                    [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", name.md5, ISMSSong.standardSongColumnSchema]];
+//                    
+//                    [db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
+//                    if (db.hadError) { DDLogError(@"[CurrentPlaylistViewController] Err attaching the currentPlaylistDb %d: %@", db.lastErrorCode, db.lastErrorMessage); }
+//                    [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", name.md5, table]];
+//                    [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
+//                }];
+//            }
+//        } else {
+//            NSString *tableName = [NSString stringWithFormat:@"splaylist%@", name.md5];
+//            if ([databaseS.localPlaylistsDbQueue tableExists:tableName]) {
+//                // If it exists, ask to overwrite
+//                [self showOverwritePlaylistAlert:name];
+//            } else {
+//                [self uploadPlaylist:name];
+//            }
+//        }
+//    }]];
+//    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+//    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)showOverwritePlaylistAlert:(NSString *)name {
-    NSString *message = [NSString stringWithFormat:@"A playlist named \"%@\" already exists. Would you like to overwrite it?", name];
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Overwrite?" message:message preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Overwrite" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-        // If yes, overwrite the playlist
-        if (self.savePlaylistLocal || settingsS.isOfflineMode) {
-            NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", settingsS.urlString.md5];
-            NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-            NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-            NSString *table = playlistS.isShuffle ? shufTable : currTable;
-            
-            [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-                [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE playlist%@", name.md5]];
-                [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", name.md5, ISMSSong.standardSongColumnSchema]];
-                
-                [db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
-                if (db.hadError) { DDLogError(@"[CurrentPlaylistViewController] Err attaching the currentPlaylistDb %d: %@", db.lastErrorCode, db.lastErrorMessage); }
-                [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", name.md5, table]];
-                [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
-            }];
-        } else {
-            [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-                [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE splaylist%@", name.md5]];
-            }];
-            
-            [self uploadPlaylist:name];
-        }
-    }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-    [self presentViewController:alert animated:YES completion:nil];
+//    NSString *message = [NSString stringWithFormat:@"A playlist named \"%@\" already exists. Would you like to overwrite it?", name];
+//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Overwrite?" message:message preferredStyle:UIAlertControllerStyleAlert];
+//    [alert addAction:[UIAlertAction actionWithTitle:@"Overwrite" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+//        // If yes, overwrite the playlist
+//        if (self.savePlaylistLocal || settingsS.isOfflineMode) {
+//            NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", settingsS.urlString.md5];
+//            NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
+//            NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
+//            NSString *table = playlistS.isShuffle ? shufTable : currTable;
+//            
+//            [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
+//                [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE playlist%@", name.md5]];
+//                [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", name.md5, ISMSSong.standardSongColumnSchema]];
+//                
+//                [db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
+//                if (db.hadError) { DDLogError(@"[CurrentPlaylistViewController] Err attaching the currentPlaylistDb %d: %@", db.lastErrorCode, db.lastErrorMessage); }
+//                [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", name.md5, table]];
+//                [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
+//            }];
+//        } else {
+//            [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
+//                [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE splaylist%@", name.md5]];
+//            }];
+//            
+//            [self uploadPlaylist:name];
+//        }
+//    }]];
+//    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+//    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)selectRow {

@@ -70,7 +70,7 @@ extension FolderMetadata: FetchableRecord, PersistableRecord {
 extension Store {
     func resetFolderAlbumCache(parentFolderId: Int) -> Bool {
         do {
-            return try serverDb.write { db in
+            return try mainDb.write { db in
                 try db.execute(literal: "DELETE FROM folderAlbumList WHERE parentFolderId = \(parentFolderId)")
                 try db.execute(literal: "DELETE FROM folderSongList WHERE parentFolderId = \(parentFolderId)")
                 return true
@@ -83,7 +83,7 @@ extension Store {
     
     func folderAlbumIds(parentFolderId: Int) -> [Int] {
         do {
-            return try serverDb.read { db in
+            return try mainDb.read { db in
                 let sql: SQLLiteral = """
                     SELECT id
                     FROM folderAlbumList
@@ -100,7 +100,7 @@ extension Store {
     
     func folderAlbum(id: Int) -> FolderAlbum? {
         do {
-            return try serverDb.read { db in
+            return try mainDb.read { db in
                 try FolderAlbum.fetchOne(db, key: id)
             }
         } catch {
@@ -111,7 +111,7 @@ extension Store {
     
     func add(folderAlbum: FolderAlbum) -> Bool {
         do {
-            return try serverDb.write { db in
+            return try mainDb.write { db in
                 // Insert or update shared album record
                 try folderAlbum.save(db)
                 
@@ -132,7 +132,7 @@ extension Store {
     
     func songIds(parentFolderId: Int) -> [Int] {
         do {
-            return try serverDb.read { db in
+            return try mainDb.read { db in
                 let sql: SQLLiteral = """
                     SELECT songId
                     FROM folderSongList
@@ -149,7 +149,7 @@ extension Store {
     
     func add(folderSong song: NewSong) -> Bool {
         do {
-            return try serverDb.write { db in
+            return try mainDb.write { db in
                 // Insert or update shared song record
                 try song.save(db)
                 
@@ -170,7 +170,7 @@ extension Store {
     
     func folderMetadata(parentFolderId: Int) -> FolderMetadata? {
         do {
-            return try serverDb.read { db in
+            return try mainDb.read { db in
                 try FolderMetadata.fetchOne(db, key: parentFolderId)
             }
         } catch {
@@ -181,7 +181,7 @@ extension Store {
     
     func add(folderMetadata: FolderMetadata) -> Bool {
         do {
-            return try serverDb.write { db in
+            return try mainDb.write { db in
                 // Insert or update folder metadata record
                 try folderMetadata.save(db)
                 return true

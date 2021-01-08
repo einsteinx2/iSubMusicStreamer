@@ -19,7 +19,6 @@
 #import "DatabaseSingleton.h"
 #import "ISMSStreamManager.h"
 #import "ISMSErrorDomain.h"
-#import "ISMSServer.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import "Reachability.h"
@@ -49,8 +48,10 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(saveAction:)];
     }
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    self.servers = Store.shared.servers;
 	
-    if (settingsS.serverList == nil || [settingsS.serverList count] == 0) {
+    if (self.servers.count == 0) {
 		[self addAction:nil];
     }
 	
@@ -150,8 +151,6 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)addAction:(id)sender {
-	viewObjectsS.serverToEdit = nil;
-	
     ServerEditViewController *serverEditViewController = [[ServerEditViewController alloc] init];
     serverEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     if (UIDevice.isPad) {
@@ -165,37 +164,21 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self.navigationController popToRootViewControllerAnimated:YES];
 }
 
-- (void)showServerEditScreen {
-    ServerEditViewController *serverEditViewController = [[ServerEditViewController alloc] init];
-    serverEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:serverEditViewController animated:YES completion:nil];
+- (void)switchServer:(NSNotification*)notification {
+    self.servers = Store.shared.servers;
+    self.serverToEdit = nil;
+    NSInteger serverId = [notification.userInfo[@"serverId"] integerValue];
+    Server *currentServer = [Store.shared serverWithId:serverId];
+    currentServer.isVideoSupported = [notification.userInfo[@"isVideoSupported"] boolValue];
+    currentServer.isNewSearchSupported = [notification.userInfo[@"isNewSearchAPI"] boolValue];
+    // Update server properties
+    (void)[Store.shared addWithServer:currentServer];
+
+    settingsS.currentServer = currentServer;
+    [self switchServer];
 }
 
-- (void)switchServer:(NSNotification*)notification  {
-    // Save the url string first because the other settings in the if block below are saved using the url
-    settingsS.urlString = viewObjectsS.serverToEdit.url;
-
-	if (notification.userInfo) {
-        settingsS.isVideoSupported = [notification.userInfo[@"isVideoSupported"] boolValue];
-        settingsS.isNewSearchAPI = [notification.userInfo[@"isNewSearchAPI"] boolValue];
-	}
-	
-	// Save the plist values
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setObject:viewObjectsS.serverToEdit.url forKey:@"url"];
-	[defaults setObject:viewObjectsS.serverToEdit.username forKey:@"username"];
-	[defaults setObject:viewObjectsS.serverToEdit.password forKey:@"password"];
-    NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:YES error:nil];
-	[defaults setObject:archivedServerList forKey:@"servers"];
-	[defaults synchronize];
-	
-	// Update the variables
-	settingsS.serverType = viewObjectsS.serverToEdit.type;
-	settingsS.username = viewObjectsS.serverToEdit.username;
-	settingsS.password = viewObjectsS.serverToEdit.password;
-    settingsS.uuid = viewObjectsS.serverToEdit.uuid;
-    settingsS.lastQueryId = viewObjectsS.serverToEdit.lastQueryId;
-    		
+- (void)switchServer {
 	if (self == [[self.navigationController viewControllers] objectAtIndexSafe:0] && !UIDevice.isPad) {
 		[self.navigationController.view removeFromSuperview];
 	} else {
@@ -261,18 +244,14 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.segmentedControl.selectedSegmentIndex == 0) {
-		return settingsS.serverList.count;
-    } else {
-		return 0;
-    }
+    return self.segmentedControl.selectedSegmentIndex == 0 ? self.servers.count : 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	static NSString *cellIdentifier = @"ServerListCell";
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 	
-	ISMSServer *aServer = [settingsS.serverList objectAtIndexSafe:indexPath.row];
+	Server *server = [self.servers objectAtIndexSafe:indexPath.row];
 	
 	// Set up the cell...
 	UILabel *serverNameLabel = [[UILabel alloc] init];
@@ -280,7 +259,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	serverNameLabel.backgroundColor = [UIColor clearColor];
 	serverNameLabel.textAlignment = NSTextAlignmentLeft; // default
 	serverNameLabel.font = [UIFont boldSystemFontOfSize:20];
-	[serverNameLabel setText:aServer.url];
+	[serverNameLabel setText:server.url.absoluteString];
 	[cell.contentView addSubview:serverNameLabel];
 	
 	UILabel *detailsLabel = [[UILabel alloc] init];
@@ -288,7 +267,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	detailsLabel.backgroundColor = [UIColor clearColor];
 	detailsLabel.textAlignment = NSTextAlignmentLeft; // default
     detailsLabel.font = [UIFont systemFontOfSize:15];
-	[detailsLabel setText:[NSString stringWithFormat:@"username: %@", aServer.username]];
+	[detailsLabel setText:[NSString stringWithFormat:@"username: %@", server.username]];
 	[cell.contentView addSubview:detailsLabel];
 	
     UIImage *typeImage = [UIImage imageNamed:@"server-subsonic"];
@@ -297,7 +276,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	serverType.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 	[cell.contentView addSubview:serverType];
 	
-	if ([settingsS.urlString isEqualToString:aServer.url] && [settingsS.username isEqualToString:aServer.username] && [settingsS.password isEqualToString:aServer.password]) {
+    if ([server isEqual:settingsS.currentServer]) {
 		UIImageView *currentServerMarker = [[UIImageView alloc] init];
         if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
             currentServerMarker.image = [[UIImage imageNamed:@"current-server"] imageWithTint:UIColor.whiteColor];
@@ -321,17 +300,20 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	if (!indexPath) return;
 	
-	viewObjectsS.serverToEdit = [settingsS.serverList objectAtIndexSafe:indexPath.row];
+	self.serverToEdit = [self.servers objectAtIndexSafe:indexPath.row];
 
 	if (self.isEditing) {
-		[self showServerEditScreen];
+        ServerEditViewController *serverEditViewController = [[ServerEditViewController alloc] init];
+        serverEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+        serverEditViewController.serverToEdit = self.serverToEdit;
+        [self presentViewController:serverEditViewController animated:YES completion:nil];
 	} else {
 		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Checking Server"];
         
         SUSStatusLoader *statusLoader = [[SUSStatusLoader alloc] initWithDelegate:self];
-        statusLoader.urlString = viewObjectsS.serverToEdit.url;
-        statusLoader.username = viewObjectsS.serverToEdit.username;
-        statusLoader.password = viewObjectsS.serverToEdit.password;
+        statusLoader.urlString = self.serverToEdit.url.absoluteString;
+        statusLoader.username = self.serverToEdit.username;
+        statusLoader.password = self.serverToEdit.password;
         [statusLoader startLoad];
 	}
 }
@@ -340,25 +322,16 @@ LOG_LEVEL_ISUB_DEFAULT
     return YES;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath  {
-	return YES;
-}
-
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath  {
-	NSArray *server = [ settingsS.serverList objectAtIndexSafe:fromIndexPath.row];
-	[settingsS.serverList removeObjectAtIndex:fromIndexPath.row];
-	[settingsS.serverList insertObject:server atIndex:toIndexPath.row];
-    NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:YES error:nil];
-	[[NSUserDefaults standardUserDefaults] setObject:archivedServerList forKey:@"servers"];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-	
-	[self.tableView reloadData];
-}
-
+// TODO: Delete all server resources (maybe do it in the Store)
+// TODO: Automatically switch to another server or show the add server screen
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+        Server *server = [self.servers objectAtIndexSafe:indexPath.row];
+        (void)[Store.shared deleteServerWithId:server.serverId.integerValue];
+        self.servers = Store.shared.servers;
+        
 		// Alert user to select new default server if they deleting the default
-		if ([settingsS.urlString isEqualToString:[(ISMSServer *)[settingsS.serverList objectAtIndexSafe:indexPath.row] url]]) {
+        if ([server isEqual:settingsS.currentServer]) {
             if (settingsS.isPopupsEnabled) {
                 NSString *message = @"Make sure to select a new server";
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notice" message:message preferredStyle:UIAlertControllerStyleAlert];
@@ -367,22 +340,11 @@ LOG_LEVEL_ISUB_DEFAULT
             }
 		}
 		
-        // Delete the row from the data source
-        [settingsS.serverList removeObjectAtIndex:indexPath.row];
-		
 		@try {
-			[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+			[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 		} @catch (NSException *exception) {
-            //DLog(@"Exception: %@ - %@", exception.name, exception.reason);
+            [self.tableView reloadData];
 		}
-		
-		[self.tableView reloadData];
-		
-		// Save the plist values
-		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSData *archivedServerList = [NSKeyedArchiver archivedDataWithRootObject:settingsS.serverList requiringSecureCoding:YES error:nil];
-		[defaults setObject:archivedServerList forKey:@"servers"];
-		[defaults synchronize];
     }   
 }
 
@@ -402,17 +364,18 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)loadingFinished:(SUSLoader *)theLoader {
-	settingsS.serverType = viewObjectsS.serverToEdit.type;
-	settingsS.urlString = viewObjectsS.serverToEdit.url;
-	settingsS.username = viewObjectsS.serverToEdit.username;
-	settingsS.password = viewObjectsS.serverToEdit.password;
-    
+    // Update server properties
     if (theLoader.type == SUSLoaderType_Status) {
-        settingsS.isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
-        settingsS.isNewSearchAPI = ((SUSStatusLoader *)theLoader).isNewSearchAPI;
+        self.serverToEdit.isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
+        self.serverToEdit.isNewSearchSupported = ((SUSStatusLoader *)theLoader).isNewSearchAPI;
+        if (self.serverToEdit) {
+            (void)[Store.shared addWithServer:self.serverToEdit];
+        }
     }
-	
-	[self switchServer:nil];
+    
+    // Switch to the server
+    settingsS.currentServer = self.serverToEdit;
+	[self switchServer];
     
     DDLogInfo(@"[ServerListViewController] server verification passed, hiding loading screen");
     [viewObjectsS hideLoadingScreen];

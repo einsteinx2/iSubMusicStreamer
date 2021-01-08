@@ -42,7 +42,7 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
 @objc extension Store {
     @objc func coverArt(id: String, isLarge: Bool) -> CoverArt? {
         do {
-            return try serverDb.read { db in
+            return try mainDb.read { db in
                 try CoverArt.fetchOne(db, key: [CoverArt.Column.id.rawValue: id, CoverArt.Column.isLarge.rawValue: isLarge])
             }
         } catch {
@@ -53,7 +53,7 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
     
     @objc func artistArt(id: String) -> ArtistArt? {
         do {
-            return try serverDb.read { db in
+            return try mainDb.read { db in
                 try ArtistArt.fetchOne(db, key: id)
             }
         } catch {
@@ -64,7 +64,7 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
     
     @objc func isCoverArtCached(id: String, isLarge: Bool) -> Bool {
         do {
-            return try serverDb.read { db in
+            return try mainDb.read { db in
                 try CoverArt.filter(literal: "id = \(id) AND isLarge = \(isLarge)").fetchCount(db) > 0
             }
         } catch {
@@ -75,7 +75,7 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
     
     @objc func isArtistArtCached(id: String) -> Bool {
         do {
-            return try serverDb.read { db in
+            return try mainDb.read { db in
                 try ArtistArt.filter(key: id).fetchCount(db) > 0
             }
         } catch {
@@ -86,7 +86,7 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
     
     @objc func add(coverArt: CoverArt) -> Bool {
         do {
-            return try serverDb.write { db in
+            return try mainDb.write { db in
                 try coverArt.save(db)
                 return true
             }
@@ -98,7 +98,7 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
     
     @objc func add(artistArt: CoverArt) -> Bool {
         do {
-            return try serverDb.write { db in
+            return try mainDb.write { db in
                 try artistArt.save(db)
                 return true
             }

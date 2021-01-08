@@ -17,9 +17,9 @@
 #import "PlayQueueSingleton.h"
 #import "ISMSStreamManager.h"
 #import "ISMSSong+DAO.h"
-#import "ISMSServer.h"
 #import "Defines.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -35,7 +35,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)playerHandleSocial {
     if (!self.playerHasNotifiedSubsonic && audioEngineS.player.progress >= socialS.subsonicDelay) {
-        if ([settingsS.serverType isEqualToString:SUBSONIC]) {
+        if (settingsS.currentServer.type == ServerTypeSubsonic) {
             [EX2Dispatch runInMainThreadAsync:^{
                 [self notifySubsonic];
             }];

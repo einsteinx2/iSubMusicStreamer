@@ -362,7 +362,7 @@ extension HomeViewController: UISearchBarDelegate {
         }
         
         view.addSubview(searchOverlay)
-        if Settings.shared().isNewSearchAPI {
+        if Settings.shared().currentServer.isNewSearchSupported {
             searchOverlay.snp.makeConstraints { make in
                 make.top.equalTo(searchSegmentContainer.snp.bottom)
                 make.leading.trailing.bottom.equalToSuperview()
@@ -381,7 +381,7 @@ extension HomeViewController: UISearchBarDelegate {
         }
         
         UIView.animate(withDuration: 0.2) {
-            if Settings.shared().isNewSearchAPI {
+            if Settings.shared().currentServer.isNewSearchSupported {
                 self.searchSegment.isEnabled = true
                 self.searchSegment.alpha = 1
                 self.searchSegmentContainer.alpha = 1
@@ -392,7 +392,7 @@ extension HomeViewController: UISearchBarDelegate {
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         UIView.animate(withDuration: 0.2) {
-            if Settings.shared().isNewSearchAPI {
+            if Settings.shared().currentServer.isNewSearchSupported {
                 self.searchSegment.isEnabled = false
                 self.searchSegment.alpha = 0
                 self.searchSegmentContainer.alpha = 0
@@ -410,7 +410,7 @@ extension HomeViewController: UISearchBarDelegate {
         var query = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         var parameters = [String: String]()
         var action = ""
-        if Settings.shared().isNewSearchAPI {
+        if Settings.shared().currentServer.isNewSearchSupported {
             // Due to a Subsonic bug, to get good search results, we need to add a * to the end of
             // Latin based languages, but not to unicode languages like Japanese.
             if query.canBeConverted(to: .isoLatin1) {
@@ -447,7 +447,7 @@ extension HomeViewController: UISearchBarDelegate {
                         DDLogVerbose("search results: \(String(data: data, encoding: .utf8)!)")
                         let parser = SearchXMLParser(data: data)
                         
-                        if Settings.shared().isNewSearchAPI && self.searchSegment.selectedSegmentIndex == 3 {
+                        if Settings.shared().currentServer.isNewSearchSupported && self.searchSegment.selectedSegmentIndex == 3 {
                             let controller = SearchAllViewController(nibName: "SearchAllViewController", bundle: nil)
                             controller.folderArtists = parser.folderArtists
                             controller.folderAlbums = parser.folderAlbums
@@ -457,7 +457,7 @@ extension HomeViewController: UISearchBarDelegate {
                         } else {
                             let controller = SearchSongsViewController(nibName: "SearchSongsViewController", bundle: nil)
                             controller.title = "Search"
-                            if Settings.shared().isNewSearchAPI {
+                            if Settings.shared().currentServer.isNewSearchSupported {
                                 if self.searchSegment.selectedSegmentIndex == 0 {
                                     controller.folderArtists = NSMutableArray(array: parser.folderArtists)
                                 } else if self.searchSegment.selectedSegmentIndex == 1 {

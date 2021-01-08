@@ -417,26 +417,26 @@
 		[result close];
 	}];
 		
-	// See if there's a playlist table for this bookmark
-	if ([databaseS.bookmarksDbQueue tableExists:[NSString stringWithFormat:@"bookmark%lu", (unsigned long)bookmarkId]]) {
-		// Save the playlist
-		NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
-		NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-		NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-		NSString *table = playlistS.isShuffle ? shufTable : currTable;
-		
-		[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
-			[db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
-			[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO currentPlaylistDb.%@ SELECT * FROM bookmark%lu", table, (unsigned long)bookmarkId]];
-			[db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
-		}];
-		
-        if (settingsS.isJukeboxEnabled) {
-			[jukeboxS replacePlaylistWithLocal];
-        }
-	} else {
-		[aSong addToCurrentPlaylistDbQueue];
-	}
+//	// See if there's a playlist table for this bookmark
+//	if ([databaseS.bookmarksDbQueue tableExists:[NSString stringWithFormat:@"bookmark%lu", (unsigned long)bookmarkId]]) {
+//		// Save the playlist
+//		NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
+//		NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
+//		NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
+//		NSString *table = playlistS.isShuffle ? shufTable : currTable;
+//		
+//		[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
+//			[db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
+//			[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO currentPlaylistDb.%@ SELECT * FROM bookmark%lu", table, (unsigned long)bookmarkId]];
+//			[db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
+//		}];
+//		
+//        if (settingsS.isJukeboxEnabled) {
+//			[jukeboxS replacePlaylistWithLocal];
+//        }
+//	} else {
+//		[aSong addToCurrentPlaylistDbQueue];
+//	}
 	
 	playlistS.currentIndex = playlistIndex;
 	

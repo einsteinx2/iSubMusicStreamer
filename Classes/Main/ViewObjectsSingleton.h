@@ -13,8 +13,6 @@
 
 #define viewObjectsS ((ViewObjectsSingleton *)[ViewObjectsSingleton sharedInstance])
 
-@class ISMSServer;
-
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ViewObjects)
@@ -23,10 +21,6 @@ NS_SWIFT_NAME(ViewObjects)
 // Artists page objects
 //
 @property BOOL isArtistsLoading;
-
-// Settings page objects
-//
-@property (nullable, strong) ISMSServer *serverToEdit;
 
 // Cell colors
 //

@@ -26,18 +26,18 @@ extension MediaFolder: FetchableRecord, PersistableRecord {
 @objc extension Store {
     @objc func mediaFolders() -> [MediaFolder] {
         do {
-            return try serverDb.read { db in
-                try MediaFolder.all().fetchAll(db)
+            return try mainDb.read { db in
+                try MediaFolder.fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select all media folders: \(error)")
-            return [MediaFolder]()
+            return []
         }
     }
     
     @objc func deleteMediaFolders() -> Bool {
         do {
-            return try serverDb.write { db in
+            return try mainDb.write { db in
                 try MediaFolder.deleteAll(db)
                 return true
             }
@@ -49,9 +49,9 @@ extension MediaFolder: FetchableRecord, PersistableRecord {
     
     @objc func add(mediaFolders: [MediaFolder]) -> Bool {
         do {
-            return try serverDb.write { db in
+            return try mainDb.write { db in
                 for mediaFolder in mediaFolders {
-                    try mediaFolder.insert(db)
+                    try mediaFolder.save(db)
                 }
                 return true
             }

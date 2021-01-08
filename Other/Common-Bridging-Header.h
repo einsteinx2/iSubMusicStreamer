@@ -58,9 +58,6 @@
 // Parsers
 #import "RXMLElement.h"
 
-// Models
-#import "ISMSServer.h"
-
 // Utils
 #import "EX2Dispatch.h"
 

@@ -65,7 +65,7 @@ final class SubfolderLoader: SUSLoader {
                             }
                         } else {
                             let song = NewSong(element: element)
-                            if song.path != "" && (Settings.shared().isVideoSupported || !song.isVideo) {
+                            if song.path != "" && (Settings.shared().currentServer.isVideoSupported || !song.isVideo) {
                                 // Fix for pdfs showing in directory listing
                                 // TODO: See if this is still necessary
                                 if song.suffix.lowercased() != "pdf" {

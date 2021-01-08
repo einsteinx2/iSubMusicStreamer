@@ -314,27 +314,27 @@ LOG_LEVEL_ISUB_DEFAULT
 	}*/
 	
 	// Need to do this for speed (NOTE: haha well 10 years ago maybe, but probably not now)
-	NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
-	NSString *currTableName = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-	NSString *playTableName = [NSString stringWithFormat:@"%@%@", self.isLocalPlaylist ? @"playlist" : @"splaylist", self.md5];
-	[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-		 [db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
-		 if ([db hadError]) { DDLogError(@"[PlaylistSongsViewController] Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
-		 
-		 [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ SELECT * FROM %@", currTableName, playTableName]];
-		 [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
-	 }];
-	
-    if (settingsS.isJukeboxEnabled) {
-		[jukeboxS replacePlaylistWithLocal];
-    }
-
-    [viewObjectsS hideLoadingScreen];
-    
-    ISMSSong *playedSong = [musicS playSongAtPosition:indexPath.row];
-    if (!playedSong.isVideo) {
-        [self showPlayer];
-    }
+//	NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
+//	NSString *currTableName = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
+//	NSString *playTableName = [NSString stringWithFormat:@"%@%@", self.isLocalPlaylist ? @"playlist" : @"splaylist", self.md5];
+//	[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
+//		 [db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
+//		 if ([db hadError]) { DDLogError(@"[PlaylistSongsViewController] Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
+//		 
+//		 [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ SELECT * FROM %@", currTableName, playTableName]];
+//		 [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
+//	 }];
+//	
+//    if (settingsS.isJukeboxEnabled) {
+//		[jukeboxS replacePlaylistWithLocal];
+//    }
+//
+//    [viewObjectsS hideLoadingScreen];
+//    
+//    ISMSSong *playedSong = [musicS playSongAtPosition:indexPath.row];
+//    if (!playedSong.isVideo) {
+//        [self showPlayer];
+//    }
 }
 
 

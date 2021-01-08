@@ -28,7 +28,7 @@ import CocoaLumberjackSwift
                 let message = error.attribute("message") ?? "no message"
                 DDLogError("[SearchXMLParser] Subsonic error: \(NSError(ismsCode: code, message: message))")
             } else {
-                if Settings.shared().isNewSearchAPI {
+                if Settings.shared().currentServer.isNewSearchSupported {
                     root.iterate("searchResult2.artist") { element in
                         self.folderArtists.append(FolderArtist(element: element))
                     }

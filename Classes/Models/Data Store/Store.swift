@@ -20,11 +20,8 @@ fileprivate let debugPrintAllQueries = false
     // Temporary accessor for Objective-C classes using Resolver under the hood
     @objc static var shared: Store { Resolver.main.resolve() }
     
-    // Per server database, contains only records specific to the active server
-    var serverDb: DatabasePool!
-    
-    // Shared database, contains data shared between all servers like the lyrics cache
-    var sharedDb: DatabasePool!
+    // Main database, contains records for all servers
+    var mainDb: DatabasePool!
     
     // Shared downloaded songs database, contains data related to songs downloaded for offline use
     // NOTE: This is a separate database so that it can be excluded from iCloud backups
@@ -41,13 +38,9 @@ fileprivate let debugPrintAllQueries = false
         }
         
         do {
-            // Server DB
-            let serverDbPath = FileSystem.databaseDirectory.appendingPathComponent(Settings.shared().serverId + "_grdb.db").path
-            serverDb = try DatabasePool(path: serverDbPath, configuration: config)
-            
-            // Shared DB
-            let sharedDbPath = FileSystem.databaseDirectory.appendingPathComponent("shared.db").path
-            sharedDb = try DatabasePool(path: sharedDbPath, configuration: config)
+            // Main DB
+            let mainDbPath = FileSystem.databaseDirectory.appendingPathComponent("main.db").path
+            mainDb = try DatabasePool(path: mainDbPath, configuration: config)
             
             // Downloads DB
             let downloadsDbPath = FileSystem.databaseDirectory.appendingPathComponent("downloads.db").path
@@ -60,27 +53,27 @@ fileprivate let debugPrintAllQueries = false
         migrate()
     }
     
+    // TODO: Remove this as we now share the same DB for all servers and offline mode
     @objc(closeAllDatabases) func close() {
         // Underlying dataabases are closed on deallocation
-        serverDb = nil
-        sharedDb = nil
+        mainDb = nil
         downloadsDb = nil
     }
     
     private func migrate() {
-        migrateServerDb()
-        migrateSharedDb()
+        migrateMainDb()
         migrateDownloadsDb()
     }
     
-    private func migrateServerDb() {
-        guard let serverDb = serverDb else { DDLogError("serverDb not initialized"); return }
+    private func migrateMainDb() {
+        guard let mainDb = mainDb else { DDLogError("mainDb not initialized"); return }
         
         do {
             var migrator = DatabaseMigrator()
             
             // Initial schema creation
             migrator.registerMigration("initialSchema") { db in
+                try Server.createInitialSchema(db)
                 try MediaFolder.createInitialSchema(db)
                 try TagArtist.createInitialSchema(db)
                 try TagAlbum.createInitialSchema(db)
@@ -94,29 +87,10 @@ fileprivate let debugPrintAllQueries = false
             
             // Automatically perform all registered migrations in order
             // (will only perform migrations that have not run before)
-            try migrator.migrate(serverDb)
+            try migrator.migrate(mainDb)
         } catch {
-            DDLogError("Failed to migrate database: \(error)")
+            DDLogError("Failed to migrate mainDb: \(error)")
         }
-    }
-    
-    private func migrateSharedDb() {
-//        guard let sharedDb = sharedDb else { DDLogError("sharedDb not initialized"); return }
-//
-//        do {
-//            var migrator = DatabaseMigrator()
-//
-//            // Initial schema creation
-//            migrator.registerMigration("initialSchema") { db in
-//
-//            }
-//
-//            // Automatically perform all registered migrations in order
-//            // (will only perform migrations that have not run before)
-//            try migrator.migrate(sharedDb)
-//        } catch {
-//            DDLogError("Failed to migrate database: \(error)")
-//        }
     }
     
     private func migrateDownloadsDb() {

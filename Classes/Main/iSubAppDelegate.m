@@ -59,7 +59,8 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
-    // Make sure audio engine and cache singletons get loaded
+    // Make sure database, audio engine, and cache singletons get loaded
+    [DatabaseSingleton sharedInstance];
 	[AudioEngine sharedInstance];
 	[CacheSingleton sharedInstance];
     
@@ -141,7 +142,7 @@ LOG_LEVEL_ISUB_DEFAULT
     }
 		
 	self.showIntro = NO;
-	if (settingsS.isTestServer) {
+	if (settingsS.currentServer == nil) {
 		if (settingsS.isOfflineMode) {
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Welcome!" message:@"Looks like this is your first time using iSub or you haven't set up your Subsonic account info yet.\n\nYou'll need an internet connection to get started." preferredStyle:UIAlertControllerStyleAlert];
             [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
@@ -279,9 +280,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	// have internet access or if the host url entered was wrong.
     if (!settingsS.isOfflineMode) {
         self.statusLoader = [[SUSStatusLoader alloc] initWithDelegate:self];
-        self.statusLoader.urlString = settingsS.urlString;
-        self.statusLoader.username = settingsS.username;
-        self.statusLoader.password = settingsS.password;
+        self.statusLoader.urlString = settingsS.currentServer.url.absoluteString;
+        self.statusLoader.username = settingsS.currentServer.username;
+        self.statusLoader.password = settingsS.currentServer.password;
         [self.statusLoader startLoad];
     }
 	
@@ -296,17 +297,10 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
     if (theLoader.type == SUSLoaderType_Status) {
         [viewObjectsS hideLoadingScreen];
-        
         if (!settingsS.isOfflineMode) {
             DDLogVerbose(@"[iSubAppDelegate] Loading failed for loading type %i, entering offline mode. Error: %@", theLoader.type, error);
             [self enterOfflineMode];
         }
-        
-        if ([theLoader isKindOfClass:SUSStatusLoader.class]) {
-            settingsS.isNewSearchAPI = ((SUSStatusLoader *)theLoader).isNewSearchAPI;
-            settingsS.isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
-        }
-        
         self.statusLoader = nil;
     }
 }
@@ -314,9 +308,17 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)loadingFinished:(SUSLoader *)theLoader {
     // This happens right on app launch
     if (theLoader.type == SUSLoaderType_Status) {
+        // Update server properties if changed
         if ([theLoader isKindOfClass:SUSStatusLoader.class]) {
-            settingsS.isNewSearchAPI = ((SUSStatusLoader *)theLoader).isNewSearchAPI;
-            settingsS.isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
+            BOOL isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
+            BOOL isNewSearchSupported = ((SUSStatusLoader *)theLoader).isNewSearchAPI;
+            Server *server = settingsS.currentServer;
+            if (server.isVideoSupported != isVideoSupported || server.isNewSearchSupported != isNewSearchSupported) {
+                server.isVideoSupported = isVideoSupported;
+                server.isNewSearchSupported = isNewSearchSupported;
+                settingsS.currentServer = server;
+                (void)[Store.shared addWithServer:server];
+            }
         }
         
         self.statusLoader = nil;
@@ -668,7 +670,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)playVideo:(ISMSSong *)aSong {
-    if (!aSong.isVideo || !settingsS.isVideoSupported) {
+    if (!aSong.isVideo || !settingsS.currentServer.isVideoSupported) {
         return;
     }
     

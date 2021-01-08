@@ -9,9 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "SUSLoaderDelegate.h"
 
-@class SettingsTabViewController;
+@class SettingsTabViewController, Server;
 
 @interface ServerListViewController : UIViewController <SUSLoaderDelegate>
+
+@property (nonatomic, strong) NSArray<Server*> *servers;
+@property (nonatomic, strong) Server *serverToEdit;
 
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIView *segmentControlContainer;

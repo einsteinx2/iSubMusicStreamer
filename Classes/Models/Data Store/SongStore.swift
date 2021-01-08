@@ -47,7 +47,7 @@ extension NewSong: FetchableRecord, PersistableRecord {
 extension Store {
     func song(id: Int) -> NewSong? {
         do {
-            return try serverDb.read { db in
+            return try mainDb.read { db in
                 try NewSong.fetchOne(db, key: id)
             }
         } catch {
@@ -58,7 +58,7 @@ extension Store {
     
     func add(song: NewSong) -> Bool {
         do {
-            return try serverDb.write { db in
+            return try mainDb.write { db in
                 // Insert or update shared song record
                 try song.save(db)
                 return true

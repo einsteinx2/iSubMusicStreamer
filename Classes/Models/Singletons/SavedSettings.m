@@ -18,14 +18,9 @@
 #import "EX2Kit.h"
 #import "iSubAppDelegate.h"
 #import "Defines.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
-
-// Test server details
-#define DEFAULT_SERVER_TYPE SUBSONIC
-#define DEFAULT_URL @"http://isubapp.com:9001"
-#define DEFAULT_USER_NAME @"isub-guest"
-#define DEFAULT_PASSWORD @"1sub1snumb3r0n3"
 
 @interface SavedSettings() {
     NSUserDefaults *_userDefaults;
@@ -41,6 +36,7 @@ LOG_LEVEL_ISUB_DEFAULT
     double _secondsOffset;
     BOOL _isRecover;
     NSInteger _recoverSetting;
+    Server *_currentServer;
 }
 @end
 
@@ -241,110 +237,14 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark - Login Settings
 
-- (NSString *)serverType {
-    NSString *serverType = [_userDefaults stringForKey:@"serverType"];
-    return serverType ? serverType : DEFAULT_SERVER_TYPE;
+- (Server *)currentServer {
+    return _currentServer;
 }
 
-- (void)setServerType:(NSString *)type {
-    [_userDefaults setObject:type forKey:@"serverType"];
+- (void)setCurrentServer:(Server *)currentServer {
+    _currentServer = currentServer;
+    [_userDefaults setObject:currentServer.serverId forKey:@"currentServerId"];
     [_userDefaults synchronize];
-}
-
-- (NSString *)urlString {
-    NSString *urlString = [_userDefaults stringForKey:@"url"];
-    return urlString ? urlString : DEFAULT_URL;
-}
-
-- (void)setUrlString:(NSString *)url {
-    [_userDefaults setObject:url forKey:@"url"];
-    [_userDefaults synchronize];
-}
-
-- (NSString *)username {
-    NSString *username = [_userDefaults stringForKey:@"username"];
-    return username ? username : DEFAULT_USER_NAME;
-}
-
-- (void)setUsername:(NSString *)user {
-    [_userDefaults setObject:user forKey:@"username"];
-    [_userDefaults synchronize];
-}
-
-- (NSString *)password {
-	NSString *password = [_userDefaults stringForKey:@"password"];
-    return password ? password : DEFAULT_PASSWORD;
-}
-
-- (void)setPassword:(NSString *)pass {
-    [_userDefaults setObject:pass forKey:@"password"];
-    [_userDefaults synchronize];
-}
-
-- (NSString *)uuid {
-    return [_userDefaults stringForKey:@"uuid"];
-}
-
-- (void)setUuid:(NSString *)uuid {
-    [_userDefaults setObject:uuid forKey:@"uuid"];
-    [_userDefaults synchronize];
-}
-
-- (NSString *)lastQueryId {
-    return [_userDefaults stringForKey:@"lastQueryId"];
-}
-
-- (void)setLastQueryId:(NSString *)lastQueryId {
-    [_userDefaults setObject:lastQueryId forKey:@"lastQueryId"];
-    [_userDefaults synchronize];
-}
-
-- (NSString *)sessionId {
-    return [_userDefaults stringForKey:[NSString stringWithFormat:@"sessionId%@", self.urlString.md5]];
-}
-
-- (void)setSessionId:(NSString *)sessionId {
-    NSString *key = [NSString stringWithFormat:@"sessionId%@", self.urlString.md5];
-    [_userDefaults setObject:sessionId forKey:key];
-    [_userDefaults synchronize];
-}
-
-- (NSString *)urlStringFilesystemSafe {
-    NSURL *url = [NSURL URLWithString:self.urlString];
-    NSMutableString *urlStringFilesystemSafe = [NSMutableString stringWithFormat:@"%@", url.host];
-    unsigned long port = url.port.unsignedLongValue;
-    if (port != 0 && port != 80) {
-        [urlStringFilesystemSafe appendFormat:@"_%lu", port];
-    }
-    for (NSString *pathComponent in url.pathComponents) {
-        if (![pathComponent containsString:@"/"]) {
-            [urlStringFilesystemSafe appendFormat:@"_%@", pathComponent];
-        }
-    }
-    return urlStringFilesystemSafe;
-}
-
-- (NSString *)serverId {
-    // Get a URL object for the current server URL string (this is never nil)
-    NSURL *url = [NSURL URLWithString:self.urlString];
-    
-    // Start with the host as-is, but without the protocol
-    NSMutableString *serverId = [NSMutableString stringWithFormat:@"%@", url.host];
-    
-    // Add the port if not 80
-    unsigned long port = url.port.unsignedLongValue;
-    if (port != 0 && port != 80) {
-        [serverId appendFormat:@"_%lu", port];
-    }
-    
-    // Add the paths, underscore separated and skipping the first slash
-    for (NSString *pathComponent in url.pathComponents) {
-        if (![pathComponent containsString:@"/"]) {
-            [serverId appendFormat:@"_%@", pathComponent];
-        }
-    }
-    
-    return serverId;
 }
 
 #pragma mark - Document Folder Paths
@@ -399,32 +299,27 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark - Root Folders Settings
 
-- (NSDate *)rootFoldersReloadTime {
-    return [_userDefaults objectForKey:[NSString stringWithFormat:@"%@rootFoldersReloadTime", self.urlString]];
-}
-
-- (void)setRootFoldersReloadTime:(NSDate *)reloadTime {
-    [_userDefaults setObject:reloadTime forKey:[NSString stringWithFormat:@"%@rootFoldersReloadTime", self.urlString]];
-    [_userDefaults synchronize];
-}
-
 - (NSNumber *)rootFoldersSelectedFolderId {
-    return [_userDefaults objectForKey:[NSString stringWithFormat:@"%@rootFoldersSelectedFolder", self.urlString]];
+    NSString *key = [NSString stringWithFormat:@"rootFoldersSelectedFolder%@", self.currentServer.serverId];
+    return [_userDefaults objectForKey:key];
 }
 
 - (void)setRootFoldersSelectedFolderId:(NSNumber *)folderId {
-    [_userDefaults setObject:folderId forKey:[NSString stringWithFormat:@"%@rootFoldersSelectedFolder", self.urlString]];
+    NSString *key = [NSString stringWithFormat:@"rootFoldersSelectedFolder%@", self.currentServer.serverId];
+    [_userDefaults setObject:folderId forKey:key];
     [_userDefaults synchronize];
 }
 
 #pragma mark - Root Artists Settings
 
 - (NSNumber *)rootArtistsSelectedFolderId {
-    return [_userDefaults objectForKey:[NSString stringWithFormat:@"%@rootArtistsSelectedFolder", self.urlString]];
+    NSString *key = [NSString stringWithFormat:@"rootArtistsSelectedFolder%ld", (long)self.currentServer.serverId.integerValue];
+    return [_userDefaults objectForKey:key];
 }
 
 - (void)setRootArtistsSelectedFolderId:(NSNumber *)folderId {
-    [_userDefaults setObject:folderId forKey:[NSString stringWithFormat:@"%@rootArtistsSelectedFolder", self.urlString]];
+    NSString *key = [NSString stringWithFormat:@"rootArtistsSelectedFolder%ld", (long)self.currentServer.serverId.integerValue];
+    [_userDefaults setObject:folderId forKey:key];
     [_userDefaults synchronize];
 }
 
@@ -721,28 +616,6 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
 }
 
-- (BOOL)isVideoSupported {
-    NSString *key = [NSString stringWithFormat:@"isVideoSupported%@", self.urlString.md5];
-    return [_userDefaults boolForKey:key];
-}
-
-- (void)setIsVideoSupported:(BOOL)isVideoSupported {
-    NSString *key = [NSString stringWithFormat:@"isVideoSupported%@", self.urlString.md5];
-    [_userDefaults setBool:isVideoSupported forKey:key];
-    [_userDefaults synchronize];
-}
-
-- (BOOL)isNewSearchAPI {
-    NSString *key = [NSString stringWithFormat:@"isNewSearchAPI%@", self.urlString.md5];
-    return [_userDefaults boolForKey:key];
-}
-
-- (void)setIsNewSearchAPI:(BOOL)isNewSearchAPI {
-    NSString *key = [NSString stringWithFormat:@"isNewSearchAPI%@", self.urlString.md5];
-    [_userDefaults setBool:isNewSearchAPI forKey:key];
-    [_userDefaults synchronize];
-}
-
 - (BOOL)isRecover {
     return [_userDefaults boolForKey:@"recover"];
 }
@@ -880,9 +753,9 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
 }
 
-- (BOOL)isTestServer {
-	return [self.urlString isEqualToString:DEFAULT_URL];
-}
+//- (BOOL)isTestServer {
+//	return [self.urlString isEqualToString:DEFAULT_URL];
+//}
 
 - (NSUInteger)oneTimeRunIncrementor {
     return [_userDefaults integerForKey:@"oneTimeRunIncrementor"];
@@ -932,12 +805,33 @@ LOG_LEVEL_ISUB_DEFAULT
 	
     // If the settings are not set up, create the defaults
 	[self createInitialSettings];
-	    
-	// Load the servers array
-    NSData *servers = [_userDefaults objectForKey:@"servers"];
-    if (servers) {
-        NSSet *classes = [NSSet setWithArray:@[NSArray.class, ISMSServer.class]];
-        self.serverList = [[NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:servers error:nil] mutableCopy];
+	
+    
+    NSNumber *currentServerId = [_userDefaults objectForKey:@"currentServerId"];
+    if (currentServerId) {
+        // Load the new server object
+        NSNumber *currentServerId = [_userDefaults objectForKey:@"currentServerId"];
+        _currentServer = [Store.shared serverWithId:currentServerId.integerValue];
+    } else {
+        // Load the old server objects
+        NSData *servers = [_userDefaults objectForKey:@"servers"];
+        if (servers) {
+            // Previous selected server info
+            NSString *urlString = [_userDefaults stringForKey:@"url"];
+            NSString *username = [_userDefaults stringForKey:@"username"];
+            
+            NSSet *classes = [NSSet setWithArray:@[NSArray.class, ISMSServer.class]];
+            NSArray *serverList = [NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:servers error:nil];
+            for (ISMSServer *oldServer in serverList) {
+                Server *server = [[Server alloc] initWithType:ServerTypeSubsonic url:[NSURL URLWithString:oldServer.url] username:oldServer.username password:oldServer.password];
+                server = [Store.shared addWithServer:server];
+                
+                if ([oldServer.url isEqual:urlString] && [oldServer.username isEqual:username]) {
+                    self.currentServer = server;
+                }
+            }
+            // TODO: Delete the following user defaults keys: servers, url, username, serverType, password, uuid, lastQueryId
+        }
     }
 }
 

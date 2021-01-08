@@ -48,7 +48,7 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
 extension Store {
     func deleteTagAlbums(tagArtistId: Int) -> Bool {
         do {
-            return try serverDb.write { db in
+            return try mainDb.write { db in
                 try db.execute(literal: "DELETE FROM \(TagAlbum.self) WHERE tagArtistId = \(tagArtistId)")
                 return true
             }
@@ -79,7 +79,7 @@ extension Store {
     
     func tagAlbumIds(tagArtistId: Int, orderBy: TagAlbum.Column = .name) -> [Int] {
         do {
-            return try serverDb.read { db in
+            return try mainDb.read { db in
                 let sql: SQLLiteral = """
                     SELECT id
                     FROM \(TagAlbum.self)
@@ -96,7 +96,7 @@ extension Store {
     
     func tagAlbum(id: Int) -> TagAlbum? {
         do {
-            return try serverDb.read { db in
+            return try mainDb.read { db in
                 try TagAlbum.fetchOne(db, key: id)
             }
         } catch {
@@ -107,7 +107,7 @@ extension Store {
     
     func add(tagAlbum: TagAlbum) -> Bool {
         do {
-            return try serverDb.write { db in
+            return try mainDb.write { db in
                 // Insert or update shared album record
                 try tagAlbum.save(db)
                 return true
@@ -120,7 +120,7 @@ extension Store {
     
     func songIds(tagAlbumId: Int) -> [Int] {
         do {
-            return try serverDb.read { db in
+            return try mainDb.read { db in
                 let sql: SQLLiteral = """
                     SELECT songId
                     FROM tagSongList
@@ -137,7 +137,7 @@ extension Store {
     
     func deleteTagSongs(tagAlbumId: Int) -> Bool {
         do {
-            return try serverDb.write { db in
+            return try mainDb.write { db in
                 try db.execute(literal: "DELETE FROM tagSongList WHERE tagAlbumId = \(tagAlbumId)")
                 return true
             }
@@ -149,7 +149,7 @@ extension Store {
     
     func add(tagSong song: NewSong) -> Bool {
         do {
-            return try serverDb.write { db in
+            return try mainDb.write { db in
                 // Insert or update shared song record
                 try song.save(db)
                 

@@ -97,7 +97,7 @@ LOG_LEVEL_ISUB_DEFAULT
     NSDictionary *parameters = nil;
     NSString *action = nil;
 	NSString *offsetString = [NSString stringWithFormat:@"%lu", (unsigned long)self.offset];
-	if (settingsS.isNewSearchAPI) {
+	if (settingsS.currentServer.isNewSearchSupported) {
         action = @"search2";
 		NSString *queryString = [NSString stringWithFormat:@"%@*", self.query];
 		switch (self.searchType) {

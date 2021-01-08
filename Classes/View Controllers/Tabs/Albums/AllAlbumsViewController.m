@@ -90,7 +90,7 @@
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 	[formatter setDateStyle:NSDateFormatterMediumStyle];
 	[formatter setTimeStyle:NSDateFormatterShortStyle];
-	self.reloadTimeLabel.text = [NSString stringWithFormat:@"last reload: %@", [formatter stringFromDate:[defaults objectForKey:[NSString stringWithFormat:@"%@songsReloadTime", settingsS.urlString]]]];
+//	self.reloadTimeLabel.text = [NSString stringWithFormat:@"last reload: %@", [formatter stringFromDate:[defaults objectForKey:[NSString stringWithFormat:@"%@songsReloadTime", settingsS.urlString]]]];
 	
 	self.tableView.tableHeaderView = self.headerView;
 	
@@ -106,67 +106,67 @@
 - (void)viewWillAppear:(BOOL)animated  {
 	[super viewWillAppear:animated];
         
-	// Don't run this while the table is updating
-	if ([SUSAllSongsLoader isLoading]) {
-        [self showLoadingScreen];
-	} else {
-        [self addURLRefBackButton];
-
-        self.navigationItem.rightBarButtonItem = nil;
-		if (musicS.showPlayerIcon) {
-			self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-		}
-		
-		// Check if the data has been loaded
-		if (self.dataModel.isDataLoaded) {
-			[self addCount];
-		} else {
-			self.tableView.tableHeaderView = nil;
-
-			if ([[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@isAllSongsLoading", settingsS.urlString]] isEqualToString:@"YES"]) {
-                NSString *message = @"If you've reloaded the albums tab since this load started you should choose 'Restart Load'.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.";
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Resume Load?"
-                                                                               message:message
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                [alert addAction:[UIAlertAction actionWithTitle:@"Restart Load" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-                    [self showLoadingScreen];
-                    
-                    [self.allSongsDataModel restartLoad];
-                    self.tableView.tableHeaderView = nil;
-                    [self.tableView reloadData];
-                    
-                    [self.tableView.refreshControl endRefreshing];
-                }]];
-                [alert addAction:[UIAlertAction actionWithTitle:@"Resume Load" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-                    [self showLoadingScreen];
-                    
-                    [self.allSongsDataModel startLoad];
-                    self.tableView.tableHeaderView = nil;
-                    [self.tableView reloadData];
-                    
-                    [self.tableView.refreshControl endRefreshing];
-                }]];
-                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-                [self presentViewController:alert animated:YES completion:nil];
-			} else {
-                NSString *message = @"This could take a while if you have a big collection.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.\n\nNote: If you've added new artists, you should reload the Folders first.";
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Load?"
-                                                                               message:message
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-                    [self showLoadingScreen];
-                    
-                    [self.allSongsDataModel restartLoad];
-                    self.tableView.tableHeaderView = nil;
-                    [self.tableView reloadData];
-                    
-                    [self.tableView.refreshControl endRefreshing];
-                }]];
-                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-                [self presentViewController:alert animated:YES completion:nil];
-			}
-		}
-	}
+//	// Don't run this while the table is updating
+//	if ([SUSAllSongsLoader isLoading]) {
+//        [self showLoadingScreen];
+//	} else {
+//        [self addURLRefBackButton];
+//
+//        self.navigationItem.rightBarButtonItem = nil;
+//		if (musicS.showPlayerIcon) {
+//			self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
+//		}
+//		
+//		// Check if the data has been loaded
+//		if (self.dataModel.isDataLoaded) {
+//			[self addCount];
+//		} else {
+//			self.tableView.tableHeaderView = nil;
+//
+//			if ([[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@isAllSongsLoading", settingsS.urlString]] isEqualToString:@"YES"]) {
+//                NSString *message = @"If you've reloaded the albums tab since this load started you should choose 'Restart Load'.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.";
+//                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Resume Load?"
+//                                                                               message:message
+//                                                                        preferredStyle:UIAlertControllerStyleAlert];
+//                [alert addAction:[UIAlertAction actionWithTitle:@"Restart Load" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+//                    [self showLoadingScreen];
+//                    
+//                    [self.allSongsDataModel restartLoad];
+//                    self.tableView.tableHeaderView = nil;
+//                    [self.tableView reloadData];
+//                    
+//                    [self.tableView.refreshControl endRefreshing];
+//                }]];
+//                [alert addAction:[UIAlertAction actionWithTitle:@"Resume Load" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+//                    [self showLoadingScreen];
+//                    
+//                    [self.allSongsDataModel startLoad];
+//                    self.tableView.tableHeaderView = nil;
+//                    [self.tableView reloadData];
+//                    
+//                    [self.tableView.refreshControl endRefreshing];
+//                }]];
+//                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+//                [self presentViewController:alert animated:YES completion:nil];
+//			} else {
+//                NSString *message = @"This could take a while if you have a big collection.\n\nIMPORTANT: Make sure to plug in your device to keep the app active if you have a large collection.\n\nNote: If you've added new artists, you should reload the Folders first.";
+//                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Load?"
+//                                                                               message:message
+//                                                                        preferredStyle:UIAlertControllerStyleAlert];
+//                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+//                    [self showLoadingScreen];
+//                    
+//                    [self.allSongsDataModel restartLoad];
+//                    self.tableView.tableHeaderView = nil;
+//                    [self.tableView reloadData];
+//                    
+//                    [self.tableView.refreshControl endRefreshing];
+//                }]];
+//                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+//                [self presentViewController:alert animated:YES completion:nil];
+//			}
+//		}
+//	}
 	
 	[self.tableView reloadData];
 	

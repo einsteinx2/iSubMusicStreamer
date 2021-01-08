@@ -26,29 +26,14 @@ typedef enum
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class AudioEngine;
+@class AudioEngine, Server;
 NS_SWIFT_NAME(Settings)
 @interface SavedSettings : NSObject 
 
 @property BOOL isCancelLoading;
 @property BOOL isOfflineMode;
 
-// Server Login Settings
-@property (nullable, strong) NSMutableArray *serverList;
-@property (copy) NSString *serverType;
-@property (copy) NSString *urlString;
-@property (copy) NSString *username;
-@property (copy) NSString *password;
-@property (nullable, copy) NSString *uuid;
-@property (nullable, copy) NSString *lastQueryId;
-@property (nullable, copy) NSString *sessionId;
-
-@property (readonly) NSString *urlStringFilesystemSafe;
-
-// Server ID (server URL in format "host_port_path" skipping port if 80, skipping protocol, skipping initial / in path)
-// I.e. https://plex:4041 is "plex_4041", http://test.subsonic.org is "test.subsonic.org", http://test.com:8080/subsonic is "test.com_8080_subsonic"
-// This gives a somewhat unique ID that can be used in DB records to distinguish different servers and is still human readable for filesystem use
-@property (readonly) NSString *serverId;
+@property (strong) Server *currentServer;
 
 // Root Folders Settings
 @property (nullable, strong) NSDate *rootFoldersReloadTime;
@@ -85,9 +70,6 @@ NS_SWIFT_NAME(Settings)
 @property BOOL isPopupsEnabled;
 @property BOOL isUpdateCheckEnabled;
 @property BOOL isUpdateCheckQuestionAsked;
-@property BOOL isNewSearchAPI;
-@property BOOL isVideoSupported;
-@property (readonly) BOOL isTestServer;
 @property BOOL isBasicAuthEnabled;
 @property BOOL isTapAndHoldEnabled;
 @property BOOL isSwipeEnabled;

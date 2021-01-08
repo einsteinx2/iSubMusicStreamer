@@ -8,14 +8,18 @@
 
 import UIKit
 import CocoaLumberjackSwift
+import Resolver
 
-@objc final class ServerEditViewController: UIViewController {    
+@objc final class ServerEditViewController: UIViewController {
+    @Injected var store: Store
+    
     let backgroundImageView = UIImageView(image: UIImage(named: "settings-page"))
     let urlField = InsetTextField(inset: 5)
     let usernameField = InsetTextField(inset: 5)
     let passwordField = InsetTextField(inset: 5)
     let closeButton = UIButton(type: .close)
     let saveButton = UIButton(type: .system)
+    @objc var serverToEdit: Server?
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
@@ -37,7 +41,7 @@ import CocoaLumberjackSwift
         }
         
         closeButton.addClosure(for: .touchUpInside) { [unowned self] in
-            ViewObjects.shared().serverToEdit = nil
+            self.serverToEdit = nil
             
             self.dismiss(animated: true, completion: nil)
             
@@ -131,8 +135,8 @@ import CocoaLumberjackSwift
             make.trailing.equalTo(stackView)
         }
         
-        if let serverToEdit = ViewObjects.shared().serverToEdit {
-            urlField.text = serverToEdit.url
+        if let serverToEdit = serverToEdit {
+            urlField.text = serverToEdit.url.absoluteString
             usernameField.text = serverToEdit.username
             passwordField.text = serverToEdit.password
         } else {
@@ -251,85 +255,27 @@ extension ServerEditViewController: SUSLoaderDelegate {
     func loadingFinished(_ loader: SUSLoader?) {
         ViewObjects.shared().hideLoadingScreen()
         
-        let server = Server()
-        server.url = urlField.text
-        server.username = usernameField.text
-        server.password = passwordField.text
-        server.type = SUBSONIC
-        
-        if Settings.shared().serverList == nil {
-            Settings.shared().serverList = NSMutableArray()
+        if let serverToEdit = serverToEdit {
+            _ = store.add(server: serverToEdit)
+        } else if let url = URL(string: urlField.text ?? ""), let username = usernameField.text, let password = passwordField.text {
+            let server = Server(type: .subsonic, url: url, username: username, password: password)
+            _ = store.add(server: server)
         }
         
-        if let serverToEdit = ViewObjects.shared().serverToEdit, let serverList = Settings.shared().serverList {
-            // Replace the entry in the server list
-            if let index = Settings.shared().serverList?.index(of: serverToEdit) {
-                Settings.shared().serverList?.replaceObject(at: index, with: server)
-            }
-            
-            // Update the serverToEdit to the new details
-            ViewObjects.shared().serverToEdit = server
-            
-            // Save the plist values
-            UserDefaults.standard.set(server.url, forKey: "url")
-            UserDefaults.standard.set(server.username, forKey: "username")
-            UserDefaults.standard.set(server.password, forKey: "password")
-            do {
-                let archivedServerList = try NSKeyedArchiver.archivedData(withRootObject: serverList, requiringSecureCoding: true)
-                UserDefaults.standard.set(archivedServerList, forKey: "servers")
-            } catch {
-                DDLogError("Error archiving the server list: \(error)")
-            }
-            UserDefaults.standard.synchronize()
-            
-            NotificationCenter.postNotificationToMainThread(name: "reloadServerList")
-            NotificationCenter.postNotificationToMainThread(name: "showSaveButton")
-            
-            self.dismiss(animated: true, completion: nil)
-            
-            var userInfo = [AnyHashable: Any]()
-            if let statusLoader = loader as? SUSStatusLoader {
-                userInfo["isVideoSupported"] = statusLoader.isVideoSupported
-                userInfo["isNewSearchAPI"] = statusLoader.isNewSearchAPI
-            }
-            NotificationCenter.postNotificationToMainThread(name: "switchServer", userInfo: userInfo)
-        } else if let serverList = Settings.shared().serverList {
-            // Create the entry in serverList
-            ViewObjects.shared().serverToEdit = server
-            Settings.shared().serverList?.add(server)
-            
-            if let statusLoader = loader as? SUSStatusLoader {
-                Settings.shared().isVideoSupported = statusLoader.isVideoSupported
-                Settings.shared().isNewSearchAPI = statusLoader.isNewSearchAPI
-            }
-            
-            // Save the plist values
-            UserDefaults.standard.set(server.url, forKey: "url")
-            UserDefaults.standard.set(server.username, forKey: "username")
-            UserDefaults.standard.set(server.password, forKey: "password")
-            do {
-                let archivedServerList = try NSKeyedArchiver.archivedData(withRootObject: serverList, requiringSecureCoding: true)
-                UserDefaults.standard.set(archivedServerList, forKey: "servers")
-            } catch {
-                DDLogError("Error archiving the server list: \(error)")
-            }
-            UserDefaults.standard.synchronize()
-            
-            NotificationCenter.postNotificationToMainThread(name: "reloadServerList")
-            NotificationCenter.postNotificationToMainThread(name: "showSaveButton")
-            
-            self.dismiss(animated: true, completion: nil)
-            
-            if UIDevice.isPad() {
-                AppDelegate.shared().padRootViewController.menuViewController.showHome()
-            }
-            
-            var userInfo = [AnyHashable: Any]()
-            if let statusLoader = loader as? SUSStatusLoader {
-                userInfo["isVideoSupported"] = statusLoader.isVideoSupported
-                userInfo["isNewSearchAPI"] = statusLoader.isNewSearchAPI
-            }
-            NotificationCenter.postNotificationToMainThread(name: "switchServer", userInfo: userInfo)
+        NotificationCenter.postNotificationToMainThread(name: "reloadServerList")
+        NotificationCenter.postNotificationToMainThread(name: "showSaveButton")
+        
+        self.dismiss(animated: true, completion: nil)
+        
+        if UIDevice.isPad() {
+            AppDelegate.shared().padRootViewController.menuViewController.showHome()
         }
+        
+        var userInfo = [AnyHashable: Any]()
+        if let statusLoader = loader as? SUSStatusLoader {
+            userInfo["isVideoSupported"] = statusLoader.isVideoSupported
+            userInfo["isNewSearchAPI"] = statusLoader.isNewSearchAPI
+        }
+        NotificationCenter.postNotificationToMainThread(name: "switchServer", userInfo: userInfo)
     }
 }

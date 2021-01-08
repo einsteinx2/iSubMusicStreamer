@@ -8,6 +8,7 @@
 
 #import "NSString+URLEncode.h"
 #import "SavedSettings.h"
+#import "Swift.h"
 
 @implementation NSMutableURLRequest (SUS)
 
@@ -120,7 +121,13 @@ static NSSet *setOfVersions = nil;
 }
 
 + (NSMutableURLRequest *)requestWithSUSAction:(NSString *)action parameters:(NSDictionary *)parameters byteOffset:(NSUInteger)offset {
-    return [NSMutableURLRequest requestWithSUSAction:action urlString:settingsS.urlString username:settingsS.username password:settingsS.password parameters:parameters byteOffset:offset];
+    Server *server = settingsS.currentServer;
+    return [NSMutableURLRequest requestWithSUSAction:action
+                                           urlString:server.url.absoluteString
+                                            username:server.username
+                                            password:server.password
+                                          parameters:parameters
+                                          byteOffset:offset];
 }
 
 + (NSMutableURLRequest *)requestWithSUSAction:(NSString *)action parameters:(NSDictionary *)parameters {

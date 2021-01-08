@@ -68,9 +68,9 @@ static BOOL _isAllSongsLoading = NO;
 	
 	[SUSAllSongsLoader setIsLoading:YES];
 	
-	[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:[NSString stringWithFormat:@"%@isAllAlbumsLoading", settingsS.urlString]];
-	[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:[NSString stringWithFormat:@"%@isAllSongsLoading", settingsS.urlString]];
-	[[NSUserDefaults standardUserDefaults] synchronize];
+//	[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:[NSString stringWithFormat:@"%@isAllAlbumsLoading", settingsS.urlString]];
+//	[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:[NSString stringWithFormat:@"%@isAllSongsLoading", settingsS.urlString]];
+//	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 //	self.rootFolders = [[RootFoldersDAO alloc] init];
 	
@@ -155,57 +155,57 @@ static BOOL _isAllSongsLoading = NO;
 }
 
 - (void)createLoadTables {
-	@autoreleasepool  {
-		// Remove the old databases
-		[databaseS.allAlbumsDbQueue close]; databaseS.allAlbumsDbQueue = nil;
-		[[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@allAlbums.db", settingsS.databasePath, [settingsS.urlString md5]] error:NULL];
-		[databaseS.allSongsDbQueue close]; databaseS.allSongsDbQueue = nil;
-		[[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@allSongs.db", settingsS.databasePath, [settingsS.urlString md5]] error:NULL];
-		[databaseS.genresDbQueue close]; databaseS.genresDbQueue = nil;
-		[[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@genres.db", settingsS.databasePath, [settingsS.urlString md5]] error:NULL];
-		
-		// Recreate the databases
-		[databaseS setupAllSongsDb];
-		
-		[databaseS.allAlbumsDbQueue inDatabase:^(FMDatabase *db) {
-			// Create allAlbums tables
-			[db executeUpdate:@"CREATE TABLE resumeLoad (artistNum INTEGER, iteration INTEGER)"];
-			[db executeUpdate:@"INSERT INTO resumeLoad (artistNum, iteration) VALUES (1, 0)"];
-			[db executeUpdate:@"CREATE VIRTUAL TABLE allAlbums USING FTS3(title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT, tokenize=porter)"];
-			[db executeUpdate:@"CREATE TABLE allAlbumsUnsorted(title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
-			[db executeUpdate:@"CREATE TABLE allAlbumsCount (count INTEGER)"];
-			[db executeUpdate:@"CREATE TABLE allAlbumsUnsortedCount (count INTEGER)"];
-			
-			[db executeUpdate:@"CREATE TABLE subalbums1 (title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
-			[db executeUpdate:@"CREATE TABLE subalbums2 (title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
-			[db executeUpdate:@"CREATE TABLE subalbums3 (title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
-			[db executeUpdate:@"CREATE TABLE subalbums4 (title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
-		}];
-		
-		// Initialize allSongs db
-		[databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
-			// Create allSongs tables
-			[db executeUpdate:@"CREATE TABLE resumeLoad (albumNum INTEGER, iteration INTEGER)"];
-			[db executeUpdate:@"INSERT INTO resumeLoad (albumNum, iteration) VALUES (1, 0)"];
-			NSString *query = [NSString stringWithFormat:@"CREATE VIRTUAL TABLE allSongs USING FTS3 (%@, tokenize=porter)", ISMSSong.standardSongColumnSchema];
-			[db executeUpdate:query];
-			
-			query = [NSString stringWithFormat:@"CREATE TABLE allSongsUnsorted (%@)", ISMSSong.standardSongColumnSchema];
-			[db executeUpdate:query];
-			//[db executeUpdate:@"CREATE INDEX allSongsUnsorted_title ON allSongsUnsorted (title ASC)"];
-			[db executeUpdate:@"CREATE TABLE allSongsCount (count INTEGER)"];
-		}];
-		
-		// Initialize genres db
-		[databaseS.genresDbQueue inDatabase:^(FMDatabase *db) {
-			// Create genres tables
-			[db executeUpdate:@"CREATE TABLE genres (genre TEXT UNIQUE)"];
-			[db executeUpdate:@"CREATE TABLE genresUnsorted (genre TEXT UNIQUE)"];
-			[db executeUpdate:@"CREATE TABLE genresLayout (md5 TEXT, genre TEXT, segs INTEGER, seg1 TEXT, seg2 TEXT, seg3 TEXT, seg4 TEXT, seg5 TEXT, seg6 TEXT, seg7 TEXT, seg8 TEXT, seg9 TEXT)"];
-            [db executeUpdate:@"CREATE INDEX genresLayout_genre_seg1 ON genresLayout (genre, seg1)"];
-            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE genresSongs (md5 TEXT, %@)", ISMSSong.standardSongColumnSchema]];
-		}];
-	}
+//	@autoreleasepool  {
+//		// Remove the old databases
+//		[databaseS.allAlbumsDbQueue close]; databaseS.allAlbumsDbQueue = nil;
+//		[[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@allAlbums.db", settingsS.databasePath, [settingsS.urlString md5]] error:NULL];
+//		[databaseS.allSongsDbQueue close]; databaseS.allSongsDbQueue = nil;
+//		[[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@allSongs.db", settingsS.databasePath, [settingsS.urlString md5]] error:NULL];
+//		[databaseS.genresDbQueue close]; databaseS.genresDbQueue = nil;
+//		[[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@genres.db", settingsS.databasePath, [settingsS.urlString md5]] error:NULL];
+//		
+//		// Recreate the databases
+//		[databaseS setupAllSongsDb];
+//		
+//		[databaseS.allAlbumsDbQueue inDatabase:^(FMDatabase *db) {
+//			// Create allAlbums tables
+//			[db executeUpdate:@"CREATE TABLE resumeLoad (artistNum INTEGER, iteration INTEGER)"];
+//			[db executeUpdate:@"INSERT INTO resumeLoad (artistNum, iteration) VALUES (1, 0)"];
+//			[db executeUpdate:@"CREATE VIRTUAL TABLE allAlbums USING FTS3(title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT, tokenize=porter)"];
+//			[db executeUpdate:@"CREATE TABLE allAlbumsUnsorted(title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
+//			[db executeUpdate:@"CREATE TABLE allAlbumsCount (count INTEGER)"];
+//			[db executeUpdate:@"CREATE TABLE allAlbumsUnsortedCount (count INTEGER)"];
+//			
+//			[db executeUpdate:@"CREATE TABLE subalbums1 (title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
+//			[db executeUpdate:@"CREATE TABLE subalbums2 (title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
+//			[db executeUpdate:@"CREATE TABLE subalbums3 (title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
+//			[db executeUpdate:@"CREATE TABLE subalbums4 (title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
+//		}];
+//		
+//		// Initialize allSongs db
+//		[databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
+//			// Create allSongs tables
+//			[db executeUpdate:@"CREATE TABLE resumeLoad (albumNum INTEGER, iteration INTEGER)"];
+//			[db executeUpdate:@"INSERT INTO resumeLoad (albumNum, iteration) VALUES (1, 0)"];
+//			NSString *query = [NSString stringWithFormat:@"CREATE VIRTUAL TABLE allSongs USING FTS3 (%@, tokenize=porter)", ISMSSong.standardSongColumnSchema];
+//			[db executeUpdate:query];
+//			
+//			query = [NSString stringWithFormat:@"CREATE TABLE allSongsUnsorted (%@)", ISMSSong.standardSongColumnSchema];
+//			[db executeUpdate:query];
+//			//[db executeUpdate:@"CREATE INDEX allSongsUnsorted_title ON allSongsUnsorted (title ASC)"];
+//			[db executeUpdate:@"CREATE TABLE allSongsCount (count INTEGER)"];
+//		}];
+//		
+//		// Initialize genres db
+//		[databaseS.genresDbQueue inDatabase:^(FMDatabase *db) {
+//			// Create genres tables
+//			[db executeUpdate:@"CREATE TABLE genres (genre TEXT UNIQUE)"];
+//			[db executeUpdate:@"CREATE TABLE genresUnsorted (genre TEXT UNIQUE)"];
+//			[db executeUpdate:@"CREATE TABLE genresLayout (md5 TEXT, genre TEXT, segs INTEGER, seg1 TEXT, seg2 TEXT, seg3 TEXT, seg4 TEXT, seg5 TEXT, seg6 TEXT, seg7 TEXT, seg8 TEXT, seg9 TEXT)"];
+//            [db executeUpdate:@"CREATE INDEX genresLayout_genre_seg1 ON genresLayout (genre, seg1)"];
+//            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE genresSongs (md5 TEXT, %@)", ISMSSong.standardSongColumnSchema]];
+//		}];
+//	}
 }
 
 - (void)loadAlbumFolder {
@@ -405,24 +405,24 @@ static BOOL _isAllSongsLoading = NO;
             return;
         }
         
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:[NSDate date] forKey:[NSString stringWithFormat:@"%@songsReloadTime", settingsS.urlString]];
-        [defaults synchronize];
-        
-		[databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
-			[db executeUpdate:@"UPDATE resumeLoad SET albumNum = ?, iteration = ?", @0, @6];
-			[db executeUpdate:@"DROP TABLE resumeLoad"];
-		}];
-      		
-		[SUSAllSongsLoader setIsLoading:NO];
-        settingsS.isCancelLoading = NO;
-		[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:[NSString stringWithFormat:@"%@isAllAlbumsLoading", settingsS.urlString]];
-		[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:[NSString stringWithFormat:@"%@isAllSongsLoading", settingsS.urlString]];
-		[[NSUserDefaults standardUserDefaults] synchronize];
-		
-		[EX2Dispatch runInMainThreadAndWaitUntilDone:NO block:^{ [self informDelegateLoadingFinished]; }];
-		
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_AllSongsLoadingFinished];
+//        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//        [defaults setObject:[NSDate date] forKey:[NSString stringWithFormat:@"%@songsReloadTime", settingsS.urlString]];
+//        [defaults synchronize];
+//        
+//		[databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
+//			[db executeUpdate:@"UPDATE resumeLoad SET albumNum = ?, iteration = ?", @0, @6];
+//			[db executeUpdate:@"DROP TABLE resumeLoad"];
+//		}];
+//      		
+//		[SUSAllSongsLoader setIsLoading:NO];
+//        settingsS.isCancelLoading = NO;
+//		[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:[NSString stringWithFormat:@"%@isAllAlbumsLoading", settingsS.urlString]];
+//		[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:[NSString stringWithFormat:@"%@isAllSongsLoading", settingsS.urlString]];
+//		[[NSUserDefaults standardUserDefaults] synchronize];
+//		
+//		[EX2Dispatch runInMainThreadAndWaitUntilDone:NO block:^{ [self informDelegateLoadingFinished]; }];
+//		
+//		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_AllSongsLoadingFinished];
     }
 }
 
