@@ -26,15 +26,15 @@ extension FolderArtist: FetchableRecord, PersistableRecord {
     static func createInitialSchema(_ db: Database) throws {
         // Shared table of unique artist records
         try db.create(table: FolderArtist.databaseTableName) { t in
-            t.column(FolderArtist.Column.id, .integer).notNull().primaryKey()
-            t.column(FolderArtist.Column.name, .text).notNull().indexed()
+            t.column(Column.id, .integer).notNull().primaryKey()
+            t.column(Column.name, .text).notNull().indexed()
         }
         
         // Cache of folder artist IDs for each media folder for display
         try db.create(table: FolderArtist.Table.folderArtistList) { t in
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
-            t.column(FolderArtist.RelatedColumn.mediaFolderId, .integer).notNull().indexed()
-            t.column(FolderArtist.RelatedColumn.folderArtistId, .integer).notNull()
+            t.column(RelatedColumn.mediaFolderId, .integer).notNull().indexed()
+            t.column(RelatedColumn.folderArtistId, .integer).notNull()
         }
         
         // Cache of section indexes for display
@@ -89,7 +89,7 @@ extension Store {
     func folderArtist(id: Int) -> FolderArtist? {
         do {
             return try serverDb.read { db in
-                try FolderArtist.filter(key: id).fetchOne(db)
+                try FolderArtist.fetchOne(db, key: id)
             }
         } catch {
             DDLogError("Failed to select folder artist \(id): \(error)")

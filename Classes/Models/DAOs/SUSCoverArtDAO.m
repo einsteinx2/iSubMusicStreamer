@@ -11,6 +11,7 @@
 #import "FMDatabaseQueueAdditions.h"
 #import "DatabaseSingleton.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation SUSCoverArtDAO
 
@@ -35,16 +36,6 @@
 	_loader.delegate = nil;
 }
 
-#pragma mark - Private DB Methods
-
-- (FMDatabaseQueue *)dbQueue {
-    return databaseS.serverDbQueue;
-}
-
-- (NSString *)table {
-    return self.isLarge ? @"coverArtCacheLarge" : @"coverArtCacheSmall";
-}
-
 #pragma mark - Public DAO methods
 
 + (UIImage *)defaultCoverArtImage:(BOOL)isLarge {
@@ -56,15 +47,12 @@
 }
 
 - (UIImage *)coverArtImage {
-    NSString *query = [NSString stringWithFormat:@"SELECT data FROM %@ WHERE coverArtId = ?", self.table];
-    NSData *imageData = [self.dbQueue dataForQuery:query, self.coverArtId];
-    return imageData ? [UIImage imageWithData:imageData] : self.defaultCoverArtImage;
+    return [Store.shared coverArtWithId:self.coverArtId isLarge:self.isLarge].image ?: self.defaultCoverArtImage;
 }
 
 - (BOOL)isCoverArtCached {
 	if (!self.coverArtId) return NO;
-    NSString *query = [NSString stringWithFormat:@"SELECT count(*) FROM %@ WHERE coverArtId = ?", self.table];
-    return [self.dbQueue intForQuery:query, self.coverArtId] > 0;
+    return [Store.shared isCoverArtCachedWithId:self.coverArtId isLarge:self.isLarge];
 }
 
 - (void)downloadArtIfNotExists {

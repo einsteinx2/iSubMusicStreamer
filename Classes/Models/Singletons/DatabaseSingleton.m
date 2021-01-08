@@ -77,24 +77,6 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)setupServerDatabase {
     
     //
-    // Cover art cache
-    //
-    
-    [self.serverDbQueue inDatabase:^(FMDatabase * _Nonnull db) {
-        if (![db tableExists:@"coverArtCacheSmall"]) {
-            [db executeUpdate:@"CREATE TABLE coverArtCacheSmall (coverArtId TEXT PRIMARY KEY, data BLOB)"];
-        }
-        
-        if (![db tableExists:@"coverArtCacheLarge"]) {
-            [db executeUpdate:@"CREATE TABLE coverArtCacheLarge (coverArtId TEXT PRIMARY KEY, data BLOB)"];
-        }
-        
-        if (![db tableExists:@"artistArtCache"]) {
-            [db executeUpdate:@"CREATE TABLE artistArtCache (coverArtId TEXT PRIMARY KEY, data BLOB)"];
-        }
-    }];
-    
-    //
     // Playlists
     //
     

@@ -139,6 +139,12 @@
 		535E143625A7BB910039BCAA /* FolderAlbumStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E143425A7BB910039BCAA /* FolderAlbumStore.swift */; };
 		535E143825A7C6D60039BCAA /* QuickAlbumsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E143725A7C6D60039BCAA /* QuickAlbumsLoader.swift */; };
 		535E143925A7C6D60039BCAA /* QuickAlbumsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E143725A7C6D60039BCAA /* QuickAlbumsLoader.swift */; };
+		535E143B25A7CC690039BCAA /* CoverArtStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E143A25A7CC690039BCAA /* CoverArtStore.swift */; };
+		535E143C25A7CC690039BCAA /* CoverArtStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E143A25A7CC690039BCAA /* CoverArtStore.swift */; };
+		535E143E25A7CC870039BCAA /* CoverArt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E143D25A7CC870039BCAA /* CoverArt.swift */; };
+		535E143F25A7CC870039BCAA /* CoverArt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E143D25A7CC870039BCAA /* CoverArt.swift */; };
+		535E144125A7D3480039BCAA /* ArtistArt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E144025A7D3480039BCAA /* ArtistArt.swift */; };
+		535E144225A7D3480039BCAA /* ArtistArt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E144025A7D3480039BCAA /* ArtistArt.swift */; };
 		53614ACA116432DA0088ABC0 /* ServerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53614AC8116432DA0088ABC0 /* ServerListViewController.m */; };
 		53614BD9116467420088ABC0 /* AllSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53614BD7116467420088ABC0 /* AllSongsViewController.xib */; };
 		536585811478920D00FE57A5 /* EqualizerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365857F1478920B00FE57A5 /* EqualizerViewController.m */; };
@@ -746,6 +752,9 @@
 		535E142E25A7B6750039BCAA /* RootFoldersDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootFoldersDAO.swift; sourceTree = "<group>"; };
 		535E143425A7BB910039BCAA /* FolderAlbumStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAlbumStore.swift; sourceTree = "<group>"; };
 		535E143725A7C6D60039BCAA /* QuickAlbumsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAlbumsLoader.swift; sourceTree = "<group>"; };
+		535E143A25A7CC690039BCAA /* CoverArtStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverArtStore.swift; sourceTree = "<group>"; };
+		535E143D25A7CC870039BCAA /* CoverArt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverArt.swift; sourceTree = "<group>"; };
+		535E144025A7D3480039BCAA /* ArtistArt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistArt.swift; sourceTree = "<group>"; };
 		53614AC7116432DA0088ABC0 /* ServerListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerListViewController.h; sourceTree = "<group>"; };
 		53614AC8116432DA0088ABC0 /* ServerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerListViewController.m; sourceTree = "<group>"; };
 		53614BD7116467420088ABC0 /* AllSongsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllSongsViewController.xib; sourceTree = "<group>"; };
@@ -1896,6 +1905,7 @@
 				53B9C49625A7A650007E9E3C /* SongStore.swift */,
 				535E142525A7B2020039BCAA /* FolderArtistStore.swift */,
 				535E143425A7BB910039BCAA /* FolderAlbumStore.swift */,
+				535E143A25A7CC690039BCAA /* CoverArtStore.swift */,
 			);
 			path = "Data Store";
 			sourceTree = "<group>";
@@ -1906,6 +1916,8 @@
 				5389479C25A53C7F0078FBAF /* TableSection.swift */,
 				53D4FCA22599335900C6F1AE /* FolderMetadata.swift */,
 				5381884125A65F6100C59CDE /* RootListMetadata.swift */,
+				535E143D25A7CC870039BCAA /* CoverArt.swift */,
+				535E144025A7D3480039BCAA /* ArtistArt.swift */,
 			);
 			path = "DB Models";
 			sourceTree = "<group>";
@@ -2429,6 +2441,7 @@
 				53FE38981EA961C80058B925 /* NSFileHandle+ZKAdditions.m in Sources */,
 				5389479425A4EA9B0078FBAF /* DropdownFolderLoader.swift in Sources */,
 				53614ACA116432DA0088ABC0 /* ServerListViewController.m in Sources */,
+				535E144125A7D3480039BCAA /* ArtistArt.swift in Sources */,
 				530388A9116571920043292D /* AllSongsViewController.m in Sources */,
 				53FE37251EA961720058B925 /* ISMSNotificationNames.m in Sources */,
 				53C3AB73257DDA1000B35B99 /* LicensesViewController.swift in Sources */,
@@ -2440,6 +2453,7 @@
 				53FE37161EA961720058B925 /* ISMSChatMessage.m in Sources */,
 				53FE67AC256DE9600015FC83 /* Defines.swift in Sources */,
 				53FE38BC1EA961C80058B925 /* ZKLog.m in Sources */,
+				535E143B25A7CC690039BCAA /* CoverArtStore.swift in Sources */,
 				53FE358E1EA961540058B925 /* EX2RingBuffer.m in Sources */,
 				53FE34E31EA961540058B925 /* NSNull+CleanString.m in Sources */,
 				530A16B92592DFC700E9294E /* TagArtistViewController.m in Sources */,
@@ -2564,6 +2578,7 @@
 				538E5255255A31F2000DF682 /* UIApplication+Helper.m in Sources */,
 				53ADBBC013352DB40098FAE6 /* FolderDropdownControl.m in Sources */,
 				53FE38B01EA961C80058B925 /* ZKDataArchive.m in Sources */,
+				535E143E25A7CC870039BCAA /* CoverArt.swift in Sources */,
 				53FE38921EA961C80058B925 /* NSDate+ZKAdditions.m in Sources */,
 				53D973FE255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
 				53246AA3256C209E00E11EC4 /* ServerEditViewController.swift in Sources */,
@@ -2663,6 +2678,7 @@
 				53BC27AE139AF0DD00A825F1 /* ServerListViewController.m in Sources */,
 				5389479525A4EA9B0078FBAF /* DropdownFolderLoader.swift in Sources */,
 				53BC27B0139AF0DD00A825F1 /* AllSongsViewController.m in Sources */,
+				535E144225A7D3480039BCAA /* ArtistArt.swift in Sources */,
 				5359C85A256EA8FE00C8F8DC /* ObjC.swift in Sources */,
 				53FE37271EA961720058B925 /* ISMSNotificationNames.m in Sources */,
 				53246AB7256C975600E11EC4 /* CacheStatusViewController.swift in Sources */,
@@ -2674,6 +2690,7 @@
 				53329642255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */,
 				53FE37181EA961720058B925 /* ISMSChatMessage.m in Sources */,
 				53FE38BE1EA961C80058B925 /* ZKLog.m in Sources */,
+				535E143C25A7CC690039BCAA /* CoverArtStore.swift in Sources */,
 				53FE35901EA961540058B925 /* EX2RingBuffer.m in Sources */,
 				53C3AB74257DDA1000B35B99 /* LicensesViewController.swift in Sources */,
 				530A16BA2592DFC700E9294E /* TagArtistViewController.m in Sources */,
@@ -2798,6 +2815,7 @@
 				53FE38881EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */,
 				538E5256255A31F2000DF682 /* UIApplication+Helper.m in Sources */,
 				533295F9255EEFE50027C51A /* FMDatabasePool.m in Sources */,
+				535E143F25A7CC870039BCAA /* CoverArt.swift in Sources */,
 				53BC282D139AF0DD00A825F1 /* FolderDropdownControl.m in Sources */,
 				53FE38B21EA961C80058B925 /* ZKDataArchive.m in Sources */,
 				53FE6795256DD0F00015FC83 /* GCDWebServer.m in Sources */,

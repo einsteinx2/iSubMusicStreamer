@@ -17,8 +17,8 @@ extension MediaFolder: FetchableRecord, PersistableRecord {
     
     static func createInitialSchema(_ db: Database) throws {
         try db.create(table: MediaFolder.databaseTableName) { t in
-            t.column(MediaFolder.Column.id, .integer).notNull().primaryKey()
-            t.column(MediaFolder.Column.name, .text).notNull()
+            t.column(Column.id, .integer).notNull().primaryKey()
+            t.column(Column.name, .text).notNull()
         }
     }
 }

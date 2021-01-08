@@ -25,28 +25,28 @@ extension FolderAlbum: FetchableRecord, PersistableRecord {
     static func createInitialSchema(_ db: Database) throws {
         // Shared table of unique album records
         try db.create(table: FolderAlbum.databaseTableName) { t in
-            t.column(FolderAlbum.Column.id, .integer).notNull().primaryKey()
-            t.column(FolderAlbum.Column.name, .text).notNull()
-            t.column(FolderAlbum.Column.coverArtId, .text)
-            t.column(FolderAlbum.Column.parentFolderId, .integer)
-            t.column(FolderAlbum.Column.tagArtistName, .text)
-            t.column(FolderAlbum.Column.tagAlbumName, .text)
-            t.column(FolderAlbum.Column.playCount, .integer)
-            t.column(FolderAlbum.Column.year, .integer)
+            t.column(Column.id, .integer).notNull().primaryKey()
+            t.column(Column.name, .text).notNull()
+            t.column(Column.coverArtId, .text)
+            t.column(Column.parentFolderId, .integer)
+            t.column(Column.tagArtistName, .text)
+            t.column(Column.tagAlbumName, .text)
+            t.column(Column.playCount, .integer)
+            t.column(Column.year, .integer)
         }
         
         // Cache of folder album IDs for each folder for display
         try db.create(table: FolderAlbum.Table.folderAlbumList) { t in
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
-            t.column(FolderAlbum.RelatedColumn.parentFolderId, .integer).notNull().indexed()
-            t.column(FolderAlbum.RelatedColumn.folderId, .integer).notNull()
+            t.column(RelatedColumn.parentFolderId, .integer).notNull().indexed()
+            t.column(RelatedColumn.folderId, .integer).notNull()
         }
         
         // Cache of song IDs for each folder for display
         try db.create(table: FolderAlbum.Table.folderSongList) { t in
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
-            t.column(FolderAlbum.RelatedColumn.parentFolderId, .integer).notNull().indexed()
-            t.column(FolderAlbum.RelatedColumn.songId, .integer).notNull()
+            t.column(RelatedColumn.parentFolderId, .integer).notNull().indexed()
+            t.column(RelatedColumn.songId, .integer).notNull()
         }
     }
 }
@@ -101,7 +101,7 @@ extension Store {
     func folderAlbum(id: Int) -> FolderAlbum? {
         do {
             return try serverDb.read { db in
-                try FolderAlbum.filter(key: id).fetchOne(db)
+                try FolderAlbum.fetchOne(db, key: id)
             }
         } catch {
             DDLogError("Failed to select folder album \(id): \(error)")
@@ -171,7 +171,7 @@ extension Store {
     func folderMetadata(parentFolderId: Int) -> FolderMetadata? {
         do {
             return try serverDb.read { db in
-                try FolderMetadata.filter(key: parentFolderId).fetchOne(db)
+                try FolderMetadata.fetchOne(db, key: parentFolderId)
             }
         } catch {
             DDLogError("Failed to select folder metadata \(parentFolderId): \(error)")

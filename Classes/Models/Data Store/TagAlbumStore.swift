@@ -24,23 +24,23 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
     static func createInitialSchema(_ db: Database) throws {
         // Shared table of unique album records
         try db.create(table: TagAlbum.databaseTableName) { t in
-            t.column(TagAlbum.Column.id, .integer).notNull().primaryKey()
-            t.column(TagAlbum.Column.name, .text).notNull()
-            t.column(TagAlbum.Column.coverArtId, .text)
-            t.column(TagAlbum.Column.tagArtistId, .integer).indexed()
-            t.column(TagAlbum.Column.tagArtistName, .text)
-            t.column(TagAlbum.Column.songCount, .integer).notNull()
-            t.column(TagAlbum.Column.duration, .integer).notNull()
-            t.column(TagAlbum.Column.playCount, .integer)
-            t.column(TagAlbum.Column.year, .integer)
-            t.column(TagAlbum.Column.genre, .text)
+            t.column(Column.id, .integer).notNull().primaryKey()
+            t.column(Column.name, .text).notNull()
+            t.column(Column.coverArtId, .text)
+            t.column(Column.tagArtistId, .integer).indexed()
+            t.column(Column.tagArtistName, .text)
+            t.column(Column.songCount, .integer).notNull()
+            t.column(Column.duration, .integer).notNull()
+            t.column(Column.playCount, .integer)
+            t.column(Column.year, .integer)
+            t.column(Column.genre, .text)
         }
         
         // Cache of song IDs for each tag album for display
         try db.create(table: TagAlbum.Table.tagSongList) { t in
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
-            t.column(TagAlbum.RelatedColumn.tagAlbumId, .integer).notNull().indexed()
-            t.column(TagAlbum.RelatedColumn.songId, .integer).notNull()
+            t.column(RelatedColumn.tagAlbumId, .integer).notNull().indexed()
+            t.column(RelatedColumn.songId, .integer).notNull()
         }
     }
 }
@@ -97,7 +97,7 @@ extension Store {
     func tagAlbum(id: Int) -> TagAlbum? {
         do {
             return try serverDb.read { db in
-                try TagAlbum.filter(key: id).fetchOne(db)
+                try TagAlbum.fetchOne(db, key: id)
             }
         } catch {
             DDLogError("Failed to select tag album \(id): \(error)")

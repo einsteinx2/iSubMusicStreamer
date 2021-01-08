@@ -13,6 +13,7 @@
 #import "DatabaseSingleton.h"
 #import "EX2Kit.h"
 #import "Defines.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -64,18 +65,9 @@ static void initialize_navigationBarImages() {
 
 #pragma mark Properties
 
-- (FMDatabaseQueue *)dbQueue {
-    return databaseS.serverDbQueue;
-}
-
-- (NSString *)table {
-    return self.isLarge ? @"coverArtCacheLarge" : @"coverArtCacheSmall";
-}
-
 - (BOOL)isCoverArtCached {
     if (!self.coverArtId) return NO;
-    NSString *query = [NSString stringWithFormat:@"SELECT count(*) FROM %@ WHERE coverArtId = ?", self.table];
-    return [self.dbQueue intForQuery:query, self.coverArtId] > 0;
+    return [Store.shared isCoverArtCachedWithId:self.coverArtId isLarge:self.isLarge];
 }
 
 #pragma mark Data loading
@@ -123,12 +115,10 @@ static void initialize_navigationBarImages() {
     }
     
     // Check to see if the data is a valid image. If so, use it; if not, use the default image.
-    if ([UIImage imageWithData:self.receivedData]) {
+    CoverArt *coverArt = [[CoverArt alloc] initWithId:self.coverArtId isLarge:self.isLarge data:self.receivedData];
+    if (coverArt.image) {
         DDLogInfo(@"[SUSCoverArtLoader] art loading completed for: %@", self.coverArtId);
-        [self.dbQueue inDatabase:^(FMDatabase *db) {
-            NSString *query = [NSString stringWithFormat:@"REPLACE INTO %@ (coverArtId, data) VALUES (?, ?)", self.table];
-            [db executeUpdate:query, self.coverArtId, self.receivedData];
-        }];
+        (void)[Store.shared addWithCoverArt:coverArt];
         [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CoverArtFinishedInternal object:self.coverArtId];
     } else {
         DDLogError(@"[SUSCoverArtLoader] art loading failed for: %@", self.coverArtId);

@@ -20,26 +20,26 @@ extension NewSong: FetchableRecord, PersistableRecord {
     static func createInitialSchema(_ db: Database) throws {
         // Shared table of unique song records
         try db.create(table: NewSong.databaseTableName) { t in
-            t.column(NewSong.Column.id, .integer).notNull().primaryKey()
-            t.column(NewSong.Column.title, .text).notNull()
-            t.column(NewSong.Column.coverArtId, .text)
-            t.column(NewSong.Column.parentFolderId, .integer)
-            t.column(NewSong.Column.tagArtistName, .text)
-            t.column(NewSong.Column.tagAlbumName, .text)
-            t.column(NewSong.Column.playCount, .integer)
-            t.column(NewSong.Column.year, .integer)
-            t.column(NewSong.Column.tagArtistId, .integer)
-            t.column(NewSong.Column.tagAlbumId, .integer)
-            t.column(NewSong.Column.genre, .text)
-            t.column(NewSong.Column.path, .text).notNull()
-            t.column(NewSong.Column.suffix, .text).notNull()
-            t.column(NewSong.Column.transcodedSuffix, .text)
-            t.column(NewSong.Column.duration, .integer).notNull()
-            t.column(NewSong.Column.bitrate, .integer).notNull()
-            t.column(NewSong.Column.track, .integer).notNull()
-            t.column(NewSong.Column.discNumber, .integer)
-            t.column(NewSong.Column.size, .integer).notNull()
-            t.column(NewSong.Column.isVideo, .boolean).notNull()
+            t.column(Column.id, .integer).notNull().primaryKey()
+            t.column(Column.title, .text).notNull()
+            t.column(Column.coverArtId, .text)
+            t.column(Column.parentFolderId, .integer)
+            t.column(Column.tagArtistName, .text)
+            t.column(Column.tagAlbumName, .text)
+            t.column(Column.playCount, .integer)
+            t.column(Column.year, .integer)
+            t.column(Column.tagArtistId, .integer)
+            t.column(Column.tagAlbumId, .integer)
+            t.column(Column.genre, .text)
+            t.column(Column.path, .text).notNull()
+            t.column(Column.suffix, .text).notNull()
+            t.column(Column.transcodedSuffix, .text)
+            t.column(Column.duration, .integer).notNull()
+            t.column(Column.bitrate, .integer).notNull()
+            t.column(Column.track, .integer).notNull()
+            t.column(Column.discNumber, .integer)
+            t.column(Column.size, .integer).notNull()
+            t.column(Column.isVideo, .boolean).notNull()
         }
     }
 }
@@ -48,7 +48,7 @@ extension Store {
     func song(id: Int) -> NewSong? {
         do {
             return try serverDb.read { db in
-                try NewSong.filter(key: id).fetchOne(db)
+                try NewSong.fetchOne(db, key: id)
             }
         } catch {
             DDLogError("Failed to select song \(id): \(error)")

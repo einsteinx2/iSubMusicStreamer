@@ -26,18 +26,18 @@ extension TagArtist: FetchableRecord, PersistableRecord {
     static func createInitialSchema(_ db: Database) throws {
         // Shared table of unique artist records
         try db.create(table: TagArtist.databaseTableName) { t in
-            t.column(TagArtist.Column.id, .integer).notNull().primaryKey()
-            t.column(TagArtist.Column.name, .text).notNull().indexed()
-            t.column(TagArtist.Column.coverArtId, .text)
-            t.column(TagArtist.Column.artistImageUrl, .text)
-            t.column(TagArtist.Column.albumCount, .integer).notNull()
+            t.column(Column.id, .integer).notNull().primaryKey()
+            t.column(Column.name, .text).notNull().indexed()
+            t.column(Column.coverArtId, .text)
+            t.column(Column.artistImageUrl, .text)
+            t.column(Column.albumCount, .integer).notNull()
         }
         
         // Cache of tag artist IDs for each media folder for display
         try db.create(table: TagArtist.Table.tagArtistList) { t in
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
-            t.column(TagArtist.RelatedColumn.mediaFolderId, .integer).notNull().indexed()
-            t.column(TagArtist.RelatedColumn.tagArtistId, .integer).notNull()
+            t.column(RelatedColumn.mediaFolderId, .integer).notNull().indexed()
+            t.column(RelatedColumn.tagArtistId, .integer).notNull()
         }
         
         // Cache of section indexes for display
@@ -92,7 +92,7 @@ extension Store {
     func tagArtist(id: Int) -> TagArtist? {
         do {
             return try serverDb.read { db in
-                try TagArtist.filter(key: id).fetchOne(db)
+                try TagArtist.fetchOne(db, key: id)
             }
         } catch {
             DDLogError("Failed to select tag artist \(id): \(error)")

@@ -88,6 +88,8 @@ fileprivate let debugPrintAllQueries = false
                 try FolderAlbum.createInitialSchema(db)
                 try FolderMetadata.createInitialSchema(db)
                 try NewSong.createInitialSchema(db)
+                try CoverArt.createInitialSchema(db)
+                try ArtistArt.createInitialSchema(db)
             }
             
             // Automatically perform all registered migrations in order
