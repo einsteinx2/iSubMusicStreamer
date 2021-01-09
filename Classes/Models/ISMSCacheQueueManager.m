@@ -9,10 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "ISMSCacheQueueManager.h"
 #import "DatabaseSingleton.h"
-#import "SUSLyricsLoader.h"
 #import "ISMSStreamManager.h"
 #import "ISMSStreamHandler.h"
-#import "SUSLyricsDAO.h"
 #import "RXMLElement.h"
 #import "ISMSNSURLSessionStreamHandler.h"
 #import "FMDatabaseQueueAdditions.h"
@@ -111,7 +109,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	// Grab the lyrics
 	if (self.currentQueuedSong.artist && self.currentQueuedSong.title) {
-        [self.lyricsDAO loadLyricsForArtist:self.currentQueuedSong.artist andTitle:self.currentQueuedSong.title];    
+        if (![Store.shared isLyricsCachedWithTagArtistName:self.currentQueuedSong.artist songTitle:self.currentQueuedSong.title]) {
+            [[[LyricsLoader alloc] initWithDelegate:nil tagArtistName:self.currentQueuedSong.artist songTitle:self.currentQueuedSong.title] startLoad];
+        }
 	}
 	
 	// Download the art
@@ -272,7 +272,6 @@ LOG_LEVEL_ISUB_DEFAULT
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{
 		sharedInstance = [[self alloc] init];
-        sharedInstance.lyricsDAO = [[SUSLyricsDAO alloc] init];
 	});
     return sharedInstance;
 }

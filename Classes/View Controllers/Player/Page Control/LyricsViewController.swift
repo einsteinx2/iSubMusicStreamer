@@ -8,9 +8,11 @@
 
 import UIKit
 import SnapKit
+import Resolver
 
 final class LyricsViewController: UIViewController {
-    private let dataModel = SUSLyricsDAO()
+    @Injected private var store: Store
+    
     private let textView = UITextView()
     
     override func viewDidLoad() {
@@ -56,8 +58,8 @@ final class LyricsViewController: UIViewController {
     }
     
     @objc private func updateLyricsLabel() {
-        if let song = PlayQueue.shared().currentSong(), let lyrics = dataModel.lyrics(forArtist: song.artist, andTitle: song.title), lyrics.count > 0 {
-            textView.text = lyrics
+        if let song = PlayQueue.shared().currentSong(), let lyricsText = store.lyricsText(tagArtistName: song.artist ?? "", songTitle: song.title ?? ""), lyricsText.count > 0 {
+            textView.text = lyricsText
         } else {
             textView.text = "\n\nNo lyrics found"
         }

@@ -10,15 +10,13 @@
 
 #define cacheQueueManagerS ((ISMSCacheQueueManager *)[ISMSCacheQueueManager sharedInstance])
 
-@class ISMSSong, ISMSStreamHandler, SUSLyricsDAO;
+@class ISMSSong, ISMSStreamHandler;
 @interface ISMSCacheQueueManager : NSObject <ISMSStreamHandlerDelegate>
 
 @property BOOL isQueueDownloading;
 @property (copy) ISMSSong *currentQueuedSong;
 @property (strong) ISMSStreamHandler *currentStreamHandler;
 @property (weak, readonly) ISMSSong *currentQueuedSongInDb;
-
-@property (strong) SUSLyricsDAO *lyricsDAO;
 
 + (instancetype)sharedInstance;
 

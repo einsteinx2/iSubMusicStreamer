@@ -15,12 +15,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class ISMSSong, ISMSStreamHandler, SUSLyricsDAO;
+@class ISMSSong, ISMSStreamHandler;
 NS_SWIFT_NAME(StreamManager)
 @interface ISMSStreamManager : NSObject <ISMSStreamHandlerDelegate>
 
 @property (strong) NSMutableArray<ISMSStreamHandler*> *handlerStack;
-@property (strong) SUSLyricsDAO *lyricsDAO;
 
 @property (nullable, copy) ISMSSong *lastCachedSong;
 @property (nullable, copy) ISMSSong *lastTempCachedSong;

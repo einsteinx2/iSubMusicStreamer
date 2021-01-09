@@ -10,7 +10,6 @@
 #import "ISMSStreamHandler.h"
 #import "ISMSNSURLSessionStreamHandler.h"
 #import "PlayQueueSingleton.h"
-#import "SUSLyricsDAO.h"
 #import "ISMSCacheQueueManager.h"
 #import "RXMLElement.h"
 #import "AudioEngine.h"
@@ -375,7 +374,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	else
 	{
 		[handler start:resume];
-		[self.lyricsDAO loadLyricsForArtist:handler.mySong.artist andTitle:handler.mySong.title];
+        if (![Store.shared isLyricsCachedWithTagArtistName:handler.mySong.artist songTitle:handler.mySong.title]) {
+            [[[LyricsLoader alloc] initWithDelegate:nil tagArtistName:handler.mySong.artist songTitle:handler.mySong.title] startLoad];
+        }
 	}
 }
 
@@ -712,7 +713,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 	
 	self.lastCachedSong = nil;
-	self.lyricsDAO = [[SUSLyricsDAO alloc] initWithDelegate:nil]; 
 	
 	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(songCachingToggled) name:ISMSNotification_SongCachingEnabled];
 	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(songCachingToggled) name:ISMSNotification_SongCachingDisabled];

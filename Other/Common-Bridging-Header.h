@@ -48,11 +48,12 @@
 // Loaders
 #import "ISMSErrorDomain.h"
 #import "SUSStatusLoader.h"
+#import "SUSLoaderManager.h"
+#import "SUSLoaderDelegate.h"
 
 // DAOs
 #import "ISMSSong+DAO.h"
 #import "ISMSBookmarkDAO.h"
-#import "SUSLyricsDAO.h"
 
 // Parsers
 #import "RXMLElement.h"

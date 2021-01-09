@@ -78,6 +78,7 @@ fileprivate let debugPrintAllQueries = false
                 try Server.createInitialSchema(db)
                 try CoverArt.createInitialSchema(db)
                 try ArtistArt.createInitialSchema(db)
+                try Lyrics.createInitialSchema(db)
                 try MediaFolder.createInitialSchema(db)
                 try TagArtist.createInitialSchema(db)
                 try TagAlbum.createInitialSchema(db)
