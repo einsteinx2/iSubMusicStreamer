@@ -30,7 +30,7 @@ extension Server: FetchableRecord, MutablePersistableRecord {
 }
 
 @objc extension Store {
-    @objc func nextServerId() -> Int {
+    func nextServerId() -> Int {
         do {
             return try mainDb.read { db in
                 let maxServerId = try SQLRequest<Int>(literal: "SELECT MAX(id) FROM \(Server.self)").fetchOne(db) ?? 0
@@ -42,7 +42,7 @@ extension Server: FetchableRecord, MutablePersistableRecord {
         }
     }
     
-    @objc func servers() -> [Server] {
+    func servers() -> [Server] {
         do {
             return try mainDb.read { db in
                 try Server.fetchAll(db)
@@ -52,8 +52,8 @@ extension Server: FetchableRecord, MutablePersistableRecord {
             return []
         }
     }
-    
-    @objc func server(id: Int) -> Server? {
+
+    func server(id: Int) -> Server? {
         do {
             return try mainDb.read { db in
                 try Server.fetchOne(db, key: id)
@@ -64,7 +64,7 @@ extension Server: FetchableRecord, MutablePersistableRecord {
         }
     }
     
-    @objc func add(server: Server) -> Server? {
+    func add(server: Server) -> Server? {
         do {
             var mutableServer = server
             return try mainDb.write { db in
@@ -77,7 +77,7 @@ extension Server: FetchableRecord, MutablePersistableRecord {
         }
     }
     
-    @objc func deleteServer(id: Int) -> Bool {
+    func deleteServer(id: Int) -> Bool {
         do {
             return try mainDb.write { db in
                 let sql: SQLLiteral = """

@@ -76,6 +76,19 @@ extension FolderMetadata: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
+    @objc func resetFolderAlbumCache(serverId: Int) -> Bool {
+        do {
+            return try mainDb.write { db in
+                try db.execute(literal: "DELETE FROM folderAlbumList WHERE serverId = \(serverId)")
+                try db.execute(literal: "DELETE FROM folderSongList WHERE serverId = \(serverId)")
+                return true
+            }
+        } catch {
+            DDLogError("Failed to reset folder album cache for server \(serverId): \(error)")
+            return false
+        }
+    }
+    
     func resetFolderAlbumCache(serverId: Int, parentFolderId: Int) -> Bool {
         do {
             return try mainDb.write { db in
@@ -84,7 +97,7 @@ extension Store {
                 return true
             }
         } catch {
-            DDLogError("Failed to reset folder \(parentFolderId) in server \(serverId) cache: \(error)")
+            DDLogError("Failed to reset folder album \(parentFolderId) in server \(serverId) cache: \(error)")
             return false
         }
     }

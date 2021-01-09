@@ -53,23 +53,6 @@ LOG_LEVEL_ISUB_DEFAULT
     DDLogVerbose(@"[DatabaseSingleton] Database path: %@", settingsS.databasePath);
     DDLogVerbose(@"[DatabaseSingleton] Updated database path: %@", settingsS.updatedDatabasePath);
 //    DDLogVerbose(@"[DatabaseSingleton] Database prefix: %@", settingsS.urlStringFilesystemSafe);
-		
-//	// Only load Albums, Songs, and Genre databases if the user explicitly enabled them
-//	if (settingsS.isSongsTabEnabled) {
-//		[self setupAllSongsDb];
-//	}
-//    
-//    [self setupServerDatabase];
-//    [self setupSharedDatabase];
-//	
-////    [self setupCoverArtDatabases];
-////    [self setupPlaylistDatabases];
-////    [self setupSongCacheDatabases];
-////    [self setupLyricsDatabase];
-////    [self setupBookmarksDatabase];
-//	
-//	[self updateTableDefinitions];
-    
     
     [Store.shared setupDatabases];
 }
@@ -275,110 +258,6 @@ LOG_LEVEL_ISUB_DEFAULT
     // TODO: Move data from old offline databases into offline prefixed tables in the shared db queue
 
     // TODO: Delete old database files
-    
-//    // Add parentId column to tables if necessary
-//    NSArray *parentIdDatabaseQueues = @[self.albumListCacheDbQueue, self.currentPlaylistDbQueue, self.currentPlaylistDbQueue, self.currentPlaylistDbQueue, self.currentPlaylistDbQueue, self.songCacheDbQueue, self.songCacheDbQueue, self.cacheQueueDbQueue];
-//    NSArray *parentIdTables = @[@"songsCache", @"currentPlaylist", @"shufflePlaylist", @"jukeboxCurrentPlaylist", @"jukeboxShufflePlaylist", @"cachedSongs", @"genresSongs", @"cacheQueue"];
-//    NSString *parentIdColumnName = @"parentId";
-//    NSString *isVideoColumnName = @"isVideo";
-//    for (int i = 0; i < [parentIdDatabaseQueues count]; i++)
-//    {
-//        FMDatabaseQueue *dbQueue = [parentIdDatabaseQueues objectAtIndexSafe:i];
-//        NSString *table = [parentIdTables objectAtIndexSafe:i];
-//
-//        [dbQueue inDatabase:^(FMDatabase *db)
-//        {
-//            if (![db columnExists:parentIdColumnName inTableWithName:table])
-//            {
-//                NSString *query = [NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ TEXT", table, parentIdColumnName];
-//                [db executeUpdate:query];
-//            }
-//
-//            if (![db columnExists:isVideoColumnName inTableWithName:table])
-//            {
-//                NSString *query = [NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ TEXT", table, isVideoColumnName];
-//                [db executeUpdate:query];
-//            }
-//        }];
-//    }
-//
-//    // Add parentId to all playlist and splaylist tables
-//    [self.localPlaylistsDbQueue inDatabase:^(FMDatabase *db)
-//    {
-//        NSMutableArray *playlistTableNames = [NSMutableArray arrayWithCapacity:0];
-//        NSString *query = @"SELECT name FROM sqlite_master WHERE type = 'table'";
-//        FMResultSet *result = [db executeQuery:query];
-//        while ([result next])
-//        {
-//            @autoreleasepool
-//            {
-//                NSString *tableName = [result stringForColumnIndex:0];
-//                if ([tableName length] > 8)
-//                {
-//                    NSString *tableNameSubstring = [tableName substringToIndex:8];
-//                    if ([tableNameSubstring isEqualToString:@"playlist"] ||
-//                        [tableNameSubstring isEqualToString:@"splaylis"])
-//                    {
-//                        [playlistTableNames addObject:tableName];
-//                    }
-//                }
-//            }
-//        }
-//        [result close];
-//
-//        for (NSString *table in playlistTableNames)
-//        {
-//            if (![db columnExists:parentIdColumnName inTableWithName:table])
-//            {
-//                NSString *query = [NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ TEXT", table, parentIdColumnName];
-//                [db executeUpdate:query];
-//            }
-//
-//            if (![db columnExists:isVideoColumnName inTableWithName:table])
-//            {
-//                NSString *query = [NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ TEXT", table, isVideoColumnName];
-//                [db executeUpdate:query];
-//            }
-//        }
-//    }];
-//
-//    // Update the bookmarks table to new format
-//    [self.bookmarksDbQueue inDatabase:^(FMDatabase *db)
-//    {
-//        if (![db columnExists:@"bookmarkId" inTableWithName:@"bookmarks"])
-//        {
-//            // Create the new table
-//            [db executeUpdate:@"DROP TABLE IF EXISTS bookmarksTemp"];
-//            [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE bookmarksTemp (bookmarkId INTEGER PRIMARY KEY, playlistIndex INTEGER, name TEXT, position INTEGER, %@, bytes INTEGER)", ISMSSong.standardSongColumnSchema]];
-//
-//            // Move the records
-//            [db executeUpdate:@"INSERT INTO bookmarksTemp (playlistIndex, name, position, title, songId, artist, album, genre, coverArtId, path, suffix, transcodedSuffix, duration, bitRate, track, year, size) SELECT 0, name, position, title, songId, artist, album, genre, coverArtId, path, suffix, transcodedSuffix, duration, bitRate, track, year, size FROM bookmarks"];
-//
-//            // Swap the tables
-//            [db executeUpdate:@"DROP TABLE IF EXISTS bookmarks"];
-//            [db executeUpdate:@"ALTER TABLE bookmarksTemp RENAME TO bookmarks"];
-//            [db executeUpdate:@"CREATE INDEX bookmarks_songId ON bookmarks (songId)"];
-//        }
-//
-//        if(![db columnExists:@"discNumber" inTableWithName:@"bookmarks"])
-//        {
-//            [db executeUpdate:@"ALTER TABLE bookmarks ADD COLUMN discNumber INTEGER"];
-//        }
-//    }];
-//
-//    [self.songCacheDbQueue inDatabase:^(FMDatabase *db)
-//     {
-//         if (![db tableExists:@"genresTableFixed"])
-//         {
-//             [db executeUpdate:@"DROP TABLE IF EXISTS genresTemp"];
-//             [db executeUpdate:@"CREATE TABLE genresTemp (genre TEXT)"];
-//             [db executeUpdate:@"INSERT INTO genresTemp SELECT * FROM genres"];
-//             [db executeUpdate:@"DROP TABLE genres"];
-//             [db executeUpdate:@"ALTER TABLE genresTemp RENAME TO genres"];
-//             [db executeUpdate:@"CREATE UNIQUE INDEX genreNames ON genres (genre)"];
-//             [db executeUpdate:@"CREATE TABLE genresTableFixed (a INTEGER)"];
-//         }
-//     }];
 }
 
 - (void)closeAllDatabases {
@@ -396,42 +275,6 @@ LOG_LEVEL_ISUB_DEFAULT
     
     
     [Store.shared closeAllDatabases];
-}
-
-- (void)resetCoverArtCache {
-	// Clear the table cell cover art	
-	[self.serverDbQueue inDatabase:^(FMDatabase *db) {
-        // Empty the tables
-		[db executeUpdate:@"DELETE FROM coverArtCacheSmall"];
-        [db executeUpdate:@"DELETE FROM coverArtCacheLarge"];
-        [db executeUpdate:@"DELETE FROM artistArtCache"];
-        
-        // Free up the disk space
-        [db vacuum];
-	}];
-}
-
-- (void)resetFolderCache {
-    [self.serverDbQueue inDatabase:^(FMDatabase *db) {
-        // Empty the tables
-        [db executeUpdate:@"DELETE FROM folderAlbum"];
-        [db executeUpdate:@"DELETE FROM folderSong"];
-        [db executeUpdate:@"DELETE FROM folderMetadata"];
-        
-        // Free up the disk space
-        [db vacuum];
-    }];
-}
-
-- (void)resetAlbumCache {
-    [self.serverDbQueue inDatabase:^(FMDatabase *db) {
-        // Empty the tables
-        [db executeUpdate:@"DELETE FROM tagAlbum"];
-        [db executeUpdate:@"DELETE FROM tagSong"];
-        
-        // Free up the disk space
-        [db vacuum];
-    }];
 }
 
 - (void)resetLocalPlaylistsDb {

@@ -17,8 +17,6 @@
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
 #import "ISMSErrorDomain.h"
-#import "SUSChatDAO.h"
-#import "ISMSChatMessage.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 
@@ -44,7 +42,7 @@
 #pragma mark Life Cycle
 
 - (void)createDataModel {
-	self.dataModel = [[SUSChatDAO alloc] initWithDelegate:self];
+	self.dataModel = [[ChatMessageDAO alloc] initWithDelegate:self];
 }
 
 - (void)loadData {
@@ -195,7 +193,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath  {
 	// Automatically set the height based on the height of the message text
-	ISMSChatMessage *aChatMessage = [self.dataModel.chatMessages objectAtIndexSafe:indexPath.row];
+	ChatMessage *aChatMessage = [self.dataModel.chatMessages objectAtIndexSafe:indexPath.row];
     CGSize expectedLabelSize = [aChatMessage.message boundingRectWithSize:CGSizeMake(310,CGFLOAT_MAX)
                                                                   options:NSStringDrawingUsesLineFragmentOrigin
                                                                attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:20]}
@@ -214,15 +212,13 @@
     return self.dataModel.chatMessages.count;
 }
 
-- (NSString *)formatDate:(NSInteger)unixtime {
+- (NSString *)formatDate:(NSTimeInterval)unixtime {
 	NSDate *date = [NSDate dateWithTimeIntervalSince1970:unixtime];
-	
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 	formatter.dateStyle = kCFDateFormatterShortStyle;
 	formatter.timeStyle = kCFDateFormatterShortStyle;
 	formatter.locale = [NSLocale currentLocale];
 	NSString *formattedDate = [formatter stringFromDate:date];
-	
 	return formattedDate;
 }
 
@@ -234,9 +230,9 @@
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	}
 
-	ISMSChatMessage *aChatMessage = [self.dataModel.chatMessages objectAtIndexSafe:indexPath.row];
-	cell.userNameLabel.text = [NSString stringWithFormat:@"%@ - %@", aChatMessage.user, [self formatDate:aChatMessage.timestamp]];
-	cell.messageLabel.text = aChatMessage.message;
+	ChatMessage *chatMessage = [self.dataModel.chatMessages objectAtIndexSafe:indexPath.row];
+	cell.userNameLabel.text = [NSString stringWithFormat:@"%@ - %@", chatMessage.username, [self formatDate:chatMessage.timestamp]];
+	cell.messageLabel.text = chatMessage.message;
 		
     return cell;
 }
@@ -252,7 +248,7 @@
 		}
 		
 		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Sending"];
-		[self.dataModel sendChatMessage:self.textInput.text];
+		[self.dataModel sendWithMessage:self.textInput.text];
 		
 		self.textInput.text = @"";
 		[self.textInput resignFirstResponder];

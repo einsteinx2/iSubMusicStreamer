@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SUSLoaderDelegate.h"
 
-@class CustomUITextView, SUSChatDAO;
+@class CustomUITextView, ChatMessageDAO;
 
 @interface ChatViewController : UITableViewController <UITextViewDelegate, SUSLoaderDelegate>
 
@@ -20,7 +20,7 @@
 @property (strong) NSMutableArray *chatMessages;
 @property (strong) NSMutableData *receivedData;
 @property NSInteger lastCheck;
-@property (strong) SUSChatDAO *dataModel;
+@property (strong) ChatMessageDAO *dataModel;
 
 - (void)cancelLoad;
 

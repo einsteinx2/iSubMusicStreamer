@@ -26,7 +26,7 @@ extension MediaFolder: FetchableRecord, PersistableRecord {
 }
 
 @objc extension Store {
-    @objc func mediaFolders(serverId: Int) -> [MediaFolder] {
+    func mediaFolders(serverId: Int) -> [MediaFolder] {
         do {
             return try mainDb.read { db in
                 try MediaFolder.filter(literal: "serverId = \(serverId)").fetchAll(db)
@@ -37,7 +37,7 @@ extension MediaFolder: FetchableRecord, PersistableRecord {
         }
     }
     
-    @objc func deleteMediaFolders() -> Bool {
+    func deleteMediaFolders() -> Bool {
         do {
             return try mainDb.write { db in
                 try MediaFolder.deleteAll(db)
@@ -49,7 +49,7 @@ extension MediaFolder: FetchableRecord, PersistableRecord {
         }
     }
     
-    @objc func add(mediaFolders: [MediaFolder]) -> Bool {
+    func add(mediaFolders: [MediaFolder]) -> Bool {
         do {
             return try mainDb.write { db in
                 for mediaFolder in mediaFolders {

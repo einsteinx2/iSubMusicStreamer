@@ -378,13 +378,17 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)resetFolderCache {
-	[databaseS resetFolderCache];
+    NSInteger serverId = settingsS.currentServerId;
+    (void)[Store.shared resetFolderAlbumCacheWithServerId:serverId];
+    (void)[Store.shared deleteTagAlbumsWithServerId:serverId];
 	[viewObjectsS hideLoadingScreen];
 	[self popFoldersTab];
 }
 
 - (void)resetAlbumArtCache {
-	[databaseS resetCoverArtCache];
+    NSInteger serverId = settingsS.currentServerId;
+    (void)[Store.shared resetCoverArtCacheWithServerId:serverId];
+    (void)[Store.shared resetArtistArtCacheWithServerId:serverId];
 	[viewObjectsS hideLoadingScreen];
 	[self popFoldersTab];
 }

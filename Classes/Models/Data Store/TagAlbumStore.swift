@@ -50,6 +50,18 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
+    @objc func deleteTagAlbums(serverId: Int) -> Bool {
+        do {
+            return try mainDb.write { db in
+                try db.execute(literal: "DELETE FROM \(TagAlbum.self) WHERE serverId = \(serverId)")
+                return true
+            }
+        } catch {
+            DDLogError("Failed to delete tag albums for server \(serverId): \(error)")
+            return false
+        }
+    }
+    
     func deleteTagAlbums(serverId: Int, tagArtistId: Int) -> Bool {
         do {
             return try mainDb.write { db in

@@ -43,7 +43,31 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
 }
 
 @objc extension Store {
-    @objc func coverArt(serverId: Int, id: String, isLarge: Bool) -> CoverArt? {
+    func resetCoverArtCache(serverId: Int) -> Bool {
+        do {
+            return try mainDb.write { db in
+                try db.execute(literal: "DELETE FROM \(CoverArt.self) WHERE serverId = \(serverId)")
+                return true
+            }
+        } catch {
+            DDLogError("Failed to reset cover art cache for server \(serverId): \(error)")
+            return false
+        }
+    }
+    
+    func resetArtistArtCache(serverId: Int) -> Bool {
+        do {
+            return try mainDb.write { db in
+                try db.execute(literal: "DELETE FROM \(ArtistArt.self) WHERE serverId = \(serverId)")
+                return true
+            }
+        } catch {
+            DDLogError("Failed to reset artist art cache for server \(serverId): \(error)")
+            return false
+        }
+    }
+    
+    func coverArt(serverId: Int, id: String, isLarge: Bool) -> CoverArt? {
         do {
             return try mainDb.read { db in
                 try CoverArt.filter(literal: "serverId = \(serverId) AND id = \(id) AND isLarge = \(isLarge)").fetchOne(db)
@@ -54,7 +78,7 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
         }
     }
     
-    @objc func artistArt(serverId: Int, id: String) -> ArtistArt? {
+    func artistArt(serverId: Int, id: String) -> ArtistArt? {
         do {
             return try mainDb.read { db in
                 try ArtistArt.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
@@ -65,7 +89,7 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
         }
     }
     
-    @objc func isCoverArtCached(serverId: Int, id: String, isLarge: Bool) -> Bool {
+    func isCoverArtCached(serverId: Int, id: String, isLarge: Bool) -> Bool {
         do {
             return try mainDb.read { db in
                 try CoverArt.filter(literal: "serverId = \(serverId) AND id = \(id) AND isLarge = \(isLarge)").fetchCount(db) > 0
@@ -76,7 +100,7 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
         }
     }
     
-    @objc func isArtistArtCached(serverId: Int, id: String) -> Bool {
+    func isArtistArtCached(serverId: Int, id: String) -> Bool {
         do {
             return try mainDb.read { db in
                 try ArtistArt.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchCount(db) > 0
@@ -87,7 +111,7 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
         }
     }
     
-    @objc func add(coverArt: CoverArt) -> Bool {
+    func add(coverArt: CoverArt) -> Bool {
         do {
             return try mainDb.write { db in
                 try coverArt.save(db)
@@ -99,7 +123,7 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
         }
     }
     
-    @objc func add(artistArt: CoverArt) -> Bool {
+    func add(artistArt: CoverArt) -> Bool {
         do {
             return try mainDb.write { db in
                 try artistArt.save(db)

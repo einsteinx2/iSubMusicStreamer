@@ -223,7 +223,6 @@ LOG_LEVEL_ISUB_DEFAULT
 		
 		// Reset the databases
 		[databaseS closeAllDatabases];
-		
 		[databaseS setupDatabases];
 		
 		// Reset the tabs

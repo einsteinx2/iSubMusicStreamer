@@ -55,21 +55,21 @@ import Resolver
 }
 
 @objc extension CoverArtDAO: SUSLoaderManager {
-    @objc func startLoad() {
+    func startLoad() {
         cancelLoad()
         loader = CoverArtLoader(delegate: self, coverArtId: coverArtId, isLarge: isLarge)
         loader?.serverId = serverId
         loader?.startLoad()
     }
     
-    @objc func cancelLoad() {
+    func cancelLoad() {
         loader?.cancelLoad()
         loader?.delegate = nil
         loader = nil
     }
 }
 
-@objc extension CoverArtDAO: SUSLoaderDelegate {
+extension CoverArtDAO: SUSLoaderDelegate {
     func loadingFinished(_ loader: SUSLoader?) {
         self.loader?.delegate = nil
         self.loader = nil
