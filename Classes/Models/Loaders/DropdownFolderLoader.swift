@@ -9,11 +9,13 @@
 import Foundation
 
 @objc final class DropdownFolderLoader: SUSLoader {
+    @objc var serverId = Settings.shared().currentServerId
+    
     @objc private(set) var mediaFolders = [MediaFolder]()
     
     override var type: SUSLoaderType { SUSLoaderType_DropdownFolder }
     
-    override func createRequest() -> URLRequest {
+    override func createRequest() -> URLRequest? {
         return NSMutableURLRequest(susAction: "getMusicFolders", parameters: nil) as URLRequest
     }
     
@@ -27,11 +29,9 @@ import Foundation
             if let error = root.child("error"), error.isValid {
                 informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
             } else {
-                var mediaFolders = [MediaFolder(id: MediaFolder.allFoldersId, name: "All Media Folders")]
+                var mediaFolders = [MediaFolder(serverId: serverId, id: MediaFolder.allFoldersId, name: "All Media Folders")]
                 root.iterate("musicFolders.musicFolder") { e in
-                    if let id = Int(e.attribute("id") ?? ""), let name = e.attribute("name") {
-                        mediaFolders.append(MediaFolder(id: id, name: name))
-                    }
+                    mediaFolders.append(MediaFolder(serverId: self.serverId, element: e))
                 }
                 self.mediaFolders = mediaFolders
                 informDelegateLoadingFinished()

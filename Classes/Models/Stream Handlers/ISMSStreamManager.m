@@ -10,7 +10,6 @@
 #import "ISMSStreamHandler.h"
 #import "ISMSNSURLSessionStreamHandler.h"
 #import "PlayQueueSingleton.h"
-#import "SUSCoverArtLoader.h"
 #import "SUSLyricsDAO.h"
 #import "ISMSCacheQueueManager.h"
 #import "RXMLElement.h"
@@ -20,6 +19,7 @@
 #import "ISMSCacheQueueManager.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 #define maxNumOfReconnects 5
@@ -445,11 +445,11 @@ LOG_LEVEL_ISUB_DEFAULT
 		// Also download the album art
 		if (song.coverArtId)
 		{
-            SUSCoverArtLoader *playerArt = [[SUSCoverArtLoader alloc] initWithDelegate:nil coverArtId:song.coverArtId isLarge:YES];
-			[playerArt downloadArtIfNotExists];
+            CoverArtLoader *playerArt = [[CoverArtLoader alloc] initWithDelegate:nil coverArtId:song.coverArtId isLarge:YES];
+			(void)[playerArt downloadArtIfNotExists];
 			
-			SUSCoverArtLoader *tableArt = [[SUSCoverArtLoader alloc] initWithDelegate:nil coverArtId:song.coverArtId isLarge:NO];
-			[tableArt downloadArtIfNotExists];
+			CoverArtLoader *tableArt = [[CoverArtLoader alloc] initWithDelegate:nil coverArtId:song.coverArtId isLarge:NO];
+			(void)[tableArt downloadArtIfNotExists];
 		}
 	}
 	

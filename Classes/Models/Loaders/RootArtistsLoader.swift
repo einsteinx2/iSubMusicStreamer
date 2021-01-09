@@ -12,6 +12,7 @@ import Resolver
 final class RootArtistsLoader: SUSLoader {
     @Injected private var store: Store
     
+    var serverId = Settings.shared().currentServerId
     var mediaFolderId = MediaFolder.allFoldersId
     
     var metadata: RootListMetadata?
@@ -22,7 +23,7 @@ final class RootArtistsLoader: SUSLoader {
     
     override var type: SUSLoaderType { SUSLoaderType_RootArtists }
         
-    override func createRequest() -> URLRequest {
+    override func createRequest() -> URLRequest? {
         var parameters: [AnyHashable: Any]?
         if mediaFolderId != MediaFolder.allFoldersId {
             parameters = ["musicFolderId": mediaFolderId]
@@ -44,7 +45,7 @@ final class RootArtistsLoader: SUSLoader {
             if let error = error, error.isValid {
                 informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
             } else {
-                if store.deleteTagArtists(mediaFolderId: mediaFolderId) {
+                if store.deleteTagArtists(serverId: serverId, mediaFolderId: mediaFolderId) {
                     var rowCount = 0
                     var sectionCount = 0
                     var rowIndex = 0
@@ -53,7 +54,7 @@ final class RootArtistsLoader: SUSLoader {
                         rowIndex = rowCount
                         e.iterate("artist") { artist in
                             // Add the artist to the DB
-                            let tagArtist = TagArtist(element: artist)
+                            let tagArtist = TagArtist(serverId: self.serverId, element: artist)
                             if self.store.add(tagArtist: tagArtist, mediaFolderId: self.mediaFolderId) {
                                 self.tagArtistIds.append(tagArtist.id)
                                 rowCount += 1
@@ -61,7 +62,8 @@ final class RootArtistsLoader: SUSLoader {
                             }
                         }
                         
-                        let section = TableSection(mediaFolderId: self.mediaFolderId,
+                        let section = TableSection(serverId: self.serverId,
+                                                   mediaFolderId: self.mediaFolderId,
                                                    name: e.attribute("name").stringXML,
                                                    position: rowIndex,
                                                    itemCount: sectionCount)
@@ -71,7 +73,7 @@ final class RootArtistsLoader: SUSLoader {
                     }
                     
                     // Update the metadata
-                    let metadata = RootListMetadata(mediaFolderId: mediaFolderId, itemCount: rowCount, reloadDate: Date())
+                    let metadata = RootListMetadata(serverId: self.serverId, mediaFolderId: mediaFolderId, itemCount: rowCount, reloadDate: Date())
                     _ = store.add(tagArtistListMetadata: metadata)
                     
                     self.metadata = metadata

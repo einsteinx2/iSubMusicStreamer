@@ -486,18 +486,19 @@ static BOOL _isAllSongsLoading = NO;
 }
 
 - (ISMSFolderAlbum *)folderAlbumFromDbRow:(NSUInteger)row inTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue {
-    row++;
-    __block ISMSFolderAlbum *folderAlbum = nil;
-    [dbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE ROWID = %lu", table, (unsigned long)row]];
-        if ([db hadError]) {
-            //DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-        } else if ([result next]) {
-            folderAlbum = [[ISMSFolderAlbum alloc] initWithResult:result];
-        }
-        [result close];
-    }];
-    return folderAlbum;
+//    row++;
+//    __block ISMSFolderAlbum *folderAlbum = nil;
+//    [dbQueue inDatabase:^(FMDatabase *db) {
+//        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE ROWID = %lu", table, (unsigned long)row]];
+//        if ([db hadError]) {
+//            //DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+//        } else if ([result next]) {
+//            folderAlbum = [[ISMSFolderAlbum alloc] initWithResult:result];
+//        }
+//        [result close];
+//    }];
+//    return folderAlbum;
+    return nil;
 }
 
 #pragma mark Connection Delegate

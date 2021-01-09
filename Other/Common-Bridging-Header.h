@@ -53,7 +53,6 @@
 #import "ISMSSong+DAO.h"
 #import "ISMSBookmarkDAO.h"
 #import "SUSLyricsDAO.h"
-#import "SUSCoverArtDAO.h"
 
 // Parsers
 #import "RXMLElement.h"

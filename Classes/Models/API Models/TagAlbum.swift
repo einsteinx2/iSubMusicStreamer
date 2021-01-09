@@ -9,6 +9,7 @@
 import Foundation
 
 @objc(ISMSTagAlbum) final class TagAlbum: NSObject, NSCopying, Codable {
+    @objc let serverId: Int
     @objc(albumId) let id: Int
     @objc let name: String
     @objc let coverArtId: String?
@@ -20,7 +21,9 @@ import Foundation
     @objc let year: Int
     @objc let genre: String?
     
-    @objc init(id: Int, name: String, coverArtId: String?, tagArtistId: String?, tagArtistName: String?, songCount: Int, duration: Int, playCount: Int, year: Int, genre: String?) {
+    @objc(initWithServerId:albumId:name:coverArtId:tagArtistId:tagArtistName:songCount:duration:playCount:year:genre:)
+    init(serverId: Int, id: Int, name: String, coverArtId: String?, tagArtistId: String?, tagArtistName: String?, songCount: Int, duration: Int, playCount: Int, year: Int, genre: String?) {
+        self.serverId = serverId
         self.id = id
         self.name = name
         self.coverArtId = coverArtId
@@ -34,7 +37,8 @@ import Foundation
         super.init()
     }
     
-    @objc init(element: RXMLElement) {
+    @objc init(serverId: Int, element: RXMLElement) {
+        self.serverId = serverId
         self.id = element.attribute("id").intXML
         self.name = element.attribute("name").stringXML
         self.coverArtId = element.attribute("coverArt").stringXMLOptional
@@ -49,11 +53,11 @@ import Foundation
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
-        return TagAlbum(id: id, name: name, coverArtId: coverArtId, tagArtistId: tagArtistId, tagArtistName: tagArtistName, songCount: songCount, duration: duration, playCount: playCount, year: year, genre: genre)
+        return TagAlbum(serverId: serverId, id: id, name: name, coverArtId: coverArtId, tagArtistId: tagArtistId, tagArtistName: tagArtistName, songCount: songCount, duration: duration, playCount: playCount, year: year, genre: genre)
     }
     
     override var description: String {
-        return "\(super.description): id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), tagArtistId: \(tagArtistId ?? "nil"), tagArtistName: \(tagArtistName ?? "nil"), songCount: \(songCount), duration: \(duration), playCount: \(playCount), year: \(year), genre: \(genre ?? "nil")"
+        return "\(super.description): serverId: \(serverId), id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), tagArtistId: \(tagArtistId ?? "nil"), tagArtistName: \(tagArtistName ?? "nil"), songCount: \(songCount), duration: \(duration), playCount: \(playCount), year: \(year), genre: \(genre ?? "nil")"
     }
 }
 

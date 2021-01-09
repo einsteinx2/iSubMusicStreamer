@@ -9,13 +9,15 @@
 import Foundation
 
 @objc(ISMSTagArtist) final class TagArtist: NSObject, NSCopying, Codable {
+    @objc let serverId: Int
     @objc(artistId) let id: Int
     @objc let name: String
     @objc let coverArtId: String?
     @objc let artistImageUrl: String?
     @objc let albumCount: Int
     
-    @objc init(id: Int, name: String, coverArtId: String?, artistImageUrl: String?, albumCount: Int) {
+    @objc init(serverId: Int, id: Int, name: String, coverArtId: String?, artistImageUrl: String?, albumCount: Int) {
+        self.serverId = serverId
         self.id = id
         self.name = name
         self.coverArtId = coverArtId
@@ -24,7 +26,8 @@ import Foundation
         super.init()
     }
     
-    @objc init(element: RXMLElement) {
+    @objc init(serverId: Int, element: RXMLElement) {
+        self.serverId = serverId
         self.id = element.attribute("id").intXML
         self.name = element.attribute("name").stringXML
         self.coverArtId = element.attribute("coverArt").stringXMLOptional
@@ -34,11 +37,11 @@ import Foundation
     }
     
     @objc func copy(with zone: NSZone? = nil) -> Any {
-        return TagArtist(id: id, name: name, coverArtId: coverArtId, artistImageUrl: artistImageUrl, albumCount: albumCount)
+        return TagArtist(serverId: serverId, id: id, name: name, coverArtId: coverArtId, artistImageUrl: artistImageUrl, albumCount: albumCount)
     }
     
     @objc override var description: String {
-        return "\(super.description): id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), artistImageUrl: \(artistImageUrl ?? "nil"), albumCount: \(albumCount)"
+        return "\(super.description): serverId: \(serverId), id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), artistImageUrl: \(artistImageUrl ?? "nil"), albumCount: \(albumCount)"
     }
 }
 

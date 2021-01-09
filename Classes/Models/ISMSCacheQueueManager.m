@@ -10,7 +10,6 @@
 #import "ISMSCacheQueueManager.h"
 #import "DatabaseSingleton.h"
 #import "SUSLyricsLoader.h"
-#import "SUSCoverArtLoader.h"
 #import "ISMSStreamManager.h"
 #import "ISMSStreamHandler.h"
 #import "SUSLyricsDAO.h"
@@ -118,11 +117,11 @@ LOG_LEVEL_ISUB_DEFAULT
 	// Download the art
 	if (self.currentQueuedSong.coverArtId) {
 		NSString *coverArtId = self.currentQueuedSong.coverArtId;
-		SUSCoverArtLoader *playerArt = [[SUSCoverArtLoader alloc] initWithDelegate:nil coverArtId:coverArtId isLarge:YES];
-		[playerArt downloadArtIfNotExists];
+		CoverArtLoader *playerArt = [[CoverArtLoader alloc] initWithDelegate:nil coverArtId:coverArtId isLarge:YES];
+		(void)[playerArt downloadArtIfNotExists];
 		
-		SUSCoverArtLoader *tableArt = [[SUSCoverArtLoader alloc] initWithDelegate:nil coverArtId:coverArtId isLarge:NO];
-		[tableArt downloadArtIfNotExists];
+		CoverArtLoader *tableArt = [[CoverArtLoader alloc] initWithDelegate:nil coverArtId:coverArtId isLarge:NO];
+		(void)[tableArt downloadArtIfNotExists];
 	}
 	
 	// Create the stream handler

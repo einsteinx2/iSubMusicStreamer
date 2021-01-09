@@ -12,6 +12,7 @@ import Resolver
 final class RootFoldersLoader: SUSLoader {
     @Injected private var store: Store
     
+    var serverId = Settings.shared().currentServerId
     var mediaFolderId = MediaFolder.allFoldersId
     
     private(set) var metadata: RootListMetadata?
@@ -22,7 +23,7 @@ final class RootFoldersLoader: SUSLoader {
     
     override var type: SUSLoaderType { SUSLoaderType_RootArtists }
         
-    override func createRequest() -> URLRequest {
+    override func createRequest() -> URLRequest? {
         var parameters: [AnyHashable: Any]?
         if mediaFolderId != MediaFolder.allFoldersId {
             parameters = ["musicFolderId": mediaFolderId]
@@ -44,14 +45,14 @@ final class RootFoldersLoader: SUSLoader {
             if let error = error, error.isValid {
                 informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
             } else {
-                if store.deleteFolderArtists(mediaFolderId: mediaFolderId) {
+                if store.deleteFolderArtists(serverId: serverId, mediaFolderId: mediaFolderId) {
                     var rowCount = 0
                     var sectionCount = 0
                     var rowIndex = 0
                     
                     // Process shortcuts (basically just custom folder artists)
                     root.iterate("indexes.shortcut") { e in
-                        let shortcut = FolderArtist(element: e)
+                        let shortcut = FolderArtist(serverId: self.serverId, element: e)
                         if self.store.add(folderArtist: shortcut, mediaFolderId: self.mediaFolderId) {
                             self.folderArtistIds.append(shortcut.id)
                             rowCount += 1
@@ -59,7 +60,8 @@ final class RootFoldersLoader: SUSLoader {
                         }
                     }
                     if sectionCount > 0 {
-                        let section = TableSection(mediaFolderId: self.mediaFolderId,
+                        let section = TableSection(serverId: self.serverId,
+                                                   mediaFolderId: self.mediaFolderId,
                                                    name: "*",
                                                    position: rowIndex,
                                                    itemCount: sectionCount)
@@ -74,7 +76,7 @@ final class RootFoldersLoader: SUSLoader {
                         rowIndex = rowCount
                         e.iterate("artist") { artist in
                             // Add the artist to the DB
-                            let folderArtist = FolderArtist(element: artist)
+                            let folderArtist = FolderArtist(serverId: self.serverId, element: artist)
                             // Prevent inserting .AppleDouble folders
                             if folderArtist.name != ".AppleDouble" && self.store.add(folderArtist: folderArtist, mediaFolderId: self.mediaFolderId) {
                                 self.folderArtistIds.append(folderArtist.id)
@@ -83,7 +85,8 @@ final class RootFoldersLoader: SUSLoader {
                             }
                         }
                         
-                        let section = TableSection(mediaFolderId: self.mediaFolderId,
+                        let section = TableSection(serverId: self.serverId,
+                                                   mediaFolderId: self.mediaFolderId,
                                                    name: e.attribute("name").stringXML,
                                                    position: rowIndex,
                                                    itemCount: sectionCount)
@@ -93,7 +96,7 @@ final class RootFoldersLoader: SUSLoader {
                     }
                     
                     // Update the metadata
-                    let metadata = RootListMetadata(mediaFolderId: mediaFolderId, itemCount: rowCount, reloadDate: Date())
+                    let metadata = RootListMetadata(serverId: self.serverId, mediaFolderId: mediaFolderId, itemCount: rowCount, reloadDate: Date())
                     _ = store.add(folderArtistListMetadata: metadata)
                     
                     self.metadata = metadata

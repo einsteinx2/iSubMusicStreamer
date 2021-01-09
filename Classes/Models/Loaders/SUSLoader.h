@@ -50,12 +50,12 @@ typedef void (^LoaderCallback)(BOOL success, NSError * _Nullable error);
 + (NSURLSession *)sharedSession;
 
 - (void)setup; // Override this
-- (instancetype)initWithDelegate:(NSObject<SUSLoaderDelegate> *)delegate;
+- (instancetype)initWithDelegate:(nullable NSObject<SUSLoaderDelegate> *)delegate;
 - (instancetype)initWithCallback:(nullable LoaderCallback)callback;
 
 - (void)startLoad;
 - (void)cancelLoad;
-- (NSURLRequest *)createRequest; // Override this
+- (nullable NSURLRequest *)createRequest; // Override this
 - (void)processResponse; // Override this
 
 - (void)informDelegateLoadingFailed:(nullable NSError *)error;

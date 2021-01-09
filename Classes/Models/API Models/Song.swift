@@ -11,7 +11,8 @@ import Foundation
 @objc final class NewSong: NSObject, NSCopying, NSSecureCoding, Codable {
     static var supportsSecureCoding: Bool = true
     
-    @objc(songId) var id: Int
+    @objc let serverId: Int
+    @objc(songId) let id: Int
     @objc let title: String
     @objc let coverArtId: String?
     @objc let parentFolderId: Int
@@ -90,7 +91,8 @@ import Foundation
         return rate
     }
     
-    init(id: Int, title: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int, tagArtistId: Int, tagAlbumId: Int, genre: String?, path: String, suffix: String, transcodedSuffix: String?, duration: Int, bitrate: Int, track: Int, discNumber: Int, size: Int, isVideo: Bool) {
+    init(serverId: Int, id: Int, title: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int, tagArtistId: Int, tagAlbumId: Int, genre: String?, path: String, suffix: String, transcodedSuffix: String?, duration: Int, bitrate: Int, track: Int, discNumber: Int, size: Int, isVideo: Bool) {
+        self.serverId = serverId
         self.id = id
         self.title = title
         self.coverArtId = coverArtId
@@ -114,7 +116,8 @@ import Foundation
         super.init()
     }
     
-    init(element: RXMLElement) {
+    init(serverId: Int, element: RXMLElement) {
+        self.serverId = serverId
         self.id = element.attribute("id").intXML
         self.title = element.attribute("title").stringXML
         self.coverArtId = element.attribute("coverArt").stringXMLOptional
@@ -138,7 +141,8 @@ import Foundation
         super.init()
     }
     
-    init(attributeDict: [String: String]) {
+    init(serverId: Int, attributeDict: [String: String]) {
+        self.serverId = serverId
         self.id = attributeDict["id"].intXML
         self.title = attributeDict["title"].stringXML
         self.coverArtId = attributeDict["coverArt"].stringXMLOptional
@@ -166,6 +170,7 @@ import Foundation
         // Handle old coding format
         if coder.containsValue(forKey: "coderVersion") && coder.decodeInteger(forKey: "coderVersion") == 1 {
             // New coding type
+            self.serverId = coder.decodeInteger(forKey: "serverId")
             self.id = coder.decodeInteger(forKey: "id")
             self.title = coder.decodeObject(forKey: "title") as? String ?? ""
             self.coverArtId = coder.decodeObject(forKey: "coverArtid") as? String
@@ -207,6 +212,7 @@ import Foundation
             self.discNumber = (coder.decodeObject(forKey: "discNumber") as? String).intXML
 
             // Not encoded
+            self.serverId = -1
             self.playCount = 0
             self.tagArtistId = 0
             self.tagAlbumId = 0
@@ -216,6 +222,7 @@ import Foundation
     
     func encode(with coder: NSCoder) {
         coder.encode(1, forKey: "coderVersion")
+        coder.encode(serverId, forKey: "serverId")
         coder.encode(id, forKey: "id")
         coder.encode(title, forKey: "title")
         coder.encode(coverArtId, forKey: "coverArtId")
@@ -239,26 +246,20 @@ import Foundation
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
-        return NewSong(id: id, title: title, coverArtId: coverArtId, parentFolderId: parentFolderId, tagArtistName: tagArtistName, tagAlbumName: tagAlbumName, playCount: playCount, year: year, tagArtistId: tagArtistId, tagAlbumId: tagAlbumId, genre: genre, path: path, suffix: suffix, transcodedSuffix: transcodedSuffix, duration: duration, bitrate: bitrate, track: track, discNumber: discNumber, size: size, isVideo: isVideo)
+        return NewSong(serverId: serverId, id: id, title: title, coverArtId: coverArtId, parentFolderId: parentFolderId, tagArtistName: tagArtistName, tagAlbumName: tagAlbumName, playCount: playCount, year: year, tagArtistId: tagArtistId, tagAlbumId: tagAlbumId, genre: genre, path: path, suffix: suffix, transcodedSuffix: transcodedSuffix, duration: duration, bitrate: bitrate, track: track, discNumber: discNumber, size: size, isVideo: isVideo)
     }
     
     override var description: String {
-        return "\(super.description): id: \(id), title: \(title)"
+        return "\(super.description): serverId: \(serverId), id: \(id), title: \(title)"
     }
     
     override var hash: Int {
         return id.hashValue
     }
     
-    // TODO: Take into account different servers (add server id to the song object?)
-    func isEqual(song: NewSong) -> Bool {
-        if self === song { return true }
-        return id == song.id
-    }
-    
     override func isEqual(_ object: Any?) -> Bool {
         if let song = object as? NewSong {
-            return isEqual(song: song)
+            return self === song || (serverId == song.serverId && id == song.id)
         }
         return false
     }
@@ -280,6 +281,10 @@ import Foundation
     }
 //
 //    var
+    
+    func addToCurrentPlaylistDbQueue() {
+        
+    }
 }
 
 extension NewSong: TableCellModel {

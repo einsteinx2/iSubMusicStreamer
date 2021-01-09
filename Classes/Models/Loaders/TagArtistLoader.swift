@@ -15,6 +15,7 @@ final class TagArtistLoader: SUSLoader {
     
     override var type: SUSLoaderType { return SUSLoaderType_TagArtist }
     
+    var serverId = Settings.shared().currentServerId
     let tagArtistId: Int
     
     var tagAlbumIds = [Int]()
@@ -29,7 +30,7 @@ final class TagArtistLoader: SUSLoader {
         super.init(callback: callback)
     }
     
-    override func createRequest() -> URLRequest {
+    override func createRequest() -> URLRequest? {
         return NSMutableURLRequest(susAction: "getArtist", parameters: ["id": tagArtistId]) as URLRequest
     }
     
@@ -44,10 +45,10 @@ final class TagArtistLoader: SUSLoader {
             if let error = root.child("error"), error.isValid {
                 informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
             } else {
-                if store.deleteTagAlbums(tagArtistId: tagArtistId) {
+                if store.deleteTagAlbums(serverId: serverId, tagArtistId: tagArtistId) {
                     var albumOrder = 0
                     root.iterate("artist.album") { element in
-                        let tagAlbum = TagAlbum(element: element)
+                        let tagAlbum = TagAlbum(serverId: self.serverId, element: element)
                         if self.store.add(tagAlbum: tagAlbum) {
                             self.tagAlbumIds.append(tagAlbum.id)
                             albumOrder += 1

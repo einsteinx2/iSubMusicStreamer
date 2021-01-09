@@ -44,7 +44,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         _selectedFolderId = -1;
-        _mediaFolders = [Store.shared mediaFolders];
+        _mediaFolders = [Store.shared mediaFoldersWithServerId:settingsS.currentServer.serverId];
         _labels = [[NSMutableArray alloc] init];
         _isOpen = NO;
         _borderColor = UIColor.systemGrayColor;

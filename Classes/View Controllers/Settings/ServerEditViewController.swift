@@ -258,7 +258,7 @@ extension ServerEditViewController: SUSLoaderDelegate {
         if let serverToEdit = serverToEdit {
             _ = store.add(server: serverToEdit)
         } else if let url = URL(string: urlField.text ?? ""), let username = usernameField.text, let password = passwordField.text {
-            let server = Server(type: .subsonic, url: url, username: username, password: password)
+            let server = Server(id: store.nextServerId(), type: .subsonic, url: url, username: username, password: password)
             _ = store.add(server: server)
         }
         

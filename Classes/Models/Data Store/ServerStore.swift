@@ -27,13 +27,21 @@ extension Server: FetchableRecord, MutablePersistableRecord {
             t.column(Column.isNewSearchSupported, .boolean).notNull()
         }
     }
-    
-    func didInsert(with rowID: Int64, for column: String?) {
-        id = Int(rowID)
-    }
 }
 
 @objc extension Store {
+    @objc func nextServerId() -> Int {
+        do {
+            return try mainDb.read { db in
+                let maxServerId = try SQLRequest<Int>(literal: "SELECT MAX(id) FROM \(Server.self)").fetchOne(db) ?? 0
+                return maxServerId + 1
+            }
+        } catch {
+            DDLogError("Failed to select next server ID: \(error)")
+            return -1
+        }
+    }
+    
     @objc func servers() -> [Server] {
         do {
             return try mainDb.read { db in

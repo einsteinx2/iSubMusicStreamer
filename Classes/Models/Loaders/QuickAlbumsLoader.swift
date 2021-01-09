@@ -9,6 +9,8 @@
 import Foundation
 
 @objc final class QuickAlbumsLoader: SUSLoader {
+    @objc var serverId = Settings.shared().currentServerId
+    
     @objc var folderAlbums = [FolderAlbum]()
     // TODO: Make this an enum once only swift code is using this class
     @objc var modifier = ""
@@ -16,7 +18,7 @@ import Foundation
     
     override var type: SUSLoaderType { SUSLoaderType_QuickAlbums }
     
-    override func createRequest() -> URLRequest {
+    override func createRequest() -> URLRequest? {
         let parameters: [AnyHashable: Any] = ["size": 20, "type": modifier, "offset": offset]
         return NSMutableURLRequest(susAction: "getAlbumList", parameters: parameters) as URLRequest
     }
@@ -33,7 +35,7 @@ import Foundation
             } else {
                 folderAlbums.removeAll()
                 root.iterate("albumList.album") { e in
-                    let folderAlbum = FolderAlbum(element: e)
+                    let folderAlbum = FolderAlbum(serverId: self.serverId, element: e)
                     if folderAlbum.name != ".AppleDouble" {
                         self.folderAlbums.append(folderAlbum)
                     }

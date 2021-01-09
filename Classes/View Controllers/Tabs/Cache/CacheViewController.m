@@ -902,7 +902,7 @@
     if (self.segmentedControl.selectedSegmentIndex != 0) return nil;
     
     NSString *name = [[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] objectAtIndexSafe:indexPath.row];
-    return [[ISMSFolderArtist alloc] initWithId:@"" name:name];
+    return [[ISMSFolderArtist alloc] initWithServerId:-1 folderId:-1 name:name];
 }
 
 - (ISMSSong *)songForIndexPath:(NSIndexPath *)indexPath {

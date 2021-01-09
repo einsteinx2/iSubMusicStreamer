@@ -12,22 +12,24 @@ import CocoaLumberjackSwift
 
 extension MediaFolder: FetchableRecord, PersistableRecord {
     enum Column: String, ColumnExpression {
-        case id, name
+        case serverId, id, name
     }
     
     static func createInitialSchema(_ db: Database) throws {
         try db.create(table: MediaFolder.databaseTableName) { t in
-            t.column(Column.id, .integer).notNull().primaryKey()
+            t.column(Column.serverId, .integer).notNull()
+            t.column(Column.id, .integer).notNull()
             t.column(Column.name, .text).notNull()
+            t.primaryKey([Column.serverId, Column.id])
         }
     }
 }
 
 @objc extension Store {
-    @objc func mediaFolders() -> [MediaFolder] {
+    @objc func mediaFolders(serverId: Int) -> [MediaFolder] {
         do {
             return try mainDb.read { db in
-                try MediaFolder.fetchAll(db)
+                try MediaFolder.filter(literal: "serverId = \(serverId)").fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select all media folders: \(error)")

@@ -23,14 +23,14 @@ import CocoaLumberjackSwift
     
     @objc init() {
         super.init(frame: .zero)
-        image = CoverArtDAO.defaultCoverArtImage(isLarge)
+        image = CoverArtDAO.defaultCoverArtImage(isLarge: isLarge)
     }
     
     @objc init(frame: CGRect = .zero, coverArtId: String? = nil, isLarge: Bool = false) {
         self.coverArtId = coverArtId
         self.isLarge = isLarge
         super.init(frame: frame)
-        image = CoverArtDAO.defaultCoverArtImage(isLarge)
+        image = CoverArtDAO.defaultCoverArtImage(isLarge: isLarge)
     }
     
     required init?(coder: NSCoder) {
@@ -49,26 +49,26 @@ import CocoaLumberjackSwift
         
         guard let coverArtId = coverArtId else {
             // Set default cover art
-            image = CoverArtDAO.defaultCoverArtImage(isLarge)
+            image = CoverArtDAO.defaultCoverArtImage(isLarge: isLarge)
             return
         }
         
         let dao = CoverArtDAO(delegate: self, coverArtId: coverArtId, isLarge: isLarge)
-        if dao.isCoverArtCached {
-            image = dao.coverArtImage()
+        if dao.isCached {
+            image = dao.coverArtImage
         } else {
             var usedSmallCoverArt = false
             if isLarge {
                 // Try and use the small cover art temporarily
                 let smallDAO = CoverArtDAO(delegate: nil, coverArtId: coverArtId, isLarge: false)
-                if smallDAO.isCoverArtCached {
-                    image = smallDAO.coverArtImage()
+                if smallDAO.isCached {
+                    image = smallDAO.coverArtImage
                     usedSmallCoverArt = true
                 } else {
-                    image = dao.defaultCoverArtImage()
+                    image = dao.defaultCoverArtImage
                 }
             } else {
-                image = dao.defaultCoverArtImage()
+                image = dao.defaultCoverArtImage
             }
             
             if isLarge && !usedSmallCoverArt {
@@ -91,7 +91,7 @@ extension AsyncImageView: SUSLoaderDelegate {
         DDLogInfo("[AsyncImageView] async cover art loading finished for: \(coverArtId ?? "nil")")
         activityIndicator?.removeFromSuperview()
         activityIndicator = nil
-        image = coverArtDAO?.coverArtImage()
+        image = coverArtDAO?.coverArtImage
         coverArtDAO = nil
     }
     

@@ -12,74 +12,77 @@ import CocoaLumberjackSwift
 
 extension CoverArt: FetchableRecord, PersistableRecord {
     enum Column: String, ColumnExpression {
-        case id, isLarge, data
+        case serverId, id, isLarge, data
     }
     
     static func createInitialSchema(_ db: Database) throws {
         try db.create(table: CoverArt.databaseTableName) { t in
+            t.column(Column.serverId, .integer).notNull()
             t.column(Column.id, .text).notNull()
             t.column(Column.isLarge, .boolean).notNull()
             t.column(Column.data, .blob).notNull()
-            t.primaryKey([Column.id.rawValue, Column.isLarge.rawValue])
+            t.primaryKey([Column.serverId, Column.id, Column.isLarge])
         }
     }
 }
 
 extension ArtistArt: FetchableRecord, PersistableRecord {
     enum Column: String, ColumnExpression {
-        case id, isLarge, data
+        case serverId, id, isLarge, data
     }
     
     static func createInitialSchema(_ db: Database) throws {
         // Artist header art
         try db.create(table: ArtistArt.databaseTableName) { t in
-            t.column(Column.id, .text).notNull().primaryKey()
+            t.column(Column.serverId, .integer).notNull()
+            t.column(Column.id, .text).notNull()
             t.column(Column.data, .blob).notNull()
+            t.primaryKey([Column.serverId, Column.id])
         }
     }
 }
 
 @objc extension Store {
-    @objc func coverArt(id: String, isLarge: Bool) -> CoverArt? {
+    @objc func coverArt(serverId: Int, id: String, isLarge: Bool) -> CoverArt? {
         do {
             return try mainDb.read { db in
-                try CoverArt.fetchOne(db, key: [CoverArt.Column.id.rawValue: id, CoverArt.Column.isLarge.rawValue: isLarge])
+                try CoverArt.filter(literal: "serverId = \(serverId) AND id = \(id) AND isLarge = \(isLarge)").fetchOne(db)
             }
         } catch {
-            DDLogError("Failed to select cover art \(id) isLarge \(isLarge): \(error)")
+            DDLogError("Failed to select cover art \(id) server \(serverId) isLarge \(isLarge): \(error)")
             return nil
         }
     }
     
-    @objc func artistArt(id: String) -> ArtistArt? {
+    @objc func artistArt(serverId: Int, id: String) -> ArtistArt? {
         do {
             return try mainDb.read { db in
-                try ArtistArt.fetchOne(db, key: id)
+                try ArtistArt.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
             }
         } catch {
-            DDLogError("Failed to select artist art \(id): \(error)")
+            DDLogError("Failed to select artist art \(id) server \(serverId): \(error)")
             return nil
         }
     }
     
-    @objc func isCoverArtCached(id: String, isLarge: Bool) -> Bool {
+    @objc func isCoverArtCached(serverId: Int, id: String, isLarge: Bool) -> Bool {
         do {
             return try mainDb.read { db in
-                try CoverArt.filter(literal: "id = \(id) AND isLarge = \(isLarge)").fetchCount(db) > 0
+                try CoverArt.filter(literal: "serverId = \(serverId) AND id = \(id) AND isLarge = \(isLarge)").fetchCount(db) > 0
             }
         } catch {
-            DDLogError("Failed to select cover art count \(id) isLarge \(isLarge): \(error)")
+            DDLogError("Failed to select cover art count \(id) server \(serverId) isLarge \(isLarge): \(error)")
             return false
         }
     }
     
-    @objc func isArtistArtCached(id: String) -> Bool {
+    @objc func isArtistArtCached(serverId: Int, id: String) -> Bool {
         do {
             return try mainDb.read { db in
-                try ArtistArt.filter(key: id).fetchCount(db) > 0
+                try ArtistArt.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchCount(db) > 0
             }
         } catch {
-            DDLogError("Failed to select artist art count \(id): \(error)")
+            DDLogError("Failed to select artist art count \(id) server \(serverId): \(error)")
             return false
         }
     }

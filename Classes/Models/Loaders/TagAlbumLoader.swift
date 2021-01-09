@@ -15,6 +15,7 @@ final class TagAlbumLoader: SUSLoader {
 
     override var type: SUSLoaderType { return SUSLoaderType_TagAlbum }
     
+    var serverId = Settings.shared().currentServerId
     let tagAlbumId: Int
     
     private(set) var songIds = [Int]()
@@ -29,7 +30,7 @@ final class TagAlbumLoader: SUSLoader {
         super.init(callback: callback)
     }
     
-    override func createRequest() -> URLRequest {
+    override func createRequest() -> URLRequest? {
         return NSMutableURLRequest(susAction: "getAlbum", parameters: ["id": tagAlbumId]) as URLRequest
     }
     
@@ -44,10 +45,10 @@ final class TagAlbumLoader: SUSLoader {
             if let error = root.child("error"), error.isValid {
                 informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
             } else {
-                if store.deleteTagSongs(tagAlbumId: tagAlbumId) {
+                if store.deleteTagSongs(serverId: serverId, tagAlbumId: tagAlbumId) {
                     var songOrder = 0
                     root.iterate("album.song") { element in
-                        let song = NewSong(element: element)
+                        let song = NewSong(serverId: self.serverId, element: element)
                         if song.path != "" && (Settings.shared().currentServer.isVideoSupported || !song.isVideo) {
                             // Fix for pdfs showing in directory listing
                             // TODO: See if this is still necessary

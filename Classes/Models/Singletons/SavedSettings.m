@@ -237,13 +237,17 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark - Login Settings
 
+- (NSInteger)currentServerId {
+    return _currentServer != nil ? _currentServer.serverId : -1;
+}
+
 - (Server *)currentServer {
     return _currentServer;
 }
 
 - (void)setCurrentServer:(Server *)currentServer {
     _currentServer = currentServer;
-    [_userDefaults setObject:currentServer.serverId forKey:@"currentServerId"];
+    [_userDefaults setInteger:currentServer.serverId forKey:@"currentServerId"];
     [_userDefaults synchronize];
 }
 
@@ -300,12 +304,12 @@ LOG_LEVEL_ISUB_DEFAULT
 #pragma mark - Root Folders Settings
 
 - (NSNumber *)rootFoldersSelectedFolderId {
-    NSString *key = [NSString stringWithFormat:@"rootFoldersSelectedFolder%@", self.currentServer.serverId];
+    NSString *key = [NSString stringWithFormat:@"rootFoldersSelectedFolder%ld", (long)self.currentServer.serverId];
     return [_userDefaults objectForKey:key];
 }
 
 - (void)setRootFoldersSelectedFolderId:(NSNumber *)folderId {
-    NSString *key = [NSString stringWithFormat:@"rootFoldersSelectedFolder%@", self.currentServer.serverId];
+    NSString *key = [NSString stringWithFormat:@"rootFoldersSelectedFolder%ld", (long)self.currentServer.serverId];
     [_userDefaults setObject:folderId forKey:key];
     [_userDefaults synchronize];
 }
@@ -313,12 +317,12 @@ LOG_LEVEL_ISUB_DEFAULT
 #pragma mark - Root Artists Settings
 
 - (NSNumber *)rootArtistsSelectedFolderId {
-    NSString *key = [NSString stringWithFormat:@"rootArtistsSelectedFolder%ld", (long)self.currentServer.serverId.integerValue];
+    NSString *key = [NSString stringWithFormat:@"rootArtistsSelectedFolder%ld", (long)self.currentServer.serverId];
     return [_userDefaults objectForKey:key];
 }
 
 - (void)setRootArtistsSelectedFolderId:(NSNumber *)folderId {
-    NSString *key = [NSString stringWithFormat:@"rootArtistsSelectedFolder%ld", (long)self.currentServer.serverId.integerValue];
+    NSString *key = [NSString stringWithFormat:@"rootArtistsSelectedFolder%ld", (long)self.currentServer.serverId];
     [_userDefaults setObject:folderId forKey:key];
     [_userDefaults synchronize];
 }
@@ -808,10 +812,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	
     
     NSNumber *currentServerId = [_userDefaults objectForKey:@"currentServerId"];
-    if (currentServerId) {
+    if (Store.shared.servers.count > 0 && currentServerId) {
         // Load the new server object
-        NSNumber *currentServerId = [_userDefaults objectForKey:@"currentServerId"];
-        _currentServer = [Store.shared serverWithId:currentServerId.integerValue];
+        _currentServer = [Store.shared serverWithId:[_userDefaults integerForKey:@"currentServerId"]];
     } else {
         // Load the old server objects
         NSData *servers = [_userDefaults objectForKey:@"servers"];
@@ -823,9 +826,8 @@ LOG_LEVEL_ISUB_DEFAULT
             NSSet *classes = [NSSet setWithArray:@[NSArray.class, ISMSServer.class]];
             NSArray *serverList = [NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:servers error:nil];
             for (ISMSServer *oldServer in serverList) {
-                Server *server = [[Server alloc] initWithType:ServerTypeSubsonic url:[NSURL URLWithString:oldServer.url] username:oldServer.username password:oldServer.password];
+                Server *server = [[Server alloc] initWithId:[Store.shared nextServerId] type:ServerTypeSubsonic url:[NSURL URLWithString:oldServer.url] username:oldServer.username password:oldServer.password];
                 server = [Store.shared addWithServer:server];
-                
                 if ([oldServer.url isEqual:urlString] && [oldServer.username isEqual:username]) {
                     self.currentServer = server;
                 }

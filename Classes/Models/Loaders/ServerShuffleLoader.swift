@@ -13,7 +13,7 @@ import Foundation
     
     var mediaFolderId: Int?
     
-    override func createRequest() -> URLRequest {
+    override func createRequest() -> URLRequest? {
         // Start the 100 record open search to create shuffle list
         var parameters = ["size": "100"]
         if let mediaFolderId = mediaFolderId, mediaFolderId != MediaFolder.allFoldersId {

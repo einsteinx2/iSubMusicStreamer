@@ -9,16 +9,23 @@
 import Foundation
 
 @objc final class CoverArt: NSObject, Codable {
+    @objc let serverId: Int
     @objc(coverArtId) let id: String
     @objc let isLarge: Bool
     @objc let data: Data
     
     @objc var image: UIImage? { UIImage(data: data) }
     
-    @objc init(id: String, isLarge: Bool, data: Data) {
+    @objc(initWithServerId:coverArtId:isLarge:data:)
+    init(serverId: Int, id: String, isLarge: Bool, data: Data) {
+        self.serverId = serverId
         self.id = id
         self.isLarge = isLarge
         self.data = data
         super.init()
+    }
+    
+    override var description: String {
+        return "\(super.description): serverId: \(serverId), id: \(id), isLarge: \(isLarge), data.count: \(data.count)"
     }
 }

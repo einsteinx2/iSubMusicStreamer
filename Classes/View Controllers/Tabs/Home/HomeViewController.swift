@@ -140,7 +140,7 @@ import Resolver
         }
         
         serverShuffleButton.setAction { [unowned self] in
-            let mediaFolders = store.mediaFolders()
+            let mediaFolders = store.mediaFolders(serverId: Settings.shared().currentServerId)
             if mediaFolders.count > 0 {
                 // 2 media folders means the "All Media Folders" option plus one folder aka only 1 actual media folder
                 if mediaFolders.count == 2 {

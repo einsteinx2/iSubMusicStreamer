@@ -14,6 +14,7 @@ import Resolver
     @Injected private var store: Store
     
     @objc weak var delegate: SUSLoaderDelegate?
+    @objc var serverId = Settings.shared().currentServerId
     @objc var mediaFolderId: Int {
         didSet {
             loadFromCache()
@@ -47,10 +48,10 @@ import Resolver
     }
     
     private func loadFromCache() {
-        metadata = store.folderArtistMetadata(mediaFolderId: mediaFolderId)
+        metadata = store.folderArtistMetadata(serverId: serverId, mediaFolderId: mediaFolderId)
         if metadata != nil {
-            tableSections = store.folderArtistSections(mediaFolderId: mediaFolderId)
-            folderArtistIds = store.folderArtistIds(mediaFolderId: mediaFolderId)
+            tableSections = store.folderArtistSections(serverId: serverId, mediaFolderId: mediaFolderId)
+            folderArtistIds = store.folderArtistIds(serverId: serverId, mediaFolderId: mediaFolderId)
         } else {
             tableSections.removeAll()
             folderArtistIds.removeAll()
@@ -61,12 +62,12 @@ import Resolver
         let index = tableSections[indexPath.section].position + indexPath.row
         guard index < folderArtistIds.count else { return nil }
         
-        return store.folderArtist(id: folderArtistIds[index])
+        return store.folderArtist(serverId: serverId, id: folderArtistIds[index])
     }
     
     @objc func folderArtistInSearch(indexPath: IndexPath) -> FolderArtist? {
         guard indexPath.row < searchFolderArtistIds.count else { return nil }
-        return store.folderArtist(id: searchFolderArtistIds[indexPath.row])
+        return store.folderArtist(serverId: serverId, id: searchFolderArtistIds[indexPath.row])
     }
     
     @objc func clearSearch() {
@@ -77,12 +78,12 @@ import Resolver
     
     @objc func search(name: String) {
         searchName = name
-        searchFolderArtistIds = store.search(folderArtistName: name, mediaFolderId: mediaFolderId, offset: 0, limit: searchLimit)
+        searchFolderArtistIds = store.search(folderArtistName: name, serverId: serverId, mediaFolderId: mediaFolderId, offset: 0, limit: searchLimit)
     }
     
     @objc func continueSearch() {
         if let searchName = searchName, shouldContinueSearch {
-            let folderIds = store.search(folderArtistName: searchName, mediaFolderId: mediaFolderId, offset: searchFolderArtistIds.count, limit: searchLimit)
+            let folderIds = store.search(folderArtistName: searchName, serverId: serverId, mediaFolderId: mediaFolderId, offset: searchFolderArtistIds.count, limit: searchLimit)
             shouldContinueSearch = (folderIds.count == searchLimit)
             searchFolderArtistIds.append(contentsOf: folderIds)
         }

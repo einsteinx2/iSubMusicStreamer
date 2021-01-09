@@ -14,7 +14,6 @@
 #import "JukeboxSingleton.h"
 #import "ISMSStreamManager.h"
 #import "ISMSCacheQueueManager.h"
-#import "SUSCoverArtDAO.h"
 #import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -233,7 +232,7 @@ double startSongSeconds = 0.0;
     [trackInfo setObject:@(1.0) forKey:MPNowPlayingInfoPropertyPlaybackRate];
     
     if (settingsS.isLockScreenArtEnabled) {
-        SUSCoverArtDAO *artDataModel = [[SUSCoverArtDAO alloc] initWithDelegate:nil coverArtId:currentSong.coverArtId isLarge:YES];
+        CoverArtDAO *artDataModel = [[CoverArtDAO alloc] initWithDelegate:nil coverArtId:currentSong.coverArtId isLarge:YES];
         UIImage *image = artDataModel.coverArtImage;
         MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithBoundsSize:image.size requestHandler:^UIImage * _Nonnull(CGSize size) {
             return artDataModel.coverArtImage;

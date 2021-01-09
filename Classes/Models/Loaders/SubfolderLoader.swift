@@ -18,6 +18,7 @@ final class SubfolderLoader: SUSLoader {
     
     override var type: SUSLoaderType { return SUSLoaderType_SubFolders }
     
+    var serverId = Settings.shared().currentServerId
     let parentFolderId: Int
     private(set) var folderMetadata: FolderMetadata?
     private(set) var folderAlbumIds = [Int]()
@@ -33,7 +34,7 @@ final class SubfolderLoader: SUSLoader {
         super.init(callback: callback)
     }
     
-    override func createRequest() -> URLRequest {
+    override func createRequest() -> URLRequest? {
         return NSMutableURLRequest(susAction: "getMusicDirectory", parameters: ["id": parentFolderId]) as URLRequest
     }
     
@@ -47,7 +48,7 @@ final class SubfolderLoader: SUSLoader {
             if let error = root.child("error"), error.isValid {
                 informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
             } else {
-                if store.resetFolderAlbumCache(parentFolderId: parentFolderId) {
+                if store.resetFolderAlbumCache(serverId: serverId, parentFolderId: parentFolderId) {
                     var songCount = 0
                     var duration = 0
                     
@@ -56,7 +57,7 @@ final class SubfolderLoader: SUSLoader {
                     songIds.removeAll()
                     root.iterate("directory.child") { element in
                         if element.attribute("isDir") == "true" {
-                            let folderAlbum = FolderAlbum(element: element)
+                            let folderAlbum = FolderAlbum(serverId: self.serverId, element: element)
                             if folderAlbum.name != ".AppleDouble" {
                                 folderAlbums.append(folderAlbum)
                                 
@@ -64,7 +65,7 @@ final class SubfolderLoader: SUSLoader {
                                 self.onProcessFolderAlbum?(folderAlbum)
                             }
                         } else {
-                            let song = NewSong(element: element)
+                            let song = NewSong(serverId: self.serverId, element: element)
                             if song.path != "" && (Settings.shared().currentServer.isVideoSupported || !song.isVideo) {
                                 // Fix for pdfs showing in directory listing
                                 // TODO: See if this is still necessary
@@ -98,7 +99,7 @@ final class SubfolderLoader: SUSLoader {
                         }
                     }
                     
-                    let metadata = FolderMetadata(parentFolderId: parentFolderId, folderCount: folderCount, songCount: songCount, duration: duration)
+                    let metadata = FolderMetadata(serverId: serverId, parentFolderId: parentFolderId, folderCount: folderCount, songCount: songCount, duration: duration)
                     if !store.add(folderMetadata: metadata) {
                         informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
                         return

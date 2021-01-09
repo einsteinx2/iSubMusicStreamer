@@ -13,6 +13,7 @@ import Resolver
 @objc final class SubfolderDAO: NSObject {
     @Injected private var store: Store
     
+    var serverId = Settings.shared().currentServerId
     private let parentFolderId: Int
     private var loader: SubfolderLoader?
     private var metadata: FolderMetadata?
@@ -38,10 +39,10 @@ import Resolver
     }
     
     private func loadFromCache() {
-        metadata = store.folderMetadata(parentFolderId: parentFolderId)
+        metadata = store.folderMetadata(serverId: serverId, parentFolderId: parentFolderId)
         if metadata != nil {
-            folderAlbumIds = store.folderAlbumIds(parentFolderId: parentFolderId)
-            songIds = store.songIds(parentFolderId: parentFolderId)
+            folderAlbumIds = store.folderAlbumIds(serverId: serverId, parentFolderId: parentFolderId)
+            songIds = store.songIds(serverId: serverId, parentFolderId: parentFolderId)
         } else {
             folderAlbumIds.removeAll()
             songIds.removeAll()
@@ -50,12 +51,12 @@ import Resolver
     
     @objc func folderAlbum(indexPath: IndexPath) -> FolderAlbum? {
         guard indexPath.row < folderAlbumIds.count else { return nil }
-        return store.folderAlbum(id: folderAlbumIds[indexPath.row])
+        return store.folderAlbum(serverId: serverId, id: folderAlbumIds[indexPath.row])
     }
     
     @objc func song(indexPath: IndexPath) -> NewSong? {
         guard indexPath.row < songIds.count else { return nil }
-        return store.song(id: songIds[indexPath.row])
+        return store.song(serverId: serverId, id: songIds[indexPath.row])
     }
     
     @objc func playSong(row: Int) -> Song? {

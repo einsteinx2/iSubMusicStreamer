@@ -327,7 +327,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         Server *server = [self.servers objectAtIndexSafe:indexPath.row];
-        (void)[Store.shared deleteServerWithId:server.serverId.integerValue];
+        (void)[Store.shared deleteServerWithId:server.serverId];
         self.servers = Store.shared.servers;
         
 		// Alert user to select new default server if they deleting the default

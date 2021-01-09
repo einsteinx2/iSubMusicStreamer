@@ -16,7 +16,7 @@ extension FolderAlbum: FetchableRecord, PersistableRecord {
         static let folderSongList = "folderSongList"
     }
     enum Column: String, ColumnExpression {
-        case id, name, coverArtId, parentFolderId, tagArtistName, tagAlbumName, playCount, year
+        case serverId, id, name, coverArtId, parentFolderId, tagArtistName, tagAlbumName, playCount, year
     }
     enum RelatedColumn: String, ColumnExpression {
         case parentFolderId, folderId, songId
@@ -25,7 +25,8 @@ extension FolderAlbum: FetchableRecord, PersistableRecord {
     static func createInitialSchema(_ db: Database) throws {
         // Shared table of unique album records
         try db.create(table: FolderAlbum.databaseTableName) { t in
-            t.column(Column.id, .integer).notNull().primaryKey()
+            t.column(Column.serverId, .integer).notNull()
+            t.column(Column.id, .integer).notNull()
             t.column(Column.name, .text).notNull()
             t.column(Column.coverArtId, .text)
             t.column(Column.parentFolderId, .integer)
@@ -33,78 +34,85 @@ extension FolderAlbum: FetchableRecord, PersistableRecord {
             t.column(Column.tagAlbumName, .text)
             t.column(Column.playCount, .integer)
             t.column(Column.year, .integer)
+            t.primaryKey([Column.serverId, Column.id])
         }
         
         // Cache of folder album IDs for each folder for display
         try db.create(table: FolderAlbum.Table.folderAlbumList) { t in
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
-            t.column(RelatedColumn.parentFolderId, .integer).notNull().indexed()
+            t.column(Column.serverId, .integer).notNull()
+            t.column(RelatedColumn.parentFolderId, .integer).notNull()
             t.column(RelatedColumn.folderId, .integer).notNull()
         }
+        try db.create(indexOn: FolderAlbum.Table.folderAlbumList, columns: [Column.serverId, RelatedColumn.parentFolderId])
         
         // Cache of song IDs for each folder for display
         try db.create(table: FolderAlbum.Table.folderSongList) { t in
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
-            t.column(RelatedColumn.parentFolderId, .integer).notNull().indexed()
+            t.column(Column.serverId, .integer).notNull()
+            t.column(RelatedColumn.parentFolderId, .integer).notNull()
             t.column(RelatedColumn.songId, .integer).notNull()
         }
+        try db.create(indexOn: FolderAlbum.Table.folderSongList, columns: [Column.serverId, RelatedColumn.parentFolderId])
     }
 }
 
 extension FolderMetadata: FetchableRecord, PersistableRecord {
     enum Column: String, ColumnExpression {
-        case parentFolderId, folderCount, songCount, duration
+        case serverId, parentFolderId, folderCount, songCount, duration
     }
     
     static func createInitialSchema(_ db: Database) throws {
         // Cache of metadata for each folder for display
         try db.create(table: FolderMetadata.databaseTableName) { t in
-            t.column(FolderMetadata.Column.parentFolderId, .integer).notNull().primaryKey()
+            t.column(FolderMetadata.Column.serverId, .integer).notNull()
+            t.column(FolderMetadata.Column.parentFolderId, .integer).notNull()
             t.column(FolderMetadata.Column.folderCount, .integer).notNull()
             t.column(FolderMetadata.Column.songCount, .integer).notNull()
             t.column(FolderMetadata.Column.duration, .integer).notNull()
+            t.primaryKey([FolderMetadata.Column.serverId, FolderMetadata.Column.parentFolderId])
         }
     }
 }
 
 extension Store {
-    func resetFolderAlbumCache(parentFolderId: Int) -> Bool {
+    func resetFolderAlbumCache(serverId: Int, parentFolderId: Int) -> Bool {
         do {
             return try mainDb.write { db in
-                try db.execute(literal: "DELETE FROM folderAlbumList WHERE parentFolderId = \(parentFolderId)")
-                try db.execute(literal: "DELETE FROM folderSongList WHERE parentFolderId = \(parentFolderId)")
+                try db.execute(literal: "DELETE FROM folderAlbumList WHERE serverId = \(serverId) AND parentFolderId = \(parentFolderId)")
+                try db.execute(literal: "DELETE FROM folderSongList WHERE serverId = \(serverId) AND parentFolderId = \(parentFolderId)")
                 return true
             }
         } catch {
-            DDLogError("Failed to reset folder \(parentFolderId) cache: \(error)")
+            DDLogError("Failed to reset folder \(parentFolderId) in server \(serverId) cache: \(error)")
             return false
         }
     }
     
-    func folderAlbumIds(parentFolderId: Int) -> [Int] {
+    func folderAlbumIds(serverId: Int, parentFolderId: Int) -> [Int] {
         do {
             return try mainDb.read { db in
                 let sql: SQLLiteral = """
                     SELECT id
                     FROM folderAlbumList
-                    WHERE parentFolderId = \(parentFolderId)
+                    WHERE serverId = \(serverId) AND parentFolderId = \(parentFolderId)
                     ORDER BY \(Column.rowID) ASC
                     """
                 return try SQLRequest<Int>(literal: sql).fetchAll(db)
             }
         } catch {
-            DDLogError("Failed to select folder album IDs for parent folder ID \(parentFolderId): \(error)")
+            DDLogError("Failed to select folder album IDs for server \(serverId) and parent folder \(parentFolderId): \(error)")
             return []
         }
     }
     
-    func folderAlbum(id: Int) -> FolderAlbum? {
+    func folderAlbum(serverId: Int, id: Int) -> FolderAlbum? {
         do {
             return try mainDb.read { db in
-                try FolderAlbum.fetchOne(db, key: id)
+                try FolderAlbum.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
             }
         } catch {
-            DDLogError("Failed to select folder album \(id): \(error)")
+            DDLogError("Failed to select server \(serverId) and folder album \(id): \(error)")
             return nil
         }
     }
@@ -118,8 +126,8 @@ extension Store {
                 // Insert folder id into list cache
                 let sql: SQLLiteral = """
                     INSERT INTO folderAlbumList
-                    (parentFolderId, folderId)
-                    VALUES (\(folderAlbum.parentFolderId), \(folderAlbum.id))
+                    (serverId, parentFolderId, folderId)
+                    VALUES (\(folderAlbum.serverId), \(folderAlbum.parentFolderId), \(folderAlbum.id))
                     """
                 try db.execute(literal: sql)
                 return true
@@ -130,19 +138,19 @@ extension Store {
         }
     }
     
-    func songIds(parentFolderId: Int) -> [Int] {
+    func songIds(serverId: Int, parentFolderId: Int) -> [Int] {
         do {
             return try mainDb.read { db in
                 let sql: SQLLiteral = """
                     SELECT songId
                     FROM folderSongList
-                    WHERE parentFolderId = \(parentFolderId)
+                    WHERE serverId = \(serverId) AND parentFolderId = \(parentFolderId)
                     ORDER BY \(Column.rowID) ASC
                     """
                 return try SQLRequest<Int>(literal: sql).fetchAll(db)
             }
         } catch {
-            DDLogError("Failed to select song IDs for parent folder ID \(parentFolderId): \(error)")
+            DDLogError("Failed to select song IDs for server \(serverId) and parent folder \(parentFolderId): \(error)")
             return []
         }
     }
@@ -156,8 +164,8 @@ extension Store {
                 // Insert song id into list cache
                 let sql: SQLLiteral = """
                     INSERT INTO folderSongList
-                    (parentFolderId, songId)
-                    VALUES (\(song.parentFolderId), \(song.id))
+                    (serverId, parentFolderId, songId)
+                    VALUES (\(song.serverId), \(song.parentFolderId), \(song.id))
                     """
                 try db.execute(literal: sql)
                 return true
@@ -168,13 +176,13 @@ extension Store {
         }
     }
     
-    func folderMetadata(parentFolderId: Int) -> FolderMetadata? {
+    func folderMetadata(serverId: Int, parentFolderId: Int) -> FolderMetadata? {
         do {
             return try mainDb.read { db in
-                try FolderMetadata.fetchOne(db, key: parentFolderId)
+                try FolderMetadata.filter(literal: "serverId = \(serverId) AND parentFolderId = \(parentFolderId)").fetchOne(db)
             }
         } catch {
-            DDLogError("Failed to select folder metadata \(parentFolderId): \(error)")
+            DDLogError("Failed to select folder metadata for server \(serverId) and parent folder \(parentFolderId): \(error)")
             return nil
         }
     }

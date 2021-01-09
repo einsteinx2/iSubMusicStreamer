@@ -9,27 +9,31 @@
 import Foundation
 
 @objc(ISMSFolderArtist) final class FolderArtist: NSObject, NSCopying, Codable {
+    @objc let serverId: Int
     @objc(folderId) let id: Int
     @objc let name: String
     
-    @objc init(id: Int, name: String) {
+    @objc(initWithServerId:folderId:name:)
+    init(serverId: Int, id: Int, name: String) {
+        self.serverId = serverId
         self.id = id
         self.name = name
         super.init()
     }
     
-    @objc init(element: RXMLElement) {
+    @objc init(serverId: Int, element: RXMLElement) {
+        self.serverId = serverId
         self.id =  element.attribute("id").intXML
         self.name = element.attribute("name").stringXML
         super.init()
     }
     
     @objc func copy(with zone: NSZone? = nil) -> Any {
-        return FolderArtist(id: id, name: name)
+        return FolderArtist(serverId: serverId, id: id, name: name)
     }
     
     @objc override var description: String {
-        return "\(super.description): id: \(id), name: \(name)"
+        return "\(super.description): serverId: \(serverId), id: \(id), name: \(name)"
     }
 }
 

@@ -13,6 +13,7 @@ import Resolver
 @objc final class TagAlbumDAO: NSObject {
     @Injected private var store: Store
     
+    var serverId = Settings.shared().currentServerId
     private let tagAlbumId: Int
     private var loader: TagAlbumLoader?
     private var songIds = [Int]()
@@ -36,7 +37,7 @@ import Resolver
 
     @objc func song(indexPath: IndexPath) -> NewSong? {
         guard indexPath.row < songIds.count else { return nil }
-        return store.song(id: songIds[indexPath.row])
+        return store.song(serverId: serverId, id: songIds[indexPath.row])
     }
     
     @objc func playSong(row: Int) -> Song? {
@@ -73,7 +74,7 @@ import Resolver
     }
     
     private func loadFromCache() {
-        songIds = store.songIds(tagAlbumId: tagAlbumId)
+        songIds = store.songIds(serverId: serverId, tagAlbumId: tagAlbumId)
     }
 }
 

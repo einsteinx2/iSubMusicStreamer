@@ -33,6 +33,7 @@ NS_SWIFT_NAME(Settings)
 @property BOOL isCancelLoading;
 @property BOOL isOfflineMode;
 
+@property NSInteger currentServerId;
 @property (strong) Server *currentServer;
 
 // Root Folders Settings

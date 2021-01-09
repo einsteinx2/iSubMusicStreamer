@@ -12,12 +12,21 @@ import GRDB
 @objc final class MediaFolder: NSObject, Codable {
     @objc static let allFoldersId = -1
     
+    @objc let serverId: Int
     @objc(mediaFolderId) let id: Int
     @objc let name: String
     
-    @objc init(id: Int, name: String) {
+    init(serverId: Int, id: Int, name: String) {
+        self.serverId = serverId
         self.id = id
         self.name = name
+        super.init()
+    }
+    
+    init(serverId: Int, element: RXMLElement) {
+        self.serverId = serverId
+        self.id = element.attribute("id").intXML
+        self.name = element.attribute("name").stringXML
         super.init()
     }
 }

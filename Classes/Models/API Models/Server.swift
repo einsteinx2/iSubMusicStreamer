@@ -14,7 +14,7 @@ import Foundation
 }
 
 @objc final class Server: NSObject, Codable {
-    var id: Int?
+    @objc(serverId) var id: Int
     @objc let type: ServerType
     @objc let url: URL
     @objc let username: String
@@ -31,13 +31,13 @@ import Foundation
     @objc var isVideoSupported: Bool = true
     @objc var isNewSearchSupported: Bool = true
     
-    // Enable access to server ID from Objective-C
-    @objc var serverId: NSNumber? {
-        if let id = id {
-            return NSNumber(value: id)
-        }
-        return nil
-    }
+//    // Enable access to server ID from Objective-C
+//    @objc var serverId: NSNumber? {
+//        if let id = id {
+//            return NSNumber(value: id)
+//        }
+//        return nil
+//    }
     
     static func generatePathFromURL(url: URL) -> String {
         let scheme = url.scheme ?? "scheme"
@@ -70,7 +70,8 @@ import Foundation
         super.init()
     }
     
-    @objc init(type: ServerType, url: URL, username: String, password: String) {
+    @objc init(id: Int, type: ServerType, url: URL, username: String, password: String) {
+        self.id = id
         self.type = type
         self.url = url
         self.username = username

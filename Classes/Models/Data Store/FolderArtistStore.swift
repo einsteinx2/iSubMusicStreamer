@@ -17,7 +17,7 @@ extension FolderArtist: FetchableRecord, PersistableRecord {
         static let folderArtistListMetadata = "folderArtistListMetadata"
     }
     enum Column: String, ColumnExpression {
-        case id, name
+        case serverId, id, name
     }
     enum RelatedColumn: String, ColumnExpression {
         case mediaFolderId, folderArtistId
@@ -26,73 +26,81 @@ extension FolderArtist: FetchableRecord, PersistableRecord {
     static func createInitialSchema(_ db: Database) throws {
         // Shared table of unique artist records
         try db.create(table: FolderArtist.databaseTableName) { t in
-            t.column(Column.id, .integer).notNull().primaryKey()
+            t.column(Column.serverId, .integer).notNull()
+            t.column(Column.id, .integer).notNull()
             t.column(Column.name, .text).notNull().indexed()
+            t.primaryKey([Column.serverId, Column.id])
         }
         
         // Cache of folder artist IDs for each media folder for display
         try db.create(table: FolderArtist.Table.folderArtistList) { t in
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
-            t.column(RelatedColumn.mediaFolderId, .integer).notNull().indexed()
+            t.column(Column.serverId, .integer).notNull()
+            t.column(RelatedColumn.mediaFolderId, .integer).notNull()
             t.column(RelatedColumn.folderArtistId, .integer).notNull()
         }
+        try db.create(indexOn: FolderArtist.Table.folderArtistList, columns: [Column.serverId, RelatedColumn.mediaFolderId])
         
         // Cache of section indexes for display
         try db.create(table: FolderArtist.Table.folderArtistTableSection) { t in
-            t.column(TableSection.Column.mediaFolderId, .integer).notNull().indexed()
+            t.column(TableSection.Column.serverId, .integer).notNull()
+            t.column(TableSection.Column.mediaFolderId, .integer).notNull()
             t.column(TableSection.Column.name, .text).notNull()
             t.column(TableSection.Column.position, .integer).notNull()
             t.column(TableSection.Column.itemCount, .integer).notNull()
         }
+        try db.create(indexOn: FolderArtist.Table.folderArtistTableSection, columns: [TableSection.Column.serverId, TableSection.Column.mediaFolderId])
         
         // Cache of folder artist loading metadata for display
         try db.create(table: FolderArtist.Table.folderArtistListMetadata) { t in
-            t.column(RootListMetadata.Column.mediaFolderId, .integer).notNull().primaryKey()
+            t.column(RootListMetadata.Column.serverId, .integer).notNull()
+            t.column(RootListMetadata.Column.mediaFolderId, .integer).notNull()
             t.column(RootListMetadata.Column.itemCount, .integer).notNull()
             t.column(RootListMetadata.Column.reloadDate, .datetime).notNull()
+            t.primaryKey([RootListMetadata.Column.serverId, RootListMetadata.Column.mediaFolderId])
         }
     }
 }
 
 extension Store {
-    func deleteFolderArtists(mediaFolderId: Int) -> Bool {
+    func deleteFolderArtists(serverId: Int, mediaFolderId: Int) -> Bool {
         do {
             return try mainDb.write { db in
-                try db.execute(literal: "DELETE FROM folderArtistList WHERE mediaFolderId = \(mediaFolderId)")
-                try db.execute(literal: "DELETE FROM folderArtistTableSection WHERE mediaFolderId = \(mediaFolderId)")
-                try db.execute(literal: "DELETE FROM folderArtistListMetadata WHERE mediaFolderId = \(mediaFolderId)")
+                try db.execute(literal: "DELETE FROM folderArtistList WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)")
+                try db.execute(literal: "DELETE FROM folderArtistTableSection WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)")
+                try db.execute(literal: "DELETE FROM folderArtistListMetadata WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)")
                 return true
             }
         } catch {
-            DDLogError("Failed to reset folder artist caches: \(error)")
+            DDLogError("Failed to reset folder artist caches server \(serverId) and media folder \(mediaFolderId): \(error)")
             return false
         }
     }
     
-    func folderArtistIds(mediaFolderId: Int) -> [Int] {
+    func folderArtistIds(serverId: Int, mediaFolderId: Int) -> [Int] {
         do {
             return try mainDb.read { db in
                 let sql: SQLLiteral = """
                     SELECT folderArtistId
                     FROM folderArtistList
-                    WHERE mediaFolderId = \(mediaFolderId)
+                    WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)
                     ORDER BY \(Column.rowID) ASC
                     """
                 return try SQLRequest<Int>(literal: sql).fetchAll(db)
             }
         } catch {
-            DDLogError("Failed to select folder artist IDs for media folder \(mediaFolderId): \(error)")
+            DDLogError("Failed to select folder artist IDs for server \(serverId) and media folder \(mediaFolderId): \(error)")
             return []
         }
     }
     
-    func folderArtist(id: Int) -> FolderArtist? {
+    func folderArtist(serverId: Int, id: Int) -> FolderArtist? {
         do {
             return try mainDb.read { db in
-                try FolderArtist.fetchOne(db, key: id)
+                try FolderArtist.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
             }
         } catch {
-            DDLogError("Failed to select folder artist \(id): \(error)")
+            DDLogError("Failed to select folder artist \(id) server \(serverId): \(error)")
             return nil
         }
     }
@@ -106,8 +114,8 @@ extension Store {
                 // Insert artist id into list cache
                 let sql: SQLLiteral = """
                     INSERT INTO folderArtistList
-                    (mediaFolderId, folderArtistId)
-                    VALUES (\(mediaFolderId), \(folderArtist.id))
+                    (serverId, mediaFolderId, folderArtistId)
+                    VALUES (\(folderArtist.serverId), \(mediaFolderId), \(folderArtist.id))
                     """
                 try db.execute(literal: sql)
                 return true
@@ -118,18 +126,18 @@ extension Store {
         }
     }
     
-    func folderArtistSections(mediaFolderId: Int) -> [TableSection] {
+    func folderArtistSections(serverId: Int, mediaFolderId: Int) -> [TableSection] {
         do {
             return try mainDb.read { db in
                 let sql: SQLLiteral = """
                     SELECT *
                     FROM folderArtistTableSection
-                    WHERE mediaFolderId = \(mediaFolderId)
+                    WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)
                     """
                 return try SQLRequest<TableSection>(literal: sql).fetchAll(db)
             }
         } catch {
-            DDLogError("Failed to select folder artist table sections for media folder \(mediaFolderId): \(error)")
+            DDLogError("Failed to select folder artist table sections for server \(serverId) and media folder \(mediaFolderId): \(error)")
             return [TableSection]()
         }
     }
@@ -140,8 +148,8 @@ extension Store {
                 // Insert artist id into list cache
                 let sql: SQLLiteral = """
                     INSERT INTO folderArtistTableSection
-                    (mediaFolderId, name, position, itemCount)
-                    VALUES (\(section.mediaFolderId), \(section.name), \(section.position), \(section.itemCount))
+                    (serverId, mediaFolderId, name, position, itemCount)
+                    VALUES (\(section.serverId), \(section.mediaFolderId), \(section.name), \(section.position), \(section.itemCount))
                     """
                 try db.execute(literal: sql)
                 return true
@@ -152,18 +160,18 @@ extension Store {
         }
     }
     
-    func folderArtistMetadata(mediaFolderId: Int) -> RootListMetadata? {
+    func folderArtistMetadata(serverId: Int, mediaFolderId: Int) -> RootListMetadata? {
         do {
             return try mainDb.read { db in
                 let sql: SQLLiteral = """
                     SELECT *
                     FROM folderArtistListMetadata
-                    WHERE mediaFolderId = \(mediaFolderId)
+                    WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)
                     """
                 return try SQLRequest<RootListMetadata>(literal: sql).fetchOne(db)
             }
         } catch {
-            DDLogError("Failed to select folder artist metadata for media folder \(mediaFolderId): \(error)")
+            DDLogError("Failed to select folder artist metadata for server \(serverId) and media folder \(mediaFolderId): \(error)")
             return nil
         }
     }
@@ -173,20 +181,20 @@ extension Store {
             return try mainDb.write { db in
                 let sql: SQLLiteral = """
                     INSERT INTO folderArtistListMetadata
-                    (mediaFolderId, itemCount, reloadDate)
-                    VALUES (\(metadata.mediaFolderId), \(metadata.itemCount), \(metadata.reloadDate))
+                    (serverId, mediaFolderId, itemCount, reloadDate)
+                    VALUES (\(metadata.serverId), \(metadata.mediaFolderId), \(metadata.itemCount), \(metadata.reloadDate))
                     """
                 try db.execute(literal: sql)
                 return true
             }
         } catch {
-            DDLogError("Failed to insert folder artist list metadata in media folder \(metadata.mediaFolderId): \(error)")
+            DDLogError("Failed to insert folder artist list metadata \(metadata) in media folder \(metadata.mediaFolderId): \(error)")
             return false
         }
     }
     
     // Returns a list of matching tag artist IDs
-    func search(folderArtistName name: String, mediaFolderId: Int, offset: Int, limit: Int) -> [Int] {
+    func search(folderArtistName name: String, serverId: Int, mediaFolderId: Int, offset: Int, limit: Int) -> [Int] {
         do {
             return try mainDb.read { db in
                 let searchTerm = "%\(name)%"
@@ -195,7 +203,7 @@ extension Store {
                     FROM folderArtistList
                     JOIN \(FolderArtist.self)
                     ON folderArtistList.folderArtistId = \(FolderArtist.self).id
-                    WHERE folderArtistList.mediaFolderId = \(mediaFolderId)
+                    WHERE folderArtistList.serverId = \(serverId) AND folderArtistList.mediaFolderId = \(mediaFolderId)
                     AND \(FolderArtist.self).name LIKE \(searchTerm)
                     LIMIT \(limit) OFFSET \(offset)
                     """

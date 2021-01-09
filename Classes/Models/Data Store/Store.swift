@@ -74,6 +74,8 @@ fileprivate let debugPrintAllQueries = false
             // Initial schema creation
             migrator.registerMigration("initialSchema") { db in
                 try Server.createInitialSchema(db)
+                try CoverArt.createInitialSchema(db)
+                try ArtistArt.createInitialSchema(db)
                 try MediaFolder.createInitialSchema(db)
                 try TagArtist.createInitialSchema(db)
                 try TagAlbum.createInitialSchema(db)
@@ -81,8 +83,6 @@ fileprivate let debugPrintAllQueries = false
                 try FolderAlbum.createInitialSchema(db)
                 try FolderMetadata.createInitialSchema(db)
                 try NewSong.createInitialSchema(db)
-                try CoverArt.createInitialSchema(db)
-                try ArtistArt.createInitialSchema(db)
             }
             
             // Automatically perform all registered migrations in order
@@ -115,12 +115,12 @@ fileprivate let debugPrintAllQueries = false
 
 extension TableSection: FetchableRecord, PersistableRecord {
     enum Column: String, ColumnExpression {
-        case mediaFolderId, name, position, itemCount
+        case serverId, mediaFolderId, name, position, itemCount
     }
 }
 
 extension RootListMetadata: FetchableRecord, PersistableRecord {
     enum Column: String, ColumnExpression {
-        case mediaFolderId, itemCount, reloadDate
+        case serverId, mediaFolderId, itemCount, reloadDate
     }
 }

@@ -363,7 +363,7 @@
     cell.hideSecondaryLabel = YES;
     cell.hideDurationLabel = YES;
     NSString *name = [[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] objectAtIndexSafe:indexPath.row];
-    [cell updateWithModel:[[ISMSFolderArtist alloc] initWithId:@"" name:name]];
+    [cell updateWithModel:[[ISMSFolderArtist alloc] initWithServerId: -1 folderId:-1 name:name]];
     return cell;
 }
 

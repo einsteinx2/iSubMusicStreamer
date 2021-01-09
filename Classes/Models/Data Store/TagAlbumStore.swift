@@ -15,7 +15,7 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
         static let tagSongList = "tagSongList"
     }
     enum Column: String, ColumnExpression {
-        case id, name, coverArtId, tagArtistId, tagArtistName, songCount, duration, playCount, year, genre
+        case serverId, id, name, coverArtId, tagArtistId, tagArtistName, songCount, duration, playCount, year, genre
     }
     enum RelatedColumn: String, ColumnExpression {
         case tagAlbumId, songId
@@ -24,7 +24,8 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
     static func createInitialSchema(_ db: Database) throws {
         // Shared table of unique album records
         try db.create(table: TagAlbum.databaseTableName) { t in
-            t.column(Column.id, .integer).notNull().primaryKey()
+            t.column(Column.serverId, .integer).notNull()
+            t.column(Column.id, .integer).notNull()
             t.column(Column.name, .text).notNull()
             t.column(Column.coverArtId, .text)
             t.column(Column.tagArtistId, .integer).indexed()
@@ -34,26 +35,29 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
             t.column(Column.playCount, .integer)
             t.column(Column.year, .integer)
             t.column(Column.genre, .text)
+            t.primaryKey([Column.serverId, Column.id])
         }
         
         // Cache of song IDs for each tag album for display
         try db.create(table: TagAlbum.Table.tagSongList) { t in
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
-            t.column(RelatedColumn.tagAlbumId, .integer).notNull().indexed()
+            t.column(Column.serverId, .integer).notNull()
+            t.column(RelatedColumn.tagAlbumId, .integer).notNull()
             t.column(RelatedColumn.songId, .integer).notNull()
         }
+        try db.create(indexOn: TagAlbum.Table.tagSongList, columns: [Column.serverId, RelatedColumn.tagAlbumId])
     }
 }
 
 extension Store {
-    func deleteTagAlbums(tagArtistId: Int) -> Bool {
+    func deleteTagAlbums(serverId: Int, tagArtistId: Int) -> Bool {
         do {
             return try mainDb.write { db in
-                try db.execute(literal: "DELETE FROM \(TagAlbum.self) WHERE tagArtistId = \(tagArtistId)")
+                try db.execute(literal: "DELETE FROM \(TagAlbum.self) WHERE serverId = \(serverId) AND tagArtistId = \(tagArtistId)")
                 return true
             }
         } catch {
-            DDLogError("Failed to delete tag albums for tag artist \(tagArtistId): \(error)")
+            DDLogError("Failed to delete tag albums for server \(serverId) and tag artist \(tagArtistId): \(error)")
             return false
         }
     }
@@ -77,30 +81,30 @@ extension Store {
 //        }
 //    }
     
-    func tagAlbumIds(tagArtistId: Int, orderBy: TagAlbum.Column = .name) -> [Int] {
+    func tagAlbumIds(serverId: Int, tagArtistId: Int, orderBy: TagAlbum.Column = .name) -> [Int] {
         do {
             return try mainDb.read { db in
                 let sql: SQLLiteral = """
                     SELECT id
                     FROM \(TagAlbum.self)
-                    WHERE tagArtistId = \(tagArtistId)
+                    WHERE serverId = \(serverId) AND tagArtistId = \(tagArtistId)
                     ORDER BY \(orderBy) ASC
                     """
                 return try SQLRequest<Int>(literal: sql).fetchAll(db)
             }
         } catch {
-            DDLogError("Failed to select tag album IDs for tag artist ID \(tagArtistId) ordered by \(orderBy): \(error)")
+            DDLogError("Failed to select tag album IDs for server \(serverId) and tag artist \(tagArtistId) ordered by \(orderBy): \(error)")
             return []
         }
     }
     
-    func tagAlbum(id: Int) -> TagAlbum? {
+    func tagAlbum(serverId: Int, id: Int) -> TagAlbum? {
         do {
             return try mainDb.read { db in
-                try TagAlbum.fetchOne(db, key: id)
+                try TagAlbum.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
             }
         } catch {
-            DDLogError("Failed to select tag album \(id): \(error)")
+            DDLogError("Failed to select server \(serverId) and tag album \(id): \(error)")
             return nil
         }
     }
@@ -118,31 +122,31 @@ extension Store {
         }
     }
     
-    func songIds(tagAlbumId: Int) -> [Int] {
+    func songIds(serverId: Int, tagAlbumId: Int) -> [Int] {
         do {
             return try mainDb.read { db in
                 let sql: SQLLiteral = """
                     SELECT songId
                     FROM tagSongList
-                    WHERE tagAlbumId = \(tagAlbumId)
+                    WHERE serverId = \(serverId) AND tagAlbumId = \(tagAlbumId)
                     ORDER BY \(Column.rowID) ASC
                     """
                 return try SQLRequest<Int>(literal: sql).fetchAll(db)
             }
         } catch {
-            DDLogError("Failed to select song IDs for tag album ID \(tagAlbumId): \(error)")
+            DDLogError("Failed to select song IDs for server \(serverId) and tag album \(tagAlbumId): \(error)")
             return []
         }
     }
     
-    func deleteTagSongs(tagAlbumId: Int) -> Bool {
+    func deleteTagSongs(serverId: Int, tagAlbumId: Int) -> Bool {
         do {
             return try mainDb.write { db in
-                try db.execute(literal: "DELETE FROM tagSongList WHERE tagAlbumId = \(tagAlbumId)")
+                try db.execute(literal: "DELETE FROM tagSongList WHERE serverId = \(serverId) AND tagAlbumId = \(tagAlbumId)")
                 return true
             }
         } catch {
-            DDLogError("Failed to reset tag album song cache: \(error)")
+            DDLogError("Failed to reset tag album song cache server \(serverId) and tag album \(tagAlbumId): \(error)")
             return false
         }
     }
@@ -156,8 +160,8 @@ extension Store {
                 // Insert song id into list cache
                 let sql: SQLLiteral = """
                     INSERT INTO tagSongList
-                    (tagAlbumId, songId)
-                    VALUES (\(song.tagAlbumId), \(song.id))
+                    (serverId, tagAlbumId, songId)
+                    VALUES (\(song.serverId), \(song.tagAlbumId), \(song.id))
                     """
                 try db.execute(literal: sql)
                 return true

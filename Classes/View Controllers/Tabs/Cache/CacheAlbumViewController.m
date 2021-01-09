@@ -311,14 +311,15 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
     NSString *md5 = [[self.albums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:0];
     NSString *name = [[self.albums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
     NSString *coverArtId = [databaseS.songCacheDbQueue stringForQuery:@"SELECT coverArtId FROM cachedSongs WHERE md5 = ?", md5];
-    return [[ISMSFolderAlbum alloc] initWithId:0
-                                         name:name ?: @""
-                                    coverArtId:coverArtId
-                                parentFolderId:0
-                                 tagArtistName:self.artistName
-                                  tagAlbumName:nil
-                                     playCount:0
-                                          year:0];
+    return [[ISMSFolderAlbum alloc] initWithServerId:-1
+                                            folderId:-1
+                                                name:name ?: @""
+                                          coverArtId:coverArtId
+                                      parentFolderId:-1
+                                       tagArtistName:self.artistName
+                                        tagAlbumName:nil
+                                           playCount:0
+                                                year:0];
     
 //    return [[ISMSFolderAlbum alloc] initWithId:@""
 //                                         title:title ? title : @""

@@ -62,15 +62,16 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (ISMSFolderAlbum *)allAlbumsFolderAlbumForPosition:(NSUInteger)position {
-	__block ISMSFolderAlbum *folderAlbum = nil;
-	[self.dbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM allAlbums WHERE ROWID = ?", @(position)];
-		if ([result next]) {
-            folderAlbum = [[ISMSFolderAlbum alloc] initWithResult:result];
-		}
-		[result close];
-	}];
-	return folderAlbum;
+//	__block ISMSFolderAlbum *folderAlbum = nil;
+//	[self.dbQueue inDatabase:^(FMDatabase *db) {
+//        FMResultSet *result = [db executeQuery:@"SELECT * FROM allAlbums WHERE ROWID = ?", @(position)];
+//		if ([result next]) {
+//            folderAlbum = [[ISMSFolderAlbum alloc] initWithResult:result];
+//		}
+//		[result close];
+//	}];
+//	return folderAlbum;
+    return nil;
 }
 
 - (ISMSFolderAlbum *)allAlbumsFolderAlbumForPositionInSearch:(NSUInteger)position {

@@ -10,9 +10,11 @@ import Foundation
 import CocoaLumberjackSwift
 
 @objc class SearchXMLParser: NSObject {
+    @objc var serverId = Settings.shared().currentServerId
+    
     @objc private(set) var folderArtists = [FolderArtist]()
     @objc private(set) var folderAlbums = [FolderAlbum]()
-    @objc private(set) var songs = [Song]()
+    @objc private(set) var songs = [NewSong]()
     
     @objc init(data: Data) {
         super.init()
@@ -30,16 +32,16 @@ import CocoaLumberjackSwift
             } else {
                 if Settings.shared().currentServer.isNewSearchSupported {
                     root.iterate("searchResult2.artist") { element in
-                        self.folderArtists.append(FolderArtist(element: element))
+                        self.folderArtists.append(FolderArtist(serverId: self.serverId, element: element))
                     }
                     root.iterate("searchResult2.album") { element in
-                        self.folderAlbums.append(FolderAlbum(element: element))
+                        self.folderAlbums.append(FolderAlbum(serverId: self.serverId, element: element))
                     }
                     root.iterate("searchResult2.song") { element in
                         let isVideo = element.attribute("isVideo")
                         if isVideo != "true" {
-                            let song = Song(rxmlElement: element)
-                            if song.path != nil {
+                            let song = NewSong(serverId: self.serverId, element: element)
+                            if song.path != "" {
                                 self.songs.append(song)
                             }
                         }
@@ -48,8 +50,8 @@ import CocoaLumberjackSwift
                     root.iterate("searchResult.match") { element in
                         let isVideo = element.attribute("isVideo")
                         if isVideo != "true" {
-                            let song = Song(rxmlElement: element)
-                            if song.path != nil {
+                            let song = NewSong(serverId: self.serverId, element: element)
+                            if song.path != "" {
                                 self.songs.append(song)
                             }
                         }

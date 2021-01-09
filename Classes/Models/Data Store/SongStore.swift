@@ -14,13 +14,14 @@ extension NewSong: FetchableRecord, PersistableRecord {
     static var databaseTableName: String = "song"
     
     enum Column: String, ColumnExpression {
-        case id, title, coverArtId, parentFolderId, tagArtistName, tagAlbumName, playCount, year, tagArtistId, tagAlbumId, genre, path, suffix, transcodedSuffix, duration, bitrate, track, discNumber, size, isVideo
+        case serverId, id, title, coverArtId, parentFolderId, tagArtistName, tagAlbumName, playCount, year, tagArtistId, tagAlbumId, genre, path, suffix, transcodedSuffix, duration, bitrate, track, discNumber, size, isVideo
     }
     
     static func createInitialSchema(_ db: Database) throws {
         // Shared table of unique song records
         try db.create(table: NewSong.databaseTableName) { t in
-            t.column(Column.id, .integer).notNull().primaryKey()
+            t.column(Column.serverId, .integer).notNull()
+            t.column(Column.id, .integer).notNull()
             t.column(Column.title, .text).notNull()
             t.column(Column.coverArtId, .text)
             t.column(Column.parentFolderId, .integer)
@@ -40,18 +41,19 @@ extension NewSong: FetchableRecord, PersistableRecord {
             t.column(Column.discNumber, .integer)
             t.column(Column.size, .integer).notNull()
             t.column(Column.isVideo, .boolean).notNull()
+            t.primaryKey([Column.serverId, Column.id])
         }
     }
 }
 
 extension Store {
-    func song(id: Int) -> NewSong? {
+    func song(serverId: Int, id: Int) -> NewSong? {
         do {
             return try mainDb.read { db in
-                try NewSong.fetchOne(db, key: id)
+                try NewSong.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
             }
         } catch {
-            DDLogError("Failed to select song \(id): \(error)")
+            DDLogError("Failed to select song \(id) for server \(serverId): \(error)")
             return nil
         }
     }
