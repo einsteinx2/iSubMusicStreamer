@@ -156,13 +156,13 @@ import SnapKit
                     controller = CustomUINavigationController(rootViewController: CacheOfflineFoldersViewController(nibName: "CacheOfflineFoldersViewController", bundle: nil))
                     cachedTabs["CacheOfflineFoldersViewController"] = controller
                 }
-            case 2:
-                if let cachedController = cachedTabs["GenresViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: GenresViewController(nibName: "GenresViewController", bundle: nil))
-                    cachedTabs["GenresViewController"] = controller
-                }
+//            case 2:
+//                if let cachedController = cachedTabs["GenresViewController"] {
+//                    controller = cachedController
+//                } else {
+//                    controller = CustomUINavigationController(rootViewController: GenresViewController(nibName: "GenresViewController", bundle: nil))
+//                    cachedTabs["GenresViewController"] = controller
+//                }
             case 3:
                 if let cachedController = cachedTabs["PlaylistsViewController"] {
                     controller = cachedController
@@ -237,27 +237,27 @@ import SnapKit
                     controller = CustomUINavigationController(rootViewController: ChatViewController(nibName: "ChatViewController", bundle: nil))
                     cachedTabs["ChatViewController"] = controller
                 }
-            case 8:
-                if let cachedController = cachedTabs["GenresViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: GenresViewController(nibName: "GenresViewController", bundle: nil))
-                    cachedTabs["GenresViewController"] = controller
-                }
-            case 9:
-                if let cachedController = cachedTabs["AllAlbumsViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: AllAlbumsViewController(nibName: "AllAlbumsViewController", bundle: nil))
-                    cachedTabs["AllAlbumsViewController"] = controller
-                }
-            case 10:
-                if let cachedController = cachedTabs["AllSongsViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: AllSongsViewController(nibName: "AllSongsViewController", bundle: nil))
-                    cachedTabs["AllSongsViewController"] = controller
-                }
+//            case 8:
+//                if let cachedController = cachedTabs["GenresViewController"] {
+//                    controller = cachedController
+//                } else {
+//                    controller = CustomUINavigationController(rootViewController: GenresViewController(nibName: "GenresViewController", bundle: nil))
+//                    cachedTabs["GenresViewController"] = controller
+//                }
+//            case 9:
+//                if let cachedController = cachedTabs["AllAlbumsViewController"] {
+//                    controller = cachedController
+//                } else {
+//                    controller = CustomUINavigationController(rootViewController: AllAlbumsViewController(nibName: "AllAlbumsViewController", bundle: nil))
+//                    cachedTabs["AllAlbumsViewController"] = controller
+//                }
+//            case 10:
+//                if let cachedController = cachedTabs["AllSongsViewController"] {
+//                    controller = cachedController
+//                } else {
+//                    controller = CustomUINavigationController(rootViewController: AllSongsViewController(nibName: "AllSongsViewController", bundle: nil))
+//                    cachedTabs["AllSongsViewController"] = controller
+//                }
             default: controller = nil
             }
         }

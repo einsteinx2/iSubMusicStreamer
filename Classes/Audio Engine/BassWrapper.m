@@ -7,9 +7,10 @@
 //
 
 #import "BassWrapper.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "Defines.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 

@@ -22,10 +22,14 @@ import CocoaLumberjackSwift
             #if SILENT
                 dynamicLogLevel = DDLogLevel.off
             #else
-                dynamicLogLevel = DDLogLevel.all
+                dynamicLogLevel = DDLogLevel.info//all
             #endif
         #else
             dynamicLogLevel = DDLogLevel.info
         #endif
     }
+}
+
+func bytesForSecondsAtBitrate(seconds: Float, bitrate: Float) -> Float {
+    return (bitrate / 8) * 1024 * seconds
 }

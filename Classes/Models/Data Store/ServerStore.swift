@@ -10,7 +10,7 @@ import Foundation
 import GRDB
 import CocoaLumberjackSwift
 
-extension Server: FetchableRecord, MutablePersistableRecord {
+extension Server: FetchableRecord, PersistableRecord {
     enum Column: String, ColumnExpression {
         case id, type, url, username, password, path, isVideoSupported, isNewSearchSupported
     }
@@ -32,7 +32,7 @@ extension Server: FetchableRecord, MutablePersistableRecord {
 @objc extension Store {
     func nextServerId() -> Int {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let maxServerId = try SQLRequest<Int>(literal: "SELECT MAX(id) FROM \(Server.self)").fetchOne(db) ?? 0
                 return maxServerId + 1
             }
@@ -44,7 +44,7 @@ extension Server: FetchableRecord, MutablePersistableRecord {
     
     func servers() -> [Server] {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 try Server.fetchAll(db)
             }
         } catch {
@@ -55,7 +55,7 @@ extension Server: FetchableRecord, MutablePersistableRecord {
 
     func server(id: Int) -> Server? {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 try Server.fetchOne(db, key: id)
             }
         } catch {
@@ -64,22 +64,21 @@ extension Server: FetchableRecord, MutablePersistableRecord {
         }
     }
     
-    func add(server: Server) -> Server? {
+    func add(server: Server) -> Bool {
         do {
-            var mutableServer = server
-            return try mainDb.write { db in
-                try mutableServer.save(db)
-                return mutableServer
+            return try pool.write { db in
+                try server.save(db)
+                return true
             }
         } catch {
             DDLogError("Failed to insert server \(server): \(error)")
-            return nil
+            return false
         }
     }
     
     func deleteServer(id: Int) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 let sql: SQLLiteral = """
                 DELETE FROM \(Server.self)
                 WHERE id = \(id)

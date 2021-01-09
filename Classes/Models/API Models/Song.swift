@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc final class NewSong: NSObject, NSCopying, NSSecureCoding, Codable {
+@objc(ISMSSong) final class Song: NSObject, NSCopying, NSSecureCoding, Codable {
     static var supportsSecureCoding: Bool = true
     
     @objc let serverId: Int
@@ -67,6 +67,14 @@ import Foundation
 //        return FileManager.default.attributesOfItem(atPath: currentPath)[.size]
     }
     
+    @objc var fileExists: Bool {
+        // Filesystem check
+        return FileManager.default.fileExists(atPath: currentPath)
+        
+        // Database check
+        //return [self.db stringForQuery:@"SELECT md5 FROM cachedSongs WHERE md5 = ?", [self.path md5]] ? YES : NO;
+    }
+    
     @objc var estimatedBitrate: Int {
         let currentMaxBitrate = Settings.shared().currentMaxBitrate
         
@@ -91,7 +99,7 @@ import Foundation
         return rate
     }
     
-    init(serverId: Int, id: Int, title: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int, tagArtistId: Int, tagAlbumId: Int, genre: String?, path: String, suffix: String, transcodedSuffix: String?, duration: Int, bitrate: Int, track: Int, discNumber: Int, size: Int, isVideo: Bool) {
+    @objc init(serverId: Int, id: Int, title: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int, tagArtistId: Int, tagAlbumId: Int, genre: String?, path: String, suffix: String, transcodedSuffix: String?, duration: Int, bitrate: Int, track: Int, discNumber: Int, size: Int, isVideo: Bool) {
         self.serverId = serverId
         self.id = id
         self.title = title
@@ -116,7 +124,7 @@ import Foundation
         super.init()
     }
     
-    init(serverId: Int, element: RXMLElement) {
+    @objc init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
         self.id = element.attribute("id").intXML
         self.title = element.attribute("title").stringXML
@@ -141,7 +149,7 @@ import Foundation
         super.init()
     }
     
-    init(serverId: Int, attributeDict: [String: String]) {
+    @objc init(serverId: Int, attributeDict: [String: String]) {
         self.serverId = serverId
         self.id = attributeDict["id"].intXML
         self.title = attributeDict["title"].stringXML
@@ -246,7 +254,7 @@ import Foundation
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
-        return NewSong(serverId: serverId, id: id, title: title, coverArtId: coverArtId, parentFolderId: parentFolderId, tagArtistName: tagArtistName, tagAlbumName: tagAlbumName, playCount: playCount, year: year, tagArtistId: tagArtistId, tagAlbumId: tagAlbumId, genre: genre, path: path, suffix: suffix, transcodedSuffix: transcodedSuffix, duration: duration, bitrate: bitrate, track: track, discNumber: discNumber, size: size, isVideo: isVideo)
+        return Song(serverId: serverId, id: id, title: title, coverArtId: coverArtId, parentFolderId: parentFolderId, tagArtistName: tagArtistName, tagAlbumName: tagAlbumName, playCount: playCount, year: year, tagArtistId: tagArtistId, tagAlbumId: tagAlbumId, genre: genre, path: path, suffix: suffix, transcodedSuffix: transcodedSuffix, duration: duration, bitrate: bitrate, track: track, discNumber: discNumber, size: size, isVideo: isVideo)
     }
     
     override var description: String {
@@ -258,36 +266,71 @@ import Foundation
     }
     
     override func isEqual(_ object: Any?) -> Bool {
-        if let song = object as? NewSong {
+        if let song = object as? Song {
             return self === song || (serverId == song.serverId && id == song.id)
         }
         return false
     }
     
-//    // MARK: ISMSSong+DAO
+    // MARK: ISMSSong+DAO
 //
 //    var fileExists: Bool {
 //        // Filesystem check
 //        return FileManager.default.fileExists(atPath:currentPath)
 //    }
 //
-//    var isPartiallyCached: Bool {
-//
-//    }
-//
-    var isFullyCached: Bool {
+    @objc var isPartiallyCached: Bool {
         // Implement this
         return false
     }
-//
-//    var
     
-    func addToCurrentPlaylistDbQueue() {
+    @objc var isFullyCached: Bool {
+        // Implement this
+        return false
+    }
+
+    @objc var downloadProgress: Float {
+        var downloadProgress: Float = 0
         
+        if isFullyCached {
+            downloadProgress = 1
+        } else if isPartiallyCached {
+            var bitrate = Float(estimatedBitrate)
+            if let player = AudioEngine.shared().player, player.isPlaying {
+                bitrate = Float(BassWrapper.estimateBitrate(player.currentStream))
+            }
+            
+            var seconds = Float(duration)
+            if transcodedSuffix != nil {
+                // This is a transcode, so we'll want to use the actual bitrate if possible
+                if let currentSong = PlayQueue.shared().currentSong(), currentSong == self {
+                    // This is the current playing song, so see if BASS has an actual bitrate for it
+                    if let player = AudioEngine.shared().player, player.bitRate > 0 {
+                        // Bass has a non-zero bitrate, so use that for the calculation
+                        // convert to bytes per second, multiply by number of seconds
+                        bitrate = Float(player.bitRate)
+                        seconds = Float(duration)
+                    }
+                }
+            }
+            let totalSize = bytesForSecondsAtBitrate(seconds: seconds, bitrate: bitrate)
+            downloadProgress = Float(localFileSize) / totalSize
+        }
+        
+        // Keep within bounds
+        downloadProgress = downloadProgress < 0 ? 0 : downloadProgress
+        downloadProgress = downloadProgress > 1 ? 1 : downloadProgress
+        
+        // The song hasn't started downloading yet
+        return downloadProgress;
+    }
+    
+    @objc func removeFromCachedSongsTable() {
+        // Implement this
     }
 }
 
-extension NewSong: TableCellModel {
+extension Song: TableCellModel {
     var primaryLabelText: String? { title }
     var secondaryLabelText: String? { tagArtistName }
     var durationLabelText: String? { NSString.formatTime(Double(duration)) }

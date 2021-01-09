@@ -13,7 +13,7 @@ import UIKit
 
     var folderArtists = [FolderArtist]()
     var folderAlbums = [FolderAlbum]()
-    var songs = [NewSong]()
+    var songs = [Song]()
     var query = ""
     
     override func viewDidLoad() {

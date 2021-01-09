@@ -15,7 +15,7 @@
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 //#import "SUSTagArtistDAO.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import "TagAlbumViewController.h"

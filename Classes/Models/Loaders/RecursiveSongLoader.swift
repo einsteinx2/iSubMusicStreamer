@@ -142,12 +142,12 @@ import Foundation
 //        }
     }
     
-    private func handleSong(song: NewSong) {
+    private func handleSong(song: Song) {
         fatalError("implement this")
 //        if isQueue {
 //            song.addToCurrentPlaylistDbQueue()
 //        } else if isDownload {
-//            song.addToCacheQueueDbQueue()
+//            song.addToDownloadQueue()
 //        }
     }
     

@@ -13,8 +13,9 @@
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation SUSNowPlayingDAO
 
@@ -106,8 +107,7 @@
 	}
 	
 	// Add the song to the empty playlist
-	ISMSSong *aSong = [self songForIndex:index];
-	[aSong addToCurrentPlaylistDbQueue];
+	[[self songForIndex:index] queue];
 	
 	// Set player defaults
 	playlistS.isShuffle = NO;

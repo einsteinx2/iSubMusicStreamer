@@ -6,13 +6,13 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-#import "ISMSTableCellModel.h"
+#import "Swift.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class RXMLElement;
 NS_SWIFT_NAME(ServerPlaylist)
-@interface SUSServerPlaylist : NSObject <ISMSTableCellModel,  NSCopying>
+@interface SUSServerPlaylist : NSObject <TableCellModel,  NSCopying>
 
 @property (copy) NSString *playlistId;
 @property (copy) NSString *playlistName;

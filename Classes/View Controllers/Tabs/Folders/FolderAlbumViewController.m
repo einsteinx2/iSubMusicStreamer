@@ -14,7 +14,7 @@
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import <MediaPlayer/MediaPlayer.h>
@@ -215,7 +215,7 @@
         cell.hideSecondaryLabel = NO;
         cell.hideCoverArt = YES;
         cell.hideDurationLabel = NO;
-        NewSong *song = [self.dataModel songWithIndexPath:indexPath];
+        ISMSSong *song = [self.dataModel songWithIndexPath:indexPath];
         [cell updateWithModel:song];
         if (song.track == 0) {
             cell.hideNumberLabel = YES;
@@ -246,7 +246,7 @@
     if (indexPath.row < self.dataModel.folderCount) {
         return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel folderAlbumWithIndexPath:indexPath]];
     } else {
-        NewSong *song = [self.dataModel songWithIndexPath:indexPath];
+        ISMSSong *song = [self.dataModel songWithIndexPath:indexPath];
         if (!song.isVideo) {
             return [SwipeAction downloadAndQueueConfigWithModel:song];
         }

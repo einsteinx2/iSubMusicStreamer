@@ -6,7 +6,7 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "FMDatabaseQueueAdditions.h"
 #import "PlayQueueSingleton.h"
 #import "ISMSCacheQueueManager.h"
@@ -101,7 +101,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			[self insertIntoGenreTable:@"genresSongs" inDatabaseQueue:databaseS.songCacheDbQueue];
 		}
 		
-		[self removeFromCacheQueueDbQueue];
+		[self removeFromDownloadQueue];
 	}
 }
 
@@ -326,9 +326,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	return !hadError;
 }
 
-- (BOOL)removeFromCachedSongsTableDbQueue
+- (BOOL)removeFromCachedSongsTable
 {
-	return [ISMSSong removeSongFromCacheDbQueueByMD5:[self.path md5]];
+	return [ISMSSong removeSongFromCacheDbByMD5:[self.path md5]];
 	
 	// TODO: Figure out why the fuck I was doing this instead of calling the class method
 	// this causes an orphaned file to be created whenever a stream is canceled part-way done
@@ -343,7 +343,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	return ![self.db hadError];*/
 }
 
-- (BOOL)removeFromCacheQueueDbQueue
+- (BOOL)removeFromDownloadQueue
 {
 	__block BOOL hadError;
 	[databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db)
@@ -359,7 +359,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	return !hadError;
 }
 
-- (BOOL)addToCacheQueueDbQueue
+- (BOOL)addToDownloadQueue
 {	
 	__block BOOL hadError;
 	__block NSString *md5;
@@ -483,7 +483,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	return !hadError;
 }
 
-+ (BOOL)removeSongFromCacheDbQueueByMD5:(NSString *)md5
++ (BOOL)removeSongFromCacheDbByMD5:(NSString *)md5
 {
 	// Check if we're deleting the song that's currently playing. If so, stop the player.
 	if (playlistS.currentSong && !settingsS.isJukeboxEnabled && [[playlistS.currentSong.path md5] isEqualToString:md5])

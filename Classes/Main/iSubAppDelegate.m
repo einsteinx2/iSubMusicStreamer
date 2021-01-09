@@ -23,7 +23,7 @@
 #import "CacheSingleton.h"
 #import "ISMSStreamManager.h"
 #import "ISMSCacheQueueManager.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import "Reachability.h"
@@ -696,7 +696,7 @@ LOG_LEVEL_ISUB_DEFAULT
     self.hlsProxyServer = [[HLSReverseProxyServer alloc] init];
     [self.hlsProxyServer start];
 
-    NSDictionary *parameters = @{ @"id" : aSong.songId, @"bitRate" : bitrates };
+    NSDictionary *parameters = @{@"id": @(aSong.songId), @"bitRate": bitrates};
     NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"hls" parameters:parameters];
     NSString *urlString = [NSString stringWithFormat:@"http://localhost:%lu%@?%@", self.hlsProxyServer.port, request.URL.relativePath, request.URL.query];
     NSString *originUrlString = [NSString stringWithFormat:@"%@://%@:%@%@", request.URL.scheme, request.URL.host, request.URL.port, request.URL.path];

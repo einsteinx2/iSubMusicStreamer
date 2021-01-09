@@ -35,7 +35,7 @@ import Resolver
         loader?.callback = nil
     }
 
-    @objc func song(indexPath: IndexPath) -> NewSong? {
+    @objc func song(indexPath: IndexPath) -> Song? {
         guard indexPath.row < songIds.count else { return nil }
         return store.song(serverId: serverId, id: songIds[indexPath.row])
     }

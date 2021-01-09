@@ -16,7 +16,7 @@
 #import "SavedSettings.h"
 #import "PlayQueueSingleton.h"
 #import "ISMSStreamManager.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "Defines.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -62,9 +62,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	// Scrobble in 30 seconds (or settings amount) if not canceled
 	ISMSSong *currentSong = audioEngineS.player.currentStream.song;
 	NSTimeInterval scrobbleDelay = 30.0;
-	if (currentSong.duration != nil) {
+	if (currentSong.duration != 0) {
 		float scrobblePercent = settingsS.scrobblePercent;
-		float duration = [currentSong.duration floatValue];
+		float duration = currentSong.duration;
 		scrobbleDelay = scrobblePercent * duration;
 	}
 	return scrobbleDelay;
@@ -80,7 +80,7 @@ LOG_LEVEL_ISUB_DEFAULT
 //		// If this song wasn't just cached, then notify Subsonic of the playback
 //		ISMSSong *lastCachedSong = streamManagerS.lastCachedSong;
 //		ISMSSong *currentSong = playlistS.currentSong;
-//		if (![lastCachedSong isEqualToSong:currentSong]) {
+//		if (![lastCachedSong isEqual:currentSong]) {
 //            NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"stream" parameters:@{@"id": n2N(currentSong.songId)} byteOffset:0];
 //            if ([[NSURLConnection alloc] initWithRequest:request delegate:self])
 //            {

@@ -28,7 +28,7 @@ extension Lyrics: FetchableRecord, PersistableRecord {
 extension Store {
     @objc func isLyricsCached(tagArtistName: String, songTitle: String) -> Bool {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 try Lyrics.filter(literal: "tagArtistName = \(tagArtistName) AND songTitle = \(songTitle)").fetchCount(db) > 0
             }
         } catch {
@@ -39,7 +39,7 @@ extension Store {
     
     func lyrics(tagArtistName: String, songTitle: String) -> Lyrics? {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 try Lyrics.filter(literal: "tagArtistName = \(tagArtistName) AND songTitle = \(songTitle)").fetchOne(db)
             }
         } catch {
@@ -50,7 +50,7 @@ extension Store {
     
     func lyricsText(tagArtistName: String, songTitle: String) -> String? {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let sql: SQLLiteral = """
                     SELECT lyricsText
                     FROM \(Lyrics.self)
@@ -66,7 +66,7 @@ extension Store {
     
     func add(lyrics: Lyrics) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 try lyrics.save(db)
                 return true
             }

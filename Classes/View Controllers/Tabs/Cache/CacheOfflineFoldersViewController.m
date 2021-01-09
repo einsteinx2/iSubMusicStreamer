@@ -19,7 +19,7 @@
 #import "CacheSingleton.h"
 #import "DatabaseSingleton.h"
 #import "ISMSCacheQueueManager.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 
@@ -166,41 +166,41 @@
 }
 
 - (void)loadPlayAllPlaylist:(BOOL)shuffle {
-    playlistS.isShuffle = NO;
-	
-    [databaseS resetCurrentPlaylistDb];
-	
-	NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
-	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-		FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout ORDER BY seg1, seg2, seg3, seg4, seg5, seg6, seg7, seg8, seg9 COLLATE NOCASE"];
-		while ([result next]) {
-			@autoreleasepool {
-				NSString *md5 = [result stringForColumnIndex:0];
-				if (md5) [songMd5s addObject:md5];
-			}
-		}
-		[result close];
-	}];
-	
-	for (NSString *md5 in songMd5s) {
-		@autoreleasepool {
-			ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:md5];
-			[aSong addToCurrentPlaylistDbQueue];
-		}
-	}
-	
-	if (shuffle) {
-		playlistS.isShuffle = YES;
-		[databaseS shufflePlaylist];
-	} else {
-		playlistS.isShuffle = NO;
-	}
-    
-	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
-	
-	// Must do UI stuff in main thread
-	[viewObjectsS hideLoadingScreen];
-	[self playAllPlaySong];	
+//    playlistS.isShuffle = NO;
+//	
+//    [databaseS resetCurrentPlaylistDb];
+//	
+//	NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
+//	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
+//		FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout ORDER BY seg1, seg2, seg3, seg4, seg5, seg6, seg7, seg8, seg9 COLLATE NOCASE"];
+//		while ([result next]) {
+//			@autoreleasepool {
+//				NSString *md5 = [result stringForColumnIndex:0];
+//				if (md5) [songMd5s addObject:md5];
+//			}
+//		}
+//		[result close];
+//	}];
+//	
+//	for (NSString *md5 in songMd5s) {
+//		@autoreleasepool {
+//			ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:md5];
+//			[aSong addToCurrentPlaylistDbQueue];
+//		}
+//	}
+//	
+//	if (shuffle) {
+//		playlistS.isShuffle = YES;
+//		[databaseS shufflePlaylist];
+//	} else {
+//		playlistS.isShuffle = NO;
+//	}
+//    
+//	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+//	
+//	// Must do UI stuff in main thread
+//	[viewObjectsS hideLoadingScreen];
+//	[self playAllPlaySong];	
 }
 
 - (void)reloadTable {
@@ -457,70 +457,71 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Custom queue and delete actions
-    NSString *name = [[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] objectAtIndexSafe:indexPath.row];
-    return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
-        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-        [EX2Dispatch runInBackgroundAsync:^{
-            NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
-            [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-                FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ORDER BY seg2 COLLATE NOCASE", name];
-                while ([result next]) {
-                    @autoreleasepool {
-                        NSString *md5 = [result stringForColumnIndex:0];
-                        if (md5) [songMd5s addObject:md5];
-                    }
-                }
-                [result close];
-            }];
-
-            for (NSString *md5 in songMd5s) {
-                @autoreleasepool {
-                    [[ISMSSong songFromCacheDbQueue:md5] addToCurrentPlaylistDbQueue];
-                }
-            }
-
-            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
-
-            [EX2Dispatch runInMainThreadAsync:^{
-                [viewObjectsS hideLoadingScreen];
-            }];
-        }];
-    } deleteHandler:^{
-        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-        [EX2Dispatch runInBackgroundAsync:^{
-            NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
-            [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-                FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ", name];
-                while ([result next]) {
-                    @autoreleasepool {
-                        NSString *md5 = [result stringForColumnIndex:0];
-                        if (md5) [songMd5s addObject:md5];
-                    }
-                }
-                [result close];
-            }];
-            
-            for (NSString *md5 in songMd5s) {
-                @autoreleasepool {
-                    [ISMSSong removeSongFromCacheDbQueueByMD5:md5];
-                }
-            }
-            
-            [cacheS findCacheSize];
-            
-            // Reload the cached songs table
-            [NSNotificationCenter postNotificationToMainThreadWithName:@"cachedSongDeleted"];
-            
-            if (!cacheQueueManagerS.isQueueDownloading) {
-                [cacheQueueManagerS startDownloadQueue];
-            }
-            
-            [EX2Dispatch runInMainThreadAsync:^{
-                [viewObjectsS hideLoadingScreen];
-            }];
-        }];
-    }];
+//    // Custom queue and delete actions
+//    NSString *name = [[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] objectAtIndexSafe:indexPath.row];
+//    return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
+//        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+//        [EX2Dispatch runInBackgroundAsync:^{
+//            NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
+//            [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
+//                FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ORDER BY seg2 COLLATE NOCASE", name];
+//                while ([result next]) {
+//                    @autoreleasepool {
+//                        NSString *md5 = [result stringForColumnIndex:0];
+//                        if (md5) [songMd5s addObject:md5];
+//                    }
+//                }
+//                [result close];
+//            }];
+//
+//            for (NSString *md5 in songMd5s) {
+//                @autoreleasepool {
+//                    [[ISMSSong songFromCacheDbQueue:md5] addToCurrentPlaylistDbQueue];
+//                }
+//            }
+//
+//            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+//
+//            [EX2Dispatch runInMainThreadAsync:^{
+//                [viewObjectsS hideLoadingScreen];
+//            }];
+//        }];
+//    } deleteHandler:^{
+//        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+//        [EX2Dispatch runInBackgroundAsync:^{
+//            NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
+//            [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
+//                FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ", name];
+//                while ([result next]) {
+//                    @autoreleasepool {
+//                        NSString *md5 = [result stringForColumnIndex:0];
+//                        if (md5) [songMd5s addObject:md5];
+//                    }
+//                }
+//                [result close];
+//            }];
+//
+//            for (NSString *md5 in songMd5s) {
+//                @autoreleasepool {
+//                    [ISMSSong removeSongFromCacheDbByMD5:md5];
+//                }
+//            }
+//
+//            [cacheS findCacheSize];
+//
+//            // Reload the cached songs table
+//            [NSNotificationCenter postNotificationToMainThreadWithName:@"cachedSongDeleted"];
+//
+//            if (!cacheQueueManagerS.isQueueDownloading) {
+//                [cacheQueueManagerS startDownloadQueue];
+//            }
+//
+//            [EX2Dispatch runInMainThreadAsync:^{
+//                [viewObjectsS hideLoadingScreen];
+//            }];
+//        }];
+//    }];
+    return nil;
 }
 
 @end

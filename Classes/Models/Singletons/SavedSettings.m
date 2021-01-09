@@ -826,8 +826,8 @@ LOG_LEVEL_ISUB_DEFAULT
             NSSet *classes = [NSSet setWithArray:@[NSArray.class, ISMSServer.class]];
             NSArray *serverList = [NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:servers error:nil];
             for (ISMSServer *oldServer in serverList) {
-                Server *server = [[Server alloc] initWithId:[Store.shared nextServerId] type:ServerTypeSubsonic url:[NSURL URLWithString:oldServer.url] username:oldServer.username password:oldServer.password];
-                server = [Store.shared addWithServer:server];
+                Server *server = [[Server alloc] initWithId:Store.shared.nextServerId type:ServerTypeSubsonic url:[NSURL URLWithString:oldServer.url] username:oldServer.username password:oldServer.password];
+                (void)[Store.shared addWithServer:server];
                 if ([oldServer.url isEqual:urlString] && [oldServer.username isEqual:username]) {
                     self.currentServer = server;
                 }

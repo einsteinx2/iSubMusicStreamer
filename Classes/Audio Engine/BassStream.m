@@ -7,7 +7,8 @@
 //
 
 #import "BassStream.h"
-#import "ISMSSong.h"
+//#import "ISMSSong.h"
+#import "Swift.h"
 
 @implementation BassStream
 
@@ -57,7 +58,7 @@
 	if (!self.song || !otherStream.song)
 		return NO;
 	
-	if ([self.song isEqualToSong:otherStream.song] && self.stream == otherStream.stream)
+	if ([self.song isEqual:otherStream.song] && self.stream == otherStream.stream)
 		return YES;
 	
 	return NO;

@@ -6,11 +6,11 @@
 //  Copyright © 2020 Ben Baron. All rights reserved.
 //
 
-#import "ISMSTableCellModel.h"
+#import "Swift.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ISMSLocalPlaylist : NSObject<ISMSTableCellModel>
+@interface ISMSLocalPlaylist : NSObject<TableCellModel>
 
 @property (copy) NSString *name;
 @property (copy) NSString *md5;

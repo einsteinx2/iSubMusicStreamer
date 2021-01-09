@@ -25,7 +25,7 @@
 #import "JukeboxSingleton.h"
 #import "NSError+ISMSError.h"
 #import "SUSServerPlaylistsDAO.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "SUSServerPlaylist.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -651,57 +651,57 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)uploadPlaylist:(NSString*)name {
-	NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(name), @"name", nil];
-	
-	NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:self.currentPlaylistCount];
-	NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-	NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-	NSString *table = playlistS.isShuffle ? shufTable : currTable;
-	
-	[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
-		 for (int i = 0; i < self.currentPlaylistCount; i++) {
-			 @autoreleasepool {
-				 ISMSSong *aSong = [ISMSSong songFromDbRow:i inTable:table inDatabase:db];
-				 [songIds addObject:n2N(aSong.songId)];
-			 }
-		 }
-	 }];
-	[parameters setObject:[NSArray arrayWithArray:songIds] forKey:@"songId"];
-	NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
-    NSURLSessionDataTask *dataTask = [self.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (error) {
-            if (settingsS.isPopupsEnabled) {
-                [EX2Dispatch runInMainThreadAsync:^{
-                    NSString *message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)error.code, error.localizedDescription];
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
-                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-                    [self presentViewController:alert animated:YES completion:nil];
-                }];
-            }
-        } else {
-            RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
-            if (!root.isValid) {
-                NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
-                [self subsonicErrorCode:nil message:error.description];
-            } else {
-                RXMLElement *error = [root child:@"error"];
-                if (error.isValid) {
-                    NSString *code = [error attribute:@"code"];
-                    NSString *message = [error attribute:@"message"];
-                    [self subsonicErrorCode:code message:message];
-                }
-            }
-        }
-        
-        [EX2Dispatch runInMainThreadAsync:^{
-            self.tableView.scrollEnabled = YES;
-            [viewObjectsS hideLoadingScreen];
-        }];
-    }];
-    [dataTask resume];
-    
-    self.tableView.scrollEnabled = NO;
-    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
+//	NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(name), @"name", nil];
+//
+//	NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:self.currentPlaylistCount];
+//	NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
+//	NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
+//	NSString *table = playlistS.isShuffle ? shufTable : currTable;
+//
+//	[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
+//		 for (int i = 0; i < self.currentPlaylistCount; i++) {
+//			 @autoreleasepool {
+//				 ISMSSong *aSong = [ISMSSong songFromDbRow:i inTable:table inDatabase:db];
+//				 [songIds addObject:n2N(aSong.songId)];
+//			 }
+//		 }
+//	 }];
+//	[parameters setObject:[NSArray arrayWithArray:songIds] forKey:@"songId"];
+//	NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
+//    NSURLSessionDataTask *dataTask = [self.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+//        if (error) {
+//            if (settingsS.isPopupsEnabled) {
+//                [EX2Dispatch runInMainThreadAsync:^{
+//                    NSString *message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)error.code, error.localizedDescription];
+//                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+//                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+//                    [self presentViewController:alert animated:YES completion:nil];
+//                }];
+//            }
+//        } else {
+//            RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
+//            if (!root.isValid) {
+//                NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
+//                [self subsonicErrorCode:nil message:error.description];
+//            } else {
+//                RXMLElement *error = [root child:@"error"];
+//                if (error.isValid) {
+//                    NSString *code = [error attribute:@"code"];
+//                    NSString *message = [error attribute:@"message"];
+//                    [self subsonicErrorCode:code message:message];
+//                }
+//            }
+//        }
+//
+//        [EX2Dispatch runInMainThreadAsync:^{
+//            self.tableView.scrollEnabled = YES;
+//            [viewObjectsS hideLoadingScreen];
+//        }];
+//    }];
+//    [dataTask resume];
+//
+//    self.tableView.scrollEnabled = NO;
+//    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
 }
 
 - (void)deleteCurrentPlaylistSongsAtRowIndexes:(NSArray<NSNumber*> *)rowIndexes {
@@ -1071,62 +1071,62 @@ LOG_LEVEL_ISUB_DEFAULT
 
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-	if (self.segmentedControl.selectedSegmentIndex == 0) {
-		NSInteger fromRow = fromIndexPath.row + 1;
-		NSInteger toRow = toIndexPath.row + 1;
-		
-		[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
-			NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-			NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-			NSString *table = playlistS.isShuffle ? shufTable : currTable;
-						
-			[db executeUpdate:@"DROP TABLE moveTemp"];
-			NSString *query = [NSString stringWithFormat:@"CREATE TABLE moveTemp (%@)", ISMSSong.standardSongColumnSchema];
-			[db executeUpdate:query];
-			
-			if (fromRow < toRow) {
-				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID < ?", table], @(fromRow)];
-				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID > ? AND ROWID <= ?", table], @(fromRow), @(toRow)];
-				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID = ?", table], @(fromRow)];
-				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID > ?", table], @(toRow)];
-				
-				[db executeUpdate:[NSString stringWithFormat:@"DROP TABLE %@", table]];
-				[db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE moveTemp RENAME TO %@", table]];
-			} else {
-				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID < ?", table], @(toRow)];
-				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID = ?", table], @(fromRow)];
-				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID >= ? AND ROWID < ?", table], @(toRow), @(fromRow)];
-				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID > ?", table], @(fromRow)];
-				
-				[db executeUpdate:[NSString stringWithFormat:@"DROP TABLE %@", table]];
-				[db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE moveTemp RENAME TO %@", table]];
-			}
-		}];
-		
-		if (settingsS.isJukeboxEnabled) {
-			[jukeboxS replacePlaylistWithLocal];
-		}
-		
-		// Correct the value of currentPlaylistPosition
-		if (fromIndexPath.row == playlistS.currentIndex) {
-			playlistS.currentIndex = toIndexPath.row;
-		} else  {
-			if (fromIndexPath.row < playlistS.currentIndex && toIndexPath.row >= playlistS.currentIndex) {
-				playlistS.currentIndex = playlistS.currentIndex - 1;
-			} else if (fromIndexPath.row > playlistS.currentIndex && toIndexPath.row <= playlistS.currentIndex) {
-				playlistS.currentIndex = playlistS.currentIndex + 1;
-			}
-		}
-		
-		// Highlight the current playing song
-		if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
-			[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
-		}
-		
-        if (!settingsS.isJukeboxEnabled) {
-			[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistOrderChanged];
-        }
-	}
+//	if (self.segmentedControl.selectedSegmentIndex == 0) {
+//		NSInteger fromRow = fromIndexPath.row + 1;
+//		NSInteger toRow = toIndexPath.row + 1;
+//		
+//		[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
+//			NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
+//			NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
+//			NSString *table = playlistS.isShuffle ? shufTable : currTable;
+//						
+//			[db executeUpdate:@"DROP TABLE moveTemp"];
+//			NSString *query = [NSString stringWithFormat:@"CREATE TABLE moveTemp (%@)", ISMSSong.standardSongColumnSchema];
+//			[db executeUpdate:query];
+//			
+//			if (fromRow < toRow) {
+//				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID < ?", table], @(fromRow)];
+//				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID > ? AND ROWID <= ?", table], @(fromRow), @(toRow)];
+//				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID = ?", table], @(fromRow)];
+//				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID > ?", table], @(toRow)];
+//				
+//				[db executeUpdate:[NSString stringWithFormat:@"DROP TABLE %@", table]];
+//				[db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE moveTemp RENAME TO %@", table]];
+//			} else {
+//				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID < ?", table], @(toRow)];
+//				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID = ?", table], @(fromRow)];
+//				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID >= ? AND ROWID < ?", table], @(toRow), @(fromRow)];
+//				[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO moveTemp SELECT * FROM %@ WHERE ROWID > ?", table], @(fromRow)];
+//				
+//				[db executeUpdate:[NSString stringWithFormat:@"DROP TABLE %@", table]];
+//				[db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE moveTemp RENAME TO %@", table]];
+//			}
+//		}];
+//		
+//		if (settingsS.isJukeboxEnabled) {
+//			[jukeboxS replacePlaylistWithLocal];
+//		}
+//		
+//		// Correct the value of currentPlaylistPosition
+//		if (fromIndexPath.row == playlistS.currentIndex) {
+//			playlistS.currentIndex = toIndexPath.row;
+//		} else  {
+//			if (fromIndexPath.row < playlistS.currentIndex && toIndexPath.row >= playlistS.currentIndex) {
+//				playlistS.currentIndex = playlistS.currentIndex - 1;
+//			} else if (fromIndexPath.row > playlistS.currentIndex && toIndexPath.row <= playlistS.currentIndex) {
+//				playlistS.currentIndex = playlistS.currentIndex + 1;
+//			}
+//		}
+//		
+//		// Highlight the current playing song
+//		if (playlistS.currentIndex >= 0 && playlistS.currentIndex < self.currentPlaylistCount) {
+//			[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:playlistS.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
+//		}
+//		
+//        if (!settingsS.isJukeboxEnabled) {
+//			[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistOrderChanged];
+//        }
+//	}
 }
 
 

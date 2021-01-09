@@ -18,7 +18,7 @@
 #import "CacheSingleton.h"
 #import "DatabaseSingleton.h"
 #import "ISMSStreamManager.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "iSubAppDelegate.h"
 #import "Swift.h"
@@ -36,19 +36,21 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (ISMSSong *)currentQueuedSongInDb {
-	__block ISMSSong *aSong = nil;
-	[databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
-		 FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue WHERE finished = 'NO' ORDER BY ROWID ASC LIMIT 1"];
-		 if ([db hadError]) {
-			 //DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-		 } else {
-			 aSong = [ISMSSong songFromDbResult:result];
-		 }
-		 
-		 [result close]; 
-	 }];
-	
-	return aSong;
+    return [Store.shared firstSongInDownloadQueue];
+    
+//	__block ISMSSong *aSong = nil;
+//	[databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
+//		 FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue WHERE finished = 'NO' ORDER BY ROWID ASC LIMIT 1"];
+//		 if ([db hadError]) {
+//			 //DLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+//		 } else {
+//			 aSong = [ISMSSong songFromDbResult:result];
+//		 }
+//
+//		 [result close];
+//	 }];
+//
+//	return aSong;
 }
 
 // Start downloading the file specified in the text field.
@@ -77,7 +79,7 @@ LOG_LEVEL_ISUB_DEFAULT
     // Check if this is a video
     if (self.currentQueuedSong.isVideo) {
         // Remove from the queue
-        [self.currentQueuedSong removeFromCacheQueueDbQueue];
+        (void)[Store.shared removeFromDownloadQueueWithSong:self.currentQueuedSong];
         
         // Continue the queue
 		[self startDownloadQueue];
@@ -90,13 +92,13 @@ LOG_LEVEL_ISUB_DEFAULT
         DDLogInfo(@"[ISMSCacheQueueManager] Marking %@ as downloaded because it's already fully cached", self.currentQueuedSong.title);
 		
 		// Mark it as downloaded
-		//self.currentQueuedSong.isDownloaded = YES;
+        (void)[Store.shared updateWithDownloadFinished:YES song:self.currentQueuedSong];
 		
 		// The song is fully cached, so delete it from the cache queue database
-		[self.currentQueuedSong removeFromCacheQueueDbQueue];
+        (void)[Store.shared removeFromDownloadQueueWithSong:self.currentQueuedSong];
 		
 		// Notify any tables
-		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:self.currentQueuedSong.songId forKey:@"songId"];
+		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@(self.currentQueuedSong.songId) forKey:@"songId"];
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CacheQueueSongDownloaded userInfo:userInfo];
 		
 		// Continue the queue
@@ -108,9 +110,11 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.isQueueDownloading = YES;
 	
 	// Grab the lyrics
-	if (self.currentQueuedSong.artist && self.currentQueuedSong.title) {
-        if (![Store.shared isLyricsCachedWithTagArtistName:self.currentQueuedSong.artist songTitle:self.currentQueuedSong.title]) {
-            [[[LyricsLoader alloc] initWithDelegate:nil tagArtistName:self.currentQueuedSong.artist songTitle:self.currentQueuedSong.title] startLoad];
+	if (self.currentQueuedSong.tagArtistName && self.currentQueuedSong.title) {
+        NSString *tagArtistName = self.currentQueuedSong.tagArtistName;
+        NSString *title = self.currentQueuedSong.title;
+        if (![Store.shared isLyricsCachedWithTagArtistName:tagArtistName songTitle:title]) {
+            [[[LyricsLoader alloc] initWithDelegate:nil tagArtistName:tagArtistName songTitle:title] startLoad];
         }
 	}
 	
@@ -169,7 +173,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (self.isQueueDownloading)
 		[self stopDownloadQueue];
 	
-	[self.currentQueuedSong removeFromCacheQueueDbQueue];
+    (void)[Store.shared removeFromDownloadQueueWithSong:self.currentQueuedSong];
 	
 	if (!self.isQueueDownloading)
 		[self startDownloadQueue];
@@ -197,7 +201,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		
 		// Tried max number of times so remove
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CacheQueueSongFailed];
-		[self.currentQueuedSong removeFromCacheQueueDbQueue];
+        (void)[Store.shared removeFromDownloadQueueWithSong:self.currentQueuedSong];
 		self.currentStreamHandler = nil;
 		[self startDownloadQueue];
 	}
@@ -242,17 +246,17 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	if (isSuccess) {
 		// Mark song as cached
-        self.currentQueuedSong.isFullyCached = YES;
+        (void)[Store.shared updateWithDownloadFinished:YES song:self.currentQueuedSong];
 		
 		// Remove the song from the cache queue
-		[self.currentQueuedSong removeFromCacheQueueDbQueue];
+        (void)[Store.shared removeFromDownloadQueueWithSong:self.currentQueuedSong];
 		self.currentQueuedSong = nil;
         		
 		// Remove the stream handler
 		self.currentStreamHandler = nil;
 		
 		// Tell the cache queue view to reload
-		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:handler.mySong.songId forKey:@"songId"];
+		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@(handler.mySong.songId) forKey:@"songId"];
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CacheQueueSongDownloaded userInfo:userInfo];
 		
 		// Download the next song in the queue

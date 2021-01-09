@@ -48,7 +48,7 @@ final class TagAlbumLoader: SUSLoader {
                 if store.deleteTagSongs(serverId: serverId, tagAlbumId: tagAlbumId) {
                     var songOrder = 0
                     root.iterate("album.song") { element in
-                        let song = NewSong(serverId: self.serverId, element: element)
+                        let song = Song(serverId: self.serverId, element: element)
                         if song.path != "" && (Settings.shared().currentServer.isVideoSupported || !song.isVideo) {
                             // Fix for pdfs showing in directory listing
                             // TODO: See if this is still necessary

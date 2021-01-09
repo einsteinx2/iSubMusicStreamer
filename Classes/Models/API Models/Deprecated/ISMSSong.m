@@ -10,7 +10,7 @@
 #import "RXMLElement.h"
 #import "SavedSettings.h"
 #import "EX2Kit.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "FMResultSet.h"
 #import <sys/stat.h>
 #import <MediaPlayer/MediaPlayer.h>
@@ -307,7 +307,7 @@
 - (NSString *)secondaryLabelText { return self.artist; }
 - (NSString *)durationLabelText { return [NSString formatTime:[self.duration floatValue]]; }
 - (BOOL)isCached { return self.isFullyCached; }
-- (void)download { [self addToCacheQueueDbQueue]; }
+- (void)download { [self addToDownloadQueue]; }
 - (void)queue { [self addToCurrentPlaylistDbQueue]; }
 
 @end

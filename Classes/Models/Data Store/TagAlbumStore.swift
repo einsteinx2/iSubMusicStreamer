@@ -52,7 +52,7 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
 extension Store {
     @objc func deleteTagAlbums(serverId: Int) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 try db.execute(literal: "DELETE FROM \(TagAlbum.self) WHERE serverId = \(serverId)")
                 return true
             }
@@ -64,7 +64,7 @@ extension Store {
     
     func deleteTagAlbums(serverId: Int, tagArtistId: Int) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 try db.execute(literal: "DELETE FROM \(TagAlbum.self) WHERE serverId = \(serverId) AND tagArtistId = \(tagArtistId)")
                 return true
             }
@@ -95,7 +95,7 @@ extension Store {
     
     func tagAlbumIds(serverId: Int, tagArtistId: Int, orderBy: TagAlbum.Column = .name) -> [Int] {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let sql: SQLLiteral = """
                     SELECT id
                     FROM \(TagAlbum.self)
@@ -112,7 +112,7 @@ extension Store {
     
     func tagAlbum(serverId: Int, id: Int) -> TagAlbum? {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 try TagAlbum.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
             }
         } catch {
@@ -123,7 +123,7 @@ extension Store {
     
     func add(tagAlbum: TagAlbum) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 // Insert or update shared album record
                 try tagAlbum.save(db)
                 return true
@@ -136,7 +136,7 @@ extension Store {
     
     func songIds(serverId: Int, tagAlbumId: Int) -> [Int] {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let sql: SQLLiteral = """
                     SELECT songId
                     FROM tagSongList
@@ -153,7 +153,7 @@ extension Store {
     
     func deleteTagSongs(serverId: Int, tagAlbumId: Int) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 try db.execute(literal: "DELETE FROM tagSongList WHERE serverId = \(serverId) AND tagAlbumId = \(tagAlbumId)")
                 return true
             }
@@ -163,9 +163,9 @@ extension Store {
         }
     }
     
-    func add(tagSong song: NewSong) -> Bool {
+    func add(tagSong song: Song) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 // Insert or update shared song record
                 try song.save(db)
                 

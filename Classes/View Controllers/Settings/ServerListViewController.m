@@ -10,7 +10,6 @@
 #import "SettingsTabViewController.h"
 #import "FoldersViewController.h"
 #import "SUSStatusLoader.h"
-#import "SUSAllSongsLoader.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -192,9 +191,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		[streamManagerS removeAllStreams];
 		
 		// Cancel any tab loads
-		if ([SUSAllSongsLoader isLoading]) {
-			settingsS.isCancelLoading = YES;
-		}
+        settingsS.isCancelLoading = YES;
     
 		while (settingsS.isCancelLoading) {
             if (!settingsS.isCancelLoading){

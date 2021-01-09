@@ -20,7 +20,7 @@
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
 #import "NSError+ISMSError.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "SUSServerPlaylist.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -82,61 +82,61 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)loadData {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObject:n2N(self.serverPlaylist.playlistId) forKey:@"id"];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"getPlaylist" parameters:parameters];
-    self.dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (error) {
-            [EX2Dispatch runInMainThreadAsync:^{
-                if (settingsS.isPopupsEnabled) {
-                    NSString *message = [NSString stringWithFormat:@"There was an error loading the playlist.\n\nError %li: %@", (long)error.code, error.localizedDescription];
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
-                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-                    [self presentViewController:alert animated:YES completion:nil];
-                }
-                
-                self.tableView.scrollEnabled = YES;
-                [viewObjectsS hideLoadingScreen];
-                [self.refreshControl endRefreshing];
-            }];
-        } else {
-            RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
-            if (!root.isValid) {
-                //NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
-                // TODO: Handle this error
-            } else {
-                RXMLElement *error = [root child:@"error"];
-                if (error.isValid) {
-                    //NSString *code = [error attribute:@"code"];
-                    //NSString *message = [error attribute:@"message"];
-                    //[self subsonicErrorCode:[code intValue] message:message];
-                    // TODO: Handle this error
-                } else {
-                    // TODO: Handle !isValid case
-                    if ([[root child:@"playlist"] isValid]) {
-                        [databaseS removeServerPlaylistTable:self.md5];
-                        [databaseS createServerPlaylistTable:self.md5];
-                        [root iterate:@"playlist.entry" usingBlock:^(RXMLElement *e) {
-                            ISMSSong *aSong = [[ISMSSong alloc] initWithRXMLElement:e];
-                            [aSong insertIntoServerPlaylistWithPlaylistId:self.md5];
-                        }];
-                    }
-                }
-            }
-            
-            self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM splaylist%@", self.md5]];
-            
-            [EX2Dispatch runInMainThreadAsync:^{
-                [self.tableView reloadData];
-                [self.refreshControl endRefreshing];
-                [viewObjectsS hideLoadingScreen];
-                self.tableView.scrollEnabled = YES;
-            }];
-        }
-    }];
-    [self.dataTask resume];
-    
-    self.tableView.scrollEnabled = NO;
-    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
+//    NSDictionary *parameters = [NSDictionary dictionaryWithObject:n2N(self.serverPlaylist.playlistId) forKey:@"id"];
+//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"getPlaylist" parameters:parameters];
+//    self.dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+//        if (error) {
+//            [EX2Dispatch runInMainThreadAsync:^{
+//                if (settingsS.isPopupsEnabled) {
+//                    NSString *message = [NSString stringWithFormat:@"There was an error loading the playlist.\n\nError %li: %@", (long)error.code, error.localizedDescription];
+//                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+//                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+//                    [self presentViewController:alert animated:YES completion:nil];
+//                }
+//                
+//                self.tableView.scrollEnabled = YES;
+//                [viewObjectsS hideLoadingScreen];
+//                [self.refreshControl endRefreshing];
+//            }];
+//        } else {
+//            RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
+//            if (!root.isValid) {
+//                //NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
+//                // TODO: Handle this error
+//            } else {
+//                RXMLElement *error = [root child:@"error"];
+//                if (error.isValid) {
+//                    //NSString *code = [error attribute:@"code"];
+//                    //NSString *message = [error attribute:@"message"];
+//                    //[self subsonicErrorCode:[code intValue] message:message];
+//                    // TODO: Handle this error
+//                } else {
+//                    // TODO: Handle !isValid case
+//                    if ([[root child:@"playlist"] isValid]) {
+//                        [databaseS removeServerPlaylistTable:self.md5];
+//                        [databaseS createServerPlaylistTable:self.md5];
+//                        [root iterate:@"playlist.entry" usingBlock:^(RXMLElement *e) {
+//                            ISMSSong *aSong = [[ISMSSong alloc] initWithRXMLElement:e];
+//                            [aSong insertIntoServerPlaylistWithPlaylistId:self.md5];
+//                        }];
+//                    }
+//                }
+//            }
+//            
+//            self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM splaylist%@", self.md5]];
+//            
+//            [EX2Dispatch runInMainThreadAsync:^{
+//                [self.tableView reloadData];
+//                [self.refreshControl endRefreshing];
+//                [viewObjectsS hideLoadingScreen];
+//                self.tableView.scrollEnabled = YES;
+//            }];
+//        }
+//    }];
+//    [self.dataTask resume];
+//    
+//    self.tableView.scrollEnabled = NO;
+//    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
 }	
 
 - (void)cancelLoad {
@@ -254,11 +254,12 @@ LOG_LEVEL_ISUB_DEFAULT
 #pragma mark Table view methods
 
 - (ISMSSong *)songAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.isLocalPlaylist) {
-        return [ISMSSong songFromDbRow:indexPath.row inTable:[NSString stringWithFormat:@"playlist%@", self.md5] inDatabaseQueue:databaseS.localPlaylistsDbQueue];
-    } else {
-        return [ISMSSong songFromServerPlaylistId:self.md5 row:indexPath.row];
-    }
+//    if (self.isLocalPlaylist) {
+//        return [ISMSSong songFromDbRow:indexPath.row inTable:[NSString stringWithFormat:@"playlist%@", self.md5] inDatabaseQueue:databaseS.localPlaylistsDbQueue];
+//    } else {
+//        return [ISMSSong songFromServerPlaylistId:self.md5 row:indexPath.row];
+//    }
+    return nil;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

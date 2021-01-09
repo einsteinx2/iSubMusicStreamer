@@ -31,7 +31,7 @@ fileprivate var albumLoader: TagAlbumLoader?
         fatalError("implement this")
 //        albumLoader = TagAlbumLoader(tagAlbumId: tagAlbumId) { success, error in
 //            if success {
-//                albumLoader?.songs.forEach { $0.addToCacheQueueDbQueue() }
+//                albumLoader?.songs.forEach { $0.addToDownloadQueue() }
 //            }
 //            downloadCallback(success: success, error: error)
 //        }

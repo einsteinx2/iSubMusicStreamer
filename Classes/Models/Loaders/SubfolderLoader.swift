@@ -11,7 +11,7 @@ import CocoaLumberjackSwift
 import Resolver
 
 typealias FolderAlbumHandler = (_ folderAlbum: FolderAlbum) -> ()
-typealias SongHandler = (_ song: NewSong) -> ()
+typealias SongHandler = (_ song: Song) -> ()
 
 final class SubfolderLoader: SUSLoader {
     @Injected private var store: Store
@@ -65,7 +65,7 @@ final class SubfolderLoader: SUSLoader {
                                 self.onProcessFolderAlbum?(folderAlbum)
                             }
                         } else {
-                            let song = NewSong(serverId: self.serverId, element: element)
+                            let song = Song(serverId: self.serverId, element: element)
                             if song.path != "" && (Settings.shared().currentServer.isVideoSupported || !song.isVideo) {
                                 // Fix for pdfs showing in directory listing
                                 // TODO: See if this is still necessary

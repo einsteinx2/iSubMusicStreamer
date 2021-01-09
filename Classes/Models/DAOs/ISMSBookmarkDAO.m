@@ -11,7 +11,7 @@
 #import "DatabaseSingleton.h"
 #import "PlayQueueSingleton.h"
 #import "SavedSettings.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 
 @implementation ISMSBookmarkDAO
@@ -23,12 +23,12 @@
 //        [db executeUpdate:query, @(playlistS.currentIndex), name, @(position), song.title, song.songId, song.artist, song.album, song.genre, song.coverArtId, song.path, song.suffix, song.transcodedSuffix, song.duration, song.bitRate, song.track, song.year, song.size, song.parentId, @(song.isVideo), song.discNumber, @(bytePosition)];
 //
 //        NSInteger bookmarkId = [db intForQuery:@"SELECT MAX(bookmarkId) FROM bookmarks"];
-//        
+//
 //        NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 //        NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
 //        NSString *table = playlistS.isShuffle ? shufTable : currTable;
 //        //DLog(@"table: %@", table);
-//        
+//
 //        // Save the playlist
 //        NSString *dbName = settingsS.isOfflineMode ? @"%@/offlineCurrentPlaylist.db" : @"%@/%@currentPlaylist.db";
 //        [db executeUpdate:@"ATTACH DATABASE ? AS ?", [NSString stringWithFormat:dbName, settingsS.databasePath, settingsS.urlString.md5], @"currentPlaylistDb"];
@@ -39,7 +39,7 @@
 //        }
 //        [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE %@ (%@)", playlistTable, ISMSSong.standardSongColumnSchema]];
 //        [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ SELECT * FROM currentPlaylistDb.%@", playlistTable, table]];
-//        
+//
 //        [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
 //    }];
 }

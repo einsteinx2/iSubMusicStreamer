@@ -12,7 +12,7 @@
 #import "SavedSettings.h"
 #import "DatabaseSingleton.h"
 #import "EX2Kit.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
@@ -272,14 +272,14 @@ LOG_LEVEL_ISUB_DEFAULT
             [databaseS resetJukeboxPlaylist];
         }
     } else if ([elementName isEqualToString:@"entry"]) {
-        ISMSSong *aSong = [[ISMSSong alloc] initWithAttributeDict:attributeDict];
-        if (aSong.path) {
-            if (playlistS.isShuffle) {
-                [aSong insertIntoTable:@"jukeboxShufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
-            } else {
-                [aSong insertIntoTable:@"jukeboxCurrentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
-            }
-        }
+//        ISMSSong *song = [[ISMSSong alloc] initWithServerId:settingsS.currentServerId attributeDict:attributeDict];
+//        if (song.path.hasValue) {
+//            if (playlistS.isShuffle) {
+//                [aSong insertIntoTable:@"jukeboxShufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
+//            } else {
+//                [aSong insertIntoTable:@"jukeboxCurrentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
+//            }
+//        }
     }
 }
 

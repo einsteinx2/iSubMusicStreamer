@@ -584,7 +584,7 @@ import CocoaLumberjackSwift
             return
         }
         
-        let duration = currentSong.duration?.doubleValue ?? 0.0
+        let duration = Double(currentSong.duration)
         if Settings.shared().isJukeboxEnabled {
             elapsedTimeLabel.text = NSString.formatTime(0)
             remainingTimeLabel.text = "-\(NSString.formatTime(duration) ?? "0:00")"
@@ -623,14 +623,14 @@ import CocoaLumberjackSwift
         currentSong = song
         coverArtPageControl.coverArtId = song.coverArtId
         songNameLabel.text = song.title
-        artistNameLabel.text = song.artist
-        progressSlider.maximumValue = song.duration?.floatValue ?? 0.0
+        artistNameLabel.text = song.tagArtistName
+        progressSlider.maximumValue = Float(song.duration)
         updateDownloadProgress(animated: false)
         updateBookmarkButton()
         updateSlider()
     }
     
-    private var previousDownloadProgress: CGFloat = 0.0;
+    private var previousDownloadProgress: Float = 0.0;
     private func updateDownloadProgress(animated: Bool) {
         guard let currentSong = currentSong, !currentSong.isTempCached else {
             downloadProgressView.isHidden = true
@@ -760,7 +760,7 @@ import CocoaLumberjackSwift
     
     private func updateBookmarkButton() {
         var bookmarkCount: Int32 = 0
-        if let songId = self.currentSong?.songId {
+        if let songId = self.currentSong?.id {
             DatabaseOld.shared().bookmarksDbQueue?.inDatabase { db in
                 do {
                     let result = try db.executeQuery("SELECT COUNT(*) FROM bookmarks WHERE songId = ?", values: [songId])

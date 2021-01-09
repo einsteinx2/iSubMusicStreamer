@@ -39,14 +39,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)insertIntoGenreTable:(NSString *)table inDatabase:(FMDatabase *)db;
 - (BOOL)insertIntoCachedSongsTableDbQueue;
 
-- (BOOL)addToCacheQueueDbQueue;
-- (BOOL)removeFromCacheQueueDbQueue;
+- (BOOL)addToDownloadQueue;
+- (BOOL)removeFromDownloadQueue;
 
 - (BOOL)addToCurrentPlaylistDbQueue;
 - (BOOL)addToShufflePlaylistDbQueue;
 
-- (BOOL)removeFromCachedSongsTableDbQueue;
-+ (BOOL)removeSongFromCacheDbQueueByMD5:(NSString *)md5;
+- (BOOL)removeFromCachedSongsTable;
++ (BOOL)removeSongFromCacheDbByMD5:(NSString *)md5;
 
 - (BOOL)insertIntoCachedSongsLayoutDbQueue;
 

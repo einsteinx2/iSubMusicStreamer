@@ -78,7 +78,7 @@ extension FolderMetadata: FetchableRecord, PersistableRecord {
 extension Store {
     @objc func resetFolderAlbumCache(serverId: Int) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 try db.execute(literal: "DELETE FROM folderAlbumList WHERE serverId = \(serverId)")
                 try db.execute(literal: "DELETE FROM folderSongList WHERE serverId = \(serverId)")
                 return true
@@ -91,7 +91,7 @@ extension Store {
     
     func resetFolderAlbumCache(serverId: Int, parentFolderId: Int) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 try db.execute(literal: "DELETE FROM folderAlbumList WHERE serverId = \(serverId) AND parentFolderId = \(parentFolderId)")
                 try db.execute(literal: "DELETE FROM folderSongList WHERE serverId = \(serverId) AND parentFolderId = \(parentFolderId)")
                 return true
@@ -104,7 +104,7 @@ extension Store {
     
     func folderAlbumIds(serverId: Int, parentFolderId: Int) -> [Int] {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let sql: SQLLiteral = """
                     SELECT id
                     FROM folderAlbumList
@@ -121,7 +121,7 @@ extension Store {
     
     func folderAlbum(serverId: Int, id: Int) -> FolderAlbum? {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 try FolderAlbum.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
             }
         } catch {
@@ -132,7 +132,7 @@ extension Store {
     
     func add(folderAlbum: FolderAlbum) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 // Insert or update shared album record
                 try folderAlbum.save(db)
                 
@@ -153,7 +153,7 @@ extension Store {
     
     func songIds(serverId: Int, parentFolderId: Int) -> [Int] {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let sql: SQLLiteral = """
                     SELECT songId
                     FROM folderSongList
@@ -168,9 +168,9 @@ extension Store {
         }
     }
     
-    func add(folderSong song: NewSong) -> Bool {
+    func add(folderSong song: Song) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 // Insert or update shared song record
                 try song.save(db)
                 
@@ -191,7 +191,7 @@ extension Store {
     
     func folderMetadata(serverId: Int, parentFolderId: Int) -> FolderMetadata? {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 try FolderMetadata.filter(literal: "serverId = \(serverId) AND parentFolderId = \(parentFolderId)").fetchOne(db)
             }
         } catch {
@@ -202,7 +202,7 @@ extension Store {
     
     func add(folderMetadata: FolderMetadata) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 // Insert or update folder metadata record
                 try folderMetadata.save(db)
                 return true

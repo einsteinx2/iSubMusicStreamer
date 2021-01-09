@@ -14,7 +14,7 @@ import CocoaLumberjackSwift
     
     @objc private(set) var folderArtists = [FolderArtist]()
     @objc private(set) var folderAlbums = [FolderAlbum]()
-    @objc private(set) var songs = [NewSong]()
+    @objc private(set) var songs = [Song]()
     
     @objc init(data: Data) {
         super.init()
@@ -40,7 +40,7 @@ import CocoaLumberjackSwift
                     root.iterate("searchResult2.song") { element in
                         let isVideo = element.attribute("isVideo")
                         if isVideo != "true" {
-                            let song = NewSong(serverId: self.serverId, element: element)
+                            let song = Song(serverId: self.serverId, element: element)
                             if song.path != "" {
                                 self.songs.append(song)
                             }
@@ -50,7 +50,7 @@ import CocoaLumberjackSwift
                     root.iterate("searchResult.match") { element in
                         let isVideo = element.attribute("isVideo")
                         if isVideo != "true" {
-                            let song = NewSong(serverId: self.serverId, element: element)
+                            let song = Song(serverId: self.serverId, element: element)
                             if song.path != "" {
                                 self.songs.append(song)
                             }

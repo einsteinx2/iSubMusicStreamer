@@ -97,14 +97,12 @@ final class SongInfoViewController: UIViewController {
 //                let filename = (path as NSString).lastPathComponent
 //                stackView.addArrangedSubview(createInfoLabel(text: filename))
 //            }
-            if let path = song.path {
-                stackView.addArrangedSubview(createTitleLabel(text: "File Path"))
-                stackView.addArrangedSubview(createInfoLabel(text: path))
-            }
-            if let suffix = song.suffix {
-                stackView.addArrangedSubview(createTitleLabel(text: "Original File Type"))
-                stackView.addArrangedSubview(createInfoLabel(text: suffix.uppercased()))
-            }
+            stackView.addArrangedSubview(createTitleLabel(text: "File Path"))
+            stackView.addArrangedSubview(createInfoLabel(text: song.path))
+            
+            stackView.addArrangedSubview(createTitleLabel(text: "Original File Type"))
+            stackView.addArrangedSubview(createInfoLabel(text: song.suffix.uppercased()))
+            
             if let transcodedSuffix = song.transcodedSuffix {
                 stackView.addArrangedSubview(createTitleLabel(text: "Transcoded File Type"))
                 stackView.addArrangedSubview(createInfoLabel(text: transcodedSuffix.uppercased()))
@@ -112,42 +110,48 @@ final class SongInfoViewController: UIViewController {
                 stackView.addArrangedSubview(createTitleLabel(text: "Transcoded File Type"))
                 stackView.addArrangedSubview(createInfoLabel(text: "Not transcoded"))
             }
-            if let bitrate = song.bitRate {
-                stackView.addArrangedSubview(createTitleLabel(text: "Original Bitrate"))
-                stackView.addArrangedSubview(createInfoLabel(text: "\(bitrate) Kbps"))
-            }
+            
+            stackView.addArrangedSubview(createTitleLabel(text: "Original Bitrate"))
+            stackView.addArrangedSubview(createInfoLabel(text: "\(song.bitrate) Kbps"))
+            
             realTimeBitrateLabel = createInfoLabel(text: "Unknown")
+            
             if let realTimeBitrateLabel = realTimeBitrateLabel {
                 stackView.addArrangedSubview(createTitleLabel(text: "Realtime Bitrate"))
                 stackView.addArrangedSubview(realTimeBitrateLabel)
             }
-            if let title = song.title {
-                stackView.addArrangedSubview(createTitleLabel(text: "Title"))
-                stackView.addArrangedSubview(createInfoLabel(text: title))
-            }
-            if let artist = song.artist {
+            
+            stackView.addArrangedSubview(createTitleLabel(text: "Title"))
+            stackView.addArrangedSubview(createInfoLabel(text: song.title))
+            
+            if let tagArtistName = song.tagArtistName {
                 stackView.addArrangedSubview(createTitleLabel(text: "Artist"))
-                stackView.addArrangedSubview(createInfoLabel(text: artist))
+                stackView.addArrangedSubview(createInfoLabel(text: tagArtistName))
             }
-            if let album = song.album {
+            
+            if let tagAlbumName = song.tagAlbumName {
                 stackView.addArrangedSubview(createTitleLabel(text: "Album"))
-                stackView.addArrangedSubview(createInfoLabel(text: album))
+                stackView.addArrangedSubview(createInfoLabel(text: tagAlbumName))
             }
-            if let year = song.year {
+            
+            if song.year > 0 {
                 stackView.addArrangedSubview(createTitleLabel(text: "Year"))
-                stackView.addArrangedSubview(createInfoLabel(text: year.stringValue))
+                stackView.addArrangedSubview(createInfoLabel(text: "\(song.year)"))
             }
+            
             if let genre = song.genre {
                 stackView.addArrangedSubview(createTitleLabel(text: "Genre"))
                 stackView.addArrangedSubview(createInfoLabel(text: genre))
             }
-            if let track = song.track {
+            
+            if song.track > 0 {
                 stackView.addArrangedSubview(createTitleLabel(text: "Track Number"))
-                stackView.addArrangedSubview(createInfoLabel(text: track.stringValue))
+                stackView.addArrangedSubview(createInfoLabel(text: "\(song.track)"))
             }
-            if let discNumber = song.discNumber {
+            
+            if song.discNumber > 0 {
                 stackView.addArrangedSubview(createTitleLabel(text: "Disc Number"))
-                stackView.addArrangedSubview(createInfoLabel(text: discNumber.stringValue))
+                stackView.addArrangedSubview(createInfoLabel(text: "\(song.discNumber)"))
             }
         }
     }

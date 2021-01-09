@@ -16,7 +16,7 @@
     #ifdef SILENT
         #define LOG_LEVEL_ISUB_DEFAULT static const DDLogLevel ddLogLevel = DDLogLevelOff;
     #else
-        #define LOG_LEVEL_ISUB_DEFAULT static const DDLogLevel ddLogLevel = DDLogLevelAll;
+        #define LOG_LEVEL_ISUB_DEFAULT static const DDLogLevel ddLogLevel = DDLogLevelInfo;//DDLogLevelAll;
     #endif
 #else
     // Only log DDLogInfo, DDLogWarning, and DDLogError in release builds for privacy and to reduce log spam for every API call

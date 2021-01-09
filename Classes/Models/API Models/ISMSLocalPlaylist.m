@@ -10,7 +10,7 @@
 #import "DatabaseSingleton.h"
 #import "ViewObjectsSingleton.h"
 #import "FMDatabaseQueueAdditions.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Defines.h"
 
@@ -38,33 +38,33 @@
 - (BOOL)isCached { return NO; }
 
 - (void)download {
-    [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-    
-    [EX2Dispatch runInBackgroundAfterDelay:0.05 block:^{
-        for (int i = 0; i < self.count; i++) {
-            [[ISMSSong songFromDbRow:i inTable:self.databaseTable inDatabaseQueue:databaseS.localPlaylistsDbQueue] addToCacheQueueDbQueue];
-        }
-        
-        [EX2Dispatch runInMainThreadAsync:^{
-            [viewObjectsS hideLoadingScreen];
-        }];
-    }];
+//    [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+//
+//    [EX2Dispatch runInBackgroundAfterDelay:0.05 block:^{
+//        for (int i = 0; i < self.count; i++) {
+//            [[ISMSSong songFromDbRow:i inTable:self.databaseTable inDatabaseQueue:databaseS.localPlaylistsDbQueue] addToDownloadQueue];
+//        }
+//
+//        [EX2Dispatch runInMainThreadAsync:^{
+//            [viewObjectsS hideLoadingScreen];
+//        }];
+//    }];
 }
 
 - (void)queue {
-    [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-    
-    [EX2Dispatch runInBackgroundAfterDelay:0.05 block:^{
-        for (int i = 0; i < self.count; i++) {
-            [[ISMSSong songFromDbRow:i inTable:self.databaseTable inDatabaseQueue:databaseS.localPlaylistsDbQueue] addToCurrentPlaylistDbQueue];
-        }
-        
-        [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
-        
-        [EX2Dispatch runInMainThreadAsync:^{
-            [viewObjectsS hideLoadingScreen];
-        }];
-    }];
+//    [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+//    
+//    [EX2Dispatch runInBackgroundAfterDelay:0.05 block:^{
+//        for (int i = 0; i < self.count; i++) {
+//            [[ISMSSong songFromDbRow:i inTable:self.databaseTable inDatabaseQueue:databaseS.localPlaylistsDbQueue] addToCurrentPlaylistDbQueue];
+//        }
+//        
+//        [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+//        
+//        [EX2Dispatch runInMainThreadAsync:^{
+//            [viewObjectsS hideLoadingScreen];
+//        }];
+//    }];
 }
 
 @end

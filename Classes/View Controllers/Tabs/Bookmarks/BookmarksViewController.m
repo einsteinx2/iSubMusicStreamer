@@ -19,7 +19,7 @@
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 
@@ -366,57 +366,58 @@
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    __block ISMSSong *song;
-    __block NSString *name = nil;
-    __block int position = 0;
-    [databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM bookmarks WHERE bookmarkId = ?", [self.bookmarkIds objectAtIndexSafe:indexPath.row]];
-        song = [ISMSSong songFromDbResult:result];
-        name = [result stringForColumn:@"name"];
-        position = [result intForColumn:@"position"];
-        [result close];
-    }];
-    
-    UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-    cell.hideHeaderLabel = NO;
-    cell.hideNumberLabel = YES;
-    cell.headerText = [NSString stringWithFormat:@"%@ - %@", name, [NSString formatTime:(float)position]];
-    [cell updateWithModel:song];
-    return cell;
+//    __block ISMSSong *song;
+//    __block NSString *name = nil;
+//    __block int position = 0;
+//    [databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
+//        FMResultSet *result = [db executeQuery:@"SELECT * FROM bookmarks WHERE bookmarkId = ?", [self.bookmarkIds objectAtIndexSafe:indexPath.row]];
+//        song = [ISMSSong songFromDbResult:result];
+//        name = [result stringForColumn:@"name"];
+//        position = [result intForColumn:@"position"];
+//        [result close];
+//    }];
+//
+//    UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+//    cell.hideHeaderLabel = NO;
+//    cell.hideNumberLabel = YES;
+//    cell.headerText = [NSString stringWithFormat:@"%@ - %@", name, [NSString formatTime:(float)position]];
+//    [cell updateWithModel:song];
+//    return cell;
+    return nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (!indexPath) return;
     
-    if (self.isEditing) {
-        [self showDeleteButton];
-        return;
-    }
-	
-	if (settingsS.isJukeboxEnabled) {
-		[databaseS resetJukeboxPlaylist];
-		[jukeboxS clearRemotePlaylist];
-	} else {
-		[databaseS resetCurrentPlaylistDb];
-	}
-	playlistS.isShuffle = NO;
-	
-	__block NSUInteger bookmarkId = 0;
-	__block NSUInteger playlistIndex = 0;
-	__block NSUInteger offsetSeconds = 0;
-	__block NSUInteger offsetBytes = 0;
-	__block ISMSSong *aSong;
-	
-	[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
-		FMResultSet *result = [db executeQuery:@"SELECT * FROM bookmarks WHERE bookmarkId = ?", [self.bookmarkIds objectAtIndexSafe:indexPath.row]];
-		aSong = [ISMSSong songFromDbResult:result];
-		bookmarkId = [result intForColumn:@"bookmarkId"];
-		playlistIndex = [result intForColumn:@"playlistIndex"];
-		offsetSeconds = [result intForColumn:@"position"];
-		offsetBytes = [result intForColumn:@"bytes"];
-		[result close];
-	}];
-		
+//    if (self.isEditing) {
+//        [self showDeleteButton];
+//        return;
+//    }
+//
+//	if (settingsS.isJukeboxEnabled) {
+//		[databaseS resetJukeboxPlaylist];
+//		[jukeboxS clearRemotePlaylist];
+//	} else {
+//		[databaseS resetCurrentPlaylistDb];
+//	}
+//	playlistS.isShuffle = NO;
+//
+//	__block NSUInteger bookmarkId = 0;
+//	__block NSUInteger playlistIndex = 0;
+//	__block NSUInteger offsetSeconds = 0;
+//	__block NSUInteger offsetBytes = 0;
+//	__block ISMSSong *aSong;
+//
+//	[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
+//		FMResultSet *result = [db executeQuery:@"SELECT * FROM bookmarks WHERE bookmarkId = ?", [self.bookmarkIds objectAtIndexSafe:indexPath.row]];
+//		aSong = [ISMSSong songFromDbResult:result];
+//		bookmarkId = [result intForColumn:@"bookmarkId"];
+//		playlistIndex = [result intForColumn:@"playlistIndex"];
+//		offsetSeconds = [result intForColumn:@"position"];
+//		offsetBytes = [result intForColumn:@"bytes"];
+//		[result close];
+//	}];
+//
 //	// See if there's a playlist table for this bookmark
 //	if ([databaseS.bookmarksDbQueue tableExists:[NSString stringWithFormat:@"bookmark%lu", (unsigned long)bookmarkId]]) {
 //		// Save the playlist
@@ -424,46 +425,46 @@
 //		NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 //		NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
 //		NSString *table = playlistS.isShuffle ? shufTable : currTable;
-//		
+//
 //		[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
 //			[db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
 //			[db executeUpdate:[NSString stringWithFormat:@"INSERT INTO currentPlaylistDb.%@ SELECT * FROM bookmark%lu", table, (unsigned long)bookmarkId]];
 //			[db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
 //		}];
-//		
+//
 //        if (settingsS.isJukeboxEnabled) {
 //			[jukeboxS replacePlaylistWithLocal];
 //        }
 //	} else {
 //		[aSong addToCurrentPlaylistDbQueue];
 //	}
-	
-	playlistS.currentIndex = playlistIndex;
-	
-	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
-		
-	[self showPlayer];
-	
-	// Check if these are old bookmarks and don't have byteOffset saved
-	if (offsetBytes == 0 && offsetSeconds != 0) {
-		// By default, use the server reported bitrate
-		NSUInteger bitrate = [aSong.bitRate intValue];
-		
-		if (aSong.transcodedSuffix) {
-			// This is a transcode, guess the bitrate and byteoffset
-			NSUInteger maxBitrate = settingsS.currentMaxBitrate == 0 ? 128 : settingsS.currentMaxBitrate;
-			bitrate = maxBitrate < [aSong.bitRate intValue] ? maxBitrate : [aSong.bitRate intValue];
-		}
-
-		// Use the bitrate to get byteoffset
-		offsetBytes = BytesForSecondsAtBitrate(offsetSeconds, bitrate);
-	}
-	
-    if (settingsS.isJukeboxEnabled) {
-		[musicS playSongAtPosition:playlistIndex];
-    } else {
-		[musicS startSongAtOffsetInBytes:offsetBytes andSeconds:offsetSeconds];
-    }
+//	
+//	playlistS.currentIndex = playlistIndex;
+//	
+//	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+//		
+//	[self showPlayer];
+//	
+//	// Check if these are old bookmarks and don't have byteOffset saved
+//	if (offsetBytes == 0 && offsetSeconds != 0) {
+//		// By default, use the server reported bitrate
+//		NSUInteger bitrate = [aSong.bitRate intValue];
+//		
+//		if (aSong.transcodedSuffix) {
+//			// This is a transcode, guess the bitrate and byteoffset
+//			NSUInteger maxBitrate = settingsS.currentMaxBitrate == 0 ? 128 : settingsS.currentMaxBitrate;
+//			bitrate = maxBitrate < [aSong.bitRate intValue] ? maxBitrate : [aSong.bitRate intValue];
+//		}
+//
+//		// Use the bitrate to get byteoffset
+//		offsetBytes = BytesForSecondsAtBitrate(offsetSeconds, bitrate);
+//	}
+//	
+//    if (settingsS.isJukeboxEnabled) {
+//		[musicS playSongAtPosition:playlistIndex];
+//    } else {
+//		[musicS startSongAtOffsetInBytes:offsetBytes andSeconds:offsetSeconds];
+//    }
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -483,25 +484,26 @@
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    __block ISMSSong *song = nil;
-    [databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM bookmarks WHERE bookmarkId = ?", [self.bookmarkIds objectAtIndexSafe:indexPath.row]];
-        song = [ISMSSong songFromDbResult:result];
-        [result close];
-    }];
-    return [SwipeAction downloadQueueAndDeleteConfigWithModel:song deleteHandler:^{
-        [databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
-             [db executeUpdate:@"DELETE FROM bookmarks WHERE bookmarkId = ?", [self.bookmarkIds objectAtIndex:indexPath.row]];
-        }];
-        
-        [self.bookmarkIds removeObjectAtIndex:indexPath.row];
-        
-        @try {
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
-        } @catch (NSException *exception) {
-            //DLog(@"Exception: %@ - %@", exception.name, exception.reason);
-        }
-    }];
+//    __block ISMSSong *song = nil;
+//    [databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
+//        FMResultSet *result = [db executeQuery:@"SELECT * FROM bookmarks WHERE bookmarkId = ?", [self.bookmarkIds objectAtIndexSafe:indexPath.row]];
+//        song = [ISMSSong songFromDbResult:result];
+//        [result close];
+//    }];
+//    return [SwipeAction downloadQueueAndDeleteConfigWithModel:song deleteHandler:^{
+//        [databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
+//             [db executeUpdate:@"DELETE FROM bookmarks WHERE bookmarkId = ?", [self.bookmarkIds objectAtIndex:indexPath.row]];
+//        }];
+//
+//        [self.bookmarkIds removeObjectAtIndex:indexPath.row];
+//
+//        @try {
+//            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
+//        } @catch (NSException *exception) {
+//            //DLog(@"Exception: %@ - %@", exception.name, exception.reason);
+//        }
+//    }];
+    return nil;
 }
 
 /*// Override to support rearranging the table view.

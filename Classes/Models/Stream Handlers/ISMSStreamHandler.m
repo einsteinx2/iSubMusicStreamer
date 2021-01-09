@@ -8,9 +8,10 @@
 
 #import "ISMSStreamHandler.h"
 #import "PlayQueueSingleton.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "Defines.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @interface ISMSStreamHandler() {
     unsigned long long _byteOffset;
@@ -108,7 +109,7 @@
 	if (self.isPartialPrecacheSleeping)
 		self.partialPrecacheSleep = NO;
 	
-	if ([self.mySong isEqualToSong:playlistS.currentSong])
+	if ([self.mySong isEqual:playlistS.currentSong])
 		self.isCurrentSong = YES;
 }
 
@@ -188,7 +189,7 @@
 
 - (NSUInteger)hash
 {
-	return [self.mySong.songId hash];
+	return self.mySong.songId;
 }
 
 - (BOOL)isEqualToISMSStreamHandler:(ISMSStreamHandler *)otherHandler 
@@ -196,7 +197,7 @@
 	if (self == otherHandler)
 		return YES;
 	
-	return [self.mySong isEqualToSong:otherHandler.mySong];
+	return [self.mySong isEqual:otherHandler.mySong];
 }
 
 - (BOOL)isEqual:(id)other 

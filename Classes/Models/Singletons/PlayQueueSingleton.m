@@ -13,7 +13,7 @@
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -28,123 +28,124 @@
 #pragma mark Public DAO Methods
 
 - (void)deleteSongs:(NSArray *)indexes {
-	@autoreleasepool {
-		BOOL goToNextSong = NO;
-		NSMutableArray *indexesMut = [NSMutableArray arrayWithArray:indexes];
-		
-		// Sort the indexes to make sure they're accending
-		[indexesMut sortUsingSelector:@selector(compare:)];
-		
-		if (settingsS.isJukeboxEnabled) {
-			if (indexesMut.count == self.count) {
-				[databaseS resetCurrentPlaylist];
-			} else {
-				[self.dbQueue inDatabase:^(FMDatabase *db) {
-					[db executeUpdate:@"DROP TABLE IF EXISTS jukeboxTemp"];
-					[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE jukeboxTemp(%@)", ISMSSong.standardSongColumnSchema]];
-					
-					for (NSNumber *index in indexesMut.reverseObjectEnumerator) {
-						@autoreleasepool {
-							NSInteger rowId = [index integerValue] + 1;
-							[db executeUpdate:[NSString stringWithFormat:@"DELETE FROM jukeboxCurrentPlaylist WHERE ROWID = %ld", (long)rowId]];
-						}
-					}
-					
-					[db executeUpdate:@"INSERT INTO jukeboxTemp SELECT * FROM jukeboxCurrentPlaylist"];
-					[db executeUpdate:@"DROP TABLE jukeboxCurrentPlaylist"];
-					[db executeUpdate:@"ALTER TABLE jukeboxTemp RENAME TO jukeboxCurrentPlaylist"];
-				}];
-			}
-		} else {
-			if (self.isShuffle) {
-				if (indexesMut.count == self.count) {
-					[databaseS resetCurrentPlaylistDb];
-					self.isShuffle = NO;
-				} else {
-					[self.dbQueue inDatabase:^(FMDatabase *db) {
-						[db executeUpdate:@"DROP TABLE IF EXISTS shuffleTemp"];
-						[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE shuffleTemp(%@)", ISMSSong.standardSongColumnSchema]];
-						
-						for (NSNumber *index in indexesMut.reverseObjectEnumerator) {
-							@autoreleasepool {
-								NSInteger rowId = [index integerValue] + 1;
-								[db executeUpdate:[NSString stringWithFormat:@"DELETE FROM shufflePlaylist WHERE ROWID = %ld", (long)rowId]];
-							}
-						}
-						
-						[db executeUpdate:@"INSERT INTO shuffleTemp SELECT * FROM shufflePlaylist"];
-						[db executeUpdate:@"DROP TABLE shufflePlaylist"];
-						[db executeUpdate:@"ALTER TABLE shuffleTemp RENAME TO shufflePlaylist"];
-					}];
-				}
-			} else {
-				if (indexesMut.count == self.count) {
-					[databaseS resetCurrentPlaylistDb];
-				} else {
-					[self.dbQueue inDatabase:^(FMDatabase *db) {
-						[db executeUpdate:@"DROP TABLE currentTemp"];
-						[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE currentTemp(%@)", ISMSSong.standardSongColumnSchema]];
-						
-						for (NSNumber *index in indexesMut.reverseObjectEnumerator) {
-							@autoreleasepool {
-								NSInteger rowId = [index integerValue] + 1;
-								[db executeUpdate:[NSString stringWithFormat:@"DELETE FROM currentPlaylist WHERE ROWID = %ld", (long)rowId]];
-							}
-						}
-						
-						[db executeUpdate:@"INSERT INTO currentTemp SELECT * FROM currentPlaylist"];
-						[db executeUpdate:@"DROP TABLE currentPlaylist"];
-						[db executeUpdate:@"ALTER TABLE currentTemp RENAME TO currentPlaylist"];
-					}];
-				}
-			}
-		}
-		
-		// Correct the value of currentPlaylistPosition
-		// If the current song was deleted make sure to set goToNextSong so the next song will play
-		if ([indexesMut containsObject:@(self.currentIndex)] && audioEngineS.player.isPlaying) {
-			goToNextSong = YES;
-		}
-		
-		// Find out how many songs were deleted before the current position to determine the new position
-		NSInteger numberBefore = 0;
-		for (NSNumber *index in indexesMut) {
-			@autoreleasepool {
-				if (index.integerValue <= self.currentIndex) {
-					numberBefore++;
-				}
-			}
-		}
-		self.currentIndex = self.currentIndex - numberBefore;
-        if (self.currentIndex < 0) {
-			self.currentIndex = 0;
-        }
-		
-		if (settingsS.isJukeboxEnabled) {
-			[jukeboxS replacePlaylistWithLocal];
-		}
-		
-		if (goToNextSong) {
-            if (self.currentIndex != 0) {
-				[self incrementIndex];
-            }
-			[musicS playSongAtPosition:self.currentIndex];
-		} else {
-            if (!settingsS.isJukeboxEnabled) {
-				[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistOrderChanged];
-            }
-		}
-	}
+//	@autoreleasepool {
+//		BOOL goToNextSong = NO;
+//		NSMutableArray *indexesMut = [NSMutableArray arrayWithArray:indexes];
+//
+//		// Sort the indexes to make sure they're accending
+//		[indexesMut sortUsingSelector:@selector(compare:)];
+//
+//		if (settingsS.isJukeboxEnabled) {
+//			if (indexesMut.count == self.count) {
+//				[databaseS resetCurrentPlaylist];
+//			} else {
+//				[self.dbQueue inDatabase:^(FMDatabase *db) {
+//					[db executeUpdate:@"DROP TABLE IF EXISTS jukeboxTemp"];
+//					[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE jukeboxTemp(%@)", ISMSSong.standardSongColumnSchema]];
+//
+//					for (NSNumber *index in indexesMut.reverseObjectEnumerator) {
+//						@autoreleasepool {
+//							NSInteger rowId = [index integerValue] + 1;
+//							[db executeUpdate:[NSString stringWithFormat:@"DELETE FROM jukeboxCurrentPlaylist WHERE ROWID = %ld", (long)rowId]];
+//						}
+//					}
+//
+//					[db executeUpdate:@"INSERT INTO jukeboxTemp SELECT * FROM jukeboxCurrentPlaylist"];
+//					[db executeUpdate:@"DROP TABLE jukeboxCurrentPlaylist"];
+//					[db executeUpdate:@"ALTER TABLE jukeboxTemp RENAME TO jukeboxCurrentPlaylist"];
+//				}];
+//			}
+//		} else {
+//			if (self.isShuffle) {
+//				if (indexesMut.count == self.count) {
+//					[databaseS resetCurrentPlaylistDb];
+//					self.isShuffle = NO;
+//				} else {
+//					[self.dbQueue inDatabase:^(FMDatabase *db) {
+//						[db executeUpdate:@"DROP TABLE IF EXISTS shuffleTemp"];
+//						[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE shuffleTemp(%@)", ISMSSong.standardSongColumnSchema]];
+//
+//						for (NSNumber *index in indexesMut.reverseObjectEnumerator) {
+//							@autoreleasepool {
+//								NSInteger rowId = [index integerValue] + 1;
+//								[db executeUpdate:[NSString stringWithFormat:@"DELETE FROM shufflePlaylist WHERE ROWID = %ld", (long)rowId]];
+//							}
+//						}
+//
+//						[db executeUpdate:@"INSERT INTO shuffleTemp SELECT * FROM shufflePlaylist"];
+//						[db executeUpdate:@"DROP TABLE shufflePlaylist"];
+//						[db executeUpdate:@"ALTER TABLE shuffleTemp RENAME TO shufflePlaylist"];
+//					}];
+//				}
+//			} else {
+//				if (indexesMut.count == self.count) {
+//					[databaseS resetCurrentPlaylistDb];
+//				} else {
+//					[self.dbQueue inDatabase:^(FMDatabase *db) {
+//						[db executeUpdate:@"DROP TABLE currentTemp"];
+//						[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE currentTemp(%@)", ISMSSong.standardSongColumnSchema]];
+//
+//						for (NSNumber *index in indexesMut.reverseObjectEnumerator) {
+//							@autoreleasepool {
+//								NSInteger rowId = [index integerValue] + 1;
+//								[db executeUpdate:[NSString stringWithFormat:@"DELETE FROM currentPlaylist WHERE ROWID = %ld", (long)rowId]];
+//							}
+//						}
+//
+//						[db executeUpdate:@"INSERT INTO currentTemp SELECT * FROM currentPlaylist"];
+//						[db executeUpdate:@"DROP TABLE currentPlaylist"];
+//						[db executeUpdate:@"ALTER TABLE currentTemp RENAME TO currentPlaylist"];
+//					}];
+//				}
+//			}
+//		}
+//
+//		// Correct the value of currentPlaylistPosition
+//		// If the current song was deleted make sure to set goToNextSong so the next song will play
+//		if ([indexesMut containsObject:@(self.currentIndex)] && audioEngineS.player.isPlaying) {
+//			goToNextSong = YES;
+//		}
+//
+//		// Find out how many songs were deleted before the current position to determine the new position
+//		NSInteger numberBefore = 0;
+//		for (NSNumber *index in indexesMut) {
+//			@autoreleasepool {
+//				if (index.integerValue <= self.currentIndex) {
+//					numberBefore++;
+//				}
+//			}
+//		}
+//		self.currentIndex = self.currentIndex - numberBefore;
+//        if (self.currentIndex < 0) {
+//			self.currentIndex = 0;
+//        }
+//
+//		if (settingsS.isJukeboxEnabled) {
+//			[jukeboxS replacePlaylistWithLocal];
+//		}
+//
+//		if (goToNextSong) {
+//            if (self.currentIndex != 0) {
+//				[self incrementIndex];
+//            }
+//			[musicS playSongAtPosition:self.currentIndex];
+//		} else {
+//            if (!settingsS.isJukeboxEnabled) {
+//				[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistOrderChanged];
+//            }
+//		}
+//	}
 }
 
 - (ISMSSong *)songForIndex:(NSUInteger)index {
-    NSString *table;
-    if (settingsS.isJukeboxEnabled) {
-        table = self.isShuffle ? @"jukeboxShufflePlaylist" : @"jukeboxCurrentPlaylist";
-    } else {
-        table = self.isShuffle ? @"shufflePlaylist" : @"currentPlaylist";
-    }
-    return [ISMSSong songAtPosition:index inTable:table];
+//    NSString *table;
+//    if (settingsS.isJukeboxEnabled) {
+//        table = self.isShuffle ? @"jukeboxShufflePlaylist" : @"jukeboxCurrentPlaylist";
+//    } else {
+//        table = self.isShuffle ? @"shufflePlaylist" : @"currentPlaylist";
+//    }
+//    return [ISMSSong songAtPosition:index inTable:table];
+    return nil;
 }
 
 - (ISMSSong *)prevSong {
@@ -329,53 +330,53 @@
 }
 
 - (void)shuffleToggle {
-	if (self.isShuffle) {
-		NSString *songId = self.currentSong.songId;
-		self.isShuffle = NO;
-		
-		// Find the track position in the regular playlist
-		NSString *tableName = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-		NSString *query = [NSString stringWithFormat:@"SELECT ROWID FROM %@ WHERE songId = ? LIMIT 1", tableName];
-		self.currentIndex = [self.dbQueue intForQuery:query, songId] - 1;
-		
-		if (settingsS.isJukeboxEnabled) {
-			[jukeboxS replacePlaylistWithLocal];
-			[jukeboxS playSongAtPosition:@0];
-		}
-				
-		// Send a notification to update the playlist view
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistShuffleToggled];
-        
-        // Inform the OS
-        MPRemoteCommandCenter.sharedCommandCenter.changeShuffleModeCommand.currentShuffleType = MPShuffleTypeOff;
-	} else {
-		ISMSSong *currentSong = self.currentSong;
-		NSNumber *oldPlaylistPosition = @(self.currentIndex + 1);
-		self.shuffleIndex = 0;
-		self.isShuffle = YES;
-		
-		[databaseS resetShufflePlaylist];
-		[currentSong addToShufflePlaylistDbQueue];
-		
-		[self.dbQueue inDatabase:^(FMDatabase *db) {
-			if (settingsS.isJukeboxEnabled) {
-				[db executeUpdate:@"INSERT INTO jukeboxShufflePlaylist SELECT * FROM jukeboxCurrentPlaylist WHERE ROWID != ? ORDER BY RANDOM()", oldPlaylistPosition];
-			} else {
-				[db executeUpdate:@"INSERT INTO shufflePlaylist SELECT * FROM currentPlaylist WHERE ROWID != ? ORDER BY RANDOM()", oldPlaylistPosition];
-			}
-		}];
-		
-		if (settingsS.isJukeboxEnabled) {
-			[jukeboxS replacePlaylistWithLocal];
-			[jukeboxS playSongAtPosition:@1];
-		}
-		
-		// Send a notification to update the playlist view 
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistShuffleToggled];
-        
-        // Inform the OS
-        MPRemoteCommandCenter.sharedCommandCenter.changeShuffleModeCommand.currentShuffleType = MPShuffleTypeItems;
-	}
+//	if (self.isShuffle) {
+//		NSString *songId = self.currentSong.songId;
+//		self.isShuffle = NO;
+//		
+//		// Find the track position in the regular playlist
+//		NSString *tableName = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
+//		NSString *query = [NSString stringWithFormat:@"SELECT ROWID FROM %@ WHERE songId = ? LIMIT 1", tableName];
+//		self.currentIndex = [self.dbQueue intForQuery:query, songId] - 1;
+//		
+//		if (settingsS.isJukeboxEnabled) {
+//			[jukeboxS replacePlaylistWithLocal];
+//			[jukeboxS playSongAtPosition:@0];
+//		}
+//				
+//		// Send a notification to update the playlist view
+//		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistShuffleToggled];
+//        
+//        // Inform the OS
+//        MPRemoteCommandCenter.sharedCommandCenter.changeShuffleModeCommand.currentShuffleType = MPShuffleTypeOff;
+//	} else {
+//		ISMSSong *currentSong = self.currentSong;
+//		NSNumber *oldPlaylistPosition = @(self.currentIndex + 1);
+//		self.shuffleIndex = 0;
+//		self.isShuffle = YES;
+//		
+//		[databaseS resetShufflePlaylist];
+//		[currentSong addToShufflePlaylistDbQueue];
+//		
+//		[self.dbQueue inDatabase:^(FMDatabase *db) {
+//			if (settingsS.isJukeboxEnabled) {
+//				[db executeUpdate:@"INSERT INTO jukeboxShufflePlaylist SELECT * FROM jukeboxCurrentPlaylist WHERE ROWID != ? ORDER BY RANDOM()", oldPlaylistPosition];
+//			} else {
+//				[db executeUpdate:@"INSERT INTO shufflePlaylist SELECT * FROM currentPlaylist WHERE ROWID != ? ORDER BY RANDOM()", oldPlaylistPosition];
+//			}
+//		}];
+//		
+//		if (settingsS.isJukeboxEnabled) {
+//			[jukeboxS replacePlaylistWithLocal];
+//			[jukeboxS playSongAtPosition:@1];
+//		}
+//		
+//		// Send a notification to update the playlist view 
+//		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistShuffleToggled];
+//        
+//        // Inform the OS
+//        MPRemoteCommandCenter.sharedCommandCenter.changeShuffleModeCommand.currentShuffleType = MPShuffleTypeItems;
+//	}
 }
 
 #pragma mark - Singleton methods

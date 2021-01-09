@@ -11,7 +11,6 @@
 #import "FolderAlbumViewController.h"
 #import "FolderDropdownControl.h"
 #import "UIViewController+PushViewControllerCustom.h"
-#import "SUSAllSongsLoader.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -80,7 +79,7 @@
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 	}
 	
-	if (![SUSAllSongsLoader isLoading] && !viewObjectsS.isArtistsLoading) {
+	if (!viewObjectsS.isArtistsLoading) {
 		if (!self.dataModel.isCached) {
 			[self loadData:settingsS.rootFoldersSelectedFolderId.integerValue];
 		}
@@ -271,14 +270,7 @@
 #pragma mark Button handling methods
 
 - (void)reloadAction:(id)sender {
-	if (!SUSAllSongsLoader.isLoading) {
-		[self loadData:settingsS.rootFoldersSelectedFolderId.integerValue];
-	} else if (settingsS.isPopupsEnabled) {
-        NSString *message = @"You cannot reload the Artists tab while the Albums or Songs tabs are loading";
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Please Wait" message:message preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
+    [self loadData:settingsS.rootFoldersSelectedFolderId.integerValue];
 }
 
 - (void)settingsAction:(id)sender {
@@ -465,7 +457,7 @@
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSObject<ISMSTableCellModel> *model = [self folderArtistAtIndexPath:indexPath];
+    NSObject<TableCellModel> *model = [self folderArtistAtIndexPath:indexPath];
     return [SwipeAction downloadAndQueueConfigWithModel:model];
 }
 

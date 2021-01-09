@@ -68,7 +68,7 @@ extension TagArtist: FetchableRecord, PersistableRecord {
 extension Store {
     func deleteTagArtists(serverId: Int, mediaFolderId: Int) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 try db.execute(literal: "DELETE FROM tagArtistList WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)")
                 try db.execute(literal: "DELETE FROM tagArtistTableSection WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)")
                 try db.execute(literal: "DELETE FROM tagArtistListMetadata WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)")
@@ -82,7 +82,7 @@ extension Store {
     
     func tagArtistIds(serverId: Int, mediaFolderId: Int) -> [Int] {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let sql: SQLLiteral = """
                     SELECT tagArtistId
                     FROM tagArtistList
@@ -99,7 +99,7 @@ extension Store {
     
     func tagArtist(serverId: Int, id: Int) -> TagArtist? {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 try TagArtist.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
             }
         } catch {
@@ -110,7 +110,7 @@ extension Store {
     
     func add(tagArtist: TagArtist, mediaFolderId: Int) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 // Insert or update shared artist record
                 try tagArtist.save(db)
                 
@@ -131,7 +131,7 @@ extension Store {
     
     func tagArtistSections(serverId: Int, mediaFolderId: Int) -> [TableSection] {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let sql: SQLLiteral = """
                     SELECT *
                     FROM tagArtistTableSection
@@ -147,7 +147,7 @@ extension Store {
     
     func add(tagArtistSection section: TableSection) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 // Insert artist id into list cache
                 let sql: SQLLiteral = """
                     INSERT INTO tagArtistTableSection
@@ -165,7 +165,7 @@ extension Store {
     
     func tagArtistMetadata(serverId: Int, mediaFolderId: Int) -> RootListMetadata? {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let sql: SQLLiteral = """
                     SELECT *
                     FROM tagArtistListMetadata
@@ -181,7 +181,7 @@ extension Store {
     
     func add(tagArtistListMetadata metadata: RootListMetadata) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 let sql: SQLLiteral = """
                     INSERT INTO tagArtistListMetadata
                     (serverId, mediaFolderId, itemCount, reloadDate)
@@ -199,7 +199,7 @@ extension Store {
     // Returns a list of matching tag artist IDs
     func search(tagArtistName name: String, serverId: Int, mediaFolderId: Int, offset: Int, limit: Int) -> [Int] {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let searchTerm = "%\(name)%"
                 let sql: SQLLiteral = """
                     SELECT tagArtistId

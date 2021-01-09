@@ -610,7 +610,7 @@ private final class HomeSongInfoButton: UIView {
         if let song = song {
             coverArt.coverArtId = song.coverArtId
             songLabel.text = song.title
-            artistLabel.text = song.artist
+            artistLabel.text = song.tagArtistName
         } else {
             coverArt.image = UIImage(named: "default-album-art-small")
             songLabel.text = nil

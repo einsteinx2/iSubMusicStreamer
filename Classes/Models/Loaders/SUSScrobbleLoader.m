@@ -8,9 +8,10 @@
 
 #import "SUSScrobbleLoader.h"
 #import "NSMutableURLRequest+SUS.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Defines.h"
+#import "Swift.h"
 
 @implementation SUSScrobbleLoader
 
@@ -20,7 +21,7 @@
 
 - (NSURLRequest *)createRequest {
     NSString *isSubmissionString = [NSString stringWithFormat:@"%i", self.isSubmission];
-    NSDictionary *parameters = @{@"id": n2N(self.aSong.songId), @"submission": n2N(isSubmissionString)};
+    NSDictionary *parameters = @{@"id": @(self.aSong.songId), @"submission": n2N(isSubmissionString)};
     NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"scrobble" parameters:parameters];
     return request;
 }

@@ -18,7 +18,7 @@
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import "SUSLoader.h"
@@ -269,11 +269,11 @@ LOG_LEVEL_ISUB_DEFAULT
 			NSMutableArray *songIds = [[NSMutableArray alloc] init];
 			for (ISMSSong *aSong in self.songs) {
 				@autoreleasepool {
-					[aSong addToCurrentPlaylistDbQueue];
+                    [aSong queue];
 					
 					// In jukebox mode, collect the song ids to send to the server
                     if (settingsS.isJukeboxEnabled) {
-                        [songIds addObject:aSong.songId];
+                        [songIds addObject:@(aSong.songId)];
                     }
 				}
 			}

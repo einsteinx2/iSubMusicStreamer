@@ -14,7 +14,7 @@
 #import "JukeboxSingleton.h"
 #import "ISMSStreamManager.h"
 #import "ISMSCacheQueueManager.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import <MediaPlayer/MediaPlayer.h>
@@ -77,7 +77,7 @@ double startSongSeconds = 0.0;
 	} else if (!currentSong.isFullyCached && settingsS.isOfflineMode) {
 		[self playSongAtPosition:playlistS.nextIndex];
 	} else {
-		if ([cacheQueueManagerS.currentQueuedSong isEqualToSong:currentSong]) {
+		if ([cacheQueueManagerS.currentQueuedSong isEqual:currentSong]) {
 			// The cache queue is downloading this song, remove it before continuing
 			[cacheQueueManagerS removeCurrentSong];
 		}
@@ -212,14 +212,14 @@ double startSongSeconds = 0.0;
     ISMSSong *currentSong = playlistS.currentSong;
     if (currentSong.title)
         [trackInfo setObject:currentSong.title forKey:MPMediaItemPropertyTitle];
-    if (currentSong.album)
-        [trackInfo setObject:currentSong.album forKey:MPMediaItemPropertyAlbumTitle];
-    if (currentSong.artist)
-        [trackInfo setObject:currentSong.artist forKey:MPMediaItemPropertyArtist];
+    if (currentSong.tagAlbumName)
+        [trackInfo setObject:currentSong.tagAlbumName forKey:MPMediaItemPropertyAlbumTitle];
+    if (currentSong.tagArtistName)
+        [trackInfo setObject:currentSong.tagArtistName forKey:MPMediaItemPropertyArtist];
     if (currentSong.genre)
         [trackInfo setObject:currentSong.genre forKey:MPMediaItemPropertyGenre];
     if (currentSong.duration)
-        [trackInfo setObject:currentSong.duration forKey:MPMediaItemPropertyPlaybackDuration];
+        [trackInfo setObject:@(currentSong.duration) forKey:MPMediaItemPropertyPlaybackDuration];
     NSNumber *trackIndex = @(playlistS.currentIndex);
     if (trackIndex)
         [trackInfo setObject:trackIndex forKey:MPNowPlayingInfoPropertyPlaybackQueueIndex];

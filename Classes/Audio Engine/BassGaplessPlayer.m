@@ -11,8 +11,9 @@
 #import "SavedSettings.h"
 #import "ISMSStreamManager.h"
 #import "ISMSCacheQueueManager.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 #import <AVFoundation/AVFoundation.h>
 
 @interface BassGaplessPlayer ()
@@ -183,7 +184,7 @@ QWORD CALLBACK MyFileLenProc(void *user)
 		else
 		{
 			// Return server reported file size
-			length = [theSong.size longLongValue];
+			length = theSong.size;
 		}
 		
         DDLogInfo(@"[BassGaplessPlayer] checking %@ length: %llu", theSong.title, length);
@@ -390,7 +391,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 			[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackStarted];
             
             // Mark the last played time in the database for cache cleanup
-			self.currentStream.song.playedDate = [NSDate date];
+            (void)[Store.shared updateWithPlayedDate:[NSDate date] song:self.currentStream.song];
 		}
         /*else
         {
@@ -552,7 +553,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                                     
                                     // Get the stream for this song
                                     ISMSStreamHandler *handler = [streamManagerS handlerForSong:userInfo.song];
-                                    if (!handler && [[cacheQueueManagerS currentQueuedSong] isEqualToSong:userInfo.song])
+                                    if (!handler && [[cacheQueueManagerS currentQueuedSong] isEqual:userInfo.song])
                                         handler = [cacheQueueManagerS currentStreamHandler];
                                     
                                     // Calculate the bytes to wait based on the recent download speed. If the handler is nil or recent download speed is 0
@@ -596,7 +597,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 												if (userInfo.localFileSize >= userInfo.neededSize)
 													break;
 												// Handle temp cached songs ending. When they end, they are set as the last temp cached song, so we know it's done and can stop waiting for data.
-												else if (theSong.isTempCached && [theSong isEqualToSong:streamManagerS.lastTempCachedSong])
+												else if (theSong.isTempCached && [theSong isEqual:streamManagerS.lastTempCachedSong])
 													break;
 												// If the song has finished caching, we can stop waiting
 												else if (theSong.isFullyCached)
@@ -701,10 +702,10 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 	if (aSong.fileExists)
 	{
 		// Create the stream
-        HSTREAM fileStream = BASS_StreamCreateFile(NO, [aSong.currentPath cStringUsingEncoding:NSUTF8StringEncoding], 0, aSong.size.longValue, BASS_STREAM_DECODE|BASS_SAMPLE_FLOAT);
+        HSTREAM fileStream = BASS_StreamCreateFile(NO, [aSong.currentPath cStringUsingEncoding:NSUTF8StringEncoding], 0, aSong.size, BASS_STREAM_DECODE|BASS_SAMPLE_FLOAT);
 		if(!fileStream)
         {
-            fileStream = BASS_StreamCreateFile(NO, [aSong.currentPath cStringUsingEncoding:NSUTF8StringEncoding], 0, aSong.size.longValue, BASS_STREAM_DECODE|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_FLOAT);
+            fileStream = BASS_StreamCreateFile(NO, [aSong.currentPath cStringUsingEncoding:NSUTF8StringEncoding], 0, aSong.size, BASS_STREAM_DECODE|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_FLOAT);
         }
         
 		if (fileStream)
@@ -910,7 +911,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 				 // Notify listeners that playback has started
 				 [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackStarted];
 				 
-				 aSong.playedDate = [NSDate date];
+                 [Store.shared updateWithPlayedDate:[NSDate date] song:aSong];
 			 }
 			 else if (!userInfo && !aSong.isFullyCached && aSong.localFileSize < ISMS_BassStreamMinFilesizeToFail)
 			 {
@@ -922,7 +923,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 				 {
 					 DDLogError(@"[BassGaplessPlayer] Stream for song %@ failed, file is not on disk, so calling retrying the song", userInfo.song.title);
 					 // File was removed, most likely because the decryption failed, so start again normally
-					 [aSong removeFromCachedSongsTableDbQueue];
+					 [aSong removeFromCachedSongsTable];
                      
                      [self.delegate bassRetrySongAtIndex:self.currentPlaylistIndex player:self];
 				 }
@@ -948,7 +949,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 			 }
 			 else
 			 {
-				 [aSong removeFromCachedSongsTableDbQueue];
+				 [aSong removeFromCachedSongsTable];
                  
                  [self.delegate bassRetrySongAtIndex:self.currentPlaylistIndex player:self];
 			 }
@@ -1020,7 +1021,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 		return previousSong.duration.doubleValue + seconds;*/
         
         
-        return self.previousSongForProgress.duration.doubleValue + seconds;
+        return self.previousSongForProgress.duration + seconds;
     }
     
     //ALog(@"bytepos: %lld, secs: %f", pcmBytePosition, seconds);

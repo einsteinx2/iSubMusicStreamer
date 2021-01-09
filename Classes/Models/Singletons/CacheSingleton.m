@@ -14,8 +14,9 @@
 #import "DatabaseSingleton.h"
 #import "ISMSStreamManager.h"
 #import "ISMSCacheQueueManager.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -61,46 +62,47 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)removeOldestCachedSongs {
-	NSString *songMD5 = nil;
-	if (settingsS.cachingType == ISMSCachingType_minSpace) {
-		// Remove the oldest songs based on either oldest played or oldest cached until free space is more than minFreeSpace
-		while (self.freeSpace < settingsS.minFreeSpace) {
-			@autoreleasepool {
-                if (settingsS.autoDeleteCacheType == 0) {
-					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY playedDate ASC LIMIT 1"];
-                } else {
-					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY cachedDate ASC LIMIT 1"];
-                }
-                DDLogInfo(@"[CacheSingleton] removeOldestCachedSongs: min space removing %@", songMD5);
-				[ISMSSong removeSongFromCacheDbQueueByMD5:songMD5];	
-			}
-		}
-	} else if (settingsS.cachingType == ISMSCachingType_maxSize) {
-		// Remove the oldest songs based on either oldest played or oldest cached until cache size is less than maxCacheSize
-		unsigned long long size = self.cacheSize;
-		while (size > settingsS.maxCacheSize) {
-			@autoreleasepool  {
-				if (settingsS.autoDeleteCacheType == 0) {
-					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY playedDate ASC LIMIT 1"];
-				} else {
-					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY cachedDate ASC LIMIT 1"];
-				}
-				ISMSSong *song = [ISMSSong songFromCacheDbQueue:songMD5];
-				NSString *songPath = [settingsS.songCachePath stringByAppendingPathComponent:song.path.md5];
-				unsigned long long songSize = [[NSFileManager.defaultManager attributesOfItemAtPath:songPath error:NULL] fileSize];
-                
-                DDLogInfo(@"[CacheSingleton] removeOldestCachedSongs: max size removing %@", song);
-				[ISMSSong removeSongFromCacheDbQueueByMD5:songMD5];
-				size -= songSize;
-			}
-		}
-	}
-	
-	[self findCacheSize];
-	
-    if (!cacheQueueManagerS.isQueueDownloading) {
-		[cacheQueueManagerS startDownloadQueue];
-    }
+    // TODO: Reimplement this using new data model
+//	NSString *songMD5 = nil;
+//	if (settingsS.cachingType == ISMSCachingType_minSpace) {
+//		// Remove the oldest songs based on either oldest played or oldest cached until free space is more than minFreeSpace
+//		while (self.freeSpace < settingsS.minFreeSpace) {
+//			@autoreleasepool {
+//                if (settingsS.autoDeleteCacheType == 0) {
+//					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY playedDate ASC LIMIT 1"];
+//                } else {
+//					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY cachedDate ASC LIMIT 1"];
+//                }
+//                DDLogInfo(@"[CacheSingleton] removeOldestCachedSongs: min space removing %@", songMD5);
+//				[ISMSSong removeSongFromCacheDbByMD5:songMD5];
+//			}
+//		}
+//	} else if (settingsS.cachingType == ISMSCachingType_maxSize) {
+//		// Remove the oldest songs based on either oldest played or oldest cached until cache size is less than maxCacheSize
+//		unsigned long long size = self.cacheSize;
+//		while (size > settingsS.maxCacheSize) {
+//			@autoreleasepool  {
+//				if (settingsS.autoDeleteCacheType == 0) {
+//					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY playedDate ASC LIMIT 1"];
+//				} else {
+//					songMD5 = [databaseS.songCacheDbQueue stringForQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'YES' ORDER BY cachedDate ASC LIMIT 1"];
+//				}
+//				ISMSSong *song = [ISMSSong songFromCacheDbQueue:songMD5];
+//				NSString *songPath = [settingsS.songCachePath stringByAppendingPathComponent:song.path.md5];
+//				unsigned long long songSize = [[NSFileManager.defaultManager attributesOfItemAtPath:songPath error:NULL] fileSize];
+//
+//                DDLogInfo(@"[CacheSingleton] removeOldestCachedSongs: max size removing %@", song);
+//				[ISMSSong removeSongFromCacheDbByMD5:songMD5];
+//				size -= songSize;
+//			}
+//		}
+//	}
+//
+//	[self findCacheSize];
+//
+//    if (!cacheQueueManagerS.isQueueDownloading) {
+//		[cacheQueueManagerS startDownloadQueue];
+//    }
 }
 
 - (void)findCacheSize {

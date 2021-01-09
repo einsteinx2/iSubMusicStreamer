@@ -10,8 +10,9 @@
 #import "NSMutableURLRequest+SUS.h"
 #import "RXMLElement.h"
 #import "NSError+ISMSError.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation SUSNowPlayingLoader
 
@@ -38,7 +39,7 @@
             // TODO: Stop using a dictionary for this
             [root iterate:@"nowPlaying.entry" usingBlock:^(RXMLElement *e) {
                 NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-                dict[@"song"] = [[ISMSSong alloc] initWithRXMLElement:e];
+                dict[@"song"] = [[ISMSSong alloc] initWithServerId:settingsS.currentServerId element:e];
                 dict[@"username"] = [e attribute:@"username"];
                 dict[@"minutesAgo"] = [e attribute:@"minutesAgo"];
                 dict[@"playerId"] = [e attribute:@"playerId"];

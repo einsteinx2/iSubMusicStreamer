@@ -10,7 +10,7 @@ import Foundation
 import GRDB
 import CocoaLumberjackSwift
 
-extension NewSong: FetchableRecord, PersistableRecord {
+extension Song: FetchableRecord, PersistableRecord {
     static var databaseTableName: String = "song"
     
     enum Column: String, ColumnExpression {
@@ -19,7 +19,7 @@ extension NewSong: FetchableRecord, PersistableRecord {
     
     static func createInitialSchema(_ db: Database) throws {
         // Shared table of unique song records
-        try db.create(table: NewSong.databaseTableName) { t in
+        try db.create(table: Song.databaseTableName) { t in
             t.column(Column.serverId, .integer).notNull()
             t.column(Column.id, .integer).notNull()
             t.column(Column.title, .text).notNull()
@@ -47,10 +47,10 @@ extension NewSong: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
-    func song(serverId: Int, id: Int) -> NewSong? {
+    func song(serverId: Int, id: Int) -> Song? {
         do {
-            return try mainDb.read { db in
-                try NewSong.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
+            return try pool.read { db in
+                try Song.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
             }
         } catch {
             DDLogError("Failed to select song \(id) for server \(serverId): \(error)")
@@ -58,9 +58,9 @@ extension Store {
         }
     }
     
-    func add(song: NewSong) -> Bool {
+    func add(song: Song) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 // Insert or update shared song record
                 try song.save(db)
                 return true

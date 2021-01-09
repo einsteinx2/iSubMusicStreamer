@@ -65,7 +65,7 @@ extension FolderArtist: FetchableRecord, PersistableRecord {
 extension Store {
     func deleteFolderArtists(serverId: Int, mediaFolderId: Int) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 try db.execute(literal: "DELETE FROM folderArtistList WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)")
                 try db.execute(literal: "DELETE FROM folderArtistTableSection WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)")
                 try db.execute(literal: "DELETE FROM folderArtistListMetadata WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)")
@@ -79,7 +79,7 @@ extension Store {
     
     func folderArtistIds(serverId: Int, mediaFolderId: Int) -> [Int] {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let sql: SQLLiteral = """
                     SELECT folderArtistId
                     FROM folderArtistList
@@ -96,7 +96,7 @@ extension Store {
     
     func folderArtist(serverId: Int, id: Int) -> FolderArtist? {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 try FolderArtist.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
             }
         } catch {
@@ -107,7 +107,7 @@ extension Store {
     
     func add(folderArtist: FolderArtist, mediaFolderId: Int) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 // Insert or update shared artist record
                 try folderArtist.save(db)
                 
@@ -128,7 +128,7 @@ extension Store {
     
     func folderArtistSections(serverId: Int, mediaFolderId: Int) -> [TableSection] {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let sql: SQLLiteral = """
                     SELECT *
                     FROM folderArtistTableSection
@@ -144,7 +144,7 @@ extension Store {
     
     func add(folderArtistSection section: TableSection) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 // Insert artist id into list cache
                 let sql: SQLLiteral = """
                     INSERT INTO folderArtistTableSection
@@ -162,7 +162,7 @@ extension Store {
     
     func folderArtistMetadata(serverId: Int, mediaFolderId: Int) -> RootListMetadata? {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let sql: SQLLiteral = """
                     SELECT *
                     FROM folderArtistListMetadata
@@ -178,7 +178,7 @@ extension Store {
     
     func add(folderArtistListMetadata metadata: RootListMetadata) -> Bool {
         do {
-            return try mainDb.write { db in
+            return try pool.write { db in
                 let sql: SQLLiteral = """
                     INSERT INTO folderArtistListMetadata
                     (serverId, mediaFolderId, itemCount, reloadDate)
@@ -196,7 +196,7 @@ extension Store {
     // Returns a list of matching tag artist IDs
     func search(folderArtistName name: String, serverId: Int, mediaFolderId: Int, offset: Int, limit: Int) -> [Int] {
         do {
-            return try mainDb.read { db in
+            return try pool.read { db in
                 let searchTerm = "%\(name)%"
                 let sql: SQLLiteral = """
                     SELECT folderArtistId

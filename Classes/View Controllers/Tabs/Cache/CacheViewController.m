@@ -23,7 +23,7 @@
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
 #import "ISMSCacheQueueManager.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import "Reachability.h"
@@ -240,50 +240,50 @@
 }
 
 - (void)loadPlayAllPlaylist:(BOOL)shuffle {
-    playlistS.isShuffle = NO;
-	
-	if (settingsS.isJukeboxEnabled) {
-		[databaseS resetJukeboxPlaylist];
-		[jukeboxS clearRemotePlaylist];
-	} else {
-		[databaseS resetCurrentPlaylistDb];
-	}
-	
-	NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
-	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-		FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout ORDER BY seg1, seg2, seg3, seg4, seg5, seg6, seg7, seg8, seg9 COLLATE NOCASE"];
-		while ([result next]) {
-			@autoreleasepool {
-				NSString *md5 = [result stringForColumnIndex:0];
-				if (md5) [songMd5s addObject:md5];
-			}
-		}
-		[result close];
-	}];
-	
-	for (NSString *md5 in songMd5s) {
-		@autoreleasepool {
-			ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:md5];
-			[aSong addToCurrentPlaylistDbQueue];
-		}
-	}
-	
-	if (shuffle) {
-		playlistS.isShuffle = YES;
-		[databaseS shufflePlaylist];
-	} else {
-		playlistS.isShuffle = NO;
-	}
-	
-    if (settingsS.isJukeboxEnabled) {
-		[jukeboxS playSongAtPosition:@(0)];
-    }
-    
-	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
-	
-	// Must do UI stuff in main thread
-	[viewObjectsS hideLoadingScreen];
-	[self playAllPlaySong];	
+//    playlistS.isShuffle = NO;
+//	
+//	if (settingsS.isJukeboxEnabled) {
+//		[databaseS resetJukeboxPlaylist];
+//		[jukeboxS clearRemotePlaylist];
+//	} else {
+//		[databaseS resetCurrentPlaylistDb];
+//	}
+//	
+//	NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:0];
+//	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
+//		FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout ORDER BY seg1, seg2, seg3, seg4, seg5, seg6, seg7, seg8, seg9 COLLATE NOCASE"];
+//		while ([result next]) {
+//			@autoreleasepool {
+//				NSString *md5 = [result stringForColumnIndex:0];
+//				if (md5) [songMd5s addObject:md5];
+//			}
+//		}
+//		[result close];
+//	}];
+//	
+//	for (NSString *md5 in songMd5s) {
+//		@autoreleasepool {
+//			ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:md5];
+//			[aSong addToCurrentPlaylistDbQueue];
+//		}
+//	}
+//	
+//	if (shuffle) {
+//		playlistS.isShuffle = YES;
+//		[databaseS shufflePlaylist];
+//	} else {
+//		playlistS.isShuffle = NO;
+//	}
+//	
+//    if (settingsS.isJukeboxEnabled) {
+//		[jukeboxS playSongAtPosition:@(0)];
+//    }
+//    
+//	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+//	
+//	// Must do UI stuff in main thread
+//	[viewObjectsS hideLoadingScreen];
+//	[self playAllPlaySong];	
 }
 
 - (void)reloadTable {
@@ -805,58 +805,58 @@
 }
 
 - (void)deleteCachedSongs {
-	[self unregisterForNotifications];
-			
-	for (NSString *md5 in self.selectedRowMD5s) {
-		@autoreleasepool {
-			[ISMSSong removeSongFromCacheDbQueueByMD5:md5];
-		}
-	}
-	
-	[self segmentAction:nil];
-	
-	[cacheS findCacheSize];
-	
-	[viewObjectsS hideLoadingScreen];
-	
-    if (!cacheQueueManagerS.isQueueDownloading) {
-		[cacheQueueManagerS startDownloadQueue];
-    }
-	
-	[self registerForNotifications];
+//	[self unregisterForNotifications];
+//
+//	for (NSString *md5 in self.selectedRowMD5s) {
+//		@autoreleasepool {
+//			[ISMSSong removeSongFromCacheDbByMD5:md5];
+//		}
+//	}
+//
+//	[self segmentAction:nil];
+//
+//	[cacheS findCacheSize];
+//
+//	[viewObjectsS hideLoadingScreen];
+//
+//    if (!cacheQueueManagerS.isQueueDownloading) {
+//		[cacheQueueManagerS startDownloadQueue];
+//    }
+//
+//	[self registerForNotifications];
 }
 
 - (void)deleteQueuedSongs {
-  	[self unregisterForNotifications];
-	
-	// Delete each song from the database
-	for (NSString *md5 in self.selectedRowMD5s) {
-		//NSDate *inside = [NSDate date];
-		if (cacheQueueManagerS.isQueueDownloading) {
-			// Check if we're deleting the song that's currently caching. If so, stop the download.
-			if (cacheQueueManagerS.currentQueuedSong) {
-				if ([[cacheQueueManagerS.currentQueuedSong.path md5] isEqualToString:md5]) {
-					[cacheQueueManagerS stopDownloadQueue];
-				}
-			}
-		}
-		
-		// Delete the row from the cacheQueue
-		[databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
-			[db executeUpdate:@"DELETE FROM cacheQueue WHERE md5 = ?", md5];
-		}];
-	}
-		
-	// Reload the table
-	[self editSongsAction:nil];
-	
-    if (!cacheQueueManagerS.isQueueDownloading) {
-		[cacheQueueManagerS startDownloadQueue];
-    }
-	
-	[viewObjectsS hideLoadingScreen];
-	
-	[self registerForNotifications];
+//  	[self unregisterForNotifications];
+//	
+//	// Delete each song from the database
+//	for (NSString *md5 in self.selectedRowMD5s) {
+//		//NSDate *inside = [NSDate date];
+//		if (cacheQueueManagerS.isQueueDownloading) {
+//			// Check if we're deleting the song that's currently caching. If so, stop the download.
+//			if (cacheQueueManagerS.currentQueuedSong) {
+//				if ([[cacheQueueManagerS.currentQueuedSong.path md5] isEqualToString:md5]) {
+//					[cacheQueueManagerS stopDownloadQueue];
+//				}
+//			}
+//		}
+//		
+//		// Delete the row from the cacheQueue
+//		[databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
+//			[db executeUpdate:@"DELETE FROM cacheQueue WHERE md5 = ?", md5];
+//		}];
+//	}
+//		
+//	// Reload the table
+//	[self editSongsAction:nil];
+//	
+//    if (!cacheQueueManagerS.isQueueDownloading) {
+//		[cacheQueueManagerS startDownloadQueue];
+//    }
+//	
+//	[viewObjectsS hideLoadingScreen];
+//	
+//	[self registerForNotifications];
 }
 
 - (void)deleteSongsAction:(id)sender {
@@ -906,13 +906,14 @@
 }
 
 - (ISMSSong *)songForIndexPath:(NSIndexPath *)indexPath {
-    __block ISMSSong *song;
-    [databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue ORDER BY ROWID ASC LIMIT 1 OFFSET ?", @(indexPath.row)];
-        song = [ISMSSong songFromDbResult:result];
-        [result close];
-    }];
-    return song;
+//    __block ISMSSong *song;
+//    [databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
+//        FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue ORDER BY ROWID ASC LIMIT 1 OFFSET ?", @(indexPath.row)];
+//        song = [ISMSSong songFromDbResult:result];
+//        [result close];
+//    }];
+//    return song;
+    return nil;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -982,50 +983,51 @@
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if (self.segmentedControl.selectedSegmentIndex == 0) {
-        UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-        cell.hideHeaderLabel = YES;
-        cell.hideCacheIndicator = YES;
-        cell.hideNumberLabel = YES;
-        cell.hideCoverArt = YES;
-        cell.hideSecondaryLabel = YES;
-        cell.hideDurationLabel = YES;
-        [cell updateWithModel:[self folderArtistForIndexPath:indexPath]];
-        return cell;
-	} else {
-        UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-        cell.hideHeaderLabel = NO;
-        cell.hideCacheIndicator = YES;
-        cell.hideNumberLabel = YES;
-        cell.hideCoverArt = NO;
-        cell.hideSecondaryLabel = NO;
-        cell.hideDurationLabel = NO;
-        
-        __block ISMSSong *song;
-        __block NSDate *cachedDate;
-        [databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
-            FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue ORDER BY ROWID ASC LIMIT 1 OFFSET ?", @(indexPath.row)];
-            song = [ISMSSong songFromDbResult:result];
-            cachedDate = [NSDate dateWithTimeIntervalSince1970:[result doubleForColumn:@"cachedDate"]];
-            [result close];
-        }];
-        
-        [cell updateWithModel:song];
-        
-        if (indexPath.row == 0) {
-            NSLog(@"song: %@  currentQueuedSong: %@  isQueueDownloading: %@", song, cacheQueueManagerS.currentQueuedSong, NSStringFromBOOL(cacheQueueManagerS.isQueueDownloading));
-            if ([song isEqualToSong:cacheQueueManagerS.currentQueuedSong] && cacheQueueManagerS.isQueueDownloading) {
-                cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: %@", [NSString relativeTime:cachedDate], [NSString formatFileSize:cacheQueueManagerS.currentQueuedSong.localFileSize]];
-            } else if (appDelegateS.isWifi || settingsS.isManualCachingOnWWANEnabled) {
-                cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Waiting...", [NSString relativeTime:cachedDate]];
-            } else {
-                cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Need Wifi", [NSString relativeTime:cachedDate]];
-            }
-        } else {
-            cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Waiting...", [NSString relativeTime:cachedDate]];
-        }
-		return cell;
-	}
+//	if (self.segmentedControl.selectedSegmentIndex == 0) {
+//        UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+//        cell.hideHeaderLabel = YES;
+//        cell.hideCacheIndicator = YES;
+//        cell.hideNumberLabel = YES;
+//        cell.hideCoverArt = YES;
+//        cell.hideSecondaryLabel = YES;
+//        cell.hideDurationLabel = YES;
+//        [cell updateWithModel:[self folderArtistForIndexPath:indexPath]];
+//        return cell;
+//	} else {
+//        UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+//        cell.hideHeaderLabel = NO;
+//        cell.hideCacheIndicator = YES;
+//        cell.hideNumberLabel = YES;
+//        cell.hideCoverArt = NO;
+//        cell.hideSecondaryLabel = NO;
+//        cell.hideDurationLabel = NO;
+//
+//        __block ISMSSong *song;
+//        __block NSDate *cachedDate;
+//        [databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
+//            FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue ORDER BY ROWID ASC LIMIT 1 OFFSET ?", @(indexPath.row)];
+//            song = [ISMSSong songFromDbResult:result];
+//            cachedDate = [NSDate dateWithTimeIntervalSince1970:[result doubleForColumn:@"cachedDate"]];
+//            [result close];
+//        }];
+//
+//        [cell updateWithModel:song];
+//
+//        if (indexPath.row == 0) {
+//            NSLog(@"song: %@  currentQueuedSong: %@  isQueueDownloading: %@", song, cacheQueueManagerS.currentQueuedSong, NSStringFromBOOL(cacheQueueManagerS.isQueueDownloading));
+//            if ([song isEqual:cacheQueueManagerS.currentQueuedSong] && cacheQueueManagerS.isQueueDownloading) {
+//                cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: %@", [NSString relativeTime:cachedDate], [NSString formatFileSize:cacheQueueManagerS.currentQueuedSong.localFileSize]];
+//            } else if (appDelegateS.isWifi || settingsS.isManualCachingOnWWANEnabled) {
+//                cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Waiting...", [NSString relativeTime:cachedDate]];
+//            } else {
+//                cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Need Wifi", [NSString relativeTime:cachedDate]];
+//            }
+//        } else {
+//            cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Waiting...", [NSString relativeTime:cachedDate]];
+//        }
+//		return cell;
+//	}
+    return nil;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1146,80 +1148,81 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.segmentedControl.selectedSegmentIndex == 0) {
-        // Custom queue and delete actions
-        ISMSFolderArtist *folderArtist = [self folderArtistForIndexPath:indexPath];
-        return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
-            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-            [EX2Dispatch runInBackgroundAsync:^{
-                NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
-                [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-                    FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ORDER BY seg2 COLLATE NOCASE", folderArtist.name];
-                    while ([result next]) {
-                        @autoreleasepool {
-                            NSString *md5 = [result stringForColumnIndex:0];
-                            if (md5) [songMd5s addObject:md5];
-                        }
-                    }
-                    [result close];
-                }];
-
-                for (NSString *md5 in songMd5s) {
-                    @autoreleasepool {
-                        [[ISMSSong songFromCacheDbQueue:md5] addToCurrentPlaylistDbQueue];
-                    }
-                }
-
-                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
-
-                [EX2Dispatch runInMainThreadAsync:^{
-                    [viewObjectsS hideLoadingScreen];
-                }];
-            }];
-        } deleteHandler:^{
-            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-            [EX2Dispatch runInBackgroundAsync:^{
-                NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
-                [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-                    FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ", folderArtist.name];
-                    while ([result next]) {
-                        @autoreleasepool {
-                            NSString *md5 = [result stringForColumnIndex:0];
-                            if (md5) [songMd5s addObject:md5];
-                        }
-                    }
-                    [result close];
-                }];
-                
-                for (NSString *md5 in songMd5s) {
-                    @autoreleasepool {
-                        [ISMSSong removeSongFromCacheDbQueueByMD5:md5];
-                    }
-                }
-                
-                [cacheS findCacheSize];
-                
-                // Reload the cached songs table
-                [NSNotificationCenter postNotificationToMainThreadWithName:@"cachedSongDeleted"];
-                
-                if (!cacheQueueManagerS.isQueueDownloading) {
-                    [cacheQueueManagerS startDownloadQueue];
-                }
-                
-                [EX2Dispatch runInMainThreadAsync:^{
-                    [viewObjectsS hideLoadingScreen];
-                }];
-            }];
-        }];
-    } else {
-        ISMSSong *song = [self songForIndexPath:indexPath];
-        return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
-            [song addToCurrentPlaylistDbQueue];
-        } deleteHandler:^{
-            [song removeFromCacheQueueDbQueue];
-            [self reloadTable];
-        }];
-    }
+//    if (self.segmentedControl.selectedSegmentIndex == 0) {
+//        // Custom queue and delete actions
+//        ISMSFolderArtist *folderArtist = [self folderArtistForIndexPath:indexPath];
+//        return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
+//            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+//            [EX2Dispatch runInBackgroundAsync:^{
+//                NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
+//                [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
+//                    FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ORDER BY seg2 COLLATE NOCASE", folderArtist.name];
+//                    while ([result next]) {
+//                        @autoreleasepool {
+//                            NSString *md5 = [result stringForColumnIndex:0];
+//                            if (md5) [songMd5s addObject:md5];
+//                        }
+//                    }
+//                    [result close];
+//                }];
+//
+//                for (NSString *md5 in songMd5s) {
+//                    @autoreleasepool {
+//                        [[ISMSSong songFromCacheDbQueue:md5] addToCurrentPlaylistDbQueue];
+//                    }
+//                }
+//
+//                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+//
+//                [EX2Dispatch runInMainThreadAsync:^{
+//                    [viewObjectsS hideLoadingScreen];
+//                }];
+//            }];
+//        } deleteHandler:^{
+//            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+//            [EX2Dispatch runInBackgroundAsync:^{
+//                NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
+//                [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
+//                    FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ", folderArtist.name];
+//                    while ([result next]) {
+//                        @autoreleasepool {
+//                            NSString *md5 = [result stringForColumnIndex:0];
+//                            if (md5) [songMd5s addObject:md5];
+//                        }
+//                    }
+//                    [result close];
+//                }];
+//
+//                for (NSString *md5 in songMd5s) {
+//                    @autoreleasepool {
+//                        [ISMSSong removeSongFromCacheDbByMD5:md5];
+//                    }
+//                }
+//
+//                [cacheS findCacheSize];
+//
+//                // Reload the cached songs table
+//                [NSNotificationCenter postNotificationToMainThreadWithName:@"cachedSongDeleted"];
+//
+//                if (!cacheQueueManagerS.isQueueDownloading) {
+//                    [cacheQueueManagerS startDownloadQueue];
+//                }
+//
+//                [EX2Dispatch runInMainThreadAsync:^{
+//                    [viewObjectsS hideLoadingScreen];
+//                }];
+//            }];
+//        }];
+//    } else {
+//        ISMSSong *song = [self songForIndexPath:indexPath];
+//        return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
+//            [song addToCurrentPlaylistDbQueue];
+//        } deleteHandler:^{
+//            [song removeFromDownloadQueue];
+//            [self reloadTable];
+//        }];
+//    }
+    return nil;
 }
 
 @end

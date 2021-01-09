@@ -13,9 +13,10 @@
 #import "SavedSettings.h"
 #import "PlayQueueSingleton.h"
 #import "CacheSingleton.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "iSubAppDelegate.h"
+#import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -78,7 +79,7 @@ LOG_LEVEL_ISUB_DEFAULT
         self.fileHandle = [NSFileHandle fileHandleForWritingAtPath:self.filePath];
     }
     
-    NSMutableDictionary *parameters = [@{@"id": n2N(self.mySong.songId), @"estimateContentLength": @"true"} mutableCopy];
+    NSMutableDictionary *parameters = [@{@"id": @(self.mySong.songId), @"estimateContentLength": @"true"} mutableCopy];
     if (self.maxBitrateSetting == NSIntegerMax) {
         self.maxBitrateSetting = settingsS.currentMaxBitrate;
     }
@@ -96,7 +97,7 @@ LOG_LEVEL_ISUB_DEFAULT
     }
     
     self.bitrate = self.mySong.estimatedBitrate;
-    if ([self.mySong isEqualToSong:playlistS.currentSong]) {
+    if ([self.mySong isEqual:playlistS.currentSong]) {
         self.isCurrentSong = YES;
     }
     
@@ -117,7 +118,8 @@ LOG_LEVEL_ISUB_DEFAULT
     DDLogInfo(@"[ISMSNSURLSessionStreamHandler] Stream handler startConnectionInternalSuccess for %@", self.mySong);
 
     if (!self.isTempCache) {
-        self.mySong.isPartiallyCached = YES;
+        DownloadedSong *downloadedSong = [[DownloadedSong alloc] initWithSong:self.mySong];
+        (void)[Store.shared addWithDownloadedSong:downloadedSong];
     }
     
     [EX2Dispatch runInMainThreadAndWaitUntilDone:YES block:^{

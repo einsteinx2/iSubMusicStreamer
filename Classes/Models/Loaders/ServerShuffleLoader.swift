@@ -35,7 +35,7 @@ import Foundation
         }
         
         for song in parser.songs {
-            song.addToCurrentPlaylistDbQueue()
+            song.download()
         }
         
         PlayQueue.shared().isShuffle = false

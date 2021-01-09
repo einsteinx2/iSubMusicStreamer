@@ -10,7 +10,7 @@
 #import "RXMLElement.h"
 #import "EX2Kit.h"
 #import "DatabaseSingleton.h"
-#import "ISMSSong+DAO.h"
+//#import "ISMSSong+DAO.h"
 #import "ViewObjectsSingleton.h"
 #import "SUSLoader.h"
 #import "NSMutableURLRequest+SUS.h"
@@ -54,21 +54,21 @@
                     // TODO: handle this error
                 } else {
                     // TODO: Handle !isValid case
-                    if ([[root child:@"playlist"] isValid]) {
-                        NSString *md5 = [self.playlistName md5];
-                        [databaseS removeServerPlaylistTable:md5];
-                        [databaseS createServerPlaylistTable:md5];
-                        
-                        [root iterate:@"playlist.entry" usingBlock:^(RXMLElement *e) {
-                            ISMSSong *aSong = [[ISMSSong alloc] initWithRXMLElement:e];
-                            [aSong insertIntoServerPlaylistWithPlaylistId:md5];
-                            if (isDownload) {
-                                [aSong addToCacheQueueDbQueue];
-                            } else {
-                                [aSong addToCurrentPlaylistDbQueue];
-                            }
-                        }];
-                    }
+//                    if ([[root child:@"playlist"] isValid]) {
+//                        NSString *md5 = [self.playlistName md5];
+//                        [databaseS removeServerPlaylistTable:md5];
+//                        [databaseS createServerPlaylistTable:md5];
+//                        
+//                        [root iterate:@"playlist.entry" usingBlock:^(RXMLElement *e) {
+//                            ISMSSong *aSong = [[ISMSSong alloc] initWithRXMLElement:e];
+//                            [aSong insertIntoServerPlaylistWithPlaylistId:md5];
+//                            if (isDownload) {
+//                                [aSong addToDownloadQueue];
+//                            } else {
+//                                [aSong addToCurrentPlaylistDbQueue];
+//                            }
+//                        }];
+//                    }
                 }
             }
         }

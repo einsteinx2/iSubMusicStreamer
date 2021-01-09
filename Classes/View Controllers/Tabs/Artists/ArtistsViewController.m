@@ -472,7 +472,7 @@
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSObject<ISMSTableCellModel> *model = [self tagArtistAtIndexPath:indexPath];
+    NSObject<TableCellModel> *model = [self tagArtistAtIndexPath:indexPath];
     return [SwipeAction downloadAndQueueConfigWithModel:model];
 }
 
