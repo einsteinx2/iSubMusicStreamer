@@ -31,14 +31,6 @@ import Foundation
     @objc var isVideoSupported: Bool = true
     @objc var isNewSearchSupported: Bool = true
     
-//    // Enable access to server ID from Objective-C
-//    @objc var serverId: NSNumber? {
-//        if let id = id {
-//            return NSNumber(value: id)
-//        }
-//        return nil
-//    }
-    
     static func generatePathFromURL(url: URL) -> String {
         let scheme = url.scheme ?? "scheme"
         let host = url.host ?? "host"

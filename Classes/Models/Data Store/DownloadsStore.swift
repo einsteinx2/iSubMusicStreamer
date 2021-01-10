@@ -16,15 +16,16 @@ extension DownloadedSong: FetchableRecord, PersistableRecord {
     }
     
     enum Column: String, ColumnExpression {
-        case serverId, songId, finished, pinned, size, cachedDate, playedDate
+        case serverId, songId, path, isFinished, isPinned, size, cachedDate, playedDate
     }
     
     static func createInitialSchema(_ db: Database) throws {
         try db.create(table: DownloadedSong.databaseTableName) { t in
             t.column(Column.serverId, .integer).notNull()
             t.column(Column.songId, .integer).notNull()
-            t.column(Column.finished, .boolean).notNull()
-            t.column(Column.pinned, .boolean).notNull()
+            t.column(Column.path, .integer).notNull()
+            t.column(Column.isFinished, .boolean).notNull()
+            t.column(Column.isPinned, .boolean).notNull()
             t.column(Column.size, .integer).notNull()
             t.column(Column.cachedDate, .datetime)
             t.column(Column.playedDate, .datetime)
@@ -106,7 +107,7 @@ extension DownloadedSongPathComponent: FetchableRecord, PersistableRecord {
             return try pool.write { db in
                 let sql: SQLLiteral = """
                     UPDATE \(DownloadedSong.self)
-                    SET finished = \(downloadFinished)
+                    SET isFinished = \(downloadFinished)
                     WHERE serverId = \(serverId) AND songId = \(songId)
                     """
                 try db.execute(literal: sql)
@@ -120,6 +121,47 @@ extension DownloadedSongPathComponent: FetchableRecord, PersistableRecord {
     
     func update(downloadFinished: Bool, song: Song) -> Bool {
         return update(downloadFinished: downloadFinished, serverId: song.serverId, songId: song.id)
+    }
+    
+    func update(isPinned: Bool, serverId: Int, songId: Int) -> Bool {
+        do {
+            return try pool.write { db in
+                let sql: SQLLiteral = """
+                    UPDATE \(DownloadedSong.self)
+                    SET isPinned = \(isPinned)
+                    WHERE serverId = \(serverId) AND songId = \(songId)
+                    """
+                try db.execute(literal: sql)
+                return true
+            }
+        } catch {
+            DDLogError("Failed to update download is pinned \(isPinned) for song \(songId) server \(serverId): \(error)")
+            return false
+        }
+    }
+    
+    func update(isPinned: Bool, song: Song) -> Bool {
+        return update(isPinned: isPinned, serverId: song.serverId, songId: song.id)
+    }
+    
+    func isDownloadFinished(serverId: Int, songId: Int) -> Bool {
+        do {
+            return try pool.read { db in
+                let sql: SQLLiteral = """
+                    SELECT isFinished
+                    FROM \(DownloadedSong.self)
+                    WHERE serverId = \(serverId) AND songId = \(songId)
+                    """
+                return try SQLRequest<Bool>(literal: sql).fetchOne(db) ?? false
+            }
+        } catch {
+            DDLogError("Failed to select download finished for song \(songId) server \(serverId): \(error)")
+            return false
+        }
+    }
+    
+    func isDownloadFinished(song: Song) -> Bool {
+        return isDownloadFinished(serverId: song.serverId, songId: song.id)
     }
     
     func add(downloadedSongPathComponents downloadedSong: DownloadedSong) -> Bool {

@@ -11,7 +11,7 @@ import Resolver
 
 @objc(ISMSSong) final class Song: NSObject, NSCopying, NSSecureCoding, Codable {
     static var supportsSecureCoding: Bool = true
-    
+        
     @objc let serverId: Int
     @objc(songId) let id: Int
     @objc let title: String
@@ -36,17 +36,29 @@ import Resolver
     
     @objc var localSuffix: String? { transcodedSuffix ?? suffix }
     @objc var localPath: String {
-//        let fileName = NSString(string: path).md5
-//        return NSString(Settings.shared().songCachePath()).path
-////         ? NSString(Settings.shared().songCachePath()).}
-        fatalError("implement this")
+        let store: Store = Resolver.main.resolve()
+        let serverPathPrefix: String
+        if let server = store.server(id: serverId) {
+            serverPathPrefix = server.path
+        } else {
+            serverPathPrefix = "Unknown"
+        }
+        let localPath = FileSystem.downloadsDirectory.appendingPathComponent(serverPathPrefix).appendingPathComponent(path).path
+        return localPath
     }
+    
     @objc var localTempPath: String {
-        fatalError("implement this")
+        let store: Store = Resolver.main.resolve()
+        let serverPathPrefix: String
+        if let server = store.server(id: serverId) {
+            serverPathPrefix = server.path
+        } else {
+            serverPathPrefix = "Unknown"
+        }
+        let localPath = FileSystem.tempDownloadsDirectory.appendingPathComponent(serverPathPrefix).appendingPathComponent(path).path
+        return localPath
     }
-    @objc var currentPath: String {
-        fatalError("implement this")
-    }
+    @objc var currentPath: String { isTempCached ? localTempPath : localPath }
     
     @objc var isTempCached: Bool {
         // If the song is fully cached, then it doesn't matter if there is a temp cache file
@@ -274,20 +286,10 @@ import Resolver
     }
     
     // MARK: ISMSSong+DAO
-//
-//    var fileExists: Bool {
-//        // Filesystem check
-//        return FileManager.default.fileExists(atPath:currentPath)
-//    }
-//
-    @objc var isPartiallyCached: Bool {
-        // Implement this
-        return false
-    }
     
     @objc var isFullyCached: Bool {
-        // Implement this
-        return false
+        let store: Store = Resolver.main.resolve()
+        return store.isDownloadFinished(song: self)
     }
 
     @objc var downloadProgress: Float {
@@ -295,7 +297,7 @@ import Resolver
         
         if isFullyCached {
             downloadProgress = 1
-        } else if isPartiallyCached {
+        } else {
             var bitrate = Float(estimatedBitrate)
             if let player = AudioEngine.shared().player, player.isPlaying {
                 bitrate = Float(BassWrapper.estimateBitrate(player.currentStream))
@@ -337,11 +339,11 @@ extension Song: TableCellModel {
     var durationLabelText: String? { NSString.formatTime(Double(duration)) }
     var isCached: Bool { isFullyCached }
     func download() {
-        let store: Store = Resolver.resolve()
+        let store: Store = Resolver.main.resolve()
         _ = store.addToDownloadQueue(song: self)
     }
     func queue() {
-        let store: Store = Resolver.resolve()
+        let store: Store = Resolver.main.resolve()
         _ = store.queue(song: self)
     }
 }

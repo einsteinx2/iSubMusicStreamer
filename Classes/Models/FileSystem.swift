@@ -25,6 +25,18 @@ struct FileSystem {
         return url
     }()
     
+    static var downloadsDirectory: URL {
+        let url = documentDirectory.appendingPathComponent("Downloads")
+        createDirectory(url: url)
+        return url
+    }
+    
+    static var tempDownloadsDirectory: URL {
+        let url = cachesDirectory.appendingPathComponent("Temp Downloads")
+        createDirectory(url: url)
+        return url
+    }
+    
     private static func createDirectory(url: URL) {
         if !FileManager.default.fileExists(atPath: url.path) {
             do {

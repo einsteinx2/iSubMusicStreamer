@@ -12,18 +12,18 @@ import Foundation
     @objc let serverId: Int
     @objc let songId: Int
     @objc let path: String
-    @objc var finished: Bool = false
-    @objc var pinned: Bool = false
+    @objc var isFinished: Bool = false
+    @objc var isPinned: Bool = false
     @objc var size: Int = 0
     @objc var cachedDate: Date? = nil
     @objc var playedDate: Date? = nil
     
-    @objc init(serverId: Int, songId: Int, path: String, finished: Bool, pinned: Bool, size: Int, cachedDate: Date?, playedDate: Date?) {
+    @objc init(serverId: Int, songId: Int, path: String, isFinished: Bool, isPinned: Bool, size: Int, cachedDate: Date?, playedDate: Date?) {
         self.serverId = serverId
         self.songId = songId
         self.path = path
-        self.finished = finished
-        self.pinned = pinned
+        self.isFinished = isFinished
+        self.isPinned = isPinned
         self.size = size
         self.cachedDate = cachedDate
         self.playedDate = playedDate
@@ -45,10 +45,10 @@ import Foundation
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
-        return DownloadedSong(serverId: serverId, songId: songId, path: path, finished: finished, pinned: pinned, size: size, cachedDate: cachedDate, playedDate: playedDate)
+        return DownloadedSong(serverId: serverId, songId: songId, path: path, isFinished: isFinished, isPinned: isPinned, size: size, cachedDate: cachedDate, playedDate: playedDate)
     }
     
     override var description: String {
-        return "\(super.description): serverId: \(serverId), songId: \(songId), path: \(path), finished: \(finished), pinned: \(pinned), size: \(size), cachedDate: \(cachedDate?.description ?? "nil"), playedDate: \(playedDate?.description ?? "nil")"
+        return "\(super.description): serverId: \(serverId), songId: \(songId), path: \(path), isFinished: \(isFinished), isPinned: \(isPinned), size: \(size), cachedDate: \(cachedDate?.description ?? "nil"), playedDate: \(playedDate?.description ?? "nil")"
     }
 }

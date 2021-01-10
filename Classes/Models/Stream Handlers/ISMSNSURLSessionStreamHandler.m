@@ -71,10 +71,27 @@ LOG_LEVEL_ISUB_DEFAULT
     }
     
     if (!resume) {
+        // Create intermediary directory if needed
+        NSString *containingDirectory = [self.filePath stringByDeletingLastPathComponent];
+        if (![NSFileManager.defaultManager fileExistsAtPath:containingDirectory]) {
+            NSError *error = nil;
+            [NSFileManager.defaultManager createDirectoryAtPath:containingDirectory withIntermediateDirectories:YES attributes:nil error:&error];
+            if (error) {
+                DDLogError(@"[ISMSNSURLSessionStreamHandler] Failed to create containing directory %@, error: %@", containingDirectory, error);
+            }
+        }
+        
         // Create the file
         self.totalBytesTransferred = 0;
-        [[NSFileManager defaultManager] createFileAtPath:self.filePath contents:[NSData data] attributes:nil];
+        NSError *error = nil;
+        [[NSData data] writeToFile:self.filePath options:0 error:&error];
+        if (error) {
+            DDLogError(@"[ISMSNSURLSessionStreamHandler] Failed to create file %@, error: %@", self.filePath, error);
+        }
         self.fileHandle = [NSFileHandle fileHandleForWritingAtPath:self.filePath];
+        if (!self.fileHandle) {
+            DDLogError(@"[ISMSNSURLSessionStreamHandler] Failed to create file handle for file %@", self.filePath);
+        }
     }
     
     NSMutableDictionary *parameters = [@{@"id": @(self.mySong.songId), @"estimateContentLength": @"true"} mutableCopy];
