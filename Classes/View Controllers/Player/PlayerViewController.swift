@@ -758,26 +758,27 @@ import CocoaLumberjackSwift
     }
     
     private func updateBookmarkButton() {
-        var bookmarkCount: Int32 = 0
-        if let songId = self.currentSong?.id {
-            DatabaseOld.shared().bookmarksDbQueue?.inDatabase { db in
-                do {
-                    let result = try db.executeQuery("SELECT COUNT(*) FROM bookmarks WHERE songId = ?", values: [songId])
-                    if result.next() {
-                        bookmarkCount = result.int(forColumnIndex: 0)
-                    }
-                    result.close()
-                } catch {
-                    DDLogError("[PlayerViewController] Failed to query the bookmark count: \(error)")
-                }
-            }
-        }
-        
-        let imageName = bookmarkCount > 0 ? "bookmark.fill" : "bookmark"
-        let tintColor = bookmarkCount > 0 ? iconActivatedColor : iconDefaultColor
-        let config = UIImage.SymbolConfiguration(pointSize: 21, weight: .light, scale: .large)
-        bookmarksButton.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
-        bookmarksButton.tintColor = tintColor
+        // TODO: implement this using new data model
+//        var bookmarkCount: Int32 = 0
+//        if let songId = self.currentSong?.id {
+//            DatabaseOld.shared().bookmarksDbQueue?.inDatabase { db in
+//                do {
+//                    let result = try db.executeQuery("SELECT COUNT(*) FROM bookmarks WHERE songId = ?", values: [songId])
+//                    if result.next() {
+//                        bookmarkCount = result.int(forColumnIndex: 0)
+//                    }
+//                    result.close()
+//                } catch {
+//                    DDLogError("[PlayerViewController] Failed to query the bookmark count: \(error)")
+//                }
+//            }
+//        }
+//
+//        let imageName = bookmarkCount > 0 ? "bookmark.fill" : "bookmark"
+//        let tintColor = bookmarkCount > 0 ? iconActivatedColor : iconDefaultColor
+//        let config = UIImage.SymbolConfiguration(pointSize: 21, weight: .light, scale: .large)
+//        bookmarksButton.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
+//        bookmarksButton.tintColor = tintColor
     }
     
     @objc private func updateQuickSkipButtons() {

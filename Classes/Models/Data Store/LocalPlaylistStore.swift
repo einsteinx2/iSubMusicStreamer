@@ -81,6 +81,17 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
         }
     }
     
+    func localPlaylistsCount() -> Int {
+        do {
+            return try pool.read { db in
+                try LocalPlaylist.filter(literal: "id > \(LocalPlaylist.Default.maxDefaultId)").fetchCount(db)
+            }
+        } catch {
+            DDLogError("Failed to select count of local playlists: \(error)")
+            return -1
+        }
+    }
+    
     func localPlaylists() -> [LocalPlaylist] {
         do {
             return try pool.read { db in

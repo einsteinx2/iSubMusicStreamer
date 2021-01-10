@@ -47,7 +47,6 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.disableScreenSleepSwitch.on = !settingsS.isScreenSleepEnabled;
 	self.enableBasicAuthSwitch.on = settingsS.isBasicAuthEnabled;
     self.disableCellUsageSwitch.on = settingsS.isDisableUsageOver3G;
-	self.enableSongsTabSwitch.on = settingsS.isSongsTabEnabled;
 	self.recoverSegmentedControl.selectedSegmentIndex = settingsS.recoverSetting;
 	self.maxBitrateWifiSegmentedControl.selectedSegmentIndex = settingsS.maxBitrateWifi;
 	self.maxBitrate3GSegmentedControl.selectedSegmentIndex = settingsS.maxBitrate3G;
@@ -300,35 +299,6 @@ LOG_LEVEL_ISUB_DEFAULT
 			settingsS.isAutoReloadArtistsEnabled = self.autoReloadArtistSwitch.on;
 		} else if (sender == self.disablePopupsSwitch) {
 			settingsS.isPopupsEnabled = !self.disablePopupsSwitch.on;
-		} else if (sender == self.enableSongsTabSwitch) {
-			if (self.enableSongsTabSwitch.on) {
-				settingsS.isSongsTabEnabled = YES;
-				if (UIDevice.isPad) {
-					[appDelegateS.padRootViewController.menuViewController loadCellContents];
-				} else {
-					NSMutableArray *controllers = [NSMutableArray arrayWithArray:appDelegateS.mainTabBarController.viewControllers];
-					[controllers addObject:appDelegateS.allAlbumsNavigationController];
-					[controllers addObject:appDelegateS.allSongsNavigationController];
-					[controllers addObject:appDelegateS.genresNavigationController];
-					appDelegateS.mainTabBarController.viewControllers = controllers;
-				}
-				[databaseS setupAllSongsDb];
-			} else {
-				settingsS.isSongsTabEnabled = NO;
-
-                if (UIDevice.isPad) {
-					[appDelegateS.padRootViewController.menuViewController loadCellContents];
-                } else {
-					[viewObjectsS orderMainTabBarController];
-                }
-                
-				[databaseS.allAlbumsDbQueue close];
-				databaseS.allAlbumsDbQueue = nil;
-				[databaseS.allSongsDbQueue close];
-				databaseS.allSongsDbQueue = nil;
-				[databaseS.genresDbQueue close];
-				databaseS.genresDbQueue = nil;
-			}
 		} else if (sender == self.disableRotationSwitch) {
 			settingsS.isRotationLockEnabled = self.disableRotationSwitch.on;
 		} else if (sender == self.disableScreenSleepSwitch) {

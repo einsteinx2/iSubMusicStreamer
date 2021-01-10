@@ -528,15 +528,6 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
 }
 
-- (BOOL)isSongsTabEnabled {
-    return [_userDefaults boolForKey:@"enableSongsTabSetting"];
-}
-
-- (void)setIsSongsTabEnabled:(BOOL)isSongsTabEnabled {
-    [_userDefaults setBool:isSongsTabEnabled forKey:@"enableSongsTabSetting"];
-    [_userDefaults synchronize];
-}
-
 - (BOOL)isAutoReloadArtistsEnabled {
     return [_userDefaults boolForKey:@"autoReloadArtistsSetting"];
 }

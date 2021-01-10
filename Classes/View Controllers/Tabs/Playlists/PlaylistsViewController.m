@@ -27,7 +27,6 @@
 #import "SUSServerPlaylist.h"
 #import "EX2Kit.h"
 #import "Swift.h"
-#import "ISMSLocalPlaylist.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -271,12 +270,13 @@ LOG_LEVEL_ISUB_DEFAULT
 			self.savePlaylistLabel.text = @"Save Playlist";
 		} else if (self.segmentedControl.selectedSegmentIndex == 1) {
 			self.savePlaylistLabel.frame = CGRectMake(0, 0, 227, 50);
-			NSUInteger localPlaylistsCount = [databaseS.localPlaylistsDbQueue intForQuery:@"SELECT COUNT(*) FROM localPlaylists"];
-            if (localPlaylistsCount == 1) {
-				self.savePlaylistLabel.text = [NSString stringWithFormat:@"1 playlist"];
-            } else {
-				self.savePlaylistLabel.text = [NSString stringWithFormat:@"%lu playlists", (unsigned long)localPlaylistsCount];
-            }
+            // TODO: implement this
+//			NSUInteger localPlaylistsCount = [databaseS.localPlaylistsDbQueue intForQuery:@"SELECT COUNT(*) FROM localPlaylists"];
+//            if (localPlaylistsCount == 1) {
+//				self.savePlaylistLabel.text = [NSString stringWithFormat:@"1 playlist"];
+//            } else {
+//				self.savePlaylistLabel.text = [NSString stringWithFormat:@"%lu playlists", (unsigned long)localPlaylistsCount];
+//            }
 		} else if (self.segmentedControl.selectedSegmentIndex == 2) {
 			self.savePlaylistLabel.frame = CGRectMake(0, 0, 227, 50);
 			NSUInteger serverPlaylistsCount = [self.serverPlaylistsDataModel.serverPlaylists count];
@@ -382,7 +382,7 @@ LOG_LEVEL_ISUB_DEFAULT
 				self.playlistCountLabel.text = [NSString stringWithFormat:@"%lu songs", (unsigned long)self.currentPlaylistCount];
             }
 		} else if (self.segmentedControl.selectedSegmentIndex == 1) {
-			NSUInteger localPlaylistsCount = [databaseS.localPlaylistsDbQueue intForQuery:@"SELECT COUNT(*) FROM localPlaylists"];
+            NSUInteger localPlaylistsCount = Store.shared.localPlaylistsCount;
             if (localPlaylistsCount == 1) {
 				self.playlistCountLabel.text = [NSString stringWithFormat:@"1 playlist"];
             } else {
@@ -509,9 +509,8 @@ LOG_LEVEL_ISUB_DEFAULT
 		// Remove the save and edit buttons if showing
 		[self removeSaveEditButtons];
 		
-		NSUInteger localPlaylistsCount = [databaseS.localPlaylistsDbQueue intForQuery:@"SELECT COUNT(*) FROM localPlaylists"];
-		
-		if (localPlaylistsCount > 0) {
+        self.localPlaylists = Store.shared.localPlaylists;
+		if (self.localPlaylists.count > 0) {
 			// Modify the header view to include the save and edit buttons
 			[self addSaveEditButtons];
 		}
@@ -523,7 +522,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		[self removeNoPlaylistsScreen];
 		
 		// If the list is empty, display the no playlists overlay screen
-		if (localPlaylistsCount == 0) {
+		if (self.localPlaylists.count == 0) {
 			[self addNoPlaylistsScreen];
 		}
 	} else if (self.segmentedControl.selectedSegmentIndex == 2) {		
@@ -707,14 +706,23 @@ LOG_LEVEL_ISUB_DEFAULT
     [PlayQueue.shared removeSongsWithIndexes:rowIndexes];
     [self updateCurrentPlaylistCount];
     
-//        [self.tableView deleteRowsAtIndexPaths:self.tableView.indexPathsForSelectedRows withRowAnimation:UITableViewRowAnimationRight];
-    [self.tableView reloadData];
+    @try {
+        NSMutableArray<NSIndexPath*> *indexPaths = [[NSMutableArray alloc] initWithCapacity:rowIndexes.count];
+        [rowIndexes enumerateObjectsUsingBlock:^(NSNumber * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [indexPaths addObject:[NSIndexPath indexPathForRow:obj.integerValue inSection:0]];
+        }];
+        [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
+    }
+    @catch (NSException *exception) {
+        [self.tableView reloadData];
+    }
     
     [self editPlaylistAction:nil];
     [self segmentAction:nil];
 }
 
 - (void)deleteLocalPlaylistsAtRowIndexes:(NSArray<NSNumber*> *)rowIndexes {
+    // TODO: implement this
 //    // Sort the row indexes to make sure they're accending
 //    NSArray<NSNumber*> *sortedRowIndexes = [rowIndexes sortedArrayUsingSelector:@selector(compare:)];
 //
@@ -741,6 +749,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)deleteServerPlaylistsAtRowIndexes:(NSArray<NSNumber*> *)rowIndexes {
+    // TODO: implement this
 //    self.tableView.scrollEnabled = NO;
 //    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
 //    
@@ -817,7 +826,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (self.deleteSongsLabel.hidden == NO) {
 			if (selectedRowIndexes.count == 0) {
 				// Select all the rows
-				NSUInteger count = [databaseS.localPlaylistsDbQueue intForQuery:@"SELECT COUNT(*) FROM localPlaylists"];
+                NSUInteger count = Store.shared.localPlaylistsCount;
 				for (int i = 0; i < count; i++) {
                     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
 				}
@@ -862,35 +871,26 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)showSavePlaylistAlert {
-//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Save Playlist" message:nil preferredStyle:UIAlertControllerStyleAlert];
-//    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-//        textField.placeholder = @"Playlist name";
-//    }];
-//    [alert addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        NSString *name = [[[alert textFields] firstObject] text];
-//        if (self.savePlaylistLocal || settingsS.isOfflineMode) {
-//            // Check if the playlist exists, if not create the playlist table and add the entry to localPlaylists table
-//            NSString *test = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT md5 FROM localPlaylists WHERE md5 = ?", name.md5];
-//            if (test) {
-//                // If it exists, ask to overwrite
-//                [self showOverwritePlaylistAlert:name];
-//            } else {
-//                NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
-//                NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-//                NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-//                NSString *table = PlayQueue.shared.isShuffle ? shufTable : currTable;
-//                
-//                [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-//                    [db executeUpdate:@"INSERT INTO localPlaylists (playlist, md5) VALUES (?, ?)", name, name.md5];
-//                    [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", name.md5, ISMSSong.standardSongColumnSchema]];
-//                    
-//                    [db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
-//                    if (db.hadError) { DDLogError(@"[PlaylistsViewController] Err attaching the currentPlaylistDb %d: %@", db.lastErrorCode, db.lastErrorMessage); }
-//                    [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", name.md5, table]];
-//                    [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
-//                }];
-//            }
-//        } else {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Save Playlist" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"Playlist name";
+    }];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *name = [[[alert textFields] firstObject] text];
+        if (self.savePlaylistLocal || settingsS.isOfflineMode) {
+            // TODO: Do this without loading every song object
+            NSInteger nextLocalPlaylistId = Store.shared.nextLocalPlaylistId;
+            LocalPlaylist *localPlaylist = [[LocalPlaylist alloc] initWithId:nextLocalPlaylistId name:name songCount:0];
+            if ([Store.shared addWithLocalPlaylist:localPlaylist]) {
+                for (int i = 0; i < PlayQueue.shared.count; i++) {
+                    ISMSSong *song = [PlayQueue.shared songWithIndex:i];
+                    if (song) {
+                        (void)[Store.shared addWithSong:song localPlaylistId:nextLocalPlaylistId];
+                    }
+                }
+            }
+        } else {
+            // TODO: implement this
 //            NSString *tableName = [NSString stringWithFormat:@"splaylist%@", name.md5];
 //            if ([databaseS.localPlaylistsDbQueue tableExists:tableName]) {
 //                // If it exists, ask to overwrite
@@ -898,13 +898,14 @@ LOG_LEVEL_ISUB_DEFAULT
 //            } else {
 //                [self uploadPlaylist:name];
 //            }
-//        }
-//    }]];
-//    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-//    [self presentViewController:alert animated:YES completion:nil];
+        }
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)showOverwritePlaylistAlert:(NSString *)name {
+    // TODO: implement this
 //    NSString *message = [NSString stringWithFormat:@"A playlist named \"%@\" already exists. Would you like to overwrite it?", name];
 //    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Overwrite?" message:message preferredStyle:UIAlertControllerStyleAlert];
 //    [alert addAction:[UIAlertAction actionWithTitle:@"Overwrite" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
@@ -979,12 +980,9 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark Table view methods
 
-- (ISMSLocalPlaylist *)localPlaylistForIndex:(NSUInteger)index {
-    if (self.segmentedControl.selectedSegmentIndex == 1) {
-        NSString *name = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT playlist FROM localPlaylists WHERE ROWID = ?", @(index + 1)];
-        NSString *md5 = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT md5 FROM localPlaylists WHERE ROWID = ?", @(index + 1)];
-        NSUInteger count = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM playlist%@", md5]];
-        return [[ISMSLocalPlaylist alloc] initWithName:name md5:md5 count:count];
+- (LocalPlaylist *)localPlaylistForIndex:(NSUInteger)index {
+    if (index < self.localPlaylists.count) {
+        return self.localPlaylists[index];
     }
     return nil;
 }
@@ -1042,20 +1040,18 @@ LOG_LEVEL_ISUB_DEFAULT
     return 1;
 }
 
-
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (self.segmentedControl.selectedSegmentIndex == 0) {
 		return self.currentPlaylistCount;
     } else if (self.segmentedControl.selectedSegmentIndex == 1) {
-		return [databaseS.localPlaylistsDbQueue intForQuery:@"SELECT COUNT(*) FROM localPlaylists"];
+        return self.localPlaylists.count;
     } else if (self.segmentedControl.selectedSegmentIndex == 2) {
 		return self.serverPlaylistsDataModel.serverPlaylists.count;
     }
-	
+
 	return 0;
 }
-
 
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1072,17 +1068,11 @@ LOG_LEVEL_ISUB_DEFAULT
     if (self.segmentedControl.selectedSegmentIndex == 0) {
         (void)[PlayQueue.shared moveSongFromIndex:fromIndexPath.row toIndex:toIndexPath.row];
         
-//        // Highlight the current playing song
-//        if (PlayQueue.shared.currentIndex >= 0 && PlayQueue.shared.currentIndex < self.currentPlaylistCount) {
-//            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:PlayQueue.shared.currentIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
-//        }
-        
         if (!settingsS.isJukeboxEnabled) {
             [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistOrderChanged];
         }
     }
 }
-
 
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1147,16 +1137,17 @@ LOG_LEVEL_ISUB_DEFAULT
     else if (self.segmentedControl.selectedSegmentIndex == 1)
     {
         PlaylistSongsViewController *playlistSongsViewController = [[PlaylistSongsViewController alloc] init];
-        playlistSongsViewController.md5 = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT md5 FROM localPlaylists WHERE ROWID = ?", @(indexPath.row + 1)];
+        playlistSongsViewController.localPlaylist = [self localPlaylistForIndex:indexPath.row];
         [self pushViewControllerCustom:playlistSongsViewController];
     }
     else if (self.segmentedControl.selectedSegmentIndex == 2)
     {
-        PlaylistSongsViewController *playlistSongsViewController = [[PlaylistSongsViewController alloc] init];
-        SUSServerPlaylist *playlist = [self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:indexPath.row];
-        playlistSongsViewController.md5 = [playlist.playlistName md5];
-        playlistSongsViewController.serverPlaylist = playlist;
-        [self pushViewControllerCustom:playlistSongsViewController];
+        // TODO: implement this
+//        PlaylistSongsViewController *playlistSongsViewController = [[PlaylistSongsViewController alloc] init];
+//        SUSServerPlaylist *playlist = [self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:indexPath.row];
+//        playlistSongsViewController.md5 = [playlist.playlistName md5];
+//        playlistSongsViewController.serverPlaylist = playlist;
+//        [self pushViewControllerCustom:playlistSongsViewController];
     }
 }
 

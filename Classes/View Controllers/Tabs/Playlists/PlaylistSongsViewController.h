@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@class SUSServerPlaylist;
+@class LocalPlaylist, SUSServerPlaylist;
 
 @interface PlaylistSongsViewController : UITableViewController
 
-@property (copy) NSString *md5;
-@property NSUInteger playlistCount;
+@property LocalPlaylist *localPlaylist;
 @property (copy) SUSServerPlaylist *serverPlaylist;
 
 @end

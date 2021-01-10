@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SUSLoaderDelegate.h"
 
-@class SUSServerPlaylistsDAO;
+@class LocalPlaylist, SUSServerPlaylistsDAO;
 
 @interface PlaylistsViewController : UIViewController <SUSLoaderDelegate>
 
@@ -28,6 +28,7 @@
 @property (nonatomic, strong) UIButton *editPlaylistButton;
 @property (nonatomic) BOOL isPlaylistSaveEditShowing;
 @property (nonatomic) BOOL savePlaylistLocal;
+@property (nonatomic, strong) NSArray<LocalPlaylist*> *localPlaylists;
 @property (nonatomic, strong) SUSServerPlaylistsDAO *serverPlaylistsDataModel;
 @property (nonatomic) NSUInteger currentPlaylistCount;
 

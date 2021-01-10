@@ -58,15 +58,16 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)skipNext {
-	NSInteger index = PlayQueue.shared.currentIndex + 1;
-	if (index <= ([databaseS.currentPlaylistDbQueue intForQuery:@"SELECT COUNT(*) FROM jukeboxCurrentPlaylist"] - 1)) {
-		[self playSongAtPosition:@(index)];
-		self.isPlaying = YES;
-	} else {
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackEnded];
-		[self stop];
-		self.isPlaying = NO;
-	}
+    // TODO: implement this
+//	NSInteger index = PlayQueue.shared.currentIndex + 1;
+//	if (index <= ([databaseS.currentPlaylistDbQueue intForQuery:@"SELECT COUNT(*) FROM jukeboxCurrentPlaylist"] - 1)) {
+//		[self playSongAtPosition:@(index)];
+//		self.isPlaying = YES;
+//	} else {
+//		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackEnded];
+//		[self stop];
+//		self.isPlaying = NO;
+//	}
 }
 
 - (void)setVolume:(float)level {
@@ -85,22 +86,23 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)replacePlaylistWithLocal {
-	[self clearRemotePlaylist];
-	
-	__block NSMutableArray *songIds = [[NSMutableArray alloc] init];
-	[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
-        NSString *table = PlayQueue.shared.isShuffle ? @"jukeboxShufflePlaylist" : @"jukeboxCurrentPlaylist";
-        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT songId FROM %@", table]];
-		while ([result next]) {
-			@autoreleasepool {
-				NSString *songId = [result stringForColumnIndex:0];
-				if (songId) [songIds addObject:songId];
-			}
-		}
-		[result close];
-	}];
-	
-	[self addSongs:songIds];
+    // TODO: implement this
+//	[self clearRemotePlaylist];
+//
+//	__block NSMutableArray *songIds = [[NSMutableArray alloc] init];
+//	[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
+//        NSString *table = PlayQueue.shared.isShuffle ? @"jukeboxShufflePlaylist" : @"jukeboxCurrentPlaylist";
+//        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT songId FROM %@", table]];
+//		while ([result next]) {
+//			@autoreleasepool {
+//				NSString *songId = [result stringForColumnIndex:0];
+//				if (songId) [songIds addObject:songId];
+//			}
+//		}
+//		[result close];
+//	}];
+//
+//	[self addSongs:songIds];
 }
 
 - (void)removeSong:(NSString*)songId {
@@ -109,7 +111,8 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)clearPlaylist {
     [self queueDataTaskWithAction:@"clear" parameters:nil];
-    [databaseS resetJukeboxPlaylist];
+    // TODO: implement this
+//    [databaseS resetJukeboxPlaylist];
 }
 
 - (void)clearRemotePlaylist {
@@ -118,22 +121,24 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)shuffle {
     [self queueDataTaskWithAction:@"shuffle" parameters:nil];
-    [databaseS resetJukeboxPlaylist];
+    // TODO: implement this
+//    [databaseS resetJukeboxPlaylist];
 }
 
 - (void)jukeboxGetInfoInternal {
-    if (settingsS.isJukeboxEnabled) {
-        [self queueGetInfoDataTask];
-        if (PlayQueue.shared.isShuffle) {
-            [databaseS resetShufflePlaylist];
-        } else {
-            [databaseS resetJukeboxPlaylist];
-        }
-        
-        // Keep reloading every 30 seconds if there is no activity so that the player stays updated if visible
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(jukeboxGetInfoInternal) object:nil];
-        [self performSelector:@selector(jukeboxGetInfoInternal) withObject:nil afterDelay:30.0];
-    }
+    // TODO: implement this
+//    if (settingsS.isJukeboxEnabled) {
+//        [self queueGetInfoDataTask];
+//        if (PlayQueue.shared.isShuffle) {
+//            [databaseS resetShufflePlaylist];
+//        } else {
+//            [databaseS resetJukeboxPlaylist];
+//        }
+//
+//        // Keep reloading every 30 seconds if there is no activity so that the player stays updated if visible
+//        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(jukeboxGetInfoInternal) object:nil];
+//        [self performSelector:@selector(jukeboxGetInfoInternal) withObject:nil afterDelay:30.0];
+//    }
 }
 
 - (void)getInfo {
@@ -261,16 +266,18 @@ LOG_LEVEL_ISUB_DEFAULT
     if ([elementName isEqualToString:@"error"]) {
         [self subsonicErrorCode:[attributeDict objectForKey:@"code"] message:[attributeDict objectForKey:@"message"]];
     } else if ([elementName isEqualToString:@"jukeboxPlaylist"]) {
-        self.currentIndex = [[attributeDict objectForKey:@"currentIndex"] intValue];
-        self.isPlaying = [[attributeDict objectForKey:@"playing"] boolValue];
-        self.gain = [[attributeDict objectForKey:@"gain"] floatValue];
-        
-        if (PlayQueue.shared.isShuffle) {
-            [databaseS resetShufflePlaylist];
-        } else {
-            [databaseS resetJukeboxPlaylist];
-        }
+        // TODO: implement this
+//        self.currentIndex = [[attributeDict objectForKey:@"currentIndex"] intValue];
+//        self.isPlaying = [[attributeDict objectForKey:@"playing"] boolValue];
+//        self.gain = [[attributeDict objectForKey:@"gain"] floatValue];
+//
+//        if (PlayQueue.shared.isShuffle) {
+//            [databaseS resetShufflePlaylist];
+//        } else {
+//            [databaseS resetJukeboxPlaylist];
+//        }
     } else if ([elementName isEqualToString:@"entry"]) {
+        // TODO: implement this
 //        ISMSSong *song = [[ISMSSong alloc] initWithServerId:settingsS.currentServerId attributeDict:attributeDict];
 //        if (song.path.hasValue) {
 //            if (PlayQueue.shared.isShuffle) {

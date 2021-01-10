@@ -169,50 +169,51 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 	}
 	[query appendFormat:@"GROUP BY seg%lu ORDER BY seg%lu COLLATE NOCASE", (long)(segment+1), (long)(segment+1)];
 	
-	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-		FMResultSet *result = [db executeQuery:query withArgumentsInArray:self.segments];
-		while ([result next]) {
-			@autoreleasepool {
-				NSString *md5 = [result stringForColumnIndex:0];
-				NSInteger segs = [result intForColumnIndex:1];
-				NSString *seg = [result stringForColumnIndex:2];
-				NSInteger track = [result intForColumnIndex:3];
-                NSInteger discNumber = [result intForColumn:@"discNumber"];
-				
-				if (segs > (segment + 1)) {
-					if (md5 && seg) {
-                        NSArray *albumEntry = @[md5, seg];
-						[self.albums addObject:albumEntry];
-					}
-				} else {
-					if (md5) {
-                        NSArray *songEntry = @[md5, @(track), @(discNumber)];
-						[self.songs addObject:songEntry];
-						
-						BOOL multipleSameTrackNumbers = NO;
-						NSMutableArray *trackNumbers = [NSMutableArray arrayWithCapacity:self.songs.count];
-						for (NSArray *song in self.songs) {
-							NSNumber *track = [song objectAtIndexSafe:1];
-							
-							if ([trackNumbers containsObject:track]) {
-								multipleSameTrackNumbers = YES;
-								break;
-							}
-							
-							if (track)
-								[trackNumbers addObject:track];
-						}
-						
-						// Sort by track number
-                        if (!multipleSameTrackNumbers) {
-							[self.songs sortUsingFunction:trackSort context:NULL];
-                        }
-					}
-				}
-			}
-		}
-		[result close];
-	}];
+    // TODO: implement this
+//	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
+//		FMResultSet *result = [db executeQuery:query withArgumentsInArray:self.segments];
+//		while ([result next]) {
+//			@autoreleasepool {
+//				NSString *md5 = [result stringForColumnIndex:0];
+//				NSInteger segs = [result intForColumnIndex:1];
+//				NSString *seg = [result stringForColumnIndex:2];
+//				NSInteger track = [result intForColumnIndex:3];
+//                NSInteger discNumber = [result intForColumn:@"discNumber"];
+//
+//				if (segs > (segment + 1)) {
+//					if (md5 && seg) {
+//                        NSArray *albumEntry = @[md5, seg];
+//						[self.albums addObject:albumEntry];
+//					}
+//				} else {
+//					if (md5) {
+//                        NSArray *songEntry = @[md5, @(track), @(discNumber)];
+//						[self.songs addObject:songEntry];
+//
+//						BOOL multipleSameTrackNumbers = NO;
+//						NSMutableArray *trackNumbers = [NSMutableArray arrayWithCapacity:self.songs.count];
+//						for (NSArray *song in self.songs) {
+//							NSNumber *track = [song objectAtIndexSafe:1];
+//
+//							if ([trackNumbers containsObject:track]) {
+//								multipleSameTrackNumbers = YES;
+//								break;
+//							}
+//
+//							if (track)
+//								[trackNumbers addObject:track];
+//						}
+//
+//						// Sort by track number
+//                        if (!multipleSameTrackNumbers) {
+//							[self.songs sortUsingFunction:trackSort context:NULL];
+//                        }
+//					}
+//				}
+//			}
+//		}
+//		[result close];
+//	}];
 	
 	// If the table is empty, pop back one view, otherwise reload the table data
 	if (self.albums.count + self.songs.count == 0) {
@@ -305,18 +306,19 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 #pragma mark Table view methods
 
 - (ISMSFolderAlbum *)folderAlbumAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *md5 = [[self.albums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:0];
-    NSString *name = [[self.albums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
-    NSString *coverArtId = [databaseS.songCacheDbQueue stringForQuery:@"SELECT coverArtId FROM cachedSongs WHERE md5 = ?", md5];
-    return [[ISMSFolderAlbum alloc] initWithServerId:-1
-                                            folderId:-1
-                                                name:name ?: @""
-                                          coverArtId:coverArtId
-                                      parentFolderId:-1
-                                       tagArtistName:self.artistName
-                                        tagAlbumName:nil
-                                           playCount:0
-                                                year:0];
+    // TODO: implement this
+//    NSString *md5 = [[self.albums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:0];
+//    NSString *name = [[self.albums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
+//    NSString *coverArtId = [databaseS.songCacheDbQueue stringForQuery:@"SELECT coverArtId FROM cachedSongs WHERE md5 = ?", md5];
+//    return [[ISMSFolderAlbum alloc] initWithServerId:-1
+//                                            folderId:-1
+//                                                name:name ?: @""
+//                                          coverArtId:coverArtId
+//                                      parentFolderId:-1
+//                                       tagArtistName:self.artistName
+//                                        tagAlbumName:nil
+//                                           playCount:0
+//                                                year:0];
     
 //    return [[ISMSFolderAlbum alloc] initWithId:@""
 //                                         title:title ? title : @""

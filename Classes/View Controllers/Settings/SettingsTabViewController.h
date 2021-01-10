@@ -18,7 +18,6 @@
 @property (nonatomic, strong) IBOutlet UISwitch *disableScreenSleepSwitch;
 @property (nonatomic, strong) IBOutlet UISwitch *enableBasicAuthSwitch;
 @property (nonatomic, strong) IBOutlet UISwitch *disableCellUsageSwitch;
-@property (nonatomic, strong) IBOutlet UISwitch *enableSongsTabSwitch;
 @property (nonatomic, strong) IBOutlet UILabel *enableSongsTabLabel;
 @property (nonatomic, strong) IBOutlet UILabel *enableSongsTabDesc;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *recoverSegmentedControl;

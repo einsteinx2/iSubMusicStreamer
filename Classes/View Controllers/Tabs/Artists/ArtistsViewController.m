@@ -137,12 +137,6 @@
     
     self.dropdown = [[FolderDropdownControl alloc] initWithFrame:CGRectMake(50, 61, 220, 40)];
     self.dropdown.delegate = self;
-//    NSDictionary *dropdownFolders = [SUSRootArtistsDAO folderDropdownFolders];
-//    if (dropdownFolders != nil) {
-//        self.dropdown.folders = dropdownFolders;
-//    } else {
-//        self.dropdown.folders = [NSDictionary dictionaryWithObject:@"All Media Folders" forKey:@-1];
-//    }
     [self.dropdown selectFolderWithId:self.dataModel.mediaFolderId];
     [self.headerView addSubview:self.dropdown];
     

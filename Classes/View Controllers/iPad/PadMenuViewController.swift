@@ -105,12 +105,6 @@ import SnapKit
             cellContents.append((imageName: "tabbaricon-bookmarks", text: "Bookmarks"))
             cellContents.append((imageName: "tabbaricon-playing", text: "Playing"))
             cellContents.append((imageName: "tabbaricon-chat", text: "Chat"))
-            
-            if Settings.shared().isSongsTabEnabled {
-                cellContents.append((imageName: "tabbaricon-genres", text: "Genres"))
-                cellContents.append((imageName: "tabbaricon-albums", text: "Albums"))
-                cellContents.append((imageName: "tabbaricon-songs", text: "Songs"))
-            }
         }
         
         tableView.reloadData()

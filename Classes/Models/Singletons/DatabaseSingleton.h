@@ -18,22 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FMDatabase, FMDatabaseQueue, ISMSFolderArtist, ISMSSong;
 
 NS_SWIFT_NAME(DatabaseOld)
-@interface DatabaseSingleton : NSObject 
-
-// Per server DB queue, contains only records specific to the active server
-@property (nullable, strong) FMDatabaseQueue *serverDbQueue;
-
-// Shared DB queue, contains data shared between all servers like the lyrics cache
-@property (nullable, strong) FMDatabaseQueue *sharedDbQueue;
-
-@property (nullable, strong) FMDatabaseQueue *allAlbumsDbQueue;
-@property (nullable, strong) FMDatabaseQueue *allSongsDbQueue;
-@property (nullable, strong) FMDatabaseQueue *genresDbQueue;
-@property (nullable, strong) FMDatabaseQueue *currentPlaylistDbQueue;
-@property (nullable, strong) FMDatabaseQueue *localPlaylistsDbQueue;
-@property (nullable, strong) FMDatabaseQueue *songCacheDbQueue;
-@property (nullable, strong) FMDatabaseQueue *cacheQueueDbQueue;
-@property (nullable, strong) FMDatabaseQueue *bookmarksDbQueue;
+@interface DatabaseSingleton : NSObject
 
 + (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 + (void)setAllSongsToBackup;
@@ -41,19 +26,6 @@ NS_SWIFT_NAME(DatabaseOld)
 
 - (void)setupDatabases;
 - (void)closeAllDatabases;
-
-- (void)resetLocalPlaylistsDb;
-- (void)resetCurrentPlaylistDb;
-- (void)resetCurrentPlaylist;
-- (void)resetShufflePlaylist;
-- (void)resetJukeboxPlaylist;
-
-- (void)setupAllSongsDb;
-
-- (void)createServerPlaylistTable:(NSInteger)playlistId;
-- (void)removeServerPlaylistTable:(NSInteger)playlistId;
-
-- (NSUInteger)serverPlaylistCount:(NSInteger)playlistId;
 
 - (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column;
 - (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column;

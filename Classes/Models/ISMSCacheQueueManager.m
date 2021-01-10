@@ -31,7 +31,8 @@ LOG_LEVEL_ISUB_DEFAULT
 #pragma mark Download Methods
 
 - (BOOL)isSongInQueue:(ISMSSong *)aSong {
-	return [databaseS.cacheQueueDbQueue boolForQuery:@"SELECT COUNT(*) FROM cacheQueue WHERE songId = ? LIMIT 1", aSong.songId];
+    // TODO: implement this
+//	return [databaseS.cacheQueueDbQueue boolForQuery:@"SELECT COUNT(*) FROM cacheQueue WHERE songId = ? LIMIT 1", aSong.songId];
 }
 
 - (ISMSSong *)currentQueuedSongInDb {

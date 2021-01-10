@@ -43,7 +43,8 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (NSUInteger)numberOfCachedSongs {
-	return [databaseS.songCacheDbQueue intForQuery:@"SELECT COUNT(*) FROM cachedSongs WHERE finished = 'YES'"];
+    // TODO: implement this
+//	return [databaseS.songCacheDbQueue intForQuery:@"SELECT COUNT(*) FROM cachedSongs WHERE finished = 'YES'"];
 }
 
 // If the available space has dropped below the max cache size since last app load, adjust it.
@@ -61,7 +62,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)removeOldestCachedSongs {
-    // TODO: Reimplement this using new data model
+    // TODO: implement this using new data model
 //	NSString *songMD5 = nil;
 //	if (settingsS.cachingType == ISMSCachingType_minSpace) {
 //		// Remove the oldest songs based on either oldest played or oldest cached until free space is more than minFreeSpace
@@ -105,18 +106,21 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)findCacheSize {
-    [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-        unsigned long long size = [[db stringForQuery:@"SELECT sum(size) FROM sizesSongs"] longLongValue];
-        FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'NO'"];
-        while ([result next]) {
-            NSString *path = [settingsS.songCachePath stringByAppendingPathComponent:[result stringForColumn:@"md5"]];
-            NSDictionary *attr = [NSFileManager.defaultManager attributesOfItemAtPath:path error:nil];
-            size += [attr fileSize];
-        }
-        
-        DDLogVerbose(@"[CacheSingleton] Total cache size was found to be: %llu", size);
-        self->_cacheSize = size;
-    }];
+    // TODO: implement this
+//    [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
+//        unsigned long long size = [[db stringForQuery:@"SELECT sum(size) FROM sizesSongs"] longLongValue];
+//        FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongs WHERE finished = 'NO'"];
+//        while ([result next]) {
+//            NSString *path = [settingsS.songCachePath stringByAppendingPathComponent:[result stringForColumn:@"md5"]];
+//            NSDictionary *attr = [NSFileManager.defaultManager attributesOfItemAtPath:path error:nil];
+//            size += [attr fileSize];
+//        }
+//
+//        DDLogVerbose(@"[CacheSingleton] Total cache size was found to be: %llu", size);
+//        self->_cacheSize = size;
+//    }];
+    
+    
 //	unsigned long long size = 0;
 //	NSFileManager *fileManager = NSFileManager.defaultManager;
 //	NSArray *subpaths = [fileManager subpathsAtPath:settingsS.songCachePath];

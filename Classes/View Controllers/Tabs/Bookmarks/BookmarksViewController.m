@@ -81,38 +81,39 @@
 		self.isNoBookmarksScreenShowing = NO;
 	}
 	
-	NSUInteger bookmarksCount = [databaseS.bookmarksDbQueue intForQuery:@"SELECT COUNT(*) FROM bookmarks"];
-	if (bookmarksCount == 0) {
-        [self removeSaveEditButtons];
-        
-		self.isNoBookmarksScreenShowing = YES;
-		self.noBookmarksScreen = [[UIImageView alloc] init];
-		self.noBookmarksScreen.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
-		self.noBookmarksScreen.frame = CGRectMake(40, 100, 240, 180);
-		self.noBookmarksScreen.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-		self.noBookmarksScreen.image = [UIImage imageNamed:@"loading-screen-image"];
-		self.noBookmarksScreen.alpha = .80;
-		
-		UILabel *textLabel = [[UILabel alloc] init];
-		textLabel.backgroundColor = [UIColor clearColor];
-		textLabel.textColor = [UIColor whiteColor];
-		textLabel.font = [UIFont boldSystemFontOfSize:30];
-		textLabel.textAlignment = NSTextAlignmentCenter;
-		textLabel.numberOfLines = 0;
-		if (settingsS.isOfflineMode) {
-			[textLabel setText:@"No Offline\nBookmarks"];
-		}
-		else {
-			[textLabel setText:@"No Saved\nBookmarks"];
-		}
-		textLabel.frame = CGRectMake(20, 20, 200, 140);
-		[self.noBookmarksScreen addSubview:textLabel];
-		
-		[self.view addSubview:self.noBookmarksScreen];
-		
-	} else {
-        [self addSaveEditButtons:bookmarksCount];
-	}
+    // TODO: implement this
+//	NSUInteger bookmarksCount = [databaseS.bookmarksDbQueue intForQuery:@"SELECT COUNT(*) FROM bookmarks"];
+//	if (bookmarksCount == 0) {
+//        [self removeSaveEditButtons];
+//
+//		self.isNoBookmarksScreenShowing = YES;
+//		self.noBookmarksScreen = [[UIImageView alloc] init];
+//		self.noBookmarksScreen.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+//		self.noBookmarksScreen.frame = CGRectMake(40, 100, 240, 180);
+//		self.noBookmarksScreen.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+//		self.noBookmarksScreen.image = [UIImage imageNamed:@"loading-screen-image"];
+//		self.noBookmarksScreen.alpha = .80;
+//
+//		UILabel *textLabel = [[UILabel alloc] init];
+//		textLabel.backgroundColor = [UIColor clearColor];
+//		textLabel.textColor = [UIColor whiteColor];
+//		textLabel.font = [UIFont boldSystemFontOfSize:30];
+//		textLabel.textAlignment = NSTextAlignmentCenter;
+//		textLabel.numberOfLines = 0;
+//		if (settingsS.isOfflineMode) {
+//			[textLabel setText:@"No Offline\nBookmarks"];
+//		}
+//		else {
+//			[textLabel setText:@"No Saved\nBookmarks"];
+//		}
+//		textLabel.frame = CGRectMake(20, 20, 200, 140);
+//		[self.noBookmarksScreen addSubview:textLabel];
+//
+//		[self.view addSubview:self.noBookmarksScreen];
+//
+//	} else {
+//        [self addSaveEditButtons:bookmarksCount];
+//	}
 	
 	[self loadBookmarkIds];
 	
@@ -226,18 +227,19 @@
 }
 
 - (void)loadBookmarkIds {
-	NSMutableArray *bookmarkIdsTemp = [[NSMutableArray alloc] initWithCapacity:0];
-	[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
-		FMResultSet *result = [db executeQuery:@"SELECT bookmarkId FROM bookmarks"];
-		while ([result next]) {
-			@autoreleasepool {
-				NSNumber *bookmarkId = [result objectForColumnIndex:0];
-				if (bookmarkId) [bookmarkIdsTemp addObject:bookmarkId];
-			}
-		}
-		[result close];
-	}];
-	self.bookmarkIds = bookmarkIdsTemp;
+    // TODO: implement this
+//	NSMutableArray *bookmarkIdsTemp = [[NSMutableArray alloc] initWithCapacity:0];
+//	[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
+//		FMResultSet *result = [db executeQuery:@"SELECT bookmarkId FROM bookmarks"];
+//		while ([result next]) {
+//			@autoreleasepool {
+//				NSNumber *bookmarkId = [result objectForColumnIndex:0];
+//				if (bookmarkId) [bookmarkIdsTemp addObject:bookmarkId];
+//			}
+//		}
+//		[result close];
+//	}];
+//	self.bookmarkIds = bookmarkIdsTemp;
 }
 
 - (void)showDeleteButton {
@@ -299,29 +301,30 @@
         }
         [self showDeleteButton];
 	} else {
-        // Sort the row indexes to make sure they're accending
-        NSMutableArray<NSNumber*> *selectedIndexes = self.selectedRowIndexes;
-        [selectedIndexes sortUsingSelector:@selector(compare:)];
-        
-		for (NSNumber *index in selectedIndexes) {
-			NSNumber *bookmarkId = [self.bookmarkIds objectAtIndex:[index intValue]];
-			[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
-                [db executeUpdate:@"DELETE FROM bookmarks WHERE bookmarkId = ?", bookmarkId];
-                // TODO: Delete the bookmark playlist table as well
-			}];
-		}
-        
-        for (NSNumber *index in self.selectedRowIndexes.reverseObjectEnumerator) {
-            [self.bookmarkIds removeObjectAtIndex:[index integerValue]];
-        }
-		
-		@try {
-            [self.tableView deleteRowsAtIndexPaths:self.tableView.indexPathsForSelectedRows withRowAnimation:UITableViewRowAnimationRight];
-		} @catch (NSException *exception) {
-            //DLog(@"Exception: %@ - %@", exception.name, exception.reason);
-		}
-		
-		[self editBookmarksAction:nil];
+        // TODO: implement this
+//        // Sort the row indexes to make sure they're accending
+//        NSMutableArray<NSNumber*> *selectedIndexes = self.selectedRowIndexes;
+//        [selectedIndexes sortUsingSelector:@selector(compare:)];
+//
+//		for (NSNumber *index in selectedIndexes) {
+//			NSNumber *bookmarkId = [self.bookmarkIds objectAtIndex:[index intValue]];
+//			[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
+//                [db executeUpdate:@"DELETE FROM bookmarks WHERE bookmarkId = ?", bookmarkId];
+//                // TODO: Delete the bookmark playlist table as well
+//			}];
+//		}
+//
+//        for (NSNumber *index in self.selectedRowIndexes.reverseObjectEnumerator) {
+//            [self.bookmarkIds removeObjectAtIndex:[index integerValue]];
+//        }
+//
+//		@try {
+//            [self.tableView deleteRowsAtIndexPaths:self.tableView.indexPathsForSelectedRows withRowAnimation:UITableViewRowAnimationRight];
+//		} @catch (NSException *exception) {
+//            //DLog(@"Exception: %@ - %@", exception.name, exception.reason);
+//		}
+//
+//		[self editBookmarksAction:nil];
 	}
 }
 

@@ -158,25 +158,6 @@
 	
 	NSArray *savedTabsOrderArray = [[NSUserDefaults standardUserDefaults] arrayForKey:@"mainTabBarTabsOrder"];
 	
-	// If this is an old device, remove Albums and Songs tabs
-	if (!settingsS.isSongsTabEnabled) {
-		NSMutableArray *tabs = [[NSMutableArray alloc] init];
-		for (UIViewController *controller in appDelegateS.mainTabBarController.viewControllers) {
-			if (controller.tabBarItem.tag != 1 && controller.tabBarItem.tag != 2 && controller.tabBarItem.tag != 6) {
-				[tabs addObject:controller];
-			}
-		}
-		appDelegateS.mainTabBarController.viewControllers = tabs;
-		
-		tabs = [[NSMutableArray alloc] init];
-		for (NSNumber *tag in savedTabsOrderArray) {
-			if (tag.intValue != 1 && tag.intValue != 2 && tag.intValue != 6) {
-				[tabs addObject:tag];
-			}
-		}
-		savedTabsOrderArray = tabs;
-	}
-	
 	NSUInteger count = appDelegateS.mainTabBarController.viewControllers.count;
 	if (savedTabsOrderArray.count == count) {
 		BOOL needsReordering = NO;

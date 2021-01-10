@@ -21,87 +21,12 @@ LOG_LEVEL_ISUB_DEFAULT
 
 @implementation DatabaseSingleton
 
-- (void)setupAllSongsDb {
-//	NSString *urlStringMd5 = [[settingsS urlString] md5];
-//
-//	// Setup the allAlbums database
-//	NSString *path = [NSString stringWithFormat:@"%@/%@allAlbums.db", settingsS.databasePath, urlStringMd5];
-//	self.allAlbumsDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
-//	[self.allAlbumsDbQueue inDatabase:^(FMDatabase *db) {
-//		[db  executeUpdate:@"PRAGMA cache_size = 1"];
-//	}];
-//
-//	// Setup the allSongs database
-//	path = [NSString stringWithFormat:@"%@/%@allSongs.db", settingsS.databasePath, urlStringMd5];
-//	self.allSongsDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
-//	[self.allSongsDbQueue inDatabase:^(FMDatabase *db)  {
-//		[db  executeUpdate:@"PRAGMA cache_size = 1"];
-//	}];
-//
-//	// Setup the Genres database
-//	path = [NSString stringWithFormat:@"%@/%@genres.db", settingsS.databasePath, urlStringMd5];
-//	self.genresDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
-//	[self.genresDbQueue inDatabase:^(FMDatabase *db) {
-//		[db  executeUpdate:@"PRAGMA cache_size = 1"];
-//	}];
-}
-
 - (void)setupDatabases {
     DDLogVerbose(@"[DatabaseSingleton] Database path: %@", settingsS.databasePath);
     DDLogVerbose(@"[DatabaseSingleton] Updated database path: %@", settingsS.updatedDatabasePath);
 //    DDLogVerbose(@"[DatabaseSingleton] Database prefix: %@", settingsS.urlStringFilesystemSafe);
     
     [Store.shared setupDatabases];
-}
-
-- (void)setupServerDatabase {
-    
-    //
-    // Playlists
-    //
-    
-    [self.serverDbQueue inDatabase:^(FMDatabase * _Nonnull db) {
-        if (![db tableExists:@"currentPlaylist"])  {
-            [db executeUpdate:@"CREATE TABLE currentPlaylist (songId TEXT, itemOrder INTEGER)"];
-            [db executeUpdate:@"CREATE INDEX currentPlaylist__itemOrder ON currentPlaylist (itemOrder)"];
-        }
-        
-        if (![db tableExists:@"shufflePlaylist"])  {
-            [db executeUpdate:@"CREATE TABLE shufflePlaylist (songId TEXT, itemOrder INTEGER)"];
-            [db executeUpdate:@"CREATE INDEX shufflePlaylist__itemOrder ON shufflePlaylist (itemOrder)"];
-        }
-        
-        if (![db tableExists:@"jukeboxCurrentPlaylist"])  {
-            [db executeUpdate:@"CREATE TABLE jukeboxCurrentPlaylist (songId TEXT, itemOrder INTEGER)"];
-            [db executeUpdate:@"CREATE INDEX jukeboxCurrentPlaylist__itemOrder ON jukeboxCurrentPlaylist (itemOrder)"];
-        }
-        
-        if (![db tableExists:@"jukeboxShufflePlaylist"])  {
-            [db executeUpdate:@"CREATE TABLE jukeboxShufflePlaylist (songId TEXT, itemOrder INTEGER)"];
-            [db executeUpdate:@"CREATE INDEX jukeboxShufflePlaylist__itemOrder ON jukeboxShufflePlaylist (itemOrder)"];
-        }
-        
-        if (![db tableExists:@"localPlaylists"]) {
-            [db executeUpdate:@"CREATE TABLE localPlaylists (playlistId INTEGER PRIMARY KEY, playlistName TEXT, createdAt REAL, lastPlayed REAL)"];
-        }
-    }];
-}
-
-- (void)setupSharedDatabase {
-//    //
-//    // Lyrics
-//    //
-//
-//    NSString *path = [settingsS.updatedDatabasePath stringByAppendingPathComponent:@"shared.db"];
-//    self.sharedDbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
-//    [self.sharedDbQueue inDatabase:^(FMDatabase *db) {
-////        [db executeUpdate:@"PRAGMA cache_size = 1"];
-//
-//        if (![db tableExists:@"lyrics"]) {
-//            [db executeUpdate:@"CREATE TABLE lyrics (artist TEXT, title TEXT, lyrics TEXT)"];
-//            [db executeUpdate:@"CREATE INDEX lyrics_artistTitle ON lyrics (artist, title)"];
-//        }
-//    }];
 }
 
 - (void)setupSongCacheDatabases {
@@ -258,97 +183,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)closeAllDatabases {
-    [self.serverDbQueue close]; self.serverDbQueue = nil;
-    [self.sharedDbQueue close]; self.sharedDbQueue = nil;
-    
-	[self.allAlbumsDbQueue close]; self.allAlbumsDbQueue = nil;
-	[self.allSongsDbQueue close]; self.allSongsDbQueue = nil;
-	[self.genresDbQueue close]; self.genresDbQueue = nil;
-	[self.currentPlaylistDbQueue close]; self.currentPlaylistDbQueue = nil;
-	[self.localPlaylistsDbQueue close]; self.localPlaylistsDbQueue = nil;
-	[self.songCacheDbQueue close]; self.songCacheDbQueue = nil;
-	[self.cacheQueueDbQueue close]; self.cacheQueueDbQueue = nil;
-	[self.bookmarksDbQueue close]; self.bookmarksDbQueue = nil;
-    
-    
     [Store.shared closeAllDatabases];
-}
-
-- (void)resetLocalPlaylistsDb {
-	[self.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-		// Get the table names
-		NSMutableArray *playlistTableNames = [NSMutableArray arrayWithCapacity:0];
-		NSString *query = @"SELECT name FROM sqlite_master WHERE type = 'table'";
-		FMResultSet *result = [db executeQuery:query];
-		while ([result next]) {
-			@autoreleasepool {
-				NSString *tableName = [result stringForColumnIndex:0];
-				[playlistTableNames addObject:tableName];
-			}
-		}
-		[result close];
-		
-		// Drop the tables
-		for (NSString *table in playlistTableNames) {
-			NSString *query = [NSString stringWithFormat:@"DROP TABLE IF EXISTS %@", table];
-			[db executeUpdate:query];
-		} 
-		
-		// Create the localPlaylists table
-		[db executeUpdate:@"CREATE TABLE localPlaylists (playlist TEXT, md5 TEXT)"];
-	}];
-}
-
-- (void)resetCurrentPlaylistDb {
-	[self.serverDbQueue inDatabase:^(FMDatabase *db) {
-        // Empty the tables
-        // NOTE: Not running vacuum as this needs to be as fast as possible
-		[db executeUpdate:@"DELETE FROM currentPlaylist"];
-		[db executeUpdate:@"DELETE FROM shufflePlaylist"];
-		[db executeUpdate:@"DELETE FROM jukeboxCurrentPlaylist"];
-		[db executeUpdate:@"DELETE FROM jukeboxShufflePlaylist"];
-	}];	
-}
-
-- (void)resetCurrentPlaylist {
-	[self.serverDbQueue inDatabase:^(FMDatabase *db) {
-        // NOTE: Not running vacuum as this needs to be as fast as possible
-        NSString *table = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-        [db executeUpdate:[NSString stringWithFormat:@"DELETE FROM %@", table]];
-	}];
-}
-
-- (void)resetShufflePlaylist {
-	[self.serverDbQueue inDatabase:^(FMDatabase *db) {
-        // NOTE: Not running vacuum as this needs to be as fast as possible
-        NSString *table = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-        [db executeUpdate:[NSString stringWithFormat:@"DELETE FROM %@", table]];
-	}];
-}
-
-- (void)resetJukeboxPlaylist {
-	[self.serverDbQueue inDatabase:^(FMDatabase *db) {
-        // NOTE: Not running vacuum as this needs to be as fast as possible
-		[db executeUpdate:@"DELETE FROM jukeboxCurrentPlaylist"];
-		[db executeUpdate:@"DELETE FROM jukeboxShufflePlaylist"];
-	}];
-}
-
-- (void)createServerPlaylistTable:(NSInteger)playlistId {
-	[self.serverDbQueue inDatabase:^(FMDatabase *db) {
-		[db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE splaylist%ld (songId TEXT, itemOrder INTEGER)", playlistId]];
-	}];	
-}
-
-- (void)removeServerPlaylistTable:(NSInteger)playlistId {
-	[self.serverDbQueue inDatabase:^(FMDatabase *db) {
-		[db executeUpdate:[NSString stringWithFormat:@"DROP TABLE splaylist%ld", playlistId]];
-	}];
-}
-
-- (NSUInteger)serverPlaylistCount:(NSInteger)playlistId {
-	NSString *query = [NSString stringWithFormat:@"SELECT count(*) FROM splaylist%ld", playlistId];
-	return [self.localPlaylistsDbQueue intForQuery:query];
 }
 
 - (NSArray *)sectionInfoFromTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column {
@@ -434,22 +269,23 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)shufflePlaylist {
-	@autoreleasepool {
-		PlayQueue.shared.currentIndex = 0;
-		PlayQueue.shared.isShuffle = YES;
-		
-		[self resetShufflePlaylist];
-		
-		[self.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
-            if (settingsS.isJukeboxEnabled) {
-				[db executeUpdate:@"INSERT INTO jukeboxShufflePlaylist SELECT * FROM jukeboxCurrentPlaylist ORDER BY RANDOM()"];
-            } else {
-				[db executeUpdate:@"INSERT INTO shufflePlaylist SELECT * FROM currentPlaylist ORDER BY RANDOM()"];
-            }
-		}];
-		
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistShuffleToggled];
-	}
+    // TODO: implement this
+//	@autoreleasepool {
+//		PlayQueue.shared.currentIndex = 0;
+//		PlayQueue.shared.isShuffle = YES;
+//
+//		[self resetShufflePlaylist];
+//
+//		[self.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
+//            if (settingsS.isJukeboxEnabled) {
+//				[db executeUpdate:@"INSERT INTO jukeboxShufflePlaylist SELECT * FROM jukeboxCurrentPlaylist ORDER BY RANDOM()"];
+//            } else {
+//				[db executeUpdate:@"INSERT INTO shufflePlaylist SELECT * FROM currentPlaylist ORDER BY RANDOM()"];
+//            }
+//		}];
+//
+//		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistShuffleToggled];
+//	}
 }
 
 #pragma mark - Singleton methods

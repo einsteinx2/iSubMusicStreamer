@@ -43,3 +43,43 @@ import Foundation
         return "\(super.description): id: \(id), name: \(name), songCount: \(songCount)"
     }
 }
+
+extension LocalPlaylist: TableCellModel {
+    var primaryLabelText: String? { name }
+    var secondaryLabelText: String? { songCount == 1 ? "1 song" : "\(songCount) songs" }
+    var durationLabelText: String? { nil }
+    var coverArtId: String? { nil }
+    var isCached: Bool { false }
+    
+    func download() {
+        // TODO: implement this
+        //    [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+        //
+        //    [EX2Dispatch runInBackgroundAfterDelay:0.05 block:^{
+        //        for (int i = 0; i < self.count; i++) {
+        //            [[ISMSSong songFromDbRow:i inTable:self.databaseTable inDatabaseQueue:databaseS.localPlaylistsDbQueue] addToDownloadQueue];
+        //        }
+        //
+        //        [EX2Dispatch runInMainThreadAsync:^{
+        //            [viewObjectsS hideLoadingScreen];
+        //        }];
+        //    }];
+    }
+    
+    func queue() {
+        // TODO: implement this
+        //    [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+        //
+        //    [EX2Dispatch runInBackgroundAfterDelay:0.05 block:^{
+        //        for (int i = 0; i < self.count; i++) {
+        //            [[ISMSSong songFromDbRow:i inTable:self.databaseTable inDatabaseQueue:databaseS.localPlaylistsDbQueue] addToCurrentPlaylistDbQueue];
+        //        }
+        //
+        //        [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+        //
+        //        [EX2Dispatch runInMainThreadAsync:^{
+        //            [viewObjectsS hideLoadingScreen];
+        //        }];
+        //    }];
+    }
+}

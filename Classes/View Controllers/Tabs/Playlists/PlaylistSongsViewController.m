@@ -32,20 +32,16 @@ LOG_LEVEL_ISUB_DEFAULT
 
 @implementation PlaylistSongsViewController
 
-- (BOOL)isLocalPlaylist {
-    return self.serverPlaylist == nil;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (self.localPlaylist) {
+        self.title = self.localPlaylist.name;
 
-    if (self.isLocalPlaylist) {
-		self.title = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT playlist FROM localPlaylists WHERE md5 = ?", self.md5];
-		
 		if (!settingsS.isOfflineMode) {
 			UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
 //			headerView.backgroundColor = viewObjectsS.darkNormal;
-			
+
 			UILabel *sendLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
 			sendLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
 			sendLabel.backgroundColor = [UIColor clearColor];
@@ -54,27 +50,29 @@ LOG_LEVEL_ISUB_DEFAULT
 			sendLabel.font = [UIFont boldSystemFontOfSize:24];
 			sendLabel.text = @"Save to Server";
 			[headerView addSubview:sendLabel];
-			
+
 			UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			sendButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
 			sendButton.frame = CGRectMake(0, 0, 320, 50);
 			[sendButton addTarget:self action:@selector(uploadPlaylistAction:) forControlEvents:UIControlEventTouchUpInside];
 			[headerView addSubview:sendButton];
-			
+
 			self.tableView.tableHeaderView = headerView;
 		}
 	} else {
-        self.title = self.serverPlaylist.playlistName;
-        self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM splaylist%@", self.md5]];
-		[self.tableView reloadData];
-		
-        // Add the pull to refresh view
-        __weak PlaylistSongsViewController *weakSelf = self;
-        self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
-            [weakSelf loadData];
-        }];
+        // TODO: implement this
+//        self.title = self.serverPlaylist.playlistName;
+//        self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM splaylist%@", self.md5]];
+//		[self.tableView reloadData];
+//
+//        // Add the pull to refresh view
+//        __weak PlaylistSongsViewController *weakSelf = self;
+//        self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
+//            [weakSelf loadData];
+//        }];
 	}
-	
+
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.rowHeight = Defines.rowHeight;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 }
@@ -143,7 +141,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.tableView.scrollEnabled = YES;
 	[viewObjectsS hideLoadingScreen];
 	
-	if (!self.isLocalPlaylist) {
+	if (!self.localPlaylist) {
         [self.refreshControl endRefreshing];
 	}
 }
@@ -151,22 +149,19 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)viewWillAppear:(BOOL)animated  {
     [super viewWillAppear:animated];
     
-    // For some reason this controller needs to do this, but none of the others do :/
-//    self.navigationController.navigationBar.translucent = NO;
-	
-	if(musicS.showPlayerIcon) {
+	if (musicS.showPlayerIcon) {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 	} else {
 		self.navigationItem.rightBarButtonItem = nil;
 	}
-	
-	if (self.isLocalPlaylist) {
-		self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM playlist%@", self.md5]];
+
+	if (self.localPlaylist) {
 		[self.tableView reloadData];
 	} else {
-		if (self.playlistCount == 0) {
-			[self loadData];
-		}
+        // TODO: implement this
+//		if (self.playlistCount == 0) {
+//			[self loadData];
+//		}
 	}
 }
 
@@ -184,58 +179,59 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)uploadPlaylistAction:(id)sender {
-	NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(self.title), @"name", nil];
-    
-	NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM playlist%@", self.md5];
-	NSUInteger count = [databaseS.localPlaylistsDbQueue intForQuery:query];
-	NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:count];
-	for (int i = 1; i <= count; i++) {
-		@autoreleasepool {
-			NSString *query = [NSString stringWithFormat:@"SELECT songId FROM playlist%@ WHERE ROWID = %i", self.md5, i];
-			NSString *songId = [databaseS.localPlaylistsDbQueue stringForQuery:query];
-			
-			[songIds addObject:n2N(songId)];
-		}
-	}
-	[parameters setObject:[NSArray arrayWithArray:songIds] forKey:@"songId"];
-	
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
-    self.dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (error) {
-            if (settingsS.isPopupsEnabled) {
-                [EX2Dispatch runInMainThreadAsync:^{
-                    NSString *message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)error.code, error.localizedDescription];
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
-                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-                    [self presentViewController:alert animated:YES completion:nil];
-                }];
-            }
-        } else {
-            DDLogVerbose(@"[PlaylistSongsViewController] upload playlist response: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-            RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
-            if (!root.isValid) {
-                NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
-                [self subsonicErrorCode:nil message:error.description];
-            } else {
-                RXMLElement *error = [root child:@"error"];
-                if (error.isValid) {
-                    NSString *code = [error attribute:@"code"];
-                    NSString *message = [error attribute:@"message"];
-                    [self subsonicErrorCode:code message:message];
-                }
-            }
-        }
-        
-        [EX2Dispatch runInMainThreadAsync:^{
-            self.tableView.scrollEnabled = YES;
-            [viewObjectsS hideLoadingScreen];
-            [self.refreshControl endRefreshing];
-        }];
-    }];
-    [self.dataTask resume];
-    
-    self.tableView.scrollEnabled = NO;
-    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
+    // TODO: implement this
+//	NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(self.title), @"name", nil];
+//
+//	NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM playlist%@", self.md5];
+//	NSUInteger count = [databaseS.localPlaylistsDbQueue intForQuery:query];
+//	NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:count];
+//	for (int i = 1; i <= count; i++) {
+//		@autoreleasepool {
+//			NSString *query = [NSString stringWithFormat:@"SELECT songId FROM playlist%@ WHERE ROWID = %i", self.md5, i];
+//			NSString *songId = [databaseS.localPlaylistsDbQueue stringForQuery:query];
+//
+//			[songIds addObject:n2N(songId)];
+//		}
+//	}
+//	[parameters setObject:[NSArray arrayWithArray:songIds] forKey:@"songId"];
+//
+//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
+//    self.dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+//        if (error) {
+//            if (settingsS.isPopupsEnabled) {
+//                [EX2Dispatch runInMainThreadAsync:^{
+//                    NSString *message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)error.code, error.localizedDescription];
+//                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+//                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+//                    [self presentViewController:alert animated:YES completion:nil];
+//                }];
+//            }
+//        } else {
+//            DDLogVerbose(@"[PlaylistSongsViewController] upload playlist response: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+//            RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
+//            if (!root.isValid) {
+//                NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
+//                [self subsonicErrorCode:nil message:error.description];
+//            } else {
+//                RXMLElement *error = [root child:@"error"];
+//                if (error.isValid) {
+//                    NSString *code = [error attribute:@"code"];
+//                    NSString *message = [error attribute:@"message"];
+//                    [self subsonicErrorCode:code message:message];
+//                }
+//            }
+//        }
+//
+//        [EX2Dispatch runInMainThreadAsync:^{
+//            self.tableView.scrollEnabled = YES;
+//            [viewObjectsS hideLoadingScreen];
+//            [self.refreshControl endRefreshing];
+//        }];
+//    }];
+//    [self.dataTask resume];
+//
+//    self.tableView.scrollEnabled = NO;
+//    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
 }
 
 - (void)subsonicErrorCode:(NSString *)errorCode message:(NSString *)message {
@@ -252,11 +248,12 @@ LOG_LEVEL_ISUB_DEFAULT
 #pragma mark Table view methods
 
 - (ISMSSong *)songAtIndexPath:(NSIndexPath *)indexPath {
-//    if (self.isLocalPlaylist) {
-//        return [ISMSSong songFromDbRow:indexPath.row inTable:[NSString stringWithFormat:@"playlist%@", self.md5] inDatabaseQueue:databaseS.localPlaylistsDbQueue];
-//    } else {
+    if (self.localPlaylist) {
+        return [Store.shared songWithLocalPlaylistId:self.localPlaylist.playlistId position:indexPath.row];
+    } else {
+        // TODO: implement this
 //        return [ISMSSong songFromServerPlaylistId:self.md5 row:indexPath.row];
-//    }
+    }
     return nil;
 }
 
@@ -264,12 +261,10 @@ LOG_LEVEL_ISUB_DEFAULT
     return 1;
 }
 
-
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return self.playlistCount;
+	return self.localPlaylist.songCount;
 }
-
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -284,15 +279,16 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)didSelectRowInternal:(NSIndexPath *)indexPath {
-	// Clear the current playlist
-	if (settingsS.isJukeboxEnabled) {
-		[databaseS resetJukeboxPlaylist];
-		[jukeboxS clearRemotePlaylist];
-	} else {
-		[databaseS resetCurrentPlaylistDb];
-	}
-	
-	PlayQueue.shared.isShuffle = NO;
+    // TODO: implement this
+//	// Clear the current playlist
+//	if (settingsS.isJukeboxEnabled) {
+//		[databaseS resetJukeboxPlaylist];
+//		[jukeboxS clearRemotePlaylist];
+//	} else {
+//		[databaseS resetCurrentPlaylistDb];
+//	}
+//
+//	PlayQueue.shared.isShuffle = NO;
 	
 	/*for (int i = 0; i < self.playlistCount; i++)
 	{

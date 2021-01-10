@@ -27,12 +27,13 @@ import Foundation
                 
         let parser = SearchXMLParser(data: receivedData)
         
-        if Settings.shared().isJukeboxEnabled {
-            DatabaseOld.shared().resetJukeboxPlaylist()
-            Jukebox.shared().clearRemotePlaylist()
-        } else {
-            DatabaseOld.shared().resetCurrentPlaylistDb()
-        }
+        // TODO: implement this
+//        if Settings.shared().isJukeboxEnabled {
+//            DatabaseOld.shared().resetJukeboxPlaylist()
+//            Jukebox.shared().clearRemotePlaylist()
+//        } else {
+//            DatabaseOld.shared().resetCurrentPlaylistDb()
+//        }
         
         for song in parser.songs {
             song.download()

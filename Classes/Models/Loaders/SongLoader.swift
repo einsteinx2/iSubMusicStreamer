@@ -151,7 +151,8 @@ fileprivate var albumLoader: TagAlbumLoader?
         if Settings.shared().isJukeboxEnabled {
             Jukebox.shared().clearPlaylist()
         } else {
-            DatabaseOld.shared().resetCurrentPlaylistDb()
+            // TODO: implement this
+//            DatabaseOld.shared().resetCurrentPlaylistDb()
         }
         PlayQueue.shared.isShuffle = false
     }

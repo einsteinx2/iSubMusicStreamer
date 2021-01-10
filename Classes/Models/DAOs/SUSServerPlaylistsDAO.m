@@ -31,7 +31,7 @@
 
 - (FMDatabaseQueue *)dbQueue
 {
-    return databaseS.localPlaylistsDbQueue;
+//    return databaseS.localPlaylistsDbQueue;
 }
 
 #pragma mark - Loader Manager Methods

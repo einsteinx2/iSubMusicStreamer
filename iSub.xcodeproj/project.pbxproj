@@ -371,8 +371,6 @@
 		53D9743B255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D97439255C0DA900AABF7F /* AutoScrollingLabel.swift */; };
 		53D97454255C51CA00AABF7F /* SwipeAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D97453255C51CA00AABF7F /* SwipeAction.swift */; };
 		53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D97453255C51CA00AABF7F /* SwipeAction.swift */; };
-		53D97463255C74FB00AABF7F /* ISMSLocalPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D97462255C74FB00AABF7F /* ISMSLocalPlaylist.m */; };
-		53D97464255C74FB00AABF7F /* ISMSLocalPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D97462255C74FB00AABF7F /* ISMSLocalPlaylist.m */; };
 		53DA4E33256B600C0057D4C7 /* Launch Screen Beta.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 53DA4E31256B600B0057D4C7 /* Launch Screen Beta.storyboard */; };
 		53DD0DD2259A33D100494AEA /* FMDatabase+Vacuum.m in Sources */ = {isa = PBXBuildFile; fileRef = 53DD0DD1259A33D100494AEA /* FMDatabase+Vacuum.m */; };
 		53DD0DD3259A33D100494AEA /* FMDatabase+Vacuum.m in Sources */ = {isa = PBXBuildFile; fileRef = 53DD0DD1259A33D100494AEA /* FMDatabase+Vacuum.m */; };
@@ -887,8 +885,6 @@
 		53D9742A255C04A400AABF7F /* Common-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Common-Bridging-Header.h"; path = "Other/Common-Bridging-Header.h"; sourceTree = "<group>"; };
 		53D97439255C0DA900AABF7F /* AutoScrollingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoScrollingLabel.swift; sourceTree = "<group>"; };
 		53D97453255C51CA00AABF7F /* SwipeAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeAction.swift; sourceTree = "<group>"; };
-		53D97461255C74FB00AABF7F /* ISMSLocalPlaylist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSLocalPlaylist.h; sourceTree = "<group>"; };
-		53D97462255C74FB00AABF7F /* ISMSLocalPlaylist.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ISMSLocalPlaylist.m; sourceTree = "<group>"; };
 		53DA4E31256B600B0057D4C7 /* Launch Screen Beta.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen Beta.storyboard"; sourceTree = "<group>"; };
 		53DD0DCD259A33AA00494AEA /* FMDatabase+Vacuum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FMDatabase+Vacuum.h"; sourceTree = "<group>"; };
 		53DD0DD1259A33D100494AEA /* FMDatabase+Vacuum.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "FMDatabase+Vacuum.m"; sourceTree = "<group>"; };
@@ -1630,8 +1626,6 @@
 				539D330825AA3B5200F53797 /* TableCellModel.swift */,
 				53FE36C91EA961720058B925 /* SUSServerPlaylist.h */,
 				53FE36CA1EA961720058B925 /* SUSServerPlaylist.m */,
-				53D97461255C74FB00AABF7F /* ISMSLocalPlaylist.h */,
-				53D97462255C74FB00AABF7F /* ISMSLocalPlaylist.m */,
 				539D32EA25AA196900F53797 /* ChatMessage.swift */,
 				539D32D725A8E07E00F53797 /* Server.swift */,
 				5389477F25A4E7170078FBAF /* MediaFolder.swift */,
@@ -2535,7 +2529,6 @@
 				53FE371F1EA961720058B925 /* ISMSIndex.m in Sources */,
 				53D632D925A65CBC004EC117 /* String+Clean.swift in Sources */,
 				534B20E9256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
-				53D97463255C74FB00AABF7F /* ISMSLocalPlaylist.m in Sources */,
 				53FE36FE1EA961720058B925 /* CacheSingleton.m in Sources */,
 				53E04947255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */,
 				53FE35041EA961540058B925 /* NSString+FileSize.m in Sources */,
@@ -2769,7 +2762,6 @@
 				53FE36EB1EA961720058B925 /* BassEffectValue.m in Sources */,
 				5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
 				53FE37211EA961720058B925 /* ISMSIndex.m in Sources */,
-				53D97464255C74FB00AABF7F /* ISMSLocalPlaylist.m in Sources */,
 				53D632DA25A65CBC004EC117 /* String+Clean.swift in Sources */,
 				53FE389D1EA961C80058B925 /* NSFileManager+ZKAdditions.m in Sources */,
 				53FE37001EA961720058B925 /* CacheSingleton.m in Sources */,
