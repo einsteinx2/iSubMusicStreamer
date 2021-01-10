@@ -7,10 +7,8 @@
 //
 
 #import "SavedSettings.h"
-#import "PlayQueueSingleton.h"
 #import "BassGaplessPlayer.h"
 #import "AudioEngine.h"
-#import "PlayQueueSingleton.h"
 #import "DatabaseSingleton.h"
 #import "CacheSingleton.h"
 #import "ISMSCacheQueueManager.h"
@@ -30,7 +28,7 @@ LOG_LEVEL_ISUB_DEFAULT
     BOOL _isShuffle;
     NSInteger _normalPlaylistIndex;
     NSInteger _shufflePlaylistIndex;
-    ISMSRepeatMode _repeatMode;
+    RepeatMode _repeatMode;
     NSInteger _bitRate;
     unsigned long long _byteOffset;
     double _secondsOffset;
@@ -50,16 +48,16 @@ LOG_LEVEL_ISUB_DEFAULT
     }
     
 	_isShuffle = [_userDefaults boolForKey:@"isShuffle"];
-	playlistS.isShuffle = _isShuffle;
+	PlayQueue.shared.isShuffle = _isShuffle;
 	
 	_normalPlaylistIndex = [_userDefaults integerForKey:@"normalPlaylistIndex"];
-	playlistS.normalIndex = _normalPlaylistIndex;
+	PlayQueue.shared.normalIndex = _normalPlaylistIndex;
 	
 	_shufflePlaylistIndex = [_userDefaults integerForKey:@"shufflePlaylistIndex"];
-	playlistS.shuffleIndex = _shufflePlaylistIndex;
+	PlayQueue.shared.shuffleIndex = _shufflePlaylistIndex;
     
-	_repeatMode = (ISMSRepeatMode)[_userDefaults integerForKey:@"repeatMode"];
-	playlistS.repeatMode = _repeatMode;
+	_repeatMode = (RepeatMode)[_userDefaults integerForKey:@"repeatMode"];
+	PlayQueue.shared.repeatMode = _repeatMode;
 	
 	_bitRate = [_userDefaults integerForKey:@"bitRate"];
 	_byteOffset = self.byteOffset;
@@ -95,26 +93,26 @@ LOG_LEVEL_ISUB_DEFAULT
 			isDefaultsDirty = YES;
 		}
 		
-		if (playlistS.isShuffle != _isShuffle) {
-			_isShuffle = playlistS.isShuffle;
+		if (PlayQueue.shared.isShuffle != _isShuffle) {
+			_isShuffle = PlayQueue.shared.isShuffle;
 			[_userDefaults setBool:_isShuffle forKey:@"isShuffle"];
 			isDefaultsDirty = YES;
 		}
 		
-		if (playlistS.normalIndex != _normalPlaylistIndex) {
-			_normalPlaylistIndex = playlistS.normalIndex;
+		if (PlayQueue.shared.normalIndex != _normalPlaylistIndex) {
+			_normalPlaylistIndex = PlayQueue.shared.normalIndex;
 			[_userDefaults setInteger:_normalPlaylistIndex forKey:@"normalPlaylistIndex"];
 			isDefaultsDirty = YES;
 		}
 		
-		if (playlistS.shuffleIndex != _shufflePlaylistIndex) {
-			_shufflePlaylistIndex = playlistS.shuffleIndex;
+		if (PlayQueue.shared.shuffleIndex != _shufflePlaylistIndex) {
+			_shufflePlaylistIndex = PlayQueue.shared.shuffleIndex;
 			[_userDefaults setInteger:_shufflePlaylistIndex forKey:@"shufflePlaylistIndex"];
 			isDefaultsDirty = YES;
 		}
 		
-		if (playlistS.repeatMode != _repeatMode) {
-			_repeatMode = playlistS.repeatMode;
+		if (PlayQueue.shared.repeatMode != _repeatMode) {
+			_repeatMode = PlayQueue.shared.repeatMode;
 			[_userDefaults setInteger:_repeatMode forKey:@"repeatMode"];
 			isDefaultsDirty = YES;
 		}

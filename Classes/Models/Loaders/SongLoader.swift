@@ -152,7 +152,7 @@ fileprivate var albumLoader: TagAlbumLoader?
         } else {
             DatabaseOld.shared().resetCurrentPlaylistDb()
         }
-        PlayQueue.shared().isShuffle = false
+        PlayQueue.shared.isShuffle = false
     }
     
     private static func queueTagAlbum(tagAlbumId: Int, callback: @escaping LoaderCallback) {

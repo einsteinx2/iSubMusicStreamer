@@ -6,15 +6,12 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-//#import "ISMSSong+DAO.h"
 #import "FMDatabaseQueueAdditions.h"
-#import "PlayQueueSingleton.h"
 #import "ISMSCacheQueueManager.h"
 #import "ISMSStreamManager.h"
 #import "BassGaplessPlayer.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
-#import "PlayQueueSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
 #import "ISMSStreamManager.h"
@@ -409,7 +406,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (![self insertIntoTable:@"jukeboxCurrentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue])
 			success = NO;
 
-		if (playlistS.isShuffle)
+		if (PlayQueue.shared.isShuffle)
 		{
 			if (![self insertIntoTable:@"jukeboxShufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue])
 				success = NO;
@@ -422,7 +419,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (![self insertIntoTable:@"currentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue])
 			success = NO;
 
-		if (playlistS.isShuffle)
+		if (PlayQueue.shared.isShuffle)
 		{
 			if (![self insertIntoTable:@"shufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue])
 				success = NO;
@@ -486,7 +483,7 @@ LOG_LEVEL_ISUB_DEFAULT
 + (BOOL)removeSongFromCacheDbByMD5:(NSString *)md5
 {
 	// Check if we're deleting the song that's currently playing. If so, stop the player.
-	if (playlistS.currentSong && !settingsS.isJukeboxEnabled && [[playlistS.currentSong.path md5] isEqualToString:md5])
+	if (PlayQueue.shared.currentSong && !settingsS.isJukeboxEnabled && [[PlayQueue.shared.currentSong.path md5] isEqualToString:md5])
 	{
 		//DLog(@"stopping the player before deleting the file");
         [audioEngineS.player stop];
@@ -573,7 +570,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (self.transcodedSuffix)
 		{
 			// This is a transcode, so we'll want to use the actual bitrate if possible
-			if ([playlistS.currentSong isEqualToSong:self])
+			if ([PlayQueue.shared.currentSong isEqualToSong:self])
 			{
 				// This is the current playing song, so see if BASS has an actual bitrate for it
 				if (audioEngineS.player.bitRate > 0)
@@ -662,7 +659,7 @@ LOG_LEVEL_ISUB_DEFAULT
 {
 	if (settingsS.isJukeboxEnabled)
 	{
-		return jukeboxS.isPlaying && [self isEqualToSong:playlistS.currentSong];
+		return jukeboxS.isPlaying && [self isEqualToSong:PlayQueue.shared.currentSong];
 	}
 	else
 	{

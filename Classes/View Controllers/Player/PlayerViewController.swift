@@ -262,7 +262,7 @@ import CocoaLumberjackSwift
                     player.playPause()
                 } else {
                     // If we haven't started the song yet, start the player
-                    Music.shared().playSong(atPosition: PlayQueue.shared().currentIndex)
+                    Music.shared().playSong(atPosition: PlayQueue.shared.currentIndex)
                 }
             }
         }
@@ -273,7 +273,7 @@ import CocoaLumberjackSwift
         previousButton.addClosure(for: .touchUpInside) {
             if let player = AudioEngine.shared().player, player.progress > 10.0 {
                 // If we're more than 10 seconds into the song, restart it
-                Music.shared().playSong(atPosition: PlayQueue.shared().currentIndex)
+                Music.shared().playSong(atPosition: PlayQueue.shared.currentIndex)
             } else {
                 // Otherwise, go to the previous song
                 Music.shared().prevSong()
@@ -331,11 +331,10 @@ import CocoaLumberjackSwift
         }
         
         repeatButton.addClosure(for: .touchUpInside) { [unowned self] in
-            switch PlayQueue.shared().repeatMode {
-            case ISMSRepeatMode_Normal: PlayQueue.shared().repeatMode = ISMSRepeatMode_RepeatOne
-            case ISMSRepeatMode_RepeatOne: PlayQueue.shared().repeatMode = ISMSRepeatMode_RepeatAll
-            case ISMSRepeatMode_RepeatAll: PlayQueue.shared().repeatMode = ISMSRepeatMode_Normal
-            default: break
+            switch PlayQueue.shared.repeatMode {
+            case .none: PlayQueue.shared.repeatMode = .one
+            case .one: PlayQueue.shared.repeatMode = .all
+            case .all: PlayQueue.shared.repeatMode = .none
             }
             self.updateRepeatButtonIcon()
         }
@@ -380,10 +379,10 @@ import CocoaLumberjackSwift
         let shuffleButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
         shuffleButton.setImage(UIImage(systemName: "shuffle", withConfiguration: shuffleButtonConfig), for: .normal)
         shuffleButton.addClosure(for: .touchUpInside) { [unowned self] in
-            let message = PlayQueue.shared().isShuffle ? "Unshuffling" : "Shuffling"
+            let message = PlayQueue.shared.isShuffle ? "Unshuffling" : "Shuffling"
             ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: message)
             EX2Dispatch.runInBackgroundAsync {
-                PlayQueue.shared().shuffleToggle()
+                PlayQueue.shared.shuffleToggle()
             }
             self.updateShuffleButtonIcon()
         }
@@ -607,7 +606,7 @@ import CocoaLumberjackSwift
     }
     
     @objc private func updateSongInfo() {
-        guard let song = PlayQueue.shared().currentSong() else {
+        guard let song = PlayQueue.shared.currentSong else {
             currentSong = nil
             coverArtPageControl.coverArtId = nil
             coverArtPageControl.coverArtImage = UIImage(named: "default-album-art")
@@ -692,19 +691,19 @@ import CocoaLumberjackSwift
     
     private func updateRepeatButtonIcon() {
         let imageName: String
-        switch PlayQueue.shared().repeatMode {
-        case ISMSRepeatMode_RepeatOne: imageName = "repeat.1"
-        case ISMSRepeatMode_RepeatAll: imageName = "repeat"
-        default: imageName = "repeat"
+        switch PlayQueue.shared.repeatMode {
+        case .none: imageName = "repeat"
+        case .one: imageName = "repeat.1"
+        case .all: imageName = "repeat"
         }
         
         let config = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
         repeatButton.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
-        repeatButton.tintColor = PlayQueue.shared().repeatMode == ISMSRepeatMode_Normal ? iconDefaultColor : iconActivatedColor
+        repeatButton.tintColor = PlayQueue.shared.repeatMode == .none ? iconDefaultColor : iconActivatedColor
     }
     
     private func updateShuffleButtonIcon() {
-        shuffleButton.tintColor = PlayQueue.shared().isShuffle ? iconActivatedColor : iconDefaultColor
+        shuffleButton.tintColor = PlayQueue.shared.isShuffle ? iconActivatedColor : iconDefaultColor
     }
     
     @objc private func updateJukeboxControls() {

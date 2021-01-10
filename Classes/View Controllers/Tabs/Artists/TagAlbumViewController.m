@@ -14,7 +14,6 @@
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
-//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import <MediaPlayer/MediaPlayer.h>
@@ -207,7 +206,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (!indexPath) return;
     
-    ISMSSong *playedSong = [self.dataModel playSongWithRow:indexPath.row];
+    ISMSSong *playedSong = [self.dataModel playSongWithIndexPath:indexPath];
     if (!playedSong.isVideo) {
         [self showPlayer];
     }

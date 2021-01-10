@@ -12,7 +12,6 @@
 #import "SavedSettings.h"
 #import "DatabaseSingleton.h"
 #import "EX2Kit.h"
-//#import "ISMSSong+DAO.h"
 #import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
@@ -35,7 +34,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)playSongAtPosition:(NSNumber *)position {
     [self queueDataTaskWithAction:@"skip" parameters:@{@"index": n2N(position.stringValue)}];
-    playlistS.currentIndex = position.intValue;
+    PlayQueue.shared.currentIndex = position.intValue;
 }
 
 
@@ -51,7 +50,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)skipPrev {
-	NSInteger index = playlistS.currentIndex - 1;
+	NSInteger index = PlayQueue.shared.currentIndex - 1;
 	if (index >= 0) {
 		[self playSongAtPosition:@(index)];
 		self.isPlaying = YES;
@@ -59,7 +58,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)skipNext {
-	NSInteger index = playlistS.currentIndex + 1;
+	NSInteger index = PlayQueue.shared.currentIndex + 1;
 	if (index <= ([databaseS.currentPlaylistDbQueue intForQuery:@"SELECT COUNT(*) FROM jukeboxCurrentPlaylist"] - 1)) {
 		[self playSongAtPosition:@(index)];
 		self.isPlaying = YES;
@@ -90,7 +89,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	__block NSMutableArray *songIds = [[NSMutableArray alloc] init];
 	[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
-        NSString *table = playlistS.isShuffle ? @"jukeboxShufflePlaylist" : @"jukeboxCurrentPlaylist";
+        NSString *table = PlayQueue.shared.isShuffle ? @"jukeboxShufflePlaylist" : @"jukeboxCurrentPlaylist";
         FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT songId FROM %@", table]];
 		while ([result next]) {
 			@autoreleasepool {
@@ -125,7 +124,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)jukeboxGetInfoInternal {
     if (settingsS.isJukeboxEnabled) {
         [self queueGetInfoDataTask];
-        if (playlistS.isShuffle) {
+        if (PlayQueue.shared.isShuffle) {
             [databaseS resetShufflePlaylist];
         } else {
             [databaseS resetJukeboxPlaylist];
@@ -188,7 +187,7 @@ LOG_LEVEL_ISUB_DEFAULT
             [xmlParser parse];
                     
             [EX2Dispatch runInMainThreadAsync:^{
-                playlistS.currentIndex = parserDelegate.currentIndex;
+                PlayQueue.shared.currentIndex = parserDelegate.currentIndex;
                 jukeboxS.gain = parserDelegate.gain;
                 jukeboxS.isPlaying = parserDelegate.isPlaying;
                 
@@ -266,7 +265,7 @@ LOG_LEVEL_ISUB_DEFAULT
         self.isPlaying = [[attributeDict objectForKey:@"playing"] boolValue];
         self.gain = [[attributeDict objectForKey:@"gain"] floatValue];
         
-        if (playlistS.isShuffle) {
+        if (PlayQueue.shared.isShuffle) {
             [databaseS resetShufflePlaylist];
         } else {
             [databaseS resetJukeboxPlaylist];
@@ -274,7 +273,7 @@ LOG_LEVEL_ISUB_DEFAULT
     } else if ([elementName isEqualToString:@"entry"]) {
 //        ISMSSong *song = [[ISMSSong alloc] initWithServerId:settingsS.currentServerId attributeDict:attributeDict];
 //        if (song.path.hasValue) {
-//            if (playlistS.isShuffle) {
+//            if (PlayQueue.shared.isShuffle) {
 //                [aSong insertIntoTable:@"jukeboxShufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
 //            } else {
 //                [aSong insertIntoTable:@"jukeboxCurrentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];

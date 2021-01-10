@@ -15,12 +15,10 @@
 #import "RXMLElement.h"
 #import "FMDatabaseQueueAdditions.h"
 #import "SavedSettings.h"
-#import "PlayQueueSingleton.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
 #import "NSError+ISMSError.h"
-//#import "ISMSSong+DAO.h"
 #import "SUSServerPlaylist.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -294,7 +292,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		[databaseS resetCurrentPlaylistDb];
 	}
 	
-	playlistS.isShuffle = NO;
+	PlayQueue.shared.isShuffle = NO;
 	
 	/*for (int i = 0; i < self.playlistCount; i++)
 	{

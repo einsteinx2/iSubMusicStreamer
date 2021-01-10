@@ -9,14 +9,11 @@
 #import "ISMSStreamManager.h"
 #import "ISMSStreamHandler.h"
 #import "ISMSNSURLSessionStreamHandler.h"
-#import "PlayQueueSingleton.h"
 #import "ISMSCacheQueueManager.h"
 #import "RXMLElement.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
-#import "PlayQueueSingleton.h"
 #import "ISMSCacheQueueManager.h"
-//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 
@@ -506,7 +503,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	{
 		for (int i = 0; i < numStreamsToQueue; i++)
 		{
-			ISMSSong *aSong = [playlistS songForIndex:[playlistS indexForOffsetFromCurrentIndex:i]];
+			ISMSSong *aSong = [PlayQueue.shared songWithIndex:[PlayQueue.shared indexFromCurrentIndexWithOffset:i]];
 			if (aSong && !aSong.isVideo && ![self isSongInQueue:aSong] && ![self.lastTempCachedSong isEqual:aSong] && !aSong.isFullyCached && !settingsS.isOfflineMode && ![cacheQueueManagerS.currentQueuedSong isEqual:aSong])
 			{
 				// Queue the song for download
@@ -536,13 +533,13 @@ LOG_LEVEL_ISUB_DEFAULT
 	// TODO: Fix this logic, it's wrong
 	// Verify that the last song is not constantly retrying to connect, 
 	// so the current song can download and play
-	[self removeStreamForSong:playlistS.prevSong];
+	[self removeStreamForSong:PlayQueue.shared.prevSong];
 }
 
 - (void)currentPlaylistOrderChanged
 {
-	ISMSSong *currentSong = playlistS.currentSong;
-	ISMSSong *nextSong = playlistS.nextSong;
+	ISMSSong *currentSong = PlayQueue.shared.currentSong;
+	ISMSSong *nextSong = PlayQueue.shared.nextSong;
 	NSMutableArray *songsToSkip = [NSMutableArray arrayWithCapacity:2];
 	if (currentSong) [songsToSkip addObject:currentSong];
 	if (nextSong) [songsToSkip addObject:nextSong];
@@ -564,10 +561,10 @@ LOG_LEVEL_ISUB_DEFAULT
 	// Update the last cached song
 	self.lastCachedSong = handler.mySong;
     
-    ISMSSong *currentSong = playlistS.currentSong;
-	if ([handler.mySong isEqual:playlistS.currentSong])
+    ISMSSong *currentSong = PlayQueue.shared.currentSong;
+	if ([handler.mySong isEqual:PlayQueue.shared.currentSong])
 	{
-        [audioEngineS startSong:currentSong atIndex:playlistS.currentIndex withOffsetInBytes:@(handler.byteOffset) orSeconds:@(handler.secondsOffset)];
+        [audioEngineS startSong:currentSong atIndex:PlayQueue.shared.currentIndex withOffsetInBytes:@(handler.byteOffset) orSeconds:@(handler.secondsOffset)];
 	}
 	
 	[self saveHandlerStack];

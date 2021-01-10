@@ -56,6 +56,13 @@ import Foundation
         return TagAlbum(serverId: serverId, id: id, name: name, coverArtId: coverArtId, tagArtistId: tagArtistId, tagArtistName: tagArtistName, songCount: songCount, duration: duration, playCount: playCount, year: year, genre: genre)
     }
     
+    override func isEqual(_ object: Any?) -> Bool {
+        if let object = object as? TagAlbum {
+            return self === object || (serverId == object.serverId && id == object.id)
+        }
+        return false
+    }
+    
     override var description: String {
         return "\(super.description): serverId: \(serverId), id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), tagArtistId: \(tagArtistId ?? "nil"), tagArtistName: \(tagArtistName ?? "nil"), songCount: \(songCount), duration: \(duration), playCount: \(playCount), year: \(year), genre: \(genre ?? "nil")"
     }

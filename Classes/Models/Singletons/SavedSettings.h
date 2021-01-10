@@ -12,7 +12,6 @@
 #import "BassEffectDAO.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
-#import "PlayQueueSingleton.h"
 #import "Defines.h"
 #import "ISMSBassVisualType.h"
 
@@ -33,7 +32,7 @@ NS_SWIFT_NAME(Settings)
 @property BOOL isCancelLoading;
 @property BOOL isOfflineMode;
 
-@property NSInteger currentServerId;
+@property (readonly) NSInteger currentServerId;
 @property (strong) Server *currentServer;
 
 // Root Folders Settings

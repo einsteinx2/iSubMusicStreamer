@@ -32,6 +32,13 @@ import Foundation
         return FolderArtist(serverId: serverId, id: id, name: name)
     }
     
+    override func isEqual(_ object: Any?) -> Bool {
+        if let object = object as? FolderArtist {
+            return self === object || (serverId == object.serverId && id == object.id)
+        }
+        return false
+    }
+    
     @objc override var description: String {
         return "\(super.description): serverId: \(serverId), id: \(id), name: \(name)"
     }

@@ -9,11 +9,9 @@
 #import "SUSNowPlayingDAO.h"
 #import "SUSNowPlayingLoader.h"
 #import "SavedSettings.h"
-#import "PlayQueueSingleton.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
-//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 
@@ -110,7 +108,7 @@
 	[[self songForIndex:index] queue];
 	
 	// Set player defaults
-	playlistS.isShuffle = NO;
+	PlayQueue.shared.isShuffle = NO;
     
     [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
 	

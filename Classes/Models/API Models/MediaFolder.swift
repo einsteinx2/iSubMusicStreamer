@@ -29,4 +29,15 @@ import GRDB
         self.name = element.attribute("name").stringXML
         super.init()
     }
+    
+    override func isEqual(_ object: Any?) -> Bool {
+        if let object = object as? MediaFolder {
+            return self === object || (serverId == object.serverId && id == object.id)
+        }
+        return false
+    }
+    
+    override var description: String {
+        return "\(super.description): serverId: \(serverId), id: \(id), name: \(name)"
+    }
 }

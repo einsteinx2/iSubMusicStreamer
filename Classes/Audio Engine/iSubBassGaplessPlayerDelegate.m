@@ -9,12 +9,12 @@
 #import "iSubBassGaplessPlayerDelegate.h"
 #import "BassGaplessPlayer.h"
 #import "ISMSStreamHandler.h"
-#import "PlayQueueSingleton.h"
 #import "MusicSingleton.h"
 #import "SocialSingleton.h"
 #import "ISMSStreamManager.h"
 #import "Defines.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation iSubBassGaplessPlayerDelegate
 
@@ -61,7 +61,7 @@
 - (void)bassSongEndedCalled:(BassGaplessPlayer*)player
 {
     // Increment current playlist index
-    [playlistS incrementIndex];
+    (void)[PlayQueue.shared incrementIndex];
     
     // Clear the social post status
     [socialS playerClearSocial];
@@ -74,17 +74,17 @@
 
 - (NSUInteger)bassIndexAtOffset:(NSInteger)offset fromIndex:(NSUInteger)index player:(BassGaplessPlayer *)player
 {
-    return [playlistS indexForOffset:offset fromIndex:index];
+    return [PlayQueue.shared indexWithOffset:offset fromIndex:index];
 }
 
 - (ISMSSong *)bassSongForIndex:(NSUInteger)index player:(BassGaplessPlayer *)player
 {
-    return [playlistS songForIndex:index];
+    return [PlayQueue.shared songWithIndex:index];
 }
 
 - (NSUInteger)bassCurrentPlaylistIndex:(BassGaplessPlayer *)player
 {
-    return playlistS.currentIndex;
+    return PlayQueue.shared.currentIndex;
 }
 
 - (void)bassRetrySongAtIndex:(NSUInteger)index player:(BassGaplessPlayer*)player;
@@ -108,7 +108,7 @@
 - (void)bassFailedToCreateNextStreamForIndex:(NSUInteger)index player:(BassGaplessPlayer *)player
 {
     // The song ended, and we tried to make the next stream but it failed
-    ISMSSong *aSong = [playlistS songForIndex:index];
+    ISMSSong *aSong = [PlayQueue.shared songWithIndex:index];
     ISMSStreamHandler *handler = [streamManagerS handlerForSong:aSong];
     if (!handler.isDownloading || handler.isDelegateNotifiedToStartPlayback)
     {

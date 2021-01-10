@@ -17,13 +17,11 @@
 #import "FMDatabaseQueueAdditions.h"
 #import "Flurry.h"
 #import "SavedSettings.h"
-#import "PlayQueueSingleton.h"
 #import "MusicSingleton.h"
 #import "CacheSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
 #import "ISMSCacheQueueManager.h"
-//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import "Reachability.h"
@@ -240,7 +238,7 @@
 }
 
 - (void)loadPlayAllPlaylist:(BOOL)shuffle {
-//    playlistS.isShuffle = NO;
+//    PlayQueue.shared.isShuffle = NO;
 //	
 //	if (settingsS.isJukeboxEnabled) {
 //		[databaseS resetJukeboxPlaylist];
@@ -269,10 +267,10 @@
 //	}
 //	
 //	if (shuffle) {
-//		playlistS.isShuffle = YES;
+//		PlayQueue.shared.isShuffle = YES;
 //		[databaseS shufflePlaylist];
 //	} else {
-//		playlistS.isShuffle = NO;
+//		PlayQueue.shared.isShuffle = NO;
 //	}
 //	
 //    if (settingsS.isJukeboxEnabled) {

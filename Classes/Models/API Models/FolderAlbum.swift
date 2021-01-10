@@ -50,6 +50,13 @@ import Foundation
         return FolderAlbum(serverId: serverId, id: id, name: name, coverArtId: coverArtId, parentFolderId: parentFolderId, tagArtistName: tagArtistName, tagAlbumName: tagAlbumName, playCount: playCount, year: year)
     }
     
+    override func isEqual(_ object: Any?) -> Bool {
+        if let object = object as? FolderAlbum {
+            return self === object || (serverId == object.serverId && id == object.id)
+        }
+        return false
+    }
+    
     @objc override var description: String {
         return "\(super.description): serverId: \(serverId), id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), parentFolderId: \(parentFolderId), tagArtistName: \(tagArtistName ?? "nil"), tagAlbumName: \(tagAlbumName ?? "nil"), playCount: \(playCount), year: \(year)"
     }

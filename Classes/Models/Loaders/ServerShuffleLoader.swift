@@ -38,7 +38,7 @@ import Foundation
             song.download()
         }
         
-        PlayQueue.shared().isShuffle = false
+        PlayQueue.shared.isShuffle = false
         
         NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistSongsQueued)
         informDelegateLoadingFinished()

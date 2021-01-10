@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Resolver
 
 @objc(ISMSSong) final class Song: NSObject, NSCopying, NSSecureCoding, Codable {
     static var supportsSecureCoding: Bool = true
@@ -266,8 +267,8 @@ import Foundation
     }
     
     override func isEqual(_ object: Any?) -> Bool {
-        if let song = object as? Song {
-            return self === song || (serverId == song.serverId && id == song.id)
+        if let object = object as? Song {
+            return self === object || (serverId == object.serverId && id == object.id)
         }
         return false
     }
@@ -303,7 +304,7 @@ import Foundation
             var seconds = Float(duration)
             if transcodedSuffix != nil {
                 // This is a transcode, so we'll want to use the actual bitrate if possible
-                if let currentSong = PlayQueue.shared().currentSong(), currentSong == self {
+                if let currentSong = PlayQueue.shared.currentSong, currentSong == self {
                     // This is the current playing song, so see if BASS has an actual bitrate for it
                     if let player = AudioEngine.shared().player, player.bitRate > 0 {
                         // Bass has a non-zero bitrate, so use that for the calculation
@@ -335,6 +336,12 @@ extension Song: TableCellModel {
     var secondaryLabelText: String? { tagArtistName }
     var durationLabelText: String? { NSString.formatTime(Double(duration)) }
     var isCached: Bool { isFullyCached }
-    func download() { fatalError("implement this") }
-    func queue() { fatalError("implement this") }
+    func download() {
+        let store: Store = Resolver.resolve()
+        _ = store.addToDownloadQueue(song: self)
+    }
+    func queue() {
+        let store: Store = Resolver.resolve()
+        _ = store.queue(song: self)
+    }
 }

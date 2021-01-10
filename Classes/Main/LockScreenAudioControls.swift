@@ -23,13 +23,13 @@ import MediaPlayer
         let settings = Settings.shared()
         let jukebox = Jukebox.shared()
         let audioEngine = AudioEngine.shared()
-        let playQueue = PlayQueue.shared()
+        let playQueue = PlayQueue.shared
         let music = Music.shared()
         
         // Play
         remote.playCommand.isEnabled = true
         remote.playCommand.addTarget { _ in
-            guard playQueue.currentSong() != nil else { return .noActionableNowPlayingItem }
+            guard playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
             if settings.isJukeboxEnabled {
                 if !jukebox.isPlaying {
                     jukebox.play()
@@ -48,7 +48,7 @@ import MediaPlayer
         // Pause
         remote.pauseCommand.isEnabled = true
         remote.pauseCommand.addTarget { _ in
-            guard playQueue.currentSong() != nil else { return .noActionableNowPlayingItem }
+            guard playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
             if settings.isJukeboxEnabled {
                 if jukebox.isPlaying {
                     jukebox.stop()
@@ -64,7 +64,7 @@ import MediaPlayer
         // Toggle play/pause
         remote.togglePlayPauseCommand.isEnabled = true
         remote.togglePlayPauseCommand.addTarget { _ in
-            guard playQueue.currentSong() != nil else { return .noActionableNowPlayingItem }
+            guard playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
             if settings.isJukeboxEnabled {
                 if jukebox.isPlaying {
                     jukebox.stop()
@@ -84,7 +84,7 @@ import MediaPlayer
         // Stop
         remote.stopCommand.isEnabled = true
         remote.stopCommand.addTarget { _ in
-            guard playQueue.currentSong() != nil else { return .noActionableNowPlayingItem }
+            guard playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
             if settings.isJukeboxEnabled {
                 if jukebox.isPlaying {
                     jukebox.stop()
@@ -100,7 +100,7 @@ import MediaPlayer
         // Next Track
         remote.nextTrackCommand.isEnabled = true
         remote.nextTrackCommand.addTarget { _ in
-            guard playQueue.nextSong() != nil else { return .noActionableNowPlayingItem }
+            guard playQueue.nextSong != nil else { return .noActionableNowPlayingItem }
             music.nextSong()
             return .commandFailed
         }
@@ -108,7 +108,7 @@ import MediaPlayer
         // Previous Track
         remote.previousTrackCommand.isEnabled = true
         remote.previousTrackCommand.addTarget { _ in
-            guard playQueue.prevSong() != nil else { return .noActionableNowPlayingItem }
+            guard playQueue.prevSong != nil else { return .noActionableNowPlayingItem }
             music.prevSong()
             return .commandFailed
         }
@@ -119,17 +119,17 @@ import MediaPlayer
             guard let repeatEvent = event as? MPChangeRepeatModeCommandEvent else { return .commandFailed }
             
             switch repeatEvent.repeatType {
-            case .off: playQueue.repeatMode = ISMSRepeatMode_Normal
-            case .one: playQueue.repeatMode = ISMSRepeatMode_RepeatOne
-            case .all: playQueue.repeatMode = ISMSRepeatMode_RepeatAll
+            case .off: playQueue.repeatMode = .none
+            case .one: playQueue.repeatMode = .one
+            case .all: playQueue.repeatMode = .all
             default: return .commandFailed
             }
             return .success
         }
         let currentRepeatType: MPRepeatType
         switch playQueue.repeatMode {
-        case ISMSRepeatMode_RepeatOne: currentRepeatType = .one
-        case ISMSRepeatMode_RepeatAll: currentRepeatType = .all
+        case .one: currentRepeatType = .one
+        case .all: currentRepeatType = .all
         default: currentRepeatType = .off
         }
         remote.changeRepeatModeCommand.currentRepeatType = currentRepeatType
@@ -155,7 +155,7 @@ import MediaPlayer
         // Seeking
         remote.changePlaybackPositionCommand.isEnabled = true
         remote.changePlaybackPositionCommand.addTarget { event in
-            guard settings.isJukeboxEnabled || playQueue.currentSong() != nil else { return .noActionableNowPlayingItem }
+            guard settings.isJukeboxEnabled || playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
             guard let positionEvent = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
             if let player = audioEngine.player, player.isPlaying {
                 player.seekToPosition(inSeconds: positionEvent.positionTime, fadeVolume: true)

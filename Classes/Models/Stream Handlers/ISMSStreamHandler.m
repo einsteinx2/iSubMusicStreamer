@@ -7,8 +7,6 @@
 //
 
 #import "ISMSStreamHandler.h"
-#import "PlayQueueSingleton.h"
-//#import "ISMSSong+DAO.h"
 #import "Defines.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -109,7 +107,7 @@
 	if (self.isPartialPrecacheSleeping)
 		self.partialPrecacheSleep = NO;
 	
-	if ([self.mySong isEqual:playlistS.currentSong])
+	if ([self.mySong isEqual:PlayQueue.shared.currentSong])
 		self.isCurrentSong = YES;
 }
 

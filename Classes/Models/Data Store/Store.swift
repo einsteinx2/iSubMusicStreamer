@@ -73,6 +73,7 @@ fileprivate let debugPrintAllQueries = false
                 try Song.createInitialSchema(db)
                 try DownloadedSong.createInitialSchema(db)
                 try DownloadedSongPathComponent.createInitialSchema(db)
+                try LocalPlaylist.createInitialSchema(db)
             }
             
             // Automatically perform all registered migrations in order

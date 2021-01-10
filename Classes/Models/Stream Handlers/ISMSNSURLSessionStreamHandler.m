@@ -11,9 +11,7 @@
 #import "DatabaseSingleton.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "SavedSettings.h"
-#import "PlayQueueSingleton.h"
 #import "CacheSingleton.h"
-//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "iSubAppDelegate.h"
 #import "Swift.h"
@@ -97,7 +95,7 @@ LOG_LEVEL_ISUB_DEFAULT
     }
     
     self.bitrate = self.mySong.estimatedBitrate;
-    if ([self.mySong isEqual:playlistS.currentSong]) {
+    if ([self.mySong isEqual:PlayQueue.shared.currentSong]) {
         self.isCurrentSong = YES;
     }
     

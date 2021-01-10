@@ -59,37 +59,9 @@ import Resolver
         return store.song(serverId: serverId, id: songIds[indexPath.row])
     }
     
-    @objc func playSong(row: Int) -> Song? {
-        fatalError("implement this")
-//        // Clear the current playlist
-//        if Settings.shared().isJukeboxEnabled {
-//            DatabaseOld.shared().resetJukeboxPlaylist()
-//            Jukebox.shared().clearRemotePlaylist()
-//        } else {
-//            DatabaseOld.shared().resetCurrentPlaylistDb()
-//        }
-//
-//        // Add the songs to the playlist
-//        DatabaseOld.shared().serverDbQueue?.inDatabase { db in
-//            let query = """
-//                INSERT INTO currentPlaylist
-//                SELECT songId, itemOrder
-//                FROM folderSong
-//                WHERE folderId = ?
-//                ORDER BY itemOrder ASC
-//            """
-//            if !db.executeUpdate(query, folderId) {
-//                DDLogError("[SubfolderDAO] Error inserting folder \(folderId)'s songs into current playlist \(db.lastErrorCode()): \(db.lastErrorMessage())");
-//            }
-//        }
-//
-//        // Set player defaults
-//        PlayQueue.shared().isShuffle = false
-//
-//        NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistSongsQueued)
-//
-//        // Start the song
-//        return Music.shared().playSong(atPosition: row)
+    @objc func playSong(indexPath: IndexPath) -> Song? {
+        guard indexPath.section == 1, indexPath.row < songIds.count else { return nil }
+        return store.playSong(position: indexPath.row, songIds: songIds, serverId: serverId)
     }
     
 //    @objc func sectionInfo() -> [Any]? {

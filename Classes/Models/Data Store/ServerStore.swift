@@ -33,8 +33,8 @@ extension Server: FetchableRecord, PersistableRecord {
     func nextServerId() -> Int {
         do {
             return try pool.read { db in
-                let maxServerId = try SQLRequest<Int>(literal: "SELECT MAX(id) FROM \(Server.self)").fetchOne(db) ?? 0
-                return maxServerId + 1
+                let maxId = try SQLRequest<Int>(literal: "SELECT MAX(id) FROM \(Server.self)").fetchOne(db) ?? 0
+                return maxId + 1
             }
         } catch {
             DDLogError("Failed to select next server ID: \(error)")

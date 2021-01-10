@@ -40,6 +40,13 @@ import Foundation
         return TagArtist(serverId: serverId, id: id, name: name, coverArtId: coverArtId, artistImageUrl: artistImageUrl, albumCount: albumCount)
     }
     
+    override func isEqual(_ object: Any?) -> Bool {
+        if let object = object as? TagArtist {
+            return self === object || (serverId == object.serverId && id == object.id)
+        }
+        return false
+    }
+    
     @objc override var description: String {
         return "\(super.description): serverId: \(serverId), id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), artistImageUrl: \(artistImageUrl ?? "nil"), albumCount: \(albumCount)"
     }

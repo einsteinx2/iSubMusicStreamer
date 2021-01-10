@@ -81,8 +81,8 @@ import Foundation
     }
     
     override func isEqual(_ object: Any?) -> Bool {
-        if let otherServer = object as? Server {
-            return id == otherServer.id
+        if let object = object as? Server {
+            return self === object || id == object.id
         }
         return false
     }

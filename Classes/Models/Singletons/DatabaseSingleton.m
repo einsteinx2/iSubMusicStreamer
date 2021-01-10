@@ -7,16 +7,13 @@
 //
 
 #import "DatabaseSingleton.h"
-#import "PlayQueueSingleton.h"
 #import "ISMSStreamManager.h"
 #import "JukeboxSingleton.h"
 #import "FMDatabaseQueueAdditions.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
-#import "PlayQueueSingleton.h"
 #import "JukeboxSingleton.h"
 #import "ISMSStreamManager.h"
-//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 
@@ -438,8 +435,8 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)shufflePlaylist {
 	@autoreleasepool {
-		playlistS.currentIndex = 0;
-		playlistS.isShuffle = YES;
+		PlayQueue.shared.currentIndex = 0;
+		PlayQueue.shared.isShuffle = YES;
 		
 		[self resetShufflePlaylist];
 		

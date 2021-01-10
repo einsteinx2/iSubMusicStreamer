@@ -13,16 +13,13 @@
 #import "Defines.h"
 #import "FMDatabaseQueueAdditions.h"
 #import "SavedSettings.h"
-#import "PlayQueueSingleton.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
-//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import "ISMSCacheQueueManager.h"
 #import "CacheSingleton.h"
-//#import "ISMSSong+DAO.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -270,14 +267,14 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 //	}
 //
 //	if (shuffle) {
-//		playlistS.isShuffle = YES;
+//		PlayQueue.shared.isShuffle = YES;
 //
 //		[databaseS resetShufflePlaylist];
 //		[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
 //			[db executeUpdate:@"INSERT INTO shufflePlaylist SELECT * FROM currentPlaylist ORDER BY RANDOM()"];
 //		}];
 //	} else {
-//		playlistS.isShuffle = NO;
+//		PlayQueue.shared.isShuffle = NO;
 //	}
 //
 //	// Must do UI stuff in main thread
@@ -481,7 +478,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 //            [aSong addToCurrentPlaylistDbQueue];
 //        }
 //
-//        playlistS.isShuffle = NO;
+//        PlayQueue.shared.isShuffle = NO;
 //
 //        [musicS playSongAtPosition:a];
 //

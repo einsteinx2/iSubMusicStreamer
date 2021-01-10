@@ -136,8 +136,8 @@ final class CacheStatusViewController: UIViewController {
     }
     
     @objc private func cacheSongObjects() {
-        currentSong = PlayQueue.shared().currentSong()
-        nextSong = PlayQueue.shared().nextSong()
+        currentSong = PlayQueue.shared.currentSong
+        nextSong = PlayQueue.shared.nextSong
     }
     
     @objc private func startUpdatingStats() {

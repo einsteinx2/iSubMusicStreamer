@@ -14,7 +14,6 @@
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
-//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import <MediaPlayer/MediaPlayer.h>
@@ -235,7 +234,7 @@
         FolderAlbumViewController *folderAlbumViewController = [[FolderAlbumViewController alloc] initWithFolderArtist:nil orFolderAlbum:folderAlbum];
         [self pushViewControllerCustom:folderAlbumViewController];
     } else {
-        ISMSSong *playedSong = [self.dataModel playSongWithRow:indexPath.row];
+        ISMSSong *playedSong = [self.dataModel playSongWithIndexPath:indexPath];
         if (!playedSong.isVideo) {
             [self showPlayer];
         }

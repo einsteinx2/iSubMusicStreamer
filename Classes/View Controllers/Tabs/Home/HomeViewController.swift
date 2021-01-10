@@ -275,7 +275,7 @@ import Resolver
     }
     
     @objc private func initSongInfo() {
-        songInfoButton.update(song: PlayQueue.shared().currentSong() ?? PlayQueue.shared().prevSong())
+        songInfoButton.update(song: PlayQueue.shared.currentSong ?? PlayQueue.shared.prevSong)
     }
     
     private func loadQuickAlbums(modifier: String, title: String) {

@@ -15,11 +15,9 @@
 #import "FMDatabaseQueueAdditions.h"
 #import "Flurry.h"
 #import "SavedSettings.h"
-#import "PlayQueueSingleton.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
-//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 
@@ -400,7 +398,7 @@
 //	} else {
 //		[databaseS resetCurrentPlaylistDb];
 //	}
-//	playlistS.isShuffle = NO;
+//	PlayQueue.shared.isShuffle = NO;
 //
 //	__block NSUInteger bookmarkId = 0;
 //	__block NSUInteger playlistIndex = 0;
@@ -424,7 +422,7 @@
 //		NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
 //		NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 //		NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-//		NSString *table = playlistS.isShuffle ? shufTable : currTable;
+//		NSString *table = PlayQueue.shared.isShuffle ? shufTable : currTable;
 //
 //		[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
 //			[db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
@@ -439,7 +437,7 @@
 //		[aSong addToCurrentPlaylistDbQueue];
 //	}
 //	
-//	playlistS.currentIndex = playlistIndex;
+//	PlayQueue.shared.currentIndex = playlistIndex;
 //	
 //	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
 //		

@@ -19,7 +19,6 @@
 #import "CacheSingleton.h"
 #import "DatabaseSingleton.h"
 #import "ISMSCacheQueueManager.h"
-//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 
@@ -166,7 +165,7 @@
 }
 
 - (void)loadPlayAllPlaylist:(BOOL)shuffle {
-//    playlistS.isShuffle = NO;
+//    PlayQueue.shared.isShuffle = NO;
 //	
 //    [databaseS resetCurrentPlaylistDb];
 //	
@@ -190,10 +189,10 @@
 //	}
 //	
 //	if (shuffle) {
-//		playlistS.isShuffle = YES;
+//		PlayQueue.shared.isShuffle = YES;
 //		[databaseS shufflePlaylist];
 //	} else {
-//		playlistS.isShuffle = NO;
+//		PlayQueue.shared.isShuffle = NO;
 //	}
 //    
 //	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];

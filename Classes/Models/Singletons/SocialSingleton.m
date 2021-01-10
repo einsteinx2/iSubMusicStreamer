@@ -8,15 +8,12 @@
 
 #import "SocialSingleton.h"
 #import "BassGaplessPlayer.h"
-#import "PlayQueueSingleton.h"
 #import "ISMSStreamManager.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "SUSScrobbleLoader.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
-#import "PlayQueueSingleton.h"
 #import "ISMSStreamManager.h"
-//#import "ISMSSong+DAO.h"
 #import "Defines.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -79,7 +76,7 @@ LOG_LEVEL_ISUB_DEFAULT
 //	if (!settingsS.isOfflineMode) {
 //		// If this song wasn't just cached, then notify Subsonic of the playback
 //		ISMSSong *lastCachedSong = streamManagerS.lastCachedSong;
-//		ISMSSong *currentSong = playlistS.currentSong;
+//		ISMSSong *currentSong = PlayQueue.shared.currentSong;
 //		if (![lastCachedSong isEqual:currentSong]) {
 //            NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"stream" parameters:@{@"id": n2N(currentSong.songId)} byteOffset:0];
 //            if ([[NSURLConnection alloc] initWithRequest:request delegate:self])
@@ -94,7 +91,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)scrobbleSongAsSubmission {
 	if (settingsS.isScrobbleEnabled && !settingsS.isOfflineMode) {
-		ISMSSong *currentSong = playlistS.currentSong;
+		ISMSSong *currentSong = PlayQueue.shared.currentSong;
 		[self scrobbleSong:currentSong isSubmission:YES];
 	}
 }
@@ -102,7 +99,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)scrobbleSongAsPlaying {
 	// If scrobbling is enabled, send "now playing" call
 	if (settingsS.isScrobbleEnabled && !settingsS.isOfflineMode) {
-		ISMSSong *currentSong = playlistS.currentSong;
+		ISMSSong *currentSong = PlayQueue.shared.currentSong;
 		[self scrobbleSong:currentSong isSubmission:NO];
 	}
 }

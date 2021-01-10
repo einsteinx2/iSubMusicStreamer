@@ -17,13 +17,11 @@
 #import "Flurry.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
-#import "PlayQueueSingleton.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "CacheSingleton.h"
 #import "ISMSStreamManager.h"
 #import "ISMSCacheQueueManager.h"
-//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import "Reachability.h"
@@ -229,7 +227,7 @@ LOG_LEVEL_ISUB_DEFAULT
                     [audioEngineS.player playPause];
                 }
             } else {
-                [musicS playSongAtPosition:playlistS.currentIndex];
+                [musicS playSongAtPosition:PlayQueue.shared.currentIndex];
             }
         } else if ([[url.host lowercaseString] isEqualToString:@"pause"]) {
             if (audioEngineS.player.isPlaying) {
@@ -239,12 +237,12 @@ LOG_LEVEL_ISUB_DEFAULT
             if (audioEngineS.player) {
                 [audioEngineS.player playPause];
             } else {
-                [musicS playSongAtPosition:playlistS.currentIndex];
+                [musicS playSongAtPosition:PlayQueue.shared.currentIndex];
             }
         } else if ([[url.host lowercaseString] isEqualToString:@"next"]) {
-            [musicS playSongAtPosition:playlistS.nextIndex];
+            [musicS playSongAtPosition:PlayQueue.shared.nextIndex];
         } else if ([[url.host lowercaseString] isEqualToString:@"prev"]) {
-            [musicS playSongAtPosition:playlistS.prevIndex];
+            [musicS playSongAtPosition:PlayQueue.shared.prevIndex];
         }
     }
     
@@ -676,8 +674,8 @@ LOG_LEVEL_ISUB_DEFAULT
     
 //    if (UIDevice.isPad) {
 //        // Turn off repeat one so user doesn't get stuck
-//        if (playlistS.repeatMode == ISMSRepeatMode_RepeatOne) {
-//            playlistS.repeatMode = ISMSRepeatMode_Normal;
+//        if (PlayQueue.shared.repeatMode == ISMSRepeatMode_RepeatOne) {
+//            PlayQueue.shared.repeatMode = ISMSRepeatMode_Normal;
 //        }
 //    }
     

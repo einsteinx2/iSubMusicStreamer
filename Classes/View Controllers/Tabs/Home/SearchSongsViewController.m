@@ -14,11 +14,9 @@
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "SavedSettings.h"
-#import "PlayQueueSingleton.h"
 #import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
-//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import "SUSLoader.h"
@@ -286,7 +284,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			}
 			
 			// Set player defaults
-			playlistS.isShuffle = NO;
+			PlayQueue.shared.isShuffle = NO;
 			
             [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
             

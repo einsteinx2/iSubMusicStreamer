@@ -91,7 +91,7 @@ final class SongInfoViewController: UIViewController {
             return infoLabel
         }
         
-        if let song = PlayQueue.shared().currentSong() {
+        if let song = PlayQueue.shared.currentSong {
 //            if let path = song.path {
 //                stackView.addArrangedSubview(createTitleLabel(text: "File Name"))
 //                let filename = (path as NSString).lastPathComponent

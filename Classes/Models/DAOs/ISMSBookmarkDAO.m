@@ -9,9 +9,7 @@
 #import "ISMSBookmarkDAO.h"
 #import "FMDatabaseQueueAdditions.h"
 #import "DatabaseSingleton.h"
-#import "PlayQueueSingleton.h"
 #import "SavedSettings.h"
-//#import "ISMSSong+DAO.h"
 #import "EX2Kit.h"
 
 @implementation ISMSBookmarkDAO
@@ -20,13 +18,13 @@
 //    // TODO: somehow this is saving the incorrect playlist index sometimes
 //    [databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
 //        NSString *query = [NSString stringWithFormat:@"INSERT INTO bookmarks (playlistIndex, name, position, %@, bytes) VALUES (?, ?, ?, %@, ?)", [ISMSSong standardSongColumnNames], ISMSSong.standardSongColumnQMarks];
-//        [db executeUpdate:query, @(playlistS.currentIndex), name, @(position), song.title, song.songId, song.artist, song.album, song.genre, song.coverArtId, song.path, song.suffix, song.transcodedSuffix, song.duration, song.bitRate, song.track, song.year, song.size, song.parentId, @(song.isVideo), song.discNumber, @(bytePosition)];
+//        [db executeUpdate:query, @(PlayQueue.shared.currentIndex), name, @(position), song.title, song.songId, song.artist, song.album, song.genre, song.coverArtId, song.path, song.suffix, song.transcodedSuffix, song.duration, song.bitRate, song.track, song.year, song.size, song.parentId, @(song.isVideo), song.discNumber, @(bytePosition)];
 //
 //        NSInteger bookmarkId = [db intForQuery:@"SELECT MAX(bookmarkId) FROM bookmarks"];
 //
 //        NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
 //        NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-//        NSString *table = playlistS.isShuffle ? shufTable : currTable;
+//        NSString *table = PlayQueue.shared.isShuffle ? shufTable : currTable;
 //        //DLog(@"table: %@", table);
 //
 //        // Save the playlist

@@ -58,7 +58,7 @@ final class LyricsViewController: UIViewController {
     }
     
     @objc private func updateLyricsLabel() {
-        if let song = PlayQueue.shared().currentSong(), let lyricsText = store.lyricsText(tagArtistName: song.tagArtistName ?? "", songTitle: song.title), lyricsText.count > 0 {
+        if let song = PlayQueue.shared.currentSong, let lyricsText = store.lyricsText(tagArtistName: song.tagArtistName ?? "", songTitle: song.title), lyricsText.count > 0 {
             textView.text = lyricsText
         } else {
             textView.text = "\n\nNo lyrics found"
