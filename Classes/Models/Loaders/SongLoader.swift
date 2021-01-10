@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Resolver
 
 fileprivate var recursiveLoader: RecursiveSongLoader?
 fileprivate var albumLoader: TagAlbumLoader?
@@ -28,15 +29,15 @@ fileprivate var albumLoader: TagAlbumLoader?
     }
     
     @objc static func downloadAll(tagAlbumId: Int) {
-        fatalError("implement this")
-//        albumLoader = TagAlbumLoader(tagAlbumId: tagAlbumId) { success, error in
-//            if success {
-//                albumLoader?.songs.forEach { $0.addToDownloadQueue() }
-//            }
-//            downloadCallback(success: success, error: error)
-//        }
-//        albumLoader?.startLoad()
-//        showLoadingScreen(sender: albumLoader)
+        albumLoader = TagAlbumLoader(tagAlbumId: tagAlbumId) { success, error in
+            if success, let albumLoader = albumLoader {
+                let store: Store = Resolver.main.resolve()
+                _ = store.addToDownloadQueue(serverId: albumLoader.serverId, songIds: albumLoader.songIds)
+            }
+            downloadCallback(success: success, error: error)
+        }
+        albumLoader?.startLoad()
+        showLoadingScreen(sender: albumLoader)
     }
     
     @objc static func queueAll(folderId: Int) {
@@ -156,14 +157,14 @@ fileprivate var albumLoader: TagAlbumLoader?
     }
     
     private static func queueTagAlbum(tagAlbumId: Int, callback: @escaping LoaderCallback) {
-        fatalError("implement this")
-//        albumLoader = TagAlbumLoader(tagAlbumId: tagAlbumId) { success, error in
-//            if success {
-//                albumLoader?.songs.forEach { $0.addToCurrentPlaylistDbQueue() }
-//            }
-//            callback(success, error)
-//        }
-//        albumLoader?.startLoad()
+        albumLoader = TagAlbumLoader(tagAlbumId: tagAlbumId) { success, error in
+            if success, let albumLoader = albumLoader {
+                let store: Store = Resolver.main.resolve()
+                _ = store.queue(songIds: albumLoader.songIds, serverId: albumLoader.serverId)
+            }
+            callback(success, error)
+        }
+        albumLoader?.startLoad()
     }
     
     private static func showLoadingScreen(sender: Any?) {

@@ -1005,10 +1005,6 @@
 		53FE36591EA961720058B925 /* ISMSNotificationNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSNotificationNames.m; sourceTree = "<group>"; };
 		53FE36641EA961720058B925 /* ISMSServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSServer.h; sourceTree = "<group>"; };
 		53FE36651EA961720058B925 /* ISMSServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSServer.m; sourceTree = "<group>"; };
-		53FE36681EA961720058B925 /* ISMSSong+DAO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ISMSSong+DAO.h"; sourceTree = "<group>"; };
-		53FE36691EA961720058B925 /* ISMSSong+DAO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ISMSSong+DAO.m"; sourceTree = "<group>"; };
-		53FE366A1EA961720058B925 /* ISMSSong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSSong.h; sourceTree = "<group>"; };
-		53FE366B1EA961720058B925 /* ISMSSong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSSong.m; sourceTree = "<group>"; };
 		53FE366E1EA961720058B925 /* ISMSStreamHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSStreamHandler.h; sourceTree = "<group>"; };
 		53FE366F1EA961720058B925 /* ISMSStreamHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSStreamHandler.m; sourceTree = "<group>"; };
 		53FE36701EA961720058B925 /* ISMSStreamHandlerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSStreamHandlerDelegate.h; sourceTree = "<group>"; };
@@ -1686,8 +1682,6 @@
 		531D3A0B255AB642000CB0DF /* DAOs */ = {
 			isa = PBXGroup;
 			children = (
-				53FE36681EA961720058B925 /* ISMSSong+DAO.h */,
-				53FE36691EA961720058B925 /* ISMSSong+DAO.m */,
 				53FE36BB1EA961720058B925 /* SUSNowPlayingDAO.h */,
 				53FE36BC1EA961720058B925 /* SUSNowPlayingDAO.m */,
 				53FE36CB1EA961720058B925 /* SUSServerPlaylistsDAO.h */,
@@ -1850,8 +1844,6 @@
 			children = (
 				53FE36641EA961720058B925 /* ISMSServer.h */,
 				53FE36651EA961720058B925 /* ISMSServer.m */,
-				53FE366A1EA961720058B925 /* ISMSSong.h */,
-				53FE366B1EA961720058B925 /* ISMSSong.m */,
 			);
 			path = Deprecated;
 			sourceTree = "<group>";

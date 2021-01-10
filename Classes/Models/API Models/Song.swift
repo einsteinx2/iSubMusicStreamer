@@ -328,8 +328,11 @@ import Resolver
         return downloadProgress;
     }
     
-    @objc func removeFromCachedSongsTable() {
-        // Implement this
+    @objc func removeFromDownloads() -> Bool {
+        let store: Store = Resolver.main.resolve()
+        return store.deleteDownloadedSong(serverId: serverId, songId: id)
+        
+        // TODO: Delete file here? This used to be a database only method
     }
 }
 

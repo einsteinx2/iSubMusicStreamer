@@ -69,6 +69,19 @@ extension DownloadedSongPathComponent: FetchableRecord, PersistableRecord {
         }
     }
     
+    func deleteDownloadedSong(serverId: Int, songId: Int) -> Bool {
+        do {
+            return try pool.write { db in
+                try db.execute(literal: "DELETE FROM \(DownloadedSong.self) WHERE serverId = \(serverId) AND songId = \(songId)")
+                try db.execute(literal: "DELETE FROM \(DownloadedSongPathComponent.self) WHERE serverId = \(serverId) AND songId = \(songId)")
+                return true
+            }
+        } catch {
+            DDLogError("Failed to delete downloaded song record for server \(serverId) and song \(songId): \(error)")
+            return false
+        }
+    }
+    
     func add(downloadedSong: DownloadedSong) -> Bool {
         do {
             return try pool.write { db in
@@ -200,6 +213,24 @@ extension DownloadedSongPathComponent: FetchableRecord, PersistableRecord {
     
     func addToDownloadQueue(song: Song) -> Bool {
         return addToDownloadQueue(serverId: song.serverId, songId: song.id)
+    }
+    
+    func addToDownloadQueue(serverId: Int, songIds: [Int]) -> Bool {
+        do {
+            return try pool.write { db in
+                for songId in songIds {
+                    let sql: SQLLiteral = """
+                        INSERT OR IGNORE INTO downloadQueue (serverId, songId)
+                        VALUES (\(serverId), \(songId)
+                        """
+                    try db.execute(literal: sql)
+                }
+                return true
+            }
+        } catch {
+            DDLogError("Failed to add songIds \(songIds) server \(serverId) to download queue: \(error)")
+            return false
+        }
     }
     
     func removeFromDownloadQueue(serverId: Int, songId: Int) -> Bool {

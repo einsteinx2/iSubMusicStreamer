@@ -7,8 +7,10 @@
 //
 
 import Foundation
+import Resolver
 
 @objc final class RecursiveSongLoader: NSObject {
+    var serverId = Settings.shared().currentServerId
     var callback: LoaderCallback?
         
     private var subfolderLoader: SubfolderLoader?
@@ -124,31 +126,38 @@ import Foundation
     }
     
     private func loadAlbums(tagAlbumIds: [Int]) {
-        fatalError("implement this")
-//        tagAlbumIds.forEach { tagAlbumId in
-//            tagAlbumLoader = TagAlbumLoader(tagAlbumId: tagAlbumId) { [unowned self] success, error in
-//                if success {
-//                    if let songs = self.tagAlbumLoader?.songs {
-//                        self.tagAlbumLoader = nil
-//                        songs.forEach { self.handleSong(song: $0) }
-//                    } else {
-//                        // This should never happen
-//                        self.loadingFailed(success: success, error: nil)
-//                    }
-//                } else {
-//                    self.loadingFailed(success: success, error: error)
-//                }
-//            }
-//        }
+        tagAlbumIds.forEach { tagAlbumId in
+            tagAlbumLoader = TagAlbumLoader(tagAlbumId: tagAlbumId) { [unowned self] success, error in
+                if success {
+                    if let tagAlbumLoader = self.tagAlbumLoader {
+                        self.handleSongIds(songIds: tagAlbumLoader.songIds, serverId: tagAlbumLoader.serverId)
+                        self.tagAlbumLoader = nil
+                    } else {
+                        // This should never happen
+                        self.loadingFailed(success: success, error: nil)
+                    }
+                } else {
+                    self.loadingFailed(success: success, error: error)
+                }
+            }
+        }
     }
     
     private func handleSong(song: Song) {
-        fatalError("implement this")
-//        if isQueue {
-//            song.addToCurrentPlaylistDbQueue()
-//        } else if isDownload {
-//            song.addToDownloadQueue()
-//        }
+        if isQueue {
+            song.queue()
+        } else if isDownload {
+            song.download()
+        }
+    }
+    
+    private func handleSongIds(songIds: [Int], serverId: Int) {
+        let store: Store = Resolver.main.resolve()
+        if isQueue {
+            _ = store.queue(songIds: songIds, serverId: serverId)
+        } else {
+            _ = store.addToDownloadQueue(serverId: serverId, songIds: songIds)
+        }
     }
     
     private func loadingFailed(success: Bool, error: Error?) {
