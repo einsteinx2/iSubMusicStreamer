@@ -29,7 +29,7 @@ import Foundation
     }
     
     @objc func copy(with zone: NSZone? = nil) -> Any {
-        return FolderArtist(serverId: serverId, id: id, name: name)
+        FolderArtist(serverId: serverId, id: id, name: name)
     }
     
     override func isEqual(_ object: Any?) -> Bool {
@@ -40,7 +40,7 @@ import Foundation
     }
     
     @objc override var description: String {
-        return "\(super.description): serverId: \(serverId), id: \(id), name: \(name)"
+        "\(super.description): serverId: \(serverId), id: \(id), name: \(name)"
     }
 }
 

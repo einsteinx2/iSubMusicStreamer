@@ -29,7 +29,7 @@ import Foundation
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
-        return LocalPlaylist(id: id, name: name, songCount: songCount)
+        LocalPlaylist(id: id, name: name, songCount: songCount)
     }
     
     override func isEqual(_ object: Any?) -> Bool {
@@ -40,7 +40,7 @@ import Foundation
     }
     
     override var description: String {
-        return "\(super.description): id: \(id), name: \(name), songCount: \(songCount)"
+        "\(super.description): id: \(id), name: \(name), songCount: \(songCount)"
     }
 }
 

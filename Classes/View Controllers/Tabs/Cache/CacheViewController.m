@@ -200,7 +200,7 @@
 		
 		[self reloadTable];
 		
-		if (self.listOfArtists.count == 0) {
+		if (self.downloadedFolderArtists.count == 0) {
 			[self removeSaveEditButtons];
 			[self addNoSongsScreen];
 		} else {
@@ -286,6 +286,12 @@
 }
 
 - (void)reloadTable {
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        self.downloadedFolderArtists = [Store.shared downloadedFolderArtistsWithServerId:settingsS.currentServerId];
+        [self.tableView reloadData];
+    }
+    
+    
     // TODO: implement this
 //	if (self.segmentedControl.selectedSegmentIndex == 0) {
 //		// Create the artist list
@@ -901,11 +907,16 @@
 
 #pragma mark Table view data source
 
-- (ISMSFolderArtist *)folderArtistForIndexPath:(NSIndexPath *)indexPath {
-    if (self.segmentedControl.selectedSegmentIndex != 0) return nil;
-    
-    NSString *name = [[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] objectAtIndexSafe:indexPath.row];
-    return [[ISMSFolderArtist alloc] initWithServerId:-1 folderId:-1 name:name];
+//- (ISMSFolderArtist *)folderArtistForIndexPath:(NSIndexPath *)indexPath {
+//    if (self.segmentedControl.selectedSegmentIndex != 0) return nil;
+//
+//    NSString *name = [[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] objectAtIndexSafe:indexPath.row];
+//    return [[ISMSFolderArtist alloc] initWithServerId:-1 folderId:-1 name:name];
+//}
+
+- (DownloadedFolderArtist *)downloadedFolderArtistForIndexPath:(NSIndexPath *)indexPath {
+    if (self.segmentedControl.selectedSegmentIndex != 0 || indexPath.row >= self.downloadedFolderArtists.count) return nil;
+    return self.downloadedFolderArtists[indexPath.row];
 }
 
 - (ISMSSong *)songForIndexPath:(NSIndexPath *)indexPath {
@@ -919,54 +930,54 @@
     return nil;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	if (self.segmentedControl.selectedSegmentIndex == 0) {
-		return [self.sectionInfo count];
-	}
-	
-	return 1;
-}
+//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+//	if (self.segmentedControl.selectedSegmentIndex == 0) {
+//		return [self.sectionInfo count];
+//	}
+//
+//	return 1;
+//}
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (self.segmentedControl.selectedSegmentIndex == 0 && self.showIndex) {
-        BlurredSectionHeader *sectionHeader = [tableView dequeueReusableHeaderFooterViewWithIdentifier:BlurredSectionHeader.reuseId];
-        sectionHeader.text = [[self.sectionInfo objectAtIndexSafe:section] objectAtIndexSafe:0];
-        return sectionHeader;
-    }
-    return nil;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (self.segmentedControl.selectedSegmentIndex == 0 && self.showIndex) {
-        return Defines.rowHeight - 5;
-    }
-    return 0;
-}
-
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView  {
-	if (self.segmentedControl.selectedSegmentIndex == 0 && self.showIndex) {
-		NSMutableArray *indexes = [[NSMutableArray alloc] init];
-		for (int i = 0; i < [self.sectionInfo count]; i++) {
-			[indexes addObject:[[self.sectionInfo objectAtIndexSafe:i] objectAtIndexSafe:0]];
-		}
-		return indexes;
-	}
-		
-	return nil;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index  {
-	if (self.segmentedControl.selectedSegmentIndex == 0) {
-		if (index == 0) {
-			[tableView scrollRectToVisible:CGRectMake(0, 90, 320, 40) animated:NO];
-			return -1;
-		}
-		
-		return index;
-	}
-	
-	return -1;
-}
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+//    if (self.segmentedControl.selectedSegmentIndex == 0 && self.showIndex) {
+//        BlurredSectionHeader *sectionHeader = [tableView dequeueReusableHeaderFooterViewWithIdentifier:BlurredSectionHeader.reuseId];
+//        sectionHeader.text = [[self.sectionInfo objectAtIndexSafe:section] objectAtIndexSafe:0];
+//        return sectionHeader;
+//    }
+//    return nil;
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+//    if (self.segmentedControl.selectedSegmentIndex == 0 && self.showIndex) {
+//        return Defines.rowHeight - 5;
+//    }
+//    return 0;
+//}
+//
+//- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView  {
+//	if (self.segmentedControl.selectedSegmentIndex == 0 && self.showIndex) {
+//		NSMutableArray *indexes = [[NSMutableArray alloc] init];
+//		for (int i = 0; i < [self.sectionInfo count]; i++) {
+//			[indexes addObject:[[self.sectionInfo objectAtIndexSafe:i] objectAtIndexSafe:0]];
+//		}
+//		return indexes;
+//	}
+//
+//	return nil;
+//}
+//
+//- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index  {
+//	if (self.segmentedControl.selectedSegmentIndex == 0) {
+//		if (index == 0) {
+//			[tableView scrollRectToVisible:CGRectMake(0, 90, 320, 40) animated:NO];
+//			return -1;
+//		}
+//
+//		return index;
+//	}
+//
+//	return -1;
+//}
 
 // Customize the height of individual rows to make the album rows taller to accomidate the album art.
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -976,7 +987,8 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
     if (self.segmentedControl.selectedSegmentIndex == 0) {
-        return [[self.listOfArtistsSections objectAtIndexSafe:section] count];
+//        return [[self.listOfArtistsSections objectAtIndexSafe:section] count];
+        return self.downloadedFolderArtists.count;
     } else if (self.segmentedControl.selectedSegmentIndex == 1) {
         return self.cacheQueueCount;
     }
@@ -986,17 +998,18 @@
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//	if (self.segmentedControl.selectedSegmentIndex == 0) {
-//        UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-//        cell.hideHeaderLabel = YES;
-//        cell.hideCacheIndicator = YES;
-//        cell.hideNumberLabel = YES;
-//        cell.hideCoverArt = YES;
-//        cell.hideSecondaryLabel = YES;
-//        cell.hideDurationLabel = YES;
-//        [cell updateWithModel:[self folderArtistForIndexPath:indexPath]];
-//        return cell;
-//	} else {
+	if (self.segmentedControl.selectedSegmentIndex == 0) {
+        UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+        cell.hideHeaderLabel = YES;
+        cell.hideCacheIndicator = YES;
+        cell.hideNumberLabel = YES;
+        cell.hideCoverArt = YES;
+        cell.hideSecondaryLabel = YES;
+        cell.hideDurationLabel = YES;
+        [cell updateWithModel:[self downloadedFolderArtistForIndexPath:indexPath]];
+        return cell;
+	} else {
+        // TODO: implement this
 //        UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
 //        cell.hideHeaderLabel = NO;
 //        cell.hideCacheIndicator = YES;
@@ -1029,7 +1042,7 @@
 //            cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Waiting...", [NSString relativeTime:cachedDate]];
 //        }
 //		return cell;
-//	}
+	}
     return nil;
 }
 
@@ -1045,20 +1058,24 @@
 
 #pragma mark Table view delegate
 
-static NSInteger trackSort(id obj1, id obj2, void *context) {
-	NSUInteger track1 = [(NSNumber*)[(NSArray*)obj1 objectAtIndexSafe:1] intValue];
-	NSUInteger track2 = [(NSNumber*)[(NSArray*)obj2 objectAtIndexSafe:1] intValue];
-    if (track1 < track2) {
-		return NSOrderedAscending;
-    } else if (track1 == track2) {
-		return NSOrderedSame;
-    } else {
-		return NSOrderedDescending;
-    }
-}
+//static NSInteger trackSort(id obj1, id obj2, void *context) {
+//	NSUInteger track1 = [(NSNumber*)[(NSArray*)obj1 objectAtIndexSafe:1] intValue];
+//	NSUInteger track2 = [(NSNumber*)[(NSArray*)obj2 objectAtIndexSafe:1] intValue];
+//    if (track1 < track2) {
+//		return NSOrderedAscending;
+//    } else if (track1 == track2) {
+//		return NSOrderedSame;
+//    } else {
+//		return NSOrderedDescending;
+//    }
+//}
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
+    DownloadedFolderArtist *downloadedFolderArtist = [self downloadedFolderArtistForIndexPath:indexPath];
+    CacheAlbumViewController *controller = [[CacheAlbumViewController alloc] initWithLevel:1 parentPathComponent:downloadedFolderArtist.name];
+    [self pushViewControllerCustom:controller];
+    
+    
     // TODO: implement this
 //	if (!indexPath) return;
 //

@@ -78,4 +78,8 @@ import Foundation
         }
         return false
     }
+    
+    override var description: String {
+        "\(super.description): id: \(id), type: \(type), url: \(url)"
+    }
 }

@@ -39,29 +39,157 @@ extension DownloadedSong: FetchableRecord, PersistableRecord {
             t.uniqueKey([Column.serverId, Column.songId])
         }
     }
+    
+    static func fetchOne(_ db: Database, serverId: Int, songId: Int) throws -> DownloadedSong? {
+        try DownloadedSong.filter(literal: "serverId = \(serverId) AND songId = \(songId)").fetchOne(db)
+    }
 }
 
 extension DownloadedSongPathComponent: FetchableRecord, PersistableRecord {
     enum Column: String, ColumnExpression {
-        case serverId, songId, level, pathComponent
+        case level, maxLevel, pathComponent, parentPathComponent, serverId, songId
     }
     
     static func createInitialSchema(_ db: Database) throws {
         try db.create(table: DownloadedSongPathComponent.databaseTableName) { t in
             t.column(Column.serverId, .integer).notNull()
-            t.column(Column.songId, .integer).notNull()
             t.column(Column.level, .integer).notNull()
+            t.column(Column.maxLevel, .integer).notNull()
             t.column(Column.pathComponent, .text).notNull()
+            t.column(Column.parentPathComponent, .text)
+            t.column(Column.songId, .integer).notNull()
         }
-        try db.create(indexOn: DownloadedSongPathComponent.databaseTableName, columns: [Column.level, Column.pathComponent])
+        // TODO: Implement correct indexes
+//        try db.create(indexOn: DownloadedSongPathComponent.databaseTableName, columns: [Column.serverId, Column.songId])
+//        try db.create(indexOn: DownloadedSongPathComponent.databaseTableName, columns: [Column.serverId, Column.level, Column.pathComponent])
+//        try db.create(indexOn: DownloadedSongPathComponent.databaseTableName, columns: [Column.level, Column.pathComponent])
+//        try db.create(indexOn: DownloadedSongPathComponent.databaseTableName, columns: [Column.level, Column.maxLevel, Column.pathComponent])
+    }
+    
+    static func addDownloadedSongPathComponents(_ db: Database, downloadedSong: DownloadedSong) throws {
+        let serverId = downloadedSong.serverId
+        let songId = downloadedSong.songId
+        let pathComponents = NSString(string: downloadedSong.path).pathComponents
+        let maxLevel = pathComponents.count - 1
+        var parentPathComponent: String?
+        for (level, pathComponent) in pathComponents.enumerated() {
+            let record = DownloadedSongPathComponent(level: level, maxLevel: maxLevel, pathComponent: pathComponent, parentPathComponent: parentPathComponent, serverId: serverId, songId: songId)
+            try record.save(db)
+            parentPathComponent = record.pathComponent
+        }
     }
 }
 
+extension DownloadedFolderArtist: FetchableRecord, PersistableRecord {
+}
+
+extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
+}
+
 @objc extension Store {
+//    func downloadedFolderArtists() -> [DownloadedFolderArtist] {
+//        do {
+//            return try pool.read { db in
+//                let sql: SQLLiteral = """
+//                    SELECT serverId, pathComponent AS name
+//                    FROM \(DownloadedSongPathComponent.self)
+//                    WHERE level = 0
+//                    GROUP BY pathComponent
+//                    """
+//                return try SQLRequest<DownloadedFolderArtist>(literal: sql).fetchAll(db)
+//            }
+//        } catch {
+//            DDLogError("Failed to select all downloaded folder artists: \(error)")
+//            return []
+//        }
+//    }
+    
+    func downloadedFolderArtists(serverId: Int) -> [DownloadedFolderArtist] {
+        do {
+            return try pool.read { db in
+                let sql: SQLLiteral = """
+                    SELECT serverId, pathComponent AS name
+                    FROM \(DownloadedSongPathComponent.self)
+                    WHERE serverId = \(serverId) AND level = 0
+                    GROUP BY pathComponent
+                    """
+                return try SQLRequest<DownloadedFolderArtist>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select all downloaded folder artists for server \(serverId): \(error)")
+            return []
+        }
+    }
+    
+//    func downloadedFolderAlbums(level: Int) -> [DownloadedFolderArtist] {
+//        do {
+//            return try pool.read { db in
+//                let sql: SQLLiteral = """
+//                    SELECT serverId, level, pathComponent AS name
+//                    FROM \(DownloadedSongPathComponent.self)
+//                    WHERE serverId = \(serverId) AND level = \(level)
+//                    GROUP BY pathComponent
+//                    """
+//                return try SQLRequest<DownloadedFolderArtist>(literal: sql).fetchAll(db)
+//            }
+//        } catch {
+//            DDLogError("Failed to select all downloaded folder artists for server \(serverId): \(error)")
+//            return []
+//        }
+//    }
+    
+    func downloadedFolderAlbums(serverId: Int, level: Int, parentPathComponent: String) -> [DownloadedFolderAlbum] {
+        do {
+            return try pool.read { db in
+                let sql: SQLLiteral = """
+                    SELECT \(DownloadedSongPathComponent.self).serverId,
+                        \(DownloadedSongPathComponent.self).level,
+                        \(DownloadedSongPathComponent.self).pathComponent AS name,
+                        \(Song.self).coverArtId
+                    FROM \(DownloadedSongPathComponent.self)
+                    JOIN \(Song.self)
+                    ON \(DownloadedSongPathComponent.self).serverId = \(Song.self).serverId
+                        AND \(DownloadedSongPathComponent.self).songId = \(Song.self).id
+                    WHERE \(DownloadedSongPathComponent.self).serverId = \(serverId)
+                        AND \(DownloadedSongPathComponent.self).level = \(level)
+                        AND \(DownloadedSongPathComponent.self).maxLevel != \(level)
+                        AND \(DownloadedSongPathComponent.self).parentPathComponent = \(parentPathComponent)
+                    GROUP BY pathComponent
+                    """
+                return try SQLRequest<DownloadedFolderAlbum>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select all downloaded folder albums for server \(serverId) level \(level) parent \(parentPathComponent): \(error)")
+            return []
+        }
+    }
+    
+    func downloadedSongs(serverId: Int, level: Int, parentPathComponent: String) -> [DownloadedSong] {
+        do {
+            return try pool.read { db in
+                let sql: SQLLiteral = """
+                    SELECT *
+                    FROM \(DownloadedSong.self)
+                    JOIN \(DownloadedSongPathComponent.self)
+                    ON \(DownloadedSong.self).serverId = \(DownloadedSongPathComponent.self).serverId
+                    AND \(DownloadedSong.self).songID = \(DownloadedSongPathComponent.self).songId
+                    WHERE \(DownloadedSongPathComponent.self).serverId = \(serverId)
+                    AND \(DownloadedSongPathComponent.self).level = \(level)
+                    AND \(DownloadedSongPathComponent.self).maxLevel = \(level)
+                    AND \(DownloadedSongPathComponent.self).parentPathComponent = \(parentPathComponent)
+                    """
+                return try SQLRequest<DownloadedSong>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select downloaded songs at level \(level) for server \(serverId): \(error)")
+            return []
+        }
+    }
+    
     func downloadedSong(serverId: Int, songId: Int) -> DownloadedSong? {
         do {
             return try pool.read { db in
-                try DownloadedSong.filter(literal: "serverId = \(serverId) AND songId = \(songId)").fetchOne(db)
+                try DownloadedSong.fetchOne(db, serverId: serverId, songId: songId)
             }
         } catch {
             DDLogError("Failed to select downloaded song \(songId) for server \(serverId): \(error)")
@@ -124,6 +252,11 @@ extension DownloadedSongPathComponent: FetchableRecord, PersistableRecord {
                     WHERE serverId = \(serverId) AND songId = \(songId)
                     """
                 try db.execute(literal: sql)
+                
+                // If the download finished, add the path components
+                if downloadFinished, let downloadedSong = try DownloadedSong.fetchOne(db, serverId: serverId, songId: songId) {
+                    try DownloadedSongPathComponent.addDownloadedSongPathComponents(db, downloadedSong: downloadedSong)
+                }
                 return true
             }
         } catch {
@@ -175,24 +308,6 @@ extension DownloadedSongPathComponent: FetchableRecord, PersistableRecord {
     
     func isDownloadFinished(song: Song) -> Bool {
         return isDownloadFinished(serverId: song.serverId, songId: song.id)
-    }
-    
-    func add(downloadedSongPathComponents downloadedSong: DownloadedSong) -> Bool {
-        do {
-            return try pool.write { db in
-                let serverId = downloadedSong.serverId
-                let songId = downloadedSong.songId
-                let pathComponents = NSString(string: downloadedSong.path).pathComponents
-                for (level, pathComponent) in pathComponents.enumerated() {
-                    let record = DownloadedSongPathComponent(serverId: serverId, songId: songId, level: level, pathComponent: pathComponent)
-                    try record.save(db)
-                }
-                return true
-            }
-        } catch {
-            DDLogError("Failed to insert downloaded song path components \(downloadedSong): \(error)")
-            return false
-        }
     }
     
     func addToDownloadQueue(serverId: Int, songId: Int) -> Bool {

@@ -9,24 +9,28 @@
 import Foundation
 
 @objc final class DownloadedSongPathComponent: NSObject, NSCopying, Codable {
+    @objc let level: Int
+    @objc let maxLevel: Int
+    @objc let pathComponent: String
+    @objc let parentPathComponent: String?
     @objc let serverId: Int
     @objc let songId: Int
-    @objc let level: Int
-    @objc let pathComponent: String
     
-    @objc init(serverId: Int, songId: Int, level: Int, pathComponent: String) {
+    @objc init(level: Int, maxLevel: Int, pathComponent: String, parentPathComponent: String?, serverId: Int, songId: Int) {
+        self.level = level
+        self.maxLevel = maxLevel
+        self.pathComponent = pathComponent
+        self.parentPathComponent = parentPathComponent
         self.serverId = serverId
         self.songId = songId
-        self.level = level
-        self.pathComponent = pathComponent
         super.init()
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
-        return DownloadedSongPathComponent(serverId: serverId, songId: songId, level: level, pathComponent: pathComponent)
+        return DownloadedSongPathComponent(level: level, maxLevel: maxLevel, pathComponent: pathComponent, parentPathComponent: parentPathComponent, serverId: serverId, songId: songId)
     }
     
     override var description: String {
-        return "\(super.description): serverId: \(serverId), songId: \(songId), level: \(level), pathComponent: \(pathComponent)"
+        "\(super.description): level: \(level), maxLevel: \(maxLevel), pathComponent: \(pathComponent), parentPathComponent: \(parentPathComponent ?? "nil"), serverId: \(serverId), songId: \(songId)"
     }
 }

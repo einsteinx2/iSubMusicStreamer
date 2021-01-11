@@ -31,6 +31,10 @@ import Foundation
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
-        return ChatMessage(serverId: serverId, timestamp: timestamp, username: username, message: message)
+        ChatMessage(serverId: serverId, timestamp: timestamp, username: username, message: message)
+    }
+    
+    override var description: String {
+        "\(super.description): serverId: \(serverId), timestamp: \(timestamp), username: \(username), message: \(message)"
     }
 }

@@ -53,7 +53,7 @@ import Foundation
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
-        return TagAlbum(serverId: serverId, id: id, name: name, coverArtId: coverArtId, tagArtistId: tagArtistId, tagArtistName: tagArtistName, songCount: songCount, duration: duration, playCount: playCount, year: year, genre: genre)
+        TagAlbum(serverId: serverId, id: id, name: name, coverArtId: coverArtId, tagArtistId: tagArtistId, tagArtistName: tagArtistName, songCount: songCount, duration: duration, playCount: playCount, year: year, genre: genre)
     }
     
     override func isEqual(_ object: Any?) -> Bool {
@@ -64,7 +64,7 @@ import Foundation
     }
     
     override var description: String {
-        return "\(super.description): serverId: \(serverId), id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), tagArtistId: \(tagArtistId ?? "nil"), tagArtistName: \(tagArtistName ?? "nil"), songCount: \(songCount), duration: \(duration), playCount: \(playCount), year: \(year), genre: \(genre ?? "nil")"
+        "\(super.description): serverId: \(serverId), id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), tagArtistId: \(tagArtistId ?? "nil"), tagArtistName: \(tagArtistName ?? "nil"), songCount: \(songCount), duration: \(duration), playCount: \(playCount), year: \(year), genre: \(genre ?? "nil")"
     }
 }
 

@@ -23,6 +23,6 @@ import Foundation
     }
     
     override var description: String {
-        return "\(super.description): serverId: \(serverId), mediaFolderId: \(mediaFolderId), itemCount: \(itemCount), reloadDate: \(reloadDate)"
+        "\(super.description): serverId: \(serverId), mediaFolderId: \(mediaFolderId), itemCount: \(itemCount), reloadDate: \(reloadDate)"
     }
 }

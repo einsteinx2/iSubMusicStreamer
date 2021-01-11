@@ -49,6 +49,6 @@ import Foundation
     }
     
     override var description: String {
-        return "\(super.description): serverId: \(serverId), songId: \(songId), path: \(path), isFinished: \(isFinished), isPinned: \(isPinned), size: \(size), cachedDate: \(cachedDate?.description ?? "nil"), playedDate: \(playedDate?.description ?? "nil")"
+        "\(super.description): serverId: \(serverId), songId: \(songId), path: \(path), isFinished: \(isFinished), isPinned: \(isPinned), size: \(size), cachedDate: \(cachedDate?.description ?? "nil"), playedDate: \(playedDate?.description ?? "nil")"
     }
 }

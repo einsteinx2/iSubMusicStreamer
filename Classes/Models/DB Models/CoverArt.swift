@@ -26,6 +26,6 @@ import Foundation
     }
     
     override var description: String {
-        return "\(super.description): serverId: \(serverId), id: \(id), isLarge: \(isLarge), data.count: \(data.count)"
+        "\(super.description): serverId: \(serverId), id: \(id), isLarge: \(isLarge), data.count: \(data.count)"
     }
 }

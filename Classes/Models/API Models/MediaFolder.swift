@@ -38,6 +38,6 @@ import GRDB
     }
     
     override var description: String {
-        return "\(super.description): serverId: \(serverId), id: \(id), name: \(name)"
+        "\(super.description): serverId: \(serverId), id: \(id), name: \(name)"
     }
 }

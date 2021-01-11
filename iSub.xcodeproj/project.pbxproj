@@ -256,6 +256,10 @@
 		539D331025AA61DD00F53797 /* LocalPlaylistStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D330E25AA61DD00F53797 /* LocalPlaylistStore.swift */; };
 		539D331225AB691B00F53797 /* PlayQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D331125AB691B00F53797 /* PlayQueue.swift */; };
 		539D331325AB691B00F53797 /* PlayQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D331125AB691B00F53797 /* PlayQueue.swift */; };
+		539D331825AC8D8B00F53797 /* DownloadedFolderArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D331725AC8D8B00F53797 /* DownloadedFolderArtist.swift */; };
+		539D331925AC8D8B00F53797 /* DownloadedFolderArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D331725AC8D8B00F53797 /* DownloadedFolderArtist.swift */; };
+		539D331B25AC95A300F53797 /* DownloadedFolderAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D331A25AC95A300F53797 /* DownloadedFolderAlbum.swift */; };
+		539D331C25AC95A300F53797 /* DownloadedFolderAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D331A25AC95A300F53797 /* DownloadedFolderAlbum.swift */; };
 		53A2BE24147DF09800E44822 /* EqualizerPointView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A2BE23147DF09800E44822 /* EqualizerPointView.m */; };
 		53A2BE26147DF09800E44822 /* EqualizerPointView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A2BE23147DF09800E44822 /* EqualizerPointView.m */; };
 		53A2BE28147DF13600E44822 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A2BE27147DF13600E44822 /* OpenGLES.framework */; };
@@ -824,6 +828,8 @@
 		539D330B25AA55E000F53797 /* LocalPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPlaylist.swift; sourceTree = "<group>"; };
 		539D330E25AA61DD00F53797 /* LocalPlaylistStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPlaylistStore.swift; sourceTree = "<group>"; };
 		539D331125AB691B00F53797 /* PlayQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayQueue.swift; sourceTree = "<group>"; };
+		539D331725AC8D8B00F53797 /* DownloadedFolderArtist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadedFolderArtist.swift; sourceTree = "<group>"; };
+		539D331A25AC95A300F53797 /* DownloadedFolderAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadedFolderAlbum.swift; sourceTree = "<group>"; };
 		53A2BE22147DF09800E44822 /* EqualizerPointView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerPointView.h; sourceTree = "<group>"; };
 		53A2BE23147DF09800E44822 /* EqualizerPointView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EqualizerPointView.m; sourceTree = "<group>"; };
 		53A2BE27147DF13600E44822 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -1829,6 +1835,8 @@
 				535E144025A7D3480039BCAA /* ArtistArt.swift */,
 				539D330225AA336600F53797 /* DownloadedSong.swift */,
 				539D330525AA353C00F53797 /* DownloadedSongPathComponent.swift */,
+				539D331725AC8D8B00F53797 /* DownloadedFolderArtist.swift */,
+				539D331A25AC95A300F53797 /* DownloadedFolderAlbum.swift */,
 			);
 			path = "DB Models";
 			sourceTree = "<group>";
@@ -2340,6 +2348,7 @@
 				530A167F259277E700E9294E /* SearchAllViewController.swift in Sources */,
 				53FE36F21EA961720058B925 /* BassParamEqValue.m in Sources */,
 				53FE351F1EA961540058B925 /* NSString+URLEncode.m in Sources */,
+				539D331825AC8D8B00F53797 /* DownloadedFolderArtist.swift in Sources */,
 				53E04938255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */,
 				539D32D825A8E07E00F53797 /* Server.swift in Sources */,
 				53D4FCB9259967CF00C6F1AE /* SubfolderLoader.swift in Sources */,
@@ -2531,6 +2540,7 @@
 				534B20E9256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
 				53FE36FE1EA961720058B925 /* CacheSingleton.m in Sources */,
 				53E04947255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */,
+				539D331B25AC95A300F53797 /* DownloadedFolderAlbum.swift in Sources */,
 				53FE35041EA961540058B925 /* NSString+FileSize.m in Sources */,
 				53FE36F51EA961720058B925 /* BassStream.m in Sources */,
 				537E9A0A14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */,
@@ -2576,6 +2586,7 @@
 				530A1680259277E700E9294E /* SearchAllViewController.swift in Sources */,
 				53FE37901EA961720058B925 /* SocialSingleton.m in Sources */,
 				53FE350C1EA961540058B925 /* NSString+HasValue.m in Sources */,
+				539D331925AC8D8B00F53797 /* DownloadedFolderArtist.swift in Sources */,
 				539D32D925A8E07E00F53797 /* Server.swift in Sources */,
 				53D4FCBA259967CF00C6F1AE /* SubfolderLoader.swift in Sources */,
 				53BCC51D181387B300442E86 /* CustomUINavigationController.m in Sources */,
@@ -2767,6 +2778,7 @@
 				53FE37001EA961720058B925 /* CacheSingleton.m in Sources */,
 				53E04948255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */,
 				53FE35061EA961540058B925 /* NSString+FileSize.m in Sources */,
+				539D331C25AC95A300F53797 /* DownloadedFolderAlbum.swift in Sources */,
 				53FE36F71EA961720058B925 /* BassStream.m in Sources */,
 				537E9A0C14F323EF006CB0BC /* UIViewController+PushViewControllerCustom.m in Sources */,
 				53246AA4256C209E00E11EC4 /* ServerEditViewController.swift in Sources */,

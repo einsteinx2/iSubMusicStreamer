@@ -37,7 +37,7 @@ import Foundation
     }
     
     @objc func copy(with zone: NSZone? = nil) -> Any {
-        return TagArtist(serverId: serverId, id: id, name: name, coverArtId: coverArtId, artistImageUrl: artistImageUrl, albumCount: albumCount)
+        TagArtist(serverId: serverId, id: id, name: name, coverArtId: coverArtId, artistImageUrl: artistImageUrl, albumCount: albumCount)
     }
     
     override func isEqual(_ object: Any?) -> Bool {
@@ -48,7 +48,7 @@ import Foundation
     }
     
     @objc override var description: String {
-        return "\(super.description): serverId: \(serverId), id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), artistImageUrl: \(artistImageUrl ?? "nil"), albumCount: \(albumCount)"
+        "\(super.description): serverId: \(serverId), id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), artistImageUrl: \(artistImageUrl ?? "nil"), albumCount: \(albumCount)"
     }
 }
 

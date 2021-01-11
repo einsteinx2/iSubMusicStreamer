@@ -267,15 +267,15 @@ import Resolver
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
-        return Song(serverId: serverId, id: id, title: title, coverArtId: coverArtId, parentFolderId: parentFolderId, tagArtistName: tagArtistName, tagAlbumName: tagAlbumName, playCount: playCount, year: year, tagArtistId: tagArtistId, tagAlbumId: tagAlbumId, genre: genre, path: path, suffix: suffix, transcodedSuffix: transcodedSuffix, duration: duration, bitrate: bitrate, track: track, discNumber: discNumber, size: size, isVideo: isVideo)
+        Song(serverId: serverId, id: id, title: title, coverArtId: coverArtId, parentFolderId: parentFolderId, tagArtistName: tagArtistName, tagAlbumName: tagAlbumName, playCount: playCount, year: year, tagArtistId: tagArtistId, tagAlbumId: tagAlbumId, genre: genre, path: path, suffix: suffix, transcodedSuffix: transcodedSuffix, duration: duration, bitrate: bitrate, track: track, discNumber: discNumber, size: size, isVideo: isVideo)
     }
     
     override var description: String {
-        return "\(super.description): serverId: \(serverId), id: \(id), title: \(title)"
+        "\(super.description): serverId: \(serverId), id: \(id), title: \(title)"
     }
     
     override var hash: Int {
-        return id.hashValue
+        id.hashValue
     }
     
     override func isEqual(_ object: Any?) -> Bool {
