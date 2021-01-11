@@ -18,11 +18,12 @@
 //@property (nonatomic, strong) NSArray *segments;
 
 
+@property (nonatomic) NSInteger serverId;
 @property (nonatomic) NSInteger level;
 @property (nonatomic) NSString *parentPathComponent;
 @property (nonatomic, strong) NSArray<DownloadedFolderAlbum*> *downloadedFolderAlbums;
 @property (nonatomic, strong) NSArray<DownloadedSong*> *downloadedSongs;
 
-- (instancetype)initWithLevel:(NSInteger)level parentPathComponent:(NSString *)parentPathComponent;
+- (instancetype)initWithServerId:(NSInteger)serverId level:(NSInteger)level parentPathComponent:(NSString *)parentPathComponent;
 
 @end

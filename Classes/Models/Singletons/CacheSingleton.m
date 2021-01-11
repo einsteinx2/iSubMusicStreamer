@@ -62,7 +62,6 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)removeOldestCachedSongs {
-    // TODO: implement this using new data model
 	if (settingsS.cachingType == ISMSCachingType_minSpace) {
 		// Remove the oldest songs based on either oldest played or oldest cached until free space is more than minFreeSpace
 		while (self.freeSpace < settingsS.minFreeSpace) {
@@ -224,6 +223,8 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 + (void)setAllCachedSongsToNotBackup {
+    // TODO: Handle clearing cached songs DB after iCloud restore
+    // TODO: implement this
     [FileSystem.downloadsDirectory addSkipBackupAttribute];
 }
 

@@ -7,8 +7,11 @@
 //
 
 import Foundation
+import Resolver
 
 @objc final class ServerShuffleLoader: SUSLoader {
+    @Injected private var store: Store
+    
     override var type: SUSLoaderType { SUSLoaderType_ServerShuffle }
     
     var mediaFolderId: Int?
@@ -24,24 +27,8 @@ import Foundation
     
     override func processResponse() {
         guard let receivedData = receivedData else { return }
-                
         let parser = SearchXMLParser(data: receivedData)
-        
-        // TODO: implement this
-//        if Settings.shared().isJukeboxEnabled {
-//            DatabaseOld.shared().resetJukeboxPlaylist()
-//            Jukebox.shared().clearRemotePlaylist()
-//        } else {
-//            DatabaseOld.shared().resetCurrentPlaylistDb()
-//        }
-        
-        for song in parser.songs {
-            song.download()
-        }
-        
-        PlayQueue.shared.isShuffle = false
-        
-        NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistSongsQueued)
+        _ = store.playSong(position: 0, songs: parser.songs)
         informDelegateLoadingFinished()
     }
 }

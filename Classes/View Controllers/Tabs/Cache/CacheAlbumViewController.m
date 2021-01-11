@@ -51,8 +51,9 @@ LOG_LEVEL_ISUB_DEFAULT
 //	else return NSOrderedDescending;
 //}
 
-- (instancetype)initWithLevel:(NSInteger)level parentPathComponent:(NSString *)parentPathComponent {
+- (instancetype)initWithServerId:(NSInteger)serverId level:(NSInteger)level parentPathComponent:(NSString *)parentPathComponent {
     if (self = [super initWithNibName:nil bundle:nil]) {
+        _serverId = serverId;
         _level = level;
         _parentPathComponent = parentPathComponent;
     }
@@ -66,10 +67,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
     self.tableView.rowHeight = Defines.rowHeight;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
-    
-    NSInteger serverId = SavedSettings.sharedInstance.currentServerId;
-    self.downloadedFolderAlbums = [Store.shared downloadedFolderAlbumsWithServerId:serverId level:self.level parentPathComponent:self.parentPathComponent];
-    self.downloadedSongs = [Store.shared downloadedSongsWithServerId:serverId level:self.level parentPathComponent:self.parentPathComponent];
+    [self loadData];
     
 //    // Sort the subfolders in the same way that Subsonic sorts them (indefinite articles)
 //    [self.albums sortUsingComparator:^NSComparisonResult(NSArray* _Nonnull obj1, NSArray* _Nonnull obj2) {
@@ -98,6 +96,11 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 	[NSNotificationCenter removeObserverOnMainThread:self name:@"cachedSongDeleted"];
+}
+
+- (void)loadData {
+    self.downloadedFolderAlbums = [Store.shared downloadedFolderAlbumsWithServerId:self.serverId level:self.level parentPathComponent:self.parentPathComponent];
+    self.downloadedSongs = [Store.shared downloadedSongsWithServerId:self.serverId level:self.level parentPathComponent:self.parentPathComponent];
 }
 
 - (void)addHeaderAndIndex {
@@ -170,139 +173,31 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)cachedSongDeleted {
-    // TODO: implement this
-//	NSUInteger segment = self.segments.count;
-//
-//	self.albums = [NSMutableArray arrayWithCapacity:1];
-//	self.songs = [NSMutableArray arrayWithCapacity:1];
-//
-//	NSMutableString *query = [NSMutableString stringWithFormat:@"SELECT md5, segs, seg%lu, track FROM cachedSongsLayout JOIN cachedSongs USING(md5) WHERE seg1 = ? ", (long)(segment+1)];
-//	for (int i = 2; i <= segment; i++) {
-//		[query appendFormat:@" AND seg%i = ? ", i];
-//	}
-//	[query appendFormat:@"GROUP BY seg%lu ORDER BY seg%lu COLLATE NOCASE", (long)(segment+1), (long)(segment+1)];
-//
-//	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-//		FMResultSet *result = [db executeQuery:query withArgumentsInArray:self.segments];
-//		while ([result next]) {
-//			@autoreleasepool {
-//				NSString *md5 = [result stringForColumnIndex:0];
-//				NSInteger segs = [result intForColumnIndex:1];
-//				NSString *seg = [result stringForColumnIndex:2];
-//				NSInteger track = [result intForColumnIndex:3];
-//                NSInteger discNumber = [result intForColumn:@"discNumber"];
-//
-//				if (segs > (segment + 1)) {
-//					if (md5 && seg) {
-//                        NSArray *albumEntry = @[md5, seg];
-//						[self.albums addObject:albumEntry];
-//					}
-//				} else {
-//					if (md5) {
-//                        NSArray *songEntry = @[md5, @(track), @(discNumber)];
-//						[self.songs addObject:songEntry];
-//
-//						BOOL multipleSameTrackNumbers = NO;
-//						NSMutableArray *trackNumbers = [NSMutableArray arrayWithCapacity:self.songs.count];
-//						for (NSArray *song in self.songs) {
-//							NSNumber *track = [song objectAtIndexSafe:1];
-//
-//							if ([trackNumbers containsObject:track]) {
-//								multipleSameTrackNumbers = YES;
-//								break;
-//							}
-//
-//							if (track)
-//								[trackNumbers addObject:track];
-//						}
-//
-//						// Sort by track number
-//                        if (!multipleSameTrackNumbers) {
-//							[self.songs sortUsingFunction:trackSort context:NULL];
-//                        }
-//					}
-//				}
-//			}
-//		}
-//		[result close];
-//	}];
-//
-//	// If the table is empty, pop back one view, otherwise reload the table data
-//	if (self.albums.count + self.songs.count == 0) {
-//		if (UIDevice.isPad) {
-//            [appDelegateS.padRootViewController.currentContentNavigationController popToRootViewControllerAnimated:YES];
-//		} else {
-//			// Handle the moreNavigationController stupidity
-//			if (appDelegateS.currentTabBarController.selectedIndex == 4) {
-//				[appDelegateS.currentTabBarController.moreNavigationController popToViewController:[appDelegateS.currentTabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
-//			} else {
-//				[(UINavigationController*)appDelegateS.currentTabBarController.selectedViewController popToRootViewControllerAnimated:YES];
-//			}
-//		}
-//	} else {
-//		[self.tableView reloadData];
-//	}
+    [self loadData];
+    
+	// If the table is empty, pop back one view, otherwise reload the table data
+	if (self.downloadedFolderAlbums.count + self.downloadedSongs.count == 0) {
+		if (UIDevice.isPad) {
+            [appDelegateS.padRootViewController.currentContentNavigationController popToRootViewControllerAnimated:YES];
+		} else {
+			// Handle the moreNavigationController stupidity
+			if (appDelegateS.currentTabBarController.selectedIndex == 4) {
+				[appDelegateS.currentTabBarController.moreNavigationController popToViewController:[appDelegateS.currentTabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
+			} else {
+				[(UINavigationController*)appDelegateS.currentTabBarController.selectedViewController popToRootViewControllerAnimated:YES];
+			}
+		}
+	} else {
+		[self.tableView reloadData];
+	}
 }
 
 - (void)loadPlayAllPlaylist:(BOOL)shuffle {
-//	NSUInteger segment = [self.segments count];
-//
-//	if (settingsS.isJukeboxEnabled) {
-//		[databaseS resetJukeboxPlaylist];
-//		[jukeboxS clearRemotePlaylist];
-//	} else {
-//		[databaseS resetCurrentPlaylistDb];
-//	}
-//
-//	NSMutableString *query = [NSMutableString stringWithString:@"SELECT md5 FROM cachedSongsLayout JOIN cachedSongs USING(md5) WHERE seg1 = ? "];
-//	for (int i = 2; i <= segment; i++) {
-//		[query appendFormat:@" AND seg%i = ? ", i];
-//	}
-//	[query appendString:@"ORDER BY seg1, seg2, seg3, seg4, seg5, seg6, seg7, seg8 COLLATE NOCASE"];
-//
-//	NSMutableArray *songMd5s = [NSMutableArray arrayWithCapacity:50];
-//	[databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-//        FMResultSet *result = [db executeQuery:query withArgumentsInArray:self.segments];
-//		while ([result next]) {
-//			@autoreleasepool {
-//				NSString *md5 = [result stringForColumnIndex:0];
-//				if (md5) [songMd5s addObject:md5];
-//			}
-//		}
-//		[result close];
-//	}];
-//
-//	for (NSString *md5 in songMd5s) {
-//		@autoreleasepool {
-//			ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:md5];
-//			[aSong addToCurrentPlaylistDbQueue];
-//		}
-//	}
-//
-//	if (shuffle) {
-//		PlayQueue.shared.isShuffle = YES;
-//
-//		[databaseS resetShufflePlaylist];
-//		[databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
-//			[db executeUpdate:@"INSERT INTO shufflePlaylist SELECT * FROM currentPlaylist ORDER BY RANDOM()"];
-//		}];
-//	} else {
-//		PlayQueue.shared.isShuffle = NO;
-//	}
-//
-//	// Must do UI stuff in main thread
-//    [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
-//	[EX2Dispatch runInMainThreadAndWaitUntilDone:NO block:^ {
-//        [viewObjectsS hideLoadingScreen];
-//        [musicS playSongAtPosition:0];
-//        if (UIDevice.isPad) {
-//            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
-//        } else {
-//            PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
-//            playerViewController.hidesBottomBarWhenPushed = YES;
-//            [self.navigationController pushViewController:playerViewController animated:YES];
-//        }
-//    }];
+    NSArray<ISMSSong*> *songs = [Store.shared songsRecursiveWithServerId:self.serverId level:self.level parentPathComponent:self.parentPathComponent];
+    [Store.shared playSongWithPosition:0 songs:songs];
+    if (shuffle) {
+        [PlayQueue.shared shuffleToggle];
+    }
 }
 
 - (IBAction)nowPlayingAction:(id)sender {
@@ -391,7 +286,7 @@ LOG_LEVEL_ISUB_DEFAULT
     
     if (indexPath.section == 0) {
         DownloadedFolderAlbum *downloadedFolderAlbum = [self downloadedFolderAlbumAtIndexPath:indexPath];
-        CacheAlbumViewController *controller = [[CacheAlbumViewController alloc] initWithLevel:downloadedFolderAlbum.level + 1 parentPathComponent:downloadedFolderAlbum.name];
+        CacheAlbumViewController *controller = [[CacheAlbumViewController alloc] initWithServerId:downloadedFolderAlbum.serverId level:downloadedFolderAlbum.level + 1 parentPathComponent:downloadedFolderAlbum.name];
         [self pushViewControllerCustom:controller];
     } else {
         // TODO: Optimize this

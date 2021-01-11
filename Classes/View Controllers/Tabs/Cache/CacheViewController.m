@@ -506,7 +506,6 @@
     self.songsCountLabel.textAlignment = NSTextAlignmentCenter;
     self.songsCountLabel.font = [UIFont boldSystemFontOfSize:22];
     if (self.segmentedControl.selectedSegmentIndex == 0) {
-        // TODO: implement this
         NSInteger downloadedSongsCount = Store.shared.downloadedSongsCount;
         if (downloadedSongsCount == 1) {
             self.songsCountLabel.text = [NSString stringWithFormat:@"1 Song"];
@@ -1062,7 +1061,7 @@
     
     if (self.segmentedControl.selectedSegmentIndex == 0) {
         DownloadedFolderArtist *downloadedFolderArtist = [self downloadedFolderArtistForIndexPath:indexPath];
-        CacheAlbumViewController *controller = [[CacheAlbumViewController alloc] initWithLevel:1 parentPathComponent:downloadedFolderArtist.name];
+        CacheAlbumViewController *controller = [[CacheAlbumViewController alloc] initWithServerId:downloadedFolderArtist.serverId level:1 parentPathComponent:downloadedFolderArtist.name];
         [self pushViewControllerCustom:controller];
     } else {
         // TODO: implement this
@@ -1079,7 +1078,6 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.segmentedControl.selectedSegmentIndex == 0) {
-        // TODO: implement this
         // Custom queue and delete actions
         return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
             // TODO: implement this

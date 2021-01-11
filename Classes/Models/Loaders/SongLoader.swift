@@ -133,7 +133,7 @@ fileprivate var albumLoader: TagAlbumLoader?
             if Settings.shared().isJukeboxEnabled {
                 Jukebox.shared().clearRemotePlaylist()
             }
-            DatabaseOld.shared().shufflePlaylist()
+            PlayQueue.shared.shuffleToggle()
             if Settings.shared().isJukeboxEnabled {
                 Jukebox.shared().replacePlaylistWithLocal()
             } else {
@@ -151,8 +151,8 @@ fileprivate var albumLoader: TagAlbumLoader?
         if Settings.shared().isJukeboxEnabled {
             Jukebox.shared().clearPlaylist()
         } else {
-            // TODO: implement this
-//            DatabaseOld.shared().resetCurrentPlaylistDb()
+            let store: Store = Resolver.main.resolve()
+            _ = store.clearPlayQueue()
         }
         PlayQueue.shared.isShuffle = false
     }

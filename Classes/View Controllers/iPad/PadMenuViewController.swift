@@ -128,6 +128,7 @@ import SnapKit
         tableView(tableView, didSelectRowAt: indexPath)
     }
     
+    // TODO: implement this
     private func showController(indexPath: IndexPath) {
         // If we have the back button displayed, subtract 1 from the row to get the correct action
         let row = AppDelegate.shared().referringAppUrl == nil ? indexPath.row : indexPath.row - 1
@@ -143,13 +144,13 @@ import SnapKit
                     controller = CustomUINavigationController(rootViewController: ServerListViewController(nibName: "ServerListViewController", bundle: nil))
                     cachedTabs["ServerListViewController"] = controller
                 }
-            case 1:
-                if let cachedController = cachedTabs["CacheOfflineFoldersViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: CacheOfflineFoldersViewController(nibName: "CacheOfflineFoldersViewController", bundle: nil))
-                    cachedTabs["CacheOfflineFoldersViewController"] = controller
-                }
+//            case 1:
+//                if let cachedController = cachedTabs["CacheOfflineFoldersViewController"] {
+//                    controller = cachedController
+//                } else {
+//                    controller = CustomUINavigationController(rootViewController: CacheOfflineFoldersViewController(nibName: "CacheOfflineFoldersViewController", bundle: nil))
+//                    cachedTabs["CacheOfflineFoldersViewController"] = controller
+//                }
 //            case 2:
 //                if let cachedController = cachedTabs["GenresViewController"] {
 //                    controller = cachedController

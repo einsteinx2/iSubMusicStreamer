@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Resolver
 
 @objc final class DownloadedFolderAlbum: NSObject, NSCopying, Codable {
     @objc let serverId: Int
@@ -36,8 +37,18 @@ extension DownloadedFolderAlbum: TableCellModel {
     var secondaryLabelText: String? { nil }
     var durationLabelText: String? { nil }
     var isCached: Bool { true }
-    func download() { }
+    func download() {
+        let store: Store = Resolver.main.resolve()
+        let songs = store.songsRecursive(serverId: serverId, level: level, parentPathComponent: name)
+        for song in songs {
+            song.download()
+        }
+    }
     func queue() {
-        // TODO: implement this
+        let store: Store = Resolver.main.resolve()
+        let songs = store.songsRecursive(serverId: serverId, level: level, parentPathComponent: name)
+        for song in songs {
+            song.queue()
+        }
     }
 }

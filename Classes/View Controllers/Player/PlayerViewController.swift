@@ -758,7 +758,7 @@ import CocoaLumberjackSwift
     }
     
     private func updateBookmarkButton() {
-        // TODO: implement this using new data model
+        // TODO: implement this
 //        var bookmarkCount: Int32 = 0
 //        if let songId = self.currentSong?.id {
 //            DatabaseOld.shared().bookmarksDbQueue?.inDatabase { db in

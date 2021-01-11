@@ -21,8 +21,6 @@ NS_SWIFT_NAME(DatabaseOld)
 @interface DatabaseSingleton : NSObject
 
 + (instancetype)sharedInstance NS_SWIFT_NAME(shared());
-+ (void)setAllSongsToBackup;
-+ (void)setAllSongsToNotBackup;
 
 - (void)setupDatabases;
 - (void)closeAllDatabases;
@@ -32,10 +30,6 @@ NS_SWIFT_NAME(DatabaseOld)
 
 - (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column NS_SWIFT_NAME(sectionInfoFromOrderColumnTable(_:databaseQueue:column:));
 - (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column NS_SWIFT_NAME(sectionInfoFromOrderColumnTable(_:database:column:));
-
-- (void)shufflePlaylist;
-
-- (void)updateTableDefinitions;
 
 @end
 

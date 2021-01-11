@@ -172,16 +172,6 @@ LOG_LEVEL_ISUB_DEFAULT
     }
 }
 
-- (void)updateTableDefinitions {
-	// Add conditional table update statements here as DB schema changes
-    
-    // TODO: Move song records from all playlist tables to the new database
-    
-    // TODO: Move data from old offline databases into offline prefixed tables in the shared db queue
-
-    // TODO: Delete old database files
-}
-
 - (void)closeAllDatabases {
     [Store.shared closeAllDatabases];
 }
@@ -268,51 +258,13 @@ LOG_LEVEL_ISUB_DEFAULT
     return sections;
 }
 
-- (void)shufflePlaylist {
-    // TODO: implement this
-//	@autoreleasepool {
-//		PlayQueue.shared.currentIndex = 0;
-//		PlayQueue.shared.isShuffle = YES;
-//
-//		[self resetShufflePlaylist];
-//
-//		[self.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
-//            if (settingsS.isJukeboxEnabled) {
-//				[db executeUpdate:@"INSERT INTO jukeboxShufflePlaylist SELECT * FROM jukeboxCurrentPlaylist ORDER BY RANDOM()"];
-//            } else {
-//				[db executeUpdate:@"INSERT INTO shufflePlaylist SELECT * FROM currentPlaylist ORDER BY RANDOM()"];
-//            }
-//		}];
-//
-//		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistShuffleToggled];
-//	}
-}
-
 #pragma mark - Singleton methods
 
 - (void)setup  {
 	[self setupDatabases];
 }
 
-+ (void)setAllSongsToBackup {
-    // Handle moving the song cache database if necessary
-    NSString *path = [settingsS.databasePath stringByAppendingPathComponent:@"songCache.db"];
-    NSFileManager *defaultManager = [NSFileManager defaultManager];
-    if ([defaultManager fileExistsAtPath:path]) {
-        // Set the no backup flag since the file already exists
-        [[NSURL fileURLWithPath:path] removeSkipBackupAttribute];
-    }
-}
 
-+ (void)setAllSongsToNotBackup {
-    // Handle moving the song cache database if necessary
-    NSString *path = [settingsS.databasePath stringByAppendingPathComponent:@"songCache.db"];
-    NSFileManager *defaultManager = [NSFileManager defaultManager];
-    if ([defaultManager fileExistsAtPath:path]) {
-        // Set the no backup flag since the file already exists
-        [[NSURL fileURLWithPath:path] addSkipBackupAttribute];
-    }
-}
 
 + (instancetype)sharedInstance {
     static DatabaseSingleton *sharedInstance = nil;

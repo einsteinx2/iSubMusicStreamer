@@ -96,10 +96,6 @@
 		533C65D015ABB9D6003EAF29 /* SettingsTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65D415ABB9D6003EAF29 /* SettingsTabViewController.xib */; };
 		533C65DC15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */; };
 		533C65DE15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */; };
-		533D181D255F72FF003F962C /* CacheOfflineFoldersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533D181A255F72FE003F962C /* CacheOfflineFoldersViewController.xib */; };
-		533D181E255F72FF003F962C /* CacheOfflineFoldersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533D181A255F72FE003F962C /* CacheOfflineFoldersViewController.xib */; };
-		533D181F255F72FF003F962C /* CacheOfflineFoldersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 533D181C255F72FF003F962C /* CacheOfflineFoldersViewController.m */; };
-		533D1820255F72FF003F962C /* CacheOfflineFoldersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 533D181C255F72FF003F962C /* CacheOfflineFoldersViewController.m */; };
 		533D18E325602530003F962C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DB25602526003F962C /* CocoaLumberjack.framework */; };
 		533D18E425602530003F962C /* CocoaLumberjack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DB25602526003F962C /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		533D18E725602539003F962C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DB25602526003F962C /* CocoaLumberjack.framework */; };
@@ -712,9 +708,6 @@
 		53329640255F2B960027C51A /* AlbumTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumTableViewHeader.swift; sourceTree = "<group>"; };
 		53329647255F2E770027C51A /* PlayAllAndShuffleHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayAllAndShuffleHeader.swift; sourceTree = "<group>"; };
 		53329651255F30220027C51A /* ClosureSleeve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosureSleeve.swift; sourceTree = "<group>"; };
-		533D181A255F72FE003F962C /* CacheOfflineFoldersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CacheOfflineFoldersViewController.xib; sourceTree = "<group>"; };
-		533D181B255F72FF003F962C /* CacheOfflineFoldersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheOfflineFoldersViewController.h; sourceTree = "<group>"; };
-		533D181C255F72FF003F962C /* CacheOfflineFoldersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheOfflineFoldersViewController.m; sourceTree = "<group>"; };
 		533D18D225602526003F962C /* Lumberjack.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Lumberjack.xcodeproj; path = Frameworks/CocoaLumberjack/Lumberjack.xcodeproj; sourceTree = "<group>"; };
 		533F651C160533F4000098E1 /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
 		5340B8A4256968C400FD5D6D /* ISMSBookmarkDAO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSBookmarkDAO.h; sourceTree = "<group>"; };
@@ -1471,9 +1464,6 @@
 				530B416F11B607A200743C09 /* CacheViewController.h */,
 				530B417011B607A200743C09 /* CacheViewController.m */,
 				530B417111B607A200743C09 /* CacheViewController.xib */,
-				533D181B255F72FF003F962C /* CacheOfflineFoldersViewController.h */,
-				533D181C255F72FF003F962C /* CacheOfflineFoldersViewController.m */,
-				533D181A255F72FE003F962C /* CacheOfflineFoldersViewController.xib */,
 				538229F311C98091003F1E23 /* CacheAlbumViewController.h */,
 				538229F411C98091003F1E23 /* CacheAlbumViewController.m */,
 			);
@@ -2260,7 +2250,6 @@
 				533C659115ABB9AD003EAF29 /* SearchSongsViewController.xib in Resources */,
 				530738F41FAF6A72005C2650 /* Media.xcassets in Resources */,
 				531D3A01255AB5F6000CB0DF /* MainWindow.xib in Resources */,
-				533D181D255F72FF003F962C /* CacheOfflineFoldersViewController.xib in Resources */,
 				533C659F15ABB9B3003EAF29 /* SearchAllViewController.xib in Resources */,
 				533C65DC15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */,
 				539148E02559FEFD004AAC3F /* Launch Screen.storyboard in Resources */,
@@ -2291,7 +2280,6 @@
 				533C658C15ABB9A9003EAF29 /* HomeAlbumViewController.xib in Resources */,
 				533C659315ABB9AD003EAF29 /* SearchSongsViewController.xib in Resources */,
 				531D3A04255AB5F6000CB0DF /* MainWindow-iPad.xib in Resources */,
-				533D181E255F72FF003F962C /* CacheOfflineFoldersViewController.xib in Resources */,
 				533C65A115ABB9B3003EAF29 /* SearchAllViewController.xib in Resources */,
 				533C65DE15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */,
 				534B20DB25619936007FF1D7 /* HomeViewController.xib in Resources */,
@@ -2371,7 +2359,6 @@
 				53ABE3631165C83900197877 /* PlayingViewController.m in Sources */,
 				53ABE54311665B6B00197877 /* PlaylistsViewController.m in Sources */,
 				53FE36EF1EA961720058B925 /* BassGaplessPlayer.m in Sources */,
-				533D181F255F72FF003F962C /* CacheOfflineFoldersViewController.m in Sources */,
 				53FE67AC256DE9600015FC83 /* Defines.swift in Sources */,
 				53FE38BC1EA961C80058B925 /* ZKLog.m in Sources */,
 				535E143B25A7CC690039BCAA /* CoverArtStore.swift in Sources */,
@@ -2790,7 +2777,6 @@
 				53246AA4256C209E00E11EC4 /* ServerEditViewController.swift in Sources */,
 				53FE38A01EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53FE6797256DD0F00015FC83 /* GCDWebServerConnection.m in Sources */,
-				533D1820255F72FF003F962C /* CacheOfflineFoldersViewController.m in Sources */,
 				536C994F16619F5D005A73C6 /* ViewObjectsSingleton.m in Sources */,
 				53FE67A1256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
 				539D331025AA61DD00F53797 /* LocalPlaylistStore.swift in Sources */,

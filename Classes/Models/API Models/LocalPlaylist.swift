@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Resolver
 
 @objc final class LocalPlaylist: NSObject, NSCopying, Codable {
     struct Default {
@@ -50,36 +51,17 @@ extension LocalPlaylist: TableCellModel {
     var durationLabelText: String? { nil }
     var coverArtId: String? { nil }
     var isCached: Bool { false }
-    
     func download() {
-        // TODO: implement this
-        //    [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-        //
-        //    [EX2Dispatch runInBackgroundAfterDelay:0.05 block:^{
-        //        for (int i = 0; i < self.count; i++) {
-        //            [[ISMSSong songFromDbRow:i inTable:self.databaseTable inDatabaseQueue:databaseS.localPlaylistsDbQueue] addToDownloadQueue];
-        //        }
-        //
-        //        [EX2Dispatch runInMainThreadAsync:^{
-        //            [viewObjectsS hideLoadingScreen];
-        //        }];
-        //    }];
+        let store: Store = Resolver.main.resolve()
+        for position in 0..<self.songCount {
+            store.song(localPlaylistId: id, position: position)?.download()
+        }
     }
     
     func queue() {
-        // TODO: implement this
-        //    [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-        //
-        //    [EX2Dispatch runInBackgroundAfterDelay:0.05 block:^{
-        //        for (int i = 0; i < self.count; i++) {
-        //            [[ISMSSong songFromDbRow:i inTable:self.databaseTable inDatabaseQueue:databaseS.localPlaylistsDbQueue] addToCurrentPlaylistDbQueue];
-        //        }
-        //
-        //        [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
-        //
-        //        [EX2Dispatch runInMainThreadAsync:^{
-        //            [viewObjectsS hideLoadingScreen];
-        //        }];
-        //    }];
+        let store: Store = Resolver.main.resolve()
+        for position in 0..<self.songCount {
+            store.song(localPlaylistId: id, position: position)?.queue()
+        }
     }
 }

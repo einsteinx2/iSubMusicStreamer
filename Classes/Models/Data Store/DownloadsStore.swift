@@ -174,6 +174,35 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         return song(serverId: downloadedSong.serverId, id: downloadedSong.songId)
     }
     
+    func songsRecursive(serverId: Int, level: Int, parentPathComponent: String) -> [Song] {
+        do {
+            return try pool.read { db in
+                let sql: SQLLiteral = """
+                    SELECT *
+                    FROM \(Song.self)
+                    JOIN \(DownloadedSongPathComponent.self)
+                    ON \(DownloadedSongPathComponent.self).serverId = \(Song.self).serverId
+                        AND \(DownloadedSongPathComponent.self).songId = \(Song.self).id
+                    WHERE \(DownloadedSongPathComponent.self).serverId = \(serverId)
+                        AND  \(DownloadedSongPathComponent.self).level >= \(level)
+                    GROUP BY \(Song.self).serverId, \(Song.self).id
+                    """
+                return try SQLRequest<Song>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select all songs recursively for server \(serverId) level \(level) parent \(parentPathComponent): \(error)")
+            return []
+        }
+    }
+    
+    func songsRecursive(downloadedFolderArtist: DownloadedFolderArtist) -> [Song] {
+        return songsRecursive(serverId: downloadedFolderArtist.serverId, level: 0, parentPathComponent: downloadedFolderArtist.name)
+    }
+    
+    func songsRecursive(downloadedFolderAlbum: DownloadedFolderAlbum) -> [Song] {
+        return songsRecursive(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level, parentPathComponent: downloadedFolderAlbum.name)
+    }
+    
     func downloadedSongsCount() -> Int {
         do {
             return try pool.read { db in

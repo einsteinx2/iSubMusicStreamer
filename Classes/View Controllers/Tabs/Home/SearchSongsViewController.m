@@ -254,49 +254,42 @@ LOG_LEVEL_ISUB_DEFAULT
 			return;
 		}
 	} else {
-        // TODO: implement this
-//		if (indexPath.row != self.songs.count) {
-//			// Clear the current playlist
-//			if (settingsS.isJukeboxEnabled) {
-//				[databaseS resetJukeboxPlaylist];
-//				[jukeboxS clearRemotePlaylist];
-//			} else {
-//				[databaseS resetCurrentPlaylistDb];
-//			}
-//
-//			// Add the songs to the playlist
-//			NSMutableArray *songIds = [[NSMutableArray alloc] init];
-//			for (ISMSSong *aSong in self.songs) {
-//				@autoreleasepool {
-//                    [aSong queue];
-//
-//					// In jukebox mode, collect the song ids to send to the server
-//                    if (settingsS.isJukeboxEnabled) {
-//                        [songIds addObject:@(aSong.songId)];
-//                    }
-//				}
-//			}
-//
-//			// If jukebox mode, send song ids to server
-//			if (settingsS.isJukeboxEnabled) {
-//				[jukeboxS stop];
-//				[jukeboxS clearPlaylist];
-//				[jukeboxS addSongs:songIds];
-//			}
-//
-//			// Set player defaults
-//			PlayQueue.shared.isShuffle = NO;
-//
-//            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
-//
-//			// Start the song
-//			ISMSSong *playedSong = [musicS playSongAtPosition:indexPath.row];
-//            if (!playedSong.isVideo) {
-//                [self showPlayer];
-//            }
-//
-//			return;
-//		}
+		if (indexPath.row != self.songs.count) {
+            (void)[Store.shared clearPlayQueue];
+
+			// Add the songs to the playlist
+			NSMutableArray *songIds = [[NSMutableArray alloc] init];
+			for (ISMSSong *aSong in self.songs) {
+				@autoreleasepool {
+                    [aSong queue];
+
+					// In jukebox mode, collect the song ids to send to the server
+                    if (settingsS.isJukeboxEnabled) {
+                        [songIds addObject:@(aSong.songId)];
+                    }
+				}
+			}
+
+			// If jukebox mode, send song ids to server
+			if (settingsS.isJukeboxEnabled) {
+				[jukeboxS stop];
+				[jukeboxS clearPlaylist];
+				[jukeboxS addSongs:songIds];
+			}
+
+			// Set player defaults
+			PlayQueue.shared.isShuffle = NO;
+
+            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+
+			// Start the song
+			ISMSSong *playedSong = [musicS playSongAtPosition:indexPath.row];
+            if (!playedSong.isVideo) {
+                [self showPlayer];
+            }
+
+			return;
+		}
 	}
 	
 	[self.tableView deselectRowAtIndexPath:indexPath animated:NO];

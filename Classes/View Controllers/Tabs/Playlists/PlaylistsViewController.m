@@ -270,20 +270,19 @@ LOG_LEVEL_ISUB_DEFAULT
 			self.savePlaylistLabel.text = @"Save Playlist";
 		} else if (self.segmentedControl.selectedSegmentIndex == 1) {
 			self.savePlaylistLabel.frame = CGRectMake(0, 0, 227, 50);
-            // TODO: implement this
-//			NSUInteger localPlaylistsCount = [databaseS.localPlaylistsDbQueue intForQuery:@"SELECT COUNT(*) FROM localPlaylists"];
-//            if (localPlaylistsCount == 1) {
-//				self.savePlaylistLabel.text = [NSString stringWithFormat:@"1 playlist"];
-//            } else {
-//				self.savePlaylistLabel.text = [NSString stringWithFormat:@"%lu playlists", (unsigned long)localPlaylistsCount];
-//            }
+            NSInteger localPlaylistsCount = Store.shared.localPlaylistsCount;
+            if (localPlaylistsCount == 1) {
+				self.savePlaylistLabel.text = [NSString stringWithFormat:@"1 playlist"];
+            } else {
+				self.savePlaylistLabel.text = [NSString stringWithFormat:@"%ld playlists", (long)localPlaylistsCount];
+            }
 		} else if (self.segmentedControl.selectedSegmentIndex == 2) {
 			self.savePlaylistLabel.frame = CGRectMake(0, 0, 227, 50);
-			NSUInteger serverPlaylistsCount = [self.serverPlaylistsDataModel.serverPlaylists count];
+			NSInteger serverPlaylistsCount = [self.serverPlaylistsDataModel.serverPlaylists count];
             if (serverPlaylistsCount == 1) {
 				self.savePlaylistLabel.text = [NSString stringWithFormat:@"1 playlist"];
             } else {
-				self.savePlaylistLabel.text = [NSString stringWithFormat:@"%lu playlists", (unsigned long)serverPlaylistsCount];
+				self.savePlaylistLabel.text = [NSString stringWithFormat:@"%ld playlists", (long)serverPlaylistsCount];
             }
 		}
 		[self.saveEditContainer addSubview:self.savePlaylistLabel];
@@ -297,7 +296,7 @@ LOG_LEVEL_ISUB_DEFAULT
             if (self.currentPlaylistCount == 1) {
 				self.playlistCountLabel.text = [NSString stringWithFormat:@"1 song"];
             } else {
-				self.playlistCountLabel.text = [NSString stringWithFormat:@"%lu songs", (unsigned long)self.currentPlaylistCount];
+				self.playlistCountLabel.text = [NSString stringWithFormat:@"%ld songs", (long)self.currentPlaylistCount];
             }
 		}
 		[self.saveEditContainer addSubview:self.playlistCountLabel];

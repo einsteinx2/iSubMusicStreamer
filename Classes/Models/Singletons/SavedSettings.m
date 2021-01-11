@@ -447,16 +447,10 @@ LOG_LEVEL_ISUB_DEFAULT
     if (isBackupCacheEnabled) {
         //Set all cached songs to removeSkipBackup
         [CacheSingleton setAllCachedSongsToBackup];
-        
-        // Set database to removeskipBackup
-        [DatabaseSingleton setAllSongsToBackup];
  
     } else {
-        //Set all cached songs to removeSkipBackup
+        // Set all cached songs to removeSkipBackup
         [CacheSingleton setAllCachedSongsToNotBackup];
-        
-        // Set database to removeskipBackup
-        [DatabaseSingleton setAllSongsToNotBackup];
     }
 }
 

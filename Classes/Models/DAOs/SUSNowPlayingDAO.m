@@ -91,19 +91,8 @@
 	return nil;
 }
 
-- (ISMSSong *)playSongAtIndex:(NSUInteger)index
-{
-    // TODO: implement this
-//	// Clear the current playlist
-//	if (settingsS.isJukeboxEnabled)
-//	{
-//		[databaseS resetJukeboxPlaylist];
-//		[jukeboxS clearRemotePlaylist];
-//	}
-//	else
-//	{
-//		[databaseS resetCurrentPlaylistDb];
-//	}
+- (ISMSSong *)playSongAtIndex:(NSUInteger)index {
+    (void)[Store.shared clearPlayQueue];
 	
 	// Add the song to the empty playlist
 	[[self songForIndex:index] queue];

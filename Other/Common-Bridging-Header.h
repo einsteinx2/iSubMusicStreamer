@@ -33,7 +33,6 @@
 #import "BookmarksViewController.h"
 #import "FoldersViewController.h"
 #import "PlayingViewController.h"
-#import "CacheOfflineFoldersViewController.h"
 
 // Views
 #import "CellCachedIndicatorView.h"

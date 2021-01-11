@@ -76,6 +76,16 @@ fileprivate let debugPrintAllQueries = false
                 try LocalPlaylist.createInitialSchema(db)
             }
             
+            // Migrate old data
+            // TODO: implement this
+            migrator.registerMigration("migrateOldDate") { db in
+                // TODO: Move song records from all playlist tables to the new database
+                
+                // TODO: Move data from old offline databases into offline prefixed tables in the shared db queue
+
+                // TODO: Delete old database files
+            }
+            
             // Automatically perform all registered migrations in order
             // (will only perform migrations that have not run before)
             try migrator.migrate(pool)
