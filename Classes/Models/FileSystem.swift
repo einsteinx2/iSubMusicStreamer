@@ -9,29 +9,29 @@
 import Foundation
 import CocoaLumberjackSwift
 
-struct FileSystem {
-    static let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    static let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+@objc class FileSystem: NSObject {
+    @objc static let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    @objc static let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
     
-    static var applicationSupportDirectory: URL = {
+    @objc static var applicationSupportDirectory: URL = {
         let url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("iSub")
         createDirectory(url: url)
         return url
     }()
     
-    static var databaseDirectory: URL = {
+    @objc static var databaseDirectory: URL = {
         let url = applicationSupportDirectory.appendingPathComponent("database")
         createDirectory(url: url)
         return url
     }()
     
-    static var downloadsDirectory: URL {
+    @objc static var downloadsDirectory: URL {
         let url = documentDirectory.appendingPathComponent("Downloads")
         createDirectory(url: url)
         return url
     }
     
-    static var tempDownloadsDirectory: URL {
+    @objc static var tempDownloadsDirectory: URL {
         let url = cachesDirectory.appendingPathComponent("Temp Downloads")
         createDirectory(url: url)
         return url

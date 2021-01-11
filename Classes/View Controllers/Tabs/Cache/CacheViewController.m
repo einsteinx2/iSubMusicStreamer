@@ -27,7 +27,8 @@
 #import "Reachability.h"
 
 @interface CacheViewController ()
-@property NSUInteger cacheQueueCount;
+@property (nonatomic, strong) NSArray<DownloadedFolderArtist*> *downloadedFolderArtists;
+@property NSUInteger downloadQueueCount;
 @end
 
 @implementation CacheViewController
@@ -88,7 +89,7 @@
     self.segmentControlContainer = [[UIView alloc] init];
     self.segmentControlContainer.translatesAutoresizingMaskIntoConstraints = NO;
     
-	self.segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Cached", @"Downloading"]];
+	self.segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Downloads", @"Download Queue"]];
     self.segmentedControl.translatesAutoresizingMaskIntoConstraints = NO;
 	[self.segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
 	self.segmentedControl.selectedSegmentIndex = 0;
@@ -214,10 +215,13 @@
 		
 		[self reloadTable];
 		
-		if (self.cacheQueueCount > 0) {
-			[self removeNoSongsScreen];
-			[self addSaveEditButtons];
-		}
+		if (self.downloadQueueCount == 0) {
+            [self removeSaveEditButtons];
+            [self addNoSongsScreen];
+        } else {
+            [self removeNoSongsScreen];
+            [self addSaveEditButtons];
+        }
 	}
 	
 	[self.tableView reloadData];
@@ -288,8 +292,11 @@
 - (void)reloadTable {
     if (self.segmentedControl.selectedSegmentIndex == 0) {
         self.downloadedFolderArtists = [Store.shared downloadedFolderArtistsWithServerId:settingsS.currentServerId];
-        [self.tableView reloadData];
+        
+    } else {
+        self.downloadQueueCount = Store.shared.downloadedSongsCount;
     }
+    [self.tableView reloadData];
     
     
     // TODO: implement this
@@ -500,17 +507,17 @@
     self.songsCountLabel.font = [UIFont boldSystemFontOfSize:22];
     if (self.segmentedControl.selectedSegmentIndex == 0) {
         // TODO: implement this
-//        NSUInteger cachedSongsCount = [databaseS.songCacheDbQueue intForQuery:@"SELECT COUNT(*) FROM cachedSongs WHERE finished = 'YES' AND md5 != ''"];
-//        if ([databaseS.songCacheDbQueue intForQuery:@"SELECT COUNT(*) FROM cachedSongs WHERE finished = 'YES' AND md5 != ''"] == 1) {
-//            self.songsCountLabel.text = [NSString stringWithFormat:@"1 Song"];
-//        } else {
-//            self.songsCountLabel.text = [NSString stringWithFormat:@"%lu Songs", (unsigned long)cachedSongsCount];
-//        }
-    } else if (self.segmentedControl.selectedSegmentIndex == 1) {
-        if (self.cacheQueueCount == 1) {
+        NSInteger downloadedSongsCount = Store.shared.downloadedSongsCount;
+        if (downloadedSongsCount == 1) {
             self.songsCountLabel.text = [NSString stringWithFormat:@"1 Song"];
         } else {
-            self.songsCountLabel.text = [NSString stringWithFormat:@"%lu Songs", (unsigned long)self.cacheQueueCount];
+            self.songsCountLabel.text = [NSString stringWithFormat:@"%ld Songs", (long)downloadedSongsCount];
+        }
+    } else if (self.segmentedControl.selectedSegmentIndex == 1) {
+        if (self.downloadQueueCount == 1) {
+            self.songsCountLabel.text = [NSString stringWithFormat:@"1 Song"];
+        } else {
+            self.songsCountLabel.text = [NSString stringWithFormat:@"%ld Songs", (long)self.downloadQueueCount];
         }
     }
     [self.saveEditContainer addSubview:self.songsCountLabel];
@@ -772,18 +779,18 @@
     }
 }
 
-- (NSMutableArray<NSString*> *)selectedRowNames {
-    NSMutableArray<NSString*> *selectedRowNames = [[NSMutableArray alloc] init];
-    if (self.segmentedControl.selectedSegmentIndex == 0) {
-        for (NSIndexPath *indexPath in self.tableView.indexPathsForSelectedRows) {
-            NSString *name = [[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] objectAtIndexSafe:indexPath.row];
-            [selectedRowNames addObject:name];
-        }
-    }
-    return selectedRowNames;
-}
+//- (NSMutableArray<NSString*> *)selectedRowNames {
+//    NSMutableArray<NSString*> *selectedRowNames = [[NSMutableArray alloc] init];
+//    if (self.segmentedControl.selectedSegmentIndex == 0) {
+//        for (NSIndexPath *indexPath in self.tableView.indexPathsForSelectedRows) {
+//            NSString *name = [[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] objectAtIndexSafe:indexPath.row];
+//            [selectedRowNames addObject:name];
+//        }
+//    }
+//    return selectedRowNames;
+//}
 
-- (NSMutableArray<NSString*> *)selectedRowMD5s {
+//- (NSMutableArray<NSString*> *)selectedRowMD5s {
     // TODO: implement this
 //    NSMutableArray<NSString*> *selectedRowMD5s = [[NSMutableArray alloc] init];
 //    if (self.segmentedControl.selectedSegmentIndex == 0) {
@@ -810,93 +817,95 @@
 //        }
 //    }
 //    return selectedRowMD5s;
-}
+//}
 
 - (void)deleteCachedSongs {
-//	[self unregisterForNotifications];
-//
-//	for (NSString *md5 in self.selectedRowMD5s) {
-//		@autoreleasepool {
-//			[ISMSSong removeSongFromCacheDbByMD5:md5];
-//		}
-//	}
-//
-//	[self segmentAction:nil];
-//
-//	[cacheS findCacheSize];
-//
-//	[viewObjectsS hideLoadingScreen];
-//
-//    if (!cacheQueueManagerS.isQueueDownloading) {
-//		[cacheQueueManagerS startDownloadQueue];
-//    }
-//
-//	[self registerForNotifications];
+	[self unregisterForNotifications];
+        
+    NSArray *indexPathsForSelectedRows = self.tableView.indexPathsForSelectedRows;
+    [EX2Dispatch runInBackgroundAsync:^{
+        for (NSIndexPath *indexPath in indexPathsForSelectedRows) {
+            (void)[Store.shared deleteDownloadedSongsWithDownloadedFolderArtist:[self downloadedFolderArtistForIndexPath:indexPath]];
+        }
+
+        [cacheS findCacheSize];
+        
+        [EX2Dispatch runInMainThreadAsync:^{
+            [self segmentAction:nil];
+
+            [viewObjectsS hideLoadingScreen];
+
+            if (!cacheQueueManagerS.isQueueDownloading) {
+                [cacheQueueManagerS startDownloadQueue];
+            }
+
+            [self registerForNotifications];
+        }];
+    }];
 }
 
 - (void)deleteQueuedSongs {
-//  	[self unregisterForNotifications];
-//	
-//	// Delete each song from the database
-//	for (NSString *md5 in self.selectedRowMD5s) {
-//		//NSDate *inside = [NSDate date];
-//		if (cacheQueueManagerS.isQueueDownloading) {
-//			// Check if we're deleting the song that's currently caching. If so, stop the download.
-//			if (cacheQueueManagerS.currentQueuedSong) {
-//				if ([[cacheQueueManagerS.currentQueuedSong.path md5] isEqualToString:md5]) {
-//					[cacheQueueManagerS stopDownloadQueue];
-//				}
-//			}
-//		}
-//		
-//		// Delete the row from the cacheQueue
-//		[databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
-//			[db executeUpdate:@"DELETE FROM cacheQueue WHERE md5 = ?", md5];
-//		}];
-//	}
-//		
-//	// Reload the table
-//	[self editSongsAction:nil];
-//	
-//    if (!cacheQueueManagerS.isQueueDownloading) {
-//		[cacheQueueManagerS startDownloadQueue];
-//    }
-//	
-//	[viewObjectsS hideLoadingScreen];
-//	
-//	[self registerForNotifications];
+  	[self unregisterForNotifications];
+    
+    // Reverse order of rows to delete from top to bottom so positions don't change during the loop
+    NSArray *indexPathsForSelectedRows = self.tableView.indexPathsForSelectedRows;
+    NSMutableArray *positions = [NSMutableArray arrayWithCapacity:indexPathsForSelectedRows.count];
+    for (NSIndexPath *indexPath in indexPathsForSelectedRows.reverseObjectEnumerator) {
+        [positions addObject:@(indexPath.row)];
+    }
+    
+    // TODO: Rewrite this to not require loading each song
+    [EX2Dispatch runInBackgroundAsync:^{
+        for (NSNumber *position in positions) {
+            ISMSSong *song = [Store.shared songFromDownloadQueueWithPosition:position.integerValue];
+            if (song) {
+                (void)[Store.shared removeFromDownloadQueueWithSong:song];
+            }
+        }
+        
+        [EX2Dispatch runInMainThreadAsync:^{
+            // Reload the table
+            [self editSongsAction:nil];
+            
+            if (!cacheQueueManagerS.isQueueDownloading) {
+                [cacheQueueManagerS startDownloadQueue];
+            }
+            
+            [viewObjectsS hideLoadingScreen];
+            
+            [self registerForNotifications];
+        }];
+    }];
 }
 
 - (void)deleteSongsAction:(id)sender {
-    // TODO: implement this
-//	if (self.isEditing) {
-//		if ([self.deleteSongsLabel.text isEqualToString:@"Select All"]) {
-//			if (self.segmentedControl.selectedSegmentIndex == 0) {
-//				// Select all the rows
-//                NSUInteger sectionCount = self.listOfArtistsSections.count;
-//                for (NSUInteger section = 0; section < sectionCount; section++) {
-//                    NSUInteger rowCount = [(NSArray*)self.listOfArtistsSections[section] count];
-//                    for (NSUInteger row = 0; row < rowCount; row++) {
-//                        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section] animated:NO scrollPosition:UITableViewScrollPositionNone];
-//                    }
-//                }
-//			} else {
-//				// Select all the rows
-//                NSUInteger rowCount = [databaseS.cacheQueueDbQueue intForQuery:@"SELECT count(*) FROM cacheQueue"];
-//                for (NSUInteger i = 0; i < rowCount; i++) {
-//                    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
-//                }
-//			}
-//			[self showDeleteButton];
-//		} else {
-//			[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Deleting"];
-//            if (self.segmentedControl.selectedSegmentIndex == 0) {
-//				[self performSelector:@selector(deleteCachedSongs) withObject:nil afterDelay:0.05];
-//            } else {
-//				[self performSelector:@selector(deleteQueuedSongs) withObject:nil afterDelay:0.05];
-//            }
-//		}
-//	}
+	if (self.isEditing) {
+		if ([self.deleteSongsLabel.text isEqualToString:@"Select All"]) {
+			if (self.segmentedControl.selectedSegmentIndex == 0) {
+				// Select all the rows
+                NSUInteger sectionCount = self.listOfArtistsSections.count;
+                for (NSUInteger section = 0; section < sectionCount; section++) {
+                    NSUInteger rowCount = [(NSArray*)self.listOfArtistsSections[section] count];
+                    for (NSUInteger row = 0; row < rowCount; row++) {
+                        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section] animated:NO scrollPosition:UITableViewScrollPositionNone];
+                    }
+                }
+			} else {
+				// Select all the rows
+                for (NSUInteger i = 0; i < self.downloadQueueCount; i++) {
+                    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+                }
+			}
+			[self showDeleteButton];
+		} else {
+			[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Deleting"];
+            if (self.segmentedControl.selectedSegmentIndex == 0) {
+				[self performSelector:@selector(deleteCachedSongs) withObject:nil afterDelay:0.05];
+            } else {
+				[self performSelector:@selector(deleteQueuedSongs) withObject:nil afterDelay:0.05];
+            }
+		}
+	}
 }
 
 - (void)playAllPlaySong {
@@ -907,27 +916,13 @@
 
 #pragma mark Table view data source
 
-//- (ISMSFolderArtist *)folderArtistForIndexPath:(NSIndexPath *)indexPath {
-//    if (self.segmentedControl.selectedSegmentIndex != 0) return nil;
-//
-//    NSString *name = [[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] objectAtIndexSafe:indexPath.row];
-//    return [[ISMSFolderArtist alloc] initWithServerId:-1 folderId:-1 name:name];
-//}
-
 - (DownloadedFolderArtist *)downloadedFolderArtistForIndexPath:(NSIndexPath *)indexPath {
     if (self.segmentedControl.selectedSegmentIndex != 0 || indexPath.row >= self.downloadedFolderArtists.count) return nil;
     return self.downloadedFolderArtists[indexPath.row];
 }
 
 - (ISMSSong *)songForIndexPath:(NSIndexPath *)indexPath {
-//    __block ISMSSong *song;
-//    [databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
-//        FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue ORDER BY ROWID ASC LIMIT 1 OFFSET ?", @(indexPath.row)];
-//        song = [ISMSSong songFromDbResult:result];
-//        [result close];
-//    }];
-//    return song;
-    return nil;
+    return [Store.shared songFromDownloadQueueWithPosition:indexPath.row];
 }
 
 //- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -987,10 +982,9 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
     if (self.segmentedControl.selectedSegmentIndex == 0) {
-//        return [[self.listOfArtistsSections objectAtIndexSafe:section] count];
         return self.downloadedFolderArtists.count;
     } else if (self.segmentedControl.selectedSegmentIndex == 1) {
-        return self.cacheQueueCount;
+        return self.downloadQueueCount;
     }
     
     return 0;
@@ -1009,39 +1003,29 @@
         [cell updateWithModel:[self downloadedFolderArtistForIndexPath:indexPath]];
         return cell;
 	} else {
-        // TODO: implement this
-//        UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-//        cell.hideHeaderLabel = NO;
-//        cell.hideCacheIndicator = YES;
-//        cell.hideNumberLabel = YES;
-//        cell.hideCoverArt = NO;
-//        cell.hideSecondaryLabel = NO;
-//        cell.hideDurationLabel = NO;
-//
-//        __block ISMSSong *song;
-//        __block NSDate *cachedDate;
-//        [databaseS.cacheQueueDbQueue inDatabase:^(FMDatabase *db) {
-//            FMResultSet *result = [db executeQuery:@"SELECT * FROM cacheQueue ORDER BY ROWID ASC LIMIT 1 OFFSET ?", @(indexPath.row)];
-//            song = [ISMSSong songFromDbResult:result];
-//            cachedDate = [NSDate dateWithTimeIntervalSince1970:[result doubleForColumn:@"cachedDate"]];
-//            [result close];
-//        }];
-//
-//        [cell updateWithModel:song];
-//
-//        if (indexPath.row == 0) {
-//            NSLog(@"song: %@  currentQueuedSong: %@  isQueueDownloading: %@", song, cacheQueueManagerS.currentQueuedSong, NSStringFromBOOL(cacheQueueManagerS.isQueueDownloading));
-//            if ([song isEqual:cacheQueueManagerS.currentQueuedSong] && cacheQueueManagerS.isQueueDownloading) {
-//                cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: %@", [NSString relativeTime:cachedDate], [NSString formatFileSize:cacheQueueManagerS.currentQueuedSong.localFileSize]];
-//            } else if (appDelegateS.isWifi || settingsS.isManualCachingOnWWANEnabled) {
-//                cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Waiting...", [NSString relativeTime:cachedDate]];
-//            } else {
-//                cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Need Wifi", [NSString relativeTime:cachedDate]];
-//            }
-//        } else {
-//            cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Waiting...", [NSString relativeTime:cachedDate]];
-//        }
-//		return cell;
+        UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+        cell.hideHeaderLabel = NO;
+        cell.hideCacheIndicator = YES;
+        cell.hideNumberLabel = YES;
+        cell.hideCoverArt = NO;
+        cell.hideSecondaryLabel = NO;
+        cell.hideDurationLabel = NO;
+        [cell updateWithModel:[Store.shared songFromDownloadQueueWithPosition:indexPath.row]];
+        
+        NSDate *queuedDate = [Store.shared queuedDateForSongFromDownloadQueueWithPosition:indexPath.row];
+        NSString *relativeTime = [NSString relativeTime:queuedDate];
+        if (indexPath.row == 0) {
+            if (cacheQueueManagerS.isQueueDownloading) {
+                cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: %@", relativeTime, [NSString formatFileSize:cacheQueueManagerS.currentQueuedSong.localFileSize]];
+            } else if (appDelegateS.isWifi || settingsS.isManualCachingOnWWANEnabled) {
+                cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Waiting...", relativeTime];
+            } else {
+                cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Need Wifi", relativeTime];
+            }
+        } else {
+            cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Waiting...", relativeTime];
+        }
+		return cell;
 	}
     return nil;
 }
@@ -1050,9 +1034,7 @@
     return YES;
 }
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-//	return UITableViewCellEditingStyleNone;
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return UITableViewCellEditingStyleDelete;
 }
 
@@ -1071,92 +1053,20 @@
 //}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
-    DownloadedFolderArtist *downloadedFolderArtist = [self downloadedFolderArtistForIndexPath:indexPath];
-    CacheAlbumViewController *controller = [[CacheAlbumViewController alloc] initWithLevel:1 parentPathComponent:downloadedFolderArtist.name];
-    [self pushViewControllerCustom:controller];
+    if (!indexPath) return;
     
+    if (self.isEditing) {
+        [self showDeleteButton];
+        return;
+    }
     
-    // TODO: implement this
-//	if (!indexPath) return;
-//
-//    if (self.isEditing) {
-//        [self showDeleteButton];
-//        return;
-//    }
-//
-//    if (self.segmentedControl.selectedSegmentIndex == 0) {
-//        NSString *name = nil;
-//        if ([self.listOfArtistsSections count] > indexPath.section) {
-//            if ([[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] count] > indexPath.row) {
-//                name = [[self.listOfArtistsSections objectAtIndexSafe:indexPath.section] objectAtIndexSafe:indexPath.row];
-//            }
-//        }
-//
-//        CacheAlbumViewController *cacheAlbumViewController = [[CacheAlbumViewController alloc] init];
-//        cacheAlbumViewController.artistName = name;
-//        cacheAlbumViewController.albums = [NSMutableArray arrayWithCapacity:1];
-//        cacheAlbumViewController.songs = [NSMutableArray arrayWithCapacity:1];
-//
-//        [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-//            FMResultSet *result = [db executeQuery:@"SELECT md5, segs, seg2, track FROM cachedSongsLayout JOIN cachedSongs USING(md5) WHERE seg1 = ? GROUP BY seg2 ORDER BY seg2 COLLATE NOCASE", name];
-//            while ([result next]) {
-//                @autoreleasepool {
-//                    NSUInteger numOfSegments = [result intForColumnIndex:1];
-//
-//                    NSString *md5 = [result stringForColumn:@"md5"];
-//                    NSString *seg2 = [result stringForColumn:@"seg2"];
-//
-//                    if (numOfSegments > 2) {
-//                        if (md5 && seg2) {
-//                            [cacheAlbumViewController.albums addObject:@[md5, seg2]];
-//                        }
-//                    } else {
-//                        if (md5) {
-//                            [cacheAlbumViewController.songs addObject:@[md5, @([result intForColumn:@"track"])]];
-//
-//                            /*// Sort by track number -- iOS 4.0+ only
-//                             [cacheAlbumViewController.listOfSongs sortUsingComparator: ^NSComparisonResult(id obj1, id obj2) {
-//                             NSUInteger track1 = [(NSNumber*)[(NSArray*)obj1 objectAtIndexSafe:1] intValue];
-//                             NSUInteger track2 = [(NSNumber*)[(NSArray*)obj2 objectAtIndexSafe:1] intValue];
-//                             if (track1 < track2)
-//                             return NSOrderedAscending;
-//                             else if (track1 == track2)
-//                             return NSOrderedSame;
-//                             else
-//                             return NSOrderedDescending;
-//                             }];*/
-//
-//                            BOOL multipleSameTrackNumbers = NO;
-//                            NSMutableArray *trackNumbers = [NSMutableArray arrayWithCapacity:[cacheAlbumViewController.songs count]];
-//                            for (NSArray *song in cacheAlbumViewController.songs) {
-//                                NSNumber *track = [song objectAtIndexSafe:1];
-//
-//                                if ([trackNumbers containsObject:track]) {
-//                                    multipleSameTrackNumbers = YES;
-//                                    break;
-//                                }
-//
-//                                [trackNumbers addObject:track];
-//                            }
-//
-//                            // Sort by track number
-//                            if (!multipleSameTrackNumbers) {
-//                                [cacheAlbumViewController.songs sortUsingFunction:trackSort context:NULL];
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                if (!cacheAlbumViewController.segments) {
-//                    NSArray *segments = @[name];
-//                    cacheAlbumViewController.segments = segments;
-//                }
-//            }
-//            [result close];
-//        }];
-//
-//        [self pushViewControllerCustom:cacheAlbumViewController];
-//	}
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        DownloadedFolderArtist *downloadedFolderArtist = [self downloadedFolderArtistForIndexPath:indexPath];
+        CacheAlbumViewController *controller = [[CacheAlbumViewController alloc] initWithLevel:1 parentPathComponent:downloadedFolderArtist.name];
+        [self pushViewControllerCustom:controller];
+    } else {
+        // TODO: implement this
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1167,12 +1077,12 @@
     }
 }
 
-
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    if (self.segmentedControl.selectedSegmentIndex == 0) {
-//        // Custom queue and delete actions
-//        ISMSFolderArtist *folderArtist = [self folderArtistForIndexPath:indexPath];
-//        return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        // TODO: implement this
+        // Custom queue and delete actions
+        return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
+            // TODO: implement this
 //            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
 //            [EX2Dispatch runInBackgroundAsync:^{
 //                NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
@@ -1199,50 +1109,34 @@
 //                    [viewObjectsS hideLoadingScreen];
 //                }];
 //            }];
-//        } deleteHandler:^{
-//            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-//            [EX2Dispatch runInBackgroundAsync:^{
-//                NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
-//                [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-//                    FMResultSet *result = [db executeQuery:@"SELECT md5 FROM cachedSongsLayout WHERE seg1 = ? ", folderArtist.name];
-//                    while ([result next]) {
-//                        @autoreleasepool {
-//                            NSString *md5 = [result stringForColumnIndex:0];
-//                            if (md5) [songMd5s addObject:md5];
-//                        }
-//                    }
-//                    [result close];
-//                }];
-//
-//                for (NSString *md5 in songMd5s) {
-//                    @autoreleasepool {
-//                        [ISMSSong removeSongFromCacheDbByMD5:md5];
-//                    }
-//                }
-//
-//                [cacheS findCacheSize];
-//
-//                // Reload the cached songs table
-//                [NSNotificationCenter postNotificationToMainThreadWithName:@"cachedSongDeleted"];
-//
-//                if (!cacheQueueManagerS.isQueueDownloading) {
-//                    [cacheQueueManagerS startDownloadQueue];
-//                }
-//
-//                [EX2Dispatch runInMainThreadAsync:^{
-//                    [viewObjectsS hideLoadingScreen];
-//                }];
-//            }];
-//        }];
-//    } else {
-//        ISMSSong *song = [self songForIndexPath:indexPath];
-//        return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
-//            [song addToCurrentPlaylistDbQueue];
-//        } deleteHandler:^{
-//            [song removeFromDownloadQueue];
-//            [self reloadTable];
-//        }];
-//    }
+        } deleteHandler:^{
+            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+            [EX2Dispatch runInBackgroundAsync:^{
+                (void)[Store.shared deleteDownloadedSongsWithDownloadedFolderArtist:[self downloadedFolderArtistForIndexPath:indexPath]];
+
+                [cacheS findCacheSize];
+
+                // Reload the cached songs table
+                [NSNotificationCenter postNotificationToMainThreadWithName:@"cachedSongDeleted"];
+
+                if (!cacheQueueManagerS.isQueueDownloading) {
+                    [cacheQueueManagerS startDownloadQueue];
+                }
+
+                [EX2Dispatch runInMainThreadAsync:^{
+                    [viewObjectsS hideLoadingScreen];
+                }];
+            }];
+        }];
+    } else {
+        ISMSSong *song = [self songForIndexPath:indexPath];
+        return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
+            [song queue];
+        } deleteHandler:^{
+            (void)[Store.shared removeFromDownloadQueueWithSong:song];
+            [self reloadTable];
+        }];
+    }
     return nil;
 }
 

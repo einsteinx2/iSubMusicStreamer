@@ -273,7 +273,7 @@
 	[self.navigationController pushViewController:serverListViewController animated:YES];
 }
 
-- (IBAction)nowPlayingAction:(id)sender {
+- (void)nowPlayingAction:(id)sender {
     PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
     playerViewController.hidesBottomBarWhenPushed = YES;
 	[self.navigationController pushViewController:playerViewController animated:YES];

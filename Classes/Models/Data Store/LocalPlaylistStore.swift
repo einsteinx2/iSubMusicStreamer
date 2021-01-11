@@ -68,6 +68,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
     }
 }
 
+// TODO: Handle Jukebox mode properly
 @objc extension Store {
     func nextLocalPlaylistId() -> Int {
         do {
@@ -279,8 +280,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
         return success
     }
     
-    // TODO: Move this to a single transaction
-    func clearAndQueue(songIds: [Int], serverId: Int) -> Bool {
+    func clearPlayQueue() -> Bool {
         var success = true
         if Settings.shared().isJukeboxEnabled {
             if PlayQueue.shared.isShuffle {
@@ -297,16 +297,45 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
                 success = clear(localPlaylistId: LocalPlaylist.Default.playQueueId)
             }
         }
-        
-        if success {
+        return success
+    }
+    
+    // TODO: Move this to a single transaction
+    func clearAndQueue(songIds: [Int], serverId: Int) -> Bool {
+        if clearPlayQueue() {
             return queue(songIds: songIds, serverId: serverId)
         }
         return false
     }
     
     // TODO: Move this to a single transaction
+    func clearAndQueue(songs: [Song]) -> Bool {
+        if clearPlayQueue() {
+            for song in songs {
+                if !queue(song: song) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
+    // TODO: Move this to a single transaction
     func playSong(position: Int, songIds: [Int], serverId: Int) -> Song? {
         if clearAndQueue(songIds: songIds, serverId: serverId) {
+            // Set player defaults
+            PlayQueue.shared.isShuffle = false
+            
+            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistSongsQueued)
+            
+            // Start the song
+            return Music.shared().playSong(atPosition: position)
+        }
+        return nil
+    }
+    
+    func playSong(position: Int, songs: [Song]) -> Song? {
+        if clearAndQueue(songs: songs) {
             // Set player defaults
             PlayQueue.shared.isShuffle = false
             

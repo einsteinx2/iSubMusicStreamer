@@ -394,104 +394,15 @@ LOG_LEVEL_ISUB_DEFAULT
         CacheAlbumViewController *controller = [[CacheAlbumViewController alloc] initWithLevel:downloadedFolderAlbum.level + 1 parentPathComponent:downloadedFolderAlbum.name];
         [self pushViewControllerCustom:controller];
     } else {
-        
+        // TODO: Optimize this
+        NSMutableArray<ISMSSong*> *songs = [NSMutableArray arrayWithCapacity:self.downloadedSongs.count];
+        for (DownloadedSong *downloadedSong in self.downloadedSongs) {
+            [songs addObject:[Store.shared songWithDownloadedSong:downloadedSong]];
+        }
+        if ([Store.shared playSongWithPosition:indexPath.row songs:songs]) {
+            [self showPlayer];
+        }
     }
-	
-//    if (indexPath.row < self.albums.count) {
-//        NSUInteger segment = self.segments.count + 1;
-//
-//        CacheAlbumViewController *cacheAlbumViewController = [[CacheAlbumViewController alloc] init];
-//        cacheAlbumViewController.artistName = [[self.albums objectAtIndexSafe:indexPath.row] objectAtIndexSafe:1];
-//        cacheAlbumViewController.albums = [NSMutableArray arrayWithCapacity:1];
-//        cacheAlbumViewController.songs = [NSMutableArray arrayWithCapacity:1];
-//
-//        NSMutableString *query = [NSMutableString stringWithFormat:@"SELECT md5, segs, seg%lu, track, cachedSongs.discNumber FROM cachedSongsLayout JOIN cachedSongs USING(md5) WHERE seg1 = ? ", (long)(segment+1)];
-//        for (int i = 2; i <= segment; i++) {
-//            [query appendFormat:@" AND seg%i = ? ", i];
-//        }
-//        [query appendFormat:@"GROUP BY seg%lu ORDER BY seg%lu COLLATE NOCASE", (long)(segment+1), (long)(segment+1)];
-//
-//        NSMutableArray *newSegments = [NSMutableArray arrayWithArray:self.segments];
-//        [newSegments addObject:cacheAlbumViewController.artistName];
-//        cacheAlbumViewController.segments = [NSArray arrayWithArray:newSegments];
-//
-//        [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
-//            FMResultSet *result = [db executeQuery:query withArgumentsInArray:newSegments];
-//            while ([result next]) {
-//                @autoreleasepool {
-//                    NSString *md5 = [result stringForColumnIndex:0];
-//                    NSInteger segs = [result intForColumnIndex:1];
-//                    NSString *seg = [result stringForColumnIndex:2];
-//                    NSInteger track = [result intForColumnIndex:3];
-//                    NSInteger discNumber = [result intForColumn:@"discNumber"];
-//
-//                    if (segs > (segment + 1)) {
-//                        if (md5 && seg) {
-//                            NSArray *albumEntry = @[md5, seg];
-//                            [cacheAlbumViewController.albums addObject:albumEntry];
-//                        }
-//                    } else {
-//                        if (md5) {
-//                            NSMutableArray *songEntry = [NSMutableArray arrayWithObjects:md5, @(track), nil];
-//
-//                            if (discNumber != 0) {
-//                                [songEntry addObject:@(discNumber)];
-//                            }
-//
-//                            [cacheAlbumViewController.songs addObject:songEntry];
-//
-//                            BOOL multipleSameTrackNumbers = NO;
-//                            NSMutableArray *trackNumbers = [NSMutableArray arrayWithCapacity:cacheAlbumViewController.songs.count];
-//                            for (NSArray *song in cacheAlbumViewController.songs) {
-//                                NSNumber *track = [song objectAtIndexSafe:1];
-//                                NSNumber *disc = [song objectAtIndexSafe:2];
-//
-//                                // Wow, that got messy quick.  In the second part we're checking that the entry at the index
-//                                // of the object we found doesn't have the same disc number as the one we're about to add.  If
-//                                // it does, we have a problem, but if not, we can add it anyway and let the sort method sort it
-//                                // out.  Hahah.  See what I did there?
-//                                if ([trackNumbers containsObject:track] && (disc == nil || [[cacheAlbumViewController.songs[[trackNumbers indexOfObject:track]] objectAtIndexSafe:2] isEqual:disc])) {
-//                                    multipleSameTrackNumbers = YES;
-//                                    break;
-//                                }
-//
-//                                [trackNumbers addObject:track];
-//                            }
-//
-//                            // Sort by track number
-//                            if (!multipleSameTrackNumbers) {
-//                                [cacheAlbumViewController.songs sortUsingFunction:trackSort context:NULL];
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            [result close];
-//        }];
-//
-//        [self pushViewControllerCustom:cacheAlbumViewController];
-//    } else {
-//        NSUInteger a = indexPath.row - self.albums.count;
-//
-//        if (settingsS.isJukeboxEnabled) {
-//            [databaseS resetJukeboxPlaylist];
-//            [jukeboxS clearRemotePlaylist];
-//        } else {
-//            [databaseS resetCurrentPlaylistDb];
-//        }
-//        for (NSArray *song in self.songs) {
-//            ISMSSong *aSong = [ISMSSong songFromCacheDbQueue:[song objectAtIndexSafe:0]];
-//            [aSong addToCurrentPlaylistDbQueue];
-//        }
-//
-//        PlayQueue.shared.isShuffle = NO;
-//
-//        [musicS playSongAtPosition:a];
-//
-//        [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
-//
-//        [self showPlayer];
-//    }
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {

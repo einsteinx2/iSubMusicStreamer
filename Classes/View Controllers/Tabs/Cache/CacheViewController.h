@@ -33,7 +33,6 @@
 @property (nonatomic, strong) UIButton *jukeboxInputBlocker;
 @property (nonatomic) BOOL showIndex;
 //@property (nonatomic, strong) NSMutableArray *listOfArtists;
-@property (nonatomic, strong) NSArray<DownloadedFolderArtist*> *downloadedFolderArtists;
 @property (nonatomic, strong) NSMutableArray *listOfArtistsSections;
 @property (nonatomic, strong) NSArray *sectionInfo;
 @property (nonatomic, strong) UILabel *cacheSizeLabel;

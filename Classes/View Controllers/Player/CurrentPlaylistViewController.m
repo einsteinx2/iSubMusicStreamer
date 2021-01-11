@@ -510,29 +510,11 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
-//    UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-//	
-//	ISMSSong *aSong;
-//	if (settingsS.isJukeboxEnabled) {
-//        if (PlayQueue.shared.isShuffle) {
-//			aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"jukeboxShufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
-//        } else {
-//            aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"jukeboxCurrentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
-//        }
-//	} else {
-//        if (PlayQueue.shared.isShuffle) {
-//			aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"shufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
-//        } else {
-//			aSong = [ISMSSong songFromDbRow:indexPath.row inTable:@"currentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
-//        }
-//	}
-//    
-////    cell.autoScroll = NO;
-//    cell.number = indexPath.row + 1;
-//    [cell updateWithModel:aSong];
-//	
-//    return cell;
-    return nil;
+    UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+    ISMSSong *song = [PlayQueue.shared songWithIndex:indexPath.row];
+    cell.number = indexPath.row + 1;
+    [cell updateWithModel:song];
+    return cell;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
