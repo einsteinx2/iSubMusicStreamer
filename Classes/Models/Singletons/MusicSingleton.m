@@ -130,31 +130,31 @@ double startSongSeconds = 0.0;
 }
 
 - (ISMSSong *)playSongAtPosition:(NSInteger)position {
-	PlayQueue.shared.currentIndex = position;
-    ISMSSong *currentSong = PlayQueue.shared.currentSong;
- 
-    if (!currentSong.isVideo) {
-        // Remove the video player if this is not a video
-        [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_RemoveMoviePlayer];
-    }
-    
-	if (settingsS.isJukeboxEnabled) {
-        if (currentSong.isVideo) {
-            currentSong = nil;
-            [SlidingNotification showOnMainWindowWithMessage:@"Cannot play videos in Jukebox mode."];
-        } else {
-            [jukeboxS playSongAtPosition:@(position)];
+    PlayQueue.shared.currentIndex = position;
+    __block ISMSSong *currentSong = PlayQueue.shared.currentSong;
+    [EX2Dispatch runInMainThreadAndWaitUntilDone:YES block:^{
+        if (!currentSong.isVideo) {
+            // Remove the video player if this is not a video
+            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_RemoveMoviePlayer];
         }
-	} else {
-		[streamManagerS removeAllStreamsExceptForSong:PlayQueue.shared.currentSong];
         
-        if (currentSong.isVideo) {
-            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_PlayVideo userInfo:@{@"song":currentSong}];
+        if (settingsS.isJukeboxEnabled) {
+            if (currentSong.isVideo) {
+                currentSong = nil;
+                [SlidingNotification showOnMainWindowWithMessage:@"Cannot play videos in Jukebox mode."];
+            } else {
+                [jukeboxS playSongAtPosition:@(position)];
+            }
         } else {
-            [self startSong];
+            [streamManagerS removeAllStreamsExceptForSong:PlayQueue.shared.currentSong];
+            
+            if (currentSong.isVideo) {
+                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_PlayVideo userInfo:@{@"song":currentSong}];
+            } else {
+                [self startSong];
+            }
         }
-	}
-    
+    }];
     return currentSong;
 }
 

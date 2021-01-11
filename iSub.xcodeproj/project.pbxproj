@@ -151,6 +151,14 @@
 		536D620B1144495400DFCE56 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 536D620A1144495400DFCE56 /* SystemConfiguration.framework */; };
 		53752BEC2562CEF800438636 /* CoverArtViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53752BEB2562CEF800438636 /* CoverArtViewController.swift */; };
 		53752BED2562CEF800438636 /* CoverArtViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53752BEB2562CEF800438636 /* CoverArtViewController.swift */; };
+		53762C7725ACE7E700476F2D /* ServerPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C7625ACE7E700476F2D /* ServerPlaylist.swift */; };
+		53762C7825ACE7E700476F2D /* ServerPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C7625ACE7E700476F2D /* ServerPlaylist.swift */; };
+		53762C7A25ACE86D00476F2D /* ServerPlaylistStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C7925ACE86D00476F2D /* ServerPlaylistStore.swift */; };
+		53762C7B25ACE86D00476F2D /* ServerPlaylistStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C7925ACE86D00476F2D /* ServerPlaylistStore.swift */; };
+		53762C7D25ACEEB400476F2D /* ServerPlaylistsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C7C25ACEEB400476F2D /* ServerPlaylistsLoader.swift */; };
+		53762C7E25ACEEB400476F2D /* ServerPlaylistsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C7C25ACEEB400476F2D /* ServerPlaylistsLoader.swift */; };
+		53762C8025AD012200476F2D /* ServerPlaylistLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C7F25AD012200476F2D /* ServerPlaylistLoader.swift */; };
+		53762C8125AD012200476F2D /* ServerPlaylistLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C7F25AD012200476F2D /* ServerPlaylistLoader.swift */; };
 		5379DC4F1219E48800F426CD /* ChatUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5379DC491219E48800F426CD /* ChatUITableViewCell.m */; };
 		5379DC501219E48800F426CD /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5379DC4B1219E48800F426CD /* ChatViewController.m */; };
 		5379DC511219E48800F426CD /* ChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5379DC4C1219E48800F426CD /* ChatViewController.xib */; };
@@ -484,8 +492,6 @@
 		53FE37031EA961720058B925 /* DatabaseSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE363A1EA961710058B925 /* DatabaseSingleton.m */; };
 		53FE37101EA961720058B925 /* ISMSCacheQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */; };
 		53FE37121EA961720058B925 /* ISMSCacheQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */; };
-		53FE371F1EA961720058B925 /* ISMSIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36511EA961720058B925 /* ISMSIndex.m */; };
-		53FE37211EA961720058B925 /* ISMSIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36511EA961720058B925 /* ISMSIndex.m */; };
 		53FE37251EA961720058B925 /* ISMSNotificationNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36591EA961720058B925 /* ISMSNotificationNames.m */; };
 		53FE37271EA961720058B925 /* ISMSNotificationNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36591EA961720058B925 /* ISMSNotificationNames.m */; };
 		53FE37371EA961720058B925 /* ISMSServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36651EA961720058B925 /* ISMSServer.m */; };
@@ -514,12 +520,6 @@
 		53FE37B41EA961720058B925 /* SUSNowPlayingLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36BE1EA961720058B925 /* SUSNowPlayingLoader.m */; };
 		53FE37C11EA961720058B925 /* SUSScrobbleLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36C81EA961720058B925 /* SUSScrobbleLoader.m */; };
 		53FE37C31EA961720058B925 /* SUSScrobbleLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36C81EA961720058B925 /* SUSScrobbleLoader.m */; };
-		53FE37C41EA961720058B925 /* SUSServerPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36CA1EA961720058B925 /* SUSServerPlaylist.m */; };
-		53FE37C61EA961720058B925 /* SUSServerPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36CA1EA961720058B925 /* SUSServerPlaylist.m */; };
-		53FE37C71EA961720058B925 /* SUSServerPlaylistsDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36CC1EA961720058B925 /* SUSServerPlaylistsDAO.m */; };
-		53FE37C91EA961720058B925 /* SUSServerPlaylistsDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36CC1EA961720058B925 /* SUSServerPlaylistsDAO.m */; };
-		53FE37CA1EA961720058B925 /* SUSServerPlaylistsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36CE1EA961720058B925 /* SUSServerPlaylistsLoader.m */; };
-		53FE37CC1EA961720058B925 /* SUSServerPlaylistsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36CE1EA961720058B925 /* SUSServerPlaylistsLoader.m */; };
 		53FE37D01EA961720058B925 /* SUSStatusLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36D21EA961720058B925 /* SUSStatusLoader.m */; };
 		53FE37D21EA961720058B925 /* SUSStatusLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36D21EA961720058B925 /* SUSStatusLoader.m */; };
 		53FE38041EA961970058B925 /* RXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38031EA961970058B925 /* RXMLElement.m */; };
@@ -750,6 +750,10 @@
 		536D620A1144495400DFCE56 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		53746678255AD19300DB9193 /* SUSLoaderDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SUSLoaderDelegate.h; sourceTree = "<group>"; };
 		53752BEB2562CEF800438636 /* CoverArtViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverArtViewController.swift; sourceTree = "<group>"; };
+		53762C7625ACE7E700476F2D /* ServerPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerPlaylist.swift; sourceTree = "<group>"; };
+		53762C7925ACE86D00476F2D /* ServerPlaylistStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerPlaylistStore.swift; sourceTree = "<group>"; };
+		53762C7C25ACEEB400476F2D /* ServerPlaylistsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerPlaylistsLoader.swift; sourceTree = "<group>"; };
+		53762C7F25AD012200476F2D /* ServerPlaylistLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerPlaylistLoader.swift; sourceTree = "<group>"; };
 		5379DC481219E48800F426CD /* ChatUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatUITableViewCell.h; sourceTree = "<group>"; };
 		5379DC491219E48800F426CD /* ChatUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatUITableViewCell.m; sourceTree = "<group>"; };
 		5379DC4A1219E48800F426CD /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
@@ -996,8 +1000,6 @@
 		53FE36431EA961720058B925 /* ISMSCacheQueueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSCacheQueueManager.h; sourceTree = "<group>"; };
 		53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSCacheQueueManager.m; sourceTree = "<group>"; };
 		53FE364F1EA961720058B925 /* ISMSErrorDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSErrorDomain.h; sourceTree = "<group>"; };
-		53FE36501EA961720058B925 /* ISMSIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSIndex.h; sourceTree = "<group>"; };
-		53FE36511EA961720058B925 /* ISMSIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSIndex.m; sourceTree = "<group>"; };
 		53FE36551EA961720058B925 /* SUSLoaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSLoaderManager.h; sourceTree = "<group>"; };
 		53FE36581EA961720058B925 /* ISMSNotificationNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSNotificationNames.h; sourceTree = "<group>"; };
 		53FE36591EA961720058B925 /* ISMSNotificationNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSNotificationNames.m; sourceTree = "<group>"; };
@@ -1029,12 +1031,6 @@
 		53FE36BE1EA961720058B925 /* SUSNowPlayingLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUSNowPlayingLoader.m; sourceTree = "<group>"; };
 		53FE36C71EA961720058B925 /* SUSScrobbleLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSScrobbleLoader.h; sourceTree = "<group>"; };
 		53FE36C81EA961720058B925 /* SUSScrobbleLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUSScrobbleLoader.m; sourceTree = "<group>"; };
-		53FE36C91EA961720058B925 /* SUSServerPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSServerPlaylist.h; sourceTree = "<group>"; };
-		53FE36CA1EA961720058B925 /* SUSServerPlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUSServerPlaylist.m; sourceTree = "<group>"; };
-		53FE36CB1EA961720058B925 /* SUSServerPlaylistsDAO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSServerPlaylistsDAO.h; sourceTree = "<group>"; };
-		53FE36CC1EA961720058B925 /* SUSServerPlaylistsDAO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUSServerPlaylistsDAO.m; sourceTree = "<group>"; };
-		53FE36CD1EA961720058B925 /* SUSServerPlaylistsLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSServerPlaylistsLoader.h; sourceTree = "<group>"; };
-		53FE36CE1EA961720058B925 /* SUSServerPlaylistsLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUSServerPlaylistsLoader.m; sourceTree = "<group>"; };
 		53FE36D11EA961720058B925 /* SUSStatusLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSStatusLoader.h; sourceTree = "<group>"; };
 		53FE36D21EA961720058B925 /* SUSStatusLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUSStatusLoader.m; sourceTree = "<group>"; };
 		53FE38021EA961970058B925 /* RXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXMLElement.h; sourceTree = "<group>"; };
@@ -1405,7 +1401,6 @@
 				53ADBBBF13352DB40098FAE6 /* FolderDropdownControl.m */,
 				53F2D3EB113A338500107D63 /* FolderAlbumViewController.h */,
 				53F2D3EC113A338500107D63 /* FolderAlbumViewController.m */,
-				53329640255F2B960027C51A /* AlbumTableViewHeader.swift */,
 			);
 			path = Folders;
 			sourceTree = "<group>";
@@ -1520,6 +1515,7 @@
 				538C8FE025606299005D6CA9 /* RefreshControl.swift */,
 				53329647255F2E770027C51A /* PlayAllAndShuffleHeader.swift */,
 				538C8FE625609F4F005D6CA9 /* BlurredSectionHeader.swift */,
+				53329640255F2B960027C51A /* AlbumTableViewHeader.swift */,
 			);
 			path = "Custom UI";
 			sourceTree = "<group>";
@@ -1621,11 +1617,7 @@
 				539D32E025A912EC00F53797 /* Deprecated */,
 				53FE36B51EA961720058B925 /* SUSErrorDomain.h */,
 				53FE364F1EA961720058B925 /* ISMSErrorDomain.h */,
-				53FE36501EA961720058B925 /* ISMSIndex.h */,
-				53FE36511EA961720058B925 /* ISMSIndex.m */,
 				539D330825AA3B5200F53797 /* TableCellModel.swift */,
-				53FE36C91EA961720058B925 /* SUSServerPlaylist.h */,
-				53FE36CA1EA961720058B925 /* SUSServerPlaylist.m */,
 				539D32EA25AA196900F53797 /* ChatMessage.swift */,
 				539D32D725A8E07E00F53797 /* Server.swift */,
 				5389477F25A4E7170078FBAF /* MediaFolder.swift */,
@@ -1635,7 +1627,6 @@
 				530A16AC2592D22100E9294E /* TagAlbum.swift */,
 				53B9C48225A789D3007E9E3C /* Song.swift */,
 				539D32F325AA1F7200F53797 /* Lyrics.swift */,
-				539D330B25AA55E000F53797 /* LocalPlaylist.swift */,
 			);
 			path = "API Models";
 			sourceTree = "<group>";
@@ -1648,8 +1639,6 @@
 				531D3A1E255ABAAC000CB0DF /* SUSLoader.m */,
 				53746678255AD19300DB9193 /* SUSLoaderDelegate.h */,
 				53FE36551EA961720058B925 /* SUSLoaderManager.h */,
-				53FE36CD1EA961720058B925 /* SUSServerPlaylistsLoader.h */,
-				53FE36CE1EA961720058B925 /* SUSServerPlaylistsLoader.m */,
 				53FE36D11EA961720058B925 /* SUSStatusLoader.h */,
 				53FE36D21EA961720058B925 /* SUSStatusLoader.m */,
 				53FE36BD1EA961720058B925 /* SUSNowPlayingLoader.h */,
@@ -1669,6 +1658,8 @@
 				539D32E125A93E9A00F53797 /* CoverArtLoader.swift */,
 				539D32ED25AA1B1800F53797 /* ChatLoader.swift */,
 				539D32F625AA207400F53797 /* LyricsLoader.swift */,
+				53762C7C25ACEEB400476F2D /* ServerPlaylistsLoader.swift */,
+				53762C7F25AD012200476F2D /* ServerPlaylistLoader.swift */,
 			);
 			path = Loaders;
 			sourceTree = "<group>";
@@ -1678,8 +1669,6 @@
 			children = (
 				53FE36BB1EA961720058B925 /* SUSNowPlayingDAO.h */,
 				53FE36BC1EA961720058B925 /* SUSNowPlayingDAO.m */,
-				53FE36CB1EA961720058B925 /* SUSServerPlaylistsDAO.h */,
-				53FE36CC1EA961720058B925 /* SUSServerPlaylistsDAO.m */,
 				5340B8A4256968C400FD5D6D /* ISMSBookmarkDAO.h */,
 				5340B8A5256968C400FD5D6D /* ISMSBookmarkDAO.m */,
 				539D32E725A9490E00F53797 /* CoverArtDAO.swift */,
@@ -1815,6 +1804,7 @@
 				535E143425A7BB910039BCAA /* FolderAlbumStore.swift */,
 				539D32FF25AA2F4E00F53797 /* DownloadsStore.swift */,
 				539D330E25AA61DD00F53797 /* LocalPlaylistStore.swift */,
+				53762C7925ACE86D00476F2D /* ServerPlaylistStore.swift */,
 			);
 			path = "Data Store";
 			sourceTree = "<group>";
@@ -1831,6 +1821,8 @@
 				539D330525AA353C00F53797 /* DownloadedSongPathComponent.swift */,
 				539D331725AC8D8B00F53797 /* DownloadedFolderArtist.swift */,
 				539D331A25AC95A300F53797 /* DownloadedFolderAlbum.swift */,
+				539D330B25AA55E000F53797 /* LocalPlaylist.swift */,
+				53762C7625ACE7E700476F2D /* ServerPlaylist.swift */,
 			);
 			path = "DB Models";
 			sourceTree = "<group>";
@@ -2325,7 +2317,6 @@
 				53D4FCB0259944B500C6F1AE /* FMDatabaseVariadic.swift in Sources */,
 				53FE36F81EA961720058B925 /* BassVisualizer.m in Sources */,
 				530A16732592468C00E9294E /* FolderArtist.swift in Sources */,
-				53FE37CA1EA961720058B925 /* SUSServerPlaylistsLoader.m in Sources */,
 				53FE376A1EA961720058B925 /* NSError+ISMSError.m in Sources */,
 				53FE37101EA961720058B925 /* ISMSCacheQueueManager.m in Sources */,
 				53FE38A71EA961C80058B925 /* ZKCDTrailer.m in Sources */,
@@ -2353,6 +2344,7 @@
 				539D330925AA3B5200F53797 /* TableCellModel.swift in Sources */,
 				53614ACA116432DA0088ABC0 /* ServerListViewController.m in Sources */,
 				535E144125A7D3480039BCAA /* ArtistArt.swift in Sources */,
+				53762C8025AD012200476F2D /* ServerPlaylistLoader.swift in Sources */,
 				53FE37251EA961720058B925 /* ISMSNotificationNames.m in Sources */,
 				53C3AB73257DDA1000B35B99 /* LicensesViewController.swift in Sources */,
 				53FE36EC1EA961720058B925 /* BassEqualizer.m in Sources */,
@@ -2367,9 +2359,9 @@
 				530A16B92592DFC700E9294E /* TagArtistViewController.m in Sources */,
 				53FE38951EA961C80058B925 /* NSDictionary+ZKAdditions.m in Sources */,
 				5389478025A4E7170078FBAF /* MediaFolder.swift in Sources */,
+				53762C7A25ACE86D00476F2D /* ServerPlaylistStore.swift in Sources */,
 				53FE36FB1EA961720058B925 /* BassWrapper.m in Sources */,
 				531D3A1F255ABAAC000CB0DF /* SUSLoader.m in Sources */,
-				53FE37C71EA961720058B925 /* SUSServerPlaylistsDAO.m in Sources */,
 				537B05BC256B04360008892C /* PadMenuViewController.swift in Sources */,
 				53FE37881EA961720058B925 /* SavedSettings.m in Sources */,
 				538C8FEA2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
@@ -2403,6 +2395,7 @@
 				537E6C1E181208A200127E29 /* CustomUITabBarController.m in Sources */,
 				53D4FCAE259944B500C6F1AE /* FMDatabaseAdditionsVariadic.swift in Sources */,
 				53FE388F1EA961C80058B925 /* NSData+ZKAdditions.m in Sources */,
+				53762C7D25ACEEB400476F2D /* ServerPlaylistsLoader.swift in Sources */,
 				53B5298A11AD9B79005776B5 /* LoadingScreen.m in Sources */,
 				530B417211B607A200743C09 /* CacheViewController.m in Sources */,
 				53D97454255C51CA00AABF7F /* SwipeAction.swift in Sources */,
@@ -2436,7 +2429,6 @@
 				534B20E025619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */,
 				53FE679C256DD0F00015FC83 /* GCDWebServerDataResponse.m in Sources */,
 				53FE6794256DD0F00015FC83 /* GCDWebServer.m in Sources */,
-				53FE37C41EA961720058B925 /* SUSServerPlaylist.m in Sources */,
 				53FE35581EA961540058B925 /* UIImage+Tint.m in Sources */,
 				5389479A25A4EFAE0078FBAF /* ServerShuffleLoader.swift in Sources */,
 				53B9C49A25A7A6D7007E9E3C /* GRDB+Helper.swift in Sources */,
@@ -2497,6 +2489,7 @@
 				533295FA255EEFE50027C51A /* FMResultSet.m in Sources */,
 				535E142C25A7B4600039BCAA /* RootFoldersLoader.swift in Sources */,
 				53FE37671EA961720058B925 /* MusicSingleton.m in Sources */,
+				53762C7725ACE7E700476F2D /* ServerPlaylist.swift in Sources */,
 				530A1679259255D200E9294E /* FolderAlbum.swift in Sources */,
 				53EA2DE2257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
 				53CB016825864D5200E2DF10 /* NSFileManager+ZKAdditions.m in Sources */,
@@ -2526,7 +2519,6 @@
 				533295EE255EEFE50027C51A /* FMDatabaseQueueAdditions.m in Sources */,
 				5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
 				533295F4255EEFE50027C51A /* FMDatabase+FTS3.m in Sources */,
-				53FE371F1EA961720058B925 /* ISMSIndex.m in Sources */,
 				53D632D925A65CBC004EC117 /* String+Clean.swift in Sources */,
 				534B20E9256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
 				539D331E25ACAD6700F53797 /* ItemListViewController.swift in Sources */,
@@ -2562,7 +2554,6 @@
 				53FE36FA1EA961720058B925 /* BassVisualizer.m in Sources */,
 				53D4FCB1259944B500C6F1AE /* FMDatabaseVariadic.swift in Sources */,
 				530A16742592468C00E9294E /* FolderArtist.swift in Sources */,
-				53FE37CC1EA961720058B925 /* SUSServerPlaylistsLoader.m in Sources */,
 				53FE376C1EA961720058B925 /* NSError+ISMSError.m in Sources */,
 				53FE37121EA961720058B925 /* ISMSCacheQueueManager.m in Sources */,
 				53246AAA256C324500E11EC4 /* InsetTextField.swift in Sources */,
@@ -2591,6 +2582,7 @@
 				539D330A25AA3B5200F53797 /* TableCellModel.swift in Sources */,
 				535E144225A7D3480039BCAA /* ArtistArt.swift in Sources */,
 				5359C85A256EA8FE00C8F8DC /* ObjC.swift in Sources */,
+				53762C8125AD012200476F2D /* ServerPlaylistLoader.swift in Sources */,
 				53FE37271EA961720058B925 /* ISMSNotificationNames.m in Sources */,
 				53246AB7256C975600E11EC4 /* CacheStatusViewController.swift in Sources */,
 				53FE36EE1EA961720058B925 /* BassEqualizer.m in Sources */,
@@ -2605,12 +2597,12 @@
 				53C3AB74257DDA1000B35B99 /* LicensesViewController.swift in Sources */,
 				530A16BA2592DFC700E9294E /* TagArtistViewController.m in Sources */,
 				53FE34E51EA961540058B925 /* NSNull+CleanString.m in Sources */,
+				53762C7B25ACE86D00476F2D /* ServerPlaylistStore.swift in Sources */,
 				53FE38971EA961C80058B925 /* NSDictionary+ZKAdditions.m in Sources */,
 				5389478125A4E7170078FBAF /* MediaFolder.swift in Sources */,
 				53FE36FD1EA961720058B925 /* BassWrapper.m in Sources */,
 				53FE67AD256DE9600015FC83 /* Defines.swift in Sources */,
 				531D3A20255ABAAC000CB0DF /* SUSLoader.m in Sources */,
-				53FE37C91EA961720058B925 /* SUSServerPlaylistsDAO.m in Sources */,
 				53FE378A1EA961720058B925 /* SavedSettings.m in Sources */,
 				53FE35271EA961540058B925 /* NSURL+QueryParameterDictionary.m in Sources */,
 				537B05BD256B04360008892C /* PadMenuViewController.swift in Sources */,
@@ -2641,6 +2633,7 @@
 				53752BED2562CEF800438636 /* CoverArtViewController.swift in Sources */,
 				53D4FCAF259944B500C6F1AE /* FMDatabaseAdditionsVariadic.swift in Sources */,
 				53FE678F256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
+				53762C7E25ACEEB400476F2D /* ServerPlaylistsLoader.swift in Sources */,
 				53BC27CC139AF0DD00A825F1 /* LoadingScreen.m in Sources */,
 				53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */,
 				538C8FE825609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */,
@@ -2675,7 +2668,6 @@
 				53FE38AF1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
 				53266BFB2562D4D0002C64BB /* PageControlViewController.swift in Sources */,
 				53D9743B255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */,
-				53FE37C61EA961720058B925 /* SUSServerPlaylist.m in Sources */,
 				53FE355A1EA961540058B925 /* UIImage+Tint.m in Sources */,
 				5389479B25A4EFAE0078FBAF /* ServerShuffleLoader.swift in Sources */,
 				53B9C49B25A7A6D7007E9E3C /* GRDB+Helper.swift in Sources */,
@@ -2735,6 +2727,7 @@
 				53D973FF255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
 				53FE356F1EA961540058B925 /* UIView+ObjCFrameHelper.m in Sources */,
 				535E142D25A7B4600039BCAA /* RootFoldersLoader.swift in Sources */,
+				53762C7825ACE7E700476F2D /* ServerPlaylist.swift in Sources */,
 				537B05C0256B0E4B0008892C /* PadMenuTableCell.swift in Sources */,
 				530A167A259255D200E9294E /* FolderAlbum.swift in Sources */,
 				53FE37691EA961720058B925 /* MusicSingleton.m in Sources */,
@@ -2764,7 +2757,6 @@
 				530A16AB2592CA5000E9294E /* ArtistsViewController.m in Sources */,
 				53FE36EB1EA961720058B925 /* BassEffectValue.m in Sources */,
 				5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
-				53FE37211EA961720058B925 /* ISMSIndex.m in Sources */,
 				53D632DA25A65CBC004EC117 /* String+Clean.swift in Sources */,
 				53FE389D1EA961C80058B925 /* NSFileManager+ZKAdditions.m in Sources */,
 				53FE37001EA961720058B925 /* CacheSingleton.m in Sources */,

@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@class LocalPlaylist, SUSServerPlaylist;
+@class LocalPlaylist, ServerPlaylist, ServerPlaylistLoader;
 
 @interface PlaylistSongsViewController : UITableViewController
 
-@property LocalPlaylist *localPlaylist;
-@property (copy) SUSServerPlaylist *serverPlaylist;
+@property (nonatomic, strong) LocalPlaylist *localPlaylist;
+@property (nonatomic, strong) ServerPlaylist *serverPlaylist;
+
+@property (nonatomic, strong) ServerPlaylistLoader *serverPlaylistLoader;
 
 @end

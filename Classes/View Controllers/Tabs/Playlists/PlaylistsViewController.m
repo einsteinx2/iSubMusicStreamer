@@ -23,8 +23,6 @@
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
 #import "NSError+ISMSError.h"
-#import "SUSServerPlaylistsDAO.h"
-#import "SUSServerPlaylist.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 
@@ -88,9 +86,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [super viewDidLoad];
     
     [self recreateSharedSession];
-		
-	self.serverPlaylistsDataModel = [[SUSServerPlaylistsDAO alloc] initWithDelegate:self];
-	
+    
 	self.isNoPlaylistsScreenShowing = NO;
 	self.isPlaylistSaveEditShowing = NO;
 	self.savePlaylistLocal = NO;
@@ -270,7 +266,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			self.savePlaylistLabel.text = @"Save Playlist";
 		} else if (self.segmentedControl.selectedSegmentIndex == 1) {
 			self.savePlaylistLabel.frame = CGRectMake(0, 0, 227, 50);
-            NSInteger localPlaylistsCount = Store.shared.localPlaylistsCount;
+            NSInteger localPlaylistsCount = self.localPlaylists.count;
             if (localPlaylistsCount == 1) {
 				self.savePlaylistLabel.text = [NSString stringWithFormat:@"1 playlist"];
             } else {
@@ -278,7 +274,7 @@ LOG_LEVEL_ISUB_DEFAULT
             }
 		} else if (self.segmentedControl.selectedSegmentIndex == 2) {
 			self.savePlaylistLabel.frame = CGRectMake(0, 0, 227, 50);
-			NSInteger serverPlaylistsCount = [self.serverPlaylistsDataModel.serverPlaylists count];
+            NSInteger serverPlaylistsCount = self.serverPlaylists.count;
             if (serverPlaylistsCount == 1) {
 				self.savePlaylistLabel.text = [NSString stringWithFormat:@"1 playlist"];
             } else {
@@ -380,20 +376,8 @@ LOG_LEVEL_ISUB_DEFAULT
             } else {
 				self.playlistCountLabel.text = [NSString stringWithFormat:@"%lu songs", (unsigned long)self.currentPlaylistCount];
             }
-		} else if (self.segmentedControl.selectedSegmentIndex == 1) {
-            NSUInteger localPlaylistsCount = Store.shared.localPlaylistsCount;
-            if (localPlaylistsCount == 1) {
-				self.playlistCountLabel.text = [NSString stringWithFormat:@"1 playlist"];
-            } else {
-				self.playlistCountLabel.text = [NSString stringWithFormat:@"%lu playlists", (unsigned long)localPlaylistsCount];
-            }
-		} else if (self.segmentedControl.selectedSegmentIndex == 2) {
-			NSUInteger serverPlaylistsCount = [self.serverPlaylistsDataModel.serverPlaylists count];
-            if (serverPlaylistsCount == 1) {
-				self.playlistCountLabel.text = [NSString stringWithFormat:@"1 playlist"];
-            } else {
-				self.playlistCountLabel.text = [NSString stringWithFormat:@"%lu playlists", (unsigned long)serverPlaylistsCount];
-            }
+        } else {
+            self.playlistCountLabel.text = @"";
         }
 	}
 }
@@ -456,6 +440,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)segmentAction:(id)sender {
+    self.tableView.refreshControl = nil;
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
 		// Get the current playlist count
 		self.currentPlaylistCount = [PlayQueue.shared count];
@@ -530,15 +515,32 @@ LOG_LEVEL_ISUB_DEFAULT
 		
 		// Remove the save and edit buttons if showing
 		[self removeSaveEditButtons];
+        
+        self.serverPlaylists = [Store.shared serverPlaylistsWithServerId:settingsS.currentServerId];
+        if (self.serverPlaylists.count > 0) {
+            // Modify the header view to include the save and edit buttons
+            [self addSaveEditButtons];
+        } else {
+            // Automatically load
+            [self loadServerPlaylists];
+        }
 
 		// Reload the table data
 		[self.tableView reloadData];
 		
 		// Remove the no playlists overlay screen if it's showing
 		[self removeNoPlaylistsScreen];
-		
-        [viewObjectsS showAlbumLoadingScreen:appDelegateS.window sender:self];
-        [self.serverPlaylistsDataModel startLoad];
+        
+        // If the list is empty, display the no playlists overlay screen
+        if (self.serverPlaylists.count == 0) {
+            [self addNoPlaylistsScreen];
+        }
+        
+        // Add the pull to refresh view
+        __weak PlaylistsViewController *weakSelf = self;
+        self.tableView.refreshControl = [[RefreshControl alloc] initWithHandler:^{
+            [weakSelf loadServerPlaylists];
+        }];
 	}
 }
 
@@ -840,8 +842,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (self.deleteSongsLabel.hidden == NO) {
 			if (selectedRowIndexes.count == 0) {
 				// Select all the rows
-				NSUInteger count = [self.serverPlaylistsDataModel.serverPlaylists count];
-				for (int i = 0; i < count; i++) {
+				for (int i = 0; i < self.serverPlaylists.count; i++) {
                     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
 				}
 				[self showDeleteButton];
@@ -864,7 +865,7 @@ LOG_LEVEL_ISUB_DEFAULT
         [self recreateSharedSession];
 	} else {
         [self recreateSharedSession];
-        [self.serverPlaylistsDataModel cancelLoad];
+        [self.serverPlaylistsLoader cancelLoad];
         [viewObjectsS hideLoadingScreen];
 	}
 }
@@ -947,23 +948,35 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark - ISMSLoader Delegate
 
+- (void)loadServerPlaylists {
+    [viewObjectsS showAlbumLoadingScreen:appDelegateS.window sender:self];
+    [self.serverPlaylistsLoader cancelLoad];
+    self.serverPlaylistsLoader = [[ServerPlaylistsLoader alloc] initWithDelegate:self];
+    [self.serverPlaylistsLoader startLoad];
+}
+
 - (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
     [viewObjectsS hideLoadingScreen];
+    [self.tableView.refreshControl endRefreshing];
 }
 
 - (void)loadingFinished:(SUSLoader *)theLoader {
+    self.serverPlaylists = self.serverPlaylistsLoader.serverPlaylists;
+    
     [self.tableView reloadData];
     
     // If the list is empty, display the no playlists overlay screen
-    if ([self.serverPlaylistsDataModel.serverPlaylists count] == 0 && self.isNoPlaylistsScreenShowing == NO) {
+    if (self.serverPlaylists.count == 0 && !self.isNoPlaylistsScreenShowing) {
 		[self addNoPlaylistsScreen];
     } else {
         // Modify the header view to include the save and edit buttons
         [self addSaveEditButtons];
+        [self removeNoPlaylistsScreen];
     }
     
     // Hide the loading screen
     [viewObjectsS hideLoadingScreen];
+    [self.tableView.refreshControl endRefreshing];
 }
 
 - (void)subsonicErrorCode:(NSString *)errorCode message:(NSString *)message {
@@ -982,6 +995,13 @@ LOG_LEVEL_ISUB_DEFAULT
 - (LocalPlaylist *)localPlaylistForIndex:(NSUInteger)index {
     if (index < self.localPlaylists.count) {
         return self.localPlaylists[index];
+    }
+    return nil;
+}
+
+- (ServerPlaylist *)serverPlaylistForIndex:(NSUInteger)index {
+    if (index < self.serverPlaylists.count) {
+        return self.serverPlaylists[index];
     }
     return nil;
 }
@@ -1046,7 +1066,7 @@ LOG_LEVEL_ISUB_DEFAULT
     } else if (self.segmentedControl.selectedSegmentIndex == 1) {
         return self.localPlaylists.count;
     } else if (self.segmentedControl.selectedSegmentIndex == 2) {
-		return self.serverPlaylistsDataModel.serverPlaylists.count;
+		return self.serverPlaylists.count;
     }
 
 	return 0;
@@ -1108,17 +1128,16 @@ LOG_LEVEL_ISUB_DEFAULT
 	} else if (self.segmentedControl.selectedSegmentIndex == 2) {
         // Server playlist
         cell.hideNumberLabel = YES;
-        cell.hideCoverArt = YES;
+        cell.hideCoverArt = NO;
         cell.hideDurationLabel = YES;
-        cell.hideSecondaryLabel = YES;
-        [cell updateWithModel:[self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:indexPath.row]];
+        cell.hideSecondaryLabel = NO;
+        [cell updateWithModel:[self serverPlaylistForIndex:indexPath.row]];
 	}
 	
 	return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	if (!indexPath) return;
     
     if (self.isEditing) {
@@ -1126,27 +1145,19 @@ LOG_LEVEL_ISUB_DEFAULT
         return;
     }
 	
-    if (self.segmentedControl.selectedSegmentIndex == 0)
-    {
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
         ISMSSong *playedSong = [musicS playSongAtPosition:indexPath.row];
         if (!playedSong.isVideo) {
             [self showPlayer];
         }
-    }
-    else if (self.segmentedControl.selectedSegmentIndex == 1)
-    {
-        PlaylistSongsViewController *playlistSongsViewController = [[PlaylistSongsViewController alloc] init];
-        playlistSongsViewController.localPlaylist = [self localPlaylistForIndex:indexPath.row];
-        [self pushViewControllerCustom:playlistSongsViewController];
-    }
-    else if (self.segmentedControl.selectedSegmentIndex == 2)
-    {
-        // TODO: implement this
-//        PlaylistSongsViewController *playlistSongsViewController = [[PlaylistSongsViewController alloc] init];
-//        SUSServerPlaylist *playlist = [self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:indexPath.row];
-//        playlistSongsViewController.md5 = [playlist.playlistName md5];
-//        playlistSongsViewController.serverPlaylist = playlist;
-//        [self pushViewControllerCustom:playlistSongsViewController];
+    } else if (self.segmentedControl.selectedSegmentIndex == 1) {
+        PlaylistSongsViewController *controller = [[PlaylistSongsViewController alloc] init];
+        controller.localPlaylist = [self localPlaylistForIndex:indexPath.row];
+        [self pushViewControllerCustom:controller];
+    } else if (self.segmentedControl.selectedSegmentIndex == 2) {
+        PlaylistSongsViewController *controller = [[PlaylistSongsViewController alloc] init];
+        controller.serverPlaylist = [self serverPlaylistForIndex:indexPath.row];
+        [self pushViewControllerCustom:controller];
     }
 }
 
@@ -1174,7 +1185,7 @@ LOG_LEVEL_ISUB_DEFAULT
         }];
     } else if (self.segmentedControl.selectedSegmentIndex == 2) {
         // Server Playlists
-        return [SwipeAction downloadQueueAndDeleteConfigWithModel:[self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:indexPath.row] deleteHandler:^{
+        return [SwipeAction downloadQueueAndDeleteConfigWithModel:[self.serverPlaylists objectAtIndexSafe:indexPath.row] deleteHandler:^{
             [self deleteServerPlaylistsAtRowIndexes:@[@(indexPath.row)]];
         }];
         return nil;
@@ -1182,10 +1193,9 @@ LOG_LEVEL_ISUB_DEFAULT
     return nil;
 }
 
-- (void)dealloc 
-{
+- (void)dealloc  {
 	[NSNotificationCenter removeObserverOnMainThread:self];
-	self.serverPlaylistsDataModel.delegate = nil;
+	self.serverPlaylistsLoader.delegate = nil;
 }
 
 @end

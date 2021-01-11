@@ -19,16 +19,11 @@
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
 #import "NSError+ISMSError.h"
-#import "SUSServerPlaylist.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import "SUSLoader.h"
 
 LOG_LEVEL_ISUB_DEFAULT
-
-@interface PlaylistSongsViewController()
-@property (strong) NSURLSessionDataTask *dataTask;
-@end
 
 @implementation PlaylistSongsViewController
 
@@ -60,16 +55,15 @@ LOG_LEVEL_ISUB_DEFAULT
 			self.tableView.tableHeaderView = headerView;
 		}
 	} else {
-        // TODO: implement this
-//        self.title = self.serverPlaylist.playlistName;
-//        self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM splaylist%@", self.md5]];
-//		[self.tableView reloadData];
-//
-//        // Add the pull to refresh view
-//        __weak PlaylistSongsViewController *weakSelf = self;
-//        self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
-//            [weakSelf loadData];
-//        }];
+        self.title = self.serverPlaylist.name;
+                
+		[self.tableView reloadData];
+
+        // Add the pull to refresh view
+        __weak PlaylistSongsViewController *weakSelf = self;
+        self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
+            [weakSelf loadData];
+        }];
 	}
 
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -78,67 +72,41 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)loadData {
-//    NSDictionary *parameters = [NSDictionary dictionaryWithObject:n2N(self.serverPlaylist.playlistId) forKey:@"id"];
-//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"getPlaylist" parameters:parameters];
-//    self.dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-//        if (error) {
-//            [EX2Dispatch runInMainThreadAsync:^{
-//                if (settingsS.isPopupsEnabled) {
-//                    NSString *message = [NSString stringWithFormat:@"There was an error loading the playlist.\n\nError %li: %@", (long)error.code, error.localizedDescription];
-//                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
-//                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-//                    [self presentViewController:alert animated:YES completion:nil];
-//                }
-//                
-//                self.tableView.scrollEnabled = YES;
-//                [viewObjectsS hideLoadingScreen];
-//                [self.refreshControl endRefreshing];
-//            }];
-//        } else {
-//            RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
-//            if (!root.isValid) {
-//                //NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
-//                // TODO: Handle this error
-//            } else {
-//                RXMLElement *error = [root child:@"error"];
-//                if (error.isValid) {
-//                    //NSString *code = [error attribute:@"code"];
-//                    //NSString *message = [error attribute:@"message"];
-//                    //[self subsonicErrorCode:[code intValue] message:message];
-//                    // TODO: Handle this error
-//                } else {
-//                    // TODO: Handle !isValid case
-//                    if ([[root child:@"playlist"] isValid]) {
-//                        [databaseS removeServerPlaylistTable:self.md5];
-//                        [databaseS createServerPlaylistTable:self.md5];
-//                        [root iterate:@"playlist.entry" usingBlock:^(RXMLElement *e) {
-//                            ISMSSong *aSong = [[ISMSSong alloc] initWithRXMLElement:e];
-//                            [aSong insertIntoServerPlaylistWithPlaylistId:self.md5];
-//                        }];
-//                    }
-//                }
-//            }
-//            
-//            self.playlistCount = [databaseS.localPlaylistsDbQueue intForQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM splaylist%@", self.md5]];
-//            
-//            [EX2Dispatch runInMainThreadAsync:^{
-//                [self.tableView reloadData];
-//                [self.refreshControl endRefreshing];
-//                [viewObjectsS hideLoadingScreen];
-//                self.tableView.scrollEnabled = YES;
-//            }];
-//        }
-//    }];
-//    [self.dataTask resume];
-//    
-//    self.tableView.scrollEnabled = NO;
-//    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
+    [self cancelLoad];
+    
+    NSInteger serverId = self.serverPlaylist.serverId;
+    NSInteger serverPlaylistId = self.serverPlaylist.playlistId;
+    __weak PlaylistSongsViewController *weakSelf = self;
+    self.serverPlaylistLoader = [[ServerPlaylistLoader alloc] initWithServerPlaylistId:serverPlaylistId];
+    self.serverPlaylistLoader.callback = ^(BOOL success, NSError * _Nullable error) {
+        [EX2Dispatch runInMainThreadAsync:^{
+            if (error) {
+                if (settingsS.isPopupsEnabled) {
+                    NSString *message = [NSString stringWithFormat:@"There was an error loading the playlist.\n\nError %li: %@", (long)error.code, error.localizedDescription];
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+                    [weakSelf presentViewController:alert animated:YES completion:nil];
+                }
+                [viewObjectsS hideLoadingScreen];
+                [weakSelf.refreshControl endRefreshing];
+            } else {
+                // Reload the server playlist to get the updated loaded song count
+                weakSelf.serverPlaylist = [Store.shared serverPlaylistWithServerId:serverId serverPlaylistId:serverPlaylistId];
+                [weakSelf.tableView reloadData];
+                [weakSelf.refreshControl endRefreshing];
+                [viewObjectsS hideLoadingScreen];
+            }
+        }];
+    };
+    [self.serverPlaylistLoader startLoad];
+    
+    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
 }	
 
 - (void)cancelLoad {
-    [self.dataTask cancel];
-    self.dataTask = nil;
-	self.tableView.scrollEnabled = YES;
+    [self.serverPlaylistLoader cancelLoad];
+    self.serverPlaylistLoader.callback = nil;
+    self.serverPlaylistLoader = nil;
 	[viewObjectsS hideLoadingScreen];
 	
 	if (!self.localPlaylist) {
@@ -157,11 +125,8 @@ LOG_LEVEL_ISUB_DEFAULT
 
 	if (self.localPlaylist) {
 		[self.tableView reloadData];
-	} else {
-        // TODO: implement this
-//		if (self.playlistCount == 0) {
-//			[self loadData];
-//		}
+	} else if (!self.serverPlaylist.isLoaded) {
+        [self loadData];
 	}
 }
 
@@ -251,8 +216,7 @@ LOG_LEVEL_ISUB_DEFAULT
     if (self.localPlaylist) {
         return [Store.shared songWithLocalPlaylistId:self.localPlaylist.playlistId position:indexPath.row];
     } else {
-        // TODO: implement this
-//        return [ISMSSong songFromServerPlaylistId:self.md5 row:indexPath.row];
+        return [Store.shared songWithServerPlaylist:self.serverPlaylist position:indexPath.row];
     }
     return nil;
 }
@@ -263,7 +227,11 @@ LOG_LEVEL_ISUB_DEFAULT
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return self.localPlaylist.songCount;
+    if (self.localPlaylist) {
+        return self.localPlaylist.songCount;
+    } else {
+        return self.serverPlaylist.loadedSongCount;
+    }
 }
 
 // Customize the appearance of table view cells.
@@ -278,66 +246,25 @@ LOG_LEVEL_ISUB_DEFAULT
     return cell;
 }
 
-- (void)didSelectRowInternal:(NSIndexPath *)indexPath {
-    // TODO: implement this
-//	// Clear the current playlist
-//	if (settingsS.isJukeboxEnabled) {
-//		[databaseS resetJukeboxPlaylist];
-//		[jukeboxS clearRemotePlaylist];
-//	} else {
-//		[databaseS resetCurrentPlaylistDb];
-//	}
-//
-//	PlayQueue.shared.isShuffle = NO;
-	
-	/*for (int i = 0; i < self.playlistCount; i++)
-	{
-		@autoreleasepool
-		{
-			ISMSSong *aSong;
-			if (self.isLocalPlaylist)
-			{
-				aSong = [ISMSSong songFromDbRow:i inTable:[NSString stringWithFormat:@"playlist%@", self.md5] inDatabaseQueue:databaseS.localPlaylistsDbQueue];
-			}
-			else
-			{
-				aSong = [ISMSSong songFromServerPlaylistId:self.md5 row:i];
-			}
-			
-			[aSong addToCurrentPlaylistDbQueue];
-		}
-	}*/
-	
-	// Need to do this for speed (NOTE: haha well 10 years ago maybe, but probably not now)
-//	NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
-//	NSString *currTableName = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-//	NSString *playTableName = [NSString stringWithFormat:@"%@%@", self.isLocalPlaylist ? @"playlist" : @"splaylist", self.md5];
-//	[databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-//		 [db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
-//		 if ([db hadError]) { DDLogError(@"[PlaylistSongsViewController] Err attaching the currentPlaylistDb %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
-//		 
-//		 [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ SELECT * FROM %@", currTableName, playTableName]];
-//		 [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
-//	 }];
-//	
-//    if (settingsS.isJukeboxEnabled) {
-//		[jukeboxS replacePlaylistWithLocal];
-//    }
-//
-//    [viewObjectsS hideLoadingScreen];
-//    
-//    ISMSSong *playedSong = [musicS playSongAtPosition:indexPath.row];
-//    if (!playedSong.isVideo) {
-//        [self showPlayer];
-//    }
-}
-
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	if (!indexPath) return;
     
     [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-    [self performSelector:@selector(didSelectRowInternal:) withObject:indexPath afterDelay:0.05];
+    [EX2Dispatch runInBackgroundAsync:^{
+        ISMSSong *song = nil;
+        if (self.localPlaylist) {
+            // TODO: implement this
+        } else {
+            song = [Store.shared playSongFromServerPlaylistWithServerId:self.serverPlaylist.serverId serverPlaylistId:self.serverPlaylist.playlistId position:indexPath.row];
+        }
+        
+        [EX2Dispatch runInMainThreadAsync:^{
+            [viewObjectsS hideLoadingScreen];
+            if (!song.isVideo) {
+                [self showPlayer];
+            }
+        }];
+    }];
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {

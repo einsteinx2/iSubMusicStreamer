@@ -74,6 +74,7 @@ fileprivate let debugPrintAllQueries = false
                 try DownloadedSong.createInitialSchema(db)
                 try DownloadedSongPathComponent.createInitialSchema(db)
                 try LocalPlaylist.createInitialSchema(db)
+                try ServerPlaylist.createInitialSchema(db)
             }
             
             // Migrate old data
