@@ -24,7 +24,7 @@
 
 - (void)scrobbleSongAsPlaying;
 - (void)scrobbleSongAsSubmission;
-- (void)scrobbleSong:(ISMSSong *)aSong isSubmission:(BOOL)isSubmission;
+- (void)scrobbleSong:(ISMSSong *)song isSubmission:(BOOL)isSubmission;
 - (void)notifySubsonic;
 
 @property (nonatomic) BOOL playerHasNotifiedSubsonic;

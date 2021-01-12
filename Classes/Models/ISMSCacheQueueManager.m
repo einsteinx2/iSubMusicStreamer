@@ -114,17 +114,17 @@ LOG_LEVEL_ISUB_DEFAULT
         NSString *tagArtistName = self.currentQueuedSong.tagArtistName;
         NSString *title = self.currentQueuedSong.title;
         if (![Store.shared isLyricsCachedWithTagArtistName:tagArtistName songTitle:title]) {
-            [[[LyricsLoader alloc] initWithDelegate:nil tagArtistName:tagArtistName songTitle:title] startLoad];
+            [[[LyricsLoader alloc] initWithTagArtistName:tagArtistName songTitle:title delegate:nil] startLoad];
         }
 	}
 	
 	// Download the art
 	if (self.currentQueuedSong.coverArtId) {
 		NSString *coverArtId = self.currentQueuedSong.coverArtId;
-		CoverArtLoader *playerArt = [[CoverArtLoader alloc] initWithDelegate:nil coverArtId:coverArtId isLarge:YES];
+		CoverArtLoader *playerArt = [[CoverArtLoader alloc] initWithCoverArtId:coverArtId isLarge:YES delegate:nil];
 		(void)[playerArt downloadArtIfNotExists];
 		
-		CoverArtLoader *tableArt = [[CoverArtLoader alloc] initWithDelegate:nil coverArtId:coverArtId isLarge:NO];
+		CoverArtLoader *tableArt = [[CoverArtLoader alloc] initWithCoverArtId:coverArtId isLarge:NO delegate:nil];
 		(void)[tableArt downloadArtIfNotExists];
 	}
 	

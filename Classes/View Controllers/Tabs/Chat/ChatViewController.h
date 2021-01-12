@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SUSLoaderDelegate.h"
 
 @class CustomUITextView, ChatMessageDAO;
 
-@interface ChatViewController : UITableViewController <UITextViewDelegate, SUSLoaderDelegate>
+@interface ChatViewController: UITableViewController
 
 @property (strong) UIView *headerView;
 @property (strong) CustomUITextView *textInput;

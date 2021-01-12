@@ -20,6 +20,9 @@
 #import "EX2Kit.h"
 #import "Swift.h"
 
+@interface ChatViewController() <UITextViewDelegate, APILoaderDelegate>
+@end
+
 @implementation ChatViewController
 
 #pragma mark - Rotation
@@ -169,9 +172,17 @@
 	[self.navigationController pushViewController:playerViewController animated:YES];
 }
 
-#pragma mark ISMSLoader delegate
+#pragma mark APILoader delegate
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
+- (void)loadingFinished:(APILoader *)loader {
+    [viewObjectsS hideLoadingScreen];
+    
+    [self.tableView reloadData];
+    [self.refreshControl endRefreshing];
+}
+
+
+- (void)loadingFailed:(APILoader *)loader error:(NSError *)error {
 	[viewObjectsS hideLoadingScreen];
 	
 	[self.tableView reloadData];
@@ -180,13 +191,6 @@
 	if (error.code == ISMSErrorCode_CouldNotSendChatMessage) {
 		self.textInput.text = [[[error userInfo] objectForKey:@"message"] copy];
 	}
-}
-
-- (void)loadingFinished:(SUSLoader *)theLoader {
-	[viewObjectsS hideLoadingScreen];
-	
-	[self.tableView reloadData];
-	[self.refreshControl endRefreshing];
 }
 
 #pragma mark Table view delegate

@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SUSLoaderDelegate.h"
 
 @class SettingsTabViewController, Server;
 
-@interface ServerListViewController : UIViewController <SUSLoaderDelegate>
+@interface ServerListViewController : UIViewController
 
 @property (nonatomic, strong) NSArray<Server*> *servers;
 @property (nonatomic, strong) Server *serverToEdit;

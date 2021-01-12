@@ -21,7 +21,6 @@
 #import "NSError+ISMSError.h"
 #import "EX2Kit.h"
 #import "Swift.h"
-#import "SUSLoader.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 

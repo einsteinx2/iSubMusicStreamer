@@ -19,7 +19,6 @@
 #import "JukeboxSingleton.h"
 #import "EX2Kit.h"
 #import "Swift.h"
-#import "SUSLoader.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -120,7 +119,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
     
     NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:action parameters:parameters];
-    self.dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    self.dataTask = [APILoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
             [EX2Dispatch runInMainThreadAsync:^{
                 if (settingsS.isPopupsEnabled) {

@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-@objc final class CoverArtLoader: SUSLoader {
+@objc final class CoverArtLoader: APILoader {
     private struct Notifications {
         static let downloadFinished = "CoverArtLoader.downloadFinished"
         static let downloadFailed = "CoverArtLoader.downloadFailed"
@@ -33,7 +33,7 @@ import Resolver
         return store.isCoverArtCached(serverId: serverId, id: coverArtId, isLarge: isLarge)
     }
     
-    @objc init(delegate: SUSLoaderDelegate?, coverArtId: String, isLarge: Bool) {
+    @objc init(coverArtId: String, isLarge: Bool, delegate: APILoaderDelegate?) {
         self.coverArtId = coverArtId
         self.isLarge = isLarge
         super.init(delegate: delegate)
@@ -69,15 +69,13 @@ import Resolver
         }
     }
     
-    override func processResponse() {
+    override func processResponse(data: Data) {
         synchronized(Self.syncObject) {
             _ = Self.loadingIds.remove(mergedId)
         }
-        
-        guard let receivedData = receivedData else { return }
-        
+                
         // Check to see if the data is a valid image. If so, use it; if not, use the default image.
-        let coverArt = CoverArt(serverId: serverId, id: coverArtId, isLarge: isLarge, data: receivedData)
+        let coverArt = CoverArt(serverId: serverId, id: coverArtId, isLarge: isLarge, data: data)
         if coverArt.image == nil {
             DDLogError("[SUSCoverArtLoader] art loading failed for server: \(serverId) id: \(coverArtId)")
             NotificationCenter.postNotificationToMainThread(name: Notifications.downloadFailed, object: mergedId)
@@ -95,7 +93,7 @@ import Resolver
         }
     }
     
-    override func informDelegateLoadingFailed(_ error: Error?) {
+    override func informDelegateLoadingFailed(error: NSError?) {
         synchronized(Self.syncObject) {
             _ = Self.loadingIds.remove(mergedId)
         }
@@ -113,7 +111,7 @@ import Resolver
     
     @objc private func coverArtDownloadFailed(notification: Notification) {
         if let id = notification.object as? String, id == mergedId {
-            informDelegateLoadingFailed(nil)
+            informDelegateLoadingFailed(error: nil)
         }
     }
 }

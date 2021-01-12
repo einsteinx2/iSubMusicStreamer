@@ -10,10 +10,10 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-final class TagArtistLoader: SUSLoader {
+final class TagArtistLoader: APILoader {
     @Injected private var store: Store
     
-    override var type: SUSLoaderType { return SUSLoaderType_TagArtist }
+    override var type: APILoaderType { .tagArtist }
     
     var serverId = Settings.shared().currentServerId
     let tagArtistId: Int
@@ -34,16 +34,14 @@ final class TagArtistLoader: SUSLoader {
         return NSMutableURLRequest(susAction: "getArtist", parameters: ["id": tagArtistId]) as URLRequest
     }
     
-    override func processResponse() {
-        guard let receivedData = receivedData else { return }
-        
+    override func processResponse(data: Data) {
         tagAlbumIds.removeAll()
-        let root = RXMLElement(fromXMLData: receivedData)
+        let root = RXMLElement(fromXMLData: data)
         if !root.isValid {
-            informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
+            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
         } else {
             if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
+                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
             } else {
                 if store.deleteTagAlbums(serverId: serverId, tagArtistId: tagArtistId) {
                     var albumOrder = 0
@@ -53,13 +51,13 @@ final class TagArtistLoader: SUSLoader {
                             self.tagAlbumIds.append(tagAlbum.id)
                             albumOrder += 1
                         } else {
-                            self.informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                            self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
                             return
                         }
                     }
                     informDelegateLoadingFinished()
                 } else {
-                    informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                    informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
                 }
             }
         }

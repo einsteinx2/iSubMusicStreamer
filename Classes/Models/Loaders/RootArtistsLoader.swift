@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-final class RootArtistsLoader: SUSLoader {
+final class RootArtistsLoader: APILoader {
     @Injected private var store: Store
     
     var serverId = Settings.shared().currentServerId
@@ -21,7 +21,7 @@ final class RootArtistsLoader: SUSLoader {
     
     // MARK: SUSLoader Overrides
     
-    override var type: SUSLoaderType { SUSLoaderType_RootArtists }
+    override var type: APILoaderType { .rootArtists }
         
     override func createRequest() -> URLRequest? {
         var parameters: [AnyHashable: Any]?
@@ -31,19 +31,17 @@ final class RootArtistsLoader: SUSLoader {
         return NSMutableURLRequest(susAction: "getArtists", parameters: parameters) as URLRequest
     }
     
-    override func processResponse() {
-        guard let receivedData = receivedData else { return }
-        
+    override func processResponse(data: Data) {
         metadata = nil
         tableSections.removeAll()
         tagArtistIds.removeAll()
-        let root = RXMLElement(fromXMLData: receivedData)
+        let root = RXMLElement(fromXMLData: data)
         if !root.isValid {
-            informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
+            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
         } else {
             let error = root.child("error")
             if let error = error, error.isValid {
-                informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
+                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
             } else {
                 if store.deleteTagArtists(serverId: serverId, mediaFolderId: mediaFolderId) {
                     var rowCount = 0
@@ -79,7 +77,7 @@ final class RootArtistsLoader: SUSLoader {
                     self.metadata = metadata
                     informDelegateLoadingFinished()
                 } else {
-                    informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                    informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
                 }
             }
         }

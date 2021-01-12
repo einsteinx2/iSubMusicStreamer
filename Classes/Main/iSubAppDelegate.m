@@ -10,7 +10,6 @@
 #import "ServerListViewController.h"
 #import "FoldersViewController.h"
 #import "UIViewController+PushViewControllerCustom.h"
-#import "SUSStatusLoader.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "ViewObjectsSingleton.h"
 #import "ZipKit.h"
@@ -33,7 +32,7 @@
 
 LOG_LEVEL_ISUB_DEFAULT
 
-@interface iSubAppDelegate()
+@interface iSubAppDelegate() <APILoaderDelegate, AVPlayerViewControllerDelegate>
 @property (nonatomic) BOOL isNoNetworkAlertShowing;
 @property (nonatomic) BOOL isOnlineModeAlertShowing;
 @end
@@ -188,7 +187,7 @@ LOG_LEVEL_ISUB_DEFAULT
     self.window.backgroundColor = settingsS.isJukeboxEnabled ? viewObjectsS.jukeboxColor : viewObjectsS.windowColor;
 		
 	// Check the server status in the background
-    if (!settingsS.isOfflineMode) {
+    if (!settingsS.isOfflineMode && settingsS.currentServer) {
 		[viewObjectsS showAlbumLoadingScreen:self.window sender:self];
 		[self checkServer];
 	}
@@ -276,11 +275,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	// if it's not then display an alert and allow user to change settings if they want.
 	// This is in case the user is, for instance, connected to a wifi network but does not 
 	// have internet access or if the host url entered was wrong.
-    if (!settingsS.isOfflineMode) {
-        self.statusLoader = [[SUSStatusLoader alloc] initWithDelegate:self];
-        self.statusLoader.urlString = settingsS.currentServer.url.absoluteString;
-        self.statusLoader.username = settingsS.currentServer.username;
-        self.statusLoader.password = settingsS.currentServer.password;
+    Server *currentServer = settingsS.currentServer;
+    if (!settingsS.isOfflineMode && currentServer) {
+        self.statusLoader = [[StatusLoader alloc] initWithUrlString:currentServer.url.absoluteString username:currentServer.username password:currentServer.password delegate:self];
         [self.statusLoader startLoad];
     }
 	
@@ -292,24 +289,13 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark SUS Loader Delegate
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
-    if (theLoader.type == SUSLoaderType_Status) {
-        [viewObjectsS hideLoadingScreen];
-        if (!settingsS.isOfflineMode) {
-            DDLogVerbose(@"[iSubAppDelegate] Loading failed for loading type %i, entering offline mode. Error: %@", theLoader.type, error);
-            [self enterOfflineMode];
-        }
-        self.statusLoader = nil;
-    }
-}
-
-- (void)loadingFinished:(SUSLoader *)theLoader {
+- (void)loadingFinished:(APILoader *)loader {
     // This happens right on app launch
-    if (theLoader.type == SUSLoaderType_Status) {
+    if (loader.type == APILoaderTypeStatus) {
         // Update server properties if changed
-        if ([theLoader isKindOfClass:SUSStatusLoader.class]) {
-            BOOL isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
-            BOOL isNewSearchSupported = ((SUSStatusLoader *)theLoader).isNewSearchAPI;
+        if ([loader isKindOfClass:StatusLoader.class]) {
+            BOOL isVideoSupported = ((StatusLoader *)loader).isVideoSupported;
+            BOOL isNewSearchSupported = ((StatusLoader *)loader).isNewSearchSupported;
             Server *server = settingsS.currentServer;
             if (server.isVideoSupported != isVideoSupported || server.isNewSearchSupported != isNewSearchSupported) {
                 server.isVideoSupported = isVideoSupported;
@@ -332,6 +318,17 @@ LOG_LEVEL_ISUB_DEFAULT
             // Start the queued downloads if Wifi is available
             [cacheQueueManagerS startDownloadQueue];
         }
+    }
+}
+
+- (void)loadingFailed:(APILoader *)loader error:(NSError *)error {
+    if (loader.type == APILoaderTypeStatus) {
+        [viewObjectsS hideLoadingScreen];
+        if (!settingsS.isOfflineMode) {
+            DDLogVerbose(@"[iSubAppDelegate] Loading failed for loading type %ld, entering offline mode. Error: %@", (long)loader.type, error);
+            [self enterOfflineMode];
+        }
+        self.statusLoader = nil;
     }
 }
 

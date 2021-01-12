@@ -8,26 +8,24 @@
 
 import Foundation
 
-@objc final class DropdownFolderLoader: SUSLoader {
+@objc final class DropdownFolderLoader: APILoader {
     @objc var serverId = Settings.shared().currentServerId
     
     @objc private(set) var mediaFolders = [MediaFolder]()
     
-    override var type: SUSLoaderType { SUSLoaderType_DropdownFolder }
+    override var type: APILoaderType { .dropdownFolder }
     
     override func createRequest() -> URLRequest? {
         return NSMutableURLRequest(susAction: "getMusicFolders", parameters: nil) as URLRequest
     }
     
-    override func processResponse() {
-        guard let receivedData = receivedData else { return }
-        
-        let root = RXMLElement(fromXMLData: receivedData)
+    override func processResponse(data: Data) {
+        let root = RXMLElement(fromXMLData: data)
         if !root.isValid {
-            informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
+            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
         } else {
             if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
+                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
             } else {
                 var mediaFolders = [MediaFolder(serverId: serverId, id: MediaFolder.allFoldersId, name: "All Media Folders")]
                 root.iterate("musicFolders.musicFolder") { e in

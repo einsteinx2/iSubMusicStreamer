@@ -375,7 +375,7 @@ LOG_LEVEL_ISUB_DEFAULT
         NSString *title = handler.mySong.title;
         if (tagArtistName && title) {
             if (![Store.shared isLyricsCachedWithTagArtistName:tagArtistName songTitle:title]) {
-                [[[LyricsLoader alloc] initWithDelegate:nil tagArtistName:tagArtistName songTitle:title] startLoad];
+                [[[LyricsLoader alloc] initWithTagArtistName:tagArtistName songTitle:title delegate:nil] startLoad];
             }
         }
 	}
@@ -447,10 +447,10 @@ LOG_LEVEL_ISUB_DEFAULT
 		// Also download the album art
 		if (song.coverArtId)
 		{
-            CoverArtLoader *playerArt = [[CoverArtLoader alloc] initWithDelegate:nil coverArtId:song.coverArtId isLarge:YES];
+            CoverArtLoader *playerArt = [[CoverArtLoader alloc] initWithCoverArtId:song.coverArtId isLarge:YES delegate:nil];
 			(void)[playerArt downloadArtIfNotExists];
 			
-			CoverArtLoader *tableArt = [[CoverArtLoader alloc] initWithDelegate:nil coverArtId:song.coverArtId isLarge:NO];
+			CoverArtLoader *tableArt = [[CoverArtLoader alloc] initWithCoverArtId:song.coverArtId isLarge:NO delegate:nil];
 			(void)[tableArt downloadArtIfNotExists];
 		}
 	}

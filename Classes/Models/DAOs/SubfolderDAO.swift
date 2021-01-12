@@ -20,14 +20,14 @@ import Resolver
     private var folderAlbumIds = [Int]()
     private var songIds = [Int]()
     
-    @objc weak var delegate: SUSLoaderDelegate?
+    @objc weak var delegate: APILoaderDelegate?
     
     @objc var hasLoaded: Bool { metadata != nil }
     @objc var folderCount: Int { metadata?.folderCount ?? 0 }
     @objc var songCount: Int { metadata?.songCount ?? 0 }
     @objc var duration: Int { metadata?.duration ?? 0 }
     
-    @objc init(parentFolderId: Int, delegate: SUSLoaderDelegate?) {
+    @objc init(parentFolderId: Int, delegate: APILoaderDelegate?) {
         self.parentFolderId = parentFolderId
         self.delegate = delegate
         super.init()
@@ -80,7 +80,7 @@ import Resolver
 //    }
 }
 
-@objc extension SubfolderDAO: SUSLoaderManager {
+@objc extension SubfolderDAO: APILoaderManager {
     func startLoad() {
         loader = SubfolderLoader(parentFolderId: parentFolderId) { [unowned self] success, error in
             if let loader = loader {
@@ -91,9 +91,9 @@ import Resolver
             
             loader = nil
             if success {
-                delegate?.loadingFinished(nil)
+                delegate?.loadingFinished(loader: nil)
             } else {
-                delegate?.loadingFailed(nil, withError: error)
+                delegate?.loadingFailed(loader: nil, error: error as NSError?)
             }
         }
         loader?.startLoad()

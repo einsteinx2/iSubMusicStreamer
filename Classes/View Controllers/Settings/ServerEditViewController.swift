@@ -192,10 +192,7 @@ import Resolver
             present(alert, animated: true, completion: nil)
         } else {
             ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: "Checking Server")
-            let loader = SUSStatusLoader(delegate: self)
-            loader.urlString = urlField.text
-            loader.username = usernameField.text
-            loader.password = passwordField.text
+            let loader = StatusLoader(urlString: urlField.text ?? "", username: usernameField.text ?? "", password: passwordField.text ?? "", delegate: self)
             loader.startLoad()
         }
     }
@@ -234,25 +231,8 @@ extension ServerEditViewController: UITextFieldDelegate {
     }
 }
 
-extension ServerEditViewController: SUSLoaderDelegate {
-    func loadingFailed(_ loader: SUSLoader?, withError error: Error?) {
-        ViewObjects.shared().hideLoadingScreen()
-        
-        var message = "Unknown error occured, please try again."
-        if let error = error {
-            let nsError = error as NSError
-            if nsError.code != ISMSErrorCode_IncorrectCredentials {
-                message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\nError code \(nsError.code):\n\(nsError.localizedDescription)"
-            } else {
-                message = "Either your username or password is incorrect, please try again"
-            }
-        }
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-        present(alert, animated: true, completion: nil)
-    }
-    
-    func loadingFinished(_ loader: SUSLoader?) {
+extension ServerEditViewController: APILoaderDelegate {
+    func loadingFinished(loader: APILoader?) {
         ViewObjects.shared().hideLoadingScreen()
         
         if let serverToEdit = serverToEdit {
@@ -272,10 +252,27 @@ extension ServerEditViewController: SUSLoaderDelegate {
         }
         
         var userInfo = [AnyHashable: Any]()
-        if let statusLoader = loader as? SUSStatusLoader {
+        if let statusLoader = loader as? StatusLoader {
             userInfo["isVideoSupported"] = statusLoader.isVideoSupported
-            userInfo["isNewSearchAPI"] = statusLoader.isNewSearchAPI
+            userInfo["isNewSearchSupported"] = statusLoader.isNewSearchSupported
         }
         NotificationCenter.postNotificationToMainThread(name: "switchServer", userInfo: userInfo)
+    }
+    
+    func loadingFailed(loader: APILoader?, error: NSError?) {
+        ViewObjects.shared().hideLoadingScreen()
+        
+        var message = "Unknown error occured, please try again."
+        if let error = error {
+            let nsError = error as NSError
+            if nsError.code != ISMSErrorCode_IncorrectCredentials {
+                message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\nError code \(nsError.code):\n\(nsError.localizedDescription)"
+            } else {
+                message = "Either your username or password is incorrect, please try again"
+            }
+        }
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }

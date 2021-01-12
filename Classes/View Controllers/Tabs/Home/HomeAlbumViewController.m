@@ -17,6 +17,9 @@
 #import "EX2Kit.h"
 #import "Swift.h"
 
+@interface HomeAlbumViewController() <APILoaderDelegate>
+@end
+
 @implementation HomeAlbumViewController
 
 - (instancetype)initWithNibName:(NSString *)n bundle:(NSBundle *)b; {
@@ -63,22 +66,10 @@
     [self.loader startLoad];
 }
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
-    self.loader = nil;
-	self.isLoading = NO;
-	    
-    if (settingsS.isPopupsEnabled) {
-        NSString *message = [NSString stringWithFormat:@"There was an error performing the search.\n\nError:%@", error.localizedDescription];
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-}	
-
-- (void)loadingFinished:(SUSLoader *)theLoader {
+- (void)loadingFinished:(APILoader *)loader {
     if (self.loader.folderAlbums.count == 0) {
         // There are no more songs
-		self.isMoreAlbums = NO;
+        self.isMoreAlbums = NO;
     } else {
         // Add the new results to the list of songs
         [self.folderAlbums addObjectsFromArray:self.loader.folderAlbums];
@@ -88,7 +79,19 @@
     [self.tableView reloadData];
     self.isLoading = NO;
     
-	self.loader = nil;
+    self.loader = nil;
+}
+
+- (void)loadingFailed:(APILoader *)theLoader error:(NSError *)error {
+    self.loader = nil;
+	self.isLoading = NO;
+	    
+    if (settingsS.isPopupsEnabled) {
+        NSString *message = [NSString stringWithFormat:@"There was an error performing the search.\n\nError:%@", error.localizedDescription];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 #pragma mark Table view methods

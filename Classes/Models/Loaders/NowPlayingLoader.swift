@@ -1,5 +1,5 @@
 //
-//  ServerPlaylistsLoader.swift
+//  NowPlayingLoader.swift
 //  iSub
 //
 //  Created by Benjamin Baron on 1/11/21.
@@ -9,16 +9,17 @@
 import Foundation
 import Resolver
 
-@objc final class ServerPlaylistsLoader: APILoader {
+@objc final class NowPlayingLoader: APILoader {
     @Injected private var store: Store
     
-    override var type: APILoaderType { .serverPlaylists }
-    
     @objc var serverId = Settings.shared().currentServerId
-    @objc var serverPlaylists = [ServerPlaylist]()
+    
+    @objc var nowPlayingSongs = [NowPlayingSong]()
+    
+    override var type: APILoaderType { .nowPlaying }
     
     override func createRequest() -> URLRequest? {
-        NSMutableURLRequest(susAction: "getPlaylists", parameters: nil) as URLRequest
+        NSMutableURLRequest(susAction: "getNowPlaying", parameters: nil) as URLRequest
     }
     
     override func processResponse(data: Data) {
@@ -29,11 +30,11 @@ import Resolver
             if let error = root.child("error"), error.isValid {
                 informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
             } else {
-                serverPlaylists.removeAll()
-                root.iterate("playlists.playlist") { e in
-                    let serverPlaylist = ServerPlaylist(serverId: self.serverId, element: e)
-                    if self.store.add(serverPlaylist: serverPlaylist) {
-                        self.serverPlaylists.append(serverPlaylist)
+                nowPlayingSongs.removeAll()
+                root.iterate("nowPlaying.entry") { e in
+                    let song = Song(serverId: self.serverId, element: e)
+                    if self.store.add(song: song) {
+                        self.nowPlayingSongs.append(NowPlayingSong(serverId: self.serverId, element: e))
                     }
                 }
                 informDelegateLoadingFinished()

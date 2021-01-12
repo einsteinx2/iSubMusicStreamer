@@ -9,10 +9,10 @@
 import Foundation
 import Resolver
 
-@objc final class ServerShuffleLoader: SUSLoader {
+@objc final class ServerShuffleLoader: APILoader {
     @Injected private var store: Store
     
-    override var type: SUSLoaderType { SUSLoaderType_ServerShuffle }
+    override var type: APILoaderType { .serverShuffle }
     
     var mediaFolderId: Int?
     
@@ -25,9 +25,8 @@ import Resolver
         return NSMutableURLRequest(susAction: "getRandomSongs", parameters: parameters) as URLRequest
     }
     
-    override func processResponse() {
-        guard let receivedData = receivedData else { return }
-        let parser = SearchXMLParser(data: receivedData)
+    override func processResponse(data: Data) {
+        let parser = SearchXMLParser(data: data)
         _ = store.playSong(position: 0, songs: parser.songs)
         informDelegateLoadingFinished()
     }

@@ -230,7 +230,7 @@ double startSongSeconds = 0.0;
     [trackInfo setObject:@(1.0) forKey:MPNowPlayingInfoPropertyPlaybackRate];
     
     if (settingsS.isLockScreenArtEnabled) {
-        CoverArtDAO *artDataModel = [[CoverArtDAO alloc] initWithDelegate:nil coverArtId:currentSong.coverArtId isLarge:YES];
+        CoverArtDAO *artDataModel = [[CoverArtDAO alloc] initWithCoverArtId:currentSong.coverArtId isLarge:YES delegate:nil];
         UIImage *image = artDataModel.coverArtImage;
         MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithBoundsSize:image.size requestHandler:^UIImage * _Nonnull(CGSize size) {
             return artDataModel.coverArtImage;

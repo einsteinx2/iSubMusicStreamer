@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SUSLoaderDelegate.h"
 
 @class ISMSFolderArtist, ISMSFolderAlbum, SubfolderDAO;
 
-@interface FolderAlbumViewController : UITableViewController <SUSLoaderDelegate>
+@interface FolderAlbumViewController: UITableViewController
 
 @property (nonatomic) BOOL isReloading;
 @property (nonatomic) NSInteger folderId;

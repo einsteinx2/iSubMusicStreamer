@@ -7,12 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FolderDropdownDelegate.h"
-#import "SUSLoader.h"
 
 @class RootArtistsDAO, FolderDropdownControl;
 
-@interface ArtistsViewController : UIViewController <UISearchBarDelegate, SUSLoaderDelegate, FolderDropdownDelegate>
+@interface ArtistsViewController : UIViewController
 
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (nonatomic) BOOL isSearching;

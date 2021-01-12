@@ -9,10 +9,10 @@
 import Foundation
 import Resolver
 
-@objc final class ServerPlaylistLoader: SUSLoader {
+@objc final class ServerPlaylistLoader: APILoader {
     @Injected private var store: Store
     
-    override var type: SUSLoaderType { SUSLoaderType_ServerPlaylist }
+    override var type: APILoaderType { .serverPlaylist }
     
     @objc var serverId = Settings.shared().currentServerId
     @objc let serverPlaylistId: Int
@@ -26,18 +26,16 @@ import Resolver
         NSMutableURLRequest(susAction: "getPlaylist", parameters: ["id": serverPlaylistId]) as URLRequest
     }
     
-    override func processResponse() {
-        guard let receivedData = receivedData else { return }
-        
-        let root = RXMLElement(fromXMLData: receivedData)
+    override func processResponse(data: Data) {
+        let root = RXMLElement(fromXMLData: data)
         if !root.isValid {
-            informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
+            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
         } else {
             if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
+                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
             } else {
                 guard store.clear(serverId: serverId, serverPlaylistId: serverPlaylistId) else {
-                    informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                    informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
                     return
                 }
                 

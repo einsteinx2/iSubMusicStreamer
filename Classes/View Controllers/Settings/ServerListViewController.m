@@ -9,7 +9,6 @@
 #import "ServerListViewController.h"
 #import "SettingsTabViewController.h"
 #import "FoldersViewController.h"
-#import "SUSStatusLoader.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -23,6 +22,9 @@
 #import "Reachability.h"
 
 LOG_LEVEL_ISUB_DEFAULT
+
+@interface ServerListViewController() <APILoaderDelegate>
+@end
 
 @implementation ServerListViewController
 
@@ -169,7 +171,7 @@ LOG_LEVEL_ISUB_DEFAULT
     NSInteger serverId = [notification.userInfo[@"serverId"] integerValue];
     Server *currentServer = [Store.shared serverWithId:serverId];
     currentServer.isVideoSupported = [notification.userInfo[@"isVideoSupported"] boolValue];
-    currentServer.isNewSearchSupported = [notification.userInfo[@"isNewSearchAPI"] boolValue];
+    currentServer.isNewSearchSupported = [notification.userInfo[@"isNewSearchSupported"] boolValue];
     // Update server properties
     (void)[Store.shared addWithServer:currentServer];
 
@@ -306,11 +308,10 @@ LOG_LEVEL_ISUB_DEFAULT
 	} else {
 		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Checking Server"];
         
-        SUSStatusLoader *statusLoader = [[SUSStatusLoader alloc] initWithDelegate:self];
-        statusLoader.urlString = self.serverToEdit.url.absoluteString;
-        statusLoader.username = self.serverToEdit.username;
-        statusLoader.password = self.serverToEdit.password;
-        [statusLoader startLoad];
+        if (self.serverToEdit) {
+            StatusLoader *statusLoader = [[StatusLoader alloc] initWithUrlString:self.serverToEdit.url.absoluteString username:self.serverToEdit.username password:self.serverToEdit.password delegate:self];
+            [statusLoader startLoad];
+        }
 	}
 }
 
@@ -344,7 +345,25 @@ LOG_LEVEL_ISUB_DEFAULT
     }   
 }
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
+- (void)loadingFinished:(APILoader *)loader {
+    // Update server properties
+    if (loader.type == APILoaderTypeStatus) {
+        self.serverToEdit.isVideoSupported = ((StatusLoader *)loader).isVideoSupported;
+        self.serverToEdit.isNewSearchSupported = ((StatusLoader *)loader).isNewSearchSupported;
+        if (self.serverToEdit) {
+            (void)[Store.shared addWithServer:self.serverToEdit];
+        }
+    }
+    
+    // Switch to the server
+    settingsS.currentServer = self.serverToEdit;
+    [self switchServer];
+    
+    DDLogInfo(@"[ServerListViewController] server verification passed, hiding loading screen");
+    [viewObjectsS hideLoadingScreen];
+}
+
+- (void)loadingFailed:(APILoader *)loader error:(NSError *)error {
     NSString *message = nil;
 	if (error.code == ISMSErrorCode_IncorrectCredentials) {
 		message = [NSString stringWithFormat:@"Either your username or password is incorrect\n\n☆☆ Choose a server to return to online mode. ☆☆\n\nError code %li:\n%@", (long)error.code, error.localizedDescription];
@@ -356,24 +375,6 @@ LOG_LEVEL_ISUB_DEFAULT
     [self presentViewController:alert animated:YES completion:nil];
         
     DDLogError(@"[ServerListViewController] server verification failed, hiding loading screen");
-    [viewObjectsS hideLoadingScreen];
-}
-
-- (void)loadingFinished:(SUSLoader *)theLoader {
-    // Update server properties
-    if (theLoader.type == SUSLoaderType_Status) {
-        self.serverToEdit.isVideoSupported = ((SUSStatusLoader *)theLoader).isVideoSupported;
-        self.serverToEdit.isNewSearchSupported = ((SUSStatusLoader *)theLoader).isNewSearchAPI;
-        if (self.serverToEdit) {
-            (void)[Store.shared addWithServer:self.serverToEdit];
-        }
-    }
-    
-    // Switch to the server
-    settingsS.currentServer = self.serverToEdit;
-	[self switchServer];
-    
-    DDLogInfo(@"[ServerListViewController] server verification passed, hiding loading screen");
     [viewObjectsS hideLoadingScreen];
 }
 

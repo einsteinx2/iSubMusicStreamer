@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SUSLoaderDelegate.h"
 
 @class ISMSTagArtist, ISMSTagAlbum, TagArtistDAO;
 
-@interface TagArtistViewController : UITableViewController <SUSLoaderDelegate>
+@interface TagArtistViewController: UITableViewController
 
 @property (nonatomic) BOOL isReloading;
 @property (nonatomic, strong) ISMSTagArtist *tagArtist;

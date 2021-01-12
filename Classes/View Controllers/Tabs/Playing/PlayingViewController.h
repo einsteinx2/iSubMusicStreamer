@@ -7,16 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SUSLoaderDelegate.h"
 
-@class SUSNowPlayingDAO;
+@class NowPlayingLoader;
 
-@interface PlayingViewController : UITableViewController <SUSLoaderDelegate>
+@interface PlayingViewController: UITableViewController
 
 @property (nonatomic) BOOL isNothingPlayingScreenShowing;
 @property (nonatomic, strong) UIImageView *nothingPlayingScreen;
-@property (nonatomic, strong) NSMutableData *receivedData;
-@property (nonatomic, strong) SUSNowPlayingDAO *dataModel;
+@property (nonatomic, strong) NowPlayingLoader *nowPlayingLoader;
 
 - (void)cancelLoad;
 

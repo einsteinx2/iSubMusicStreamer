@@ -12,7 +12,7 @@ import Resolver
 @objc final class CoverArtDAO: NSObject {
     @Injected private var store: Store
     
-    @objc weak var delegate: SUSLoaderDelegate?
+    @objc weak var delegate: APILoaderDelegate?
     private var loader: CoverArtLoader?
     
     @objc var serverId = Settings.shared().currentServerId
@@ -35,10 +35,10 @@ import Resolver
         store.isCoverArtCached(serverId: serverId, id: coverArtId, isLarge: isLarge)
     }
     
-    @objc init(delegate: SUSLoaderDelegate?, coverArtId: String, isLarge: Bool) {
-        self.delegate = delegate
+    @objc init(coverArtId: String, isLarge: Bool, delegate: APILoaderDelegate?) {
         self.coverArtId = coverArtId
         self.isLarge = isLarge
+        self.delegate = delegate
         super.init()
     }
     
@@ -54,10 +54,10 @@ import Resolver
     }
 }
 
-@objc extension CoverArtDAO: SUSLoaderManager {
+@objc extension CoverArtDAO: APILoaderManager {
     func startLoad() {
         cancelLoad()
-        loader = CoverArtLoader(delegate: self, coverArtId: coverArtId, isLarge: isLarge)
+        loader = CoverArtLoader(coverArtId: coverArtId, isLarge: isLarge, delegate: self)
         loader?.serverId = serverId
         loader?.startLoad()
     }
@@ -69,16 +69,16 @@ import Resolver
     }
 }
 
-extension CoverArtDAO: SUSLoaderDelegate {
-    func loadingFinished(_ loader: SUSLoader?) {
+extension CoverArtDAO: APILoaderDelegate {
+    func loadingFinished(loader: APILoader?) {
         self.loader?.delegate = nil
         self.loader = nil
-        delegate?.loadingFinished(nil)
+        delegate?.loadingFinished(loader: nil)
     }
     
-    func loadingFailed(_ loader: SUSLoader?, withError error: Error?) {
+    func loadingFailed(loader: APILoader?, error: NSError?) {
         self.loader?.delegate = nil
         self.loader = nil
-        delegate?.loadingFailed(nil, withError: error)
+        delegate?.loadingFailed(loader: nil, error: error)
     }
 }

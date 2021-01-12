@@ -435,7 +435,7 @@ extension HomeViewController: UISearchBarDelegate {
         
         let request = NSMutableURLRequest(susAction: action, parameters: parameters)
         if let request = request as URLRequest? {
-            dataTask = SUSLoader.sharedSession().dataTask(with: request) { data, _, error in
+            dataTask = APILoader.sharedSession.dataTask(with: request) { data, _, error in
                 EX2Dispatch.runInMainThreadAsync {
                     if let error = error {
                         if Settings.shared().isPopupsEnabled {

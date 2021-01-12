@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SUSLoaderDelegate.h"
 
 @class QuickAlbumsLoader, ISMSFolderAlbum;
-@interface HomeAlbumViewController : UITableViewController <SUSLoaderDelegate>
+@interface HomeAlbumViewController : UITableViewController
 
 @property (nonatomic, strong) QuickAlbumsLoader *loader;
 

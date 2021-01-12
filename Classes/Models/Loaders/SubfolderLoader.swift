@@ -13,10 +13,10 @@ import Resolver
 typealias FolderAlbumHandler = (_ folderAlbum: FolderAlbum) -> ()
 typealias SongHandler = (_ song: Song) -> ()
 
-final class SubfolderLoader: SUSLoader {
+final class SubfolderLoader: APILoader {
     @Injected private var store: Store
     
-    override var type: SUSLoaderType { return SUSLoaderType_SubFolders }
+    override var type: APILoaderType { .subFolders }
     
     var serverId = Settings.shared().currentServerId
     let parentFolderId: Int
@@ -38,15 +38,13 @@ final class SubfolderLoader: SUSLoader {
         return NSMutableURLRequest(susAction: "getMusicDirectory", parameters: ["id": parentFolderId]) as URLRequest
     }
     
-    override func processResponse() {
-        guard let receivedData = receivedData else { return }
-        
-        let root = RXMLElement(fromXMLData: receivedData)
+    override func processResponse(data: Data) {
+        let root = RXMLElement(fromXMLData: data)
         if !root.isValid {
-            informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
+            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
         } else {
             if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
+                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
             } else {
                 if store.resetFolderAlbumCache(serverId: serverId, parentFolderId: parentFolderId) {
                     var songCount = 0
@@ -78,7 +76,7 @@ final class SubfolderLoader: SUSLoader {
                                         // Optionally the client can do something with the song object
                                         self.onProcessSong?(song)
                                     } else {
-                                        self.informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                                        self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
                                         return
                                     }
                                 }
@@ -94,21 +92,21 @@ final class SubfolderLoader: SUSLoader {
                             self.folderAlbumIds.append(folderAlbum.id)
                             folderCount += 1
                         } else {
-                            informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
                             return
                         }
                     }
                     
                     let metadata = FolderMetadata(serverId: serverId, parentFolderId: parentFolderId, folderCount: folderCount, songCount: songCount, duration: duration)
                     if !store.add(folderMetadata: metadata) {
-                        informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                        informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
                         return
                     }
                     
                     folderMetadata = metadata
                     informDelegateLoadingFinished()
                 } else {
-                    informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                    informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
                 }
             }
         }

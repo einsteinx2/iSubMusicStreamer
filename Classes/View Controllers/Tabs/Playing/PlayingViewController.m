@@ -15,9 +15,11 @@
 #import "Flurry.h"
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
-#import "SUSNowPlayingDAO.h"
 #import "EX2Kit.h"
 #import "Swift.h"
+
+@interface PlayingViewController() <APILoaderDelegate>
+@end
 
 @implementation PlayingViewController
 
@@ -30,13 +32,13 @@
 		
 	self.title = @"Now Playing";
 	
-	self.dataModel = [[SUSNowPlayingDAO alloc] initWithDelegate:self];
+    self.nowPlayingLoader = [[NowPlayingLoader alloc] initWithDelegate:self];
 	
     // Add the pull to refresh view
     __weak PlayingViewController *weakSelf = self;
     self.refreshControl = [[RefreshControl alloc] initWithHandler:^{
         [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
-        [weakSelf.dataModel startLoad];
+        [weakSelf.nowPlayingLoader startLoad];
     }];
     
     self.tableView.rowHeight = Defines.tallRowHeight;
@@ -65,13 +67,13 @@
 	
 	[viewObjectsS showAlbumLoadingScreen:appDelegateS.window sender:self];
 	
-	[self.dataModel startLoad];
+	[self.nowPlayingLoader startLoad];
 	
 	[Flurry logEvent:@"NowPlayingTab"];
 }
 
 - (void)cancelLoad {
-	[self.dataModel cancelLoad];
+	[self.nowPlayingLoader cancelLoad];
 	[viewObjectsS hideLoadingScreen];
 	[self.refreshControl endRefreshing];
 }
@@ -99,41 +101,57 @@
 
 #pragma mark - Table View Delegate
 
+- (NowPlayingSong *)nowPlayingSongAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row < self.nowPlayingLoader.nowPlayingSongs.count) {
+        return self.nowPlayingLoader.nowPlayingSongs[indexPath.row];
+    }
+    return nil;
+}
+
+- (ISMSSong *)songAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row < self.nowPlayingLoader.nowPlayingSongs.count) {
+        NowPlayingSong *nowPlayingSong = self.nowPlayingLoader.nowPlayingSongs[indexPath.row];
+        return [Store.shared songWithServerId:nowPlayingSong.serverId songId:nowPlayingSong.songId];
+    }
+    return nil;
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView  {
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
-    return self.dataModel.count;
+    return self.nowPlayingLoader.nowPlayingSongs.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
     cell.hideHeaderLabel = NO;
     cell.hideNumberLabel = YES;
-    NSString *playTime = [self.dataModel playTimeForIndex:indexPath.row];
-    NSString *username = [self.dataModel usernameForIndex:indexPath.row];
-    NSString *playerName = [self.dataModel playerNameForIndex:indexPath.row];
-    if (playerName) {
-        cell.headerText = [NSString stringWithFormat:@"%@ @ %@ - %@", username, playerName, playTime];
+    NowPlayingSong *nowPlayingSong = [self nowPlayingSongAtIndexPath:indexPath];
+    NSString *playTimeMins = nowPlayingSong.minutesAgo == 1 ? @"min" : @"mins";
+    NSString *playTime = [NSString stringWithFormat:@"%ld %@ ago", (long)nowPlayingSong.minutesAgo, playTimeMins];
+    if (nowPlayingSong.playerName.hasValue) {
+        cell.headerText = [NSString stringWithFormat:@"%@ @ %@ - %@", nowPlayingSong.username, nowPlayingSong.playerName, playTime];
     } else {
-        cell.headerText = [NSString stringWithFormat:@"%@ - %@", username, playTime];
+        cell.headerText = [NSString stringWithFormat:@"%@ - %@", nowPlayingSong.username, playTime];
     }
-    [cell updateWithModel:[self.dataModel songForIndex:indexPath.row]];
+    [cell updateWithModel:[self songAtIndexPath:indexPath]];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if (!indexPath) return;
+	if (!indexPath || indexPath.row >= self.nowPlayingLoader.nowPlayingSongs.count) return;
 	
-	ISMSSong *playedSong = [self.dataModel playSongAtIndex:indexPath.row];
-    if (!playedSong.isVideo) {
+    ISMSSong *song = [self songAtIndexPath:indexPath];
+    song = [Store.shared playSongWithPosition:0 songs:@[song]];
+    if (!song.isVideo) {
         [self showPlayer];
     }
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel songForIndex:indexPath.row]];
+    return [SwipeAction downloadAndQueueConfigWithModel:[self songAtIndexPath:indexPath]];
 }
 
 // NOTE: For some reason, in this controller and this controller only, it's ignoring the rowHeight property and this must be implemented
@@ -141,29 +159,16 @@
     return Defines.tallRowHeight;
 }
 
-#pragma mark - ISMSLoader delegate
+#pragma mark - APILoader delegate
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
-    if (settingsS.isPopupsEnabled) {
-        NSString *message = [NSString stringWithFormat:@"There was an error loading the now playing list.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-	
-	[viewObjectsS hideLoadingScreen];
-	
-	[self.refreshControl endRefreshing];
-}
-
-- (void)loadingFinished:(SUSLoader *)theLoader {
+- (void)loadingFinished:(APILoader *)loader {
     [viewObjectsS hideLoadingScreen];
 	
 	[self.tableView reloadData];
 	[self.refreshControl endRefreshing];
 	
 	// Display the no songs overlay if 0 results
-	if (self.dataModel.count == 0) {
+	if (self.nowPlayingLoader.nowPlayingSongs.count == 0) {
 		if (!self.isNothingPlayingScreenShowing) {
 			self.isNothingPlayingScreenShowing = YES;
 			self.nothingPlayingScreen = [[UIImageView alloc] init];
@@ -191,6 +196,19 @@
 			[self.nothingPlayingScreen removeFromSuperview];
 		}
 	}
+}
+
+- (void)loadingFailed:(APILoader *)loader error:(NSError *)error {
+    if (settingsS.isPopupsEnabled) {
+        NSString *message = [NSString stringWithFormat:@"There was an error loading the now playing list.\n\nError %li: %@", (long)[error code], [error localizedDescription]];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    
+    [viewObjectsS hideLoadingScreen];
+    
+    [self.refreshControl endRefreshing];
 }
 
 @end

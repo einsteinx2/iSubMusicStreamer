@@ -7,12 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FolderDropdownDelegate.h"
-#import "SUSLoader.h"
 
 @class RootFoldersDAO, FolderDropdownControl;
 
-@interface FoldersViewController : UIViewController <UISearchBarDelegate, SUSLoaderDelegate, FolderDropdownDelegate>
+@interface FoldersViewController : UIViewController
 
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (nonatomic) BOOL isSearching;

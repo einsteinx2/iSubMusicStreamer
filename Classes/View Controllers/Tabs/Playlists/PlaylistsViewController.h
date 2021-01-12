@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SUSLoaderDelegate.h"
 
 @class LocalPlaylist, ServerPlaylist, ServerPlaylistsLoader;
 
-@interface PlaylistsViewController : UIViewController <SUSLoaderDelegate>
+@interface PlaylistsViewController: UIViewController
 
 @property (strong) NSLayoutConstraint *tableViewTopConstraint;
 @property (strong) IBOutlet UITableView *tableView;

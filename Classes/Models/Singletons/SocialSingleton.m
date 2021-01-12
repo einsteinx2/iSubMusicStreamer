@@ -10,7 +10,6 @@
 #import "BassGaplessPlayer.h"
 #import "ISMSStreamManager.h"
 #import "NSMutableURLRequest+SUS.h"
-#import "SUSScrobbleLoader.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
 #import "ISMSStreamManager.h"
@@ -104,13 +103,11 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 }
 
-- (void)scrobbleSong:(ISMSSong*)aSong isSubmission:(BOOL)isSubmission {
+- (void)scrobbleSong:(ISMSSong*)song isSubmission:(BOOL)isSubmission {
 	if (settingsS.isScrobbleEnabled && !settingsS.isOfflineMode) {
-		SUSScrobbleLoader *loader = [[SUSScrobbleLoader alloc] initWithCallback:^(BOOL success, NSError *error) {
-            DDLogInfo(@"[SocialSingleton] Scrobble successfully completed for song: %@", aSong.title);
+        ScrobbleLoader *loader = [[ScrobbleLoader alloc] initWithSong:song isSubmission:isSubmission callback:^(BOOL success, NSError *error) {
+            DDLogInfo(@"[SocialSingleton] Scrobble successfully completed for song: %@", song.title);
         }];
-        loader.aSong = aSong;
-        loader.isSubmission = isSubmission;
         [loader startLoad];
 	}
 }

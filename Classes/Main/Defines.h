@@ -32,4 +32,7 @@
 #define BytesForSecondsAtBitrate(seconds, bitrate) ((bitrate / 8) * 1024 * seconds)
 #define NSIndexPathMake(section, row) ([NSIndexPath indexPathForRow:row inSection:section])
 
+// Loader callback block, make sure to always check success bool, not error, as error can be nil when success is NO
+typedef void (^LoaderCallback)(BOOL success, NSError * _Nullable error);
+
 #endif

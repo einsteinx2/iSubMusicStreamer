@@ -28,7 +28,7 @@
 
 LOG_LEVEL_ISUB_DEFAULT
 
-@interface PlaylistsViewController()
+@interface PlaylistsViewController() <APILoaderDelegate>
 @property (nonatomic, strong) NSURLSession *sharedSession;
 @property (nonatomic, strong) SelfSignedCertURLSessionDelegate *sharedSessionDelegate;
 @end
@@ -946,7 +946,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	}
 }
 
-#pragma mark - ISMSLoader Delegate
+#pragma mark - APILoader Delegate
 
 - (void)loadServerPlaylists {
     [viewObjectsS showAlbumLoadingScreen:appDelegateS.window sender:self];
@@ -955,19 +955,14 @@ LOG_LEVEL_ISUB_DEFAULT
     [self.serverPlaylistsLoader startLoad];
 }
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
-    [viewObjectsS hideLoadingScreen];
-    [self.tableView.refreshControl endRefreshing];
-}
-
-- (void)loadingFinished:(SUSLoader *)theLoader {
+- (void)loadingFinished:(APILoader *)loader {
     self.serverPlaylists = self.serverPlaylistsLoader.serverPlaylists;
     
     [self.tableView reloadData];
     
     // If the list is empty, display the no playlists overlay screen
     if (self.serverPlaylists.count == 0 && !self.isNoPlaylistsScreenShowing) {
-		[self addNoPlaylistsScreen];
+        [self addNoPlaylistsScreen];
     } else {
         // Modify the header view to include the save and edit buttons
         [self addSaveEditButtons];
@@ -975,6 +970,11 @@ LOG_LEVEL_ISUB_DEFAULT
     }
     
     // Hide the loading screen
+    [viewObjectsS hideLoadingScreen];
+    [self.tableView.refreshControl endRefreshing];
+}
+
+- (void)loadingFailed:(APILoader *)loader error:(NSError *)error {
     [viewObjectsS hideLoadingScreen];
     [self.tableView.refreshControl endRefreshing];
 }

@@ -18,12 +18,12 @@ import Resolver
     private var loader: TagAlbumLoader?
     private var songIds = [Int]()
 
-    @objc weak var delegate: SUSLoaderDelegate?
+    @objc weak var delegate: APILoaderDelegate?
 
     @objc var hasLoaded: Bool { songIds.count > 0 }
     @objc var songCount: Int { songIds.count }
 
-    @objc init(tagAlbumId: Int, delegate: SUSLoaderDelegate?) {
+    @objc init(tagAlbumId: Int, delegate: APILoaderDelegate?) {
         self.tagAlbumId = tagAlbumId
         self.delegate = delegate
         super.init()
@@ -50,16 +50,16 @@ import Resolver
     }
 }
 
-@objc extension TagAlbumDAO: SUSLoaderManager {
+@objc extension TagAlbumDAO: APILoaderManager {
     func startLoad() {
         loader = TagAlbumLoader(tagAlbumId: tagAlbumId) { [unowned self] success, error in
             songIds = self.loader?.songIds ?? []
             self.loader = nil
 
             if success {
-                delegate?.loadingFinished(nil)
+                delegate?.loadingFinished(loader: nil)
             } else {
-                delegate?.loadingFailed(nil, withError: error)
+                delegate?.loadingFailed(loader: nil, error: error as NSError?)
             }
         }
         loader?.startLoad()

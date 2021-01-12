@@ -53,14 +53,14 @@ import CocoaLumberjackSwift
             return
         }
         
-        let dao = CoverArtDAO(delegate: self, coverArtId: coverArtId, isLarge: isLarge)
+        let dao = CoverArtDAO(coverArtId: coverArtId, isLarge: isLarge, delegate: self)
         if dao.isCached {
             image = dao.coverArtImage
         } else {
             var usedSmallCoverArt = false
             if isLarge {
                 // Try and use the small cover art temporarily
-                let smallDAO = CoverArtDAO(delegate: nil, coverArtId: coverArtId, isLarge: false)
+                let smallDAO = CoverArtDAO(coverArtId: coverArtId, isLarge: false, delegate: nil)
                 if smallDAO.isCached {
                     image = smallDAO.coverArtImage
                     usedSmallCoverArt = true
@@ -86,8 +86,8 @@ import CocoaLumberjackSwift
     }
 }
 
-extension AsyncImageView: SUSLoaderDelegate {
-    func loadingFinished(_ loader: SUSLoader?) {
+extension AsyncImageView: APILoaderDelegate {
+    func loadingFinished(loader: APILoader?) {
         DDLogInfo("[AsyncImageView] async cover art loading finished for: \(coverArtId ?? "nil")")
         activityIndicator?.removeFromSuperview()
         activityIndicator = nil
@@ -95,7 +95,7 @@ extension AsyncImageView: SUSLoaderDelegate {
         coverArtDAO = nil
     }
     
-    func loadingFailed(_ loader: SUSLoader?, withError error: Error?) {
+    func loadingFailed(loader: APILoader?, error: NSError?) {
         DDLogError("[AsyncImageView] async cover art loading failed: \(error?.localizedDescription ?? "unknown error")")
         activityIndicator?.removeFromSuperview()
         activityIndicator = nil

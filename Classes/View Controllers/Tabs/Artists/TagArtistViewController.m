@@ -20,6 +20,9 @@
 #import "TagAlbumViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 
+@interface TagArtistViewController() <APILoaderDelegate>
+@end
+
 @implementation TagArtistViewController
 
 #pragma mark Lifecycle
@@ -193,9 +196,18 @@
     return [SwipeAction downloadAndQueueConfigWithModel:[self.dataModel tagAlbumWithIndexPath:indexPath]];
 }
 
-#pragma mark - ISMSLoader delegate
+#pragma mark - APILoader delegate
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
+- (void)loadingFinished:(APILoader *)loader {
+    [viewObjectsS hideLoadingScreen];
+    
+    [self.tableView reloadData];
+    [self addHeaderAndIndex];
+    
+    [self.refreshControl endRefreshing];
+}
+
+- (void)loadingFailed:(APILoader *)loader error:(NSError *)error {
     if (settingsS.isPopupsEnabled) {
         NSString *message = [NSString stringWithFormat:@"There was an error loading the album.\n\nError %li: %@", (long)error.code, error.localizedDescription];
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
@@ -204,15 +216,6 @@
     }
     
     [viewObjectsS hideLoadingScreen];
-    
-    [self.refreshControl endRefreshing];
-}
-
-- (void)loadingFinished:(SUSLoader *)theLoader {
-    [viewObjectsS hideLoadingScreen];
-    
-    [self.tableView reloadData];
-    [self addHeaderAndIndex];
     
     [self.refreshControl endRefreshing];
 }

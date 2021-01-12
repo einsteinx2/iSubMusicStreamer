@@ -21,13 +21,16 @@
 #import "Swift.h"
 #import <QuartzCore/QuartzCore.h>
 
+@interface FoldersViewController() <UISearchBarDelegate, APILoaderDelegate, FolderDropdownDelegate>
+@end
+
 @implementation FoldersViewController
 
 #pragma mark - Lifecycle
 
 - (void)createDataModel {
     NSInteger mediaFolderId = settingsS.rootFoldersSelectedFolderId.integerValue;
-    self.dataModel = [[RootFoldersDAO alloc] initWithDelegate:self mediaFolderId:mediaFolderId];
+    self.dataModel = [[RootFoldersDAO alloc] initWithMediaFolderId:mediaFolderId delegate:self];
 }
 
 - (void)viewDidLoad  {
@@ -181,7 +184,24 @@
 	[self.dataModel startLoad];
 }
 
-- (void)loadingFailed:(SUSLoader *)theLoader withError:(NSError *)error {
+- (void)loadingFinished:(APILoader *)loader {
+    if (self.isCountShowing) {
+        [self updateCount];
+    } else {
+        [self addCount];
+    }
+    
+    [self.tableView reloadData];
+    
+    viewObjectsS.isArtistsLoading = NO;
+    
+    // Hide the loading screen
+    [viewObjectsS hideLoadingScreen];
+    
+    [self.tableView.refreshControl endRefreshing];
+}
+
+- (void)loadingFailed:(APILoader *)loader error:(NSError *)error {
 	viewObjectsS.isArtistsLoading = NO;
 	
 	// Hide the loading screen
@@ -198,23 +218,6 @@
         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
         [self presentViewController:alert animated:YES completion:nil];
     }];
-}
-
-- (void)loadingFinished:(SUSLoader *)theLoader {
-    if (self.isCountShowing) {
-		[self updateCount];
-    } else {
-		[self addCount];		
-    }
-    
-	[self.tableView reloadData];
-	
-	viewObjectsS.isArtistsLoading = NO;
-	
-	// Hide the loading screen
-	[viewObjectsS hideLoadingScreen];
-	
-    [self.tableView.refreshControl endRefreshing];
 }
 
 #pragma mark Folder Dropdown Delegate

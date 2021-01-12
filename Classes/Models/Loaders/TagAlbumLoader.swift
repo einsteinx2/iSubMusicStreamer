@@ -10,10 +10,10 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-final class TagAlbumLoader: SUSLoader {
+final class TagAlbumLoader: APILoader {
     @Injected private var store: Store
 
-    override var type: SUSLoaderType { return SUSLoaderType_TagAlbum }
+    override var type: APILoaderType { .tagAlbum }
     
     var serverId = Settings.shared().currentServerId
     let tagAlbumId: Int
@@ -34,16 +34,14 @@ final class TagAlbumLoader: SUSLoader {
         return NSMutableURLRequest(susAction: "getAlbum", parameters: ["id": tagAlbumId]) as URLRequest
     }
     
-    override func processResponse() {
-        guard let receivedData = receivedData else { return }
-        
+    override func processResponse(data: Data) {
         songIds.removeAll()
-        let root = RXMLElement(fromXMLData: receivedData)
+        let root = RXMLElement(fromXMLData: data)
         if !root.isValid {
-            informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
+            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
         } else {
             if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
+                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
             } else {
                 if store.deleteTagSongs(serverId: serverId, tagAlbumId: tagAlbumId) {
                     var songOrder = 0
@@ -57,7 +55,7 @@ final class TagAlbumLoader: SUSLoader {
                                     self.songIds.append(song.id)
                                     songOrder += 1
                                 } else {
-                                    self.informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                                    self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
                                     return
                                 }
                             }
@@ -65,7 +63,7 @@ final class TagAlbumLoader: SUSLoader {
                     }
                     informDelegateLoadingFinished()
                 } else {
-                    informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                    informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
                 }
             }
         }

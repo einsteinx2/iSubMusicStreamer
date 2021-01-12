@@ -9,21 +9,20 @@
 #ifndef iSub_iSubAppDelegate_h
 #define iSub_iSubAppDelegate_h
 
-#import "SUSLoaderDelegate.h"
 #import <AVKit/AVKit.h>
 
 #define appDelegateS [iSubAppDelegate sharedInstance]
 
-@class BBSplitViewController, PadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, SettingsViewController, FoldersViewController, AudioStreamer, SUSStatusLoader, MPMoviePlayerController, AVPlayerViewController, HLSReverseProxyServer, ServerListViewController, Reachability;
+@class BBSplitViewController, PadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, SettingsViewController, FoldersViewController, AudioStreamer, StatusLoader, MPMoviePlayerController, AVPlayerViewController, HLSReverseProxyServer, ServerListViewController, Reachability;
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppDelegate)
-@interface iSubAppDelegate : NSObject <UIApplicationDelegate, SUSLoaderDelegate, AVPlayerViewControllerDelegate>
+@interface iSubAppDelegate: NSObject <UIApplicationDelegate>
 
 //@property (nullable, strong) HTTPServer *hlsProxyServer;
 
-@property (nullable,  strong) SUSStatusLoader *statusLoader;
+@property (nullable,  strong) StatusLoader *statusLoader;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 

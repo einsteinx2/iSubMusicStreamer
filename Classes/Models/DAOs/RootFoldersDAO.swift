@@ -13,7 +13,7 @@ import Resolver
 @objc final class RootFoldersDAO: NSObject {
     @Injected private var store: Store
     
-    @objc weak var delegate: SUSLoaderDelegate?
+    @objc weak var delegate: APILoaderDelegate?
     @objc var serverId = Settings.shared().currentServerId
     @objc var mediaFolderId: Int {
         didSet {
@@ -36,9 +36,9 @@ import Resolver
     private var searchName: String?
     @objc private(set) var shouldContinueSearch = true
     
-    @objc init(delegate: SUSLoaderDelegate, mediaFolderId: Int) {
-        self.delegate = delegate
+    @objc init(mediaFolderId: Int, delegate: APILoaderDelegate?) {
         self.mediaFolderId = mediaFolderId
+        self.delegate = delegate
         super.init()
         loadFromCache()
     }
@@ -90,7 +90,7 @@ import Resolver
     }
 }
 
-extension RootFoldersDAO: SUSLoaderManager {
+extension RootFoldersDAO: APILoaderManager {
     func startLoad() {
         cancelLoad()
         
@@ -106,14 +106,8 @@ extension RootFoldersDAO: SUSLoaderManager {
     }
 }
 
-extension RootFoldersDAO: SUSLoaderDelegate {
-    func loadingFailed(_ loader: SUSLoader?, withError error: Error?) {
-        self.loader?.delegate = nil
-        self.loader = nil
-        delegate?.loadingFailed(nil, withError: error)
-    }
-    
-    func loadingFinished(_ loader: SUSLoader?) {
+extension RootFoldersDAO: APILoaderDelegate {
+    func loadingFinished(loader: APILoader?) {
         if let loader = loader as? RootFoldersLoader {
             metadata = loader.metadata
             tableSections = loader.tableSections
@@ -122,6 +116,12 @@ extension RootFoldersDAO: SUSLoaderDelegate {
         
         self.loader?.delegate = nil
         self.loader = nil
-        delegate?.loadingFinished(nil)
+        delegate?.loadingFinished(loader: nil)
+    }
+    
+    func loadingFailed(loader: APILoader?, error: NSError?) {
+        self.loader?.delegate = nil
+        self.loader = nil
+        delegate?.loadingFailed(loader: nil, error: error)
     }
 }

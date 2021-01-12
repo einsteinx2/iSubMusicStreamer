@@ -13,11 +13,11 @@ import Foundation
     
     private var loader: ChatLoader?
     private var dataTask: URLSessionDataTask?
-    @objc weak var delegate: SUSLoaderDelegate?
+    @objc weak var delegate: APILoaderDelegate?
     
     @objc var chatMessages = [ChatMessage]()
     
-    @objc init(delegate: SUSLoaderDelegate?) {
+    @objc init(delegate: APILoaderDelegate?) {
         self.delegate = delegate
         super.init()
     }
@@ -30,10 +30,10 @@ import Foundation
     
     @objc func send(message: String) {
         let request = NSMutableURLRequest(susAction: "addChatMessage", parameters: ["message": message]) as URLRequest
-        dataTask = SUSLoader.sharedSession().dataTask(with: request) { [weak self] data, response, error in
+        dataTask = APILoader.sharedSession.dataTask(with: request) { [weak self] data, response, error in
             EX2Dispatch.runInMainThreadAsync {
                 if error != nil {
-                    self?.delegate?.loadingFailed(nil, withError: NSError(ismsCode: Int(ISMSErrorCode_CouldNotSendChatMessage), extraAttributes: ["message": message]))
+                    self?.delegate?.loadingFailed(loader: nil, error: NSError(ismsCode: Int(ISMSErrorCode_CouldNotSendChatMessage), extraAttributes: ["message": message]))
                 } else {
                     self?.startLoad()
                 }
@@ -42,7 +42,7 @@ import Foundation
     }
 }
 
-@objc extension ChatMessageDAO: SUSLoaderManager {
+@objc extension ChatMessageDAO: APILoaderManager {
     func startLoad() {
         cancelLoad()
         loader = ChatLoader(delegate: self)
@@ -56,19 +56,19 @@ import Foundation
     }
 }
 
-extension ChatMessageDAO: SUSLoaderDelegate {
-    func loadingFinished(_ loader: SUSLoader?) {
+extension ChatMessageDAO: APILoaderDelegate {
+    func loadingFinished(loader: APILoader?) {
         if let loader = loader as? ChatLoader {
             chatMessages = loader.chatMessages
         }
         self.loader?.delegate = nil
         self.loader = nil
-        delegate?.loadingFinished(nil)
+        delegate?.loadingFinished(loader: nil)
     }
     
-    func loadingFailed(_ loader: SUSLoader?, withError error: Error?) {
+    func loadingFailed(loader: APILoader?, error: NSError?) {
         self.loader?.delegate = nil
         self.loader = nil
-        delegate?.loadingFailed(nil, withError: error)
+        delegate?.loadingFailed(loader: nil, error: error)
     }
 }

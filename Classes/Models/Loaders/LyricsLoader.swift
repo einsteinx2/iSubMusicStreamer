@@ -9,16 +9,16 @@
 import Foundation
 import Resolver
 
-@objc final class LyricsLoader: SUSLoader {
+@objc final class LyricsLoader: APILoader {
     @Injected private var store: Store
     
-    override var type: SUSLoaderType { SUSLoaderType_Lyrics }
+    override var type: APILoaderType { .lyrics }
     
     let tagArtistName: String
     let songTitle: String
     var lyrics: Lyrics?
     
-    @objc init(delegate: SUSLoaderDelegate?, tagArtistName: String, songTitle: String) {
+    @objc init(tagArtistName: String, songTitle: String, delegate: APILoaderDelegate?) {
         self.tagArtistName = tagArtistName
         self.songTitle = songTitle
         super.init(delegate: delegate)
@@ -28,16 +28,14 @@ import Resolver
         return NSMutableURLRequest(susAction: "getLyrics", parameters: ["artist": tagArtistName, "title": songTitle]) as URLRequest
     }
     
-    override func processResponse() {
-        guard let receivedData = receivedData else { return }
-        
-        let root = RXMLElement(fromXMLData: receivedData)
+    override func processResponse(data: Data) {
+        let root = RXMLElement(fromXMLData: data)
         if !root.isValid {
-            informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
+            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
             NotificationCenter.postNotificationToMainThread(name: ISMSNotification_LyricsFailed)
         } else {
             if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(NSError(subsonicXMLResponse: error))
+                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
                 NotificationCenter.postNotificationToMainThread(name: ISMSNotification_LyricsFailed)
             } else if let lyricsElement = root.child("lyrics"), lyricsElement.isValid {
                 let lyrics = Lyrics(tagArtistName: tagArtistName, songTitle: songTitle, element: lyricsElement)
@@ -45,10 +43,10 @@ import Resolver
                     self.lyrics = lyrics
                     informDelegateLoadingFinished()
                 } else {
-                    informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NoLyricsFound)))
+                    informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NoLyricsFound)))
                 }
             } else {
-                informDelegateLoadingFailed(NSError(ismsCode: Int(ISMSErrorCode_NoLyricsElement)))
+                informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NoLyricsElement)))
             }
         }
     }
@@ -58,8 +56,8 @@ import Resolver
         super.informDelegateLoadingFinished()
     }
     
-    override func informDelegateLoadingFailed(_ error: Error?) {
+    override func informDelegateLoadingFailed(error: NSError?) {
         NotificationCenter.postNotificationToMainThread(name: ISMSNotification_LyricsFailed)
-        super.informDelegateLoadingFailed(error)
+        super.informDelegateLoadingFailed(error: error)
     }
 }
