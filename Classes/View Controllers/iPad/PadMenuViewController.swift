@@ -22,7 +22,7 @@ import SnapKit
         super.viewDidLoad()
         
         view.overrideUserInterfaceStyle = .dark
-        view.backgroundColor = UIColor(named: "isubBackgroundColor")
+        view.backgroundColor = Colors.background
         
         loadCellContents()
         

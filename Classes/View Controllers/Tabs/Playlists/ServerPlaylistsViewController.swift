@@ -22,12 +22,12 @@ import Resolver
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(named: "isubBackgroundColor")
+        view.backgroundColor = Colors.background
         title = "Server Playlists"
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.backgroundColor = UIColor(named: "isubBackgroundColor")
+        tableView.backgroundColor = Colors.background
         tableView.separatorStyle = .none
         tableView.allowsMultipleSelectionDuringEditing = true
         tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)

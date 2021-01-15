@@ -69,11 +69,11 @@ import Foundation
 }
 
 @objc extension TagAlbum: TableCellModel {
-    var primaryLabelText: String? { return name }
+    var primaryLabelText: String? { name }
     var secondaryLabelText: String? {
         var textParts = [String]()
         if year > 0 { textParts.append(String(year)) }
-        textParts.append(songCount == 1 ? "1 Song" : "\(songCount) Songs")
+        textParts.append("\(songCount) \("Song".pluralize(amount: songCount))")
         textParts.append(NSString.formatTime(Double(duration)))
         
         var text = textParts[0]
@@ -82,8 +82,8 @@ import Foundation
         }
         return text
     }
-    var durationLabelText: String? { return nil }
-    var isCached: Bool { return false }
+    var durationLabelText: String? { nil }
+    var isCached: Bool { false }
     func download() { SongLoader.downloadAll(tagAlbumId: id) }
     func queue() { SongLoader.queueAll(tagAlbumId: id) }
 }

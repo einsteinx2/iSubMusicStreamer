@@ -89,16 +89,17 @@ import CocoaLumberjackSwift
         }
         
         // Load the API endpoint
-        dataTask = Self.sharedSession.dataTask(with: request) { [unowned self] data, response, error in
+        dataTask = Self.sharedSession.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
             if let error = error {
-                DDLogError("[SUSLoader] loader type: \(type.rawValue) failed: \(error)")
-                informDelegateLoadingFailed(error: error as NSError)
+                DDLogError("[SUSLoader] loader type: \(self.type.rawValue) failed: \(error)")
+                self.informDelegateLoadingFailed(error: error as NSError)
             } else if let data = data {
-                DDLogVerbose("[SUSLoader] loader type: \(type.rawValue) response:\n\(String(data: data, encoding: .utf8) ?? "Failed to convert data to string.")")
-                processResponse(data: data)
+                DDLogVerbose("[SUSLoader] loader type: \(self.type.rawValue) response:\n\(String(data: data, encoding: .utf8) ?? "Failed to convert data to string.")")
+                self.processResponse(data: data)
             } else {
-                DDLogError("[SUSLoader] loader type: \(type.rawValue) did not receive any data")
-                informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
+                DDLogError("[SUSLoader] loader type: \(self.type.rawValue) did not receive any data")
+                self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
             }
         }
         dataTask?.resume()

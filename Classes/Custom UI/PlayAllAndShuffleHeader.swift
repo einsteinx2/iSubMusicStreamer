@@ -16,7 +16,7 @@ import SnapKit
     @objc init(playAllHandler: @escaping () -> (), shuffleHandler: @escaping () -> ()) {
         super.init(frame: CGRect.zero)
         
-        backgroundColor = UIColor(named: "isubBackgroundColor")
+        backgroundColor = Colors.background
         snp.makeConstraints { make in
             make.height.equalTo(50)
         }

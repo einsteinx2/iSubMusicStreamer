@@ -11,14 +11,18 @@
 #define cacheQueueManagerS ((ISMSCacheQueueManager *)[ISMSCacheQueueManager sharedInstance])
 
 @class ISMSSong, ISMSStreamHandler;
+
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(CacheQueue)
 @interface ISMSCacheQueueManager : NSObject <ISMSStreamHandlerDelegate>
 
 @property BOOL isQueueDownloading;
-@property (copy) ISMSSong *currentQueuedSong;
-@property (strong) ISMSStreamHandler *currentStreamHandler;
-@property (weak, readonly) ISMSSong *currentQueuedSongInDb;
+@property (nullable, copy) ISMSSong *currentQueuedSong;
+@property (nullable, strong) ISMSStreamHandler *currentStreamHandler;
+@property (nullable, weak, readonly) ISMSSong *currentQueuedSongInDb;
 
-+ (instancetype)sharedInstance;
++ (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
 - (void)startDownloadQueue;
 - (void)stopDownloadQueue;
@@ -29,3 +33,5 @@
 - (BOOL)isSongInQueue:(ISMSSong *)aSong;
 
 @end
+
+NS_ASSUME_NONNULL_END

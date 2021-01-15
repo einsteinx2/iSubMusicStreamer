@@ -30,7 +30,10 @@ import Resolver
 
 extension DownloadedFolderArtist: TableCellModel {
     var primaryLabelText: String? { name }
-    var secondaryLabelText: String? { nil }
+    var secondaryLabelText: String? {
+        // TODO: implement this using number of subfolders downloaded
+        return nil
+    }
     var durationLabelText: String? { nil }
     var coverArtId: String? { nil }
     var isCached: Bool { true }

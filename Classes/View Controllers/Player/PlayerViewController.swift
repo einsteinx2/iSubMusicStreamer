@@ -129,7 +129,7 @@ import CocoaLumberjackSwift
         super.viewDidLoad()
         
         view.overrideUserInterfaceStyle = .dark
-        view.backgroundColor = UIColor(named: "isubBackgroundColor")
+        view.backgroundColor = Colors.background
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image:  UIImage(systemName: "list.number"), style: .plain, target: self, action: #selector(showCurrentPlaylist))
         
@@ -709,7 +709,7 @@ import CocoaLumberjackSwift
     @objc private func updateJukeboxControls() {
         let jukeboxEnabled = Settings.shared().isJukeboxEnabled
         equalizerButton.isHidden = jukeboxEnabled
-//        view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor : UIColor(named: "isubBackgroundColor")
+//        view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor : Colors.background
         
         let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
         self.playPauseButton.tintColor = self.iconDefaultColor
@@ -749,7 +749,7 @@ import CocoaLumberjackSwift
         downloadProgressView.isHidden = jukeboxEnabled
         title = jukeboxEnabled ? "Jukebox Mode" : ""
         if UIDevice.isPad() {
-            view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor.withAlphaComponent(0.5) : UIColor(named: "isubBackgroundColor")
+            view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor.withAlphaComponent(0.5) : Colors.background
         }
     }
     

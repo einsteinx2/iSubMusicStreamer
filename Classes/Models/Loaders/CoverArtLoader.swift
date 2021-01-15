@@ -16,6 +16,8 @@ import Resolver
         static let downloadFailed = "CoverArtLoader.downloadFailed"
     }
     
+    override var type: APILoaderType { .coverArt }
+    
     private static var syncObject = NSObject()
     private static var loadingIds = Set<String>()
     

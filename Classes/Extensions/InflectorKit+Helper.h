@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSString(Helper)
 
-- (NSString *)pluralize:(NSInteger)count;
+- (NSString *)pluralize:(NSInteger)count NS_SWIFT_NAME(pluralize(amount:));
 
 @end
 

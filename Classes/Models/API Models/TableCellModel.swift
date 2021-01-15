@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc protocol TableCellModel: NSObjectProtocol {
+@objc protocol TableCellModel {
     @objc var primaryLabelText: String? { get }
     @objc var secondaryLabelText: String? { get }
     @objc var durationLabelText: String? { get }

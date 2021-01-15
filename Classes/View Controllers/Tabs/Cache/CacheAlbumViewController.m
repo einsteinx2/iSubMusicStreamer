@@ -90,12 +90,12 @@ LOG_LEVEL_ISUB_DEFAULT
     [self addHeaderAndIndex];
 	
 	// Set notification receiver for when cached songs are deleted to reload the table
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(cachedSongDeleted) name:@"cachedSongDeleted"];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(cachedSongDeleted) name:ISMSNotification_CachedSongDeleted];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
-	[NSNotificationCenter removeObserverOnMainThread:self name:@"cachedSongDeleted"];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CachedSongDeleted];
 }
 
 - (void)loadData {
@@ -377,7 +377,7 @@ LOG_LEVEL_ISUB_DEFAULT
 //                [cacheS findCacheSize];
 //
 //                // Reload the cached songs table
-//                [NSNotificationCenter postNotificationToMainThreadWithName:@"cachedSongDeleted"];
+//                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CachedSongDeleted];
 //
 //                if (!cacheQueueManagerS.isQueueDownloading) {
 //                    [cacheQueueManagerS startDownloadQueue];
@@ -397,7 +397,7 @@ LOG_LEVEL_ISUB_DEFAULT
 //            [ISMSSong removeSongFromCacheDbByMD5:md5];
 //            [cacheS findCacheSize];
 //            // Reload the cached songs table
-//            [NSNotificationCenter postNotificationToMainThreadWithName:@"cachedSongDeleted"];
+//            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CachedSongDeleted];
 //        }];
 //    }
     return nil;

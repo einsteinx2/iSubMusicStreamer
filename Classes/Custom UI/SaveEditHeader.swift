@@ -34,7 +34,7 @@ import InflectorKit
     
     @objc var count = 0 {
         didSet {
-            countLabel.text = "\(count) \(countType.pluralize(count))"
+            countLabel.text = "\(count) \(countType.pluralize(amount: count))"
         }
     }
     
@@ -43,7 +43,7 @@ import InflectorKit
             if selectedCount == 0 {
                 deleteLabel.text = "Clear \((pluralizeClearType ? saveType.pluralized : saveType).capitalized)"
             } else {
-                deleteLabel.text = "Remove \(selectedCount) \(countType.pluralize(selectedCount))"
+                deleteLabel.text = "Remove \(selectedCount) \(countType.pluralize(amount: selectedCount))"
             }
         }
     }

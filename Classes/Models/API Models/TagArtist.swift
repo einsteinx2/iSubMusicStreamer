@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import InflectorKit
 
 @objc(ISMSTagArtist) final class TagArtist: NSObject, NSCopying, Codable {
     @objc let serverId: Int
@@ -53,13 +54,10 @@ import Foundation
 }
 
 @objc extension TagArtist: TableCellModel {
-    var primaryLabelText: String? { return name }
-    var secondaryLabelText: String? {
-        guard albumCount > 0 else { return nil }
-        return albumCount == 1 ? "1 Album" : "\(albumCount) Albums"
-    }
-    var durationLabelText: String? { return nil }
-    var isCached: Bool { return false }
+    var primaryLabelText: String? { name }
+    var secondaryLabelText: String? { "\(albumCount) \("Album".pluralize(amount: albumCount))" }
+    var durationLabelText: String? { nil }
+    var isCached: Bool { false }
     func download() { SongLoader.downloadAll(tagArtistId: id) }
     func queue() { SongLoader.queueAll(tagArtistId: id) }
 }

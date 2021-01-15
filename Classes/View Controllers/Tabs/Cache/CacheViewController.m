@@ -61,7 +61,7 @@
 	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:ISMSNotification_CacheQueueSongDownloaded];
 	
 	// Set notification receiver for when cached songs are deleted to reload the table
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:@"cachedSongDeleted"];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:ISMSNotification_CachedSongDeleted];
 	
 	// Set notification receiver for when network status changes to reload the table
 	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(segmentAction:) name:kReachabilityChangedNotification];
@@ -70,7 +70,7 @@
 - (void)unregisterForNotifications {
 	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_StreamHandlerSongDownloaded];
 	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CacheQueueSongDownloaded];
-	[NSNotificationCenter removeObserverOnMainThread:self name:@"cachedSongDeleted"];
+	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CachedSongDeleted];
 	[NSNotificationCenter removeObserverOnMainThread:self name:kReachabilityChangedNotification];
 }
 
@@ -1115,7 +1115,7 @@
                 [cacheS findCacheSize];
 
                 // Reload the cached songs table
-                [NSNotificationCenter postNotificationToMainThreadWithName:@"cachedSongDeleted"];
+                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CachedSongDeleted];
 
                 if (!cacheQueueManagerS.isQueueDownloading) {
                     [cacheQueueManagerS startDownloadQueue];

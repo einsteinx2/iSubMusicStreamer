@@ -9,9 +9,12 @@
 import UIKit
 import Resolver
 import InflectorKit
+import SnapKit
 
-@objc final class NowPlayingViewController: UITableViewController {
+@objc final class NowPlayingViewController: UIViewController {
     @Injected private var store: Store
+    
+    private let tableView = UITableView()
     
     private var nowPlayingLoader: NowPlayingLoader?
     private var nowPlayingSongs = [NowPlayingSong]()
@@ -19,14 +22,23 @@ import InflectorKit
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = Colors.background
         title = "Now Playing"
-                
-        self.refreshControl = RefreshControl(handler: { [unowned self] in
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.backgroundColor = Colors.background
+        tableView.rowHeight = Defines.tallRowHeight
+        tableView.separatorStyle = .none
+        tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.leading.trailing.top.bottom.equalToSuperview()
+        }
+        
+        self.tableView.refreshControl = RefreshControl(handler: { [unowned self] in
             loadData()
         })
-        
-        tableView.rowHeight = Defines.tallRowHeight
-        tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)
         
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification.rawValue)
     }
@@ -67,7 +79,7 @@ import InflectorKit
                 tableView.reloadData()
             }
             ViewObjects.shared().hideLoadingScreen()
-            refreshControl?.endRefreshing()
+            tableView.refreshControl?.endRefreshing()
             nowPlayingLoader = nil
         }
         nowPlayingLoader?.startLoad()
@@ -78,7 +90,7 @@ import InflectorKit
         nowPlayingLoader?.callback = nil
         nowPlayingLoader = nil
         ViewObjects.shared().hideLoadingScreen()
-        refreshControl?.endRefreshing()
+        tableView.refreshControl?.endRefreshing()
     }
     
     @objc private func addURLRefBackButton() {
@@ -97,26 +109,23 @@ import InflectorKit
         let nowPlayingSong = nowPlayingSongs[indexPath.row]
         return store.song(serverId: nowPlayingSong.serverId, id: nowPlayingSong.songId)
     }
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
+}
+
+extension NowPlayingViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return nowPlayingSongs.count
     }
-    
-    // NOTE: For some reason, in this controller and this controller only, it's ignoring the rowHeight property and this must be implemented. Maybe the XIB file?
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return Defines.tallRowHeight
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: UniversalTableViewCell.reuseId) as! UniversalTableViewCell
         cell.hideHeaderLabel = false
         cell.hideNumberLabel = true
         let nowPlayingSong = nowPlayingSongs[indexPath.row]
-        let playTime = "\(nowPlayingSong.minutesAgo) \("min".pluralize(nowPlayingSong.minutesAgo)) ago"
+        let playTime = "\(nowPlayingSong.minutesAgo) \("min".pluralize(amount: nowPlayingSong.minutesAgo)) ago"
         if nowPlayingSong.playerName.count > 0 {
             cell.headerText = "\(nowPlayingSong.username) @ \(nowPlayingSong.playerName) - \(playTime)"
         } else {
@@ -126,7 +135,7 @@ import InflectorKit
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let song = song(indexPath: indexPath) {
             if let playingSong = store.playSong(position: indexPath.row, songs: [song]), !playingSong.isVideo {
                 showPlayer()
@@ -134,7 +143,7 @@ import InflectorKit
         }
     }
     
-    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if let song = song(indexPath: indexPath) {
             return SwipeAction.downloadAndQueueConfig(model: song)
         }

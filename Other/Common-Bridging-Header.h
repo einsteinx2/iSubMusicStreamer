@@ -79,6 +79,7 @@
 #import "ISMSStreamManager.h"
 #import "DatabaseSingleton.h"
 #import "CacheSingleton.h"
+#import "ISMSCacheQueueManager.h"
 
 /*
  * Frameworks
@@ -91,5 +92,6 @@
 #import "GCDWebServer.h"
 #import "GCDWebServerDataResponse.h"
 #import "GCDWebServerErrorResponse.h"
+#import "Reachability.h"
 
 #endif /* Common_Bridging_Header_h */

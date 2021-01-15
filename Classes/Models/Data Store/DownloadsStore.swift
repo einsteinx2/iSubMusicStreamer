@@ -90,7 +90,13 @@ extension DownloadedFolderArtist: FetchableRecord, PersistableRecord {
 extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
 }
 
-@objc extension Store {
+extension DownloadedTagArtist: FetchableRecord, PersistableRecord {
+}
+
+extension DownloadedTagAlbum: FetchableRecord, PersistableRecord {
+}
+
+extension Store {
 //    func downloadedFolderArtists() -> [DownloadedFolderArtist] {
 //        do {
 //            return try pool.read { db in
@@ -108,7 +114,7 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
 //        }
 //    }
     
-    func downloadedFolderArtists(serverId: Int) -> [DownloadedFolderArtist] {
+    @objc func downloadedFolderArtists(serverId: Int) -> [DownloadedFolderArtist] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -143,7 +149,7 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
 //        }
 //    }
     
-    func downloadedFolderAlbums(serverId: Int, level: Int, parentPathComponent: String) -> [DownloadedFolderAlbum] {
+    @objc func downloadedFolderAlbums(serverId: Int, level: Int, parentPathComponent: String) -> [DownloadedFolderAlbum] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -170,11 +176,61 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func song(downloadedSong: DownloadedSong) -> Song? {
+    // TODO: Check query plan and try different join orders and group by tables to see which is fastest (i.e. TagArtist.id vs Song.tagArtistId)
+    func downloadedTagArtists(serverId: Int) -> [DownloadedTagArtist] {
+        do {
+            return try pool.read { db in
+                let sql: SQLLiteral = """
+                    SELECT \(TagArtist.self).*
+                    FROM \(DownloadedSong.self)
+                    JOIN \(Song.self)
+                    ON \(DownloadedSong.self).serverId = \(Song.self).serverId
+                        AND \(DownloadedSong.self).songId = \(Song.self).id
+                    JOIN \(TagArtist.self)
+                    ON \(DownloadedSong.self).serverId = \(TagArtist.self).serverId
+                        AND \(Song.self).tagArtistId = \(TagArtist.self).id
+                    WHERE \(DownloadedSong.self).serverId = \(serverId)
+                    GROUP BY \(TagArtist.self).id
+                    ORDER BY \(TagArtist.self).name COLLATE NOCASE ASC
+                    """
+                return try SQLRequest<DownloadedTagArtist>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select all downloaded tag artists for server \(serverId): \(error)")
+            return []
+        }
+    }
+    
+    // TODO: Check query plan and try different join orders and group by tables to see which is fastest (i.e. TagAlbum.id vs Song.tagAlbumId)
+    func downloadedTagAlbums(serverId: Int) -> [DownloadedTagAlbum] {
+        do {
+            return try pool.read { db in
+                let sql: SQLLiteral = """
+                    SELECT \(TagAlbum.self).*
+                    FROM \(DownloadedSong.self)
+                    JOIN \(Song.self)
+                    ON \(DownloadedSong.self).serverId = \(Song.self).serverId
+                        AND \(DownloadedSong.self).songId = \(Song.self).id
+                    JOIN \(TagAlbum.self)
+                    ON \(DownloadedSong.self).serverId = \(TagAlbum.self).serverId
+                        AND \(Song.self).tagAlbumId = \(TagAlbum.self).id
+                    WHERE \(DownloadedSong.self).serverId = \(serverId)
+                    GROUP BY \(TagAlbum.self).id
+                    ORDER BY \(TagAlbum.self).name COLLATE NOCASE ASC
+                    """
+                return try SQLRequest<DownloadedTagAlbum>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select all downloaded tag artists for server \(serverId): \(error)")
+            return []
+        }
+    }
+    
+    @objc func song(downloadedSong: DownloadedSong) -> Song? {
         return song(serverId: downloadedSong.serverId, id: downloadedSong.songId)
     }
     
-    func songsRecursive(serverId: Int, level: Int, parentPathComponent: String) -> [Song] {
+    @objc func songsRecursive(serverId: Int, level: Int, parentPathComponent: String) -> [Song] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -195,15 +251,15 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func songsRecursive(downloadedFolderArtist: DownloadedFolderArtist) -> [Song] {
+    @objc func songsRecursive(downloadedFolderArtist: DownloadedFolderArtist) -> [Song] {
         return songsRecursive(serverId: downloadedFolderArtist.serverId, level: 0, parentPathComponent: downloadedFolderArtist.name)
     }
     
-    func songsRecursive(downloadedFolderAlbum: DownloadedFolderAlbum) -> [Song] {
+    @objc func songsRecursive(downloadedFolderAlbum: DownloadedFolderAlbum) -> [Song] {
         return songsRecursive(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level, parentPathComponent: downloadedFolderAlbum.name)
     }
     
-    func downloadedSongsCount() -> Int {
+    @objc func downloadedSongsCount() -> Int {
         do {
             return try pool.read { db in
                 try DownloadedSong.filter(literal: "isFinished = 1").fetchCount(db)
@@ -214,7 +270,7 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func downloadedSongsCount(serverId: Int) -> Int {
+    @objc func downloadedSongsCount(serverId: Int) -> Int {
         do {
             return try pool.read { db in
                 try DownloadedSong.filter(literal:"serverId = \(serverId) AND isFinished = 1").fetchCount(db)
@@ -225,7 +281,7 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func downloadedSongs(serverId: Int, level: Int, parentPathComponent: String) -> [DownloadedSong] {
+    @objc func downloadedSongs(serverId: Int, level: Int, parentPathComponent: String) -> [DownloadedSong] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -248,7 +304,23 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func downloadedSong(serverId: Int, songId: Int) -> DownloadedSong? {
+    @objc func downloadedSongs(serverId: Int) -> [DownloadedSong] {
+        do {
+            return try pool.read { db in
+                let sql: SQLLiteral = """
+                    SELECT *
+                    FROM \(DownloadedSong.self)
+                    ORDER BY \(DownloadedSong.self).cachedDate COLLATE NOCASE DESC
+                    """
+                return try SQLRequest<DownloadedSong>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select all downloaded songs for server \(serverId): \(error)")
+            return []
+        }
+    }
+    
+    @objc func downloadedSong(serverId: Int, songId: Int) -> DownloadedSong? {
         do {
             return try pool.read { db in
                 try DownloadedSong.fetchOne(db, serverId: serverId, songId: songId)
@@ -261,7 +333,7 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
     
     // TODO: Confirm if LIMIT 1 makes any performance difference when using fetchOne()
     // NOTE: Excludes pinned songs
-    func oldestDownloadedSongByCachedDate() -> DownloadedSong? {
+    @objc func oldestDownloadedSongByCachedDate() -> DownloadedSong? {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -280,7 +352,7 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
     }
     
     // NOTE: Excludes pinned songs
-    func oldestDownloadedSongByPlayedDate() -> DownloadedSong? {
+    @objc func oldestDownloadedSongByPlayedDate() -> DownloadedSong? {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -298,7 +370,7 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func deleteDownloadedSong(serverId: Int, songId: Int) -> Bool {
+    @objc func deleteDownloadedSong(serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.write { db in
                 try db.execute(literal: "DELETE FROM \(DownloadedSong.self) WHERE serverId = \(serverId) AND songId = \(songId)")
@@ -311,11 +383,11 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func delete(downloadedSong: DownloadedSong) -> Bool {
+    @objc func delete(downloadedSong: DownloadedSong) -> Bool {
         return deleteDownloadedSong(serverId: downloadedSong.serverId, songId: downloadedSong.songId);
     }
     
-    func deleteDownloadedSongs(serverId: Int, level: Int) -> Bool {
+    @objc func deleteDownloadedSongs(serverId: Int, level: Int) -> Bool {
         do {
             return try pool.write { db in
                 let songIdsSql: SQLLiteral = """
@@ -337,15 +409,15 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func deleteDownloadedSongs(downloadedFolderArtist: DownloadedFolderArtist) -> Bool {
+    @objc func deleteDownloadedSongs(downloadedFolderArtist: DownloadedFolderArtist) -> Bool {
         return deleteDownloadedSongs(serverId: downloadedFolderArtist.serverId, level: 0)
     }
     
-    func deleteDownloadedSongs(downloadedFolderAlbum: DownloadedFolderAlbum) -> Bool {
+    @objc func deleteDownloadedSongs(downloadedFolderAlbum: DownloadedFolderAlbum) -> Bool {
         return deleteDownloadedSongs(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level)
     }
     
-    func add(downloadedSong: DownloadedSong) -> Bool {
+    @objc func add(downloadedSong: DownloadedSong) -> Bool {
         do {
             return try pool.write { db in
                 try downloadedSong.save(db)
@@ -357,7 +429,7 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func update(playedDate: Date, serverId: Int, songId: Int) -> Bool {
+    @objc func update(playedDate: Date, serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -374,11 +446,11 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func update(playedDate: Date, song: Song) -> Bool {
+    @objc func update(playedDate: Date, song: Song) -> Bool {
         return update(playedDate: playedDate, serverId: song.serverId, songId: song.id)
     }
     
-    func update(downloadFinished: Bool, serverId: Int, songId: Int) -> Bool {
+    @objc func update(downloadFinished: Bool, serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -400,11 +472,11 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func update(downloadFinished: Bool, song: Song) -> Bool {
+    @objc func update(downloadFinished: Bool, song: Song) -> Bool {
         return update(downloadFinished: downloadFinished, serverId: song.serverId, songId: song.id)
     }
     
-    func update(isPinned: Bool, serverId: Int, songId: Int) -> Bool {
+    @objc func update(isPinned: Bool, serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -421,11 +493,11 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func update(isPinned: Bool, song: Song) -> Bool {
+    @objc func update(isPinned: Bool, song: Song) -> Bool {
         return update(isPinned: isPinned, serverId: song.serverId, songId: song.id)
     }
     
-    func isDownloadFinished(serverId: Int, songId: Int) -> Bool {
+    @objc func isDownloadFinished(serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -441,11 +513,11 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func isDownloadFinished(song: Song) -> Bool {
+    @objc func isDownloadFinished(song: Song) -> Bool {
         return isDownloadFinished(serverId: song.serverId, songId: song.id)
     }
     
-    func addToDownloadQueue(serverId: Int, songId: Int) -> Bool {
+    @objc func addToDownloadQueue(serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -461,11 +533,11 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func addToDownloadQueue(song: Song) -> Bool {
+    @objc func addToDownloadQueue(song: Song) -> Bool {
         return addToDownloadQueue(serverId: song.serverId, songId: song.id)
     }
     
-    func addToDownloadQueue(serverId: Int, songIds: [Int]) -> Bool {
+    @objc func addToDownloadQueue(serverId: Int, songIds: [Int]) -> Bool {
         do {
             return try pool.write { db in
                 for songId in songIds {
@@ -483,7 +555,7 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func removeFromDownloadQueue(serverId: Int, songId: Int) -> Bool {
+    @objc func removeFromDownloadQueue(serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -499,11 +571,11 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func removeFromDownloadQueue(song: Song) -> Bool {
+    @objc func removeFromDownloadQueue(song: Song) -> Bool {
         return removeFromDownloadQueue(serverId: song.serverId, songId: song.id)
     }
     
-    func songFromDownloadQueue(position: Int) -> Song? {
+    @objc func songFromDownloadQueue(position: Int) -> Song? {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -522,7 +594,7 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func queuedDateForSongFromDownloadQueue(position: Int) -> Date? {
+    @objc func queuedDateForSongFromDownloadQueue(position: Int) -> Date? {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -539,11 +611,11 @@ extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
         }
     }
     
-    func firstSongInDownloadQueue() -> Song? {
+    @objc func firstSongInDownloadQueue() -> Song? {
         return songFromDownloadQueue(position: 0)
     }
     
-    func downloadQueueCount() -> Int {
+    @objc func downloadQueueCount() -> Int {
         do {
             return try pool.read { db in
                 return try SQLRequest<Int>(literal: "SELECT COUNT(*) FROM downloadQueue").fetchOne(db) ?? 0

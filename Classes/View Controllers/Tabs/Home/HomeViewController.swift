@@ -231,7 +231,7 @@ import Resolver
             make.trailing.bottom.equalToSuperview().offset(-5)
         }
         
-        searchSegmentContainer.backgroundColor = UIColor(named: "isubBackgroundColor")
+        searchSegmentContainer.backgroundColor = Colors.background
         view.addSubview(searchSegmentContainer)
         searchSegmentContainer.snp.makeConstraints { make in
             make.height.equalTo(50)

@@ -113,14 +113,14 @@
                 </navigationController>
                 <navigationController id="100" customClass="CustomUINavigationController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="7" title="Cache" image="tabbaricon-cache" id="101"/>
+                    <tabBarItem key="tabBarItem" tag="7" title="Downloads" image="tabbaricon-cache" id="101"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="104">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <viewControllers>
-                        <viewController nibName="CacheViewController" id="102" customClass="CacheViewController">
+                        <viewController nibName="DownloadsViewController" id="102" customClass="DownloadsViewController" customModule="iSub" customModuleProvider="target">
                             <extendedEdge key="edgesForExtendedLayout"/>
                             <toolbarItems/>
                             <navigationItem key="navigationItem" title="Item" id="103"/>

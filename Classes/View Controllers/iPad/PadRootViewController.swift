@@ -25,7 +25,7 @@ import SnapKit
         view.backgroundColor = .black
         
         // Container to hold all views under the status bar
-        rootView.backgroundColor = UIColor(named: "isubBackgroundColor")
+        rootView.backgroundColor = Colors.background
         rootView.frame = view.bounds
         view.addSubview(rootView)
         rootView.snp.makeConstraints { make in

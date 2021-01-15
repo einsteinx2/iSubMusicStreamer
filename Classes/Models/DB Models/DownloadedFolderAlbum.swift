@@ -34,7 +34,10 @@ import Resolver
 
 extension DownloadedFolderAlbum: TableCellModel {
     var primaryLabelText: String? { name }
-    var secondaryLabelText: String? { nil }
+    var secondaryLabelText: String? {
+        // TODO: implement this using number of songs downloaded
+        nil
+    }
     var durationLabelText: String? { nil }
     var isCached: Bool { true }
     func download() {
