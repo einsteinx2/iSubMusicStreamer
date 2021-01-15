@@ -25,7 +25,6 @@
 #import "ChatViewController.h"
 #import "SearchSongsViewController.h"
 #import "HomeAlbumViewController.h"
-#import "CurrentPlaylistViewController.h"
 #import "EqualizerViewController.h"
 #import "ServerListViewController.h"
 #import "CacheViewController.h"
@@ -67,6 +66,7 @@
 #import "NSString+Clean.h"
 #import "NSError+ISMSError.h"
 #import "NSString+MD5.h"
+#import "InflectorKit+Helper.h"
 
 /*
  * Singletons

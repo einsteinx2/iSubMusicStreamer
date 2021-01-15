@@ -125,7 +125,8 @@ import Resolver
     }
     
     @objc func removeSongs(indexes: [Int]) {
-        
+        // TODO: implement this
+        fatalError("implement this")
     }
     
     @objc func song(index: Int) -> Song? {

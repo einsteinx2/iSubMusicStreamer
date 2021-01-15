@@ -178,6 +178,16 @@
 		537B05C0256B0E4B0008892C /* PadMenuTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05BE256B0E4B0008892C /* PadMenuTableCell.swift */; };
 		537B05C2256B40930008892C /* SongInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05C1256B40930008892C /* SongInfoViewController.swift */; };
 		537B05C3256B40930008892C /* SongInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05C1256B40930008892C /* SongInfoViewController.swift */; };
+		537C93E125B1051200175DF6 /* SaveEditHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93E025B1051200175DF6 /* SaveEditHeader.swift */; };
+		537C93E225B1051200175DF6 /* SaveEditHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93E025B1051200175DF6 /* SaveEditHeader.swift */; };
+		537C93EB25B1161200175DF6 /* InflectorKit in Frameworks */ = {isa = PBXBuildFile; productRef = 537C93EA25B1161200175DF6 /* InflectorKit */; };
+		537C93ED25B1162100175DF6 /* InflectorKit in Frameworks */ = {isa = PBXBuildFile; productRef = 537C93EC25B1162100175DF6 /* InflectorKit */; };
+		537C93F325B117D700175DF6 /* InflectorKit+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 537C93F225B117D700175DF6 /* InflectorKit+Helper.m */; };
+		537C93F425B117D700175DF6 /* InflectorKit+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 537C93F225B117D700175DF6 /* InflectorKit+Helper.m */; };
+		537C93F625B125AE00175DF6 /* PlayQueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93F525B125AE00175DF6 /* PlayQueueViewController.swift */; };
+		537C93F725B125AE00175DF6 /* PlayQueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93F525B125AE00175DF6 /* PlayQueueViewController.swift */; };
+		537C93F925B127BF00175DF6 /* UIViewController+IsModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93F825B127BF00175DF6 /* UIViewController+IsModal.swift */; };
+		537C93FA25B127BF00175DF6 /* UIViewController+IsModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93F825B127BF00175DF6 /* UIViewController+IsModal.swift */; };
 		537DE2D9113F008C00875852 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 537DE2D8113F008C00875852 /* CoreFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		537E6C1E181208A200127E29 /* CustomUITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E6C1D181208A200127E29 /* CustomUITabBarController.m */; };
 		537E6C20181208A200127E29 /* CustomUITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E6C1D181208A200127E29 /* CustomUITabBarController.m */; };
@@ -312,7 +322,6 @@
 		53BC27AE139AF0DD00A825F1 /* ServerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53614AC8116432DA0088ABC0 /* ServerListViewController.m */; };
 		53BC27B3139AF0DD00A825F1 /* PlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ABE3611165C83900197877 /* PlayingViewController.m */; };
 		53BC27B6139AF0DD00A825F1 /* PlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ABE54111665B6B00197877 /* PlaylistsViewController.m */; };
-		53BC27BB139AF0DD00A825F1 /* CurrentPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4A07B116FF7EE00BB8411 /* CurrentPlaylistViewController.m */; };
 		53BC27C4139AF0DD00A825F1 /* BookmarksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5388A3B2119899260049BA9E /* BookmarksViewController.m */; };
 		53BC27CC139AF0DD00A825F1 /* LoadingScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B5298911AD9B79005776B5 /* LoadingScreen.m */; };
 		53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530B417011B607A200743C09 /* CacheViewController.m */; };
@@ -407,7 +416,6 @@
 		53EA2DE2257D7B4D0003F38D /* UIView+ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EA2DE1257D7B4D0003F38D /* UIView+ViewController.swift */; };
 		53EA2DE3257D7B4D0003F38D /* UIView+ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EA2DE1257D7B4D0003F38D /* UIView+ViewController.swift */; };
 		53F2D3EE113A338500107D63 /* FolderAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F2D3EC113A338500107D63 /* FolderAlbumViewController.m */; };
-		53F4A07D116FF7EE00BB8411 /* CurrentPlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4A07B116FF7EE00BB8411 /* CurrentPlaylistViewController.m */; };
 		53F675D8113B092C00822059 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675D7113B092C00822059 /* MediaPlayer.framework */; };
 		53F675DC113B093900822059 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675DB113B093900822059 /* CFNetwork.framework */; };
 		53F675E2113B095900822059 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675E1113B095900822059 /* QuartzCore.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -765,6 +773,11 @@
 		537B05BB256B04360008892C /* PadMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadMenuViewController.swift; sourceTree = "<group>"; };
 		537B05BE256B0E4B0008892C /* PadMenuTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadMenuTableCell.swift; sourceTree = "<group>"; };
 		537B05C1256B40930008892C /* SongInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongInfoViewController.swift; sourceTree = "<group>"; };
+		537C93E025B1051200175DF6 /* SaveEditHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveEditHeader.swift; sourceTree = "<group>"; };
+		537C93F125B117D700175DF6 /* InflectorKit+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "InflectorKit+Helper.h"; sourceTree = "<group>"; };
+		537C93F225B117D700175DF6 /* InflectorKit+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "InflectorKit+Helper.m"; sourceTree = "<group>"; };
+		537C93F525B125AE00175DF6 /* PlayQueueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayQueueViewController.swift; sourceTree = "<group>"; };
+		537C93F825B127BF00175DF6 /* UIViewController+IsModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+IsModal.swift"; sourceTree = "<group>"; };
 		537DE2D8113F008C00875852 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		537E6C1C181208A200127E29 /* CustomUITabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomUITabBarController.h; sourceTree = "<group>"; };
 		537E6C1D181208A200127E29 /* CustomUITabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUITabBarController.m; sourceTree = "<group>"; };
@@ -909,8 +922,6 @@
 		53F1412015FD550C004D00D5 /* buildnumber.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = buildnumber.xcconfig; path = Other/buildnumber.xcconfig; sourceTree = "<group>"; };
 		53F2D3EB113A338500107D63 /* FolderAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderAlbumViewController.h; sourceTree = "<group>"; };
 		53F2D3EC113A338500107D63 /* FolderAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FolderAlbumViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		53F4A07A116FF7EE00BB8411 /* CurrentPlaylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentPlaylistViewController.h; sourceTree = "<group>"; };
-		53F4A07B116FF7EE00BB8411 /* CurrentPlaylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentPlaylistViewController.m; sourceTree = "<group>"; };
 		53F675D7113B092C00822059 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		53F675DB113B093900822059 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		53F675E1113B095900822059 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -1123,6 +1134,7 @@
 				537DE2D9113F008C00875852 /* CoreFoundation.framework in Frameworks */,
 				2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */,
 				53DE598514F1933800206529 /* CoreText.framework in Frameworks */,
+				537C93EB25B1161200175DF6 /* InflectorKit in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				53F675D8113B092C00822059 /* MediaPlayer.framework in Frameworks */,
 				53C7FDA0150F0EAF008DA51C /* MessageUI.framework in Frameworks */,
@@ -1165,6 +1177,7 @@
 				53BC2857139AF0DD00A825F1 /* CoreFoundation.framework in Frameworks */,
 				53BC2852139AF0DD00A825F1 /* CoreGraphics.framework in Frameworks */,
 				53DE598314F1932C00206529 /* CoreText.framework in Frameworks */,
+				537C93ED25B1162100175DF6 /* InflectorKit in Frameworks */,
 				53BC2850139AF0DD00A825F1 /* Foundation.framework in Frameworks */,
 				53BC2853139AF0DD00A825F1 /* MediaPlayer.framework in Frameworks */,
 				53C7FD9E150F0EA9008DA51C /* MessageUI.framework in Frameworks */,
@@ -1343,8 +1356,7 @@
 			isa = PBXGroup;
 			children = (
 				534B20E8256202CF007FF1D7 /* PlayerViewController.swift */,
-				53F4A07A116FF7EE00BB8411 /* CurrentPlaylistViewController.h */,
-				53F4A07B116FF7EE00BB8411 /* CurrentPlaylistViewController.m */,
+				537C93F525B125AE00175DF6 /* PlayQueueViewController.swift */,
 				53752BE62562CEC500438636 /* Page Control */,
 				53752BEA2562CEDE00438636 /* EQ and Visualizer */,
 			);
@@ -1509,6 +1521,7 @@
 				53329647255F2E770027C51A /* PlayAllAndShuffleHeader.swift */,
 				538C8FE625609F4F005D6CA9 /* BlurredSectionHeader.swift */,
 				53329640255F2B960027C51A /* AlbumTableViewHeader.swift */,
+				537C93E025B1051200175DF6 /* SaveEditHeader.swift */,
 			);
 			path = "Custom UI";
 			sourceTree = "<group>";
@@ -1848,6 +1861,8 @@
 				53DD0DD4259A345500494AEA /* FMDB */,
 				53EA2DE4257D7F340003F38D /* Foundation */,
 				53FE342C1EA961540058B925 /* UIKit */,
+				537C93F125B117D700175DF6 /* InflectorKit+Helper.h */,
+				537C93F225B117D700175DF6 /* InflectorKit+Helper.m */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1917,6 +1932,7 @@
 				53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */,
 				53EA2DD2257D6A2C0003F38D /* UIDevice+Info.h */,
 				53EA2DD3257D6A2C0003F38D /* UIDevice+Info.m */,
+				537C93F825B127BF00175DF6 /* UIViewController+IsModal.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -2105,6 +2121,7 @@
 				53D97409255BFDE900AABF7F /* SnapKit */,
 				5389478725A4E7700078FBAF /* GRDB */,
 				5381884B25A67A2F00C59CDE /* Resolver */,
+				537C93EA25B1161200175DF6 /* InflectorKit */,
 			);
 			productName = iSubTESTING;
 			productReference = 1D6058910D05DD3D006BFB54 /* iSub.app */;
@@ -2129,6 +2146,7 @@
 				53D97405255BFD9100AABF7F /* SnapKit */,
 				5389478925A4E7880078FBAF /* GRDB */,
 				5381884D25A67A4300C59CDE /* Resolver */,
+				537C93EC25B1162100175DF6 /* InflectorKit */,
 			);
 			productName = iSubTESTING;
 			productReference = 53BC2865139AF0DD00A825F1 /* iSub Beta.app */;
@@ -2168,6 +2186,7 @@
 				53D97404255BFD9100AABF7F /* XCRemoteSwiftPackageReference "SnapKit" */,
 				5389478625A4E7700078FBAF /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 				5381884A25A67A2F00C59CDE /* XCRemoteSwiftPackageReference "Resolver" */,
+				537C93E925B1161200175DF6 /* XCRemoteSwiftPackageReference "InflectorKit" */,
 			);
 			projectDirPath = "";
 			projectReferences = (
@@ -2321,6 +2340,7 @@
 				539D331825AC8D8B00F53797 /* DownloadedFolderArtist.swift in Sources */,
 				53E04938255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */,
 				539D32D825A8E07E00F53797 /* Server.swift in Sources */,
+				537C93F325B117D700175DF6 /* InflectorKit+Helper.m in Sources */,
 				53D4FCB9259967CF00C6F1AE /* SubfolderLoader.swift in Sources */,
 				53FE378E1EA961720058B925 /* SocialSingleton.m in Sources */,
 				53FE350A1EA961540058B925 /* NSString+HasValue.m in Sources */,
@@ -2353,7 +2373,6 @@
 				53FE37881EA961720058B925 /* SavedSettings.m in Sources */,
 				538C8FEA2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53FE35251EA961540058B925 /* NSURL+QueryParameterDictionary.m in Sources */,
-				53F4A07D116FF7EE00BB8411 /* CurrentPlaylistViewController.m in Sources */,
 				5340B8A6256968C400FD5D6D /* ISMSBookmarkDAO.m in Sources */,
 				53D4FC9C259406BE00C6F1AE /* TagAlbumViewController.m in Sources */,
 				539D330325AA336600F53797 /* DownloadedSong.swift in Sources */,
@@ -2386,6 +2405,7 @@
 				53B5298A11AD9B79005776B5 /* LoadingScreen.m in Sources */,
 				530B417211B607A200743C09 /* CacheViewController.m in Sources */,
 				53D97454255C51CA00AABF7F /* SwipeAction.swift in Sources */,
+				537C93F925B127BF00175DF6 /* UIViewController+IsModal.swift in Sources */,
 				53FE34C51EA961540058B925 /* NSArray+Safe.m in Sources */,
 				538229F611C98091003F1E23 /* CacheAlbumViewController.m in Sources */,
 				53FE6798256DD0F00015FC83 /* GCDWebServerErrorResponse.m in Sources */,
@@ -2422,6 +2442,7 @@
 				5398F26D11DA61DA00007870 /* SettingsTabViewController.m in Sources */,
 				53FE36E61EA961720058B925 /* BassEffectDAO.m in Sources */,
 				533295F2255EEFE50027C51A /* FMDatabase+InMemoryOnDiskIO.m in Sources */,
+				537C93F625B125AE00175DF6 /* PlayQueueViewController.swift in Sources */,
 				5389479D25A53C7F0078FBAF /* TableSection.swift in Sources */,
 				530A168E259299C800E9294E /* TagArtist.swift in Sources */,
 				53FE34FE1EA961540058B925 /* NSString+CompareWithoutIndefiniteArticles.m in Sources */,
@@ -2480,6 +2501,7 @@
 				53CB016825864D5200E2DF10 /* NSFileManager+ZKAdditions.m in Sources */,
 				53D632D325A65A37004EC117 /* RootArtistsLoader.swift in Sources */,
 				53FE37461EA961720058B925 /* ISMSStreamHandler.m in Sources */,
+				537C93E125B1051200175DF6 /* SaveEditHeader.swift in Sources */,
 				533295F8255EEFE50027C51A /* FMDatabasePool.m in Sources */,
 				539D330C25AA55E000F53797 /* LocalPlaylist.swift in Sources */,
 				536AB8111353DCF900DABD83 /* PlaylistSongsViewController.m in Sources */,
@@ -2559,6 +2581,7 @@
 				539D331925AC8D8B00F53797 /* DownloadedFolderArtist.swift in Sources */,
 				539D32D925A8E07E00F53797 /* Server.swift in Sources */,
 				53D4FCBA259967CF00C6F1AE /* SubfolderLoader.swift in Sources */,
+				537C93F425B117D700175DF6 /* InflectorKit+Helper.m in Sources */,
 				53BCC51D181387B300442E86 /* CustomUINavigationController.m in Sources */,
 				53FE679F256DD0F00015FC83 /* GCDWebServerStreamedResponse.m in Sources */,
 				533295F5255EEFE50027C51A /* FMDatabase+FTS3.m in Sources */,
@@ -2596,7 +2619,6 @@
 				53FE6793256DD0F00015FC83 /* GCDWebServerFunctions.m in Sources */,
 				53D4FC9D259406BE00C6F1AE /* TagAlbumViewController.m in Sources */,
 				539D330425AA336600F53797 /* DownloadedSong.swift in Sources */,
-				53BC27BB139AF0DD00A825F1 /* CurrentPlaylistViewController.m in Sources */,
 				53FE38BB1EA961C80058B925 /* ZKLFHeader.m in Sources */,
 				53FE351B1EA961540058B925 /* NSString+Time.m in Sources */,
 				533295F1255EEFE50027C51A /* FMDatabase.m in Sources */,
@@ -2624,6 +2646,7 @@
 				53BC27CC139AF0DD00A825F1 /* LoadingScreen.m in Sources */,
 				53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */,
 				538C8FE825609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */,
+				537C93FA25B127BF00175DF6 /* UIViewController+IsModal.swift in Sources */,
 				534B20E72561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
 				53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */,
 				533295FB255EEFE50027C51A /* FMResultSet.m in Sources */,
@@ -2660,6 +2683,7 @@
 				53BC27E2139AF0DD00A825F1 /* SettingsTabViewController.m in Sources */,
 				53FE36E81EA961720058B925 /* BassEffectDAO.m in Sources */,
 				53FE35001EA961540058B925 /* NSString+CompareWithoutIndefiniteArticles.m in Sources */,
+				537C93F725B125AE00175DF6 /* PlayQueueViewController.swift in Sources */,
 				53FE67A3256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m in Sources */,
 				5389479E25A53C7F0078FBAF /* TableSection.swift in Sources */,
 				530A168F259299C800E9294E /* TagArtist.swift in Sources */,
@@ -2718,6 +2742,7 @@
 				53FE37691EA961720058B925 /* MusicSingleton.m in Sources */,
 				53D632D425A65A37004EC117 /* RootArtistsLoader.swift in Sources */,
 				53FE37481EA961720058B925 /* ISMSStreamHandler.m in Sources */,
+				537C93E225B1051200175DF6 /* SaveEditHeader.swift in Sources */,
 				53BC2840139AF0DD00A825F1 /* PlaylistSongsViewController.m in Sources */,
 				533295ED255EEFE50027C51A /* FMDatabaseAdditions.m in Sources */,
 				539D330D25AA55E000F53797 /* LocalPlaylist.swift in Sources */,
@@ -3323,6 +3348,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		537C93E925B1161200175DF6 /* XCRemoteSwiftPackageReference "InflectorKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mattt/InflectorKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		5381884A25A67A2F00C59CDE /* XCRemoteSwiftPackageReference "Resolver" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hmlongco/Resolver.git";
@@ -3350,6 +3383,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		537C93EA25B1161200175DF6 /* InflectorKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 537C93E925B1161200175DF6 /* XCRemoteSwiftPackageReference "InflectorKit" */;
+			productName = InflectorKit;
+		};
+		537C93EC25B1162100175DF6 /* InflectorKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 537C93E925B1161200175DF6 /* XCRemoteSwiftPackageReference "InflectorKit" */;
+			productName = InflectorKit;
+		};
 		5381884B25A67A2F00C59CDE /* Resolver */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 5381884A25A67A2F00C59CDE /* XCRemoteSwiftPackageReference "Resolver" */;

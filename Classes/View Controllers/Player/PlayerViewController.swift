@@ -685,7 +685,7 @@ import CocoaLumberjackSwift
     }
     
     @objc private func showCurrentPlaylist() {
-        let controller = CustomUINavigationController(rootViewController: CurrentPlaylistViewController())
+        let controller = CustomUINavigationController(rootViewController: PlayQueueViewController())
         present(controller, animated: true, completion: nil)
     }
     
