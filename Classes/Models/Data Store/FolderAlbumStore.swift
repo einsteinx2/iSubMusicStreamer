@@ -106,7 +106,7 @@ extension Store {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
-                    SELECT id
+                    SELECT folderId
                     FROM folderAlbumList
                     WHERE serverId = \(serverId) AND parentFolderId = \(parentFolderId)
                     ORDER BY \(Column.rowID) ASC

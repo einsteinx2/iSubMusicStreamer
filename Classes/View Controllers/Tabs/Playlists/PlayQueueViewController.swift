@@ -59,16 +59,9 @@ import Resolver
             make.leading.trailing.top.equalToSuperview()
         }
         
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = Colors.background
-        tableView.separatorStyle = .none
         tableView.allowsMultipleSelectionDuringEditing = true
-        tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)
-        tableView.rowHeight = Defines.rowHeight
-        view.addSubview(tableView)
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(saveEditHeader.snp.bottom)
+        setupDefaultTableView(tableView) { make in
+            make.top.equalTo(self.saveEditHeader.snp.bottom)
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
@@ -309,7 +302,7 @@ extension PlayQueueViewController: SaveEditHeaderDelegate {
     }
 }
 
-extension PlayQueueViewController: UITableViewDelegate, UITableViewDataSource {
+extension PlayQueueViewController: UITableViewConfiguration {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -319,7 +312,7 @@ extension PlayQueueViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UniversalTableViewCell.reuseId) as! UniversalTableViewCell
+        let cell = tableView.dequeueUniversalCell()
         cell.number = indexPath.row + 1
         cell.update(model: PlayQueue.shared.song(index: indexPath.row))
         return cell

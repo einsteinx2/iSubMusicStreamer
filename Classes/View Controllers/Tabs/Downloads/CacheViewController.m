@@ -130,12 +130,6 @@
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
 }
 
-- (void)addURLRefBackButton {
-    if (appDelegateS.referringAppUrl && appDelegateS.mainTabBarController.selectedIndex != 4) {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:appDelegateS action:@selector(backToReferringApp)];
-    }
-}
-
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 		
@@ -169,12 +163,7 @@
 	}
     
     [self addURLRefBackButton];
-    
-    self.navigationItem.rightBarButtonItem = nil;
-    if(musicS.showPlayerIcon)
-	{
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-	}    
+    [self addShowPlayerButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -225,20 +214,6 @@
 	}
 	
 	[self.tableView reloadData];
-}
-
-#pragma mark Button Handling
-
-- (void)settingsAction:(id)sender  {
-	ServerListViewController *serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
-	serverListViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:serverListViewController animated:YES];
-}
-
-- (IBAction)nowPlayingAction:(id)sender {
-    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
-    playerViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:playerViewController animated:YES];
 }
 
 - (void)loadPlayAllPlaylist:(BOOL)shuffle {
@@ -993,22 +968,14 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (self.segmentedControl.selectedSegmentIndex == 0) {
         UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+        [cell showCached:NO number:NO art:NO secondary:NO duration:NO];
         cell.hideHeaderLabel = YES;
-        cell.hideCacheIndicator = YES;
-        cell.hideNumberLabel = YES;
-        cell.hideCoverArt = YES;
-        cell.hideSecondaryLabel = YES;
-        cell.hideDurationLabel = YES;
         [cell updateWithModel:[self downloadedFolderArtistForIndexPath:indexPath]];
         return cell;
 	} else {
         UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
+        [cell showCached:NO number:NO art:YES secondary:YES duration:YES];
         cell.hideHeaderLabel = NO;
-        cell.hideCacheIndicator = YES;
-        cell.hideNumberLabel = YES;
-        cell.hideCoverArt = NO;
-        cell.hideSecondaryLabel = NO;
-        cell.hideDurationLabel = NO;
         [cell updateWithModel:[Store.shared songFromDownloadQueueWithPosition:indexPath.row]];
         
         NSDate *queuedDate = [Store.shared queuedDateForSongFromDownloadQueueWithPosition:indexPath.row];

@@ -39,20 +39,9 @@ import CocoaLumberjackSwift
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = Colors.background
         title = "Downloaded Albums"
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = Colors.background
-        tableView.rowHeight = Defines.rowHeight
-        tableView.separatorStyle = .none
-        tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)
-        view.addSubview(tableView)
-        tableView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalToSuperview()
-        }
+        setupDefaultTableView(tableView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,7 +61,7 @@ import CocoaLumberjackSwift
     }
 }
 
-extension DownloadedSongsViewController: UITableViewDelegate, UITableViewDataSource {
+extension DownloadedSongsViewController: UITableViewConfiguration {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -90,12 +79,8 @@ extension DownloadedSongsViewController: UITableViewDelegate, UITableViewDataSou
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UniversalTableViewCell.reuseId) as! UniversalTableViewCell
-        cell.hideCacheIndicator = true
-        cell.hideNumberLabel = true
-        cell.hideCoverArt = false
-        cell.hideSecondaryLabel = false
-        cell.hideDurationLabel = false
+        let cell = tableView.dequeueUniversalCell()
+        cell.show(cached: false, number: false, art: true, secondary: true, duration: true)
         if let song = store.song(downloadedSong: downloadedSongs[indexPath.row]) {
             cell.update(model: song)
         }

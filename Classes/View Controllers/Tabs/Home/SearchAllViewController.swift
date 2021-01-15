@@ -8,8 +8,10 @@
 
 import UIKit
 
-@objc class SearchAllViewController: UITableViewController {
+@objc class SearchAllViewController: UIViewController {
     private var cellNames = [String]()
+    
+    private let tableView = UITableView()
 
     var folderArtists = [FolderArtist]()
     var folderAlbums = [FolderAlbum]()
@@ -21,26 +23,26 @@ import UIKit
         if folderArtists.count > 0 { cellNames.append("Artists") }
         if folderAlbums.count > 0 { cellNames.append("Albums") }
         if songs.count > 0 { cellNames.append("Songs") }
-        
-        tableView.rowHeight = Defines.rowHeight
-        tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)
+        setupDefaultTableView(tableView)
     }
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
+}
+ 
+extension SearchAllViewController: UITableViewConfiguration {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cellNames.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UniversalTableViewCell.reuseId) as! UniversalTableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueUniversalCell()
         cell.update(primaryText: cellNames[indexPath.row], secondaryText: nil)
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let controller = SearchSongsViewController(nibName: "SearchSongsViewController", bundle: nil)
         switch cellNames[indexPath.row] {
         case "Artists":

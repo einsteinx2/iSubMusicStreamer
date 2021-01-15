@@ -10,11 +10,13 @@ import UIKit
 import SnapKit
 import Resolver
 
-@objc final class ServerPlaylistViewController: UITableViewController {
+@objc final class ServerPlaylistViewController: UIViewController {
     @Injected private var store: Store
     
     private var serverPlaylistLoader: ServerPlaylistLoader?
     private var serverPlaylist: ServerPlaylist
+    
+    private let tableView = UITableView()
     
     @objc init(serverPlaylist: ServerPlaylist) {
         self.serverPlaylist = serverPlaylist
@@ -28,35 +30,20 @@ import Resolver
     override func viewDidLoad() {
         super.viewDidLoad()
         title = serverPlaylist.name
-        
-        tableView.separatorStyle = .none
-        tableView.rowHeight = Defines.rowHeight
-        tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)
-        tableView.reloadData()
-        
-        self.refreshControl = RefreshControl(handler: { [unowned self] in
+        setupDefaultTableView(tableView)
+        tableView.refreshControl = RefreshControl { [unowned self] in
             loadData()
-        })
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        navigationItem.rightBarButtonItem = nil
-        if Music.shared().showPlayerIcon {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "music.quarternote.3"), style: .plain, target: self, action: #selector(nowPlayingAction))
-        }
+        addShowPlayerButton()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         cancelLoad()
-    }
-    
-    @objc private func nowPlayingAction() {
-        let controller = PlayerViewController()
-        controller.hidesBottomBarWhenPushed = true
-        pushCustom(controller)
     }
     
     private func loadData() {
@@ -81,7 +68,7 @@ import Resolver
                     tableView.reloadData()
                 }
                 ViewObjects.shared().hideLoadingScreen()
-                refreshControl?.endRefreshing()
+                self.tableView.refreshControl?.endRefreshing()
             }
         }
         serverPlaylistLoader?.startLoad()
@@ -93,33 +80,32 @@ import Resolver
         serverPlaylistLoader?.callback = nil
         serverPlaylistLoader = nil
         ViewObjects.shared().hideLoadingScreen()
-        self.refreshControl?.endRefreshing()
+        self.tableView.refreshControl?.endRefreshing()
     }
-    
+}
+ 
+extension ServerPlaylistViewController: UITableViewConfiguration {
     private func song(indexPath: IndexPath) -> Song? {
         return store.song(serverPlaylist: serverPlaylist, position: indexPath.row)
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return serverPlaylist.loadedSongCount
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UniversalTableViewCell.reuseId) as! UniversalTableViewCell
-        cell.hideNumberLabel = false
-        cell.hideCoverArt = false
-        cell.hideDurationLabel = false
-        cell.hideSecondaryLabel = false
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueUniversalCell()
+        cell.show(cached: true, number: true, art: true, secondary: true, duration: true)
         cell.number = indexPath.row + 1
         cell.update(model: song(indexPath: indexPath))
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: nil)
         EX2Dispatch.runInBackgroundAsync { [unowned self] in
             let song = store.playSongFromServerPlaylist(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id, position: indexPath.row)
@@ -133,7 +119,7 @@ import Resolver
         }
     }
     
-    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if let song = song(indexPath: indexPath) {
             return SwipeAction.downloadAndQueueConfig(model: song)
         }

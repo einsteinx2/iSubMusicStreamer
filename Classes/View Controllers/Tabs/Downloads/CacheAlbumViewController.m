@@ -81,11 +81,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 		
-	if (musicS.showPlayerIcon) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-	} else {
-		self.navigationItem.rightBarButtonItem = nil;
-	}
+    [self addShowPlayerButton];
 
     [self addHeaderAndIndex];
 	
@@ -194,16 +190,10 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)loadPlayAllPlaylist:(BOOL)shuffle {
     NSArray<ISMSSong*> *songs = [Store.shared songsRecursiveWithServerId:self.serverId level:self.level parentPathComponent:self.parentPathComponent];
-    [Store.shared playSongWithPosition:0 songs:songs];
+    (void)[Store.shared playSongWithPosition:0 songs:songs];
     if (shuffle) {
         [PlayQueue.shared shuffleToggle];
     }
-}
-
-- (IBAction)nowPlayingAction:(id)sender {
-    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
-    playerViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:playerViewController animated:YES];
 }
 
 - (void)dealloc {
@@ -258,25 +248,18 @@ LOG_LEVEL_ISUB_DEFAULT
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
 	if (indexPath.section == 0) {
         // Album
-        cell.hideCacheIndicator = YES;
-        cell.hideNumberLabel = YES;
-        cell.hideCoverArt = NO;
-        cell.hideDurationLabel = YES;
-        cell.hideSecondaryLabel = YES;
+        [cell showCached:NO number:NO art:YES secondary:NO duration:NO];
         [cell updateWithModel:[self downloadedFolderAlbumAtIndexPath:indexPath]];
 	} else {
         // Song
-        cell.hideCacheIndicator = YES;
-        cell.hideCoverArt = YES;
-        cell.hideDurationLabel = NO;
         ISMSSong *song = [self songAtIndexPath:indexPath];
-        [cell updateWithModel:song];
-        if (song.track == 0) {
-            cell.hideNumberLabel = YES;
-        } else {
-            cell.hideNumberLabel = NO;
+        BOOL showNumber = NO;
+        if (song.track > 0) {
+            showNumber = NO;
             cell.number = song.track;
         }
+        [cell showCached:NO number:showNumber art:NO secondary:YES duration:YES];
+        [cell updateWithModel:song];
 	}
     return cell;
 }

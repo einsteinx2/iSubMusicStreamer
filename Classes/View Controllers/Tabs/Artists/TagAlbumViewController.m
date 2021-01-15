@@ -70,11 +70,7 @@
 - (void)viewWillAppear:(BOOL)animated  {
     [super viewWillAppear:animated];
     
-    if (musicS.showPlayerIcon) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-    } else {
-        self.navigationItem.rightBarButtonItem = nil;
-    }
+    [self addShowPlayerButton];
     
     [self.tableView reloadData];
         
@@ -156,14 +152,6 @@
     }
 }
 
-#pragma mark Actions
-
-- (IBAction)nowPlayingAction:(id)sender {
-    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
-    playerViewController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:playerViewController animated:YES];
-}
-
 #pragma mark Table view methods
 
 // Following 2 methods handle the right side index
@@ -192,17 +180,14 @@
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-    cell.hideSecondaryLabel = NO;
-    cell.hideCoverArt = YES;
-    cell.hideDurationLabel = NO;
     ISMSSong *song = [self.dataModel songWithIndexPath:indexPath];
-    [cell updateWithModel:song];
-    if (song.track == 0) {
-        cell.hideNumberLabel = YES;
-    } else {
-        cell.hideNumberLabel = NO;
+    BOOL showNumber = NO;
+    if (song.track > 0) {
+        showNumber = NO;
         cell.number = song.track;
     }
+    [cell showCached:YES number:showNumber art:NO secondary:YES duration:YES];
+    [cell updateWithModel:song];
     return cell;
 }
 

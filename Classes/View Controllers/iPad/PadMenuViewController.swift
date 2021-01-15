@@ -264,7 +264,7 @@ import SnapKit
     }
 }
 
-extension PadMenuViewController: UITableViewDelegate, UITableViewDataSource {
+extension PadMenuViewController: UITableViewConfiguration {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }

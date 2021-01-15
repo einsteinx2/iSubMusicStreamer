@@ -10,10 +10,12 @@ import UIKit
 import SnapKit
 import Resolver
 
-@objc final class LocalPlaylistViewController: UITableViewController {
+@objc final class LocalPlaylistViewController: UIViewController {
     @Injected private var store: Store
     
     private let localPlaylist: LocalPlaylist
+    
+    private let tableView = UITableView()
     
     @objc init(localPlaylist: LocalPlaylist) {
         self.localPlaylist = localPlaylist
@@ -27,10 +29,7 @@ import Resolver
     override func viewDidLoad() {
         super.viewDidLoad()
         title = localPlaylist.name
-        
-        tableView.separatorStyle = .none
-        tableView.rowHeight = Defines.rowHeight
-        tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)
+        setupDefaultTableView(tableView)
         
         if !Settings.shared().isOfflineMode {
             let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
@@ -51,17 +50,7 @@ import Resolver
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        navigationItem.rightBarButtonItem = nil
-        if Music.shared().showPlayerIcon {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "music.quarternote.3"), style: .plain, target: self, action: #selector(nowPlayingAction))
-        }
-    }
-    
-    @objc private func nowPlayingAction() {
-        let controller = PlayerViewController()
-        controller.hidesBottomBarWhenPushed = true
-        pushCustom(controller)
+        addShowPlayerButton()
     }
     
     @objc private func uploadPlaylist() {
@@ -119,31 +108,30 @@ import Resolver
     //    self.tableView.scrollEnabled = NO;
     //    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
     }
-    
+}
+
+extension LocalPlaylistViewController: UITableViewConfiguration {
     private func song(indexPath: IndexPath) -> Song? {
         return store.song(localPlaylistId: localPlaylist.id, position: indexPath.row)
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return localPlaylist.songCount
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UniversalTableViewCell.reuseId) as! UniversalTableViewCell
-        cell.hideNumberLabel = false
-        cell.hideCoverArt = false
-        cell.hideDurationLabel = false
-        cell.hideSecondaryLabel = false
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueUniversalCell()
+        cell.show(cached: true, number: true, art: true, secondary: true, duration: true)
         cell.number = indexPath.row + 1
         cell.update(model: song(indexPath: indexPath))
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: nil)
         EX2Dispatch.runInBackgroundAsync {
             // TODO: implement this
@@ -157,7 +145,7 @@ import Resolver
         }
     }
     
-    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if let song = song(indexPath: indexPath) {
             return SwipeAction.downloadAndQueueConfig(model: song)
         }

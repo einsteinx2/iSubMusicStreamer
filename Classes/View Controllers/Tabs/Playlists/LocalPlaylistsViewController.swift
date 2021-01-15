@@ -24,17 +24,8 @@ import Resolver
         view.backgroundColor = Colors.background
         title = "Local Playlists"
         
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = Colors.background
-        tableView.separatorStyle = .none
         tableView.allowsMultipleSelectionDuringEditing = true
-        tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)
-        tableView.rowHeight = Defines.rowHeight
-        view.addSubview(tableView)
-        tableView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalToSuperview()
-        }
+        setupDefaultTableView(tableView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -228,7 +219,7 @@ extension LocalPlaylistsViewController: SaveEditHeaderDelegate {
     }
 }
 
-extension LocalPlaylistsViewController: UITableViewDelegate, UITableViewDataSource {
+extension LocalPlaylistsViewController: UITableViewConfiguration {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -246,11 +237,8 @@ extension LocalPlaylistsViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UniversalTableViewCell.reuseId) as! UniversalTableViewCell
-        cell.hideNumberLabel = true
-        cell.hideCoverArt = true
-        cell.hideDurationLabel = true
-        cell.hideSecondaryLabel = false
+        let cell = tableView.dequeueUniversalCell()
+        cell.show(cached: false, number: false, art: false, secondary: true, duration: false)
         cell.update(model: localPlaylists[indexPath.row])
         return cell
     }

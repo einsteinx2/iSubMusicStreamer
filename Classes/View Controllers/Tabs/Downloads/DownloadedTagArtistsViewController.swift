@@ -1,5 +1,5 @@
 //
-//  DownloadedTagAlbumsViewController.swift
+//  DownloadedTagArtistsViewController.swift
 //  iSub
 //
 //  Created by Benjamin Baron on 1/15/21.
@@ -11,13 +11,13 @@ import Resolver
 import SnapKit
 import CocoaLumberjackSwift
 
-// TODO: Make sure to call the getAlbum API for all downloaded songs or they won't show up here
-@objc final class DownloadedTagAlbumsViewController: UIViewController {
+// TODO: Make sure to call the getArtist API for all downloaded songs or they won't show up here
+@objc final class DownloadedTagArtistsViewController: UIViewController {
     @Injected private var store: Store
     
     private let tableView = UITableView()
     
-    private var downloadedTagAlbums = [DownloadedTagAlbum]()
+    private var downloadedTagArtists = [DownloadedTagArtist]()
     
     private func registerForNotifications() {
         // Set notification receiver for when queued songs finish downloading to reload the table
@@ -42,18 +42,8 @@ import CocoaLumberjackSwift
         super.viewDidLoad()
         
         view.backgroundColor = Colors.background
-        title = "Downloaded Albums"
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = Colors.background
-        tableView.rowHeight = Defines.rowHeight
-        tableView.separatorStyle = .none
-        tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)
-        view.addSubview(tableView)
-        tableView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalToSuperview()
-        }
+        title = "Downloaded Artists"
+        setupDefaultTableView(tableView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -68,18 +58,18 @@ import CocoaLumberjackSwift
     }
     
     @objc private func reloadTable() {
-        downloadedTagAlbums = store.downloadedTagAlbums(serverId: Settings.shared().currentServerId)
+        downloadedTagArtists = store.downloadedTagArtists(serverId: Settings.shared().currentServerId)
         tableView.reloadData()
     }
 }
 
-extension DownloadedTagAlbumsViewController: UITableViewDelegate, UITableViewDataSource {
+extension DownloadedTagArtistsViewController: UITableViewConfiguration {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return downloadedTagAlbums.count
+        return downloadedTagArtists.count
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -91,13 +81,9 @@ extension DownloadedTagAlbumsViewController: UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UniversalTableViewCell.reuseId) as! UniversalTableViewCell
-        cell.hideCacheIndicator = true
-        cell.hideNumberLabel = true
-        cell.hideCoverArt = false
-        cell.hideSecondaryLabel = true
-        cell.hideDurationLabel = true
-        cell.update(model: downloadedTagAlbums[indexPath.row])
+        let cell = tableView.dequeueUniversalCell()
+        cell.show(cached: false, number: false, art: true, secondary: false, duration: false)
+        cell.update(model: downloadedTagArtists[indexPath.row])
         return cell
     }
     

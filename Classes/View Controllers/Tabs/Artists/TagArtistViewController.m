@@ -70,11 +70,7 @@
 - (void)viewWillAppear:(BOOL)animated  {
     [super viewWillAppear:animated];
     
-    if (musicS.showPlayerIcon) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-    } else {
-        self.navigationItem.rightBarButtonItem = nil;
-    }
+    [self addShowPlayerButton];
     
     [self.tableView reloadData];
         
@@ -160,14 +156,6 @@
 //        [self.tableView reloadData];
 }
 
-#pragma mark Actions
-
-- (IBAction)nowPlayingAction:(id)sender {
-    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
-    playerViewController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:playerViewController animated:YES];
-}
-
 #pragma mark Table view methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section  {
@@ -176,10 +164,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-    cell.hideSecondaryLabel = NO;
-    cell.hideNumberLabel = YES;
-    cell.hideCoverArt = NO;
-    cell.hideDurationLabel = YES;
+    [cell showCached:NO number:NO art:YES secondary:YES duration:NO];
     [cell updateWithModel:[self.dataModel tagAlbumWithIndexPath:indexPath]];
     return cell;
 }

@@ -252,7 +252,7 @@ import Resolver
         }
         songInfoButton.translatesAutoresizingMaskIntoConstraints = false
         songInfoButton.setAction { [unowned self] in
-            self.nowPlayingAction(sender: nil)
+            self.showPlayer()
         }
         view.addSubview(songInfoButton)
     }
@@ -260,7 +260,7 @@ import Resolver
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addURLRefBackButton()
-        navigationItem.rightBarButtonItem = Music.shared().showPlayerIcon ? UIBarButtonItem(image: UIImage(systemName: "music.quarternote.3"), style: .plain, target: self, action: #selector(nowPlayingAction(sender:))) : nil
+        addShowPlayerButton()
         
         let jukeboxImageName = Settings.shared().isJukeboxEnabled ? "home-jukebox-on" : "home-jukebox-off"
         jukeboxButton.setIcon(image: UIImage(named: jukeboxImageName))
@@ -338,18 +338,6 @@ import Resolver
     @objc private func jukeboxOff() {
         jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-off"))
         initSongInfo()
-    }
-    
-    @objc private func addURLRefBackButton() {
-        if AppDelegate.shared().referringAppUrl != nil && AppDelegate.shared().mainTabBarController.selectedIndex != 4 {
-            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: AppDelegate.shared(), action: #selector(AppDelegate.backToReferringApp))
-        }
-    }
-    
-    @objc private func nowPlayingAction(sender: Any?) {
-        let controller = PlayerViewController()
-        controller.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(controller, animated: true)
     }
 }
 
@@ -448,7 +436,7 @@ extension HomeViewController: UISearchBarDelegate {
                         let parser = SearchXMLParser(data: data)
                         
                         if Settings.shared().currentServer.isNewSearchSupported && self.searchSegment.selectedSegmentIndex == 3 {
-                            let controller = SearchAllViewController(nibName: "SearchAllViewController", bundle: nil)
+                            let controller = SearchAllViewController()
                             controller.folderArtists = parser.folderArtists
                             controller.folderAlbums = parser.folderAlbums
                             controller.songs = parser.songs

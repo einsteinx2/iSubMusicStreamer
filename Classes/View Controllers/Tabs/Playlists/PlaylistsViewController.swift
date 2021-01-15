@@ -38,13 +38,10 @@ import SnapKit
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        navigationItem.rightBarButtonItem = nil;
-        if Music.shared().showPlayerIcon {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "music.quarternote.3"), style: .plain, target: self, action: #selector(nowPlayingAction(sender:)))
-        }
-        
+                
         addURLRefBackButton()
+        addShowPlayerButton()
+
         segmentChanged()
         Flurry.logEvent("PlaylistsTab")
     }
@@ -65,17 +62,5 @@ import SnapKit
             make.top.equalTo(segmentedControl.snp.bottom).offset(7)
             make.leading.trailing.bottom.equalToSuperview()
         }
-    }
-    
-    @objc private func addURLRefBackButton() {
-        if AppDelegate.shared().referringAppUrl != nil && AppDelegate.shared().mainTabBarController.selectedIndex != 4 {
-            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: AppDelegate.shared(), action: #selector(AppDelegate.backToReferringApp))
-        }
-    }
-    
-    @objc private func nowPlayingAction(sender: Any?) {
-        let controller = PlayerViewController()
-        controller.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(controller, animated: true)
     }
 }

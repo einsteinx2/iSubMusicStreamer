@@ -66,21 +66,11 @@
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
 }
 
-- (void)addURLRefBackButton {
-    if (appDelegateS.referringAppUrl && appDelegateS.mainTabBarController.selectedIndex != 4) {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:appDelegateS action:@selector(backToReferringApp)];
-    }
-}
-
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
     
     [self addURLRefBackButton];
-    
-    self.navigationItem.rightBarButtonItem = nil;
-	if (musicS.showPlayerIcon) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-	}
+    [self addShowPlayerButton];
 	
 	if (!viewObjectsS.isArtistsLoading) {
 		if (!self.dataModel.isCached) {
@@ -270,18 +260,6 @@
     [self loadData:settingsS.rootFoldersSelectedFolderId.integerValue];
 }
 
-- (void)settingsAction:(id)sender {
-	ServerListViewController *serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
-	serverListViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:serverListViewController animated:YES];
-}
-
-- (void)nowPlayingAction:(id)sender {
-    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
-    playerViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:playerViewController animated:YES];
-}
-
 #pragma mark SearchBar
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
@@ -402,10 +380,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-    cell.hideNumberLabel = YES;
-    cell.hideCoverArt = YES;
-    cell.hideSecondaryLabel = YES;
-    cell.hideDurationLabel = YES;
     [cell updateWithModel:[self folderArtistAtIndexPath:indexPath]];
 	return cell;
 }

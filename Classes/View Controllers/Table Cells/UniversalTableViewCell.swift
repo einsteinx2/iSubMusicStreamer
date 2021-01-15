@@ -46,7 +46,7 @@ import SnapKit
         didSet { headerLabel.text = headerText }
     }
     
-    @objc var hideCacheIndicator: Bool = false {
+    @objc var hideCacheIndicator: Bool = true {
         didSet { cachedIndicator.isHidden = (hideCacheIndicator || !(tableCellModel?.isCached ?? false)) }
     }
     
@@ -54,20 +54,29 @@ import SnapKit
         didSet { if oldValue != hideHeaderLabel { makeHeaderLabelConstraints() } }
     }
     
-    @objc var hideNumberLabel: Bool = false {
+    @objc var hideNumberLabel: Bool = true {
         didSet { if oldValue != hideNumberLabel { makeNumberLabelConstraints() } }
     }
     
-    @objc var hideCoverArt: Bool = false {
+    @objc var hideCoverArt: Bool = true {
         didSet { if oldValue != hideCoverArt { makeCoverArtConstraints(); makePrimaryLabelConstraints() } }
     }
     
-    @objc var hideSecondaryLabel: Bool = false {
+    @objc var hideSecondaryLabel: Bool = true {
         didSet { if oldValue != hideSecondaryLabel { makeSecondaryLabelConstraints() } }
     }
     
-    @objc var hideDurationLabel: Bool = false {
+    @objc var hideDurationLabel: Bool = true {
         didSet { if oldValue != hideDurationLabel { makeDurationLabelConstraints() } }
+    }
+    
+    @objc(showCached:number:art:secondary:duration:)
+    func show(cached: Bool, number: Bool, art: Bool, secondary: Bool, duration: Bool) {
+        hideCacheIndicator = !cached
+        hideNumberLabel = !number
+        hideCoverArt = !art
+        hideSecondaryLabel = !secondary
+        hideDurationLabel = !duration
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -212,7 +221,7 @@ import SnapKit
             } else {
                 make.bottom.equalTo(secondaryLabel.snp.top)
             }
-            make.leading.equalTo(coverArtView.snp.trailing).offset(hideCoverArt ? 5 : 10)
+            make.leading.equalTo(coverArtView.snp.trailing).offset(10)
             make.trailing.equalTo(durationLabel.snp.leading).offset(-10)
             make.top.equalTo(headerLabel.snp.bottom).offset(UIDevice.isSmall() ? 5 : 10)
         }

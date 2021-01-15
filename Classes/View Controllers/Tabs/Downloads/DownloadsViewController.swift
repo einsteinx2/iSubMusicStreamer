@@ -1,5 +1,5 @@
 //
-//  DownloadedTagArtistsViewController.swift
+//  DownloadsViewController.swift
 //  iSub
 //
 //  Created by Benjamin Baron on 1/15/21.
@@ -7,17 +7,16 @@
 //
 
 import UIKit
-import Resolver
 import SnapKit
-import CocoaLumberjackSwift
+import Resolver
 
-// TODO: Make sure to call the getArtist API for all downloaded songs or they won't show up here
-@objc final class DownloadedTagArtistsViewController: UIViewController {
+@objc final class DownloadsViewController: UIViewController {
     @Injected private var store: Store
     
     private let tableView = UITableView()
     
-    private var downloadedTagArtists = [DownloadedTagArtist]()
+    // TODO: Separately track downloaded folders, artists, albums, and songs to show the appropriate table cells
+    private var downloadedSongsCount = 0
     
     private func registerForNotifications() {
         // Set notification receiver for when queued songs finish downloading to reload the table
@@ -42,18 +41,9 @@ import CocoaLumberjackSwift
         super.viewDidLoad()
         
         view.backgroundColor = Colors.background
-        title = "Downloaded Artists"
+        title = "Downloads"
         
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = Colors.background
-        tableView.rowHeight = Defines.rowHeight
-        tableView.separatorStyle = .none
-        tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)
-        view.addSubview(tableView)
-        tableView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalToSuperview()
-        }
+        setupDefaultTableView(tableView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -68,18 +58,25 @@ import CocoaLumberjackSwift
     }
     
     @objc private func reloadTable() {
-        downloadedTagArtists = store.downloadedTagArtists(serverId: Settings.shared().currentServerId)
+        downloadedSongsCount = store.downloadedSongsCount()
         tableView.reloadData()
     }
 }
 
-extension DownloadedTagArtistsViewController: UITableViewDelegate, UITableViewDataSource {
+extension DownloadsViewController: UITableViewConfiguration {
+    private enum RowType: Int {
+        case folders = 0
+        case artists = 1
+        case albums = 2
+        case songs = 3
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return downloadedTagArtists.count
+        return downloadedSongsCount > 0 ? 4 : 0
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -91,22 +88,30 @@ extension DownloadedTagArtistsViewController: UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UniversalTableViewCell.reuseId) as! UniversalTableViewCell
-        cell.hideCacheIndicator = true
-        cell.hideNumberLabel = true
-        cell.hideCoverArt = false
-        cell.hideSecondaryLabel = true
-        cell.hideDurationLabel = true
-        cell.update(model: downloadedTagArtists[indexPath.row])
+        let cell = tableView.dequeueUniversalCell()
+        cell.show(cached: false, number: false, art: false, secondary: false, duration: false)
+        switch RowType(rawValue: indexPath.row) {
+        case .folders: cell.update(primaryText: "Folders", secondaryText: nil)
+        case .artists: cell.update(primaryText: "Artists", secondaryText: nil)
+        case .albums:  cell.update(primaryText: "Albums", secondaryText: nil)
+        case .songs:   cell.update(primaryText: "Songs", secondaryText: nil)
+        default: break
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        let controller: UIViewController?
+        switch RowType(rawValue: indexPath.row) {
+        case .folders: controller = DownloadedFolderArtistsViewController()
+        case .artists: controller = DownloadedTagArtistsViewController()
+        case .albums:  controller = DownloadedTagAlbumsViewController()
+        case .songs:   controller = DownloadedSongsViewController()
+        default: controller = nil
+        }
+        if let controller = controller {
+            pushCustom(controller)
+        }
     }
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        // TODO: implement this
-        return nil
-    }
+
 }

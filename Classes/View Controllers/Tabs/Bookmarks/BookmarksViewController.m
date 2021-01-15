@@ -46,10 +46,6 @@
     self.view.backgroundColor = [UIColor colorNamed:@"isubBackgroundColor"];
 		
 	self.title = @"Bookmarks";
-	
-    if (settingsS.isOfflineMode) {
-		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"gearshape.fill"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsAction:)];
-    }
     
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.tableView.rowHeight = Defines.tallRowHeight;
@@ -58,21 +54,11 @@
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
 }
 
-- (void)addURLRefBackButton {
-    if (appDelegateS.referringAppUrl && appDelegateS.mainTabBarController.selectedIndex != 4) {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:appDelegateS action:@selector(backToReferringApp)];
-    }
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     [self addURLRefBackButton];
-	
-    self.navigationItem.rightBarButtonItem = nil;
-	if (musicS.showPlayerIcon) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-	}
+    [self addShowPlayerButton];
 	
 	self.tableView.tableHeaderView = nil;
 	
@@ -326,19 +312,6 @@
 //
 //		[self editBookmarksAction:nil];
 	}
-}
-
-- (void)settingsAction:(id)sender {
-	ServerListViewController *serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
-	serverListViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:serverListViewController animated:YES];
-}
-
-
-- (IBAction)nowPlayingAction:(id)sender {
-    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
-    playerViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:playerViewController animated:YES];
 }
 
 #pragma mark Table View

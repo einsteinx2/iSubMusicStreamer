@@ -21,25 +21,13 @@ import SnapKit
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = Colors.background
         title = "Now Playing"
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = Colors.background
+        setupDefaultTableView(tableView)
         tableView.rowHeight = Defines.tallRowHeight
-        tableView.separatorStyle = .none
-        tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)
-        view.addSubview(tableView)
-        tableView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalToSuperview()
-        }
-        
-        self.tableView.refreshControl = RefreshControl(handler: { [unowned self] in
+        tableView.refreshControl = RefreshControl { [unowned self] in
             loadData()
-        })
-        
+        }
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification.rawValue)
     }
     
@@ -52,11 +40,7 @@ import SnapKit
         super.viewWillAppear(animated)
         
         addURLRefBackButton()
-        
-        navigationItem.rightBarButtonItem = nil;
-        if Music.shared().showPlayerIcon {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "music.quarternote.3"), style: .plain, target: self, action: #selector(nowPlayingAction(sender:)))
-        }
+        addShowPlayerButton()
         
         loadData()
         Flurry.logEvent("NowPlayingTab")
@@ -93,25 +77,13 @@ import SnapKit
         tableView.refreshControl?.endRefreshing()
     }
     
-    @objc private func addURLRefBackButton() {
-        if AppDelegate.shared().referringAppUrl != nil && AppDelegate.shared().mainTabBarController.selectedIndex != 4 {
-            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: AppDelegate.shared(), action: #selector(AppDelegate.backToReferringApp))
-        }
-    }
-    
-    @objc private func nowPlayingAction(sender: Any?) {
-        let controller = PlayerViewController()
-        controller.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
     private func song(indexPath: IndexPath) -> Song? {
         let nowPlayingSong = nowPlayingSongs[indexPath.row]
         return store.song(serverId: nowPlayingSong.serverId, id: nowPlayingSong.songId)
     }
 }
 
-extension NowPlayingViewController: UITableViewDelegate, UITableViewDataSource {
+extension NowPlayingViewController: UITableViewConfiguration {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -121,9 +93,7 @@ extension NowPlayingViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UniversalTableViewCell.reuseId) as! UniversalTableViewCell
-        cell.hideHeaderLabel = false
-        cell.hideNumberLabel = true
+        let cell = tableView.dequeueUniversalCell()
         let nowPlayingSong = nowPlayingSongs[indexPath.row]
         let playTime = "\(nowPlayingSong.minutesAgo) \("min".pluralize(amount: nowPlayingSong.minutesAgo)) ago"
         if nowPlayingSong.playerName.count > 0 {
@@ -131,6 +101,8 @@ extension NowPlayingViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             cell.headerText = "\(nowPlayingSong.username) - \(playTime)"
         }
+        cell.hideHeaderLabel = false
+        cell.show(cached: true, number: false, art: true, secondary: true, duration: true)
         cell.update(model: song(indexPath: indexPath))
         return cell
     }

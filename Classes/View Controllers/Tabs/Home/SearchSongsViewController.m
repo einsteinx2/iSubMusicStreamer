@@ -37,15 +37,14 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)viewDidLoad  {
     [super viewDidLoad];
-	
-	if (musicS.showPlayerIcon) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-	} else {
-		self.navigationItem.rightBarButtonItem = nil;
-	}
     
     self.tableView.rowHeight = Defines.rowHeight;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self addShowPlayerButton];
 }
 		
 - (void)viewWillDisappear:(BOOL)animated {
@@ -55,18 +54,6 @@ LOG_LEVEL_ISUB_DEFAULT
         [self.dataTask cancel];
         self.dataTask = nil;
     }
-}
-
-- (void) settingsAction:(id)sender  {
-	ServerListViewController *serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
-	serverListViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:serverListViewController animated:YES];
-}
-
-- (IBAction)nowPlayingAction:(id)sender {
-    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
-    playerViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:playerViewController animated:YES];
 }
 
 #pragma mark Table view data source
@@ -193,10 +180,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (indexPath.row < self.folderArtists.count) {
             // Artist
             UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-            cell.hideNumberLabel = YES;
-            cell.hideCoverArt = YES;
-            cell.hideSecondaryLabel = YES;
-            cell.hideDurationLabel = YES;
+            [cell showCached:NO number:NO art:NO secondary:NO duration:NO];
             [cell updateWithModel:[self.folderArtists objectAtIndexSafe:indexPath.row]];
             return cell;
 		} else if (indexPath.row == self.folderArtists.count) {
@@ -206,9 +190,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (indexPath.row < self.folderAlbums.count) {
             // Album
             UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-            cell.hideNumberLabel = YES;
-            cell.hideCoverArt = NO;
-            cell.hideDurationLabel = YES;
+            [cell showCached:NO number:NO art:YES secondary:NO duration:NO];
             [cell updateWithModel:[self.folderAlbums objectAtIndexSafe:indexPath.row]];
             return cell;
 		} else if (indexPath.row == [self.folderAlbums count]) {
@@ -218,9 +200,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (indexPath.row < self.songs.count) {
             // Song
             UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-            cell.hideNumberLabel = YES;
-            cell.hideCoverArt = NO;
-            cell.hideDurationLabel = NO;
+            [cell showCached:YES number:YES art:YES secondary:YES duration:YES];
             [cell updateWithModel:[self.songs objectAtIndexSafe:indexPath.row]];
             return cell;
 		} else if (indexPath.row == self.songs.count) {

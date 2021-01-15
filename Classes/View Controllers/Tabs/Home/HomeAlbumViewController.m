@@ -31,27 +31,14 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	
-	if (musicS.showPlayerIcon) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
-	} else {
-		self.navigationItem.rightBarButtonItem = nil;
-	}
-    
+	    
     self.tableView.rowHeight = Defines.rowHeight;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 }
 
-- (void) settingsAction:(id)sender {
-	ServerListViewController *serverListViewController = [[ServerListViewController alloc] initWithNibName:@"ServerListViewController" bundle:nil];
-	serverListViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:serverListViewController animated:YES];
-}
-
-- (IBAction)nowPlayingAction:(id)sender {
-    PlayerViewController *playerViewController = [[PlayerViewController alloc] init];
-    playerViewController.hidesBottomBarWhenPushed = YES;
-	[self.navigationController pushViewController:playerViewController animated:YES];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self addShowPlayerButton];
 }
 
 - (void)loadMoreResults {
@@ -105,9 +92,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
 	if (indexPath.row < self.folderAlbums.count) {
         UniversalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:UniversalTableViewCell.reuseId];
-        cell.hideNumberLabel = YES;
-        cell.hideCoverArt = NO;
-        cell.hideDurationLabel = YES;
+        [cell showCached:NO number:NO art:YES secondary:YES duration:NO];
         [cell updateWithModel:[self.folderAlbums objectAtIndexSafe:indexPath.row]];
         return cell;
 	} else if (indexPath.row == self.folderAlbums.count) {

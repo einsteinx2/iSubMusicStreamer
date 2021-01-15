@@ -39,20 +39,9 @@ import CocoaLumberjackSwift
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = Colors.background
         title = "Downloaded Folders"
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = Colors.background
-        tableView.rowHeight = Defines.rowHeight
-        tableView.separatorStyle = .none
-        tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)
-        view.addSubview(tableView)
-        tableView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalToSuperview()
-        }
+        setupDefaultTableView(tableView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,7 +61,7 @@ import CocoaLumberjackSwift
     }
 }
 
-extension DownloadedFolderArtistsViewController: UITableViewDelegate, UITableViewDataSource {
+extension DownloadedFolderArtistsViewController: UITableViewConfiguration {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -90,12 +79,8 @@ extension DownloadedFolderArtistsViewController: UITableViewDelegate, UITableVie
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UniversalTableViewCell.reuseId) as! UniversalTableViewCell
-        cell.hideCacheIndicator = true
-        cell.hideNumberLabel = true
-        cell.hideCoverArt = true
-        cell.hideSecondaryLabel = true
-        cell.hideDurationLabel = true
+        let cell = tableView.dequeueUniversalCell()
+        cell.show(cached: false, number: false, art: false, secondary: false, duration: false)
         cell.update(model: downloadedFolderArtists[indexPath.row])
         return cell
     }
