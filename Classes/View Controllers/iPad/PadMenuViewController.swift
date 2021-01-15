@@ -219,11 +219,11 @@ import SnapKit
                     cachedTabs["BookmarksViewController"] = controller
                 }
             case 6:
-                if let cachedController = cachedTabs["PlayingViewController"] {
+                if let cachedController = cachedTabs["NowPlayingViewController"] {
                     controller = cachedController
                 } else {
-                    controller = CustomUINavigationController(rootViewController: PlayingViewController(nibName: "PlayingViewController", bundle: nil))
-                    cachedTabs["PlayingViewController"] = controller
+                    controller = CustomUINavigationController(rootViewController: NowPlayingViewController(nibName: "NowPlayingViewController", bundle: nil))
+                    cachedTabs["NowPlayingViewController"] = controller
                 }
             case 7:
                 if let cachedController = cachedTabs["ChatViewController"] {

@@ -182,7 +182,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <viewControllers>
-                        <viewController nibName="PlayingViewController" id="66" customClass="PlayingViewController">
+                        <viewController nibName="NowPlayingViewController" id="66" customClass="NowPlayingViewController" customModule="iSub" customModuleProvider="target">
                             <extendedEdge key="edgesForExtendedLayout"/>
                             <toolbarItems/>
                             <navigationItem key="navigationItem" title="Item" id="67"/>

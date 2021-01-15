@@ -30,7 +30,6 @@
 #import "CacheViewController.h"
 #import "BookmarksViewController.h"
 #import "FoldersViewController.h"
-#import "PlayingViewController.h"
 
 // Views
 #import "CellCachedIndicatorView.h"

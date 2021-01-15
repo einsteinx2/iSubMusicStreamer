@@ -9,13 +9,13 @@
 import Foundation
 import Resolver
 
-@objc final class ServerPlaylistsLoader: APILoader {
+final class ServerPlaylistsLoader: APILoader {
     @Injected private var store: Store
     
     override var type: APILoaderType { .serverPlaylists }
     
-    @objc var serverId = Settings.shared().currentServerId
-    @objc var serverPlaylists = [ServerPlaylist]()
+    var serverId = Settings.shared().currentServerId
+    var serverPlaylists = [ServerPlaylist]()
     
     override func createRequest() -> URLRequest? {
         NSMutableURLRequest(susAction: "getPlaylists", parameters: nil) as URLRequest

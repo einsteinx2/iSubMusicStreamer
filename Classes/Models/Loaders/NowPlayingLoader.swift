@@ -9,12 +9,12 @@
 import Foundation
 import Resolver
 
-@objc final class NowPlayingLoader: APILoader {
+final class NowPlayingLoader: APILoader {
     @Injected private var store: Store
     
-    @objc var serverId = Settings.shared().currentServerId
+    var serverId = Settings.shared().currentServerId
     
-    @objc var nowPlayingSongs = [NowPlayingSong]()
+    var nowPlayingSongs = [NowPlayingSong]()
     
     override var type: APILoaderType { .nowPlaying }
     
