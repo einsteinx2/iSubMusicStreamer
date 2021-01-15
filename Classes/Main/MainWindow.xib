@@ -104,7 +104,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <viewControllers>
-                        <viewController nibName="PlaylistsViewController" id="71" customClass="PlaylistsViewController">
+                        <viewController nibName="PlaylistsViewController" id="71" customClass="PlaylistsViewController" customModule="iSub" customModuleProvider="target">
                             <extendedEdge key="edgesForExtendedLayout"/>
                             <toolbarItems/>
                             <navigationItem key="navigationItem" title="Item" id="72"/>

@@ -348,18 +348,18 @@ import CocoaLumberjackSwift
             alert.addTextField { textField in
                 textField.placeholder = "Bookmark name"
             }
-            alert.addAction(UIAlertAction(title: "Save", style: .default) { action in
+            alert.addAction(title: "Save", style: .default) { action in
                 guard let song = song, let name = alert.textFields?.first?.text else {
                     let errorAlert = UIAlertController(title: "Error", message: "Failed to create the bookmark, please try again.", preferredStyle: .alert)
-                    errorAlert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                    errorAlert.addAction(title: "OK", style: .cancel, handler: nil)
                     self.present(errorAlert, animated: true, completion: nil)
                     return
                 }
                 
                 ISMSBookmarkDAO.createBookmark(for: song, name: name, bookmarkPosition: position, bytePosition: bytePosition)
                 self.updateBookmarkButton()
-            })
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            }
+            alert.addCancelAction()
             self.present(alert, animated: true, completion: nil)
         }
         updateBookmarkButton()
@@ -554,7 +554,7 @@ import CocoaLumberjackSwift
             } else {
                 let message = "You are trying to skip further than the song has cached. You can do this, but the song won't be cached. Or you can wait a little bit for the cache to catch up."
                 let alert = UIAlertController(title: "Past Cache Point", message: message, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                alert.addAction(title: "OK", style: .default) { _ in
                     player.stop()
                     AudioEngine.shared().startByteOffset = byteOffset
                     AudioEngine.shared().startSecondsOffset = UInt(self.progressSlider.value)
@@ -567,10 +567,10 @@ import CocoaLumberjackSwift
                         }
                     }
                     self.progressDisplayLink?.isPaused = false
-                })
-                alert.addAction(UIAlertAction(title: "Wait", style: .cancel) { _ in
+                }
+                alert.addAction(title: "Wait", style: .cancel) { _ in
                     self.progressDisplayLink?.isPaused = false
-                })
+                }
             }
         }
     }

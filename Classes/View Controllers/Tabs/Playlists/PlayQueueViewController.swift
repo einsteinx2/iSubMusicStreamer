@@ -9,9 +9,12 @@
 import UIKit
 import SnapKit
 import CocoaLumberjackSwift
+import Resolver
 
 @objc final class PlayQueueViewController: UIViewController {
-    private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "song")
+    @Injected private var store: Store
+    
+    private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "song", pluralizeClearType: false, isLargeCount: false)
     private let tableView = UITableView()
         
     deinit {
@@ -73,6 +76,10 @@ import CocoaLumberjackSwift
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         selectRow()
+        Flurry.logEvent(isModal ? "PlayerPlayQueue" : "PlayQueueTab")
+        if Settings.shared().isJukeboxEnabled {
+            Jukebox.shared().getInfo()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -120,11 +127,10 @@ import CocoaLumberjackSwift
             for i in 0..<PlayQueue.shared.count {
                 tableView.deselectRow(at: IndexPath(row: i, section: 0), animated: false)
             }
-            saveEditHeader.selectedCount = 0
         } else {
             selectRow()
-            saveEditHeader.selectedCount = PlayQueue.shared.count
         }
+        saveEditHeader.selectedCount = 0
     }
     
     var selectedRows: [Int] {
@@ -138,79 +144,37 @@ import CocoaLumberjackSwift
         return tableView.indexPathsForSelectedRows?.count ?? 0
     }
     
-    private func showSavePlaylistAlert(local: Bool) {
-        //    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Save Playlist" message:nil preferredStyle:UIAlertControllerStyleAlert];
-        //    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        //        textField.placeholder = @"Playlist name";
-        //    }];
-        //    [alert addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        //        NSString *name = [[[alert textFields] firstObject] text];
-        //        if (self.savePlaylistLocal || settingsS.isOfflineMode) {
-        //            // Check if the playlist exists, if not create the playlist table and add the entry to localPlaylists table
-        //            NSString *test = [databaseS.localPlaylistsDbQueue stringForQuery:@"SELECT md5 FROM localPlaylists WHERE md5 = ?", name.md5];
-        //            if (test) {
-        //                // If it exists, ask to overwrite
-        //                [self showOverwritePlaylistAlert:name];
-        //            } else {
-        //                NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", [settingsS.urlString md5]];
-        //                NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-        //                NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-        //                NSString *table = PlayQueue.shared.isShuffle ? shufTable : currTable;
-        //
-        //                [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-        //                    [db executeUpdate:@"INSERT INTO localPlaylists (playlist, md5) VALUES (?, ?)", name, name.md5];
-        //                    [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", name.md5, ISMSSong.standardSongColumnSchema]];
-        //
-        //                    [db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
-        //                    if (db.hadError) { DDLogError(@"[CurrentPlaylistViewController] Err attaching the currentPlaylistDb %d: %@", db.lastErrorCode, db.lastErrorMessage); }
-        //                    [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", name.md5, table]];
-        //                    [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
-        //                }];
-        //            }
-        //        } else {
-        //            NSString *tableName = [NSString stringWithFormat:@"splaylist%@", name.md5];
-        //            if ([databaseS.localPlaylistsDbQueue tableExists:tableName]) {
-        //                // If it exists, ask to overwrite
-        //                [self showOverwritePlaylistAlert:name];
-        //            } else {
-        //                [self uploadPlaylist:name];
-        //            }
-        //        }
-        //    }]];
-        //    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-        //    [self presentViewController:alert animated:YES completion:nil];
-    }
-    
-    private func showOverwritePlaylistAlert(local: Bool, name: String) {
-        //    NSString *message = [NSString stringWithFormat:@"A playlist named \"%@\" already exists. Would you like to overwrite it?", name];
-        //    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Overwrite?" message:message preferredStyle:UIAlertControllerStyleAlert];
-        //    [alert addAction:[UIAlertAction actionWithTitle:@"Overwrite" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-        //        // If yes, overwrite the playlist
-        //        if (self.savePlaylistLocal || settingsS.isOfflineMode) {
-        //            NSString *databaseName = settingsS.isOfflineMode ? @"offlineCurrentPlaylist.db" : [NSString stringWithFormat:@"%@currentPlaylist.db", settingsS.urlString.md5];
-        //            NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-        //            NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-        //            NSString *table = PlayQueue.shared.isShuffle ? shufTable : currTable;
-        //
-        //            [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-        //                [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE playlist%@", name.md5]];
-        //                [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE playlist%@ (%@)", name.md5, ISMSSong.standardSongColumnSchema]];
-        //
-        //                [db executeUpdate:@"ATTACH DATABASE ? AS ?", [settingsS.databasePath stringByAppendingPathComponent:databaseName], @"currentPlaylistDb"];
-        //                if (db.hadError) { DDLogError(@"[CurrentPlaylistViewController] Err attaching the currentPlaylistDb %d: %@", db.lastErrorCode, db.lastErrorMessage); }
-        //                [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO playlist%@ SELECT * FROM %@", name.md5, table]];
-        //                [db executeUpdate:@"DETACH DATABASE currentPlaylistDb"];
-        //            }];
-        //        } else {
-        //            [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-        //                [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE splaylist%@", name.md5]];
-        //            }];
-        //
-        //            [self uploadPlaylist:name];
-        //        }
-        //    }]];
-        //    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-        //    [self presentViewController:alert animated:YES completion:nil];
+    private func showSavePlaylistAlert(isLocal: Bool) {
+        let alert = UIAlertController(title: "Save Playlist", message: nil, preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.placeholder = "Playlist name"
+        }
+        alert.addAction(title: "Save", style: .default, handler: { _ in
+            guard let name = alert.textFields?.first?.text else { return }
+            if isLocal || Settings.shared().isOfflineMode {
+                // TODO: optimize this in the store to not require loading each song object
+                // TODO: Add error handling
+                ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: nil)
+                EX2Dispatch.runInBackgroundAsync {
+                    let localPlaylist = LocalPlaylist(id: self.store.nextLocalPlaylistId(), name: name, songCount: 0)
+                    if self.store.add(localPlaylist: localPlaylist) {
+                        for i in 0..<PlayQueue.shared.count {
+                            if let song = PlayQueue.shared.song(index: i) {
+                                _ = self.store.add(song: song, localPlaylistId: localPlaylist.id)
+                            }
+                        }
+                    }
+                    EX2Dispatch.runInMainThreadAsync {
+                        ViewObjects.shared().hideLoadingScreen()
+                    }
+                }
+                
+            } else {
+                self.uploadPlaylist(name: name)
+            }
+        })
+        alert.addCancelAction()
+        present(alert, animated: true, completion: nil)
     }
     
     private func updateTableCellNumbers() {
@@ -224,6 +188,7 @@ import CocoaLumberjackSwift
     }
     
     private func uploadPlaylist(name: String) {
+        // TODO: implement this
         //    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(name), @"name", nil];
         //    NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:self.currentPlaylistCount];
         //    NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
@@ -299,17 +264,17 @@ extension PlayQueueViewController: SaveEditHeaderDelegate {
         if saveEditHeader.deleteLabel.isHidden {
             if !isEditing {
                 if Settings.shared().isOfflineMode {
-                    showSavePlaylistAlert(local: true)
+                    showSavePlaylistAlert(isLocal: true)
                 } else {
                     let message = "Would you like to save this playlist to your device or to your Subsonic server?"
                     let alert = UIAlertController(title: "Playlist Location", message: message, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Local", style: .default, handler: { _ in
-                        self.showSavePlaylistAlert(local: true)
-                    }))
-                    alert.addAction(UIAlertAction(title: "Server", style: .default, handler: { _ in
-                        self.showSavePlaylistAlert(local: false)
-                    }))
-                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                    alert.addAction(title: "Local", style: .default, handler: { _ in
+                        self.showSavePlaylistAlert(isLocal: true)
+                    })
+                    alert.addAction(title: "Server", style: .default, handler: { _ in
+                        self.showSavePlaylistAlert(isLocal: false)
+                    })
+                    alert.addCancelAction()
                     present(alert, animated: true, completion: nil)
                 }
             }

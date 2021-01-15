@@ -28,7 +28,6 @@
 #import "EqualizerViewController.h"
 #import "ServerListViewController.h"
 #import "CacheViewController.h"
-#import "PlaylistsViewController.h"
 #import "BookmarksViewController.h"
 #import "FoldersViewController.h"
 #import "PlayingViewController.h"

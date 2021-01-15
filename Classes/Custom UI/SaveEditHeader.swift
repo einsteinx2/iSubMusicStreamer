@@ -16,15 +16,18 @@ import InflectorKit
 }
 
 @objc final class SaveEditHeader: UIView {
-    @objc let saveLabel = UILabel()
-    @objc let countLabel = UILabel()
+    private let saveLabel = UILabel()
+    private let countLabel = UILabel()
+    // TODO: Make this private
     @objc let deleteLabel = UILabel()
-    @objc let saveDeleteButton = UIButton(type: .custom)
-    @objc let editLabel = UILabel()
-    @objc let editButton = UIButton(type: .custom)
+    private let saveDeleteButton = UIButton(type: .custom)
+    private let editLabel = UILabel()
+    private let editButton = UIButton(type: .custom)
     
     private var saveType: String
     private var countType: String
+    private var pluralizeClearType: Bool
+    private var isLargeCount: Bool
 
     @objc var delegate: SaveEditHeaderDelegate?
     @objc private(set) var isEditing = false
@@ -38,43 +41,58 @@ import InflectorKit
     @objc var selectedCount = 0 {
         didSet {
             if selectedCount == 0 {
-                deleteLabel.text = "Clear \(saveType)"
+                deleteLabel.text = "Clear \((pluralizeClearType ? saveType.pluralized : saveType).capitalized)"
             } else {
                 deleteLabel.text = "Remove \(selectedCount) \(countType.pluralize(selectedCount))"
             }
         }
     }
     
-    @objc convenience init(saveType: String, countType: String) {
-        self.init(saveType: saveType, countType: countType, delegate: nil)
+    @objc convenience init(saveType: String, countType: String, pluralizeClearType: Bool, isLargeCount: Bool) {
+        self.init(saveType: saveType, countType: countType, pluralizeClearType: pluralizeClearType, isLargeCount: isLargeCount, delegate: nil)
     }
         
-    @objc init(saveType: String, countType: String, delegate: SaveEditHeaderDelegate?) {
+    @objc init(saveType: String, countType: String, pluralizeClearType: Bool, isLargeCount: Bool, delegate: SaveEditHeaderDelegate?) {
         self.saveType = saveType
         self.countType = countType
+        self.pluralizeClearType = pluralizeClearType
+        self.isLargeCount = isLargeCount
         self.delegate = delegate
         super.init(frame: .zero)
 
-        saveLabel.textColor = .label
-        saveLabel.textAlignment = .center
-        saveLabel.font = .boldSystemFont(ofSize: 22)
-        saveLabel.text = "Save \(saveType.capitalized)"
-        addSubview(saveLabel)
-        saveLabel.snp.makeConstraints { make in
-            make.width.equalToSuperview().multipliedBy(0.75)
-            make.height.equalToSuperview().multipliedBy(0.666)
-            make.leading.top.equalToSuperview()
-        }
+        if isLargeCount {
+            countLabel.textColor = .label
+            countLabel.textAlignment = .center
+            countLabel.font = .boldSystemFont(ofSize: 22)
+            addSubview(countLabel)
+            countLabel.snp.makeConstraints { make in
+                make.width.equalToSuperview().multipliedBy(0.75)
+                make.height.equalToSuperview()
+                make.leading.equalToSuperview()
+                make.bottom.equalToSuperview()
+            }
+        } else {
+            saveLabel.textColor = .label
+            saveLabel.textAlignment = .center
+            saveLabel.font = .boldSystemFont(ofSize: 22)
+            saveLabel.text = "Save \(saveType.capitalized)"
+            addSubview(saveLabel)
+            saveLabel.snp.makeConstraints { make in
+                make.width.equalToSuperview().multipliedBy(0.75)
+                make.height.equalToSuperview().multipliedBy(0.666)
+                make.leading.top.equalToSuperview()
+            }
 
-        countLabel.textColor = .label
-        countLabel.textAlignment = .center
-        countLabel.font = .boldSystemFont(ofSize: 12)
-        addSubview(countLabel)
-        countLabel.snp.makeConstraints { make in
-            make.width.equalToSuperview().multipliedBy(0.75)
-            make.height.equalToSuperview().multipliedBy(0.333)
-            make.leading.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-4)
+            countLabel.textColor = .label
+            countLabel.textAlignment = .center
+            countLabel.font = .boldSystemFont(ofSize: 12)
+            addSubview(countLabel)
+            countLabel.snp.makeConstraints { make in
+                make.width.equalToSuperview().multipliedBy(0.75)
+                make.height.equalToSuperview().multipliedBy(0.333)
+                make.leading.equalToSuperview()
+                make.bottom.equalToSuperview().offset(-4)
+            }
         }
 
         deleteLabel.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.5)

@@ -172,23 +172,23 @@ import Resolver
         if !checkURL() {
             let message = "The URL must be in the format: http://mywebsite.com:port/folder\n\nBoth the :port and /folder are optional"
             let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .cancel) { _ in
+            alert.addAction(title: "OK", style: .cancel) { _ in
                 self.urlField.becomeFirstResponder()
-            })
+            }
             present(alert, animated: true, completion: nil)
         } else if !checkUsername() {
             let message = "Please enter a username"
             let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .cancel) { _ in
+            alert.addAction(title: "OK", style: .cancel) { _ in
                 self.usernameField.becomeFirstResponder()
-            })
+            }
             present(alert, animated: true, completion: nil)
         } else if !checkPassword() {
             let message = "Please enter a password"
             let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .cancel) { _ in
+            alert.addAction(title: "OK", style: .cancel) { _ in
                 self.passwordField.becomeFirstResponder()
-            })
+            }
             present(alert, animated: true, completion: nil)
         } else {
             ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: "Checking Server")
@@ -272,7 +272,7 @@ extension ServerEditViewController: APILoaderDelegate {
             }
         }
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        alert.addAction(title: "OK", style: .cancel, handler: nil)
         present(alert, animated: true, completion: nil)
     }
 }

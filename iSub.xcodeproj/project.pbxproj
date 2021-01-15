@@ -42,6 +42,16 @@
 		531D3A04255AB5F6000CB0DF /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 531D3A00255AB5F6000CB0DF /* MainWindow-iPad.xib */; };
 		531D3A16255ABA20000CB0DF /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A15255ABA20000CB0DF /* DDSocialDialog.m */; };
 		531D3A17255ABA20000CB0DF /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A15255ABA20000CB0DF /* DDSocialDialog.m */; };
+		531EC84625B1D4800076973A /* UIAlertController+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC84525B1D4800076973A /* UIAlertController+Actions.swift */; };
+		531EC84725B1D4800076973A /* UIAlertController+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC84525B1D4800076973A /* UIAlertController+Actions.swift */; };
+		531EC85025B1E6420076973A /* LocalPlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC84F25B1E6420076973A /* LocalPlaylistsViewController.swift */; };
+		531EC85125B1E6420076973A /* LocalPlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC84F25B1E6420076973A /* LocalPlaylistsViewController.swift */; };
+		531EC85425B1EBCA0076973A /* ServerPlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC85325B1EBCA0076973A /* ServerPlaylistsViewController.swift */; };
+		531EC85525B1EBCA0076973A /* ServerPlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC85325B1EBCA0076973A /* ServerPlaylistsViewController.swift */; };
+		531EC85925B1F0390076973A /* LocalPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC85825B1F0390076973A /* LocalPlaylistViewController.swift */; };
+		531EC85A25B1F0390076973A /* LocalPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC85825B1F0390076973A /* LocalPlaylistViewController.swift */; };
+		531EC85C25B1F43A0076973A /* ServerPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC85B25B1F43A0076973A /* ServerPlaylistViewController.swift */; };
+		531EC85D25B1F43A0076973A /* ServerPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC85B25B1F43A0076973A /* ServerPlaylistViewController.swift */; };
 		531F166E126FA2E600F524BD /* HomeAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 531F166D126FA2E600F524BD /* HomeAlbumViewController.m */; };
 		53246AA3256C209E00E11EC4 /* ServerEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */; };
 		53246AA4256C209E00E11EC4 /* ServerEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */; };
@@ -188,6 +198,8 @@
 		537C93F725B125AE00175DF6 /* PlayQueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93F525B125AE00175DF6 /* PlayQueueViewController.swift */; };
 		537C93F925B127BF00175DF6 /* UIViewController+IsModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93F825B127BF00175DF6 /* UIViewController+IsModal.swift */; };
 		537C93FA25B127BF00175DF6 /* UIViewController+IsModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93F825B127BF00175DF6 /* UIViewController+IsModal.swift */; };
+		537C93FC25B134DE00175DF6 /* PlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93FB25B134DE00175DF6 /* PlaylistsViewController.swift */; };
+		537C93FD25B134DE00175DF6 /* PlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93FB25B134DE00175DF6 /* PlaylistsViewController.swift */; };
 		537DE2D9113F008C00875852 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 537DE2D8113F008C00875852 /* CoreFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		537E6C1E181208A200127E29 /* CustomUITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E6C1D181208A200127E29 /* CustomUITabBarController.m */; };
 		537E6C20181208A200127E29 /* CustomUITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 537E6C1D181208A200127E29 /* CustomUITabBarController.m */; };
@@ -290,7 +302,6 @@
 		53A2BE2A147DF14600E44822 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A2BE27147DF13600E44822 /* OpenGLES.framework */; };
 		53ABE3631165C83900197877 /* PlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ABE3611165C83900197877 /* PlayingViewController.m */; };
 		53ABE3641165C83900197877 /* PlayingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53ABE3621165C83900197877 /* PlayingViewController.xib */; };
-		53ABE54311665B6B00197877 /* PlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ABE54111665B6B00197877 /* PlaylistsViewController.m */; };
 		53ABE54411665B6B00197877 /* PlaylistsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53ABE54211665B6B00197877 /* PlaylistsViewController.xib */; };
 		53ADBBC013352DB40098FAE6 /* FolderDropdownControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ADBBBF13352DB40098FAE6 /* FolderDropdownControl.m */; };
 		53B38C12147593FA00CD8A99 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B38C11147593F900CD8A99 /* AVFoundation.framework */; };
@@ -321,7 +332,6 @@
 		53BC27A1139AF0DD00A825F1 /* FolderAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F2D3EC113A338500107D63 /* FolderAlbumViewController.m */; };
 		53BC27AE139AF0DD00A825F1 /* ServerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53614AC8116432DA0088ABC0 /* ServerListViewController.m */; };
 		53BC27B3139AF0DD00A825F1 /* PlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ABE3611165C83900197877 /* PlayingViewController.m */; };
-		53BC27B6139AF0DD00A825F1 /* PlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ABE54111665B6B00197877 /* PlaylistsViewController.m */; };
 		53BC27C4139AF0DD00A825F1 /* BookmarksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5388A3B2119899260049BA9E /* BookmarksViewController.m */; };
 		53BC27CC139AF0DD00A825F1 /* LoadingScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 53B5298911AD9B79005776B5 /* LoadingScreen.m */; };
 		53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530B417011B607A200743C09 /* CacheViewController.m */; };
@@ -679,6 +689,11 @@
 		531D3A00255AB5F6000CB0DF /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		531D3A14255ABA20000CB0DF /* DDSocialDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDSocialDialog.h; sourceTree = "<group>"; };
 		531D3A15255ABA20000CB0DF /* DDSocialDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDSocialDialog.m; sourceTree = "<group>"; };
+		531EC84525B1D4800076973A /* UIAlertController+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Actions.swift"; sourceTree = "<group>"; };
+		531EC84F25B1E6420076973A /* LocalPlaylistsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPlaylistsViewController.swift; sourceTree = "<group>"; };
+		531EC85325B1EBCA0076973A /* ServerPlaylistsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerPlaylistsViewController.swift; sourceTree = "<group>"; };
+		531EC85825B1F0390076973A /* LocalPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPlaylistViewController.swift; sourceTree = "<group>"; };
+		531EC85B25B1F43A0076973A /* ServerPlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerPlaylistViewController.swift; sourceTree = "<group>"; };
 		531F166C126FA2E600F524BD /* HomeAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeAlbumViewController.h; sourceTree = "<group>"; };
 		531F166D126FA2E600F524BD /* HomeAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeAlbumViewController.m; sourceTree = "<group>"; };
 		53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEditViewController.swift; sourceTree = "<group>"; };
@@ -778,6 +793,7 @@
 		537C93F225B117D700175DF6 /* InflectorKit+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "InflectorKit+Helper.m"; sourceTree = "<group>"; };
 		537C93F525B125AE00175DF6 /* PlayQueueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayQueueViewController.swift; sourceTree = "<group>"; };
 		537C93F825B127BF00175DF6 /* UIViewController+IsModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+IsModal.swift"; sourceTree = "<group>"; };
+		537C93FB25B134DE00175DF6 /* PlaylistsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsViewController.swift; sourceTree = "<group>"; };
 		537DE2D8113F008C00875852 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		537E6C1C181208A200127E29 /* CustomUITabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomUITabBarController.h; sourceTree = "<group>"; };
 		537E6C1D181208A200127E29 /* CustomUITabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUITabBarController.m; sourceTree = "<group>"; };
@@ -851,8 +867,6 @@
 		53ABE3601165C83900197877 /* PlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayingViewController.h; sourceTree = "<group>"; };
 		53ABE3611165C83900197877 /* PlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PlayingViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		53ABE3621165C83900197877 /* PlayingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayingViewController.xib; sourceTree = "<group>"; };
-		53ABE54011665B6B00197877 /* PlaylistsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistsViewController.h; sourceTree = "<group>"; };
-		53ABE54111665B6B00197877 /* PlaylistsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PlaylistsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		53ABE54211665B6B00197877 /* PlaylistsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaylistsViewController.xib; sourceTree = "<group>"; };
 		53ABE54511665B8500197877 /* PlaylistSongsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistSongsViewController.h; sourceTree = "<group>"; };
 		53ADBBBE13352DB40098FAE6 /* FolderDropdownControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderDropdownControl.h; sourceTree = "<group>"; };
@@ -1356,7 +1370,6 @@
 			isa = PBXGroup;
 			children = (
 				534B20E8256202CF007FF1D7 /* PlayerViewController.swift */,
-				537C93F525B125AE00175DF6 /* PlayQueueViewController.swift */,
 				53752BE62562CEC500438636 /* Page Control */,
 				53752BEA2562CEDE00438636 /* EQ and Visualizer */,
 			);
@@ -1429,11 +1442,15 @@
 		531D39EB255AB300000CB0DF /* Playlists */ = {
 			isa = PBXGroup;
 			children = (
-				53ABE54011665B6B00197877 /* PlaylistsViewController.h */,
-				53ABE54111665B6B00197877 /* PlaylistsViewController.m */,
+				537C93FB25B134DE00175DF6 /* PlaylistsViewController.swift */,
 				53ABE54211665B6B00197877 /* PlaylistsViewController.xib */,
+				537C93F525B125AE00175DF6 /* PlayQueueViewController.swift */,
+				531EC84F25B1E6420076973A /* LocalPlaylistsViewController.swift */,
 				53ABE54511665B8500197877 /* PlaylistSongsViewController.h */,
 				536AB80F1353DCF700DABD83 /* PlaylistSongsViewController.m */,
+				531EC85325B1EBCA0076973A /* ServerPlaylistsViewController.swift */,
+				531EC85825B1F0390076973A /* LocalPlaylistViewController.swift */,
+				531EC85B25B1F43A0076973A /* ServerPlaylistViewController.swift */,
 			);
 			path = Playlists;
 			sourceTree = "<group>";
@@ -1933,6 +1950,7 @@
 				53EA2DD2257D6A2C0003F38D /* UIDevice+Info.h */,
 				53EA2DD3257D6A2C0003F38D /* UIDevice+Info.m */,
 				537C93F825B127BF00175DF6 /* UIViewController+IsModal.swift */,
+				531EC84525B1D4800076973A /* UIAlertController+Actions.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -2356,7 +2374,6 @@
 				53C3AB73257DDA1000B35B99 /* LicensesViewController.swift in Sources */,
 				53FE36EC1EA961720058B925 /* BassEqualizer.m in Sources */,
 				53ABE3631165C83900197877 /* PlayingViewController.m in Sources */,
-				53ABE54311665B6B00197877 /* PlaylistsViewController.m in Sources */,
 				53762C8625AD105E00476F2D /* NowPlayingSong.swift in Sources */,
 				53FE36EF1EA961720058B925 /* BassGaplessPlayer.m in Sources */,
 				53FE67AC256DE9600015FC83 /* Defines.swift in Sources */,
@@ -2405,6 +2422,7 @@
 				53B5298A11AD9B79005776B5 /* LoadingScreen.m in Sources */,
 				530B417211B607A200743C09 /* CacheViewController.m in Sources */,
 				53D97454255C51CA00AABF7F /* SwipeAction.swift in Sources */,
+				537C93FC25B134DE00175DF6 /* PlaylistsViewController.swift in Sources */,
 				537C93F925B127BF00175DF6 /* UIViewController+IsModal.swift in Sources */,
 				53FE34C51EA961540058B925 /* NSArray+Safe.m in Sources */,
 				538229F611C98091003F1E23 /* CacheAlbumViewController.m in Sources */,
@@ -2419,6 +2437,7 @@
 				53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
 				534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
 				5381885C25A68F0300C59CDE /* main.swift in Sources */,
+				531EC85C25B1F43A0076973A /* ServerPlaylistViewController.swift in Sources */,
 				53FE35281EA961540058B925 /* NSURL+SkipBackupAttribute.m in Sources */,
 				539148F0255A0D56004AAC3F /* CellCachedIndicatorView.m in Sources */,
 				53FE38AA1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
@@ -2468,6 +2487,7 @@
 				53FE34F81EA961540058B925 /* GTMNSString+HTML.m in Sources */,
 				539D32DE25A8E78F00F53797 /* ServerStore.swift in Sources */,
 				53329641255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */,
+				531EC85425B1EBCA0076973A /* ServerPlaylistsViewController.swift in Sources */,
 				53D4FCB625995BB900C6F1AE /* TagAlbumLoader.swift in Sources */,
 				53FE34FB1EA961540058B925 /* NSString+Clean.m in Sources */,
 				539D32E825A9490E00F53797 /* CoverArtDAO.swift in Sources */,
@@ -2513,10 +2533,12 @@
 				536585811478920D00FE57A5 /* EqualizerViewController.m in Sources */,
 				538C8FE125606299005D6CA9 /* RefreshControl.swift in Sources */,
 				537B05BF256B0E4B0008892C /* PadMenuTableCell.swift in Sources */,
+				531EC84625B1D4800076973A /* UIAlertController+Actions.swift in Sources */,
 				535E143525A7BB910039BCAA /* FolderAlbumStore.swift in Sources */,
 				5381885625A67CC500C59CDE /* RootArtistsDAO.swift in Sources */,
 				5365859314789ADA00FE57A5 /* EqualizerView.m in Sources */,
 				53FE37371EA961720058B925 /* ISMSServer.m in Sources */,
+				531EC85025B1E6420076973A /* LocalPlaylistsViewController.swift in Sources */,
 				53A2BE24147DF09800E44822 /* EqualizerPointView.m in Sources */,
 				53B9C49425A7A5F9007E9E3C /* TagAlbumStore.swift in Sources */,
 				5306236D14D3295300D320A8 /* EqualizerPathView.m in Sources */,
@@ -2541,6 +2563,7 @@
 				536C994D16619F5D005A73C6 /* ViewObjectsSingleton.m in Sources */,
 				53FE37581EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */,
 				53CF64F725843ADA00BD47DC /* SlidingNotification.swift in Sources */,
+				531EC85925B1F0390076973A /* LocalPlaylistViewController.swift in Sources */,
 				539D330F25AA61DD00F53797 /* LocalPlaylistStore.swift in Sources */,
 				53C3AB6D257DB7D200B35B99 /* AsyncImageView.swift in Sources */,
 				53DD0DDC259A6F8A00494AEA /* SongLoader.swift in Sources */,
@@ -2597,7 +2620,6 @@
 				53246AB7256C975600E11EC4 /* CacheStatusViewController.swift in Sources */,
 				53FE36EE1EA961720058B925 /* BassEqualizer.m in Sources */,
 				53BC27B3139AF0DD00A825F1 /* PlayingViewController.m in Sources */,
-				53BC27B6139AF0DD00A825F1 /* PlaylistsViewController.m in Sources */,
 				53762C8725AD105E00476F2D /* NowPlayingSong.swift in Sources */,
 				53FE36F11EA961720058B925 /* BassGaplessPlayer.m in Sources */,
 				538C8FE225606299005D6CA9 /* RefreshControl.swift in Sources */,
@@ -2646,6 +2668,7 @@
 				53BC27CC139AF0DD00A825F1 /* LoadingScreen.m in Sources */,
 				53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */,
 				538C8FE825609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */,
+				537C93FD25B134DE00175DF6 /* PlaylistsViewController.swift in Sources */,
 				537C93FA25B127BF00175DF6 /* UIViewController+IsModal.swift in Sources */,
 				534B20E72561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
 				53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */,
@@ -2660,6 +2683,7 @@
 				534B20EA256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
 				53FE67A7256DD0F00015FC83 /* GCDWebServerFileRequest.m in Sources */,
 				5347A1E5256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */,
+				531EC85D25B1F43A0076973A /* ServerPlaylistViewController.swift in Sources */,
 				539148D12559EB1D004AAC3F /* FlurryEmpty.m in Sources */,
 				5381885D25A68F0300C59CDE /* main.swift in Sources */,
 				53FE36E51EA961720058B925 /* AudioEngine.m in Sources */,
@@ -2709,6 +2733,7 @@
 				53D4FCA725993B6A00C6F1AE /* TagArtistDAO.swift in Sources */,
 				53329653255F30220027C51A /* ClosureSleeve.swift in Sources */,
 				539D32DF25A8E78F00F53797 /* ServerStore.swift in Sources */,
+				531EC85525B1EBCA0076973A /* ServerPlaylistsViewController.swift in Sources */,
 				533295EB255EEFE50027C51A /* FMDatabaseQueue.m in Sources */,
 				53D4FCB725995BB900C6F1AE /* TagAlbumLoader.swift in Sources */,
 				53BC2803139AF0DD00A825F1 /* HomeAlbumViewController.m in Sources */,
@@ -2754,10 +2779,12 @@
 				535E142725A7B2020039BCAA /* FolderArtistStore.swift in Sources */,
 				533295F3255EEFE50027C51A /* FMDatabase+InMemoryOnDiskIO.m in Sources */,
 				53FE679B256DD0F00015FC83 /* GCDWebServerFileResponse.m in Sources */,
+				531EC84725B1D4800076973A /* UIAlertController+Actions.swift in Sources */,
 				53EA2DD5257D6A2C0003F38D /* UIDevice+Info.m in Sources */,
 				535E143625A7BB910039BCAA /* FolderAlbumStore.swift in Sources */,
 				5381885725A67CC500C59CDE /* RootArtistsDAO.swift in Sources */,
 				53C3AB65257DA71000B35B99 /* Reachability.m in Sources */,
+				531EC85125B1E6420076973A /* LocalPlaylistsViewController.swift in Sources */,
 				53FE37391EA961720058B925 /* ISMSServer.m in Sources */,
 				53FE67A5256DD0F00015FC83 /* GCDWebServerDataRequest.m in Sources */,
 				53B9C49525A7A5F9007E9E3C /* TagAlbumStore.swift in Sources */,
@@ -2782,6 +2809,7 @@
 				53FE6797256DD0F00015FC83 /* GCDWebServerConnection.m in Sources */,
 				536C994F16619F5D005A73C6 /* ViewObjectsSingleton.m in Sources */,
 				53FE67A1256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
+				531EC85A25B1F0390076973A /* LocalPlaylistViewController.swift in Sources */,
 				539D331025AA61DD00F53797 /* LocalPlaylistStore.swift in Sources */,
 				53FE375A1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */,
 				53DD0DDD259A6F8A00494AEA /* SongLoader.swift in Sources */,

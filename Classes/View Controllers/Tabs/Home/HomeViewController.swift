@@ -118,19 +118,19 @@ import Resolver
         
         quickAlbumsButton.setAction { [unowned self] in
             let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            sheet.addAction(UIAlertAction(title: "Recently Played", style: .default) { action in
+            sheet.addAction(title: "Recently Played", style: .default) { action in
                 self.loadQuickAlbums(modifier: "recent", title: action.title ?? "")
-            })
-            sheet.addAction(UIAlertAction(title: "Frequently Played", style: .default) { action in
+            }
+            sheet.addAction(title: "Frequently Played", style: .default) { action in
                 self.loadQuickAlbums(modifier: "frequent", title: action.title ?? "")
-            })
-            sheet.addAction(UIAlertAction(title: "Recently Added", style: .default) { action in
+            }
+            sheet.addAction(title: "Recently Added", style: .default) { action in
                 self.loadQuickAlbums(modifier: "newest", title: action.title ?? "")
-            })
-            sheet.addAction(UIAlertAction(title: "Random Albums", style: .default) { action in
+            }
+            sheet.addAction(title: "Random Albums", style: .default) { action in
                 self.loadQuickAlbums(modifier: "random", title: action.title ?? "")
-            })
-            sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            }
+            sheet.addCancelAction()
             if let popoverPresentationController = sheet.popoverPresentationController {
                 // Fix exception on iPad
                 popoverPresentationController.sourceView = self.quickAlbumsButton
@@ -147,17 +147,17 @@ import Resolver
                     performServerShuffle(mediaFolderId: MediaFolder.allFoldersId)
                 } else {
                     let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                    sheet.addAction(UIAlertAction(title: "All Media Folders", style: .default) { action in
+                    sheet.addAction(title: "All Media Folders", style: .default) { action in
                         performServerShuffle(mediaFolderId: MediaFolder.allFoldersId)
-                    })
+                    }
                     for mediaFolder in mediaFolders {
                         if mediaFolder.id != MediaFolder.allFoldersId {
-                            sheet.addAction(UIAlertAction(title: mediaFolder.name, style: .default) { action in
+                            sheet.addAction(title: mediaFolder.name, style: .default) { action in
                                 performServerShuffle(mediaFolderId: mediaFolder.id)
-                            })
+                            }
                         }
                     }
-                    sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                    sheet.addCancelAction()
                     if let popoverPresentationController = sheet.popoverPresentationController {
                         // Fix exception on iPad
                         popoverPresentationController.sourceView = self.serverShuffleButton
@@ -286,7 +286,7 @@ import Resolver
             if let error = error {
                 if Settings.shared().isPopupsEnabled && (error as NSError).code != NSURLErrorCancelled {
                     let alert = UIAlertController(title: "Error", message: "There was an error grabbing the album list.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                    alert.addAction(title: "OK", style: .cancel, handler: nil)
                     self.present(alert, animated: true, completion: nil)
                 }
             } else {
@@ -314,7 +314,7 @@ import Resolver
             } else {
                 if Settings.shared().isPopupsEnabled {
                     let alert = UIAlertController(title: "Error", message: "There was an error creating the server shuffle list.\n\nThe connection could not be created", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                    alert.addAction(title: "OK", style: .cancel, handler: nil)
                     self.present(alert, animated: true, completion: nil)
                 }
             }
@@ -440,7 +440,7 @@ extension HomeViewController: UISearchBarDelegate {
                     if let error = error {
                         if Settings.shared().isPopupsEnabled {
                             let alert = UIAlertController(title: "Error", message: "There was an error completing the search.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                            alert.addAction(title: "OK", style: .cancel, handler: nil)
                             self.present(alert, animated: true, completion: nil)
                         }
                     } else if let data = data {
