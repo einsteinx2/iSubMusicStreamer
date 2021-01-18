@@ -9,6 +9,7 @@
 import Foundation
 import Resolver
 
+// TODO: Get rid of this class and just use the CoverArtLoader
 @objc final class CoverArtDAO: NSObject {
     @Injected private var store: Store
     

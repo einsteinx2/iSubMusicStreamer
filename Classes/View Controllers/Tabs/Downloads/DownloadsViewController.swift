@@ -110,7 +110,7 @@ extension DownloadsViewController: UITableViewConfiguration {
         default: controller = nil
         }
         if let controller = controller {
-            pushCustom(controller)
+            pushViewControllerCustom(controller)
         }
     }
 

@@ -7,7 +7,6 @@
 //
 
 #import "CacheSingleton.h"
-#import "FMDatabaseQueueAdditions.h"
 #import "ISMSStreamManager.h"
 #import "ISMSCacheQueueManager.h"
 #import "SavedSettings.h"

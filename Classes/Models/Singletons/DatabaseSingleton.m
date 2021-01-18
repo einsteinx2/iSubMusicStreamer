@@ -9,7 +9,6 @@
 #import "DatabaseSingleton.h"
 #import "ISMSStreamManager.h"
 #import "JukeboxSingleton.h"
-#import "FMDatabaseQueueAdditions.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
 #import "JukeboxSingleton.h"
@@ -176,87 +175,87 @@ LOG_LEVEL_ISUB_DEFAULT
     [Store.shared closeAllDatabases];
 }
 
-- (NSArray *)sectionInfoFromTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column {
-	__block NSArray *sectionInfo;
-	[dbQueue inDatabase:^(FMDatabase *db) {
-		sectionInfo = [self sectionInfoFromTable:table inDatabase:db withColumn:column];
-	}];
-	return sectionInfo;
-}
-
-- (NSArray *)sectionInfoFromTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column {
-	NSArray *sectionTitles = @[@"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z"];
-	NSMutableArray *sections = [[NSMutableArray alloc] init];
-	
-    for (int i = 0; i < sectionTitles.count; i++) {
-        NSArray *articles = [NSString indefiniteArticles];
-        NSString *section = [sectionTitles objectAtIndexSafe:i];
-        NSMutableString *query = [NSMutableString stringWithFormat:@"SELECT ROWID FROM %@ WHERE %@ LIKE '%@%%'", table, column, section];
-        for (NSString *article in articles) {
-            [query appendFormat:@"AND %@ NOT LIKE '%@ %%' ", column, article];
-        }
-        [query appendString:@"LIMIT 1"];
-
-		NSString *row = [database stringForQuery:query];
-		if (row != nil) {
-			[sections addObject:@[[sectionTitles objectAtIndexSafe:i], @([row intValue] - 1)]];
-		}
-	}
-	
-	if (sections.count > 0) {
-		if ([[[sections objectAtIndexSafe:0] objectAtIndexSafe:1] intValue] > 0) {
-			[sections insertObject:@[@"#", @0] atIndex:0];
-		}
-	} else {
-		// Looks like there are only number rows, make sure the table is not empty
-		NSString *row = [database stringForQuery:[NSString stringWithFormat:@"SELECT ROWID FROM %@ LIMIT 1", table]];
-		if (row) {
-			[sections insertObject:@[@"#", @0] atIndex:0];
-		}
-	}
-	return sections;
-}
-
-- (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column {
-    __block NSArray *sectionInfo;
-    [dbQueue inDatabase:^(FMDatabase *db) {
-        sectionInfo = [self sectionInfoFromOrderColumnTable:table inDatabase:db withColumn:column];
-    }];
-    return sectionInfo;
-}
-
-- (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column {
-    NSArray *sectionTitles = @[@"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z"];
-    NSMutableArray *sections = [[NSMutableArray alloc] init];
-    
-    for (int i = 0; i < sectionTitles.count; i++) {
-        NSArray *articles = [NSString indefiniteArticles];
-        NSString *section = [sectionTitles objectAtIndexSafe:i];
-        NSMutableString *query = [NSMutableString stringWithFormat:@"SELECT itemOrder FROM %@ WHERE %@ LIKE '%@%%'", table, column, section];
-        for (NSString *article in articles) {
-            [query appendFormat:@"AND %@ NOT LIKE '%@ %%' ", column, article];
-        }
-        [query appendString:@"LIMIT 1"];
-
-        NSString *order = [database stringForQuery:query];
-        if (order != nil) {
-            [sections addObject:@[[sectionTitles objectAtIndexSafe:i], @(order.intValue)]];
-        }
-    }
-    
-    if (sections.count > 0) {
-        if ([[[sections objectAtIndexSafe:0] objectAtIndexSafe:1] intValue] > 0) {
-            [sections insertObject:@[@"#", @0] atIndex:0];
-        }
-    } else {
-        // Looks like there are only number rows, make sure the table is not empty
-        NSString *row = [database stringForQuery:[NSString stringWithFormat:@"SELECT itemOrder FROM %@ LIMIT 1", table]];
-        if (row) {
-            [sections insertObject:@[@"#", @0] atIndex:0];
-        }
-    }
-    return sections;
-}
+//- (NSArray *)sectionInfoFromTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column {
+//	__block NSArray *sectionInfo;
+//	[dbQueue inDatabase:^(FMDatabase *db) {
+//		sectionInfo = [self sectionInfoFromTable:table inDatabase:db withColumn:column];
+//	}];
+//	return sectionInfo;
+//}
+//
+//- (NSArray *)sectionInfoFromTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column {
+//	NSArray *sectionTitles = @[@"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z"];
+//	NSMutableArray *sections = [[NSMutableArray alloc] init];
+//	
+//    for (int i = 0; i < sectionTitles.count; i++) {
+//        NSArray *articles = [NSString indefiniteArticles];
+//        NSString *section = [sectionTitles objectAtIndexSafe:i];
+//        NSMutableString *query = [NSMutableString stringWithFormat:@"SELECT ROWID FROM %@ WHERE %@ LIKE '%@%%'", table, column, section];
+//        for (NSString *article in articles) {
+//            [query appendFormat:@"AND %@ NOT LIKE '%@ %%' ", column, article];
+//        }
+//        [query appendString:@"LIMIT 1"];
+//
+//		NSString *row = [database stringForQuery:query];
+//		if (row != nil) {
+//			[sections addObject:@[[sectionTitles objectAtIndexSafe:i], @([row intValue] - 1)]];
+//		}
+//	}
+//	
+//	if (sections.count > 0) {
+//		if ([[[sections objectAtIndexSafe:0] objectAtIndexSafe:1] intValue] > 0) {
+//			[sections insertObject:@[@"#", @0] atIndex:0];
+//		}
+//	} else {
+//		// Looks like there are only number rows, make sure the table is not empty
+//		NSString *row = [database stringForQuery:[NSString stringWithFormat:@"SELECT ROWID FROM %@ LIMIT 1", table]];
+//		if (row) {
+//			[sections insertObject:@[@"#", @0] atIndex:0];
+//		}
+//	}
+//	return sections;
+//}
+//
+//- (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column {
+//    __block NSArray *sectionInfo;
+//    [dbQueue inDatabase:^(FMDatabase *db) {
+//        sectionInfo = [self sectionInfoFromOrderColumnTable:table inDatabase:db withColumn:column];
+//    }];
+//    return sectionInfo;
+//}
+//
+//- (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column {
+//    NSArray *sectionTitles = @[@"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z"];
+//    NSMutableArray *sections = [[NSMutableArray alloc] init];
+//    
+//    for (int i = 0; i < sectionTitles.count; i++) {
+//        NSArray *articles = [NSString indefiniteArticles];
+//        NSString *section = [sectionTitles objectAtIndexSafe:i];
+//        NSMutableString *query = [NSMutableString stringWithFormat:@"SELECT itemOrder FROM %@ WHERE %@ LIKE '%@%%'", table, column, section];
+//        for (NSString *article in articles) {
+//            [query appendFormat:@"AND %@ NOT LIKE '%@ %%' ", column, article];
+//        }
+//        [query appendString:@"LIMIT 1"];
+//
+//        NSString *order = [database stringForQuery:query];
+//        if (order != nil) {
+//            [sections addObject:@[[sectionTitles objectAtIndexSafe:i], @(order.intValue)]];
+//        }
+//    }
+//    
+//    if (sections.count > 0) {
+//        if ([[[sections objectAtIndexSafe:0] objectAtIndexSafe:1] intValue] > 0) {
+//            [sections insertObject:@[@"#", @0] atIndex:0];
+//        }
+//    } else {
+//        // Looks like there are only number rows, make sure the table is not empty
+//        NSString *row = [database stringForQuery:[NSString stringWithFormat:@"SELECT itemOrder FROM %@ LIMIT 1", table]];
+//        if (row) {
+//            [sections insertObject:@[@"#", @0] atIndex:0];
+//        }
+//    }
+//    return sections;
+//}
 
 #pragma mark - Singleton methods
 

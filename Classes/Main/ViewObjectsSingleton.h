@@ -16,7 +16,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ViewObjects)
-@interface ViewObjectsSingleton : NSObject <UITabBarControllerDelegate, UINavigationControllerDelegate>
+@interface ViewObjectsSingleton : NSObject //<UITabBarControllerDelegate, UINavigationControllerDelegate>
 
 // Artists page objects
 //
@@ -33,7 +33,7 @@ NS_SWIFT_NAME(ViewObjects)
 
 + (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
-- (void)orderMainTabBarController;
+//- (void)orderMainTabBarController;
 
 - (void)showLoadingScreenOnMainWindowWithMessage:(nullable NSString *)message;
 - (void)showLoadingScreen:(UIView *)view withMessage:(nullable NSString *)message;

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class RootArtistsDAO, FolderDropdownControl;
+@class RootArtistsViewModel, FolderDropdownControl;
 
 @interface ArtistsViewController : UIViewController
 
@@ -21,6 +21,6 @@
 @property (nonatomic, strong) UILabel *countLabel;
 @property (nonatomic, strong) UILabel *reloadTimeLabel;
 @property (nonatomic, strong) FolderDropdownControl *dropdown;
-@property (nonatomic, strong) RootArtistsDAO *dataModel;
+@property (nonatomic, strong) RootArtistsViewModel *dataModel;
 
 @end

@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "FolderDropdownDelegate.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FolderDropdownControl : UIView
 
-@property (nonatomic, weak) id<FolderDropdownDelegate> delegate;
+@property (nullable, nonatomic, weak) id<FolderDropdownDelegate> delegate;
 
 - (void)selectFolderWithId:(NSInteger)folderId;
 - (void)updateFolders;
@@ -21,3 +23,5 @@
 - (BOOL)hasMultipleMediaFolders;
 
 @end
+
+NS_ASSUME_NONNULL_END

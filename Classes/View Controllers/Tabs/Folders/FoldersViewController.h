@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class RootFoldersDAO, FolderDropdownControl;
+@class RootFoldersViewModel, FolderDropdownControl;
 
 @interface FoldersViewController : UIViewController
 
@@ -21,6 +21,6 @@
 @property (nonatomic, strong) UILabel *countLabel;
 @property (nonatomic, strong) UILabel *reloadTimeLabel;
 @property (nonatomic, strong) FolderDropdownControl *dropdown;
-@property (nonatomic, strong) RootFoldersDAO *dataModel;
+@property (nonatomic, strong) RootFoldersViewModel *dataModel;
 
 @end

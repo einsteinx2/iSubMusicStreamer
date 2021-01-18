@@ -11,14 +11,18 @@ import UIKit
 // Haptic info: https://medium.com/@sdrzn/make-your-ios-app-feel-better-a-comprehensive-guide-over-taptic-engine-and-haptic-feedback-724dec425f10
 
 @objc final class SwipeAction: NSObject {
-    @objc static func downloadAndQueueConfig(model: TableCellModel) -> UISwipeActionsConfiguration {
+    @objc static func downloadAndQueueConfig(model: TableCellModel?) -> UISwipeActionsConfiguration? {
+        guard let model = model else { return nil }
+        
         let actions = model.isCached ? [queue(model: model)] : [download(model: model), queue(model: model)];
         let config = UISwipeActionsConfiguration(actions: actions)
         config.performsFirstActionWithFullSwipe = false;
         return config;
     }
     
-    @objc static func downloadQueueAndDeleteConfig(model: TableCellModel, deleteHandler: @escaping () -> ()) -> UISwipeActionsConfiguration {
+    @objc static func downloadQueueAndDeleteConfig(model: TableCellModel?, deleteHandler: @escaping () -> ()) -> UISwipeActionsConfiguration? {
+        guard let model = model else { return nil }
+        
         let actions = model.isCached ? [queue(model: model), delete(handler: deleteHandler)] : [download(model: model), queue(model: model), delete(handler: deleteHandler)];
         let config = UISwipeActionsConfiguration(actions: actions)
         config.performsFirstActionWithFullSwipe = false;

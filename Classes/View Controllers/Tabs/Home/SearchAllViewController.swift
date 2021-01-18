@@ -57,6 +57,6 @@ extension SearchAllViewController: UITableViewConfiguration {
         default: break
         }
         controller.query = query
-        pushCustom(controller)
+        pushViewControllerCustom(controller)
     }
 }

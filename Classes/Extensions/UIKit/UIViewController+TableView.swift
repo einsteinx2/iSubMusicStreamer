@@ -34,6 +34,6 @@ extension UIViewController {
 
 extension UITableView {
     func dequeueUniversalCell() -> UniversalTableViewCell {
-        return dequeueUniversalCell()
+        return dequeueReusableCell(withIdentifier: UniversalTableViewCell.reuseId) as! UniversalTableViewCell
     }
 }

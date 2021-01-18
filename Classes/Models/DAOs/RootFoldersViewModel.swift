@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-@objc final class RootFoldersDAO: NSObject {
+@objc final class RootFoldersViewModel: NSObject {
     @Injected private var store: Store
     
     @objc weak var delegate: APILoaderDelegate?
@@ -90,7 +90,7 @@ import Resolver
     }
 }
 
-extension RootFoldersDAO: APILoaderManager {
+extension RootFoldersViewModel: APILoaderManager {
     func startLoad() {
         cancelLoad()
         
@@ -106,7 +106,7 @@ extension RootFoldersDAO: APILoaderManager {
     }
 }
 
-extension RootFoldersDAO: APILoaderDelegate {
+extension RootFoldersViewModel: APILoaderDelegate {
     func loadingFinished(loader: APILoader?) {
         if let loader = loader as? RootFoldersLoader {
             metadata = loader.metadata

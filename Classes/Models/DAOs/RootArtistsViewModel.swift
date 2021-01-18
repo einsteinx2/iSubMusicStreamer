@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-@objc final class RootArtistsDAO: NSObject {
+@objc final class RootArtistsViewModel: NSObject {
     @Injected private var store: Store
     
     @objc weak var delegate: APILoaderDelegate?
@@ -90,7 +90,7 @@ import Resolver
     }
 }
 
-extension RootArtistsDAO: APILoaderManager {
+extension RootArtistsViewModel: APILoaderManager {
     func startLoad() {
         cancelLoad()
         
@@ -106,7 +106,7 @@ extension RootArtistsDAO: APILoaderManager {
     }
 }
 
-extension RootArtistsDAO: APILoaderDelegate {
+extension RootArtistsViewModel: APILoaderDelegate {
     func loadingFinished(loader: APILoader?) {
         if let loader = loader as? RootArtistsLoader {
             metadata = loader.metadata

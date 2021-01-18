@@ -15,7 +15,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FMDatabase, FMDatabaseQueue, ISMSFolderArtist, ISMSSong;
+@class ISMSFolderArtist, ISMSSong;
 
 NS_SWIFT_NAME(DatabaseOld)
 @interface DatabaseSingleton : NSObject
@@ -25,11 +25,11 @@ NS_SWIFT_NAME(DatabaseOld)
 - (void)setupDatabases;
 - (void)closeAllDatabases;
 
-- (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column;
-- (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column;
-
-- (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column NS_SWIFT_NAME(sectionInfoFromOrderColumnTable(_:databaseQueue:column:));
-- (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column NS_SWIFT_NAME(sectionInfoFromOrderColumnTable(_:database:column:));
+//- (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column;
+//- (nullable NSArray *)sectionInfoFromTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column;
+//
+//- (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabaseQueue:(FMDatabaseQueue *)dbQueue withColumn:(NSString *)column NS_SWIFT_NAME(sectionInfoFromOrderColumnTable(_:databaseQueue:column:));
+//- (NSArray *)sectionInfoFromOrderColumnTable:(NSString *)table inDatabase:(FMDatabase *)database withColumn:(NSString *)column NS_SWIFT_NAME(sectionInfoFromOrderColumnTable(_:database:column:));
 
 @end
 

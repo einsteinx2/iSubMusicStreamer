@@ -249,7 +249,7 @@ extension LocalPlaylistsViewController: UITableViewConfiguration {
             return
         }
         
-        pushCustom(LocalPlaylistViewController(localPlaylist: localPlaylists[indexPath.row]))
+        pushViewControllerCustom(LocalPlaylistViewController(localPlaylist: localPlaylists[indexPath.row]))
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

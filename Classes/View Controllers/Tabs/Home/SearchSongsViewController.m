@@ -8,8 +8,6 @@
 
 #import "SearchSongsViewController.h"
 #import "ServerListViewController.h"
-#import "FolderAlbumViewController.h"
-#import "UIViewController+PushViewControllerCustom.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -221,15 +219,15 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (self.searchType == ISMSSearchSongsSearchType_Artists) {
 		if (indexPath.row != self.folderArtists.count) {
 			ISMSFolderArtist *folderArtist = [self.folderArtists objectAtIndexSafe:indexPath.row];
-			FolderAlbumViewController *albumView = [[FolderAlbumViewController alloc] initWithFolderArtist:folderArtist orFolderAlbum:nil];
-			[self pushViewControllerCustom:albumView];
+			FolderAlbumViewController *controller = [[FolderAlbumViewController alloc] initWithFolderArtist:folderArtist];
+			[self pushViewControllerCustom:controller];
 			return;
 		}
 	} else if (self.searchType == ISMSSearchSongsSearchType_Albums) {
 		if (indexPath.row != self.folderAlbums.count) {
 			ISMSFolderAlbum *folderAlbum = [self.folderAlbums objectAtIndexSafe:indexPath.row];
-            FolderAlbumViewController *albumView = [[FolderAlbumViewController alloc] initWithFolderArtist:nil orFolderAlbum:folderAlbum];
-			[self pushViewControllerCustom:albumView];
+            FolderAlbumViewController *controller = [[FolderAlbumViewController alloc] initWithFolderAlbum:folderAlbum];
+			[self pushViewControllerCustom:controller];
 			return;
 		}
 	} else {

@@ -146,9 +146,6 @@ extension LocalPlaylistViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if let song = song(indexPath: indexPath) {
-            return SwipeAction.downloadAndQueueConfig(model: song)
-        }
-        return nil
+        return SwipeAction.downloadAndQueueConfig(model: song(indexPath: indexPath))
     }
 }

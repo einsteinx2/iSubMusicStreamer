@@ -190,7 +190,7 @@ extension ServerPlaylistsViewController: UITableViewConfiguration {
             saveEditHeader.selectedCount += 1
             return
         }
-        pushCustom(ServerPlaylistViewController(serverPlaylist: serverPlaylists[indexPath.row]))
+        pushViewControllerCustom(ServerPlaylistViewController(serverPlaylist: serverPlaylists[indexPath.row]))
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

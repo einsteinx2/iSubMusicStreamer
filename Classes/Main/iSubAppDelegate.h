@@ -13,37 +13,29 @@
 
 #define appDelegateS [iSubAppDelegate sharedInstance]
 
-@class BBSplitViewController, PadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, SettingsViewController, FoldersViewController, AudioStreamer, StatusLoader, MPMoviePlayerController, AVPlayerViewController, HLSReverseProxyServer, ServerListViewController, Reachability;
+@class BBSplitViewController, PadRootViewController, InitialDetailViewController, LoadingScreen, FMDatabase, SettingsViewController, FolderArtistsViewController, AudioStreamer, StatusLoader, MPMoviePlayerController, AVPlayerViewController, HLSReverseProxyServer, ServerListViewController, Reachability, CustomUITabBarController, CustomUINavigationController;
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppDelegate)
 @interface iSubAppDelegate: NSObject <UIApplicationDelegate>
 
-//@property (nullable, strong) HTTPServer *hlsProxyServer;
-
 @property (nullable,  strong) StatusLoader *statusLoader;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 
 @property (strong) SettingsViewController *settingsViewController;
-@property (strong) IBOutlet UIImageView *background;
 @property (strong) UITabBarController *currentTabBarController;
-@property (strong) IBOutlet UITabBarController *mainTabBarController;
-@property (strong) IBOutlet UITabBarController *offlineTabBarController;
-@property (strong) IBOutlet UINavigationController *homeNavigationController;
-@property (strong) IBOutlet UINavigationController *playerNavigationController;
-@property (strong) IBOutlet UINavigationController *artistsNavigationController;
-@property (strong) IBOutlet FoldersViewController *rootViewController;
-@property (strong) IBOutlet UINavigationController *allAlbumsNavigationController;
-@property (strong) IBOutlet UINavigationController *allSongsNavigationController;
-@property (strong) IBOutlet UINavigationController *playlistsNavigationController;
-@property (strong) IBOutlet UINavigationController *bookmarksNavigationController;
-@property (strong) IBOutlet UINavigationController *playingNavigationController;
-@property (strong) IBOutlet UINavigationController *genresNavigationController;
-@property (strong) IBOutlet UINavigationController *cacheNavigationController;
-@property (strong) IBOutlet UINavigationController *chatNavigationController;
-@property (strong) UINavigationController *supportNavigationController;
+@property (strong) IBOutlet CustomUITabBarController *mainTabBarController;
+@property (strong) IBOutlet CustomUITabBarController *offlineTabBarController;
+@property (strong) IBOutlet CustomUINavigationController *homeNavigationController;
+@property (strong) IBOutlet CustomUINavigationController *artistsNavigationController;
+@property (strong) IBOutlet FolderArtistsViewController *rootViewController;
+@property (strong) IBOutlet CustomUINavigationController *playlistsNavigationController;
+@property (strong) IBOutlet CustomUINavigationController *bookmarksNavigationController;
+@property (strong) IBOutlet CustomUINavigationController *playingNavigationController;
+@property (strong) IBOutlet CustomUINavigationController *cacheNavigationController;
+@property (strong) IBOutlet CustomUINavigationController *chatNavigationController;
 
 @property (strong) ServerListViewController *serverListViewController;
 

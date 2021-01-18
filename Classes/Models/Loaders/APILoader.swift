@@ -26,19 +26,20 @@ import CocoaLumberjackSwift
     case rootFolders        =  1
     case subFolders         =  2
     case chat               =  3
-    case lyrics             =  4
-    case coverArt           =  5
-    case serverPlaylists    =  6
-    case serverPlaylist     =  7
-    case nowPlaying         =  8
-    case status             =  9
-    case quickAlbums        = 10
-    case dropdownFolder     = 11
-    case serverShuffle      = 12
-    case scrobble           = 13
-    case rootArtists        = 14
-    case tagArtist          = 15
-    case tagAlbum           = 16
+    case chatSend           =  4
+    case lyrics             =  5
+    case coverArt           =  6
+    case serverPlaylists    =  7
+    case serverPlaylist     =  8
+    case nowPlaying         =  9
+    case status             = 10
+    case quickAlbums        = 11
+    case dropdownFolder     = 12
+    case serverShuffle      = 13
+    case scrobble           = 14
+    case rootArtists        = 15
+    case tagArtist          = 16
+    case tagAlbum           = 17
 }
 
 @objc class APILoader: NSObject {

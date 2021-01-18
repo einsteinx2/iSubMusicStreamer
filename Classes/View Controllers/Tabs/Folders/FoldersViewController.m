@@ -8,9 +8,7 @@
 
 #import "FoldersViewController.h"
 #import "ServerListViewController.h"
-#import "FolderAlbumViewController.h"
 #import "FolderDropdownControl.h"
-#import "UIViewController+PushViewControllerCustom.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -30,7 +28,7 @@
 
 - (void)createDataModel {
     NSInteger mediaFolderId = settingsS.rootFoldersSelectedFolderId.integerValue;
-    self.dataModel = [[RootFoldersDAO alloc] initWithMediaFolderId:mediaFolderId delegate:self];
+    self.dataModel = [[RootFoldersViewModel alloc] initWithMediaFolderId:mediaFolderId delegate:self];
 }
 
 - (void)viewDidLoad  {
@@ -424,7 +422,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	if (!indexPath) return;
-    [self pushViewControllerCustom:[[FolderAlbumViewController alloc] initWithFolderArtist:[self folderArtistAtIndexPath:indexPath] orFolderAlbum:nil]];
+    [self pushViewControllerCustom:[[FolderAlbumViewController alloc] initWithFolderArtist:[self folderArtistAtIndexPath:indexPath]]];
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {

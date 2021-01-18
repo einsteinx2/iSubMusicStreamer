@@ -216,7 +216,7 @@ LOG_LEVEL_ISUB_DEFAULT
 				for (UIView *subview in appDelegateS.window.subviews) {
 					[subview removeFromSuperview];
 				}
-				[viewObjectsS orderMainTabBarController];
+//				[viewObjectsS orderMainTabBarController];
 			}
 		}
 		

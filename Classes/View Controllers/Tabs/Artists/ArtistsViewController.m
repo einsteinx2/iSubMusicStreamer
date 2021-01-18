@@ -8,9 +8,7 @@
 
 #import "ArtistsViewController.h"
 #import "ServerListViewController.h"
-#import "TagArtistViewController.h"
 #import "FolderDropdownControl.h"
-#import "UIViewController+PushViewControllerCustom.h"
 #import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
@@ -30,7 +28,7 @@
 
 - (void)createDataModel {
     NSInteger mediaFolderId = settingsS.rootArtistsSelectedFolderId.integerValue;
-    self.dataModel = [[RootArtistsDAO alloc] initWithMediaFolderId:mediaFolderId delegate:self];
+    self.dataModel = [[RootArtistsViewModel alloc] initWithMediaFolderId:mediaFolderId delegate:self];
 }
 
 - (void)viewDidLoad  {

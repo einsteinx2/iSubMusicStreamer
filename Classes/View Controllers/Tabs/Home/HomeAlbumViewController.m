@@ -7,9 +7,7 @@
 //
 
 #import "HomeAlbumViewController.h"
-#import "FolderAlbumViewController.h"
 #import "ServerListViewController.h"
-#import "UIViewController+PushViewControllerCustom.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "SavedSettings.h"
@@ -123,8 +121,8 @@
 	
 	if (indexPath.row != self.folderAlbums.count) {
 		ISMSFolderAlbum *folderAlbum = [self.folderAlbums objectAtIndexSafe:indexPath.row];
-		FolderAlbumViewController *albumViewController = [[FolderAlbumViewController alloc] initWithFolderArtist:nil orFolderAlbum:folderAlbum];
-		[self pushViewControllerCustom:albumViewController];
+		FolderAlbumViewController *controller = [[FolderAlbumViewController alloc] initWithFolderAlbum:folderAlbum];
+		[self pushViewControllerCustom:controller];
 	} else {
 		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 	}

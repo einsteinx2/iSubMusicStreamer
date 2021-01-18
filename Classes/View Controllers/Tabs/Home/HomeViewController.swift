@@ -294,7 +294,7 @@ import Resolver
                 controller.modifier = modifier
                 controller.title = title
                 controller.folderAlbums = NSMutableArray(array: loader.folderAlbums)
-                self.pushCustom(controller)
+                self.pushViewControllerCustom(controller)
             }
             self.quickAlbumsLoader = nil
         }
@@ -441,7 +441,7 @@ extension HomeViewController: UISearchBarDelegate {
                             controller.folderAlbums = parser.folderAlbums
                             controller.songs = parser.songs
                             controller.query = query
-                            self.pushCustom(controller)
+                            self.pushViewControllerCustom(controller)
                         } else {
                             let controller = SearchSongsViewController(nibName: "SearchSongsViewController", bundle: nil)
                             controller.title = "Search"
@@ -460,7 +460,7 @@ extension HomeViewController: UISearchBarDelegate {
                                 controller.searchType = ISMSSearchSongsSearchType_Songs
                                 controller.query = query
                             }
-                            self.pushCustom(controller)
+                            self.pushViewControllerCustom(controller)
                         }
                     }
                     ViewObjects.shared().hideLoadingScreen()

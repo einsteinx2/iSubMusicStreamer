@@ -15,13 +15,11 @@
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <customObject id="3" customClass="iSubAppDelegate">
             <connections>
-                <outlet property="allAlbumsNavigationController" destination="35" id="47"/>
-                <outlet property="allSongsNavigationController" destination="53" id="148"/>
                 <outlet property="artistsNavigationController" destination="27" id="46"/>
                 <outlet property="bookmarksNavigationController" destination="86" id="150"/>
                 <outlet property="cacheNavigationController" destination="100" id="153"/>
                 <outlet property="chatNavigationController" destination="156" id="173"/>
-                <outlet property="genresNavigationController" destination="93" id="152"/>
+                <outlet property="homeNavigationController" destination="163" id="S4u-pv-1v8"/>
                 <outlet property="mainTabBarController" destination="21" id="147"/>
                 <outlet property="offlineTabBarController" destination="105" id="113"/>
                 <outlet property="playingNavigationController" destination="64" id="151"/>
@@ -38,7 +36,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="52.173913043478265" y="28.794642857142854"/>
         </window>
-        <tabBarController id="21" customClass="CustomUITabBarController">
+        <tabBarController id="21" customClass="CustomUITabBarController" customModule="iSub" customModuleProvider="target">
             <extendedEdge key="edgesForExtendedLayout"/>
             <nil key="simulatedBottomBarMetrics"/>
             <size key="freeformSize" width="320" height="480"/>
@@ -47,7 +45,7 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
             </tabBar>
             <viewControllers>
-                <navigationController title="Home" id="163" customClass="CustomUINavigationController">
+                <navigationController title="Home" id="163" customClass="CustomUINavigationController" customModule="iSub" customModuleProvider="target">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" tag="9" title="Home" image="tabbaricon-home" id="164"/>
                     <toolbarItems/>
@@ -63,7 +61,7 @@
                         </viewController>
                     </viewControllers>
                 </navigationController>
-                <navigationController id="27" customClass="CustomUINavigationController">
+                <navigationController id="27" customClass="CustomUINavigationController" customModule="iSub" customModuleProvider="target">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" title="Folders" image="tabbaricon-folders" id="28"/>
                     <toolbarItems/>
@@ -72,14 +70,14 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <viewControllers>
-                        <viewController nibName="FoldersViewController" id="29" customClass="FoldersViewController">
+                        <viewController nibName="FolderArtistsViewController" id="29" customClass="FolderArtistsViewController" customModule="iSub" customModuleProvider="target">
                             <extendedEdge key="edgesForExtendedLayout"/>
                             <toolbarItems/>
                             <navigationItem key="navigationItem" title="Item" id="30"/>
                         </viewController>
                     </viewControllers>
                 </navigationController>
-                <navigationController id="NDw-13-tef" userLabel="Artists" customClass="CustomUINavigationController">
+                <navigationController id="NDw-13-tef" userLabel="Artists" customClass="CustomUINavigationController" customModule="iSub" customModuleProvider="target">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" tag="10" title="Artists" image="tabbaricon-folders" id="0Fw-Pp-Aqn"/>
                     <toolbarItems/>
@@ -95,7 +93,7 @@
                         </viewController>
                     </viewControllers>
                 </navigationController>
-                <navigationController id="69" customClass="CustomUINavigationController">
+                <navigationController id="69" customClass="CustomUINavigationController" customModule="iSub" customModuleProvider="target">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" tag="3" title="Playlists" image="tabbaricon-playlists" id="70"/>
                     <toolbarItems/>
@@ -111,7 +109,7 @@
                         </viewController>
                     </viewControllers>
                 </navigationController>
-                <navigationController id="100" customClass="CustomUINavigationController">
+                <navigationController id="100" customClass="CustomUINavigationController" customModule="iSub" customModuleProvider="target">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" tag="7" title="Downloads" image="tabbaricon-cache" id="101"/>
                     <toolbarItems/>
@@ -124,38 +122,6 @@
                             <extendedEdge key="edgesForExtendedLayout"/>
                             <toolbarItems/>
                             <navigationItem key="navigationItem" title="Item" id="103"/>
-                        </viewController>
-                    </viewControllers>
-                </navigationController>
-                <navigationController id="35" customClass="CustomUINavigationController">
-                    <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="1" title="Albums" image="tabbaricon-albums" id="36"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="39">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <viewControllers>
-                        <viewController nibName="AllAlbumsViewController" id="37" customClass="AllAlbumsViewController">
-                            <extendedEdge key="edgesForExtendedLayout"/>
-                            <toolbarItems/>
-                            <navigationItem key="navigationItem" title="Item" id="38"/>
-                        </viewController>
-                    </viewControllers>
-                </navigationController>
-                <navigationController id="53" customClass="CustomUINavigationController">
-                    <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="2" title="Songs" image="tabbaricon-songs" id="54"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="57">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <viewControllers>
-                        <viewController nibName="AllSongsViewController" id="55" customClass="AllSongsViewController">
-                            <extendedEdge key="edgesForExtendedLayout"/>
-                            <toolbarItems/>
-                            <navigationItem key="navigationItem" title="Item" id="56"/>
                         </viewController>
                     </viewControllers>
                 </navigationController>
@@ -173,7 +139,7 @@
                         </viewController>
                     </viewControllers>
                 </navigationController>
-                <navigationController id="64" customClass="CustomUINavigationController">
+                <navigationController id="64" customClass="CustomUINavigationController" customModule="iSub" customModuleProvider="target">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" tag="5" title="Playing" image="tabbaricon-playing" id="65"/>
                     <toolbarItems/>
@@ -189,23 +155,7 @@
                         </viewController>
                     </viewControllers>
                 </navigationController>
-                <navigationController id="93" customClass="CustomUINavigationController">
-                    <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="6" title="Genres" image="tabbaricon-genres" id="94"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="97">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <viewControllers>
-                        <viewController nibName="GenresViewController" id="95" customClass="GenresViewController">
-                            <extendedEdge key="edgesForExtendedLayout"/>
-                            <toolbarItems/>
-                            <navigationItem key="navigationItem" title="Item" id="96"/>
-                        </viewController>
-                    </viewControllers>
-                </navigationController>
-                <navigationController id="156" customClass="CustomUINavigationController">
+                <navigationController id="156" customClass="CustomUINavigationController" customModule="iSub" customModuleProvider="target">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" tag="8" title="Chat" image="tabbaricon-chat" id="157"/>
                     <toolbarItems/>
@@ -214,7 +164,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <viewControllers>
-                        <viewController nibName="ChatViewController" id="158" customClass="ChatViewController">
+                        <viewController nibName="ChatViewController" id="158" customClass="ChatViewController" customModule="iSub" customModuleProvider="target">
                             <extendedEdge key="edgesForExtendedLayout"/>
                             <toolbarItems/>
                             <navigationItem key="navigationItem" title="Item" id="159"/>
@@ -222,12 +172,9 @@
                     </viewControllers>
                 </navigationController>
             </viewControllers>
-            <connections>
-                <outlet property="delegate" destination="3" id="40"/>
-            </connections>
             <point key="canvasLocation" x="-192.75362318840581" y="-97.767857142857139"/>
         </tabBarController>
-        <tabBarController id="105" customClass="CustomUITabBarController">
+        <tabBarController id="105" customClass="CustomUITabBarController" customModule="iSub" customModuleProvider="target">
             <extendedEdge key="edgesForExtendedLayout"/>
             <nil key="simulatedBottomBarMetrics"/>
             <size key="freeformSize" width="320" height="480"/>
@@ -301,14 +248,10 @@
                     </viewControllers>
                 </navigationController>
             </viewControllers>
-            <connections>
-                <outlet property="delegate" destination="3" id="112"/>
-            </connections>
             <point key="canvasLocation" x="460.86956521739131" y="-17.410714285714285"/>
         </tabBarController>
     </objects>
     <resources>
-        <image name="tabbaricon-albums" width="30" height="30"/>
         <image name="tabbaricon-bookmarks" width="30" height="30"/>
         <image name="tabbaricon-cache" width="30" height="30"/>
         <image name="tabbaricon-chat" width="30" height="30"/>
@@ -317,7 +260,6 @@
         <image name="tabbaricon-home" width="30" height="30"/>
         <image name="tabbaricon-playing" width="30" height="30"/>
         <image name="tabbaricon-playlists" width="30" height="30"/>
-        <image name="tabbaricon-songs" width="30" height="30"/>
         <systemColor name="darkTextColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

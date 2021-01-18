@@ -9,7 +9,6 @@
 #import "iSubAppDelegate.h"
 #import "ServerListViewController.h"
 #import "FoldersViewController.h"
-#import "UIViewController+PushViewControllerCustom.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "ViewObjectsSingleton.h"
 #import "ZipKit.h"
@@ -575,7 +574,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (UIDevice.isPad) {
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
 	} else {
-		[viewObjectsS orderMainTabBarController];
+//		[viewObjectsS orderMainTabBarController];
         self.window.rootViewController = self.mainTabBarController;
 	}
 	

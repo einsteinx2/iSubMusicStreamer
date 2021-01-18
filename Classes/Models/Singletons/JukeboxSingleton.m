@@ -8,7 +8,6 @@
 
 #import "JukeboxSingleton.h"
 #import "NSMutableURLRequest+SUS.h"
-#import "FMDatabaseQueueAdditions.h"
 #import "SavedSettings.h"
 #import "DatabaseSingleton.h"
 #import "EX2Kit.h"
