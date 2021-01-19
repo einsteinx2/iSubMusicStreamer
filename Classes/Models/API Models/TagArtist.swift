@@ -9,7 +9,7 @@
 import Foundation
 import InflectorKit
 
-@objc(ISMSTagArtist) final class TagArtist: NSObject, NSCopying, Codable {
+@objc(ISMSTagArtist) final class TagArtist: NSObject, Artist, NSCopying, Codable {
     @objc let serverId: Int
     @objc(artistId) let id: Int
     @objc let name: String

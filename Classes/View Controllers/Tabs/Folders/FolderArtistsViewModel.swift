@@ -1,5 +1,5 @@
 //
-//  RootFoldersDAO.swift
+//  FolderArtistsViewModel.swift
 //  iSub
 //
 //  Created by Benjamin Baron on 1/7/21.
@@ -10,37 +10,35 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-@objc final class RootFoldersViewModel: NSObject {
+final class FolderArtistsViewModel: ArtistsViewModel {
     @Injected private var store: Store
     
-    @objc weak var delegate: APILoaderDelegate?
-    @objc var serverId = Settings.shared().currentServerId
-    @objc var mediaFolderId: Int {
+    weak var delegate: APILoaderDelegate?
+    var serverId = Settings.shared().currentServerId
+    var mediaFolderId: Int {
         didSet {
             loadFromCache()
         }
     }
     
     private var metadata: RootListMetadata?
-    @objc var tableSections = [TableSection]()
+    var tableSections = [TableSection]()
     
-    @objc var isCached: Bool { metadata != nil }
-    @objc var count: Int { metadata?.itemCount ?? 0 }
-    @objc var searchCount: Int { searchFolderArtistIds.count }
-    @objc var reloadDate: Date? { metadata?.reloadDate }
+    var isCached: Bool { metadata != nil }
+    var count: Int { metadata?.itemCount ?? 0 }
+    var searchCount: Int { searchFolderArtistIds.count }
+    var reloadDate: Date? { metadata?.reloadDate }
     
     private var loader: RootFoldersLoader?
     private var folderArtistIds = [Int]()
     private var searchFolderArtistIds = [Int]()
     private let searchLimit = 100
     private var searchName: String?
-    @objc private(set) var shouldContinueSearch = true
+    private(set) var shouldContinueSearch = true
     
-    @objc init(mediaFolderId: Int, delegate: APILoaderDelegate?) {
+    init(mediaFolderId: Int, delegate: APILoaderDelegate? = nil) {
         self.mediaFolderId = mediaFolderId
         self.delegate = delegate
-        super.init()
-        loadFromCache()
     }
     
     deinit {
@@ -58,30 +56,45 @@ import Resolver
         }
     }
     
-    @objc func folderArtist(indexPath: IndexPath) -> FolderArtist? {
+    func reset() {
+        loader?.cancelLoad()
+        loader?.delegate = nil
+        loader = nil
+        
+        metadata = nil
+        tableSections.removeAll()
+        folderArtistIds.removeAll()
+        searchFolderArtistIds.removeAll()
+        searchName = nil
+        shouldContinueSearch = true
+        
+        loadFromCache()
+    }
+    
+    func artist(indexPath: IndexPath) -> Artist? {
         let index = tableSections[indexPath.section].position + indexPath.row
         guard index < folderArtistIds.count else { return nil }
         
         return store.folderArtist(serverId: serverId, id: folderArtistIds[index])
     }
     
-    @objc func folderArtistInSearch(indexPath: IndexPath) -> FolderArtist? {
+    func artistInSearch(indexPath: IndexPath) -> Artist? {
         guard indexPath.row < searchFolderArtistIds.count else { return nil }
         return store.folderArtist(serverId: serverId, id: searchFolderArtistIds[indexPath.row])
     }
     
-    @objc func clearSearch() {
+    func clearSearch() {
         searchFolderArtistIds.removeAll()
         searchName = nil
         shouldContinueSearch = true
     }
     
-    @objc func search(name: String) {
+    func search(name: String) {
         searchName = name
         searchFolderArtistIds = store.search(folderArtistName: name, serverId: serverId, mediaFolderId: mediaFolderId, offset: 0, limit: searchLimit)
     }
     
-    @objc func continueSearch() {
+    func continueSearch() {
         if let searchName = searchName, shouldContinueSearch {
             let folderIds = store.search(folderArtistName: searchName, serverId: serverId, mediaFolderId: mediaFolderId, offset: searchFolderArtistIds.count, limit: searchLimit)
             shouldContinueSearch = (folderIds.count == searchLimit)
@@ -90,7 +103,7 @@ import Resolver
     }
 }
 
-extension RootFoldersViewModel: APILoaderManager {
+extension FolderArtistsViewModel: APILoaderManager {
     func startLoad() {
         cancelLoad()
         
@@ -106,7 +119,7 @@ extension RootFoldersViewModel: APILoaderManager {
     }
 }
 
-extension RootFoldersViewModel: APILoaderDelegate {
+extension FolderArtistsViewModel: APILoaderDelegate {
     func loadingFinished(loader: APILoader?) {
         if let loader = loader as? RootFoldersLoader {
             metadata = loader.metadata

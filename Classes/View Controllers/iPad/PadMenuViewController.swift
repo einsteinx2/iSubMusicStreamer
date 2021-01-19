@@ -148,28 +148,28 @@ import SnapKit
 //                if let cachedController = cachedTabs["CacheOfflineFoldersViewController"] {
 //                    controller = cachedController
 //                } else {
-//                    controller = CustomUINavigationController(rootViewController: CacheOfflineFoldersViewController(nibName: "CacheOfflineFoldersViewController", bundle: nil))
+//                    controller = CustomUINavigationController(rootViewController: CacheOfflineFoldersViewController())
 //                    cachedTabs["CacheOfflineFoldersViewController"] = controller
 //                }
 //            case 2:
 //                if let cachedController = cachedTabs["GenresViewController"] {
 //                    controller = cachedController
 //                } else {
-//                    controller = CustomUINavigationController(rootViewController: GenresViewController(nibName: "GenresViewController", bundle: nil))
+//                    controller = CustomUINavigationController(rootViewController: GenresViewController())
 //                    cachedTabs["GenresViewController"] = controller
 //                }
             case 3:
                 if let cachedController = cachedTabs["PlaylistsViewController"] {
                     controller = cachedController
                 } else {
-                    controller = CustomUINavigationController(rootViewController: PlaylistsViewController(nibName: "PlaylistsViewController", bundle: nil))
+                    controller = CustomUINavigationController(rootViewController: PlaylistsViewController())
                     cachedTabs["PlaylistsViewController"] = controller
                 }
             case 4:
                 if let cachedController = cachedTabs["BookmarksViewController"] {
                     controller = cachedController
                 } else {
-                    controller = CustomUINavigationController(rootViewController: BookmarksViewController(nibName: "BookmarksViewController", bundle: nil))
+                    controller = CustomUINavigationController(rootViewController: BookmarksViewController())
                     cachedTabs["BookmarksViewController"] = controller
                 }
             default: controller = nil
@@ -187,70 +187,72 @@ import SnapKit
                 if let cachedController = cachedTabs["HomeViewController"] {
                     controller = cachedController
                 } else {
-                    controller = CustomUINavigationController(rootViewController: HomeViewController(nibName: "HomeViewController", bundle: nil))
+                    controller = CustomUINavigationController(rootViewController: HomeViewController())
                     cachedTabs["HomeViewController"] = controller
                 }
             case 2:
                 if let cachedController = cachedTabs["FoldersViewController"] {
                     controller = cachedController
                 } else {
-                    controller = CustomUINavigationController(rootViewController: FoldersViewController(nibName: "FoldersViewController", bundle: nil))
+                    let mediaFolderId = Settings.shared().rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
+                    let dataModel = FolderArtistsViewModel(mediaFolderId: mediaFolderId)
+                    controller = CustomUINavigationController(rootViewController: ArtistsViewController(dataModel: dataModel))
                     cachedTabs["FoldersViewController"] = controller
                 }
             case 3:
                 if let cachedController = cachedTabs["PlaylistsViewController"] {
                     controller = cachedController
                 } else {
-                    controller = CustomUINavigationController(rootViewController: PlaylistsViewController(nibName: "PlaylistsViewController", bundle: nil))
+                    controller = CustomUINavigationController(rootViewController: PlaylistsViewController())
                     cachedTabs["PlaylistsViewController"] = controller
                 }
             case 4:
                 if let cachedController = cachedTabs["CacheViewController"] {
                     controller = cachedController
                 } else {
-                    controller = CustomUINavigationController(rootViewController: CacheViewController(nibName: "CacheViewController", bundle: nil))
+                    controller = CustomUINavigationController(rootViewController: CacheViewController())
                     cachedTabs["CacheViewController"] = controller
                 }
             case 5:
                 if let cachedController = cachedTabs["BookmarksViewController"] {
                     controller = cachedController
                 } else {
-                    controller = CustomUINavigationController(rootViewController: BookmarksViewController(nibName: "BookmarksViewController", bundle: nil))
+                    controller = CustomUINavigationController(rootViewController: BookmarksViewController())
                     cachedTabs["BookmarksViewController"] = controller
                 }
             case 6:
                 if let cachedController = cachedTabs["NowPlayingViewController"] {
                     controller = cachedController
                 } else {
-                    controller = CustomUINavigationController(rootViewController: NowPlayingViewController(nibName: "NowPlayingViewController", bundle: nil))
+                    controller = CustomUINavigationController(rootViewController: NowPlayingViewController())
                     cachedTabs["NowPlayingViewController"] = controller
                 }
             case 7:
                 if let cachedController = cachedTabs["ChatViewController"] {
                     controller = cachedController
                 } else {
-                    controller = CustomUINavigationController(rootViewController: ChatViewController(nibName: "ChatViewController", bundle: nil))
+                    controller = CustomUINavigationController(rootViewController: ChatViewController())
                     cachedTabs["ChatViewController"] = controller
                 }
 //            case 8:
 //                if let cachedController = cachedTabs["GenresViewController"] {
 //                    controller = cachedController
 //                } else {
-//                    controller = CustomUINavigationController(rootViewController: GenresViewController(nibName: "GenresViewController", bundle: nil))
+//                    controller = CustomUINavigationController(rootViewController: GenresViewController())
 //                    cachedTabs["GenresViewController"] = controller
 //                }
 //            case 9:
 //                if let cachedController = cachedTabs["AllAlbumsViewController"] {
 //                    controller = cachedController
 //                } else {
-//                    controller = CustomUINavigationController(rootViewController: AllAlbumsViewController(nibName: "AllAlbumsViewController", bundle: nil))
+//                    controller = CustomUINavigationController(rootViewController: AllAlbumsViewController())
 //                    cachedTabs["AllAlbumsViewController"] = controller
 //                }
 //            case 10:
 //                if let cachedController = cachedTabs["AllSongsViewController"] {
 //                    controller = cachedController
 //                } else {
-//                    controller = CustomUINavigationController(rootViewController: AllSongsViewController(nibName: "AllSongsViewController", bundle: nil))
+//                    controller = CustomUINavigationController(rootViewController: AllSongsViewController())
 //                    cachedTabs["AllSongsViewController"] = controller
 //                }
             default: controller = nil

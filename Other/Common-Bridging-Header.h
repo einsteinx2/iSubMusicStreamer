@@ -27,8 +27,6 @@
 #import "ServerListViewController.h"
 #import "CacheViewController.h"
 #import "BookmarksViewController.h"
-#import "FoldersViewController.h"
-#import "ArtistsViewController.h"
 
 // Views
 #import "CellCachedIndicatorView.h"

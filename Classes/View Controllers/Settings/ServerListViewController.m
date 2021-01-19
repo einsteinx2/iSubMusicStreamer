@@ -8,7 +8,6 @@
 
 #import "ServerListViewController.h"
 #import "SettingsTabViewController.h"
-#import "FoldersViewController.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "AudioEngine.h"

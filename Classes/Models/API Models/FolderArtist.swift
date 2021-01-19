@@ -53,3 +53,8 @@ import Foundation
     func download() { SongLoader.downloadAll(folderId: id) }
     func queue() { SongLoader.queueAll(folderId: id) }
 }
+
+extension FolderArtist: Artist {
+    var artistImageUrl: String? { nil }
+    var albumCount: Int { -1 }
+}

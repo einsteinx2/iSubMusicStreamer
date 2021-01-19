@@ -7,7 +7,6 @@
 //
 
 #import "SettingsTabViewController.h"
-#import "FoldersViewController.h"
 #import "ViewObjectsSingleton.h"
 #import "SavedSettings.h"
 #import "CacheSingleton.h"

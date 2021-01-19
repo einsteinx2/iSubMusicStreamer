@@ -1,5 +1,5 @@
 //
-//  FolderArtistsViewController.swift
+//  ArtistsViewController.swift
 //  iSub
 //
 //  Created by Benjamin Baron on 1/15/21.
@@ -11,8 +11,10 @@ import Resolver
 import SnapKit
 import CocoaLumberjackSwift
 
-@objc final class FolderArtistsViewController: UIViewController {
+@objc final class ArtistsViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var viewObjects: ViewObjects
+    @Injected private var settings: Settings
     
     private let tableView = UITableView()
     private lazy var dropdown = FolderDropdownControl(frame: CGRect(x: 50, y: 61, width: 220, height: 40))
@@ -24,13 +26,17 @@ import CocoaLumberjackSwift
     private var isSearching = false
     private var isCountShowing = false
     
-    private var dataModel: RootFoldersViewModel?
+    private let dataModel: ArtistsViewModel
         
     // MARK: Lifecycle
     
-    private func createDataModel() {
-        let mediaFolderId = Settings.shared().rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
-        dataModel = RootFoldersViewModel(mediaFolderId: mediaFolderId, delegate: self)
+    init(dataModel: ArtistsViewModel) {
+        self.dataModel = dataModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("unimplemented")
     }
     
     override func viewDidLoad() {
@@ -38,15 +44,16 @@ import CocoaLumberjackSwift
         view.backgroundColor = Colors.background
         title = "Folders"
         
-        createDataModel()
+        dataModel.delegate = self
+        dataModel.reset()
         
         setupDefaultTableView(tableView)
         tableView.register(BlurredSectionHeader.self, forHeaderFooterViewReuseIdentifier: BlurredSectionHeader.reuseId)
         tableView.refreshControl = RefreshControl(handler: { [unowned self] in
-            loadData(mediaFolderId: Settings.shared().currentServerId)
+            loadData(mediaFolderId: settings.currentServerId)
         })
         
-        if dataModel!.isCached {
+        if dataModel.isCached {
             addCount()
             tableView.setContentOffset(CGPoint.zero, animated: false)
         }
@@ -60,24 +67,24 @@ import CocoaLumberjackSwift
         super.viewWillAppear(animated)
         addURLRefBackButton()
         addShowPlayerButton()
-        if let dataModel = dataModel, !ViewObjects.shared().isArtistsLoading, !dataModel.isCached {
-            loadData(mediaFolderId: Settings.shared().rootFoldersSelectedFolderId?.intValue ?? 0)
+        if !viewObjects.isArtistsLoading, !dataModel.isCached {
+            loadData(mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? 0)
         }
         Flurry.logEvent("FoldersTab")
     }
     
     deinit {
         NotificationCenter.removeObserverOnMainThread(self)
-        dataModel?.delegate = nil
+        dataModel.delegate = nil
         dropdown.delegate = nil
     }
     
     // MARK: Loading
     
     private func updateCount() {
-        let count = dataModel?.count ?? 0
+        let count = dataModel.count
         countLabel.text = "\(count) \("Folder".pluralize(amount: count))"
-        if let reloadDate = dataModel?.reloadDate {
+        if let reloadDate = dataModel.reloadDate {
             let formatter = DateFormatter()
             formatter.dateStyle = .medium
             formatter.timeStyle = .short
@@ -118,7 +125,7 @@ import CocoaLumberjackSwift
         dropdown = FolderDropdownControl(frame: CGRect(x: 50, y: 61, width: 220, height: 40))
         dropdown.frame = CGRect(x: 50, y: 61, width: 220, height: 40)
         dropdown.delegate = self
-        dropdown.selectFolder(withId: dataModel?.mediaFolderId ?? 0)
+        dropdown.selectFolder(withId: dataModel.mediaFolderId)
         headerView.addSubview(dropdown)
         // TODO: Why is this hack needed in the Swift port but not in the original Obj-C version??
         EX2Dispatch.runInMainThread(afterDelay: 0.1) {
@@ -155,19 +162,19 @@ import CocoaLumberjackSwift
     }
     
     @objc private func reloadAction() {
-        loadData(mediaFolderId: Settings.shared().rootFoldersSelectedFolderId?.intValue ?? 0)
+        loadData(mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? 0)
     }
 
     private func loadData(mediaFolderId: Int) {
         dropdown.updateFolders()
-        ViewObjects.shared().isArtistsLoading = true
-        ViewObjects.shared().showAlbumLoadingScreenOnMainWindowWithSender(self)
-        dataModel?.mediaFolderId = mediaFolderId
-        dataModel?.startLoad()
+        viewObjects.isArtistsLoading = true
+        viewObjects.showAlbumLoadingScreenOnMainWindowWithSender(self)
+        dataModel.mediaFolderId = mediaFolderId
+        dataModel.startLoad()
     }
 }
 
-extension FolderArtistsViewController: APILoaderDelegate {
+extension ArtistsViewController: APILoaderDelegate {
     func loadingFinished(loader: APILoader?) {
         if isCountShowing {
             updateCount()
@@ -176,14 +183,14 @@ extension FolderArtistsViewController: APILoaderDelegate {
         }
         
         tableView.reloadData()
-        ViewObjects.shared().isArtistsLoading = false
-        ViewObjects.shared().hideLoadingScreen()
+        viewObjects.isArtistsLoading = false
+        viewObjects.hideLoadingScreen()
         tableView.refreshControl?.endRefreshing()
     }
     
     func loadingFailed(loader: APILoader?, error: NSError?) {
-        ViewObjects.shared().isArtistsLoading = false
-        ViewObjects.shared().hideLoadingScreen()
+        viewObjects.isArtistsLoading = false
+        viewObjects.hideLoadingScreen()
         tableView.refreshControl?.endRefreshing()
         
         // Inform the user that the connection failed.
@@ -196,7 +203,7 @@ extension FolderArtistsViewController: APILoaderDelegate {
     }
 }
 
-extension FolderArtistsViewController: FolderDropdownDelegate {
+extension ArtistsViewController: FolderDropdownDelegate {
     func folderDropdownMoveViewsY(_ y: Float) {
         tableView.performBatchUpdates({
             tableView.tableHeaderView?.frame.size.height += CGFloat(y)
@@ -214,10 +221,8 @@ extension FolderArtistsViewController: FolderDropdownDelegate {
     }
     
     func folderDropdownSelectFolder(_ mediaFolderId: Int) {
-        guard let dataModel = dataModel else { return }
-        
         // Save the default
-        Settings.shared().rootFoldersSelectedFolderId = NSNumber(value: mediaFolderId)
+        settings.rootFoldersSelectedFolderId = NSNumber(value: mediaFolderId)
         
         // Reload the data
         dataModel.mediaFolderId = mediaFolderId
@@ -235,8 +240,8 @@ extension FolderArtistsViewController: FolderDropdownDelegate {
     }
     
     @objc private func serverSwitched() {
-        createDataModel()
-        if !dataModel!.isCached {
+        dataModel.reset()
+        if !dataModel.isCached {
             tableView.reloadData()
             removeCount()
         }
@@ -248,12 +253,12 @@ extension FolderArtistsViewController: FolderDropdownDelegate {
     }
 }
 
-extension FolderArtistsViewController: UISearchBarDelegate {
+extension ArtistsViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         guard !isSearching else { return }
         
         isSearching = true
-        dataModel?.clearSearch()
+        dataModel.clearSearch()
         
         dropdown.closeDropdownFast()
         tableView.setContentOffset(CGPoint(x: 0, y: 104), animated: true)
@@ -271,10 +276,10 @@ extension FolderArtistsViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        dataModel?.clearSearch()
+        dataModel.clearSearch()
         if searchText.count > 0 {
             hideSearchOverlay()
-            dataModel?.search(name: searchText)
+            dataModel.search(name: searchText)
 //            tableView.setContentOffset(CGPoint(x: 0, y: 45), animated: false)
         } else {
             createSearchOverlay()
@@ -294,7 +299,7 @@ extension FolderArtistsViewController: UISearchBarDelegate {
         isSearching = false
         
         navigationItem.leftBarButtonItem = nil
-        dataModel?.clearSearch()
+        dataModel.clearSearch()
         tableView.reloadData()
         tableView.setContentOffset(CGPoint(x: 0, y: 104), animated: true)
     }
@@ -336,20 +341,16 @@ extension FolderArtistsViewController: UISearchBarDelegate {
     }
 }
 
-extension FolderArtistsViewController: UITableViewDelegate, UITableViewDataSource {
-    private func folderArtist(indexPath: IndexPath) -> FolderArtist? {
-        guard let dataModel = dataModel else { return nil }
-        
+extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
+    private func artist(indexPath: IndexPath) -> Artist? {
         if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) {
-            return dataModel.folderArtistInSearch(indexPath: indexPath)
+            return dataModel.artistInSearch(indexPath: indexPath)
         } else {
-            return dataModel.folderArtist(indexPath: indexPath)
+            return dataModel.artist(indexPath: indexPath)
         }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        guard let dataModel = dataModel else { return 0 }
-        
         if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) {
             return 1
         }
@@ -357,8 +358,6 @@ extension FolderArtistsViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let dataModel = dataModel else { return 0 }
-        
         if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) {
             return dataModel.searchCount
         } else if section < dataModel.tableSections.count {
@@ -369,13 +368,11 @@ extension FolderArtistsViewController: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
-        cell.update(model: folderArtist(indexPath: indexPath))
+        cell.update(model: artist(indexPath: indexPath))
         return cell
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let dataModel = dataModel else { return nil }
-        
         if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) { return nil }
         if section >= dataModel.tableSections.count { return nil }
         
@@ -385,8 +382,6 @@ extension FolderArtistsViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        guard let dataModel = dataModel else { return 0 }
-        
         if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) { return 0 }
         if section >= dataModel.tableSections.count { return 0 }
         
@@ -394,8 +389,6 @@ extension FolderArtistsViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        guard let dataModel = dataModel else { return nil }
-        
         if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) { return nil }
         
         var titles = ["{search}"]
@@ -406,8 +399,6 @@ extension FolderArtistsViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
-        guard let dataModel = dataModel else { return 0 }
-        
         if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) { return -1 }
         
         if index == 0 {
@@ -419,12 +410,16 @@ extension FolderArtistsViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let folderArtist = folderArtist(indexPath: indexPath) {
-            pushViewControllerCustom(FolderAlbumViewController(folderArtist: folderArtist))
+        if let artist = artist(indexPath: indexPath) {
+            if let artist = artist as? FolderArtist {
+                pushViewControllerCustom(FolderAlbumViewController(folderArtist: artist))
+            } else if let artist = artist as? TagArtist {
+                pushViewControllerCustom(TagArtistViewController(tagArtist: artist))
+            }
         }
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        return SwipeAction.downloadAndQueueConfig(model: folderArtist(indexPath: indexPath))
+        return SwipeAction.downloadAndQueueConfig(model: artist(indexPath: indexPath))
     }
 }

@@ -1,5 +1,5 @@
 //
-//  RootArtistsDAO.swift
+//  TagArtistsViewModel.swift
 //  iSub
 //
 //  Created by Benjamin Baron on 1/6/21.
@@ -10,37 +10,35 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-@objc final class RootArtistsViewModel: NSObject {
+final class TagArtistsViewModel: ArtistsViewModel {
     @Injected private var store: Store
     
-    @objc weak var delegate: APILoaderDelegate?
-    @objc var serverId = Settings.shared().currentServerId
-    @objc var mediaFolderId: Int {
+    weak var delegate: APILoaderDelegate?
+    var serverId = Settings.shared().currentServerId
+    var mediaFolderId: Int {
         didSet {
             loadFromCache()
         }
     }
     
     private var metadata: RootListMetadata?
-    @objc var tableSections = [TableSection]()
+    var tableSections = [TableSection]()
     
-    @objc var isCached: Bool { metadata != nil }
-    @objc var count: Int { metadata?.itemCount ?? 0 }
-    @objc var searchCount: Int { searchTagArtistIds.count }
-    @objc var reloadDate: Date? { metadata?.reloadDate }
+    var isCached: Bool { metadata != nil }
+    var count: Int { metadata?.itemCount ?? 0 }
+    var searchCount: Int { searchTagArtistIds.count }
+    var reloadDate: Date? { metadata?.reloadDate }
     
     private var loader: RootArtistsLoader?
     private var tagArtistIds = [Int]()
     private var searchTagArtistIds = [Int]()
     private let searchLimit = 100
     private var searchName: String?
-    @objc private(set) var shouldContinueSearch = true
+    private(set) var shouldContinueSearch = true
     
-    @objc init(mediaFolderId: Int, delegate: APILoaderDelegate?) {
+    init(mediaFolderId: Int, delegate: APILoaderDelegate? = nil) {
         self.mediaFolderId = mediaFolderId
         self.delegate = delegate
-        super.init()
-        loadFromCache()
     }
     
     deinit {
@@ -58,30 +56,45 @@ import Resolver
         }
     }
     
-    @objc func tagArtist(indexPath: IndexPath) -> TagArtist? {
+    func reset() {
+        loader?.cancelLoad()
+        loader?.delegate = nil
+        loader = nil
+        
+        metadata = nil
+        tableSections.removeAll()
+        tagArtistIds.removeAll()
+        searchTagArtistIds.removeAll()
+        searchName = nil
+        shouldContinueSearch = true
+        
+        loadFromCache()
+    }
+    
+    func artist(indexPath: IndexPath) -> Artist? {
         let index = tableSections[indexPath.section].position + indexPath.row
         guard index < tagArtistIds.count else { return nil }
         
         return store.tagArtist(serverId: serverId, id: tagArtistIds[index])
     }
     
-    @objc func tagArtistInSearch(indexPath: IndexPath) -> TagArtist? {
+    func artistInSearch(indexPath: IndexPath) -> Artist? {
         guard indexPath.row < searchTagArtistIds.count else { return nil }
         return store.tagArtist(serverId: serverId, id: searchTagArtistIds[indexPath.row])
     }
     
-    @objc func clearSearch() {
+    func clearSearch() {
         searchTagArtistIds.removeAll()
         searchName = nil
         shouldContinueSearch = true
     }
     
-    @objc func search(name: String) {
+    func search(name: String) {
         searchName = name
         searchTagArtistIds = store.search(tagArtistName: name, serverId: serverId, mediaFolderId: mediaFolderId, offset: 0, limit: searchLimit)
     }
     
-    @objc func continueSearch() {
+    func continueSearch() {
         if let searchName = searchName, shouldContinueSearch {
             let artistIds = store.search(tagArtistName: searchName, serverId: serverId, mediaFolderId: mediaFolderId, offset: searchTagArtistIds.count, limit: searchLimit)
             shouldContinueSearch = (artistIds.count == searchLimit)
@@ -90,7 +103,7 @@ import Resolver
     }
 }
 
-extension RootArtistsViewModel: APILoaderManager {
+extension TagArtistsViewModel: APILoaderManager {
     func startLoad() {
         cancelLoad()
         
@@ -106,7 +119,7 @@ extension RootArtistsViewModel: APILoaderManager {
     }
 }
 
-extension RootArtistsViewModel: APILoaderDelegate {
+extension TagArtistsViewModel: APILoaderDelegate {
     func loadingFinished(loader: APILoader?) {
         if let loader = loader as? RootArtistsLoader {
             metadata = loader.metadata

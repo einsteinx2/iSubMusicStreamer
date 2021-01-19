@@ -196,8 +196,7 @@ import Resolver
         spacerButton.isUserInteractionEnabled = false
         
         chatButton.setAction { [unowned self] in
-            let controller = ChatViewController(nibName: "ChatViewController", bundle: nil)
-            navigationController?.pushViewController(controller, animated: true)
+            navigationController?.pushViewController(ChatViewController(), animated: true)
         }
         
         bottomRowStack.translatesAutoresizingMaskIntoConstraints = false
