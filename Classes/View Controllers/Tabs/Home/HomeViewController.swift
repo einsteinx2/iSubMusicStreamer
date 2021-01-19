@@ -110,9 +110,8 @@ import Resolver
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = Colors.background
         title = "Home"
-        // Not sure why, but it's necessary to set this on the navigation item only in this controller
-        navigationItem.title = "Home"
         
         registerNotifications()
         
@@ -172,7 +171,6 @@ import Resolver
             if Settings.shared().isJukeboxEnabled {
                 self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-off"))
                 Settings.shared().isJukeboxEnabled = false
-                AppDelegate.shared().window.backgroundColor = ViewObjects.shared().windowColor
                 NotificationCenter.postNotificationToMainThread(name: ISMSNotification_JukeboxDisabled)
                 Flurry.logEvent("JukeboxDisabled")
             } else {
@@ -180,7 +178,6 @@ import Resolver
                 self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-on"))
                 Settings.shared().isJukeboxEnabled = true
                 Jukebox.shared().getInfo()
-                AppDelegate.shared().window.backgroundColor = ViewObjects.shared().jukeboxColor
                 NotificationCenter.postNotificationToMainThread(name: ISMSNotification_JukeboxEnabled)
                 Flurry.logEvent("JukeboxEnabled")
             }
@@ -193,7 +190,7 @@ import Resolver
         topRowStack.distribution = .equalCentering
         
         settingsButton.setAction {
-            AppDelegate.shared().showSettings()
+            SceneDelegate.shared.showSettings()
         }
         
         spacerButton.isUserInteractionEnabled = false
@@ -279,7 +276,7 @@ import Resolver
     }
     
     private func loadQuickAlbums(modifier: String, title: String) {
-        ViewObjects.shared().showAlbumLoadingScreen(AppDelegate.shared().window, sender: self)
+        ViewObjects.shared().showAlbumLoadingScreenOnMainWindowWithSender(self)
         let loader = QuickAlbumsLoader()
         loader.callback = { _, error in
             ViewObjects.shared().hideLoadingScreen()
@@ -304,7 +301,7 @@ import Resolver
     }
     
     private func performServerShuffle(mediaFolderId: Int) {
-        ViewObjects.shared().showAlbumLoadingScreen(AppDelegate.shared().window, sender: self)
+        ViewObjects.shared().showAlbumLoadingScreenOnMainWindowWithSender(self)
         let loader = ServerShuffleLoader()
         loader.callback = { success, _ in
             ViewObjects.shared().hideLoadingScreen()
@@ -342,6 +339,8 @@ import Resolver
 }
 
 extension HomeViewController: UISearchBarDelegate {
+    private var isNewSearchSupported: Bool { Settings.shared().currentServer?.isNewSearchSupported ?? false }
+    
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         if traitCollection.userInterfaceStyle == .dark {
             searchOverlay.effect = UIBlurEffect(style: .systemUltraThinMaterialLight)
@@ -350,7 +349,7 @@ extension HomeViewController: UISearchBarDelegate {
         }
         
         view.addSubview(searchOverlay)
-        if Settings.shared().currentServer.isNewSearchSupported {
+        if Settings.shared().currentServer?.isNewSearchSupported == true {
             searchOverlay.snp.makeConstraints { make in
                 make.top.equalTo(searchSegmentContainer.snp.bottom)
                 make.leading.trailing.bottom.equalToSuperview()
@@ -369,7 +368,7 @@ extension HomeViewController: UISearchBarDelegate {
         }
         
         UIView.animate(withDuration: 0.2) {
-            if Settings.shared().currentServer.isNewSearchSupported {
+            if self.isNewSearchSupported {
                 self.searchSegment.isEnabled = true
                 self.searchSegment.alpha = 1
                 self.searchSegmentContainer.alpha = 1
@@ -380,7 +379,7 @@ extension HomeViewController: UISearchBarDelegate {
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         UIView.animate(withDuration: 0.2) {
-            if Settings.shared().currentServer.isNewSearchSupported {
+            if self.isNewSearchSupported {
                 self.searchSegment.isEnabled = false
                 self.searchSegment.alpha = 0
                 self.searchSegmentContainer.alpha = 0
@@ -398,7 +397,7 @@ extension HomeViewController: UISearchBarDelegate {
         var query = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         var parameters = [String: String]()
         var action = ""
-        if Settings.shared().currentServer.isNewSearchSupported {
+        if isNewSearchSupported {
             // Due to a Subsonic bug, to get good search results, we need to add a * to the end of
             // Latin based languages, but not to unicode languages like Japanese.
             if query.canBeConverted(to: .isoLatin1) {
@@ -435,7 +434,7 @@ extension HomeViewController: UISearchBarDelegate {
                         DDLogVerbose("search results: \(String(data: data, encoding: .utf8)!)")
                         let parser = SearchXMLParser(data: data)
                         
-                        if Settings.shared().currentServer.isNewSearchSupported && self.searchSegment.selectedSegmentIndex == 3 {
+                        if self.isNewSearchSupported && self.searchSegment.selectedSegmentIndex == 3 {
                             let controller = SearchAllViewController()
                             controller.folderArtists = parser.folderArtists
                             controller.folderAlbums = parser.folderAlbums
@@ -445,7 +444,7 @@ extension HomeViewController: UISearchBarDelegate {
                         } else {
                             let controller = SearchSongsViewController(nibName: "SearchSongsViewController", bundle: nil)
                             controller.title = "Search"
-                            if Settings.shared().currentServer.isNewSearchSupported {
+                            if self.isNewSearchSupported {
                                 if self.searchSegment.selectedSegmentIndex == 0 {
                                     controller.folderArtists = NSMutableArray(array: parser.folderArtists)
                                 } else if self.searchSegment.selectedSegmentIndex == 1 {

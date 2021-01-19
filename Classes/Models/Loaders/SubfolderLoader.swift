@@ -64,7 +64,8 @@ final class SubfolderLoader: APILoader {
                             }
                         } else {
                             let song = Song(serverId: self.serverId, element: element)
-                            if song.path != "" && (Settings.shared().currentServer.isVideoSupported || !song.isVideo) {
+                            let isVideoSupported = self.store.server(id: self.serverId)?.isVideoSupported ?? false
+                            if song.path != "" && (isVideoSupported || !song.isVideo) {
                                 // Fix for pdfs showing in directory listing
                                 // TODO: See if this is still necessary
                                 if song.suffix.lowercased() != "pdf" {

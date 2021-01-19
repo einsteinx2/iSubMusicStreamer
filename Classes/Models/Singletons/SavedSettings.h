@@ -33,7 +33,9 @@ NS_SWIFT_NAME(Settings)
 @property BOOL isOfflineMode;
 
 @property (readonly) NSInteger currentServerId;
-@property (strong) Server *currentServer;
+//@property (readonly) BOOL currentServerIsVideoSupported;
+//@property (readonly) BOOL currentServerIsNewSearchSupported;
+@property (nullable, strong) Server *currentServer;
 
 // Root Folders Settings
 @property (nullable, strong) NSDate *rootFoldersReloadTime;
@@ -42,6 +44,10 @@ NS_SWIFT_NAME(Settings)
 // Root Artists Settings
 @property (nullable, strong) NSNumber *rootArtistsSelectedFolderId;
 
+// Check if app crashed on last run (read any time during app session)
+@property BOOL appCrashedOnLastRun;
+
+@property BOOL appTerminatedCleanly; // NO on launch if app crashed, only read on app launch
 @property BOOL isForceOfflineMode;
 @property NSInteger recoverSetting;
 @property NSInteger maxBitrateWifi;
@@ -49,7 +55,7 @@ NS_SWIFT_NAME(Settings)
 @property (readonly) NSInteger currentMaxBitrate;
 @property NSInteger maxVideoBitrateWifi;
 @property NSInteger maxVideoBitrate3G;
-@property (readonly) NSArray *currentVideoBitrates;
+@property (readonly) NSArray<NSNumber*> *currentVideoBitrates;
 @property BOOL isSongCachingEnabled;
 @property BOOL isNextSongCacheEnabled;
 @property BOOL isBackupCacheEnabled;
@@ -98,12 +104,19 @@ NS_SWIFT_NAME(Settings)
 - (NSString *)songCachePath;
 - (NSString *)tempCachePath;
 
-- (void)setupSaveState;
+//- (void)setupSaveState;
 - (void)loadState;
 - (void)saveState;
 
+//- (void)oneTimeRun;
+
 // Log all app settings except for some unnecessary or sensitive information such as the username, password, and server URL
 - (void)logAppSettings;
+
+- (NSString *)latestLogFileName;
+- (NSString *)zipAllLogFiles;
+
+- (void)setup;
 
 + (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 

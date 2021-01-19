@@ -86,7 +86,7 @@ import SnapKit
     @objc func loadCellContents() {
         cellContents.removeAll()
         
-        if AppDelegate.shared().referringAppUrl != nil {
+        if AppDelegate.shared.referringAppUrl != nil {
             cellContents.append((imageName: "tabbaricon-back", text: "Back"))
         }
         
@@ -111,7 +111,7 @@ import SnapKit
     }
     
     @objc func showSettings() {
-        let isShowingBackCell = AppDelegate.shared().referringAppUrl != nil
+        let isShowingBackCell = AppDelegate.shared.referringAppUrl != nil
         let indexPath = IndexPath(row: isShowingBackCell ? 1 : 0, section: 0)
         tableView.selectRow(at: indexPath, animated: true, scrollPosition: .middle)
         
@@ -120,7 +120,7 @@ import SnapKit
     }
     
     @objc func showHome() {
-        let isShowingBackCell = AppDelegate.shared().referringAppUrl != nil
+        let isShowingBackCell = AppDelegate.shared.referringAppUrl != nil
         let indexPath = IndexPath(row: isShowingBackCell ? 2 : 1, section: 0)
         tableView.selectRow(at: indexPath, animated: true, scrollPosition: .middle)
         
@@ -131,7 +131,7 @@ import SnapKit
     // TODO: implement this
     private func showController(indexPath: IndexPath) {
         // If we have the back button displayed, subtract 1 from the row to get the correct action
-        let row = AppDelegate.shared().referringAppUrl == nil ? indexPath.row : indexPath.row - 1
+        let row = AppDelegate.shared.referringAppUrl == nil ? indexPath.row : indexPath.row - 1
         
         // Present the view controller
         var controller: UINavigationController?
@@ -283,7 +283,7 @@ extension PadMenuViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Handle the special case of the back button / ref url
-        if let referringAppUrl = AppDelegate.shared().referringAppUrl, indexPath.row == 0 {
+        if let referringAppUrl = AppDelegate.shared.referringAppUrl, indexPath.row == 0 {
             // Fix the cell highlighting
             // NOTE: Is this still necessary?
             tableView.deselectRow(at: indexPath, animated: false)

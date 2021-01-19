@@ -7,7 +7,6 @@
 //
 
 #import "CacheAlbumViewController.h"
-#import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "SavedSettings.h"
@@ -172,13 +171,14 @@ LOG_LEVEL_ISUB_DEFAULT
 	// If the table is empty, pop back one view, otherwise reload the table data
 	if (self.downloadedFolderAlbums.count + self.downloadedSongs.count == 0) {
 		if (UIDevice.isPad) {
-            [appDelegateS.padRootViewController.currentContentNavigationController popToRootViewControllerAnimated:YES];
+            [SceneDelegate.shared.padRootViewController.currentContentNavigationController popToRootViewControllerAnimated:YES];
 		} else {
 			// Handle the moreNavigationController stupidity
-			if (appDelegateS.currentTabBarController.selectedIndex == 4) {
-				[appDelegateS.currentTabBarController.moreNavigationController popToViewController:[appDelegateS.currentTabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
+            UITabBarController *tabBarController = SceneDelegate.shared.tabBarController;
+			if (tabBarController.selectedIndex == 4) {
+				[tabBarController.moreNavigationController popToViewController:[tabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
 			} else {
-				[(UINavigationController*)appDelegateS.currentTabBarController.selectedViewController popToRootViewControllerAnimated:YES];
+				[(UINavigationController*)tabBarController.selectedViewController popToRootViewControllerAnimated:YES];
 			}
 		}
 	} else {

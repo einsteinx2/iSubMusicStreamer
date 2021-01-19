@@ -49,7 +49,7 @@ double startSongSeconds = 0.0;
 
 // TODO: put this method somewhere and name it properly
 - (void)startSongAtOffsetInSeconds2 {
-    [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_RemoveMoviePlayer];
+    [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_RemoveVideoPlayer];
 	
 	ISMSSong *currentSong = PlayQueue.shared.currentSong;
     NSUInteger currentIndex = PlayQueue.shared.currentIndex;
@@ -135,7 +135,7 @@ double startSongSeconds = 0.0;
     [EX2Dispatch runInMainThreadAndWaitUntilDone:YES block:^{
         if (!currentSong.isVideo) {
             // Remove the video player if this is not a video
-            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_RemoveMoviePlayer];
+            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_RemoveVideoPlayer];
         }
         
         if (settingsS.isJukeboxEnabled) {

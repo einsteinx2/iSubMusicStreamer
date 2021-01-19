@@ -30,7 +30,7 @@ extension CustomUINavigationController: UINavigationControllerDelegate {
         
         // Customizing the more tab controller
         if !(viewController.navigationController is CustomUINavigationController) {
-            AppDelegate.shared().mainTabBarController.customizeMoreTabTableView()
+            SceneDelegate.shared.tabBarController?.customizeMoreTabTableView()
         }
     }
 }

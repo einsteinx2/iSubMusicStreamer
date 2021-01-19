@@ -9,7 +9,6 @@
 #import "ArtistsViewController.h"
 #import "ServerListViewController.h"
 #import "FolderDropdownControl.h"
-#import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "Flurry.h"
@@ -167,7 +166,7 @@
 - (void)loadData:(NSInteger)mediaFolderId  {
     [self.dropdown updateFolders];
     viewObjectsS.isArtistsLoading = YES;
-    [viewObjectsS showAlbumLoadingScreen:appDelegateS.window sender:self];
+    [viewObjectsS showAlbumLoadingScreenOnMainWindowWithSender:self];
     self.dataModel.mediaFolderId = mediaFolderId;
     [self.dataModel startLoad];
 }

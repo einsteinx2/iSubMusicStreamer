@@ -99,7 +99,7 @@ LOG_LEVEL_ISUB_DEFAULT
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{
 		sharedInstance = [[self alloc] init];
-		[sharedInstance setup];
+//		[sharedInstance setup];
 	});
     return sharedInstance;
 }

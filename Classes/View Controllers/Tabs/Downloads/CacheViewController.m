@@ -10,7 +10,6 @@
 #import "CacheAlbumViewController.h"
 #import "CacheQueueSongUITableViewCell.h"
 #import "ServerListViewController.h"
-#import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "Flurry.h"
@@ -981,7 +980,7 @@
         if (indexPath.row == 0) {
             if (cacheQueueManagerS.isQueueDownloading) {
                 cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: %@", relativeTime, [NSString formatFileSize:cacheQueueManagerS.currentQueuedSong.localFileSize]];
-            } else if (appDelegateS.isWifi || settingsS.isManualCachingOnWWANEnabled) {
+            } else if (AppDelegate.shared.isWifi || settingsS.isManualCachingOnWWANEnabled) {
                 cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Waiting...", relativeTime];
             } else {
                 cell.headerText = [NSString stringWithFormat:@"Added %@ - Progress: Need Wifi", relativeTime];

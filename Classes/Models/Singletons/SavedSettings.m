@@ -14,9 +14,9 @@
 #import "ISMSCacheQueueManager.h"
 #import "ISMSServer.h"
 #import "EX2Kit.h"
-#import "iSubAppDelegate.h"
 #import "Defines.h"
 #import "Swift.h"
+#import "ZipKit.h"
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -239,6 +239,14 @@ LOG_LEVEL_ISUB_DEFAULT
     return _currentServer != nil ? _currentServer.serverId : -1;
 }
 
+//- (BOOL)currentServerIsVideoSupported {
+//    return _currentServer != nil ? _currentServer.isVideoSupported : NO;
+//}
+//
+//- (BOOL)currentServerIsNewSearchSupported {
+//    return _currentServer != nil ? _currentServer.isNewSearchSupported : NO;
+//}
+
 - (Server *)currentServer {
     return _currentServer;
 }
@@ -327,6 +335,15 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark - Other Settings
 
+- (BOOL)appTerminatedCleanly {
+    return [_userDefaults boolForKey:@"appTerminatedCleanly"];
+}
+
+- (void)setAppTerminatedCleanly:(BOOL)appTerminatedCleanly {
+    [_userDefaults setBool:appTerminatedCleanly forKey:@"appTerminatedCleanly"];
+    [_userDefaults synchronize];
+}
+
 - (BOOL)isForceOfflineMode {
     return [_userDefaults boolForKey:@"manualOfflineModeSetting"];
 }
@@ -364,7 +381,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (NSInteger)currentMaxBitrate {
-    switch (appDelegateS.isWifi ? self.maxBitrateWifi : self.maxBitrate3G) {
+    switch (AppDelegate.shared.isWifi ? self.maxBitrateWifi : self.maxBitrate3G) {
         case 0: return 64;
         case 1: return 96;
         case 2: return 128;
@@ -395,7 +412,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (NSArray *)currentVideoBitrates {
-    if (appDelegateS.isWifi) {
+    if (AppDelegate.shared.isWifi) {
         switch (self.maxVideoBitrateWifi) {
             case 0: return @[@512];
             case 1: return @[@1024, @512];
@@ -463,7 +480,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults setBool:isManualCachingOnWWANEnabled forKey:@"isManualCachingOnWWANEnabled"];
     [_userDefaults synchronize];
     
-    if (!appDelegateS.isWifi) {
+    if (!AppDelegate.shared.isWifi) {
         isManualCachingOnWWANEnabled ? [cacheQueueManagerS startDownloadQueue] : [cacheQueueManagerS stopDownloadQueue];
     }
 }
@@ -762,6 +779,15 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
 }
 
+- (void)oneTimeRun {
+    if (self.oneTimeRunIncrementor < 1) {
+        self.isPartialCacheNextSong = NO;
+        self.oneTimeRunIncrementor = 1;
+    }
+}
+
+#pragma mark App Logs
+
 - (void)logAppSettings {
     NSArray *keysToSkip = @[@"handlerStack", @"rootFolders", @"password", @"servers", @"url", @"username"];
     NSMutableDictionary *settings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] mutableCopy];
@@ -779,6 +805,51 @@ LOG_LEVEL_ISUB_DEFAULT
     DDLogInfo(@"App Settings:\n%@", settings);
 }
 
+- (NSString *)latestLogFileName {
+    NSString *logsFolder = [settingsS.cachesPath stringByAppendingPathComponent:@"Logs"];
+    NSArray *logFiles = [NSFileManager.defaultManager contentsOfDirectoryAtPath:logsFolder error:nil];
+    
+    NSTimeInterval modifiedTime = 0.;
+    NSString *fileNameToUse;
+    for (NSString *file in logFiles) {
+        NSDictionary *attributes = [NSFileManager.defaultManager attributesOfItemAtPath:[logsFolder stringByAppendingPathComponent:file] error:nil];
+        NSDate *modified = attributes.fileModificationDate;
+        //DLog(@"Checking file %@ with modified time of %f", file, [modified timeIntervalSince1970]);
+        if (modified && modified.timeIntervalSince1970 >= modifiedTime) {
+            //DLog(@"Using this file, since it's modified time %f is higher than %f", [modified timeIntervalSince1970], modifiedTime);
+            
+            // This file is newer
+            fileNameToUse = file;
+            modifiedTime = [modified timeIntervalSince1970];
+        }
+    }
+    
+    return fileNameToUse;
+}
+
+- (NSString *)zipAllLogFiles {
+    // Log the app settings, excluding sensitive info
+    [settingsS logAppSettings];
+    
+    // Flush all logs to disk
+    [DDLog flushLog];
+    
+    NSString *zipFileName = @"iSub Logs.zip";
+    NSString *zipFilePath = [settingsS.cachesPath stringByAppendingPathComponent:zipFileName];
+    NSString *logsFolder = [settingsS.cachesPath stringByAppendingPathComponent:@"Logs"];
+    
+    // Delete the old zip if exists
+    [[NSFileManager defaultManager] removeItemAtPath:zipFilePath error:nil];
+    
+    // Zip the logs
+    ZKFileArchive *archive = [ZKFileArchive archiveWithArchivePath:zipFilePath];
+    NSInteger result = [archive deflateDirectory:logsFolder relativeToPath:settingsS.cachesPath usingResourceFork:NO];
+    if (result == zkSucceeded) {
+        return zipFilePath;
+    }
+    return nil;
+}
+
 #pragma mark - Singleton methods
 
 - (void)setup {
@@ -792,7 +863,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	
     // If the settings are not set up, create the defaults
 	[self createInitialSettings];
-	
+    
+    // Run things like one time settings migrations
+    [self oneTimeRun];
     
     NSNumber *currentServerId = [_userDefaults objectForKey:@"currentServerId"];
     if (Store.shared.servers.count > 0 && currentServerId) {
@@ -818,6 +891,9 @@ LOG_LEVEL_ISUB_DEFAULT
             // TODO: Delete the following user defaults keys: servers, url, username, serverType, password, uuid, lastQueryId
         }
     }
+    
+    // Start saving state
+    [self setupSaveState];
 }
 
 + (instancetype)sharedInstance {
@@ -825,7 +901,7 @@ LOG_LEVEL_ISUB_DEFAULT
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{
 		sharedInstance = [[self alloc] init];
-		[sharedInstance setup];
+//		[sharedInstance setup];
 	});
     return sharedInstance;
 }

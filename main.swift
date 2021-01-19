@@ -16,5 +16,5 @@ UIApplicationMain(
     CommandLine.argc,
     CommandLine.unsafeArgv,
     nil,
-    "iSubAppDelegate"
+    NSStringFromClass(AppDelegate.self)
 )

@@ -20,9 +20,9 @@ typedef enum : NSInteger {
 #pragma mark IPv6 Support
 //Reachability fully support IPv6.  For full details, see ReadMe.md.
 
+NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *kReachabilityChangedNotification;
-
 
 @interface Reachability : NSObject
 
@@ -61,4 +61,4 @@ extern NSString *kReachabilityChangedNotification;
 
 @end
 
-
+NS_ASSUME_NONNULL_END

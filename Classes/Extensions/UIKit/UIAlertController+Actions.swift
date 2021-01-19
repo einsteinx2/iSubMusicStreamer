@@ -13,7 +13,7 @@ extension UIAlertController {
         addAction(UIAlertAction(title: title, style: style, handler: handler))
     }
     
-    func addCancelAction(handler: ((UIAlertAction) -> Void)? = nil) {
-        addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+    func addCancelAction(title: String = "Cancel", handler: ((UIAlertAction) -> Void)? = nil) {
+        addAction(UIAlertAction(title: title, style: .cancel, handler: nil))
     }
 }

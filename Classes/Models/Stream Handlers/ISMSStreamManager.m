@@ -675,18 +675,18 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark - Singleton methods
 
-- (void)delayedSetup
-{
-	for (ISMSStreamHandler *handler in self.handlerStack)
-	{
-		// Resume any handlers that were downloading when iSub closed
-		if (handler.isDownloading && !handler.isTempCache)
-		{
-            DDLogInfo(@"[ISMSStreamManager] resuming starting handler");
-			[handler start:YES];
-		}
-	}
-}
+//- (void)delayedSetup
+//{
+//	for (ISMSStreamHandler *handler in self.handlerStack)
+//	{
+//		// Resume any handlers that were downloading when iSub closed
+//		if (handler.isDownloading && !handler.isTempCache)
+//		{
+//            DDLogInfo(@"[ISMSStreamManager] resuming starting handler");
+//			[handler start:YES];
+//		}
+//	}
+//}
 
 - (void)setup
 {
@@ -730,7 +730,6 @@ LOG_LEVEL_ISUB_DEFAULT
     static dispatch_once_t once = 0;
     dispatch_once(&once, ^{
 		sharedInstance = [[self alloc] init];
-		[sharedInstance setup];
 	});
     return sharedInstance;
 }

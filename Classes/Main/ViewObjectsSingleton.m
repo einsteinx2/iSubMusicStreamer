@@ -7,7 +7,6 @@
 //
 
 #import "ViewObjectsSingleton.h"
-#import "iSubAppDelegate.h"
 #import "Defines.h"
 #import "SavedSettings.h"
 #import "EX2Kit.h"
@@ -34,7 +33,7 @@
 }
 
 - (void)showLoadingScreenOnMainWindowWithMessage:(NSString *)message {
-	[self showLoadingScreen:appDelegateS.window withMessage:message];
+	[self showLoadingScreen:SceneDelegate.shared.window withMessage:message];
 }
 
 - (void)showLoadingScreen:(UIView *)view withMessage:(NSString *)message {
@@ -47,7 +46,7 @@
 	
 	self.HUD = [[MBProgressHUD alloc] initWithView:view];
     self.HUD.graceTime = HUD_GRACE_TIME;
-	[appDelegateS.window addSubview:self.HUD];
+	[view addSubview:self.HUD];
 	self.HUD.delegate = self;
     self.HUD.label.text = message ? message : @"Loading";
     [self.HUD showAnimated:YES];
@@ -58,7 +57,7 @@
 }
 
 - (void)showAlbumLoadingScreenOnMainWindowWithSender:(id)sender {
-    [self showAlbumLoadingScreen:appDelegateS.window sender:sender];
+    [self showAlbumLoadingScreen:SceneDelegate.shared.window sender:sender];
 }
 
 - (void)showAlbumLoadingScreen:(UIView *)view sender:(id)sender {
@@ -66,7 +65,7 @@
 	
 	self.isLoadingScreenShowing = YES;
 	
-	self.HUD = [[MBProgressHUD alloc] initWithView:appDelegateS.window];
+	self.HUD = [[MBProgressHUD alloc] initWithView:view];
 	self.HUD.userInteractionEnabled = YES;
     self.HUD.graceTime = HUD_GRACE_TIME;
 	
@@ -87,7 +86,7 @@
         [cancelButton.bottomAnchor constraintEqualToAnchor:self.HUD.bezelView.bottomAnchor]
     ]];
 	
-	[appDelegateS.window addSubview:self.HUD];
+	[view addSubview:self.HUD];
 	self.HUD.delegate = self;
     self.HUD.label.text = @"Loading";
     self.HUD.detailsLabel.text = @"tap to cancel";

@@ -30,7 +30,8 @@ NS_SWIFT_NAME(StreamManager)
 
 + (instancetype)sharedInstance NS_SWIFT_NAME(shared());
 
-- (void)delayedSetup;
+//- (void)delayedSetup;
+- (void)setup;
 
 - (nullable ISMSStreamHandler *)handlerForSong:(ISMSSong *)aSong;
 - (BOOL)isSongInQueue:(ISMSSong *)aSong;

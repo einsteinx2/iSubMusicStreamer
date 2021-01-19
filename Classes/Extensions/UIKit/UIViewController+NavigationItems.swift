@@ -10,8 +10,8 @@ import UIKit
 
 @objc extension UIViewController {
     @objc func addURLRefBackButton() {
-        if AppDelegate.shared().referringAppUrl != nil && AppDelegate.shared().mainTabBarController.selectedIndex != 4 {
-            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: AppDelegate.shared(), action: #selector(AppDelegate.backToReferringApp))
+        if AppDelegate.shared.referringAppUrl != nil && SceneDelegate.shared.tabBarController?.selectedIndex != 4 {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: AppDelegate.shared, action: #selector(AppDelegate.backToReferringApp))
         }
     }
     

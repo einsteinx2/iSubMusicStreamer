@@ -92,7 +92,7 @@ import Resolver
                 if Settings.shared().isPopupsEnabled {
                     let message = "There was an error loading the artist.\n\nError \(error.code): \(error.localizedDescription)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                    alert.addCancelAction(title: "OK")
                     self.present(alert, animated: true, completion: nil)
                 }
             }

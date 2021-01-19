@@ -18,7 +18,6 @@
 #import "DatabaseSingleton.h"
 #import "ISMSStreamManager.h"
 #import "EX2Kit.h"
-#import "iSubAppDelegate.h"
 #import "Swift.h"
 
 LOG_LEVEL_ISUB_DEFAULT
@@ -59,7 +58,7 @@ LOG_LEVEL_ISUB_DEFAULT
     	
 	// Check if there's another queued song and that were are on Wifi
 	self.currentQueuedSong = self.currentQueuedSongInDb;
-	if (!self.currentQueuedSong || (!appDelegateS.isWifi && !settingsS.isManualCachingOnWWANEnabled) || settingsS.isOfflineMode) {
+	if (!self.currentQueuedSong || (!AppDelegate.shared.isWifi && !settingsS.isManualCachingOnWWANEnabled) || settingsS.isOfflineMode) {
 		return;
     }
     

@@ -19,11 +19,26 @@ import Foundation
     @objc var minorVersion = 0
     @objc var versionString: String?
     
+    convenience init(server: Server, callback: LoaderCallback? = nil) {
+        self.init(urlString: server.url.absoluteString, username: server.username, password: server.password, callback: callback)
+    }
+    
+    convenience init(server: Server, delegate: APILoaderDelegate? = nil) {
+        self.init(urlString: server.url.absoluteString, username: server.username, password: server.password, delegate: delegate)
+    }
+    
     @objc init(urlString: String, username: String, password: String, delegate: APILoaderDelegate?) {
         self.urlString = urlString
         self.username = username
         self.password = password
         super.init(delegate: delegate)
+    }
+    
+    @objc init(urlString: String, username: String, password: String, callback: LoaderCallback?) {
+        self.urlString = urlString
+        self.username = username
+        self.password = password
+        super.init(callback: callback)
     }
     
     override var type: APILoaderType { .status }

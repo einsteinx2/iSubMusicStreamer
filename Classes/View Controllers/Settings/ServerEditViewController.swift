@@ -47,11 +47,12 @@ import Resolver
             
             if UserDefaults.standard.object(forKey: "servers") != nil {
                 // Pop the view back
-                let currentTabBarController = AppDelegate.shared().currentTabBarController
-                if currentTabBarController.selectedIndex == 4 && currentTabBarController.moreNavigationController.viewControllers.count >= 2 {
-                    currentTabBarController.moreNavigationController.popToViewController(currentTabBarController.moreNavigationController.viewControllers[1], animated: true)
-                } else if let navController = currentTabBarController.selectedViewController as? UINavigationController {
-                    navController.popToRootViewController(animated: true)
+                if let tabBarController = SceneDelegate.shared.tabBarController {
+                    if tabBarController.selectedIndex == 4 && tabBarController.moreNavigationController.viewControllers.count >= 2 {
+                        tabBarController.moreNavigationController.popToViewController(tabBarController.moreNavigationController.viewControllers[1], animated: true)
+                    } else if let navController = tabBarController.selectedViewController as? UINavigationController {
+                        navController.popToRootViewController(animated: true)
+                    }
                 }
             }
         }
@@ -248,7 +249,7 @@ extension ServerEditViewController: APILoaderDelegate {
         self.dismiss(animated: true, completion: nil)
         
         if UIDevice.isPad() {
-            AppDelegate.shared().padRootViewController.menuViewController.showHome()
+            SceneDelegate.shared.padRootViewController?.menuViewController.showHome()
         }
         
         var userInfo = [AnyHashable: Any]()

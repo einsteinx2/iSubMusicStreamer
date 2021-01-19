@@ -16,6 +16,7 @@ extern NSString * const ISMSNotification_SongPlaybackFailed;
 extern NSString * const ISMSNotification_AlbumArtLargeDownloaded;
 
 extern NSString * const ISMSNotification_ServerSwitched;
+extern NSString * const ISMSNotification_CheckServer;
 extern NSString * const ISMSNotification_ServerCheckPassed;
 extern NSString * const ISMSNotification_ServerCheckFailed;
 
@@ -53,8 +54,8 @@ extern NSString * const ISMSNotification_StreamHandlerSongFailed;
 
 extern NSString * const ISMSNotification_CacheSizeChecked;
 
-extern NSString * const ISMSNotification_EnteringOfflineMode;
-extern NSString * const ISMSNotification_EnteringOnlineMode;
+extern NSString * const ISMSNotification_WillEnterOfflineMode;
+extern NSString * const ISMSNotification_WillEnterOnlineMode;
 
 extern NSString * const ISMSNotification_BassInitialized;
 extern NSString * const ISMSNotification_BassFreed;
@@ -65,7 +66,7 @@ extern NSString * const ISMSNotification_JukeboxDisabled;
 extern NSString * const ISMSNotification_JukeboxSongInfo;
 
 extern NSString * const ISMSNotification_PlayVideo;
-extern NSString * const ISMSNotification_RemoveMoviePlayer;
+extern NSString * const ISMSNotification_RemoveVideoPlayer;
 
 extern NSString * const ISMSNotification_ShowAlbumLoadingScreenOnMainWindow;
 extern NSString * const ISMSNotification_ShowLoadingScreenOnMainWindow;

@@ -28,6 +28,7 @@
 #import "CacheViewController.h"
 #import "BookmarksViewController.h"
 #import "FoldersViewController.h"
+#import "ArtistsViewController.h"
 
 // Views
 #import "CellCachedIndicatorView.h"
@@ -67,7 +68,6 @@
  * Singletons
  */
 
-#import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "MusicSingleton.h"
 #import "JukeboxSingleton.h"

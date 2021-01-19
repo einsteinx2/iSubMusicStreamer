@@ -16,6 +16,7 @@ NSString * const ISMSNotification_SongPlaybackFailed = @"ISMSNotification_SongPl
 NSString * const ISMSNotification_AlbumArtLargeDownloaded = @"ISMSNotification_AlbumArtLargeDownloaded";
 
 NSString * const ISMSNotification_ServerSwitched = @"ISMSNotification_ServerSwitched";
+NSString * const ISMSNotification_CheckServer = @"ISMSNotification_CheckServer";
 NSString * const ISMSNotification_ServerCheckPassed = @"ISMSNotification_ServerCheckPassed";
 NSString * const ISMSNotification_ServerCheckFailed = @"ISMSNotification_ServerCheckFailed";
 
@@ -53,8 +54,8 @@ NSString * const ISMSNotification_StreamHandlerSongFailed = @"ISMSNotification_S
 
 NSString * const ISMSNotification_CacheSizeChecked = @"ISMSNotification_CacheSizeChecked";
 
-NSString * const ISMSNotification_EnteringOfflineMode = @"ISMSNotification_EnteringOfflineMode";
-NSString * const ISMSNotification_EnteringOnlineMode = @"ISMSNotification_EnteringOnlineMode";
+NSString * const ISMSNotification_WillEnterOfflineMode = @"ISMSNotification_WillEnterOfflineMode";
+NSString * const ISMSNotification_WillEnterOnlineMode = @"ISMSNotification_WillEnterOnlineMode";
 
 NSString * const ISMSNotification_BassInitialized = @"ISMSNotification_BassInitialized";
 NSString * const ISMSNotification_BassFreed = @"ISMSNotification_BassFreed";
@@ -65,7 +66,7 @@ NSString * const ISMSNotification_JukeboxDisabled = @"ISMSNotification_JukeboxDi
 NSString * const ISMSNotification_JukeboxSongInfo = @"ISMSNotification_JukeboxSongInfo";
 
 NSString * const ISMSNotification_PlayVideo = @"ISMSNotification_PlayVideo";
-NSString * const ISMSNotification_RemoveMoviePlayer = @"ISMSNotification_RemoveMoviePlayer";
+NSString * const ISMSNotification_RemoveVideoPlayer = @"ISMSNotification_RemoveVideoPlayer";
 
 NSString * const ISMSNotification_ShowAlbumLoadingScreenOnMainWindow = @"ISMSNotification_ShowAlbumLoadingScreenOnMainWindow";
 NSString * const ISMSNotification_ShowLoadingScreenOnMainWindow = @"ISMSNotification_ShowLoadingScreenOnMainWindow";

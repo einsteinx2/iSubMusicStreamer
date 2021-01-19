@@ -17,7 +17,9 @@ import Resolver
 }
 
 @objc final class PlayQueue: NSObject {
-    @objc static let shared = PlayQueue()
+    
+    // Temporary accessor for Objective-C classes using Resolver under the hood
+    @objc static var shared: PlayQueue { Resolver.main.resolve() }
     
     @Injected private var store: Store
     

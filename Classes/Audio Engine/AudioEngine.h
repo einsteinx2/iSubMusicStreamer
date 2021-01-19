@@ -41,6 +41,8 @@ NS_SWIFT_NAME(AudioEngine)
 
 @property (nullable, strong) iSubBassGaplessPlayerDelegate *delegate;
 
+- (void)setup;
+
 // BASS methods
 //
 - (void)startSong:(ISMSSong *)aSong atIndex:(NSUInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds;

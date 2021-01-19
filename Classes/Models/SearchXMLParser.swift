@@ -8,8 +8,11 @@
 
 import Foundation
 import CocoaLumberjackSwift
+import Resolver
 
 @objc class SearchXMLParser: NSObject {
+    @Injected private var store: Store
+    
     @objc var serverId = Settings.shared().currentServerId
     
     @objc private(set) var folderArtists = [FolderArtist]()
@@ -30,7 +33,8 @@ import CocoaLumberjackSwift
                 let message = error.attribute("message") ?? "no message"
                 DDLogError("[SearchXMLParser] Subsonic error: \(NSError(ismsCode: code, message: message))")
             } else {
-                if Settings.shared().currentServer.isNewSearchSupported {
+                let isNewSearchSupported = store.server(id: serverId)?.isNewSearchSupported ?? false
+                if isNewSearchSupported {
                     root.iterate("searchResult2.artist") { element in
                         self.folderArtists.append(FolderArtist(serverId: self.serverId, element: element))
                     }

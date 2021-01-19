@@ -9,7 +9,6 @@
 #import "ServerListViewController.h"
 #import "SettingsTabViewController.h"
 #import "FoldersViewController.h"
-#import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "AudioEngine.h"
@@ -155,7 +154,7 @@ LOG_LEVEL_ISUB_DEFAULT
     ServerEditViewController *serverEditViewController = [[ServerEditViewController alloc] init];
     serverEditViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     if (UIDevice.isPad) {
-        [appDelegateS.padRootViewController presentViewController:serverEditViewController animated:YES completion:nil];
+        [SceneDelegate.shared.padRootViewController presentViewController:serverEditViewController animated:YES completion:nil];
     } else {
         [self presentViewController:serverEditViewController animated:YES completion:nil];
     }
@@ -185,7 +184,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	} else {
 		[self.navigationController popToRootViewControllerAnimated:YES];
 		
-        if ([appDelegateS.wifiReach currentReachabilityStatus] == NotReachable) {
+        if (!AppDelegate.shared.isNetworkReachable) {
 			return;
         }
 		
@@ -211,12 +210,11 @@ LOG_LEVEL_ISUB_DEFAULT
 			settingsS.isOfflineMode = NO;
 			
 			if (UIDevice.isPad) {
-				[appDelegateS.padRootViewController.menuViewController toggleOfflineMode];
+                [SceneDelegate.shared.padRootViewController.menuViewController toggleOfflineMode];
 			} else {
-				for (UIView *subview in appDelegateS.window.subviews) {
+				for (UIView *subview in SceneDelegate.shared.window.subviews) {
 					[subview removeFromSuperview];
 				}
-//				[viewObjectsS orderMainTabBarController];
 			}
 		}
 		
@@ -226,10 +224,14 @@ LOG_LEVEL_ISUB_DEFAULT
 		
 		// Reset the tabs
         if (!UIDevice.isPad) {
-			[appDelegateS.rootViewController.navigationController popToRootViewControllerAnimated:NO];
+            for (UIViewController *controller in SceneDelegate.shared.tabBarController.viewControllers) {
+                if ([controller isKindOfClass:UINavigationController.class]) {
+                    [(UINavigationController *)controller popToRootViewControllerAnimated:NO];
+                }
+            }
         }
         
-		appDelegateS.window.backgroundColor = viewObjectsS.windowColor;
+		SceneDelegate.shared.window.backgroundColor = viewObjectsS.windowColor;
 		
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ServerSwitched];
 	}

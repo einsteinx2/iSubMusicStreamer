@@ -17,8 +17,12 @@ import UIKit
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        ViewObjects.shared().orderMainTabBarController()
+        createTabs()
         customizeMoreTabTableView()
+    }
+    
+    private func createTabs() {
+        
     }
     
     @objc func customizeMoreTabTableView() {

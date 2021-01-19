@@ -28,6 +28,8 @@ NS_SWIFT_NAME(Cache)
 + (void)setAllCachedSongsToBackup;
 + (void)setAllCachedSongsToNotBackup;
 
+- (void)setup;
+
 //- (void)startCacheCheckTimer;
 - (void)startCacheCheckTimerWithInterval:(NSTimeInterval)interval;
 - (void)stopCacheCheckTimer;

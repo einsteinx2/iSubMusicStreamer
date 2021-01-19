@@ -8,7 +8,6 @@
 
 #import "SettingsTabViewController.h"
 #import "FoldersViewController.h"
-#import "iSubAppDelegate.h"
 #import "ViewObjectsSingleton.h"
 #import "SavedSettings.h"
 #import "CacheSingleton.h"
@@ -214,16 +213,17 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (sender == self.manualOfflineModeSwitch) {
 			settingsS.isForceOfflineMode = self.manualOfflineModeSwitch.on;
 			if (self.manualOfflineModeSwitch.on) {
-				[appDelegateS enterOfflineModeForce];
+				[AppDelegate.shared enterOfflineModeForce];
 			} else {
-				[appDelegateS enterOnlineModeForce];
+				[AppDelegate.shared enterOnlineModeForce];
 			}
 			
 			// Handle the moreNavigationController stupidity
-			if (appDelegateS.currentTabBarController.selectedIndex == 4) {
-				[appDelegateS.currentTabBarController.moreNavigationController popToViewController:[appDelegateS.currentTabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
+            UITabBarController *tabBarController = SceneDelegate.shared.tabBarController;
+			if (tabBarController.selectedIndex == 4) {
+				[tabBarController.moreNavigationController popToViewController:[tabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
 			} else {
-				[(UINavigationController*)appDelegateS.currentTabBarController.selectedViewController popToRootViewControllerAnimated:YES];
+				[(UINavigationController*)tabBarController.selectedViewController popToRootViewControllerAnimated:YES];
 			}
 		}
 		else if (sender == self.enableScrobblingSwitch) {
@@ -311,22 +311,23 @@ LOG_LEVEL_ISUB_DEFAULT
             settingsS.isDisableUsageOver3G = self.disableCellUsageSwitch.on;
             
             BOOL handleStupidity = NO;
-            if (!settingsS.isOfflineMode && settingsS.isDisableUsageOver3G && !appDelegateS.isWifi) {
+            if (!settingsS.isOfflineMode && settingsS.isDisableUsageOver3G && !AppDelegate.shared.isWifi) {
                 // We're on 3G and we just disabled use on 3G, so go offline
-                [appDelegateS enterOfflineModeForce];
+                [AppDelegate.shared enterOfflineModeForce];
                 handleStupidity = YES;
-            } else if (settingsS.isOfflineMode && !settingsS.isDisableUsageOver3G && !appDelegateS.isWifi) {
+            } else if (settingsS.isOfflineMode && !settingsS.isDisableUsageOver3G && !AppDelegate.shared.isWifi) {
                 // We're on 3G and we just enabled use on 3G, so go online if we're offline
-                [appDelegateS enterOfflineModeForce];
+                [AppDelegate.shared enterOfflineModeForce];
                 handleStupidity = YES;
             }
             
             if (handleStupidity) {
                 // Handle the moreNavigationController stupidity
-                if (appDelegateS.currentTabBarController.selectedIndex == 4) {
-                    [appDelegateS.currentTabBarController.moreNavigationController popToViewController:[appDelegateS.currentTabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
+                UITabBarController *tabBarController = SceneDelegate.shared.tabBarController;
+                if (tabBarController.selectedIndex == 4) {
+                    [tabBarController.moreNavigationController popToViewController:[tabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
                 } else {
-                    [(UINavigationController*)appDelegateS.currentTabBarController.selectedViewController popToRootViewControllerAnimated:YES];
+                    [(UINavigationController*)tabBarController.selectedViewController popToRootViewControllerAnimated:YES];
                 }
             }
         }
@@ -363,7 +364,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (IBAction)shareAppLogsAction {
-    NSString *path = [appDelegateS zipAllLogFiles];
+    NSString *path = [settingsS zipAllLogFiles];
     NSURL *pathURL = [NSURL fileURLWithPath:path];
     UIActivityViewController *shareSheet = [[UIActivityViewController alloc] initWithActivityItems:@[pathURL] applicationActivities:nil];
     if (shareSheet.popoverPresentationController) {
@@ -389,11 +390,8 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)popFoldersTab {
-    if (UIDevice.isPad) {
-		[appDelegateS.artistsNavigationController popToRootViewControllerAnimated:NO];
-    } else {
-		[appDelegateS.rootViewController.navigationController popToRootViewControllerAnimated:NO];
-    }
+    [SceneDelegate.shared.foldersTab popToRootViewControllerAnimated:NO];
+    [SceneDelegate.shared.artistsTab popToRootViewControllerAnimated:NO];
 }
 
 - (void)updateCacheSpaceSlider {

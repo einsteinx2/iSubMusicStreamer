@@ -190,7 +190,7 @@ extension FolderArtistsViewController: APILoaderDelegate {
         // NOTE: Must call after a delay or the refresh control won't hide
         EX2Dispatch.runInMainThread(afterDelay: 0.3) {
             let alert = UIAlertController(title: "Subsonic Error", message: error?.localizedDescription ?? "Unknown error", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+            alert.addCancelAction(title: "OK")
             self.present(alert, animated: true, completion: nil)
         }
     }
