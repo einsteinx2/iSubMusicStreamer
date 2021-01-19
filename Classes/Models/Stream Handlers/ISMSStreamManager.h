@@ -34,8 +34,8 @@ NS_SWIFT_NAME(StreamManager)
 - (void)setup;
 
 - (nullable ISMSStreamHandler *)handlerForSong:(ISMSSong *)aSong;
-- (BOOL)isSongInQueue:(ISMSSong *)aSong;
-- (BOOL)isSongFirstInQueue:(ISMSSong *)aSong;
+- (BOOL)isSongInQueue:(ISMSSong *)aSong NS_SWIFT_NAME(isSongInQueue(song:));
+- (BOOL)isSongFirstInQueue:(ISMSSong *)aSong NS_SWIFT_NAME(isSongFirstInQueue(song:));
 - (BOOL)isSongDownloading:(ISMSSong *)aSong;
 
 - (void)cancelAllStreamsExcept:(nullable NSArray *)handlersToSkip;

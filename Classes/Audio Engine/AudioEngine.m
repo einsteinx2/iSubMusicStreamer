@@ -8,7 +8,6 @@
 
 #import "AudioEngine.h"
 #import "BassParamEqValue.h"
-#import "MusicSingleton.h"
 #import "BassEffectDAO.h"
 #import "BassStream.h"
 #import "ISMSStreamManager.h"

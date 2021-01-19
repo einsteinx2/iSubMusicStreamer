@@ -73,7 +73,6 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
 @objc extension Store {
     private var settings: Settings { Resolver.resolve() }
     private var playQueue: PlayQueue { Resolver.resolve() }
-    private var music: Music { Resolver.resolve() }
     
     func nextLocalPlaylistId() -> Int {
         do {
@@ -334,7 +333,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
             NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistSongsQueued)
             
             // Start the song
-            return music.playSong(atPosition: position)
+            return playQueue.playSong(position: position)
         }
         return nil
     }
@@ -347,7 +346,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
             NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistSongsQueued)
             
             // Start the song
-            return music.playSong(atPosition: position)
+            return playQueue.playSong(position: position)
         }
         return nil
     }

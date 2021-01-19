@@ -16,10 +16,12 @@
 #import "BassVisualizer.h"
 #import "BassGaplessPlayerDelegate.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class EX2RingBuffer, SUSRegisterActionLoader;
 @interface BassGaplessPlayer : NSObject
 
-@property (weak) id<BassGaplessPlayerDelegate> delegate;
+@property (nullable, weak) id<BassGaplessPlayerDelegate> delegate;
 
 @property (strong) dispatch_queue_t streamGcdQueue;
 
@@ -29,8 +31,8 @@
 
 // BASS streams
 @property (strong) NSMutableArray *streamQueue;
-@property (readonly) BassStream *currentStream;
-@property (copy) ISMSSong *previousSongForProgress;
+@property (nullable, readonly) BassStream *currentStream;
+@property (nullable, copy) ISMSSong *previousSongForProgress;
 @property (nonatomic) HSTREAM outStream;
 @property (nonatomic) HSTREAM mixerStream;
 
@@ -39,7 +41,7 @@
 @property (readonly) NSInteger bitRate;
 @property (readonly) NSUInteger currentByteOffset;
 @property (readonly) double progress;
-@property (strong) BassStream *waitLoopStream;
+@property (nullable, strong) BassStream *waitLoopStream;
 
 @property NSUInteger startByteOffset;
 @property NSUInteger startSecondsOffset;
@@ -54,7 +56,7 @@
 // BASS methods
 //
 - (DWORD)bassGetOutputData:(void *)buffer length:(DWORD)length;
-- (void)startSong:(ISMSSong *)aSong atIndex:(NSUInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds;
+- (void)startSong:(ISMSSong *)aSong atIndex:(NSUInteger)index withOffsetInBytes:(nullable NSNumber *)byteOffset orSeconds:(nullable NSNumber *)seconds;
 //- (void)prepareNextSongStream;
 
 + (NSUInteger)bytesToBufferForKiloBitrate:(NSUInteger)rate speedInBytesPerSec:(NSUInteger)speedInBytesPerSec;
@@ -72,3 +74,5 @@
 - (BassStream *)prepareStreamForSong:(ISMSSong *)aSong;
 
 @end
+
+NS_ASSUME_NONNULL_END

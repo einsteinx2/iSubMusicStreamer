@@ -25,7 +25,6 @@ import MediaPlayer
         let jukebox: Jukebox = Resolver.resolve()
         let audioEngine: AudioEngine = Resolver.resolve()
         let playQueue: PlayQueue = Resolver.resolve()
-        let music: Music = Resolver.resolve()
         
         // Play
         remote.playCommand.isEnabled = true
@@ -40,7 +39,7 @@ import MediaPlayer
                 player.playPause()
                 return .success
             } else {
-                music.startSong()
+                playQueue.startSong()
                 return .success
             }
             return .commandFailed
@@ -77,7 +76,7 @@ import MediaPlayer
                 player.playPause()
                 return .success
             } else {
-                music.startSong()
+                playQueue.startSong()
                 return .success
             }
         }
@@ -102,7 +101,7 @@ import MediaPlayer
         remote.nextTrackCommand.isEnabled = true
         remote.nextTrackCommand.addTarget { _ in
             guard playQueue.nextSong != nil else { return .noActionableNowPlayingItem }
-            music.nextSong()
+            playQueue.playNextSong()
             return .commandFailed
         }
         
@@ -110,7 +109,7 @@ import MediaPlayer
         remote.previousTrackCommand.isEnabled = true
         remote.previousTrackCommand.addTarget { _ in
             guard playQueue.prevSong != nil else { return .noActionableNowPlayingItem }
-            music.prevSong()
+            playQueue.playPrevSong()
             return .commandFailed
         }
         

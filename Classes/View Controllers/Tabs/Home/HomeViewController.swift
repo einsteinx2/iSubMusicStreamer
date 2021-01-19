@@ -14,7 +14,6 @@ import Resolver
 @objc final class HomeViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var music: Music
     @Injected private var audioEngine: AudioEngine
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
@@ -310,7 +309,7 @@ import Resolver
         loader.callback = { success, _ in
             HUD.hide()
             if success {
-                self.music.playSong(atPosition: 0)
+                self.playQueue.playSong(position: 0)
                 self.showPlayer()
             } else {
                 if self.settings.isPopupsEnabled {

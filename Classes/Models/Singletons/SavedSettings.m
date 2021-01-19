@@ -233,6 +233,10 @@ LOG_LEVEL_ISUB_DEFAULT
 	[_userDefaults synchronize];
 }
 
+- (BOOL)showPlayerIcon {
+    return !UIDevice.isPad;
+}
+
 #pragma mark - Login Settings
 
 - (NSInteger)currentServerId {

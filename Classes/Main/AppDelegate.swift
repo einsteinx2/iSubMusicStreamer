@@ -16,7 +16,6 @@ import CocoaLumberjackSwift
     @Injected private var settings: Settings
     @Injected private var audioEngine: AudioEngine
     @Injected private var playQueue: PlayQueue
-    @Injected private var music: Music
     @Injected private var cache: Cache
     
     @objc static var shared: AppDelegate { UIApplication.shared.delegate as! AppDelegate }
@@ -141,7 +140,7 @@ import CocoaLumberjackSwift
                 if let player = audioEngine.player, !player.isPlaying {
                     player.playPause()
                 } else {
-                    music.playSong(atPosition: playQueue.currentIndex)
+                    playQueue.playCurrentSong()
                 }
             case "pause":
                 if let player = audioEngine.player, player.isPlaying {
@@ -151,12 +150,12 @@ import CocoaLumberjackSwift
                 if let player = audioEngine.player {
                     player.playPause()
                 } else {
-                    music.playSong(atPosition: playQueue.currentIndex)
+                    playQueue.playCurrentSong()
                 }
             case "next":
-                music.playSong(atPosition: playQueue.nextIndex)
+                playQueue.playSong(position: playQueue.nextIndex)
             case "prev":
-                music.playSong(atPosition: playQueue.prevIndex)
+                playQueue.playSong(position: playQueue.prevIndex)
             default: break
             }
             

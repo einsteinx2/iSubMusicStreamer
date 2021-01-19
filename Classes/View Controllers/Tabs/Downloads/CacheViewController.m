@@ -13,7 +13,6 @@
 #import "Defines.h"
 #import "Flurry.h"
 #import "SavedSettings.h"
-#import "MusicSingleton.h"
 #import "CacheSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
@@ -879,8 +878,7 @@
 }
 
 - (void)playAllPlaySong {
-	[musicS playSongAtPosition:0];
-	
+    [PlayQueue.shared playSongWithPosition:0];
 	[self showPlayer];
 }
 

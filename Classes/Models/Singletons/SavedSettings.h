@@ -32,6 +32,8 @@ NS_SWIFT_NAME(Settings)
 @property BOOL isCancelLoading;
 @property BOOL isOfflineMode;
 
+@property (readonly) BOOL showPlayerIcon;
+
 @property (readonly) NSInteger currentServerId;
 //@property (readonly) BOOL currentServerIsVideoSupported;
 //@property (readonly) BOOL currentServerIsNewSearchSupported;

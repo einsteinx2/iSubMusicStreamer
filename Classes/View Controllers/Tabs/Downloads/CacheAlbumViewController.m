@@ -9,7 +9,6 @@
 #import "CacheAlbumViewController.h"
 #import "Defines.h"
 #import "SavedSettings.h"
-#import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
 #import "EX2Kit.h"

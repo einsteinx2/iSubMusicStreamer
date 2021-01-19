@@ -9,6 +9,7 @@
 import Foundation
 import MediaPlayer
 import Resolver
+import CocoaLumberjackSwift
 
 @objc enum RepeatMode: Int {
     case none = 0
@@ -19,6 +20,9 @@ import Resolver
 @objc final class PlayQueue: NSObject {
     @Injected private var settings: Settings
     @Injected private var jukebox: Jukebox
+    @Injected private var streamManager: StreamManager
+    @Injected private var cacheQueue: CacheQueue
+    @Injected private var audioEngine: AudioEngine
     
     // Temporary accessor for Objective-C classes using Resolver under the hood
     @objc static var shared: PlayQueue { Resolver.resolve() }
@@ -212,6 +216,210 @@ import Resolver
             
         } else {
             
+        }
+    }
+    
+    @objc @discardableResult
+    func playSong(position: Int) -> Song? {
+        currentIndex = position
+        guard let currentSong = self.currentSong else { return nil }
+        
+        return DispatchQueue.mainSyncSafe {
+            if !currentSong.isVideo {
+                // Remove the video player if this is not a video
+                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_RemoveVideoPlayer)
+            }
+            
+            if settings.isJukeboxEnabled {
+                if currentSong.isVideo {
+                    SlidingNotification.showOnMainWindow(message: "Cannot play videos in Jukebox mode.")
+                    return nil
+                } else {
+                    jukebox.playSong(atPosition: NSNumber(value: position))
+                }
+            } else {
+                streamManager.removeAllStreamsExcept(for: currentSong)
+                if currentSong.isVideo {
+                    NotificationCenter.postNotificationToMainThread(name: ISMSNotification_PlayVideo, userInfo: ["song": currentSong])
+                } else {
+                    startSong()
+                }
+            }
+            return currentSong
+        }
+    }
+    
+    @objc @discardableResult
+    func playPrevSong() -> Song? {
+        DDLogVerbose("[PlayQueue] playPrevSong called");
+        if let player = audioEngine.player, player.progress > 10.0 {
+            // Past 10 seconds in the song, so restart playback instead of changing songs
+            DDLogVerbose("[PlayQueue] playPrevSong Past 10 seconds in the song, so restart playback instead of changing songs, calling playSong(position: \(currentIndex))")
+            return playSong(position: currentIndex)
+        } else {
+            // Within first 10 seconds, go to previous song
+            DDLogVerbose("[PlayQueue] playPrevSong within first 10 seconds, so go to previous, calling playSong(position: \(prevIndex))")
+            return playSong(position: prevIndex)
+        }
+    }
+    
+    @objc @discardableResult
+    func playNextSong() -> Song? {
+        DDLogVerbose("[PlayQueue] playNextSong called, calling playSong(position: \(nextIndex))")
+        return playSong(position: nextIndex)
+    }
+    
+    @objc @discardableResult
+    func playCurrentSong() -> Song? {
+        DDLogVerbose("[PlayQueue] playCurrentSong called, calling playSong(position: \(currentIndex))")
+        return playSong(position: currentIndex)
+    }
+    
+    // Resume song after iSub shuts down
+    @objc @discardableResult
+    func resumeSong() -> Song? {
+        if let currentSong = currentSong, settings.isRecover {
+            startSong(offsetInBytes: settings.byteOffset, offsetInSeconds: settings.seekTime)
+            return currentSong
+        } else {
+            audioEngine.startByteOffset = UInt(settings.byteOffset)
+            audioEngine.startSecondsOffset = UInt(settings.seekTime)
+            return nil
+        }
+    }
+    
+    @objc func updateLockScreenInfo() {
+        DispatchQueue.main.async {
+            var info = [String: Any]()
+            
+            if let song = self.currentSong {
+                info[MPMediaItemPropertyTitle] = song.title
+                info[MPMediaItemPropertyAlbumTitle] = song.tagAlbumName
+                info[MPMediaItemPropertyArtist] = song.tagArtistName
+                info[MPMediaItemPropertyGenre] = song.genre
+                if song.duration > 0 {
+                    info[MPMediaItemPropertyPlaybackDuration] = song.duration
+                }
+                info[MPNowPlayingInfoPropertyPlaybackQueueIndex] = self.currentIndex
+                info[MPNowPlayingInfoPropertyPlaybackQueueCount] = self.count
+                info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.audioEngine.player?.progress
+                info[MPNowPlayingInfoPropertyPlaybackRate] = 1
+                
+                if let coverArtId = song.coverArtId, self.settings.isLockScreenArtEnabled {
+                    let artDataModel = CoverArtDAO(coverArtId: coverArtId, isLarge: true, delegate: nil)
+                    if let image = artDataModel.coverArtImage {
+                        let artwork = MPMediaItemArtwork(boundsSize: image.size) { size -> UIImage in
+                            return image
+                        }
+                        info[MPMediaItemPropertyArtwork] = artwork
+                    }
+                }
+            }
+            
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+            
+            // Run this every 30 seconds to update the progress and keep it in sync
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.updateLockScreenInfo), object: nil)
+            self.perform(#selector(self.updateLockScreenInfo), with: nil, afterDelay: 30)
+        }
+    }
+    
+    // MARK: Old MusicSingleton start song functions
+    // TODO: Refactor this craziness
+    
+    @objc func startSong() {
+        startSong(offsetInBytes: 0, offsetInSeconds: 0)
+    }
+    
+    private var offsetInBytes: UInt64 = 0
+    private var offsetInSeconds: Double = 0
+    @objc func startSong(offsetInBytes bytes: UInt64, offsetInSeconds seconds: Double) {
+        DispatchQueue.mainSyncSafe {
+            // Destroy the streamer/video player to start a new song
+            audioEngine.player?.stop()
+            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_RemoveVideoPlayer)
+            
+            guard currentSong != nil else { return }
+            
+            offsetInBytes = bytes
+            offsetInSeconds = seconds
+            
+            // Only start the caching process if it's been a half second after the last request. Prevents crash when skipping through playlist fast
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(startSongAtOffsetsInternal), object: nil)
+            perform(#selector(startSongAtOffsetsInternal), with: nil, afterDelay: 1)
+        }
+    }
+    
+    @objc private func startSongAtOffsetsInternal() {
+        guard let song = currentSong else { return }
+        let index = currentIndex
+        
+        // Fix for bug that caused songs to sometimes start playing then immediately restart
+        if let player = audioEngine.player, let playerSong = player.currentStream?.song, player.isPlaying, song.isEqual(playerSong) {
+            // We're already playing this song so bail
+            return
+        }
+        
+        // Check to see if the song is already cached
+        if song.isFullyCached {
+            // The song is fully cached, start streaming from the local copy
+            audioEngine.start(song,
+                              at: UInt(index),
+                              withOffsetInBytes: NSNumber(value: offsetInBytes),
+                              orSeconds: NSNumber(value: offsetInSeconds))
+            
+            // Fill the stream queue
+            if !settings.isOfflineMode {
+                streamManager.fillStreamQueue(true)
+                //[streamManagerS fillStreamQueue:audioEngineS.player.isStarted];
+            }
+        } else if !song.isFullyCached && settings.isOfflineMode {
+            playNextSong()
+        } else {
+            if let currentQueuedSong = cacheQueue.currentQueuedSong, song.isEqual(currentQueuedSong) {
+                // The cache queue is downloading this song, remove it before continuing
+                cacheQueue.removeCurrentSong()
+            }
+            
+            if streamManager.isSongDownloading(song) {
+                // The song is caching, start streaming from the local copy
+                if let handler = streamManager.handler(for: song), let player = audioEngine.player, !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
+                    // Only start the player if the handler isn't going to do it itself
+                    audioEngine.start(song,
+                                      at: UInt(index),
+                                      withOffsetInBytes: NSNumber(value: offsetInBytes),
+                                      orSeconds: NSNumber(value: offsetInSeconds))
+                }
+            } else if streamManager.isSongFirstInQueue(song: song) && !streamManager.isQueueDownloading {
+                // The song is first in queue, but the queue is not downloading. Probably the song was downloading when the app quit. Resume the download and start the player
+                streamManager.resumeQueue()
+                
+                // The song is caching, start streaming from the local copy
+                if let handler = streamManager.handler(for: song), let player = audioEngine.player, !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
+                    // Only start the player if the handler isn't going to do it itself
+                    audioEngine.start(song,
+                                      at: UInt(index),
+                                      withOffsetInBytes: NSNumber(value: offsetInBytes),
+                                      orSeconds: NSNumber(value: offsetInSeconds))
+                }
+            } else {
+                // Clear the stream manager
+                streamManager.removeAllStreams()
+                
+                // Start downloading the current song from the correct offset
+                let isTempCache = offsetInBytes > 0 || !settings.isSongCachingEnabled
+                streamManager.queueStream(for: song,
+                                          byteOffset: offsetInBytes,
+                                          secondsOffset: offsetInSeconds,
+                                          at: 0,
+                                          isTempCache: isTempCache,
+                                          isStartDownload: true)
+                
+                // Fill the stream queue
+                if settings.isSongCachingEnabled {
+                    streamManager.fillStreamQueue(audioEngine.player?.isStarted ?? false)
+                }
+            }
         }
     }
 }

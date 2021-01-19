@@ -14,7 +14,6 @@ import Resolver
 @objc final class PlayQueueViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var music: Music
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
     
@@ -348,10 +347,10 @@ extension PlayQueueViewController: UITableViewConfiguration {
         if isModal {
             dismiss(sender: self)
             DispatchQueue.main.async(after: 0.5) {
-                self.music.playSong(atPosition: indexPath.row)
+                self.playQueue.playSong(position: indexPath.row)
             }
         } else {
-            music.playSong(atPosition: indexPath.row)
+            playQueue.playSong(position: indexPath.row)
         }
     }
     

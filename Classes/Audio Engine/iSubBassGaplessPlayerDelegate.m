@@ -9,7 +9,6 @@
 #import "iSubBassGaplessPlayerDelegate.h"
 #import "BassGaplessPlayer.h"
 #import "ISMSStreamHandler.h"
-#import "MusicSingleton.h"
 #import "SocialSingleton.h"
 #import "ISMSStreamManager.h"
 #import "Defines.h"
@@ -18,48 +17,39 @@
 
 @implementation iSubBassGaplessPlayerDelegate
 
-- (instancetype)init
-{
-    if ((self = [super init]))
-    {
+- (instancetype)init {
+    if (self = [super init]) {
         [NSNotificationCenter addObserverOnMainThread:self selector:@selector(grabCurrentPlaylistIndex:) name:ISMSNotification_CurrentPlaylistOrderChanged];
         [NSNotificationCenter addObserverOnMainThread:self selector:@selector(grabCurrentPlaylistIndex:) name:ISMSNotification_CurrentPlaylistShuffleToggled];
     }
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [NSNotificationCenter removeObserverOnMainThread:self];
 }
 
-- (void)grabCurrentPlaylistIndex:(NSNotification *)notification
-{
+- (void)grabCurrentPlaylistIndex:(NSNotification *)notification {
     
 }
 
-- (void)bassSeekToPositionStarted:(BassGaplessPlayer*)player
-{
+- (void)bassSeekToPositionStarted:(BassGaplessPlayer*)player {
     
 }
 
-- (void)bassSeekToPositionSuccess:(BassGaplessPlayer*)player
-{
+- (void)bassSeekToPositionSuccess:(BassGaplessPlayer*)player {
     
 }
 
-- (void)bassStopped:(BassGaplessPlayer*)player
-{
+- (void)bassStopped:(BassGaplessPlayer*)player {
     
 }
 
-- (void)bassFirstStreamStarted:(BassGaplessPlayer*)player
-{
+- (void)bassFirstStreamStarted:(BassGaplessPlayer*)player {
     [socialS playerClearSocial];
 }
 
-- (void)bassSongEndedCalled:(BassGaplessPlayer*)player
-{
+- (void)bassSongEndedCalled:(BassGaplessPlayer*)player {
     // Increment current playlist index
     (void)[PlayQueue.shared incrementIndex];
     
@@ -67,61 +57,49 @@
     [socialS playerClearSocial];
 }
 
-- (void)bassFreed:(BassGaplessPlayer *)player
-{
+- (void)bassFreed:(BassGaplessPlayer *)player {
     [socialS playerClearSocial];
 }
 
-- (NSUInteger)bassIndexAtOffset:(NSInteger)offset fromIndex:(NSUInteger)index player:(BassGaplessPlayer *)player
-{
+- (NSUInteger)bassIndexAtOffset:(NSInteger)offset fromIndex:(NSUInteger)index player:(BassGaplessPlayer *)player {
     return [PlayQueue.shared indexWithOffset:offset fromIndex:index];
 }
 
-- (ISMSSong *)bassSongForIndex:(NSUInteger)index player:(BassGaplessPlayer *)player
-{
+- (ISMSSong *)bassSongForIndex:(NSUInteger)index player:(BassGaplessPlayer *)player {
     return [PlayQueue.shared songWithIndex:index];
 }
 
-- (NSUInteger)bassCurrentPlaylistIndex:(BassGaplessPlayer *)player
-{
+- (NSUInteger)bassCurrentPlaylistIndex:(BassGaplessPlayer *)player {
     return PlayQueue.shared.currentIndex;
 }
 
-- (void)bassRetrySongAtIndex:(NSUInteger)index player:(BassGaplessPlayer*)player;
-{
-    [EX2Dispatch runInMainThreadAsync:^
-     {
-         [musicS playSongAtPosition:index];
-     }];
+- (void)bassRetrySongAtIndex:(NSUInteger)index player:(BassGaplessPlayer*)player; {
+    [EX2Dispatch runInMainThreadAsync:^{
+        [PlayQueue.shared playSongWithPosition:index];
+    }];
 }
 
-- (void)bassUpdateLockScreenInfo:(BassGaplessPlayer *)player
-{
-	[musicS updateLockScreenInfo];
+- (void)bassUpdateLockScreenInfo:(BassGaplessPlayer *)player {
+	[PlayQueue.shared updateLockScreenInfo];
 }
 
-- (void)bassRetrySongAtOffsetInBytes:(NSUInteger)bytes andSeconds:(NSUInteger)seconds player:(BassGaplessPlayer*)player
-{
-    [musicS startSongAtOffsetInBytes:bytes andSeconds:seconds];
+- (void)bassRetrySongAtOffsetInBytes:(NSUInteger)bytes andSeconds:(NSUInteger)seconds player:(BassGaplessPlayer*)player {
+    [PlayQueue.shared startSongWithOffsetInBytes:bytes offsetInSeconds:seconds];
 }
 
-- (void)bassFailedToCreateNextStreamForIndex:(NSUInteger)index player:(BassGaplessPlayer *)player
-{
+- (void)bassFailedToCreateNextStreamForIndex:(NSUInteger)index player:(BassGaplessPlayer *)player {
     // The song ended, and we tried to make the next stream but it failed
     ISMSSong *aSong = [PlayQueue.shared songWithIndex:index];
     ISMSStreamHandler *handler = [streamManagerS handlerForSong:aSong];
-    if (!handler.isDownloading || handler.isDelegateNotifiedToStartPlayback)
-    {
+    if (!handler.isDownloading || handler.isDelegateNotifiedToStartPlayback) {
         // If the song isn't downloading, or it is and it already informed the player to play (i.e. the playlist will stop if we don't force a retry), then retry
-        [EX2Dispatch runInMainThreadAsync:^
-         {
-             [musicS playSongAtPosition:index];
-         }];
+        [EX2Dispatch runInMainThreadAsync:^{
+            [PlayQueue.shared playSongWithPosition:index];
+        }];
     }
 }
 
-- (void)bassRetrievingOutputData:(BassGaplessPlayer *)player
-{
+- (void)bassRetrievingOutputData:(BassGaplessPlayer *)player {
     [socialS playerHandleSocial];
 }
 

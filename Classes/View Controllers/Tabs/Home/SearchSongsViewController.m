@@ -11,7 +11,6 @@
 #import "NSMutableURLRequest+SUS.h"
 #import "Defines.h"
 #import "SavedSettings.h"
-#import "MusicSingleton.h"
 #import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
 #import "EX2Kit.h"
@@ -259,7 +258,7 @@ LOG_LEVEL_ISUB_DEFAULT
             [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
 
 			// Start the song
-			ISMSSong *playedSong = [musicS playSongAtPosition:indexPath.row];
+            ISMSSong *playedSong = [PlayQueue.shared playSongWithPosition:indexPath.row];
             if (!playedSong.isVideo) {
                 [self showPlayer];
             }

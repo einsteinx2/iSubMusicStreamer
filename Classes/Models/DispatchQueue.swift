@@ -25,13 +25,13 @@ extension DispatchQueue {
     // Work takes significant time, such as minutes or hours.
     static var background: DispatchQueue      { return DispatchQueue.global(qos: .background) }
     
-    public func async(after timeInterval: TimeInterval, execute work: @escaping @convention(block) () -> Swift.Void) {
+    public func async(after timeInterval: TimeInterval, execute work: @escaping () -> Void) {
         let milliseconds = Int(timeInterval * 1000)
         let deadline = DispatchTime.now() + .milliseconds(milliseconds)
         asyncAfter(deadline: deadline, execute: work)
     }
     
-    public func async(afterWall timeInterval: TimeInterval, execute work: @escaping @convention(block) () -> Swift.Void) {
+    public func async(afterWall timeInterval: TimeInterval, execute work: @escaping () -> Void) {
         let milliseconds = Int(timeInterval * 1000)
         let deadline = DispatchWallTime.now() + .milliseconds(milliseconds)
         asyncAfter(wallDeadline: deadline, execute: work)
@@ -47,5 +47,15 @@ extension DispatchQueue {
         let milliseconds = Int(timeInterval * 1000)
         let deadline = DispatchWallTime.now() + .milliseconds(milliseconds)
         asyncAfter(wallDeadline: deadline, execute: execute)
+    }
+    
+    // Run synchronously, but won't deadlock if called from the main queue
+    public static func mainSyncSafe<T>(execute work: () throws -> T) rethrows -> T {
+        guard !Thread.isMainThread else {
+            // If we're already on the main thread, just execute the block directly to prevent a deadlock
+            return try work()
+        }
+        
+        return try DispatchQueue.main.sync(execute: work)
     }
 }

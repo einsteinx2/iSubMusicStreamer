@@ -16,7 +16,6 @@ struct SongLoader {
     @Injected private static var audioEngine: AudioEngine
     @Injected private static var playQueue: PlayQueue
     @Injected private static var streamManager: StreamManager
-    @Injected private static var music: Music
     
     private static var recursiveLoader: RecursiveSongLoader?
     private static var albumLoader: TagAlbumLoader?
@@ -129,7 +128,8 @@ struct SongLoader {
                 let isStarted = audioEngine.player?.isStarted ?? false
                 streamManager.fillStreamQueue(isStarted)
             }
-            music.showPlayer()
+            playQueue.playSong(position: 0)
+            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_ShowPlayer)
         }
         finishLoading()
     }
@@ -146,7 +146,8 @@ struct SongLoader {
                 let isStarted = audioEngine.player?.isStarted ?? false
                 streamManager.fillStreamQueue(isStarted)
             }
-            music.showPlayer()
+            playQueue.playSong(position: 0)
+            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_ShowPlayer)
         }
         finishLoading()
     }

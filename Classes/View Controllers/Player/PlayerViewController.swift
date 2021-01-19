@@ -17,7 +17,6 @@ import Resolver
     @Injected private var settings: Settings
     @Injected private var jukebox: Jukebox
     @Injected private var audioEngine: AudioEngine
-    @Injected private var music: Music
     @Injected private var playQueue: PlayQueue
     @Injected private var streamManager: StreamManager
     
@@ -270,7 +269,7 @@ import Resolver
                     player.playPause()
                 } else {
                     // If we haven't started the song yet, start the player
-                    music.playSong(atPosition: playQueue.currentIndex)
+                    playQueue.playCurrentSong()
                 }
             }
         }
@@ -278,21 +277,21 @@ import Resolver
         let previousButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
         previousButton.setImage(UIImage(systemName: "backward.end.fill", withConfiguration: previousButtonConfig), for: .normal)
         previousButton.tintColor = iconDefaultColor
-        previousButton.addClosure(for: .touchUpInside) {
-            if let player = self.audioEngine.player, player.progress > 10.0 {
+        previousButton.addClosure(for: .touchUpInside) { [unowned self] in
+            if let player = audioEngine.player, player.progress > 10.0 {
                 // If we're more than 10 seconds into the song, restart it
-                self.music.playSong(atPosition: self.playQueue.currentIndex)
+                playQueue.playCurrentSong()
             } else {
                 // Otherwise, go to the previous song
-                self.music.prevSong()
+                playQueue.playPrevSong()
             }
         }
         
         let nextButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
         nextButton.setImage(UIImage(systemName: "forward.end.fill", withConfiguration: nextButtonConfig), for: .normal)
         nextButton.tintColor = iconDefaultColor
-        nextButton.addClosure(for: .touchUpInside) {
-            self.music.nextSong()
+        nextButton.addClosure(for: .touchUpInside) { [unowned self] in
+            playQueue.playNextSong()
         }
 
         let quickSkipBackButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .light, scale: .large)
@@ -301,8 +300,8 @@ import Resolver
         quickSkipBackButton.setTitleColor(iconDefaultColor, for: .normal)
         quickSkipBackButton.titleLabel?.font = .systemFont(ofSize: 10)
         quickSkipBackButton.addClosure(for: .touchUpInside) { [unowned self] in
-            let value = self.progressSlider.value - Float(settings.quickSkipNumberOfSeconds);
-            self.progressSlider.value = value > 0.0 ? value : 0.0;
+            let value = progressSlider.value - Float(settings.quickSkipNumberOfSeconds);
+            progressSlider.value = value > 0.0 ? value : 0.0;
             seekedAction()
             Flurry.logEvent("QuickSkip")
         }
@@ -313,11 +312,11 @@ import Resolver
         quickSkipForwardButton.setTitleColor(iconDefaultColor, for: .normal)
         quickSkipForwardButton.titleLabel?.font = .systemFont(ofSize: 10)
         quickSkipForwardButton.addClosure(for: .touchUpInside) { [unowned self] in
-            let value = self.progressSlider.value + Float(settings.quickSkipNumberOfSeconds)
-            if value >= self.progressSlider.maximumValue {
-                music.nextSong()
+            let value = progressSlider.value + Float(settings.quickSkipNumberOfSeconds)
+            if value >= progressSlider.maximumValue {
+                playQueue.playNextSong()
             } else {
-                self.progressSlider.value = value
+                progressSlider.value = value
                 seekedAction()
                 Flurry.logEvent("QuickSkip")
             }

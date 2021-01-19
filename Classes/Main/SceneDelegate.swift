@@ -14,7 +14,7 @@ import CocoaLumberjackSwift
 @objc final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @Injected private var settings: Settings
     @Injected private var cacheQueue: CacheQueue
-    @Injected private var music: Music
+    @Injected private var playQueue: PlayQueue
     @Injected private var streamManager: StreamManager
     
     // Temporary singleton access until multiple scenes are properly supported
@@ -173,7 +173,7 @@ import CocoaLumberjackSwift
         
         // Recover current state if player was interrupted
         streamManager.setup()
-        music.resumeSong()
+        playQueue.resumeSong()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -201,7 +201,7 @@ import CocoaLumberjackSwift
         cancelBackgroundTask()
         
         // Update the lock screen art in case were were using another app
-        music.updateLockScreenInfo()
+        playQueue.updateLockScreenInfo()
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
@@ -234,6 +234,8 @@ import CocoaLumberjackSwift
     }
     
     @objc private func showPlayer() {
+        guard !UIDevice.isPad() else { return }
+        
         let controller = PlayerViewController()
         controller.hidesBottomBarWhenPushed = true
         if let navigationController = tabBarController?.selectedViewController as? UINavigationController {

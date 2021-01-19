@@ -10,7 +10,6 @@
 #import "ServerListViewController.h"
 #import "Defines.h"
 #import "SavedSettings.h"
-#import "MusicSingleton.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 

@@ -504,8 +504,6 @@
 		53FE375A1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
 		53FE375E1EA961720058B925 /* JukeboxSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36801EA961720058B925 /* JukeboxSingleton.m */; };
 		53FE37601EA961720058B925 /* JukeboxSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36801EA961720058B925 /* JukeboxSingleton.m */; };
-		53FE37671EA961720058B925 /* MusicSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36891EA961720058B925 /* MusicSingleton.m */; };
-		53FE37691EA961720058B925 /* MusicSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36891EA961720058B925 /* MusicSingleton.m */; };
 		53FE376A1EA961720058B925 /* NSError+ISMSError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE368B1EA961720058B925 /* NSError+ISMSError.m */; };
 		53FE376C1EA961720058B925 /* NSError+ISMSError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE368B1EA961720058B925 /* NSError+ISMSError.m */; };
 		53FE37701EA961720058B925 /* NSMutableURLRequest+SUS.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE368F1EA961720058B925 /* NSMutableURLRequest+SUS.m */; };
@@ -971,8 +969,6 @@
 		53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSubBassGaplessPlayerDelegate.m; sourceTree = "<group>"; };
 		53FE367F1EA961720058B925 /* JukeboxSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JukeboxSingleton.h; sourceTree = "<group>"; };
 		53FE36801EA961720058B925 /* JukeboxSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JukeboxSingleton.m; sourceTree = "<group>"; };
-		53FE36881EA961720058B925 /* MusicSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicSingleton.h; sourceTree = "<group>"; };
-		53FE36891EA961720058B925 /* MusicSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MusicSingleton.m; sourceTree = "<group>"; };
 		53FE368A1EA961720058B925 /* NSError+ISMSError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+ISMSError.h"; sourceTree = "<group>"; };
 		53FE368B1EA961720058B925 /* NSError+ISMSError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+ISMSError.m"; sourceTree = "<group>"; };
 		53FE368E1EA961720058B925 /* NSMutableURLRequest+SUS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableURLRequest+SUS.h"; sourceTree = "<group>"; };
@@ -1529,8 +1525,6 @@
 				53FE36381EA961710058B925 /* CacheSingleton.m */,
 				53FE36391EA961710058B925 /* DatabaseSingleton.h */,
 				53FE363A1EA961710058B925 /* DatabaseSingleton.m */,
-				53FE36881EA961720058B925 /* MusicSingleton.h */,
-				53FE36891EA961720058B925 /* MusicSingleton.m */,
 				539D331125AB691B00F53797 /* PlayQueue.swift */,
 			);
 			path = Singletons;
@@ -2316,7 +2310,6 @@
 				53FE356D1EA961540058B925 /* UIView+ObjCFrameHelper.m in Sources */,
 				53C3AB64257DA71000B35B99 /* Reachability.m in Sources */,
 				535E142C25A7B4600039BCAA /* RootFoldersLoader.swift in Sources */,
-				53FE37671EA961720058B925 /* MusicSingleton.m in Sources */,
 				53762C7725ACE7E700476F2D /* ServerPlaylist.swift in Sources */,
 				530A1679259255D200E9294E /* FolderAlbum.swift in Sources */,
 				53EA2DE2257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
@@ -2565,7 +2558,6 @@
 				53762C7825ACE7E700476F2D /* ServerPlaylist.swift in Sources */,
 				537B05C0256B0E4B0008892C /* PadMenuTableCell.swift in Sources */,
 				530A167A259255D200E9294E /* FolderAlbum.swift in Sources */,
-				53FE37691EA961720058B925 /* MusicSingleton.m in Sources */,
 				53D632D425A65A37004EC117 /* RootArtistsLoader.swift in Sources */,
 				53FE37481EA961720058B925 /* ISMSStreamHandler.m in Sources */,
 				537C93E225B1051200175DF6 /* SaveEditHeader.swift in Sources */,
