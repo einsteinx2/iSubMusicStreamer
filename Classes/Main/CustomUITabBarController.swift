@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import Resolver
 
 @objc final class CustomUITabBarController: UITabBarController {
+    @Injected private var settings: Settings
+    
     override var shouldAutorotate: Bool {
-        !(Settings.shared().isRotationLockEnabled && UIDevice.current.orientation != .portrait)
+        !(settings.isRotationLockEnabled && UIDevice.current.orientation != .portrait)
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask { .all }

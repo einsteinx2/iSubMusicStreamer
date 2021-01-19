@@ -7,8 +7,13 @@
 //
 
 import UIKit
+import Resolver
 
 final class CacheStatusViewController: UIViewController {
+    @Injected private var settings: Settings
+    @Injected private var cache: Cache
+    @Injected private var playQueue: PlayQueue
+    
     let currentSongProgressBar = UIProgressView(progressViewStyle: .default)
     let nextSongProgressBar = UIProgressView(progressViewStyle: .default)
         
@@ -92,7 +97,7 @@ final class CacheStatusViewController: UIViewController {
         infoTitleStackView.axis = .vertical
         infoTitleStackView.distribution = .equalSpacing
         infoTitleStackView.spacing = 3
-        let cacheSizeTitle = Settings.shared().cachingType == ISMSCachingType_minSpace.rawValue ? "Min Free Space:" : "Max Cache Size:"
+        let cacheSizeTitle = settings.cachingType == ISMSCachingType_minSpace.rawValue ? "Min Free Space:" : "Max Cache Size:"
         infoTitleStackView.addArrangedSubviews([makeInfoLabel(text: "Songs Cached:"),
                                                 makeInfoLabel(text: "Cache Used:"),
                                                 makeInfoLabel(text: cacheSizeTitle),
@@ -136,14 +141,14 @@ final class CacheStatusViewController: UIViewController {
     }
     
     @objc private func cacheSongObjects() {
-        currentSong = PlayQueue.shared.currentSong
-        nextSong = PlayQueue.shared.nextSong
+        currentSong = playQueue.currentSong
+        nextSong = playQueue.nextSong
     }
     
     @objc private func startUpdatingStats() {
         stopUpdatingStats()
         
-        if Settings.shared().isJukeboxEnabled {
+        if settings.isJukeboxEnabled {
             currentSongProgressBar.progress = 0
             currentSongProgressBar.alpha = 0.5
             nextSongProgressBar.progress = 0
@@ -166,15 +171,15 @@ final class CacheStatusViewController: UIViewController {
             }
         }
         
-        let numCachedSongs = Cache.shared().numberOfCachedSongs
+        let numCachedSongs = cache.numberOfCachedSongs
         songsCachedLabel.text = numCachedSongs == 1 ? "1 song" : "\(numCachedSongs) songs"
-        cachedUsedLabel.text = NSString.formatFileSize(Cache.shared().cacheSize)
-        if Settings.shared().cachingType == ISMSCachingType_minSpace.rawValue {
-            cacheSizeLabel.text = NSString.formatFileSize(Settings.shared().minFreeSpace)
+        cachedUsedLabel.text = NSString.formatFileSize(cache.cacheSize)
+        if settings.cachingType == ISMSCachingType_minSpace.rawValue {
+            cacheSizeLabel.text = NSString.formatFileSize(settings.minFreeSpace)
         } else {
-            cacheSizeLabel.text = NSString.formatFileSize(Settings.shared().minFreeSpace)
+            cacheSizeLabel.text = NSString.formatFileSize(settings.minFreeSpace)
         }
-        freeSpaceLabel.text = NSString.formatFileSize(Cache.shared().freeSpace)
+        freeSpaceLabel.text = NSString.formatFileSize(cache.freeSpace)
         
         perform(#selector(startUpdatingStats), with: nil, afterDelay: 1.0)
     }

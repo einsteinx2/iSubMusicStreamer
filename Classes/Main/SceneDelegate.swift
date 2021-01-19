@@ -57,13 +57,13 @@ import CocoaLumberjackSwift
             let homeTab = CustomUINavigationController(rootViewController: HomeViewController())
             homeTab.tabBarItem = UITabBarItem(title: "Home", image: UIImage(named: "tabbaricon-home"), tag: 0)
             
-            let foldersMediaFolderId = Settings.shared().rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
+            let foldersMediaFolderId = settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
             let foldersDataModel = FolderArtistsViewModel(mediaFolderId: foldersMediaFolderId)
             let foldersTab = CustomUINavigationController(rootViewController: ArtistsViewController(dataModel: foldersDataModel))
             foldersTab.tabBarItem = UITabBarItem(title: "Folders", image: UIImage(named: "tabbaricon-folders"), tag: 0)
             self.foldersTab = foldersTab
             
-            let artistsMediaFolderId = Settings.shared().rootArtistsSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
+            let artistsMediaFolderId = settings.rootArtistsSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
             let artistsDataModel = TagArtistsViewModel(mediaFolderId: artistsMediaFolderId)
             let artistsTab = CustomUINavigationController(rootViewController: ArtistsViewController(dataModel: artistsDataModel))
             artistsTab.tabBarItem = UITabBarItem(title: "Artists", image: UIImage(named: "tabbaricon-folders"), tag: 0)

@@ -17,15 +17,17 @@ import Resolver
 }
 
 @objc final class PlayQueue: NSObject {
+    @Injected private var settings: Settings
+    @Injected private var jukebox: Jukebox
     
     // Temporary accessor for Objective-C classes using Resolver under the hood
-    @objc static var shared: PlayQueue { Resolver.main.resolve() }
+    @objc static var shared: PlayQueue { Resolver.resolve() }
     
     @Injected private var store: Store
     
     private var currentPlaylistId: Int {
         let id: Int
-        if Settings.shared().isJukeboxEnabled {
+        if settings.isJukeboxEnabled {
             id = isShuffle ? LocalPlaylist.Default.jukeboxShuffleQueueId : LocalPlaylist.Default.jukeboxPlayQueueId
         } else {
             id = isShuffle ? LocalPlaylist.Default.shuffleQueueId : LocalPlaylist.Default.playQueueId
@@ -137,8 +139,8 @@ import Resolver
     
     @objc func moveSong(fromIndex: Int, toIndex: Int) -> Bool {
         if store.move(songAtPosition: fromIndex, toPosition: toIndex, localPlaylistId: currentPlaylistId) {
-            if Settings.shared().isJukeboxEnabled {
-                Jukebox.shared().replacePlaylistWithLocal()
+            if settings.isJukeboxEnabled {
+                jukebox.replacePlaylistWithLocal()
             }
             
             // Correct the value of currentPlaylistPosition

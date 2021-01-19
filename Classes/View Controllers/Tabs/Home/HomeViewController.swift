@@ -13,6 +13,12 @@ import Resolver
 
 @objc final class HomeViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var settings: Settings
+    @Injected private var viewObjects: ViewObjects
+    @Injected private var music: Music
+    @Injected private var audioEngine: AudioEngine
+    @Injected private var jukebox: Jukebox
+    @Injected private var playQueue: PlayQueue
     
     private var quickAlbumsLoader: QuickAlbumsLoader?
     private var serverShuffleLoader: ServerShuffleLoader?
@@ -139,7 +145,7 @@ import Resolver
         }
         
         serverShuffleButton.setAction { [unowned self] in
-            let mediaFolders = store.mediaFolders(serverId: Settings.shared().currentServerId)
+            let mediaFolders = store.mediaFolders(serverId: settings.currentServerId)
             if mediaFolders.count > 0 {
                 // 2 media folders means the "All Media Folders" option plus one folder aka only 1 actual media folder
                 if mediaFolders.count == 2 {
@@ -168,16 +174,16 @@ import Resolver
         }
         
         jukeboxButton.setAction { [unowned self] in
-            if Settings.shared().isJukeboxEnabled {
+            if settings.isJukeboxEnabled {
                 self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-off"))
-                Settings.shared().isJukeboxEnabled = false
+                settings.isJukeboxEnabled = false
                 NotificationCenter.postNotificationToMainThread(name: ISMSNotification_JukeboxDisabled)
                 Flurry.logEvent("JukeboxDisabled")
             } else {
-                AudioEngine.shared().player?.stop()
+                self.audioEngine.player?.stop()
                 self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-on"))
-                Settings.shared().isJukeboxEnabled = true
-                Jukebox.shared().getInfo()
+                settings.isJukeboxEnabled = true
+                self.jukebox.getInfo()
                 NotificationCenter.postNotificationToMainThread(name: ISMSNotification_JukeboxEnabled)
                 Flurry.logEvent("JukeboxEnabled")
             }
@@ -258,7 +264,7 @@ import Resolver
         addURLRefBackButton()
         addShowPlayerButton()
         
-        let jukeboxImageName = Settings.shared().isJukeboxEnabled ? "home-jukebox-on" : "home-jukebox-off"
+        let jukeboxImageName = settings.isJukeboxEnabled ? "home-jukebox-on" : "home-jukebox-off"
         jukeboxButton.setIcon(image: UIImage(named: jukeboxImageName))
         
         searchSegment.alpha = 0.0
@@ -271,16 +277,16 @@ import Resolver
     }
     
     @objc private func initSongInfo() {
-        songInfoButton.update(song: PlayQueue.shared.currentSong ?? PlayQueue.shared.prevSong)
+        songInfoButton.update(song: playQueue.currentSong ?? playQueue.prevSong)
     }
     
     private func loadQuickAlbums(modifier: String, title: String) {
-        ViewObjects.shared().showAlbumLoadingScreenOnMainWindowWithSender(self)
+        viewObjects.showAlbumLoadingScreenOnMainWindowWithSender(self)
         let loader = QuickAlbumsLoader()
         loader.callback = { _, error in
-            ViewObjects.shared().hideLoadingScreen()
+            self.viewObjects.hideLoadingScreen()
             if let error = error {
-                if Settings.shared().isPopupsEnabled && (error as NSError).code != NSURLErrorCancelled {
+                if self.settings.isPopupsEnabled && (error as NSError).code != NSURLErrorCancelled {
                     let alert = UIAlertController(title: "Error", message: "There was an error grabbing the album list.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
                     alert.addAction(title: "OK", style: .cancel, handler: nil)
                     self.present(alert, animated: true, completion: nil)
@@ -300,15 +306,15 @@ import Resolver
     }
     
     private func performServerShuffle(mediaFolderId: Int) {
-        ViewObjects.shared().showAlbumLoadingScreenOnMainWindowWithSender(self)
+        viewObjects.showAlbumLoadingScreenOnMainWindowWithSender(self)
         let loader = ServerShuffleLoader()
         loader.callback = { success, _ in
-            ViewObjects.shared().hideLoadingScreen()
+            self.viewObjects.hideLoadingScreen()
             if success {
-                Music.shared().playSong(atPosition: 0)
+                self.music.playSong(atPosition: 0)
                 self.showPlayer()
             } else {
-                if Settings.shared().isPopupsEnabled {
+                if self.settings.isPopupsEnabled {
                     let alert = UIAlertController(title: "Error", message: "There was an error creating the server shuffle list.\n\nThe connection could not be created", preferredStyle: .alert)
                     alert.addAction(title: "OK", style: .cancel, handler: nil)
                     self.present(alert, animated: true, completion: nil)
@@ -328,7 +334,7 @@ import Resolver
         serverShuffleLoader = nil
         dataTask?.cancel()
         dataTask = nil
-        ViewObjects.shared().hideLoadingScreen()
+        viewObjects.hideLoadingScreen()
     }
     
     @objc private func jukeboxOff() {
@@ -338,7 +344,7 @@ import Resolver
 }
 
 extension HomeViewController: UISearchBarDelegate {
-    private var isNewSearchSupported: Bool { Settings.shared().currentServer?.isNewSearchSupported ?? false }
+    private var isNewSearchSupported: Bool { settings.currentServer?.isNewSearchSupported ?? false }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         if traitCollection.userInterfaceStyle == .dark {
@@ -348,7 +354,7 @@ extension HomeViewController: UISearchBarDelegate {
         }
         
         view.addSubview(searchOverlay)
-        if Settings.shared().currentServer?.isNewSearchSupported == true {
+        if settings.currentServer?.isNewSearchSupported == true {
             searchOverlay.snp.makeConstraints { make in
                 make.top.equalTo(searchSegmentContainer.snp.bottom)
                 make.leading.trailing.bottom.equalToSuperview()
@@ -424,7 +430,7 @@ extension HomeViewController: UISearchBarDelegate {
             dataTask = APILoader.sharedSession.dataTask(with: request) { data, _, error in
                 DispatchQueue.main.async {
                     if let error = error {
-                        if Settings.shared().isPopupsEnabled {
+                        if self.settings.isPopupsEnabled {
                             let alert = UIAlertController(title: "Error", message: "There was an error completing the search.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
                             alert.addAction(title: "OK", style: .cancel, handler: nil)
                             self.present(alert, animated: true, completion: nil)
@@ -461,11 +467,11 @@ extension HomeViewController: UISearchBarDelegate {
                             self.pushViewControllerCustom(controller)
                         }
                     }
-                    ViewObjects.shared().hideLoadingScreen()
+                    self.viewObjects.hideLoadingScreen()
                 }
             }
             dataTask?.resume()
-            ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: "")
+            viewObjects.showLoadingScreenOnMainWindow(withMessage: "")
         }
     }
 }

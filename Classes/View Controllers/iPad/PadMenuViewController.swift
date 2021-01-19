@@ -8,8 +8,11 @@
 
 import UIKit
 import SnapKit
+import Resolver
 
 @objc final class PadMenuViewController: UIViewController {
+    @Injected private var settings: Settings
+    
     private let tableContainer = UIView()
     private let tableView = UITableView(frame: .zero, style: .plain)
     private let playerController = PlayerViewController()
@@ -90,7 +93,7 @@ import SnapKit
             cellContents.append((imageName: "tabbaricon-back", text: "Back"))
         }
         
-        if Settings.shared().isOfflineMode {
+        if settings.isOfflineMode {
             cellContents.append((imageName: "tabbaricon-settings", text: "Settings"))
             cellContents.append((imageName: "tabbaricon-folders", text: "Folders"))
             cellContents.append((imageName: "tabbaricon-genres", text: "Genres"))
@@ -135,7 +138,7 @@ import SnapKit
         
         // Present the view controller
         var controller: UINavigationController?
-        if Settings.shared().isOfflineMode {
+        if settings.isOfflineMode {
             switch row {
             case 0:
                 if let cachedController = cachedTabs["ServerListViewController"] {
@@ -194,7 +197,7 @@ import SnapKit
                 if let cachedController = cachedTabs["FoldersViewController"] {
                     controller = cachedController
                 } else {
-                    let mediaFolderId = Settings.shared().rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
+                    let mediaFolderId = settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
                     let dataModel = FolderArtistsViewModel(mediaFolderId: mediaFolderId)
                     controller = CustomUINavigationController(rootViewController: ArtistsViewController(dataModel: dataModel))
                     cachedTabs["FoldersViewController"] = controller

@@ -8,8 +8,12 @@
 
 import UIKit
 import SnapKit
+import Resolver
 
 final class SongInfoViewController: UIViewController {
+    @Injected private var audioEngine: AudioEngine
+    @Injected private var playQueue: PlayQueue
+    
     let stackView = UIStackView()
     var realTimeBitrateLabel: UILabel?
     
@@ -91,7 +95,7 @@ final class SongInfoViewController: UIViewController {
             return infoLabel
         }
         
-        if let song = PlayQueue.shared.currentSong {
+        if let song = playQueue.currentSong {
 //            if let path = song.path {
 //                stackView.addArrangedSubview(createTitleLabel(text: "File Name"))
 //                let filename = (path as NSString).lastPathComponent
@@ -159,7 +163,7 @@ final class SongInfoViewController: UIViewController {
     @objc private func startUpdatingRealtimeBitrate() {
         stopUpdatingRealtimeBitrate()
         if let realTimeBitrateLabel = realTimeBitrateLabel {
-            if let player = AudioEngine.shared().player, let bitrate = AudioEngine.shared().player?.bitRate, bitrate > 0, player.isPlaying {
+            if let player = audioEngine.player, let bitrate = audioEngine.player?.bitRate, bitrate > 0, player.isPlaying {
                 realTimeBitrateLabel.text = "\(bitrate) Kbps"
             } else {
                 realTimeBitrateLabel.text = "Unknown"

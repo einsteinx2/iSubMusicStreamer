@@ -12,6 +12,8 @@ import Resolver
 
 @objc final class FolderAlbumViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var settings: Settings
+    @Injected private var viewObjects: ViewObjects
     
     var serverId = Settings.shared().currentServerId
     
@@ -159,7 +161,7 @@ import Resolver
     }
     
     func startLoad() {
-        ViewObjects.shared().showAlbumLoadingScreen(view, sender: self)
+        viewObjects.showAlbumLoadingScreen(view, sender: self)
         loader = SubfolderLoader(parentFolderId: parentFolderId) { [weak self] success, error in
             guard let self = self else { return }
             
@@ -175,14 +177,14 @@ import Resolver
                 self.addHeader()
                 self.addSectionIndex()
             } else if let error = error as NSError? {
-                if Settings.shared().isPopupsEnabled {
+                if self.settings.isPopupsEnabled {
                     let message = "There was an error loading the album.\n\nError \(error.code): \(error.localizedDescription)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
                     alert.addCancelAction(title: "OK")
                     self.present(alert, animated: true, completion: nil)
                 }
             }
-            ViewObjects.shared().hideLoadingScreen()
+            self.viewObjects.hideLoadingScreen()
             self.tableView.refreshControl?.endRefreshing()
         }
         loader?.startLoad()
@@ -194,7 +196,7 @@ import Resolver
         loader = nil
         
         tableView.refreshControl?.endRefreshing()
-        ViewObjects.shared().hideLoadingScreen()
+        viewObjects.hideLoadingScreen()
     }
 }
 

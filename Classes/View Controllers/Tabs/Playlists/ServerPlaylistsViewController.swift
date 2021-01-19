@@ -13,6 +13,9 @@ import Resolver
 
 @objc final class ServerPlaylistsViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var settings: Settings
+    @Injected private var viewObjects: ViewObjects
+    @Injected private var playQueue: PlayQueue
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "playlist", pluralizeClearType: false, isLargeCount: true)
     private let tableView = UITableView()
@@ -48,7 +51,7 @@ import Resolver
         guard saveEditHeader.superview == nil else { return }
         
         saveEditHeader.delegate = self
-        saveEditHeader.count = PlayQueue.shared.count
+        saveEditHeader.count = playQueue.count
         view.addSubview(saveEditHeader)
         saveEditHeader.snp.makeConstraints { make in
             make.height.equalTo(50)
@@ -76,7 +79,7 @@ import Resolver
         tableView.refreshControl = nil
         setEditing(false, animated: false)
         removeSaveEditHeader()
-        serverPlaylists = store.serverPlaylists(serverId: Settings.shared().currentServerId)
+        serverPlaylists = store.serverPlaylists(serverId: settings.currentServerId)
         if serverPlaylists.count > 0 {
             addSaveEditHeader()
         } else {
@@ -125,7 +128,7 @@ import Resolver
     
     private func loadServerPlaylists() {
         cancelLoad()
-        ViewObjects.shared().showAlbumLoadingScreenOnMainWindowWithSender(self)
+        viewObjects.showAlbumLoadingScreenOnMainWindowWithSender(self)
         self.serverPlaylistsLoader = ServerPlaylistsLoader()
         self.serverPlaylistsLoader?.callback = { [unowned self] (success, error) in
             if success {
@@ -136,7 +139,7 @@ import Resolver
             } else {
                 // TODO: Show error message
             }
-            ViewObjects.shared().hideLoadingScreen()
+            self.viewObjects.hideLoadingScreen()
             self.tableView.refreshControl?.endRefreshing()
         }
     }
@@ -157,7 +160,7 @@ extension ServerPlaylistsViewController: SaveEditHeaderDelegate {
         if let indexPathsForSelectedRows = tableView.indexPathsForSelectedRows {
             deleteServerPlaylists(indexPaths: indexPathsForSelectedRows)
         }
-        ViewObjects.shared().hideLoadingScreen()
+        viewObjects.hideLoadingScreen()
     }
 }
 

@@ -12,6 +12,8 @@ import Resolver
 
 @objc final class ServerPlaylistViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var settings: Settings
+    @Injected private var viewObjects: ViewObjects
     
     private var serverPlaylistLoader: ServerPlaylistLoader?
     private var serverPlaylist: ServerPlaylist
@@ -54,7 +56,7 @@ import Resolver
         serverPlaylistLoader?.callback = { [unowned self] (success, error) in
             DispatchQueue.main.async {
                 if let error = error as NSError? {
-                    if Settings.shared().isPopupsEnabled {
+                    if self.settings.isPopupsEnabled {
                         let message = "There was an error loading the playlist.\n\nError %\(error.code): \(error.localizedDescription)"
                         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
                         alert.addCancelAction(title: "OK")
@@ -67,19 +69,19 @@ import Resolver
                     }
                     tableView.reloadData()
                 }
-                ViewObjects.shared().hideLoadingScreen()
+                viewObjects.hideLoadingScreen()
                 self.tableView.refreshControl?.endRefreshing()
             }
         }
         serverPlaylistLoader?.startLoad()
-        ViewObjects.shared().showAlbumLoadingScreen(self.view, sender: self)
+        viewObjects.showAlbumLoadingScreen(self.view, sender: self)
     }
     
     @objc func cancelLoad() {
         serverPlaylistLoader?.cancelLoad()
         serverPlaylistLoader?.callback = nil
         serverPlaylistLoader = nil
-        ViewObjects.shared().hideLoadingScreen()
+        viewObjects.hideLoadingScreen()
         self.tableView.refreshControl?.endRefreshing()
     }
 }
@@ -106,12 +108,12 @@ extension ServerPlaylistViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: nil)
+        viewObjects.showLoadingScreenOnMainWindow(withMessage: nil)
         DispatchQueue.userInitiated.async { [unowned self] in
             let song = store.playSongFromServerPlaylist(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id, position: indexPath.row)
             
             DispatchQueue.main.async {
-                ViewObjects.shared().hideLoadingScreen()
+                viewObjects.hideLoadingScreen()
                 if let song = song, !song.isVideo {
                     showPlayer()
                 }

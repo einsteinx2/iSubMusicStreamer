@@ -11,8 +11,9 @@ import Resolver
 import SnapKit
 import CocoaLumberjackSwift
 
-@objc final class DownloadedSongsViewController: UIViewController {
+final class DownloadedSongsViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var settings: Settings
     
     private let tableView = UITableView()
     
@@ -56,7 +57,7 @@ import CocoaLumberjackSwift
     }
     
     @objc private func reloadTable() {
-        downloadedSongs = store.downloadedSongs(serverId: Settings.shared().currentServerId)
+        downloadedSongs = store.downloadedSongs(serverId: settings.currentServerId)
         tableView.reloadData()
     }
 }

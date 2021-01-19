@@ -152,7 +152,7 @@ import Resolver
     }
     
     private func handleSongIds(songIds: [Int], serverId: Int) {
-        let store: Store = Resolver.main.resolve()
+        let store: Store = Resolver.resolve()
         if isQueue {
             _ = store.queue(songIds: songIds, serverId: serverId)
         } else {

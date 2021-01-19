@@ -12,6 +12,8 @@ import Resolver
 
 @objc final class LocalPlaylistViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var settings: Settings
+    @Injected private var viewObjects: ViewObjects
     
     private let localPlaylist: LocalPlaylist
     
@@ -31,7 +33,7 @@ import Resolver
         title = localPlaylist.name
         setupDefaultTableView(tableView)
         
-        if !Settings.shared().isOfflineMode {
+        if !settings.isOfflineMode {
             let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
             
             let saveButton = UIButton(type: .custom)
@@ -132,12 +134,12 @@ extension LocalPlaylistViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: nil)
+        viewObjects.showLoadingScreenOnMainWindow(withMessage: nil)
         DispatchQueue.userInitiated.async {
             // TODO: implement this
             
             DispatchQueue.main.async {
-                ViewObjects.shared().hideLoadingScreen()
+                self.viewObjects.hideLoadingScreen()
 //                if !song.isVideo {
 //                    showPlayer()
 //                }

@@ -113,13 +113,13 @@ extension ServerPlaylist: TableCellModel {
     var durationLabelText: String? { NSString.formatTime(Double(duration)) }
     var isCached: Bool { false }
     func download() {
-        let store: Store = Resolver.main.resolve()
+        let store: Store = Resolver.resolve()
         for position in 0..<self.songCount {
             store.song(serverId: serverId, serverPlaylistId: id, position: position)?.download()
         }
     }
     func queue() {
-        let store: Store = Resolver.main.resolve()
+        let store: Store = Resolver.resolve()
         for position in 0..<self.songCount {
             store.song(serverId: serverId, serverPlaylistId: id, position: position)?.queue()
         }

@@ -52,14 +52,14 @@ extension LocalPlaylist: TableCellModel {
     var coverArtId: String? { nil }
     var isCached: Bool { false }
     func download() {
-        let store: Store = Resolver.main.resolve()
+        let store: Store = Resolver.resolve()
         for position in 0..<self.songCount {
             store.song(localPlaylistId: id, position: position)?.download()
         }
     }
     
     func queue() {
-        let store: Store = Resolver.main.resolve()
+        let store: Store = Resolver.resolve()
         for position in 0..<self.songCount {
             store.song(localPlaylistId: id, position: position)?.queue()
         }

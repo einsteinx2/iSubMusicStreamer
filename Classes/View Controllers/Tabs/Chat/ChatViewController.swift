@@ -8,9 +8,12 @@
 
 import UIKit
 import SnapKit
+import Resolver
 
-@objc final class ChatViewController: UIViewController {
-    @objc lazy var serverId = Settings.shared().currentServerId
+final class ChatViewController: UIViewController {
+    @Injected private var viewObjects: ViewObjects
+    
+    var serverId = Settings.shared().currentServerId
     
     private var loader: ChatLoader?
     
@@ -103,28 +106,29 @@ import SnapKit
     }
     
     private func send(message: String) {
-        ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: "Sending")
+        viewObjects.showLoadingScreenOnMainWindow(withMessage: "Sending")
         let chatSendLoader = ChatSendLoader(message: message)
         chatSendLoader.callback = { [weak self] (success, error) in
-            ViewObjects.shared().hideLoadingScreen()
+            guard let self = self else { return }
+            self.viewObjects.hideLoadingScreen()
             if success {
-                self?.startLoad()
+                self.startLoad()
             } else {
-                self?.textInput.text = message
+                self.textInput.text = message
             }
         }
         chatSendLoader.startLoad()
     }
     
     func startLoad() {
-        ViewObjects.shared().showAlbumLoadingScreenOnMainWindowWithSender(self)
+        viewObjects.showAlbumLoadingScreenOnMainWindowWithSender(self)
         cancelLoad()
         loader = ChatLoader(delegate: self)
         loader?.startLoad()
     }
     
     func cancelLoad() {
-        ViewObjects.shared().hideLoadingScreen()
+        viewObjects.hideLoadingScreen()
         loader?.cancelLoad()
         loader?.delegate = nil
         loader = nil
@@ -139,7 +143,7 @@ extension ChatViewController: APILoaderDelegate {
         self.loader?.delegate = nil
         self.loader = nil
         
-        ViewObjects.shared().hideLoadingScreen()
+        viewObjects.hideLoadingScreen()
         tableView.reloadData()
         tableView.setNeedsUpdateConstraints()
         tableView.refreshControl?.endRefreshing()
@@ -149,7 +153,7 @@ extension ChatViewController: APILoaderDelegate {
         self.loader?.delegate = nil
         self.loader = nil
         
-        ViewObjects.shared().hideLoadingScreen()
+        viewObjects.hideLoadingScreen()
         tableView.refreshControl?.endRefreshing()
     }
 }

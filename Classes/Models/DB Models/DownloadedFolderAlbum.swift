@@ -41,14 +41,14 @@ extension DownloadedFolderAlbum: TableCellModel {
     var durationLabelText: String? { nil }
     var isCached: Bool { true }
     func download() {
-        let store: Store = Resolver.main.resolve()
+        let store: Store = Resolver.resolve()
         let songs = store.songsRecursive(serverId: serverId, level: level, parentPathComponent: name)
         for song in songs {
             song.download()
         }
     }
     func queue() {
-        let store: Store = Resolver.main.resolve()
+        let store: Store = Resolver.resolve()
         let songs = store.songsRecursive(serverId: serverId, level: level, parentPathComponent: name)
         for song in songs {
             song.queue()

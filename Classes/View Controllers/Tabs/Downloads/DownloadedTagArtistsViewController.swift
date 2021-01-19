@@ -12,8 +12,9 @@ import SnapKit
 import CocoaLumberjackSwift
 
 // TODO: Make sure to call the getArtist API for all downloaded songs or they won't show up here
-@objc final class DownloadedTagArtistsViewController: UIViewController {
+final class DownloadedTagArtistsViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var settings: Settings
     
     private let tableView = UITableView()
     
@@ -58,7 +59,7 @@ import CocoaLumberjackSwift
     }
     
     @objc private func reloadTable() {
-        downloadedTagArtists = store.downloadedTagArtists(serverId: Settings.shared().currentServerId)
+        downloadedTagArtists = store.downloadedTagArtists(serverId: settings.currentServerId)
         tableView.reloadData()
     }
 }

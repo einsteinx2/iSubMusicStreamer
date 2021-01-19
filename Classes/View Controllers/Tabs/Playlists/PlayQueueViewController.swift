@@ -13,6 +13,11 @@ import Resolver
 
 @objc final class PlayQueueViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var settings: Settings
+    @Injected private var viewObjects: ViewObjects
+    @Injected private var music: Music
+    @Injected private var jukebox: Jukebox
+    @Injected private var playQueue: PlayQueue
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "song", pluralizeClearType: false, isLargeCount: false)
     private let tableView = UITableView()
@@ -52,7 +57,7 @@ import Resolver
         registerForNotifications()
         
         saveEditHeader.delegate = self
-        saveEditHeader.count = PlayQueue.shared.count
+        saveEditHeader.count = playQueue.count
         view.addSubview(saveEditHeader)
         saveEditHeader.snp.makeConstraints { make in
             make.height.equalTo(50)
@@ -70,8 +75,8 @@ import Resolver
         super.viewWillAppear(animated)
         selectRow()
         Flurry.logEvent(isModal ? "PlayerPlayQueue" : "PlayQueueTab")
-        if Settings.shared().isJukeboxEnabled {
-            Jukebox.shared().getInfo()
+        if settings.isJukeboxEnabled {
+            jukebox.getInfo()
         }
     }
     
@@ -85,20 +90,20 @@ import Resolver
     
     @objc private func selectRow() {
         tableView.reloadData()
-        let currentIndex = PlayQueue.shared.currentIndex
-        if currentIndex >= 0 && currentIndex < PlayQueue.shared.count {
+        let currentIndex = playQueue.currentIndex
+        if currentIndex >= 0 && currentIndex < playQueue.count {
             tableView.selectRow(at: IndexPath(row: currentIndex, section: 0), animated: false, scrollPosition: .top)
         }
     }
     
     @objc private func jukeboxSongInfoUpdated() {
-        saveEditHeader.count = PlayQueue.shared.count
+        saveEditHeader.count = playQueue.count
         tableView.reloadData()
         selectRow()
     }
     
     @objc private func songsQueued() {
-        saveEditHeader.count = PlayQueue.shared.count
+        saveEditHeader.count = playQueue.count
         tableView.reloadData()
     }
     
@@ -117,7 +122,7 @@ import Resolver
         
         if isEditing {
             // Deselect all the rows
-            for i in 0..<PlayQueue.shared.count {
+            for i in 0..<playQueue.count {
                 tableView.deselectRow(at: IndexPath(row: i, section: 0), animated: false)
             }
         } else {
@@ -144,21 +149,21 @@ import Resolver
         }
         alert.addAction(title: "Save", style: .default, handler: { _ in
             guard let name = alert.textFields?.first?.text else { return }
-            if isLocal || Settings.shared().isOfflineMode {
+            if isLocal || self.settings.isOfflineMode {
                 // TODO: optimize this in the store to not require loading each song object
                 // TODO: Add error handling
-                ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: nil)
+                self.viewObjects.showLoadingScreenOnMainWindow(withMessage: nil)
                 DispatchQueue.userInitiated.async {
                     let localPlaylist = LocalPlaylist(id: self.store.nextLocalPlaylistId(), name: name, songCount: 0)
                     if self.store.add(localPlaylist: localPlaylist) {
-                        for i in 0..<PlayQueue.shared.count {
-                            if let song = PlayQueue.shared.song(index: i) {
+                        for i in 0..<self.playQueue.count {
+                            if let song = self.playQueue.song(index: i) {
                                 _ = self.store.add(song: song, localPlaylistId: localPlaylist.id)
                             }
                         }
                     }
                     DispatchQueue.main.async {
-                        ViewObjects.shared().hideLoadingScreen()
+                        self.viewObjects.hideLoadingScreen()
                     }
                 }
                 
@@ -186,7 +191,7 @@ import Resolver
         //    NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:self.currentPlaylistCount];
         //    NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
         //    NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-        //    NSString *table = PlayQueue.shared.isShuffle ? shufTable : currTable;
+        //    NSString *table = playQueue.isShuffle ? shufTable : currTable;
         //
         //    [databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
         //         for (int i = 0; i < self.currentPlaylistCount; i++) {
@@ -256,7 +261,7 @@ extension PlayQueueViewController: SaveEditHeaderDelegate {
     func saveEditHeaderSaveDeleteAction(_ saveEditHeader: SaveEditHeader) {
         if saveEditHeader.deleteLabel.isHidden {
             if !isEditing {
-                if Settings.shared().isOfflineMode {
+                if settings.isOfflineMode {
                     showSavePlaylistAlert(isLocal: true)
                 } else {
                     let message = "Would you like to save this playlist to your device or to your Subsonic server?"
@@ -276,20 +281,20 @@ extension PlayQueueViewController: SaveEditHeaderDelegate {
             
             if selectedRowsCount == 0 {
                 // Select all the rows
-                for i in 0..<PlayQueue.shared.count {
+                for i in 0..<playQueue.count {
                     tableView.selectRow(at: IndexPath(row: i, section: 0), animated: false, scrollPosition: .none)
                 }
-                saveEditHeader.selectedCount = PlayQueue.shared.count
+                saveEditHeader.selectedCount = playQueue.count
             } else {
                 // Delete action
-                PlayQueue.shared.removeSongs(indexes: selectedRows)
-                saveEditHeader.count = PlayQueue.shared.count
+                playQueue.removeSongs(indexes: selectedRows)
+                saveEditHeader.count = playQueue.count
                 tableView.deleteRows(at: tableView.indexPathsForSelectedRows ?? [], with: .automatic)
                 updateTableCellNumbers()
                 setEditing(false, animated: true)
             }
             
-            if !Settings.shared().isJukeboxEnabled {
+            if !settings.isJukeboxEnabled {
                 NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistOrderChanged)
             }
             
@@ -308,14 +313,14 @@ extension PlayQueueViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return PlayQueue.shared.count
+        return playQueue.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
         cell.number = indexPath.row + 1
         cell.show(cached: true, number: true, art: true, secondary: true, duration: true)
-        cell.update(model: PlayQueue.shared.song(index: indexPath.row))
+        cell.update(model: playQueue.song(index: indexPath.row))
         return cell
     }
     
@@ -332,7 +337,7 @@ extension PlayQueueViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        _ = PlayQueue.shared.moveSong(fromIndex: sourceIndexPath.row, toIndex: destinationIndexPath.row)
+        _ = playQueue.moveSong(fromIndex: sourceIndexPath.row, toIndex: destinationIndexPath.row)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -344,10 +349,10 @@ extension PlayQueueViewController: UITableViewConfiguration {
         if isModal {
             dismiss(sender: self)
             DispatchQueue.main.async(after: 0.5) {
-                Music.shared().playSong(atPosition: indexPath.row)
+                self.music.playSong(atPosition: indexPath.row)
             }
         } else {
-            Music.shared().playSong(atPosition: indexPath.row)
+            music.playSong(atPosition: indexPath.row)
         }
     }
     
@@ -358,10 +363,10 @@ extension PlayQueueViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if let song = PlayQueue.shared.song(index: indexPath.row), !song.isVideo {
+        if let song = playQueue.song(index: indexPath.row), !song.isVideo {
             return SwipeAction.downloadQueueAndDeleteConfig(model: song) { [unowned self] in
-                PlayQueue.shared.removeSongs(indexes: [indexPath.row])
-                self.saveEditHeader.count = PlayQueue.shared.count
+                playQueue.removeSongs(indexes: [indexPath.row])
+                self.saveEditHeader.count = playQueue.count
                 self.tableView.deleteRows(at: [indexPath], with: .automatic)
             }
         }

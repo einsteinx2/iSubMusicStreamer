@@ -18,7 +18,7 @@ fileprivate let debugPrintAllQueries = false
 @objc final class Store: NSObject {
     
     // Temporary accessor for Objective-C classes using Resolver under the hood
-    @objc static var shared: Store { Resolver.main.resolve() }
+    @objc static var shared: Store { Resolver.resolve() }
     
     // Main database, contains records for all servers
     var pool: DatabasePool!

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Resolver
 import MediaPlayer
 
 @objc final class LockScreenAudioControls: NSObject {
@@ -20,11 +21,11 @@ import MediaPlayer
         //
         
         let remote = MPRemoteCommandCenter.shared()
-        let settings = Settings.shared()
-        let jukebox = Jukebox.shared()
-        let audioEngine = AudioEngine.shared()
-        let playQueue = PlayQueue.shared
-        let music = Music.shared()
+        let settings: Settings = Resolver.resolve()
+        let jukebox: Jukebox = Resolver.resolve()
+        let audioEngine: AudioEngine = Resolver.resolve()
+        let playQueue: PlayQueue = Resolver.resolve()
+        let music: Music = Resolver.resolve()
         
         // Play
         remote.playCommand.isEnabled = true

@@ -11,8 +11,12 @@ import Resolver
 import SnapKit
 import CocoaLumberjackSwift
 
-@objc final class DownloadedFolderArtistsViewController: UIViewController {
+final class DownloadedFolderArtistsViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var settings: Settings
+    @Injected private var cache: Cache
+    @Injected private var cacheQueue: CacheQueue
+    @Injected private var viewObjects: ViewObjects
     
     private let tableView = UITableView()
     
@@ -56,7 +60,7 @@ import CocoaLumberjackSwift
     }
     
     @objc private func reloadTable() {
-        downloadedFolderArtists = store.downloadedFolderArtists(serverId: Settings.shared().currentServerId)
+        downloadedFolderArtists = store.downloadedFolderArtists(serverId: settings.currentServerId)
         tableView.reloadData()
     }
 }
@@ -119,17 +123,17 @@ extension DownloadedFolderArtistsViewController: UITableViewConfiguration {
 //                }];
 //            }];
         }, deleteHandler: {
-            ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: nil)
+            self.viewObjects.showLoadingScreenOnMainWindow(withMessage: nil)
             DispatchQueue.userInitiated.async {
                 if self.store.deleteDownloadedSongs(downloadedFolderArtist: self.downloadedFolderArtists[indexPath.row]) {
-                    Cache.shared().findCacheSize()
+                    self.cache.findCacheSize()
                     NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CachedSongDeleted)
-                    if (!CacheQueue.shared().isQueueDownloading) {
-                        CacheQueue.shared().startDownloadQueue()
+                    if (!self.cacheQueue.isQueueDownloading) {
+                        self.cacheQueue.startDownloadQueue()
                     }
                 }
                 DispatchQueue.main.async {
-                    ViewObjects.shared().hideLoadingScreen()
+                    self.viewObjects.hideLoadingScreen()
                 }
             }
         })

@@ -1,5 +1,5 @@
 //
-//  RecursiveSongLoaderWrapper.swift
+//  SongLoader.swift
 //  iSub
 //
 //  Created by Benjamin Baron on 12/28/20.
@@ -9,29 +9,36 @@
 import Foundation
 import Resolver
 
-fileprivate var recursiveLoader: RecursiveSongLoader?
-fileprivate var albumLoader: TagAlbumLoader?
-
-@objc class SongLoader: NSObject {
+struct SongLoader {
+    @Injected private static var store: Store
+    @Injected private static var settings: Settings
+    @Injected private static var jukebox: Jukebox
+    @Injected private static var audioEngine: AudioEngine
+    @Injected private static var playQueue: PlayQueue
+    @Injected private static var streamManager: StreamManager
+    @Injected private static var music: Music
+    @Injected private static var viewObjects: ViewObjects
+    
+    private static var recursiveLoader: RecursiveSongLoader?
+    private static var albumLoader: TagAlbumLoader?
     
     // MARK: Public Helper Functions
     
-    @objc static func downloadAll(folderId: Int) {
+    static func downloadAll(folderId: Int) {
         recursiveLoader = RecursiveSongLoader(folderId: folderId, callback: downloadCallback(success:error:))
         recursiveLoader?.downloadAll()
         showLoadingScreen(sender: recursiveLoader)
     }
     
-    @objc static func downloadAll(tagArtistId: Int) {
+    static func downloadAll(tagArtistId: Int) {
         recursiveLoader = RecursiveSongLoader(tagArtistId: tagArtistId, callback: downloadCallback(success:error:))
         recursiveLoader?.downloadAll()
         showLoadingScreen(sender: recursiveLoader)
     }
     
-    @objc static func downloadAll(tagAlbumId: Int) {
+    static func downloadAll(tagAlbumId: Int) {
         albumLoader = TagAlbumLoader(tagAlbumId: tagAlbumId) { success, error in
             if success, let albumLoader = albumLoader {
-                let store: Store = Resolver.main.resolve()
                 _ = store.addToDownloadQueue(serverId: albumLoader.serverId, songIds: albumLoader.songIds)
             }
             downloadCallback(success: success, error: error)
@@ -40,58 +47,58 @@ fileprivate var albumLoader: TagAlbumLoader?
         showLoadingScreen(sender: albumLoader)
     }
     
-    @objc static func queueAll(folderId: Int) {
+    static func queueAll(folderId: Int) {
         recursiveLoader = RecursiveSongLoader(folderId: folderId, callback: queueCallback(success:error:))
         recursiveLoader?.queueAll()
         showLoadingScreen(sender: recursiveLoader)
     }
     
-    @objc static func queueAll(tagArtistId: Int) {
+    static func queueAll(tagArtistId: Int) {
         recursiveLoader = RecursiveSongLoader(tagArtistId: tagArtistId, callback: queueCallback(success:error:))
         recursiveLoader?.queueAll()
         showLoadingScreen(sender: recursiveLoader)
     }
     
-    @objc static func queueAll(tagAlbumId: Int) {
+    static func queueAll(tagAlbumId: Int) {
         queueTagAlbum(tagAlbumId: tagAlbumId, callback: queueCallback(success:error:))
         showLoadingScreen(sender: albumLoader)
     }
     
-    @objc static func playAll(folderId: Int) {
+    static func playAll(folderId: Int) {
         preparePlayAll()
         recursiveLoader = RecursiveSongLoader(folderId: folderId, callback: playCallback(success:error:))
         recursiveLoader?.queueAll()
         showLoadingScreen(sender: recursiveLoader)
     }
     
-    @objc static func playAll(tagArtistId: Int) {
+    static func playAll(tagArtistId: Int) {
         preparePlayAll()
         recursiveLoader = RecursiveSongLoader(tagArtistId: tagArtistId, callback: playCallback(success:error:))
         recursiveLoader?.queueAll()
         showLoadingScreen(sender: recursiveLoader)
     }
     
-    @objc static func playAll(tagAlbumId: Int) {
+    static func playAll(tagAlbumId: Int) {
         preparePlayAll()
         queueTagAlbum(tagAlbumId: tagAlbumId, callback: playCallback(success:error:))
         showLoadingScreen(sender: albumLoader)
     }
     
-    @objc static func shuffleAll(folderId: Int) {
+    static func shuffleAll(folderId: Int) {
         preparePlayAll()
         recursiveLoader = RecursiveSongLoader(folderId: folderId, callback: shuffleCallback(success:error:))
         recursiveLoader?.queueAll()
         showLoadingScreen(sender: recursiveLoader)
     }
     
-    @objc static func shuffleAll(tagArtistId: Int) {
+    static func shuffleAll(tagArtistId: Int) {
         preparePlayAll()
         recursiveLoader = RecursiveSongLoader(tagArtistId: tagArtistId, callback: shuffleCallback(success:error:))
         recursiveLoader?.queueAll()
         showLoadingScreen(sender: recursiveLoader)
     }
     
-    @objc static func shuffleAll(tagAlbumId: Int) {
+    static func shuffleAll(tagAlbumId: Int) {
         preparePlayAll()
         queueTagAlbum(tagAlbumId: tagAlbumId, callback: shuffleCallback(success:error:))
         showLoadingScreen(sender: albumLoader)
@@ -105,11 +112,11 @@ fileprivate var albumLoader: TagAlbumLoader?
     
     private static func queueCallback(success: Bool, error: Error?) {
         if success {
-            if Settings.shared().isJukeboxEnabled {
-                Jukebox.shared().replacePlaylistWithLocal()
+            if settings.isJukeboxEnabled {
+                jukebox.replacePlaylistWithLocal()
             } else {
-                let isStarted = AudioEngine.shared().player?.isStarted ?? false
-                StreamManager.shared().fillStreamQueue(isStarted)
+                let isStarted = audioEngine.player?.isStarted ?? false
+                streamManager.fillStreamQueue(isStarted)
             }
         }
         finishLoading()
@@ -117,30 +124,30 @@ fileprivate var albumLoader: TagAlbumLoader?
     
     private static func playCallback(success: Bool, error: Error?) {
         if success {
-            if Settings.shared().isJukeboxEnabled {
-                Jukebox.shared().replacePlaylistWithLocal()
+            if settings.isJukeboxEnabled {
+                jukebox.replacePlaylistWithLocal()
             } else {
-                let isStarted = AudioEngine.shared().player?.isStarted ?? false
-                StreamManager.shared().fillStreamQueue(isStarted)
+                let isStarted = audioEngine.player?.isStarted ?? false
+                streamManager.fillStreamQueue(isStarted)
             }
-            Music.shared().showPlayer()
+            music.showPlayer()
         }
         finishLoading()
     }
     
     private static func shuffleCallback(success: Bool, error: Error?) {
         if success {
-            if Settings.shared().isJukeboxEnabled {
-                Jukebox.shared().clearRemotePlaylist()
+            if settings.isJukeboxEnabled {
+                jukebox.clearRemotePlaylist()
             }
-            PlayQueue.shared.shuffleToggle()
-            if Settings.shared().isJukeboxEnabled {
-                Jukebox.shared().replacePlaylistWithLocal()
+            playQueue.shuffleToggle()
+            if settings.isJukeboxEnabled {
+                jukebox.replacePlaylistWithLocal()
             } else {
-                let isStarted = AudioEngine.shared().player?.isStarted ?? false
-                StreamManager.shared().fillStreamQueue(isStarted)
+                let isStarted = audioEngine.player?.isStarted ?? false
+                streamManager.fillStreamQueue(isStarted)
             }
-            Music.shared().showPlayer()
+            music.showPlayer()
         }
         finishLoading()
     }
@@ -148,19 +155,17 @@ fileprivate var albumLoader: TagAlbumLoader?
     // MARK: Internal
     
     private static func preparePlayAll() {
-        if Settings.shared().isJukeboxEnabled {
-            Jukebox.shared().clearPlaylist()
+        if settings.isJukeboxEnabled {
+            jukebox.clearPlaylist()
         } else {
-            let store: Store = Resolver.main.resolve()
             _ = store.clearPlayQueue()
         }
-        PlayQueue.shared.isShuffle = false
+        playQueue.isShuffle = false
     }
     
     private static func queueTagAlbum(tagAlbumId: Int, callback: @escaping LoaderCallback) {
         albumLoader = TagAlbumLoader(tagAlbumId: tagAlbumId) { success, error in
             if success, let albumLoader = albumLoader {
-                let store: Store = Resolver.main.resolve()
                 _ = store.queue(songIds: albumLoader.songIds, serverId: albumLoader.serverId)
             }
             callback(success, error)
@@ -170,11 +175,11 @@ fileprivate var albumLoader: TagAlbumLoader?
     
     private static func showLoadingScreen(sender: Any?) {
         guard let sender = sender else { return }
-        ViewObjects.shared().showAlbumLoadingScreenOnMainWindowWithSender(sender)
+        viewObjects.showAlbumLoadingScreenOnMainWindowWithSender(sender)
     }
     
     private static func finishLoading() {
-        ViewObjects.shared().hideLoadingScreen()
+        viewObjects.hideLoadingScreen()
         recursiveLoader = nil
     }
 }

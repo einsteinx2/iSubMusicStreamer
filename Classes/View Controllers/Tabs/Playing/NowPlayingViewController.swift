@@ -13,6 +13,8 @@ import SnapKit
 
 @objc final class NowPlayingViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var viewObjects: ViewObjects
+    @Injected private var settings: Settings
     
     private let tableView = UITableView()
     
@@ -48,11 +50,11 @@ import SnapKit
     
     private func loadData() {
         cancelLoad()
-        ViewObjects.shared().showAlbumLoadingScreen(self.view, sender: self)
+        viewObjects.showAlbumLoadingScreen(self.view, sender: self)
         nowPlayingLoader = NowPlayingLoader()
         nowPlayingLoader?.callback = { [unowned self] (success, error) in
             if let error = error as NSError? {
-                if Settings.shared().isPopupsEnabled {
+                if settings.isPopupsEnabled {
                     let message = "There was an error loading the now playing list.\n\nError \(error.code): \(error.localizedDescription)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
                     alert.addCancelAction(title: "OK")
@@ -62,7 +64,7 @@ import SnapKit
                 nowPlayingSongs = nowPlayingLoader?.nowPlayingSongs ?? []
                 tableView.reloadData()
             }
-            ViewObjects.shared().hideLoadingScreen()
+            viewObjects.hideLoadingScreen()
             tableView.refreshControl?.endRefreshing()
             nowPlayingLoader = nil
         }
@@ -73,7 +75,7 @@ import SnapKit
         nowPlayingLoader?.cancelLoad()
         nowPlayingLoader?.callback = nil
         nowPlayingLoader = nil
-        ViewObjects.shared().hideLoadingScreen()
+        viewObjects.hideLoadingScreen()
         tableView.refreshControl?.endRefreshing()
     }
     

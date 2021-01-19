@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Resolver
 
 @objc extension UIViewController {
     @objc func addURLRefBackButton() {
@@ -16,8 +17,9 @@ import UIKit
     }
     
     @objc func addShowPlayerButton() {
+        let music: Music = Resolver.resolve()
         navigationItem.rightBarButtonItem = nil
-        if Music.shared().showPlayerIcon {
+        if music.showPlayerIcon {
             navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "music.quarternote.3"), style: .plain, target: self, action: #selector(showPlayer))
         }
     }

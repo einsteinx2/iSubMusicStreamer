@@ -11,6 +11,9 @@ import CocoaLumberjackSwift
 import Resolver
 
 @objc final class CoverArtLoader: APILoader {
+    @Injected private var store: Store
+    @Injected private var settings: Settings
+    
     private struct Notifications {
         static let downloadFinished = "CoverArtLoader.downloadFinished"
         static let downloadFailed = "CoverArtLoader.downloadFailed"
@@ -20,8 +23,6 @@ import Resolver
     
     private static var syncObject = NSObject()
     private static var loadingIds = Set<String>()
-    
-    @Injected private var store: Store
     
     @objc var serverId = Settings.shared().currentServerId
     private let coverArtId: String
@@ -58,7 +59,7 @@ import Resolver
     
     override func createRequest() -> URLRequest? {
         synchronized(Self.syncObject) { () -> URLRequest? in
-            if !Settings.shared().isOfflineMode && !isCached && !Self.loadingIds.contains(mergedId) {
+            if !settings.isOfflineMode && !isCached && !Self.loadingIds.contains(mergedId) {
                 Self.loadingIds.insert(mergedId)
                 let scale = UIScreen.main.scale
                 var size = scale * 80

@@ -42,7 +42,7 @@ import CocoaLumberjackSwift
         cache.setup()
         
         // Detect app crash on previous launch
-        settings.appCrashedOnLastRun = !Settings.shared().appTerminatedCleanly
+        settings.appCrashedOnLastRun = !settings.appTerminatedCleanly
         settings.appTerminatedCleanly = false
         
         // Initialize the lock screen controls

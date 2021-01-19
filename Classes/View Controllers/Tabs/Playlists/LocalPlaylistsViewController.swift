@@ -13,6 +13,8 @@ import Resolver
 
 @objc final class LocalPlaylistsViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var viewObjects: ViewObjects
+    @Injected private var playQueue: PlayQueue
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "song", pluralizeClearType: false, isLargeCount: false)
     private let tableView = UITableView()
@@ -43,7 +45,7 @@ import Resolver
         guard saveEditHeader.superview == nil else { return }
         
         saveEditHeader.delegate = self
-        saveEditHeader.count = PlayQueue.shared.count
+        saveEditHeader.count = playQueue.count
         view.addSubview(saveEditHeader)
         saveEditHeader.snp.makeConstraints { make in
             make.height.equalTo(50)
@@ -98,7 +100,7 @@ import Resolver
     //    NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:self.currentPlaylistCount];
     //    NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
     //    NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-    //    NSString *table = PlayQueue.shared.isShuffle ? shufTable : currTable;
+    //    NSString *table = playQueue.isShuffle ? shufTable : currTable;
     //
     //    [databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
     //         for (int i = 0; i < self.currentPlaylistCount; i++) {
@@ -175,7 +177,7 @@ import Resolver
     
     @objc func cancelLoad() {
         // TODO: Cancel the upload
-        ViewObjects.shared().hideLoadingScreen()
+        viewObjects.hideLoadingScreen()
     }
     
     private func showSavePlaylistAlert() {
@@ -206,13 +208,13 @@ extension LocalPlaylistsViewController: SaveEditHeaderDelegate {
     
     func saveEditHeaderSaveDeleteAction(_ saveEditHeader: SaveEditHeader) {
         if !saveEditHeader.deleteLabel.isHidden {
-            ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: "Deleting")
+            viewObjects.showLoadingScreenOnMainWindow(withMessage: "Deleting")
             DispatchQueue.userInitiated.async {
                 if let indexPathsForSelectedRows = self.tableView.indexPathsForSelectedRows {
                     self.deleteLocalPlaylists(indexPaths: indexPathsForSelectedRows)
                 }
                 DispatchQueue.main.async {
-                    ViewObjects.shared().hideLoadingScreen()
+                    self.viewObjects.hideLoadingScreen()
                 }
             }
         }

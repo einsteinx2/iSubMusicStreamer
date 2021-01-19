@@ -9,6 +9,7 @@
 import Foundation
 import GRDB
 import CocoaLumberjackSwift
+import Resolver
 
 extension LocalPlaylist: FetchableRecord, PersistableRecord {
     struct Table {
@@ -70,6 +71,10 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
 
 // TODO: Handle Jukebox mode properly
 @objc extension Store {
+    private var settings: Settings { Resolver.resolve() }
+    private var playQueue: PlayQueue { Resolver.resolve() }
+    private var music: Music { Resolver.resolve() }
+    
     func nextLocalPlaylistId() -> Int {
         do {
             return try pool.read { db in
@@ -241,15 +246,15 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
     // TODO: Move this to a single transaction
     func queue(song: Song) -> Bool {
         var success = true
-        if Settings.shared().isJukeboxEnabled {
-            if PlayQueue.shared.isShuffle {
+        if settings.isJukeboxEnabled {
+            if playQueue.isShuffle {
                 success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxShuffleQueueId)
             }
             if success {
                 success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId)
             }
         } else {
-            if PlayQueue.shared.isShuffle {
+            if playQueue.isShuffle {
                 success = add(song: song, localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
             }
             if success {
@@ -262,15 +267,15 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
     // TODO: Move this to a single transaction
     func queue(songIds: [Int], serverId: Int) -> Bool {
         var success = true
-        if Settings.shared().isJukeboxEnabled {
-            if PlayQueue.shared.isShuffle {
+        if settings.isJukeboxEnabled {
+            if playQueue.isShuffle {
                 success = add(songIds: songIds, serverId: serverId, localPlaylistId: LocalPlaylist.Default.jukeboxShuffleQueueId)
             }
             if success {
                 success = add(songIds: songIds, serverId: serverId, localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId)
             }
         } else {
-            if PlayQueue.shared.isShuffle {
+            if playQueue.isShuffle {
                 success = add(songIds: songIds, serverId: serverId, localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
             }
             if success {
@@ -282,15 +287,15 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
     
     func clearPlayQueue() -> Bool {
         var success = true
-        if Settings.shared().isJukeboxEnabled {
-            if PlayQueue.shared.isShuffle {
+        if settings.isJukeboxEnabled {
+            if playQueue.isShuffle {
                 success = clear(localPlaylistId: LocalPlaylist.Default.jukeboxShuffleQueueId)
             }
             if success {
                 success = clear(localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId)
             }
         } else {
-            if PlayQueue.shared.isShuffle {
+            if playQueue.isShuffle {
                 success = clear(localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
             }
             if success {
@@ -324,12 +329,12 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
     func playSong(position: Int, songIds: [Int], serverId: Int) -> Song? {
         if clearAndQueue(songIds: songIds, serverId: serverId) {
             // Set player defaults
-            PlayQueue.shared.isShuffle = false
+            playQueue.isShuffle = false
             
             NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistSongsQueued)
             
             // Start the song
-            return Music.shared().playSong(atPosition: position)
+            return music.playSong(atPosition: position)
         }
         return nil
     }
@@ -337,12 +342,12 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
     func playSong(position: Int, songs: [Song]) -> Song? {
         if clearAndQueue(songs: songs) {
             // Set player defaults
-            PlayQueue.shared.isShuffle = false
+            playQueue.isShuffle = false
             
             NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistSongsQueued)
             
             // Start the song
-            return Music.shared().playSong(atPosition: position)
+            return music.playSong(atPosition: position)
         }
         return nil
     }

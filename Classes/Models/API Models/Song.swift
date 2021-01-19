@@ -10,6 +10,11 @@ import Foundation
 import Resolver
 
 @objc(ISMSSong) final class Song: NSObject, NSCopying, NSSecureCoding, Codable {
+    private var store: Store { Resolver.resolve() }
+    private var settings: Settings { Resolver.resolve() }
+    private var audioEngine: AudioEngine { Resolver.resolve() }
+    private var playQueue: PlayQueue { Resolver.resolve() }
+    
     static var supportsSecureCoding: Bool = true
         
     @objc let serverId: Int
@@ -36,7 +41,6 @@ import Resolver
     
     @objc var localSuffix: String? { transcodedSuffix ?? suffix }
     @objc var localPath: String {
-        let store: Store = Resolver.main.resolve()
         let serverPathPrefix: String
         if let server = store.server(id: serverId) {
             serverPathPrefix = server.path
@@ -48,7 +52,6 @@ import Resolver
     }
     
     @objc var localTempPath: String {
-        let store: Store = Resolver.main.resolve()
         let serverPathPrefix: String
         if let server = store.server(id: serverId) {
             serverPathPrefix = server.path
@@ -89,7 +92,7 @@ import Resolver
     }
     
     @objc var estimatedBitrate: Int {
-        let currentMaxBitrate = Settings.shared().currentMaxBitrate
+        let currentMaxBitrate = settings.currentMaxBitrate
         
         // Default to 128 if there is no bitrate for this song object (should never happen)
         var rate = bitrate == 0 ? 128 : bitrate
@@ -288,7 +291,6 @@ import Resolver
     // MARK: ISMSSong+DAO
     
     @objc var isFullyCached: Bool {
-        let store: Store = Resolver.main.resolve()
         return store.isDownloadFinished(song: self)
     }
 
@@ -299,16 +301,16 @@ import Resolver
             downloadProgress = 1
         } else {
             var bitrate = Float(estimatedBitrate)
-            if let player = AudioEngine.shared().player, player.isPlaying {
+            if let player = audioEngine.player, player.isPlaying {
                 bitrate = Float(BassWrapper.estimateBitrate(player.currentStream))
             }
             
             var seconds = Float(duration)
             if transcodedSuffix != nil {
                 // This is a transcode, so we'll want to use the actual bitrate if possible
-                if let currentSong = PlayQueue.shared.currentSong, currentSong == self {
+                if let currentSong = playQueue.currentSong, currentSong == self {
                     // This is the current playing song, so see if BASS has an actual bitrate for it
-                    if let player = AudioEngine.shared().player, player.bitRate > 0 {
+                    if let player = audioEngine.player, player.bitRate > 0 {
                         // Bass has a non-zero bitrate, so use that for the calculation
                         // convert to bytes per second, multiply by number of seconds
                         bitrate = Float(player.bitRate)
@@ -329,7 +331,6 @@ import Resolver
     }
     
     @objc func removeFromDownloads() -> Bool {
-        let store: Store = Resolver.main.resolve()
         return store.deleteDownloadedSong(serverId: serverId, songId: id)
         
         // TODO: Delete file here? This used to be a database only method
@@ -342,11 +343,9 @@ extension Song: TableCellModel {
     var durationLabelText: String? { NSString.formatTime(Double(duration)) }
     var isCached: Bool { isFullyCached }
     func download() {
-        let store: Store = Resolver.main.resolve()
         _ = store.addToDownloadQueue(song: self)
     }
     func queue() {
-        let store: Store = Resolver.main.resolve()
         _ = store.queue(song: self)
     }
 }

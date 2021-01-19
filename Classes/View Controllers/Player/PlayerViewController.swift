@@ -9,10 +9,19 @@
 import UIKit
 import SnapKit
 import CocoaLumberjackSwift
+import Resolver
 
 // TODO: Add bitrate and file type labels
 // TODO: Add bookmark button
-@objc final class PlayerViewController: UIViewController {    
+@objc final class PlayerViewController: UIViewController {
+    @Injected private var settings: Settings
+    @Injected private var jukebox: Jukebox
+    @Injected private var audioEngine: AudioEngine
+    @Injected private var music: Music
+    @Injected private var playQueue: PlayQueue
+    @Injected private var viewObjects: ViewObjects
+    @Injected private var streamManager: StreamManager
+    
     let iconDefaultColor = UIColor(white: 0.8, alpha: 1.0)
     let iconActivatedColor = UIColor.systemBlue
     
@@ -250,19 +259,19 @@ import CocoaLumberjackSwift
         playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
         playPauseButton.tintColor = iconDefaultColor
         playPauseButton.addClosure(for: .touchUpInside) { [unowned self] in
-            if Settings.shared().isJukeboxEnabled {
-                if Jukebox.shared().isPlaying {
-                    Jukebox.shared().stop()
+            if settings.isJukeboxEnabled {
+                if jukebox.isPlaying {
+                    jukebox.stop()
                 } else {
-                    Jukebox.shared().play()
+                    jukebox.play()
                 }
             } else {
-                if let player = AudioEngine.shared().player, let currentSong = self.currentSong, !currentSong.isVideo {
+                if let player = audioEngine.player, let currentSong = self.currentSong, !currentSong.isVideo {
                     // If we're already playing, toggle the player state
                     player.playPause()
                 } else {
                     // If we haven't started the song yet, start the player
-                    Music.shared().playSong(atPosition: PlayQueue.shared.currentIndex)
+                    music.playSong(atPosition: playQueue.currentIndex)
                 }
             }
         }
@@ -271,12 +280,12 @@ import CocoaLumberjackSwift
         previousButton.setImage(UIImage(systemName: "backward.end.fill", withConfiguration: previousButtonConfig), for: .normal)
         previousButton.tintColor = iconDefaultColor
         previousButton.addClosure(for: .touchUpInside) {
-            if let player = AudioEngine.shared().player, player.progress > 10.0 {
+            if let player = self.audioEngine.player, player.progress > 10.0 {
                 // If we're more than 10 seconds into the song, restart it
-                Music.shared().playSong(atPosition: PlayQueue.shared.currentIndex)
+                self.music.playSong(atPosition: self.playQueue.currentIndex)
             } else {
                 // Otherwise, go to the previous song
-                Music.shared().prevSong()
+                self.music.prevSong()
             }
         }
         
@@ -284,7 +293,7 @@ import CocoaLumberjackSwift
         nextButton.setImage(UIImage(systemName: "forward.end.fill", withConfiguration: nextButtonConfig), for: .normal)
         nextButton.tintColor = iconDefaultColor
         nextButton.addClosure(for: .touchUpInside) {
-            Music.shared().nextSong()
+            self.music.nextSong()
         }
 
         let quickSkipBackButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .light, scale: .large)
@@ -293,7 +302,7 @@ import CocoaLumberjackSwift
         quickSkipBackButton.setTitleColor(iconDefaultColor, for: .normal)
         quickSkipBackButton.titleLabel?.font = .systemFont(ofSize: 10)
         quickSkipBackButton.addClosure(for: .touchUpInside) { [unowned self] in
-            let value = self.progressSlider.value - Float(Settings.shared().quickSkipNumberOfSeconds);
+            let value = self.progressSlider.value - Float(settings.quickSkipNumberOfSeconds);
             self.progressSlider.value = value > 0.0 ? value : 0.0;
             seekedAction()
             Flurry.logEvent("QuickSkip")
@@ -305,9 +314,9 @@ import CocoaLumberjackSwift
         quickSkipForwardButton.setTitleColor(iconDefaultColor, for: .normal)
         quickSkipForwardButton.titleLabel?.font = .systemFont(ofSize: 10)
         quickSkipForwardButton.addClosure(for: .touchUpInside) { [unowned self] in
-            let value = self.progressSlider.value + Float(Settings.shared().quickSkipNumberOfSeconds)
+            let value = self.progressSlider.value + Float(settings.quickSkipNumberOfSeconds)
             if value >= self.progressSlider.maximumValue {
-                Music.shared().nextSong()
+                music.nextSong()
             } else {
                 self.progressSlider.value = value
                 seekedAction()
@@ -331,10 +340,10 @@ import CocoaLumberjackSwift
         }
         
         repeatButton.addClosure(for: .touchUpInside) { [unowned self] in
-            switch PlayQueue.shared.repeatMode {
-            case .none: PlayQueue.shared.repeatMode = .one
-            case .one: PlayQueue.shared.repeatMode = .all
-            case .all: PlayQueue.shared.repeatMode = .none
+            switch playQueue.repeatMode {
+            case .none: playQueue.repeatMode = .one
+            case .one: playQueue.repeatMode = .all
+            case .all: playQueue.repeatMode = .none
             }
             self.updateRepeatButtonIcon()
         }
@@ -342,7 +351,7 @@ import CocoaLumberjackSwift
         
         bookmarksButton.addClosure(for: .touchUpInside) { [unowned self] in
             let position = UInt(self.progressSlider.value);
-            let bytePosition = UInt(AudioEngine.shared().player?.currentByteOffset ?? 0);
+            let bytePosition = UInt(audioEngine.player?.currentByteOffset ?? 0);
             let song = self.currentSong
             let alert = UIAlertController(title: "Create Bookmark", message: nil, preferredStyle: .alert)
             alert.addTextField { textField in
@@ -379,10 +388,10 @@ import CocoaLumberjackSwift
         let shuffleButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
         shuffleButton.setImage(UIImage(systemName: "shuffle", withConfiguration: shuffleButtonConfig), for: .normal)
         shuffleButton.addClosure(for: .touchUpInside) { [unowned self] in
-            let message = PlayQueue.shared.isShuffle ? "Unshuffling" : "Shuffling"
-            ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: message)
+            let message = playQueue.isShuffle ? "Unshuffling" : "Shuffling"
+            viewObjects.showLoadingScreenOnMainWindow(withMessage: message)
             DispatchQueue.userInitiated.async {
-                PlayQueue.shared.shuffleToggle()
+                playQueue.shuffleToggle()
                 DispatchQueue.main.async {
                     self.updateShuffleButtonIcon()
                 }
@@ -403,7 +412,7 @@ import CocoaLumberjackSwift
         jukeboxVolumeSlider.maximumValue = 1.0
         jukeboxVolumeSlider.isContinuous = false
         jukeboxVolumeSlider.addClosure(for: .valueChanged) { [unowned self] in
-            Jukebox.shared().setVolume(self.jukeboxVolumeSlider.value)
+            jukebox.setVolume(self.jukeboxVolumeSlider.value)
         }
         jukeboxVolumeContainer.addSubview(jukeboxVolumeSlider)
         jukeboxVolumeSlider.snp.makeConstraints { make in
@@ -432,8 +441,8 @@ import CocoaLumberjackSwift
         updateEqualizerButton()
         registerForNotifications()
         
-        if Settings.shared().isJukeboxEnabled {
-            Jukebox.shared().getInfo()
+        if settings.isJukeboxEnabled {
+            jukebox.getInfo()
         }
     }
     
@@ -478,7 +487,7 @@ import CocoaLumberjackSwift
         notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_CurrentPlaylistShuffleToggled) { [unowned self] _ in
             self.updateShuffleButtonIcon()
             self.updateSongInfo()
-            ViewObjects.shared().hideLoadingScreen()
+            viewObjects.hideLoadingScreen()
         })
     }
     
@@ -525,8 +534,8 @@ import CocoaLumberjackSwift
     }
     
     @objc private func seekedAction() {
-        guard let currentSong = currentSong, let player = AudioEngine.shared().player else {
-            self.progressDisplayLink?.isPaused = false
+        guard let currentSong = currentSong, let player = audioEngine.player else {
+            progressDisplayLink?.isPaused = false
             return
         }
         
@@ -538,33 +547,33 @@ import CocoaLumberjackSwift
         if currentSong.isTempCached {
             player.stop()
             
-            AudioEngine.shared().startByteOffset = byteOffset
-            AudioEngine.shared().startSecondsOffset = UInt(secondsOffset)
+            audioEngine.startByteOffset = byteOffset
+            audioEngine.startSecondsOffset = UInt(secondsOffset)
             
-            StreamManager.shared().removeStream(at: 0)
-            StreamManager.shared().queueStream(for: currentSong, byteOffset: UInt64(byteOffset), secondsOffset: Double(secondsOffset), at: 0, isTempCache: true, isStartDownload: true)
-            if StreamManager.shared().handlerStack.count > 1 {
-                if let handler = StreamManager.shared().handlerStack.firstObject as? ISMSStreamHandler {
+            streamManager.removeStream(at: 0)
+            streamManager.queueStream(for: currentSong, byteOffset: UInt64(byteOffset), secondsOffset: Double(secondsOffset), at: 0, isTempCache: true, isStartDownload: true)
+            if streamManager.handlerStack.count > 1 {
+                if let handler = streamManager.handlerStack.firstObject as? ISMSStreamHandler {
                     handler.start()
                 }
             }
-            self.progressDisplayLink?.isPaused = false
+            progressDisplayLink?.isPaused = false
         } else {
             if currentSong.isFullyCached || byteOffset < currentSong.localFileSize {
                 player.seekToPosition(inSeconds: Double(progressSlider.value), fadeVolume: true)
-                self.progressDisplayLink?.isPaused = false
+                progressDisplayLink?.isPaused = false
             } else {
                 let message = "You are trying to skip further than the song has cached. You can do this, but the song won't be cached. Or you can wait a little bit for the cache to catch up."
                 let alert = UIAlertController(title: "Past Cache Point", message: message, preferredStyle: .alert)
                 alert.addAction(title: "OK", style: .default) { _ in
                     player.stop()
-                    AudioEngine.shared().startByteOffset = byteOffset
-                    AudioEngine.shared().startSecondsOffset = UInt(self.progressSlider.value)
+                    self.audioEngine.startByteOffset = byteOffset
+                    self.audioEngine.startSecondsOffset = UInt(self.progressSlider.value)
                     
-                    StreamManager.shared().removeStream(at: 0)
-                    StreamManager.shared().queueStream(for: currentSong, byteOffset: UInt64(byteOffset), secondsOffset: Double(self.progressSlider.value), at: 0, isTempCache: true, isStartDownload: true)
-                    if StreamManager.shared().handlerStack.count > 1 {
-                        if let handler = StreamManager.shared().handlerStack.firstObject as? ISMSStreamHandler {
+                    self.streamManager.removeStream(at: 0)
+                    self.streamManager.queueStream(for: currentSong, byteOffset: UInt64(byteOffset), secondsOffset: Double(self.progressSlider.value), at: 0, isTempCache: true, isStartDownload: true)
+                    if self.streamManager.handlerStack.count > 1 {
+                        if let handler = self.streamManager.handlerStack.firstObject as? ISMSStreamHandler {
                             handler.start()
                         }
                     }
@@ -578,7 +587,7 @@ import CocoaLumberjackSwift
     }
     
     @objc private func updateSlider() {
-        guard let currentSong = currentSong, let player = AudioEngine.shared().player, let progressDisplayLink = progressDisplayLink else { return }
+        guard let currentSong = currentSong, let player = audioEngine.player, let progressDisplayLink = progressDisplayLink else { return }
         
         // Prevent temporary movement after seeking temp cached song
         if currentSong.isTempCached && Date().timeIntervalSince(lastSeekTime) < 5.0 && player.progress == 0.0 {
@@ -586,7 +595,7 @@ import CocoaLumberjackSwift
         }
         
         let duration = Double(currentSong.duration)
-        if Settings.shared().isJukeboxEnabled {
+        if settings.isJukeboxEnabled {
             elapsedTimeLabel.text = NSString.formatTime(0)
             remainingTimeLabel.text = "-\(NSString.formatTime(duration) ?? "0:00")"
             progressSlider.value = 0.0;
@@ -608,7 +617,7 @@ import CocoaLumberjackSwift
     }
     
     @objc private func updateSongInfo() {
-        guard let song = PlayQueue.shared.currentSong else {
+        guard let song = playQueue.currentSong else {
             currentSong = nil
             coverArtPageControl.coverArtId = nil
             coverArtPageControl.coverArtImage = UIImage(named: "default-album-art")
@@ -638,7 +647,7 @@ import CocoaLumberjackSwift
             return
         }
         
-        downloadProgressView.isHidden = Settings.shared().isJukeboxEnabled
+        downloadProgressView.isHidden = settings.isJukeboxEnabled
         
         let width = currentSong.downloadProgress == 0 ? 0 : self.progressSlider.frame.width + 6
         guard width != self.downloadProgressView.frame.width else {
@@ -693,7 +702,7 @@ import CocoaLumberjackSwift
     
     private func updateRepeatButtonIcon() {
         let imageName: String
-        switch PlayQueue.shared.repeatMode {
+        switch playQueue.repeatMode {
         case .none: imageName = "repeat"
         case .one: imageName = "repeat.1"
         case .all: imageName = "repeat"
@@ -701,28 +710,28 @@ import CocoaLumberjackSwift
         
         let config = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
         repeatButton.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
-        repeatButton.tintColor = PlayQueue.shared.repeatMode == .none ? iconDefaultColor : iconActivatedColor
+        repeatButton.tintColor = playQueue.repeatMode == .none ? iconDefaultColor : iconActivatedColor
     }
     
     private func updateShuffleButtonIcon() {
-        shuffleButton.tintColor = PlayQueue.shared.isShuffle ? iconActivatedColor : iconDefaultColor
+        shuffleButton.tintColor = playQueue.isShuffle ? iconActivatedColor : iconDefaultColor
     }
     
     @objc private func updateJukeboxControls() {
-        let jukeboxEnabled = Settings.shared().isJukeboxEnabled
+        let jukeboxEnabled = settings.isJukeboxEnabled
         equalizerButton.isHidden = jukeboxEnabled
-//        view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor : Colors.background
+//        view.backgroundColor = jukeboxEnabled ? viewObjects.jukeboxColor : Colors.background
         
         let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
         self.playPauseButton.tintColor = self.iconDefaultColor
         if jukeboxEnabled {
-            if Jukebox.shared().isPlaying {
+            if jukebox.isPlaying {
                 self.playPauseButton.setImage(UIImage(systemName: "stop.fill", withConfiguration: playButtonConfig), for: .normal)
             } else {
                 self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
             }
         } else {
-            if AudioEngine.shared().player?.isPlaying ?? false {
+            if audioEngine.player?.isPlaying ?? false {
                 self.playPauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: playButtonConfig), for: .normal)
             } else {
                 self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
@@ -731,7 +740,7 @@ import CocoaLumberjackSwift
         
         if jukeboxEnabled {
             // Update the jukebox volume slider position
-            jukeboxVolumeSlider.value = Jukebox.shared().gain
+            jukeboxVolumeSlider.value = jukebox.gain
             
             // Add the volume control if needed
             if jukeboxVolumeContainer.superview == nil {
@@ -751,12 +760,12 @@ import CocoaLumberjackSwift
         downloadProgressView.isHidden = jukeboxEnabled
         title = jukeboxEnabled ? "Jukebox Mode" : ""
         if UIDevice.isPad() {
-            view.backgroundColor = jukeboxEnabled ? ViewObjects.shared().jukeboxColor.withAlphaComponent(0.5) : Colors.background
+            view.backgroundColor = jukeboxEnabled ? viewObjects.jukeboxColor.withAlphaComponent(0.5) : Colors.background
         }
     }
     
     private func updateEqualizerButton() {
-        equalizerButton.tintColor = Settings.shared().isEqualizerOn ? iconActivatedColor : iconDefaultColor
+        equalizerButton.tintColor = settings.isEqualizerOn ? iconActivatedColor : iconDefaultColor
     }
     
     private func updateBookmarkButton() {
@@ -784,7 +793,7 @@ import CocoaLumberjackSwift
     }
     
     @objc private func updateQuickSkipButtons() {
-        let seconds = Settings.shared().quickSkipNumberOfSeconds
+        let seconds = settings.quickSkipNumberOfSeconds
         let quickSkipTitle = seconds < 60 ? "\(seconds)s" : "\(seconds/60)m"
         quickSkipBackButton.setTitle(quickSkipTitle, for: .normal)
         quickSkipForwardButton.setTitle(quickSkipTitle, for: .normal)
