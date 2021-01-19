@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BookmarksViewController : UIViewController
+@interface BookmarksViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (strong) NSLayoutConstraint *tableViewTopConstraint;
-@property (nonatomic, strong) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic) BOOL isNoBookmarksScreenShowing;
 @property (nonatomic, strong) UIImageView *noBookmarksScreen;
 @property (nonatomic) BOOL isSaveEditShowing;

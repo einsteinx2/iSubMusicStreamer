@@ -31,7 +31,11 @@
 		
 	self.isNoBookmarksScreenShowing = NO;
     
+    self.tableView = [[UITableView alloc] init];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:self.tableView];
     self.tableViewTopConstraint = [self.tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor];
     [NSLayoutConstraint activateConstraints:@[
         self.tableViewTopConstraint,
@@ -46,6 +50,7 @@
     
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.tableView.rowHeight = Defines.tallRowHeight;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	    
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];

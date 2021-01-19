@@ -41,7 +41,7 @@ final class DownloadedSongsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Colors.background
-        title = "Downloaded Albums"
+        title = "Downloaded Songs"
         setupDefaultTableView(tableView)
     }
     
