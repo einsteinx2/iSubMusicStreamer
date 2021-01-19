@@ -19,7 +19,6 @@ import Resolver
     @Injected private var audioEngine: AudioEngine
     @Injected private var music: Music
     @Injected private var playQueue: PlayQueue
-    @Injected private var viewObjects: ViewObjects
     @Injected private var streamManager: StreamManager
     
     let iconDefaultColor = UIColor(white: 0.8, alpha: 1.0)
@@ -389,7 +388,7 @@ import Resolver
         shuffleButton.setImage(UIImage(systemName: "shuffle", withConfiguration: shuffleButtonConfig), for: .normal)
         shuffleButton.addClosure(for: .touchUpInside) { [unowned self] in
             let message = playQueue.isShuffle ? "Unshuffling" : "Shuffling"
-            viewObjects.showLoadingScreenOnMainWindow(withMessage: message)
+            HUD.show(message: message)
             DispatchQueue.userInitiated.async {
                 playQueue.shuffleToggle()
                 DispatchQueue.main.async {
@@ -487,7 +486,7 @@ import Resolver
         notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_CurrentPlaylistShuffleToggled) { [unowned self] _ in
             self.updateShuffleButtonIcon()
             self.updateSongInfo()
-            viewObjects.hideLoadingScreen()
+            HUD.hide()
         })
     }
     
@@ -760,7 +759,7 @@ import Resolver
         downloadProgressView.isHidden = jukeboxEnabled
         title = jukeboxEnabled ? "Jukebox Mode" : ""
         if UIDevice.isPad() {
-            view.backgroundColor = jukeboxEnabled ? viewObjects.jukeboxColor.withAlphaComponent(0.5) : Colors.background
+            view.backgroundColor = jukeboxEnabled ? Colors.jukeboxWindowColor.withAlphaComponent(0.5) : Colors.background
         }
     }
     

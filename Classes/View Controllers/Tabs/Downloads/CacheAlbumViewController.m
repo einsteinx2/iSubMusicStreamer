@@ -7,7 +7,6 @@
 //
 
 #import "CacheAlbumViewController.h"
-#import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "SavedSettings.h"
 #import "MusicSingleton.h"
@@ -110,12 +109,12 @@ LOG_LEVEL_ISUB_DEFAULT
     // Create the play all and shuffle buttons and constrain to the container view
     __weak CacheAlbumViewController *weakSelf = self;
     PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
-        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+        [HUD show];
         [EX2Dispatch runInBackgroundAsync:^{
             [weakSelf loadPlayAllPlaylist:NO];
         }];
     } shuffleHandler:^{
-        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
+        [HUD showWithMessage:@"Shuffling"];
         [EX2Dispatch runInBackgroundAsync:^{
             [weakSelf loadPlayAllPlaylist:YES];
         }];
@@ -286,7 +285,7 @@ LOG_LEVEL_ISUB_DEFAULT
 //        // Custom queue and delete actions
 //        ISMSFolderAlbum *folderAlbum = [self folderAlbumAtIndexPath:indexPath];
 //        return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
-//            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+//            [HUD show];
 //            [EX2Dispatch runInBackgroundAsync:^{
 //                NSMutableArray *newSegments = [NSMutableArray arrayWithArray:self.segments];
 //                [newSegments addObject:folderAlbum.name];
@@ -319,7 +318,7 @@ LOG_LEVEL_ISUB_DEFAULT
 //                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
 //
 //                [EX2Dispatch runInMainThreadAsync:^{
-//                    [viewObjectsS hideLoadingScreen];
+//                    [HUD hide];
 //                }];
 //            }];
 //        } deleteHandler:^{
@@ -365,7 +364,7 @@ LOG_LEVEL_ISUB_DEFAULT
 //                }
 //
 //                [EX2Dispatch runInMainThreadAsync:^{
-//                    [viewObjectsS hideLoadingScreen];
+//                    [HUD hide];
 //                }];
 //            }];
 //        }];

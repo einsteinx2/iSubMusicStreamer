@@ -15,7 +15,7 @@ import SnapKit
     private var tableCellModel: TableCellModel?
     
     private let headerLabel = UILabel()
-    private let cachedIndicator = CellCachedIndicatorView()
+    private let cachedIndicator = DownloadedIndicatorView()
     private let numberLabel = UILabel()
     private let coverArtView = AsyncImageView()
     private let primaryLabel = UILabel()

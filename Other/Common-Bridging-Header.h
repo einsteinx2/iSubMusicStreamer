@@ -29,7 +29,6 @@
 #import "BookmarksViewController.h"
 
 // Views
-#import "CellCachedIndicatorView.h"
 #import "FolderDropdownControl.h"
 
 /*
@@ -63,7 +62,6 @@
  * Singletons
  */
 
-#import "ViewObjectsSingleton.h"
 #import "MusicSingleton.h"
 #import "JukeboxSingleton.h"
 #import "SavedSettings.h"
@@ -79,6 +77,7 @@
 
 #import "Flurry.h"
 #import "OBSlider.h"
+#import "MBProgressHUD.h"
 #import "GCDWebServer.h"
 #import "GCDWebServerDataResponse.h"
 #import "GCDWebServerErrorResponse.h"

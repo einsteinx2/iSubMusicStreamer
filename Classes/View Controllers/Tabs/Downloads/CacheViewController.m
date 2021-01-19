@@ -10,7 +10,6 @@
 #import "CacheAlbumViewController.h"
 #import "CacheQueueSongUITableViewCell.h"
 #import "ServerListViewController.h"
-#import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "Flurry.h"
 #import "SavedSettings.h"
@@ -257,7 +256,7 @@
 //	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
 //	
 //	// Must do UI stuff in main thread
-//	[viewObjectsS hideLoadingScreen];
+//	[HUD hide];
 //	[self playAllPlaySong];	
 }
 
@@ -420,12 +419,12 @@
     // Create the play all and shuffle buttons and constrain to the container view
     __weak CacheViewController *weakSelf = self;
     PlayAllAndShuffleHeader *playAllAndShuffleHeader = [[PlayAllAndShuffleHeader alloc] initWithPlayAllHandler:^{
-        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+        [HUD show];
         [EX2Dispatch runInMainThreadAsync:^{
             [weakSelf loadPlayAllPlaylist:NO];
         }];
     } shuffleHandler:^{
-        [viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Shuffling"];
+        [HUD showWithMessage:@"Shuffling"];
         [EX2Dispatch runInMainThreadAsync:^{
             [weakSelf loadPlayAllPlaylist:YES];
         }];
@@ -804,7 +803,7 @@
         [EX2Dispatch runInMainThreadAsync:^{
             [self segmentAction:nil];
 
-            [viewObjectsS hideLoadingScreen];
+            [HUD hide];
 
             if (!cacheQueueManagerS.isQueueDownloading) {
                 [cacheQueueManagerS startDownloadQueue];
@@ -842,7 +841,7 @@
                 [cacheQueueManagerS startDownloadQueue];
             }
             
-            [viewObjectsS hideLoadingScreen];
+            [HUD hide];
             
             [self registerForNotifications];
         }];
@@ -869,7 +868,7 @@
 			}
 			[self showDeleteButton];
 		} else {
-			[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Deleting"];
+            [HUD showWithMessage:@"Deleting"];
             if (self.segmentedControl.selectedSegmentIndex == 0) {
 				[self performSelector:@selector(deleteCachedSongs) withObject:nil afterDelay:0.05];
             } else {
@@ -1045,7 +1044,7 @@
         // Custom queue and delete actions
         return [SwipeAction downloadQueueAndDeleteConfigWithDownloadHandler:nil queueHandler:^{
             // TODO: implement this
-//            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+//            [HUD show];
 //            [EX2Dispatch runInBackgroundAsync:^{
 //                NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
 //                [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
@@ -1068,11 +1067,11 @@
 //                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
 //
 //                [EX2Dispatch runInMainThreadAsync:^{
-//                    [viewObjectsS hideLoadingScreen];
+//                    [HUD hide];
 //                }];
 //            }];
         } deleteHandler:^{
-            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+            [HUD show];
             [EX2Dispatch runInBackgroundAsync:^{
                 (void)[Store.shared deleteDownloadedSongsWithDownloadedFolderArtist:[self downloadedFolderArtistForIndexPath:indexPath]];
 
@@ -1086,7 +1085,7 @@
                 }
 
                 [EX2Dispatch runInMainThreadAsync:^{
-                    [viewObjectsS hideLoadingScreen];
+                    [HUD hide];
                 }];
             }];
         }];

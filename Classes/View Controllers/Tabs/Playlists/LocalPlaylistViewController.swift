@@ -13,7 +13,6 @@ import Resolver
 @objc final class LocalPlaylistViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var viewObjects: ViewObjects
     
     private let localPlaylist: LocalPlaylist
     
@@ -101,7 +100,7 @@ import Resolver
     //
     //        [EX2Dispatch runInMainThreadAsync:^{
     //            self.tableView.scrollEnabled = YES;
-    //            [viewObjectsS hideLoadingScreen];
+    //            [HUD hide];
     //            [self.refreshControl endRefreshing];
     //        }];
     //    }];
@@ -134,12 +133,12 @@ extension LocalPlaylistViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewObjects.showLoadingScreenOnMainWindow(withMessage: nil)
+        HUD.show()
         DispatchQueue.userInitiated.async {
             // TODO: implement this
             
             DispatchQueue.main.async {
-                self.viewObjects.hideLoadingScreen()
+                HUD.hide()
 //                if !song.isVideo {
 //                    showPlayer()
 //                }

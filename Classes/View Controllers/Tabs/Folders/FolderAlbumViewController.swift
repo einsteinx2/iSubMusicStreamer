@@ -13,7 +13,6 @@ import Resolver
 @objc final class FolderAlbumViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var viewObjects: ViewObjects
     
     var serverId = Settings.shared().currentServerId
     
@@ -161,7 +160,7 @@ import Resolver
     }
     
     func startLoad() {
-        viewObjects.showAlbumLoadingScreen(view, sender: self)
+        HUD.show(closeHandler: cancelLoad)
         loader = SubfolderLoader(parentFolderId: parentFolderId) { [weak self] success, error in
             guard let self = self else { return }
             
@@ -184,7 +183,7 @@ import Resolver
                     self.present(alert, animated: true, completion: nil)
                 }
             }
-            self.viewObjects.hideLoadingScreen()
+            HUD.hide()
             self.tableView.refreshControl?.endRefreshing()
         }
         loader?.startLoad()
@@ -196,7 +195,7 @@ import Resolver
         loader = nil
         
         tableView.refreshControl?.endRefreshing()
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
     }
 }
 

@@ -17,7 +17,6 @@ struct SongLoader {
     @Injected private static var playQueue: PlayQueue
     @Injected private static var streamManager: StreamManager
     @Injected private static var music: Music
-    @Injected private static var viewObjects: ViewObjects
     
     private static var recursiveLoader: RecursiveSongLoader?
     private static var albumLoader: TagAlbumLoader?
@@ -27,13 +26,13 @@ struct SongLoader {
     static func downloadAll(folderId: Int) {
         recursiveLoader = RecursiveSongLoader(folderId: folderId, callback: downloadCallback(success:error:))
         recursiveLoader?.downloadAll()
-        showLoadingScreen(sender: recursiveLoader)
+        showLoadingScreen(loader: recursiveLoader)
     }
     
     static func downloadAll(tagArtistId: Int) {
         recursiveLoader = RecursiveSongLoader(tagArtistId: tagArtistId, callback: downloadCallback(success:error:))
         recursiveLoader?.downloadAll()
-        showLoadingScreen(sender: recursiveLoader)
+        showLoadingScreen(loader: recursiveLoader)
     }
     
     static func downloadAll(tagAlbumId: Int) {
@@ -44,64 +43,64 @@ struct SongLoader {
             downloadCallback(success: success, error: error)
         }
         albumLoader?.startLoad()
-        showLoadingScreen(sender: albumLoader)
+        showLoadingScreen(loader: albumLoader)
     }
     
     static func queueAll(folderId: Int) {
         recursiveLoader = RecursiveSongLoader(folderId: folderId, callback: queueCallback(success:error:))
         recursiveLoader?.queueAll()
-        showLoadingScreen(sender: recursiveLoader)
+        showLoadingScreen(loader: recursiveLoader)
     }
     
     static func queueAll(tagArtistId: Int) {
         recursiveLoader = RecursiveSongLoader(tagArtistId: tagArtistId, callback: queueCallback(success:error:))
         recursiveLoader?.queueAll()
-        showLoadingScreen(sender: recursiveLoader)
+        showLoadingScreen(loader: recursiveLoader)
     }
     
     static func queueAll(tagAlbumId: Int) {
         queueTagAlbum(tagAlbumId: tagAlbumId, callback: queueCallback(success:error:))
-        showLoadingScreen(sender: albumLoader)
+        showLoadingScreen(loader: albumLoader)
     }
     
     static func playAll(folderId: Int) {
         preparePlayAll()
         recursiveLoader = RecursiveSongLoader(folderId: folderId, callback: playCallback(success:error:))
         recursiveLoader?.queueAll()
-        showLoadingScreen(sender: recursiveLoader)
+        showLoadingScreen(loader: recursiveLoader)
     }
     
     static func playAll(tagArtistId: Int) {
         preparePlayAll()
         recursiveLoader = RecursiveSongLoader(tagArtistId: tagArtistId, callback: playCallback(success:error:))
         recursiveLoader?.queueAll()
-        showLoadingScreen(sender: recursiveLoader)
+        showLoadingScreen(loader: recursiveLoader)
     }
     
     static func playAll(tagAlbumId: Int) {
         preparePlayAll()
         queueTagAlbum(tagAlbumId: tagAlbumId, callback: playCallback(success:error:))
-        showLoadingScreen(sender: albumLoader)
+        showLoadingScreen(loader: albumLoader)
     }
     
     static func shuffleAll(folderId: Int) {
         preparePlayAll()
         recursiveLoader = RecursiveSongLoader(folderId: folderId, callback: shuffleCallback(success:error:))
         recursiveLoader?.queueAll()
-        showLoadingScreen(sender: recursiveLoader)
+        showLoadingScreen(loader: recursiveLoader)
     }
     
     static func shuffleAll(tagArtistId: Int) {
         preparePlayAll()
         recursiveLoader = RecursiveSongLoader(tagArtistId: tagArtistId, callback: shuffleCallback(success:error:))
         recursiveLoader?.queueAll()
-        showLoadingScreen(sender: recursiveLoader)
+        showLoadingScreen(loader: recursiveLoader)
     }
     
     static func shuffleAll(tagAlbumId: Int) {
         preparePlayAll()
         queueTagAlbum(tagAlbumId: tagAlbumId, callback: shuffleCallback(success:error:))
-        showLoadingScreen(sender: albumLoader)
+        showLoadingScreen(loader: albumLoader)
     }
     
     // MARK: Callbacks
@@ -173,13 +172,16 @@ struct SongLoader {
         albumLoader?.startLoad()
     }
     
-    private static func showLoadingScreen(sender: Any?) {
-        guard let sender = sender else { return }
-        viewObjects.showAlbumLoadingScreenOnMainWindowWithSender(sender)
+    private static func showLoadingScreen(loader: CancelableLoader?) {
+        guard let loader = loader else { return }
+        HUD.show {
+            loader.cancelLoad()
+            HUD.hide()
+        }
     }
     
     private static func finishLoading() {
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
         recursiveLoader = nil
     }
 }

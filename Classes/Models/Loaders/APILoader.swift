@@ -9,6 +9,10 @@
 import Foundation
 import CocoaLumberjackSwift
 
+protocol CancelableLoader {
+    func cancelLoad()
+}
+
 @objc protocol APILoaderDelegate {
     @objc(loadingFinished:)
     func loadingFinished(loader: APILoader?)
@@ -42,7 +46,7 @@ import CocoaLumberjackSwift
     case tagAlbum           = 17
 }
 
-@objc class APILoader: NSObject {
+@objc class APILoader: NSObject, CancelableLoader {
     static private let sessionDelegate = SelfSignedCertURLSessionDelegate()
     @objc final class var sharedSession: URLSession {
         let configuration = URLSessionConfiguration.ephemeral

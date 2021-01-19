@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-@objc final class RecursiveSongLoader: NSObject {
+@objc final class RecursiveSongLoader: NSObject, CancelableLoader {
     var serverId = Settings.shared().currentServerId
     var callback: LoaderCallback?
         

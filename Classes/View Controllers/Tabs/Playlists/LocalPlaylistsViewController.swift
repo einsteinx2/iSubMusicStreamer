@@ -13,7 +13,6 @@ import Resolver
 
 @objc final class LocalPlaylistsViewController: UIViewController {
     @Injected private var store: Store
-    @Injected private var viewObjects: ViewObjects
     @Injected private var playQueue: PlayQueue
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "song", pluralizeClearType: false, isLargeCount: false)
@@ -139,7 +138,7 @@ import Resolver
     //
     //        [EX2Dispatch runInMainThreadAsync:^{
     //            self.tableView.scrollEnabled = YES;
-    //            [viewObjectsS hideLoadingScreen];
+    //            [HUD hide];
     //        }];
     //    }];
     //    [dataTask resume];
@@ -177,7 +176,7 @@ import Resolver
     
     @objc func cancelLoad() {
         // TODO: Cancel the upload
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
     }
     
     private func showSavePlaylistAlert() {
@@ -208,13 +207,13 @@ extension LocalPlaylistsViewController: SaveEditHeaderDelegate {
     
     func saveEditHeaderSaveDeleteAction(_ saveEditHeader: SaveEditHeader) {
         if !saveEditHeader.deleteLabel.isHidden {
-            viewObjects.showLoadingScreenOnMainWindow(withMessage: "Deleting")
+            HUD.show(message: "Deleting")
             DispatchQueue.userInitiated.async {
                 if let indexPathsForSelectedRows = self.tableView.indexPathsForSelectedRows {
                     self.deleteLocalPlaylists(indexPaths: indexPathsForSelectedRows)
                 }
                 DispatchQueue.main.async {
-                    self.viewObjects.hideLoadingScreen()
+                    HUD.hide()
                 }
             }
         }

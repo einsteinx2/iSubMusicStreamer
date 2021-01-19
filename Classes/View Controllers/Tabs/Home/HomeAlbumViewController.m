@@ -8,7 +8,6 @@
 
 #import "HomeAlbumViewController.h"
 #import "ServerListViewController.h"
-#import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "SavedSettings.h"
 #import "MusicSingleton.h"

@@ -68,10 +68,6 @@ extern NSString * const ISMSNotification_JukeboxSongInfo;
 extern NSString * const ISMSNotification_PlayVideo;
 extern NSString * const ISMSNotification_RemoveVideoPlayer;
 
-extern NSString * const ISMSNotification_ShowAlbumLoadingScreenOnMainWindow;
-extern NSString * const ISMSNotification_ShowLoadingScreenOnMainWindow;
-extern NSString * const ISMSNotification_HideLoadingScreen;
-
 extern NSString * const ISMSNotification_ShowDeleteButton;
 extern NSString * const ISMSNotification_HideDeleteButton;
 

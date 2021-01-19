@@ -14,7 +14,6 @@ import Resolver
 @objc final class HomeViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var viewObjects: ViewObjects
     @Injected private var music: Music
     @Injected private var audioEngine: AudioEngine
     @Injected private var jukebox: Jukebox
@@ -281,10 +280,10 @@ import Resolver
     }
     
     private func loadQuickAlbums(modifier: String, title: String) {
-        viewObjects.showAlbumLoadingScreenOnMainWindowWithSender(self)
+        HUD.show(closeHandler: cancelLoad)
         let loader = QuickAlbumsLoader()
         loader.callback = { _, error in
-            self.viewObjects.hideLoadingScreen()
+            HUD.hide()
             if let error = error {
                 if self.settings.isPopupsEnabled && (error as NSError).code != NSURLErrorCancelled {
                     let alert = UIAlertController(title: "Error", message: "There was an error grabbing the album list.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
@@ -306,10 +305,10 @@ import Resolver
     }
     
     private func performServerShuffle(mediaFolderId: Int) {
-        viewObjects.showAlbumLoadingScreenOnMainWindowWithSender(self)
+        HUD.show(closeHandler: cancelLoad)
         let loader = ServerShuffleLoader()
         loader.callback = { success, _ in
-            self.viewObjects.hideLoadingScreen()
+            HUD.hide()
             if success {
                 self.music.playSong(atPosition: 0)
                 self.showPlayer()
@@ -334,7 +333,7 @@ import Resolver
         serverShuffleLoader = nil
         dataTask?.cancel()
         dataTask = nil
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
     }
     
     @objc private func jukeboxOff() {
@@ -467,11 +466,11 @@ extension HomeViewController: UISearchBarDelegate {
                             self.pushViewControllerCustom(controller)
                         }
                     }
-                    self.viewObjects.hideLoadingScreen()
+                    HUD.hide()
                 }
             }
             dataTask?.resume()
-            viewObjects.showLoadingScreenOnMainWindow(withMessage: "")
+            HUD.show()
         }
     }
 }

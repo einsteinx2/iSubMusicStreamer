@@ -68,10 +68,6 @@ NSString * const ISMSNotification_JukeboxSongInfo = @"ISMSNotification_JukeboxSo
 NSString * const ISMSNotification_PlayVideo = @"ISMSNotification_PlayVideo";
 NSString * const ISMSNotification_RemoveVideoPlayer = @"ISMSNotification_RemoveVideoPlayer";
 
-NSString * const ISMSNotification_ShowAlbumLoadingScreenOnMainWindow = @"ISMSNotification_ShowAlbumLoadingScreenOnMainWindow";
-NSString * const ISMSNotification_ShowLoadingScreenOnMainWindow = @"ISMSNotification_ShowLoadingScreenOnMainWindow";
-NSString * const ISMSNotification_HideLoadingScreen = @"ISMSNotification_HideLoadingScreen";
-
 NSString * const ISMSNotification_ShowDeleteButton = @"ISMSNotification_ShowDeleteButton";
 NSString * const ISMSNotification_HideDeleteButton = @"ISMSNotification_HideDeleteButton";
 

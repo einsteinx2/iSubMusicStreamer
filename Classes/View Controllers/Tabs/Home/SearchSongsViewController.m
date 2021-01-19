@@ -9,7 +9,6 @@
 #import "SearchSongsViewController.h"
 #import "ServerListViewController.h"
 #import "NSMutableURLRequest+SUS.h"
-#import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "SavedSettings.h"
 #import "MusicSingleton.h"

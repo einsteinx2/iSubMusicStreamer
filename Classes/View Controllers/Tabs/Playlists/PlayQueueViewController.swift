@@ -14,7 +14,6 @@ import Resolver
 @objc final class PlayQueueViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var viewObjects: ViewObjects
     @Injected private var music: Music
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
@@ -152,7 +151,7 @@ import Resolver
             if isLocal || self.settings.isOfflineMode {
                 // TODO: optimize this in the store to not require loading each song object
                 // TODO: Add error handling
-                self.viewObjects.showLoadingScreenOnMainWindow(withMessage: nil)
+                HUD.show()
                 DispatchQueue.userInitiated.async {
                     let localPlaylist = LocalPlaylist(id: self.store.nextLocalPlaylistId(), name: name, songCount: 0)
                     if self.store.add(localPlaylist: localPlaylist) {
@@ -163,7 +162,7 @@ import Resolver
                         }
                     }
                     DispatchQueue.main.async {
-                        self.viewObjects.hideLoadingScreen()
+                        HUD.hide()
                     }
                 }
                 
@@ -216,7 +215,7 @@ import Resolver
         //                }
         //
         //                self.tableView.scrollEnabled = YES;
-        //                [viewObjectsS hideLoadingScreen];
+        //                [HUD hide];
         //            } else {
         //                RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
         //                if (!root.isValid) {
@@ -233,7 +232,7 @@ import Resolver
         //                }
         //
         //                self.tableView.scrollEnabled = YES;
-        //                [viewObjectsS hideLoadingScreen];
+        //                [HUD hide];
         //            }
         //        }];
         //    }];

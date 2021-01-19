@@ -13,7 +13,6 @@ import Resolver
 final class TagAlbumViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var viewObjects: ViewObjects
     
     var serverId = Settings.shared().currentServerId
     
@@ -119,7 +118,7 @@ final class TagAlbumViewController: UIViewController {
     }
     
     func startLoad() {
-        viewObjects.showAlbumLoadingScreen(view, sender: self)
+        HUD.show(closeHandler: cancelLoad)
         loader = TagAlbumLoader(tagAlbumId: tagAlbum.id) { [weak self] success, error in
             guard let self = self else { return }
             
@@ -137,7 +136,7 @@ final class TagAlbumViewController: UIViewController {
                     self.present(alert, animated: true, completion: nil)
                 }
             }
-            self.viewObjects.hideLoadingScreen()
+            HUD.hide()
             self.tableView.refreshControl?.endRefreshing()
         }
         loader?.startLoad()
@@ -149,7 +148,7 @@ final class TagAlbumViewController: UIViewController {
         loader = nil
         
         tableView.refreshControl?.endRefreshing()
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
     }
 }
 

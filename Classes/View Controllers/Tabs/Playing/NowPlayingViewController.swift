@@ -13,7 +13,6 @@ import SnapKit
 
 @objc final class NowPlayingViewController: UIViewController {
     @Injected private var store: Store
-    @Injected private var viewObjects: ViewObjects
     @Injected private var settings: Settings
     
     private let tableView = UITableView()
@@ -50,7 +49,7 @@ import SnapKit
     
     private func loadData() {
         cancelLoad()
-        viewObjects.showAlbumLoadingScreen(self.view, sender: self)
+        HUD.show(closeHandler: cancelLoad)
         nowPlayingLoader = NowPlayingLoader()
         nowPlayingLoader?.callback = { [unowned self] (success, error) in
             if let error = error as NSError? {
@@ -64,7 +63,7 @@ import SnapKit
                 nowPlayingSongs = nowPlayingLoader?.nowPlayingSongs ?? []
                 tableView.reloadData()
             }
-            viewObjects.hideLoadingScreen()
+            HUD.hide()
             tableView.refreshControl?.endRefreshing()
             nowPlayingLoader = nil
         }
@@ -75,7 +74,7 @@ import SnapKit
         nowPlayingLoader?.cancelLoad()
         nowPlayingLoader?.callback = nil
         nowPlayingLoader = nil
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
         tableView.refreshControl?.endRefreshing()
     }
     

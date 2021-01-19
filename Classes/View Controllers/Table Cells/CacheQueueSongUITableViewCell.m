@@ -7,7 +7,6 @@
 //
 
 #import "CacheQueueSongUITableViewCell.h"
-#import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "EX2Kit.h"
 #import "Swift.h"

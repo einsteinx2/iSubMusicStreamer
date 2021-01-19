@@ -13,7 +13,6 @@ import Resolver
 @objc final class ServerPlaylistViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var viewObjects: ViewObjects
     
     private var serverPlaylistLoader: ServerPlaylistLoader?
     private var serverPlaylist: ServerPlaylist
@@ -69,19 +68,19 @@ import Resolver
                     }
                     tableView.reloadData()
                 }
-                viewObjects.hideLoadingScreen()
+                HUD.hide()
                 self.tableView.refreshControl?.endRefreshing()
             }
         }
         serverPlaylistLoader?.startLoad()
-        viewObjects.showAlbumLoadingScreen(self.view, sender: self)
+        HUD.show(closeHandler: cancelLoad)
     }
     
     @objc func cancelLoad() {
         serverPlaylistLoader?.cancelLoad()
         serverPlaylistLoader?.callback = nil
         serverPlaylistLoader = nil
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
         self.tableView.refreshControl?.endRefreshing()
     }
 }
@@ -108,12 +107,12 @@ extension ServerPlaylistViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewObjects.showLoadingScreenOnMainWindow(withMessage: nil)
+        HUD.show()
         DispatchQueue.userInitiated.async { [unowned self] in
             let song = store.playSongFromServerPlaylist(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id, position: indexPath.row)
             
             DispatchQueue.main.async {
-                viewObjects.hideLoadingScreen()
+                HUD.hide()
                 if let song = song, !song.isVideo {
                     showPlayer()
                 }

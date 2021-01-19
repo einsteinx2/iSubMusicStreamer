@@ -13,7 +13,6 @@ import CocoaLumberjackSwift
 final class ServerChecker: NSObject {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var viewObjects: ViewObjects
     @Injected private var cacheQueue: CacheQueue
     
     private var statusLoader: StatusLoader?
@@ -64,7 +63,7 @@ final class ServerChecker: NSObject {
                     }
                 }
                 
-                self.viewObjects.hideLoadingScreen()
+                HUD.hide()
                 self.statusLoader = nil
             }
             statusLoader?.startLoad()
@@ -83,6 +82,6 @@ final class ServerChecker: NSObject {
         statusLoader?.cancelLoad()
         statusLoader?.callback = nil
         statusLoader = nil
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
     }
 }

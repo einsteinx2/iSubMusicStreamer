@@ -12,7 +12,6 @@ import Resolver
 
 @objc final class ServerEditViewController: UIViewController {
     @Injected private var store: Store
-    @Injected private var viewObjects: ViewObjects
     
     let backgroundImageView = UIImageView(image: UIImage(named: "settings-page"))
     let urlField = InsetTextField(inset: 5)
@@ -193,7 +192,7 @@ import Resolver
             }
             present(alert, animated: true, completion: nil)
         } else {
-            viewObjects.showLoadingScreenOnMainWindow(withMessage: "Checking Server")
+            HUD.show(message: "Checking Server")
             let loader = StatusLoader(urlString: urlField.text ?? "", username: usernameField.text ?? "", password: passwordField.text ?? "", delegate: self)
             loader.startLoad()
         }
@@ -235,7 +234,7 @@ extension ServerEditViewController: UITextFieldDelegate {
 
 extension ServerEditViewController: APILoaderDelegate {
     func loadingFinished(loader: APILoader?) {
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
         
         if let serverToEdit = serverToEdit {
             _ = store.add(server: serverToEdit)
@@ -262,7 +261,7 @@ extension ServerEditViewController: APILoaderDelegate {
     }
     
     func loadingFailed(loader: APILoader?, error: NSError?) {
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
         
         var message = "Unknown error occured, please try again."
         if let error = error {

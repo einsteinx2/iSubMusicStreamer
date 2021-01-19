@@ -8,7 +8,6 @@
 
 #import "ServerListViewController.h"
 #import "SettingsTabViewController.h"
-#import "ViewObjectsSingleton.h"
 #import "Defines.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
@@ -230,7 +229,7 @@ LOG_LEVEL_ISUB_DEFAULT
             }
         }
         
-		SceneDelegate.shared.window.backgroundColor = viewObjectsS.windowColor;
+//		SceneDelegate.shared.window.backgroundColor = viewObjectsS.windowColor;
 		
 		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ServerSwitched];
 	}
@@ -307,8 +306,7 @@ LOG_LEVEL_ISUB_DEFAULT
         serverEditViewController.serverToEdit = self.serverToEdit;
         [self presentViewController:serverEditViewController animated:YES completion:nil];
 	} else {
-		[viewObjectsS showLoadingScreenOnMainWindowWithMessage:@"Checking Server"];
-        
+        [HUD showWithMessage:@"Checking Server"];
         if (self.serverToEdit) {
             StatusLoader *statusLoader = [[StatusLoader alloc] initWithUrlString:self.serverToEdit.url.absoluteString username:self.serverToEdit.username password:self.serverToEdit.password delegate:self];
             [statusLoader startLoad];
@@ -361,7 +359,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [self switchServer];
     
     DDLogInfo(@"[ServerListViewController] server verification passed, hiding loading screen");
-    [viewObjectsS hideLoadingScreen];
+    [HUD hide];
 }
 
 - (void)loadingFailed:(APILoader *)loader error:(NSError *)error {
@@ -376,7 +374,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [self presentViewController:alert animated:YES completion:nil];
         
     DDLogError(@"[ServerListViewController] server verification failed, hiding loading screen");
-    [viewObjectsS hideLoadingScreen];
+    [HUD hide];
 }
 
 @end

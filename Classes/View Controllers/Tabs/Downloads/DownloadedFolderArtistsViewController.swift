@@ -16,7 +16,6 @@ final class DownloadedFolderArtistsViewController: UIViewController {
     @Injected private var settings: Settings
     @Injected private var cache: Cache
     @Injected private var cacheQueue: CacheQueue
-    @Injected private var viewObjects: ViewObjects
     
     private let tableView = UITableView()
     
@@ -96,7 +95,7 @@ extension DownloadedFolderArtistsViewController: UITableViewConfiguration {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         SwipeAction.downloadQueueAndDeleteConfig(downloadHandler: nil, queueHandler: {
             // TODO: implement this
-//            [viewObjectsS showLoadingScreenOnMainWindowWithMessage:nil];
+//            [HUD show];
 //            [EX2Dispatch runInBackgroundAsync:^{
 //                NSMutableArray *songMd5s = [[NSMutableArray alloc] initWithCapacity:50];
 //                [databaseS.songCacheDbQueue inDatabase:^(FMDatabase *db) {
@@ -119,11 +118,11 @@ extension DownloadedFolderArtistsViewController: UITableViewConfiguration {
 //                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
 //
 //                [EX2Dispatch runInMainThreadAsync:^{
-//                    [viewObjectsS hideLoadingScreen];
+//                    [HUD hide];
 //                }];
 //            }];
         }, deleteHandler: {
-            self.viewObjects.showLoadingScreenOnMainWindow(withMessage: nil)
+            HUD.show()
             DispatchQueue.userInitiated.async {
                 if self.store.deleteDownloadedSongs(downloadedFolderArtist: self.downloadedFolderArtists[indexPath.row]) {
                     self.cache.findCacheSize()
@@ -133,7 +132,7 @@ extension DownloadedFolderArtistsViewController: UITableViewConfiguration {
                     }
                 }
                 DispatchQueue.main.async {
-                    self.viewObjects.hideLoadingScreen()
+                    HUD.hide()
                 }
             }
         })

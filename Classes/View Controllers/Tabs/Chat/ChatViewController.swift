@@ -10,9 +10,7 @@ import UIKit
 import SnapKit
 import Resolver
 
-final class ChatViewController: UIViewController {
-    @Injected private var viewObjects: ViewObjects
-    
+final class ChatViewController: UIViewController {    
     var serverId = Settings.shared().currentServerId
     
     private var loader: ChatLoader?
@@ -106,11 +104,11 @@ final class ChatViewController: UIViewController {
     }
     
     private func send(message: String) {
-        viewObjects.showLoadingScreenOnMainWindow(withMessage: "Sending")
+        HUD.show(message: "Sending")
         let chatSendLoader = ChatSendLoader(message: message)
         chatSendLoader.callback = { [weak self] (success, error) in
             guard let self = self else { return }
-            self.viewObjects.hideLoadingScreen()
+            HUD.hide()
             if success {
                 self.startLoad()
             } else {
@@ -121,14 +119,14 @@ final class ChatViewController: UIViewController {
     }
     
     func startLoad() {
-        viewObjects.showAlbumLoadingScreenOnMainWindowWithSender(self)
+        HUD.show(closeHandler: cancelLoad)
         cancelLoad()
         loader = ChatLoader(delegate: self)
         loader?.startLoad()
     }
     
     func cancelLoad() {
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
         loader?.cancelLoad()
         loader?.delegate = nil
         loader = nil
@@ -143,7 +141,7 @@ extension ChatViewController: APILoaderDelegate {
         self.loader?.delegate = nil
         self.loader = nil
         
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
         tableView.reloadData()
         tableView.setNeedsUpdateConstraints()
         tableView.refreshControl?.endRefreshing()
@@ -153,7 +151,7 @@ extension ChatViewController: APILoaderDelegate {
         self.loader?.delegate = nil
         self.loader = nil
         
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
         tableView.refreshControl?.endRefreshing()
     }
 }

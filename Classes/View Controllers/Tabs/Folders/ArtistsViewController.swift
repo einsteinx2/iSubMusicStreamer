@@ -13,7 +13,6 @@ import CocoaLumberjackSwift
 
 @objc final class ArtistsViewController: UIViewController {
     @Injected private var store: Store
-    @Injected private var viewObjects: ViewObjects
     @Injected private var settings: Settings
     
     private let tableView = UITableView()
@@ -67,7 +66,7 @@ import CocoaLumberjackSwift
         super.viewWillAppear(animated)
         addURLRefBackButton()
         addShowPlayerButton()
-        if !viewObjects.isArtistsLoading, !dataModel.isCached {
+        if !dataModel.isCached {
             loadData(mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? 0)
         }
         Flurry.logEvent("FoldersTab")
@@ -167,14 +166,19 @@ import CocoaLumberjackSwift
 
     private func loadData(mediaFolderId: Int) {
         dropdown.updateFolders()
-        viewObjects.isArtistsLoading = true
-        viewObjects.showAlbumLoadingScreenOnMainWindowWithSender(self)
+        HUD.show(closeHandler: cancelLoad)
         dataModel.mediaFolderId = mediaFolderId
         dataModel.startLoad()
     }
 }
 
 extension ArtistsViewController: APILoaderDelegate {
+    func cancelLoad() {
+        dataModel.cancelLoad()
+        tableView.refreshControl?.endRefreshing()
+        HUD.hide()
+    }
+    
     func loadingFinished(loader: APILoader?) {
         if isCountShowing {
             updateCount()
@@ -183,14 +187,12 @@ extension ArtistsViewController: APILoaderDelegate {
         }
         
         tableView.reloadData()
-        viewObjects.isArtistsLoading = false
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
         tableView.refreshControl?.endRefreshing()
     }
     
     func loadingFailed(loader: APILoader?, error: NSError?) {
-        viewObjects.isArtistsLoading = false
-        viewObjects.hideLoadingScreen()
+        HUD.hide()
         tableView.refreshControl?.endRefreshing()
         
         // Inform the user that the connection failed.
