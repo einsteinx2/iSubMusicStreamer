@@ -43,17 +43,17 @@ extension SearchAllViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let controller = SearchSongsViewController(nibName: "SearchSongsViewController", bundle: nil)
+        let controller = SearchSongsViewController()
         switch cellNames[indexPath.row] {
         case "Artists":
-            controller.folderArtists = NSMutableArray(array: folderArtists)
-            controller.searchType = ISMSSearchSongsSearchType_Artists
+            controller.folderArtists = folderArtists
+            controller.searchType = .artists
         case "Albums":
-            controller.folderAlbums = NSMutableArray(array: folderAlbums)
-            controller.searchType = ISMSSearchSongsSearchType_Albums
+            controller.folderAlbums = folderAlbums
+            controller.searchType = .albums
         case "Songs":
-            controller.songs = NSMutableArray(array: songs)
-            controller.searchType = ISMSSearchSongsSearchType_Songs
+            controller.songs = songs
+            controller.searchType = .songs
         default: break
         }
         controller.query = query
