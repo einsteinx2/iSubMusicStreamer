@@ -8,14 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "ISMSCacheQueueManager.h"
-#import "DatabaseSingleton.h"
 #import "ISMSStreamManager.h"
 #import "ISMSStreamHandler.h"
 #import "RXMLElement.h"
 #import "ISMSNSURLSessionStreamHandler.h"
 #import "SavedSettings.h"
 #import "CacheSingleton.h"
-#import "DatabaseSingleton.h"
 #import "ISMSStreamManager.h"
 #import "EX2Kit.h"
 #import "Swift.h"

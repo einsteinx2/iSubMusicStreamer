@@ -10,7 +10,6 @@
 #import "ISMSStreamManager.h"
 #import "ISMSCacheQueueManager.h"
 #import "SavedSettings.h"
-#import "DatabaseSingleton.h"
 #import "ISMSStreamManager.h"
 #import "ISMSCacheQueueManager.h"
 #import "EX2Kit.h"

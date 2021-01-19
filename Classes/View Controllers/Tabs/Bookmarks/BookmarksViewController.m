@@ -11,7 +11,6 @@
 #import "Defines.h"
 #import "Flurry.h"
 #import "SavedSettings.h"
-#import "DatabaseSingleton.h"
 #import "JukeboxSingleton.h"
 #import "EX2Kit.h"
 #import "Swift.h"

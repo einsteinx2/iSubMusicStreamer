@@ -8,7 +8,6 @@
 
 #import "ISMSNSURLSessionStreamHandler.h"
 #import "NSError+ISMSError.h"
-#import "DatabaseSingleton.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "SavedSettings.h"
 #import "CacheSingleton.h"

@@ -9,7 +9,6 @@
 #import "SavedSettings.h"
 #import "BassGaplessPlayer.h"
 #import "AudioEngine.h"
-#import "DatabaseSingleton.h"
 #import "CacheSingleton.h"
 #import "ISMSCacheQueueManager.h"
 #import "ISMSServer.h"

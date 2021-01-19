@@ -7,7 +7,6 @@
 //
 
 #import "ISMSBookmarkDAO.h"
-#import "DatabaseSingleton.h"
 #import "SavedSettings.h"
 #import "EX2Kit.h"
 

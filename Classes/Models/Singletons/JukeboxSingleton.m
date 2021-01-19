@@ -9,7 +9,6 @@
 #import "JukeboxSingleton.h"
 #import "NSMutableURLRequest+SUS.h"
 #import "SavedSettings.h"
-#import "DatabaseSingleton.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 

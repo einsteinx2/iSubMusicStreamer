@@ -66,7 +66,6 @@
 #import "SavedSettings.h"
 #import "AudioEngine.h"
 #import "ISMSStreamManager.h"
-#import "DatabaseSingleton.h"
 #import "CacheSingleton.h"
 #import "ISMSCacheQueueManager.h"
 

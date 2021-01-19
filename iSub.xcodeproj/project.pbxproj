@@ -488,8 +488,6 @@
 		53FE36FD1EA961720058B925 /* BassWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36361EA961710058B925 /* BassWrapper.m */; };
 		53FE36FE1EA961720058B925 /* CacheSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36381EA961710058B925 /* CacheSingleton.m */; };
 		53FE37001EA961720058B925 /* CacheSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36381EA961710058B925 /* CacheSingleton.m */; };
-		53FE37011EA961720058B925 /* DatabaseSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE363A1EA961710058B925 /* DatabaseSingleton.m */; };
-		53FE37031EA961720058B925 /* DatabaseSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE363A1EA961710058B925 /* DatabaseSingleton.m */; };
 		53FE37101EA961720058B925 /* ISMSCacheQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */; };
 		53FE37121EA961720058B925 /* ISMSCacheQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */; };
 		53FE37251EA961720058B925 /* ISMSNotificationNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36591EA961720058B925 /* ISMSNotificationNames.m */; };
@@ -951,8 +949,6 @@
 		53FE36361EA961710058B925 /* BassWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BassWrapper.m; sourceTree = "<group>"; };
 		53FE36371EA961710058B925 /* CacheSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheSingleton.h; sourceTree = "<group>"; };
 		53FE36381EA961710058B925 /* CacheSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheSingleton.m; sourceTree = "<group>"; };
-		53FE36391EA961710058B925 /* DatabaseSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseSingleton.h; sourceTree = "<group>"; };
-		53FE363A1EA961710058B925 /* DatabaseSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseSingleton.m; sourceTree = "<group>"; };
 		53FE36431EA961720058B925 /* ISMSCacheQueueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSCacheQueueManager.h; sourceTree = "<group>"; };
 		53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSCacheQueueManager.m; sourceTree = "<group>"; };
 		53FE364F1EA961720058B925 /* ISMSErrorDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSErrorDomain.h; sourceTree = "<group>"; };
@@ -1523,8 +1519,6 @@
 				53FE36A41EA961720058B925 /* SocialSingleton.m */,
 				53FE36371EA961710058B925 /* CacheSingleton.h */,
 				53FE36381EA961710058B925 /* CacheSingleton.m */,
-				53FE36391EA961710058B925 /* DatabaseSingleton.h */,
-				53FE363A1EA961710058B925 /* DatabaseSingleton.m */,
 				539D331125AB691B00F53797 /* PlayQueue.swift */,
 			);
 			path = Singletons;
@@ -2137,7 +2131,6 @@
 				53FE6796256DD0F00015FC83 /* GCDWebServerConnection.m in Sources */,
 				53266BFA2562D4D0002C64BB /* PageControlViewController.swift in Sources */,
 				5347A1E4256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */,
-				53FE37011EA961720058B925 /* DatabaseSingleton.m in Sources */,
 				53FE34E01EA961540058B925 /* NSNotificationCenter+MainThread.m in Sources */,
 				535E143825A7C6D60039BCAA /* QuickAlbumsLoader.swift in Sources */,
 				53246AB6256C975600E11EC4 /* CacheStatusViewController.swift in Sources */,
@@ -2378,7 +2371,6 @@
 				53246AAA256C324500E11EC4 /* InsetTextField.swift in Sources */,
 				538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53FE38A91EA961C80058B925 /* ZKCDTrailer.m in Sources */,
-				53FE37031EA961720058B925 /* DatabaseSingleton.m in Sources */,
 				53FE6799256DD0F00015FC83 /* GCDWebServerErrorResponse.m in Sources */,
 				53FE34E21EA961540058B925 /* NSNotificationCenter+MainThread.m in Sources */,
 				53FE36F41EA961720058B925 /* BassParamEqValue.m in Sources */,

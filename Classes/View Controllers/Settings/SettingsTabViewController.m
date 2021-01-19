@@ -9,7 +9,6 @@
 #import "SettingsTabViewController.h"
 #import "SavedSettings.h"
 #import "CacheSingleton.h"
-#import "DatabaseSingleton.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import <Accounts/Accounts.h>

@@ -11,7 +11,6 @@
 #import "Defines.h"
 #import "AudioEngine.h"
 #import "SavedSettings.h"
-#import "DatabaseSingleton.h"
 #import "ISMSStreamManager.h"
 #import "ISMSErrorDomain.h"
 #import "EX2Kit.h"
@@ -217,8 +216,8 @@ LOG_LEVEL_ISUB_DEFAULT
 		}
 		
 		// Reset the databases
-		[databaseS closeAllDatabases];
-		[databaseS setupDatabases];
+        [Store.shared closeAllDatabases];
+        [Store.shared setupDatabases];
 		
 		// Reset the tabs
         if (!UIDevice.isPad) {
