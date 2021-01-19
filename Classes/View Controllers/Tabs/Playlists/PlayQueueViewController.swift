@@ -148,7 +148,7 @@ import Resolver
                 // TODO: optimize this in the store to not require loading each song object
                 // TODO: Add error handling
                 ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: nil)
-                EX2Dispatch.runInBackgroundAsync {
+                DispatchQueue.userInitiated.async {
                     let localPlaylist = LocalPlaylist(id: self.store.nextLocalPlaylistId(), name: name, songCount: 0)
                     if self.store.add(localPlaylist: localPlaylist) {
                         for i in 0..<PlayQueue.shared.count {
@@ -157,7 +157,7 @@ import Resolver
                             }
                         }
                     }
-                    EX2Dispatch.runInMainThreadAsync {
+                    DispatchQueue.main.async {
                         ViewObjects.shared().hideLoadingScreen()
                     }
                 }
@@ -343,7 +343,7 @@ extension PlayQueueViewController: UITableViewConfiguration {
         
         if isModal {
             dismiss(sender: self)
-            EX2Dispatch.runInMainThread(afterDelay: 0.5) {
+            DispatchQueue.main.async(after: 0.5) {
                 Music.shared().playSong(atPosition: indexPath.row)
             }
         } else {

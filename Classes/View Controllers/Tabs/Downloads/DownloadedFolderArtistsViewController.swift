@@ -120,7 +120,7 @@ extension DownloadedFolderArtistsViewController: UITableViewConfiguration {
 //            }];
         }, deleteHandler: {
             ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: nil)
-            EX2Dispatch.runInBackgroundAsync {
+            DispatchQueue.userInitiated.async {
                 if self.store.deleteDownloadedSongs(downloadedFolderArtist: self.downloadedFolderArtists[indexPath.row]) {
                     Cache.shared().findCacheSize()
                     NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CachedSongDeleted)
@@ -128,7 +128,7 @@ extension DownloadedFolderArtistsViewController: UITableViewConfiguration {
                         CacheQueue.shared().startDownloadQueue()
                     }
                 }
-                EX2Dispatch.runInMainThreadAsync {
+                DispatchQueue.main.async {
                     ViewObjects.shared().hideLoadingScreen()
                 }
             }

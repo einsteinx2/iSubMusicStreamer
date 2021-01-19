@@ -52,7 +52,7 @@ import Resolver
         let serverPlaylistId = serverPlaylist.id
         serverPlaylistLoader = ServerPlaylistLoader(serverPlaylistId: serverPlaylistId)
         serverPlaylistLoader?.callback = { [unowned self] (success, error) in
-            EX2Dispatch.runInMainThreadAsync {
+            DispatchQueue.main.async {
                 if let error = error as NSError? {
                     if Settings.shared().isPopupsEnabled {
                         let message = "There was an error loading the playlist.\n\nError %\(error.code): \(error.localizedDescription)"
@@ -107,10 +107,10 @@ extension ServerPlaylistViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: nil)
-        EX2Dispatch.runInBackgroundAsync { [unowned self] in
+        DispatchQueue.userInitiated.async { [unowned self] in
             let song = store.playSongFromServerPlaylist(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id, position: indexPath.row)
             
-            EX2Dispatch.runInMainThreadAsync {
+            DispatchQueue.main.async {
                 ViewObjects.shared().hideLoadingScreen()
                 if let song = song, !song.isVideo {
                     showPlayer()

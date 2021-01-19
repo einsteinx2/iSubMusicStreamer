@@ -133,10 +133,10 @@ extension LocalPlaylistViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: nil)
-        EX2Dispatch.runInBackgroundAsync {
+        DispatchQueue.userInitiated.async {
             // TODO: implement this
             
-            EX2Dispatch.runInMainThreadAsync {
+            DispatchQueue.main.async {
                 ViewObjects.shared().hideLoadingScreen()
 //                if !song.isVideo {
 //                    showPlayer()

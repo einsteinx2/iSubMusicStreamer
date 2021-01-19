@@ -128,7 +128,7 @@ import CocoaLumberjackSwift
         dropdown.selectFolder(withId: dataModel.mediaFolderId)
         headerView.addSubview(dropdown)
         // TODO: Why is this hack needed in the Swift port but not in the original Obj-C version??
-        EX2Dispatch.runInMainThread(afterDelay: 0.1) {
+        DispatchQueue.main.async(after: 0.1) {
             self.dropdown.frame = CGRect(x: 50, y: 61, width: self.view.frame.width - 100, height: 40)
             print(self.dropdown.frame)
         }
@@ -195,7 +195,7 @@ extension ArtistsViewController: APILoaderDelegate {
         
         // Inform the user that the connection failed.
         // NOTE: Must call after a delay or the refresh control won't hide
-        EX2Dispatch.runInMainThread(afterDelay: 0.3) {
+        DispatchQueue.main.async(after: 0.3) {
             let alert = UIAlertController(title: "Subsonic Error", message: error?.localizedDescription ?? "Unknown error", preferredStyle: .alert)
             alert.addCancelAction(title: "OK")
             self.present(alert, animated: true, completion: nil)

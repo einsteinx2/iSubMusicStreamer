@@ -34,7 +34,7 @@ class NetworkMonitor: NSObject {
     @objc private func reachabilityChanged(notification: Notification) {
         guard !settings.isForceOfflineMode else { return }
         
-        EX2Dispatch.runInMainThreadAsync {
+        DispatchQueue.main.async {
             // Perform the actual check after a few seconds to make sure it's the last message received
             // this prevents a bug where the status changes from wifi to not reachable, but first it receives
             // some messages saying it's still on wifi, then gets the not reachable messages

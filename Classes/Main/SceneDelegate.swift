@@ -120,7 +120,7 @@ import CocoaLumberjackSwift
         
         if settings.currentServer == nil {
             if settings.isOfflineMode {
-                EX2Dispatch.runInMainThread(afterDelay: 1) {
+                DispatchQueue.main.async(after: 1) {
                     let message = "Looks like this is your first time using iSub!\n\nYou'll need an internet connection to get started."
                     let alert = UIAlertController(title: "Welcome!", message: message, preferredStyle: .alert)
                     alert.addCancelAction(title: "OK")

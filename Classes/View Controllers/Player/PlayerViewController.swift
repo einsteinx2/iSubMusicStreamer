@@ -381,10 +381,12 @@ import CocoaLumberjackSwift
         shuffleButton.addClosure(for: .touchUpInside) { [unowned self] in
             let message = PlayQueue.shared.isShuffle ? "Unshuffling" : "Shuffling"
             ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: message)
-            EX2Dispatch.runInBackgroundAsync {
+            DispatchQueue.userInitiated.async {
                 PlayQueue.shared.shuffleToggle()
+                DispatchQueue.main.async {
+                    self.updateShuffleButtonIcon()
+                }
             }
-            self.updateShuffleButtonIcon()
         }
         updateShuffleButtonIcon()
         

@@ -422,7 +422,7 @@ extension HomeViewController: UISearchBarDelegate {
         let request = NSMutableURLRequest(susAction: action, parameters: parameters)
         if let request = request as URLRequest? {
             dataTask = APILoader.sharedSession.dataTask(with: request) { data, _, error in
-                EX2Dispatch.runInMainThreadAsync {
+                DispatchQueue.main.async {
                     if let error = error {
                         if Settings.shared().isPopupsEnabled {
                             let alert = UIAlertController(title: "Error", message: "There was an error completing the search.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)

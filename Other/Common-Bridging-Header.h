@@ -45,9 +45,6 @@
 // Parsers
 #import "RXMLElement.h"
 
-// Utils
-#import "EX2Dispatch.h"
-
 /*
  * Extensions
  */

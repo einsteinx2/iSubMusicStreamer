@@ -207,11 +207,11 @@ extension LocalPlaylistsViewController: SaveEditHeaderDelegate {
     func saveEditHeaderSaveDeleteAction(_ saveEditHeader: SaveEditHeader) {
         if !saveEditHeader.deleteLabel.isHidden {
             ViewObjects.shared().showLoadingScreenOnMainWindow(withMessage: "Deleting")
-            EX2Dispatch.runInBackgroundAsync {
+            DispatchQueue.userInitiated.async {
                 if let indexPathsForSelectedRows = self.tableView.indexPathsForSelectedRows {
                     self.deleteLocalPlaylists(indexPaths: indexPathsForSelectedRows)
                 }
-                EX2Dispatch.runInMainThreadAsync {
+                DispatchQueue.main.async {
                     ViewObjects.shared().hideLoadingScreen()
                 }
             }

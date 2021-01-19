@@ -81,7 +81,7 @@ import CocoaLumberjackSwift
             DDLogInfo("[AppDelegate] Request for local notifications granted: \(granted)")
             if !granted {
                 // TODO: Test this alert
-                EX2Dispatch.runInMainThread(afterDelay: 1.0) {
+                DispatchQueue.main.async(after: 1) {
                     let message = "iSub uses local notifications to let you know if it will be put to sleep while you still have downloads running in the background. If you'd like to receive these notifications, you can enable it in the Settings app."
                     let alert = UIAlertController(title: "Local Notifications", message: message, preferredStyle: .alert)
                     alert.addAction(title: "Open Settings", style: .default) { _ in
@@ -97,10 +97,6 @@ import CocoaLumberjackSwift
         
         // Load Flurry
         loadFlurryAnalytics()
-        
-        
-        
-        
         
         return true
     }

@@ -296,7 +296,7 @@ extension PadMenuViewController: UITableViewConfiguration {
             return
         }
         
-        EX2Dispatch.runInMainThread(afterDelay: 0.05) {
+        DispatchQueue.main.async(after: 0.05) {
             self.showController(indexPath: indexPath)
         }
     }

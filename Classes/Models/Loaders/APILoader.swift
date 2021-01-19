@@ -124,7 +124,7 @@ import CocoaLumberjackSwift
     }
     
     @objc func informDelegateLoadingFinished() {
-        EX2Dispatch.runInMainThreadAsync {
+        DispatchQueue.main.async {
             self.delegate?.loadingFinished(loader: self)
             self.callback?(true, nil)
             self.cleanup()
@@ -132,7 +132,7 @@ import CocoaLumberjackSwift
     }
     
     @objc func informDelegateLoadingFailed(error: NSError?) {
-        EX2Dispatch.runInMainThreadAsync {
+        DispatchQueue.main.async {
             self.delegate?.loadingFailed(loader: self, error: error)
             self.callback?(false, error)
             self.cleanup()
