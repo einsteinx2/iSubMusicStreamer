@@ -51,27 +51,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property NSUInteger currentPlaylistIndex;
         
-- (instancetype)initWithDelegate:(id<BassGaplessPlayerDelegate>)theDelegate;
++ (instancetype)shared;
 
 // BASS methods
 //
 - (DWORD)bassGetOutputData:(void *)buffer length:(DWORD)length;
+- (void)startNewSong:(ISMSSong *)aSong atIndex:(NSUInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds;
 - (void)startSong:(ISMSSong *)aSong atIndex:(NSUInteger)index withOffsetInBytes:(nullable NSNumber *)byteOffset orSeconds:(nullable NSNumber *)seconds;
-//- (void)prepareNextSongStream;
 
 + (NSUInteger)bytesToBufferForKiloBitrate:(NSUInteger)rate speedInBytesPerSec:(NSUInteger)speedInBytesPerSec;
 
 // Playback methods
 //
-//- (void)start;
 - (void)stop;
 - (void)pause;
 - (void)playPause;
 - (void)seekToPositionInBytes:(QWORD)bytes fadeVolume:(BOOL)fadeVolume;
 - (void)seekToPositionInSeconds:(double)seconds fadeVolume:(BOOL)fadeVolume;
-
-- (BOOL)testStreamForSong:(ISMSSong *)aSong;
-- (BassStream *)prepareStreamForSong:(ISMSSong *)aSong;
 
 @end
 

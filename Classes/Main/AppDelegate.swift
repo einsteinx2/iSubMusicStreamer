@@ -14,7 +14,7 @@ import CocoaLumberjackSwift
 @objc final class AppDelegate: UIResponder, UIApplicationDelegate {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var audioEngine: AudioEngine
+    @Injected private var player: BassGaplessPlayer
     @Injected private var playQueue: PlayQueue
     @Injected private var cache: Cache
     
@@ -37,7 +37,6 @@ import CocoaLumberjackSwift
         // Setup singletons
         // TODO: Don't have so many singletons lol
         settings.setup()
-        audioEngine.setup()
         cache.setup()
         
         // Detect app crash on previous launch
@@ -109,7 +108,7 @@ import CocoaLumberjackSwift
         
         // Cleanly terminate audio
         UIApplication.shared.endReceivingRemoteControlEvents()
-        audioEngine.player?.stop()
+        player.stop()
     }
     
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
@@ -137,21 +136,15 @@ import CocoaLumberjackSwift
         if let host = url.host {
             switch host.lowercased() {
             case "play":
-                if let player = audioEngine.player, !player.isPlaying {
+                if !player.isPlaying {
                     player.playPause()
                 } else {
                     playQueue.playCurrentSong()
                 }
             case "pause":
-                if let player = audioEngine.player, player.isPlaying {
-                    player.playPause()
-                }
+                player.pause()
             case "playpause":
-                if let player = audioEngine.player {
-                    player.playPause()
-                } else {
-                    playQueue.playCurrentSong()
-                }
+                player.playPause()
             case "next":
                 playQueue.playSong(position: playQueue.nextIndex)
             case "prev":

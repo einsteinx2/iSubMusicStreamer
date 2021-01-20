@@ -11,7 +11,7 @@
 #import "ISMSNSURLSessionStreamHandler.h"
 #import "ISMSCacheQueueManager.h"
 #import "RXMLElement.h"
-#import "AudioEngine.h"
+#import "BassGaplessPlayer.h"
 #import "SavedSettings.h"
 #import "ISMSCacheQueueManager.h"
 #import "EX2Kit.h"
@@ -545,7 +545,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (nextSong) [songsToSkip addObject:nextSong];
 	
 	[self removeAllStreamsExceptForSongs:songsToSkip];
-	[self fillStreamQueue:audioEngineS.player.isStarted];
+	[self fillStreamQueue:BassGaplessPlayer.shared.isStarted];
 }
 
 #pragma mark - ISMSStreamHandler delegate
@@ -564,7 +564,7 @@ LOG_LEVEL_ISUB_DEFAULT
     ISMSSong *currentSong = PlayQueue.shared.currentSong;
 	if ([handler.mySong isEqual:PlayQueue.shared.currentSong])
 	{
-        [audioEngineS startSong:currentSong atIndex:PlayQueue.shared.currentIndex withOffsetInBytes:@(handler.byteOffset) orSeconds:@(handler.secondsOffset)];
+        [BassGaplessPlayer.shared startNewSong:currentSong atIndex:PlayQueue.shared.currentIndex withOffsetInBytes:@(handler.byteOffset) orSeconds:@(handler.secondsOffset)];
 	}
 	
 	[self saveHandlerStack];

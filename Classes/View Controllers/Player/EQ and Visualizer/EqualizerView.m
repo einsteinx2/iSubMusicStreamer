@@ -238,10 +238,11 @@ typedef struct {
 }
 
 - (void)drawTheEq {
-	if (!audioEngineS.player.isPlaying || self.visualType == ISMSBassVisualType_none)
+    BassGaplessPlayer *player = BassGaplessPlayer.shared;
+	if (!player.isPlaying || self.visualType == ISMSBassVisualType_none)
 		return;
 	
-	[audioEngineS.visualizer readAudioData];
+	[player.visualizer readAudioData];
 	
     int x = 0, y = 0, y1 = 0;
 
@@ -253,7 +254,7 @@ typedef struct {
 			[self eraseBitBuffer];
 			for (x = 0; x < specWidth; x++) 
 			{
-				int v=(32767 - [audioEngineS.visualizer lineSpecData:x]) * specHeight/65536; // invert and scale to fit display
+				int v=(32767 - [player.visualizer lineSpecData:x]) * specHeight/65536; // invert and scale to fit display
 				if (!x) 
 					y = v;
 				do 
@@ -277,7 +278,7 @@ typedef struct {
 			[self eraseBitBuffer];
 			for (x = 0; x < specWidth / 2; x++) {
 #if 1
-				y = sqrt([audioEngineS.visualizer fftData:x + 1]) * 3 * specHeight - 4; // scale it (sqrt to make low values more visible)
+				y = sqrt([player.visualizer fftData:x + 1]) * 3 * specHeight - 4; // scale it (sqrt to make low values more visible)
 #else
 				y = [audioEngineS fftData:x + 1] * 10 * specHeight; // scale it (linearly)
 #endif
@@ -318,8 +319,8 @@ typedef struct {
                 }
                 
 				for (; b0 < b1; b0++) {
-                    if (peak < [audioEngineS.visualizer fftData:1 + b0]) {
-						peak = [audioEngineS.visualizer fftData:1 + b0];
+                    if (peak < [player.visualizer fftData:1 + b0]) {
+						peak = [player.visualizer fftData:1 + b0];
                     }
 				}
 				
@@ -343,7 +344,7 @@ typedef struct {
 			break;
 		} case ISMSBassVisualType_aphexFace: {
 			for (x=0; x < specHeight; x++) {
-				y = sqrt([audioEngineS.visualizer fftData:x + 1]) * 3 * 127; // scale it (sqrt to make low values more visible)
+				y = sqrt([player.visualizer fftData:x + 1]) * 3 * 127; // scale it (sqrt to make low values more visible)
                 if (y > 127) {
 					y = 127; // cap it
                 }
@@ -507,9 +508,10 @@ typedef struct {
 }
 
 - (void)changeType:(ISMSBassVisualType)type {
+    BassGaplessPlayer *player = BassGaplessPlayer.shared;
 	switch (type) {
 		case ISMSBassVisualType_none:
-			audioEngineS.visualizer.type = BassVisualizerTypeNone;
+            player.visualizer.type = BassVisualizerTypeNone;
 			[self eraseBitBuffer];
 			[self erase];
             [self stopEqDisplay];
@@ -517,28 +519,28 @@ typedef struct {
 			break;
 			
 		case ISMSBassVisualType_line:
-			audioEngineS.visualizer.type = BassVisualizerTypeLine;
+            player.visualizer.type = BassVisualizerTypeLine;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			self.visualType = ISMSBassVisualType_line;
             [self startEqDisplay];
 			break;
 			
 		case ISMSBassVisualType_skinnyBar:
-			audioEngineS.visualizer.type = BassVisualizerTypeFFT;
+            player.visualizer.type = BassVisualizerTypeFFT;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			self.visualType = ISMSBassVisualType_skinnyBar;
             [self startEqDisplay];
 			break;
 			
 		case ISMSBassVisualType_fatBar:
-			audioEngineS.visualizer.type = BassVisualizerTypeFFT;
+            player.visualizer.type = BassVisualizerTypeFFT;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			self.visualType = ISMSBassVisualType_fatBar;
             [self startEqDisplay];
 			break;
 			
 		case ISMSBassVisualType_aphexFace:
-			audioEngineS.visualizer.type = BassVisualizerTypeFFT;
+            player.visualizer.type = BassVisualizerTypeFFT;
 			[self eraseBitBuffer];
             specpos = 0;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

@@ -9,7 +9,6 @@
 #import "SocialSingleton.h"
 #import "BassGaplessPlayer.h"
 #import "ISMSStreamManager.h"
-#import "AudioEngine.h"
 #import "SavedSettings.h"
 #import "ISMSStreamManager.h"
 #import "Defines.h"
@@ -29,7 +28,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)playerHandleSocial {
-    if (!self.playerHasNotifiedSubsonic && audioEngineS.player.progress >= socialS.subsonicDelay) {
+    if (!self.playerHasNotifiedSubsonic && BassGaplessPlayer.shared.progress >= socialS.subsonicDelay) {
         if (settingsS.currentServer.type == ServerTypeSubsonic) {
             [EX2Dispatch runInMainThreadAsync:^{
                 [self notifySubsonic];
@@ -38,7 +37,7 @@ LOG_LEVEL_ISUB_DEFAULT
         self.playerHasNotifiedSubsonic = YES;
     }
     
-	if (!self.playerHasScrobbled && audioEngineS.player.progress >= socialS.scrobbleDelay) {
+	if (!self.playerHasScrobbled && BassGaplessPlayer.shared.progress >= socialS.scrobbleDelay) {
 		self.playerHasScrobbled = YES;
 		[EX2Dispatch runInMainThreadAsync:^{
 			[self scrobbleSongAsSubmission];
@@ -55,7 +54,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (NSTimeInterval)scrobbleDelay {
 	// Scrobble in 30 seconds (or settings amount) if not canceled
-	ISMSSong *currentSong = audioEngineS.player.currentStream.song;
+	ISMSSong *currentSong = BassGaplessPlayer.shared.currentStream.song;
 	NSTimeInterval scrobbleDelay = 30.0;
 	if (currentSong.duration != 0) {
 		float scrobblePercent = settingsS.scrobblePercent;

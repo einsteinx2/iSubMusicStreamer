@@ -11,7 +11,7 @@ import SnapKit
 import Resolver
 
 final class SongInfoViewController: UIViewController {
-    @Injected private var audioEngine: AudioEngine
+    @Injected private var player: BassGaplessPlayer
     @Injected private var playQueue: PlayQueue
     
     let stackView = UIStackView()
@@ -163,8 +163,8 @@ final class SongInfoViewController: UIViewController {
     @objc private func startUpdatingRealtimeBitrate() {
         stopUpdatingRealtimeBitrate()
         if let realTimeBitrateLabel = realTimeBitrateLabel {
-            if let player = audioEngine.player, let bitrate = audioEngine.player?.bitRate, bitrate > 0, player.isPlaying {
-                realTimeBitrateLabel.text = "\(bitrate) Kbps"
+            if player.bitRate > 0 && player.isPlaying {
+                realTimeBitrateLabel.text = "\(player.bitRate) Kbps"
             } else {
                 realTimeBitrateLabel.text = "Unknown"
             }

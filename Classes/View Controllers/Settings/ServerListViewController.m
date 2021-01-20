@@ -200,7 +200,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		// Stop any playing song and remove old tab bar controller from window
 		[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"recover"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
-		[audioEngineS.player stop];
+		[BassGaplessPlayer.shared stop];
 		settingsS.isJukeboxEnabled = NO;
 		
 		if (settingsS.isOfflineMode) {

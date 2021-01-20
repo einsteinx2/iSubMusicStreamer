@@ -14,7 +14,7 @@ import Resolver
 final class HomeViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var audioEngine: AudioEngine
+    @Injected private var player: BassGaplessPlayer
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
     
@@ -178,7 +178,7 @@ final class HomeViewController: UIViewController {
                 NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
                 Flurry.logEvent("JukeboxDisabled")
             } else {
-                self.audioEngine.player?.stop()
+                player.stop()
                 self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-on"))
                 settings.isJukeboxEnabled = true
                 self.jukebox.getInfo()

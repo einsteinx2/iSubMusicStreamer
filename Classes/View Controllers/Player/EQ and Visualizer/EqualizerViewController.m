@@ -102,10 +102,6 @@
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showPresetPicker:)];
     [self.presetLabel.superview addGestureRecognizer:recognizer];
 	
-    if (!audioEngineS.player) {
-        [audioEngineS startEmptyPlayer];
-    }
-	
 	self.isSavePresetButtonShowing = NO;
 	self.savePresetButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 	CGRect f = self.presetLabel.superview.frame;
@@ -128,7 +124,7 @@
 	[self.controlsContainer addSubview:self.deletePresetButton];
     
     self.effectDAO = [[BassEffectDAO alloc] initWithType:BassEffectType_ParametricEQ];
-    if (!audioEngineS.player.equalizer.equalizerValues.count) {
+    if (!BassGaplessPlayer.shared.equalizer.equalizerValues.count) {
         [self.effectDAO selectPresetAtIndex:self.effectDAO.selectedPresetIndex];
     }
     
@@ -263,8 +259,8 @@
 - (void)createEqViews {
 	[self removeEqViews];
 		
-	self.equalizerPointViews = [[NSMutableArray alloc] initWithCapacity:audioEngineS.equalizer.equalizerValues.count];
-	for (BassParamEqValue *value in audioEngineS.equalizer.equalizerValues) {
+	self.equalizerPointViews = [[NSMutableArray alloc] initWithCapacity:BassGaplessPlayer.shared.equalizer.equalizerValues.count];
+	for (BassParamEqValue *value in BassGaplessPlayer.shared.equalizer.equalizerValues) {
 		//DLog(@"eq handle: %i", value.handle);
 		EqualizerPointView *eqView = [[EqualizerPointView alloc] initWithEqValue:value parentSize:self.equalizerView.frame.size];
 		[self.equalizerPointViews addObject:eqView];
@@ -296,7 +292,7 @@
 	[self.equalizerView stopEqDisplay];
 	[self.equalizerView removeFromSuperview];
 	self.equalizerView = nil;
-	audioEngineS.visualizer.type = BassVisualizerTypeNone;
+    BassGaplessPlayer.shared.visualizer.type = BassVisualizerTypeNone;
 	self.navigationController.navigationBar.hidden = NO;
 }
 
@@ -428,7 +424,7 @@
 	CGFloat maxValue = self.gainSlider.maximumValue;
 	
 	settingsS.gainMultiplier = gainValue;
-	audioEngineS.equalizer.gain = gainValue;
+    BassGaplessPlayer.shared.equalizer.gain = gainValue;
 	
 	CGFloat difference = fabs(gainValue - self.lastGainValue);
 	if (difference >= .1 || gainValue == minValue || gainValue == maxValue) {
@@ -454,7 +450,7 @@
 			// remove the point
 			//DLog(@"double tap, remove point");
 			
-			[audioEngineS.equalizer removeEqualizerValue:self.selectedView.eqValue];
+			[BassGaplessPlayer.shared.equalizer removeEqualizerValue:self.selectedView.eqValue];
 			[self.equalizerPointViews removeObject:self.selectedView];
 			[self.selectedView removeFromSuperview];
 			self.selectedView = nil;
@@ -491,7 +487,7 @@
 				
 				// Create the eq view
 				EqualizerPointView *eqView = [[EqualizerPointView alloc] initWithCGPoint:point parentSize:self.equalizerView.bounds.size];
-				BassParamEqValue *value = [audioEngineS.equalizer addEqualizerValue:eqView.eqValue.parameters];
+				BassParamEqValue *value = [BassGaplessPlayer.shared.equalizer addEqualizerValue:eqView.eqValue.parameters];
 				eqView.eqValue = value;
 				
 				// Add the view
@@ -512,7 +508,7 @@
 		CGPoint location = [touch locationInView:self.equalizerView];
 		if (CGRectContainsPoint(self.equalizerView.frame, location)) {
 			self.selectedView.center = [touch locationInView:self.view];
-			[audioEngineS.equalizer updateEqParameter:self.selectedView.eqValue];
+			[BassGaplessPlayer.shared.equalizer updateEqParameter:self.selectedView.eqValue];
 			[self createAndDrawEqualizerPath];
 		}
 	}
@@ -521,7 +517,7 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	// Apply the EQ
 	if (self.selectedView != nil) {
-		[audioEngineS.equalizer updateEqParameter:self.selectedView.eqValue];
+		[BassGaplessPlayer.shared.equalizer updateEqParameter:self.selectedView.eqValue];
 		self.selectedView = nil;
 		[self saveTempCustomPreset];
 	}
@@ -537,7 +533,7 @@
 
 - (IBAction)toggle:(id)sender {
 
-	if ([audioEngineS.equalizer toggleEqualizer]) {
+	if ([BassGaplessPlayer.shared.equalizer toggleEqualizer]) {
 		[self removeEqViews];
 		[self createEqViews];
 	}

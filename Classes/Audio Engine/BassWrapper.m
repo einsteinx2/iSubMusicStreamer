@@ -52,10 +52,6 @@ static NSUInteger _bassOutputBufferLengthMillis = 0;
         DDLogError(@"[BassWrapper] Can't initialize device");
         [BassWrapper logError];
     }
-	
-	//[audioEngineS startEmptyPlayer];
-    
-	//[NSNotificationCenter postNotificationToMainThreadWithName:Notifications.bassInitialized];
 }
 
 + (void)bassInit

@@ -181,7 +181,7 @@ import Resolver
 //            if Settings.shared().isJukeboxEnabled {
 //                Jukebox.shared().replacePlaylistWithLocal()
 //            } else {
-//                StreamManager.shared().fillStreamQueue(AudioEngine.shared().player?.isStarted ?? false)
+//                StreamManager.shared().fillStreamQueue(player.isStarted)
 //            }
         }
         

@@ -13,7 +13,7 @@ struct SongLoader {
     @Injected private static var store: Store
     @Injected private static var settings: Settings
     @Injected private static var jukebox: Jukebox
-    @Injected private static var audioEngine: AudioEngine
+    @Injected private static var player: BassGaplessPlayer
     @Injected private static var playQueue: PlayQueue
     @Injected private static var streamManager: StreamManager
     
@@ -113,8 +113,7 @@ struct SongLoader {
             if settings.isJukeboxEnabled {
                 jukebox.replacePlaylistWithLocal()
             } else {
-                let isStarted = audioEngine.player?.isStarted ?? false
-                streamManager.fillStreamQueue(isStarted)
+                streamManager.fillStreamQueue(player.isStarted)
             }
         }
         finishLoading()
@@ -125,8 +124,7 @@ struct SongLoader {
             if settings.isJukeboxEnabled {
                 jukebox.replacePlaylistWithLocal()
             } else {
-                let isStarted = audioEngine.player?.isStarted ?? false
-                streamManager.fillStreamQueue(isStarted)
+                streamManager.fillStreamQueue(player.isStarted)
             }
             playQueue.playSong(position: 0)
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
@@ -143,8 +141,7 @@ struct SongLoader {
             if settings.isJukeboxEnabled {
                 jukebox.replacePlaylistWithLocal()
             } else {
-                let isStarted = audioEngine.player?.isStarted ?? false
-                streamManager.fillStreamQueue(isStarted)
+                streamManager.fillStreamQueue(player.isStarted)
             }
             playQueue.playSong(position: 0)
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)

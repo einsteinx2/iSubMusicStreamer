@@ -25,7 +25,7 @@ typedef enum
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class AudioEngine, Server;
+@class Server;
 NS_SWIFT_NAME(Settings)
 @interface SavedSettings : NSObject 
 

@@ -8,7 +8,6 @@
 
 #import "SavedSettings.h"
 #import "BassGaplessPlayer.h"
-#import "AudioEngine.h"
 #import "CacheSingleton.h"
 #import "ISMSCacheQueueManager.h"
 #import "ISMSServer.h"
@@ -40,6 +39,9 @@ LOG_LEVEL_ISUB_DEFAULT
 @implementation SavedSettings
 
 - (void)loadState {
+    BassGaplessPlayer *player = BassGaplessPlayer.shared;
+    PlayQueue *playQueue = PlayQueue.shared;
+    
     if (self.isJukeboxEnabled) {
 		_isPlaying = NO;
     } else {
@@ -47,16 +49,16 @@ LOG_LEVEL_ISUB_DEFAULT
     }
     
 	_isShuffle = [_userDefaults boolForKey:@"isShuffle"];
-	PlayQueue.shared.isShuffle = _isShuffle;
+    playQueue.isShuffle = _isShuffle;
 	
 	_normalPlaylistIndex = [_userDefaults integerForKey:@"normalPlaylistIndex"];
-	PlayQueue.shared.normalIndex = _normalPlaylistIndex;
+    playQueue.normalIndex = _normalPlaylistIndex;
 	
 	_shufflePlaylistIndex = [_userDefaults integerForKey:@"shufflePlaylistIndex"];
-	PlayQueue.shared.shuffleIndex = _shufflePlaylistIndex;
+    playQueue.shuffleIndex = _shufflePlaylistIndex;
     
 	_repeatMode = (RepeatMode)[_userDefaults integerForKey:@"repeatMode"];
-	PlayQueue.shared.repeatMode = _repeatMode;
+    playQueue.repeatMode = _repeatMode;
 	
 	_bitRate = [_userDefaults integerForKey:@"bitRate"];
 	_byteOffset = self.byteOffset;
@@ -64,8 +66,8 @@ LOG_LEVEL_ISUB_DEFAULT
 	_isRecover = self.isRecover;
 	_recoverSetting = self.recoverSetting;
 	
-	audioEngineS.startByteOffset = (NSUInteger)_byteOffset;
-	audioEngineS.startSecondsOffset = _secondsOffset;
+    player.startByteOffset = (NSUInteger)_byteOffset;
+    player.startSecondsOffset = _secondsOffset;
 }
 
 - (void)setupSaveState
@@ -79,57 +81,60 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)saveState {
 	@autoreleasepool {
-		BOOL isDefaultsDirty = NO;
+        BassGaplessPlayer *player = BassGaplessPlayer.shared;
+        PlayQueue *playQueue = PlayQueue.shared;
 		
-		if (audioEngineS.player.isPlaying != _isPlaying) {
+        BOOL isDefaultsDirty = NO;
+
+		if (player.isPlaying != _isPlaying) {
             if (self.isJukeboxEnabled) {
 				_isPlaying = NO;
             } else {
-				_isPlaying = audioEngineS.player.isPlaying;
+				_isPlaying = player.isPlaying;
             }
             
 			[_userDefaults setBool:_isPlaying forKey:@"isPlaying"];
 			isDefaultsDirty = YES;
 		}
 		
-		if (PlayQueue.shared.isShuffle != _isShuffle) {
-			_isShuffle = PlayQueue.shared.isShuffle;
+		if (playQueue.isShuffle != _isShuffle) {
+			_isShuffle = playQueue.isShuffle;
 			[_userDefaults setBool:_isShuffle forKey:@"isShuffle"];
 			isDefaultsDirty = YES;
 		}
 		
-		if (PlayQueue.shared.normalIndex != _normalPlaylistIndex) {
-			_normalPlaylistIndex = PlayQueue.shared.normalIndex;
+		if (playQueue.normalIndex != _normalPlaylistIndex) {
+			_normalPlaylistIndex = playQueue.normalIndex;
 			[_userDefaults setInteger:_normalPlaylistIndex forKey:@"normalPlaylistIndex"];
 			isDefaultsDirty = YES;
 		}
 		
-		if (PlayQueue.shared.shuffleIndex != _shufflePlaylistIndex) {
-			_shufflePlaylistIndex = PlayQueue.shared.shuffleIndex;
+		if (playQueue.shuffleIndex != _shufflePlaylistIndex) {
+			_shufflePlaylistIndex = playQueue.shuffleIndex;
 			[_userDefaults setInteger:_shufflePlaylistIndex forKey:@"shufflePlaylistIndex"];
 			isDefaultsDirty = YES;
 		}
 		
-		if (PlayQueue.shared.repeatMode != _repeatMode) {
-			_repeatMode = PlayQueue.shared.repeatMode;
+		if (playQueue.repeatMode != _repeatMode) {
+			_repeatMode = playQueue.repeatMode;
 			[_userDefaults setInteger:_repeatMode forKey:@"repeatMode"];
 			isDefaultsDirty = YES;
 		}
 		
-		if (audioEngineS.player.bitRate != _bitRate && audioEngineS.player.bitRate >= 0) {
-			_bitRate = audioEngineS.player.bitRate;
+		if (player.bitRate != _bitRate && player.bitRate >= 0) {
+			_bitRate = player.bitRate;
 			[_userDefaults setInteger:_bitRate forKey:@"bitRate"];
 			isDefaultsDirty = YES;
 		}
 		
-		if (_secondsOffset != audioEngineS.player.progress) {
-			_secondsOffset = audioEngineS.player.progress;
+		if (_secondsOffset != player.progress) {
+			_secondsOffset = player.progress;
 			[_userDefaults setDouble:_secondsOffset forKey:@"seekTime"];
 			isDefaultsDirty = YES;
 		}
 		
-		if (_byteOffset != audioEngineS.player.currentByteOffset) {
-			_byteOffset = audioEngineS.player.currentByteOffset;
+		if (_byteOffset != player.currentByteOffset) {
+			_byteOffset = player.currentByteOffset;
 			[_userDefaults setObject:@(_byteOffset) forKey:@"byteOffset"];
 			isDefaultsDirty = YES;
 		}

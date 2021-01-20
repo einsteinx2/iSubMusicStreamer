@@ -22,7 +22,7 @@ import CocoaLumberjackSwift
     @Injected private var jukebox: Jukebox
     @Injected private var streamManager: StreamManager
     @Injected private var cacheQueue: CacheQueue
-    @Injected private var audioEngine: AudioEngine
+    @Injected private var player: BassGaplessPlayer
     
     // Temporary accessor for Objective-C classes using Resolver under the hood
     @objc static var shared: PlayQueue { Resolver.resolve() }
@@ -252,7 +252,7 @@ import CocoaLumberjackSwift
     @objc @discardableResult
     func playPrevSong() -> Song? {
         DDLogVerbose("[PlayQueue] playPrevSong called");
-        if let player = audioEngine.player, player.progress > 10.0 {
+        if player.progress > 10.0 {
             // Past 10 seconds in the song, so restart playback instead of changing songs
             DDLogVerbose("[PlayQueue] playPrevSong Past 10 seconds in the song, so restart playback instead of changing songs, calling playSong(position: \(currentIndex))")
             return playSong(position: currentIndex)
@@ -282,8 +282,8 @@ import CocoaLumberjackSwift
             startSong(offsetInBytes: settings.byteOffset, offsetInSeconds: settings.seekTime)
             return currentSong
         } else {
-            audioEngine.startByteOffset = UInt(settings.byteOffset)
-            audioEngine.startSecondsOffset = UInt(settings.seekTime)
+            player.startByteOffset = UInt(settings.byteOffset)
+            player.startSecondsOffset = UInt(settings.seekTime)
             return nil
         }
     }
@@ -302,7 +302,7 @@ import CocoaLumberjackSwift
                 }
                 info[MPNowPlayingInfoPropertyPlaybackQueueIndex] = self.currentIndex
                 info[MPNowPlayingInfoPropertyPlaybackQueueCount] = self.count
-                info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.audioEngine.player?.progress
+                info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.player.progress
                 info[MPNowPlayingInfoPropertyPlaybackRate] = 1
                 
                 if let coverArtId = song.coverArtId, self.settings.isLockScreenArtEnabled {
@@ -336,7 +336,7 @@ import CocoaLumberjackSwift
     @objc func startSong(offsetInBytes bytes: UInt64, offsetInSeconds seconds: Double) {
         DispatchQueue.mainSyncSafe {
             // Destroy the streamer/video player to start a new song
-            audioEngine.player?.stop()
+            player.stop()
             NotificationCenter.postOnMainThread(name: Notifications.removeVideoPlayer)
             
             guard currentSong != nil else { return }
@@ -355,7 +355,7 @@ import CocoaLumberjackSwift
         let index = currentIndex
         
         // Fix for bug that caused songs to sometimes start playing then immediately restart
-        if let player = audioEngine.player, let playerSong = player.currentStream?.song, player.isPlaying, song.isEqual(playerSong) {
+        if let playerSong = player.currentStream?.song, player.isPlaying, song.isEqual(playerSong) {
             // We're already playing this song so bail
             return
         }
@@ -363,10 +363,10 @@ import CocoaLumberjackSwift
         // Check to see if the song is already cached
         if song.isFullyCached {
             // The song is fully cached, start streaming from the local copy
-            audioEngine.start(song,
-                              at: UInt(index),
-                              withOffsetInBytes: NSNumber(value: offsetInBytes),
-                              orSeconds: NSNumber(value: offsetInSeconds))
+            player.startNewSong(song,
+                                at: UInt(index),
+                                withOffsetInBytes: NSNumber(value: offsetInBytes),
+                                orSeconds: NSNumber(value: offsetInSeconds))
             
             // Fill the stream queue
             if !settings.isOfflineMode {
@@ -383,24 +383,24 @@ import CocoaLumberjackSwift
             
             if streamManager.isSongDownloading(song) {
                 // The song is caching, start streaming from the local copy
-                if let handler = streamManager.handler(for: song), let player = audioEngine.player, !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
+                if let handler = streamManager.handler(for: song), !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
                     // Only start the player if the handler isn't going to do it itself
-                    audioEngine.start(song,
-                                      at: UInt(index),
-                                      withOffsetInBytes: NSNumber(value: offsetInBytes),
-                                      orSeconds: NSNumber(value: offsetInSeconds))
+                    player.startNewSong(song,
+                                        at: UInt(index),
+                                        withOffsetInBytes: NSNumber(value: offsetInBytes),
+                                        orSeconds: NSNumber(value: offsetInSeconds))
                 }
             } else if streamManager.isSongFirstInQueue(song: song) && !streamManager.isQueueDownloading {
                 // The song is first in queue, but the queue is not downloading. Probably the song was downloading when the app quit. Resume the download and start the player
                 streamManager.resumeQueue()
                 
                 // The song is caching, start streaming from the local copy
-                if let handler = streamManager.handler(for: song), let player = audioEngine.player, !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
+                if let handler = streamManager.handler(for: song), !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
                     // Only start the player if the handler isn't going to do it itself
-                    audioEngine.start(song,
-                                      at: UInt(index),
-                                      withOffsetInBytes: NSNumber(value: offsetInBytes),
-                                      orSeconds: NSNumber(value: offsetInSeconds))
+                    player.startNewSong(song,
+                                        at: UInt(index),
+                                        withOffsetInBytes: NSNumber(value: offsetInBytes),
+                                        orSeconds: NSNumber(value: offsetInSeconds))
                 }
             } else {
                 // Clear the stream manager
@@ -417,7 +417,7 @@ import CocoaLumberjackSwift
                 
                 // Fill the stream queue
                 if settings.isSongCachingEnabled {
-                    streamManager.fillStreamQueue(audioEngine.player?.isStarted ?? false)
+                    streamManager.fillStreamQueue(player.isStarted)
                 }
             }
         }

@@ -16,7 +16,7 @@ import Resolver
 final class PlayerViewController: UIViewController {
     @Injected private var settings: Settings
     @Injected private var jukebox: Jukebox
-    @Injected private var audioEngine: AudioEngine
+    @Injected private var player: BassGaplessPlayer
     @Injected private var playQueue: PlayQueue
     @Injected private var streamManager: StreamManager
     
@@ -264,7 +264,7 @@ final class PlayerViewController: UIViewController {
                     jukebox.play()
                 }
             } else {
-                if let player = audioEngine.player, let currentSong = self.currentSong, !currentSong.isVideo {
+                if let currentSong = self.currentSong, !currentSong.isVideo {
                     // If we're already playing, toggle the player state
                     player.playPause()
                 } else {
@@ -278,7 +278,7 @@ final class PlayerViewController: UIViewController {
         previousButton.setImage(UIImage(systemName: "backward.end.fill", withConfiguration: previousButtonConfig), for: .normal)
         previousButton.tintColor = iconDefaultColor
         previousButton.addClosure(for: .touchUpInside) { [unowned self] in
-            if let player = audioEngine.player, player.progress > 10.0 {
+            if player.progress > 10.0 {
                 // If we're more than 10 seconds into the song, restart it
                 playQueue.playCurrentSong()
             } else {
@@ -349,7 +349,7 @@ final class PlayerViewController: UIViewController {
         
         bookmarksButton.addClosure(for: .touchUpInside) { [unowned self] in
             let position = UInt(self.progressSlider.value);
-            let bytePosition = UInt(audioEngine.player?.currentByteOffset ?? 0);
+            let bytePosition = UInt(player.currentByteOffset);
             let song = self.currentSong
             let alert = UIAlertController(title: "Create Bookmark", message: nil, preferredStyle: .alert)
             alert.addTextField { textField in
@@ -532,7 +532,7 @@ final class PlayerViewController: UIViewController {
     }
     
     @objc private func seekedAction() {
-        guard let currentSong = currentSong, let player = audioEngine.player else {
+        guard let currentSong = currentSong else {
             progressDisplayLink?.isPaused = false
             return
         }
@@ -545,8 +545,8 @@ final class PlayerViewController: UIViewController {
         if currentSong.isTempCached {
             player.stop()
             
-            audioEngine.startByteOffset = byteOffset
-            audioEngine.startSecondsOffset = UInt(secondsOffset)
+            player.startByteOffset = byteOffset
+            player.startSecondsOffset = UInt(secondsOffset)
             
             streamManager.removeStream(at: 0)
             streamManager.queueStream(for: currentSong, byteOffset: UInt64(byteOffset), secondsOffset: Double(secondsOffset), at: 0, isTempCache: true, isStartDownload: true)
@@ -564,9 +564,9 @@ final class PlayerViewController: UIViewController {
                 let message = "You are trying to skip further than the song has cached. You can do this, but the song won't be cached. Or you can wait a little bit for the cache to catch up."
                 let alert = UIAlertController(title: "Past Cache Point", message: message, preferredStyle: .alert)
                 alert.addAction(title: "OK", style: .default) { _ in
-                    player.stop()
-                    self.audioEngine.startByteOffset = byteOffset
-                    self.audioEngine.startSecondsOffset = UInt(self.progressSlider.value)
+                    self.player.stop()
+                    self.player.startByteOffset = byteOffset
+                    self.player.startSecondsOffset = UInt(self.progressSlider.value)
                     
                     self.streamManager.removeStream(at: 0)
                     self.streamManager.queueStream(for: currentSong, byteOffset: UInt64(byteOffset), secondsOffset: Double(self.progressSlider.value), at: 0, isTempCache: true, isStartDownload: true)
@@ -585,7 +585,7 @@ final class PlayerViewController: UIViewController {
     }
     
     @objc private func updateSlider() {
-        guard let currentSong = currentSong, let player = audioEngine.player, let progressDisplayLink = progressDisplayLink else { return }
+        guard let currentSong = currentSong, let progressDisplayLink = progressDisplayLink else { return }
         
         // Prevent temporary movement after seeking temp cached song
         if currentSong.isTempCached && Date().timeIntervalSince(lastSeekTime) < 5.0 && player.progress == 0.0 {
@@ -729,7 +729,7 @@ final class PlayerViewController: UIViewController {
                 self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
             }
         } else {
-            if audioEngine.player?.isPlaying ?? false {
+            if player.isPlaying {
                 self.playPauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: playButtonConfig), for: .normal)
             } else {
                 self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)

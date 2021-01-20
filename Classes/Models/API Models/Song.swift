@@ -12,7 +12,7 @@ import Resolver
 @objc(ISMSSong) final class Song: NSObject, NSCopying, NSSecureCoding, Codable {
     private var store: Store { Resolver.resolve() }
     private var settings: Settings { Resolver.resolve() }
-    private var audioEngine: AudioEngine { Resolver.resolve() }
+    private var player: BassGaplessPlayer { Resolver.resolve() }
     private var playQueue: PlayQueue { Resolver.resolve() }
     
     static var supportsSecureCoding: Bool = true
@@ -301,7 +301,7 @@ import Resolver
             downloadProgress = 1
         } else {
             var bitrate = Float(estimatedBitrate)
-            if let player = audioEngine.player, player.isPlaying {
+            if player.isPlaying {
                 bitrate = Float(BassWrapper.estimateBitrate(player.currentStream))
             }
             
@@ -310,7 +310,7 @@ import Resolver
                 // This is a transcode, so we'll want to use the actual bitrate if possible
                 if let currentSong = playQueue.currentSong, currentSong == self {
                     // This is the current playing song, so see if BASS has an actual bitrate for it
-                    if let player = audioEngine.player, player.bitRate > 0 {
+                    if player.bitRate > 0 {
                         // Bass has a non-zero bitrate, so use that for the calculation
                         // convert to bytes per second, multiply by number of seconds
                         bitrate = Float(player.bitRate)

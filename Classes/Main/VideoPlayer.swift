@@ -13,7 +13,7 @@ import Resolver
 
 final class VideoPlayer: NSObject {
     @Injected private var settings: Settings
-    @Injected private var audioEngine: AudioEngine
+    @Injected private var player: BassGaplessPlayer
     
     private var videoPlayerController: AVPlayerViewController?
     private var hlsProxyServer: HLSReverseProxyServer?
@@ -56,7 +56,7 @@ final class VideoPlayer: NSObject {
         let bitRate = bitrates ?? settings.currentVideoBitrates.map { $0.intValue }
         
         // Stop the player
-        audioEngine.player?.stop()
+        player.stop()
         
         // If we're on HTTPS, use our proxy to allow for playback from a self signed server
         // TODO: Right now we always use the proxy server as even if it's http, if the server has https enabled, it will forward requests there. In the future, it would be better to first test if it's possible to play without the proxy even with https (in case they are using a legit SSL cert) and then also enable picture in picture mode and airplay.

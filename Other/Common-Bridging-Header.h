@@ -56,7 +56,7 @@
  */
 
 #import "SavedSettings.h"
-#import "AudioEngine.h"
+#import "BassGaplessPlayer.h"
 #import "ISMSStreamManager.h"
 #import "CacheSingleton.h"
 #import "ISMSCacheQueueManager.h"

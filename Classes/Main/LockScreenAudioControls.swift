@@ -23,7 +23,7 @@ import MediaPlayer
         let remote = MPRemoteCommandCenter.shared()
         let settings: Settings = Resolver.resolve()
         let jukebox: Jukebox = Resolver.resolve()
-        let audioEngine: AudioEngine = Resolver.resolve()
+        let player: BassGaplessPlayer = Resolver.resolve()
         let playQueue: PlayQueue = Resolver.resolve()
         
         // Play
@@ -35,7 +35,7 @@ import MediaPlayer
                     jukebox.play()
                     return .success
                 }
-            } else if let player = audioEngine.player, !player.isPlaying {
+            } else if !player.isPlaying {
                 player.playPause()
                 return .success
             } else {
@@ -54,7 +54,7 @@ import MediaPlayer
                     jukebox.stop()
                     return .success
                 }
-            } else if let player = audioEngine.player, player.isPlaying {
+            } else if player.isPlaying {
                 player.pause()
                 return .success
             }
@@ -72,11 +72,8 @@ import MediaPlayer
                     jukebox.play()
                 }
                 return .success
-            } else if let player = audioEngine.player {
-                player.playPause()
-                return .success
             } else {
-                playQueue.startSong()
+                player.playPause()
                 return .success
             }
         }
@@ -90,7 +87,7 @@ import MediaPlayer
                     jukebox.stop()
                     return .success
                 }
-            } else if let player = audioEngine.player, player.isPlaying {
+            } else if player.isPlaying {
                 player.stop()
                 return .success
             }
@@ -157,7 +154,7 @@ import MediaPlayer
         remote.changePlaybackPositionCommand.addTarget { event in
             guard settings.isJukeboxEnabled || playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
             guard let positionEvent = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
-            if let player = audioEngine.player, player.isPlaying {
+            if player.isPlaying {
                 player.seekToPosition(inSeconds: positionEvent.positionTime, fadeVolume: true)
                 return .success
             }
