@@ -9,8 +9,7 @@
 import Foundation
 
 final class ChatSendLoader: APILoader {
-    override var type: APILoaderType { .chatSend }
-    
+    var serverId = Settings.shared().currentServerId
     private let message: String
     
     init(message: String) {
@@ -18,8 +17,12 @@ final class ChatSendLoader: APILoader {
         super.init()
     }
     
+    // MARK: APILoader Overrides
+    
+    override var type: APILoaderType { .chatSend }
+    
     override func createRequest() -> URLRequest? {
-        NSMutableURLRequest(susAction: "addChatMessage", parameters: ["message": message]) as URLRequest
+        URLRequest(serverId: serverId, subsonicAction: "addChatMessage", parameters: ["message": message])
     }
     
     override func processResponse(data: Data) {

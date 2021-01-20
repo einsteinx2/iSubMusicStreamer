@@ -8,6 +8,13 @@
 
 import Foundation
 
+private extension String {
+    // TODO: Investigate what problem I was solving using this process. I know I did it for some reason many years ago, but now I have no idea ¯\_(ツ)_/¯
+    func clean() -> String {
+        self.gtm_stringByUnescapingFromHTML()?.removingPercentEncoding ?? self
+    }
+}
+
 extension Optional where Wrapped == String {
     var stringXML: String {
         stringXMLOptional ?? ""
@@ -22,6 +29,17 @@ extension Optional where Wrapped == String {
     var intXMLOptional: Int? {
         if let self = self {
             return Int(self.clean())
+        } else {
+            return nil
+        }
+    }
+    
+    var floatXML: Float {
+        floatXMLOptional ?? 0
+    }
+    var floatXMLOptional: Float? {
+        if let self = self {
+            return Float(self.clean())
         } else {
             return nil
         }

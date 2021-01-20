@@ -8,6 +8,7 @@
 
 import UIKit
 import Resolver
+import CocoaLumberjackSwift
 
 enum SearchType: Int {
     case artists = 0
@@ -87,7 +88,16 @@ class SearchSongsViewController: UIViewController {
             parameters = ["count": 20, "any": query, "offset": offset]
         }
         
-        let request = NSMutableURLRequest(susAction: action, parameters: parameters) as URLRequest
+        // TODO: implement this
+        // TODO: Don't hard code server id
+        guard let request = URLRequest(serverId: settings.currentServerId, subsonicAction: action, parameters: parameters) else {
+            DDLogError("[SearchSongsViewController] failed to create URLRequest to load more results with action \(action) and parameters \(parameters)")
+            isMoreResults = false
+            tableView.reloadData()
+            isLoading = false
+            return
+        }
+        
         dataTask = APILoader.sharedSession.dataTask(with: request) { [weak self] (data, response, error) in
             guard let self = self else { return }
             

@@ -13,8 +13,6 @@ import Resolver
 final class TagAlbumLoader: APILoader {
     @Injected private var store: Store
 
-    override var type: APILoaderType { .tagAlbum }
-    
     var serverId = Settings.shared().currentServerId
     let tagAlbumId: Int
     
@@ -30,8 +28,12 @@ final class TagAlbumLoader: APILoader {
         super.init(callback: callback)
     }
     
+    // MARK: APILoader Overrides
+    
+    override var type: APILoaderType { .tagAlbum }
+    
     override func createRequest() -> URLRequest? {
-        return NSMutableURLRequest(susAction: "getAlbum", parameters: ["id": tagAlbumId]) as URLRequest
+        URLRequest(serverId: serverId, subsonicAction: "getAlbum", parameters: ["id": tagAlbumId])
     }
     
     override func processResponse(data: Data) {

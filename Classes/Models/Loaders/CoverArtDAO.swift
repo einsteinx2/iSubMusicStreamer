@@ -77,7 +77,7 @@ extension CoverArtDAO: APILoaderDelegate {
         delegate?.loadingFinished(loader: nil)
     }
     
-    func loadingFailed(loader: APILoader?, error: NSError?) {
+    func loadingFailed(loader: APILoader?, error: Error?) {
         self.loader?.delegate = nil
         self.loader = nil
         delegate?.loadingFailed(loader: nil, error: error)

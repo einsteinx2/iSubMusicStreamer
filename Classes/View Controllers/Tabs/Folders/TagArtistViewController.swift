@@ -89,7 +89,7 @@ import Resolver
             if success {
                 self.tableView.reloadData()
 //                self.addHeaderAndIndex()
-            } else if let error = error as NSError? {
+            } else if let error = error {
                 if self.settings.isPopupsEnabled {
                     let message = "There was an error loading the artist.\n\nError \(error.code): \(error.localizedDescription)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)

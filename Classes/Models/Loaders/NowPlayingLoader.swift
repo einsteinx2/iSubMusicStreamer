@@ -13,13 +13,14 @@ final class NowPlayingLoader: APILoader {
     @Injected private var store: Store
     
     var serverId = Settings.shared().currentServerId
-    
     var nowPlayingSongs = [NowPlayingSong]()
+    
+    // MARK: APILoader Overrides
     
     override var type: APILoaderType { .nowPlaying }
     
     override func createRequest() -> URLRequest? {
-        NSMutableURLRequest(susAction: "getNowPlaying", parameters: nil) as URLRequest
+        URLRequest(serverId: serverId, subsonicAction: "getNowPlaying")
     }
     
     override func processResponse(data: Data) {

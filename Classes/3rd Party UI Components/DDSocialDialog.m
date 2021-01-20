@@ -44,6 +44,7 @@
 #import "DDSocialDialog.h"
 #import "Defines.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 static CGFloat kDDSocialDialogBorderWidth = 10;
 static CGFloat kDDSocialDialogTransitionDuration = 0.3;
@@ -168,7 +169,7 @@ static CGFloat kDDSocialDialogPadding = 10;
 	
 	UIWindow* window = [UIApplication keyWindow];
 	if (!window) {
-		window = [[UIApplication sharedApplication].windows objectAtIndexSafe:0];
+		window = UIApplication.sharedApplication.windows.firstObject;
 	}
 	
 	// Touch background to dismiss dialog

@@ -10,17 +10,18 @@ import Foundation
 
 @objc final class QuickAlbumsLoader: APILoader {
     @objc var serverId = Settings.shared().currentServerId
-    
     @objc var folderAlbums = [FolderAlbum]()
     // TODO: Make this an enum once only swift code is using this class
     @objc var modifier = ""
     @objc var offset = 0
     
+    // MARK: APILoader Overrides
+    
     override var type: APILoaderType { .quickAlbums }
     
     override func createRequest() -> URLRequest? {
-        let parameters: [AnyHashable: Any] = ["size": 20, "type": modifier, "offset": offset]
-        return NSMutableURLRequest(susAction: "getAlbumList", parameters: parameters) as URLRequest
+        let parameters: [String: Any] = ["size": 20, "type": modifier, "offset": offset]
+        return URLRequest(serverId: serverId, subsonicAction: "getAlbumList", parameters: parameters)
     }
     
     override func processResponse(data: Data) {

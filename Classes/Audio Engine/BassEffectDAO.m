@@ -216,7 +216,7 @@ static CGPoint CGPointFromString(NSString *string)
 	if (valueIndex >= [self.selectedPresetValues count])
 		return nil;
 	
-	CGPoint point = CGPointFromString([self.selectedPresetValues objectAtIndexSafe:valueIndex]);
+	CGPoint point = CGPointFromString(self.selectedPresetValues[valueIndex]);
 	BassEffectValue  *value = [[BassEffectValue alloc] init];
 	value.type = self.type;
 	value.percentX = point.x;
@@ -252,7 +252,7 @@ static CGPoint CGPointFromString(NSString *string)
 	if (presetIndex >= [self.presets count])
 		return;
 	
-	self.selectedPresetId = [[[self.presetsArray objectAtIndexSafe:presetIndex] objectForKey:@"presetId"] intValue];
+	self.selectedPresetId = [[self.presetsArray[presetIndex] objectForKey:@"presetId"] intValue];
 	
 	[self selectPresetId:self.selectedPresetId];
 }
@@ -282,7 +282,10 @@ static CGPoint CGPointFromString(NSString *string)
 
 - (void)deleteCustomPresetForIndex:(NSUInteger)presetIndex
 {
-	NSUInteger presetId = [[[self.presetsArray objectAtIndexSafe:presetIndex] objectForKey:@"presetId"] intValue];
+    if (presetIndex >= self.presets.count)
+        return;
+    
+	NSUInteger presetId = [[self.presetsArray[presetIndex] objectForKey:@"presetId"] intValue];
 	[self deleteCustomPresetForId:presetId];
 }
 

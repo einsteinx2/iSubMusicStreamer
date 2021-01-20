@@ -65,8 +65,12 @@ final class VideoPlayer: NSObject {
         self.hlsProxyServer = proxyServer
         
         // Play the video
-        let parameters: [AnyHashable: Any] = ["id": song.id, "bitRate": bitRate]
-        let request = NSMutableURLRequest(susAction: "hls", parameters: parameters) as URLRequest
+        let parameters: [String: Any] = ["id": song.id, "bitRate": bitRate]
+        guard let request = URLRequest(serverId: song.serverId, subsonicAction: "hls", parameters: parameters) else {
+            DDLogError("[VideoPlayer] failed to create URLRequest to load HLS video with parameters \(parameters)")
+            return
+        }
+        
         if let url = request.url, let scheme = url.scheme, let host = url.host, let port = url.port {
             var urlString = "http://localhost:\(proxyServer.port)\(url.relativePath)?\(url.path)"
             let originUrlString = "\(scheme)://\(host):\(port)\(url.path)"
@@ -84,7 +88,7 @@ final class VideoPlayer: NSObject {
                 controller.exitsFullScreenWhenPlaybackEnds = true
                 self.videoPlayerController = controller
                 
-                UIApplication.keyWindow()?.rootViewController?.present(controller, animated: true) {
+                UIApplication.keyWindow?.rootViewController?.present(controller, animated: true) {
                     do {
                         // Start audio session
                         try AVAudioSession.sharedInstance().setActive(true)

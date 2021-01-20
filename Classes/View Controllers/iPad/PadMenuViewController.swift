@@ -56,7 +56,7 @@ import Resolver
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        if UIApplication.orientation().isLandscape {
+        if UIApplication.orientation.isLandscape {
             let fade = CAGradientLayer()
             fade.frame = CGRect(x: 0, y: 0, width: tableContainer.frame.size.width, height: tableContainer.frame.size.height)
             fade.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]

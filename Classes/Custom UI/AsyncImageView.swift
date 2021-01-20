@@ -95,7 +95,7 @@ extension AsyncImageView: APILoaderDelegate {
         coverArtDAO = nil
     }
     
-    func loadingFailed(loader: APILoader?, error: NSError?) {
+    func loadingFailed(loader: APILoader?, error: Error?) {
         DDLogError("[AsyncImageView] async cover art loading failed: \(error?.localizedDescription ?? "unknown error")")
         activityIndicator?.removeFromSuperview()
         activityIndicator = nil

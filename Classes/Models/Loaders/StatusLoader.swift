@@ -41,10 +41,12 @@ import Foundation
         super.init(callback: callback)
     }
     
+    // MARK: APILoader Overrides
+    
     override var type: APILoaderType { .status }
     
     override func createRequest() -> URLRequest? {
-        NSMutableURLRequest(susAction: "ping", urlString: urlString, username: username, password: password, parameters: nil) as URLRequest
+        URLRequest(subsonicAction: "ping", urlString: urlString, username: username, password: password, parameters: nil, byteOffset: 0)
     }
     
     override func processResponse(data: Data) {

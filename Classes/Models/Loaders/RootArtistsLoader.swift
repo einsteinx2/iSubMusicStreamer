@@ -19,16 +19,16 @@ final class RootArtistsLoader: APILoader {
     var tableSections = [TableSection]()
     var tagArtistIds = [Int]()
     
-    // MARK: SUSLoader Overrides
+    // MARK: APILoader Overrides
     
     override var type: APILoaderType { .rootArtists }
         
     override func createRequest() -> URLRequest? {
-        var parameters: [AnyHashable: Any]?
+        var parameters: [String: Any]?
         if mediaFolderId != MediaFolder.allFoldersId {
             parameters = ["musicFolderId": mediaFolderId]
         }
-        return NSMutableURLRequest(susAction: "getArtists", parameters: parameters) as URLRequest
+        return URLRequest(serverId: serverId, subsonicAction: "getArtists", parameters: parameters)
     }
     
     override func processResponse(data: Data) {
@@ -39,8 +39,7 @@ final class RootArtistsLoader: APILoader {
         if !root.isValid {
             informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
         } else {
-            let error = root.child("error")
-            if let error = error, error.isValid {
+            if let error = root.child("error"), error.isValid {
                 informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
             } else {
                 if store.deleteTagArtists(serverId: serverId, mediaFolderId: mediaFolderId) {

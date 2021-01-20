@@ -10,13 +10,14 @@ import Foundation
 
 @objc final class DropdownFolderLoader: APILoader {
     @objc var serverId = Settings.shared().currentServerId
-    
     @objc private(set) var mediaFolders = [MediaFolder]()
+    
+    // MARK: APILoader Overrides
     
     override var type: APILoaderType { .dropdownFolder }
     
     override func createRequest() -> URLRequest? {
-        return NSMutableURLRequest(susAction: "getMusicFolders", parameters: nil) as URLRequest
+        URLRequest(serverId: serverId, subsonicAction: "getMusicFolders")
     }
     
     override func processResponse(data: Data) {

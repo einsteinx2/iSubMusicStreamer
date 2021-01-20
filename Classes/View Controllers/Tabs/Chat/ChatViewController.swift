@@ -147,7 +147,7 @@ extension ChatViewController: APILoaderDelegate {
         tableView.refreshControl?.endRefreshing()
     }
     
-    func loadingFailed(loader: APILoader?, error: NSError?) {
+    func loadingFailed(loader: APILoader?, error: Error?) {
         self.loader?.delegate = nil
         self.loader = nil
         

@@ -12,8 +12,7 @@ import Resolver
 @objc final class LyricsLoader: APILoader {
     @Injected private var store: Store
     
-    override var type: APILoaderType { .lyrics }
-    
+    var serverId = Settings.shared().currentServerId
     let tagArtistName: String
     let songTitle: String
     var lyrics: Lyrics?
@@ -24,8 +23,12 @@ import Resolver
         super.init(delegate: delegate)
     }
     
+    // MARK: APILoader Overrides
+    
+    override var type: APILoaderType { .lyrics }
+
     override func createRequest() -> URLRequest? {
-        return NSMutableURLRequest(susAction: "getLyrics", parameters: ["artist": tagArtistName, "title": songTitle]) as URLRequest
+        URLRequest(serverId: serverId, subsonicAction: "getLyrics", parameters: ["artist": tagArtistName, "title": songTitle])
     }
     
     override func processResponse(data: Data) {
@@ -56,7 +59,7 @@ import Resolver
         super.informDelegateLoadingFinished()
     }
     
-    override func informDelegateLoadingFailed(error: NSError?) {
+    override func informDelegateLoadingFailed(error: Error?) {
         NotificationCenter.postNotificationToMainThread(name: ISMSNotification_LyricsFailed)
         super.informDelegateLoadingFailed(error: error)
     }

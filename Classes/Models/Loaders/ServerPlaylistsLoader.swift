@@ -12,13 +12,15 @@ import Resolver
 final class ServerPlaylistsLoader: APILoader {
     @Injected private var store: Store
     
-    override var type: APILoaderType { .serverPlaylists }
-    
     var serverId = Settings.shared().currentServerId
     var serverPlaylists = [ServerPlaylist]()
     
+    // MARK: APILoader Overrides
+    
+    override var type: APILoaderType { .serverPlaylists }
+    
     override func createRequest() -> URLRequest? {
-        NSMutableURLRequest(susAction: "getPlaylists", parameters: nil) as URLRequest
+        URLRequest(serverId: serverId, subsonicAction: "getPlaylists")
     }
     
     override func processResponse(data: Data) {

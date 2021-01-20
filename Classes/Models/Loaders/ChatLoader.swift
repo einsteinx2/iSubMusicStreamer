@@ -11,13 +11,14 @@ import CocoaLumberjackSwift
 
 final class ChatLoader: APILoader {
     var serverId = Settings.shared().currentServerId
-    
     var chatMessages = [ChatMessage]()
+    
+    // MARK: APILoader Overrides
     
     override var type: APILoaderType { .chat }
     
     override func createRequest() -> URLRequest? {
-        return NSMutableURLRequest(susAction: "getChatMessages", parameters: nil) as URLRequest
+        URLRequest(serverId: serverId, subsonicAction: "getChatMessages")
     }
     
     override func processResponse(data: Data) {

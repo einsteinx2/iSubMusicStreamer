@@ -235,7 +235,7 @@ import CocoaLumberjackSwift
                     SlidingNotification.showOnMainWindow(message: "Cannot play videos in Jukebox mode.")
                     return nil
                 } else {
-                    jukebox.playSong(atPosition: NSNumber(value: position))
+                    jukebox.playSong(index: position)
                 }
             } else {
                 streamManager.removeAllStreamsExcept(for: currentSong)

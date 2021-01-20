@@ -128,7 +128,7 @@ private final class ModalCoverArtViewController: UIViewController {
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
-        if UIApplication.orientation().isPortrait {
+        if UIApplication.orientation.isPortrait {
             coverArt.snp.remakeConstraints { make in
                 make.width.equalToSuperview()
                 make.height.equalTo(coverArt.snp.width)

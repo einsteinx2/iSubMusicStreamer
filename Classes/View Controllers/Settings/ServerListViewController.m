@@ -41,7 +41,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(switchServer:) name:@"switchServer"];
 	
 	self.title = @"Servers";
-    if (self != [[self.navigationController viewControllers] objectAtIndexSafe:0]) {
+    if (self != self.navigationController.viewControllers.firstObject) {
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(saveAction:)];
     }
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -176,7 +176,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)switchServer {
-	if (self == [[self.navigationController viewControllers] objectAtIndexSafe:0] && !UIDevice.isPad) {
+	if (self == self.navigationController.viewControllers.firstObject && !UIDevice.isPad) {
 		[self.navigationController.view removeFromSuperview];
 	} else {
 		[self.navigationController popToRootViewControllerAnimated:YES];
@@ -248,7 +248,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	static NSString *cellIdentifier = @"ServerListCell";
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 	
-	Server *server = [self.servers objectAtIndexSafe:indexPath.row];
+    Server *server = self.servers[indexPath.row];
 	
 	// Set up the cell...
 	UILabel *serverNameLabel = [[UILabel alloc] init];
@@ -297,7 +297,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	if (!indexPath) return;
 	
-	self.serverToEdit = [self.servers objectAtIndexSafe:indexPath.row];
+    self.serverToEdit = self.servers[indexPath.row];
 
 	if (self.isEditing) {
         ServerEditViewController *serverEditViewController = [[ServerEditViewController alloc] init];
@@ -321,7 +321,7 @@ LOG_LEVEL_ISUB_DEFAULT
 // TODO: Automatically switch to another server or show the add server screen
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        Server *server = [self.servers objectAtIndexSafe:indexPath.row];
+        Server *server = self.servers[indexPath.row];
         (void)[Store.shared deleteServerWithId:server.serverId];
         self.servers = Store.shared.servers;
         

@@ -147,7 +147,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (index < [self.handlerStack count])
 	{
 		// Find the handler object and cancel it
-		ISMSStreamHandler *handler = [self.handlerStack objectAtIndexSafe:index];
+		ISMSStreamHandler *handler = self.handlerStack[index];
 		
 		[handler cancel];
 		

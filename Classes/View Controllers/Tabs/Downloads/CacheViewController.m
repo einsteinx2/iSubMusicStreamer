@@ -14,7 +14,6 @@
 #import "Flurry.h"
 #import "SavedSettings.h"
 #import "CacheSingleton.h"
-#import "JukeboxSingleton.h"
 #import "ISMSCacheQueueManager.h"
 #import "EX2Kit.h"
 #import "Swift.h"

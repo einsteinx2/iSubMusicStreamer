@@ -47,20 +47,16 @@
  */
 
 #import "NSString+time.h"
-#import "NSMutableURLRequest+SUS.h"
-#import "UIApplication+Helper.h"
 #import "UIDevice+Info.h"
 #import "NSNotificationCenter+MainThread.h"
 #import "NSString+FileSize.h"
-#import "NSString+Clean.h"
 #import "NSError+ISMSError.h"
-#import "NSString+MD5.h"
+#import "GTMNSString+HTML.h"
 
 /*
  * Singletons
  */
 
-#import "JukeboxSingleton.h"
 #import "SavedSettings.h"
 #import "AudioEngine.h"
 #import "ISMSStreamManager.h"

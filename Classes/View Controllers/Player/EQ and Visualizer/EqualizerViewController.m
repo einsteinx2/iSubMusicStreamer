@@ -15,6 +15,7 @@
 #import "AudioEngine.h"
 #import "SavedSettings.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation EqualizerViewController
 
@@ -657,7 +658,7 @@
 }
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return [[self.effectDAO.presetsArray objectAtIndexSafe:row] objectForKey:@"name"];
+    return [self.effectDAO.presetsArray[row] objectForKey:@"name"];
 }
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
@@ -677,7 +678,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	switch (section) {
 		case 0: return 1;
-		case 1: return [self.effectDAO.userPresetsArrayMinusCustom count];
+		case 1: return self.effectDAO.userPresetsArrayMinusCustom.count;
 		default: return 0;
 	}
 }
@@ -691,7 +692,7 @@
 			cell.textLabel.text = @"New Preset";
 			break;
 		case 1:
-			preset = [self.effectDAO.userPresetsArrayMinusCustom objectAtIndexSafe:indexPath.row];
+			preset = self.effectDAO.userPresetsArrayMinusCustom[indexPath.row];
 			cell.tag = [[preset objectForKey:@"presetId"] intValue];
 			cell.textLabel.text = [preset objectForKey:@"name"];
 			break;

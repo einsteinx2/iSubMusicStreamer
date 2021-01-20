@@ -24,7 +24,7 @@ import Resolver
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         coordinator.animate(alongsideTransition: { _ in
-            self.backgroundImageView.alpha = UIApplication.orientation().isPortrait ? 1.0 : 0.3
+            self.backgroundImageView.alpha = UIApplication.orientation.isPortrait ? 1.0 : 0.3
         }, completion: nil)
     }
     
@@ -260,14 +260,13 @@ extension ServerEditViewController: APILoaderDelegate {
         NotificationCenter.postNotificationToMainThread(name: "switchServer", userInfo: userInfo)
     }
     
-    func loadingFailed(loader: APILoader?, error: NSError?) {
+    func loadingFailed(loader: APILoader?, error: Error?) {
         HUD.hide()
         
         var message = "Unknown error occured, please try again."
         if let error = error {
-            let nsError = error as NSError
-            if nsError.code != ISMSErrorCode_IncorrectCredentials {
-                message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\nError code \(nsError.code):\n\(nsError.localizedDescription)"
+            if error.code != ISMSErrorCode_IncorrectCredentials {
+                message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\nError code \(error.code):\n\(error.localizedDescription)"
             } else {
                 message = "Either your username or password is incorrect, please try again"
             }

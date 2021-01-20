@@ -7,7 +7,7 @@
 //
 
 #import "UIView+ObjCFrameHelper.h"
-#import "UIApplication+Helper.h"
+#import "Swift.h"
 
 @implementation UIView (ObjCFrameHelper)
 

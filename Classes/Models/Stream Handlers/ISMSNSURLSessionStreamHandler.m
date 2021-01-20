@@ -8,7 +8,6 @@
 
 #import "ISMSNSURLSessionStreamHandler.h"
 #import "NSError+ISMSError.h"
-#import "NSMutableURLRequest+SUS.h"
 #import "SavedSettings.h"
 #import "CacheSingleton.h"
 #import "EX2Kit.h"
@@ -100,7 +99,8 @@ LOG_LEVEL_ISUB_DEFAULT
         NSString *maxBitRate = [[NSString alloc] initWithFormat:@"%ld", (long)self.maxBitrateSetting];
         [parameters setObject:n2N(maxBitRate) forKey:@"maxBitRate"];
     }
-    self.request = [NSMutableURLRequest requestWithSUSAction:@"stream" parameters:parameters byteOffset:(NSUInteger)self.byteOffset];
+    
+    self.request = [NSURLRequest requestWithServerId:self.mySong.serverId subsonicAction:@"stream" parameters:parameters byteOffset:self.byteOffset];
     if (!self.request) {
         DDLogError(@"[ISMSURLConnectionStreamHandler] start connection failed");
         NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_CouldNotCreateConnection];

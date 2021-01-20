@@ -69,14 +69,14 @@ import Resolver
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        self.equalizerButton.isHidden = UIApplication.orientation().isPortrait
+        self.equalizerButton.isHidden = UIApplication.orientation.isPortrait
         view.setNeedsUpdateConstraints()
     }
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
         updateDownloadProgress(animated: false)
-        if UIApplication.orientation().isPortrait || UIDevice.isPad() {
+        if UIApplication.orientation.isPortrait || UIDevice.isPad() {
             coverArtPageControl.view.snp.remakeConstraints { make in
                 make.height.equalTo(coverArtPageControl.view.snp.width).offset(20)
                 make.top.leading.equalToSuperview().offset(20)
@@ -410,7 +410,7 @@ import Resolver
         jukeboxVolumeSlider.maximumValue = 1.0
         jukeboxVolumeSlider.isContinuous = false
         jukeboxVolumeSlider.addClosure(for: .valueChanged) { [unowned self] in
-            jukebox.setVolume(self.jukeboxVolumeSlider.value)
+            jukebox.setVolume(level: self.jukeboxVolumeSlider.value)
         }
         jukeboxVolumeContainer.addSubview(jukeboxVolumeSlider)
         jukeboxVolumeSlider.snp.makeConstraints { make in
@@ -431,7 +431,7 @@ import Resolver
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        equalizerButton.isHidden = UIApplication.orientation().isLandscape
+        equalizerButton.isHidden = UIApplication.orientation.isLandscape
         updateSongInfo()
         startUpdatingSlider()
         startUpdatingDownloadProgress()
@@ -738,7 +738,7 @@ import Resolver
         
         if jukeboxEnabled {
             // Update the jukebox volume slider position
-            jukeboxVolumeSlider.value = jukebox.gain
+            jukeboxVolumeSlider.value = Float(jukebox.gain)
             
             // Add the volume control if needed
             if jukeboxVolumeContainer.superview == nil {

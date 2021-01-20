@@ -7,7 +7,7 @@
 //
 
 #import "UIDevice+Info.h"
-#import "UIApplication+Helper.h"
+#import "Swift.h"
 #import <sys/sysctl.h>
 
 @implementation UIDevice (Info)

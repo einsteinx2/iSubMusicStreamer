@@ -17,7 +17,7 @@ protocol CancelableLoader {
     @objc(loadingFinished:)
     func loadingFinished(loader: APILoader?)
     @objc(loadingFailed:error:)
-    func loadingFailed(loader: APILoader?, error: NSError?)
+    func loadingFailed(loader: APILoader?, error: Error?)
 }
 
 @objc protocol APILoaderManager {
@@ -98,7 +98,7 @@ protocol CancelableLoader {
             guard let self = self else { return }
             if let error = error {
                 DDLogError("[SUSLoader] loader type: \(self.type.rawValue) failed: \(error)")
-                self.informDelegateLoadingFailed(error: error as NSError)
+                self.informDelegateLoadingFailed(error: error)
             } else if let data = data {
                 DDLogVerbose("[SUSLoader] loader type: \(self.type.rawValue) response:\n\(String(data: data, encoding: .utf8) ?? "Failed to convert data to string.")")
                 self.processResponse(data: data)
@@ -135,7 +135,7 @@ protocol CancelableLoader {
         }
     }
     
-    @objc func informDelegateLoadingFailed(error: NSError?) {
+    @objc func informDelegateLoadingFailed(error: Error?) {
         DispatchQueue.main.async {
             self.delegate?.loadingFailed(loader: self, error: error)
             self.callback?(false, error)

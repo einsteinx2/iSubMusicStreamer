@@ -52,7 +52,7 @@ import SnapKit
         HUD.show(closeHandler: cancelLoad)
         nowPlayingLoader = NowPlayingLoader()
         nowPlayingLoader?.callback = { [unowned self] (success, error) in
-            if let error = error as NSError? {
+            if let error = error {
                 if settings.isPopupsEnabled {
                     let message = "There was an error loading the now playing list.\n\nError \(error.code): \(error.localizedDescription)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)

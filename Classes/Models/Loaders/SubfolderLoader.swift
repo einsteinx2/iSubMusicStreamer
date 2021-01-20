@@ -35,7 +35,7 @@ final class SubfolderLoader: APILoader {
     }
     
     override func createRequest() -> URLRequest? {
-        return NSMutableURLRequest(susAction: "getMusicDirectory", parameters: ["id": parentFolderId]) as URLRequest
+        URLRequest(serverId: serverId, subsonicAction: "getMusicDirectory", parameters: ["id": parentFolderId])
     }
     
     override func processResponse(data: Data) {

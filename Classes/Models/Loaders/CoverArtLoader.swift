@@ -18,9 +18,7 @@ import Resolver
         static let downloadFinished = "CoverArtLoader.downloadFinished"
         static let downloadFailed = "CoverArtLoader.downloadFailed"
     }
-    
-    override var type: APILoaderType { .coverArt }
-    
+        
     private static var syncObject = NSObject()
     private static var loadingIds = Set<String>()
     
@@ -57,6 +55,27 @@ import Resolver
         return false
     }
     
+    // MARK: Notifications
+    
+    @objc private func coverArtDownloadFinished(notification: Notification) {
+        if let id = notification.object as? String, id == mergedId {
+            if isLarge {
+                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_AlbumArtLargeDownloaded)
+            }
+            informDelegateLoadingFinished()
+        }
+    }
+    
+    @objc private func coverArtDownloadFailed(notification: Notification) {
+        if let id = notification.object as? String, id == mergedId {
+            informDelegateLoadingFailed(error: nil)
+        }
+    }
+    
+    // MARK: APILoader Overrides
+    
+    override var type: APILoaderType { .coverArt }
+    
     override func createRequest() -> URLRequest? {
         synchronized(Self.syncObject) { () -> URLRequest? in
             if !settings.isOfflineMode && !isCached && !Self.loadingIds.contains(mergedId) {
@@ -66,7 +85,7 @@ import Resolver
                 if isLarge {
                     size = UIDevice.isPad() ? scale * 1080 : scale * 640
                 }
-                return NSMutableURLRequest(susAction: "getCoverArt", parameters: ["id": coverArtId, "size": size]) as URLRequest
+                return URLRequest(serverId: serverId, subsonicAction: "getCoverArt", parameters: ["id": coverArtId, "size": size])
             }
             return nil
         }
@@ -96,25 +115,10 @@ import Resolver
         }
     }
     
-    override func informDelegateLoadingFailed(error: NSError?) {
+    override func informDelegateLoadingFailed(error: Error?) {
         synchronized(Self.syncObject) {
             _ = Self.loadingIds.remove(mergedId)
         }
         NotificationCenter.postNotificationToMainThread(name: Notifications.downloadFinished, object: coverArtId, userInfo: nil)
-    }
-    
-    @objc private func coverArtDownloadFinished(notification: Notification) {
-        if let id = notification.object as? String, id == mergedId {
-            if isLarge {
-                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_AlbumArtLargeDownloaded)
-            }
-            informDelegateLoadingFinished()
-        }
-    }
-    
-    @objc private func coverArtDownloadFailed(notification: Notification) {
-        if let id = notification.object as? String, id == mergedId {
-            informDelegateLoadingFailed(error: nil)
-        }
     }
 }

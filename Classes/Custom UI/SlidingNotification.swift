@@ -76,7 +76,7 @@ private let labelInset: Float = 12.5
             make.leading.trailing.equalToSuperview()
         }
         messageLabel.snp.updateConstraints { make in
-            make.top.equalToSuperview().offset(Float(UIApplication.statusBarHeight()) + labelInset)
+            make.top.equalToSuperview().offset(Float(UIApplication.statusBarHeight) + labelInset)
         }
         messageLabel.sizeToFit()
         superview.layoutIfNeeded()
@@ -122,7 +122,7 @@ private let labelInset: Float = 12.5
         guard !Self.activeMessages.contains(message) else { return }
         
         let slidingNotification = Self(message: message)
-        UIApplication.keyWindow()?.addSubview(slidingNotification)
+        UIApplication.keyWindow?.addSubview(slidingNotification)
         slidingNotification.show(duration: duration)
     }
 }

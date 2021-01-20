@@ -191,7 +191,7 @@ extension ArtistsViewController: APILoaderDelegate {
         tableView.refreshControl?.endRefreshing()
     }
     
-    func loadingFailed(loader: APILoader?, error: NSError?) {
+    func loadingFailed(loader: APILoader?, error: Error?) {
         HUD.hide()
         tableView.refreshControl?.endRefreshing()
         

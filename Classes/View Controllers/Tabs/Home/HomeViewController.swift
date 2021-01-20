@@ -53,7 +53,7 @@ final class HomeViewController: UIViewController {
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
-        if UIApplication.orientation().isPortrait || UIDevice.isPad() {
+        if UIApplication.orientation.isPortrait || UIDevice.isPad() {
             for button in buttons {
                 button.showLabel()
             }
@@ -284,7 +284,7 @@ final class HomeViewController: UIViewController {
         loader.callback = { _, error in
             HUD.hide()
             if let error = error {
-                if self.settings.isPopupsEnabled && (error as NSError).code != NSURLErrorCancelled {
+                if self.settings.isPopupsEnabled && error.code != NSURLErrorCancelled {
                     let alert = UIAlertController(title: "Error", message: "There was an error grabbing the album list.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
                     alert.addAction(title: "OK", style: .cancel, handler: nil)
                     self.present(alert, animated: true, completion: nil)
@@ -398,7 +398,7 @@ extension HomeViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
         
         var query = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        var parameters = [String: String]()
+        var parameters = [String: Any]()
         var action = ""
         if isNewSearchSupported {
             // Due to a Subsonic bug, to get good search results, we need to add a * to the end of
@@ -408,71 +408,75 @@ extension HomeViewController: UISearchBarDelegate {
             }
 
             action = "search2"
-            parameters = ["query": query, "artistCount": "0", "albumCount": "0", "songCount": "0"]
+            parameters = ["query": query, "artistCount": 0, "albumCount": 0, "songCount": 0]
             switch searchSegment.selectedSegmentIndex {
-            case 0: parameters["artistCount"] = "20"
-            case 1: parameters["albumCount"] = "20"
-            case 2: parameters["songCount"] = "20"
+            case 0: parameters["artistCount"] = 20
+            case 1: parameters["albumCount"] = 20
+            case 2: parameters["songCount"] = 20
             default:
-                parameters["artistCount"] = "20"
-                parameters["albumCount"] = "20"
-                parameters["songCount"] = "20"
+                parameters["artistCount"] = 20
+                parameters["albumCount"] = 20
+                parameters["songCount"] = 20
             }
         } else {
             action = "search"
-            parameters = ["count": "20", "any": query]
+            parameters = ["count": 20, "any": query]
         }
         
-        let request = NSMutableURLRequest(susAction: action, parameters: parameters)
-        if let request = request as URLRequest? {
-            dataTask = APILoader.sharedSession.dataTask(with: request) { data, _, error in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        if self.settings.isPopupsEnabled {
-                            let alert = UIAlertController(title: "Error", message: "There was an error completing the search.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
-                            alert.addAction(title: "OK", style: .cancel, handler: nil)
-                            self.present(alert, animated: true, completion: nil)
-                        }
-                    } else if let data = data {
-                        DDLogVerbose("search results: \(String(data: data, encoding: .utf8)!)")
-                        let parser = SearchXMLParser(data: data)
-                        
-                        if self.isNewSearchSupported && self.searchSegment.selectedSegmentIndex == 3 {
-                            let controller = SearchAllViewController()
-                            controller.folderArtists = parser.folderArtists
-                            controller.folderAlbums = parser.folderAlbums
-                            controller.songs = parser.songs
-                            controller.query = query
-                            self.pushViewControllerCustom(controller)
-                        } else {
-                            let controller = SearchSongsViewController()
-                            controller.title = "Search"
-                            if self.isNewSearchSupported {
-                                if self.searchSegment.selectedSegmentIndex == 0 {
-                                    controller.folderArtists = parser.folderArtists
-                                    controller.searchType = .artists
-                                } else if self.searchSegment.selectedSegmentIndex == 1 {
-                                    controller.folderAlbums = parser.folderAlbums
-                                    controller.searchType = .albums
-                                } else if self.searchSegment.selectedSegmentIndex == 2 {
-                                    controller.songs = parser.songs
-                                    controller.searchType = .songs
-                                }
-                                controller.query = query
-                            } else {
+        // TODO: implement this
+        // TODO: Don't hard code server id
+        guard let request = URLRequest(serverId: settings.currentServerId, subsonicAction: action, parameters: parameters) else {
+            DDLogError("[HomeViewController] failed to create URLRequest to search with action \(action) and parameters \(parameters)")
+            return
+        }
+        
+        dataTask = APILoader.sharedSession.dataTask(with: request) { data, _, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    if self.settings.isPopupsEnabled {
+                        let alert = UIAlertController(title: "Error", message: "There was an error completing the search.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
+                        alert.addAction(title: "OK", style: .cancel, handler: nil)
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                } else if let data = data {
+                    DDLogVerbose("search results: \(String(data: data, encoding: .utf8)!)")
+                    let parser = SearchXMLParser(data: data)
+                    
+                    if self.isNewSearchSupported && self.searchSegment.selectedSegmentIndex == 3 {
+                        let controller = SearchAllViewController()
+                        controller.folderArtists = parser.folderArtists
+                        controller.folderAlbums = parser.folderAlbums
+                        controller.songs = parser.songs
+                        controller.query = query
+                        self.pushViewControllerCustom(controller)
+                    } else {
+                        let controller = SearchSongsViewController()
+                        controller.title = "Search"
+                        if self.isNewSearchSupported {
+                            if self.searchSegment.selectedSegmentIndex == 0 {
+                                controller.folderArtists = parser.folderArtists
+                                controller.searchType = .artists
+                            } else if self.searchSegment.selectedSegmentIndex == 1 {
+                                controller.folderAlbums = parser.folderAlbums
+                                controller.searchType = .albums
+                            } else if self.searchSegment.selectedSegmentIndex == 2 {
                                 controller.songs = parser.songs
                                 controller.searchType = .songs
-                                controller.query = query
                             }
-                            self.pushViewControllerCustom(controller)
+                            controller.query = query
+                        } else {
+                            controller.songs = parser.songs
+                            controller.searchType = .songs
+                            controller.query = query
                         }
+                        self.pushViewControllerCustom(controller)
                     }
-                    HUD.hide()
                 }
+                HUD.hide()
             }
-            dataTask?.resume()
-            HUD.show()
         }
+        dataTask?.resume()
+        HUD.show()
     }
 }
 

@@ -18,7 +18,7 @@ import SnapKit
     private static let hudDelegate = HUDDelegate()
     
     // TODO: Update this to support multiple scenes
-    private static var window: UIWindow { UIApplication.keyWindow() }
+    private static var window: UIWindow? { UIApplication.keyWindow }
     
     @objc @discardableResult
     static func show() -> Bool {
@@ -32,7 +32,7 @@ import SnapKit
     
     @objc @discardableResult
     static func show(message: String?) -> Bool {
-        guard hud == nil else { return false }
+        guard hud == nil, let window = window else { return false }
         
         DispatchQueue.main.async {
             let hud = MBProgressHUD(view: window)
@@ -48,7 +48,7 @@ import SnapKit
     
     @objc @discardableResult
     static func show(message: String?, closeHandler: @escaping () -> Void) -> Bool {
-        guard hud == nil else { return false }
+        guard hud == nil, let window = window else { return false }
         
         DispatchQueue.main.async {
             let hud = MBProgressHUD(view: window)

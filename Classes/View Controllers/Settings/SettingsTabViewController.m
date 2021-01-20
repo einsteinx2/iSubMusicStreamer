@@ -218,7 +218,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			// Handle the moreNavigationController stupidity
             UITabBarController *tabBarController = SceneDelegate.shared.tabBarController;
 			if (tabBarController.selectedIndex == 4) {
-				[tabBarController.moreNavigationController popToViewController:[tabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
+				[tabBarController.moreNavigationController popToViewController:tabBarController.moreNavigationController.viewControllers[1] animated:YES];
 			} else {
 				[(UINavigationController*)tabBarController.selectedViewController popToRootViewControllerAnimated:YES];
 			}
@@ -322,7 +322,7 @@ LOG_LEVEL_ISUB_DEFAULT
                 // Handle the moreNavigationController stupidity
                 UITabBarController *tabBarController = SceneDelegate.shared.tabBarController;
                 if (tabBarController.selectedIndex == 4) {
-                    [tabBarController.moreNavigationController popToViewController:[tabBarController.moreNavigationController.viewControllers objectAtIndexSafe:1] animated:YES];
+                    [tabBarController.moreNavigationController popToViewController:tabBarController.moreNavigationController.viewControllers[1] animated:YES];
                 } else {
                     [(UINavigationController*)tabBarController.selectedViewController popToRootViewControllerAnimated:YES];
                 }

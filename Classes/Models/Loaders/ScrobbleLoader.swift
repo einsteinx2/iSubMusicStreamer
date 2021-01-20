@@ -9,6 +9,7 @@
 import Foundation
 
 @objc final class ScrobbleLoader: APILoader {
+    @objc var serverId = Settings.shared().currentServerId
     @objc let song: Song
     @objc let isSubmission: Bool
     
@@ -18,11 +19,12 @@ import Foundation
         super.init(callback: callback)
     }
     
+    // MARK: APILoader Overrides
+    
     override var type: APILoaderType { .scrobble }
     
     override func createRequest() -> URLRequest? {
-        let parameters: [AnyHashable: Any] = ["id": song.id, "submission": isSubmission]
-        return NSMutableURLRequest(susAction: "scrobble", parameters: parameters) as URLRequest
+        URLRequest(serverId: serverId, subsonicAction: "scrobble", parameters: ["id": song.id, "submission": isSubmission])
     }
     
     override func processResponse(data: Data) {

@@ -89,7 +89,7 @@ import CocoaLumberjackSwift
                         }
                     }
                     alert.addCancelAction()
-                    UIApplication.keyWindow()?.rootViewController?.present(alert, animated: true, completion: nil)
+                    UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
                 }
             }
         }

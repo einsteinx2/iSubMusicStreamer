@@ -159,7 +159,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		// Adjust the arrayIndex values for the other objects
 		BassParamEqValue *aValue;
         @synchronized(self.eqValues) {
-            aValue = [self.eqValues objectAtIndexSafe:i];
+            aValue = self.eqValues[i];
         }
 		aValue.arrayIndex = i;
 	}
