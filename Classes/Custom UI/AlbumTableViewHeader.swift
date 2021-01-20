@@ -9,19 +9,19 @@
 import UIKit
 import SnapKit
 
-@objc final class AlbumTableViewHeader: UIView {
+final class AlbumTableViewHeader: UIView {
     private let coverArtView = AsyncImageView()
     private let coverArtButton = UIButton(type: .custom)
     private let artistLabel = AutoScrollingLabel()
     private let albumLabel = AutoScrollingLabel()
     private let tracksLabel = UILabel()
     
-    @objc init(folderAlbum: FolderAlbum, tracks: Int, duration: Double) {
+    init(folderAlbum: FolderAlbum, tracks: Int, duration: Double) {
         super.init(frame: CGRect.zero)
         setup(coverArtId: folderAlbum.coverArtId, artistName: folderAlbum.tagArtistName, name: folderAlbum.name, tracks: tracks, duration: duration)
     }
     
-    @objc init(tagAlbum: TagAlbum) {
+    init(tagAlbum: TagAlbum) {
         super.init(frame: CGRect.zero)
         setup(coverArtId: tagAlbum.coverArtId, artistName: tagAlbum.tagArtistName, name: tagAlbum.name, tracks: tagAlbum.songCount, duration: Double(tagAlbum.duration))
     }

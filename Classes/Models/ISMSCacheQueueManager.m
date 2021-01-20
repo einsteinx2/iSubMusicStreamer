@@ -29,6 +29,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (BOOL)isSongInQueue:(ISMSSong *)aSong {
     // TODO: implement this
 //	return [databaseS.cacheQueueDbQueue boolForQuery:@"SELECT COUNT(*) FROM cacheQueue WHERE songId = ? LIMIT 1", aSong.songId];
+    return NO;
 }
 
 - (ISMSSong *)currentQueuedSongInDb {

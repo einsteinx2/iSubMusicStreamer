@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Resolver
 
-@objc final class ServerPlaylistViewController: UIViewController {
+final class ServerPlaylistViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
@@ -19,7 +19,7 @@ import Resolver
     
     private let tableView = UITableView()
     
-    @objc init(serverPlaylist: ServerPlaylist) {
+    init(serverPlaylist: ServerPlaylist) {
         self.serverPlaylist = serverPlaylist
         super.init(nibName: nil, bundle: nil)
     }

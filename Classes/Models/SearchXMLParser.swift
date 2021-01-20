@@ -10,18 +10,16 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-@objc class SearchXMLParser: NSObject {
+final class SearchXMLParser {
     @Injected private var store: Store
     
-    @objc var serverId = Settings.shared().currentServerId
+    var serverId = Settings.shared().currentServerId
     
-    @objc private(set) var folderArtists = [FolderArtist]()
-    @objc private(set) var folderAlbums = [FolderAlbum]()
-    @objc private(set) var songs = [Song]()
+    private(set) var folderArtists = [FolderArtist]()
+    private(set) var folderAlbums = [FolderAlbum]()
+    private(set) var songs = [Song]()
     
-    @objc init(data: Data) {
-        super.init()
-        
+    init(data: Data) {        
         let root = RXMLElement(fromXMLData: data)
         if !root.isValid {
             // TODO: Handle this error in the UI

@@ -11,7 +11,7 @@ import Resolver
 import SnapKit
 import CocoaLumberjackSwift
 
-@objc final class ArtistsViewController: UIViewController {
+final class ArtistsViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     

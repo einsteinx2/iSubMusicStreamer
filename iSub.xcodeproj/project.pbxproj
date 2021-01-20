@@ -26,7 +26,6 @@
 		530A168F259299C800E9294E /* TagArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A168D259299C800E9294E /* TagArtist.swift */; };
 		530A16AD2592D22100E9294E /* TagAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A16AC2592D22100E9294E /* TagAlbum.swift */; };
 		530A16AE2592D22100E9294E /* TagAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A16AC2592D22100E9294E /* TagAlbum.swift */; };
-		530B417211B607A200743C09 /* CacheViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530B417011B607A200743C09 /* CacheViewController.m */; };
 		531D3A16255ABA20000CB0DF /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A15255ABA20000CB0DF /* DDSocialDialog.m */; };
 		531D3A17255ABA20000CB0DF /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A15255ABA20000CB0DF /* DDSocialDialog.m */; };
 		531EC84625B1D4800076973A /* UIAlertController+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC84525B1D4800076973A /* UIAlertController+Actions.swift */; };
@@ -319,7 +318,6 @@
 		53B9C49B25A7A6D7007E9E3C /* GRDB+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B9C49925A7A6D7007E9E3C /* GRDB+Helper.swift */; };
 		53BC27AE139AF0DD00A825F1 /* ServerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53614AC8116432DA0088ABC0 /* ServerListViewController.m */; };
 		53BC27C4139AF0DD00A825F1 /* BookmarksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5388A3B2119899260049BA9E /* BookmarksViewController.m */; };
-		53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530B417011B607A200743C09 /* CacheViewController.m */; };
 		53BC27D7139AF0DD00A825F1 /* CacheAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 538229F411C98091003F1E23 /* CacheAlbumViewController.m */; };
 		53BC27E0139AF0DD00A825F1 /* CacheQueueSongUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5358083711CEB5F200A09386 /* CacheQueueSongUITableViewCell.m */; };
 		53BC27E2139AF0DD00A825F1 /* SettingsTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5398F26B11DA61DA00007870 /* SettingsTabViewController.m */; };
@@ -406,6 +404,8 @@
 		53ED674125B88B5B0002BFAF /* NotificationCenter+MainThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED673F25B88B5B0002BFAF /* NotificationCenter+MainThread.swift */; };
 		53ED674325B88C390002BFAF /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED674225B88C390002BFAF /* Notifications.swift */; };
 		53ED674425B88C390002BFAF /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED674225B88C390002BFAF /* Notifications.swift */; };
+		53ED674625B8976F0002BFAF /* CustomStringConvertable+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED674525B8976F0002BFAF /* CustomStringConvertable+Default.swift */; };
+		53ED674725B8976F0002BFAF /* CustomStringConvertable+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED674525B8976F0002BFAF /* CustomStringConvertable+Default.swift */; };
 		53F675D8113B092C00822059 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675D7113B092C00822059 /* MediaPlayer.framework */; };
 		53F675DC113B093900822059 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675DB113B093900822059 /* CFNetwork.framework */; };
 		53F675E2113B095900822059 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675E1113B095900822059 /* QuartzCore.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -843,6 +843,7 @@
 		53ED673C25B7AADF0002BFAF /* Error+Code.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+Code.swift"; sourceTree = "<group>"; };
 		53ED673F25B88B5B0002BFAF /* NotificationCenter+MainThread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationCenter+MainThread.swift"; sourceTree = "<group>"; };
 		53ED674225B88C390002BFAF /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		53ED674525B8976F0002BFAF /* CustomStringConvertable+Default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomStringConvertable+Default.swift"; sourceTree = "<group>"; };
 		53F1412015FD550C004D00D5 /* buildnumber.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = buildnumber.xcconfig; path = Other/buildnumber.xcconfig; sourceTree = "<group>"; };
 		53F675D7113B092C00822059 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		53F675DB113B093900822059 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -1638,6 +1639,7 @@
 				53EA2DE4257D7F340003F38D /* Foundation */,
 				53FE342C1EA961540058B925 /* UIKit */,
 				5373C69B25B60B9300CAA859 /* InflectorKit+Helper.swift */,
+				53ED674525B8976F0002BFAF /* CustomStringConvertable+Default.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2127,7 +2129,6 @@
 				531EC86825B225C60076973A /* DownloadsViewController.swift in Sources */,
 				53FE388F1EA961C80058B925 /* NSData+ZKAdditions.m in Sources */,
 				53762C7D25ACEEB400476F2D /* ServerPlaylistsLoader.swift in Sources */,
-				530B417211B607A200743C09 /* CacheViewController.m in Sources */,
 				5373C69C25B60B9300CAA859 /* InflectorKit+Helper.swift in Sources */,
 				531EC86E25B228BF0076973A /* DownloadedTagArtist.swift in Sources */,
 				53D97454255C51CA00AABF7F /* SwipeAction.swift in Sources */,
@@ -2152,6 +2153,7 @@
 				53FE38AA1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
 				53FE67A2256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m in Sources */,
 				5358083811CEB5F200A09386 /* CacheQueueSongUITableViewCell.m in Sources */,
+				53ED674625B8976F0002BFAF /* CustomStringConvertable+Default.swift in Sources */,
 				53FE35EB1EA961540058B925 /* SnappySlider.m in Sources */,
 				53246AB3256C918500E11EC4 /* LyricsViewController.swift in Sources */,
 				53FE38AD1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
@@ -2361,7 +2363,6 @@
 				531EC86925B225C60076973A /* DownloadsViewController.swift in Sources */,
 				53FE678F256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
 				53762C7E25ACEEB400476F2D /* ServerPlaylistsLoader.swift in Sources */,
-				53BC27D5139AF0DD00A825F1 /* CacheViewController.m in Sources */,
 				532C624D25B619A200185998 /* URL+QueryParameters.swift in Sources */,
 				5373C69D25B60B9300CAA859 /* InflectorKit+Helper.swift in Sources */,
 				531EC86F25B228BF0076973A /* DownloadedTagArtist.swift in Sources */,
@@ -2388,6 +2389,7 @@
 				53FE36E51EA961720058B925 /* AudioEngine.m in Sources */,
 				53FE352A1EA961540058B925 /* NSURL+SkipBackupAttribute.m in Sources */,
 				53FE38AC1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
+				53ED674725B8976F0002BFAF /* CustomStringConvertable+Default.swift in Sources */,
 				537B05C3256B40930008892C /* SongInfoViewController.swift in Sources */,
 				53FE679D256DD0F00015FC83 /* GCDWebServerDataResponse.m in Sources */,
 				53BC27E0139AF0DD00A825F1 /* CacheQueueSongUITableViewCell.m in Sources */,

@@ -8,12 +8,12 @@
 
 import Foundation
 
-@objc final class QuickAlbumsLoader: APILoader {
-    @objc var serverId = Settings.shared().currentServerId
-    @objc var folderAlbums = [FolderAlbum]()
+final class QuickAlbumsLoader: APILoader {
+    var serverId = Settings.shared().currentServerId
+    var folderAlbums = [FolderAlbum]()
     // TODO: Make this an enum once only swift code is using this class
-    @objc var modifier = ""
-    @objc var offset = 0
+    var modifier = ""
+    var offset = 0
     
     // MARK: APILoader Overrides
     

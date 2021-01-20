@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-@objc final class PlaylistsViewController: UIViewController {    
+final class PlaylistsViewController: UIViewController {    
     let segmentedControl = UISegmentedControl(items: ["Play Queue", "Local", "Server"])
     let controllers: [UIViewController] = [PlayQueueViewController(), LocalPlaylistsViewController(), ServerPlaylistsViewController()]
     

@@ -11,7 +11,7 @@ import Resolver
 import InflectorKit
 import SnapKit
 
-@objc final class NowPlayingViewController: UIViewController {
+final class NowPlayingViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     

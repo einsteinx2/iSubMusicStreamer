@@ -210,11 +210,11 @@ import Resolver
                     cachedTabs["PlaylistsViewController"] = controller
                 }
             case 4:
-                if let cachedController = cachedTabs["CacheViewController"] {
+                if let cachedController = cachedTabs["DownloadsViewController"] {
                     controller = cachedController
                 } else {
-                    controller = CustomUINavigationController(rootViewController: CacheViewController())
-                    cachedTabs["CacheViewController"] = controller
+                    controller = CustomUINavigationController(rootViewController: DownloadsViewController())
+                    cachedTabs["DownloadsViewController"] = controller
                 }
             case 5:
                 if let cachedController = cachedTabs["BookmarksViewController"] {

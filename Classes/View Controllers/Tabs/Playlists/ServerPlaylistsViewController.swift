@@ -11,7 +11,7 @@ import SnapKit
 import CocoaLumberjackSwift
 import Resolver
 
-@objc final class ServerPlaylistsViewController: UIViewController {
+final class ServerPlaylistsViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var playQueue: PlayQueue

@@ -70,7 +70,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
 }
 
 // TODO: Handle Jukebox mode properly
-@objc extension Store {
+extension Store {
     private var settings: Settings { Resolver.resolve() }
     private var playQueue: PlayQueue { Resolver.resolve() }
     

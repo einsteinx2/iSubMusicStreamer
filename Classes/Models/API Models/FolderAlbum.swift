@@ -8,18 +8,17 @@
 
 import Foundation
 
-@objc(ISMSFolderAlbum) class FolderAlbum: NSObject, NSCopying, Codable {
-    @objc let serverId: Int
-    @objc(folderId) let id: Int
-    @objc let name: String
-    @objc let coverArtId: String?
-    @objc let parentFolderId: Int
-    @objc let tagArtistName: String?
-    @objc let tagAlbumName: String?
-    @objc let playCount: Int
-    @objc let year: Int
+class FolderAlbum: Codable, CustomStringConvertible {
+    let serverId: Int
+    let id: Int
+    let name: String
+    let coverArtId: String?
+    let parentFolderId: Int
+    let tagArtistName: String?
+    let tagAlbumName: String?
+    let playCount: Int
+    let year: Int
     
-    @objc(initWithServerId:folderId:name:coverArtId:parentFolderId:tagArtistName:tagAlbumName:playCount:year:)
     init(serverId: Int, id: Int, name: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int) {
         self.serverId = serverId
         self.id = id
@@ -30,10 +29,9 @@ import Foundation
         self.tagAlbumName = tagAlbumName
         self.playCount = playCount
         self.year = year
-        super.init()
     }
     
-    @objc init(serverId: Int, element: RXMLElement) {
+    init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
         self.id = element.attribute("id").intXML
         self.name = element.attribute("title").stringXML
@@ -43,26 +41,14 @@ import Foundation
         self.tagAlbumName = element.attribute("artist").stringXMLOptional
         self.playCount = element.attribute("playCount").intXML
         self.year = element.attribute("year").intXML
-        super.init()
     }
     
-    @objc func copy(with zone: NSZone? = nil) -> Any {
-        FolderAlbum(serverId: serverId, id: id, name: name, coverArtId: coverArtId, parentFolderId: parentFolderId, tagArtistName: tagArtistName, tagAlbumName: tagAlbumName, playCount: playCount, year: year)
-    }
-    
-    override func isEqual(_ object: Any?) -> Bool {
-        if let object = object as? FolderAlbum {
-            return self === object || (serverId == object.serverId && id == object.id)
-        }
-        return false
-    }
-    
-    @objc override var description: String {
-        "\(super.description): serverId: \(serverId), id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), parentFolderId: \(parentFolderId), tagArtistName: \(tagArtistName ?? "nil"), tagAlbumName: \(tagAlbumName ?? "nil"), playCount: \(playCount), year: \(year)"
+    static func ==(lhs: FolderAlbum, rhs: FolderAlbum) -> Bool {
+        return lhs === rhs || (lhs.serverId == rhs.serverId && lhs.id == rhs.id)
     }
 }
 
-@objc extension FolderAlbum: TableCellModel {
+extension FolderAlbum: TableCellModel {
     var primaryLabelText: String? { return name }
     var secondaryLabelText: String? { return nil }
     var durationLabelText: String? { return nil }

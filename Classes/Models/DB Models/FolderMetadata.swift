@@ -14,12 +14,4 @@ struct FolderMetadata: Codable {
     let folderCount: Int
     let songCount: Int
     let duration: Int
-    
-    init(serverId: Int, parentFolderId: Int, folderCount: Int, songCount: Int, duration: Int) {
-        self.serverId = serverId
-        self.parentFolderId = parentFolderId
-        self.folderCount = folderCount
-        self.songCount = songCount
-        self.duration = duration
-    }
 }

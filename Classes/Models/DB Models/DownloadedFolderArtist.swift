@@ -9,22 +9,17 @@
 import Foundation
 import Resolver
 
-@objc final class DownloadedFolderArtist: NSObject, NSCopying, Codable {
-    @objc let serverId: Int
-    @objc let name: String
+final class DownloadedFolderArtist: Codable, CustomStringConvertible {
+    let serverId: Int
+    let name: String
     
-    @objc init(serverId: Int, name: String) {
+    init(serverId: Int, name: String) {
         self.serverId = serverId
         self.name = name
-        super.init()
     }
     
-    func copy(with zone: NSZone? = nil) -> Any {
-        return DownloadedFolderArtist(serverId: serverId, name: name)
-    }
-    
-    override var description: String {
-        "\(super.description): serverId: \(serverId), name: \(name)"
+    static func ==(lhs: DownloadedFolderArtist, rhs: DownloadedFolderArtist) -> Bool {
+        return lhs === rhs || (lhs.serverId == rhs.serverId && lhs.name == rhs.name)
     }
 }
 

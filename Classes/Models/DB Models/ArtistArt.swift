@@ -8,21 +8,10 @@
 
 import Foundation
 
-@objc final class ArtistArt: NSObject, Codable {
-    @objc let serverId: Int
-    @objc(coverArtId) let id: String
-    @objc let data: Data
+struct ArtistArt: Codable {
+    let serverId: Int
+    let id: String
+    let data: Data
     
-    @objc var image: UIImage? { UIImage(data: data) }
-    
-    @objc init(serverId: Int, id: String, data: Data) {
-        self.serverId = serverId
-        self.id = id
-        self.data = data
-        super.init()
-    }
-    
-    override var description: String {
-        "\(super.description): serverId: \(serverId), id: \(id), data.count: \(data.count)"
-    }
+    var image: UIImage? { UIImage(data: data) }
 }

@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Resolver
 
-@objc final class DownloadsViewController: UIViewController {
+final class DownloadsViewController: UIViewController {
     @Injected private var store: Store
     
     private let tableView = UITableView()

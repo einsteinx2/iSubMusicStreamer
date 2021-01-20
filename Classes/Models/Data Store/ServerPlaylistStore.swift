@@ -72,7 +72,7 @@ extension ServerPlaylist: FetchableRecord, PersistableRecord {
     }
 }
 
-@objc extension Store {
+extension Store {
     func serverPlaylistsCount() -> Int {
         do {
             return try pool.read { db in
@@ -117,7 +117,6 @@ extension ServerPlaylist: FetchableRecord, PersistableRecord {
         }
     }
     
-    @objc(serverPlaylistWithServerId:serverPlaylistId:)
     func serverPlaylist(serverId: Int, id: Int) -> ServerPlaylist? {
         do {
             return try pool.read { db in

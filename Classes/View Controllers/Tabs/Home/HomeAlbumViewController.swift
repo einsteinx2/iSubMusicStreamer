@@ -9,7 +9,7 @@
 import UIKit
 import Resolver
 
-class HomeAlbumViewController: UIViewController {
+final class HomeAlbumViewController: UIViewController {
     @Injected private var settings: Settings
     
     var modifier = ""

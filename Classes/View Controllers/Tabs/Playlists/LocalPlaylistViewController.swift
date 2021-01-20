@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Resolver
 
-@objc final class LocalPlaylistViewController: UIViewController {
+final class LocalPlaylistViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
@@ -18,7 +18,7 @@ import Resolver
     
     private let tableView = UITableView()
     
-    @objc init(localPlaylist: LocalPlaylist) {
+    init(localPlaylist: LocalPlaylist) {
         self.localPlaylist = localPlaylist
         super.init(nibName: nil, bundle: nil)
     }

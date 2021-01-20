@@ -114,7 +114,7 @@ extension Store {
 //        }
 //    }
     
-    @objc func downloadedFolderArtists(serverId: Int) -> [DownloadedFolderArtist] {
+    func downloadedFolderArtists(serverId: Int) -> [DownloadedFolderArtist] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -149,7 +149,7 @@ extension Store {
 //        }
 //    }
     
-    @objc func downloadedFolderAlbums(serverId: Int, level: Int, parentPathComponent: String) -> [DownloadedFolderAlbum] {
+    func downloadedFolderAlbums(serverId: Int, level: Int, parentPathComponent: String) -> [DownloadedFolderAlbum] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -251,11 +251,11 @@ extension Store {
         }
     }
     
-    @objc func songsRecursive(downloadedFolderArtist: DownloadedFolderArtist) -> [Song] {
+    func songsRecursive(downloadedFolderArtist: DownloadedFolderArtist) -> [Song] {
         return songsRecursive(serverId: downloadedFolderArtist.serverId, level: 0, parentPathComponent: downloadedFolderArtist.name)
     }
     
-    @objc func songsRecursive(downloadedFolderAlbum: DownloadedFolderAlbum) -> [Song] {
+    func songsRecursive(downloadedFolderAlbum: DownloadedFolderAlbum) -> [Song] {
         return songsRecursive(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level, parentPathComponent: downloadedFolderAlbum.name)
     }
     
@@ -409,11 +409,11 @@ extension Store {
         }
     }
     
-    @objc func deleteDownloadedSongs(downloadedFolderArtist: DownloadedFolderArtist) -> Bool {
+    func deleteDownloadedSongs(downloadedFolderArtist: DownloadedFolderArtist) -> Bool {
         return deleteDownloadedSongs(serverId: downloadedFolderArtist.serverId, level: 0)
     }
     
-    @objc func deleteDownloadedSongs(downloadedFolderAlbum: DownloadedFolderAlbum) -> Bool {
+    func deleteDownloadedSongs(downloadedFolderAlbum: DownloadedFolderAlbum) -> Bool {
         return deleteDownloadedSongs(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level)
     }
     

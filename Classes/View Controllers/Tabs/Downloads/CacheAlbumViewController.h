@@ -1,29 +1,29 @@
+////
+////  CacheAlbumsViewController.h
+////  iSub
+////
+////  Created by Ben Baron on 6/16/10.
+////  Copyright 2010 Ben Baron. All rights reserved.
+////
 //
-//  CacheAlbumsViewController.h
-//  iSub
+//#import <UIKit/UIKit.h>
 //
-//  Created by Ben Baron on 6/16/10.
-//  Copyright 2010 Ben Baron. All rights reserved.
+//@class ISMSSong, DownloadedFolderAlbum, DownloadedSong;
+//@interface CacheAlbumViewController : UITableViewController 
 //
-
-#import <UIKit/UIKit.h>
-
-@class ISMSFolderAlbum, ISMSSong, DownloadedFolderAlbum, DownloadedSong;
-@interface CacheAlbumViewController : UITableViewController 
-
-//@property (nonatomic, copy) NSString *artistName;
-//@property (nonatomic, strong) NSMutableArray<NSArray*> *albums;
-//@property (nonatomic, strong) NSMutableArray<NSArray*> *songs;
-//@property (nonatomic, strong) NSArray *sectionInfo;
-//@property (nonatomic, strong) NSArray *segments;
-
-
-@property (nonatomic) NSInteger serverId;
-@property (nonatomic) NSInteger level;
-@property (nonatomic) NSString *parentPathComponent;
-@property (nonatomic, strong) NSArray<DownloadedFolderAlbum*> *downloadedFolderAlbums;
-@property (nonatomic, strong) NSArray<DownloadedSong*> *downloadedSongs;
-
-- (instancetype)initWithServerId:(NSInteger)serverId level:(NSInteger)level parentPathComponent:(NSString *)parentPathComponent;
-
-@end
+////@property (nonatomic, copy) NSString *artistName;
+////@property (nonatomic, strong) NSMutableArray<NSArray*> *albums;
+////@property (nonatomic, strong) NSMutableArray<NSArray*> *songs;
+////@property (nonatomic, strong) NSArray *sectionInfo;
+////@property (nonatomic, strong) NSArray *segments;
+//
+//
+//@property (nonatomic) NSInteger serverId;
+//@property (nonatomic) NSInteger level;
+//@property (nonatomic) NSString *parentPathComponent;
+//@property (nonatomic, strong) NSArray<DownloadedFolderAlbum*> *downloadedFolderAlbums;
+//@property (nonatomic, strong) NSArray<DownloadedSong*> *downloadedSongs;
+//
+//- (instancetype)initWithServerId:(NSInteger)serverId level:(NSInteger)level parentPathComponent:(NSString *)parentPathComponent;
+//
+//@end

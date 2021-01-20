@@ -8,21 +8,9 @@
 
 import Foundation
 
-@objc final class RootListMetadata: NSObject, Codable {
-    @objc let serverId: Int
-    @objc let mediaFolderId: Int
-    @objc let itemCount: Int
-    @objc let reloadDate: Date
-    
-    @objc init(serverId: Int, mediaFolderId: Int, itemCount: Int, reloadDate: Date) {
-        self.serverId = serverId
-        self.mediaFolderId = mediaFolderId
-        self.itemCount = itemCount
-        self.reloadDate = reloadDate
-        super.init()
-    }
-    
-    override var description: String {
-        "\(super.description): serverId: \(serverId), mediaFolderId: \(mediaFolderId), itemCount: \(itemCount), reloadDate: \(reloadDate)"
-    }
+struct RootListMetadata: Codable {
+    let serverId: Int
+    let mediaFolderId: Int
+    let itemCount: Int
+    let reloadDate: Date
 }

@@ -13,7 +13,7 @@ import Resolver
 
 // TODO: Add bitrate and file type labels
 // TODO: Add bookmark button
-@objc final class PlayerViewController: UIViewController {
+final class PlayerViewController: UIViewController {
     @Injected private var settings: Settings
     @Injected private var jukebox: Jukebox
     @Injected private var audioEngine: AudioEngine

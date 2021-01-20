@@ -9,7 +9,7 @@
 import UIKit
 import Resolver
 
-@objc final class TagArtistViewController: UIViewController {
+final class TagArtistViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
@@ -21,7 +21,7 @@ import Resolver
     
     private let tableView = UITableView()
     
-    @objc init(tagArtist: TagArtist) {
+    init(tagArtist: TagArtist) {
         self.tagArtist = tagArtist
         super.init(nibName: nil, bundle: nil)
     }

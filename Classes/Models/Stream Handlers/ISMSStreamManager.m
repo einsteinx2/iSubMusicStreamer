@@ -200,7 +200,7 @@ LOG_LEVEL_ISUB_DEFAULT
             if (!handler.mySong.isFullyCached && !handler.mySong.isTempCached && !([cacheQueueManagerS.currentQueuedSong isEqual:handler.mySong] && cacheQueueManagerS.isQueueDownloading))
             {
                 DDLogInfo(@"[ISMSStreamManager] Removing song from cached songs table: %@", handler.mySong);
-                [handler.mySong removeFromDownloads];
+                (void)[handler.mySong removeFromDownloads];
             }
 			//[handler.mySong removeFromCachedSongsTable];
 		}
@@ -280,7 +280,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (!handler.mySong.isFullyCached && !handler.mySong.isTempCached && !([cacheQueueManagerS.currentQueuedSong isEqual:handler.mySong] && cacheQueueManagerS.isQueueDownloading))
         {
             DDLogInfo(@"[ISMSStreamManager] Removing song from cached songs table: %@", handler.mySong);
-            [handler.mySong removeFromDownloads];
+            (void)[handler.mySong removeFromDownloads];
         }
         
         if (index < self.handlerStack.count) {

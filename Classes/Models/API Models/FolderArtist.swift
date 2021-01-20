@@ -8,43 +8,29 @@
 
 import Foundation
 
-@objc(ISMSFolderArtist) final class FolderArtist: NSObject, NSCopying, Codable {
-    @objc let serverId: Int
-    @objc(folderId) let id: Int
-    @objc let name: String
+final class FolderArtist: Codable, CustomStringConvertible {
+    let serverId: Int
+    let id: Int
+    let name: String
     
-    @objc(initWithServerId:folderId:name:)
     init(serverId: Int, id: Int, name: String) {
         self.serverId = serverId
         self.id = id
         self.name = name
-        super.init()
     }
     
-    @objc init(serverId: Int, element: RXMLElement) {
+    init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
         self.id =  element.attribute("id").intXML
         self.name = element.attribute("name").stringXML
-        super.init()
     }
     
-    @objc func copy(with zone: NSZone? = nil) -> Any {
-        FolderArtist(serverId: serverId, id: id, name: name)
-    }
-    
-    override func isEqual(_ object: Any?) -> Bool {
-        if let object = object as? FolderArtist {
-            return self === object || (serverId == object.serverId && id == object.id)
-        }
-        return false
-    }
-    
-    @objc override var description: String {
-        "\(super.description): serverId: \(serverId), id: \(id), name: \(name)"
+    static func ==(lhs: FolderArtist, rhs: FolderArtist) -> Bool {
+        return lhs === rhs || (lhs.serverId == rhs.serverId && lhs.id == rhs.id)
     }
 }
 
-@objc extension FolderArtist: TableCellModel {
+extension FolderArtist: TableCellModel {
     var primaryLabelText: String? { return name }
     var secondaryLabelText: String? { return nil }
     var durationLabelText: String? { return nil }

@@ -9,51 +9,38 @@
 import Foundation
 import InflectorKit
 
-@objc(ISMSTagArtist) final class TagArtist: NSObject, Artist, NSCopying, Codable {
-    @objc let serverId: Int
-    @objc(artistId) let id: Int
-    @objc let name: String
-    @objc let coverArtId: String?
-    @objc let artistImageUrl: String?
-    @objc let albumCount: Int
+final class TagArtist: Artist, Codable, CustomStringConvertible {
+    let serverId: Int
+    let id: Int
+    let name: String
+    let coverArtId: String?
+    let artistImageUrl: String?
+    let albumCount: Int
     
-    @objc init(serverId: Int, id: Int, name: String, coverArtId: String?, artistImageUrl: String?, albumCount: Int) {
+    init(serverId: Int, id: Int, name: String, coverArtId: String?, artistImageUrl: String?, albumCount: Int) {
         self.serverId = serverId
         self.id = id
         self.name = name
         self.coverArtId = coverArtId
         self.artistImageUrl = artistImageUrl
         self.albumCount = albumCount
-        super.init()
     }
     
-    @objc init(serverId: Int, element: RXMLElement) {
+    init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
         self.id = element.attribute("id").intXML
         self.name = element.attribute("name").stringXML
         self.coverArtId = element.attribute("coverArt").stringXMLOptional
         self.artistImageUrl = element.attribute("artistImageUrl").stringXMLOptional
         self.albumCount = element.attribute("albumCount").intXML
-        super.init()
     }
     
-    @objc func copy(with zone: NSZone? = nil) -> Any {
-        TagArtist(serverId: serverId, id: id, name: name, coverArtId: coverArtId, artistImageUrl: artistImageUrl, albumCount: albumCount)
-    }
-    
-    override func isEqual(_ object: Any?) -> Bool {
-        if let object = object as? TagArtist {
-            return self === object || (serverId == object.serverId && id == object.id)
-        }
-        return false
-    }
-    
-    @objc override var description: String {
-        "\(super.description): serverId: \(serverId), id: \(id), name: \(name), coverArtId: \(coverArtId ?? "nil"), artistImageUrl: \(artistImageUrl ?? "nil"), albumCount: \(albumCount)"
+    static func ==(lhs: TagArtist, rhs: TagArtist) -> Bool {
+        return lhs === rhs || (lhs.serverId == rhs.serverId && lhs.id == rhs.id)
     }
 }
 
-@objc extension TagArtist: TableCellModel {
+extension TagArtist: TableCellModel {
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? { "\(albumCount) \("Album".pluralize(amount: albumCount))" }
     var durationLabelText: String? { nil }

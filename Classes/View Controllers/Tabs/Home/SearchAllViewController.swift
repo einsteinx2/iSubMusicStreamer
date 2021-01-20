@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc class SearchAllViewController: UIViewController {
+final class SearchAllViewController: UIViewController {
     private var cellNames = [String]()
     
     private let tableView = UITableView()

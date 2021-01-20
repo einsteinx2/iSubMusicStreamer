@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-@objc final class LocalPlaylist: NSObject, NSCopying, Codable {
+final class LocalPlaylist: Codable, CustomStringConvertible {
     struct Default {
         static let playQueueId = 1
         static let shuffleQueueId = 2
@@ -18,30 +18,18 @@ import Resolver
         static let maxDefaultId = jukeboxShuffleQueueId
     }
     
-    @objc(playlistId) let id: Int
-    @objc var name: String
-    @objc var songCount: Int
+    let id: Int
+    var name: String
+    var songCount: Int
     
-    @objc init(id: Int, name: String, songCount: Int) {
+    init(id: Int, name: String, songCount: Int) {
         self.id = id
         self.name = name
         self.songCount = songCount
-        super.init()
     }
     
-    func copy(with zone: NSZone? = nil) -> Any {
-        LocalPlaylist(id: id, name: name, songCount: songCount)
-    }
-    
-    override func isEqual(_ object: Any?) -> Bool {
-        if let object = object as? LocalPlaylist {
-            return self === object || id == object.id
-        }
-        return false
-    }
-    
-    override var description: String {
-        "\(super.description): id: \(id), name: \(name), songCount: \(songCount)"
+    static func ==(lhs: LocalPlaylist, rhs: LocalPlaylist) -> Bool {
+        return lhs === rhs || (lhs.id == rhs.id)
     }
 }
 

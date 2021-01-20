@@ -16,7 +16,7 @@ enum SearchType: Int {
     case songs   = 2
 }
 
-class SearchSongsViewController: UIViewController {
+final class SearchSongsViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var jukebox: Jukebox

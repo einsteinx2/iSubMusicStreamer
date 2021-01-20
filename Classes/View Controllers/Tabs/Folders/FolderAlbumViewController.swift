@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Resolver
 
-@objc final class FolderAlbumViewController: UIViewController {
+final class FolderAlbumViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
@@ -27,19 +27,19 @@ import Resolver
     
     private let tableView = UITableView()
     
-    @objc var hasLoaded: Bool { metadata != nil }
-    @objc var folderCount: Int { metadata?.folderCount ?? 0 }
-    @objc var songCount: Int { metadata?.songCount ?? 0 }
-    @objc var duration: Int { metadata?.duration ?? 0 }
+    var hasLoaded: Bool { metadata != nil }
+    var folderCount: Int { metadata?.folderCount ?? 0 }
+    var songCount: Int { metadata?.songCount ?? 0 }
+    var duration: Int { metadata?.duration ?? 0 }
     
-    @objc init(folderArtist: FolderArtist) {
+    init(folderArtist: FolderArtist) {
         self.folderArtist = folderArtist
         self.folderAlbum = nil
         self.parentFolderId = folderArtist.id
         super.init(nibName: nil, bundle: nil)
     }
     
-    @objc init(folderAlbum: FolderAlbum) {
+    init(folderAlbum: FolderAlbum) {
         self.folderArtist = nil
         self.folderAlbum = folderAlbum
         self.parentFolderId = folderAlbum.id
