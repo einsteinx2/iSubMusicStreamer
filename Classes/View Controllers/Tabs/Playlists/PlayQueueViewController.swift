@@ -25,21 +25,21 @@ import Resolver
     }
     
     private func registerForNotifications() {
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(selectRow), name: ISMSNotification_BassInitialized)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(selectRow), name: ISMSNotification_BassFreed)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(selectRow), name: ISMSNotification_CurrentPlaylistIndexChanged)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(selectRow), name: ISMSNotification_CurrentPlaylistShuffleToggled)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxSongInfoUpdated), name: ISMSNotification_JukeboxSongInfo)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(songsQueued), name: ISMSNotification_CurrentPlaylistSongsQueued)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(selectRow), name: Notifications.bassInitialized)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(selectRow), name: Notifications.bassFreed)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(selectRow), name: Notifications.currentPlaylistIndexChanged)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(selectRow), name: Notifications.currentPlaylistShuffleToggled)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxSongInfoUpdated), name: Notifications.jukeboxSongInfo)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(songsQueued), name: Notifications.currentPlaylistSongsQueued)
     }
     
     private func unregisterForNotifications() {
-        NotificationCenter.removeObserverOnMainThread(self, name: ISMSNotification_BassInitialized)
-        NotificationCenter.removeObserverOnMainThread(self, name: ISMSNotification_BassFreed)
-        NotificationCenter.removeObserverOnMainThread(self, name: ISMSNotification_CurrentPlaylistIndexChanged)
-        NotificationCenter.removeObserverOnMainThread(self, name: ISMSNotification_CurrentPlaylistShuffleToggled)
-        NotificationCenter.removeObserverOnMainThread(self, name: ISMSNotification_JukeboxSongInfo)
-        NotificationCenter.removeObserverOnMainThread(self, name: ISMSNotification_CurrentPlaylistSongsQueued)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.bassInitialized)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.bassFreed)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.currentPlaylistIndexChanged)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.currentPlaylistShuffleToggled)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.jukeboxSongInfo)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.currentPlaylistSongsQueued)
     }
     
     override func viewDidLoad() {
@@ -293,7 +293,7 @@ extension PlayQueueViewController: SaveEditHeaderDelegate {
             }
             
             if !settings.isJukeboxEnabled {
-                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistOrderChanged)
+                NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistOrderChanged)
             }
             
             registerForNotifications()

@@ -14,6 +14,7 @@
 #import "AudioEngine.h"
 #import "SavedSettings.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 #import <stdlib.h>
 
 //CLASS IMPLEMENTATIONS:
@@ -176,8 +177,8 @@ typedef struct {
 	
 	[self changeType:settingsS.currentVisualizerType];
 	
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(stopEqDisplay) name:UIApplicationWillResignActiveNotification];
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(startEqDisplay) name:UIApplicationDidBecomeActiveNotification];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(stopEqDisplay) name:UIApplicationWillResignActiveNotification object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(startEqDisplay) name:UIApplicationDidBecomeActiveNotification object:nil];
 	
 	return self;
 }

@@ -58,8 +58,8 @@ final class TagAlbumViewController: UIViewController {
         addShowPlayerButton()
         tableView.reloadData()
         
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadData), name: ISMSNotification_CurrentPlaylistIndexChanged)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadData), name: ISMSNotification_SongPlaybackStarted)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadData), name: Notifications.currentPlaylistIndexChanged)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadData), name: Notifications.songPlaybackStarted)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -67,8 +67,8 @@ final class TagAlbumViewController: UIViewController {
         
         cancelLoad()
         
-        NotificationCenter.removeObserverOnMainThread(self, name: ISMSNotification_CurrentPlaylistIndexChanged)
-        NotificationCenter.removeObserverOnMainThread(self, name: ISMSNotification_SongPlaybackStarted)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.currentPlaylistIndexChanged)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.songPlaybackStarted)
     }
     
     // Autolayout solution described here: https://medium.com/@aunnnn/table-header-view-with-autolayout-13de4cfc4343

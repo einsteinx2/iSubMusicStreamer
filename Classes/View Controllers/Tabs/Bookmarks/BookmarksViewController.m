@@ -49,7 +49,7 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	    
-    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -413,7 +413,7 @@
 //	
 //	PlayQueue.shared.currentIndex = playlistIndex;
 //	
-//	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+//	[NSNotificationCenter postNotificationToMainThreadWithName:Notifications.currentPlaylistSongsQueued];
 //		
 //	[self showPlayer];
 //	

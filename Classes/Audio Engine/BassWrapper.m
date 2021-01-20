@@ -55,7 +55,7 @@ static NSUInteger _bassOutputBufferLengthMillis = 0;
 	
 	//[audioEngineS startEmptyPlayer];
     
-	//[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_BassInitialized];
+	//[NSNotificationCenter postNotificationToMainThreadWithName:Notifications.bassInitialized];
 }
 
 + (void)bassInit

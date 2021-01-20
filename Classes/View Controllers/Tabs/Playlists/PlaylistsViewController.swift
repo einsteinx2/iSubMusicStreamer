@@ -29,7 +29,7 @@ import SnapKit
             make.trailing.equalToSuperview().offset(-5)
         }
         
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification.rawValue)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification)
     }
     
     deinit {

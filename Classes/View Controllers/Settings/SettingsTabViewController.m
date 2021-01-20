@@ -149,7 +149,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			
             if (UIDevice.isPad) {
                 // Update the quick skip buttons in the player with the new values on iPad since player is always visible
-                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_QuickSkipSecondsSettingChanged];
+                [NSNotificationCenter postOnMainThreadWithName:Notifications.quickSkipSecondsSettingChanged object:nil userInfo:nil];
             }
 		} else if (sender == self.maxVideoBitrate3GSegmentedControl) {
             settingsS.maxVideoBitrate3G = self.maxVideoBitrate3GSegmentedControl.selectedSegmentIndex;

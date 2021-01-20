@@ -129,7 +129,7 @@ struct SongLoader {
                 streamManager.fillStreamQueue(isStarted)
             }
             playQueue.playSong(position: 0)
-            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_ShowPlayer)
+            NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
         finishLoading()
     }
@@ -147,7 +147,7 @@ struct SongLoader {
                 streamManager.fillStreamQueue(isStarted)
             }
             playQueue.playSong(position: 0)
-            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_ShowPlayer)
+            NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
         finishLoading()
     }

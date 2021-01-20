@@ -57,7 +57,7 @@ import CocoaLumberjackSwift
 //            [self playSongAtPosition:@(index)];
 //            self.isPlaying = YES;
 //        } else {
-//            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackEnded];
+//            [NSNotificationCenter postNotificationToMainThreadWithName:Notifications.songPlaybackEnded];
 //            [self stop];
 //            self.isPlaying = NO;
 //        }
@@ -186,8 +186,8 @@ import CocoaLumberjackSwift
                         }
                     }
                     
-                    NotificationCenter.postNotificationToMainThread(name: ISMSNotification_SongPlaybackStarted)
-                    NotificationCenter.postNotificationToMainThread(name: ISMSNotification_JukeboxSongInfo)
+                    NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
+                    NotificationCenter.postOnMainThread(name: Notifications.jukeboxSongInfo)
                 }
                 
                 self.getInfo()
@@ -216,7 +216,7 @@ import CocoaLumberjackSwift
                 if code == 50 {
                     // User is not authorized to control the jukebox
                     settings.isJukeboxEnabled = false
-                    NotificationCenter.postNotificationToMainThread(name: ISMSNotification_JukeboxDisabled)
+                    NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
                 }
                 
                 DispatchQueue.main.async {

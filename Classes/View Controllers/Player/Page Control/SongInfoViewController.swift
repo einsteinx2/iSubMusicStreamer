@@ -56,13 +56,13 @@ final class SongInfoViewController: UIViewController {
         super.viewWillAppear(animated)
         updateSongInfo()
         startUpdatingRealtimeBitrate()
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_SongPlaybackStarted)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: Notifications.songPlaybackStarted)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         stopUpdatingRealtimeBitrate()
-        NotificationCenter.removeObserverOnMainThread(self, name: ISMSNotification_SongPlaybackStarted)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.songPlaybackStarted)
     }
     
     deinit {

@@ -127,9 +127,9 @@ final class CacheStatusViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(cacheSongObjects), name: ISMSNotification_SongPlaybackStarted)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(cacheSongObjects), name: ISMSNotification_SongPlaybackEnded)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(cacheSongObjects), name: ISMSNotification_CurrentPlaylistIndexChanged)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(cacheSongObjects), name: Notifications.songPlaybackStarted)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(cacheSongObjects), name: Notifications.songPlaybackEnded)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(cacheSongObjects), name: Notifications.currentPlaylistIndexChanged)
         cacheSongObjects()
         startUpdatingStats()
     }

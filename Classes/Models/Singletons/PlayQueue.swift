@@ -48,7 +48,7 @@ import CocoaLumberjackSwift
     @objc var repeatMode: RepeatMode = .none {
         didSet {
             if repeatMode != oldValue {
-                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_RepeatModeChanged)
+                NotificationCenter.postOnMainThread(name: Notifications.repeatModeChanged)
                 
                 let repeatType: MPRepeatType
                 switch repeatMode {
@@ -85,7 +85,7 @@ import CocoaLumberjackSwift
             }
             
             if indexChanged {
-                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistIndexChanged)
+                NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistIndexChanged)
             }
         }
     }
@@ -227,7 +227,7 @@ import CocoaLumberjackSwift
         return DispatchQueue.mainSyncSafe {
             if !currentSong.isVideo {
                 // Remove the video player if this is not a video
-                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_RemoveVideoPlayer)
+                NotificationCenter.postOnMainThread(name: Notifications.removeVideoPlayer)
             }
             
             if settings.isJukeboxEnabled {
@@ -240,7 +240,7 @@ import CocoaLumberjackSwift
             } else {
                 streamManager.removeAllStreamsExcept(for: currentSong)
                 if currentSong.isVideo {
-                    NotificationCenter.postNotificationToMainThread(name: ISMSNotification_PlayVideo, userInfo: ["song": currentSong])
+                    NotificationCenter.postOnMainThread(name: Notifications.playVideo, userInfo: ["song": currentSong])
                 } else {
                     startSong()
                 }
@@ -337,7 +337,7 @@ import CocoaLumberjackSwift
         DispatchQueue.mainSyncSafe {
             // Destroy the streamer/video player to start a new song
             audioEngine.player?.stop()
-            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_RemoveVideoPlayer)
+            NotificationCenter.postOnMainThread(name: Notifications.removeVideoPlayer)
             
             guard currentSong != nil else { return }
             

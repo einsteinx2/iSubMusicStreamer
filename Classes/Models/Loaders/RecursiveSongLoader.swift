@@ -25,13 +25,13 @@ import Resolver
     private var folderIds = [Int]()
     private var tagArtistIds = [Int]()
     
-    @objc init(folderId: Int, callback: LoaderCallback?) {
+    @objc init(folderId: Int, callback: LoaderCallback? = nil) {
         self.folderIds.append(folderId)
         self.callback = callback
         super.init()
     }
     
-    @objc init(tagArtistId: Int, callback: LoaderCallback?) {
+    @objc init(tagArtistId: Int, callback: LoaderCallback? = nil) {
         self.tagArtistIds.append(tagArtistId)
         self.callback = callback
         super.init()
@@ -168,7 +168,7 @@ import Resolver
     
     private func finishLoad() {
         if isQueue {
-            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistSongsQueued)
+            NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
             
 //            if Settings.shared().isJukeboxEnabled {
 //                Jukebox.shared().clearPlaylist()

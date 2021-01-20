@@ -29,7 +29,7 @@ import SnapKit
         tableView.refreshControl = RefreshControl { [unowned self] in
             loadData()
         }
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification.rawValue)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification)
     }
     
     deinit {

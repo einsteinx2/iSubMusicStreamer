@@ -9,7 +9,7 @@
 #ifndef iSub_Defines_h
 #define iSub_Defines_h
 
-#import "ISMSNotificationNames.h"
+#import <Foundation/Foundation.h>
 
 #ifdef BETA
     // Log everything in beta builds unless SILENT is enabled, then log nothing (NSLogs and files using LOG_LEVEL_ISUB_DEBUG only)

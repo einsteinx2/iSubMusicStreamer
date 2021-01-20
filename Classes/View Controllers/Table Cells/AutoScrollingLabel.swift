@@ -99,8 +99,8 @@ private let labelGap = 25.0
             make.leading.equalTo(label1.snp.trailing).offset(labelGap)
         }
 
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification.rawValue)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification.rawValue)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification)
     }
     
     required init?(coder: NSCoder) {

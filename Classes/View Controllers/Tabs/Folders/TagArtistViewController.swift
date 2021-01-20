@@ -57,8 +57,8 @@ import Resolver
         addShowPlayerButton()
         tableView.reloadData()
         
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadData), name: ISMSNotification_CurrentPlaylistIndexChanged)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadData), name: ISMSNotification_SongPlaybackStarted)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadData), name: Notifications.currentPlaylistIndexChanged)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadData), name: Notifications.songPlaybackStarted)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -66,8 +66,8 @@ import Resolver
         
         cancelLoad()
         
-        NotificationCenter.removeObserverOnMainThread(self, name: ISMSNotification_CurrentPlaylistIndexChanged)
-        NotificationCenter.removeObserverOnMainThread(self, name: ISMSNotification_SongPlaybackStarted)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.currentPlaylistIndexChanged)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.songPlaybackStarted)
     }
     
     @objc private func reloadData() {

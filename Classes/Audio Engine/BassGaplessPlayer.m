@@ -48,9 +48,9 @@ LOG_LEVEL_ISUB_DEFAULT
         _visualizer = [[BassVisualizer alloc] init];
 		
 		// Keep track of the playlist index
-        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(updatePlaylistIndex:) name:ISMSNotification_CurrentPlaylistOrderChanged];
-        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(updatePlaylistIndex:) name:ISMSNotification_CurrentPlaylistIndexChanged];
-        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(updatePlaylistIndex:) name:ISMSNotification_CurrentPlaylistShuffleToggled];
+        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(updatePlaylistIndex:) name:Notifications.currentPlaylistOrderChanged object:nil];
+        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(updatePlaylistIndex:) name:Notifications.currentPlaylistIndexChanged object:nil];
+        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(updatePlaylistIndex:) name:Notifications.currentPlaylistShuffleToggled object:nil];
 	}
 	
     return self;
@@ -311,7 +311,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 		}
 		
 		// The stream should end, because there is no more music to play
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackEnded];
+		[NSNotificationCenter postOnMainThreadWithName:Notifications.songPlaybackEnded object:nil userInfo:nil];
 		
         DDLogInfo(@"[BassGaplessPlayer] Stream not active, freeing BASS");
         [EX2Dispatch runInMainThreadAsync:^{
@@ -378,7 +378,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
         self.currentPlaylistIndex = [self nextIndex];*/
 
 		// Send song end notification
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackEnded];
+		[NSNotificationCenter postOnMainThreadWithName:Notifications.songPlaybackEnded object:nil userInfo:nil];
 		
 		if (self.isPlaying)
 		{
@@ -387,7 +387,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 			self.startByteOffset = 0;
 			
 			// Send song start notification
-			[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackStarted];
+			[NSNotificationCenter postOnMainThreadWithName:Notifications.songPlaybackStarted object:nil userInfo:nil];
             
             // Mark the last played time in the database for cache cleanup
             (void)[Store.shared updateWithPlayedDate:[NSDate date] song:self.currentStream.song];
@@ -688,7 +688,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
             DDLogError(@"[BassGaplessPlayer] Failed to deactivate audio session for audio playback: %@", audioSessionError.localizedDescription);
         }
 		
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_BassFreed];		
+		[NSNotificationCenter postOnMainThreadWithName:Notifications.bassFreed object:nil userInfo:nil];
 	}
 }
 
@@ -908,7 +908,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 				 //[self prepareNextSongStream];
 				 
 				 // Notify listeners that playback has started
-				 [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackStarted];
+				 [NSNotificationCenter postOnMainThreadWithName:Notifications.songPlaybackStarted object:nil userInfo:nil];
 				 
                  (void)[Store.shared updateWithPlayedDate:[NSDate date] song:aSong];
 			 }
@@ -1057,7 +1057,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 	{
 		BASS_Pause();
 		self.isPlaying = NO;
-        [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackEnded];
+        [NSNotificationCenter postOnMainThreadWithName:Notifications.songPlaybackEnded object:nil userInfo:nil];
 	}
     
     [self cleanup];
@@ -1078,7 +1078,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 	{
 		BASS_Pause();
 		self.isPlaying = NO;
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackPaused];
+		[NSNotificationCenter postOnMainThreadWithName:Notifications.songPlaybackPaused object:nil userInfo:nil];
 	} 
 	else 
 	{
@@ -1102,7 +1102,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 		{
 			BASS_Start();
 			self.isPlaying = YES;
-			[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_SongPlaybackStarted];
+			[NSNotificationCenter postOnMainThreadWithName:Notifications.songPlaybackStarted object:nil userInfo:nil];
 		}
 	}
     

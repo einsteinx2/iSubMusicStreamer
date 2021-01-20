@@ -19,7 +19,7 @@ final class ServerChecker: NSObject {
     
     override init() {
         super.init()
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(checkServer), name: ISMSNotification_CheckServer)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(checkServer), name: Notifications.checkServer)
     }
     
     deinit {
@@ -47,7 +47,7 @@ final class ServerChecker: NSObject {
                     }
                     
                     if self.settings.isOfflineMode {
-                        NotificationCenter.postNotificationToMainThread(name: ISMSNotification_WillEnterOnlineMode)
+                        NotificationCenter.postOnMainThread(name: Notifications.willEnterOnlineMode)
                         // TODO: change the setting value here?
                     }
                     
@@ -58,7 +58,7 @@ final class ServerChecker: NSObject {
                 } else {
                     if !self.settings.isOfflineMode {
                         DDLogVerbose("[ServerChecker] Loading failed for loading type \(statusLoader.type), entering offline mode. Error: \(error?.localizedDescription ?? "unknown")")
-                        NotificationCenter.postNotificationToMainThread(name: ISMSNotification_WillEnterOfflineMode)
+                        NotificationCenter.postOnMainThread(name: Notifications.willEnterOfflineMode)
                         // TODO: change the setting value here?
                     }
                 }

@@ -36,9 +36,6 @@ NS_SWIFT_NAME(Cache)
 - (void)clearTempCache;
 - (void)findCacheSize;
 
-+ (void)setAllSongsToBackup;
-+ (void)setAllSongsToNotBackup;
-
 @end
 
 NS_ASSUME_NONNULL_END

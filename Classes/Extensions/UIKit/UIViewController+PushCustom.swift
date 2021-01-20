@@ -19,7 +19,7 @@ import UIKit
     
     func showPlayer() {
         if UIDevice.isPad() {
-            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_ShowPlayer)
+            NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         } else {
             let controller = PlayerViewController()
             controller.hidesBottomBarWhenPushed = true

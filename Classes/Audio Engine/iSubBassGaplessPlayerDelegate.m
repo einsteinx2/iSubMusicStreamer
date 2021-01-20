@@ -19,8 +19,8 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(grabCurrentPlaylistIndex:) name:ISMSNotification_CurrentPlaylistOrderChanged];
-        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(grabCurrentPlaylistIndex:) name:ISMSNotification_CurrentPlaylistShuffleToggled];
+        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(grabCurrentPlaylistIndex:) name:Notifications.currentPlaylistOrderChanged object:nil];
+        [NSNotificationCenter addObserverOnMainThread:self selector:@selector(grabCurrentPlaylistIndex:) name:Notifications.currentPlaylistShuffleToggled object:nil];
     }
     return self;
 }

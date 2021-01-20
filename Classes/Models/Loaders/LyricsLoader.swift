@@ -35,11 +35,11 @@ import Resolver
         let root = RXMLElement(fromXMLData: data)
         if !root.isValid {
             informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_LyricsFailed)
+            NotificationCenter.postOnMainThread(name: Notifications.lyricsFailed)
         } else {
             if let error = root.child("error"), error.isValid {
                 informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
-                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_LyricsFailed)
+                NotificationCenter.postOnMainThread(name: Notifications.lyricsFailed)
             } else if let lyricsElement = root.child("lyrics"), lyricsElement.isValid {
                 let lyrics = Lyrics(tagArtistName: tagArtistName, songTitle: songTitle, element: lyricsElement)
                 if lyrics.lyricsText != "" && store.add(lyrics: lyrics) {
@@ -55,12 +55,12 @@ import Resolver
     }
     
     override func informDelegateLoadingFinished() {
-        NotificationCenter.postNotificationToMainThread(name: ISMSNotification_LyricsDownloaded)
+        NotificationCenter.postOnMainThread(name: Notifications.lyricsDownloaded)
         super.informDelegateLoadingFinished()
     }
     
     override func informDelegateLoadingFailed(error: Error?) {
-        NotificationCenter.postNotificationToMainThread(name: ISMSNotification_LyricsFailed)
+        NotificationCenter.postOnMainThread(name: Notifications.lyricsFailed)
         super.informDelegateLoadingFailed(error: error)
     }
 }

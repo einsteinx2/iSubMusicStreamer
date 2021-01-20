@@ -27,14 +27,14 @@ import Foundation
         self.init(urlString: server.url.absoluteString, username: server.username, password: server.password, delegate: delegate)
     }
     
-    @objc init(urlString: String, username: String, password: String, delegate: APILoaderDelegate?) {
+    @objc init(urlString: String, username: String, password: String, delegate: APILoaderDelegate? = nil) {
         self.urlString = urlString
         self.username = username
         self.password = password
         super.init(delegate: delegate)
     }
     
-    @objc init(urlString: String, username: String, password: String, callback: LoaderCallback?) {
+    @objc init(urlString: String, username: String, password: String, callback: LoaderCallback? = nil) {
         self.urlString = urlString
         self.username = username
         self.password = password
@@ -53,7 +53,7 @@ import Foundation
         let root = RXMLElement(fromXMLData: data)
         if !root.isValid {
             informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_ServerCheckFailed)
+            NotificationCenter.postOnMainThread(name: Notifications.serverCheckFailed)
         } else {
             if root.tag == "subsonic-response" {
                 self.versionString = root.attribute("version")
@@ -85,21 +85,21 @@ import Foundation
                     if code == 40 {
                         // Incorrect credentials, so fail
                         informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_IncorrectCredentials)))
-                        NotificationCenter.postNotificationToMainThread(name: ISMSNotification_ServerCheckFailed)
+                        NotificationCenter.postOnMainThread(name: Notifications.serverCheckFailed)
                     } else {
                         // This is a Subsonic server, so pass
                         informDelegateLoadingFinished()
-                        NotificationCenter.postNotificationToMainThread(name: ISMSNotification_ServerCheckPassed)
+                        NotificationCenter.postOnMainThread(name: Notifications.serverCheckPassed)
                     }
                 } else {
                     // This is a Subsonic server, so pass
                     informDelegateLoadingFinished()
-                    NotificationCenter.postNotificationToMainThread(name: ISMSNotification_ServerCheckPassed)
+                    NotificationCenter.postOnMainThread(name: Notifications.serverCheckPassed)
                 }
             } else {
                 // This is not a Subsonic server, so fail
                 informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotASubsonicServer)))
-                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_ServerCheckFailed)
+                NotificationCenter.postOnMainThread(name: Notifications.serverCheckFailed)
             }
         }
     }

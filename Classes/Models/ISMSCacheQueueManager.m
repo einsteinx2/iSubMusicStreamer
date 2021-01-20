@@ -95,7 +95,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		
 		// Notify any tables
 		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@(self.currentQueuedSong.songId) forKey:@"songId"];
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CacheQueueSongDownloaded userInfo:userInfo];
+        [NSNotificationCenter postOnMainThreadWithName:Notifications.cacheQueueSongDownloaded object:nil userInfo:userInfo];
 		
 		// Continue the queue
 		[self startDownloadQueue];
@@ -143,7 +143,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		[self.currentStreamHandler start];
 	}
     
-    [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CacheQueueStarted];
+    [NSNotificationCenter postOnMainThreadWithName:Notifications.cacheQueueStarted object:nil userInfo:nil];
 }
 
 - (void)resumeDownloadQueue:(NSNumber *)byteOffse {
@@ -162,7 +162,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self.currentStreamHandler cancel];
 	self.currentStreamHandler = nil;
     
-    [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CacheQueueStopped];
+    [NSNotificationCenter postOnMainThreadWithName:Notifications.cacheQueueStopped object:nil userInfo:nil];
 }
 
 - (void)removeCurrentSong {
@@ -196,7 +196,7 @@ LOG_LEVEL_ISUB_DEFAULT
         [SlidingNotification showOnMainWindowWithMessage:NSLocalizedString(@"Song failed to download", @"Download manager, download failed message")];
 		
 		// Tried max number of times so remove
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CacheQueueSongFailed];
+		[NSNotificationCenter postOnMainThreadWithName:Notifications.cacheQueueSongFailed object:nil userInfo:nil];
         (void)[Store.shared removeFromDownloadQueueWithSong:self.currentQueuedSong];
 		self.currentStreamHandler = nil;
 		[self startDownloadQueue];
@@ -253,7 +253,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		
 		// Tell the cache queue view to reload
 		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@(handler.mySong.songId) forKey:@"songId"];
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CacheQueueSongDownloaded userInfo:userInfo];
+        [NSNotificationCenter postOnMainThreadWithName:Notifications.cacheQueueSongDownloaded object:nil userInfo:userInfo];
 		
 		// Download the next song in the queue
         self.isQueueDownloading = NO;

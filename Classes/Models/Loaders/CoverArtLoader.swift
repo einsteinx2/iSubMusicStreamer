@@ -14,9 +14,9 @@ import Resolver
     @Injected private var store: Store
     @Injected private var settings: Settings
     
-    private struct Notifications {
-        static let downloadFinished = "CoverArtLoader.downloadFinished"
-        static let downloadFailed = "CoverArtLoader.downloadFailed"
+    private struct PrivateNotifications {
+        static let downloadFinished = Notification.Name("CoverArtLoader.downloadFinished")
+        static let downloadFailed = Notification.Name("CoverArtLoader.downloadFailed")
     }
         
     private static var syncObject = NSObject()
@@ -39,8 +39,8 @@ import Resolver
         self.isLarge = isLarge
         super.init(delegate: delegate)
         
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(coverArtDownloadFinished(notification:)), name: Notifications.downloadFinished)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(coverArtDownloadFailed(notification:)), name: Notifications.downloadFailed)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(coverArtDownloadFinished(notification:)), name: PrivateNotifications.downloadFinished)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(coverArtDownloadFailed(notification:)), name: PrivateNotifications.downloadFailed)
     }
     
     deinit {
@@ -60,7 +60,7 @@ import Resolver
     @objc private func coverArtDownloadFinished(notification: Notification) {
         if let id = notification.object as? String, id == mergedId {
             if isLarge {
-                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_AlbumArtLargeDownloaded)
+                NotificationCenter.postOnMainThread(name: Notifications.albumArtLargeDownloaded)
             }
             informDelegateLoadingFinished()
         }
@@ -100,11 +100,11 @@ import Resolver
         let coverArt = CoverArt(serverId: serverId, id: coverArtId, isLarge: isLarge, data: data)
         if coverArt.image == nil {
             DDLogError("[SUSCoverArtLoader] art loading failed for server: \(serverId) id: \(coverArtId)")
-            NotificationCenter.postNotificationToMainThread(name: Notifications.downloadFailed, object: mergedId)
+            NotificationCenter.postOnMainThread(name: PrivateNotifications.downloadFailed, object: mergedId)
         } else {
             DDLogInfo("[SUSCoverArtLoader] art loading completed for server: \(serverId) id: \(coverArtId)")
             _ = store.add(coverArt: coverArt)
-            NotificationCenter.postNotificationToMainThread(name: Notifications.downloadFinished, object: mergedId)
+            NotificationCenter.postOnMainThread(name: PrivateNotifications.downloadFinished, object: mergedId)
         }
     }
     
@@ -119,6 +119,6 @@ import Resolver
         synchronized(Self.syncObject) {
             _ = Self.loadingIds.remove(mergedId)
         }
-        NotificationCenter.postNotificationToMainThread(name: Notifications.downloadFinished, object: coverArtId, userInfo: nil)
+        NotificationCenter.postOnMainThread(name: PrivateNotifications.downloadFinished, object: coverArtId, userInfo: nil)
     }
 }

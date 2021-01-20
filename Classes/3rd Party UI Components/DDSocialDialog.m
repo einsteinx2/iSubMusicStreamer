@@ -190,9 +190,9 @@ static CGFloat kDDSocialDialogPadding = 10;
         }];
     }];
 	
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(deviceOrientationDidChange:) name:@"UIDeviceOrientationDidChangeNotification"];
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(keyboardDidShow:) name:@"UIKeyboardDidShowNotification"];
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(keyboardWillHide:) name:@"UIKeyboardWillHideNotification"];	
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(deviceOrientationDidChange:) name:@"UIDeviceOrientationDidChangeNotification" object:nil];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(keyboardDidShow:) name:@"UIKeyboardDidShowNotification" object:nil];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(keyboardWillHide:) name:@"UIKeyboardWillHideNotification" object:nil];
 }
 
 - (void)cancel {
@@ -222,9 +222,9 @@ static CGFloat kDDSocialDialogPadding = 10;
 
 - (void)postDismissCleanup {
 	
-	[NSNotificationCenter removeObserverOnMainThread:self name:@"UIDeviceOrientationDidChangeNotification"];
-	[NSNotificationCenter removeObserverOnMainThread:self name:@"UIKeyboardDidShowNotification"];
-	[NSNotificationCenter removeObserverOnMainThread:self name:@"UIKeyboardWillHideNotification"];
+    [NSNotificationCenter removeObserverOnMainThread:self name:@"UIDeviceOrientationDidChangeNotification" object:nil];
+    [NSNotificationCenter removeObserverOnMainThread:self name:@"UIKeyboardDidShowNotification" object:nil];
+    [NSNotificationCenter removeObserverOnMainThread:self name:@"UIKeyboardWillHideNotification" object:nil];
 	[self removeFromSuperview];
 	[touchInterceptingControl_ removeFromSuperview];
 }

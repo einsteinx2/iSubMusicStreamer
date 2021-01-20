@@ -36,9 +36,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.tableView.allowsSelectionDuringEditing = YES;
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
 	
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:@"reloadServerList"];
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(showSaveButton) name:@"showSaveButton"];
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(switchServer:) name:@"switchServer"];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:@"reloadServerList" object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(showSaveButton) name:@"showSaveButton" object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(switchServer:) name:@"switchServer" object:nil];
 	
 	self.title = @"Servers";
     if (self != self.navigationController.viewControllers.firstObject) {
@@ -230,7 +230,7 @@ LOG_LEVEL_ISUB_DEFAULT
         
 //		SceneDelegate.shared.window.backgroundColor = viewObjectsS.windowColor;
 		
-		[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ServerSwitched];
+		[NSNotificationCenter postOnMainThreadWithName:Notifications.serverSwitched object:nil userInfo:nil];
 	}
 }
 

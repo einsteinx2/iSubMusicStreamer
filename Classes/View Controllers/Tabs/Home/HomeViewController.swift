@@ -101,10 +101,10 @@ final class HomeViewController: UIViewController {
     }
     
     private func registerNotifications() {
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxOff), name: ISMSNotification_JukeboxDisabled)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(initSongInfo), name: ISMSNotification_SongPlaybackStarted)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(initSongInfo), name: ISMSNotification_ServerSwitched)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification.rawValue)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxOff), name: Notifications.jukeboxDisabled)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(initSongInfo), name: Notifications.songPlaybackStarted)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(initSongInfo), name: Notifications.serverSwitched)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification)
     }
     
     deinit {
@@ -175,14 +175,14 @@ final class HomeViewController: UIViewController {
             if settings.isJukeboxEnabled {
                 self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-off"))
                 settings.isJukeboxEnabled = false
-                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_JukeboxDisabled)
+                NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
                 Flurry.logEvent("JukeboxDisabled")
             } else {
                 self.audioEngine.player?.stop()
                 self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-on"))
                 settings.isJukeboxEnabled = true
                 self.jukebox.getInfo()
-                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_JukeboxEnabled)
+                NotificationCenter.postOnMainThread(name: Notifications.jukeboxEnabled)
                 Flurry.logEvent("JukeboxEnabled")
             }
             self.initSongInfo()

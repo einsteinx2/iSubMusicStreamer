@@ -48,7 +48,6 @@
 
 #import "NSString+time.h"
 #import "UIDevice+Info.h"
-#import "NSNotificationCenter+MainThread.h"
 #import "NSString+FileSize.h"
 #import "NSError+ISMSError.h"
 #import "GTMNSString+HTML.h"

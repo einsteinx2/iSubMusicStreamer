@@ -22,8 +22,8 @@ final class VideoPlayer: NSObject {
     
     override init() {
         super.init()
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(playVideo(notification:)), name: ISMSNotification_PlayVideo)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(removeVideoPlayer(notification:)), name: ISMSNotification_RemoveVideoPlayer)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(playVideo(notification:)), name: Notifications.playVideo)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(removeVideoPlayer(notification:)), name: Notifications.removeVideoPlayer)
     }
     
     deinit {

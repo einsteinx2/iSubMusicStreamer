@@ -123,7 +123,7 @@ LOG_LEVEL_ISUB_DEFAULT
     DDLogVerbose(@"[CacheSingleton] Total cache size was found to be: %llu", size);
 	_cacheSize = size;
 	
-	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CacheSizeChecked];
+	[NSNotificationCenter postOnMainThreadWithName:Notifications.cacheSizeChecked object:nil userInfo:nil];
 }
 
 - (void)checkCache {

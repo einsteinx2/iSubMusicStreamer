@@ -452,37 +452,37 @@ import Resolver
     }
     
     private func registerForNotifications() {
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_JukeboxSongInfo)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_CurrentPlaylistIndexChanged)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_ServerSwitched)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_CurrentPlaylistShuffleToggled)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: ISMSNotification_ShowPlayer)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: Notifications.jukeboxSongInfo)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: Notifications.currentPlaylistIndexChanged)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: Notifications.serverSwitched)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: Notifications.currentPlaylistShuffleToggled)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: Notifications.showPlayer)
         
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: ISMSNotification_JukeboxSongInfo)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: ISMSNotification_JukeboxDisabled)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: ISMSNotification_JukeboxEnabled)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.jukeboxSongInfo)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.jukeboxDisabled)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.jukeboxEnabled)
         
         if UIDevice.isPad() {
-            NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateQuickSkipButtons), name: ISMSNotification_QuickSkipSecondsSettingChanged)
+            NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateQuickSkipButtons), name: Notifications.quickSkipSecondsSettingChanged)
         }
         
-        notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackEnded) { [unowned self] _ in
+        notificationObservers.append(NotificationCenter.addObserverOnMainThread(name: Notifications.songPlaybackEnded) { [unowned self] _ in
             let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
             self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
             self.playPauseButton.tintColor = self.iconDefaultColor
         })
-        notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackPaused, object: nil) { [unowned self] _ in
+        notificationObservers.append(NotificationCenter.addObserverOnMainThread(name: Notifications.songPlaybackPaused, object: nil) { [unowned self] _ in
             let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
             self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
             self.playPauseButton.tintColor = self.iconDefaultColor
         })
-        notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_SongPlaybackStarted, object: nil) { [unowned self] _ in
+        notificationObservers.append(NotificationCenter.addObserverOnMainThread(name: Notifications.songPlaybackStarted, object: nil) { [unowned self] _ in
             let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
             self.playPauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: playButtonConfig), for: .normal)
             self.playPauseButton.tintColor = self.iconDefaultColor
         })
         
-        notificationObservers.append(NotificationCenter.addObserverOnMainThreadForName(ISMSNotification_CurrentPlaylistShuffleToggled) { [unowned self] _ in
+        notificationObservers.append(NotificationCenter.addObserverOnMainThread(name: Notifications.currentPlaylistShuffleToggled) { [unowned self] _ in
             self.updateShuffleButtonIcon()
             self.updateSongInfo()
             HUD.hide()

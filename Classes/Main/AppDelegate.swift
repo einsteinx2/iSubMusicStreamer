@@ -72,7 +72,7 @@ import CocoaLumberjackSwift
         
         // Check battery state and register for notifications
         UIDevice.current.isBatteryMonitoringEnabled = true
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(batteryStateChanged), name: UIDevice.batteryStateDidChangeNotification.rawValue)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(batteryStateChanged), name: UIDevice.batteryStateDidChangeNotification)
         batteryStateChanged()
         
         // Request authorization to send background notifications
@@ -285,7 +285,7 @@ import CocoaLumberjackSwift
 //        [cacheQueueManagerS startDownloadQueue];
 //
 //        if (UIDevice.isPad) {
-//            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
+//            [NSNotificationCenter postNotificationToMainThreadWithName:Notifications.showPlayer];
 //        } else {
 //    //        [viewObjectsS orderMainTabBarController];
 //            self.window.rootViewController = self.mainTabBarController;
@@ -323,7 +323,7 @@ import CocoaLumberjackSwift
 //        [databaseS setupDatabases];
 //
 //        if (UIDevice.isPad) {
-//            [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_ShowPlayer];
+//            [NSNotificationCenter postNotificationToMainThreadWithName:Notifications.showPlayer];
 //        } else {
 //            self.currentTabBarController = self.offlineTabBarController;
 //            self.window.rootViewController = self.offlineTabBarController;

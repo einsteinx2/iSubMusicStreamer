@@ -330,7 +330,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
             // Set player defaults
             playQueue.isShuffle = false
             
-            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistSongsQueued)
+            NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
             
             // Start the song
             return playQueue.playSong(position: position)
@@ -343,7 +343,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
             // Set player defaults
             playQueue.isShuffle = false
             
-            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CurrentPlaylistSongsQueued)
+            NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
             
             // Start the song
             return playQueue.playSong(position: position)

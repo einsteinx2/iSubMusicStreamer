@@ -36,7 +36,7 @@ final class ChatViewController: UIViewController {
         
         addHeader()
                 
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification.rawValue)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification)
     }
     
     override func viewWillAppear(_ animated: Bool) {

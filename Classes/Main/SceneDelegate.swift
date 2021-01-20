@@ -167,9 +167,9 @@ import CocoaLumberjackSwift
         serverChecker.checkServer()
         
         // TODO: Handle these properly for multiple scenes/windows
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(showPlayer), name: ISMSNotification_ShowPlayer)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxToggled), name: ISMSNotification_JukeboxDisabled)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxToggled), name: ISMSNotification_JukeboxEnabled)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(showPlayer), name: Notifications.showPlayer)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxToggled), name: Notifications.jukeboxDisabled)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxToggled), name: Notifications.jukeboxEnabled)
         
         // Recover current state if player was interrupted
         streamManager.setup()

@@ -19,7 +19,7 @@ class NetworkMonitor: NSObject {
     
     override init() {
         super.init()
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reachabilityChanged(notification:)), name: NSNotification.Name.reachabilityChanged.rawValue)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reachabilityChanged(notification:)), name: NSNotification.Name.reachabilityChanged)
         wifiReach.startNotifier()
         
         // TODO: Why was I calling this? I think it's to prime the values but I don't think it's necessary...
@@ -50,18 +50,18 @@ class NetworkMonitor: NSObject {
             // Change over to offline mode
             if !settings.isOfflineMode {
                 DDLogVerbose("[NetworkMonitor] Reachability changed to NotReachable, entering offline mode");
-                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_WillEnterOfflineMode)
+                NotificationCenter.postOnMainThread(name: Notifications.willEnterOfflineMode)
             }
         } else if status == ReachableViaWWAN && settings.isDisableUsageOver3G {
             // Change over to offline mode
             if !settings.isOfflineMode {
                 DDLogVerbose("[NetworkMonitor] Reachability changed to ReachableViaWWAN and usage over 3G is disabled, entering offline mode");
-                NotificationCenter.postNotificationToMainThread(name: ISMSNotification_WillEnterOfflineMode)
+                NotificationCenter.postOnMainThread(name: Notifications.willEnterOfflineMode)
                 SlidingNotification.showOnMainWindow(message: "You have chosen to disable usage over cellular in settings and are no longer on Wifi. Entering offline mode.")
             }
         } else {
             // Check that the server is available before entering online mode
-            NotificationCenter.postNotificationToMainThread(name: ISMSNotification_CheckServer)
+            NotificationCenter.postOnMainThread(name: Notifications.checkServer)
         }
     }
 }

@@ -243,8 +243,8 @@ extension ServerEditViewController: APILoaderDelegate {
             _ = store.add(server: server)
         }
         
-        NotificationCenter.postNotificationToMainThread(name: "reloadServerList")
-        NotificationCenter.postNotificationToMainThread(name: "showSaveButton")
+        NotificationCenter.postOnMainThread(name: Notification.Name("reloadServerList"))
+        NotificationCenter.postOnMainThread(name: Notification.Name("showSaveButton"))
         
         self.dismiss(animated: true, completion: nil)
         
@@ -257,7 +257,7 @@ extension ServerEditViewController: APILoaderDelegate {
             userInfo["isVideoSupported"] = statusLoader.isVideoSupported
             userInfo["isNewSearchSupported"] = statusLoader.isNewSearchSupported
         }
-        NotificationCenter.postNotificationToMainThread(name: "switchServer", userInfo: userInfo)
+        NotificationCenter.postOnMainThread(name: Notification.Name("switchServer"), userInfo: userInfo)
     }
     
     func loadingFailed(loader: APILoader?, error: Error?) {

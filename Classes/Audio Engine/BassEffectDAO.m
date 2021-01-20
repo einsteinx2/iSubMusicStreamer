@@ -12,6 +12,7 @@
 #import "AudioEngine.h"
 #import "SavedSettings.h"
 #import "EX2Kit.h"
+#import "Swift.h"
 
 @implementation BassEffectDAO
 
@@ -244,7 +245,7 @@ static CGPoint CGPointFromString(NSString *string)
 			[audioEngineS.equalizer toggleEqualizer];
 	}
 	
-	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_BassEffectPresetLoaded];
+	[NSNotificationCenter postOnMainThreadWithName:Notifications.bassEffectPresetLoaded object:nil userInfo:nil];
 }
 
 - (void)selectPresetAtIndex:(NSUInteger)presetIndex

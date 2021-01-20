@@ -50,21 +50,21 @@
 
 - (void)registerForNotifications {
 	// Set notification receiver for when queued songs finish downloading to reload the table
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:ISMSNotification_StreamHandlerSongDownloaded];
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:ISMSNotification_CacheQueueSongDownloaded];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:Notifications.streamHandlerSongDownloaded object:nil];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:Notifications.cacheQueueSongDownloaded object:nil];
 	
 	// Set notification receiver for when cached songs are deleted to reload the table
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:ISMSNotification_CachedSongDeleted];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:Notifications.cachedSongDeleted object:nil];
 	
 	// Set notification receiver for when network status changes to reload the table
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(segmentAction:) name:kReachabilityChangedNotification];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(segmentAction:) name:kReachabilityChangedNotification object:nil];
 }
 
 - (void)unregisterForNotifications {
-	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_StreamHandlerSongDownloaded];
-	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CacheQueueSongDownloaded];
-	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_CachedSongDeleted];
-	[NSNotificationCenter removeObserverOnMainThread:self name:kReachabilityChangedNotification];
+	[NSNotificationCenter removeObserverOnMainThread:self name:Notifications.streamHandlerSongDownloaded object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:Notifications.cacheQueueSongDownloaded object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:Notifications.cachedSongDeleted object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:kReachabilityChangedNotification object:nil];
 }
 
 - (void)viewDidLoad  {
@@ -120,7 +120,7 @@
     // Setup the update timer
     [self updateQueueDownloadProgress];
     
-    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification];
+    [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -250,7 +250,7 @@
 //		[jukeboxS playSongAtPosition:@(0)];
 //    }
 //    
-//	[NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+//	[NSNotificationCenter postNotificationToMainThreadWithName:Notifications.currentPlaylistSongsQueued];
 //	
 //	// Must do UI stuff in main thread
 //	[HUD hide];
@@ -1060,7 +1060,7 @@
 //                    }
 //                }
 //
-//                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CurrentPlaylistSongsQueued];
+//                [NSNotificationCenter postNotificationToMainThreadWithName:Notifications.currentPlaylistSongsQueued];
 //
 //                [EX2Dispatch runInMainThreadAsync:^{
 //                    [HUD hide];
@@ -1074,7 +1074,7 @@
                 [cacheS findCacheSize];
 
                 // Reload the cached songs table
-                [NSNotificationCenter postNotificationToMainThreadWithName:ISMSNotification_CachedSongDeleted];
+                [NSNotificationCenter postOnMainThreadWithName:Notifications.cachedSongDeleted object:nil userInfo:nil];
 
                 if (!cacheQueueManagerS.isQueueDownloading) {
                     [cacheQueueManagerS startDownloadQueue];

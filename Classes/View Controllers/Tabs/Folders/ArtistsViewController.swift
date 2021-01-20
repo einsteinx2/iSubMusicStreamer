@@ -57,9 +57,9 @@ import CocoaLumberjackSwift
             tableView.setContentOffset(CGPoint.zero, animated: false)
         }
         
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(serverSwitched), name: ISMSNotification_ServerSwitched)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateFolders), name: ISMSNotification_ServerCheckPassed)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification.rawValue)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(serverSwitched), name: Notifications.serverSwitched)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateFolders), name: Notifications.serverCheckPassed)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification)
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -48,9 +48,9 @@ final class LyricsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateLyricsLabel()
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateLyricsLabel), name: ISMSNotification_SongPlaybackStarted)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateLyricsLabel), name: ISMSNotification_LyricsDownloaded)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateLyricsLabel), name: ISMSNotification_LyricsFailed)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateLyricsLabel), name: Notifications.songPlaybackStarted)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateLyricsLabel), name: Notifications.lyricsDownloaded)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateLyricsLabel), name: Notifications.lyricsFailed)
     }
     
     override func viewDidDisappear(_ animated: Bool) {

@@ -219,8 +219,8 @@
     
     self.navigationController.navigationBar.hidden = UIInterfaceOrientationIsLandscape(UIApplication.orientation);
 	
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(createEqViews) name:ISMSNotification_BassEffectPresetLoaded];
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(dismissPicker) name:@"hidePresetPicker"];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(createEqViews) name:Notifications.bassEffectPresetLoaded object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(dismissPicker) name:@"hidePresetPicker" object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -290,8 +290,8 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_BassEffectPresetLoaded];
-	[NSNotificationCenter removeObserverOnMainThread:self name:@"hidePresetPicker"];
+	[NSNotificationCenter removeObserverOnMainThread:self name:Notifications.bassEffectPresetLoaded object:nil];
+	[NSNotificationCenter removeObserverOnMainThread:self name:@"hidePresetPicker" object:nil];
 	[self removeEqViews];
 	[self.equalizerView stopEqDisplay];
 	[self.equalizerView removeFromSuperview];
