@@ -324,7 +324,6 @@ extension Store {
         return true
     }
     
-    // TODO: Move this to a single transaction
     func playSong(position: Int, songIds: [Int], serverId: Int) -> Song? {
         if clearAndQueue(songIds: songIds, serverId: serverId) {
             // Set player defaults
@@ -349,6 +348,12 @@ extension Store {
             return playQueue.playSong(position: position)
         }
         return nil
+    }
+    
+    // TODO: Improve performance by preventing the need to convert to song objects
+    func playSong(position: Int, downloadedSongs: [DownloadedSong]) -> Song? {
+        let songs = downloadedSongs.compactMap { song(downloadedSong: $0) }
+        return playSong(position: position, songs: songs)
     }
     
     func move(songAtPosition from: Int, toPosition to: Int, localPlaylistId: Int) -> Bool {

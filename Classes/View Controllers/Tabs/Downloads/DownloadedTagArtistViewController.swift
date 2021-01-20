@@ -1,8 +1,8 @@
 //
-//  DownloadedTagAlbumsViewController.swift
+//  DownloadedTagArtistViewController.swift
 //  iSub
 //
-//  Created by Benjamin Baron on 1/15/21.
+//  Created by Benjamin Baron on 1/20/21.
 //  Copyright © 2021 Ben Baron. All rights reserved.
 //
 
@@ -11,25 +11,35 @@ import Resolver
 import SnapKit
 import CocoaLumberjackSwift
 
-// TODO: Make sure to call the getAlbum API for all downloaded songs or they won't show up here
-final class DownloadedTagAlbumsViewController: AbstractDownloadsViewController {
+// TODO: Make sure to call the getArtist API for all downloaded songs or they won't show up here
+final class DownloadedTagArtistViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
         
+    private let downloadedTagArtist: DownloadedTagArtist
     private var downloadedTagAlbums = [DownloadedTagAlbum]()
+    
+    init(downloadedTagArtist: DownloadedTagArtist) {
+        self.downloadedTagArtist = downloadedTagArtist
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("unimplemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Downloaded Albums"
+        title = downloadedTagArtist.name
     }
     
     @objc override func reloadTable() {
-        downloadedTagAlbums = store.downloadedTagAlbums(serverId: settings.currentServerId)
+        downloadedTagAlbums = store.downloadedTagAlbums(downloadedTagArtist: downloadedTagArtist)
         super.reloadTable()
     }
 }
 
-extension DownloadedTagAlbumsViewController: UITableViewConfiguration {
+extension DownloadedTagArtistViewController: UITableViewConfiguration {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -48,7 +58,7 @@ extension DownloadedTagAlbumsViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
-        cell.show(cached: false, number: false, art: true, secondary: false, duration: false)
+        cell.show(cached: false, number: false, art: true, secondary: true, duration: false)
         cell.update(model: downloadedTagAlbums[indexPath.row])
         return cell
     }

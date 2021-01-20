@@ -10,56 +10,20 @@ import UIKit
 import SnapKit
 import Resolver
 
-final class DownloadsViewController: UIViewController {
+final class DownloadsViewController: AbstractDownloadsViewController {//UIViewController {
     @Injected private var store: Store
-    
-    private let tableView = UITableView()
-    
+        
     // TODO: Separately track downloaded folders, artists, albums, and songs to show the appropriate table cells
     private var downloadedSongsCount = 0
     
-    private func registerForNotifications() {
-        // Set notification receiver for when queued songs finish downloading to reload the table
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.streamHandlerSongDownloaded)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.cacheQueueSongDownloaded)
-        
-        // Set notification receiver for when cached songs are deleted to reload the table
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.cachedSongDeleted)
-        
-        // Set notification receiver for when network status changes to reload the table
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name:NSNotification.Name.reachabilityChanged)
-    }
-    
-    private func unregisterForNotifications() {
-        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.streamHandlerSongDownloaded)
-        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.cacheQueueSongDownloaded)
-        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.cachedSongDeleted)
-        NotificationCenter.removeObserverOnMainThread(self, name: NSNotification.Name.reachabilityChanged)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.backgroundColor = Colors.background
         title = "Downloads"
-        
-        setupDefaultTableView(tableView)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        registerForNotifications()
-        reloadTable()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        unregisterForNotifications()
-    }
-    
-    @objc private func reloadTable() {
+    @objc override func reloadTable() {
         downloadedSongsCount = store.downloadedSongsCount()
-        tableView.reloadData()
+        super.reloadTable()
     }
 }
 

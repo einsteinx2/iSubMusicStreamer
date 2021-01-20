@@ -130,8 +130,10 @@ extension PageControlViewController: UIScrollViewDelegate {
         
         // Switch the indicator when more than 50% of the previous/next page is visible
         let pageWidth = scrollView.bounds.size.width;
-        let page = Int(floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1);
-        self.pageControl.currentPage = page;
+        if pageWidth > 0 {
+            let page = Int(floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1);
+            self.pageControl.currentPage = page;
+        }
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {

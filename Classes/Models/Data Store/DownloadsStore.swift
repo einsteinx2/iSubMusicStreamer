@@ -221,7 +221,33 @@ extension Store {
                 return try SQLRequest<DownloadedTagAlbum>(literal: sql).fetchAll(db)
             }
         } catch {
-            DDLogError("Failed to select all downloaded tag artists for server \(serverId): \(error)")
+            DDLogError("Failed to select all downloaded tag albums for server \(serverId): \(error)")
+            return []
+        }
+    }
+    
+    // TODO: Check query plan and try different join orders and group by tables to see which is fastest (i.e. TagAlbum.id vs Song.tagAlbumId)
+    func downloadedTagAlbums(downloadedTagArtist: DownloadedTagArtist) -> [DownloadedTagAlbum] {
+        do {
+            return try pool.read { db in
+                let sql: SQLLiteral = """
+                    SELECT \(TagAlbum.self).*
+                    FROM \(DownloadedSong.self)
+                    JOIN \(Song.self)
+                    ON \(DownloadedSong.self).serverId = \(Song.self).serverId
+                        AND \(DownloadedSong.self).songId = \(Song.self).id
+                    JOIN \(TagAlbum.self)
+                    ON \(DownloadedSong.self).serverId = \(TagAlbum.self).serverId
+                        AND \(Song.self).tagAlbumId = \(TagAlbum.self).id
+                    WHERE \(DownloadedSong.self).serverId = \(downloadedTagArtist.serverId)
+                        AND \(TagAlbum.self).tagArtistId = \(downloadedTagArtist.id)
+                    GROUP BY \(TagAlbum.self).id
+                    ORDER BY \(TagAlbum.self).name COLLATE NOCASE ASC
+                    """
+                return try SQLRequest<DownloadedTagAlbum>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select all downloaded tag albums for artist \(downloadedTagArtist): \(error)")
             return []
         }
     }
@@ -289,7 +315,7 @@ extension Store {
                     FROM \(DownloadedSong.self)
                     JOIN \(DownloadedSongPathComponent.self)
                     ON \(DownloadedSong.self).serverId = \(DownloadedSongPathComponent.self).serverId
-                        AND \(DownloadedSong.self).songID = \(DownloadedSongPathComponent.self).songId
+                        AND \(DownloadedSong.self).songId = \(DownloadedSongPathComponent.self).songId
                     WHERE \(DownloadedSongPathComponent.self).serverId = \(serverId)
                         AND \(DownloadedSongPathComponent.self).level = \(level)
                         AND \(DownloadedSongPathComponent.self).maxLevel = \(level)
@@ -300,6 +326,27 @@ extension Store {
             }
         } catch {
             DDLogError("Failed to select downloaded songs at level \(level) for server \(serverId): \(error)")
+            return []
+        }
+    }
+    
+    func downloadedSongs(downloadedTagAlbum: DownloadedTagAlbum) -> [DownloadedSong] {
+        do {
+            return try pool.read { db in
+                let sql: SQLLiteral = """
+                    SELECT *
+                    FROM \(DownloadedSong.self)
+                    JOIN \(Song.self)
+                    ON \(DownloadedSong.self).serverId = \(Song.self).serverId
+                        AND \(DownloadedSong.self).songId = \(Song.self).id
+                    WHERE \(Song.self).serverId = \(downloadedTagAlbum.serverId)
+                        AND \(Song.self).tagAlbumId = \(downloadedTagAlbum.id)
+                    ORDER BY \(Song.self).discNumber, \(Song.self).track, \(Song.self).title COLLATE NOCASE
+                    """
+                return try SQLRequest<DownloadedSong>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select downloaded songs for downloaded tag album \(downloadedTagAlbum): \(error)")
             return []
         }
     }

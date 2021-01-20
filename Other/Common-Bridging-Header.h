@@ -23,7 +23,6 @@
 // View Controllers
 #import "EqualizerViewController.h"
 #import "ServerListViewController.h"
-#import "CacheViewController.h"
 #import "BookmarksViewController.h"
 
 // Views

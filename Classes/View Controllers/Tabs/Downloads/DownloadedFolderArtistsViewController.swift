@@ -11,56 +11,23 @@ import Resolver
 import SnapKit
 import CocoaLumberjackSwift
 
-final class DownloadedFolderArtistsViewController: UIViewController {
+final class DownloadedFolderArtistsViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var cache: Cache
     @Injected private var cacheQueue: CacheQueue
-    
-    private let tableView = UITableView()
-    
+        
     private var downloadedFolderArtists = [DownloadedFolderArtist]()
-    
-    private func registerForNotifications() {
-        // Set notification receiver for when queued songs finish downloading to reload the table
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.streamHandlerSongDownloaded)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.cacheQueueSongDownloaded)
-        
-        // Set notification receiver for when cached songs are deleted to reload the table
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.cachedSongDeleted)
-        
-        // Set notification receiver for when network status changes to reload the table
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name:NSNotification.Name.reachabilityChanged)
-    }
-    
-    private func unregisterForNotifications() {
-        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.streamHandlerSongDownloaded)
-        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.cacheQueueSongDownloaded)
-        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.cachedSongDeleted)
-        NotificationCenter.removeObserverOnMainThread(self, name: NSNotification.Name.reachabilityChanged)
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Colors.background
         title = "Downloaded Folders"
-        setupDefaultTableView(tableView)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        registerForNotifications()
-        reloadTable()
-    }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        unregisterForNotifications()
-    }
-    
-    @objc private func reloadTable() {
+    @objc override func reloadTable() {
         downloadedFolderArtists = store.downloadedFolderArtists(serverId: settings.currentServerId)
-        tableView.reloadData()
+        super.reloadTable()
     }
 }
 
@@ -89,7 +56,8 @@ extension DownloadedFolderArtistsViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        let controller = DownloadedFolderAlbumViewController(folderArtist: downloadedFolderArtists[indexPath.row])
+        pushViewControllerCustom(controller)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

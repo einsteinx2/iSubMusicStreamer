@@ -1,8 +1,8 @@
 //
-//  DownloadedTagAlbumsViewController.swift
+//  DownloadedTagAlbumViewController.swift
 //  iSub
 //
-//  Created by Benjamin Baron on 1/15/21.
+//  Created by Benjamin Baron on 1/20/21.
 //  Copyright © 2021 Ben Baron. All rights reserved.
 //
 
@@ -12,30 +12,40 @@ import SnapKit
 import CocoaLumberjackSwift
 
 // TODO: Make sure to call the getAlbum API for all downloaded songs or they won't show up here
-final class DownloadedTagAlbumsViewController: AbstractDownloadsViewController {
+final class DownloadedTagAlbumViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
         
-    private var downloadedTagAlbums = [DownloadedTagAlbum]()
+    private let downloadedTagAlbum: DownloadedTagAlbum
+    private var downloadedSongs = [DownloadedSong]()
+    
+    init(downloadedTagAlbum: DownloadedTagAlbum) {
+        self.downloadedTagAlbum = downloadedTagAlbum
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("unimplemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Downloaded Albums"
+        title = downloadedTagAlbum.name
     }
     
     @objc override func reloadTable() {
-        downloadedTagAlbums = store.downloadedTagAlbums(serverId: settings.currentServerId)
+        downloadedSongs = store.downloadedSongs(downloadedTagAlbum: downloadedTagAlbum)
         super.reloadTable()
     }
 }
 
-extension DownloadedTagAlbumsViewController: UITableViewConfiguration {
+extension DownloadedTagAlbumViewController: UITableViewConfiguration {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return downloadedTagAlbums.count
+        return downloadedSongs.count
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -48,14 +58,22 @@ extension DownloadedTagAlbumsViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
-        cell.show(cached: false, number: false, art: true, secondary: false, duration: false)
-        cell.update(model: downloadedTagAlbums[indexPath.row])
+        if let song = store.song(downloadedSong: downloadedSongs[indexPath.row]) {
+            var showNumber = false
+            if song.track > 0 {
+                showNumber = true
+                cell.number = song.track
+            }
+            cell.show(cached: true, number: showNumber, art: true, secondary: true, duration: true)
+            cell.update(model: song)
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let controller = DownloadedTagAlbumViewController(downloadedTagAlbum: downloadedTagAlbums[indexPath.row])
-        pushViewControllerCustom(controller)
+        if let song = store.playSong(position: indexPath.row, downloadedSongs: downloadedSongs), !song.isVideo {
+            showPlayer()
+        }
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

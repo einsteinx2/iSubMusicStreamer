@@ -11,54 +11,20 @@ import Resolver
 import SnapKit
 import CocoaLumberjackSwift
 
-final class DownloadedSongsViewController: UIViewController {
+final class DownloadedSongsViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
-    private let tableView = UITableView()
-    
     private var downloadedSongs = [DownloadedSong]()
-    
-    private func registerForNotifications() {
-        // Set notification receiver for when queued songs finish downloading to reload the table
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.streamHandlerSongDownloaded)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.cacheQueueSongDownloaded)
-        
-        // Set notification receiver for when cached songs are deleted to reload the table
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.cachedSongDeleted)
-        
-        // Set notification receiver for when network status changes to reload the table
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name:NSNotification.Name.reachabilityChanged)
-    }
-    
-    private func unregisterForNotifications() {
-        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.streamHandlerSongDownloaded)
-        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.cacheQueueSongDownloaded)
-        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.cachedSongDeleted)
-        NotificationCenter.removeObserverOnMainThread(self, name: NSNotification.Name.reachabilityChanged)
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Colors.background
         title = "Downloaded Songs"
-        setupDefaultTableView(tableView)
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        registerForNotifications()
-        reloadTable()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        unregisterForNotifications()
-    }
-    
-    @objc private func reloadTable() {
+
+    @objc override func reloadTable() {
         downloadedSongs = store.downloadedSongs(serverId: settings.currentServerId)
-        tableView.reloadData()
+        super.reloadTable()
     }
 }
 
@@ -89,7 +55,9 @@ extension DownloadedSongsViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        if let song = store.playSong(position: indexPath.row, downloadedSongs: downloadedSongs), !song.isVideo {
+            showPlayer()
+        }
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
