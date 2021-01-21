@@ -9,7 +9,6 @@
 #import "ISMSNSURLSessionStreamHandler.h"
 #import "NSError+ISMSError.h"
 #import "SavedSettings.h"
-#import "CacheSingleton.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 
@@ -42,7 +41,7 @@ LOG_LEVEL_ISUB_DEFAULT
     if (!resume) {
         // Clear temp cache if this is a temp file
         if (self.isTempCache) {
-            [cacheS clearTempCache];
+            [Cache.shared clearTempCache];
         }
     }
     

@@ -13,7 +13,6 @@
 #import "RXMLElement.h"
 #import "ISMSNSURLSessionStreamHandler.h"
 #import "SavedSettings.h"
-#import "CacheSingleton.h"
 #import "ISMSStreamManager.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -64,7 +63,7 @@ LOG_LEVEL_ISUB_DEFAULT
     DDLogInfo(@"[ISMSCacheQueueManager] starting download queue for: %@", self.currentQueuedSong);
 	
 	// For simplicity sake, just make sure we never go under 25 MB and let the cache check process take care of the rest
-	if (cacheS.freeSpace <= 25 * 1024 * 1024) {
+	if (Cache.shared.freeSpace <= 25 * 1024 * 1024) {
 		/*[EX2Dispatch runInMainThread:^
 		 {
 			 [cacheS showNoFreeSpaceMessage:NSLocalizedString(@"Your device has run out of space and cannot download any more music. Please free some space and try again", @"Download manager, device out of space message")];

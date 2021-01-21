@@ -50,6 +50,7 @@
 #import "NSString+FileSize.h"
 #import "NSError+ISMSError.h"
 #import "GTMNSString+HTML.h"
+#import "NSURL+SkipBackupAttribute.h"
 
 /*
  * Singletons
@@ -58,7 +59,6 @@
 #import "SavedSettings.h"
 #import "BassGaplessPlayer.h"
 #import "ISMSStreamManager.h"
-#import "CacheSingleton.h"
 #import "ISMSCacheQueueManager.h"
 
 /*

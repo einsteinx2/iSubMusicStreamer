@@ -8,7 +8,6 @@
 
 #import "SettingsTabViewController.h"
 #import "SavedSettings.h"
-#import "CacheSingleton.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import <Accounts/Accounts.h>
@@ -56,8 +55,8 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.enableNextSongPartialCacheSwitch.on = settingsS.isPartialCacheNextSong;
     self.enableBackupCacheSwitch.on = settingsS.isBackupCacheEnabled;
     [self.cacheSpaceSlider setThumbImage:[UIImage imageNamed:@"controller-slider-thumb"] forState:UIControlStateNormal];
-	self.totalSpace = cacheS.totalSpace;
-	self.freeSpace = cacheS.freeSpace;
+	self.totalSpace = Cache.shared.totalSpace;
+	self.freeSpace = Cache.shared.freeSpace;
 	self.freeSpaceLabel.text = [NSString stringWithFormat:@"Free space: %@", [NSString formatFileSize:self.freeSpace]];
 	self.totalSpaceLabel.text = [NSString stringWithFormat:@"Total space: %@", [NSString formatFileSize:self.totalSpace]];
 	float percentFree = (float) self.freeSpace / (float) self.totalSpace;

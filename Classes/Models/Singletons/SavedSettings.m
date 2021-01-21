@@ -8,7 +8,6 @@
 
 #import "SavedSettings.h"
 #import "BassGaplessPlayer.h"
-#import "CacheSingleton.h"
 #import "ISMSCacheQueueManager.h"
 #import "ISMSServer.h"
 #import "EX2Kit.h"
@@ -471,11 +470,11 @@ LOG_LEVEL_ISUB_DEFAULT
     
     if (isBackupCacheEnabled) {
         //Set all cached songs to removeSkipBackup
-        [CacheSingleton setAllCachedSongsToBackup];
+        [Cache.shared setAllCachedSongsToBackup];
  
     } else {
         // Set all cached songs to removeSkipBackup
-        [CacheSingleton setAllCachedSongsToNotBackup];
+        [Cache.shared setAllCachedSongsToNotBackup];
     }
 }
 
