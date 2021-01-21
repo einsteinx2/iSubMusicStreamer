@@ -14,9 +14,9 @@ import CocoaLumberjackSwift
 // TODO: Refactor this and make sure it works correctly
 // TODO: Refactor this so everything happens in a background thread
 @objc final class Cache: NSObject {
-    @Injected private var settings: Settings
-    @Injected private var store: Store
-    @Injected private var cacheQueue: CacheQueue
+    @LazyInjected private var settings: Settings
+    @LazyInjected private var store: Store
+    @LazyInjected private var cacheQueue: CacheQueue
     
     // Temporary accessor for Objective-C classes using Resolver under the hood
     @objc static var shared: Cache { Resolver.resolve() }

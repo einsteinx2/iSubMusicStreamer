@@ -11,8 +11,8 @@ import Resolver
 import CocoaLumberjackSwift
 
 @objc final class Jukebox: NSObject {
-    private lazy var playQueue: PlayQueue = Resolver.resolve() // Prevent resolve cycle due to Jukebox being included in PlayQueue
-    @Injected private var settings: Settings
+    @LazyInjected private var playQueue: PlayQueue
+    @LazyInjected private var settings: Settings
     
     private(set) var isPlaying = false
     private(set) var currentIndex = -1

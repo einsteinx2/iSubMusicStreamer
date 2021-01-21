@@ -18,11 +18,11 @@ import CocoaLumberjackSwift
 }
 
 @objc final class PlayQueue: NSObject {
-    @Injected private var settings: Settings
-    @Injected private var jukebox: Jukebox
-    @Injected private var streamManager: StreamManager
-    @Injected private var cacheQueue: CacheQueue
-    @Injected private var player: BassGaplessPlayer
+    @LazyInjected private var settings: Settings
+    @LazyInjected private var jukebox: Jukebox
+    @LazyInjected private var streamManager: StreamManager
+    @LazyInjected private var cacheQueue: CacheQueue
+    @LazyInjected private var player: BassGaplessPlayer
     
     // Temporary accessor for Objective-C classes using Resolver under the hood
     @objc static var shared: PlayQueue { Resolver.resolve() }
