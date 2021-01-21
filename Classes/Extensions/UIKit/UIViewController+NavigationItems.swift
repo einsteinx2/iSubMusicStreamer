@@ -10,6 +10,8 @@ import UIKit
 import Resolver
 
 @objc extension UIViewController {
+    private var settings: Settings { Resolver.resolve() }
+    
     @objc func addURLRefBackButton() {
         if AppDelegate.shared.referringAppUrl != nil && SceneDelegate.shared.tabBarController?.selectedIndex != 4 {
             navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: AppDelegate.shared, action: #selector(AppDelegate.backToReferringApp))
@@ -17,7 +19,6 @@ import Resolver
     }
     
     @objc func addShowPlayerButton() {
-        let settings: Settings = Resolver.resolve()
         navigationItem.rightBarButtonItem = nil
         if settings.showPlayerIcon {
             navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "music.quarternote.3"), style: .plain, target: self, action: #selector(showPlayer))

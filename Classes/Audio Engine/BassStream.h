@@ -9,20 +9,22 @@
 #import <Foundation/Foundation.h>
 #import "bass.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class ISMSSong, BassGaplessPlayer;
 @interface BassStream : NSObject
 
-@property (strong, nonatomic) BassGaplessPlayer *player;
+@property (nullable, strong, nonatomic) BassGaplessPlayer *player;
 
 @property (nonatomic) HSTREAM stream;
-@property (nonatomic, copy) ISMSSong *song;
+@property (nullable, nonatomic, copy) ISMSSong *song;
 
-@property (strong, nonatomic) NSFileHandle *fileHandle;
+@property (nullable, strong, nonatomic) NSFileHandle *fileHandle;
 @property BOOL shouldBreakWaitLoop;
 @property BOOL shouldBreakWaitLoopForever;
 @property unsigned long long neededSize;
 @property BOOL isWaiting;
-@property (nonatomic, copy) NSString *writePath;
+@property (nullable, nonatomic, copy) NSString *writePath;
 @property (nonatomic, readonly) unsigned long long localFileSize;
 @property (nonatomic) BOOL isTempCached;
 @property BOOL isSongStarted;
@@ -38,3 +40,5 @@
 @property BOOL isNextSongStreamFailed;
 
 @end
+
+NS_ASSUME_NONNULL_END

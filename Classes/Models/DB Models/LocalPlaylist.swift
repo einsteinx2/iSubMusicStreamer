@@ -34,20 +34,19 @@ final class LocalPlaylist: Codable, CustomStringConvertible {
 }
 
 extension LocalPlaylist: TableCellModel {
+    private var store: Store { Resolver.resolve() }
+    
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? { songCount == 1 ? "1 song" : "\(songCount) songs" }
     var durationLabelText: String? { nil }
     var coverArtId: String? { nil }
     var isCached: Bool { false }
     func download() {
-        let store: Store = Resolver.resolve()
         for position in 0..<self.songCount {
             store.song(localPlaylistId: id, position: position)?.download()
         }
     }
-    
     func queue() {
-        let store: Store = Resolver.resolve()
         for position in 0..<self.songCount {
             store.song(localPlaylistId: id, position: position)?.queue()
         }

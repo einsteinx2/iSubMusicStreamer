@@ -246,14 +246,6 @@ LOG_LEVEL_ISUB_DEFAULT
     return _currentServer != nil ? _currentServer.serverId : -1;
 }
 
-//- (BOOL)currentServerIsVideoSupported {
-//    return _currentServer != nil ? _currentServer.isVideoSupported : NO;
-//}
-//
-//- (BOOL)currentServerIsNewSearchSupported {
-//    return _currentServer != nil ? _currentServer.isNewSearchSupported : NO;
-//}
-
 - (Server *)currentServer {
     return _currentServer;
 }

@@ -10,8 +10,6 @@
 #define iSub_SavedSettings_h
 
 #import "BassEffectDAO.h"
-#import <Accounts/Accounts.h>
-#import <Social/Social.h>
 #import "Defines.h"
 #import "ISMSBassVisualType.h"
 
@@ -35,8 +33,6 @@ NS_SWIFT_NAME(Settings)
 @property (readonly) BOOL showPlayerIcon;
 
 @property (readonly) NSInteger currentServerId;
-//@property (readonly) BOOL currentServerIsVideoSupported;
-//@property (readonly) BOOL currentServerIsNewSearchSupported;
 @property (nullable, strong) Server *currentServer;
 
 // Root Folders Settings

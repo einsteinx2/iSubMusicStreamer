@@ -28,6 +28,8 @@ final class DownloadedFolderAlbum: Codable, CustomStringConvertible {
 }
 
 extension DownloadedFolderAlbum: TableCellModel {
+    private var store: Store { Resolver.resolve() }
+    
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? {
         // TODO: implement this using number of songs downloaded
@@ -36,14 +38,12 @@ extension DownloadedFolderAlbum: TableCellModel {
     var durationLabelText: String? { nil }
     var isCached: Bool { true }
     func download() {
-        let store: Store = Resolver.resolve()
         let songs = store.songsRecursive(serverId: serverId, level: level, parentPathComponent: name)
         for song in songs {
             song.download()
         }
     }
     func queue() {
-        let store: Store = Resolver.resolve()
         let songs = store.songsRecursive(serverId: serverId, level: level, parentPathComponent: name)
         for song in songs {
             song.queue()

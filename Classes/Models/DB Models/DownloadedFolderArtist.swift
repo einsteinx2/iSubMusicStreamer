@@ -24,6 +24,8 @@ final class DownloadedFolderArtist: Codable, CustomStringConvertible {
 }
 
 extension DownloadedFolderArtist: TableCellModel {
+    private var store: Store { Resolver.resolve() }
+    
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? {
         // TODO: implement this using number of subfolders downloaded
@@ -33,14 +35,12 @@ extension DownloadedFolderArtist: TableCellModel {
     var coverArtId: String? { nil }
     var isCached: Bool { true }
     func download() {
-        let store: Store = Resolver.resolve()
         let songs = store.songsRecursive(serverId: serverId, level: 0, parentPathComponent: name)
         for song in songs {
             song.download()
         }
     }
     func queue() {
-        let store: Store = Resolver.resolve()
         let songs = store.songsRecursive(serverId: serverId, level: 0, parentPathComponent: name)
         for song in songs {
             song.queue()

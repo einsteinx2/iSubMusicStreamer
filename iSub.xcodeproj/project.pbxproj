@@ -124,6 +124,8 @@
 		5357CE9425B8D56B00FA825A /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9225B8D56B00FA825A /* Cache.swift */; };
 		5357CE9925B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */; };
 		5357CE9A25B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */; };
+		5357CE9C25B90C5B00FA825A /* Social.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9B25B90C5B00FA825A /* Social.swift */; };
+		5357CE9D25B90C5B00FA825A /* Social.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9B25B90C5B00FA825A /* Social.swift */; };
 		5358083811CEB5F200A09386 /* CacheQueueSongUITableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5358083711CEB5F200A09386 /* CacheQueueSongUITableViewCell.m */; };
 		5359C859256EA8FE00C8F8DC /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359C858256EA8FE00C8F8DC /* ObjC.swift */; };
 		5359C85A256EA8FE00C8F8DC /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359C858256EA8FE00C8F8DC /* ObjC.swift */; };
@@ -498,8 +500,6 @@
 		53FE376C1EA961720058B925 /* NSError+ISMSError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE368B1EA961720058B925 /* NSError+ISMSError.m */; };
 		53FE37881EA961720058B925 /* SavedSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A01EA961720058B925 /* SavedSettings.m */; };
 		53FE378A1EA961720058B925 /* SavedSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A01EA961720058B925 /* SavedSettings.m */; };
-		53FE378E1EA961720058B925 /* SocialSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A41EA961720058B925 /* SocialSingleton.m */; };
-		53FE37901EA961720058B925 /* SocialSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A41EA961720058B925 /* SocialSingleton.m */; };
 		53FE38041EA961970058B925 /* RXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38031EA961970058B925 /* RXMLElement.m */; };
 		53FE38061EA961970058B925 /* RXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38031EA961970058B925 /* RXMLElement.m */; };
 		53FE38861EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38591EA961C80058B925 /* GMAppleDouble+ZKAdditions.m */; };
@@ -684,6 +684,7 @@
 		5354914A11B03FC900928E0F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		5357CE9225B8D56B00FA825A /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+FileSystemAttributes.swift"; sourceTree = "<group>"; };
+		5357CE9B25B90C5B00FA825A /* Social.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Social.swift; sourceTree = "<group>"; };
 		5358083611CEB5F200A09386 /* CacheQueueSongUITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheQueueSongUITableViewCell.h; sourceTree = "<group>"; };
 		5358083711CEB5F200A09386 /* CacheQueueSongUITableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheQueueSongUITableViewCell.m; sourceTree = "<group>"; };
 		5359C854256EA8C400C8F8DC /* ObjcExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjcExceptionCatcher.h; sourceTree = "<group>"; };
@@ -937,8 +938,6 @@
 		53FE368B1EA961720058B925 /* NSError+ISMSError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+ISMSError.m"; sourceTree = "<group>"; };
 		53FE369F1EA961720058B925 /* SavedSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedSettings.h; sourceTree = "<group>"; };
 		53FE36A01EA961720058B925 /* SavedSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SavedSettings.m; sourceTree = "<group>"; };
-		53FE36A31EA961720058B925 /* SocialSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialSingleton.h; sourceTree = "<group>"; };
-		53FE36A41EA961720058B925 /* SocialSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialSingleton.m; sourceTree = "<group>"; };
 		53FE36B51EA961720058B925 /* SUSErrorDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSErrorDomain.h; sourceTree = "<group>"; };
 		53FE38021EA961970058B925 /* RXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXMLElement.h; sourceTree = "<group>"; };
 		53FE38031EA961970058B925 /* RXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXMLElement.m; sourceTree = "<group>"; };
@@ -1474,11 +1473,10 @@
 			children = (
 				53FE369F1EA961720058B925 /* SavedSettings.h */,
 				53FE36A01EA961720058B925 /* SavedSettings.m */,
-				53FE36A31EA961720058B925 /* SocialSingleton.h */,
-				53FE36A41EA961720058B925 /* SocialSingleton.m */,
 				539D331125AB691B00F53797 /* PlayQueue.swift */,
 				53ED673925B7A4550002BFAF /* Jukebox.swift */,
 				5357CE9225B8D56B00FA825A /* Cache.swift */,
+				5357CE9B25B90C5B00FA825A /* Social.swift */,
 			);
 			path = Singletons;
 			sourceTree = "<group>";
@@ -2081,7 +2079,6 @@
 				53E04938255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */,
 				539D32D825A8E07E00F53797 /* Server.swift in Sources */,
 				53D4FCB9259967CF00C6F1AE /* SubfolderLoader.swift in Sources */,
-				53FE378E1EA961720058B925 /* SocialSingleton.m in Sources */,
 				53ED675B25B8B5190002BFAF /* DownloadedTagArtistViewController.swift in Sources */,
 				539D330625AA353C00F53797 /* DownloadedSongPathComponent.swift in Sources */,
 				53ED674025B88B5B0002BFAF /* NotificationCenter+MainThread.swift in Sources */,
@@ -2169,6 +2166,7 @@
 				53FE38AD1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
 				532C625225B62F5800185998 /* NetworkMonitor.swift in Sources */,
 				53D9743A255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */,
+				5357CE9C25B90C5B00FA825A /* Social.swift in Sources */,
 				53D4FCA925993C4E00C6F1AE /* TagArtistLoader.swift in Sources */,
 				531EC86525B220E10076973A /* Colors.swift in Sources */,
 				539D331225AB691B00F53797 /* PlayQueue.swift in Sources */,
@@ -2311,7 +2309,6 @@
 				535E143925A7C6D60039BCAA /* QuickAlbumsLoader.swift in Sources */,
 				53E04939255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */,
 				530A1680259277E700E9294E /* SearchAllViewController.swift in Sources */,
-				53FE37901EA961720058B925 /* SocialSingleton.m in Sources */,
 				531EC87225B22D870076973A /* DownloadedTagArtistsViewController.swift in Sources */,
 				53762C8425AD0EED00476F2D /* ScrobbleLoader.swift in Sources */,
 				539D331925AC8D8B00F53797 /* DownloadedFolderArtist.swift in Sources */,
@@ -2409,6 +2406,7 @@
 				53BC27E0139AF0DD00A825F1 /* CacheQueueSongUITableViewCell.m in Sources */,
 				532C625325B62F5800185998 /* NetworkMonitor.swift in Sources */,
 				534B20E125619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */,
+				5357CE9D25B90C5B00FA825A /* Social.swift in Sources */,
 				531EC86625B220E10076973A /* Colors.swift in Sources */,
 				53FE35ED1EA961540058B925 /* SnappySlider.m in Sources */,
 				53D4FCAA25993C4E00C6F1AE /* TagArtistLoader.swift in Sources */,

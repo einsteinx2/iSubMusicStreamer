@@ -9,7 +9,6 @@
 #import "iSubBassGaplessPlayerDelegate.h"
 #import "BassGaplessPlayer.h"
 #import "ISMSStreamHandler.h"
-#import "SocialSingleton.h"
 #import "ISMSStreamManager.h"
 #import "Defines.h"
 #import "EX2Kit.h"
@@ -46,7 +45,7 @@
 }
 
 - (void)bassFirstStreamStarted:(BassGaplessPlayer*)player {
-    [socialS playerClearSocial];
+    [Social.shared playerClearSocial];
 }
 
 - (void)bassSongEndedCalled:(BassGaplessPlayer*)player {
@@ -54,11 +53,11 @@
     (void)[PlayQueue.shared incrementIndex];
     
     // Clear the social post status
-    [socialS playerClearSocial];
+    [Social.shared playerClearSocial];
 }
 
 - (void)bassFreed:(BassGaplessPlayer *)player {
-    [socialS playerClearSocial];
+    [Social.shared playerClearSocial];
 }
 
 - (NSUInteger)bassIndexAtOffset:(NSInteger)offset fromIndex:(NSUInteger)index player:(BassGaplessPlayer *)player {
@@ -100,7 +99,7 @@
 }
 
 - (void)bassRetrievingOutputData:(BassGaplessPlayer *)player {
-    [socialS playerHandleSocial];
+    [Social.shared playerHandleSocial];
 }
 
 @end

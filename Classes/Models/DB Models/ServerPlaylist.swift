@@ -88,6 +88,8 @@ final class ServerPlaylist: Codable, CustomStringConvertible {
 }
 
 extension ServerPlaylist: TableCellModel {
+    private var store: Store { Resolver.resolve() }
+    
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? {
         var secondaryLabelText = (songCount == 1 ? "1 song" : "\(songCount) songs")
@@ -99,13 +101,11 @@ extension ServerPlaylist: TableCellModel {
     var durationLabelText: String? { NSString.formatTime(Double(duration)) }
     var isCached: Bool { false }
     func download() {
-        let store: Store = Resolver.resolve()
         for position in 0..<self.songCount {
             store.song(serverId: serverId, serverPlaylistId: id, position: position)?.download()
         }
     }
     func queue() {
-        let store: Store = Resolver.resolve()
         for position in 0..<self.songCount {
             store.song(serverId: serverId, serverPlaylistId: id, position: position)?.queue()
         }
