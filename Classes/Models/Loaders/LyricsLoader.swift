@@ -9,18 +9,20 @@
 import Foundation
 import Resolver
 
-@objc final class LyricsLoader: APILoader {
+@objc final class LyricsLoader: AbstractAPILoader {
     @Injected private var store: Store
     
-    var serverId = Settings.shared().currentServerId
+    let serverId: Int
     let tagArtistName: String
     let songTitle: String
-    var lyrics: Lyrics?
     
-    @objc init(tagArtistName: String, songTitle: String, delegate: APILoaderDelegate? = nil) {
+    private(set) var lyrics: Lyrics?
+    
+    @objc init(serverId: Int, tagArtistName: String, songTitle: String, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+        self.serverId = serverId
         self.tagArtistName = tagArtistName
         self.songTitle = songTitle
-        super.init(delegate: delegate)
+        super.init(delegate: delegate, callback: callback)
     }
     
     // MARK: APILoader Overrides

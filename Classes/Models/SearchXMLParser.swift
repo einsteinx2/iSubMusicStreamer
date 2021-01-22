@@ -12,14 +12,15 @@ import Resolver
 
 final class SearchXMLParser {
     @Injected private var store: Store
-    
-    var serverId = Settings.shared().currentServerId
+        
+    let serverId: Int
     
     private(set) var folderArtists = [FolderArtist]()
     private(set) var folderAlbums = [FolderAlbum]()
     private(set) var songs = [Song]()
     
-    init(data: Data) {        
+    init(serverId: Int, data: Data) {
+        self.serverId = serverId
         let root = RXMLElement(fromXMLData: data)
         if !root.isValid {
             // TODO: Handle this error in the UI
@@ -34,15 +35,15 @@ final class SearchXMLParser {
                 let isNewSearchSupported = store.server(id: serverId)?.isNewSearchSupported ?? false
                 if isNewSearchSupported {
                     root.iterate("searchResult2.artist") { element in
-                        self.folderArtists.append(FolderArtist(serverId: self.serverId, element: element))
+                        self.folderArtists.append(FolderArtist(serverId: serverId, element: element))
                     }
                     root.iterate("searchResult2.album") { element in
-                        self.folderAlbums.append(FolderAlbum(serverId: self.serverId, element: element))
+                        self.folderAlbums.append(FolderAlbum(serverId: serverId, element: element))
                     }
                     root.iterate("searchResult2.song") { element in
                         let isVideo = element.attribute("isVideo")
                         if isVideo != "true" {
-                            let song = Song(serverId: self.serverId, element: element)
+                            let song = Song(serverId: serverId, element: element)
                             if song.path != "" {
                                 self.songs.append(song)
                             }
@@ -52,7 +53,7 @@ final class SearchXMLParser {
                     root.iterate("searchResult.match") { element in
                         let isVideo = element.attribute("isVideo")
                         if isVideo != "true" {
-                            let song = Song(serverId: self.serverId, element: element)
+                            let song = Song(serverId: serverId, element: element)
                             if song.path != "" {
                                 self.songs.append(song)
                             }

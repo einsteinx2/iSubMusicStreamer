@@ -15,6 +15,8 @@ final class ArtistsViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
+    var serverId = Settings.shared().currentServerId
+    
     private let tableView = UITableView()
     private lazy var dropdown = FolderDropdownControl(frame: CGRect(x: 50, y: 61, width: 220, height: 40))
     private let searchBar = UISearchBar()
@@ -49,7 +51,7 @@ final class ArtistsViewController: UIViewController {
         setupDefaultTableView(tableView)
         tableView.register(BlurredSectionHeader.self, forHeaderFooterViewReuseIdentifier: BlurredSectionHeader.reuseId)
         tableView.refreshControl = RefreshControl(handler: { [unowned self] in
-            loadData(mediaFolderId: settings.currentServerId)
+            loadData(mediaFolderId: serverId)
         })
         
         if dataModel.isCached {
@@ -179,7 +181,7 @@ extension ArtistsViewController: APILoaderDelegate {
         HUD.hide()
     }
     
-    func loadingFinished(loader: APILoader?) {
+    func loadingFinished(loader: AbstractAPILoader?) {
         if isCountShowing {
             updateCount()
         } else {
@@ -191,7 +193,7 @@ extension ArtistsViewController: APILoaderDelegate {
         tableView.refreshControl?.endRefreshing()
     }
     
-    func loadingFailed(loader: APILoader?, error: Error?) {
+    func loadingFailed(loader: AbstractAPILoader?, error: Error?) {
         HUD.hide()
         tableView.refreshControl?.endRefreshing()
         

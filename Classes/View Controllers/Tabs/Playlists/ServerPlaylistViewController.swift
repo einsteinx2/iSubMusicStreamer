@@ -13,7 +13,7 @@ import Resolver
 final class ServerPlaylistViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    
+        
     private var serverPlaylistLoader: ServerPlaylistLoader?
     private var serverPlaylist: ServerPlaylist
     
@@ -49,9 +49,7 @@ final class ServerPlaylistViewController: UIViewController {
     
     private func loadData() {
         cancelLoad()
-        let serverId = serverPlaylist.serverId
-        let serverPlaylistId = serverPlaylist.id
-        serverPlaylistLoader = ServerPlaylistLoader(serverPlaylistId: serverPlaylistId)
+        serverPlaylistLoader = ServerPlaylistLoader(serverPlaylist: serverPlaylist)
         serverPlaylistLoader?.callback = { [unowned self] (success, error) in
             DispatchQueue.main.async {
                 if let error = error {
@@ -63,7 +61,7 @@ final class ServerPlaylistViewController: UIViewController {
                     }
                 } else {
                     // Reload the server playlist to get the updated loaded song count
-                    if let serverPlaylist = store.serverPlaylist(serverId: serverId, id: serverPlaylistId) {
+                    if let serverPlaylist = store.serverPlaylist(serverId: serverPlaylist.serverId, id: serverPlaylist.id) {
                         self.serverPlaylist = serverPlaylist
                     }
                     tableView.reloadData()

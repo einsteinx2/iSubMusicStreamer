@@ -1,5 +1,5 @@
 //
-//  ISMSStreamHandler.h
+//  ISMSAbstractStreamHandler.h
 //  iSub
 //
 //  Created by Ben Baron on 7/4/12.
@@ -27,7 +27,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class ISMSSong;
-@interface ISMSStreamHandler : NSObject <NSSecureCoding>
+@interface ISMSAbstractStreamHandler : NSObject <NSSecureCoding>
 
 - (instancetype)initWithSong:(ISMSSong *)song byteOffset:(unsigned long long)bOffset secondsOffset:(double)sOffset isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate;
 - (instancetype)initWithSong:(ISMSSong *)song isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate;

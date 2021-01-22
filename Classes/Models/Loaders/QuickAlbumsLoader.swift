@@ -8,12 +8,20 @@
 
 import Foundation
 
-final class QuickAlbumsLoader: APILoader {
-    var serverId = Settings.shared().currentServerId
-    var folderAlbums = [FolderAlbum]()
+final class QuickAlbumsLoader: AbstractAPILoader {
+    let serverId: Int
     // TODO: Make this an enum once only swift code is using this class
-    var modifier = ""
-    var offset = 0
+    let modifier: String
+    let offset: Int
+    
+    private(set) var folderAlbums = [FolderAlbum]()
+    
+    init(serverId: Int, modifier: String, offset: Int = 0, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+        self.serverId = serverId
+        self.modifier = modifier
+        self.offset = offset
+        super.init(delegate: delegate, callback: callback)
+    }
     
     // MARK: APILoader Overrides
     

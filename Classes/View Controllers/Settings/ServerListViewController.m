@@ -305,7 +305,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	} else {
         [HUD showWithMessage:@"Checking Server"];
         if (self.serverToEdit) {
-            StatusLoader *statusLoader = [[StatusLoader alloc] initWithUrlString:self.serverToEdit.url.absoluteString username:self.serverToEdit.username password:self.serverToEdit.password delegate:self];
+            StatusLoader *statusLoader = [[StatusLoader alloc] initWithUrlString:self.serverToEdit.url.absoluteString username:self.serverToEdit.username password:self.serverToEdit.password delegate:self callback:nil];
             [statusLoader startLoad];
         }
 	}
@@ -341,7 +341,7 @@ LOG_LEVEL_ISUB_DEFAULT
     }   
 }
 
-- (void)loadingFinished:(APILoader *)loader {
+- (void)loadingFinished:(AbstractAPILoader *)loader {
     // Update server properties
     if (loader.type == APILoaderTypeStatus) {
         self.serverToEdit.isVideoSupported = ((StatusLoader *)loader).isVideoSupported;
@@ -359,7 +359,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [HUD hide];
 }
 
-- (void)loadingFailed:(APILoader *)loader error:(NSError *)error {
+- (void)loadingFailed:(AbstractAPILoader *)loader error:(NSError *)error {
     NSString *message = nil;
 	if (error.code == ISMSErrorCode_IncorrectCredentials) {
 		message = [NSString stringWithFormat:@"Either your username or password is incorrect\n\n☆☆ Choose a server to return to online mode. ☆☆\n\nError code %li:\n%@", (long)error.code, error.localizedDescription];

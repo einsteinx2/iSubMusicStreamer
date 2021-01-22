@@ -487,7 +487,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                                 NSUInteger bitrate = [BassWrapper estimateBitrate:userInfo];
                                 
                                 // Get the stream for this song
-                                ISMSStreamHandler *handler = [StreamManager.shared handlerWithSong:userInfo.song];
+                                ISMSAbstractStreamHandler *handler = [StreamManager.shared handlerWithSong:userInfo.song];
                                 if (!handler && [[cacheQueueManagerS currentQueuedSong] isEqual:userInfo.song])
                                     handler = [cacheQueueManagerS currentStreamHandler];
                                 

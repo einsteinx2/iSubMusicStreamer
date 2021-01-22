@@ -15,6 +15,8 @@ import CocoaLumberjackSwift
 final class DownloadedTagAlbumsViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
+    
+    var serverId = Settings.shared().currentServerId
         
     private var downloadedTagAlbums = [DownloadedTagAlbum]()
     
@@ -24,7 +26,7 @@ final class DownloadedTagAlbumsViewController: AbstractDownloadsViewController {
     }
     
     @objc override func reloadTable() {
-        downloadedTagAlbums = store.downloadedTagAlbums(serverId: settings.currentServerId)
+        downloadedTagAlbums = store.downloadedTagAlbums(serverId: serverId)
         super.reloadTable()
     }
 }

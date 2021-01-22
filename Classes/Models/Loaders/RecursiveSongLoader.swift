@@ -12,6 +12,10 @@ import Resolver
 @objc final class RecursiveSongLoader: NSObject, CancelableLoader {
     var callback: LoaderCallback?
         
+    let serverId: Int
+    private var folderIds = [Int]()
+    private var tagArtistIds = [Int]()
+    
     private var subfolderLoader: SubfolderLoader?
     private var tagArtistLoader: TagArtistLoader?
     private var tagAlbumLoader: TagAlbumLoader?
@@ -20,10 +24,6 @@ import Resolver
     private var isDownload = false
     private var isLoading = false
     private var isCancelled = false
-    
-    private let serverId: Int
-    private var folderIds = [Int]()
-    private var tagArtistIds = [Int]()
     
     @objc init(serverId: Int, folderId: Int, callback: LoaderCallback? = nil) {
         self.serverId = serverId
@@ -89,7 +89,7 @@ import Resolver
         
         folderIds.remove(at: 0)
         
-        subfolderLoader = SubfolderLoader(parentFolderId: folderId, callback: { [unowned self] success, error in
+        subfolderLoader = SubfolderLoader(serverId: serverId, parentFolderId: folderId, callback: { [unowned self] success, error in
             if success {
                 self.subfolderLoader = nil
                 self.loadNextFolder()

@@ -15,6 +15,8 @@ final class NowPlayingViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
+    var serverId = Settings.shared().currentServerId
+    
     private let tableView = UITableView()
     
     private var nowPlayingLoader: NowPlayingLoader?
@@ -50,7 +52,7 @@ final class NowPlayingViewController: UIViewController {
     private func loadData() {
         cancelLoad()
         HUD.show(closeHandler: cancelLoad)
-        nowPlayingLoader = NowPlayingLoader()
+        nowPlayingLoader = NowPlayingLoader(serverId: serverId)
         nowPlayingLoader?.callback = { [unowned self] (success, error) in
             if let error = error {
                 if settings.isPopupsEnabled {

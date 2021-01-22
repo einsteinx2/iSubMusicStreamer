@@ -8,15 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
-@class ISMSStreamHandler;
+@class ISMSAbstractStreamHandler;
+
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol ISMSStreamHandlerDelegate <NSObject>
 
 @optional
-- (void)ISMSStreamHandlerStarted:(ISMSStreamHandler *)handler;
-- (void)ISMSStreamHandlerStartPlayback:(ISMSStreamHandler *)handler;
-- (void)ISMSStreamHandlerConnectionFinished:(ISMSStreamHandler *)handler;
-- (void)ISMSStreamHandlerConnectionFailed:(ISMSStreamHandler *)handler withError:(NSError *)error;
-- (void)ISMSStreamHandlerPartialPrecachePaused:(ISMSStreamHandler *)handler;
-- (void)ISMSStreamHandlerPartialPrecacheUnpaused:(ISMSStreamHandler *)handler;
+- (void)ISMSStreamHandlerStarted:(ISMSAbstractStreamHandler *)handler;
+- (void)ISMSStreamHandlerStartPlayback:(ISMSAbstractStreamHandler *)handler;
+- (void)ISMSStreamHandlerConnectionFinished:(ISMSAbstractStreamHandler *)handler;
+- (void)ISMSStreamHandlerConnectionFailed:(ISMSAbstractStreamHandler *)handler withError:(nullable NSError *)error;
+- (void)ISMSStreamHandlerPartialPrecachePaused:(ISMSAbstractStreamHandler *)handler;
+- (void)ISMSStreamHandlerPartialPrecacheUnpaused:(ISMSAbstractStreamHandler *)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -259,7 +259,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)updateFolders {
-    DropdownFolderLoader *loader = [[DropdownFolderLoader alloc] init];
+    DropdownFolderLoader *loader = [[DropdownFolderLoader alloc] initWithServerId:settingsS.currentServerId delegate:nil callback:nil];
     __weak DropdownFolderLoader *weakLoader = loader;
     loader.callback = ^(BOOL success, NSError * _Nullable error) {
         if (success) {

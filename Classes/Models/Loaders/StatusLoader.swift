@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc final class StatusLoader: APILoader {
+@objc final class StatusLoader: AbstractAPILoader {
     @objc let urlString: String
     @objc let username: String
     @objc let password: String
@@ -19,26 +19,15 @@ import Foundation
     @objc var minorVersion = 0
     @objc var versionString: String?
     
-    convenience init(server: Server, callback: LoaderCallback? = nil) {
-        self.init(urlString: server.url.absoluteString, username: server.username, password: server.password, callback: callback)
+    convenience init(server: Server, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+        self.init(urlString: server.url.absoluteString, username: server.username, password: server.password, delegate: delegate, callback: callback)
     }
     
-    convenience init(server: Server, delegate: APILoaderDelegate? = nil) {
-        self.init(urlString: server.url.absoluteString, username: server.username, password: server.password, delegate: delegate)
-    }
-    
-    @objc init(urlString: String, username: String, password: String, delegate: APILoaderDelegate? = nil) {
+    @objc init(urlString: String, username: String, password: String, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
         self.urlString = urlString
         self.username = username
         self.password = password
-        super.init(delegate: delegate)
-    }
-    
-    @objc init(urlString: String, username: String, password: String, callback: LoaderCallback? = nil) {
-        self.urlString = urlString
-        self.username = username
-        self.password = password
-        super.init(callback: callback)
+        super.init(delegate: delegate, callback: callback)
     }
     
     // MARK: APILoader Overrides

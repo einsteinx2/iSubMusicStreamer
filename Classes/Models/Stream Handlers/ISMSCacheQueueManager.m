@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ISMSCacheQueueManager.h"
-#import "ISMSStreamHandler.h"
+#import "ISMSAbstractStreamHandler.h"
 #import "RXMLElement.h"
 #import "ISMSNSURLSessionStreamHandler.h"
 #import "SavedSettings.h"
@@ -105,10 +105,11 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	// Grab the lyrics
 	if (self.currentQueuedSong.tagArtistName && self.currentQueuedSong.title) {
+        NSInteger serverId = self.currentQueuedSong.serverId;
         NSString *tagArtistName = self.currentQueuedSong.tagArtistName;
         NSString *title = self.currentQueuedSong.title;
         if (![Store.shared isLyricsCachedWithTagArtistName:tagArtistName songTitle:title]) {
-            [[[LyricsLoader alloc] initWithTagArtistName:tagArtistName songTitle:title delegate:nil] startLoad];
+            [[[LyricsLoader alloc] initWithServerId:serverId tagArtistName:tagArtistName songTitle:title delegate:nil callback:nil] startLoad];
         }
 	}
 	
@@ -116,17 +117,17 @@ LOG_LEVEL_ISUB_DEFAULT
 	if (self.currentQueuedSong.coverArtId) {
 		NSString *coverArtId = self.currentQueuedSong.coverArtId;
         NSInteger serverId = settingsS.currentServerId;
-        CoverArtLoader *playerArt = [[CoverArtLoader alloc] initWithServerId:serverId coverArtId:coverArtId isLarge:YES delegate:nil];
+        CoverArtLoader *playerArt = [[CoverArtLoader alloc] initWithServerId:serverId coverArtId:coverArtId isLarge:YES delegate:nil callback:nil];
 		(void)[playerArt downloadArtIfNotExists];
 		
-        CoverArtLoader *tableArt = [[CoverArtLoader alloc] initWithServerId:serverId coverArtId:coverArtId isLarge:NO delegate:nil];
+        CoverArtLoader *tableArt = [[CoverArtLoader alloc] initWithServerId:serverId coverArtId:coverArtId isLarge:NO delegate:nil callback:nil];
 		(void)[tableArt downloadArtIfNotExists];
         
         // TODO: implement this - Download the artist and album using same logic as stream manager
 	}
 	
 	// Create the stream handler
-	ISMSStreamHandler *handler = [StreamManager.shared handlerWithSong:self.currentQueuedSong];
+    ISMSAbstractStreamHandler *handler = [StreamManager.shared handlerWithSong:self.currentQueuedSong];
 	if (handler) {
         DDLogInfo(@"[ISMSCacheQueueManager] stealing %@ from stream manager", handler.mySong.title);
 		
@@ -178,16 +179,16 @@ LOG_LEVEL_ISUB_DEFAULT
 
 #pragma mark ISMSStreamHandler Delegate
 
-- (void)ISMSStreamHandlerPartialPrecachePaused:(ISMSStreamHandler *)handler {
+- (void)ISMSStreamHandlerPartialPrecachePaused:(ISMSAbstractStreamHandler *)handler {
 	// Don't ever partial pre-cache
 	handler.partialPrecacheSleep = NO;
 }
 
-- (void)ISMSStreamHandlerStartPlayback:(ISMSStreamHandler *)handler {
+- (void)ISMSStreamHandlerStartPlayback:(ISMSAbstractStreamHandler *)handler {
 	[StreamManager.shared ISMSStreamHandlerStartPlayback:handler];
 }
 
-- (void)ISMSStreamHandlerConnectionFailed:(ISMSStreamHandler *)handler withError:(NSError *)error {
+- (void)ISMSStreamHandlerConnectionFailed:(ISMSAbstractStreamHandler *)handler withError:(NSError *)error {
 	if (handler.numOfReconnects < maxNumOfReconnects) {
 		// Less than max number of reconnections, so try again 
 		handler.numOfReconnects++;
@@ -205,7 +206,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 //static BOOL isAlertDisplayed = NO;
-- (void)ISMSStreamHandlerConnectionFinished:(ISMSStreamHandler *)handler {
+- (void)ISMSStreamHandlerConnectionFinished:(ISMSAbstractStreamHandler *)handler {
     NSDate *start = [NSDate date];
 	BOOL isSuccess = YES;
 	if (handler.totalBytesTransferred == 0) {

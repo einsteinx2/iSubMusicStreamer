@@ -23,7 +23,7 @@ import CocoaLumberjackSwift
     private let defaultNumberOfStreamsToQueue = 2
     private let maxNumberOfReconnects = 5
     
-    private var handlerStack = [ISMSStreamHandler]()
+    private var handlerStack = [ISMSAbstractStreamHandler]()
     @objc private(set) var lastCachedSong: Song?
     @objc private(set) var lastTempCachedSong: Song?
     
@@ -62,11 +62,11 @@ import CocoaLumberjackSwift
         return handlerStack.first?.mySong
     }
     
-    var firstHandlerInQueue: ISMSStreamHandler? {
+    var firstHandlerInQueue: ISMSAbstractStreamHandler? {
         return handlerStack.first
     }
     
-    @objc func handler(song: Song) -> ISMSStreamHandler? {
+    @objc func handler(song: Song) -> ISMSAbstractStreamHandler? {
         return handlerStack.first { $0.mySong.isEqual(song) }
     }
     
@@ -94,7 +94,7 @@ import CocoaLumberjackSwift
         return false
     }
     
-    func cancelAllStreams(except handlers: [ISMSStreamHandler]) {
+    func cancelAllStreams(except handlers: [ISMSAbstractStreamHandler]) {
         for handler in handlerStack {
             if handlers.contains(handler) { continue }
             cancelResume(handler: handler)
@@ -115,10 +115,10 @@ import CocoaLumberjackSwift
     }
     
     func cancelAllStreams() {
-        cancelAllStreams(except: [] as [ISMSStreamHandler])
+        cancelAllStreams(except: [] as [ISMSAbstractStreamHandler])
     }
     
-    func cancelStream(handler: ISMSStreamHandler) {
+    func cancelStream(handler: ISMSAbstractStreamHandler) {
         cancelResume(handler: handler)
         handler.cancel()
         saveHandlerStack()
@@ -135,7 +135,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    private func removeStreamWithoutSavingStack(handler: ISMSStreamHandler) {
+    private func removeStreamWithoutSavingStack(handler: ISMSAbstractStreamHandler) {
         // Cancel the handler
         cancelResume(handler: handler)
         handler.cancel()
@@ -153,7 +153,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    func removeAllStreams(except handlers: [ISMSStreamHandler]) {
+    func removeAllStreams(except handlers: [ISMSAbstractStreamHandler]) {
         // Remove the handlers
         let handlerStackCopy = handlerStack
         for handler in handlerStackCopy {
@@ -181,10 +181,10 @@ import CocoaLumberjackSwift
     }
     
     @objc func removeAllStreams() {
-        removeAllStreams(except: [] as [ISMSStreamHandler])
+        removeAllStreams(except: [] as [ISMSAbstractStreamHandler])
     }
     
-    func removeStream(handler: ISMSStreamHandler) {
+    func removeStream(handler: ISMSAbstractStreamHandler) {
         // Remove the handler
         removeStreamWithoutSavingStack(handler: handler)
         
@@ -207,11 +207,11 @@ import CocoaLumberjackSwift
         }
     }
     
-    private func cancelResume(handler: ISMSStreamHandler) {
+    private func cancelResume(handler: ISMSAbstractStreamHandler) {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(resume(handler:)), object: handler)
     }
     
-    @objc func resume(handler: ISMSStreamHandler) {
+    @objc func resume(handler: ISMSAbstractStreamHandler) {
         // As an added check, verify that this handler is still in the stack
         guard isInQueue(song: handler.mySong) else { return }
         
@@ -238,7 +238,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    func start(handler: ISMSStreamHandler, resume: Bool) {
+    func start(handler: ISMSAbstractStreamHandler, resume: Bool) {
         // As an added check, verify that this handler is still in the stack
         guard isInQueue(song: handler.mySong) else { return }
         
@@ -261,13 +261,13 @@ import CocoaLumberjackSwift
             let title = handler.mySong.title
             if let tagArtistName = handler.mySong.tagArtistName, title.count > 0 {
                 if !store.isLyricsCached(tagArtistName: tagArtistName, songTitle: title) {
-                    LyricsLoader(tagArtistName: tagArtistName, songTitle: title).startLoad()
+                    LyricsLoader(serverId: handler.mySong.serverId, tagArtistName: tagArtistName, songTitle: title).startLoad()
                 }
             }
         }
     }
     
-    func start(handler: ISMSStreamHandler) {
+    func start(handler: ISMSAbstractStreamHandler) {
         start(handler: handler, resume: false)
     }
     
@@ -286,7 +286,7 @@ import CocoaLumberjackSwift
     func loadHandlerStack() {
         do {
             if let data = UserDefaults.standard.object(forKey: handlerStackKey) as? Data {
-                handlerStack = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, ISMSStreamHandler.self], from: data) as? [ISMSStreamHandler] ?? []
+                handlerStack = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, ISMSAbstractStreamHandler.self], from: data) as? [ISMSAbstractStreamHandler] ?? []
             }
         
             for handler in handlerStack {
@@ -301,7 +301,7 @@ import CocoaLumberjackSwift
     
     // MARK: Handler Stealing
     
-    @objc func stealForCacheQueue(handler: ISMSStreamHandler) {
+    @objc func stealForCacheQueue(handler: ISMSAbstractStreamHandler) {
         DDLogInfo("[StreamManager] cache queue manager stole handler for song \(handler.mySong)")
         handler.partialPrecacheSleep = false
         handlerStack.removeAll { $0.isEqual(handler) }
@@ -413,13 +413,13 @@ import CocoaLumberjackSwift
 }
 
 @objc extension StreamManager: ISMSStreamHandlerDelegate {
-    func ismsStreamHandlerStarted(_ handler: ISMSStreamHandler!) {
+    func ismsStreamHandlerStarted(_ handler: ISMSAbstractStreamHandler) {
         if handler.isTempCache {
             lastTempCachedSong = nil
         }
     }
     
-    func ismsStreamHandlerStartPlayback(_ handler: ISMSStreamHandler!) {
+    func ismsStreamHandlerStartPlayback(_ handler: ISMSAbstractStreamHandler) {
         lastCachedSong = handler.mySong
         
         if let currentSong = playQueue.currentSong, handler.mySong.isEqual(currentSong) {
@@ -430,7 +430,7 @@ import CocoaLumberjackSwift
         saveHandlerStack()
     }
     
-    func ismsStreamHandlerConnectionFinished(_ handler: ISMSStreamHandler!) {
+    func ismsStreamHandlerConnectionFinished(_ handler: ISMSAbstractStreamHandler) {
         var success = true
         
         if handler.totalBytesTransferred == 0 {
@@ -493,7 +493,7 @@ import CocoaLumberjackSwift
         NotificationCenter.postOnMainThread(name: Notifications.streamHandlerSongDownloaded, object: nil, userInfo: ["songId": handler.mySong.id])
     }
     
-    func ismsStreamHandlerConnectionFailed(_ handler: ISMSStreamHandler!, withError error: Error!) {
+    func ismsStreamHandlerConnectionFailed(_ handler: ISMSAbstractStreamHandler, withError error: Error?) {
         if handler.numOfReconnects < maxNumberOfReconnects {
             // Less than max number of reconnections, so try again
             handler.numOfReconnects += 1

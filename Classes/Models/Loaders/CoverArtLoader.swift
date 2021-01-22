@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-@objc final class CoverArtLoader: APILoader {
+@objc final class CoverArtLoader: AbstractAPILoader {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
@@ -22,9 +22,9 @@ import Resolver
     private static var syncObject = NSObject()
     private static var loadingIds = Set<String>()
     
-    private let serverId: Int
-    private let coverArtId: String
-    private let isLarge: Bool
+    let serverId: Int
+    let coverArtId: String
+    let isLarge: Bool
     
     private var mergedId: String {
         return "\(serverId)_\(coverArtId)"
@@ -34,11 +34,11 @@ import Resolver
         return store.isCoverArtCached(serverId: serverId, id: coverArtId, isLarge: isLarge)
     }
     
-    @objc init(serverId: Int, coverArtId: String, isLarge: Bool, delegate: APILoaderDelegate? = nil) {
+    @objc init(serverId: Int, coverArtId: String, isLarge: Bool, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
         self.serverId = serverId
         self.coverArtId = coverArtId
         self.isLarge = isLarge
-        super.init(delegate: delegate)
+        super.init(delegate: delegate, callback: callback)
         
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(coverArtDownloadFinished(notification:)), name: PrivateNotifications.downloadFinished)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(coverArtDownloadFailed(notification:)), name: PrivateNotifications.downloadFailed)

@@ -9,11 +9,17 @@
 import Foundation
 import Resolver
 
-@objc final class ServerShuffleLoader: APILoader {
+final class ServerShuffleLoader: AbstractAPILoader {
     @Injected private var store: Store
     
-    @objc var serverId = Settings.shared().currentServerId
-    var mediaFolderId: Int?
+    let serverId: Int
+    let mediaFolderId: Int?
+    
+    init(serverId: Int, mediaFolderId: Int? = nil, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+        self.serverId = serverId
+        self.mediaFolderId = mediaFolderId
+        super.init(delegate: delegate, callback: callback)
+    }
     
     // MARK: APILoader Overrides
     
@@ -29,7 +35,7 @@ import Resolver
     }
     
     override func processResponse(data: Data) {
-        let parser = SearchXMLParser(data: data)
+        let parser = SearchXMLParser(serverId: serverId, data: data)
         _ = store.playSong(position: 0, songs: parser.songs)
         informDelegateLoadingFinished()
     }

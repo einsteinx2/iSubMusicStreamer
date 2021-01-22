@@ -186,8 +186,8 @@
 		53762C8A25AD122500476F2D /* NowPlayingLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C8825AD122500476F2D /* NowPlayingLoader.swift */; };
 		53762C8C25AD166400476F2D /* StatusLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C8B25AD166400476F2D /* StatusLoader.swift */; };
 		53762C8D25AD166400476F2D /* StatusLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C8B25AD166400476F2D /* StatusLoader.swift */; };
-		53762C8F25AD1BA200476F2D /* APILoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C8E25AD1BA200476F2D /* APILoader.swift */; };
-		53762C9025AD1BA200476F2D /* APILoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C8E25AD1BA200476F2D /* APILoader.swift */; };
+		53762C8F25AD1BA200476F2D /* AbstractAPILoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C8E25AD1BA200476F2D /* AbstractAPILoader.swift */; };
+		53762C9025AD1BA200476F2D /* AbstractAPILoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C8E25AD1BA200476F2D /* AbstractAPILoader.swift */; };
 		537B05B9256B03830008892C /* PadRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05B8256B03830008892C /* PadRootViewController.swift */; };
 		537B05BA256B03830008892C /* PadRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05B8256B03830008892C /* PadRootViewController.swift */; };
 		537B05BC256B04360008892C /* PadMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05BB256B04360008892C /* PadMenuViewController.swift */; };
@@ -490,8 +490,8 @@
 		53FE37121EA961720058B925 /* ISMSCacheQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */; };
 		53FE37371EA961720058B925 /* ISMSServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36651EA961720058B925 /* ISMSServer.m */; };
 		53FE37391EA961720058B925 /* ISMSServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36651EA961720058B925 /* ISMSServer.m */; };
-		53FE37461EA961720058B925 /* ISMSStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE366F1EA961720058B925 /* ISMSStreamHandler.m */; };
-		53FE37481EA961720058B925 /* ISMSStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE366F1EA961720058B925 /* ISMSStreamHandler.m */; };
+		53FE37461EA961720058B925 /* ISMSAbstractStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE366F1EA961720058B925 /* ISMSAbstractStreamHandler.m */; };
+		53FE37481EA961720058B925 /* ISMSAbstractStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE366F1EA961720058B925 /* ISMSAbstractStreamHandler.m */; };
 		53FE37581EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
 		53FE375A1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
 		53FE376A1EA961720058B925 /* NSError+ISMSError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE368B1EA961720058B925 /* NSError+ISMSError.m */; };
@@ -721,7 +721,7 @@
 		53762C8525AD105E00476F2D /* NowPlayingSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingSong.swift; sourceTree = "<group>"; };
 		53762C8825AD122500476F2D /* NowPlayingLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingLoader.swift; sourceTree = "<group>"; };
 		53762C8B25AD166400476F2D /* StatusLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusLoader.swift; sourceTree = "<group>"; };
-		53762C8E25AD1BA200476F2D /* APILoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APILoader.swift; sourceTree = "<group>"; };
+		53762C8E25AD1BA200476F2D /* AbstractAPILoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstractAPILoader.swift; sourceTree = "<group>"; };
 		537B05B8256B03830008892C /* PadRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadRootViewController.swift; sourceTree = "<group>"; };
 		537B05BB256B04360008892C /* PadMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadMenuViewController.swift; sourceTree = "<group>"; };
 		537B05BE256B0E4B0008892C /* PadMenuTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadMenuTableCell.swift; sourceTree = "<group>"; };
@@ -924,8 +924,8 @@
 		53FE364F1EA961720058B925 /* ISMSErrorDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSErrorDomain.h; sourceTree = "<group>"; };
 		53FE36641EA961720058B925 /* ISMSServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSServer.h; sourceTree = "<group>"; };
 		53FE36651EA961720058B925 /* ISMSServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSServer.m; sourceTree = "<group>"; };
-		53FE366E1EA961720058B925 /* ISMSStreamHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSStreamHandler.h; sourceTree = "<group>"; };
-		53FE366F1EA961720058B925 /* ISMSStreamHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSStreamHandler.m; sourceTree = "<group>"; };
+		53FE366E1EA961720058B925 /* ISMSAbstractStreamHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSAbstractStreamHandler.h; sourceTree = "<group>"; };
+		53FE366F1EA961720058B925 /* ISMSAbstractStreamHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSAbstractStreamHandler.m; sourceTree = "<group>"; };
 		53FE36701EA961720058B925 /* ISMSStreamHandlerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSStreamHandlerDelegate.h; sourceTree = "<group>"; };
 		53FE367B1EA961720058B925 /* iSubBassGaplessPlayerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSubBassGaplessPlayerDelegate.h; sourceTree = "<group>"; };
 		53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSubBassGaplessPlayerDelegate.m; sourceTree = "<group>"; };
@@ -1499,7 +1499,7 @@
 			children = (
 				53ED673625B7A3020002BFAF /* URLRequest+Subsonic.swift */,
 				53E04946255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift */,
-				53762C8E25AD1BA200476F2D /* APILoader.swift */,
+				53762C8E25AD1BA200476F2D /* AbstractAPILoader.swift */,
 				53D4FCB8259967CF00C6F1AE /* SubfolderLoader.swift */,
 				53D632D225A65A37004EC117 /* RootArtistsLoader.swift */,
 				53D4FCA825993C4E00C6F1AE /* TagArtistLoader.swift */,
@@ -1531,8 +1531,8 @@
 				53FE36431EA961720058B925 /* ISMSCacheQueueManager.h */,
 				53FE36441EA961720058B925 /* ISMSCacheQueueManager.m */,
 				53FE36701EA961720058B925 /* ISMSStreamHandlerDelegate.h */,
-				53FE366E1EA961720058B925 /* ISMSStreamHandler.h */,
-				53FE366F1EA961720058B925 /* ISMSStreamHandler.m */,
+				53FE366E1EA961720058B925 /* ISMSAbstractStreamHandler.h */,
+				53FE366F1EA961720058B925 /* ISMSAbstractStreamHandler.m */,
 				53E04936255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.h */,
 				53E04937255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m */,
 			);
@@ -2119,7 +2119,7 @@
 				5388A3B4119899260049BA9E /* BookmarksViewController.m in Sources */,
 				538B3EBC25B65BCF00824068 /* ArtistsViewModel.swift in Sources */,
 				53FE38B31EA961C80058B925 /* ZKDefs.m in Sources */,
-				53762C8F25AD1BA200476F2D /* APILoader.swift in Sources */,
+				53762C8F25AD1BA200476F2D /* AbstractAPILoader.swift in Sources */,
 				53246AA9256C324500E11EC4 /* InsetTextField.swift in Sources */,
 				53DD0DD9259A592B00494AEA /* RecursiveSongLoader.swift in Sources */,
 				539D32FA25AA21AA00F53797 /* LyricsStore.swift in Sources */,
@@ -2233,7 +2233,7 @@
 				53EA2DE2257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
 				53CB016825864D5200E2DF10 /* NSFileManager+ZKAdditions.m in Sources */,
 				53D632D325A65A37004EC117 /* RootArtistsLoader.swift in Sources */,
-				53FE37461EA961720058B925 /* ISMSStreamHandler.m in Sources */,
+				53FE37461EA961720058B925 /* ISMSAbstractStreamHandler.m in Sources */,
 				537C93E125B1051200175DF6 /* SaveEditHeader.swift in Sources */,
 				539D330C25AA55E000F53797 /* LocalPlaylist.swift in Sources */,
 				53ED672825B76FA60002BFAF /* HomeAlbumViewController.swift in Sources */,
@@ -2355,7 +2355,7 @@
 				53B9C49825A7A650007E9E3C /* SongStore.swift in Sources */,
 				53FE38B51EA961C80058B925 /* ZKDefs.m in Sources */,
 				53FE38A31EA961C80058B925 /* ZKArchive.m in Sources */,
-				53762C9025AD1BA200476F2D /* APILoader.swift in Sources */,
+				53762C9025AD1BA200476F2D /* AbstractAPILoader.swift in Sources */,
 				538B3EBD25B65BCF00824068 /* ArtistsViewModel.swift in Sources */,
 				53FE38911EA961C80058B925 /* NSData+ZKAdditions.m in Sources */,
 				53DD0DDA259A592B00494AEA /* RecursiveSongLoader.swift in Sources */,
@@ -2472,7 +2472,7 @@
 				537B05C0256B0E4B0008892C /* PadMenuTableCell.swift in Sources */,
 				530A167A259255D200E9294E /* FolderAlbum.swift in Sources */,
 				53D632D425A65A37004EC117 /* RootArtistsLoader.swift in Sources */,
-				53FE37481EA961720058B925 /* ISMSStreamHandler.m in Sources */,
+				53FE37481EA961720058B925 /* ISMSAbstractStreamHandler.m in Sources */,
 				537C93E225B1051200175DF6 /* SaveEditHeader.swift in Sources */,
 				539D330D25AA55E000F53797 /* LocalPlaylist.swift in Sources */,
 				53ED672925B76FA60002BFAF /* HomeAlbumViewController.swift in Sources */,

@@ -12,6 +12,8 @@ import Resolver
 final class HomeAlbumViewController: UIViewController {
     @Injected private var settings: Settings
     
+    var serverId = Settings.shared().currentServerId
+    
     var modifier = ""
     var folderAlbums = [FolderAlbum]()
     
@@ -45,9 +47,7 @@ final class HomeAlbumViewController: UIViewController {
         isLoading = true
         offset += 20
         
-        loader = QuickAlbumsLoader()
-        loader?.modifier = modifier
-        loader?.offset = offset
+        loader = QuickAlbumsLoader(serverId: serverId, modifier: modifier, offset: offset)
         loader?.callback = { [weak self] (success, error) in
             guard let self = self, let loader = self.loader else { return }
             

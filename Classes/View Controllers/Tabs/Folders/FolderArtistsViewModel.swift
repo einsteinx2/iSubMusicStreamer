@@ -107,8 +107,7 @@ extension FolderArtistsViewModel: APILoaderManager {
     func startLoad() {
         cancelLoad()
         
-        loader = RootFoldersLoader(delegate: self)
-        loader?.mediaFolderId = mediaFolderId
+        loader = RootFoldersLoader(serverId: serverId, mediaFolderId: mediaFolderId, delegate: self)
         loader?.startLoad()
     }
     
@@ -120,7 +119,7 @@ extension FolderArtistsViewModel: APILoaderManager {
 }
 
 extension FolderArtistsViewModel: APILoaderDelegate {
-    func loadingFinished(loader: APILoader?) {
+    func loadingFinished(loader: AbstractAPILoader?) {
         if let loader = loader as? RootFoldersLoader {
             metadata = loader.metadata
             tableSections = loader.tableSections
@@ -132,7 +131,7 @@ extension FolderArtistsViewModel: APILoaderDelegate {
         delegate?.loadingFinished(loader: nil)
     }
     
-    func loadingFailed(loader: APILoader?, error: Error?) {
+    func loadingFailed(loader: AbstractAPILoader?, error: Error?) {
         self.loader?.delegate = nil
         self.loader = nil
         delegate?.loadingFailed(loader: nil, error: error)

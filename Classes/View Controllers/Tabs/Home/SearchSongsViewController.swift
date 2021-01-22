@@ -22,6 +22,8 @@ final class SearchSongsViewController: UIViewController {
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
     
+    var serverId = Settings.shared().currentServerId
+    
     var query = ""
     var searchType = SearchType.songs
     
@@ -90,7 +92,7 @@ final class SearchSongsViewController: UIViewController {
         
         // TODO: implement this
         // TODO: Don't hard code server id
-        guard let request = URLRequest(serverId: settings.currentServerId, subsonicAction: action, parameters: parameters) else {
+        guard let request = URLRequest(serverId: serverId, subsonicAction: action, parameters: parameters) else {
             DDLogError("[SearchSongsViewController] failed to create URLRequest to load more results with action \(action) and parameters \(parameters)")
             isMoreResults = false
             tableView.reloadData()
@@ -98,11 +100,11 @@ final class SearchSongsViewController: UIViewController {
             return
         }
         
-        dataTask = APILoader.sharedSession.dataTask(with: request) { [weak self] (data, response, error) in
+        dataTask = AbstractAPILoader.sharedSession.dataTask(with: request) { [weak self] (data, response, error) in
             guard let self = self else { return }
             
             if let data = data {
-                let parser = SearchXMLParser(data: data)
+                let parser = SearchXMLParser(serverId: self.serverId, data: data)
                 switch self.searchType {
                 case .artists:
                     if parser.folderArtists.count == 0 {

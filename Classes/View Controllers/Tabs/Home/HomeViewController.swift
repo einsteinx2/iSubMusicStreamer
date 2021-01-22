@@ -18,6 +18,8 @@ final class HomeViewController: UIViewController {
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
     
+    var serverId = Settings.shared().currentServerId
+    
     private var quickAlbumsLoader: QuickAlbumsLoader?
     private var serverShuffleLoader: ServerShuffleLoader?
     private var dataTask: URLSessionDataTask?
@@ -143,7 +145,7 @@ final class HomeViewController: UIViewController {
         }
         
         serverShuffleButton.setAction { [unowned self] in
-            let mediaFolders = store.mediaFolders(serverId: settings.currentServerId)
+            let mediaFolders = store.mediaFolders(serverId: serverId)
             if mediaFolders.count > 0 {
                 // 2 media folders means the "All Media Folders" option plus one folder aka only 1 actual media folder
                 if mediaFolders.count == 2 {
@@ -280,7 +282,7 @@ final class HomeViewController: UIViewController {
     
     private func loadQuickAlbums(modifier: String, title: String) {
         HUD.show(closeHandler: cancelLoad)
-        let loader = QuickAlbumsLoader()
+        let loader = QuickAlbumsLoader(serverId: serverId, modifier: modifier)
         loader.callback = { _, error in
             HUD.hide()
             if let error = error {
@@ -298,14 +300,13 @@ final class HomeViewController: UIViewController {
             }
             self.quickAlbumsLoader = nil
         }
-        loader.modifier = modifier
         quickAlbumsLoader = loader
         loader.startLoad()
     }
     
     private func performServerShuffle(mediaFolderId: Int) {
         HUD.show(closeHandler: cancelLoad)
-        let loader = ServerShuffleLoader()
+        let loader = ServerShuffleLoader(serverId: serverId, mediaFolderId: mediaFolderId)
         loader.callback = { success, _ in
             HUD.hide()
             if success {
@@ -320,7 +321,6 @@ final class HomeViewController: UIViewController {
             }
             self.serverShuffleLoader = nil
         }
-        loader.mediaFolderId = mediaFolderId
         loader.startLoad()
         serverShuffleLoader = loader
     }
@@ -425,12 +425,12 @@ extension HomeViewController: UISearchBarDelegate {
         
         // TODO: implement this
         // TODO: Don't hard code server id
-        guard let request = URLRequest(serverId: settings.currentServerId, subsonicAction: action, parameters: parameters) else {
+        guard let request = URLRequest(serverId: serverId, subsonicAction: action, parameters: parameters) else {
             DDLogError("[HomeViewController] failed to create URLRequest to search with action \(action) and parameters \(parameters)")
             return
         }
         
-        dataTask = APILoader.sharedSession.dataTask(with: request) { data, _, error in
+        dataTask = AbstractAPILoader.sharedSession.dataTask(with: request) { data, _, error in
             DispatchQueue.main.async {
                 if let error = error {
                     if self.settings.isPopupsEnabled {
@@ -440,7 +440,7 @@ extension HomeViewController: UISearchBarDelegate {
                     }
                 } else if let data = data {
                     DDLogVerbose("search results: \(String(data: data, encoding: .utf8)!)")
-                    let parser = SearchXMLParser(data: data)
+                    let parser = SearchXMLParser(serverId: self.serverId, data: data)
                     
                     if self.isNewSearchSupported && self.searchSegment.selectedSegmentIndex == 3 {
                         let controller = SearchAllViewController()

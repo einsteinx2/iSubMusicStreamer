@@ -17,6 +17,8 @@ final class DownloadedFolderArtistsViewController: AbstractDownloadsViewControll
     @Injected private var cache: Cache
     @Injected private var cacheQueue: CacheQueue
         
+    var serverId = Settings.shared().currentServerId
+    
     private var downloadedFolderArtists = [DownloadedFolderArtist]()
     
     override func viewDidLoad() {
@@ -26,7 +28,7 @@ final class DownloadedFolderArtistsViewController: AbstractDownloadsViewControll
     
     
     @objc override func reloadTable() {
-        downloadedFolderArtists = store.downloadedFolderArtists(serverId: settings.currentServerId)
+        downloadedFolderArtists = store.downloadedFolderArtists(serverId: serverId)
         super.reloadTable()
     }
 }

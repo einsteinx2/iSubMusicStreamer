@@ -1,22 +1,22 @@
 //
-//  ISMSStreamHandler.m
+//  ISMSAbstractStreamHandler.m
 //  iSub
 //
 //  Created by Ben Baron on 7/4/12.
 //  Copyright (c) 2012 Ben Baron. All rights reserved.
 //
 
-#import "ISMSStreamHandler.h"
+#import "ISMSAbstractStreamHandler.h"
 #import "Defines.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 
-@interface ISMSStreamHandler() {
+@interface ISMSAbstractStreamHandler() {
     unsigned long long _byteOffset;
 }
 @end
 
-@implementation ISMSStreamHandler
+@implementation ISMSAbstractStreamHandler
 
 - (void)setup
 {
@@ -191,7 +191,7 @@
 	return self.mySong.serverId | self.mySong.songId;
 }
 
-- (BOOL)isEqualToISMSStreamHandler:(ISMSStreamHandler *)otherHandler 
+- (BOOL)isEqualToISMSStreamHandler:(ISMSAbstractStreamHandler *)otherHandler 
 {
 	if (self == otherHandler)
 		return YES;

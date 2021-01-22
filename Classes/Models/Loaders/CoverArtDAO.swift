@@ -70,13 +70,13 @@ import Resolver
 }
 
 extension CoverArtDAO: APILoaderDelegate {
-    func loadingFinished(loader: APILoader?) {
+    func loadingFinished(loader: AbstractAPILoader?) {
         self.loader?.delegate = nil
         self.loader = nil
         delegate?.loadingFinished(loader: nil)
     }
     
-    func loadingFailed(loader: APILoader?, error: Error?) {
+    func loadingFailed(loader: AbstractAPILoader?, error: Error?) {
         self.loader?.delegate = nil
         self.loader = nil
         delegate?.loadingFailed(loader: nil, error: error)

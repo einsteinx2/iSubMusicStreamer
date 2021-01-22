@@ -15,9 +15,9 @@ protocol CancelableLoader {
 
 @objc protocol APILoaderDelegate {
     @objc(loadingFinished:)
-    func loadingFinished(loader: APILoader?)
+    func loadingFinished(loader: AbstractAPILoader?)
     @objc(loadingFailed:error:)
-    func loadingFailed(loader: APILoader?, error: Error?)
+    func loadingFailed(loader: AbstractAPILoader?, error: Error?)
 }
 
 @objc protocol APILoaderManager {
@@ -46,7 +46,7 @@ protocol CancelableLoader {
     case tagAlbum           = 17
 }
 
-@objc class APILoader: NSObject, CancelableLoader {
+@objc class AbstractAPILoader: NSObject, CancelableLoader {
     static private let sessionDelegate = SelfSignedCertURLSessionDelegate()
     @objc final class var sharedSession: URLSession {
         let configuration = URLSessionConfiguration.ephemeral
@@ -61,24 +61,16 @@ protocol CancelableLoader {
     
     @objc var type: APILoaderType { .generic }
     
-    private var selfRef: APILoader?
+    private var selfRef: AbstractAPILoader?
     private var dataTask: URLSessionDataTask?
     
-    @objc override init() {
-        super.init()
-    }
-    
-    @objc init(delegate: APILoaderDelegate?) {
+    init(delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
         self.delegate = delegate
-        super.init()
-    }
-    
-    @objc init(callback: LoaderCallback?) {
         self.callback = callback
         super.init()
     }
     
-    @objc func createRequest() -> URLRequest? {
+    func createRequest() -> URLRequest? {
         return nil
     }
     
@@ -123,11 +115,10 @@ protocol CancelableLoader {
         selfRef = nil
     }
     
-    @objc func processResponse(data: Data) {
-        
+    func processResponse(data: Data) {
     }
     
-    @objc func informDelegateLoadingFinished() {
+    func informDelegateLoadingFinished() {
         DispatchQueue.main.async {
             self.delegate?.loadingFinished(loader: self)
             self.callback?(true, nil)
@@ -135,7 +126,7 @@ protocol CancelableLoader {
         }
     }
     
-    @objc func informDelegateLoadingFailed(error: Error?) {
+    func informDelegateLoadingFailed(error: Error?) {
         DispatchQueue.main.async {
             self.delegate?.loadingFailed(loader: self, error: error)
             self.callback?(false, error)

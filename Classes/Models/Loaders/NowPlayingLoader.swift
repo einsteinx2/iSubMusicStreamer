@@ -9,11 +9,17 @@
 import Foundation
 import Resolver
 
-final class NowPlayingLoader: APILoader {
+final class NowPlayingLoader: AbstractAPILoader {
     @Injected private var store: Store
     
-    var serverId = Settings.shared().currentServerId
-    var nowPlayingSongs = [NowPlayingSong]()
+    let serverId: Int
+    
+    private(set) var nowPlayingSongs = [NowPlayingSong]()
+    
+    init(serverId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+        self.serverId = serverId
+        super.init(delegate: delegate, callback: callback)
+    }
     
     // MARK: APILoader Overrides
     

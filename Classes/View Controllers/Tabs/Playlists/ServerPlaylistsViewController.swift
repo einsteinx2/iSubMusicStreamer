@@ -16,6 +16,8 @@ final class ServerPlaylistsViewController: UIViewController {
     @Injected private var settings: Settings
     @Injected private var playQueue: PlayQueue
     
+    var serverId = Settings.shared().currentServerId
+    
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "playlist", pluralizeClearType: false, isLargeCount: true)
     private let tableView = UITableView()
     
@@ -78,7 +80,7 @@ final class ServerPlaylistsViewController: UIViewController {
         tableView.refreshControl = nil
         setEditing(false, animated: false)
         removeSaveEditHeader()
-        serverPlaylists = store.serverPlaylists(serverId: settings.currentServerId)
+        serverPlaylists = store.serverPlaylists(serverId: serverId)
         if serverPlaylists.count > 0 {
             addSaveEditHeader()
         } else {
@@ -128,7 +130,7 @@ final class ServerPlaylistsViewController: UIViewController {
     private func loadServerPlaylists() {
         cancelLoad()
         HUD.show(closeHandler: cancelLoad)
-        self.serverPlaylistsLoader = ServerPlaylistsLoader()
+        self.serverPlaylistsLoader = ServerPlaylistsLoader(serverId: serverId)
         self.serverPlaylistsLoader?.callback = { [unowned self] (success, error) in
             if success {
                 self.serverPlaylists = self.serverPlaylistsLoader?.serverPlaylists ?? []

@@ -107,8 +107,7 @@ extension TagArtistsViewModel: APILoaderManager {
     func startLoad() {
         cancelLoad()
         
-        loader = RootArtistsLoader(delegate: self)
-        loader?.mediaFolderId = mediaFolderId
+        loader = RootArtistsLoader(serverId: serverId, mediaFolderId: mediaFolderId, delegate: self)
         loader?.startLoad()
     }
     
@@ -120,7 +119,7 @@ extension TagArtistsViewModel: APILoaderManager {
 }
 
 extension TagArtistsViewModel: APILoaderDelegate {
-    func loadingFinished(loader: APILoader?) {
+    func loadingFinished(loader: AbstractAPILoader?) {
         if let loader = loader as? RootArtistsLoader {
             metadata = loader.metadata
             tableSections = loader.tableSections
@@ -132,7 +131,7 @@ extension TagArtistsViewModel: APILoaderDelegate {
         delegate?.loadingFinished(loader: nil)
     }
     
-    func loadingFailed(loader: APILoader?, error: Error?) {
+    func loadingFailed(loader: AbstractAPILoader?, error: Error?) {
         self.loader?.delegate = nil
         self.loader = nil
         delegate?.loadingFailed(loader: nil, error: error)

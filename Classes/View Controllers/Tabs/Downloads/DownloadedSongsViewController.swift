@@ -15,6 +15,8 @@ final class DownloadedSongsViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
+    var serverId = Settings.shared().currentServerId
+    
     private var downloadedSongs = [DownloadedSong]()
     
     override func viewDidLoad() {
@@ -23,7 +25,7 @@ final class DownloadedSongsViewController: AbstractDownloadsViewController {
     }
 
     @objc override func reloadTable() {
-        downloadedSongs = store.downloadedSongs(serverId: settings.currentServerId)
+        downloadedSongs = store.downloadedSongs(serverId: serverId)
         super.reloadTable()
     }
 }

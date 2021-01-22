@@ -161,7 +161,7 @@ final class FolderAlbumViewController: UIViewController {
     
     func startLoad() {
         HUD.show(closeHandler: cancelLoad)
-        loader = SubfolderLoader(parentFolderId: parentFolderId) { [weak self] success, error in
+        loader = SubfolderLoader(serverId: serverId, parentFolderId: parentFolderId) { [weak self] success, error in
             guard let self = self else { return }
             
             if let loader = self.loader {

@@ -8,13 +8,14 @@
 
 import Foundation
 
-final class ChatSendLoader: APILoader {
-    var serverId = Settings.shared().currentServerId
-    private let message: String
+final class ChatSendLoader: AbstractAPILoader {
+    let serverId: Int
+    let message: String
     
-    init(message: String) {
+    init(serverId: Int, message: String, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+        self.serverId = serverId
         self.message = message
-        super.init()
+        super.init(delegate: delegate, callback: callback)
     }
     
     // MARK: APILoader Overrides

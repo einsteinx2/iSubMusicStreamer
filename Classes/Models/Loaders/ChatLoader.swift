@@ -9,9 +9,14 @@
 import Foundation
 import CocoaLumberjackSwift
 
-final class ChatLoader: APILoader {
-    var serverId = Settings.shared().currentServerId
-    var chatMessages = [ChatMessage]()
+final class ChatLoader: AbstractAPILoader {
+    let serverId: Int
+    private(set) var chatMessages = [ChatMessage]()
+    
+    init(serverId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+        self.serverId = serverId
+        super.init(delegate: delegate, callback: callback)
+    }
     
     // MARK: APILoader Overrides
     

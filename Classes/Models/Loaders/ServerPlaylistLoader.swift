@@ -9,15 +9,20 @@
 import Foundation
 import Resolver
 
-@objc final class ServerPlaylistLoader: APILoader {
+final class ServerPlaylistLoader: AbstractAPILoader {
     @Injected private var store: Store
     
-    @objc var serverId = Settings.shared().currentServerId
-    @objc let serverPlaylistId: Int
+    let serverId: Int
+    let serverPlaylistId: Int
     
-    @objc init(serverPlaylistId: Int) {
+    convenience init(serverPlaylist: ServerPlaylist, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+        self.init(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id, delegate: delegate, callback: callback)
+    }
+    
+    init(serverId: Int, serverPlaylistId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+        self.serverId = serverId
         self.serverPlaylistId = serverPlaylistId
-        super.init(delegate: nil)
+        super.init(delegate: delegate, callback: callback)
     }
     
     // MARK: APILoader Overrides

@@ -8,15 +8,14 @@
 
 import Foundation
 
-@objc final class ScrobbleLoader: APILoader {
-    @objc var serverId = Settings.shared().currentServerId
+@objc final class ScrobbleLoader: AbstractAPILoader {
     @objc let song: Song
     @objc let isSubmission: Bool
     
-    @objc init(song: Song, isSubmission: Bool, callback: LoaderCallback? = nil) {
+    @objc init(song: Song, isSubmission: Bool, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
         self.song = song
         self.isSubmission = isSubmission
-        super.init(callback: callback)
+        super.init(delegate: delegate, callback: callback)
     }
     
     // MARK: APILoader Overrides
@@ -24,7 +23,7 @@ import Foundation
     override var type: APILoaderType { .scrobble }
     
     override func createRequest() -> URLRequest? {
-        URLRequest(serverId: serverId, subsonicAction: "scrobble", parameters: ["id": song.id, "submission": isSubmission])
+        URLRequest(serverId: song.serverId, subsonicAction: "scrobble", parameters: ["id": song.id, "submission": isSubmission])
     }
     
     override func processResponse(data: Data) {

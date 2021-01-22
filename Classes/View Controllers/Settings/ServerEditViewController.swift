@@ -233,7 +233,7 @@ extension ServerEditViewController: UITextFieldDelegate {
 }
 
 extension ServerEditViewController: APILoaderDelegate {
-    func loadingFinished(loader: APILoader?) {
+    func loadingFinished(loader: AbstractAPILoader?) {
         HUD.hide()
         
         if let serverToEdit = serverToEdit {
@@ -260,7 +260,7 @@ extension ServerEditViewController: APILoaderDelegate {
         NotificationCenter.postOnMainThread(name: Notification.Name("switchServer"), userInfo: userInfo)
     }
     
-    func loadingFailed(loader: APILoader?, error: Error?) {
+    func loadingFailed(loader: AbstractAPILoader?, error: Error?) {
         HUD.hide()
         
         var message = "Unknown error occured, please try again."

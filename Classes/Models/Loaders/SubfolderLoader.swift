@@ -13,13 +13,14 @@ import Resolver
 typealias FolderAlbumHandler = (_ folderAlbum: FolderAlbum) -> ()
 typealias SongHandler = (_ song: Song) -> ()
 
-final class SubfolderLoader: APILoader {
+final class SubfolderLoader: AbstractAPILoader {
     @Injected private var store: Store
     
     override var type: APILoaderType { .subFolders }
     
-    var serverId = Settings.shared().currentServerId
+    let serverId: Int
     let parentFolderId: Int
+    
     private(set) var folderMetadata: FolderMetadata?
     private(set) var folderAlbumIds = [Int]()
     private(set) var songIds = [Int]()
@@ -27,11 +28,12 @@ final class SubfolderLoader: APILoader {
     var onProcessFolderAlbum: FolderAlbumHandler?
     var onProcessSong: SongHandler?
     
-    init(parentFolderId: Int, callback: LoaderCallback? = nil, folderAlbumHandler: FolderAlbumHandler? = nil, songHandler: SongHandler? = nil) {
+    init(serverId: Int, parentFolderId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil, folderAlbumHandler: FolderAlbumHandler? = nil, songHandler: SongHandler? = nil) {
+        self.serverId = serverId
         self.parentFolderId = parentFolderId
         self.onProcessFolderAlbum = folderAlbumHandler
         self.onProcessSong = songHandler
-        super.init(callback: callback)
+        super.init(delegate: delegate, callback: callback)
     }
     
     override func createRequest() -> URLRequest? {

@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-final class TagAlbumLoader: APILoader {
+final class TagAlbumLoader: AbstractAPILoader {
     @Injected private var store: Store
 
     let serverId: Int
@@ -18,10 +18,10 @@ final class TagAlbumLoader: APILoader {
     
     private(set) var songIds = [Int]()
     
-    init(serverId: Int, tagAlbumId: Int, callback: LoaderCallback? = nil) {
+    init(serverId: Int, tagAlbumId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
         self.serverId = serverId
         self.tagAlbumId = tagAlbumId
-        super.init(callback: callback)
+        super.init(delegate: delegate, callback: callback)
     }
     
     // MARK: APILoader Overrides

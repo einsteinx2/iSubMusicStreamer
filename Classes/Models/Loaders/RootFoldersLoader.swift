@@ -9,15 +9,21 @@
 import Foundation
 import Resolver
 
-final class RootFoldersLoader: APILoader {
+final class RootFoldersLoader: AbstractAPILoader {
     @Injected private var store: Store
     
-    var serverId = Settings.shared().currentServerId
-    var mediaFolderId = MediaFolder.allFoldersId
+    let serverId: Int
+    let mediaFolderId: Int
     
     private(set) var metadata: RootListMetadata?
     private(set) var tableSections = [TableSection]()
     private(set) var folderArtistIds = [Int]()
+    
+    init(serverId: Int, mediaFolderId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+        self.serverId = serverId
+        self.mediaFolderId = mediaFolderId
+        super.init(delegate: delegate, callback: callback)
+    }
     
     // MARK: APILoader Overrides
     

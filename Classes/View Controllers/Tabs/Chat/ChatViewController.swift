@@ -105,7 +105,7 @@ final class ChatViewController: UIViewController {
     
     private func send(message: String) {
         HUD.show(message: "Sending")
-        let chatSendLoader = ChatSendLoader(message: message)
+        let chatSendLoader = ChatSendLoader(serverId: serverId, message: message)
         chatSendLoader.callback = { [weak self] (success, error) in
             guard let self = self else { return }
             HUD.hide()
@@ -121,7 +121,7 @@ final class ChatViewController: UIViewController {
     func startLoad() {
         HUD.show(closeHandler: cancelLoad)
         cancelLoad()
-        loader = ChatLoader(delegate: self)
+        loader = ChatLoader(serverId: serverId, delegate: self)
         loader?.startLoad()
     }
     
@@ -134,7 +134,7 @@ final class ChatViewController: UIViewController {
 }
 
 extension ChatViewController: APILoaderDelegate {
-    func loadingFinished(loader: APILoader?) {
+    func loadingFinished(loader: AbstractAPILoader?) {
         if let loader = loader as? ChatLoader {
             chatMessages = loader.chatMessages
         }
@@ -147,7 +147,7 @@ extension ChatViewController: APILoaderDelegate {
         tableView.refreshControl?.endRefreshing()
     }
     
-    func loadingFailed(loader: APILoader?, error: Error?) {
+    func loadingFailed(loader: AbstractAPILoader?, error: Error?) {
         self.loader?.delegate = nil
         self.loader = nil
         

@@ -8,9 +8,15 @@
 
 import Foundation
 
-@objc final class DropdownFolderLoader: APILoader {
-    @objc var serverId = Settings.shared().currentServerId
+@objc final class DropdownFolderLoader: AbstractAPILoader {
+    @objc let serverId: Int
+    
     @objc private(set) var mediaFolders = [MediaFolder]()
+    
+    @objc init(serverId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+        self.serverId = serverId
+        super.init(delegate: delegate, callback: callback)
+    }
     
     // MARK: APILoader Overrides
     

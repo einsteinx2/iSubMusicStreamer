@@ -10,7 +10,7 @@
 
 #define cacheQueueManagerS ((ISMSCacheQueueManager *)[ISMSCacheQueueManager sharedInstance])
 
-@class ISMSSong, ISMSStreamHandler;
+@class ISMSSong, ISMSAbstractStreamHandler;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,7 +19,7 @@ NS_SWIFT_NAME(CacheQueue)
 
 @property BOOL isQueueDownloading;
 @property (nullable, copy) ISMSSong *currentQueuedSong;
-@property (nullable, strong) ISMSStreamHandler *currentStreamHandler;
+@property (nullable, strong) ISMSAbstractStreamHandler *currentStreamHandler;
 @property (nullable, weak, readonly) ISMSSong *currentQueuedSongInDb;
 
 + (instancetype)sharedInstance NS_SWIFT_NAME(shared());
