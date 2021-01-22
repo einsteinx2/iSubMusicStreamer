@@ -9,7 +9,6 @@
 #import "BassGaplessPlayer.h"
 #import "iSubBassGaplessPlayerDelegate.h"
 #import "SavedSettings.h"
-#import "ISMSCacheQueueManager.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 #import <AVFoundation/AVFoundation.h>
@@ -488,8 +487,8 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                                 
                                 // Get the stream for this song
                                 ISMSAbstractStreamHandler *handler = [StreamManager.shared handlerWithSong:userInfo.song];
-                                if (!handler && [[cacheQueueManagerS currentQueuedSong] isEqual:userInfo.song])
-                                    handler = [cacheQueueManagerS currentStreamHandler];
+                                if (!handler && [CacheQueue.shared.currentQueuedSong isEqual:userInfo.song])
+                                    handler = [CacheQueue.shared currentStreamHandler];
                                 
                                 // Calculate the bytes to wait based on the recent download speed. If the handler is nil or recent download speed is 0
                                 // it will just use the default (currently 10 seconds)

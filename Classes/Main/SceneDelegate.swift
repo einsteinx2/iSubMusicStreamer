@@ -211,7 +211,7 @@ import CocoaLumberjackSwift
         settings.saveState()
         UserDefaults.standard.synchronize()
         
-        if cacheQueue.isQueueDownloading {
+        if cacheQueue.isDownloading {
             backgroundTask = UIApplication.shared.beginBackgroundTask(expirationHandler: backgroundTaskExpirationHandler)
             isInBackground = true
             checkRemainingBackgroundTime()
@@ -251,8 +251,8 @@ import CocoaLumberjackSwift
     
     private func backgroundTaskExpirationHandler() {
         // App is about to be put to sleep, stop the cache download queue
-        if cacheQueue.isQueueDownloading {
-            cacheQueue.stopDownloadQueue()
+        if cacheQueue.isDownloading {
+            cacheQueue.stop()
         }
         
         // Make sure to end the background so we don't get killed by the OS
@@ -270,7 +270,7 @@ import CocoaLumberjackSwift
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(checkRemainingBackgroundTime), object: nil)
         guard isInBackground else { return }
         
-        if timeRemaining < 30 && cacheQueue.isQueueDownloading {
+        if timeRemaining < 30 && cacheQueue.isDownloading {
             // Warn at 30 second mark if cache queue is downloading
             // TODO: Test this implementation
             let content = UNMutableNotificationContent()
@@ -279,7 +279,7 @@ import CocoaLumberjackSwift
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-        } else if !cacheQueue.isQueueDownloading {
+        } else if !cacheQueue.isDownloading {
             // Cancel the next server check otherwise it will fire immediately on launch
             // TODO: See if this is necessary since the expiration handler should fire and handle it...
             serverChecker.cancelLoad()

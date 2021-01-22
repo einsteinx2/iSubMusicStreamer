@@ -97,8 +97,8 @@ extension DownloadedFolderArtistsViewController: UITableViewConfiguration {
                 if self.store.deleteDownloadedSongs(downloadedFolderArtist: self.downloadedFolderArtists[indexPath.row]) {
                     self.cache.findCacheSize()
                     NotificationCenter.postOnMainThread(name: Notifications.cachedSongDeleted)
-                    if (!self.cacheQueue.isQueueDownloading) {
-                        self.cacheQueue.startDownloadQueue()
+                    if (!self.cacheQueue.isDownloading) {
+                        self.cacheQueue.start()
                     }
                 }
                 DispatchQueue.main.async {

@@ -53,7 +53,7 @@ final class ServerChecker: NSObject {
                     
                     // Since the download queue has been a frequent source of crashes in the past, and we start this on launch automatically potentially resulting in a crash loop, do NOT start the download queue automatically if the app crashed on last launch.
                     if !self.settings.appCrashedOnLastRun {
-                        self.cacheQueue.startDownloadQueue()
+                        self.cacheQueue.start()
                     }
                 } else {
                     if !self.settings.isOfflineMode {

@@ -8,7 +8,6 @@
 
 #import "SavedSettings.h"
 #import "BassGaplessPlayer.h"
-#import "ISMSCacheQueueManager.h"
 #import "ISMSServer.h"
 #import "EX2Kit.h"
 #import "Defines.h"
@@ -480,7 +479,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
     
     if (!AppDelegate.shared.isWifi) {
-        isManualCachingOnWWANEnabled ? [cacheQueueManagerS startDownloadQueue] : [cacheQueueManagerS stopDownloadQueue];
+        isManualCachingOnWWANEnabled ? [CacheQueue.shared start] : [CacheQueue.shared stop];
     }
 }
 

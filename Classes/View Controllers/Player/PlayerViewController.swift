@@ -471,12 +471,12 @@ final class PlayerViewController: UIViewController {
             self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
             self.playPauseButton.tintColor = self.iconDefaultColor
         })
-        notificationObservers.append(NotificationCenter.addObserverOnMainThread(name: Notifications.songPlaybackPaused, object: nil) { [unowned self] _ in
+        notificationObservers.append(NotificationCenter.addObserverOnMainThread(name: Notifications.songPlaybackPaused) { [unowned self] _ in
             let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
             self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
             self.playPauseButton.tintColor = self.iconDefaultColor
         })
-        notificationObservers.append(NotificationCenter.addObserverOnMainThread(name: Notifications.songPlaybackStarted, object: nil) { [unowned self] _ in
+        notificationObservers.append(NotificationCenter.addObserverOnMainThread(name: Notifications.songPlaybackStarted) { [unowned self] _ in
             let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
             self.playPauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: playButtonConfig), for: .normal)
             self.playPauseButton.tintColor = self.iconDefaultColor

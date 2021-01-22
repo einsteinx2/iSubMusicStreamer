@@ -390,7 +390,7 @@ import CocoaLumberjackSwift
                                         withOffsetInBytes: NSNumber(value: offsetInBytes),
                                         orSeconds: NSNumber(value: offsetInSeconds))
                 }
-            } else if streamManager.isFirstInQueue(song: song) && !streamManager.isQueueDownloading {
+            } else if streamManager.isFirstInQueue(song: song) && !streamManager.isDownloading {
                 // The song is first in queue, but the queue is not downloading. Probably the song was downloading when the app quit. Resume the download and start the player
                 streamManager.resumeQueue()
                 

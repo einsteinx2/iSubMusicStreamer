@@ -59,7 +59,6 @@
 
 #import "SavedSettings.h"
 #import "BassGaplessPlayer.h"
-#import "ISMSCacheQueueManager.h"
 
 /*
  * Frameworks

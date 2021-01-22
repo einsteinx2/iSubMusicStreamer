@@ -26,6 +26,14 @@ extension Lyrics: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
+    // TODO: Should this return true when the if statement fails to prevent need for the same check in other places?
+    func isLyricsCached(song: Song) -> Bool {
+        if let tagArtistName = song.tagArtistName, song.title.count > 0 {
+            return isLyricsCached(tagArtistName: tagArtistName, songTitle: song.title)
+        }
+        return false
+    }
+    
     @objc func isLyricsCached(tagArtistName: String, songTitle: String) -> Bool {
         do {
             return try pool.read { db in

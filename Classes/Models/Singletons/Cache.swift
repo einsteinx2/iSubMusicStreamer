@@ -156,8 +156,8 @@ import CocoaLumberjackSwift
             
             findCacheSize()
             
-            if !cacheQueue.isQueueDownloading {
-                cacheQueue.startDownloadQueue()
+            if !cacheQueue.isDownloading {
+                cacheQueue.start()
             }
         }
     }

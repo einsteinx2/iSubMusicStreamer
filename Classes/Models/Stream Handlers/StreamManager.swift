@@ -58,7 +58,7 @@ import CocoaLumberjackSwift
     }
     
     var currentStreamingSong: Song? {
-        guard isQueueDownloading else { return nil }
+        guard isDownloading else { return nil }
         return handlerStack.first?.mySong
     }
     
@@ -85,7 +85,7 @@ import CocoaLumberjackSwift
         return handler(song: song)?.isDownloading ?? false
     }
     
-    var isQueueDownloading: Bool {
+    var isDownloading: Bool {
         for handler in handlerStack {
             if handler.isDownloading {
                 return true
@@ -147,7 +147,7 @@ import CocoaLumberjackSwift
         let song = handler.mySong
         let isCurrentQueuedSong = cacheQueue.currentQueuedSong?.isEqual(song) ?? false
         // TODO: Why is this checking if the CacheQueue is downloading?
-        if !isCurrentQueuedSong && !song.isFullyCached && !song.isTempCached && cacheQueue.isQueueDownloading {
+        if !isCurrentQueuedSong && !song.isFullyCached && !song.isTempCached && cacheQueue.isDownloading {
             DDLogInfo("[StreamManager] Removing song from cached songs table: \(song)")
             _ = song.removeFromDownloads()
         }
@@ -216,7 +216,7 @@ import CocoaLumberjackSwift
         guard isInQueue(song: handler.mySong) else { return }
         
         let isCurrentQueuedSong = cacheQueue.currentQueuedSong?.isEqual(handler.mySong) ?? false
-        if cacheQueue.isQueueDownloading && isCurrentQueuedSong {
+        if cacheQueue.isDownloading && isCurrentQueuedSong {
             // This song is already being downloaded by the cache queue, so just start the player
             ismsStreamHandlerStartPlayback(handler)
             
@@ -245,7 +245,7 @@ import CocoaLumberjackSwift
         DDLogInfo("[StreamManager] starting handler \(handler) resume: \(resume), handlerStack: \(handlerStack)")
         
         let isCurrentQueuedSong = cacheQueue.currentQueuedSong?.isEqual(handler.mySong) ?? false
-        if cacheQueue.isQueueDownloading && isCurrentQueuedSong {
+        if cacheQueue.isDownloading && isCurrentQueuedSong {
             // This song is already being downloaded by the cache queue, so just start the player
             ismsStreamHandlerStartPlayback(handler)
             
@@ -258,12 +258,6 @@ import CocoaLumberjackSwift
             }
         } else {
             handler.start(resume)
-            let title = handler.mySong.title
-            if let tagArtistName = handler.mySong.tagArtistName, title.count > 0 {
-                if !store.isLyricsCached(tagArtistName: tagArtistName, songTitle: title) {
-                    LyricsLoader(serverId: handler.mySong.serverId, tagArtistName: tagArtistName, songTitle: title).startLoad()
-                }
-            }
         }
     }
     
@@ -311,7 +305,7 @@ import CocoaLumberjackSwift
     
     // MARK: Download
     
-    // TODO: implement this (queue the 4 loaders so that they execute sequentially)
+    // TODO: implement this (queue the 5 loaders so that they execute sequentially)
     func queueStream(song: Song, byteOffset: UInt64 = 0, secondsOffset: Double = 0.0, index: Int, tempCache: Bool, startDownload: Bool) {
         guard index <= handlerStack.count, !isInQueue(song: song) else { return }
         
@@ -319,6 +313,13 @@ import CocoaLumberjackSwift
         handlerStack.insert(handler, at: index)
         if handlerStack.count == 1 && startDownload {
             start(handler: handler)
+        }
+        
+        // Download the lyrics
+        if handler.mySong.tagArtistName != nil && handler.mySong.title.count > 0 {
+            if !store.isLyricsCached(song: handler.mySong) {
+                LyricsLoader(song: handler.mySong)?.startLoad()
+            }
         }
         
         // Download the cover art
@@ -471,7 +472,7 @@ import CocoaLumberjackSwift
         
         // TODO: Should check store return values and do some extra error handling?
         if !handler.isTempCache {
-            if cacheQueue.isSong(inQueue: handler.mySong) {
+            if cacheQueue.isInQueue(song: handler.mySong) {
                 _ = store.removeFromDownloadQueue(song: handler.mySong)
             }
             DDLogInfo("[StreamManager] Marking download finished for \(handler.mySong)")
@@ -490,7 +491,7 @@ import CocoaLumberjackSwift
         }
         
         fillStreamQueue()
-        NotificationCenter.postOnMainThread(name: Notifications.streamHandlerSongDownloaded, object: nil, userInfo: ["songId": handler.mySong.id])
+        NotificationCenter.postOnMainThread(name: Notifications.streamHandlerSongDownloaded, userInfo: ["songId": handler.mySong.id])
     }
     
     func ismsStreamHandlerConnectionFailed(_ handler: ISMSAbstractStreamHandler, withError error: Error?) {

@@ -20,7 +20,7 @@ struct DependencyInjection {
         main.register(factory: { Settings.shared() as Settings }).scope(Resolver.application)
         main.register(factory: { BassGaplessPlayer.shared() as BassGaplessPlayer }).scope(Resolver.application)
         main.register(factory: { Cache() as Cache }).scope(Resolver.application)
-        main.register(factory: { CacheQueue.shared() as CacheQueue }).scope(Resolver.application)
+        main.register(factory: { CacheQueue() as CacheQueue }).scope(Resolver.application)
         main.register(factory: { StreamManager() as StreamManager }).scope(Resolver.application)
         main.register(factory: { Jukebox() as Jukebox }).scope(Resolver.application)
         main.register(factory: { PlayQueue() as PlayQueue }).scope(Resolver.application)

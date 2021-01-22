@@ -658,6 +658,22 @@ extension Store {
         }
     }
     
+    func isSongInDownloadQueue(song: Song) -> Bool {
+        do {
+            return try pool.read { db in
+                let sql: SQLLiteral = """
+                    SELECT songId
+                    FROM downloadQueue
+                    WHERE downloadQueue.serverId = \(song.serverId) AND downloadQueue.songId = \(song.id)
+                    """
+                return try SQLRequest<Int>(literal: sql).fetchCount(db) > 0
+            }
+        } catch {
+            DDLogError("Failed to check if song \(song) is in download queue: \(error)")
+            return false
+        }
+    }
+    
     @objc func firstSongInDownloadQueue() -> Song? {
         return songFromDownloadQueue(position: 0)
     }
