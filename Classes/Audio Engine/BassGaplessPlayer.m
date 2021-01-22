@@ -9,7 +9,6 @@
 #import "BassGaplessPlayer.h"
 #import "iSubBassGaplessPlayerDelegate.h"
 #import "SavedSettings.h"
-#import "ISMSStreamManager.h"
 #import "ISMSCacheQueueManager.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -488,7 +487,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                                 NSUInteger bitrate = [BassWrapper estimateBitrate:userInfo];
                                 
                                 // Get the stream for this song
-                                ISMSStreamHandler *handler = [streamManagerS handlerForSong:userInfo.song];
+                                ISMSStreamHandler *handler = [StreamManager.shared handlerWithSong:userInfo.song];
                                 if (!handler && [[cacheQueueManagerS currentQueuedSong] isEqual:userInfo.song])
                                     handler = [cacheQueueManagerS currentStreamHandler];
                                 
@@ -527,7 +526,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                                             if (userInfo.localFileSize >= userInfo.neededSize) {
                                                 break;
                                             // Handle temp cached songs ending. When they end, they are set as the last temp cached song, so we know it's done and can stop waiting for data.
-                                            } else if (theSong.isTempCached && [theSong isEqual:streamManagerS.lastTempCachedSong]) {
+                                            } else if (theSong.isTempCached && [theSong isEqual:StreamManager.shared.lastTempCachedSong]) {
                                                 break;
                                             // If the song has finished caching, we can stop waiting
                                             } else if (theSong.isFullyCached) {

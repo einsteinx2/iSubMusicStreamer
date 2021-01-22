@@ -36,7 +36,7 @@ import Resolver
         store.isCoverArtCached(serverId: serverId, id: coverArtId, isLarge: isLarge)
     }
     
-    @objc init(coverArtId: String, isLarge: Bool, delegate: APILoaderDelegate?) {
+    @objc init(coverArtId: String, isLarge: Bool, delegate: APILoaderDelegate? = nil) {
         self.coverArtId = coverArtId
         self.isLarge = isLarge
         self.delegate = delegate
@@ -58,8 +58,7 @@ import Resolver
 @objc extension CoverArtDAO: APILoaderManager {
     func startLoad() {
         cancelLoad()
-        loader = CoverArtLoader(coverArtId: coverArtId, isLarge: isLarge, delegate: self)
-        loader?.serverId = serverId
+        loader = CoverArtLoader(serverId: serverId, coverArtId: coverArtId, isLarge: isLarge, delegate: self)
         loader?.startLoad()
     }
     

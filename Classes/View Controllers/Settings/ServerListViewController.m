@@ -9,9 +9,7 @@
 #import "ServerListViewController.h"
 #import "SettingsTabViewController.h"
 #import "Defines.h"
-#import "AudioEngine.h"
 #import "SavedSettings.h"
-#import "ISMSStreamManager.h"
 #import "ISMSErrorDomain.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -186,7 +184,7 @@ LOG_LEVEL_ISUB_DEFAULT
         }
 		
 		// Cancel any caching
-		[streamManagerS removeAllStreams];
+        [StreamManager.shared removeAllStreams];
 		
 		// Cancel any tab loads
         settingsS.isCancelLoading = YES;

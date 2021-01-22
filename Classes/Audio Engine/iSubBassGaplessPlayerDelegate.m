@@ -9,7 +9,6 @@
 #import "iSubBassGaplessPlayerDelegate.h"
 #import "BassGaplessPlayer.h"
 #import "ISMSStreamHandler.h"
-#import "ISMSStreamManager.h"
 #import "Defines.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -88,8 +87,8 @@
 
 - (void)bassFailedToCreateNextStreamForIndex:(NSUInteger)index player:(BassGaplessPlayer *)player {
     // The song ended, and we tried to make the next stream but it failed
-    ISMSSong *aSong = [PlayQueue.shared songWithIndex:index];
-    ISMSStreamHandler *handler = [streamManagerS handlerForSong:aSong];
+    ISMSSong *song = [PlayQueue.shared songWithIndex:index];
+    ISMSStreamHandler *handler = [StreamManager.shared handlerWithSong:song];
     if (!handler.isDownloading || handler.isDelegateNotifiedToStartPlayback) {
         // If the song isn't downloading, or it is and it already informed the player to play (i.e. the playlist will stop if we don't force a retry), then retry
         [EX2Dispatch runInMainThreadAsync:^{

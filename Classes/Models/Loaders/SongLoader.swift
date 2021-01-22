@@ -22,22 +22,22 @@ struct SongLoader {
     
     // MARK: Public Helper Functions
     
-    static func downloadAll(folderId: Int) {
-        recursiveLoader = RecursiveSongLoader(folderId: folderId, callback: downloadCallback(success:error:))
+    static func downloadAll(serverId: Int, folderId: Int) {
+        recursiveLoader = RecursiveSongLoader(serverId: serverId, folderId: folderId, callback: downloadCallback(success:error:))
         recursiveLoader?.downloadAll()
         showLoadingScreen(loader: recursiveLoader)
     }
     
-    static func downloadAll(tagArtistId: Int) {
-        recursiveLoader = RecursiveSongLoader(tagArtistId: tagArtistId, callback: downloadCallback(success:error:))
+    static func downloadAll(serverId: Int, tagArtistId: Int) {
+        recursiveLoader = RecursiveSongLoader(serverId: serverId, tagArtistId: tagArtistId, callback: downloadCallback(success:error:))
         recursiveLoader?.downloadAll()
         showLoadingScreen(loader: recursiveLoader)
     }
     
-    static func downloadAll(tagAlbumId: Int) {
-        albumLoader = TagAlbumLoader(tagAlbumId: tagAlbumId) { success, error in
+    static func downloadAll(serverId: Int, tagAlbumId: Int) {
+        albumLoader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId) { success, error in
             if success, let albumLoader = albumLoader {
-                _ = store.addToDownloadQueue(serverId: albumLoader.serverId, songIds: albumLoader.songIds)
+                _ = store.addToDownloadQueue(serverId: serverId, songIds: albumLoader.songIds)
             }
             downloadCallback(success: success, error: error)
         }
@@ -45,60 +45,60 @@ struct SongLoader {
         showLoadingScreen(loader: albumLoader)
     }
     
-    static func queueAll(folderId: Int) {
-        recursiveLoader = RecursiveSongLoader(folderId: folderId, callback: queueCallback(success:error:))
+    static func queueAll(serverId: Int, folderId: Int) {
+        recursiveLoader = RecursiveSongLoader(serverId: serverId, folderId: folderId, callback: queueCallback(success:error:))
         recursiveLoader?.queueAll()
         showLoadingScreen(loader: recursiveLoader)
     }
     
-    static func queueAll(tagArtistId: Int) {
-        recursiveLoader = RecursiveSongLoader(tagArtistId: tagArtistId, callback: queueCallback(success:error:))
+    static func queueAll(serverId: Int, tagArtistId: Int) {
+        recursiveLoader = RecursiveSongLoader(serverId: serverId, tagArtistId: tagArtistId, callback: queueCallback(success:error:))
         recursiveLoader?.queueAll()
         showLoadingScreen(loader: recursiveLoader)
     }
     
-    static func queueAll(tagAlbumId: Int) {
-        queueTagAlbum(tagAlbumId: tagAlbumId, callback: queueCallback(success:error:))
+    static func queueAll(serverId: Int, tagAlbumId: Int) {
+        queueTagAlbum(serverId: serverId, tagAlbumId: tagAlbumId, callback: queueCallback(success:error:))
         showLoadingScreen(loader: albumLoader)
     }
     
-    static func playAll(folderId: Int) {
+    static func playAll(serverId: Int, folderId: Int) {
         preparePlayAll()
-        recursiveLoader = RecursiveSongLoader(folderId: folderId, callback: playCallback(success:error:))
+        recursiveLoader = RecursiveSongLoader(serverId: serverId, folderId: folderId, callback: playCallback(success:error:))
         recursiveLoader?.queueAll()
         showLoadingScreen(loader: recursiveLoader)
     }
     
-    static func playAll(tagArtistId: Int) {
+    static func playAll(serverId: Int, tagArtistId: Int) {
         preparePlayAll()
-        recursiveLoader = RecursiveSongLoader(tagArtistId: tagArtistId, callback: playCallback(success:error:))
+        recursiveLoader = RecursiveSongLoader(serverId: serverId, tagArtistId: tagArtistId, callback: playCallback(success:error:))
         recursiveLoader?.queueAll()
         showLoadingScreen(loader: recursiveLoader)
     }
     
-    static func playAll(tagAlbumId: Int) {
+    static func playAll(serverId: Int, tagAlbumId: Int) {
         preparePlayAll()
-        queueTagAlbum(tagAlbumId: tagAlbumId, callback: playCallback(success:error:))
+        queueTagAlbum(serverId: serverId, tagAlbumId: tagAlbumId, callback: playCallback(success:error:))
         showLoadingScreen(loader: albumLoader)
     }
     
-    static func shuffleAll(folderId: Int) {
+    static func shuffleAll(serverId: Int, folderId: Int) {
         preparePlayAll()
-        recursiveLoader = RecursiveSongLoader(folderId: folderId, callback: shuffleCallback(success:error:))
+        recursiveLoader = RecursiveSongLoader(serverId: serverId, folderId: folderId, callback: shuffleCallback(success:error:))
         recursiveLoader?.queueAll()
         showLoadingScreen(loader: recursiveLoader)
     }
     
-    static func shuffleAll(tagArtistId: Int) {
+    static func shuffleAll(serverId: Int, tagArtistId: Int) {
         preparePlayAll()
-        recursiveLoader = RecursiveSongLoader(tagArtistId: tagArtistId, callback: shuffleCallback(success:error:))
+        recursiveLoader = RecursiveSongLoader(serverId: serverId, tagArtistId: tagArtistId, callback: shuffleCallback(success:error:))
         recursiveLoader?.queueAll()
         showLoadingScreen(loader: recursiveLoader)
     }
     
-    static func shuffleAll(tagAlbumId: Int) {
+    static func shuffleAll(serverId: Int, tagAlbumId: Int) {
         preparePlayAll()
-        queueTagAlbum(tagAlbumId: tagAlbumId, callback: shuffleCallback(success:error:))
+        queueTagAlbum(serverId: serverId, tagAlbumId: tagAlbumId, callback: shuffleCallback(success:error:))
         showLoadingScreen(loader: albumLoader)
     }
     
@@ -113,7 +113,7 @@ struct SongLoader {
             if settings.isJukeboxEnabled {
                 jukebox.replacePlaylistWithLocal()
             } else {
-                streamManager.fillStreamQueue(player.isStarted)
+                streamManager.fillStreamQueue(startDownload: player.isStarted)
             }
         }
         finishLoading()
@@ -124,7 +124,7 @@ struct SongLoader {
             if settings.isJukeboxEnabled {
                 jukebox.replacePlaylistWithLocal()
             } else {
-                streamManager.fillStreamQueue(player.isStarted)
+                streamManager.fillStreamQueue(startDownload: player.isStarted)
             }
             playQueue.playSong(position: 0)
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
@@ -141,7 +141,7 @@ struct SongLoader {
             if settings.isJukeboxEnabled {
                 jukebox.replacePlaylistWithLocal()
             } else {
-                streamManager.fillStreamQueue(player.isStarted)
+                streamManager.fillStreamQueue(startDownload: player.isStarted)
             }
             playQueue.playSong(position: 0)
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
@@ -160,10 +160,10 @@ struct SongLoader {
         playQueue.isShuffle = false
     }
     
-    private static func queueTagAlbum(tagAlbumId: Int, callback: @escaping LoaderCallback) {
-        albumLoader = TagAlbumLoader(tagAlbumId: tagAlbumId) { success, error in
+    private static func queueTagAlbum(serverId: Int, tagAlbumId: Int, callback: @escaping LoaderCallback) {
+        albumLoader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId) { success, error in
             if success, let albumLoader = albumLoader {
-                _ = store.queue(songIds: albumLoader.songIds, serverId: albumLoader.serverId)
+                _ = store.queue(songIds: albumLoader.songIds, serverId: serverId)
             }
             callback(success, error)
         }

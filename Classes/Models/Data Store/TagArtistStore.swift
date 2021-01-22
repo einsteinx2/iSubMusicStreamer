@@ -66,6 +66,17 @@ extension TagArtist: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
+    func isTagArtistCached(serverId: Int, id: Int) -> Bool {
+        do {
+            return try pool.read { db in
+                try TagArtist.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchCount(db) > 0
+            }
+        } catch {
+            DDLogError("Failed to select tag artist count for \(id) server \(serverId): \(error)")
+            return false
+        }
+    }
+    
     func deleteTagArtists(serverId: Int, mediaFolderId: Int) -> Bool {
         do {
             return try pool.write { db in

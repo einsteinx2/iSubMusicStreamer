@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSUInteger numOfReconnects;
 @property BOOL isTempCache;
 @property NSUInteger bitrate;
-@property (weak, readonly) NSString *filePath;
+@property (readonly) NSString *filePath;
 @property BOOL partialPrecacheSleep;
 @property BOOL isDownloading;
 @property BOOL isCurrentSong;

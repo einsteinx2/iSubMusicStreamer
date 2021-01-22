@@ -12,7 +12,6 @@
 #import "EqualizerPathView.h"
 #import "SnappySlider.h"
 #import "Flurry.h"
-#import "AudioEngine.h"
 #import "SavedSettings.h"
 #import "EX2Kit.h"
 #import "Swift.h"

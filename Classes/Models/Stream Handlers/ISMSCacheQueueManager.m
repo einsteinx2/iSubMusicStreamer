@@ -8,12 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "ISMSCacheQueueManager.h"
-#import "ISMSStreamManager.h"
 #import "ISMSStreamHandler.h"
 #import "RXMLElement.h"
 #import "ISMSNSURLSessionStreamHandler.h"
 #import "SavedSettings.h"
-#import "ISMSStreamManager.h"
 #import "EX2Kit.h"
 #import "Swift.h"
 
@@ -117,22 +115,25 @@ LOG_LEVEL_ISUB_DEFAULT
 	// Download the art
 	if (self.currentQueuedSong.coverArtId) {
 		NSString *coverArtId = self.currentQueuedSong.coverArtId;
-		CoverArtLoader *playerArt = [[CoverArtLoader alloc] initWithCoverArtId:coverArtId isLarge:YES delegate:nil];
+        NSInteger serverId = settingsS.currentServerId;
+        CoverArtLoader *playerArt = [[CoverArtLoader alloc] initWithServerId:serverId coverArtId:coverArtId isLarge:YES delegate:nil];
 		(void)[playerArt downloadArtIfNotExists];
 		
-		CoverArtLoader *tableArt = [[CoverArtLoader alloc] initWithCoverArtId:coverArtId isLarge:NO delegate:nil];
+        CoverArtLoader *tableArt = [[CoverArtLoader alloc] initWithServerId:serverId coverArtId:coverArtId isLarge:NO delegate:nil];
 		(void)[tableArt downloadArtIfNotExists];
+        
+        // TODO: implement this - Download the artist and album using same logic as stream manager
 	}
 	
 	// Create the stream handler
-	ISMSStreamHandler *handler = [streamManagerS handlerForSong:self.currentQueuedSong];
+	ISMSStreamHandler *handler = [StreamManager.shared handlerWithSong:self.currentQueuedSong];
 	if (handler) {
         DDLogInfo(@"[ISMSCacheQueueManager] stealing %@ from stream manager", handler.mySong.title);
 		
 		// It's in the stream queue so steal the handler
 		self.currentStreamHandler = handler;
 		self.currentStreamHandler.delegate = self;
-		[streamManagerS stealHandlerForCacheQueue:handler];
+		[StreamManager.shared stealForCacheQueueWithHandler:handler];
 		if (!self.currentStreamHandler.isDownloading) {
 			[self.currentStreamHandler start:YES];
 		}
@@ -183,7 +184,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)ISMSStreamHandlerStartPlayback:(ISMSStreamHandler *)handler {
-	[streamManagerS ISMSStreamHandlerStartPlayback:handler];
+	[StreamManager.shared ISMSStreamHandlerStartPlayback:handler];
 }
 
 - (void)ISMSStreamHandlerConnectionFailed:(ISMSStreamHandler *)handler withError:(NSError *)error {

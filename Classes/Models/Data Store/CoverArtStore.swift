@@ -95,7 +95,7 @@ extension Store {
                 try CoverArt.filter(literal: "serverId = \(serverId) AND id = \(id) AND isLarge = \(isLarge)").fetchCount(db) > 0
             }
         } catch {
-            DDLogError("Failed to select cover art count \(id) server \(serverId) isLarge \(isLarge): \(error)")
+            DDLogError("Failed to select cover art count for \(id) server \(serverId) isLarge \(isLarge): \(error)")
             return false
         }
     }
@@ -106,7 +106,7 @@ extension Store {
                 try ArtistArt.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchCount(db) > 0
             }
         } catch {
-            DDLogError("Failed to select artist art count \(id) server \(serverId): \(error)")
+            DDLogError("Failed to select artist art count for \(id) server \(serverId): \(error)")
             return false
         }
     }

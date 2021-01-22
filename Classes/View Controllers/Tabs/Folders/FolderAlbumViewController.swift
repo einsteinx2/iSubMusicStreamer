@@ -121,9 +121,9 @@ final class FolderAlbumViewController: UIViewController {
         
         // Create the play all and shuffle buttons and constrain to the container view
         let playAllAndShuffleHeader = PlayAllAndShuffleHeader(playAllHandler: { [unowned self] in
-            SongLoader.playAll(folderId: parentFolderId)
+            SongLoader.playAll(serverId: serverId, folderId: parentFolderId)
         }, shuffleHandler: { [unowned self] in
-            SongLoader.shuffleAll(folderId: parentFolderId)
+            SongLoader.shuffleAll(serverId: serverId, folderId: parentFolderId)
         })
         headerView.addSubview(playAllAndShuffleHeader)
         playAllAndShuffleHeader.snp.makeConstraints { make in

@@ -238,7 +238,7 @@ import CocoaLumberjackSwift
                     jukebox.playSong(index: position)
                 }
             } else {
-                streamManager.removeAllStreamsExcept(for: currentSong)
+                streamManager.removeAllStreams(except: currentSong)
                 if currentSong.isVideo {
                     NotificationCenter.postOnMainThread(name: Notifications.playVideo, userInfo: ["song": currentSong])
                 } else {
@@ -370,7 +370,7 @@ import CocoaLumberjackSwift
             
             // Fill the stream queue
             if !settings.isOfflineMode {
-                streamManager.fillStreamQueue(true)
+                streamManager.fillStreamQueue(startDownload: true)
                 //[streamManagerS fillStreamQueue:audioEngineS.player.isStarted];
             }
         } else if !song.isFullyCached && settings.isOfflineMode {
@@ -381,21 +381,21 @@ import CocoaLumberjackSwift
                 cacheQueue.removeCurrentSong()
             }
             
-            if streamManager.isSongDownloading(song) {
+            if streamManager.isDownloading(song: song) {
                 // The song is caching, start streaming from the local copy
-                if let handler = streamManager.handler(for: song), !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
+                if let handler = streamManager.handler(song: song), !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
                     // Only start the player if the handler isn't going to do it itself
                     player.startNewSong(song,
                                         at: UInt(index),
                                         withOffsetInBytes: NSNumber(value: offsetInBytes),
                                         orSeconds: NSNumber(value: offsetInSeconds))
                 }
-            } else if streamManager.isSongFirstInQueue(song: song) && !streamManager.isQueueDownloading {
+            } else if streamManager.isFirstInQueue(song: song) && !streamManager.isQueueDownloading {
                 // The song is first in queue, but the queue is not downloading. Probably the song was downloading when the app quit. Resume the download and start the player
                 streamManager.resumeQueue()
                 
                 // The song is caching, start streaming from the local copy
-                if let handler = streamManager.handler(for: song), !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
+                if let handler = streamManager.handler(song: song), !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
                     // Only start the player if the handler isn't going to do it itself
                     player.startNewSong(song,
                                         at: UInt(index),
@@ -407,17 +407,16 @@ import CocoaLumberjackSwift
                 streamManager.removeAllStreams()
                 
                 // Start downloading the current song from the correct offset
-                let isTempCache = offsetInBytes > 0 || !settings.isSongCachingEnabled
-                streamManager.queueStream(for: song,
+                streamManager.queueStream(song: song,
                                           byteOffset: offsetInBytes,
                                           secondsOffset: offsetInSeconds,
-                                          at: 0,
-                                          isTempCache: isTempCache,
-                                          isStartDownload: true)
+                                          index: 0,
+                                          tempCache: offsetInBytes > 0 || !settings.isSongCachingEnabled,
+                                          startDownload: true)
                 
                 // Fill the stream queue
                 if settings.isSongCachingEnabled {
-                    streamManager.fillStreamQueue(player.isStarted)
+                    streamManager.fillStreamQueue(startDownload: player.isStarted)
                 }
             }
         }

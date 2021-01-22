@@ -34,6 +34,7 @@
 
 // Loaders
 #import "ISMSErrorDomain.h"
+#import "ISMSNSURLSessionStreamHandler.h"
 
 // DAOs
 #import "ISMSBookmarkDAO.h"
@@ -58,7 +59,6 @@
 
 #import "SavedSettings.h"
 #import "BassGaplessPlayer.h"
-#import "ISMSStreamManager.h"
 #import "ISMSCacheQueueManager.h"
 
 /*

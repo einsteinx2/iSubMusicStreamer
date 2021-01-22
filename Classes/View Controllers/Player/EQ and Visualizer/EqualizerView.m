@@ -11,7 +11,6 @@
 #import "OpenGLCommon.h"
 #import "ConstantsAndMacros.h"
 #import "EqualizerView.h"
-#import "AudioEngine.h"
 #import "SavedSettings.h"
 #import "EX2Kit.h"
 #import "Swift.h"

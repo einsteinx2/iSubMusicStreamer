@@ -17,7 +17,7 @@ import Resolver
     let songTitle: String
     var lyrics: Lyrics?
     
-    @objc init(tagArtistName: String, songTitle: String, delegate: APILoaderDelegate?) {
+    @objc init(tagArtistName: String, songTitle: String, delegate: APILoaderDelegate? = nil) {
         self.tagArtistName = tagArtistName
         self.songTitle = songTitle
         super.init(delegate: delegate)

@@ -22,7 +22,7 @@ import Resolver
     private static var syncObject = NSObject()
     private static var loadingIds = Set<String>()
     
-    @objc var serverId = Settings.shared().currentServerId
+    private let serverId: Int
     private let coverArtId: String
     private let isLarge: Bool
     
@@ -34,7 +34,8 @@ import Resolver
         return store.isCoverArtCached(serverId: serverId, id: coverArtId, isLarge: isLarge)
     }
     
-    @objc init(coverArtId: String, isLarge: Bool, delegate: APILoaderDelegate?) {
+    @objc init(serverId: Int, coverArtId: String, isLarge: Bool, delegate: APILoaderDelegate? = nil) {
+        self.serverId = serverId
         self.coverArtId = coverArtId
         self.isLarge = isLarge
         super.init(delegate: delegate)

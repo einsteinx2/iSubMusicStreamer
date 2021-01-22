@@ -548,12 +548,10 @@ final class PlayerViewController: UIViewController {
             player.startByteOffset = byteOffset
             player.startSecondsOffset = UInt(secondsOffset)
             
-            streamManager.removeStream(at: 0)
-            streamManager.queueStream(for: currentSong, byteOffset: UInt64(byteOffset), secondsOffset: Double(secondsOffset), at: 0, isTempCache: true, isStartDownload: true)
-            if streamManager.handlerStack.count > 1 {
-                if let handler = streamManager.handlerStack.firstObject as? ISMSStreamHandler {
-                    handler.start()
-                }
+            streamManager.removeStream(index: 0)
+            streamManager.queueStream(song: currentSong, byteOffset: UInt64(byteOffset), secondsOffset: Double(secondsOffset), index: 0, tempCache: true, startDownload: true)
+            if let handler = streamManager.firstHandlerInQueue {
+                handler.start()
             }
             progressDisplayLink?.isPaused = false
         } else {
@@ -568,12 +566,10 @@ final class PlayerViewController: UIViewController {
                     self.player.startByteOffset = byteOffset
                     self.player.startSecondsOffset = UInt(self.progressSlider.value)
                     
-                    self.streamManager.removeStream(at: 0)
-                    self.streamManager.queueStream(for: currentSong, byteOffset: UInt64(byteOffset), secondsOffset: Double(self.progressSlider.value), at: 0, isTempCache: true, isStartDownload: true)
-                    if self.streamManager.handlerStack.count > 1 {
-                        if let handler = self.streamManager.handlerStack.firstObject as? ISMSStreamHandler {
-                            handler.start()
-                        }
+                    self.streamManager.removeStream(index: 0)
+                    self.streamManager.queueStream(song: currentSong, byteOffset: UInt64(byteOffset), secondsOffset: Double(self.progressSlider.value), index: 0, tempCache: true, startDownload: true)
+                    if let handler = self.streamManager.firstHandlerInQueue {
+                        handler.start()
                     }
                     self.progressDisplayLink?.isPaused = false
                 }

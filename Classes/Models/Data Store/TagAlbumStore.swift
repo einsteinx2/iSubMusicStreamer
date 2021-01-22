@@ -50,6 +50,41 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
+    func isTagAlbumCached(serverId: Int, id: Int) -> Bool {
+        do {
+            return try pool.read { db in
+                try TagAlbum.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchCount(db) > 0
+            }
+        } catch {
+            DDLogError("Failed to select tag album count for \(id) server \(serverId): \(error)")
+            return false
+        }
+    }
+    
+    // Checks if all songs from the tag album are in the database
+    func isTagAlbumSongsCached(serverId: Int, id: Int) -> Bool {
+        do {
+            return try pool.read { db in
+                // If the tag album itself isn't cached, then assume it's songs aren't cached
+                guard let tagAlbum = try TagAlbum.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db) else {
+                    return false
+                }
+                
+                // Check if the songIds count matches the number of songs this album should have
+                let sql: SQLLiteral = """
+                    SELECT songId
+                    FROM tagSongList
+                    WHERE serverId = \(serverId) AND tagAlbumId = \(id)
+                    """
+                let songIdsCount = try SQLRequest<Int>(literal: sql).fetchCount(db)
+                return tagAlbum.songCount == songIdsCount
+            }
+        } catch {
+            DDLogError("Failed to select tag album count for \(id) server \(serverId): \(error)")
+            return false
+        }
+    }
+    
     @objc func deleteTagAlbums(serverId: Int) -> Bool {
         do {
             return try pool.write { db in

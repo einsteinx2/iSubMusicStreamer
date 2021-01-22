@@ -38,4 +38,7 @@
 #define ISMSErrorCode_Database                  9
 #define ISMSErrorDesc_Database                  @"Problem working with local database"
 
+#define ISMSErrorCode_IncorrectXMLResponse      10
+#define ISMSErrorDesc_IncorrectXMLResponse      @"Received the incorrect data from the XML response"
+
 #endif

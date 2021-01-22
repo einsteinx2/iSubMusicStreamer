@@ -84,6 +84,6 @@ import Foundation
     }
     var durationLabelText: String? { nil }
     var isCached: Bool { false }
-    func download() { SongLoader.downloadAll(tagAlbumId: id) }
-    func queue() { SongLoader.queueAll(tagAlbumId: id) }
+    func download() { SongLoader.downloadAll(serverId: serverId, tagAlbumId: id) }
+    func queue() { SongLoader.queueAll(serverId: serverId, tagAlbumId: id) }
 }

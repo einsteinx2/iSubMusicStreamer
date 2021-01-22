@@ -36,8 +36,8 @@ extension FolderArtist: TableCellModel {
     var durationLabelText: String? { return nil }
     var coverArtId: String? { return nil }
     var isCached: Bool { return false }
-    func download() { SongLoader.downloadAll(folderId: id) }
-    func queue() { SongLoader.queueAll(folderId: id) }
+    func download() { SongLoader.downloadAll(serverId: serverId, folderId: id) }
+    func queue() { SongLoader.queueAll(serverId: serverId, folderId: id) }
 }
 
 extension FolderArtist: Artist {

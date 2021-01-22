@@ -10,7 +10,6 @@ import Foundation
 import Resolver
 
 @objc final class RecursiveSongLoader: NSObject, CancelableLoader {
-    var serverId = Settings.shared().currentServerId
     var callback: LoaderCallback?
         
     private var subfolderLoader: SubfolderLoader?
@@ -22,16 +21,19 @@ import Resolver
     private var isLoading = false
     private var isCancelled = false
     
+    private let serverId: Int
     private var folderIds = [Int]()
     private var tagArtistIds = [Int]()
     
-    @objc init(folderId: Int, callback: LoaderCallback? = nil) {
+    @objc init(serverId: Int, folderId: Int, callback: LoaderCallback? = nil) {
+        self.serverId = serverId
         self.folderIds.append(folderId)
         self.callback = callback
         super.init()
     }
     
-    @objc init(tagArtistId: Int, callback: LoaderCallback? = nil) {
+    @objc init(serverId: Int, tagArtistId: Int, callback: LoaderCallback? = nil) {
+        self.serverId = serverId
         self.tagArtistIds.append(tagArtistId)
         self.callback = callback
         super.init()
@@ -108,7 +110,7 @@ import Resolver
         
         tagArtistIds.remove(at: 0)
         
-        tagArtistLoader = TagArtistLoader(tagArtistId: tagArtistId) { [unowned self] success, error in
+        tagArtistLoader = TagArtistLoader(serverId: serverId, tagArtistId: tagArtistId) { [unowned self] success, error in
             if success {
                 if let tagAlbumIds = self.tagArtistLoader?.tagAlbumIds {
                     self.tagArtistLoader = nil
@@ -127,7 +129,7 @@ import Resolver
     
     private func loadAlbums(tagAlbumIds: [Int]) {
         tagAlbumIds.forEach { tagAlbumId in
-            tagAlbumLoader = TagAlbumLoader(tagAlbumId: tagAlbumId) { [unowned self] success, error in
+            tagAlbumLoader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId) { [unowned self] success, error in
                 if success {
                     if let tagAlbumLoader = self.tagAlbumLoader {
                         self.handleSongIds(songIds: tagAlbumLoader.songIds, serverId: tagAlbumLoader.serverId)

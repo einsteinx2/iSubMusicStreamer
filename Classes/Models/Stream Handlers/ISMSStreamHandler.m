@@ -187,7 +187,8 @@
 
 - (NSUInteger)hash
 {
-	return self.mySong.songId;
+    // XOR the song's serverId and songId to get a semi-unique hash
+	return self.mySong.serverId | self.mySong.songId;
 }
 
 - (BOOL)isEqualToISMSStreamHandler:(ISMSStreamHandler *)otherHandler 

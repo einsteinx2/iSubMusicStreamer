@@ -13,7 +13,7 @@ import Foundation
     @objc let song: Song
     @objc let isSubmission: Bool
     
-    @objc init(song: Song, isSubmission: Bool, callback: @escaping LoaderCallback) {
+    @objc init(song: Song, isSubmission: Bool, callback: LoaderCallback? = nil) {
         self.song = song
         self.isSubmission = isSubmission
         super.init(callback: callback)

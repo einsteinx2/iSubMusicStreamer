@@ -94,9 +94,9 @@ final class TagAlbumViewController: UIViewController {
         
         // Create the play all and shuffle buttons and constrain to the container view
         let playAllAndShuffleHeader = PlayAllAndShuffleHeader(playAllHandler: { [unowned self] in
-            SongLoader.playAll(tagAlbumId: tagAlbum.id)
+            SongLoader.playAll(serverId: serverId, tagAlbumId: tagAlbum.id)
         }, shuffleHandler: { [unowned self] in
-            SongLoader.shuffleAll(tagAlbumId: tagAlbum.id)
+            SongLoader.shuffleAll(serverId: serverId, tagAlbumId: tagAlbum.id)
         })
         headerView.addSubview(playAllAndShuffleHeader)
         playAllAndShuffleHeader.snp.makeConstraints { make in
@@ -119,7 +119,7 @@ final class TagAlbumViewController: UIViewController {
     
     func startLoad() {
         HUD.show(closeHandler: cancelLoad)
-        loader = TagAlbumLoader(tagAlbumId: tagAlbum.id) { [weak self] success, error in
+        loader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbum.id) { [weak self] success, error in
             guard let self = self else { return }
             
             self.songIds = self.loader?.songIds ?? []

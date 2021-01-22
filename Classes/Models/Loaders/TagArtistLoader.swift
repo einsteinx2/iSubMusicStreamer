@@ -13,17 +13,13 @@ import Resolver
 final class TagArtistLoader: APILoader {
     @Injected private var store: Store
     
-    var serverId = Settings.shared().currentServerId
-    let tagArtistId: Int
+    private let serverId: Int
+    private let tagArtistId: Int
     
-    var tagAlbumIds = [Int]()
+    private(set) var tagAlbumIds = [Int]()
     
-    init(tagArtistId: Int) {
-        self.tagArtistId = tagArtistId
-        super.init()
-    }
-    
-    init(tagArtistId: Int, callback: @escaping LoaderCallback) {
+    init(serverId: Int, tagArtistId: Int, callback: LoaderCallback? = nil) {
+        self.serverId = serverId
         self.tagArtistId = tagArtistId
         super.init(callback: callback)
     }
@@ -38,30 +34,44 @@ final class TagArtistLoader: APILoader {
     
     override func processResponse(data: Data) {
         tagAlbumIds.removeAll()
+        
         let root = RXMLElement(fromXMLData: data)
-        if !root.isValid {
+        guard root.isValid else {
             informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-        } else {
-            if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
-            } else {
-                if store.deleteTagAlbums(serverId: serverId, tagArtistId: tagArtistId) {
-                    var albumOrder = 0
-                    root.iterate("artist.album") { element in
-                        let tagAlbum = TagAlbum(serverId: self.serverId, element: element)
-                        if self.store.add(tagAlbum: tagAlbum) {
-                            self.tagAlbumIds.append(tagAlbum.id)
-                            albumOrder += 1
-                        } else {
-                            self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
-                            return
-                        }
-                    }
-                    informDelegateLoadingFinished()
-                } else {
-                    informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
-                }
-            }
+            return
         }
+        
+        if let error = root.child("error"), error.isValid {
+            informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
+            return
+        }
+        
+        guard store.deleteTagAlbums(serverId: serverId, tagArtistId: tagArtistId) else  {
+            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
+            return
+        }
+        
+        guard let artist = root.child("artist"), artist.isValid else {
+            self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_IncorrectXMLResponse)))
+            return
+        }
+            
+        let tagArtist = TagArtist(serverId: serverId, element: artist)
+        guard self.store.add(tagArtist: tagArtist, mediaFolderId: MediaFolder.allFoldersId) else {
+            self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
+            return
+        }
+        
+        artist.iterate("album") { element in
+            let tagAlbum = TagAlbum(serverId: self.serverId, element: element)
+            guard self.store.add(tagAlbum: tagAlbum) else {
+                self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                return
+            }
+            
+            self.tagAlbumIds.append(tagAlbum.id)
+        }
+        
+        informDelegateLoadingFinished()
     }
 }

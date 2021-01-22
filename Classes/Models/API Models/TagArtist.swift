@@ -45,6 +45,6 @@ extension TagArtist: TableCellModel {
     var secondaryLabelText: String? { "\(albumCount) \("Album".pluralize(amount: albumCount))" }
     var durationLabelText: String? { nil }
     var isCached: Bool { false }
-    func download() { SongLoader.downloadAll(tagArtistId: id) }
-    func queue() { SongLoader.queueAll(tagArtistId: id) }
+    func download() { SongLoader.downloadAll(serverId: serverId, tagArtistId: id) }
+    func queue() { SongLoader.queueAll(serverId: serverId, tagArtistId: id) }
 }

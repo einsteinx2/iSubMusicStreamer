@@ -14,7 +14,7 @@ private func runOnMainThread(_ block: @escaping () -> Void) {
     if Thread.isMainThread {
         block()
     } else {
-        DispatchQueue.main.async(execute: block)
+        DispatchQueue.main.sync(execute: block)
     }
 }
 
