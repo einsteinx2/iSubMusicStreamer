@@ -9,13 +9,14 @@
 import Foundation
 import Resolver
 
-@objc(ISMSSong) final class Song: NSObject, NSCopying, NSSecureCoding, Codable {
+// TODO: implement this - Remove NSSecureCoding and use only Codable protocol
+@objc(ISMSSong) final class Song: NSObject, NSCopying, Codable {
     private var store: Store { Resolver.resolve() }
     private var settings: Settings { Resolver.resolve() }
     private var player: BassGaplessPlayer { Resolver.resolve() }
     private var playQueue: PlayQueue { Resolver.resolve() }
     
-    static var supportsSecureCoding: Bool = true
+//    static let supportsSecureCoding: Bool = true
         
     @objc let serverId: Int
     @objc(songId) let id: Int
@@ -190,84 +191,84 @@ import Resolver
         super.init()
     }
     
-    init?(coder: NSCoder) {
-        // Handle old coding format
-        if coder.containsValue(forKey: "coderVersion") && coder.decodeInteger(forKey: "coderVersion") == 1 {
-            // New coding type
-            self.serverId = coder.decodeInteger(forKey: "serverId")
-            self.id = coder.decodeInteger(forKey: "id")
-            self.title = coder.decodeObject(forKey: "title") as? String ?? ""
-            self.coverArtId = coder.decodeObject(forKey: "coverArtid") as? String
-            self.parentFolderId = coder.decodeInteger(forKey: "parentFolderId")
-            self.tagArtistName = coder.decodeObject(forKey: "tagArtistName") as? String
-            self.tagAlbumName = coder.decodeObject(forKey: "tagAlbumName") as? String
-            self.playCount = coder.decodeInteger(forKey: "playCount")
-            self.year = coder.decodeInteger(forKey: "year")
-            self.tagArtistId = coder.decodeInteger(forKey: "tagArtistId")
-            self.tagAlbumId = coder.decodeInteger(forKey: "tagAlbumId")
-            self.genre = coder.decodeObject(forKey: "genre") as? String
-            self.path = coder.decodeObject(forKey: "path") as? String ?? ""
-            self.suffix = coder.decodeObject(forKey: "suffix") as? String ?? ""
-            self.transcodedSuffix = coder.decodeObject(forKey: "transcodedSuffix") as? String
-            self.duration = coder.decodeInteger(forKey: "duration")
-            self.bitrate = coder.decodeInteger(forKey: "bitrate")
-            self.track = coder.decodeInteger(forKey: "track")
-            self.discNumber = coder.decodeInteger(forKey: "discNumber")
-            self.size = coder.decodeInteger(forKey: "size")
-            self.isVideo = coder.decodeBool(forKey: "isVideo")
-        } else {
-            // Old coding type
-            self.title = (coder.decodeObject(forKey: "title") as? String).stringXML
-            self.id = (coder.decodeObject(forKey: "songId") as? String).intXML
-            self.parentFolderId = (coder.decodeObject(forKey: "parentId") as? String).intXML
-            self.tagArtistName = coder.decodeObject(forKey: "artist") as? String
-            self.tagAlbumName = coder.decodeObject(forKey: "album") as? String
-            self.genre = coder.decodeObject(forKey: "genre") as? String
-            self.coverArtId = coder.decodeObject(forKey: "coverArtid") as? String
-            self.path = coder.decodeObject(forKey: "path") as? String ?? ""
-            self.suffix = coder.decodeObject(forKey: "suffix") as? String ?? ""
-            self.transcodedSuffix = coder.decodeObject(forKey: "transcodedSuffix") as? String
-            self.duration = (coder.decodeObject(forKey: "duration") as? String).intXML
-            self.bitrate = (coder.decodeObject(forKey: "bitRate") as? String).intXML
-            self.track = (coder.decodeObject(forKey: "track") as? String).intXML
-            self.year = (coder.decodeObject(forKey: "year") as? String).intXML
-            self.size = (coder.decodeObject(forKey: "size") as? String).intXML
-            self.isVideo = coder.decodeBool(forKey: "isVideo")
-            self.discNumber = (coder.decodeObject(forKey: "discNumber") as? String).intXML
-
-            // Not encoded
-            self.serverId = -1
-            self.playCount = 0
-            self.tagArtistId = 0
-            self.tagAlbumId = 0
-        }
-        super.init()
-    }
-    
-    func encode(with coder: NSCoder) {
-        coder.encode(1, forKey: "coderVersion")
-        coder.encode(serverId, forKey: "serverId")
-        coder.encode(id, forKey: "id")
-        coder.encode(title, forKey: "title")
-        coder.encode(coverArtId, forKey: "coverArtId")
-        coder.encode(parentFolderId, forKey: "parentFolderId")
-        coder.encode(tagArtistName, forKey: "tagArtistName")
-        coder.encode(tagAlbumName, forKey: "tagAlbumName")
-        coder.encode(playCount, forKey: "playCount")
-        coder.encode(year, forKey: "year")
-        coder.encode(tagArtistId, forKey: "tagArtistId")
-        coder.encode(tagAlbumId, forKey: "tagAlbumId")
-        coder.encode(genre, forKey: "genre")
-        coder.encode(path, forKey: "path")
-        coder.encode(suffix, forKey: "suffix")
-        coder.encode(transcodedSuffix, forKey: "transcodedSuffix")
-        coder.encode(duration, forKey: "duration")
-        coder.encode(bitrate, forKey: "bitrate")
-        coder.encode(track, forKey: "track")
-        coder.encode(discNumber, forKey: "discNumber")
-        coder.encode(size, forKey: "size")
-        coder.encode(isVideo, forKey: "isVideo")
-    }
+//    init?(coder: NSCoder) {
+//        // Handle old coding format
+//        if coder.containsValue(forKey: "coderVersion") && coder.decodeInteger(forKey: "coderVersion") == 1 {
+//            // New coding type
+//            self.serverId = coder.decodeInteger(forKey: "serverId")
+//            self.id = coder.decodeInteger(forKey: "id")
+//            self.title = coder.decodeObject(forKey: "title") as? String ?? ""
+//            self.coverArtId = coder.decodeObject(forKey: "coverArtid") as? String
+//            self.parentFolderId = coder.decodeInteger(forKey: "parentFolderId")
+//            self.tagArtistName = coder.decodeObject(forKey: "tagArtistName") as? String
+//            self.tagAlbumName = coder.decodeObject(forKey: "tagAlbumName") as? String
+//            self.playCount = coder.decodeInteger(forKey: "playCount")
+//            self.year = coder.decodeInteger(forKey: "year")
+//            self.tagArtistId = coder.decodeInteger(forKey: "tagArtistId")
+//            self.tagAlbumId = coder.decodeInteger(forKey: "tagAlbumId")
+//            self.genre = coder.decodeObject(forKey: "genre") as? String
+//            self.path = coder.decodeObject(forKey: "path") as? String ?? ""
+//            self.suffix = coder.decodeObject(forKey: "suffix") as? String ?? ""
+//            self.transcodedSuffix = coder.decodeObject(forKey: "transcodedSuffix") as? String
+//            self.duration = coder.decodeInteger(forKey: "duration")
+//            self.bitrate = coder.decodeInteger(forKey: "bitrate")
+//            self.track = coder.decodeInteger(forKey: "track")
+//            self.discNumber = coder.decodeInteger(forKey: "discNumber")
+//            self.size = coder.decodeInteger(forKey: "size")
+//            self.isVideo = coder.decodeBool(forKey: "isVideo")
+//        } else {
+//            // Old coding type
+//            self.title = (coder.decodeObject(forKey: "title") as? String).stringXML
+//            self.id = (coder.decodeObject(forKey: "songId") as? String).intXML
+//            self.parentFolderId = (coder.decodeObject(forKey: "parentId") as? String).intXML
+//            self.tagArtistName = coder.decodeObject(forKey: "artist") as? String
+//            self.tagAlbumName = coder.decodeObject(forKey: "album") as? String
+//            self.genre = coder.decodeObject(forKey: "genre") as? String
+//            self.coverArtId = coder.decodeObject(forKey: "coverArtid") as? String
+//            self.path = coder.decodeObject(forKey: "path") as? String ?? ""
+//            self.suffix = coder.decodeObject(forKey: "suffix") as? String ?? ""
+//            self.transcodedSuffix = coder.decodeObject(forKey: "transcodedSuffix") as? String
+//            self.duration = (coder.decodeObject(forKey: "duration") as? String).intXML
+//            self.bitrate = (coder.decodeObject(forKey: "bitRate") as? String).intXML
+//            self.track = (coder.decodeObject(forKey: "track") as? String).intXML
+//            self.year = (coder.decodeObject(forKey: "year") as? String).intXML
+//            self.size = (coder.decodeObject(forKey: "size") as? String).intXML
+//            self.isVideo = coder.decodeBool(forKey: "isVideo")
+//            self.discNumber = (coder.decodeObject(forKey: "discNumber") as? String).intXML
+//
+//            // Not encoded
+//            self.serverId = -1
+//            self.playCount = 0
+//            self.tagArtistId = 0
+//            self.tagAlbumId = 0
+//        }
+//        super.init()
+//    }
+//
+//    func encode(with coder: NSCoder) {
+//        coder.encode(1, forKey: "coderVersion")
+//        coder.encode(serverId, forKey: "serverId")
+//        coder.encode(id, forKey: "id")
+//        coder.encode(title, forKey: "title")
+//        coder.encode(coverArtId, forKey: "coverArtId")
+//        coder.encode(parentFolderId, forKey: "parentFolderId")
+//        coder.encode(tagArtistName, forKey: "tagArtistName")
+//        coder.encode(tagAlbumName, forKey: "tagAlbumName")
+//        coder.encode(playCount, forKey: "playCount")
+//        coder.encode(year, forKey: "year")
+//        coder.encode(tagArtistId, forKey: "tagArtistId")
+//        coder.encode(tagAlbumId, forKey: "tagAlbumId")
+//        coder.encode(genre, forKey: "genre")
+//        coder.encode(path, forKey: "path")
+//        coder.encode(suffix, forKey: "suffix")
+//        coder.encode(transcodedSuffix, forKey: "transcodedSuffix")
+//        coder.encode(duration, forKey: "duration")
+//        coder.encode(bitrate, forKey: "bitrate")
+//        coder.encode(track, forKey: "track")
+//        coder.encode(discNumber, forKey: "discNumber")
+//        coder.encode(size, forKey: "size")
+//        coder.encode(isVideo, forKey: "isVideo")
+//    }
     
     func copy(with zone: NSZone? = nil) -> Any {
         Song(serverId: serverId, id: id, title: title, coverArtId: coverArtId, parentFolderId: parentFolderId, tagArtistName: tagArtistName, tagAlbumName: tagAlbumName, playCount: playCount, year: year, tagArtistId: tagArtistId, tagAlbumId: tagAlbumId, genre: genre, path: path, suffix: suffix, transcodedSuffix: transcodedSuffix, duration: duration, bitrate: bitrate, track: track, discNumber: discNumber, size: size, isVideo: isVideo)
@@ -318,7 +319,7 @@ import Resolver
                     }
                 }
             }
-            let totalSize = bytesForSecondsAtBitrate(seconds: seconds, bitrate: bitrate)
+            let totalSize = bytesForSeconds(seconds: seconds, kiloBitrate: bitrate)
             downloadProgress = Float(localFileSize) / totalSize
         }
         

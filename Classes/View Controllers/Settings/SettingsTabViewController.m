@@ -52,7 +52,6 @@ LOG_LEVEL_ISUB_DEFAULT
     self.enableManualCachingOnWWANSwitch.on = settingsS.isManualCachingOnWWANEnabled;
 	self.enableSongCachingSwitch.on = settingsS.isSongCachingEnabled;
 	self.enableNextSongCacheSwitch.on = settingsS.isNextSongCacheEnabled;
-	self.enableNextSongPartialCacheSwitch.on = settingsS.isPartialCacheNextSong;
     self.enableBackupCacheSwitch.on = settingsS.isBackupCacheEnabled;
     [self.cacheSpaceSlider setThumbImage:[UIImage imageNamed:@"controller-slider-thumb"] forState:UIControlStateNormal];
 	self.totalSpace = Cache.shared.totalSpace;
@@ -248,24 +247,6 @@ LOG_LEVEL_ISUB_DEFAULT
 		} else if (sender == self.enableNextSongCacheSwitch) {
 			settingsS.isNextSongCacheEnabled = self.enableNextSongCacheSwitch.on;
 			[self toggleCacheControlsVisibility];
-		} else if (sender == self.enableNextSongPartialCacheSwitch) {
-            if (self.enableNextSongPartialCacheSwitch.on) {
-                // Prompt the warning
-                NSString *message = @"Due to changes in Subsonic, this will cause audio corruption if transcoding is enabled.\n\nIf you're not sure what that means, choose cancel.";
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning"
-                                                                               message:message
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-                    settingsS.isPartialCacheNextSong = YES;
-                }]];
-                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                    // They canceled, turn off the switch
-                    [self.enableNextSongPartialCacheSwitch setOn:NO animated:YES];
-                }]];
-                [self presentViewController:alert animated:YES completion:nil];
-            } else {
-                settingsS.isPartialCacheNextSong = NO;
-            }
 		} else if (sender == self.enableBackupCacheSwitch) {
             if (self.enableBackupCacheSwitch.on) {
                 // Prompt the warning

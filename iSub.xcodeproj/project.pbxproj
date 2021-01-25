@@ -157,6 +157,8 @@
 		5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D61EA92D3000B1C242 /* libSystem.tbd */; };
 		536C890725BB37F5008FE1AC /* CacheQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890625BB37F5008FE1AC /* CacheQueue.swift */; };
 		536C890825BB37F5008FE1AC /* CacheQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890625BB37F5008FE1AC /* CacheQueue.swift */; };
+		536C890A25BB5FED008FE1AC /* StreamHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890925BB5FED008FE1AC /* StreamHandler.swift */; };
+		536C890B25BB5FED008FE1AC /* StreamHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890925BB5FED008FE1AC /* StreamHandler.swift */; };
 		536D620B1144495400DFCE56 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 536D620A1144495400DFCE56 /* SystemConfiguration.framework */; };
 		5373C69025B6040900CAA859 /* CustomUITabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */; };
 		5373C69125B6040900CAA859 /* CustomUITabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */; };
@@ -382,8 +384,6 @@
 		53DD0DDD259A6F8A00494AEA /* SongLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DD0DDB259A6F8A00494AEA /* SongLoader.swift */; };
 		53DE598314F1932C00206529 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DE598214F1932C00206529 /* CoreText.framework */; };
 		53DE598514F1933800206529 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DE598214F1932C00206529 /* CoreText.framework */; };
-		53E04938255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E04937255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m */; };
-		53E04939255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E04937255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m */; };
 		53E04947255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E04946255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift */; };
 		53E04948255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E04946255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift */; };
 		53EA2DD4257D6A2C0003F38D /* UIDevice+Info.m in Sources */ = {isa = PBXBuildFile; fileRef = 53EA2DD3257D6A2C0003F38D /* UIDevice+Info.m */; };
@@ -490,8 +490,6 @@
 		53FE36FD1EA961720058B925 /* BassWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36361EA961710058B925 /* BassWrapper.m */; };
 		53FE37371EA961720058B925 /* ISMSServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36651EA961720058B925 /* ISMSServer.m */; };
 		53FE37391EA961720058B925 /* ISMSServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36651EA961720058B925 /* ISMSServer.m */; };
-		53FE37461EA961720058B925 /* ISMSAbstractStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE366F1EA961720058B925 /* ISMSAbstractStreamHandler.m */; };
-		53FE37481EA961720058B925 /* ISMSAbstractStreamHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE366F1EA961720058B925 /* ISMSAbstractStreamHandler.m */; };
 		53FE37581EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
 		53FE375A1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */; };
 		53FE376A1EA961720058B925 /* NSError+ISMSError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE368B1EA961720058B925 /* NSError+ISMSError.m */; };
@@ -706,6 +704,7 @@
 		5367C6D41EA92D2400B1C242 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		5367C6D61EA92D3000B1C242 /* libSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.tbd; path = usr/lib/libSystem.tbd; sourceTree = SDKROOT; };
 		536C890625BB37F5008FE1AC /* CacheQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheQueue.swift; sourceTree = "<group>"; };
+		536C890925BB5FED008FE1AC /* StreamHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamHandler.swift; sourceTree = "<group>"; };
 		536D620A1144495400DFCE56 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUITabBarController.swift; sourceTree = "<group>"; };
 		5373C69525B6064D00CAA859 /* CustomUINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUINavigationController.swift; sourceTree = "<group>"; };
@@ -1528,6 +1527,7 @@
 			children = (
 				5302DE4025BA2AA00036A9B1 /* StreamManager.swift */,
 				536C890625BB37F5008FE1AC /* CacheQueue.swift */,
+				536C890925BB5FED008FE1AC /* StreamHandler.swift */,
 				53FE36701EA961720058B925 /* ISMSStreamHandlerDelegate.h */,
 				53FE366E1EA961720058B925 /* ISMSAbstractStreamHandler.h */,
 				53FE366F1EA961720058B925 /* ISMSAbstractStreamHandler.m */,
@@ -2065,7 +2065,7 @@
 				53ED675525B8AD0F0002BFAF /* AbstractDownloadsViewController.swift in Sources */,
 				539D331825AC8D8B00F53797 /* DownloadedFolderArtist.swift in Sources */,
 				5373C69925B60A6900CAA859 /* UIViewController+PushCustom.swift in Sources */,
-				53E04938255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */,
+				536C890A25BB5FED008FE1AC /* StreamHandler.swift in Sources */,
 				539D32D825A8E07E00F53797 /* Server.swift in Sources */,
 				53D4FCB9259967CF00C6F1AE /* SubfolderLoader.swift in Sources */,
 				53ED675B25B8B5190002BFAF /* DownloadedTagArtistViewController.swift in Sources */,
@@ -2231,7 +2231,6 @@
 				53EA2DE2257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
 				53CB016825864D5200E2DF10 /* NSFileManager+ZKAdditions.m in Sources */,
 				53D632D325A65A37004EC117 /* RootArtistsLoader.swift in Sources */,
-				53FE37461EA961720058B925 /* ISMSAbstractStreamHandler.m in Sources */,
 				537C93E125B1051200175DF6 /* SaveEditHeader.swift in Sources */,
 				539D330C25AA55E000F53797 /* LocalPlaylist.swift in Sources */,
 				53ED672825B76FA60002BFAF /* HomeAlbumViewController.swift in Sources */,
@@ -2295,7 +2294,6 @@
 				53FE36F41EA961720058B925 /* BassParamEqValue.m in Sources */,
 				53FE35211EA961540058B925 /* NSString+URLEncode.m in Sources */,
 				535E143925A7C6D60039BCAA /* QuickAlbumsLoader.swift in Sources */,
-				53E04939255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m in Sources */,
 				530A1680259277E700E9294E /* SearchAllViewController.swift in Sources */,
 				531EC87225B22D870076973A /* DownloadedTagArtistsViewController.swift in Sources */,
 				53762C8425AD0EED00476F2D /* ScrobbleLoader.swift in Sources */,
@@ -2304,6 +2302,7 @@
 				5373C69A25B60A6900CAA859 /* UIViewController+PushCustom.swift in Sources */,
 				539D32D925A8E07E00F53797 /* Server.swift in Sources */,
 				53D4FCBA259967CF00C6F1AE /* SubfolderLoader.swift in Sources */,
+				536C890B25BB5FED008FE1AC /* StreamHandler.swift in Sources */,
 				53FE679F256DD0F00015FC83 /* GCDWebServerStreamedResponse.m in Sources */,
 				53FE389A1EA961C80058B925 /* NSFileHandle+ZKAdditions.m in Sources */,
 				539D330725AA353C00F53797 /* DownloadedSongPathComponent.swift in Sources */,
@@ -2470,7 +2469,6 @@
 				537B05C0256B0E4B0008892C /* PadMenuTableCell.swift in Sources */,
 				530A167A259255D200E9294E /* FolderAlbum.swift in Sources */,
 				53D632D425A65A37004EC117 /* RootArtistsLoader.swift in Sources */,
-				53FE37481EA961720058B925 /* ISMSAbstractStreamHandler.m in Sources */,
 				537C93E225B1051200175DF6 /* SaveEditHeader.swift in Sources */,
 				539D330D25AA55E000F53797 /* LocalPlaylist.swift in Sources */,
 				53ED672925B76FA60002BFAF /* HomeAlbumViewController.swift in Sources */,

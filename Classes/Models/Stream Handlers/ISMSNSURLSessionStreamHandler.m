@@ -19,8 +19,6 @@ LOG_LEVEL_ISUB_DEFAULT
 #define isThrottleLoggingEnabled 1
 #define isSpeedLoggingEnabled 0
 
-#define ISMSDownloadTimeoutTimer @"ISMSDownloadTimeoutTimer"
-
 @interface ISMSNSURLSessionStreamHandler()
 @property (nonnull, strong) NSURLSession *session;
 @property (nullable, strong) NSURLSessionDataTask *dataTask;
@@ -286,18 +284,18 @@ LOG_LEVEL_ISUB_DEFAULT
             }
         }
         
-        // Handle partial pre-cache next song
-        if (!self.isCurrentSong && !self.isTempCache && settingsS.isPartialCacheNextSong && self.partialPrecacheSleep) {
-            NSUInteger partialPrecacheSize = ISMSNumBytesToPartialPreCache(self.mySong.estimatedBitrate);
-            if (self.totalBytesTransferred >= partialPrecacheSize) {
-                [self performSelectorOnMainThread:@selector(partialPrecachePausedInternal) withObject:nil waitUntilDone:NO];
-                while (self.partialPrecacheSleep && !self.tempBreakPartialPrecache) {
-                    [NSThread sleepForTimeInterval:0.1];
-                }
-                self.tempBreakPartialPrecache = NO;
-                [self performSelectorOnMainThread:@selector(partialPrecacheUnpausedInternal) withObject:nil waitUntilDone:NO];
-            }
-        }
+//        // Handle partial pre-cache next song
+//        if (!self.isCurrentSong && !self.isTempCache && settingsS.isPartialCacheNextSong && self.partialPrecacheSleep) {
+//            NSUInteger partialPrecacheSize = ISMSNumBytesToPartialPreCache(self.mySong.estimatedBitrate);
+//            if (self.totalBytesTransferred >= partialPrecacheSize) {
+//                [self performSelectorOnMainThread:@selector(partialPrecachePausedInternal) withObject:nil waitUntilDone:NO];
+//                while (self.partialPrecacheSleep && !self.tempBreakPartialPrecache) {
+//                    [NSThread sleepForTimeInterval:0.1];
+//                }
+//                self.tempBreakPartialPrecache = NO;
+//                [self performSelectorOnMainThread:@selector(partialPrecacheUnpausedInternal) withObject:nil waitUntilDone:NO];
+//            }
+//        }
     } else {
         DDLogInfo(@"[ISMSNSURLSessionStreamHandler] Stream handler did receive data but file handle was nil for %@", self.mySong);
 

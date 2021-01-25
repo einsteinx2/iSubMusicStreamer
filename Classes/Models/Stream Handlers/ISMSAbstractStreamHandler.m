@@ -18,8 +18,7 @@
 
 @implementation ISMSAbstractStreamHandler
 
-- (void)setup
-{
+- (void)setup {
 	_partialPrecacheSleep = YES;
 	_contentLength = ULLONG_MAX;
 	_maxBitrateSetting = NSIntegerMax;
@@ -28,19 +27,15 @@
 	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(playlistIndexChanged) name:Notifications.currentPlaylistIndexChanged object:nil];
 }
 
-- (instancetype)init
-{
-	if ((self = [super init]))
-	{
+- (instancetype)init {
+	if (self = [super init]) {
 		[self setup];
 	}
 	return self;
 }
 
-- (instancetype)initWithSong:(ISMSSong *)song byteOffset:(unsigned long long)bOffset secondsOffset:(double)sOffset isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate
-{
-	if ((self = [self init]))
-	{
+- (instancetype)initWithSong:(ISMSSong *)song byteOffset:(unsigned long long)bOffset secondsOffset:(double)sOffset isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate {
+	if (self = [self init]) {
 		[self setup];
 		
 		_mySong = [song copy];
@@ -55,73 +50,61 @@
 	return self;
 }
 
-- (instancetype)initWithSong:(ISMSSong *)song isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate
-{
+- (instancetype)initWithSong:(ISMSSong *)song isTemp:(BOOL)isTemp delegate:(NSObject<ISMSStreamHandlerDelegate> *)theDelegate {
 	return [self initWithSong:song byteOffset:0 secondsOffset:0.0 isTemp:isTemp delegate:theDelegate];
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
 	[NSNotificationCenter removeObserverOnMainThread:self];
 }
 
-- (NSString *)filePath
-{
+- (NSString *)filePath {
 	return self.isTempCache ? self.mySong.localTempPath : self.mySong.localPath;
 }
 
-- (void)start
-{
+- (void)start {
 	[self start:NO];
 }
 
-- (void)start:(BOOL)resume
-{
+- (void)start:(BOOL)resume {
 	// Override this
 }
 
-- (void)cancel
-{
+- (void)cancel {
 	// Override this
 }
 
-- (void)connectionTimedOut
-{
+- (void)connectionTimedOut {
 	// Override this
 }
 
-- (void)startTimeOutTimer
-{
+- (void)startTimeOutTimer {
     [self stopTimeOutTimer];
 	[self performSelector:@selector(connectionTimedOut) withObject:nil afterDelay:30.];
 }
 
-- (void)stopTimeOutTimer
-{
+- (void)stopTimeOutTimer {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(connectionTimedOut) object:nil];
 }
 
-- (void)playlistIndexChanged
-{
+- (void)playlistIndexChanged {
 	// If this song is partially precached and sleeping, stop sleeping
-	if (self.isPartialPrecacheSleeping)
+    if (self.isPartialPrecacheSleeping) {
 		self.partialPrecacheSleep = NO;
+    }
 	
-	if ([self.mySong isEqual:PlayQueue.shared.currentSong])
+    if ([self.mySong isEqual:PlayQueue.shared.currentSong]) {
 		self.isCurrentSong = YES;
+    }
 }
 
-+ (double)maxBytesPerIntervalForBitrate:(double)rate is3G:(BOOL)is3G
-{
++ (double)maxBytesPerIntervalForBitrate:(double)rate is3G:(BOOL)is3G {
 	double maxBytesDefault = is3G ? (double)ISMSMaxBytesPerInterval3G : (double)ISMSMaxBytesPerIntervalWifi;
 	double maxBytesPerInterval = maxBytesDefault * (rate / 160.0);
-	if (maxBytesPerInterval < maxBytesDefault)
-	{
+	if (maxBytesPerInterval < maxBytesDefault) {
 		// Don't go lower than the default
 		maxBytesPerInterval = maxBytesDefault;
-	}
-	else if (maxBytesPerInterval > (double)ISMSMaxBytesPerIntervalWifi * 2.0)
-	{
+	} else if (maxBytesPerInterval > (double)ISMSMaxBytesPerIntervalWifi * 2.0) {
 		// Don't go higher than twice the Wifi limit to prevent disk bandwidth issues
 		maxBytesPerInterval = (double)ISMSMaxBytesPerIntervalWifi * 2.0;
 	}
@@ -129,13 +112,9 @@
 	return maxBytesPerInterval;
 }
 
-+ (NSUInteger)minBytesToStartPlaybackForKiloBitrate:(double)rate speedInBytesPerSec:(NSUInteger)bytesPerSec
-{
++ (NSUInteger)minBytesToStartPlaybackForKiloBitrate:(double)rate speedInBytesPerSec:(NSUInteger)bytesPerSec {
     // If start date is nil somehow, or total bytes transferred is 0 somehow,
-    if (rate == 0. || bytesPerSec == 0)
-    {
-        return ISMSMinBytesToStartPlayback(rate);
-    }
+    if (rate == 0 || bytesPerSec == 0) return ISMSMinBytesToStartPlayback(rate);
     
     // Get the download speed so far
     double kiloBytesPerSec = (double)bytesPerSec / 1024.;
@@ -148,27 +127,18 @@
     double secondsPerSecondFactor = (double)kiloBytesPerSec / (double)kiloBytesForOneSecond;
         
     double minSecondsToStartPlayback;
-    if (secondsPerSecondFactor < 1.0)
-    {
+    if (secondsPerSecondFactor < 1.0) {
         // Downloading slower than needed for playback, allow for a long buffer
         minSecondsToStartPlayback = 16;
-    }
-    else if (secondsPerSecondFactor >= 1.0 && secondsPerSecondFactor < 1.5)
-    {
+    } else if (secondsPerSecondFactor >= 1.0 && secondsPerSecondFactor < 1.5) {
         // Downloading faster, but not much faster, allow for a long buffer period
         minSecondsToStartPlayback = 8;
-    }
-    else if (secondsPerSecondFactor >= 1.5 && secondsPerSecondFactor < 1.8)
-    {
+    } else if (secondsPerSecondFactor >= 1.5 && secondsPerSecondFactor < 1.8) {
         minSecondsToStartPlayback = 6;
-    }
-    else if (secondsPerSecondFactor >= 1.8 && secondsPerSecondFactor < 2.0)
-    {
+    } else if (secondsPerSecondFactor >= 1.8 && secondsPerSecondFactor < 2.0) {
         // Downloading fast enough for a smaller buffer
         minSecondsToStartPlayback = 4;
-    }
-    else
-    {
+    } else {
         // Downloading multiple times playback speed, start quickly
         minSecondsToStartPlayback = 2;
     }
@@ -178,34 +148,26 @@
     return minBytesToStartPlayback;
 }
 
-- (NSUInteger)totalDownloadSpeedInBytesPerSec
-{
+- (NSUInteger)totalDownloadSpeedInBytesPerSec {
     return self.totalBytesTransferred / [[NSDate date] timeIntervalSinceDate:self.startDate];
 }
 
 #pragma mark - Overriding equality
 
-- (NSUInteger)hash
-{
+- (NSUInteger)hash {
     // XOR the song's serverId and songId to get a semi-unique hash
 	return self.mySong.serverId | self.mySong.songId;
 }
 
-- (BOOL)isEqualToISMSStreamHandler:(ISMSAbstractStreamHandler *)otherHandler 
-{
-	if (self == otherHandler)
-		return YES;
-	
+- (BOOL)isEqualToISMSStreamHandler:(ISMSAbstractStreamHandler *)otherHandler  {
+	if (self == otherHandler) return YES;
+    
 	return [self.mySong isEqual:otherHandler.mySong];
 }
 
-- (BOOL)isEqual:(id)other 
-{
-	if (other == self)
-		return YES;
-	
-	if (!other || ![other isKindOfClass:[self class]])
-		return NO;
+- (BOOL)isEqual:(id)other  {
+	if (other == self) return YES;
+	if (!other || ![other isKindOfClass:[self class]]) return NO;
 	
 	return [self isEqualToISMSStreamHandler:other];
 }

@@ -34,7 +34,6 @@
 
 // Loaders
 #import "ISMSErrorDomain.h"
-#import "ISMSNSURLSessionStreamHandler.h"
 
 // DAOs
 #import "ISMSBookmarkDAO.h"
@@ -71,5 +70,6 @@
 #import "GCDWebServerDataResponse.h"
 #import "GCDWebServerErrorResponse.h"
 #import "Reachability.h"
+#import "EX2NetworkIndicator.h"
 
 #endif /* Common_Bridging_Header_h */

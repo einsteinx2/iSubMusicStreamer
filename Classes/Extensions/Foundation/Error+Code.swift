@@ -9,5 +9,6 @@
 import Foundation
 
 extension Error {
+    var domain: String { (self as NSError).domain }
     var code: Int { (self as NSError).code }
 }

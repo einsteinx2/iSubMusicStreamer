@@ -23,7 +23,7 @@ import CocoaLumberjackSwift
     
     @objc private(set) var isDownloading = false
     @objc private(set) var currentQueuedSong: Song?
-    @objc private(set) var currentStreamHandler: ISMSAbstractStreamHandler?
+    @objc private(set) var currentStreamHandler: StreamHandler?
     
     @objc var currentQueuedSongInDb: Song? {
         return store.firstSongInDownloadQueue()
@@ -120,13 +120,12 @@ import CocoaLumberjackSwift
             handler.delegate = self
             streamManager.stealForCacheQueue(handler: handler)
             if !handler.isDownloading {
-                handler.start(true)
+                handler.start(resume: true)
             }
         } else {
             DDLogInfo("[CacheQueue] creating download handler for \(song)")
-            let handler = ISMSNSURLSessionStreamHandler(song: song, isTemp: false, delegate: self)
+            let handler = StreamHandler(song: song, tempCache: false, delegate: self)
             currentStreamHandler = handler
-            handler.partialPrecacheSleep = false
             handler.start()
         }
         
@@ -136,7 +135,7 @@ import CocoaLumberjackSwift
     // TODO: implement this - why did this take a byteOffset if it didn't use it?
     @objc func resume(byteOffset: UInt64) {
         guard let currentStreamHandler = currentStreamHandler, !settings.isOfflineMode else { return }
-        currentStreamHandler.start(true)
+        currentStreamHandler.start(resume: true)
     }
     
     @objc func stop() {
@@ -155,22 +154,19 @@ import CocoaLumberjackSwift
         _ = store.removeFromDownloadQueue(song: song)
         start()
     }
-    
-    
 }
 
-extension CacheQueue: ISMSStreamHandlerDelegate {
-    func ismsStreamHandlerPartialPrecachePaused(_ handler: ISMSAbstractStreamHandler) {
-        // Don't ever partial pre-cache
-        handler.partialPrecacheSleep = false
+extension CacheQueue: StreamHandlerDelegate {
+    func streamHandlerStarted(handler: StreamHandler) {
+        // Do nothing here (handled in StreamManager only)
     }
     
-    func ismsStreamHandlerStartPlayback(_ handler: ISMSAbstractStreamHandler) {
-        streamManager.ismsStreamHandlerStartPlayback(handler)
+    func streamHandlerStartPlayback(handler: StreamHandler) {
+        streamManager.streamHandlerStartPlayback(handler: handler)
     }
     
     // TODO: implement this - share this logic with stream manager
-    func ismsStreamHandlerConnectionFinished(_ handler: ISMSAbstractStreamHandler) {
+    func streamHandlerConnectionFinished(handler: StreamHandler) {
         var success = true
         
         if handler.totalBytesTransferred == 0 {
@@ -226,7 +222,7 @@ extension CacheQueue: ISMSStreamHandlerDelegate {
         currentStreamHandler = nil;
         
         // Tell the cache queue view to reload
-        NotificationCenter.postOnMainThread(name: Notifications.cacheQueueSongDownloaded, userInfo: ["songId": handler.mySong])
+        NotificationCenter.postOnMainThread(name: Notifications.cacheQueueSongDownloaded, userInfo: ["songId": handler.song.id])
         
         // Download the next song in the queue
         isDownloading = false
@@ -234,10 +230,10 @@ extension CacheQueue: ISMSStreamHandlerDelegate {
     }
     
     // TODO: implement this - share this logic with stream manager
-    func ismsStreamHandlerConnectionFailed(_ handler: ISMSAbstractStreamHandler, withError error: Error?) {
-        if handler.numOfReconnects < maxNumberOfReconnects {
+    func streamHandlerConnectionFailed(handler: StreamHandler, error: Error) {
+        if handler.numberOfReconnects < maxNumberOfReconnects {
             // Less than max number of reconnections, so try again
-            handler.numOfReconnects += 1
+            handler.numberOfReconnects += 1
             // Retry connection after a delay to prevent a tight loop
             perform(#selector(resume(byteOffset:)), with: nil, afterDelay: 1.5)
         } else {
@@ -245,7 +241,7 @@ extension CacheQueue: ISMSStreamHandlerDelegate {
             
             // Tried max number of times so remove
             NotificationCenter.postOnMainThread(name: Notifications.cacheQueueSongFailed)
-            _ = store.removeFromDownloadQueue(song: handler.mySong)
+            _ = store.removeFromDownloadQueue(song: handler.song)
             currentStreamHandler = nil
             start()
         }

@@ -204,11 +204,6 @@ LOG_LEVEL_ISUB_DEFAULT
 		self.recoverSetting = 1;
 	}
 	
-	// Partial caching of next song
-	if (![_userDefaults objectForKey:@"isPartialCacheNextSong"]) {
-		self.isPartialCacheNextSong = YES;
-	}
-	
 	// Visualizer Type
 	if (![_userDefaults objectForKey:@"currentVisualizerType"]) {
 		self.currentVisualizerType = ISMSBassVisualType_none;
@@ -692,15 +687,6 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
 }
 
-- (BOOL)isPartialCacheNextSong {
-    return [_userDefaults boolForKey:@"isPartialCacheNextSong"];
-}
-
-- (void)setIsPartialCacheNextSong:(BOOL)partialCache {
-    [_userDefaults setBool:partialCache forKey:@"isPartialCacheNextSong"];
-    [_userDefaults synchronize];
-}
-
 - (ISMSBassVisualType)currentVisualizerType {
     return (ISMSBassVisualType)[_userDefaults integerForKey:@"currentVisualizerType"];
 }
@@ -759,12 +745,12 @@ LOG_LEVEL_ISUB_DEFAULT
 //	return [self.urlString isEqualToString:DEFAULT_URL];
 //}
 
-- (NSUInteger)oneTimeRunIncrementor {
-    return [_userDefaults integerForKey:@"oneTimeRunIncrementor"];
+- (NSUInteger)migrateIncrementor {
+    return [_userDefaults integerForKey:@"migrateIncrementor"];
 }
 
-- (void)setOneTimeRunIncrementor:(NSUInteger)oneTimeRunIncrementor {
-    [_userDefaults setInteger:oneTimeRunIncrementor forKey:@"oneTimeRunIncrementor"];
+- (void)setMigrateIncrementor:(NSUInteger)migrateIncrementor {
+    [_userDefaults setInteger:migrateIncrementor forKey:@"migrateIncrementor"];
     [_userDefaults synchronize];
 }
 
@@ -777,11 +763,8 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
 }
 
-- (void)oneTimeRun {
-    if (self.oneTimeRunIncrementor < 1) {
-        self.isPartialCacheNextSong = NO;
-        self.oneTimeRunIncrementor = 1;
-    }
+- (void)migrate {
+    // In the future, when settings migrations are required, check the migrateIncrementor number and perform the necessary migrations in order based on the incrementor number
 }
 
 #pragma mark App Logs
@@ -862,8 +845,8 @@ LOG_LEVEL_ISUB_DEFAULT
     // If the settings are not set up, create the defaults
 	[self createInitialSettings];
     
-    // Run things like one time settings migrations
-    [self oneTimeRun];
+    // Run settings migrations
+    [self migrate];
     
     NSNumber *currentServerId = [_userDefaults objectForKey:@"currentServerId"];
     if (Store.shared.servers.count > 0 && currentServerId) {

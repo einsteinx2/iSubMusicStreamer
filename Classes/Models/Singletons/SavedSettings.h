@@ -77,13 +77,12 @@ NS_SWIFT_NAME(Settings)
 @property BOOL isTapAndHoldEnabled;
 @property BOOL isSwipeEnabled;
 @property float gainMultiplier;
-@property BOOL isPartialCacheNextSong;
 @property ISMSBassVisualType currentVisualizerType;
 @property NSUInteger quickSkipNumberOfSeconds;
 @property BOOL isShouldShowEQViewInstructions;
 @property BOOL isLockScreenArtEnabled;
 @property BOOL isEqualizerOn;
-@property NSUInteger oneTimeRunIncrementor;
+@property NSUInteger migrateIncrementor;
 @property BOOL isDisableUsageOver3G;
 @property BOOL isCacheSizeTableFinished;
 
