@@ -21,7 +21,7 @@ protocol StreamHandlerDelegate {
     func streamHandlerConnectionFailed(handler: StreamHandler, error: Error)
 }
 
-// TODO: implement this - Codable protocol and refactor everything
+// TODO: implement this - refactor to clean up the code
 @objc final class StreamHandler: NSObject, Codable {
     private enum CodingKeys: String, CodingKey {
         case song, byteOffset, secondsOffset, isDelegateNotifiedToStartPlayback, isTempCache, isDownloading, contentLength, maxBitrateSetting
@@ -32,74 +32,47 @@ protocol StreamHandlerDelegate {
     @Injected private var settings: Settings
     @Injected private var store: Store
     
-    private lazy var session: URLSession = { URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil) }()
-    private var request: URLRequest?
-    private var dataTask: URLSessionDataTask?
-    private var fileHandle: FileHandle?
-    
     var delegate: StreamHandlerDelegate?
     
     let song: Song
-    private(set) var byteOffset: UInt64
+    private(set) var byteOffset: Int
     private(set) var secondsOffset: Double
     let isTempCache: Bool
     
     @objc private(set) var isDelegateNotifiedToStartPlayback = false
     @objc private(set) var isDownloading = false
-    private(set) var totalBytesTransferred: UInt64 = 0
+    private(set) var totalBytesTransferred = 0
     var numberOfReconnects = 0
     @objc private(set) var recentDownloadSpeedInBytesPerSec = 0
     
-    private var isCurrentSong = false
-    private var isCanceled = false
-    private var contentLength = UInt64.max
-    private var maxBitrateSetting = Int.max
-    private var startDate = Date()
-    private var bytesTransfered: UInt64 = 0
-    private var bitrate = 0
+    private lazy var session: URLSession = {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.networkServiceType = .avStreaming
+        configuration.timeoutIntervalForRequest = 30
+        return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+    }()
+    private var request: URLRequest?
+    private var dataTask: URLSessionDataTask?
+    private var fileHandle: FileHandle?
+    
+    private var contentLength: Int?
+    private var maxBitrateSetting: Int?
+    private var bytesTransfered = 0
+    private var kiloBitrate = 0
     private var speedLoggingDate = Date()
-    private var speedLoggingLastSize: UInt64 = 0
+    private var speedLoggingLastSize = 0
     private var throttlingDate = Date()
     private var numberOfContentLengthFailures = 0
     
-    var totalDownloadSpeedInBytesPerSec: Int { Int(Double(totalBytesTransferred) / Date().timeIntervalSince(startDate)) }
-    
     var filePath: String { isTempCache ? song.localTempPath : song.localPath }
     
-    init(song: Song, byteOffset: UInt64 = 0, secondsOffset: Double = 0.0, tempCache: Bool, delegate: StreamHandlerDelegate) {
+    init(song: Song, byteOffset: Int = 0, secondsOffset: Double = 0.0, tempCache: Bool, delegate: StreamHandlerDelegate) {
         self.song = song
         self.byteOffset = byteOffset
         self.secondsOffset = secondsOffset
         self.isTempCache = tempCache
         self.delegate = delegate
         super.init()
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(playlistIndexChanged), name: Notifications.currentPlaylistIndexChanged)
-    }
-    
-    deinit {
-        NotificationCenter.removeObserverOnMainThread(self)
-    }
-    
-    @objc private func playlistIndexChanged() {
-        if let currentSong = playQueue.currentSong, song.isEqual(currentSong) {
-            isCurrentSong = true
-        }
-    }
-    
-    private func startTimeoutTimer() {
-        stopTimeoutTimer()
-        perform(#selector(connectionTimedOut), with: nil, afterDelay: 30)
-    }
-    
-    private func stopTimeoutTimer() {
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(connectionTimedOut), object: nil)
-    }
-    
-    @objc private func connectionTimedOut() {
-        DDLogError("[StreamHandler] Stream handler connectionTimedOut for \(song)")
-        cancel()
-        // TODO: Better error code here
-        self.didFailInternal(error: NSError(ismsCode: Int(ISMSErrorCode_CouldNotReachServer)))
     }
     
     // TODO: implement this - refactor for better error handling
@@ -120,7 +93,7 @@ protocol StreamHandlerDelegate {
             if (resume) {
                 // File exists so seek to end
                 // TODO: implement this - Handle this Obj-C exception or better, switch to non-deprecated API
-                totalBytesTransferred = fileHandle.seekToEndOfFile()
+                totalBytesTransferred = Int(fileHandle.seekToEndOfFile())
                 byteOffset += totalBytesTransferred
             } else {
                 // File exists so remove it
@@ -155,56 +128,45 @@ protocol StreamHandlerDelegate {
             }
             
             // TODO: implement this - Make sure that sending estimateContentLength as a book instead of a string works
-            var parameters: [String: Any] = ["id": song.id, "estimateContentLength": true]
-            if maxBitrateSetting == Int.max {
+            var parameters: [String: Any] = ["id": song.id]//, "estimateContentLength": true]
+            if maxBitrateSetting == nil {
                 maxBitrateSetting = settings.currentMaxBitrate
-            } else if maxBitrateSetting != 0 {
+            }
+            if let maxBitrateSetting = maxBitrateSetting, maxBitrateSetting != 0 {
                 parameters["maxBitRate"] = maxBitrateSetting
             }
             
             request = URLRequest(serverId: song.serverId, subsonicAction: "stream", parameters: parameters, byteOffset: byteOffset)
-            if request == nil {
+            guard let request = request else {
                 DDLogError("[StreamHandler] start connection failed to create request")
                 delegate?.streamHandlerConnectionFailed(handler: self, error: NSError(ismsCode: Int(ISMSErrorCode_CouldNotCreateConnection)))
+                return
             }
             
-            bitrate = song.estimatedBitrate
-            if let currentSong = playQueue.currentSong, song.isEqual(currentSong) {
-                isCurrentSong = true
+            kiloBitrate = song.estimatedKiloBitrate
+            
+            dataTask = session.dataTask(with: request)
+            dataTask?.resume()
+            isDownloading = true
+            DDLogInfo("[StreamHandler] Stream handler connection started successfully for \(song)")
+            
+            if !isTempCache {
+                _ = store.add(downloadedSong: DownloadedSong(song: song))
             }
             
-            startConnection()
-        }
-    }
-    
-    private func startConnection() {
-        guard let request = request else { return }
-        
-        dataTask = session.dataTask(with: request)
-        dataTask?.resume()
-        isDownloading = true
-        DDLogInfo("[StreamHandler] Stream handler connection started successfully for \(song)")
-        
-        if !isTempCache {
-            _ = store.add(downloadedSong: DownloadedSong(song: song))
-        }
-        
-        DispatchQueue.main.async {
-            EX2NetworkIndicator.usingNetwork()
-            self.delegate?.streamHandlerStarted(handler: self)
-            
-            self.startTimeoutTimer()
+            DispatchQueue.main.async {
+                EX2NetworkIndicator.usingNetwork()
+                self.delegate?.streamHandlerStarted(handler: self)
+            }
         }
     }
     
     func cancel() {
         DispatchQueue.mainSyncSafe {
-            stopTimeoutTimer()
             EX2NetworkIndicator.doneUsingNetwork()
         }
         
         isDownloading = false
-        isCanceled = true
         
         DDLogInfo("[StreamHandler] Stream handler request canceled for \(song)")
         dataTask?.cancel()
@@ -214,65 +176,6 @@ protocol StreamHandlerDelegate {
         // TODO: implement this - use non-deprecated API
         fileHandle?.closeFile()
         fileHandle = nil
-    }
-    
-    private func startPlaybackInternal() {
-        assert(Thread.isMainThread, "startPlaybackInternal must be called from the main thread")
-        
-        delegate?.streamHandlerStartPlayback(handler: self)
-    }
-    
-    private func didFailInternal(error: Error) {
-        DDLogError("[StreamHandler] didFailInternal for \(song)")
-        assert(Thread.isMainThread, "didFailInternal must be called from the main thread")
-        stopTimeoutTimer()
-        
-        DDLogError("[StreamHandler] Connection Failed for \(song)")
-        DDLogError("[StreamHandler] error domain: \(error.domain) code: \(error.code) description: \(error.localizedDescription)")
-        
-        isDownloading = false
-        dataTask = nil
-        
-        // Close the file handle
-        // TODO: implement this - switch to non-deprecated API
-        fileHandle?.closeFile()
-        fileHandle = nil
-        
-        EX2NetworkIndicator.doneUsingNetwork()
-        
-        delegate?.streamHandlerConnectionFailed(handler: self, error: error)
-    }
-    
-    private func didFinishLoadingInternal() {
-        DDLogInfo("[StreamHandler] Stream handler didFinishLoadingInternal for \(song)")
-        assert(Thread.isMainThread, "didFinishLoadingInternal must be called from the main thread")
-        stopTimeoutTimer()
-        
-        // Check to see if we're at the contentLength (to allow some leeway for contentLength estimation of transcoded songs
-        if contentLength != UInt64.max && song.localFileSize < contentLength && numberOfContentLengthFailures < maxContentLengthFailures {
-            numberOfContentLengthFailures += 1
-            // This is a failed connection that didn't call didFailInternal for some reason, so call didFailWithError
-            // TODO: Is there a better error code to use?
-            didFailInternal(error: NSError(ismsCode: Int(ISMSErrorCode_CouldNotReachServer)))
-        } else {
-            // Make sure the player is told to start
-            if !isDelegateNotifiedToStartPlayback {
-                isDelegateNotifiedToStartPlayback = true
-                startPlaybackInternal()
-            }
-        }
-        
-        isDownloading = false
-        dataTask = nil
-        
-        // Close the file handle
-        // TODO: implement this - switch to non-deprecated API
-        fileHandle?.closeFile()
-        fileHandle = nil
-        
-        EX2NetworkIndicator.doneUsingNetwork()
-        
-        delegate?.streamHandlerConnectionFinished(handler: self)
     }
     
     // MARK: Equality
@@ -299,17 +202,37 @@ extension StreamHandler: URLSessionDataDelegate {
         }
     }
     
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+        DDLogInfo("[StreamHandler] Stream handler didReceiveResponse for \(song)")
+        
+        if let response = response as? HTTPURLResponse {
+            if response.statusCode >= 500 {
+                // This is a failure, cancel the connection and call the didFail delegate method
+                dataTask.cancel()
+                self.dataTask = nil
+                
+                // TODO: implement this - This was commented out, presumably because this situation will automatically call didCompleteWithError, but I haven't confirmed that (maybe it only happened with NSURLConnection which the implementation was originally ported from), so does this case even need to be handled here? Does dataTask.cancel() need to even be called? This needs to be tested.
+                //[self connection:self.connection didFailWithError:[NSError errorWithISMSCode:ISMSErrorCode_CouldNotReachServer]];
+            } else if contentLength == nil, let contentLengthString = response.value(forHTTPHeaderField: "Content-Length") {
+                // Set the content length if it isn't set already, only set the first connection, not on retries
+                contentLength = Int(contentLengthString)
+            }
+        }
+        
+        bytesTransfered = 0
+        completionHandler(.allow)
+    }
+    
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        DispatchQueue.main.async { self.stopTimeoutTimer() }
-        guard !isCanceled else { return }
+        guard dataTask.state == .running else { return }
         
         if isSpeedLoggingEnabled {
             speedLoggingDate = Date()
             speedLoggingLastSize = totalBytesTransferred
         }
         
-        totalBytesTransferred += UInt64(data.count)
-        bytesTransfered += UInt64(data.count)
+        totalBytesTransferred += data.count
+        bytesTransfered += data.count
         
         if let fileHandle = fileHandle {
             // Save the data to the file
@@ -323,9 +246,9 @@ extension StreamHandler: URLSessionDataDelegate {
             }
             
             // Notify delegate if enough bytes received to start playback
-            if !isDelegateNotifiedToStartPlayback && totalBytesTransferred > UInt64(minBytesToStartLimiting(kiloBitrate: Float(bitrate))) {
+            if !isDelegateNotifiedToStartPlayback && totalBytesTransferred > minBytesToStartLimiting(kiloBitrate: kiloBitrate) {
                 isDelegateNotifiedToStartPlayback = true
-                DispatchQueue.main.async { self.startPlaybackInternal() }
+                DispatchQueue.main.async { self.delegate?.streamHandlerStartPlayback(handler: self) }
             }
             
             // Log progress
@@ -334,18 +257,19 @@ extension StreamHandler: URLSessionDataDelegate {
             }
             
             // If near beginning of file, don't throttle
-            if totalBytesTransferred < UInt64(minBytesToStartLimiting(kiloBitrate: Float(bitrate))) {
+            if totalBytesTransferred < minBytesToStartLimiting(kiloBitrate: kiloBitrate) {
                 throttlingDate = Date()
                 bytesTransfered = 0
             }
         } else {
             DDLogInfo("[StreamHandler] received data but file handle was nil for \(song)")
-            if !isCanceled {
+            if dataTask.state != .canceling {
                 // There is no file handle for some reason, cancel the connection
                 dataTask.cancel()
                 self.dataTask = nil
                 DispatchQueue.main.async {
-                    self.didFailInternal(error: NSError(ismsCode: Int(ISMSErrorCode_CouldNotReachServer)))
+                    // TODO: implement this - use better error message
+                    self.connectionFailed(error: NSError(ismsCode: Int(ISMSErrorCode_CouldNotReachServer)))
                 }
             }
         }
@@ -367,48 +291,91 @@ extension StreamHandler: URLSessionDataDelegate {
             speedLoggingLastSize = totalBytesTransferred
             speedLoggingDate = now
         }
-        
-        DispatchQueue.main.async { self.startTimeoutTimer() }
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        DispatchQueue.main.async {
-            if let error = error {
-                self.didFailInternal(error: error)
+        if let error = error {
+            DispatchQueue.main.async { self.connectionFailed(error: error) }
+        } else {
+            DDLogInfo("[StreamHandler] Stream handler didFinishLoadingInternal for \(song)")
+            
+            // Check to see if we're at the contentLength (to allow some leeway for contentLength estimation of transcoded songs)
+            if let contentLength = contentLength, song.localFileSize < contentLength && numberOfContentLengthFailures < maxContentLengthFailures {
+                numberOfContentLengthFailures += 1
+                // This is a failed connection that didn't call didFailInternal for some reason, so call didFailWithError
+                // TODO: Is there a better error code to use?
+                DispatchQueue.main.async { self.connectionFailed(error: NSError(ismsCode: Int(ISMSErrorCode_CouldNotReachServer))) }
             } else {
-                self.didFinishLoadingInternal()
+                // Make sure the player is told to start
+                if !isDelegateNotifiedToStartPlayback {
+                    isDelegateNotifiedToStartPlayback = true
+                    DispatchQueue.main.async { self.delegate?.streamHandlerStartPlayback(handler: self) }
+                }
+            }
+            
+            isDownloading = false
+            dataTask = nil
+            
+            // Close the file handle
+            // TODO: implement this - switch to non-deprecated API
+            fileHandle?.closeFile()
+            fileHandle = nil
+            
+            DispatchQueue.main.async {
+                EX2NetworkIndicator.doneUsingNetwork()
+                self.delegate?.streamHandlerConnectionFinished(handler: self)
             }
         }
+    }
+    
+    private func connectionFailed(error: Error) {
+        DDLogError("[StreamHandler] didFailInternal for \(song)")
+        assert(Thread.isMainThread, "didFailInternal must be called from the main thread")
+        
+        DDLogError("[StreamHandler] Connection Failed for \(song)")
+        DDLogError("[StreamHandler] error domain: \(error.domain) code: \(error.code) description: \(error.localizedDescription)")
+        
+        isDownloading = false
+        dataTask = nil
+        
+        // Close the file handle
+        // TODO: implement this - switch to non-deprecated API
+        fileHandle?.closeFile()
+        fileHandle = nil
+        
+        EX2NetworkIndicator.doneUsingNetwork()
+        
+        delegate?.streamHandlerConnectionFailed(handler: self, error: error)
     }
 }
 
 // MARK: Constants and Helper Functions
 
-private func minimumBytesToStartPlayback(kiloBitrate: Float) -> Float {
+private func minimumBytesToStartPlayback(kiloBitrate: Int) -> Int {
     return bytesForSeconds(seconds: 10, kiloBitrate: kiloBitrate)
 }
 
 private let throttleTimeInterval = 0.1
 
 private let maxKilobitsPerSecondCell = 500
-private func maxBytesPerIntervalCell() -> Float {
-    return bytesForSeconds(seconds: Float(throttleTimeInterval), kiloBitrate: Float(maxKilobitsPerSecondCell))
+private func maxBytesPerIntervalCell() -> Int {
+    return bytesForSeconds(seconds: throttleTimeInterval, kiloBitrate: maxKilobitsPerSecondCell)
 }
 
 private let maxKilobitsPerSecondWifi = 8000
-private func maxBytesPerIntervalWifi() -> Float {
-    return bytesForSeconds(seconds: Float(throttleTimeInterval), kiloBitrate: Float(maxKilobitsPerSecondWifi))
+private func maxBytesPerIntervalWifi() -> Int {
+    return bytesForSeconds(seconds: throttleTimeInterval, kiloBitrate: maxKilobitsPerSecondWifi)
 }
 
-private func minBytesToStartLimiting(kiloBitrate: Float) -> Float {
+private func minBytesToStartLimiting(kiloBitrate: Int) -> Int {
     return bytesForSeconds(seconds: 60, kiloBitrate: kiloBitrate)
 }
 
 private let maxContentLengthFailures = 25
 
-private func maxBytesPerInterval(kiloBitrate: Float, isCell: Bool) -> Float {
+private func maxBytesPerInterval(kiloBitrate: Int, isCell: Bool) -> Int {
     let maxBytesDefault = isCell ? maxBytesPerIntervalCell() : maxBytesPerIntervalWifi()
-    var maxBytesPerInterval = maxBytesDefault * (kiloBitrate / 160.0)
+    var maxBytesPerInterval = Int(Double(maxBytesDefault) * (Double(kiloBitrate) / 160.0))
     if maxBytesPerInterval < maxBytesDefault {
         // Don't go lower than the default
         maxBytesPerInterval = maxBytesDefault
@@ -420,21 +387,21 @@ private func maxBytesPerInterval(kiloBitrate: Float, isCell: Bool) -> Float {
 }
 
 // TODO: Refactor this to simplify (minSecondsToStartPlayback could be a single equation for example)
-private func minBytesToStartPlayback(kiloBitrate: Float, bytesPerSec: Int) -> UInt64 {
+private func minBytesToStartPlayback(kiloBitrate: Int, bytesPerSec: Int) -> Int {
     // If start date is nil somehow, or total bytes transferred is 0 somehow,
-    guard kiloBitrate > 0 && bytesPerSec > 0 else { return UInt64(minimumBytesToStartPlayback(kiloBitrate: kiloBitrate)) }
+    guard kiloBitrate > 0 && bytesPerSec > 0 else { return minimumBytesToStartPlayback(kiloBitrate: kiloBitrate) }
     
     // Get the download speed so far
-    let kiloBytesPerSec = Float(bytesPerSec) / 1024.0
+    let kiloBytesPerSec = Double(bytesPerSec) / 1024.0
     
     // Find out out many bytes equals 1 second of audio
     let bytesForOneSecond = bytesForSeconds(seconds: 1, kiloBitrate: kiloBitrate)
-    let kiloBytesForOneSecond = bytesForOneSecond * 1024.0
+    let kiloBytesForOneSecond = Double(bytesForOneSecond) * 1024.0
     
     // Calculate the amount of seconds to start as a factor of how many seconds of audio are being downloaded per second
     let secondsPerSecondFactor = kiloBytesPerSec / kiloBytesForOneSecond
     
-    let minSecondsToStartPlayback: Float
+    let minSecondsToStartPlayback: Int
     if secondsPerSecondFactor < 1.0 {
         // Downloading slower than needed for playback, allow for a long buffer
         minSecondsToStartPlayback = 16
@@ -454,5 +421,5 @@ private func minBytesToStartPlayback(kiloBitrate: Float, bytesPerSec: Int) -> UI
     
     // Convert from seconds to bytes
     let minBytesToStartPlayback = minSecondsToStartPlayback * bytesForOneSecond
-    return UInt64(minBytesToStartPlayback)
+    return Int(minBytesToStartPlayback)
 }

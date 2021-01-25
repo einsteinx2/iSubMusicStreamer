@@ -32,7 +32,7 @@
 
 + (NSError *)errorWithISMSCode:(NSInteger)code {
     NSString *description = [self descriptionFromISMSCode:code];
-    return [NSError errorWithDomain:ISMSErrorDomain code:code userInfo:@{NSLocalizedDescriptionKey: n2N(description)}];
+    return [NSError errorWithDomain:ISMSErrorDomain code:code userInfo:@{NSLocalizedDescriptionKey: description ?: @""}];
 }
 
 + (NSError *)errorWithISMSCode:(NSInteger)code extraAttributes:(NSDictionary *)attributes {
@@ -42,7 +42,7 @@
 }
 
 + (NSError *)errorWithISMSCode:(NSInteger)code message:(NSString *)message {
-    return [self errorWithDomain:SUSErrorDomain code:code userInfo:@{NSLocalizedDescriptionKey: n2N(message)}];
+    return [self errorWithDomain:SUSErrorDomain code:code userInfo:@{NSLocalizedDescriptionKey: message ?: @""}];
 }
 
 @end

@@ -831,8 +831,6 @@
 		53DD0DD8259A592B00494AEA /* RecursiveSongLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecursiveSongLoader.swift; sourceTree = "<group>"; };
 		53DD0DDB259A6F8A00494AEA /* SongLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLoader.swift; sourceTree = "<group>"; };
 		53DE598214F1932C00206529 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
-		53E04936255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSNSURLSessionStreamHandler.h; sourceTree = "<group>"; };
-		53E04937255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ISMSNSURLSessionStreamHandler.m; sourceTree = "<group>"; };
 		53E04946255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSignedCertURLSessionDelegate.swift; sourceTree = "<group>"; };
 		53E82A951406D47F0051D44B /* FolderDropdownDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderDropdownDelegate.h; sourceTree = "<group>"; };
 		53EA2DD2257D6A2C0003F38D /* UIDevice+Info.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIDevice+Info.h"; sourceTree = "<group>"; };
@@ -922,9 +920,6 @@
 		53FE364F1EA961720058B925 /* ISMSErrorDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSErrorDomain.h; sourceTree = "<group>"; };
 		53FE36641EA961720058B925 /* ISMSServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSServer.h; sourceTree = "<group>"; };
 		53FE36651EA961720058B925 /* ISMSServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSServer.m; sourceTree = "<group>"; };
-		53FE366E1EA961720058B925 /* ISMSAbstractStreamHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSAbstractStreamHandler.h; sourceTree = "<group>"; };
-		53FE366F1EA961720058B925 /* ISMSAbstractStreamHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSAbstractStreamHandler.m; sourceTree = "<group>"; };
-		53FE36701EA961720058B925 /* ISMSStreamHandlerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSStreamHandlerDelegate.h; sourceTree = "<group>"; };
 		53FE367B1EA961720058B925 /* iSubBassGaplessPlayerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSubBassGaplessPlayerDelegate.h; sourceTree = "<group>"; };
 		53FE367C1EA961720058B925 /* iSubBassGaplessPlayerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSubBassGaplessPlayerDelegate.m; sourceTree = "<group>"; };
 		53FE368A1EA961720058B925 /* NSError+ISMSError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+ISMSError.h"; sourceTree = "<group>"; };
@@ -1528,11 +1523,6 @@
 				5302DE4025BA2AA00036A9B1 /* StreamManager.swift */,
 				536C890625BB37F5008FE1AC /* CacheQueue.swift */,
 				536C890925BB5FED008FE1AC /* StreamHandler.swift */,
-				53FE36701EA961720058B925 /* ISMSStreamHandlerDelegate.h */,
-				53FE366E1EA961720058B925 /* ISMSAbstractStreamHandler.h */,
-				53FE366F1EA961720058B925 /* ISMSAbstractStreamHandler.m */,
-				53E04936255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.h */,
-				53E04937255DB8F6007D4578 /* ISMSNSURLSessionStreamHandler.m */,
 			);
 			path = "Stream Handlers";
 			sourceTree = "<group>";
