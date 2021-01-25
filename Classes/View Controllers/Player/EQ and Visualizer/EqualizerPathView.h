@@ -10,9 +10,9 @@
 
 @interface EqualizerPathView : UIView {
 	CGPoint *points;
-	NSUInteger length;
+	NSInteger length;
 }
 
-- (void)setPoints:(CGPoint *)thePoints length:(NSUInteger)theLength;
+- (void)setPoints:(CGPoint *)thePoints length:(NSInteger)theLength;
 
 @end

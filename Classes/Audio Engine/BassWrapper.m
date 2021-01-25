@@ -20,14 +20,14 @@ LOG_LEVEL_ISUB_DEFAULT
 
 extern void BASSFLACplugin, BASSWVplugin, BASS_APEplugin, BASS_MPCplugin, BASSOPUSplugin;
 
-static NSUInteger _bassOutputBufferLengthMillis = 0;
+static NSInteger _bassOutputBufferLengthMillis = 0;
 
-+ (NSUInteger)bassOutputBufferLengthMillis
++ (NSInteger)bassOutputBufferLengthMillis
 {
     return _bassOutputBufferLengthMillis;
 }
 
-+ (void)bassInit:(NSUInteger)sampleRate
++ (void)bassInit:(NSInteger)sampleRate
 {
     // Free BASS just in case we use this after launch
     BASS_Free();
@@ -201,7 +201,7 @@ static NSUInteger _bassOutputBufferLengthMillis = 0;
 	}
 }
 
-+ (NSUInteger)estimateBitrate:(BassStream *)bassStream
++ (NSInteger)estimateKiloBitrate:(BassStream *)bassStream
 {	
 	// Default to the player bitrate
 	HSTREAM stream = bassStream.stream;
@@ -210,8 +210,8 @@ static NSUInteger _bassOutputBufferLengthMillis = 0;
 	QWORD filePosition = currentFilePosition - startFilePosition;
 	QWORD decodedPosition = BASS_ChannelGetPosition(stream, BASS_POS_BYTE|BASS_POS_DECODE); // decoded PCM position
 	double bitrateDouble = filePosition * 8 / BASS_ChannelBytes2Seconds(stream, decodedPosition);
-	NSUInteger bitrate = (NSUInteger)(bitrateDouble / 1000);
-	bitrate = bitrate > 1000000 ? -1 : bitrate;
+	NSInteger kiloBitrate = (NSInteger)(bitrateDouble / 1000.0);
+    kiloBitrate = kiloBitrate > 1000000 ? -1 : kiloBitrate;
 	
 	BASS_CHANNELINFO i;
 	BASS_ChannelGetInfo(bassStream.stream, &i);
@@ -228,8 +228,8 @@ static NSUInteger _bassOutputBufferLengthMillis = 0;
         case BASS_CTYPE_STREAM_WV:
         case BASS_CTYPE_STREAM_FLAC:
         case BASS_CTYPE_STREAM_FLAC_OGG:
-			if (bitrate < 330 || bitrate > 12000)
-				bitrate = songForStream.estimatedBitrate;
+			if (kiloBitrate < 330 || kiloBitrate > 12000)
+                kiloBitrate = songForStream.estimatedKiloBitrate;
 			break;
 			
 		case BASS_CTYPE_STREAM_OGG:	
@@ -237,8 +237,8 @@ static NSUInteger _bassOutputBufferLengthMillis = 0;
 		case BASS_CTYPE_STREAM_MP2:
 		case BASS_CTYPE_STREAM_MP3:
         case BASS_CTYPE_STREAM_MPC:
-			if (bitrate > 450)
-				bitrate = songForStream.estimatedBitrate;
+			if (kiloBitrate > 450)
+                kiloBitrate = songForStream.estimatedKiloBitrate;
 			break;	
 			
 		case BASS_CTYPE_STREAM_CA:
@@ -248,8 +248,8 @@ static NSUInteger _bassOutputBufferLengthMillis = 0;
 			{
 				case kAudioFormatLinearPCM:	
 				case kAudioFormatAppleLossless:
-					if (bitrate < 330 || bitrate > 12000)
-						bitrate = songForStream.estimatedBitrate;
+					if (kiloBitrate < 330 || kiloBitrate > 12000)
+                        kiloBitrate = songForStream.estimatedKiloBitrate;
 					break;
 					
 				case kAudioFormatMPEG4AAC:
@@ -262,13 +262,13 @@ static NSUInteger _bassOutputBufferLengthMillis = 0;
 				case kAudioFormatMPEGLayer1:
 				case kAudioFormatMPEGLayer2:
 				case kAudioFormatMPEGLayer3:
-					if (bitrate > 450)
-						bitrate = songForStream.estimatedBitrate;
+					if (kiloBitrate > 450)
+                        kiloBitrate = songForStream.estimatedKiloBitrate;
 					break;
 					
 					// If we can't detect the format, use the estimated bitrate instead of player to be safe
 				default:
-					bitrate = songForStream.estimatedBitrate;
+                    kiloBitrate = songForStream.estimatedKiloBitrate;
 					break;
 			}
 			break;
@@ -276,11 +276,11 @@ static NSUInteger _bassOutputBufferLengthMillis = 0;
 			
 			// If we can't detect the format, use the estimated bitrate instead of player to be safe
 		default:
-			bitrate = songForStream.estimatedBitrate;
+            kiloBitrate = songForStream.estimatedKiloBitrate;
 			break;
 	}
 	
-	return bitrate;
+	return kiloBitrate;
 }
 
 @end

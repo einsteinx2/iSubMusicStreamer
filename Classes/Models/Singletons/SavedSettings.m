@@ -25,8 +25,8 @@ LOG_LEVEL_ISUB_DEFAULT
     NSInteger _normalPlaylistIndex;
     NSInteger _shufflePlaylistIndex;
     RepeatMode _repeatMode;
-    NSInteger _bitRate;
-    unsigned long long _byteOffset;
+    NSInteger _kiloBitrate;
+    NSInteger _byteOffset;
     double _secondsOffset;
     BOOL _isRecover;
     NSInteger _recoverSetting;
@@ -58,13 +58,13 @@ LOG_LEVEL_ISUB_DEFAULT
 	_repeatMode = (RepeatMode)[_userDefaults integerForKey:@"repeatMode"];
     playQueue.repeatMode = _repeatMode;
 	
-	_bitRate = [_userDefaults integerForKey:@"bitRate"];
+	_kiloBitrate = [_userDefaults integerForKey:@"kiloBitrate"];
 	_byteOffset = self.byteOffset;
 	_secondsOffset = self.seekTime;
 	_isRecover = self.isRecover;
 	_recoverSetting = self.recoverSetting;
 	
-    player.startByteOffset = (NSUInteger)_byteOffset;
+    player.startByteOffset = _byteOffset;
     player.startSecondsOffset = _secondsOffset;
 }
 
@@ -119,9 +119,9 @@ LOG_LEVEL_ISUB_DEFAULT
 			isDefaultsDirty = YES;
 		}
 		
-		if (player.bitRate != _bitRate && player.bitRate >= 0) {
-			_bitRate = player.bitRate;
-			[_userDefaults setInteger:_bitRate forKey:@"bitRate"];
+		if (player.kiloBitrate != _kiloBitrate && player.kiloBitrate >= 0) {
+			_kiloBitrate = player.kiloBitrate;
+			[_userDefaults setInteger:_kiloBitrate forKey:@"kiloBitrate"];
 			isDefaultsDirty = YES;
 		}
 		
@@ -487,21 +487,21 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
 }
 
-- (unsigned long long)maxCacheSize {
-    return [[_userDefaults objectForKey:@"maxCacheSize"] unsignedLongLongValue];
+- (NSInteger)maxCacheSize {
+    return [_userDefaults integerForKey:@"maxCacheSize"];
 }
 
-- (void)setMaxCacheSize:(unsigned long long)maxCacheSize {
-    [_userDefaults setObject:@(maxCacheSize) forKey:@"maxCacheSize"];
+- (void)setMaxCacheSize:(NSInteger)maxCacheSize {
+    [_userDefaults setInteger:maxCacheSize forKey:@"maxCacheSize"];
     [_userDefaults synchronize];
 }
 
-- (unsigned long long)minFreeSpace {
-    return [[_userDefaults objectForKey:@"minFreeSpace"] unsignedLongLongValue];
+- (NSInteger)minFreeSpace {
+    return [_userDefaults integerForKey:@"minFreeSpace"];
 }
 
-- (void)setMinFreeSpace:(unsigned long long)minFreeSpace {
-    [_userDefaults setObject:@(minFreeSpace) forKey:@"minFreeSpace"];
+- (void)setMinFreeSpace:(NSInteger)minFreeSpace {
+    [_userDefaults setInteger:minFreeSpace forKey:@"minFreeSpace"];
     [_userDefaults synchronize];
 }
 
@@ -632,22 +632,22 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
 }
 
-- (unsigned long long)byteOffset {
-    return [[_userDefaults objectForKey:@"byteOffset"] unsignedLongLongValue];
+- (NSInteger)byteOffset {
+    return [_userDefaults integerForKey:@"byteOffset"];
 }
 
-- (void)setByteOffset:(unsigned long long)byteOffset {
-    [_userDefaults setObject:@(byteOffset) forKey:@"byteOffset"];
+- (void)setByteOffset:(NSInteger)byteOffset {
+    [_userDefaults setInteger:byteOffset forKey:@"byteOffset"];
     [_userDefaults synchronize];
 }
 
 - (NSInteger)bitRate {
-    NSInteger rate = [[_userDefaults objectForKey:@"bitRate"] integerValue];
+    NSInteger rate = [_userDefaults integerForKey:@"bitRate"];
     return rate < 0 ? 128 : rate;
 }
 
 - (void)setBitRate:(NSInteger)rate {
-    [_userDefaults setObject:@(rate) forKey:@"bitRate"];
+    [_userDefaults setInteger:rate forKey:@"bitRate"];
     [_userDefaults synchronize];
 }
 
@@ -696,11 +696,11 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
 }
 
-- (NSUInteger)quickSkipNumberOfSeconds {
+- (NSInteger)quickSkipNumberOfSeconds {
     return [_userDefaults integerForKey:@"quickSkipNumberOfSeconds"];
 }
 
-- (void)setQuickSkipNumberOfSeconds:(NSUInteger)numSeconds {
+- (void)setQuickSkipNumberOfSeconds:(NSInteger)numSeconds {
     [_userDefaults setInteger:numSeconds forKey:@"quickSkipNumberOfSeconds"];
     [_userDefaults synchronize];
 }
@@ -745,11 +745,11 @@ LOG_LEVEL_ISUB_DEFAULT
 //	return [self.urlString isEqualToString:DEFAULT_URL];
 //}
 
-- (NSUInteger)migrateIncrementor {
+- (NSInteger)migrateIncrementor {
     return [_userDefaults integerForKey:@"migrateIncrementor"];
 }
 
-- (void)setMigrateIncrementor:(NSUInteger)migrateIncrementor {
+- (void)setMigrateIncrementor:(NSInteger)migrateIncrementor {
     [_userDefaults setInteger:migrateIncrementor forKey:@"migrateIncrementor"];
     [_userDefaults synchronize];
 }

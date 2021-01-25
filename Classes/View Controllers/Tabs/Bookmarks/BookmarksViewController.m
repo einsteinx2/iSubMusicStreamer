@@ -66,7 +66,7 @@
 	}
 	
     // TODO: implement this
-//	NSUInteger bookmarksCount = [databaseS.bookmarksDbQueue intForQuery:@"SELECT COUNT(*) FROM bookmarks"];
+//	NSInteger bookmarksCount = [databaseS.bookmarksDbQueue intForQuery:@"SELECT COUNT(*) FROM bookmarks"];
 //	if (bookmarksCount == 0) {
 //        [self removeSaveEditButtons];
 //
@@ -121,7 +121,7 @@
     [self.tableView setNeedsUpdateConstraints];
 }
 
-- (void)addSaveEditButtons:(NSUInteger)bookmarksCount {
+- (void)addSaveEditButtons:(NSInteger)bookmarksCount {
     [self removeSaveEditButtons];
     
     self.isSaveEditShowing = YES;
@@ -227,7 +227,7 @@
 }
 
 - (void)showDeleteButton {
-    NSUInteger selectedRowsCount = self.tableView.indexPathsForSelectedRows.count;
+    NSInteger selectedRowsCount = self.tableView.indexPathsForSelectedRows.count;
 	if (selectedRowsCount == 0) {
 		self.deleteBookmarksLabel.text = @"Clear Bookmarks";
 	} else if (selectedRowsCount == 1) {
@@ -242,7 +242,7 @@
 
 
 - (void)hideDeleteButton {
-    NSUInteger selectedRowsCount = self.tableView.indexPathsForSelectedRows.count;
+    NSInteger selectedRowsCount = self.tableView.indexPathsForSelectedRows.count;
 	if (selectedRowsCount == 0) {
 		if (!self.isEditing) {
 			self.bookmarkCountLabel.hidden = NO;
@@ -374,10 +374,10 @@
 //	}
 //	PlayQueue.shared.isShuffle = NO;
 //
-//	__block NSUInteger bookmarkId = 0;
-//	__block NSUInteger playlistIndex = 0;
-//	__block NSUInteger offsetSeconds = 0;
-//	__block NSUInteger offsetBytes = 0;
+//	__block NSInteger bookmarkId = 0;
+//	__block NSInteger playlistIndex = 0;
+//	__block NSInteger offsetSeconds = 0;
+//	__block NSInteger offsetBytes = 0;
 //	__block ISMSSong *aSong;
 //
 //	[databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
@@ -420,11 +420,11 @@
 //	// Check if these are old bookmarks and don't have byteOffset saved
 //	if (offsetBytes == 0 && offsetSeconds != 0) {
 //		// By default, use the server reported bitrate
-//		NSUInteger bitrate = [aSong.bitRate intValue];
+//		NSInteger bitrate = [aSong.bitRate intValue];
 //		
 //		if (aSong.transcodedSuffix) {
 //			// This is a transcode, guess the bitrate and byteoffset
-//			NSUInteger maxBitrate = settingsS.currentMaxBitrate == 0 ? 128 : settingsS.currentMaxBitrate;
+//			NSInteger maxBitrate = settingsS.currentMaxBitrate == 0 ? 128 : settingsS.currentMaxBitrate;
 //			bitrate = maxBitrate < [aSong.bitRate intValue] ? maxBitrate : [aSong.bitRate intValue];
 //		}
 //

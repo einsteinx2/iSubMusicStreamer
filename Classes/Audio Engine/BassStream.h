@@ -22,10 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, strong, nonatomic) NSFileHandle *fileHandle;
 @property BOOL shouldBreakWaitLoop;
 @property BOOL shouldBreakWaitLoopForever;
-@property unsigned long long neededSize;
+@property NSInteger neededSize;
 @property BOOL isWaiting;
 @property (nullable, nonatomic, copy) NSString *writePath;
-@property (nonatomic, readonly) unsigned long long localFileSize;
+@property (nonatomic, readonly) NSInteger localFileSize;
 @property (nonatomic) BOOL isTempCached;
 @property BOOL isSongStarted;
 @property BOOL isFileUnderrun;

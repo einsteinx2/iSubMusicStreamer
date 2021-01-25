@@ -173,13 +173,13 @@ final class CacheStatusViewController: UIViewController {
         
         let numCachedSongs = cache.numberOfCachedSongs
         songsCachedLabel.text = numCachedSongs == 1 ? "1 song" : "\(numCachedSongs) songs"
-        cachedUsedLabel.text = NSString.formatFileSize(UInt64(cache.cacheSize))
+        cachedUsedLabel.text = NSString.formatFileSize(cache.cacheSize)
         if settings.cachingType == ISMSCachingType_minSpace.rawValue {
             cacheSizeLabel.text = NSString.formatFileSize(settings.minFreeSpace)
         } else {
             cacheSizeLabel.text = NSString.formatFileSize(settings.minFreeSpace)
         }
-        freeSpaceLabel.text = NSString.formatFileSize(UInt64(cache.freeSpace))
+        freeSpaceLabel.text = NSString.formatFileSize(cache.freeSpace)
         
         perform(#selector(startUpdatingStats), with: nil, afterDelay: 1.0)
     }

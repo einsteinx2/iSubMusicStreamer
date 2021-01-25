@@ -8,7 +8,6 @@
 
 #import "iSubBassGaplessPlayerDelegate.h"
 #import "BassGaplessPlayer.h"
-#import "ISMSAbstractStreamHandler.h"
 #import "Defines.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -59,19 +58,19 @@
     [Social.shared playerClearSocial];
 }
 
-- (NSUInteger)bassIndexAtOffset:(NSInteger)offset fromIndex:(NSUInteger)index player:(BassGaplessPlayer *)player {
+- (NSInteger)bassIndexAtOffset:(NSInteger)offset fromIndex:(NSInteger)index player:(BassGaplessPlayer *)player {
     return [PlayQueue.shared indexWithOffset:offset fromIndex:index];
 }
 
-- (ISMSSong *)bassSongForIndex:(NSUInteger)index player:(BassGaplessPlayer *)player {
+- (ISMSSong *)bassSongForIndex:(NSInteger)index player:(BassGaplessPlayer *)player {
     return [PlayQueue.shared songWithIndex:index];
 }
 
-- (NSUInteger)bassCurrentPlaylistIndex:(BassGaplessPlayer *)player {
+- (NSInteger)bassCurrentPlaylistIndex:(BassGaplessPlayer *)player {
     return PlayQueue.shared.currentIndex;
 }
 
-- (void)bassRetrySongAtIndex:(NSUInteger)index player:(BassGaplessPlayer*)player; {
+- (void)bassRetrySongAtIndex:(NSInteger)index player:(BassGaplessPlayer*)player; {
     [EX2Dispatch runInMainThreadAsync:^{
         [PlayQueue.shared playSongWithPosition:index];
     }];
@@ -81,11 +80,11 @@
 	[PlayQueue.shared updateLockScreenInfo];
 }
 
-- (void)bassRetrySongAtOffsetInBytes:(NSUInteger)bytes andSeconds:(NSUInteger)seconds player:(BassGaplessPlayer*)player {
+- (void)bassRetrySongAtOffsetInBytes:(NSInteger)bytes andSeconds:(NSInteger)seconds player:(BassGaplessPlayer*)player {
     [PlayQueue.shared startSongWithOffsetInBytes:bytes offsetInSeconds:seconds];
 }
 
-- (void)bassFailedToCreateNextStreamForIndex:(NSUInteger)index player:(BassGaplessPlayer *)player {
+- (void)bassFailedToCreateNextStreamForIndex:(NSInteger)index player:(BassGaplessPlayer *)player {
     // The song ended, and we tried to make the next stream but it failed
     ISMSSong *song = [PlayQueue.shared songWithIndex:index];
     StreamHandler *handler = [StreamManager.shared handlerWithSong:song];

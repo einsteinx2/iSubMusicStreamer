@@ -8,6 +8,10 @@
 
 import Foundation
 
+@objc class NotificationKeys: NSObject {
+    @objc static let serverId = "serverId"
+}
+
 @objc class Notifications: NSObject {
     @objc static let songPlaybackStarted = Notification.Name("iSub.songPlaybackStarted")
     @objc static let songPlaybackPaused = Notification.Name("iSub.songPlaybackPaused")
@@ -15,6 +19,10 @@ import Foundation
     @objc static let songPlaybackFailed = Notification.Name("iSub.songPlaybackFailed")
     
     @objc static let albumArtLargeDownloaded = Notification.Name("iSub.albumArtLargeDownloaded")
+    
+    @objc static let switchServer = Notification.Name("iSub.switchServer")
+    @objc static let reloadServerList = Notification.Name("iSub.reloadServerList")
+    @objc static let showSaveButton = Notification.Name("iSub.showSaveButton")
     
     @objc static let serverSwitched = Notification.Name("iSub.serverSwitched")
     @objc static let checkServer = Notification.Name("iSub.checkServer")

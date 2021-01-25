@@ -27,7 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Settings)
 @interface SavedSettings : NSObject 
 
-@property BOOL isCancelLoading;
 @property BOOL isOfflineMode;
 
 @property (readonly) BOOL showPlayerIcon;
@@ -59,8 +58,8 @@ NS_SWIFT_NAME(Settings)
 @property BOOL isBackupCacheEnabled;
 @property BOOL isManualCachingOnWWANEnabled;
 @property NSInteger cachingType;
-@property unsigned long long maxCacheSize;
-@property unsigned long long minFreeSpace;
+@property NSInteger maxCacheSize;
+@property NSInteger minFreeSpace;
 @property BOOL isAutoDeleteCacheEnabled;
 @property NSInteger autoDeleteCacheType;
 @property NSInteger cachedSongCellColorType;
@@ -78,18 +77,18 @@ NS_SWIFT_NAME(Settings)
 @property BOOL isSwipeEnabled;
 @property float gainMultiplier;
 @property ISMSBassVisualType currentVisualizerType;
-@property NSUInteger quickSkipNumberOfSeconds;
+@property NSInteger quickSkipNumberOfSeconds;
 @property BOOL isShouldShowEQViewInstructions;
 @property BOOL isLockScreenArtEnabled;
 @property BOOL isEqualizerOn;
-@property NSUInteger migrateIncrementor;
+@property NSInteger migrateIncrementor;
 @property BOOL isDisableUsageOver3G;
 @property BOOL isCacheSizeTableFinished;
 
 // State Saving
 @property BOOL isRecover;
 @property double seekTime;
-@property unsigned long long byteOffset;
+@property NSInteger byteOffset;
 @property NSInteger bitRate;
 
 // Document Paths

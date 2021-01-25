@@ -10,26 +10,26 @@
 
 @interface EX2RingBuffer : NSObject
 
-@property NSUInteger maximumLength;
+@property NSInteger maximumLength;
 
 @property (strong) NSData *buffer;
-@property (nonatomic) NSUInteger readPosition;
-@property (nonatomic) NSUInteger writePosition;
-@property (nonatomic, readonly) NSUInteger totalLength;
-@property (nonatomic, readonly) NSUInteger freeSpaceLength;
-@property (nonatomic, readonly) NSUInteger filledSpaceLength;
-@property long long totalBytesDrained;
+@property (nonatomic) NSInteger readPosition;
+@property (nonatomic) NSInteger writePosition;
+@property (nonatomic, readonly) NSInteger totalLength;
+@property (nonatomic, readonly) NSInteger freeSpaceLength;
+@property (nonatomic, readonly) NSInteger filledSpaceLength;
+@property NSInteger totalBytesDrained;
 
-- (instancetype)initWithBufferLength:(NSUInteger)bytes;
-+ (instancetype)ringBufferWithLength:(NSUInteger)bytes;
+- (instancetype)initWithBufferLength:(NSInteger)bytes;
++ (instancetype)ringBufferWithLength:(NSInteger)bytes;
 
-- (BOOL)fillWithBytes:(const void *)byteBuffer length:(NSUInteger)bufferLength;
+- (BOOL)fillWithBytes:(const void *)byteBuffer length:(NSInteger)bufferLength;
 - (BOOL)fillWithData:(NSData *)data;
 
-- (NSUInteger)drainBytes:(void *)byteBuffer length:(NSUInteger)bufferLength;
-- (NSData *)drainData:(NSUInteger)length;
+- (NSInteger)drainBytes:(void *)byteBuffer length:(NSInteger)bufferLength;
+- (NSData *)drainData:(NSInteger)length;
 
-- (BOOL)hasSpace:(NSUInteger)length;
+- (BOOL)hasSpace:(NSInteger)length;
 
 - (void)reset;
 

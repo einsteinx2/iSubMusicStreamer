@@ -12,7 +12,7 @@
 
 @implementation ISMSBookmarkDAO
 
-+ (void)createBookmarkForSong:(ISMSSong *)song name:(NSString *)name bookmarkPosition:(NSUInteger)position bytePosition:(NSUInteger)bytePosition {
++ (void)createBookmarkForSong:(ISMSSong *)song name:(NSString *)name bookmarkPosition:(NSInteger)position bytePosition:(NSInteger)bytePosition {
 //    // TODO: somehow this is saving the incorrect playlist index sometimes
 //    [databaseS.bookmarksDbQueue inDatabase:^(FMDatabase *db) {
 //        NSString *query = [NSString stringWithFormat:@"INSERT INTO bookmarks (playlistIndex, name, position, %@, bytes) VALUES (?, ?, ?, %@, ?)", [ISMSSong standardSongColumnNames], ISMSSong.standardSongColumnQMarks];

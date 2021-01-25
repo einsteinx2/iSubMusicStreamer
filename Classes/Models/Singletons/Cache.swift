@@ -117,7 +117,7 @@ import CocoaLumberjackSwift
             DDLogInfo("[Cache] adjustCacheSize:  possibleSize = \(possibleSize)  maxCacheSize = \(maxCacheSize)")
             if possibleSize < maxCacheSize {
                 // Set the max cache size to 25MB less than the free space
-                settings.maxCacheSize = UInt64(possibleSize - (25 * 1024 * 1024))
+                settings.maxCacheSize = possibleSize - (25 * 1024 * 1024)
             }
         }
     }

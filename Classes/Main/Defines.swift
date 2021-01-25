@@ -30,6 +30,6 @@ import CocoaLumberjackSwift
     }
 }
 
-func bytesForSeconds(seconds: Float, kiloBitrate: Float) -> Float {
-    return (kiloBitrate / 8) * 1024 * seconds
+func bytesForSeconds(seconds: Double, kiloBitrate: Int) -> Int {
+    return Int((Double(kiloBitrate) / 8.0) * 1024.0 * seconds)
 }

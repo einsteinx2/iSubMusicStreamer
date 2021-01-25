@@ -16,7 +16,7 @@ import CocoaLumberjackSwift
         return URLSession(configuration: configuration, delegate: urlSessionDelegate, delegateQueue: nil)
     }()
 
-    @objc private(set) var port: UInt = 8080
+    @objc private(set) var port: Int = 8080
 
     @objc override init() {
         super.init()
@@ -27,7 +27,7 @@ import CocoaLumberjackSwift
     
     @objc func start() {
         guard !webServer.isRunning else { return }
-        webServer.start(withPort: port, bonjourName: nil)
+        webServer.start(withPort: UInt(port), bonjourName: nil)
     }
 
     @objc func stop() {
@@ -41,7 +41,7 @@ import CocoaLumberjackSwift
         guard var components = URLComponents(url: originURL, resolvingAgainstBaseURL: false) else { return nil }
         components.scheme = "http"
         components.host = "127.0.0.1"
-        components.port = Int(port)
+        components.port = port
 
         let originURLQueryItem = URLQueryItem(name: Self.originURLKey, value: originURL.absoluteString)
         components.queryItems = (components.queryItems ?? []) + [originURLQueryItem]

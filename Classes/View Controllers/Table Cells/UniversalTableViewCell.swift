@@ -138,7 +138,7 @@ import SnapKit
         fatalError("unimplemented")
     }
     
-    @objc func update(model: TableCellModel?) {
+    func update(model: TableCellModel?) {
         tableCellModel = model;
         if let model = model {
             if !hideCoverArt { coverArtView.coverArtId = model.coverArtId }

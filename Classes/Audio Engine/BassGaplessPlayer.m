@@ -275,7 +275,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
     }
     
 	BassStream *userInfo = self.currentStream;
-	NSUInteger bytesRead = [self.ringBuffer drainBytes:buffer length:length];
+	NSInteger bytesRead = [self.ringBuffer drainBytes:buffer length:length];
 	
 	if (userInfo.isEnded) {
 		userInfo.bufferSpaceTilSongEnd -= bytesRead;
@@ -373,7 +373,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 	}
 }
 
-+ (NSUInteger)bytesToBufferForKiloBitrate:(NSUInteger)rate speedInBytesPerSec:(NSUInteger)speedInBytesPerSec {
++ (NSInteger)bytesToBufferForKiloBitrate:(NSInteger)rate speedInBytesPerSec:(NSInteger)speedInBytesPerSec {
     // If start date is nil somehow, or total bytes transferred is 0 somehow, return the default of 10 seconds worth of audio
     if (rate == 0 || speedInBytesPerSec == 0) {
         return BytesForSecondsAtBitrate(10, rate);
@@ -410,7 +410,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
     }
     
     // Convert from seconds to bytes
-    NSUInteger numberOfBytesToBuffer = numberOfSecondsToBuffer * bytesForOneSecond;
+    NSInteger numberOfBytesToBuffer = numberOfSecondsToBuffer * bytesForOneSecond;
     return numberOfBytesToBuffer;
 }
 
@@ -434,7 +434,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
     HSTREAM localMixerStream = self.mixerStream;
     
 	@autoreleasepool {
-		NSUInteger readSize = 64 * 1024;
+		NSInteger readSize = 64 * 1024;
 		while (!NSThread.currentThread.isCancelled) {
 			// Fill the buffer if there is empty space
 			if (localRingBuffer.freeSpaceLength > readSize) {
@@ -482,8 +482,8 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                                 // Choose either the current player bitrate, or if for some reason it is not detected properly,
                                 // use the best estimated bitrate. Then use that to determine how much data to let download to continue.
                                 
-                                unsigned long long size = theSong.localFileSize;
-                                NSUInteger bitrate = [BassWrapper estimateBitrate:userInfo];
+                                NSInteger size = theSong.localFileSize;
+                                NSInteger bitrate = [BassWrapper estimateKiloBitrate:userInfo];
                                 
                                 // Get the stream for this song
                                 StreamHandler *handler = [StreamManager.shared handlerWithSong:userInfo.song];
@@ -492,12 +492,12 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                                 
                                 // Calculate the bytes to wait based on the recent download speed. If the handler is nil or recent download speed is 0
                                 // it will just use the default (currently 10 seconds)
-                                NSUInteger bytesToWait = [self.class bytesToBufferForKiloBitrate:bitrate speedInBytesPerSec:handler.recentDownloadSpeedInBytesPerSec];
+                                NSInteger bytesToWait = [self.class bytesToBufferForKiloBitrate:bitrate speedInBytesPerSec:handler.recentDownloadSpeedInBytesPerSec];
                                                                     
                                 userInfo.neededSize = size + bytesToWait;
                                 
-                                DDLogInfo(@"[BassGaplessPlayer] AUDIO ENGINE - calculating wait, bitrate: %lu, recentBytesPerSec: %lu, bytesToWait: %lu", (unsigned long)bitrate, (unsigned long)handler.recentDownloadSpeedInBytesPerSec, (unsigned long)bytesToWait);
-                                DDLogInfo(@"[BassGaplessPlayer] AUDIO ENGINE - waiting for %lu   neededSize: %llu", (unsigned long)bytesToWait, userInfo.neededSize);
+                                DDLogInfo(@"[BassGaplessPlayer] AUDIO ENGINE - calculating wait, bitrate: %ld, recentBytesPerSec: %ld, bytesToWait: %ld", (long)bitrate, (long)handler.recentDownloadSpeedInBytesPerSec, (long)bytesToWait);
+                                DDLogInfo(@"[BassGaplessPlayer] AUDIO ENGINE - waiting for %ld, neededSize: %ld", (long)bytesToWait, (long)userInfo.neededSize);
                                 
                                 // Sleep for 10000 microseconds, or 1/100th of a second
                                 static const QWORD sleepTime = 10000;
@@ -699,7 +699,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 	return nil;
 }
 
-- (void)startNewSong:(ISMSSong *)aSong atIndex:(NSUInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds {
+- (void)startNewSong:(ISMSSong *)aSong atIndex:(NSInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds {
     // Stop the player
     [self stop];
     
@@ -711,7 +711,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
     [effectDAO selectPresetId:effectDAO.selectedPresetId];
 }
 
-- (void)startSong:(ISMSSong *)aSong atIndex:(NSUInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds {
+- (void)startSong:(ISMSSong *)aSong atIndex:(NSInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds {
     if (!aSong) return;
     
     NSError *audioSessionError = nil;
@@ -851,7 +851,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
     self.retrySongOperation = nil;
 }
 
-- (NSUInteger)nextIndex {
+- (NSInteger)nextIndex {
     return [self.delegate bassIndexAtOffset:1 fromIndex:self.currentPlaylistIndex player:self];
 }
 
@@ -871,7 +871,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 	return self.currentStream.stream != 0;
 }
 
-- (NSUInteger)currentByteOffset {
+- (NSInteger)currentByteOffset {
 	return BASS_StreamGetFilePosition(self.currentStream.stream, BASS_FILEPOS_CURRENT) + self.startByteOffset;
 }
 
@@ -879,11 +879,11 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 	if (!self.currentStream)
 		return 0;
 	
-    long long pcmBytePosition = BASS_Mixer_ChannelGetPosition(self.currentStream.stream, BASS_POS_BYTE);
+    NSInteger pcmBytePosition = BASS_Mixer_ChannelGetPosition(self.currentStream.stream, BASS_POS_BYTE);
     
     NSInteger chanCount = self.currentStream.channelCount;
     double denom = (2 * (1 / (double)chanCount));
-    long long realPosition = pcmBytePosition - (long long)(self.ringBuffer.filledSpaceLength / denom);
+    NSInteger realPosition = pcmBytePosition - ((double)self.ringBuffer.filledSpaceLength / denom);
     
     //ALog(@"adjustedPosition: %lli, pcmBytePosition: %lli, self.ringBuffer.filledSpaceLength: %i", realPosition, pcmBytePosition, self.ringBuffer.filledSpaceLength);
     
@@ -899,7 +899,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 	if (seconds < 0)
     {
         // Use the previous song (i.e the one still coming out of the speakers), since we're actually finishing it right now
-        /*NSUInteger previousIndex = [self.delegate bassIndexAtOffset:-1 fromIndex:self.currentPlaylistIndex player:self];
+        /*NSInteger previousIndex = [self.delegate bassIndexAtOffset:-1 fromIndex:self.currentPlaylistIndex player:self];
         ISMSSong *previousSong = [self.delegate bassSongForIndex:previousIndex player:self];
 		return previousSong.duration.doubleValue + seconds;*/
         
@@ -918,8 +918,8 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
     }
 }
 
-- (NSInteger)bitRate {
-	return [BassWrapper estimateBitrate:self.currentStream];
+- (NSInteger)kiloBitrate {
+	return [BassWrapper estimateKiloBitrate:self.currentStream];
 }
 
 #pragma mark - Playback methods
@@ -1003,7 +1003,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
         }
 	} else {
 		if (BASS_Mixer_ChannelSetPosition(userInfo.stream, bytes, BASS_POS_BYTE)) {
-			self.startByteOffset = (NSUInteger)bytes;
+			self.startByteOffset = bytes;
 			
 			userInfo.neededSize = ULLONG_MAX;
 			if (userInfo.isWaiting) {

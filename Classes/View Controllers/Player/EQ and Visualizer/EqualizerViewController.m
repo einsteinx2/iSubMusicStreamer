@@ -70,11 +70,11 @@
             }
         }
         
-//        NSUInteger count = [self.navigationController.viewControllers count];
+//        NSInteger count = [self.navigationController.viewControllers count];
 //        UIViewController *backViewController = [self.navigationController.viewControllers objectAtIndex:count-2];
 //        [backViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-//        NSUInteger count = [self.navigationController.viewControllers count];
+//        NSInteger count = [self.navigationController.viewControllers count];
 //        UIViewController *backViewController = [self.navigationController.viewControllers objectAtIndex:count-2];
 //        [backViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     }];
@@ -232,7 +232,7 @@
 
 - (void)createAndDrawEqualizerPath {
 	// Sort the points
-	NSUInteger length = [self.equalizerPointViews count];
+	NSInteger length = [self.equalizerPointViews count];
 	CGPoint *points = malloc(sizeof(CGPoint) * [self.equalizerPointViews count]);
 	//for (EqualizerPointView *eqView in equalizerPointViews)
 	for (int i = 0; i < length; i++) {
@@ -382,7 +382,7 @@
 }
 
 - (void)promptToSaveCustomPreset {
-	NSUInteger count = [self.effectDAO.userPresets count];
+	NSInteger count = [self.effectDAO.userPresets count];
     if ([self.effectDAO.userPresets objectForKey:[@(BassEffectTempCustomPresetId) stringValue]]) {
 		count--;
     }

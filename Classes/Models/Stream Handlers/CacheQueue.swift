@@ -133,7 +133,7 @@ import CocoaLumberjackSwift
     }
     
     // TODO: implement this - why did this take a byteOffset if it didn't use it?
-    @objc func resume(byteOffset: UInt64) {
+    @objc func resume(byteOffset: Int) {
         guard let currentStreamHandler = currentStreamHandler, !settings.isOfflineMode else { return }
         currentStreamHandler.start(resume: true)
     }

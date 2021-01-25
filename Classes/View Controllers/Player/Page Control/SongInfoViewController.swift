@@ -116,7 +116,7 @@ final class SongInfoViewController: UIViewController {
             }
             
             stackView.addArrangedSubview(createTitleLabel(text: "Original Bitrate"))
-            stackView.addArrangedSubview(createInfoLabel(text: "\(song.bitrate) Kbps"))
+            stackView.addArrangedSubview(createInfoLabel(text: "\(song.kiloBitrate) Kbps"))
             
             realTimeBitrateLabel = createInfoLabel(text: "Unknown")
             
@@ -163,8 +163,8 @@ final class SongInfoViewController: UIViewController {
     @objc private func startUpdatingRealtimeBitrate() {
         stopUpdatingRealtimeBitrate()
         if let realTimeBitrateLabel = realTimeBitrateLabel {
-            if player.bitRate > 0 && player.isPlaying {
-                realTimeBitrateLabel.text = "\(player.bitRate) Kbps"
+            if player.kiloBitrate > 0 && player.isPlaying {
+                realTimeBitrateLabel.text = "\(player.kiloBitrate) Kbps"
             } else {
                 realTimeBitrateLabel.text = "Unknown"
             }

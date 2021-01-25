@@ -117,7 +117,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (BassParamEqValue *)addEqualizerValue:(BASS_DX8_PARAMEQ)value {
-	NSUInteger index;
+	NSInteger index;
     @synchronized(self.eqValues) {
         index = [self.eqValues count];
     }
@@ -149,7 +149,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	[self.eqHandles removeObject:@(value.handle)];
 	
 	// Remove the value
-    NSUInteger count = 0;
+    NSInteger count = 0;
     @synchronized(self.eqValues) {
         [self.eqValues removeObject:value];
         count = self.eqValues.count;

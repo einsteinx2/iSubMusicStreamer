@@ -91,7 +91,7 @@ LOG_LEVEL_ISUB_DEFAULT
     return self;
 }
 
-- (NSUInteger)indexOfMediaFolderId:(NSInteger)mediaFolderId {
+- (NSInteger)indexOfMediaFolderId:(NSInteger)mediaFolderId {
     return [self.mediaFolders indexOfObjectWithOptions:NSEnumerationConcurrent passingTest:^BOOL(MediaFolder * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (obj.mediaFolderId == mediaFolderId) {
             *stop = YES;
@@ -145,7 +145,7 @@ LOG_LEVEL_ISUB_DEFAULT
         folderButton.isAccessibilityElement = self.isOpen;
     }
     
-    NSUInteger index = [self indexOfMediaFolderId:self.selectedFolderId];
+    NSInteger index = [self indexOfMediaFolderId:self.selectedFolderId];
     if (index != NSNotFound) {
         self.selectedFolderLabel.text = mediaFolders[index].name;
     }
@@ -228,7 +228,7 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)selectFolder:(id)sender {
     UIButton *button = (UIButton *)sender;
     UILabel  *label  = (UILabel *)button.superview;
-    NSUInteger index = [self indexOfMediaFolderId:label.tag];
+    NSInteger index = [self indexOfMediaFolderId:label.tag];
     if (index == NSNotFound) {
         return;
     }
@@ -248,7 +248,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)selectFolderWithId:(NSInteger)folderId {
-    NSUInteger index = [self indexOfMediaFolderId:folderId];
+    NSInteger index = [self indexOfMediaFolderId:folderId];
     if (index == NSNotFound) {
         return;
     }

@@ -376,7 +376,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (IBAction)updateMinFreeSpaceLabel {
-	self.cacheSpaceLabel2.text = [NSString formatFileSize:(unsigned long long int) (self.cacheSpaceSlider.value * self.totalSpace)];
+	self.cacheSpaceLabel2.text = [NSString formatFileSize:(self.cacheSpaceSlider.value * self.totalSpace)];
 }
 
 - (IBAction)updateMinFreeSpaceSetting {
@@ -389,7 +389,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			settingsS.minFreeSpace = 52428800;
 			self.cacheSpaceSlider.value = ((float)settingsS.minFreeSpace / (float)self.totalSpace); // Leave 50MB space
 		} else {
-			settingsS.minFreeSpace = (unsigned long long int) (self.cacheSpaceSlider.value * (float)self.totalSpace);
+			settingsS.minFreeSpace = (self.cacheSpaceSlider.value * (float)self.totalSpace);
 		}
 		//cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.minFreeSpace];
 	} else if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 1) {
@@ -402,7 +402,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			settingsS.maxCacheSize = 52428800;
 			self.cacheSpaceSlider.value = ((float)settingsS.maxCacheSize / (float)self.totalSpace); // Leave 50MB space
 		} else {
-			settingsS.maxCacheSize = (unsigned long long int) (self.cacheSpaceSlider.value * self.totalSpace);
+			settingsS.maxCacheSize = (self.cacheSpaceSlider.value * self.totalSpace);
 		}
 		//cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.maxCacheSize];
 	}
@@ -415,8 +415,8 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (IBAction)updateScrobblePercentLabel {
-	NSUInteger percentInt = self.scrobblePercentSlider.value * 100;
-	self.scrobblePercentLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)percentInt];
+	NSInteger percentInt = self.scrobblePercentSlider.value * 100;
+	self.scrobblePercentLabel.text = [NSString stringWithFormat:@"%ld", (long)percentInt];
 }
 
 - (IBAction)updateScrobblePercentSetting {

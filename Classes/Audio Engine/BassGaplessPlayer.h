@@ -38,28 +38,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property BOOL isPlaying;
 @property (readonly) BOOL isStarted;
-@property (readonly) NSInteger bitRate;
-@property (readonly) NSUInteger currentByteOffset;
+@property (readonly) NSInteger kiloBitrate;
+@property (readonly) NSInteger currentByteOffset;
 @property (readonly) double progress;
 @property (nullable, strong) BassStream *waitLoopStream;
 
-@property NSUInteger startByteOffset;
-@property NSUInteger startSecondsOffset;
+@property NSInteger startByteOffset;
+@property double startSecondsOffset;
 
 @property (strong) BassEqualizer *equalizer;
 @property (strong) BassVisualizer *visualizer;
 
-@property NSUInteger currentPlaylistIndex;
+@property NSInteger currentPlaylistIndex;
         
 + (instancetype)shared;
 
 // BASS methods
 //
 - (DWORD)bassGetOutputData:(void *)buffer length:(DWORD)length;
-- (void)startNewSong:(ISMSSong *)aSong atIndex:(NSUInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds;
-- (void)startSong:(ISMSSong *)aSong atIndex:(NSUInteger)index withOffsetInBytes:(nullable NSNumber *)byteOffset orSeconds:(nullable NSNumber *)seconds;
+- (void)startNewSong:(ISMSSong *)aSong atIndex:(NSInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds;
+- (void)startSong:(ISMSSong *)aSong atIndex:(NSInteger)index withOffsetInBytes:(nullable NSNumber *)byteOffset orSeconds:(nullable NSNumber *)seconds;
 
-+ (NSUInteger)bytesToBufferForKiloBitrate:(NSUInteger)rate speedInBytesPerSec:(NSUInteger)speedInBytesPerSec;
++ (NSInteger)bytesToBufferForKiloBitrate:(NSInteger)rate speedInBytesPerSec:(NSInteger)speedInBytesPerSec;
 
 // Playback methods
 //

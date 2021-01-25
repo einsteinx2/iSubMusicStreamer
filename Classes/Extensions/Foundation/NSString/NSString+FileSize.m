@@ -10,9 +10,9 @@
 
 @implementation NSString (FileSize)
 
-+ (NSString *)formatFileSize:(unsigned long long)size {
++ (NSString *)formatFileSize:(NSInteger)size {
 	if (size < 1024) {
-		return [NSString stringWithFormat:@"%qu bytes", size];
+		return [NSString stringWithFormat:@"%ld bytes", (long)size];
 	} else if (size >= 1024 && size < 1048576) {
 		return [NSString stringWithFormat:@"%.02f KB", ((double)size / 1024)];
 	} else if (size >= 1048576 && size < 1073741824) {
@@ -23,7 +23,7 @@
 	return @"";
 }
 
-- (unsigned long long)fileSizeFromFormat {
+- (NSInteger)fileSizeFromFormat {
 	// Extract the number value from the string
 	NSCharacterSet *set = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789."] invertedSet];
 	NSArray *numbersArray = [self componentsSeparatedByCharactersInSet:set];
@@ -43,7 +43,7 @@
 		}
 	}
 	
-	return (unsigned long long)fileSize;
+	return (NSInteger)fileSize;
 }
 
 @end

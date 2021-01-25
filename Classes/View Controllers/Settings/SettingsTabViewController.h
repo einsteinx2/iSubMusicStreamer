@@ -37,8 +37,8 @@
 @property (nonatomic, strong) IBOutlet UILabel *enableBackupCacheLabel;
 @property (nonatomic, strong) IBOutlet UISwitch *enableBackupCacheSwitch;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *cachingTypeSegmentedControl;
-@property (nonatomic) unsigned long long int totalSpace;
-@property (nonatomic) unsigned long long int freeSpace;
+@property (nonatomic) NSInteger totalSpace;
+@property (nonatomic) NSInteger freeSpace;
 @property (nonatomic) IBOutlet UILabel *cacheSpaceLabel1;
 @property (nonatomic, strong) IBOutlet UITextField *cacheSpaceLabel2;
 @property (nonatomic, strong) IBOutlet UILabel *freeSpaceLabel;

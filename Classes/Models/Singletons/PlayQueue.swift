@@ -282,8 +282,8 @@ import CocoaLumberjackSwift
             startSong(offsetInBytes: settings.byteOffset, offsetInSeconds: settings.seekTime)
             return currentSong
         } else {
-            player.startByteOffset = UInt(settings.byteOffset)
-            player.startSecondsOffset = UInt(settings.seekTime)
+            player.startByteOffset = settings.byteOffset
+            player.startSecondsOffset = settings.seekTime
             return nil
         }
     }
@@ -331,9 +331,9 @@ import CocoaLumberjackSwift
         startSong(offsetInBytes: 0, offsetInSeconds: 0)
     }
     
-    private var offsetInBytes: UInt64 = 0
-    private var offsetInSeconds: Double = 0
-    @objc func startSong(offsetInBytes bytes: UInt64, offsetInSeconds seconds: Double) {
+    private var offsetInBytes = 0
+    private var offsetInSeconds = 0.0
+    @objc func startSong(offsetInBytes bytes: Int, offsetInSeconds seconds: Double) {
         DispatchQueue.mainSyncSafe {
             // Destroy the streamer/video player to start a new song
             player.stop()
@@ -364,7 +364,7 @@ import CocoaLumberjackSwift
         if song.isFullyCached {
             // The song is fully cached, start streaming from the local copy
             player.startNewSong(song,
-                                at: UInt(index),
+                                at: index,
                                 withOffsetInBytes: NSNumber(value: offsetInBytes),
                                 orSeconds: NSNumber(value: offsetInSeconds))
             
@@ -386,7 +386,7 @@ import CocoaLumberjackSwift
                 if let handler = streamManager.handler(song: song), !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
                     // Only start the player if the handler isn't going to do it itself
                     player.startNewSong(song,
-                                        at: UInt(index),
+                                        at: index,
                                         withOffsetInBytes: NSNumber(value: offsetInBytes),
                                         orSeconds: NSNumber(value: offsetInSeconds))
                 }
@@ -398,7 +398,7 @@ import CocoaLumberjackSwift
                 if let handler = streamManager.handler(song: song), !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
                     // Only start the player if the handler isn't going to do it itself
                     player.startNewSong(song,
-                                        at: UInt(index),
+                                        at: index,
                                         withOffsetInBytes: NSNumber(value: offsetInBytes),
                                         orSeconds: NSNumber(value: offsetInSeconds))
                 }

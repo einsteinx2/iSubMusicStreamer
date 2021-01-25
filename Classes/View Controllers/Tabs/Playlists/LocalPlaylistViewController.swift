@@ -59,7 +59,7 @@ final class LocalPlaylistViewController: UIViewController {
     //    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(self.title), @"name", nil];
     //
     //    NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM playlist%@", self.md5];
-    //    NSUInteger count = [databaseS.localPlaylistsDbQueue intForQuery:query];
+    //    NSInteger count = [databaseS.localPlaylistsDbQueue intForQuery:query];
     //    NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:count];
     //    for (int i = 1; i <= count; i++) {
     //        @autoreleasepool {

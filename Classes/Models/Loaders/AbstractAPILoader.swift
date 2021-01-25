@@ -51,6 +51,7 @@ protocol CancelableLoader {
     @objc final class var sharedSession: URLSession {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.waitsForConnectivity = true
+        configuration.networkServiceType = .responsiveData
         configuration.timeoutIntervalForResource = 60
         configuration.timeoutIntervalForRequest = 240
         return URLSession(configuration: configuration, delegate: sessionDelegate, delegateQueue: nil)

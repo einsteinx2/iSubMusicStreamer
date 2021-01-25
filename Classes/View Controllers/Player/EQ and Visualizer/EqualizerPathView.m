@@ -43,12 +43,12 @@ static CGColorRef fillColorOn;
 	return self;
 }
 
-- (NSString *)stringFromFrequency:(NSUInteger)frequency {
+- (NSString *)stringFromFrequency:(NSInteger)frequency {
     if (frequency < 1000) {
-		return [NSString stringWithFormat:@"%lu", (unsigned long)frequency];
+		return [NSString stringWithFormat:@"%ld", (long)frequency];
     }
     
-	return [NSString stringWithFormat:@"%lik", (long)(frequency/1000)];
+	return [NSString stringWithFormat:@"%ldk", (long)(frequency/1000)];
 }
 
 - (NSString *)stringFromGain:(CGFloat)gain {
@@ -150,7 +150,7 @@ static CGColorRef fillColorOn;
 	[self drawCurve];
 }
 
-- (void)setPoints:(CGPoint *)thePoints length:(NSUInteger)theLength {
+- (void)setPoints:(CGPoint *)thePoints length:(NSInteger)theLength {
     if (points != NULL) {
 		free(points);
     }

@@ -7,8 +7,11 @@
 //
 
 #import "BassStream.h"
-//#import "ISMSSong.h"
 #import "Swift.h"
+#import "Defines.h"
+#import <CocoaLumberjack/CocoaLumberjack.h>
+
+LOG_LEVEL_ISUB_DEFAULT
 
 @implementation BassStream
 
@@ -26,9 +29,16 @@
     [_fileHandle closeFile];
 }
 
-- (unsigned long long)localFileSize
+- (NSInteger)localFileSize
 {
-	return [[[NSFileManager defaultManager] attributesOfItemAtPath:self.writePath error:NULL] fileSize];
+    NSError *error = nil;
+    NSDictionary<NSURLResourceKey, id> *resourceValues = [[NSURL fileURLWithPath:self.writePath] resourceValuesForKeys:@[NSURLTotalFileAllocatedSizeKey] error:&error];
+    if (error) {
+        DDLogError(@"[BassStream] error reading local file size: %@", error.localizedDescription);
+        return 0;
+    }
+    
+    return [resourceValues[NSURLTotalFileAllocatedSizeKey] integerValue];    
 }
 
 - (NSUInteger)hash

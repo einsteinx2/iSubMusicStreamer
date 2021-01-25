@@ -12,6 +12,7 @@ import Resolver
 
 @objc final class ServerEditViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var settings: Settings
     
     let backgroundImageView = UIImageView(image: UIImage(named: "settings-page"))
     let urlField = InsetTextField(inset: 5)
@@ -236,15 +237,25 @@ extension ServerEditViewController: APILoaderDelegate {
     func loadingFinished(loader: AbstractAPILoader?) {
         HUD.hide()
         
+        guard let statusLoader = loader as? StatusLoader else { return }
+        
         if let serverToEdit = serverToEdit {
-            _ = store.add(server: serverToEdit)
+            serverToEdit.isVideoSupported = statusLoader.isVideoSupported
+            serverToEdit.isNewSearchSupported = statusLoader.isNewSearchSupported
+            if store.add(server: serverToEdit) {
+                settings.currentServer = serverToEdit
+            }
         } else if let url = URL(string: urlField.text ?? ""), let username = usernameField.text, let password = passwordField.text {
             let server = Server(id: store.nextServerId(), type: .subsonic, url: url, username: username, password: password)
-            _ = store.add(server: server)
+            server.isVideoSupported = statusLoader.isVideoSupported
+            server.isNewSearchSupported = statusLoader.isNewSearchSupported
+            if store.add(server: server) {
+                settings.currentServer = serverToEdit
+            }
         }
         
-        NotificationCenter.postOnMainThread(name: Notification.Name("reloadServerList"))
-        NotificationCenter.postOnMainThread(name: Notification.Name("showSaveButton"))
+        NotificationCenter.postOnMainThread(name: Notifications.reloadServerList)
+        NotificationCenter.postOnMainThread(name: Notifications.showSaveButton)
         
         self.dismiss(animated: true, completion: nil)
         
@@ -252,12 +263,7 @@ extension ServerEditViewController: APILoaderDelegate {
             SceneDelegate.shared.padRootViewController?.menuViewController.showHome()
         }
         
-        var userInfo = [AnyHashable: Any]()
-        if let statusLoader = loader as? StatusLoader {
-            userInfo["isVideoSupported"] = statusLoader.isVideoSupported
-            userInfo["isNewSearchSupported"] = statusLoader.isNewSearchSupported
-        }
-        NotificationCenter.postOnMainThread(name: Notification.Name("switchServer"), userInfo: userInfo)
+        NotificationCenter.postOnMainThread(name: Notifications.switchServer)
     }
     
     func loadingFailed(loader: AbstractAPILoader?, error: Error?) {

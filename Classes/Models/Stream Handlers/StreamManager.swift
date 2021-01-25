@@ -125,7 +125,7 @@ import CocoaLumberjackSwift
     }
     
     func cancelStream(index: Int) {
-        guard index < handlerStack.count else { return }
+        guard index >= 0 && index < handlerStack.count else { return }
         cancelStream(handler: handlerStack[index])
     }
     
@@ -197,7 +197,7 @@ import CocoaLumberjackSwift
     }
     
     func removeStream(index: Int) {
-        guard index < handlerStack.count else { return }
+        guard index >= 0 && index < handlerStack.count else { return }
         removeStream(handler: handlerStack[index])
     }
     
@@ -305,8 +305,8 @@ import CocoaLumberjackSwift
     // MARK: Download
     
     // TODO: implement this (queue the 5 loaders so that they execute sequentially)
-    func queueStream(song: Song, byteOffset: UInt64 = 0, secondsOffset: Double = 0.0, index: Int, tempCache: Bool, startDownload: Bool) {
-        guard index <= handlerStack.count, !isInQueue(song: song) else { return }
+    func queueStream(song: Song, byteOffset: Int = 0, secondsOffset: Double = 0.0, index: Int, tempCache: Bool, startDownload: Bool) {
+        guard index >= 0 && index <= handlerStack.count, !isInQueue(song: song) else { return }
         
         let handler = StreamHandler(song: song, byteOffset: byteOffset, secondsOffset: secondsOffset, tempCache: tempCache, delegate: self)
         handlerStack.insert(handler, at: index)
@@ -423,7 +423,7 @@ extension StreamManager: StreamHandlerDelegate {
         lastCachedSong = handler.song
         
         if let currentSong = playQueue.currentSong, handler.song.isEqual(currentSong) {
-            player.startNewSong(currentSong, at: UInt(playQueue.currentIndex), withOffsetInBytes: NSNumber(value: handler.byteOffset), orSeconds: NSNumber(value: handler.secondsOffset))
+            player.startNewSong(currentSong, at: playQueue.currentIndex, withOffsetInBytes: NSNumber(value: handler.byteOffset), orSeconds: NSNumber(value: handler.secondsOffset))
         }
         
         // TODO: Is this needed? Are we actually changing the stack?

@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class ISMSSong;
 @interface ISMSBookmarkDAO : NSObject
 
-+ (void)createBookmarkForSong:(ISMSSong *)song name:(NSString *)name bookmarkPosition:(NSUInteger)position bytePosition:(NSUInteger)bytePosition;
++ (void)createBookmarkForSong:(ISMSSong *)song name:(NSString *)name bookmarkPosition:(NSInteger)position bytePosition:(NSInteger)bytePosition;
 
 @end
 

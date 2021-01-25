@@ -44,7 +44,7 @@ extension URLRequest {
         return queryString
     }
     
-    init?(subsonicAction action: String, urlString: String, username: String, password: String, parameters: [String: Any]?, byteOffset: UInt64) {
+    init?(subsonicAction action: String, urlString: String, username: String, password: String, parameters: [String: Any]?, byteOffset: Int) {
         var finalUrlString: String
         if action == "hls" {
             finalUrlString = "\(urlString)/rest/\(action).m3u8"
@@ -111,7 +111,7 @@ extension URLRequest {
         setValue("no-cache", forHTTPHeaderField: "Cache-Control")
     }
     
-    init?(serverId: Int, subsonicAction action: String, parameters: [String: Any]? = nil, byteOffset: UInt64 = 0) {
+    init?(serverId: Int, subsonicAction action: String, parameters: [String: Any]? = nil, byteOffset: Int = 0) {
         let store: Store = Resolver.resolve()
 //        let settings: Settings = Resolver.resolve()
 //        guard let server = store.server(id: serverId ?? settings.currentServerId) else { return nil }
@@ -128,7 +128,7 @@ extension URLRequest {
 
 // Temporary extra extension for Obj-C
 @objc extension NSURLRequest {
-    static func request(serverId: Int, subsonicAction action: String, parameters: [String: Any]? = nil, byteOffset: UInt64 = 0) -> URLRequest? {
+    static func request(serverId: Int, subsonicAction action: String, parameters: [String: Any]? = nil, byteOffset: Int = 0) -> URLRequest? {
         URLRequest(serverId: serverId, subsonicAction: action, parameters: parameters, byteOffset: byteOffset)
     }
 }

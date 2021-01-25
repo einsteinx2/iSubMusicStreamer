@@ -34,9 +34,9 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.tableView.allowsSelectionDuringEditing = YES;
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
 	
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:@"reloadServerList" object:nil];
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(showSaveButton) name:@"showSaveButton" object:nil];
-	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(switchServer:) name:@"switchServer" object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(reloadTable) name:Notifications.reloadServerList object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(showSaveButton) name:Notifications.showSaveButton object:nil];
+	[NSNotificationCenter addObserverOnMainThread:self selector:@selector(switchServer:) name:Notifications.switchServer object:nil];
 	
 	self.title = @"Servers";
     if (self != self.navigationController.viewControllers.firstObject) {
@@ -162,14 +162,6 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)switchServer:(NSNotification*)notification {
     self.servers = Store.shared.servers;
     self.serverToEdit = nil;
-    NSInteger serverId = [notification.userInfo[@"serverId"] integerValue];
-    Server *currentServer = [Store.shared serverWithId:serverId];
-    currentServer.isVideoSupported = [notification.userInfo[@"isVideoSupported"] boolValue];
-    currentServer.isNewSearchSupported = [notification.userInfo[@"isNewSearchSupported"] boolValue];
-    // Update server properties
-    (void)[Store.shared addWithServer:currentServer];
-
-    settingsS.currentServer = currentServer;
     [self switchServer];
 }
 
@@ -185,15 +177,6 @@ LOG_LEVEL_ISUB_DEFAULT
 		
 		// Cancel any caching
         [StreamManager.shared removeAllStreams];
-		
-		// Cancel any tab loads
-        settingsS.isCancelLoading = YES;
-    
-		while (settingsS.isCancelLoading) {
-            if (!settingsS.isCancelLoading){
-				break;
-            }
-		}
 		
 		// Stop any playing song and remove old tab bar controller from window
 		[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"recover"];

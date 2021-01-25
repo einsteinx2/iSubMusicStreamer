@@ -348,8 +348,8 @@ final class PlayerViewController: UIViewController {
         updateRepeatButtonIcon()
         
         bookmarksButton.addClosure(for: .touchUpInside) { [unowned self] in
-            let position = UInt(self.progressSlider.value);
-            let bytePosition = UInt(player.currentByteOffset);
+            let position = Int(self.progressSlider.value);
+            let bytePosition = Int(player.currentByteOffset);
             let song = self.currentSong
             let alert = UIAlertController(title: "Create Bookmark", message: nil, preferredStyle: .alert)
             alert.addTextField { textField in
@@ -540,16 +540,16 @@ final class PlayerViewController: UIViewController {
         lastSeekTime = Date()
         
         // TOOD: Why is this multipled by 128?
-        let byteOffset = BassWrapper.estimateBitrate(player.currentStream) * 128 * UInt(progressSlider.value)
-        let secondsOffset = progressSlider.value
+        let byteOffset = BassWrapper.estimateKiloBitrate(player.currentStream) * 128 * Int(progressSlider.value)
+        let secondsOffset = Double(progressSlider.value)
         if currentSong.isTempCached {
             player.stop()
             
             player.startByteOffset = byteOffset
-            player.startSecondsOffset = UInt(secondsOffset)
+            player.startSecondsOffset = secondsOffset
             
             streamManager.removeStream(index: 0)
-            streamManager.queueStream(song: currentSong, byteOffset: UInt64(byteOffset), secondsOffset: Double(secondsOffset), index: 0, tempCache: true, startDownload: true)
+            streamManager.queueStream(song: currentSong, byteOffset: byteOffset, secondsOffset: secondsOffset, index: 0, tempCache: true, startDownload: true)
             if let handler = streamManager.firstHandlerInQueue {
                 handler.start()
             }
@@ -564,10 +564,10 @@ final class PlayerViewController: UIViewController {
                 alert.addAction(title: "OK", style: .default) { _ in
                     self.player.stop()
                     self.player.startByteOffset = byteOffset
-                    self.player.startSecondsOffset = UInt(self.progressSlider.value)
+                    self.player.startSecondsOffset = secondsOffset
                     
                     self.streamManager.removeStream(index: 0)
-                    self.streamManager.queueStream(song: currentSong, byteOffset: UInt64(byteOffset), secondsOffset: Double(self.progressSlider.value), index: 0, tempCache: true, startDownload: true)
+                    self.streamManager.queueStream(song: currentSong, byteOffset: byteOffset, secondsOffset: secondsOffset, index: 0, tempCache: true, startDownload: true)
                     if let handler = self.streamManager.firstHandlerInQueue {
                         handler.start()
                     }

@@ -13,7 +13,7 @@
 @interface EqualizerPointView : UIImageView
 
 @property (strong) BassParamEqValue *eqValue;
-@property (readonly) NSUInteger frequency;
+@property (readonly) NSInteger frequency;
 @property (readonly) CGFloat gain;
 @property (readonly) HFX handle;
 @property CGPoint position;
@@ -22,7 +22,7 @@
 - (instancetype)initWithCGPoint:(CGPoint)point parentSize:(CGSize)size;
 - (instancetype)initWithEqValue:(BassParamEqValue *)value parentSize:(CGSize)size;
 
-- (CGFloat)percentXFromFrequency:(NSUInteger)frequency;
+- (CGFloat)percentXFromFrequency:(NSInteger)frequency;
 - (CGFloat)percentYFromGain:(CGFloat)gain;
 
 @end

@@ -10,7 +10,7 @@
 
 @interface NSString (FileSize)
 
-+ (NSString *)formatFileSize:(unsigned long long)size;
-- (unsigned long long)fileSizeFromFormat;
++ (NSString *)formatFileSize:(NSInteger)size;
+- (NSInteger)fileSizeFromFormat;
 
 @end

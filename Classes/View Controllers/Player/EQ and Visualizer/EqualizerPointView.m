@@ -34,7 +34,7 @@
     return self;
 }
 
-- (CGFloat)percentXFromFrequency:(NSUInteger)frequency {
+- (CGFloat)percentXFromFrequency:(NSInteger)frequency {
 	return (log2(frequency) - 5) / 9;
 }
 
@@ -70,7 +70,7 @@
 	_position.y = self.center.y / self.parentSize.height;
 }
 
-- (NSUInteger)frequency {
+- (NSInteger)frequency {
 	return exp2f((self.position.x * RANGE_OF_EXPONENTS) + 5);
 }
 
@@ -107,7 +107,7 @@
 	return NSOrderedSame;
 }
 
-/*CGFloat percentXFromFrequency(NSUInteger frequency)
+/*CGFloat percentXFromFrequency(NSInteger frequency)
 {
 	return (log2(frequency) - 5) / 9;
 }
@@ -117,7 +117,7 @@ CGFloat percentYFromGain(CGFloat gain)
 	return .5 - (gain / (CGFloat)(MAX_GAIN * 2));
 }
  
-CGPoint CGPointMakeFromEqValues(NSUInteger frequency, CGFloat gain)
+CGPoint CGPointMakeFromEqValues(NSInteger frequency, CGFloat gain)
 {
 	return CGPointMake(percentXFromFrequency(frequency), percentYFromGain(gain));
 }*/

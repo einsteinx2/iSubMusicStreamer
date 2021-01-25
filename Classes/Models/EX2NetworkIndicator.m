@@ -9,7 +9,7 @@
 #import "EX2NetworkIndicator.h"
 #import "EX2Dispatch.h"
 
-static NSUInteger networkUseCount = 0;
+static NSInteger networkUseCount = 0;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"

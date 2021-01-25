@@ -23,7 +23,7 @@ typedef enum
 - (instancetype)initWithChannel:(HCHANNEL)theChannel;
 
 - (void)readAudioData;
-- (short)lineSpecData:(NSUInteger)index;
-- (float)fftData:(NSUInteger)index;
+- (short)lineSpecData:(NSInteger)index;
+- (float)fftData:(NSInteger)index;
 
 @end

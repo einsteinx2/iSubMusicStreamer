@@ -27,11 +27,11 @@ typedef enum
 @property (weak, readonly) NSDictionary *userPresets;
 @property (weak, readonly) NSDictionary *defaultPresets;
 
-@property (readonly) NSUInteger userPresetsCount;
-@property (readonly) NSUInteger defaultPresetsCount;
+@property (readonly) NSInteger userPresetsCount;
+@property (readonly) NSInteger defaultPresetsCount;
 
-@property (readonly) NSUInteger selectedPresetIndex;
-@property NSUInteger selectedPresetId;
+@property (readonly) NSInteger selectedPresetIndex;
+@property NSInteger selectedPresetId;
 @property (weak, readonly) NSDictionary *selectedPreset;
 @property (weak, readonly) NSArray *selectedPresetValues;
 
@@ -39,14 +39,14 @@ typedef enum
 - (void)setup;
 
 - (BassEffectValue *)valueForIndex:(NSInteger)index;
-- (void)selectPresetId:(NSUInteger)presetId;
-- (void)selectPresetAtIndex:(NSUInteger)presetIndex;
-- (void)saveCustomPreset:(NSArray *)arrayOfPoints name:(NSString *)name presetId:(NSUInteger)presetId;
+- (void)selectPresetId:(NSInteger)presetId;
+- (void)selectPresetAtIndex:(NSInteger)presetIndex;
+- (void)saveCustomPreset:(NSArray *)arrayOfPoints name:(NSString *)name presetId:(NSInteger)presetId;
 - (void)saveCustomPreset:(NSArray *)arrayOfPoints name:(NSString *)name;
 - (void)saveTempCustomPreset:(NSArray *)arrayOfPoints;
 
-- (void)deleteCustomPresetForId:(NSUInteger)presetId;
-- (void)deleteCustomPresetForIndex:(NSUInteger)presetIndex;
+- (void)deleteCustomPresetForId:(NSInteger)presetId;
+- (void)deleteCustomPresetForIndex:(NSInteger)presetIndex;
 - (void)deleteTempCustomPreset;
 
 @end

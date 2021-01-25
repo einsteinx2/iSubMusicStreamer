@@ -11,23 +11,23 @@
 @interface EX2RingBuffer ()
 {
 	void *_bufferBackingStore;
-    long long _totalBytesDrained;
+    NSInteger _totalBytesDrained;
 }
 @end
 
 @implementation EX2RingBuffer
 
-- (long long)totalBytesDrained
+- (NSInteger)totalBytesDrained
 {
     return _totalBytesDrained;
 }
 
-- (void)setTotalBytesDrained:(long long)totalBytesDrained
+- (void)setTotalBytesDrained:(NSInteger)totalBytesDrained
 {
     _totalBytesDrained = totalBytesDrained;
 }
 
-- (instancetype)initWithBufferLength:(NSUInteger)bytes
+- (instancetype)initWithBufferLength:(NSInteger)bytes
 {
 	if ((self = [super init]))
 	{
@@ -39,7 +39,7 @@
 	return self;
 }
 
-+ (instancetype)ringBufferWithLength:(NSUInteger)bytes
++ (instancetype)ringBufferWithLength:(NSInteger)bytes
 {
 	return [[EX2RingBuffer alloc] initWithBufferLength:bytes];
 }
@@ -54,12 +54,12 @@
     }
 }
 
-- (NSUInteger)totalLength
+- (NSInteger)totalLength
 {
 	return self.buffer.length;
 }
 
-- (NSUInteger)freeSpaceLength
+- (NSInteger)freeSpaceLength
 {
 	@synchronized(self)
 	{
@@ -67,7 +67,7 @@
 	}
 }
 
-- (NSUInteger)filledSpaceLength
+- (NSInteger)filledSpaceLength
 {
 	@synchronized(self)
 	{
@@ -83,11 +83,11 @@
 	}
 }
 
-- (void)advanceWritePosition:(NSUInteger)writeLength
+- (void)advanceWritePosition:(NSInteger)writeLength
 {
 	@synchronized(self)
 	{
-		//NSUInteger oldWritePosition = self.writePosition;
+		//NSInteger oldWritePosition = self.writePosition;
 		
 		self.writePosition += writeLength;
 		if (self.writePosition >= self.totalLength)
@@ -99,11 +99,11 @@
 	}
 }
 
-- (void)advanceReadPosition:(NSUInteger)readLength
+- (void)advanceReadPosition:(NSInteger)readLength
 {
 	@synchronized(self)
 	{
-		//NSUInteger oldReadPosition = self.readPosition;
+		//NSInteger oldReadPosition = self.readPosition;
 		
 		self.readPosition += readLength;
 		if (self.readPosition >= self.totalLength)
@@ -114,14 +114,14 @@
 	}
 }
 
-- (BOOL)fillWithBytes:(const void *)byteBuffer length:(NSUInteger)bufferLength
+- (BOOL)fillWithBytes:(const void *)byteBuffer length:(NSInteger)bufferLength
 {	
 	@synchronized(self)
 	{
 		// Make sure there is space
 		if (self.freeSpaceLength > bufferLength)
 		{
-			NSUInteger bytesUntilEnd = self.totalLength - self.writePosition;
+			NSInteger bytesUntilEnd = self.totalLength - self.writePosition;
 			if (bufferLength > bytesUntilEnd)
 			{
 				// Split it between the end and beginning
@@ -160,7 +160,7 @@
 	return [self fillWithBytes:data.bytes length:data.length];
 }
 
-- (NSUInteger)drainBytes:(void *)byteBuffer length:(NSUInteger)bufferLength
+- (NSInteger)drainBytes:(void *)byteBuffer length:(NSInteger)bufferLength
 {
 	@synchronized(self)
 	{
@@ -168,7 +168,7 @@
 		
 		if (bufferLength > 0) 
 		{
-			NSUInteger bytesUntilEnd = self.totalLength - self.readPosition;
+			NSInteger bytesUntilEnd = self.totalLength - self.readPosition;
 			if (bufferLength > bytesUntilEnd)
 			{
 				// Split it between the end and beginning
@@ -192,7 +192,7 @@
 	}
 }
 
-- (NSData *)drainData:(NSUInteger)readLength
+- (NSData *)drainData:(NSInteger)readLength
 {
 	void *byteBuffer = malloc(sizeof(char) * readLength);
 	readLength = [self drainBytes:byteBuffer length:readLength];
@@ -207,7 +207,7 @@
 	}
 }
 
-- (BOOL)hasSpace:(NSUInteger)length
+- (BOOL)hasSpace:(NSInteger)length
 {
 	return self.freeSpaceLength >= length;
 }
@@ -215,10 +215,10 @@
 - (BOOL)expand
 {
     // Expand by 25%
-    return [self expand:(NSUInteger)((double)self.totalLength * 1.25)];
+    return [self expand:(NSInteger)((double)self.totalLength * 1.25)];
 }
 
-- (BOOL)expand:(NSUInteger)size
+- (BOOL)expand:(NSInteger)size
 {
     @synchronized(self)
 	{
@@ -235,7 +235,7 @@
         else
         {
             // Drain all the bytes into the new buffer
-            NSUInteger filledSize = self.filledSpaceLength;
+            NSInteger filledSize = self.filledSpaceLength;
             [self drainBytes:tempBuffer length:filledSize];
             
             // Adjust the read and write positions
