@@ -8,22 +8,13 @@
 
 import Foundation
 
-final class NowPlayingSong: Codable, CustomStringConvertible {
+struct NowPlayingSong: Codable, Equatable {
     let serverId: Int
     let songId: Int
     let username: String
     let minutesAgo: Int
     let playerId: Int
     let playerName: String
-    
-    init(serverId: Int, songId: Int, username: String, minutesAgo: Int, playerId: Int, playerName: String) {
-        self.serverId = serverId
-        self.songId = songId
-        self.username = username
-        self.minutesAgo = minutesAgo
-        self.playerId = playerId
-        self.playerName = playerName
-    }
     
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
@@ -32,9 +23,5 @@ final class NowPlayingSong: Codable, CustomStringConvertible {
         self.minutesAgo = element.attribute("minutesAgo").intXML
         self.playerId = element.attribute("playerId").intXML
         self.playerName = element.attribute("playerName").stringXML
-    }
-
-    static func ==(lhs: NowPlayingSong, rhs: NowPlayingSong) -> Bool {
-        return lhs === rhs || (lhs.serverId == rhs.serverId && lhs.songId == rhs.songId)
     }
 }

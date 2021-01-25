@@ -8,11 +8,15 @@
 
 import Foundation
 
-struct CoverArt: Codable {
+struct CoverArt: Codable, Equatable {
     let serverId: Int
     let id: String
     let isLarge: Bool
     let data: Data
     
     var image: UIImage? { UIImage(data: data) }
+    
+    static func ==(lhs: CoverArt, rhs: CoverArt) -> Bool {
+        return lhs.serverId == rhs.serverId && lhs.id == rhs.id && lhs.isLarge == rhs.isLarge
+    }
 }

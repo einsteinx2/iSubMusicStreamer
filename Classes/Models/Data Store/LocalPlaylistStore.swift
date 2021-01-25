@@ -172,7 +172,7 @@ extension Store {
         do {
             return try pool.write { db in
                 // Select the playlist to get the count as it's O(1) instead of MAX(position) which is O(N)
-                guard let playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId) else { return false }
+                guard var playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId) else { return false }
                     
                 // Add the song to the playlist
                 try LocalPlaylist.insertSong(db, song: song, position: playlist.songCount, playlistId: localPlaylistId)
@@ -192,7 +192,7 @@ extension Store {
         do {
             return try pool.write { db in
                 // Select the playlist to get the count as it's O(1) instead of MAX(position) which is O(N)
-                guard let playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId), position <= playlist.songCount else { return false }
+                guard var playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId), position <= playlist.songCount else { return false }
                     
                 // Update all song positions after the current position
                 let positionSql: SQLLiteral = """
@@ -220,7 +220,7 @@ extension Store {
         do {
             return try pool.write { db in
                 // Select the playlist to get the count as it's O(1) instead of MAX(position) which is O(N)
-                guard let playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId) else { return false }
+                guard var playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId) else { return false }
                     
                 // Add the song to the playlist
                 for (index, songId) in songIds.enumerated() {

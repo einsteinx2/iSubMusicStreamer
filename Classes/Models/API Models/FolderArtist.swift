@@ -8,16 +8,10 @@
 
 import Foundation
 
-final class FolderArtist: Codable, CustomStringConvertible {
+struct FolderArtist: Codable, Equatable {
     let serverId: Int
     let id: Int
     let name: String
-    
-    init(serverId: Int, id: Int, name: String) {
-        self.serverId = serverId
-        self.id = id
-        self.name = name
-    }
     
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
@@ -26,7 +20,7 @@ final class FolderArtist: Codable, CustomStringConvertible {
     }
     
     static func ==(lhs: FolderArtist, rhs: FolderArtist) -> Bool {
-        return lhs === rhs || (lhs.serverId == rhs.serverId && lhs.id == rhs.id)
+        return lhs.serverId == rhs.serverId && lhs.id == rhs.id
     }
 }
 

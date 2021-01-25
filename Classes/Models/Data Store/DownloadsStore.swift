@@ -252,11 +252,11 @@ extension Store {
         }
     }
     
-    @objc func song(downloadedSong: DownloadedSong) -> Song? {
+    func song(downloadedSong: DownloadedSong) -> Song? {
         return song(serverId: downloadedSong.serverId, id: downloadedSong.songId)
     }
     
-    @objc func songsRecursive(serverId: Int, level: Int, parentPathComponent: String) -> [Song] {
+    func songsRecursive(serverId: Int, level: Int, parentPathComponent: String) -> [Song] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -285,7 +285,7 @@ extension Store {
         return songsRecursive(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level, parentPathComponent: downloadedFolderAlbum.name)
     }
     
-    @objc func downloadedSongsCount() -> Int {
+    func downloadedSongsCount() -> Int {
         do {
             return try pool.read { db in
                 try DownloadedSong.filter(literal: "isFinished = 1").fetchCount(db)
@@ -307,7 +307,7 @@ extension Store {
         }
     }
     
-    @objc func downloadedSongs(serverId: Int, level: Int, parentPathComponent: String) -> [DownloadedSong] {
+    func downloadedSongs(serverId: Int, level: Int, parentPathComponent: String) -> [DownloadedSong] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -351,7 +351,7 @@ extension Store {
         }
     }
     
-    @objc func downloadedSongs(serverId: Int) -> [DownloadedSong] {
+    func downloadedSongs(serverId: Int) -> [DownloadedSong] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -367,7 +367,7 @@ extension Store {
         }
     }
     
-    @objc func downloadedSong(serverId: Int, songId: Int) -> DownloadedSong? {
+    func downloadedSong(serverId: Int, songId: Int) -> DownloadedSong? {
         do {
             return try pool.read { db in
                 try DownloadedSong.fetchOne(db, serverId: serverId, songId: songId)
@@ -380,7 +380,7 @@ extension Store {
     
     // TODO: Confirm if LIMIT 1 makes any performance difference when using fetchOne()
     // NOTE: Excludes pinned songs
-    @objc func oldestDownloadedSongByCachedDate() -> DownloadedSong? {
+    func oldestDownloadedSongByCachedDate() -> DownloadedSong? {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -399,7 +399,7 @@ extension Store {
     }
     
     // NOTE: Excludes pinned songs
-    @objc func oldestDownloadedSongByPlayedDate() -> DownloadedSong? {
+    func oldestDownloadedSongByPlayedDate() -> DownloadedSong? {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -417,7 +417,7 @@ extension Store {
         }
     }
     
-    @objc func deleteDownloadedSong(serverId: Int, songId: Int) -> Bool {
+    func deleteDownloadedSong(serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.write { db in
                 try db.execute(literal: "DELETE FROM \(DownloadedSong.self) WHERE serverId = \(serverId) AND songId = \(songId)")
@@ -430,11 +430,11 @@ extension Store {
         }
     }
     
-    @objc func delete(downloadedSong: DownloadedSong) -> Bool {
+    func delete(downloadedSong: DownloadedSong) -> Bool {
         return deleteDownloadedSong(serverId: downloadedSong.serverId, songId: downloadedSong.songId);
     }
     
-    @objc func deleteDownloadedSongs(serverId: Int, level: Int) -> Bool {
+    func deleteDownloadedSongs(serverId: Int, level: Int) -> Bool {
         do {
             return try pool.write { db in
                 let songIdsSql: SQLLiteral = """
@@ -464,7 +464,7 @@ extension Store {
         return deleteDownloadedSongs(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level)
     }
     
-    @objc func add(downloadedSong: DownloadedSong) -> Bool {
+    func add(downloadedSong: DownloadedSong) -> Bool {
         do {
             return try pool.write { db in
                 try downloadedSong.save(db)
@@ -476,7 +476,7 @@ extension Store {
         }
     }
     
-    @objc func update(playedDate: Date, serverId: Int, songId: Int) -> Bool {
+    func update(playedDate: Date, serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -497,7 +497,7 @@ extension Store {
         return update(playedDate: playedDate, serverId: song.serverId, songId: song.id)
     }
     
-    @objc func update(downloadFinished: Bool, serverId: Int, songId: Int) -> Bool {
+    func update(downloadFinished: Bool, serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -519,11 +519,11 @@ extension Store {
         }
     }
     
-    @objc func update(downloadFinished: Bool, song: Song) -> Bool {
+    func update(downloadFinished: Bool, song: Song) -> Bool {
         return update(downloadFinished: downloadFinished, serverId: song.serverId, songId: song.id)
     }
     
-    @objc func update(isPinned: Bool, serverId: Int, songId: Int) -> Bool {
+    func update(isPinned: Bool, serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -540,11 +540,11 @@ extension Store {
         }
     }
     
-    @objc func update(isPinned: Bool, song: Song) -> Bool {
+    func update(isPinned: Bool, song: Song) -> Bool {
         return update(isPinned: isPinned, serverId: song.serverId, songId: song.id)
     }
     
-    @objc func isDownloadFinished(serverId: Int, songId: Int) -> Bool {
+    func isDownloadFinished(serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -560,11 +560,11 @@ extension Store {
         }
     }
     
-    @objc func isDownloadFinished(song: Song) -> Bool {
+    func isDownloadFinished(song: Song) -> Bool {
         return isDownloadFinished(serverId: song.serverId, songId: song.id)
     }
     
-    @objc func addToDownloadQueue(serverId: Int, songId: Int) -> Bool {
+    func addToDownloadQueue(serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -580,11 +580,11 @@ extension Store {
         }
     }
     
-    @objc func addToDownloadQueue(song: Song) -> Bool {
+    func addToDownloadQueue(song: Song) -> Bool {
         return addToDownloadQueue(serverId: song.serverId, songId: song.id)
     }
     
-    @objc func addToDownloadQueue(serverId: Int, songIds: [Int]) -> Bool {
+    func addToDownloadQueue(serverId: Int, songIds: [Int]) -> Bool {
         do {
             return try pool.write { db in
                 for songId in songIds {
@@ -602,7 +602,7 @@ extension Store {
         }
     }
     
-    @objc func removeFromDownloadQueue(serverId: Int, songId: Int) -> Bool {
+    func removeFromDownloadQueue(serverId: Int, songId: Int) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -618,11 +618,11 @@ extension Store {
         }
     }
     
-    @objc func removeFromDownloadQueue(song: Song) -> Bool {
+    func removeFromDownloadQueue(song: Song) -> Bool {
         return removeFromDownloadQueue(serverId: song.serverId, songId: song.id)
     }
     
-    @objc func songFromDownloadQueue(position: Int) -> Song? {
+    func songFromDownloadQueue(position: Int) -> Song? {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -641,7 +641,7 @@ extension Store {
         }
     }
     
-    @objc func queuedDateForSongFromDownloadQueue(position: Int) -> Date? {
+    func queuedDateForSongFromDownloadQueue(position: Int) -> Date? {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -674,11 +674,11 @@ extension Store {
         }
     }
     
-    @objc func firstSongInDownloadQueue() -> Song? {
+    func firstSongInDownloadQueue() -> Song? {
         return songFromDownloadQueue(position: 0)
     }
     
-    @objc func downloadQueueCount() -> Int {
+    func downloadQueueCount() -> Int {
         do {
             return try pool.read { db in
                 return try SQLRequest<Int>(literal: "SELECT COUNT(*) FROM downloadQueue").fetchOne(db) ?? 0

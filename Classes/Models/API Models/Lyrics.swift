@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Lyrics: Codable {
+struct Lyrics: Codable, Equatable {
     let tagArtistName: String
     let songTitle: String
     let lyricsText: String

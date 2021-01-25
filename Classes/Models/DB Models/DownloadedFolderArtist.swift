@@ -9,18 +9,9 @@
 import Foundation
 import Resolver
 
-final class DownloadedFolderArtist: Codable, CustomStringConvertible {
+struct DownloadedFolderArtist: Codable, Equatable {
     let serverId: Int
     let name: String
-    
-    init(serverId: Int, name: String) {
-        self.serverId = serverId
-        self.name = name
-    }
-    
-    static func ==(lhs: DownloadedFolderArtist, rhs: DownloadedFolderArtist) -> Bool {
-        return lhs === rhs || (lhs.serverId == rhs.serverId && lhs.name == rhs.name)
-    }
 }
 
 extension DownloadedFolderArtist: TableCellModel {

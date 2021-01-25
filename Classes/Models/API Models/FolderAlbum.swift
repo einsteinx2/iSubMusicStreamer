@@ -8,7 +8,7 @@
 
 import Foundation
 
-class FolderAlbum: Codable, CustomStringConvertible {
+struct FolderAlbum: Codable, Equatable {
     let serverId: Int
     let id: Int
     let name: String
@@ -18,18 +18,6 @@ class FolderAlbum: Codable, CustomStringConvertible {
     let tagAlbumName: String?
     let playCount: Int
     let year: Int
-    
-    init(serverId: Int, id: Int, name: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int) {
-        self.serverId = serverId
-        self.id = id
-        self.name = name
-        self.coverArtId = coverArtId
-        self.parentFolderId = parentFolderId
-        self.tagArtistName = tagArtistName
-        self.tagAlbumName = tagAlbumName
-        self.playCount = playCount
-        self.year = year
-    }
     
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
@@ -44,7 +32,7 @@ class FolderAlbum: Codable, CustomStringConvertible {
     }
     
     static func ==(lhs: FolderAlbum, rhs: FolderAlbum) -> Bool {
-        return lhs === rhs || (lhs.serverId == rhs.serverId && lhs.id == rhs.id)
+        return lhs.serverId == rhs.serverId && lhs.id == rhs.id
     }
 }
 

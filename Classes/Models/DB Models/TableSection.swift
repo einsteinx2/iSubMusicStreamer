@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct TableSection: Codable {
+struct TableSection: Codable, Equatable {
     let serverId: Int
     let mediaFolderId: Int
     let name: String

@@ -9,22 +9,13 @@
 import Foundation
 import InflectorKit
 
-final class TagArtist: Artist, Codable, CustomStringConvertible {
+struct TagArtist: Artist, Codable, Equatable {
     let serverId: Int
     let id: Int
     let name: String
     let coverArtId: String?
     let artistImageUrl: String?
     let albumCount: Int
-    
-    init(serverId: Int, id: Int, name: String, coverArtId: String?, artistImageUrl: String?, albumCount: Int) {
-        self.serverId = serverId
-        self.id = id
-        self.name = name
-        self.coverArtId = coverArtId
-        self.artistImageUrl = artistImageUrl
-        self.albumCount = albumCount
-    }
     
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
@@ -36,7 +27,7 @@ final class TagArtist: Artist, Codable, CustomStringConvertible {
     }
     
     static func ==(lhs: TagArtist, rhs: TagArtist) -> Bool {
-        return lhs === rhs || (lhs.serverId == rhs.serverId && lhs.id == rhs.id)
+        return lhs.serverId == rhs.serverId && lhs.id == rhs.id
     }
 }
 

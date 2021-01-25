@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class DownloadedTagAlbum: Codable {
+struct DownloadedTagAlbum: Codable, Equatable {
     let serverId: Int
     let id: Int
     let name: String
@@ -22,7 +22,7 @@ final class DownloadedTagAlbum: Codable {
     let genre: String?
     
     static func ==(lhs: DownloadedTagAlbum, rhs: DownloadedTagAlbum) -> Bool {
-        return lhs === rhs || (lhs.serverId == rhs.serverId && lhs.id == rhs.id)
+        return lhs.serverId == rhs.serverId && lhs.id == rhs.id
     }
 }
 

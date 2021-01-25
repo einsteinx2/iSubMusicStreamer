@@ -8,18 +8,11 @@
 
 import Foundation
 
-final class ChatMessage: CustomStringConvertible {
+struct ChatMessage: Equatable {
     let serverId: Int
     let timestamp: TimeInterval
     let username: String
     let message: String
-    
-    init(serverId: Int, timestamp: TimeInterval, username: String, message: String) {
-        self.serverId = serverId
-        self.timestamp = timestamp
-        self.username = username
-        self.message = message
-    }
     
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId

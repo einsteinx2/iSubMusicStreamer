@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct RootListMetadata: Codable {
+struct RootListMetadata: Codable, Equatable {
     let serverId: Int
     let mediaFolderId: Int
     let itemCount: Int

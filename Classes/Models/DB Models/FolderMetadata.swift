@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct FolderMetadata: Codable {
+struct FolderMetadata: Codable, Equatable {
     let serverId: Int
     let parentFolderId: Int
     let folderCount: Int

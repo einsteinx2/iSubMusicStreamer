@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-final class ServerPlaylist: Codable, CustomStringConvertible {
+struct ServerPlaylist: Codable, Equatable {
     // This is the format that my server seems to reply with
     private static let iso8601FormatterWithMilliseconds: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -48,21 +48,6 @@ final class ServerPlaylist: Codable, CustomStringConvertible {
     
     var isLoaded: Bool { return songCount == loadedSongCount }
     
-    init(serverId: Int, id: Int, coverArtId: String?, name: String, comment: String?, songCount: Int, duration: Int, owner: String, isPublic: Bool, createdDate: Date?, changedDate: Date?, loadedSongCount: Int) {
-        self.serverId = serverId
-        self.id = id
-        self.coverArtId = coverArtId
-        self.name = name
-        self.comment = comment
-        self.songCount = songCount
-        self.duration = duration
-        self.owner = owner
-        self.isPublic = isPublic
-        self.createdDate = createdDate
-        self.changedDate = changedDate
-        self.loadedSongCount = loadedSongCount
-    }
-    
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
         self.id = element.attribute("id").intXML
@@ -83,7 +68,7 @@ final class ServerPlaylist: Codable, CustomStringConvertible {
     }
     
     static func ==(lhs: ServerPlaylist, rhs: ServerPlaylist) -> Bool {
-        return lhs === rhs || (lhs.serverId == rhs.serverId && lhs.id == rhs.id)
+        return lhs.serverId == rhs.serverId && lhs.id == rhs.id
     }
 }
 

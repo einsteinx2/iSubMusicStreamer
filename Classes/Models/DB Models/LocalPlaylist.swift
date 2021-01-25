@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-final class LocalPlaylist: Codable, CustomStringConvertible {
+struct LocalPlaylist: Codable, Equatable {
     struct Default {
         static let playQueueId = 1
         static let shuffleQueueId = 2
@@ -21,15 +21,9 @@ final class LocalPlaylist: Codable, CustomStringConvertible {
     let id: Int
     var name: String
     var songCount: Int
-    
-    init(id: Int, name: String, songCount: Int) {
-        self.id = id
-        self.name = name
-        self.songCount = songCount
-    }
-    
+
     static func ==(lhs: LocalPlaylist, rhs: LocalPlaylist) -> Bool {
-        return lhs === rhs || (lhs.id == rhs.id)
+        return lhs.id == rhs.id
     }
 }
 

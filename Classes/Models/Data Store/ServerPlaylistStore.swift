@@ -144,7 +144,7 @@ extension Store {
         do {
             return try pool.write { db in
                 // Select the playlist to get the loaded count as it's O(1) instead of MAX(position) which is O(N)
-                guard let playlist = try ServerPlaylist.filter(literal: "serverId = \(serverId) AND id = \(serverPlaylistId)").fetchOne(db) else { return false }
+                guard var playlist = try ServerPlaylist.filter(literal: "serverId = \(serverId) AND id = \(serverPlaylistId)").fetchOne(db) else { return false }
                 
                 try db.execute(literal: "DELETE FROM serverPlaylistSong WHERE serverId = \(serverId) AND serverPlaylistId = \(serverPlaylistId)")
                 
@@ -199,7 +199,7 @@ extension Store {
         do {
             return try pool.write { db in
                 // Select the playlist to get the loaded count as it's O(1) instead of MAX(position) which is O(N)
-                guard let playlist = try ServerPlaylist.filter(literal: "serverId = \(serverId) AND id = \(serverPlaylistId)").fetchOne(db) else { return false }
+                guard var playlist = try ServerPlaylist.filter(literal: "serverId = \(serverId) AND id = \(serverPlaylistId)").fetchOne(db) else { return false }
                     
                 // Add the song to the playlist
                 try ServerPlaylist.insertSong(db, song: song, position: playlist.loadedSongCount, serverId: serverId, playlistId: serverPlaylistId)

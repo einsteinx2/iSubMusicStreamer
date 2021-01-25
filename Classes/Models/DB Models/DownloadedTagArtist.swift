@@ -10,7 +10,7 @@ import Foundation
 import Resolver
 import InflectorKit
 
-final class DownloadedTagArtist: Codable {
+struct DownloadedTagArtist: Codable, Equatable {
     let serverId: Int
     let id: Int
     let name: String
@@ -19,7 +19,7 @@ final class DownloadedTagArtist: Codable {
     let albumCount: Int
 
     static func ==(lhs: DownloadedTagArtist, rhs: DownloadedTagArtist) -> Bool {
-        return lhs === rhs || (lhs.serverId == rhs.serverId && lhs.id == rhs.id)
+        return lhs.serverId == rhs.serverId && lhs.id == rhs.id
     }
 }
 

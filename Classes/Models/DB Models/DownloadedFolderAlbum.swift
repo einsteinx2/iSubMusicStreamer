@@ -9,22 +9,11 @@
 import Foundation
 import Resolver
 
-final class DownloadedFolderAlbum: Codable, CustomStringConvertible {
+struct DownloadedFolderAlbum: Codable, Equatable {
     let serverId: Int
     let level: Int
     let name: String
     let coverArtId: String?
-    
-    init(serverId: Int, level: Int, name: String, coverArtId: String?) {
-        self.serverId = serverId
-        self.level = level
-        self.name = name
-        self.coverArtId = coverArtId
-    }
-    
-    static func ==(lhs: DownloadedFolderAlbum, rhs: DownloadedFolderAlbum) -> Bool {
-        return lhs === rhs || (lhs.serverId == rhs.serverId && lhs.level == rhs.level && lhs.name == rhs.name)
-    }
 }
 
 extension DownloadedFolderAlbum: TableCellModel {

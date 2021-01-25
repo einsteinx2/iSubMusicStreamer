@@ -8,13 +8,13 @@
 
 import Foundation
 
-@objc protocol TableCellModel {
-    @objc var primaryLabelText: String? { get }
-    @objc var secondaryLabelText: String? { get }
-    @objc var durationLabelText: String? { get }
-    @objc var coverArtId: String? { get }
-    @objc var isCached: Bool { get }
+protocol TableCellModel {
+    var primaryLabelText: String? { get }
+    var secondaryLabelText: String? { get }
+    var durationLabelText: String? { get }
+    var coverArtId: String? { get }
+    var isCached: Bool { get }
     
-    @objc func download()
-    @objc func queue()
+    func download()
+    func queue()
 }

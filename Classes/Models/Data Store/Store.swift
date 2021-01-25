@@ -24,7 +24,7 @@ fileprivate let debugPrintAllQueries = false
     var pool: DatabasePool!
     
     @objc(setupDatabases) func setup() {
-        DDLogVerbose("Database path: \(FileSystem.databaseDirectory)")
+        print("Database path: \(FileSystem.databaseDirectory.path)")
         
         // Shared configuration for all databases
         var config = Configuration()
