@@ -77,7 +77,7 @@ import CocoaLumberjackSwift
                     
                     let message = "Free space is running low, but even deleting the entire cache will not bring the free space up higher than your minimum setting. Automatic song caching has been turned off.\n\nYou can re-enable it in the Settings menu (tap the gear, tap Settings at the top)"
                     let alert = UIAlertController(title: "IMPORTANT", message: message, preferredStyle: .alert)
-                    alert.addCancelAction(title: "OK")
+                    alert.addOKAction()
                     UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
                 } else {
                     // Remove the oldest cached songs until freeSpace > minFreeSpace or pop the free space low alert
@@ -86,7 +86,7 @@ import CocoaLumberjackSwift
                     } else {
                         let message = "Free space is running low. Delete some cached songs or lower the minimum free space setting."
                         let alert = UIAlertController(title: "Notice", message: message, preferredStyle: .alert)
-                        alert.addCancelAction(title: "OK")
+                        alert.addOKAction()
                         UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
                     }
                 }
@@ -100,7 +100,7 @@ import CocoaLumberjackSwift
                     settings.isSongCachingEnabled = false
                     let message = "The song cache is full. Automatic song caching has been disabled.\n\nYou can re-enable it in the Settings menu (tap the gear on the Home tab, tap Settings at the top)"
                     let alert = UIAlertController(title: "Notice", message: message, preferredStyle: .alert)
-                    alert.addCancelAction(title: "OK")
+                    alert.addOKAction()
                     UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
                 }
             }

@@ -202,7 +202,7 @@ import CocoaLumberjackSwift
         DispatchQueue.main.async {
             let message = "There was an error controlling the Jukebox.\n\nError \(error.code): \(error.localizedDescription)"
             let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-            alert.addCancelAction(title: "OK")
+            alert.addOKAction()
             UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
         }
     }
@@ -222,7 +222,7 @@ import CocoaLumberjackSwift
                 DispatchQueue.main.async {
                     let message = "There was an error controlling the Jukebox.\n\nError \(code): \(message)"
                     let alert = UIAlertController(title: "Subsonic Error", message: message, preferredStyle: .alert)
-                    alert.addCancelAction(title: "OK")
+                    alert.addOKAction()
                     UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
                 }
             } else if let status = root.child("jukeboxStatus") {
@@ -248,7 +248,7 @@ import CocoaLumberjackSwift
             DispatchQueue.main.async {
                 let message = "There was an error controlling the Jukebox.\n\nError reading the response from Subsonic."
                 let alert = UIAlertController(title: "Subsonic Error", message: message, preferredStyle: .alert)
-                alert.addCancelAction(title: "OK")
+                alert.addOKAction()
                 UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
             }
         }

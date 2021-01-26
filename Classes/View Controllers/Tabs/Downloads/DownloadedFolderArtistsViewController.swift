@@ -17,7 +17,7 @@ final class DownloadedFolderArtistsViewController: AbstractDownloadsViewControll
     @Injected private var cache: Cache
     @Injected private var cacheQueue: CacheQueue
         
-    var serverId = Settings.shared().currentServerId
+    var serverId: Int { Settings.shared().currentServerId }
     
     private var downloadedFolderArtists = [DownloadedFolderArtist]()
     

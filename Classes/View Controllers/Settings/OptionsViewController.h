@@ -1,5 +1,5 @@
 //
-//  SettingsTabViewController.h
+//  OptionsViewController.h
 //  iSub
 //
 //  Created by Ben Baron on 6/29/10.
@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SettingsTabViewController : UIViewController <UITextFieldDelegate>
+@interface OptionsViewController : UIViewController <UITextFieldDelegate>
+
+@property (nonatomic, strong) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, strong) IBOutlet UIView *scrollViewContents;
 
 @property (nonatomic, strong) IBOutlet UILabel *versionLabel;
 @property (nonatomic, strong) IBOutlet UISwitch *manualOfflineModeSwitch;

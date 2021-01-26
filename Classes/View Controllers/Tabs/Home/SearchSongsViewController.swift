@@ -22,7 +22,7 @@ final class SearchSongsViewController: UIViewController {
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
     
-    var serverId = Settings.shared().currentServerId
+    var serverId: Int { Settings.shared().currentServerId }
     
     var query = ""
     var searchType = SearchType.songs
@@ -135,7 +135,7 @@ final class SearchSongsViewController: UIViewController {
                     DispatchQueue.main.async {
                         let message = "There was an error performing the search.\n\nError: \(error.localizedDescription)"
                         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-                        alert.addCancelAction(title: "OK")
+                        alert.addOKAction()
                         self.present(alert, animated: true, completion: nil)
                     }
                 }

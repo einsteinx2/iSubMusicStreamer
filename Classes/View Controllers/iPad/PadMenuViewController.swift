@@ -141,11 +141,11 @@ import Resolver
         if settings.isOfflineMode {
             switch row {
             case 0:
-                if let cachedController = cachedTabs["ServerListViewController"] {
+                if let cachedController = cachedTabs["SettingsViewController"] {
                     controller = cachedController
                 } else {
-                    controller = CustomUINavigationController(rootViewController: ServerListViewController(nibName: "ServerListViewController", bundle: nil))
-                    cachedTabs["ServerListViewController"] = controller
+                    controller = CustomUINavigationController(rootViewController: SettingsViewController())
+                    cachedTabs["SettingsViewController"] = controller
                 }
 //            case 1:
 //                if let cachedController = cachedTabs["CacheOfflineFoldersViewController"] {
@@ -180,11 +180,11 @@ import Resolver
         } else {
             switch row {
             case 0:
-                if let cachedController = cachedTabs["ServerListViewController"] {
+                if let cachedController = cachedTabs["SettingsViewController"] {
                     controller = cachedController
                 } else {
-                    controller = CustomUINavigationController(rootViewController: ServerListViewController(nibName: "ServerListViewController", bundle: nil))
-                    cachedTabs["ServerListViewController"] = controller
+                    controller = CustomUINavigationController(rootViewController: SettingsViewController())
+                    cachedTabs["SettingsViewController"] = controller
                 }
             case 1:
                 if let cachedController = cachedTabs["HomeViewController"] {
@@ -198,7 +198,7 @@ import Resolver
                     controller = cachedController
                 } else {
                     let mediaFolderId = settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
-                    let dataModel = FolderArtistsViewModel(mediaFolderId: mediaFolderId)
+                    let dataModel = FolderArtistsViewModel(serverId: settings.currentServerId, mediaFolderId: mediaFolderId)
                     controller = CustomUINavigationController(rootViewController: ArtistsViewController(dataModel: dataModel))
                     cachedTabs["FoldersViewController"] = controller
                 }

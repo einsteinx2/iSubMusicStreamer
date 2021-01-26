@@ -18,7 +18,7 @@ final class HomeViewController: UIViewController {
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
     
-    var serverId = Settings.shared().currentServerId
+    var serverId: Int { Settings.shared().currentServerId }
     
     private var quickAlbumsLoader: QuickAlbumsLoader?
     private var serverShuffleLoader: ServerShuffleLoader?

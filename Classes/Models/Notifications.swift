@@ -22,7 +22,7 @@ import Foundation
     
     @objc static let switchServer = Notification.Name("iSub.switchServer")
     @objc static let reloadServerList = Notification.Name("iSub.reloadServerList")
-    @objc static let showSaveButton = Notification.Name("iSub.showSaveButton")
+    @objc static let showBackButton = Notification.Name("iSub.showBackButton")
     
     @objc static let serverSwitched = Notification.Name("iSub.serverSwitched")
     @objc static let checkServer = Notification.Name("iSub.checkServer")

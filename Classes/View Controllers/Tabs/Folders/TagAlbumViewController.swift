@@ -14,7 +14,7 @@ final class TagAlbumViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
-    var serverId = Settings.shared().currentServerId
+    var serverId: Int { Settings.shared().currentServerId }
     
     private let tagAlbum: TagAlbum
     private var loader: TagAlbumLoader?
@@ -132,7 +132,7 @@ final class TagAlbumViewController: UIViewController {
                 if self.settings.isPopupsEnabled {
                     let message = "There was an error loading the album.\n\nError \(error.code): \(error.localizedDescription)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-                    alert.addCancelAction(title: "OK")
+                    alert.addOKAction()
                     self.present(alert, animated: true, completion: nil)
                 }
             }

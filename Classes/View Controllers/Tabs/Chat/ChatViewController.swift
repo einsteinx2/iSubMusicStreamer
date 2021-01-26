@@ -11,7 +11,7 @@ import SnapKit
 import Resolver
 
 final class ChatViewController: UIViewController {    
-    var serverId = Settings.shared().currentServerId
+    var serverId: Int { Settings.shared().currentServerId }
     
     private var loader: ChatLoader?
     

@@ -11,11 +11,12 @@ import Resolver
 import SnapKit
 import CocoaLumberjackSwift
 
+// TODO: implement this - refactor the loadData method to handle serverId better
 final class ArtistsViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
-    var serverId = Settings.shared().currentServerId
+    var serverId: Int { Settings.shared().currentServerId }
     
     private let tableView = UITableView()
     private lazy var dropdown = FolderDropdownControl(frame: CGRect(x: 50, y: 61, width: 220, height: 40))
@@ -51,7 +52,7 @@ final class ArtistsViewController: UIViewController {
         setupDefaultTableView(tableView)
         tableView.register(BlurredSectionHeader.self, forHeaderFooterViewReuseIdentifier: BlurredSectionHeader.reuseId)
         tableView.refreshControl = RefreshControl(handler: { [unowned self] in
-            loadData(mediaFolderId: serverId)
+            loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId)
         })
         
         if dataModel.isCached {
@@ -69,7 +70,7 @@ final class ArtistsViewController: UIViewController {
         addURLRefBackButton()
         addShowPlayerButton()
         if !dataModel.isCached {
-            loadData(mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? 0)
+            loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId)
         }
         Flurry.logEvent("FoldersTab")
     }
@@ -163,12 +164,13 @@ final class ArtistsViewController: UIViewController {
     }
     
     @objc private func reloadAction() {
-        loadData(mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? 0)
+        loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId)
     }
 
-    private func loadData(mediaFolderId: Int) {
+    private func loadData(serverId: Int, mediaFolderId: Int) {
         dropdown.updateFolders()
         HUD.show(closeHandler: cancelLoad)
+        dataModel.serverId = serverId
         dataModel.mediaFolderId = mediaFolderId
         dataModel.startLoad()
     }
@@ -205,11 +207,11 @@ extension ArtistsViewController: APILoaderDelegate {
                 // This is a trial period message, alert the user and stop streaming
                 let message = "You can purchase a license for Subsonic by logging in to the web interface and clicking the red Donate link on the top right.\n\nPlease remember, iSub is a 3rd party client for Subsonic, and this license and trial is for Subsonic and not iSub.\n\nThere are 100% free and open source compatible alternatives such as AirSonic if you're not interested in purchasing a Subsonic license."
                 let alert = UIAlertController(title: "Subsonic API Trial Expired", message: message, preferredStyle: .alert)
-                alert.addCancelAction(title: "OK")
+                alert.addOKAction()
                 self.present(alert, animated: true, completion: nil)
             } else {
                 let alert = UIAlertController(title: "Subsonic Error", message: error?.localizedDescription ?? "Unknown error", preferredStyle: .alert)
-                alert.addCancelAction(title: "OK")
+                alert.addOKAction()
                 self.present(alert, animated: true, completion: nil)
             }
         }
@@ -244,7 +246,7 @@ extension ArtistsViewController: FolderDropdownDelegate {
             tableView.reloadData()
             updateCount()
         } else {
-            loadData(mediaFolderId: mediaFolderId)
+            loadData(serverId: serverId, mediaFolderId: mediaFolderId)
         }
     }
     

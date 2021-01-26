@@ -14,7 +14,7 @@ final class TagArtistsViewModel: ArtistsViewModel {
     @Injected private var store: Store
     
     weak var delegate: APILoaderDelegate?
-    var serverId = Settings.shared().currentServerId
+    var serverId: Int
     var mediaFolderId: Int {
         didSet {
             loadFromCache()
@@ -36,7 +36,8 @@ final class TagArtistsViewModel: ArtistsViewModel {
     private var searchName: String?
     private(set) var shouldContinueSearch = true
     
-    init(mediaFolderId: Int, delegate: APILoaderDelegate? = nil) {
+    init(serverId: Int, mediaFolderId: Int, delegate: APILoaderDelegate? = nil) {
+        self.serverId = serverId
         self.mediaFolderId = mediaFolderId
         self.delegate = delegate
     }

@@ -1,12 +1,12 @@
 //
-//  SettingsTabViewController.m
+//  OptionsViewController.m
 //  iSub
 //
 //  Created by Ben Baron on 6/29/10.
 //  Copyright 2010 Ben Baron. All rights reserved.
 //
 
-#import "SettingsTabViewController.h"
+#import "OptionsViewController.h"
 #import "SavedSettings.h"
 #import "EX2Kit.h"
 #import "Swift.h"
@@ -15,11 +15,19 @@
 
 LOG_LEVEL_ISUB_DEFAULT
 
-@implementation SettingsTabViewController
+@implementation OptionsViewController
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad  {
     [super viewDidLoad];
+    
+    self.scrollViewContents.width = self.view.width;
+    
+    self.scrollView.scrollEnabled = YES;
+    self.scrollView.showsVerticalScrollIndicator = YES;
+    self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.contentSize = self.scrollViewContents.frame.size;
+    [self.scrollView addSubview:self.scrollViewContents];
 	
 	// Fix for UISwitch/UISegment bug in iOS 4.3 beta 1 and 2
 	// TODO: Confirm this is no longer an issue (presumably not lol)

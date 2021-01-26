@@ -7,7 +7,6 @@
 //
 
 #import "BookmarksViewController.h"
-#import "ServerListViewController.h"
 #import "Defines.h"
 #import "Flurry.h"
 #import "SavedSettings.h"

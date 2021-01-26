@@ -13,7 +13,7 @@ final class TagArtistViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
-    var serverId = Settings.shared().currentServerId
+    var serverId: Int { Settings.shared().currentServerId }
     
     private let tagArtist: TagArtist
     private var loader: TagArtistLoader?
@@ -93,7 +93,7 @@ final class TagArtistViewController: UIViewController {
                 if self.settings.isPopupsEnabled {
                     let message = "There was an error loading the artist.\n\nError \(error.code): \(error.localizedDescription)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-                    alert.addCancelAction(title: "OK")
+                    alert.addOKAction()
                     self.present(alert, animated: true, completion: nil)
                 }
             }

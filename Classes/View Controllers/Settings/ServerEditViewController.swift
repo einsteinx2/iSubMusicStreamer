@@ -250,12 +250,12 @@ extension ServerEditViewController: APILoaderDelegate {
             server.isVideoSupported = statusLoader.isVideoSupported
             server.isNewSearchSupported = statusLoader.isNewSearchSupported
             if store.add(server: server) {
-                settings.currentServer = serverToEdit
+                settings.currentServer = server
             }
         }
         
         NotificationCenter.postOnMainThread(name: Notifications.reloadServerList)
-        NotificationCenter.postOnMainThread(name: Notifications.showSaveButton)
+        NotificationCenter.postOnMainThread(name: Notifications.showBackButton)
         
         self.dismiss(animated: true, completion: nil)
         

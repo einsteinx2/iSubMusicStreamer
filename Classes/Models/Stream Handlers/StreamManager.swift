@@ -437,7 +437,7 @@ extension StreamManager: StreamHandlerDelegate {
             // Not a trial issue, but no data was returned at all
             let message = "We asked for a song, but the server didn't send anything!\n\nIt's likely that Subsonic's transcoding failed."
             let alert = UIAlertController(title: "Uh Oh!", message: message, preferredStyle: .alert)
-            alert.addCancelAction(title: "OK")
+            alert.addOKAction()
             UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
             
             // TODO: Do we care if this fails? Can the file potentially not be there at all?
@@ -455,7 +455,7 @@ extension StreamManager: StreamHandlerDelegate {
                             // This is a trial period message, alert the user and stop streaming
                             let message = "You can purchase a license for Subsonic by logging in to the web interface and clicking the red Donate link on the top right.\n\nPlease remember, iSub is a 3rd party client for Subsonic, and this license and trial is for Subsonic and not iSub.\n\nThere are 100% free and open source compatible alternatives such as AirSonic if you're not interested in purchasing a Subsonic license."
                             let alert = UIAlertController(title: "Subsonic API Trial Expired", message: message, preferredStyle: .alert)
-                            alert.addCancelAction(title: "OK")
+                            alert.addOKAction()
                             UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
                             
                             // TODO: Do we care if this fails? Can the file potentially not be there at all?

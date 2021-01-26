@@ -12,7 +12,7 @@ import Resolver
 final class HomeAlbumViewController: UIViewController {
     @Injected private var settings: Settings
     
-    var serverId = Settings.shared().currentServerId
+    var serverId: Int { Settings.shared().currentServerId }
     
     var modifier = ""
     var folderAlbums = [FolderAlbum]()
@@ -61,7 +61,7 @@ final class HomeAlbumViewController: UIViewController {
                 if self.settings.isPopupsEnabled {
                     let message = "There was an error performing the search.\n\nError: \(error.localizedDescription)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-                    alert.addCancelAction(title: "OK")
+                    alert.addOKAction()
                     self.present(alert, animated: true, completion: nil)
                 }
             }

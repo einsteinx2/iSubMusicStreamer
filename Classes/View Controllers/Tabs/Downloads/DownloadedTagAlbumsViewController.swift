@@ -16,7 +16,7 @@ final class DownloadedTagAlbumsViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
-    var serverId = Settings.shared().currentServerId
+    var serverId: Int { Settings.shared().currentServerId }
         
     private var downloadedTagAlbums = [DownloadedTagAlbum]()
     

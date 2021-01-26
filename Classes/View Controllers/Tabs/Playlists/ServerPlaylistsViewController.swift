@@ -16,7 +16,7 @@ final class ServerPlaylistsViewController: UIViewController {
     @Injected private var settings: Settings
     @Injected private var playQueue: PlayQueue
     
-    var serverId = Settings.shared().currentServerId
+    var serverId: Int { Settings.shared().currentServerId }
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "playlist", pluralizeClearType: false, isLargeCount: true)
     private let tableView = UITableView()

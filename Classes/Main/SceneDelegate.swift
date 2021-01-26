@@ -57,13 +57,13 @@ import CocoaLumberjackSwift
             homeTab.tabBarItem = UITabBarItem(title: "Home", image: UIImage(named: "tabbaricon-home"), tag: 0)
             
             let foldersMediaFolderId = settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
-            let foldersDataModel = FolderArtistsViewModel(mediaFolderId: foldersMediaFolderId)
+            let foldersDataModel = FolderArtistsViewModel(serverId: settings.currentServerId, mediaFolderId: foldersMediaFolderId)
             let foldersTab = CustomUINavigationController(rootViewController: ArtistsViewController(dataModel: foldersDataModel))
             foldersTab.tabBarItem = UITabBarItem(title: "Folders", image: UIImage(named: "tabbaricon-folders"), tag: 0)
             self.foldersTab = foldersTab
             
             let artistsMediaFolderId = settings.rootArtistsSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
-            let artistsDataModel = TagArtistsViewModel(mediaFolderId: artistsMediaFolderId)
+            let artistsDataModel = TagArtistsViewModel(serverId: settings.currentServerId, mediaFolderId: artistsMediaFolderId)
             let artistsTab = CustomUINavigationController(rootViewController: ArtistsViewController(dataModel: artistsDataModel))
             artistsTab.tabBarItem = UITabBarItem(title: "Artists", image: UIImage(named: "tabbaricon-folders"), tag: 0)
             self.artistsTab = artistsTab
@@ -122,7 +122,7 @@ import CocoaLumberjackSwift
                 DispatchQueue.main.async(after: 1) {
                     let message = "Looks like this is your first time using iSub!\n\nYou'll need an internet connection to get started."
                     let alert = UIAlertController(title: "Welcome!", message: message, preferredStyle: .alert)
-                    alert.addCancelAction(title: "OK")
+                    alert.addOKAction()
                     UIApplication.keyWindow?.rootViewController?.present(alert, animated: true) {
                         self.showSettings()
                     }
@@ -222,7 +222,7 @@ import CocoaLumberjackSwift
         if UIDevice.isPad() {
             padRootViewController?.menuViewController.showSettings()
         } else if let tabBarController = tabBarController {
-            let controller = ServerListViewController(nibName: "ServerListViewController", bundle: nil)
+            let controller = SettingsViewController()
             controller.hidesBottomBarWhenPushed = true
             
             if tabBarController.selectedIndex >= 4 || tabBarController.selectedIndex == NSNotFound {

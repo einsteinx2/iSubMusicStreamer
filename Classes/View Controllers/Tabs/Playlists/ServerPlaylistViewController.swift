@@ -56,7 +56,7 @@ final class ServerPlaylistViewController: UIViewController {
                     if self.settings.isPopupsEnabled {
                         let message = "There was an error loading the playlist.\n\nError %\(error.code): \(error.localizedDescription)"
                         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-                        alert.addCancelAction(title: "OK")
+                        alert.addOKAction()
                         present(alert, animated: true, completion: nil)
                     }
                 } else {

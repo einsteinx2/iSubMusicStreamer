@@ -15,7 +15,7 @@ final class NowPlayingViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
-    var serverId = Settings.shared().currentServerId
+    var serverId: Int { Settings.shared().currentServerId }
     
     private let tableView = UITableView()
     
@@ -58,7 +58,7 @@ final class NowPlayingViewController: UIViewController {
                 if settings.isPopupsEnabled {
                     let message = "There was an error loading the now playing list.\n\nError \(error.code): \(error.localizedDescription)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-                    alert.addCancelAction(title: "OK")
+                    alert.addOKAction()
                     present(alert, animated: true, completion: nil)
                 }
             } else {

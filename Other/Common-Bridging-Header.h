@@ -22,8 +22,8 @@
 
 // View Controllers
 #import "EqualizerViewController.h"
-#import "ServerListViewController.h"
 #import "BookmarksViewController.h"
+#import "OptionsViewController.h"
 
 // Views
 #import "FolderDropdownControl.h"
