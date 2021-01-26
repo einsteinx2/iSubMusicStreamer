@@ -442,8 +442,6 @@
 		53FE351B1EA961540058B925 /* NSString+Time.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34191EA961540058B925 /* NSString+Time.m */; };
 		53FE351F1EA961540058B925 /* NSString+URLEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE341D1EA961540058B925 /* NSString+URLEncode.m */; };
 		53FE35211EA961540058B925 /* NSString+URLEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE341D1EA961540058B925 /* NSString+URLEncode.m */; };
-		53FE35281EA961540058B925 /* NSURL+SkipBackupAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34231EA961540058B925 /* NSURL+SkipBackupAttribute.m */; };
-		53FE352A1EA961540058B925 /* NSURL+SkipBackupAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34231EA961540058B925 /* NSURL+SkipBackupAttribute.m */; };
 		53FE356D1EA961540058B925 /* UIView+ObjCFrameHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */; };
 		53FE356F1EA961540058B925 /* UIView+ObjCFrameHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */; };
 		53FE35881EA961540058B925 /* EX2NetworkIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE346A1EA961540058B925 /* EX2NetworkIndicator.m */; };
@@ -866,8 +864,6 @@
 		53FE34191EA961540058B925 /* NSString+Time.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Time.m"; sourceTree = "<group>"; };
 		53FE341C1EA961540058B925 /* NSString+URLEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncode.h"; sourceTree = "<group>"; };
 		53FE341D1EA961540058B925 /* NSString+URLEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncode.m"; sourceTree = "<group>"; };
-		53FE34221EA961540058B925 /* NSURL+SkipBackupAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+SkipBackupAttribute.h"; sourceTree = "<group>"; };
-		53FE34231EA961540058B925 /* NSURL+SkipBackupAttribute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+SkipBackupAttribute.m"; sourceTree = "<group>"; };
 		53FE34541EA961540058B925 /* UIView+ObjCFrameHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ObjCFrameHelper.h"; sourceTree = "<group>"; };
 		53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ObjCFrameHelper.m"; sourceTree = "<group>"; };
 		53FE34691EA961540058B925 /* EX2NetworkIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2NetworkIndicator.h; sourceTree = "<group>"; };
@@ -1630,8 +1626,6 @@
 				53FE368A1EA961720058B925 /* NSError+ISMSError.h */,
 				53FE368B1EA961720058B925 /* NSError+ISMSError.m */,
 				53ED673F25B88B5B0002BFAF /* NotificationCenter+MainThread.swift */,
-				53FE34221EA961540058B925 /* NSURL+SkipBackupAttribute.h */,
-				53FE34231EA961540058B925 /* NSURL+SkipBackupAttribute.m */,
 				532C624525B6186800185998 /* URL+QueryParameters.swift */,
 				53ED673C25B7AADF0002BFAF /* Error+Code.swift */,
 				5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */,
@@ -2124,7 +2118,6 @@
 				532C625E25B6559A00185998 /* main.swift in Sources */,
 				534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
 				531EC85C25B1F43A0076973A /* ServerPlaylistViewController.swift in Sources */,
-				53FE35281EA961540058B925 /* NSURL+SkipBackupAttribute.m in Sources */,
 				53FE38AA1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
 				53FE67A2256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m in Sources */,
 				5358083811CEB5F200A09386 /* CacheQueueSongUITableViewCell.m in Sources */,
@@ -2364,7 +2357,6 @@
 				5347A1E5256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */,
 				531EC85D25B1F43A0076973A /* ServerPlaylistViewController.swift in Sources */,
 				539148D12559EB1D004AAC3F /* FlurryEmpty.m in Sources */,
-				53FE352A1EA961540058B925 /* NSURL+SkipBackupAttribute.m in Sources */,
 				53FE38AC1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
 				53ED674725B8976F0002BFAF /* CustomStringConvertable+Default.swift in Sources */,
 				537B05C3256B40930008892C /* SongInfoViewController.swift in Sources */,

@@ -40,4 +40,32 @@ extension URL {
         }
         return nil
     }
+    
+    var skipBackup: Bool {
+        get {
+            // This URL must point to a file
+            guard FileManager.default.fileExists(atPath: path) else { return false }
+            
+            do {
+                if let isExcludedFromBackup = try resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup {
+                    return isExcludedFromBackup
+                }
+            } catch {
+                DDLogError("[URL+FileSystemAttributes] Failed to get is excluded from backup of \(self), \(error)")
+            }
+            return false
+        }
+        set {
+            // This URL must point to a file
+            guard FileManager.default.fileExists(atPath: path) else { return }
+            
+            do {
+                var resourceValues = URLResourceValues()
+                resourceValues.isExcludedFromBackup = true
+                try setResourceValues(resourceValues)
+            } catch {
+                DDLogError("[URL+FileSystemAttributes] Failed to set is excluded from backup of \(self) to \(newValue), \(error)")
+            }
+        }
+    }
 }

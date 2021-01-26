@@ -38,6 +38,5 @@
 #import "NSString+URLEncode.h"
 #import "GTMNSString+HTML.h"
 #import "NSString+FileSize.h"
-#import "NSURL+SkipBackupAttribute.h"
 
 #endif

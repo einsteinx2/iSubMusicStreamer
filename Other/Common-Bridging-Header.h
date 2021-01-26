@@ -50,7 +50,6 @@
 #import "NSString+FileSize.h"
 #import "NSError+ISMSError.h"
 #import "GTMNSString+HTML.h"
-#import "NSURL+SkipBackupAttribute.h"
 
 /*
  * Singletons
