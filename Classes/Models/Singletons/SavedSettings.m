@@ -787,7 +787,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (NSString *)latestLogFileName {
-    NSString *logsFolder = [settingsS.cachesPath stringByAppendingPathComponent:@"Logs"];
+    NSString *logsFolder = [self.cachesPath stringByAppendingPathComponent:@"Logs"];
     NSArray *logFiles = [NSFileManager.defaultManager contentsOfDirectoryAtPath:logsFolder error:nil];
     
     NSTimeInterval modifiedTime = 0.;
@@ -816,15 +816,15 @@ LOG_LEVEL_ISUB_DEFAULT
     [DDLog flushLog];
     
     NSString *zipFileName = @"iSub Logs.zip";
-    NSString *zipFilePath = [settingsS.cachesPath stringByAppendingPathComponent:zipFileName];
-    NSString *logsFolder = [settingsS.cachesPath stringByAppendingPathComponent:@"Logs"];
+    NSString *zipFilePath = [self.cachesPath stringByAppendingPathComponent:zipFileName];
+    NSString *logsFolder = [self.cachesPath stringByAppendingPathComponent:@"Logs"];
     
     // Delete the old zip if exists
     [[NSFileManager defaultManager] removeItemAtPath:zipFilePath error:nil];
     
     // Zip the logs
     ZKFileArchive *archive = [ZKFileArchive archiveWithArchivePath:zipFilePath];
-    NSInteger result = [archive deflateDirectory:logsFolder relativeToPath:settingsS.cachesPath usingResourceFork:NO];
+    NSInteger result = [archive deflateDirectory:logsFolder relativeToPath:self.cachesPath usingResourceFork:NO];
     if (result == zkSucceeded) {
         return zipFilePath;
     }

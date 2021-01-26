@@ -31,7 +31,6 @@
 // UIKit
 #import "UIView+ObjCFrameHelper.h"
 #import "UIDevice+Info.h"
-#import "UIImage+Tint.h"
 
 // Foundation
 #import "NSString+CompareWithoutIndefiniteArticles.h"
