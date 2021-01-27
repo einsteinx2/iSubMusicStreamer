@@ -24,7 +24,7 @@ protocol StreamHandlerDelegate {
 // TODO: implement this - refactor to clean up the code
 @objc final class StreamHandler: NSObject, Codable {
     private enum CodingKeys: String, CodingKey {
-        case song, byteOffset, secondsOffset, isDelegateNotifiedToStartPlayback, isTempCache, isDownloading, contentLength, maxBitrateSetting
+        case serverId, songId, byteOffset, secondsOffset, isDelegateNotifiedToStartPlayback, isTempCache, isDownloading, contentLength, maxBitrateSetting
     }
     
     @Injected private var playQueue: PlayQueue
@@ -73,6 +73,39 @@ protocol StreamHandlerDelegate {
         self.isTempCache = tempCache
         self.delegate = delegate
         super.init()
+    }
+
+    // Custom implementation to prevent storing Song objects directly to allow for easier changes to Song model
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let serverId: Int = try values.decode(forKey: .serverId)
+        let songId: Int = try values.decode(forKey: .songId)
+        let store: Store = Resolver.resolve()
+        guard let song = store.song(serverId: serverId, id: songId) else {
+            throw RuntimeError(message: "Error decoding StreamHandler, Song doesn't exist for serverId \(serverId) and songId \(songId)")
+        }
+        self.song = song
+        self.byteOffset = try values.decode(forKey: .byteOffset)
+        self.secondsOffset = try values.decode(forKey: .secondsOffset)
+        self.isDelegateNotifiedToStartPlayback = try values.decode(forKey: .isDelegateNotifiedToStartPlayback)
+        self.isTempCache = try values.decode(forKey: .isTempCache)
+        self.isDownloading = try values.decode(forKey: .isDownloading)
+        self.contentLength = try values.decodeIfPresent(forKey: .contentLength)
+        self.maxBitrateSetting = try values.decodeIfPresent(forKey: .maxBitrateSetting)
+        super.init()
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(song.serverId, forKey: .serverId)
+        try container.encode(song.id, forKey: .songId)
+        try container.encode(byteOffset, forKey: .byteOffset)
+        try container.encode(secondsOffset, forKey: .secondsOffset)
+        try container.encode(isDelegateNotifiedToStartPlayback, forKey: .isDelegateNotifiedToStartPlayback)
+        try container.encode(isTempCache, forKey: .isTempCache)
+        try container.encode(isDownloading, forKey: .isDownloading)
+        try container.encodeIfPresent(contentLength, forKey: .contentLength)
+        try container.encodeIfPresent(maxBitrateSetting, forKey: .maxBitrateSetting)
     }
     
     // TODO: implement this - refactor for better error handling
@@ -184,7 +217,7 @@ protocol StreamHandlerDelegate {
     
     override func isEqual(_ object: Any?) -> Bool {
         if let object = object as? StreamHandler {
-            return song.isEqual(object.song)
+            return song == object.song
         }
         return false
     }

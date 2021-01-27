@@ -145,6 +145,10 @@
 		535E143F25A7CC870039BCAA /* CoverArt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E143D25A7CC870039BCAA /* CoverArt.swift */; };
 		535E144125A7D3480039BCAA /* ArtistArt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E144025A7D3480039BCAA /* ArtistArt.swift */; };
 		535E144225A7D3480039BCAA /* ArtistArt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E144025A7D3480039BCAA /* ArtistArt.swift */; };
+		535F824425C0F64C0024C82C /* RuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535F824325C0F64C0024C82C /* RuntimeError.swift */; };
+		535F824525C0F64C0024C82C /* RuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535F824325C0F64C0024C82C /* RuntimeError.swift */; };
+		535F824725C0FE950024C82C /* Decoding+Generic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535F824625C0FE950024C82C /* Decoding+Generic.swift */; };
+		535F824825C0FE950024C82C /* Decoding+Generic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535F824625C0FE950024C82C /* Decoding+Generic.swift */; };
 		536585811478920D00FE57A5 /* EqualizerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365857F1478920B00FE57A5 /* EqualizerViewController.m */; };
 		536585831478920D00FE57A5 /* EqualizerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365857F1478920B00FE57A5 /* EqualizerViewController.m */; };
 		5365859314789ADA00FE57A5 /* EqualizerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365859214789AD900FE57A5 /* EqualizerView.m */; };
@@ -440,8 +444,6 @@
 		53FE35061EA961540058B925 /* NSString+FileSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE340B1EA961540058B925 /* NSString+FileSize.m */; };
 		53FE35191EA961540058B925 /* NSString+Time.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34191EA961540058B925 /* NSString+Time.m */; };
 		53FE351B1EA961540058B925 /* NSString+Time.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34191EA961540058B925 /* NSString+Time.m */; };
-		53FE351F1EA961540058B925 /* NSString+URLEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE341D1EA961540058B925 /* NSString+URLEncode.m */; };
-		53FE35211EA961540058B925 /* NSString+URLEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE341D1EA961540058B925 /* NSString+URLEncode.m */; };
 		53FE356D1EA961540058B925 /* UIView+ObjCFrameHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */; };
 		53FE356F1EA961540058B925 /* UIView+ObjCFrameHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */; };
 		53FE35881EA961540058B925 /* EX2NetworkIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE346A1EA961540058B925 /* EX2NetworkIndicator.m */; };
@@ -690,6 +692,8 @@
 		535E143A25A7CC690039BCAA /* CoverArtStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverArtStore.swift; sourceTree = "<group>"; };
 		535E143D25A7CC870039BCAA /* CoverArt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverArt.swift; sourceTree = "<group>"; };
 		535E144025A7D3480039BCAA /* ArtistArt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistArt.swift; sourceTree = "<group>"; };
+		535F824325C0F64C0024C82C /* RuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeError.swift; sourceTree = "<group>"; };
+		535F824625C0FE950024C82C /* Decoding+Generic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decoding+Generic.swift"; sourceTree = "<group>"; };
 		5365857E1478920B00FE57A5 /* EqualizerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerViewController.h; sourceTree = "<group>"; };
 		5365857F1478920B00FE57A5 /* EqualizerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EqualizerViewController.m; sourceTree = "<group>"; };
 		5365859114789AD800FE57A5 /* EqualizerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerView.h; sourceTree = "<group>"; };
@@ -862,8 +866,6 @@
 		53FE340B1EA961540058B925 /* NSString+FileSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FileSize.m"; sourceTree = "<group>"; };
 		53FE34181EA961540058B925 /* NSString+Time.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Time.h"; sourceTree = "<group>"; };
 		53FE34191EA961540058B925 /* NSString+Time.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Time.m"; sourceTree = "<group>"; };
-		53FE341C1EA961540058B925 /* NSString+URLEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncode.h"; sourceTree = "<group>"; };
-		53FE341D1EA961540058B925 /* NSString+URLEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncode.m"; sourceTree = "<group>"; };
 		53FE34541EA961540058B925 /* UIView+ObjCFrameHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ObjCFrameHelper.h"; sourceTree = "<group>"; };
 		53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ObjCFrameHelper.m"; sourceTree = "<group>"; };
 		53FE34691EA961540058B925 /* EX2NetworkIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EX2NetworkIndicator.h; sourceTree = "<group>"; };
@@ -1412,6 +1414,7 @@
 				53FE346A1EA961540058B925 /* EX2NetworkIndicator.m */,
 				53FE346D1EA961540058B925 /* EX2RingBuffer.h */,
 				53FE346E1EA961540058B925 /* EX2RingBuffer.m */,
+				535F824325C0F64C0024C82C /* RuntimeError.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1629,6 +1632,7 @@
 				532C624525B6186800185998 /* URL+QueryParameters.swift */,
 				53ED673C25B7AADF0002BFAF /* Error+Code.swift */,
 				5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */,
+				535F824625C0FE950024C82C /* Decoding+Generic.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -1645,8 +1649,6 @@
 				53FE340B1EA961540058B925 /* NSString+FileSize.m */,
 				53FE34181EA961540058B925 /* NSString+Time.h */,
 				53FE34191EA961540058B925 /* NSString+Time.m */,
-				53FE341C1EA961540058B925 /* NSString+URLEncode.h */,
-				53FE341D1EA961540058B925 /* NSString+URLEncode.m */,
 				53D632D825A65CBC004EC117 /* String+Clean.swift */,
 				53ED673325B7A1360002BFAF /* String+URLEncode.swift */,
 			);
@@ -2024,6 +2026,7 @@
 				5359C859256EA8FE00C8F8DC /* ObjC.swift in Sources */,
 				53FE36F81EA961720058B925 /* BassVisualizer.m in Sources */,
 				530A16732592468C00E9294E /* FolderArtist.swift in Sources */,
+				535F824425C0F64C0024C82C /* RuntimeError.swift in Sources */,
 				53FE376A1EA961720058B925 /* NSError+ISMSError.m in Sources */,
 				53FE38A71EA961C80058B925 /* ZKCDTrailer.m in Sources */,
 				53FE6796256DD0F00015FC83 /* GCDWebServerConnection.m in Sources */,
@@ -2033,7 +2036,6 @@
 				53246AB6256C975600E11EC4 /* CacheStatusViewController.swift in Sources */,
 				530A167F259277E700E9294E /* SearchAllViewController.swift in Sources */,
 				53FE36F21EA961720058B925 /* BassParamEqValue.m in Sources */,
-				53FE351F1EA961540058B925 /* NSString+URLEncode.m in Sources */,
 				531EC87125B22D870076973A /* DownloadedTagArtistsViewController.swift in Sources */,
 				53762C8325AD0EED00476F2D /* ScrobbleLoader.swift in Sources */,
 				53ED675525B8AD0F0002BFAF /* AbstractDownloadsViewController.swift in Sources */,
@@ -2041,6 +2043,7 @@
 				536C891025BF92D1008FE1AC /* SettingsViewController.swift in Sources */,
 				5373C69925B60A6900CAA859 /* UIViewController+PushCustom.swift in Sources */,
 				536C890A25BB5FED008FE1AC /* StreamHandler.swift in Sources */,
+				535F824725C0FE950024C82C /* Decoding+Generic.swift in Sources */,
 				539D32D825A8E07E00F53797 /* Server.swift in Sources */,
 				53D4FCB9259967CF00C6F1AE /* SubfolderLoader.swift in Sources */,
 				53ED675B25B8B5190002BFAF /* DownloadedTagArtistViewController.swift in Sources */,
@@ -2261,11 +2264,11 @@
 				530A16742592468C00E9294E /* FolderArtist.swift in Sources */,
 				53FE376C1EA961720058B925 /* NSError+ISMSError.m in Sources */,
 				53246AAA256C324500E11EC4 /* InsetTextField.swift in Sources */,
+				535F824525C0F64C0024C82C /* RuntimeError.swift in Sources */,
 				538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53FE38A91EA961C80058B925 /* ZKCDTrailer.m in Sources */,
 				53FE6799256DD0F00015FC83 /* GCDWebServerErrorResponse.m in Sources */,
 				53FE36F41EA961720058B925 /* BassParamEqValue.m in Sources */,
-				53FE35211EA961540058B925 /* NSString+URLEncode.m in Sources */,
 				535E143925A7C6D60039BCAA /* QuickAlbumsLoader.swift in Sources */,
 				530A1680259277E700E9294E /* SearchAllViewController.swift in Sources */,
 				531EC87225B22D870076973A /* DownloadedTagArtistsViewController.swift in Sources */,
@@ -2278,6 +2281,7 @@
 				536C891125BF92D1008FE1AC /* SettingsViewController.swift in Sources */,
 				536C890B25BB5FED008FE1AC /* StreamHandler.swift in Sources */,
 				53FE679F256DD0F00015FC83 /* GCDWebServerStreamedResponse.m in Sources */,
+				535F824825C0FE950024C82C /* Decoding+Generic.swift in Sources */,
 				53FE389A1EA961C80058B925 /* NSFileHandle+ZKAdditions.m in Sources */,
 				539D330725AA353C00F53797 /* DownloadedSongPathComponent.swift in Sources */,
 				53ED675C25B8B5190002BFAF /* DownloadedTagArtistViewController.swift in Sources */,
