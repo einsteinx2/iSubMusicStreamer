@@ -170,7 +170,7 @@ extension ServersViewController: UITableViewConfiguration {
         cell.detailTextLabel?.font = .systemFont(ofSize: 15)
         
         var image: UIImage? = nil// UIImage(named: "server-subsonic")
-        if let currentServer = settings.currentServer, currentServer.isEqual(server) {
+        if let currentServer = settings.currentServer, currentServer == server {
             if traitCollection.userInterfaceStyle == .dark {
                 image = UIImage(named: "current-server")?.withTintColor(.white)
             } else {
@@ -211,7 +211,7 @@ extension ServersViewController: UITableViewConfiguration {
         servers = store.servers()
         
         // Alert user to select new default server if they deleting the default
-        if let currentServer = settings.currentServer, currentServer.isEqual(server), settings.isPopupsEnabled {
+        if settings.isPopupsEnabled, let currentServer = settings.currentServer, currentServer == server {
             let message = "Make sure to select a new server"
             let alert = UIAlertController(title: "Notice", message: message, preferredStyle: .alert)
             alert.addOKAction()

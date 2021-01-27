@@ -355,7 +355,7 @@ import CocoaLumberjackSwift
         let index = currentIndex
         
         // Fix for bug that caused songs to sometimes start playing then immediately restart
-        if let playerSong = player.currentStream?.song, player.isPlaying, song.isEqual(playerSong) {
+        if player.isPlaying, let playerSong = player.currentStream?.song, playerSong == song {
             // We're already playing this song so bail
             return
         }
@@ -376,7 +376,7 @@ import CocoaLumberjackSwift
         } else if !song.isFullyCached && settings.isOfflineMode {
             playNextSong()
         } else {
-            if let currentQueuedSong = cacheQueue.currentQueuedSong, song.isEqual(currentQueuedSong) {
+            if let currentQueuedSong = cacheQueue.currentQueuedSong, currentQueuedSong == song {
                 // The cache queue is downloading this song, remove it before continuing
                 cacheQueue.removeCurrentSong()
             }

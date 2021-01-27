@@ -67,18 +67,16 @@ import CocoaLumberjackSwift
     }
     
     @objc func handler(song: Song) -> StreamHandler? {
-        return handlerStack.first { $0.song.isEqual(song) }
+        return handlerStack.first { $0.song == song }
     }
     
     func isFirstInQueue(song: Song) -> Bool {
-        if let firstSong = handlerStack.first?.song {
-            return firstSong.isEqual(song)
-        }
-        return false
+        guard let firstSong = handlerStack.first?.song else { return false }
+        return firstSong == song
     }
     
     func isInQueue(song: Song) -> Bool {
-        return handlerStack.contains(where: { $0.song.isEqual(song) })
+        return handlerStack.contains { $0.song == song }
     }
     
     func isDownloading(song: Song) -> Bool {
@@ -86,12 +84,7 @@ import CocoaLumberjackSwift
     }
     
     var isDownloading: Bool {
-        for handler in handlerStack {
-            if handler.isDownloading {
-                return true
-            }
-        }
-        return false
+        return handlerStack.contains { $0.isDownloading }
     }
     
     func cancelAllStreams(except handlers: [StreamHandler]) {
@@ -109,9 +102,8 @@ import CocoaLumberjackSwift
     }
     
     func cancelAllStreams(except song: Song) {
-        if let handler = handler(song: song) {
-            cancelAllStreams(except: [handler])
-        }
+        guard let handler = handler(song: song) else { return }
+        cancelAllStreams(except: [handler])
     }
     
     func cancelAllStreams() {
@@ -130,9 +122,8 @@ import CocoaLumberjackSwift
     }
     
     func cancelStream(song: Song) {
-        if let handler = handlerStack.first(where: { $0.song.isEqual(song) }) {
-            cancelStream(handler: handler)
-        }
+        guard let handler = handlerStack.first(where: { $0.song == song }) else { return }
+        cancelStream(handler: handler)
     }
     
     private func removeStreamWithoutSavingStack(handler: StreamHandler) {
@@ -141,13 +132,13 @@ import CocoaLumberjackSwift
         handler.cancel()
         
         // Remove the handler
-        handlerStack.removeAll { $0.isEqual(handler) }
+        handlerStack.removeAll { $0 == handler }
         
         // Remove the song from downloads if necessary
         let song = handler.song
-        let isCurrentQueuedSong = cacheQueue.currentQueuedSong?.isEqual(song) ?? false
+        guard let currentQueuedSong = cacheQueue.currentQueuedSong, currentQueuedSong == song else { return }
         // TODO: Why is this checking if the CacheQueue is downloading?
-        if !isCurrentQueuedSong && !song.isFullyCached && !song.isTempCached && cacheQueue.isDownloading {
+        if currentQueuedSong != song && !song.isFullyCached && !song.isTempCached && cacheQueue.isDownloading {
             DDLogInfo("[StreamManager] Removing song from cached songs table: \(song)")
             _ = song.removeFromDownloads()
         }
@@ -175,9 +166,8 @@ import CocoaLumberjackSwift
     }
     
     func removeAllStreams(except song: Song) {
-        if let handler = handler(song: song) {
-            removeAllStreams(except: [handler])
-        }
+        guard let handler = handler(song: song) else { return }
+        removeAllStreams(except: [handler])
     }
     
     @objc func removeAllStreams() {
@@ -202,9 +192,8 @@ import CocoaLumberjackSwift
     }
     
     func removeStream(song: Song) {
-        if let handler = handlerStack.first(where: { $0.song.isEqual(song) }) {
-            removeStream(handler: handler)
-        }
+        guard let handler = handlerStack.first(where: { $0.song == song }) else { return }
+        removeStream(handler: handler)
     }
     
     private func cancelResume(handler: StreamHandler) {
@@ -214,9 +203,7 @@ import CocoaLumberjackSwift
     @objc func resume(handler: StreamHandler) {
         // As an added check, verify that this handler is still in the stack
         guard isInQueue(song: handler.song) else { return }
-        
-        let isCurrentQueuedSong = cacheQueue.currentQueuedSong?.isEqual(handler.song) ?? false
-        if cacheQueue.isDownloading && isCurrentQueuedSong {
+        if cacheQueue.isDownloading, let currentQueuedSong = cacheQueue.currentQueuedSong, currentQueuedSong == handler.song {
             // This song is already being downloaded by the cache queue, so just start the player
             streamHandlerStartPlayback(handler: handler)
             
@@ -233,19 +220,15 @@ import CocoaLumberjackSwift
     }
     
     func resumeQueue() {
-        if let handler = handlerStack.first {
-            resume(handler: handler)
-        }
+        guard let handler = handlerStack.first else { return }
+        resume(handler: handler)
     }
     
     func start(handler: StreamHandler, resume: Bool) {
         // As an added check, verify that this handler is still in the stack
         guard isInQueue(song: handler.song) else { return }
-        
         DDLogInfo("[StreamManager] starting handler \(handler) resume: \(resume), handlerStack: \(handlerStack)")
-        
-        let isCurrentQueuedSong = cacheQueue.currentQueuedSong?.isEqual(handler.song) ?? false
-        if cacheQueue.isDownloading && isCurrentQueuedSong {
+        if cacheQueue.isDownloading, let currentQueuedSong = cacheQueue.currentQueuedSong, currentQueuedSong == handler.song {
             // This song is already being downloaded by the cache queue, so just start the player
             streamHandlerStartPlayback(handler: handler)
             
@@ -269,8 +252,7 @@ import CocoaLumberjackSwift
     
     func saveHandlerStack() {
         do {
-            let data = try JSONEncoder().encode(handlerStack)
-            UserDefaults.standard.set(data, forKey: handlerStackKey)
+            UserDefaults.standard.set(try JSONEncoder().encode(handlerStack), forKey: handlerStackKey)
             UserDefaults.standard.synchronize()
         } catch {
             DDLogError("[StreamManager] saveHandlerStack: failed to archive handler stack \(error)")
@@ -279,14 +261,9 @@ import CocoaLumberjackSwift
     
     func loadHandlerStack() {
         do {
-            if let data = UserDefaults.standard.object(forKey: handlerStackKey) as? Data {
-                handlerStack = try JSONDecoder().decode([StreamHandler].self, from: data)
-            }
-        
-            for handler in handlerStack {
-                handler.delegate = self
-            }
-            
+            guard let data = UserDefaults.standard.object(forKey: handlerStackKey) as? Data else { return }
+            handlerStack = try JSONDecoder().decode(from: data)
+            handlerStack.forEach { $0.delegate = self }
             DDLogInfo("[StreamManager] loaded handler stack \(handlerStack)")
         } catch {
             DDLogError("[StreamManager] saveHandlerStack: failed to unarchive handler stack \(error)")
@@ -297,7 +274,7 @@ import CocoaLumberjackSwift
     
     @objc func stealForCacheQueue(handler: StreamHandler) {
         DDLogInfo("[StreamManager] cache queue manager stole handler for song \(handler.song)")
-        handlerStack.removeAll { $0.isEqual(handler) }
+        handlerStack.removeAll { $0 == handler }
         saveHandlerStack()
         fillStreamQueue()
     }
@@ -354,12 +331,12 @@ import CocoaLumberjackSwift
         for i in 0..<numStreamsToQueue {
             if let song = playQueue.song(index: playQueue.indexFromCurrentIndex(offset: i)), !song.isVideo, !song.isFullyCached, !isInQueue(song: song) {
                 var isLastTempCachedSong = false
-                if let lastTempCachedSong = lastTempCachedSong, !lastTempCachedSong.isEqual(song) {
+                if let lastTempCachedSong = lastTempCachedSong, lastTempCachedSong == song {
                     isLastTempCachedSong = true
                 }
                 
                 var isCurrentQueuedSong = false
-                if let currentQueuedSong = cacheQueue.currentQueuedSong, !currentQueuedSong.isEqual(song) {
+                if let currentQueuedSong = cacheQueue.currentQueuedSong, currentQueuedSong == song {
                     isCurrentQueuedSong = true
                 }
                 
@@ -422,7 +399,7 @@ extension StreamManager: StreamHandlerDelegate {
     func streamHandlerStartPlayback(handler: StreamHandler) {
         lastCachedSong = handler.song
         
-        if let currentSong = playQueue.currentSong, handler.song.isEqual(currentSong) {
+        if let currentSong = playQueue.currentSong, currentSong == handler.song {
             player.startNewSong(currentSong, at: playQueue.currentIndex, withOffsetInBytes: NSNumber(value: handler.byteOffset), orSeconds: NSNumber(value: handler.secondsOffset))
         }
         
