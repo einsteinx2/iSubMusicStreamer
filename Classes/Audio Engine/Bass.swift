@@ -320,7 +320,7 @@ private let defaultSampleRate = 44100
         bassStream.fileHandle = fileHandle
         
         func createStream(softwareDecoding: Bool = false) -> HSTREAM {
-            var flags = DWORD(BASS_STREAM_DECODE | BASS_SAMPLE_FLOAT | BASS_ASYNCFILE)
+            var flags = DWORD(BASS_STREAM_DECODE | BASS_SAMPLE_FLOAT)
             if softwareDecoding {
                 flags = flags | DWORD(BASS_SAMPLE_SOFTWARE)
             }
