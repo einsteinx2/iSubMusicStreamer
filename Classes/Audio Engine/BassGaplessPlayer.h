@@ -10,7 +10,6 @@
 #import "bass_fx.h"
 #import "bassmix.h"
 #import <AudioToolbox/AudioToolbox.h>
-#import "BassWrapper.h"
 #import "BassStream.h"
 #import "BassEqualizer.h"
 #import "BassVisualizer.h"
@@ -58,8 +57,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (DWORD)bassGetOutputData:(void *)buffer length:(DWORD)length;
 - (void)startNewSong:(ISMSSong *)aSong atIndex:(NSInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds;
 - (void)startSong:(ISMSSong *)aSong atIndex:(NSInteger)index withOffsetInBytes:(nullable NSNumber *)byteOffset orSeconds:(nullable NSNumber *)seconds;
-
-+ (NSInteger)bytesToBufferForKiloBitrate:(NSInteger)rate speedInBytesPerSec:(NSInteger)speedInBytesPerSec;
 
 // Playback methods
 //

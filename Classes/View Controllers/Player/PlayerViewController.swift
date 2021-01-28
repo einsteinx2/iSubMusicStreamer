@@ -540,7 +540,13 @@ final class PlayerViewController: UIViewController {
         lastSeekTime = Date()
         
         // TOOD: Why is this multipled by 128?
-        let byteOffset = BassWrapper.estimateKiloBitrate(player.currentStream) * 128 * Int(progressSlider.value)
+        let estimatedKiloBitrate: Int
+        if let currentStream = player.currentStream {
+            estimatedKiloBitrate = Bass.estimateKiloBitrate(bassStream: currentStream)
+        } else {
+            estimatedKiloBitrate = currentSong.estimatedKiloBitrate
+        }
+        let byteOffset = estimatedKiloBitrate * 128 * Int(progressSlider.value)
         let secondsOffset = Double(progressSlider.value)
         if currentSong.isTempCached {
             player.stop()

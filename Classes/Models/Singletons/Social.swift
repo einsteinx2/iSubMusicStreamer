@@ -10,13 +10,10 @@ import Foundation
 import Resolver
 import CocoaLumberjackSwift
 
-@objc final class Social: NSObject {
+final class Social {
     @LazyInjected private var player: BassGaplessPlayer
     @LazyInjected private var settings: Settings
     @LazyInjected private var playQueue: PlayQueue
-    
-    // Temporary accessor for Objective-C classes using Resolver under the hood
-    @objc static var shared: Social { Resolver.resolve() }
     
     private let nowPlayingDelay = 10.0
     private var scrobbleDelay: Double {
@@ -33,12 +30,12 @@ import CocoaLumberjackSwift
     private var playerHasScrobbled = false
     private var playerHasSubmittedNowPlaying = false
     
-    @objc func playerClearSocial() {
+    func playerClearSocial() {
         playerHasSubmittedNowPlaying = false
         playerHasScrobbled = false
     }
     
-    @objc func playerHandleSocial() {
+    func playerHandleSocial() {
         if !playerHasSubmittedNowPlaying && player.progress >= nowPlayingDelay {
             playerHasSubmittedNowPlaying = true
             scrobbleSongAsPlaying()

@@ -7,7 +7,6 @@
 //
 
 #import "BassGaplessPlayer.h"
-#import "iSubBassGaplessPlayerDelegate.h"
 #import "SavedSettings.h"
 #import "EX2RingBuffer.h"
 #import "EX2Dispatch.h"
@@ -48,7 +47,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (instancetype)init {
 	if (self = [super init]) {
-        _defaultDelegate = [[iSubBassGaplessPlayerDelegate alloc] init];
+        _defaultDelegate = [[BassPlayerDelegate alloc] init];
         _delegate = _defaultDelegate;
 		_streamQueue = [NSMutableArray arrayWithCapacity:5];
 		_streamGcdQueue = dispatch_queue_create("com.isubapp.BassStreamQueue", NULL);
@@ -376,47 +375,6 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 	}
 }
 
-+ (NSInteger)bytesToBufferForKiloBitrate:(NSInteger)rate speedInBytesPerSec:(NSInteger)speedInBytesPerSec {
-    // If start date is nil somehow, or total bytes transferred is 0 somehow, return the default of 10 seconds worth of audio
-    if (rate == 0 || speedInBytesPerSec == 0) {
-        return BytesForSecondsAtBitrate(10, rate);
-    }
-    
-    // Get the download speed in KB/sec
-    double kiloBytesPerSec = (double)speedInBytesPerSec / 1024.;
-    
-    // Find out out many bytes equals 1 second of audio
-    double bytesForOneSecond = BytesForSecondsAtBitrate(1, rate);
-    double kiloBytesForOneSecond = bytesForOneSecond / 1024.;
-    
-    // Calculate the amount of seconds to start as a factor of how many seconds of audio are being downloaded per second
-    double secondsPerSecondFactor = kiloBytesPerSec / kiloBytesForOneSecond;
-    
-    DDLogInfo(@"secondsPerSecondsFactor: %f", secondsPerSecondFactor);
-    
-    double numberOfSecondsToBuffer;
-    if (secondsPerSecondFactor < 0.5) {
-        // Downloading very slow, buffer for a while
-        numberOfSecondsToBuffer = 20;
-    } else if (secondsPerSecondFactor >= 0.5 && secondsPerSecondFactor < 0.7) {
-        // Downloading faster, but not much faster, allow for a long buffer period
-        numberOfSecondsToBuffer = 12.;
-    } else if (secondsPerSecondFactor >= 0.7 && secondsPerSecondFactor < 0.9) {
-        // Downloading not much slower than real time, use a smaller buffer period
-        numberOfSecondsToBuffer = 8;
-    } else if (secondsPerSecondFactor >= 0.9 && secondsPerSecondFactor < 1) {
-        // Almost downloading full speed, just buffer for a short time
-        numberOfSecondsToBuffer = 5;
-    } else {
-        // We're downloading over the speed needed, so probably the connection loss was temporary? Just buffer for a very short time
-        numberOfSecondsToBuffer = 2;
-    }
-    
-    // Convert from seconds to bytes
-    NSInteger numberOfBytesToBuffer = numberOfSecondsToBuffer * bytesForOneSecond;
-    return numberOfBytesToBuffer;
-}
-
 - (void)keepRingBufferFilled {
     // Cancel the existing thread if needed
     [self.ringBufferFillThread cancel];
@@ -486,7 +444,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                                 // use the best estimated bitrate. Then use that to determine how much data to let download to continue.
                                 
                                 NSInteger size = theSong.localFileSize;
-                                NSInteger bitrate = [BassWrapper estimateKiloBitrate:userInfo];
+                                NSInteger bitrate = [Bass estimateKiloBitrateWithBassStream:userInfo];
                                 
                                 // Get the stream for this song
                                 StreamHandler *handler = [StreamManager.shared handlerWithSong:userInfo.song];
@@ -495,7 +453,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                                 
                                 // Calculate the bytes to wait based on the recent download speed. If the handler is nil or recent download speed is 0
                                 // it will just use the default (currently 10 seconds)
-                                NSInteger bytesToWait = [self.class bytesToBufferForKiloBitrate:bitrate speedInBytesPerSec:handler.recentDownloadSpeedInBytesPerSec];
+                                NSInteger bytesToWait = [Bass bytesToBufferWithKiloBitrate:bitrate bytesPerSec:handler.recentDownloadSpeedInBytesPerSec];
                                                                     
                                 userInfo.neededSize = size + bytesToWait;
                                 
@@ -663,13 +621,13 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
             // Retry the regular hardware sampling stream
             DDLogError(@"[BassGaplessPlayer] Failed to create stream for %@ with hardware sampling because BASS is not initialized, initializing BASS and trying again with hardware sampling", aSong.title);
             
-            [BassWrapper bassInit];
+            [Bass bassInit];
             fileStream = BASS_StreamCreateFileUser(STREAMFILE_NOBUFFER, BASS_STREAM_DECODE|BASS_SAMPLE_FLOAT, &fileProcs, (__bridge void*)userInfo);
         }
         
 		if (!fileStream) {
             DDLogError(@"[BassGaplessPlayer] Failed to create stream for %@ with hardware sampling, trying again with software sampling", aSong.title);
-            [BassWrapper logError];
+            [Bass logCurrentError];
             
             fileStream = BASS_StreamCreateFileUser(STREAMFILE_NOBUFFER, BASS_STREAM_DECODE|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_FLOAT, &fileProcs, (__bridge void *)userInfo);
         }
@@ -692,7 +650,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
         
         // Failed to create the stream
         DDLogError(@"[BassGaplessPlayer] failed to create stream for song: %@  filename: %@", aSong.title, aSong.currentPath);
-        [BassWrapper logError];
+        [Bass logCurrentError];
 		
 		return nil;
 	}
@@ -922,7 +880,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 }
 
 - (NSInteger)kiloBitrate {
-	return [BassWrapper estimateKiloBitrate:self.currentStream];
+	return [Bass estimateKiloBitrateWithBassStream:self.currentStream];
 }
 
 #pragma mark - Playback methods
@@ -1016,7 +974,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
 			[self.ringBuffer reset];
             
             if (fadeVolume) {
-                BASS_ChannelSlideAttribute(self.outStream, BASS_ATTRIB_VOL, 0, (DWORD)[BassWrapper bassOutputBufferLengthMillis]);
+                BASS_ChannelSlideAttribute(self.outStream, BASS_ATTRIB_VOL, 0, Bass.bassOutputBufferLengthMillis);
             }
             
             self.ringBuffer.totalBytesDrained = bytes / self.currentStream.channelCount / (self.currentStream.sampleRate / (double)ISMS_defaultSampleRate);
@@ -1025,7 +983,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                 [self.delegate bassSeekToPositionSuccess:self];
             }
 		} else {
-			[BassWrapper logError];
+			[Bass logCurrentError];
 		}
 	}
 }

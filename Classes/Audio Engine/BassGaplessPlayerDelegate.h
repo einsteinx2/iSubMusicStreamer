@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class ISMSSong, BassGaplessPlayer;
 @protocol BassGaplessPlayerDelegate <NSObject>
 
@@ -23,10 +25,12 @@
 - (void)bassRetrievingOutputData:(BassGaplessPlayer *)player;
 
 @required
-- (ISMSSong *)bassSongForIndex:(NSInteger)index player:(BassGaplessPlayer *)player;
+- (nullable ISMSSong *)bassSongForIndex:(NSInteger)index player:(BassGaplessPlayer *)player;
 - (NSInteger)bassIndexAtOffset:(NSInteger)offset fromIndex:(NSInteger)index player:(BassGaplessPlayer *)player;
 - (NSInteger)bassCurrentPlaylistIndex:(BassGaplessPlayer *)player;
 - (void)bassRetrySongAtIndex:(NSInteger)index player:(BassGaplessPlayer*)player;
 - (void)bassRetrySongAtOffsetInBytes:(NSInteger)bytes andSeconds:(NSInteger)seconds player:(BassGaplessPlayer*)player;
 
 @end
+
+NS_ASSUME_NONNULL_END

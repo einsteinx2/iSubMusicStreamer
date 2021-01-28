@@ -17,9 +17,20 @@
 #import "OptionsViewController.h"
 
 // Data Model
-#import "BassGaplessPlayer.h"
 #import "ISMSBookmarkDAO.h"
 #import "SavedSettings.h"
+
+// Audio Engine
+#import "BassGaplessPlayer.h"
+#import "BassPluginLoad.h"
+#import "bass.h"
+#import "bass_fx.h"
+#import "bassmix.h"
+#import "bassflac.h"
+#import "bassopus.h"
+#import "basswv.h"
+#import "bass_mpc.h"
+#import "bass_ape.h"
 
 // Frameworks
 #import "Flurry.h"

@@ -40,7 +40,7 @@ func bytesForSeconds(seconds: Double, kiloBitrate: Int) -> Int {
 func formatTime<T: BinaryFloatingPoint>(seconds: T) -> String {
     guard seconds >= 0 else { return "0:00" }
     let mins = seconds / 60
-    let secs = seconds.remainder(dividingBy: 60)
+    let secs = seconds.truncatingRemainder(dividingBy: 60)
     return String(format: "%d:%02d", Int(mins), Int(secs))
 }
 

@@ -200,12 +200,14 @@ import CocoaLumberjackSwift
         return index(offset: offset, fromIndex: currentIndex)
     }
     
-    @objc func decrementIndex() -> Int {
+    @objc @discardableResult
+    func decrementIndex() -> Int {
         currentIndex = prevIndex
         return currentIndex
     }
     
-    @objc func incrementIndex() -> Int {
+    @objc @discardableResult
+    func incrementIndex() -> Int {
         currentIndex = nextIndex
         return currentIndex
     }

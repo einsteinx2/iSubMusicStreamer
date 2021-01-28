@@ -201,8 +201,8 @@ import Resolver
             downloadProgress = 1
         } else {
             var bitrate = estimatedKiloBitrate
-            if player.isPlaying {
-                bitrate = BassWrapper.estimateKiloBitrate(player.currentStream)
+            if player.isPlaying, let currentStream = player.currentStream {
+                bitrate = Bass.estimateKiloBitrate(bassStream: currentStream)
             }
             
             if transcodedSuffix != nil {
