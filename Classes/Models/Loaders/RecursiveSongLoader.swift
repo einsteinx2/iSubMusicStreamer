@@ -10,7 +10,7 @@ import Foundation
 import Resolver
 
 final class RecursiveSongLoader: CancelableLoader {
-    var callback: LoaderCallback?
+    var callback: SuccessErrorCallback?
         
     let serverId: Int
     private var folderIds = [Int]()
@@ -25,13 +25,13 @@ final class RecursiveSongLoader: CancelableLoader {
     private var isLoading = false
     private var isCancelled = false
     
-    init(serverId: Int, folderId: Int, callback: LoaderCallback? = nil) {
+    init(serverId: Int, folderId: Int, callback: SuccessErrorCallback? = nil) {
         self.serverId = serverId
         self.folderIds.append(folderId)
         self.callback = callback
     }
     
-    init(serverId: Int, tagArtistId: Int, callback: LoaderCallback? = nil) {
+    init(serverId: Int, tagArtistId: Int, callback: SuccessErrorCallback? = nil) {
         self.serverId = serverId
         self.tagArtistIds.append(tagArtistId)
         self.callback = callback
@@ -87,7 +87,7 @@ final class RecursiveSongLoader: CancelableLoader {
         
         folderIds.remove(at: 0)
         
-        subfolderLoader = SubfolderLoader(serverId: serverId, parentFolderId: folderId, callback: { [unowned self] success, error in
+        subfolderLoader = SubfolderLoader(serverId: serverId, parentFolderId: folderId, callback: { [unowned self] _, success, error in
             if success {
                 self.subfolderLoader = nil
                 self.loadNextFolder()
@@ -108,7 +108,7 @@ final class RecursiveSongLoader: CancelableLoader {
         
         tagArtistIds.remove(at: 0)
         
-        tagArtistLoader = TagArtistLoader(serverId: serverId, tagArtistId: tagArtistId) { [unowned self] success, error in
+        tagArtistLoader = TagArtistLoader(serverId: serverId, tagArtistId: tagArtistId) { [unowned self] _, success, error in
             if success {
                 if let tagAlbumIds = self.tagArtistLoader?.tagAlbumIds {
                     self.tagArtistLoader = nil
@@ -127,7 +127,7 @@ final class RecursiveSongLoader: CancelableLoader {
     
     private func loadAlbums(tagAlbumIds: [Int]) {
         tagAlbumIds.forEach { tagAlbumId in
-            tagAlbumLoader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId) { [unowned self] success, error in
+            tagAlbumLoader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId) { [unowned self] _, success, error in
                 if success {
                     if let tagAlbumLoader = self.tagAlbumLoader {
                         self.handleSongIds(songIds: tagAlbumLoader.songIds, serverId: tagAlbumLoader.serverId)

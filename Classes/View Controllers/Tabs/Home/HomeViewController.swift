@@ -55,7 +55,7 @@ final class HomeViewController: UIViewController {
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
-        if UIApplication.orientation.isPortrait || UIDevice.isPad() {
+        if UIApplication.orientation.isPortrait || UIDevice.isPad {
             for button in buttons {
                 button.showLabel()
             }
@@ -66,10 +66,10 @@ final class HomeViewController: UIViewController {
                 make.bottom.equalToSuperview().offset(-10)
             }
             verticalStack.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(UIDevice.isPad() ? 50 : 20)
-                make.trailing.equalToSuperview().offset(UIDevice.isPad() ? -50 : -20)
+                make.leading.equalToSuperview().offset(UIDevice.isPad ? 50 : 20)
+                make.trailing.equalToSuperview().offset(UIDevice.isPad ? -50 : -20)
                 make.centerY.equalToSuperview().offset(15)
-                make.height.equalToSuperview().multipliedBy(UIDevice.isPad() ? 0.50 : 0.75)
+                make.height.equalToSuperview().multipliedBy(UIDevice.isPad ? 0.50 : 0.75)
             }
             songInfoButton.snp.remakeConstraints { make in
                 make.height.equalTo(80)
@@ -248,7 +248,7 @@ final class HomeViewController: UIViewController {
         searchSegment.selectedSegmentIndex = 3
         searchSegmentContainer.addSubview(searchSegment)
         
-        if UIDevice.isPad() {
+        if UIDevice.isPad {
             songInfoButton.isHidden = true
             songInfoButton.isUserInteractionEnabled = false
         }
@@ -283,7 +283,7 @@ final class HomeViewController: UIViewController {
     private func loadQuickAlbums(modifier: String, title: String) {
         HUD.show(closeHandler: cancelLoad)
         let loader = QuickAlbumsLoader(serverId: serverId, modifier: modifier)
-        loader.callback = { _, error in
+        loader.callback = { _, _, error in
             HUD.hide()
             if let error = error {
                 if self.settings.isPopupsEnabled && !error.isCanceledURLRequest {
@@ -307,7 +307,7 @@ final class HomeViewController: UIViewController {
     private func performServerShuffle(mediaFolderId: Int) {
         HUD.show(closeHandler: cancelLoad)
         let loader = ServerShuffleLoader(serverId: serverId, mediaFolderId: mediaFolderId)
-        loader.callback = { success, _ in
+        loader.callback = { _, success, _ in
             HUD.hide()
             if success {
                 self.playQueue.playSong(position: 0)

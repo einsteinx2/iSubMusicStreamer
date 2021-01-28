@@ -34,7 +34,7 @@ final class CoverArtLoader: APILoader {
         return store.isCoverArtCached(serverId: serverId, id: coverArtId, isLarge: isLarge)
     }
     
-    init(serverId: Int, coverArtId: String, isLarge: Bool, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(serverId: Int, coverArtId: String, isLarge: Bool, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         self.coverArtId = coverArtId
         self.isLarge = isLarge
@@ -84,7 +84,7 @@ final class CoverArtLoader: APILoader {
                 let scale = UIScreen.main.scale
                 var size = scale * 80
                 if isLarge {
-                    size = UIDevice.isPad() ? scale * 1080 : scale * 640
+                    size = UIDevice.isPad ? scale * 1080 : scale * 640
                 }
                 return URLRequest(serverId: serverId, subsonicAction: "getCoverArt", parameters: ["id": coverArtId, "size": size])
             }

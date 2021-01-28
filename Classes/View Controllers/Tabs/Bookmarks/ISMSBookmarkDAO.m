@@ -8,7 +8,6 @@
 
 #import "ISMSBookmarkDAO.h"
 #import "SavedSettings.h"
-#import "EX2Kit.h"
 
 @implementation ISMSBookmarkDAO
 

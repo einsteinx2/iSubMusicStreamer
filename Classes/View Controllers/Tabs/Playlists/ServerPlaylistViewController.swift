@@ -50,7 +50,7 @@ final class ServerPlaylistViewController: UIViewController {
     private func loadData() {
         cancelLoad()
         serverPlaylistLoader = ServerPlaylistLoader(serverPlaylist: serverPlaylist)
-        serverPlaylistLoader?.callback = { [unowned self] success, error in
+        serverPlaylistLoader?.callback = { [unowned self] _, success, error in
             DispatchQueue.main.async {
                 if let error = error {
                     if self.settings.isPopupsEnabled {

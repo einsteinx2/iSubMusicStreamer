@@ -10,7 +10,6 @@
 #import "Defines.h"
 #import "Flurry.h"
 #import "SavedSettings.h"
-#import "EX2Kit.h"
 #import "Swift.h"
 
 @implementation BookmarksViewController

@@ -10,6 +10,7 @@ import Foundation
 
 private extension String {
     // TODO: Investigate what problem I was solving using this process. I know I did it for some reason many years ago, but now I have no idea ¯\_(ツ)_/¯
+    // NOTE: Presumably Subsonic was sending back some characters using HTML encoding for some reason...need to confirm that.
     func clean() -> String {
         self.gtm_stringByUnescapingFromHTML()?.removingPercentEncoding ?? self
     }

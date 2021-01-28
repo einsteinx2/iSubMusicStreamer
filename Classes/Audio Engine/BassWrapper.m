@@ -8,8 +8,8 @@
 
 #import "BassWrapper.h"
 #import "Defines.h"
-#import "EX2Kit.h"
 #import "Swift.h"
+#import <CocoaLumberjack/CocoaLumberjack.h>
 
 LOG_LEVEL_ISUB_DEFAULT
 

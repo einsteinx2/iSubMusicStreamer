@@ -10,11 +10,10 @@
 #import "EqualizerView.h"
 #import "EqualizerPointView.h"
 #import "EqualizerPathView.h"
-#import "SnappySlider.h"
 #import "Flurry.h"
 #import "SavedSettings.h"
-#import "EX2Kit.h"
 #import "Swift.h"
+#import "UIView+ObjCFrameHelper.h"
 
 @implementation EqualizerViewController
 

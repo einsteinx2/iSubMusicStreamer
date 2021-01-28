@@ -12,7 +12,6 @@
 #import "ConstantsAndMacros.h"
 #import "EqualizerView.h"
 #import "SavedSettings.h"
-#import "EX2Kit.h"
 #import "Swift.h"
 #import <stdlib.h>
 

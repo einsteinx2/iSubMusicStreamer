@@ -76,7 +76,7 @@ final class PlayerViewController: UIViewController {
     override func updateViewConstraints() {
         super.updateViewConstraints()
         updateDownloadProgress(animated: false)
-        if UIApplication.orientation.isPortrait || UIDevice.isPad() {
+        if UIApplication.orientation.isPortrait || UIDevice.isPad {
             coverArtPageControl.view.snp.remakeConstraints { make in
                 make.height.equalTo(coverArtPageControl.view.snp.width).offset(20)
                 make.top.leading.equalToSuperview().offset(20)
@@ -84,7 +84,7 @@ final class PlayerViewController: UIViewController {
             }
             
             verticalStackContainer.snp.remakeConstraints { make in
-                if UIDevice.isPad() {
+                if UIDevice.isPad {
                     make.width.equalTo(coverArtPageControl.view)
                 } else {
                     make.width.equalTo(coverArtPageControl.view).multipliedBy(0.9)
@@ -96,7 +96,7 @@ final class PlayerViewController: UIViewController {
             
             verticalStack.snp.remakeConstraints { make in
                 make.leading.trailing.equalToSuperview()
-                if UIDevice.isSmall() || UIDevice.isPad() {
+                if UIDevice.isSmall || UIDevice.isPad {
                     make.height.equalToSuperview().multipliedBy(0.9)
                     make.centerY.equalToSuperview()
                 } else {
@@ -109,7 +109,7 @@ final class PlayerViewController: UIViewController {
                 make.width.equalTo(coverArtPageControl.view.snp.height).offset(-20)
                 make.top.equalToSuperview().offset(20)
                 make.bottom.equalToSuperview().offset(-20)
-                if UIDevice.isSmall() {
+                if UIDevice.isSmall {
                     make.leading.equalToSuperview().offset(20)
                 } else {
                     make.centerX.equalToSuperview().multipliedBy(0.5)
@@ -168,11 +168,11 @@ final class PlayerViewController: UIViewController {
         
         songInfoContainer.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(UIDevice.isSmall() || UIDevice.isPad() ? 50 : 60)
+            make.height.equalTo(UIDevice.isSmall || UIDevice.isPad ? 50 : 60)
             make.centerX.equalToSuperview()
         }
         
-        songNameLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall() || UIDevice.isPad() ? 20 : 22)
+        songNameLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall || UIDevice.isPad ? 20 : 22)
         songNameLabel.textColor = .label
         songInfoContainer.addSubview(songNameLabel)
         songNameLabel.snp.makeConstraints { make in
@@ -181,7 +181,7 @@ final class PlayerViewController: UIViewController {
             make.centerX.top.equalToSuperview()
         }
         
-        artistNameLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall() || UIDevice.isPad() ? 18 : 16)
+        artistNameLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall || UIDevice.isPad ? 18 : 16)
         artistNameLabel.textColor = .secondaryLabel
         songInfoContainer.addSubview(artistNameLabel)
         artistNameLabel.snp.makeConstraints { make in
@@ -375,7 +375,7 @@ final class PlayerViewController: UIViewController {
         equalizerButton.setImage(UIImage(systemName: "slider.vertical.3", withConfiguration: equalizerButtonConfig), for: .normal)
         equalizerButton.addClosure(for: .touchUpInside) { [unowned self] in
             let controller = EqualizerViewController(nibName: "EqualizerViewController", bundle: nil)
-            if UIDevice.isPad() {
+            if UIDevice.isPad {
                 self.present(controller, animated: true, completion: nil)
             } else {
                 self.navigationController?.pushViewController(controller, animated: true)
@@ -462,7 +462,7 @@ final class PlayerViewController: UIViewController {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.jukeboxDisabled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.jukeboxEnabled)
         
-        if UIDevice.isPad() {
+        if UIDevice.isPad {
             NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateQuickSkipButtons), name: Notifications.quickSkipSecondsSettingChanged)
         }
         
@@ -590,12 +590,12 @@ final class PlayerViewController: UIViewController {
         
         let duration = Double(currentSong.duration)
         if settings.isJukeboxEnabled {
-            elapsedTimeLabel.text = NSString.formatTime(0)
-            remainingTimeLabel.text = "-\(NSString.formatTime(duration) ?? "0:00")"
+            elapsedTimeLabel.text = formatTime(seconds: 0)
+            remainingTimeLabel.text = "-\(formatTime(seconds: duration))"
             progressSlider.value = 0.0;
         } else {
-            elapsedTimeLabel.text = NSString.formatTime(player.progress)
-            remainingTimeLabel.text = "-\(NSString.formatTime(duration - player.progress) ?? "0:00")"
+            elapsedTimeLabel.text = formatTime(seconds: player.progress)
+            remainingTimeLabel.text = "-\(formatTime(seconds: duration - player.progress))"
             
             // Only animate when it's moving forward
             let value = Float(player.progress)
@@ -753,7 +753,7 @@ final class PlayerViewController: UIViewController {
         progressSlider.alpha = jukeboxEnabled ? 0.5 : 1.0
         downloadProgressView.isHidden = jukeboxEnabled
         title = jukeboxEnabled ? "Jukebox Mode" : ""
-        if UIDevice.isPad() {
+        if UIDevice.isPad {
             view.backgroundColor = jukeboxEnabled ? Colors.jukeboxWindowColor.withAlphaComponent(0.5) : Colors.background
         }
     }

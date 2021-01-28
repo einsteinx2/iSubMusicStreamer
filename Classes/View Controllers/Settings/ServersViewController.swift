@@ -85,7 +85,7 @@ final class ServersViewController: UIViewController {
     @objc private func addAction() {
         let controller = ServerEditViewController()
         controller.modalPresentationStyle = .formSheet
-        if UIDevice.isPad() {
+        if UIDevice.isPad {
             SceneDelegate.shared.padRootViewController?.present(controller, animated: true, completion: nil)
         } else {
             present(controller, animated: true, completion: nil)
@@ -101,7 +101,7 @@ final class ServersViewController: UIViewController {
     
     // TODO: implement this - refactor this and make sure it actually works
     private func switchServer() {
-        if let parent = parent, let first = navigationController?.viewControllers.first, parent === first, !UIDevice.isPad() {
+        if let parent = parent, let first = navigationController?.viewControllers.first, parent === first, !UIDevice.isPad {
             navigationController?.view.removeFromSuperview()
         } else {
             navigationController?.popToRootViewController(animated: true)
@@ -119,7 +119,7 @@ final class ServersViewController: UIViewController {
             if settings.isOfflineMode {
                 settings.isOfflineMode = false
                 
-                if UIDevice.isPad() {
+                if UIDevice.isPad {
                     SceneDelegate.shared.padRootViewController?.menuViewController.toggleOfflineMode()
                 } else if let window = view.window {
                     for subview in window.subviews {
@@ -134,7 +134,7 @@ final class ServersViewController: UIViewController {
 //            store.setup()
             
             // Reset the tabs
-            if !UIDevice.isPad(), let viewControllers = SceneDelegate.shared.tabBarController?.viewControllers  {
+            if !UIDevice.isPad, let viewControllers = SceneDelegate.shared.tabBarController?.viewControllers  {
                 for controller in viewControllers {
                     if let controller = controller as? UINavigationController {
                         controller.popToRootViewController(animated: true)

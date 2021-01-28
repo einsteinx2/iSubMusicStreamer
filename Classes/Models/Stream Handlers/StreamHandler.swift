@@ -188,17 +188,12 @@ protocol StreamHandlerDelegate {
             }
             
             DispatchQueue.main.async {
-                EX2NetworkIndicator.usingNetwork()
                 self.delegate?.streamHandlerStarted(handler: self)
             }
         }
     }
     
     func cancel() {
-        DispatchQueue.mainSyncSafe {
-            EX2NetworkIndicator.doneUsingNetwork()
-        }
-        
         isDownloading = false
         
         DDLogInfo("[StreamHandler] Stream handler request canceled for \(song)")
@@ -355,7 +350,6 @@ extension StreamHandler: URLSessionDataDelegate {
             fileHandle = nil
             
             DispatchQueue.main.async {
-                EX2NetworkIndicator.doneUsingNetwork()
                 self.delegate?.streamHandlerConnectionFinished(handler: self)
             }
         }
@@ -372,9 +366,7 @@ extension StreamHandler: URLSessionDataDelegate {
         // TODO: implement this - switch to non-deprecated API
         fileHandle?.closeFile()
         fileHandle = nil
-        
-        EX2NetworkIndicator.doneUsingNetwork()
-        
+                
         delegate?.streamHandlerConnectionFailed(handler: self, error: error)
     }
 }

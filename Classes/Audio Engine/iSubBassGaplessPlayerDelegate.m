@@ -9,7 +9,7 @@
 #import "iSubBassGaplessPlayerDelegate.h"
 #import "BassGaplessPlayer.h"
 #import "Defines.h"
-#import "EX2Kit.h"
+#import "EX2Dispatch.h"
 #import "Swift.h"
 
 @implementation iSubBassGaplessPlayerDelegate

@@ -18,7 +18,7 @@ final class TagArtistLoader: APILoader {
     
     private(set) var tagAlbumIds = [Int]()
     
-    init(serverId: Int, tagArtistId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(serverId: Int, tagArtistId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         self.tagArtistId = tagArtistId
         super.init(delegate: delegate, callback: callback)

@@ -18,7 +18,7 @@ extension UIViewController {
     }
     
     @objc func showPlayer() {
-        if UIDevice.isPad() {
+        if UIDevice.isPad {
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         } else {
             let controller = PlayerViewController()

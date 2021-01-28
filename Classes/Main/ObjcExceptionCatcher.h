@@ -8,8 +8,7 @@
 
 // Example based on answers in: https://stackoverflow.com/questions/35119531/catch-objective-c-exception-in-swift
 
-#ifndef ObjcExceptionCatcher_h
-#define ObjcExceptionCatcher_h
+#pragma once
 
 #import <Foundation/Foundation.h>
 
@@ -22,5 +21,3 @@ NS_INLINE NSException * _Nullable objcTryBlock(void(NS_NOESCAPE^_Nonnull tryBloc
     }
     return nil;
 }
-
-#endif /* ObjcExceptionCatcher_h */

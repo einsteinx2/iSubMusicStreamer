@@ -80,7 +80,7 @@ final class TagArtistViewController: UIViewController {
     
     func startLoad() {
         HUD.show(closeHandler: cancelLoad)
-        loader = TagArtistLoader(serverId: serverId, tagArtistId: tagArtist.id) { [weak self] success, error in
+        loader = TagArtistLoader(serverId: serverId, tagArtistId: tagArtist.id) { [weak self] _, success, error in
             guard let self = self else { return }
             
             self.tagAlbumIds = self.loader?.tagAlbumIds ?? []

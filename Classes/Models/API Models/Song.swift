@@ -237,7 +237,7 @@ import Resolver
 extension Song: TableCellModel {
     var primaryLabelText: String? { title }
     var secondaryLabelText: String? { tagArtistName }
-    var durationLabelText: String? { NSString.formatTime(Double(duration)) }
+    var durationLabelText: String? { formatTime(seconds: duration) }
     var isCached: Bool { isFullyCached }
     func download() {
         _ = store.addToDownloadQueue(song: self)

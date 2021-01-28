@@ -15,11 +15,11 @@ final class ServerPlaylistLoader: APILoader {
     let serverId: Int
     let serverPlaylistId: Int
     
-    convenience init(serverPlaylist: ServerPlaylist, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    convenience init(serverPlaylist: ServerPlaylist, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.init(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id, delegate: delegate, callback: callback)
     }
     
-    init(serverId: Int, serverPlaylistId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(serverId: Int, serverPlaylistId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         self.serverPlaylistId = serverPlaylistId
         super.init(delegate: delegate, callback: callback)

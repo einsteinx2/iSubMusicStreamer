@@ -19,7 +19,7 @@ final class RootArtistsLoader: APILoader {
     private(set) var tableSections = [TableSection]()
     private(set) var tagArtistIds = [Int]()
     
-    init(serverId: Int, mediaFolderId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(serverId: Int, mediaFolderId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         self.mediaFolderId = mediaFolderId
         super.init(delegate: delegate, callback: callback)

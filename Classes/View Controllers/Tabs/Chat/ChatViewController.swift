@@ -106,7 +106,7 @@ final class ChatViewController: UIViewController {
     private func send(message: String) {
         HUD.show(message: "Sending")
         let chatSendLoader = ChatSendLoader(serverId: serverId, message: message)
-        chatSendLoader.callback = { [weak self] success, error in
+        chatSendLoader.callback = { [weak self] _, success, error in
             guard let self = self else { return }
             HUD.hide()
             if success {

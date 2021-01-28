@@ -7,16 +7,17 @@
 //
 
 #import "FolderDropdownControl.h"
-#import <QuartzCore/QuartzCore.h>
 #import "Defines.h"
-#import "EX2Kit.h"
 #import "Swift.h"
+#import "UIView+ObjCFrameHelper.h"
+#import <CocoaLumberjack/CocoaLumberjack.h>
+#import <QuartzCore/QuartzCore.h>
 
 LOG_LEVEL_ISUB_DEFAULT
 
 #define HEIGHT 40
 
-@interface FolderDropdownControl() {
+@interface FolderDropdownControl() <APILoaderDelegate> {
     NSArray<MediaFolder*> *_mediaFolders;
 }
 @property (nonatomic, strong) NSArray<MediaFolder*> *mediaFolders;
@@ -258,26 +259,25 @@ LOG_LEVEL_ISUB_DEFAULT
     self.dropdownButton.accessibilityLabel = self.selectedFolderLabel.text;
 }
 
-- (void)updateFolders {
-    DropdownFolderLoader *loader = [[DropdownFolderLoader alloc] initWithServerId:settingsS.currentServerId delegate:nil callback:nil];
-    __weak DropdownFolderLoader *weakLoader = loader;
-    loader.callback = ^(BOOL success, NSError * _Nullable error) {
-        if (success) {
-            self.mediaFolders = weakLoader.mediaFolders;
-            (void)[Store.shared deleteMediaFolders];
-            (void)[Store.shared addWithMediaFolders:self.mediaFolders];
-        } else {
-            // TODO: Handle error
-            // failed.  how to report this to the user?
-            DDLogError(@"[FolderDropdownControl] failed to update folders: %@", error.localizedDescription);
-        }
-    };
-    [loader startLoad];
-}
-
 - (BOOL)hasMultipleMediaFolders {
     // There will always be "All Media Folders" and at least one folder, so just check if there are more than 2 items in the array
     return self.mediaFolders.count > 2;
+}
+
+- (void)updateFolders {
+    [[[DropdownFolderLoader alloc] initWithServerId:settingsS.currentServerId delegate:self callback:nil] startLoad];
+}
+
+- (void)loadingFinished:(APILoader *)loader {
+    self.mediaFolders = ((DropdownFolderLoader *)loader).mediaFolders;
+    (void)[Store.shared deleteMediaFolders];
+    (void)[Store.shared addWithMediaFolders:self.mediaFolders];
+}
+
+- (void)loadingFailed:(APILoader *)loader error:(NSError *)error {
+    // TODO: Handle error
+    // failed.  how to report this to the user?
+    DDLogError(@"[FolderDropdownControl] failed to update folders: %@", error.localizedDescription);
 }
 
 @end

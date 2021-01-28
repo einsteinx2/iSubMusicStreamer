@@ -259,7 +259,7 @@ extension ServerEditViewController: APILoaderDelegate {
         
         self.dismiss(animated: true, completion: nil)
         
-        if UIDevice.isPad() {
+        if UIDevice.isPad {
             SceneDelegate.shared.padRootViewController?.menuViewController.showHome()
         }
         

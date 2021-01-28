@@ -16,7 +16,7 @@ final class NowPlayingLoader: APILoader {
     
     private(set) var nowPlayingSongs = [NowPlayingSong]()
     
-    init(serverId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(serverId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         super.init(delegate: delegate, callback: callback)
     }

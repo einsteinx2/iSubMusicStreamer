@@ -16,7 +16,7 @@ final class QuickAlbumsLoader: APILoader {
     
     private(set) var folderAlbums = [FolderAlbum]()
     
-    init(serverId: Int, modifier: String, offset: Int = 0, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(serverId: Int, modifier: String, offset: Int = 0, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         self.modifier = modifier
         self.offset = offset

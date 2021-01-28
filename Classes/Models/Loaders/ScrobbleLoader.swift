@@ -12,7 +12,7 @@ final class ScrobbleLoader: APILoader {
     let song: Song
     let isSubmission: Bool
     
-    init(song: Song, isSubmission: Bool, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(song: Song, isSubmission: Bool, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.song = song
         self.isSubmission = isSubmission
         super.init(delegate: delegate, callback: callback)

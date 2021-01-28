@@ -78,12 +78,10 @@ extension ServerPlaylist: TableCellModel {
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? {
         var secondaryLabelText = (songCount == 1 ? "1 song" : "\(songCount) songs")
-        if let durationString = NSString.formatTime(Double(duration)) {
-            secondaryLabelText += " • \(durationString)"
-        }
+        secondaryLabelText += " • \(formatTime(seconds: duration))"
         return secondaryLabelText
     }
-    var durationLabelText: String? { NSString.formatTime(Double(duration)) }
+    var durationLabelText: String? { formatTime(seconds: duration) }
     var isCached: Bool { false }
     func download() {
         for position in 0..<self.songCount {

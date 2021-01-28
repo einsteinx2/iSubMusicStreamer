@@ -96,11 +96,11 @@ final class UniversalTableViewCell: UITableViewCell {
         contentView.addSubview(coverArtView)
         
         primaryLabel.textColor = .label
-        primaryLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall() ? 16 : 17)
+        primaryLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall ? 16 : 17)
         contentView.addSubview(primaryLabel)
         
         secondaryLabel.textColor = .secondaryLabel
-        secondaryLabel.font = .systemFont(ofSize: UIDevice.isSmall() ? 13 : 14)
+        secondaryLabel.font = .systemFont(ofSize: UIDevice.isSmall ? 13 : 14)
         contentView.addSubview(secondaryLabel)
         
         durationLabel.textColor = .secondaryLabel
@@ -215,7 +215,7 @@ final class UniversalTableViewCell: UITableViewCell {
             }
             make.leading.equalTo(coverArtView.snp.trailing).offset(10)
             make.trailing.equalTo(durationLabel.snp.leading).offset(-10)
-            make.top.equalTo(headerLabel.snp.bottom).offset(UIDevice.isSmall() ? 5 : 10)
+            make.top.equalTo(headerLabel.snp.bottom).offset(UIDevice.isSmall ? 5 : 10)
         }
     }
     
@@ -225,7 +225,7 @@ final class UniversalTableViewCell: UITableViewCell {
             else { make.height.equalTo(coverArtView).multipliedBy(0.33) }
             make.leading.equalTo(primaryLabel)
             make.trailing.equalTo(primaryLabel)
-            make.bottom.equalToSuperview().offset(UIDevice.isSmall() ? -5 : -10)
+            make.bottom.equalToSuperview().offset(UIDevice.isSmall ? -5 : -10)
         }
     }
     

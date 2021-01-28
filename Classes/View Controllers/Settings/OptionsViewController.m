@@ -8,8 +8,9 @@
 
 #import "OptionsViewController.h"
 #import "SavedSettings.h"
-#import "EX2Kit.h"
 #import "Swift.h"
+#import "UIView+ObjCFrameHelper.h"
+#import <CocoaLumberjack/CocoaLumberjack.h>
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
 
@@ -64,8 +65,8 @@ LOG_LEVEL_ISUB_DEFAULT
     [self.cacheSpaceSlider setThumbImage:[UIImage imageNamed:@"controller-slider-thumb"] forState:UIControlStateNormal];
 	self.totalSpace = Cache.shared.totalSpace;
 	self.freeSpace = Cache.shared.freeSpace;
-	self.freeSpaceLabel.text = [NSString stringWithFormat:@"Free space: %@", [NSString formatFileSize:self.freeSpace]];
-	self.totalSpaceLabel.text = [NSString stringWithFormat:@"Total space: %@", [NSString formatFileSize:self.totalSpace]];
+	self.freeSpaceLabel.text = [NSString stringWithFormat:@"Free space: %@", [ObjCDeleteMe formatFileSizeWithBytes:self.freeSpace]];
+	self.totalSpaceLabel.text = [NSString stringWithFormat:@"Total space: %@", [ObjCDeleteMe formatFileSizeWithBytes:self.totalSpace]];
 	float percentFree = (float) self.freeSpace / (float) self.totalSpace;
 	CGRect frame = self.freeSpaceBackground.frame;
 	frame.size.width *= percentFree;
@@ -114,11 +115,11 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)cachingTypeToggle {
 	if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 0) {
 		self.cacheSpaceLabel1.text = @"Minimum free space:";
-		self.cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.minFreeSpace];
+		self.cacheSpaceLabel2.text = [ObjCDeleteMe formatFileSizeWithBytes:settingsS.minFreeSpace];
 		self.cacheSpaceSlider.value = ((float)settingsS.minFreeSpace / self.totalSpace);
 	} else if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 1) {
 		self.cacheSpaceLabel1.text = @"Maximum cache size:";
-		self.cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.maxCacheSize];
+		self.cacheSpaceLabel2.text = [ObjCDeleteMe formatFileSizeWithBytes:settingsS.maxCacheSize];
 		self.cacheSpaceSlider.value = ((float)settingsS.maxCacheSize / self.totalSpace);
 	}
 }
@@ -382,11 +383,12 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)updateCacheSpaceSlider {
-	self.cacheSpaceSlider.value = ((double)[self.cacheSpaceLabel2.text fileSizeFromFormat] / (double)self.totalSpace);
+    NSInteger fileSize = [ObjCDeleteMe fileSizeFromFormat:self.cacheSpaceLabel2.text];
+	self.cacheSpaceSlider.value = ((double)fileSize / (double)self.totalSpace);
 }
 
 - (IBAction)updateMinFreeSpaceLabel {
-	self.cacheSpaceLabel2.text = [NSString formatFileSize:(self.cacheSpaceSlider.value * self.totalSpace)];
+	self.cacheSpaceLabel2.text = [ObjCDeleteMe formatFileSizeWithBytes:(self.cacheSpaceSlider.value * self.totalSpace)];
 }
 
 - (IBAction)updateMinFreeSpaceSetting {
@@ -401,7 +403,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		} else {
 			settingsS.minFreeSpace = (self.cacheSpaceSlider.value * (float)self.totalSpace);
 		}
-		//cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.minFreeSpace];
+		//cacheSpaceLabel2.text = [ObjCDeleteMe formatFileSizeWithBytes:settingsS.minFreeSpace];
 	} else if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 1) {
 		
 		// Check if the user is trying to assign a larger max cache size than there is available space - 50MB
@@ -414,13 +416,13 @@ LOG_LEVEL_ISUB_DEFAULT
 		} else {
 			settingsS.maxCacheSize = (self.cacheSpaceSlider.value * self.totalSpace);
 		}
-		//cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.maxCacheSize];
+		//cacheSpaceLabel2.text = [ObjCDeleteMe formatFileSizeWithBytes:settingsS.maxCacheSize];
 	}
 	[self updateMinFreeSpaceLabel];
 }
 
 - (IBAction)revertMinFreeSpaceSlider {
-	self.cacheSpaceLabel2.text = [NSString formatFileSize:settingsS.minFreeSpace];
+	self.cacheSpaceLabel2.text = [ObjCDeleteMe formatFileSizeWithBytes:settingsS.minFreeSpace];
 	self.cacheSpaceSlider.value = (float)settingsS.minFreeSpace / self.totalSpace;
 }
 
@@ -454,7 +456,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)textFieldDidChange:(UITextField *)textField {
 	[self updateCacheSpaceSlider];
-//DLog(@"file size: %llu   formatted: %@", [textField.text fileSizeFromFormat], [NSString formatFileSize:[textField.text fileSizeFromFormat]]);
+//DLog(@"file size: %llu   formatted: %@", [ObjCDeleteMe fileSizeFromFormat:textField.text], [ObjCDeleteMe formatFileSizeWithBytes:[ObjCDeleteMe fileSizeFromFormat:textField.text]]);
 }
 
 @end

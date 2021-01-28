@@ -185,7 +185,7 @@ import CocoaLumberjackSwift
             Flurry.startSession(apiKey)
             
             // Send basic device model and OS information
-            let parameters = ["FirmwareVersion": UIDevice.completeVersionString, "HardwareVersion": UIDevice.platform]
+            let parameters = ["FirmwareVersion": UIDevice.completeOSVersion, "HardwareVersion": UIDevice.deviceModel]
             Flurry.logEvent("DeviceInfo", withParameters: parameters)
         }
     }

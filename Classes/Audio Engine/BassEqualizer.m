@@ -8,7 +8,8 @@
 
 #import "BassEqualizer.h"
 #import "SavedSettings.h"
-#import "EX2Kit.h"
+#import "Defines.h"
+#import <CocoaLumberjack/CocoaLumberjack.h>
 
 #define ISMS_EqualizerGainReduction 0.45
 

@@ -35,7 +35,7 @@ struct SongsHelper {
     }
     
     static func downloadAll(serverId: Int, tagAlbumId: Int) {
-        albumLoader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId) { success, error in
+        albumLoader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId) { _, success, error in
             if success, let albumLoader = albumLoader {
                 _ = store.addToDownloadQueue(serverId: serverId, songIds: albumLoader.songIds)
             }
@@ -160,8 +160,8 @@ struct SongsHelper {
         playQueue.isShuffle = false
     }
     
-    private static func queueTagAlbum(serverId: Int, tagAlbumId: Int, callback: @escaping LoaderCallback) {
-        albumLoader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId) { success, error in
+    private static func queueTagAlbum(serverId: Int, tagAlbumId: Int, callback: @escaping SuccessErrorCallback) {
+        albumLoader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId) { _, success, error in
             if success, let albumLoader = albumLoader {
                 _ = store.queue(songIds: albumLoader.songIds, serverId: serverId)
             }

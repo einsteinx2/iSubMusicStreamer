@@ -8,7 +8,6 @@
 
 #import "CacheQueueSongUITableViewCell.h"
 #import "Defines.h"
-#import "EX2Kit.h"
 #import "Swift.h"
 
 @implementation CacheQueueSongUITableViewCell

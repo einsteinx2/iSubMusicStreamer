@@ -16,7 +16,7 @@ final class ServerPlaylistsLoader: APILoader {
     
     private(set) var serverPlaylists = [ServerPlaylist]()
     
-    init(serverId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(serverId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         super.init(delegate: delegate, callback: callback)
     }

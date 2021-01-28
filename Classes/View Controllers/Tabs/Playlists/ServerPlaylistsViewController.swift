@@ -131,7 +131,7 @@ final class ServerPlaylistsViewController: UIViewController {
         cancelLoad()
         HUD.show(closeHandler: cancelLoad)
         self.serverPlaylistsLoader = ServerPlaylistsLoader(serverId: serverId)
-        self.serverPlaylistsLoader?.callback = { [unowned self] success, error in
+        self.serverPlaylistsLoader?.callback = { [unowned self] _, success, error in
             if success {
                 self.serverPlaylists = self.serverPlaylistsLoader?.serverPlaylists ?? []
                 self.saveEditHeader.count = self.serverPlaylists.count

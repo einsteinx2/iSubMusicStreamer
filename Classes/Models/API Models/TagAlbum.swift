@@ -46,7 +46,7 @@ extension TagAlbum: TableCellModel {
         var textParts = [String]()
         if year > 0 { textParts.append(String(year)) }
         textParts.append("\(songCount) \("Song".pluralize(amount: songCount))")
-        textParts.append(NSString.formatTime(Double(duration)))
+        textParts.append(formatTime(seconds: duration))
         
         var text = textParts[0]
         for i in 1..<textParts.count {

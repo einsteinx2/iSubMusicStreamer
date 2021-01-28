@@ -46,7 +46,7 @@ import CocoaLumberjackSwift
         window.frame = windowScene.coordinateSpace.bounds
         window.backgroundColor = settings.isJukeboxEnabled ? Colors.jukeboxWindowColor : Colors.windowColor
         
-        if UIDevice.isPad() {
+        if UIDevice.isPad {
             
         } else {
             // Manually create tab bar controller
@@ -219,7 +219,7 @@ import CocoaLumberjackSwift
     }
     
     @objc func showSettings() {
-        if UIDevice.isPad() {
+        if UIDevice.isPad {
             padRootViewController?.menuViewController.showSettings()
         } else if let tabBarController = tabBarController {
             let controller = SettingsViewController()
@@ -234,7 +234,7 @@ import CocoaLumberjackSwift
     }
     
     @objc private func showPlayer() {
-        guard !UIDevice.isPad() else { return }
+        guard !UIDevice.isPad else { return }
         
         let controller = PlayerViewController()
         controller.hidesBottomBarWhenPushed = true

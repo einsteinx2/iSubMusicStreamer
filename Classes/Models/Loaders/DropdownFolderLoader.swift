@@ -13,7 +13,7 @@ import Foundation
     
     @objc private(set) var mediaFolders = [MediaFolder]()
     
-    @objc init(serverId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    @objc init(serverId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         super.init(delegate: delegate, callback: callback)
     }

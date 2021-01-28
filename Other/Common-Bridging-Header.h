@@ -6,65 +6,27 @@
 //  Copyright © 2020 Ben Baron. All rights reserved.
 //
 
-/*
- * Import Objective-C headers here to be exposed to Swift in all build targets
- */
+#pragma once
 
-#ifndef Common_Bridging_Header_h
-#define Common_Bridging_Header_h
-
-#import "Defines.h"
 #import "ObjcExceptionCatcher.h"
 
-/*
- * User Interface Components
- */
-
-// View Controllers
-#import "EqualizerViewController.h"
+// User Interface Components
 #import "BookmarksViewController.h"
+#import "EqualizerViewController.h"
+#import "FolderDropdownControl.h"
 #import "OptionsViewController.h"
 
-// Views
-#import "FolderDropdownControl.h"
-
-/*
- * Data Models
- */
-
-// DAOs
-#import "ISMSBookmarkDAO.h"
-
-// Parsers
-#import "RXMLElement.h"
-
-/*
- * Extensions
- */
-
-#import "NSString+time.h"
-#import "UIDevice+Info.h"
-#import "NSString+FileSize.h"
-#import "GTMNSString+HTML.h"
-
-/*
- * Singletons
- */
-
-#import "SavedSettings.h"
+// Data Model
 #import "BassGaplessPlayer.h"
+#import "ISMSBookmarkDAO.h"
+#import "SavedSettings.h"
 
-/*
- * Frameworks
- */
-
+// Frameworks
 #import "Flurry.h"
-#import "OBSlider.h"
-#import "MBProgressHUD.h"
 #import "GCDWebServer.h"
 #import "GCDWebServerDataResponse.h"
 #import "GCDWebServerErrorResponse.h"
+#import "GTMNSString+HTML.h"
+#import "MBProgressHUD.h"
 #import "Reachability.h"
-#import "EX2NetworkIndicator.h"
-
-#endif /* Common_Bridging_Header_h */
+#import "RXMLElement.h"

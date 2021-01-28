@@ -19,11 +19,11 @@ final class StatusLoader: APILoader {
     private(set) var minorVersion = 0
     private(set) var versionString: String?
     
-    convenience init(server: Server, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    convenience init(server: Server, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.init(urlString: server.url.absoluteString, username: server.username, password: server.password, delegate: delegate, callback: callback)
     }
     
-    init(urlString: String, username: String, password: String, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(urlString: String, username: String, password: String, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.urlString = urlString
         self.username = username
         self.password = password

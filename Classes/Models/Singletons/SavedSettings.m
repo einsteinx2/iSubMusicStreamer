@@ -9,10 +9,10 @@
 #import "SavedSettings.h"
 #import "BassGaplessPlayer.h"
 #import "ISMSServer.h"
-#import "EX2Kit.h"
 #import "Defines.h"
 #import "Swift.h"
 #import "ZipKit.h"
+#import <CocoaLumberjack/CocoaLumberjack.h>
 
 LOG_LEVEL_ISUB_DEFAULT
 

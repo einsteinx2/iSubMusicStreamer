@@ -13,6 +13,9 @@ protocol CancelableLoader {
     func cancelLoad()
 }
 
+// APILoader callback block, make sure to always check success bool, not error, as error can be nil when success is NO
+typealias APILoaderCallback = (_ loader: APILoader?, _ success: Bool, _ error: Error?) -> Void
+
 @objc protocol APILoaderDelegate {
     @objc(loadingFinished:)
     func loadingFinished(loader: APILoader?)
@@ -54,14 +57,14 @@ protocol CancelableLoader {
     }
     
     @objc weak var delegate: APILoaderDelegate?
-    @objc var callback: LoaderCallback?
+    @objc var callback: APILoaderCallback?
     
     @objc var type: APILoaderType { .generic }
     
     private var selfRef: APILoader?
     private var dataTask: URLSessionDataTask?
     
-    init(delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.delegate = delegate
         self.callback = callback
         super.init()
@@ -118,7 +121,7 @@ protocol CancelableLoader {
     func informDelegateLoadingFinished() {
         DispatchQueue.main.async {
             self.delegate?.loadingFinished(loader: self)
-            self.callback?(true, nil)
+            self.callback?(self, true, nil)
             self.cleanup()
         }
     }
@@ -126,7 +129,7 @@ protocol CancelableLoader {
     func informDelegateLoadingFailed(error: Error?) {
         DispatchQueue.main.async {
             self.delegate?.loadingFailed(loader: self, error: error)
-            self.callback?(false, error)
+            self.callback?(self, false, error)
             self.cleanup()
         }
     }

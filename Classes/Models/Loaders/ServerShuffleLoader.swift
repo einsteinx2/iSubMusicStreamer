@@ -15,7 +15,7 @@ final class ServerShuffleLoader: APILoader {
     let serverId: Int
     let mediaFolderId: Int?
     
-    init(serverId: Int, mediaFolderId: Int? = nil, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(serverId: Int, mediaFolderId: Int? = nil, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         self.mediaFolderId = mediaFolderId
         super.init(delegate: delegate, callback: callback)

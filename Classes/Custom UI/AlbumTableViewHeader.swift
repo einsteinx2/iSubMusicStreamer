@@ -84,12 +84,7 @@ final class AlbumTableViewHeader: UIView {
         }
         
         let tracksString = tracks == 1 ? "1 track" : "\(tracks) tracks"
-        let durationString = NSString.formatTime(duration)
-        var finalString = tracksString
-        if let durationString = durationString {
-            finalString += " • \(durationString) minutes"
-        }
-        tracksLabel.text = finalString
+        tracksLabel.text = "\(tracksString) • \(formatTime(seconds: duration)) minutes"
         tracksLabel.font = .systemFont(ofSize: 14)
         tracksLabel.adjustsFontSizeToFitWidth = true
         tracksLabel.minimumScaleFactor = 0.5

@@ -28,7 +28,7 @@ final class SubfolderLoader: APILoader {
     var onProcessFolderAlbum: FolderAlbumHandler?
     var onProcessSong: SongHandler?
     
-    init(serverId: Int, parentFolderId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil, folderAlbumHandler: FolderAlbumHandler? = nil, songHandler: SongHandler? = nil) {
+    init(serverId: Int, parentFolderId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil, folderAlbumHandler: FolderAlbumHandler? = nil, songHandler: SongHandler? = nil) {
         self.serverId = serverId
         self.parentFolderId = parentFolderId
         self.onProcessFolderAlbum = folderAlbumHandler

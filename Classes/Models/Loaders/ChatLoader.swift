@@ -13,7 +13,7 @@ final class ChatLoader: APILoader {
     let serverId: Int
     private(set) var chatMessages = [ChatMessage]()
     
-    init(serverId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(serverId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         super.init(delegate: delegate, callback: callback)
     }

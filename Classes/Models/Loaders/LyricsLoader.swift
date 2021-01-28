@@ -18,12 +18,12 @@ final class LyricsLoader: APILoader {
     
     private(set) var lyrics: Lyrics?
     
-    convenience init?(song: Song, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    convenience init?(song: Song, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         guard let tagArtistName = song.tagArtistName, song.title.count > 0 else { return nil }
         self.init(serverId: song.serverId, tagArtistName: tagArtistName, songTitle: song.title, delegate: delegate, callback: callback)
     }
     
-    init(serverId: Int, tagArtistName: String, songTitle: String, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(serverId: Int, tagArtistName: String, songTitle: String, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         self.tagArtistName = tagArtistName
         self.songTitle = songTitle

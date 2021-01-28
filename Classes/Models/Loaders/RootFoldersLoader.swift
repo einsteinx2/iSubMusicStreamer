@@ -19,7 +19,7 @@ final class RootFoldersLoader: APILoader {
     private(set) var tableSections = [TableSection]()
     private(set) var folderArtistIds = [Int]()
     
-    init(serverId: Int, mediaFolderId: Int, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(serverId: Int, mediaFolderId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         self.mediaFolderId = mediaFolderId
         super.init(delegate: delegate, callback: callback)

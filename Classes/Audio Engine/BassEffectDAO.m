@@ -11,7 +11,6 @@
 #import "BassParamEqValue.h"
 #import "BassGaplessPlayer.h"
 #import "SavedSettings.h"
-#import "EX2Kit.h"
 #import "Swift.h"
 
 @implementation BassEffectDAO

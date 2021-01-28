@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "BassVisualizer.h"
-#import "EX2Kit.h"
 
 @interface BassVisualizer()
 {
