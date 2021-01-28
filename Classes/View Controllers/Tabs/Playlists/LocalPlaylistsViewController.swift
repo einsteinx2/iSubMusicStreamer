@@ -44,7 +44,7 @@ final class LocalPlaylistsViewController: UIViewController {
         guard saveEditHeader.superview == nil else { return }
         
         saveEditHeader.delegate = self
-        saveEditHeader.count = playQueue.count
+        saveEditHeader.count = localPlaylists.count
         view.addSubview(saveEditHeader)
         saveEditHeader.snp.makeConstraints { make in
             make.height.equalTo(50)

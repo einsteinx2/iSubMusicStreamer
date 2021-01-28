@@ -52,7 +52,7 @@ final class ServerPlaylistsViewController: UIViewController {
         guard saveEditHeader.superview == nil else { return }
         
         saveEditHeader.delegate = self
-        saveEditHeader.count = playQueue.count
+        saveEditHeader.count = serverPlaylists.count
         view.addSubview(saveEditHeader)
         saveEditHeader.snp.makeConstraints { make in
             make.height.equalTo(50)
@@ -131,7 +131,7 @@ final class ServerPlaylistsViewController: UIViewController {
         cancelLoad()
         HUD.show(closeHandler: cancelLoad)
         self.serverPlaylistsLoader = ServerPlaylistsLoader(serverId: serverId)
-        self.serverPlaylistsLoader?.callback = { [unowned self] (success, error) in
+        self.serverPlaylistsLoader?.callback = { [unowned self] success, error in
             if success {
                 self.serverPlaylists = self.serverPlaylistsLoader?.serverPlaylists ?? []
                 self.saveEditHeader.count = self.serverPlaylists.count
@@ -143,6 +143,7 @@ final class ServerPlaylistsViewController: UIViewController {
             HUD.hide()
             self.tableView.refreshControl?.endRefreshing()
         }
+        self.serverPlaylistsLoader?.startLoad()
     }
     
     @objc func cancelLoad() {
