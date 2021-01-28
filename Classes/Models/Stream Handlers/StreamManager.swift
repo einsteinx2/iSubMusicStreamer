@@ -140,7 +140,7 @@ import CocoaLumberjackSwift
         // TODO: Why is this checking if the CacheQueue is downloading?
         if currentQueuedSong != song && !song.isFullyCached && !song.isTempCached && cacheQueue.isDownloading {
             DDLogInfo("[StreamManager] Removing song from cached songs table: \(song)")
-            _ = song.removeFromDownloads()
+            _ = store.deleteDownloadedSong(song: song)
         }
     }
     

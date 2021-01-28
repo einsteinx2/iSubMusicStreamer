@@ -419,6 +419,10 @@ extension Store {
     
     func deleteDownloadedSong(serverId: Int, songId: Int) -> Bool {
         do {
+            if let song = self.song(serverId: serverId, id: songId), FileManager.default.fileExists(atPath: song.localPath) {
+                try FileManager.default.removeItem(atPath: song.localPath)
+            }
+            
             return try pool.write { db in
                 try db.execute(literal: "DELETE FROM \(DownloadedSong.self) WHERE serverId = \(serverId) AND songId = \(songId)")
                 try db.execute(literal: "DELETE FROM \(DownloadedSongPathComponent.self) WHERE serverId = \(serverId) AND songId = \(songId)")
@@ -428,6 +432,10 @@ extension Store {
             DDLogError("Failed to delete downloaded song record for server \(serverId) and song \(songId): \(error)")
             return false
         }
+    }
+    
+    @objc func deleteDownloadedSong(song: Song) -> Bool {
+        return deleteDownloadedSong(serverId: song.serverId, songId: song.id)
     }
     
     func delete(downloadedSong: DownloadedSong) -> Bool {
@@ -445,6 +453,11 @@ extension Store {
                     """
                 let songIds = try SQLRequest<Int>(literal: songIdsSql).fetchAll(db)
                 for songId in songIds {
+                    // Remove song file
+                    if let song = self.song(serverId: serverId, id: songId), FileManager.default.fileExists(atPath: song.localPath) {
+                        try FileManager.default.removeItem(atPath: song.localPath)
+                    }
+                    
                     try db.execute(literal: "DELETE FROM \(DownloadedSong.self) WHERE serverId = \(serverId) AND songId = \(songId)")
                     try db.execute(literal: "DELETE FROM \(DownloadedSongPathComponent.self) WHERE serverId = \(serverId) AND songId = \(songId)")
                 }

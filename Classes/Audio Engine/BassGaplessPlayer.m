@@ -575,7 +575,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                 } else if (!aSong.fileExists) {
                     DDLogError(@"[BassGaplessPlayer] Stream for song %@ failed, file is not on disk, so calling retrying the song", userInfo.song.title);
                     // File was removed, most likely because the decryption failed, so start again normally
-                    (void)[aSong removeFromDownloads];
+                    (void)[Store.shared deleteDownloadedSongWithSong:aSong];
                     [self.delegate bassRetrySongAtIndex:self.currentPlaylistIndex player:self];
                 } else {
                     // Failed to create the stream, retrying
@@ -596,7 +596,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
                     }];
                 }
             } else {
-                (void)[aSong removeFromDownloads];
+                (void)[Store.shared deleteDownloadedSongWithSong:aSong];
                 [self.delegate bassRetrySongAtIndex:self.currentPlaylistIndex player:self];
             }
         }

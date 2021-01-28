@@ -110,12 +110,22 @@ protocol StreamHandlerDelegate {
     
     // TODO: implement this - refactor for better error handling
     func start(resume: Bool = false) {
+        // DELETE ME
+        Thread.callStackSymbols.forEach { print($0) }
+        //
+        guard !isDownloading else {
+            print("DEBUG StreamHandler start called but already downloading")
+            return
+        }
+        
+        isDownloading = true
+        
         // Clear temp cache if this is a temp file and we're not resuming
         if !resume && isTempCache {
             cache.clearTempCache()
         }
         
-        DDLogInfo("[StreamHandler] start(resume: \(resume) for: \(song)")
+        DDLogInfo("[StreamHandler] \(super.description) start(resume: \(resume) for: \(song)")
         
         totalBytesTransferred = 0
         bytesTransfered = 0
@@ -133,8 +143,15 @@ protocol StreamHandlerDelegate {
                 // TODO: implement this - Switch to non-deprecated API
                 fileHandle.closeFile()
                 self.fileHandle = nil
-                // TODO: implement this - error handling
-                try? FileManager.default.removeItem(atPath: filePath)
+                do {
+                    try FileManager.default.removeItem(atPath: filePath)
+                } catch {
+                    DDLogError("[StreamHandler] Failed to delete existing file \(filePath), error: \(error)")
+                    isDownloading = false
+                    delegate?.streamHandlerConnectionFailed(handler: self, error: APIError.filesystem)
+                    return
+                }
+                
             }
         }
         
@@ -146,6 +163,9 @@ protocol StreamHandlerDelegate {
                     try FileManager.default.createDirectory(atPath: containingDirectory, withIntermediateDirectories: true, attributes: nil)
                 } catch {
                     DDLogError("[StreamHandler] Failed to create containing directory \(containingDirectory), error: \(error)")
+                    isDownloading = false
+                    delegate?.streamHandlerConnectionFailed(handler: self, error: APIError.filesystem)
+                    return
                 }
             }
             
@@ -154,51 +174,60 @@ protocol StreamHandlerDelegate {
                 try Data().write(to: URL(fileURLWithPath: filePath), options: [])
             } catch {
                 DDLogError("[StreamHandler] Failed to create file \(filePath), error: \(error)")
+                isDownloading = false
+                delegate?.streamHandlerConnectionFailed(handler: self, error: APIError.filesystem)
+                return
             }
             fileHandle = FileHandle(forWritingAtPath: filePath)
             if fileHandle == nil {
                 DDLogError("[StreamHandler] Failed to create file handle for file \(filePath)")
-            }
-            
-            // TODO: implement this - Make sure that sending estimateContentLength as a book instead of a string works
-            var parameters: [String: Any] = ["id": song.id]//, "estimateContentLength": true]
-            if maxBitrateSetting == nil {
-                maxBitrateSetting = settings.currentMaxBitrate
-            }
-            if let maxBitrateSetting = maxBitrateSetting, maxBitrateSetting != 0 {
-                parameters["maxBitRate"] = maxBitrateSetting
-            }
-            
-            request = URLRequest(serverId: song.serverId, subsonicAction: "stream", parameters: parameters, byteOffset: byteOffset)
-            guard let request = request else {
-                DDLogError("[StreamHandler] start connection failed to create request")
-                delegate?.streamHandlerConnectionFailed(handler: self, error: APIError.requestCreation)
+                isDownloading = false
+                delegate?.streamHandlerConnectionFailed(handler: self, error: APIError.filesystem)
                 return
             }
+        }
             
-            kiloBitrate = song.estimatedKiloBitrate
-            
-            dataTask = session.dataTask(with: request)
-            dataTask?.resume()
-            isDownloading = true
-            DDLogInfo("[StreamHandler] Stream handler connection started successfully for \(song)")
-            
-            if !isTempCache {
-                _ = store.add(downloadedSong: DownloadedSong(song: song))
-            }
-            
-            DispatchQueue.main.async {
-                self.delegate?.streamHandlerStarted(handler: self)
-            }
+        // TODO: implement this - Make sure that sending estimateContentLength as a book instead of a string works
+        var parameters: [String: Any] = ["id": song.id, "estimateContentLength": true]
+        if maxBitrateSetting == nil {
+            maxBitrateSetting = settings.currentMaxBitrate
+        }
+        if let maxBitrateSetting = maxBitrateSetting, maxBitrateSetting != 0 {
+            parameters["maxBitRate"] = maxBitrateSetting
+        }
+        
+        request = URLRequest(serverId: song.serverId, subsonicAction: "stream", parameters: parameters, byteOffset: byteOffset)
+        guard let request = request else {
+            DDLogError("[StreamHandler] start connection failed to create request")
+            isDownloading = false
+            delegate?.streamHandlerConnectionFailed(handler: self, error: APIError.requestCreation)
+            return
+        }
+        
+        kiloBitrate = song.estimatedKiloBitrate
+        
+        dataTask = session.dataTask(with: request)
+        dataTask?.resume()
+        DDLogInfo("[StreamHandler] \(super.description) Stream handler connection started successfully for \(song)")
+        
+        if !isTempCache {
+            // TODO: implement this - error handling
+            _ = store.add(downloadedSong: DownloadedSong(song: song))
+        }
+        
+        DispatchQueue.main.async {
+            self.delegate?.streamHandlerStarted(handler: self)
         }
     }
     
     func cancel() {
         isDownloading = false
         
-        DDLogInfo("[StreamHandler] Stream handler request canceled for \(song)")
-        dataTask?.cancel()
-        dataTask = nil
+        if let dataTask = dataTask {
+            DDLogInfo("[StreamHandler] Stream handler request canceled for \(song)")
+            dataTask.cancel()
+            self.dataTask = nil
+        }
         
         // Close the file handle
         // TODO: implement this - use non-deprecated API

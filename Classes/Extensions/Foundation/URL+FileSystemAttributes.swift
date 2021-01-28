@@ -9,6 +9,12 @@
 import Foundation
 import CocoaLumberjackSwift
 
+private extension Error {
+    var isNoSuchFileError: Bool {
+        (self as NSError).domain == NSCocoaErrorDomain && (self as NSError).code == NSFileReadNoSuchFileError
+    }
+}
+
 extension URL {
     var systemTotalSpace: Int? {
         do {
@@ -25,7 +31,7 @@ extension URL {
                 return Int(capacity)
             }
         } catch {
-            DDLogError("[URL+FileSystemAttributes] Failed to get file system avaiable space of \(self), \(error)")
+            DDLogError("[URL+FileSystemAttributes] Failed to get file system available space of \(self), \(error)")
         }
         return nil
     }
@@ -36,7 +42,10 @@ extension URL {
                 return Int(capacity)
             }
         } catch {
-            DDLogError("[URL+FileSystemAttributes] Failed to get file system avaiable space of \(self), \(error)")
+            // Don't log such file errors because it's common for the player to request the file size before the file exists
+            if !error.isNoSuchFileError {
+                DDLogError("[URL+FileSystemAttributes] Failed to get file size of \(self), \(error)")
+            }
         }
         return nil
     }

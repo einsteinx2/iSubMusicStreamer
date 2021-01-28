@@ -226,12 +226,6 @@ import Resolver
         // The song hasn't started downloading yet
         return downloadProgress;
     }
-    
-    @objc func removeFromDownloads() -> Bool {
-        return store.deleteDownloadedSong(serverId: serverId, songId: id)
-        
-        // TODO: Delete file here? This used to be a database only method
-    }
 }
 
 extension Song: TableCellModel {
