@@ -41,6 +41,6 @@ extension FolderAlbum: TableCellModel {
     var secondaryLabelText: String? { return nil }
     var durationLabelText: String? { return nil }
     var isCached: Bool { return false }
-    func download() { SongLoader.downloadAll(serverId: serverId, folderId: id) }
-    func queue() { SongLoader.queueAll(serverId: serverId, folderId: id) }
+    func download() { SongsHelper.downloadAll(serverId: serverId, folderId: id) }
+    func queue() { SongsHelper.queueAll(serverId: serverId, folderId: id) }
 }

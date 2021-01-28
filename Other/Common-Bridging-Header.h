@@ -32,9 +32,6 @@
  * Data Models
  */
 
-// Loaders
-#import "ISMSErrorDomain.h"
-
 // DAOs
 #import "ISMSBookmarkDAO.h"
 
@@ -48,7 +45,6 @@
 #import "NSString+time.h"
 #import "UIDevice+Info.h"
 #import "NSString+FileSize.h"
-#import "NSError+ISMSError.h"
 #import "GTMNSString+HTML.h"
 
 /*

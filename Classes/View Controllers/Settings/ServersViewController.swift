@@ -227,7 +227,7 @@ extension ServersViewController: UITableViewConfiguration {
 }
 
 extension ServersViewController: APILoaderDelegate {
-    func loadingFinished(loader: AbstractAPILoader?) {
+    func loadingFinished(loader: APILoader?) {
         DDLogInfo("[ServersViewController] server verification passed, hiding loading screen")
         HUD.hide()
         
@@ -245,15 +245,18 @@ extension ServersViewController: APILoaderDelegate {
         switchServer()
     }
     
-    func loadingFailed(loader: AbstractAPILoader?, error: Error?) {
+    func loadingFailed(loader: APILoader?, error: Error?) {
         DDLogError("[ServersViewController] server verification failed, hiding loading screen")
         HUD.hide()
         
-        let message: String
-        if let error = error, error.code == ISMSErrorCode_IncorrectCredentials {
+        var message: String
+        if let error = error as? SubsonicError, case .badCredentials = error {
             message = "Either your username or password is incorrect\n\n☆☆ Choose a server to return to online mode. ☆☆\n\nError code \(error.code):\n\(error.localizedDescription)"
         } else {
-            message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\n☆☆ Choose a server to return to online mode. ☆☆\n\nError code \(error?.code ?? -1):\n\(error?.localizedDescription ?? "Unknown error")"
+            message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\n☆☆ Choose a server to return to online mode. ☆☆"
+            if let error = error {
+                message += "\n\nError: \(error)"
+            }
         }
         
         let alert = UIAlertController(title: "Server Unavailable", message: message, preferredStyle: .alert)

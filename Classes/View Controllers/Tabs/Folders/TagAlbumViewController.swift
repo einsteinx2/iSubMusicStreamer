@@ -94,9 +94,9 @@ final class TagAlbumViewController: UIViewController {
         
         // Create the play all and shuffle buttons and constrain to the container view
         let playAllAndShuffleHeader = PlayAllAndShuffleHeader(playAllHandler: { [unowned self] in
-            SongLoader.playAll(serverId: serverId, tagAlbumId: tagAlbum.id)
+            SongsHelper.playAll(serverId: serverId, tagAlbumId: tagAlbum.id)
         }, shuffleHandler: { [unowned self] in
-            SongLoader.shuffleAll(serverId: serverId, tagAlbumId: tagAlbum.id)
+            SongsHelper.shuffleAll(serverId: serverId, tagAlbumId: tagAlbum.id)
         })
         headerView.addSubview(playAllAndShuffleHeader)
         playAllAndShuffleHeader.snp.makeConstraints { make in
@@ -130,7 +130,7 @@ final class TagAlbumViewController: UIViewController {
                 self.addHeader()
             } else if let error = error {
                 if self.settings.isPopupsEnabled {
-                    let message = "There was an error loading the album.\n\nError \(error.code): \(error.localizedDescription)"
+                    let message = "There was an error loading the album.\n\nError: \(error)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
                     alert.addOKAction()
                     self.present(alert, animated: true, completion: nil)

@@ -15,14 +15,9 @@ protocol CancelableLoader {
 
 @objc protocol APILoaderDelegate {
     @objc(loadingFinished:)
-    func loadingFinished(loader: AbstractAPILoader?)
+    func loadingFinished(loader: APILoader?)
     @objc(loadingFailed:error:)
-    func loadingFailed(loader: AbstractAPILoader?, error: Error?)
-}
-
-@objc protocol APILoaderManager {
-    func startLoad()
-    func cancelLoad()
+    func loadingFailed(loader: APILoader?, error: Error?)
 }
 
 @objc enum APILoaderType: Int {
@@ -44,9 +39,10 @@ protocol CancelableLoader {
     case rootArtists        = 15
     case tagArtist          = 16
     case tagAlbum           = 17
+    case song               = 18
 }
 
-@objc class AbstractAPILoader: NSObject, CancelableLoader {
+@objc class APILoader: NSObject, CancelableLoader {
     static private let sessionDelegate = SelfSignedCertURLSessionDelegate()
     @objc final class var sharedSession: URLSession {
         let configuration = URLSessionConfiguration.ephemeral
@@ -62,7 +58,7 @@ protocol CancelableLoader {
     
     @objc var type: APILoaderType { .generic }
     
-    private var selfRef: AbstractAPILoader?
+    private var selfRef: APILoader?
     private var dataTask: URLSessionDataTask?
     
     init(delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
@@ -97,7 +93,7 @@ protocol CancelableLoader {
                 self.processResponse(data: data)
             } else {
                 DDLogError("[SUSLoader] loader type: \(self.type.rawValue) did not receive any data")
-                self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
+                self.informDelegateLoadingFailed(error: APIError.responseNotXML)
             }
         }
         dataTask?.resume()
@@ -133,5 +129,60 @@ protocol CancelableLoader {
             self.callback?(false, error)
             self.cleanup()
         }
+    }
+}
+
+// Subsonic API validation
+extension APILoader {
+    // Returns a valid root XML element if it exists
+    func validateRoot(data: Data, informDelegate: Bool = true) -> RXMLElement? {
+        let root = RXMLElement(fromXMLData: data)
+        guard root.isValid else {
+            if informDelegate { informDelegateLoadingFailed(error: APIError.responseNotXML) }
+            return nil
+        }
+        guard root.tag == "subsonic-response" else {
+            if informDelegate { informDelegateLoadingFailed(error: APIError.serverUnsupported) }
+            return nil
+        }
+        return root
+    }
+    
+    // Returns a valid error XML element if it exists
+    func validateSubsonicError(root: RXMLElement, informDelegate: Bool = true) -> RXMLElement? {
+        guard let error = root.child("error"), error.isValid else { return nil }
+        if informDelegate {
+            informDelegateLoadingFailed(error: SubsonicError(element: error))
+        }
+        return nil
+    }
+    
+    // Convenience function to return a valid root XML element or the Subsonic error if it exists since this is required in every loader
+    func validate(data: Data, informDelegate: Bool = true) -> RXMLElement? {
+        guard let root = validateRoot(data: data, informDelegate: informDelegate) else { return nil }
+        guard validateSubsonicError(root: root, informDelegate: informDelegate) == nil else { return nil }
+        return root
+    }
+    
+    // Returns a valid child XML element if it exists
+    func validateChild(parent: RXMLElement, childTag: String, informDelegate: Bool = true) -> RXMLElement? {
+        guard let child = parent.child(childTag), child.isValid else {
+            if informDelegate {
+                informDelegateLoadingFailed(error: APIError.responseMissingElement(parent: parent.tag ?? "nil", tag: childTag))
+            }
+            return nil
+        }
+        return child
+    }
+    
+    // Returns a valid child XML element if it exists
+    func validateAttribute(element: RXMLElement, attribute: String, informDelegate: Bool = true) -> String? {
+        guard let value = element.attribute(attribute) else {
+            if informDelegate {
+                informDelegateLoadingFailed(error: APIError.responseMissingAttribute(tag: element.tag ?? "nil", attribute: attribute))
+            }
+            return nil
+        }
+        return value
     }
 }

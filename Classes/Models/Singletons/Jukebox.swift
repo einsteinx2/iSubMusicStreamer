@@ -157,7 +157,7 @@ import CocoaLumberjackSwift
             return
         }
         
-        let dataTask = session.dataTask(with: request) { (data, response, error) in
+        let dataTask = session.dataTask(with: request) { data, response, error in
             if let data = data, let jukeboxResponse = self.parse(data: data) {
                 // These values are always returned
                 self.playQueue.currentIndex = jukeboxResponse.currentIndex
@@ -200,7 +200,7 @@ import CocoaLumberjackSwift
     
     private func handleConnectionError(error: Error) {
         DispatchQueue.main.async {
-            let message = "There was an error controlling the Jukebox.\n\nError \(error.code): \(error.localizedDescription)"
+            let message = "There was an error controlling the Jukebox.\n\nError: \(error)"
             let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
             alert.addOKAction()
             UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
@@ -233,7 +233,7 @@ import CocoaLumberjackSwift
                                        position: status.attribute("position").intXML)
             } else if let playlist = root.child("jukeboxPlaylist") {
                 var songs = [Song]()
-                playlist.iterate("entry") { e in
+                playlist.iterate("entry") { e, _ in
                     // TODO: implement this
                     // TODO: Support multiple server IDs
                     songs.append(Song(serverId: self.settings.currentServerId, element: e))

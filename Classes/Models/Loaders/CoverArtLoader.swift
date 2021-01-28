@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-@objc final class CoverArtLoader: AbstractAPILoader {
+@objc final class CoverArtLoader: APILoader {
     @Injected private var store: Store
     @Injected private var settings: Settings
     

@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-final class RootArtistsLoader: AbstractAPILoader {
+final class RootArtistsLoader: APILoader {
     @Injected private var store: Store
     
     let serverId: Int
@@ -30,10 +30,7 @@ final class RootArtistsLoader: AbstractAPILoader {
     override var type: APILoaderType { .rootArtists }
         
     override func createRequest() -> URLRequest? {
-        var parameters: [String: Any]?
-        if mediaFolderId != MediaFolder.allFoldersId {
-            parameters = ["musicFolderId": mediaFolderId]
-        }
+        let parameters: [String: Any]? = mediaFolderId != MediaFolder.allFoldersId ? ["musicFolderId": mediaFolderId] : nil
         return URLRequest(serverId: serverId, subsonicAction: "getArtists", parameters: parameters)
     }
     
@@ -41,50 +38,55 @@ final class RootArtistsLoader: AbstractAPILoader {
         metadata = nil
         tableSections.removeAll()
         tagArtistIds.removeAll()
-        let root = RXMLElement(fromXMLData: data)
-        if !root.isValid {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-        } else {
-            if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
-            } else {
-                if store.deleteTagArtists(serverId: serverId, mediaFolderId: mediaFolderId) {
-                    var rowCount = 0
-                    var sectionCount = 0
-                    var rowIndex = 0
-                    root.iterate("artists.index") { e in
-                        sectionCount = 0
-                        rowIndex = rowCount
-                        e.iterate("artist") { artist in
-                            // Add the artist to the DB
-                            let tagArtist = TagArtist(serverId: self.serverId, element: artist)
-                            if self.store.add(tagArtist: tagArtist, mediaFolderId: self.mediaFolderId) {
-                                self.tagArtistIds.append(tagArtist.id)
-                                rowCount += 1
-                                sectionCount += 1
-                            }
-                        }
-                        
-                        let section = TableSection(serverId: self.serverId,
-                                                   mediaFolderId: self.mediaFolderId,
-                                                   name: e.attribute("name").stringXML,
-                                                   position: rowIndex,
-                                                   itemCount: sectionCount)
-                        if self.store.add(tagArtistSection: section) {
-                            self.tableSections.append(section)
-                        }
-                    }
-                    
-                    // Update the metadata
-                    let metadata = RootListMetadata(serverId: self.serverId, mediaFolderId: mediaFolderId, itemCount: rowCount, reloadDate: Date())
-                    _ = store.add(tagArtistListMetadata: metadata)
-                    
-                    self.metadata = metadata
-                    informDelegateLoadingFinished()
-                } else {
-                    informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
-                }
-            }
+        guard let root = validate(data: data) else { return }
+        guard let artists = validateChild(parent: root, childTag: "artists") else { return }
+        guard store.deleteTagArtists(serverId: serverId, mediaFolderId: mediaFolderId) else {
+            informDelegateLoadingFailed(error: APIError.database)
+            return
         }
+        
+        var rowCount = 0
+        var sectionCount = 0
+        var rowIndex = 0
+        let success = artists.iterate("index") { e, stop in
+            sectionCount = 0
+            rowIndex = rowCount
+            let success = e.iterate("artist") { artist, bool in
+                // Add the artist to the DB
+                let tagArtist = TagArtist(serverId: self.serverId, element: artist)
+                guard self.store.add(tagArtist: tagArtist, mediaFolderId: self.mediaFolderId) else {
+                    self.informDelegateLoadingFailed(error: APIError.database)
+                    stop.pointee = true
+                    return
+                }
+                self.tagArtistIds.append(tagArtist.id)
+                rowCount += 1
+                sectionCount += 1
+            }
+            guard success else { return }
+            
+            let section = TableSection(serverId: self.serverId,
+                                       mediaFolderId: self.mediaFolderId,
+                                       name: e.attribute("name").stringXML,
+                                       position: rowIndex,
+                                       itemCount: sectionCount)
+            guard self.store.add(tagArtistSection: section) else {
+                self.informDelegateLoadingFailed(error: APIError.database)
+                stop.pointee = true
+                return
+            }
+            self.tableSections.append(section)
+        }
+        guard success else { return }
+        
+        // Update the metadata
+        let metadata = RootListMetadata(serverId: self.serverId, mediaFolderId: mediaFolderId, itemCount: rowCount, reloadDate: Date())
+        guard store.add(tagArtistListMetadata: metadata) else {
+            informDelegateLoadingFailed(error: APIError.database)
+            return
+        }
+        
+        self.metadata = metadata
+        informDelegateLoadingFinished()
     }
 }

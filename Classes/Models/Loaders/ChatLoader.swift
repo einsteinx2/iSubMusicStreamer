@@ -9,7 +9,7 @@
 import Foundation
 import CocoaLumberjackSwift
 
-final class ChatLoader: AbstractAPILoader {
+final class ChatLoader: APILoader {
     let serverId: Int
     private(set) var chatMessages = [ChatMessage]()
     
@@ -27,19 +27,14 @@ final class ChatLoader: AbstractAPILoader {
     }
     
     override func processResponse(data: Data) {
-        let root = RXMLElement(fromXMLData: data)
-        if !root.isValid {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-        } else {
-            if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
-            } else {
-                chatMessages.removeAll()
-                root.iterate("chatMessages.chatMessage") { e in
-                    self.chatMessages.append(ChatMessage(serverId: self.serverId, element: e))
-                }
-                informDelegateLoadingFinished()
-            }
+        self.chatMessages.removeAll()
+        guard let root = validate(data: data) else { return }
+        guard let chatMessages = validateChild(parent: root, childTag: "chatMessages") else { return }
+        
+        chatMessages.iterate("chatMessage") { e, _ in
+            self.chatMessages.append(ChatMessage(serverId: self.serverId, element: e))
         }
+        
+        informDelegateLoadingFinished()
     }
 }

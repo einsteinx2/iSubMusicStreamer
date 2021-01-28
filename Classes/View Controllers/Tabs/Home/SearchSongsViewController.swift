@@ -100,7 +100,7 @@ final class SearchSongsViewController: UIViewController {
             return
         }
         
-        dataTask = AbstractAPILoader.sharedSession.dataTask(with: request) { [weak self] (data, response, error) in
+        dataTask = APILoader.sharedSession.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
             
             if let data = data {

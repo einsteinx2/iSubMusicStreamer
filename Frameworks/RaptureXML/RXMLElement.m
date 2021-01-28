@@ -471,10 +471,10 @@
 
 #pragma mark -
 
-- (void)iterate:(NSString *)query usingBlock:(void (^)(RXMLElement *))blk {
+- (BOOL)iterate:(NSString *)query usingBlock:(void (^)(RXMLElement *element, BOOL *stop))blk {
     // check for a query
     if (!query) {
-        return;
+        return NO;
     }
     
     NSArray *components = [query componentsSeparatedByString:@"."];
@@ -526,7 +526,9 @@
         do {
             if (cur->type == XML_ELEMENT_NODE) {
                 RXMLElement *element = [RXMLElement elementFromXMLDoc:self.xmlDoc node:cur];
-                blk(element);
+                BOOL stop = NO;
+                blk(element, &stop);
+                if (stop) return NO;
             }
             
             if ([childTagName isEqualToString:@"*"]) {
@@ -542,17 +544,22 @@
             }
         } while (cur);
     }
+    
+    return YES;
 }
 
-- (void)iterateWithRootXPath:(NSString *)xpath usingBlock:(void (^)(RXMLElement *))blk {
+- (BOOL)iterateWithRootXPath:(NSString *)xpath usingBlock:(void (^)(RXMLElement *element, BOOL *stop))blk {
     NSArray *children = [self childrenWithRootXPath:xpath];
-    [self iterateElements:children usingBlock:blk];
+    return [self iterateElements:children usingBlock:blk];
 }
 
-- (void)iterateElements:(NSArray *)elements usingBlock:(void (^)(RXMLElement *))blk {
+- (BOOL)iterateElements:(NSArray *)elements usingBlock:(void (^)(RXMLElement *element, BOOL *stop))blk {
     for (RXMLElement *iElement in elements) {
-        blk(iElement);
+        BOOL stop = NO;
+        blk(iElement, &stop);
+        if (stop) return NO;
     }
+    return YES;
 }
 
 @end

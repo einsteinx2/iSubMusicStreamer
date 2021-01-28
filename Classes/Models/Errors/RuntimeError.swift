@@ -11,7 +11,13 @@ import Foundation
 struct RuntimeError: Error {
     let message: String
 
-    public var localizedDescription: String {
+    var localizedDescription: String {
         return message
+    }
+}
+
+extension RuntimeError: CustomStringConvertible {
+    var description: String {
+        "RuntimeError - \(localizedDescription)"
     }
 }

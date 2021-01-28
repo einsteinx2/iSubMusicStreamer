@@ -50,11 +50,11 @@ final class ServerPlaylistViewController: UIViewController {
     private func loadData() {
         cancelLoad()
         serverPlaylistLoader = ServerPlaylistLoader(serverPlaylist: serverPlaylist)
-        serverPlaylistLoader?.callback = { [unowned self] (success, error) in
+        serverPlaylistLoader?.callback = { [unowned self] success, error in
             DispatchQueue.main.async {
                 if let error = error {
                     if self.settings.isPopupsEnabled {
-                        let message = "There was an error loading the playlist.\n\nError %\(error.code): \(error.localizedDescription)"
+                        let message = "There was an error loading the playlist.\n\nError: \(error)"
                         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
                         alert.addOKAction()
                         present(alert, animated: true, completion: nil)

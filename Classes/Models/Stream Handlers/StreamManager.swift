@@ -426,12 +426,9 @@ extension StreamManager: StreamHandlerDelegate {
                 let root = RXMLElement(fromXMLData: data)
                 if root.isValid {
                     if let error = root.child("error"), error.isValid {
-                        let code = error.attribute("code").intXML
-                        // TODO: implement this - Make an enum of Subsonic error codes
-                        if code == 60 {
-                            // This is a trial period message, alert the user and stop streaming
-                            let message = "You can purchase a license for Subsonic by logging in to the web interface and clicking the red Donate link on the top right.\n\nPlease remember, iSub is a 3rd party client for Subsonic, and this license and trial is for Subsonic and not iSub.\n\nThere are 100% free and open source compatible alternatives such as AirSonic if you're not interested in purchasing a Subsonic license."
-                            let alert = UIAlertController(title: "Subsonic API Trial Expired", message: message, preferredStyle: .alert)
+                        let subsonicError = SubsonicError(element: error)
+                        if case .trialExpired = subsonicError {
+                            let alert = UIAlertController(title: "Subsonic Error", message: subsonicError.localizedDescription, preferredStyle: .alert)
                             alert.addOKAction()
                             UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
                             

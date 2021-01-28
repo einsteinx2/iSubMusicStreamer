@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-@objc final class LyricsLoader: AbstractAPILoader {
+@objc final class LyricsLoader: APILoader {
     @Injected private var store: Store
     
     let serverId: Int
@@ -39,26 +39,22 @@ import Resolver
     }
     
     override func processResponse(data: Data) {
-        let root = RXMLElement(fromXMLData: data)
-        if !root.isValid {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-            NotificationCenter.postOnMainThread(name: Notifications.lyricsFailed)
-        } else {
-            if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
-                NotificationCenter.postOnMainThread(name: Notifications.lyricsFailed)
-            } else if let lyricsElement = root.child("lyrics"), lyricsElement.isValid {
-                let lyrics = Lyrics(tagArtistName: tagArtistName, songTitle: songTitle, element: lyricsElement)
-                if lyrics.lyricsText != "" && store.add(lyrics: lyrics) {
-                    self.lyrics = lyrics
-                    informDelegateLoadingFinished()
-                } else {
-                    informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NoLyricsFound)))
-                }
-            } else {
-                informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NoLyricsElement)))
-            }
+        self.lyrics = nil
+        guard let root = validate(data: data) else { return }
+        guard let lyricsElement = validateChild(parent: root, childTag: "lyrics") else { return }
+        
+        let lyrics = Lyrics(tagArtistName: tagArtistName, songTitle: songTitle, element: lyricsElement)
+        guard lyrics.lyricsText.count > 0 else {
+            informDelegateLoadingFailed(error: APIError.dataNotFound)
+            return
         }
+        guard store.add(lyrics: lyrics) else {
+            informDelegateLoadingFailed(error: APIError.database)
+            return
+        }
+        
+        self.lyrics = lyrics
+        informDelegateLoadingFinished()
     }
     
     override func informDelegateLoadingFinished() {

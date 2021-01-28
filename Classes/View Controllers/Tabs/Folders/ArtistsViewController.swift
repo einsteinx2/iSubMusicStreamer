@@ -183,7 +183,7 @@ extension ArtistsViewController: APILoaderDelegate {
         HUD.hide()
     }
     
-    func loadingFinished(loader: AbstractAPILoader?) {
+    func loadingFinished(loader: APILoader?) {
         if isCountShowing {
             updateCount()
         } else {
@@ -195,25 +195,22 @@ extension ArtistsViewController: APILoaderDelegate {
         tableView.refreshControl?.endRefreshing()
     }
     
-    func loadingFailed(loader: AbstractAPILoader?, error: Error?) {
+    func loadingFailed(loader: APILoader?, error: Error?) {
         HUD.hide()
         tableView.refreshControl?.endRefreshing()
         
         // Inform the user that the connection failed.
         // NOTE: Must call after a delay or the refresh control won't hide
         DispatchQueue.main.async(after: 0.3) {
-            // TODO: implement this - Turn subsonic codes into an enum and share this common error handling code
-            if let code = error?.code, code == 60 {
-                // This is a trial period message, alert the user and stop streaming
-                let message = "You can purchase a license for Subsonic by logging in to the web interface and clicking the red Donate link on the top right.\n\nPlease remember, iSub is a 3rd party client for Subsonic, and this license and trial is for Subsonic and not iSub.\n\nThere are 100% free and open source compatible alternatives such as AirSonic if you're not interested in purchasing a Subsonic license."
-                let alert = UIAlertController(title: "Subsonic API Trial Expired", message: message, preferredStyle: .alert)
-                alert.addOKAction()
-                self.present(alert, animated: true, completion: nil)
-            } else {
-                let alert = UIAlertController(title: "Subsonic Error", message: error?.localizedDescription ?? "Unknown error", preferredStyle: .alert)
-                alert.addOKAction()
-                self.present(alert, animated: true, completion: nil)
+            var message = "Unknown error, please try again."
+            if let error = error as? SubsonicError, case .trialExpired = error {
+                message = "\(error.localizedDescription)"
+            } else if let error = error {
+                message = "\(error)"
             }
+            let alert = UIAlertController(title: "Subsonic Error", message: message, preferredStyle: .alert)
+            alert.addOKAction()
+            self.present(alert, animated: true, completion: nil)
         }
     }
 }

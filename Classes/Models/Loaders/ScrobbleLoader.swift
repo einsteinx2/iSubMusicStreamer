@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc final class ScrobbleLoader: AbstractAPILoader {
+@objc final class ScrobbleLoader: APILoader {
     @objc let song: Song
     @objc let isSubmission: Bool
     
@@ -27,6 +27,7 @@ import Foundation
     }
     
     override func processResponse(data: Data) {
+        guard let _ = validate(data: data) else { return }
         informDelegateLoadingFinished()
     }
 }

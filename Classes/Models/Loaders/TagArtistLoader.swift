@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-final class TagArtistLoader: AbstractAPILoader {
+final class TagArtistLoader: APILoader {
     @Injected private var store: Store
     
     let serverId: Int
@@ -34,43 +34,29 @@ final class TagArtistLoader: AbstractAPILoader {
     
     override func processResponse(data: Data) {
         tagAlbumIds.removeAll()
-        
-        let root = RXMLElement(fromXMLData: data)
-        guard root.isValid else {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-            return
-        }
-        
-        if let error = root.child("error"), error.isValid {
-            informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
-            return
-        }
-        
+        guard let root = validate(data: data) else { return }
+        guard let artist = validateChild(parent: root, childTag: "artist") else { return }
         guard store.deleteTagAlbums(serverId: serverId, tagArtistId: tagArtistId) else  {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
-            return
-        }
-        
-        guard let artist = root.child("artist"), artist.isValid else {
-            self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_IncorrectXMLResponse)))
+            informDelegateLoadingFailed(error: APIError.database)
             return
         }
             
         let tagArtist = TagArtist(serverId: serverId, element: artist)
         guard self.store.add(tagArtist: tagArtist, mediaFolderId: MediaFolder.allFoldersId) else {
-            self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
+            self.informDelegateLoadingFailed(error: APIError.database)
             return
         }
         
-        artist.iterate("album") { element in
+        let success = artist.iterate("album") { element, stop in
             let tagAlbum = TagAlbum(serverId: self.serverId, element: element)
             guard self.store.add(tagAlbum: tagAlbum) else {
-                self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                self.informDelegateLoadingFailed(error: APIError.database)
+                stop.pointee = true
                 return
             }
-            
             self.tagAlbumIds.append(tagAlbum.id)
         }
+        guard success else { return }
         
         informDelegateLoadingFinished()
     }

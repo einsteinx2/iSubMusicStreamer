@@ -172,7 +172,7 @@ protocol StreamHandlerDelegate {
             request = URLRequest(serverId: song.serverId, subsonicAction: "stream", parameters: parameters, byteOffset: byteOffset)
             guard let request = request else {
                 DDLogError("[StreamHandler] start connection failed to create request")
-                delegate?.streamHandlerConnectionFailed(handler: self, error: NSError(ismsCode: Int(ISMSErrorCode_CouldNotCreateConnection)))
+                delegate?.streamHandlerConnectionFailed(handler: self, error: APIError.requestCreation)
                 return
             }
             
@@ -302,7 +302,7 @@ extension StreamHandler: URLSessionDataDelegate {
                 self.dataTask = nil
                 DispatchQueue.main.async {
                     // TODO: implement this - use better error message
-                    self.connectionFailed(error: NSError(ismsCode: Int(ISMSErrorCode_CouldNotReachServer)))
+                    self.connectionFailed(error: APIError.filesystem)
                 }
             }
         }
@@ -337,7 +337,7 @@ extension StreamHandler: URLSessionDataDelegate {
                 numberOfContentLengthFailures += 1
                 // This is a failed connection that didn't call didFailInternal for some reason, so call didFailWithError
                 // TODO: Is there a better error code to use?
-                DispatchQueue.main.async { self.connectionFailed(error: NSError(ismsCode: Int(ISMSErrorCode_CouldNotReachServer))) }
+                DispatchQueue.main.async { self.connectionFailed(error: APIError.serverUnreachable) }
             } else {
                 // Make sure the player is told to start
                 if !isDelegateNotifiedToStartPlayback {
@@ -362,11 +362,8 @@ extension StreamHandler: URLSessionDataDelegate {
     }
     
     private func connectionFailed(error: Error) {
-        DDLogError("[StreamHandler] didFailInternal for \(song)")
         assert(Thread.isMainThread, "didFailInternal must be called from the main thread")
-        
-        DDLogError("[StreamHandler] Connection Failed for \(song)")
-        DDLogError("[StreamHandler] error domain: \(error.domain) code: \(error.code) description: \(error.localizedDescription)")
+        DDLogError("[StreamHandler] Connection Failed for \(song), error: \(error)")
         
         isDownloading = false
         dataTask = nil

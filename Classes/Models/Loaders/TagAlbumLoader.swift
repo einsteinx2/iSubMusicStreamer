@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-final class TagAlbumLoader: AbstractAPILoader {
+final class TagAlbumLoader: APILoader {
     @Injected private var store: Store
 
     let serverId: Int
@@ -34,35 +34,20 @@ final class TagAlbumLoader: AbstractAPILoader {
     
     override func processResponse(data: Data) {
         songIds.removeAll()
-        
-        let root = RXMLElement(fromXMLData: data)
-        guard root.isValid else {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-            return
-        }
-        
-        if let error = root.child("error"), error.isValid {
-            informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
-            return
-        }
-        
+        guard let root = validate(data: data) else { return }
+        guard let album = validateChild(parent: root, childTag: "album") else { return }
         guard store.deleteTagSongs(serverId: serverId, tagAlbumId: tagAlbumId) else {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
-            return
-        }
-        
-        guard let album = root.child("album"), album.isValid else {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_IncorrectXMLResponse)))
+            informDelegateLoadingFailed(error: APIError.database)
             return
         }
         
         let tagAlbum = TagAlbum(serverId: serverId, element: album)
         guard store.add(tagAlbum: tagAlbum) else {
-            self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
+            self.informDelegateLoadingFailed(error: APIError.database)
             return
         }
         
-        root.iterate("album") { element in
+        let success = album.iterate("song") { element, stop in
             let song = Song(serverId: self.serverId, element: element)
             let isVideoSupported = self.store.server(id: self.serverId)?.isVideoSupported ?? false
             if song.path != "" && (isVideoSupported || !song.isVideo) {
@@ -70,14 +55,15 @@ final class TagAlbumLoader: AbstractAPILoader {
                 // TODO: See if this is still necessary
                 if song.suffix.lowercased() != "pdf" {
                     guard self.store.add(tagSong: song) else {
-                        self.informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
+                        self.informDelegateLoadingFailed(error: APIError.database)
+                        stop.pointee = true
                         return
                     }
-                    
                     self.songIds.append(song.id)
                 }
             }
         }
+        guard success else { return }
         
         informDelegateLoadingFinished()
     }

@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-final class ServerShuffleLoader: AbstractAPILoader {
+final class ServerShuffleLoader: APILoader {
     @Injected private var store: Store
     
     let serverId: Int

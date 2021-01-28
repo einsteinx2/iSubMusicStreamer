@@ -234,7 +234,7 @@ extension ServerEditViewController: UITextFieldDelegate {
 }
 
 extension ServerEditViewController: APILoaderDelegate {
-    func loadingFinished(loader: AbstractAPILoader?) {
+    func loadingFinished(loader: APILoader?) {
         HUD.hide()
         
         guard let statusLoader = loader as? StatusLoader else { return }
@@ -266,17 +266,19 @@ extension ServerEditViewController: APILoaderDelegate {
         NotificationCenter.postOnMainThread(name: Notifications.switchServer)
     }
     
-    func loadingFailed(loader: AbstractAPILoader?, error: Error?) {
+    func loadingFailed(loader: APILoader?, error: Error?) {
         HUD.hide()
         
         var message = "Unknown error occured, please try again."
-        if let error = error {
-            if error.code != ISMSErrorCode_IncorrectCredentials {
-                message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\nError code \(error.code):\n\(error.localizedDescription)"
-            } else {
-                message = "Either your username or password is incorrect, please try again"
+        if let error = error as? SubsonicError, case .badCredentials = error {
+            message = "Either your username or password is incorrect, please try again"
+        } else {
+            message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet."
+            if let error = error {
+                message += "\n\nError: \(error)"
             }
         }
+        
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(title: "OK", style: .cancel, handler: nil)
         present(alert, animated: true, completion: nil)

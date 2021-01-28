@@ -53,10 +53,10 @@ final class NowPlayingViewController: UIViewController {
         cancelLoad()
         HUD.show(closeHandler: cancelLoad)
         nowPlayingLoader = NowPlayingLoader(serverId: serverId)
-        nowPlayingLoader?.callback = { [unowned self] (success, error) in
+        nowPlayingLoader?.callback = { [unowned self] success, error in
             if let error = error {
                 if settings.isPopupsEnabled {
-                    let message = "There was an error loading the now playing list.\n\nError \(error.code): \(error.localizedDescription)"
+                    let message = "There was an error loading the now playing list.\n\nError: \(error)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
                     alert.addOKAction()
                     present(alert, animated: true, completion: nil)

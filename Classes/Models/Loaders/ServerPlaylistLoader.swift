@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-final class ServerPlaylistLoader: AbstractAPILoader {
+final class ServerPlaylistLoader: APILoader {
     @Injected private var store: Store
     
     let serverId: Int
@@ -34,26 +34,22 @@ final class ServerPlaylistLoader: AbstractAPILoader {
     }
     
     override func processResponse(data: Data) {
-        let root = RXMLElement(fromXMLData: data)
-        if !root.isValid {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-        } else {
-            if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
-            } else {
-                guard store.clear(serverId: serverId, serverPlaylistId: serverPlaylistId) else {
-                    informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_Database)))
-                    return
-                }
-                
-                root.iterate("playlist.entry") { e in
-                    let song = Song(serverId: self.serverId, element: e)
-                    if self.store.add(song: song) {
-                        _ = self.store.add(song: song, serverId: self.serverId, serverPlaylistId: self.serverPlaylistId)
-                    }
-                }
-                informDelegateLoadingFinished()
+        guard let root = validate(data: data) else { return }
+        guard let playlist = validateChild(parent: root, childTag: "playlist") else { return }
+        guard store.clear(serverId: serverId, serverPlaylistId: serverPlaylistId) else {
+            informDelegateLoadingFailed(error: APIError.database)
+            return
+        }
+        
+        playlist.iterate("entry") { e, stop in
+            let song = Song(serverId: self.serverId, element: e)
+            guard self.store.add(song: song) && self.store.add(song: song, serverId: self.serverId, serverPlaylistId: self.serverPlaylistId) else {
+                self.informDelegateLoadingFailed(error: APIError.database)
+                stop.pointee = true
+                return
             }
         }
+        
+        informDelegateLoadingFinished()
     }
 }

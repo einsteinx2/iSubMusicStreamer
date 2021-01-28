@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-final class ServerPlaylistsLoader: AbstractAPILoader {
+final class ServerPlaylistsLoader: APILoader {
     @Injected private var store: Store
     
     let serverId: Int
@@ -30,22 +30,21 @@ final class ServerPlaylistsLoader: AbstractAPILoader {
     }
     
     override func processResponse(data: Data) {
-        let root = RXMLElement(fromXMLData: data)
-        if !root.isValid {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-        } else {
-            if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
-            } else {
-                serverPlaylists.removeAll()
-                root.iterate("playlists.playlist") { e in
-                    let serverPlaylist = ServerPlaylist(serverId: self.serverId, element: e)
-                    if self.store.add(serverPlaylist: serverPlaylist) {
-                        self.serverPlaylists.append(serverPlaylist)
-                    }
-                }
-                informDelegateLoadingFinished()
+        serverPlaylists.removeAll()
+        guard let root = validate(data: data) else { return }
+        guard let playlists = validateChild(parent: root, childTag: "playlists") else { return }
+        
+        let success = playlists.iterate("playlist") { e, stop in
+            let serverPlaylist = ServerPlaylist(serverId: self.serverId, element: e)
+            guard self.store.add(serverPlaylist: serverPlaylist) else {
+                self.informDelegateLoadingFailed(error: APIError.database)
+                stop.pointee = true
+                return
             }
+            self.serverPlaylists.append(serverPlaylist)
         }
+        guard success else { return }
+        
+        informDelegateLoadingFinished()
     }
 }

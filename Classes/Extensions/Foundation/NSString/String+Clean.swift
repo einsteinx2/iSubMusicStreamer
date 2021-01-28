@@ -17,7 +17,7 @@ private extension String {
 
 extension Optional where Wrapped == String {
     var stringXML: String {
-        stringXMLOptional ?? ""
+        stringXMLOptional ?? "nil"
     }
     var stringXMLOptional: String? {
         self?.clean()
@@ -55,4 +55,6 @@ extension Optional where Wrapped == String {
             return nil
         }
     }
+    
+    
 }

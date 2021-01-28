@@ -286,7 +286,7 @@ final class HomeViewController: UIViewController {
         loader.callback = { _, error in
             HUD.hide()
             if let error = error {
-                if self.settings.isPopupsEnabled && error.code != NSURLErrorCancelled {
+                if self.settings.isPopupsEnabled && !error.isCanceledURLRequest {
                     let alert = UIAlertController(title: "Error", message: "There was an error grabbing the album list.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
                     alert.addAction(title: "OK", style: .cancel, handler: nil)
                     self.present(alert, animated: true, completion: nil)
@@ -430,7 +430,7 @@ extension HomeViewController: UISearchBarDelegate {
             return
         }
         
-        dataTask = AbstractAPILoader.sharedSession.dataTask(with: request) { data, _, error in
+        dataTask = APILoader.sharedSession.dataTask(with: request) { data, _, error in
             DispatchQueue.main.async {
                 if let error = error {
                     if self.settings.isPopupsEnabled {

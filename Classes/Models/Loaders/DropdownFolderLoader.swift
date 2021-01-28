@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc final class DropdownFolderLoader: AbstractAPILoader {
+@objc final class DropdownFolderLoader: APILoader {
     @objc let serverId: Int
     
     @objc private(set) var mediaFolders = [MediaFolder]()
@@ -27,20 +27,16 @@ import Foundation
     }
     
     override func processResponse(data: Data) {
-        let root = RXMLElement(fromXMLData: data)
-        if !root.isValid {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-        } else {
-            if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
-            } else {
-                var mediaFolders = [MediaFolder(serverId: serverId, id: MediaFolder.allFoldersId, name: "All Media Folders")]
-                root.iterate("musicFolders.musicFolder") { e in
-                    mediaFolders.append(MediaFolder(serverId: self.serverId, element: e))
-                }
-                self.mediaFolders = mediaFolders
-                informDelegateLoadingFinished()
-            }
+        self.mediaFolders = []
+        guard let root = validate(data: data) else { return }
+        guard let musicFolders = validateChild(parent: root, childTag: "musicFolders") else { return }
+        
+        var mediaFolders = [MediaFolder(serverId: serverId, id: MediaFolder.allFoldersId, name: "All Media Folders")]
+        musicFolders.iterate("musicFolder") { e, _ in
+            mediaFolders.append(MediaFolder(serverId: self.serverId, element: e))
         }
+        
+        self.mediaFolders = mediaFolders
+        informDelegateLoadingFinished()
     }
 }

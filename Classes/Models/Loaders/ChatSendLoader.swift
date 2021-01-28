@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class ChatSendLoader: AbstractAPILoader {
+final class ChatSendLoader: APILoader {
     let serverId: Int
     let message: String
     
@@ -27,15 +27,7 @@ final class ChatSendLoader: AbstractAPILoader {
     }
     
     override func processResponse(data: Data) {
-        let root = RXMLElement(fromXMLData: data)
-        if !root.isValid {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-        } else {
-            if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
-            } else {
-                informDelegateLoadingFinished()
-            }
-        }
+        guard let _ = validate(data: data) else { return }
+        informDelegateLoadingFinished()
     }
 }

@@ -56,6 +56,6 @@ extension TagAlbum: TableCellModel {
     }
     var durationLabelText: String? { nil }
     var isCached: Bool { false }
-    func download() { SongLoader.downloadAll(serverId: serverId, tagAlbumId: id) }
-    func queue() { SongLoader.queueAll(serverId: serverId, tagAlbumId: id) }
+    func download() { SongsHelper.downloadAll(serverId: serverId, tagAlbumId: id) }
+    func queue() { SongsHelper.queueAll(serverId: serverId, tagAlbumId: id) }
 }

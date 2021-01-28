@@ -121,9 +121,9 @@ final class FolderAlbumViewController: UIViewController {
         
         // Create the play all and shuffle buttons and constrain to the container view
         let playAllAndShuffleHeader = PlayAllAndShuffleHeader(playAllHandler: { [unowned self] in
-            SongLoader.playAll(serverId: serverId, folderId: parentFolderId)
+            SongsHelper.playAll(serverId: serverId, folderId: parentFolderId)
         }, shuffleHandler: { [unowned self] in
-            SongLoader.shuffleAll(serverId: serverId, folderId: parentFolderId)
+            SongsHelper.shuffleAll(serverId: serverId, folderId: parentFolderId)
         })
         headerView.addSubview(playAllAndShuffleHeader)
         playAllAndShuffleHeader.snp.makeConstraints { make in
@@ -177,7 +177,7 @@ final class FolderAlbumViewController: UIViewController {
                 self.addSectionIndex()
             } else if let error = error {
                 if self.settings.isPopupsEnabled {
-                    let message = "There was an error loading the album.\n\nError \(error.code): \(error.localizedDescription)"
+                    let message = "There was an error loading the album.\n\nError: \(error)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
                     alert.addOKAction()
                     self.present(alert, animated: true, completion: nil)

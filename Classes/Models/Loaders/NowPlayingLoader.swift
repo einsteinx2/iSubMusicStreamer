@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-final class NowPlayingLoader: AbstractAPILoader {
+final class NowPlayingLoader: APILoader {
     @Injected private var store: Store
     
     let serverId: Int
@@ -30,22 +30,21 @@ final class NowPlayingLoader: AbstractAPILoader {
     }
     
     override func processResponse(data: Data) {
-        let root = RXMLElement(fromXMLData: data)
-        if !root.isValid {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-        } else {
-            if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
-            } else {
-                nowPlayingSongs.removeAll()
-                root.iterate("nowPlaying.entry") { e in
-                    let song = Song(serverId: self.serverId, element: e)
-                    if self.store.add(song: song) {
-                        self.nowPlayingSongs.append(NowPlayingSong(serverId: self.serverId, element: e))
-                    }
-                }
-                informDelegateLoadingFinished()
+        nowPlayingSongs.removeAll()
+        guard let root = validate(data: data) else { return }
+        guard let nowPlaying = validateChild(parent: root, childTag: "nowPlaying") else { return }
+        
+        let success = nowPlaying.iterate("entry") { e, stop in
+            let song = Song(serverId: self.serverId, element: e)
+            guard self.store.add(song: song) else {
+                self.informDelegateLoadingFailed(error: APIError.database)
+                stop.pointee = true
+                return
             }
+            self.nowPlayingSongs.append(NowPlayingSong(serverId: self.serverId, element: e))
         }
+        guard success else { return }
+        
+        informDelegateLoadingFinished()
     }
 }

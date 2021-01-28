@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class QuickAlbumsLoader: AbstractAPILoader {
+final class QuickAlbumsLoader: APILoader {
     let serverId: Int
     // TODO: Make this an enum once only swift code is using this class
     let modifier: String
@@ -33,22 +33,15 @@ final class QuickAlbumsLoader: AbstractAPILoader {
     }
     
     override func processResponse(data: Data) {
-        let root = RXMLElement(fromXMLData: data)
-        if !root.isValid {
-            informDelegateLoadingFailed(error: NSError(ismsCode: Int(ISMSErrorCode_NotXML)))
-        } else {
-            if let error = root.child("error"), error.isValid {
-                informDelegateLoadingFailed(error: NSError(subsonicXMLResponse: error))
-            } else {
-                folderAlbums.removeAll()
-                root.iterate("albumList.album") { e in
-                    let folderAlbum = FolderAlbum(serverId: self.serverId, element: e)
-                    if folderAlbum.name != ".AppleDouble" {
-                        self.folderAlbums.append(folderAlbum)
-                    }
-                }
-                informDelegateLoadingFinished()
-            }
+        folderAlbums.removeAll()
+        guard let root = validate(data: data) else { return }
+        guard let albumList = validateChild(parent: root, childTag: "albumList") else { return }
+         
+        albumList.iterate("album") { e, _ in
+            let folderAlbum = FolderAlbum(serverId: self.serverId, element: e)
+            if folderAlbum.name != ".AppleDouble" { self.folderAlbums.append(folderAlbum) }
         }
+        
+        informDelegateLoadingFinished()
     }
 }

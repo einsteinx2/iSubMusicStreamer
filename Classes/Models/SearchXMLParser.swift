@@ -24,23 +24,21 @@ final class SearchXMLParser {
         let root = RXMLElement(fromXMLData: data)
         if !root.isValid {
             // TODO: Handle this error in the UI
-            DDLogError("[SearchXMLParser] Error parsing search results: \(NSError(ismsCode: Int(ISMSErrorCode_NotXML)))")
+            DDLogError("[SearchXMLParser] Error parsing search results: \(APIError.responseNotXML)")
         } else {
             if let error = root.child("error"), error.isValid {
                 // TODO: Handle this error in the UI
-                let code = Int(error.attribute("code") ?? "-1") ?? -1
-                let message = error.attribute("message") ?? "no message"
-                DDLogError("[SearchXMLParser] Subsonic error: \(NSError(ismsCode: code, message: message))")
+                DDLogError("[SearchXMLParser] Subsonic error: \(SubsonicError(element: error))")
             } else {
                 let isNewSearchSupported = store.server(id: serverId)?.isNewSearchSupported ?? false
                 if isNewSearchSupported {
-                    root.iterate("searchResult2.artist") { element in
+                    root.iterate("searchResult2.artist") { element, _ in
                         self.folderArtists.append(FolderArtist(serverId: serverId, element: element))
                     }
-                    root.iterate("searchResult2.album") { element in
+                    root.iterate("searchResult2.album") { element, _ in
                         self.folderAlbums.append(FolderAlbum(serverId: serverId, element: element))
                     }
-                    root.iterate("searchResult2.song") { element in
+                    root.iterate("searchResult2.song") { element, _ in
                         let isVideo = element.attribute("isVideo")
                         if isVideo != "true" {
                             let song = Song(serverId: serverId, element: element)
@@ -50,7 +48,7 @@ final class SearchXMLParser {
                         }
                     }
                 } else {
-                    root.iterate("searchResult.match") { element in
+                    root.iterate("searchResult.match") { element, _ in
                         let isVideo = element.attribute("isVideo")
                         if isVideo != "true" {
                             let song = Song(serverId: serverId, element: element)
