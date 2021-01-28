@@ -325,7 +325,7 @@ LOG_LEVEL_ISUB_DEFAULT
                                                                    message:message
                                                             preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-        [HUD showWithMessage:@"Processing"];
+//        [HUD showWithMessage:@"Processing"];
         [self performSelector:@selector(resetAlbumArtCache) withObject:nil afterDelay:0.05];
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
@@ -333,18 +333,20 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)resetFolderCache {
+//    [HUD showWithMessage:@"Processing"];
     NSInteger serverId = settingsS.currentServerId;
     (void)[Store.shared resetFolderAlbumCacheWithServerId:serverId];
     (void)[Store.shared deleteTagAlbumsWithServerId:serverId];
-	[HUD hide];
+//	[HUD hide];
 	[self popFoldersTab];
 }
 
 - (void)resetAlbumArtCache {
+//    [HUD showWithMessage:@"Processing"];
     NSInteger serverId = settingsS.currentServerId;
     (void)[Store.shared resetCoverArtCacheWithServerId:serverId];
     (void)[Store.shared resetArtistArtCacheWithServerId:serverId];
-	[HUD hide];
+//	[HUD hide];
 	[self popFoldersTab];
 }
 

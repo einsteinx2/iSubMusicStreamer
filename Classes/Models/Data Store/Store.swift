@@ -23,7 +23,7 @@ fileprivate let debugPrintAllQueries = false
     // Main database, contains records for all servers
     var pool: DatabasePool!
     
-    @objc(setupDatabases) func setup() {
+    func setup() {
         print("Database path: \(FileSystem.databaseDirectory.path)")
         
         // Shared configuration for all databases
@@ -46,8 +46,8 @@ fileprivate let debugPrintAllQueries = false
         migrate()
     }
     
-    // TODO: Remove this as we now share the same DB for all servers and offline mode
-    @objc(closeAllDatabases) func close() {
+    // TODO: implement this - Remove this as we now share the same DB for all servers and offline mode
+    func close() {
         // Underlying dataabases are closed on deallocation
         pool = nil
     }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc final class SelfSignedCertURLSessionDelegate: NSObject, URLSessionDelegate {
+final class SelfSignedCertURLSessionDelegate: NSObject, URLSessionDelegate {
     func urlSession(_ session: URLSession,
                     didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {

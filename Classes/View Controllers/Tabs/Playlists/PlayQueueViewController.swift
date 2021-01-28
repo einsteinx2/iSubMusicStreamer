@@ -257,24 +257,7 @@ final class PlayQueueViewController: UIViewController {
 
 extension PlayQueueViewController: SaveEditHeaderDelegate {
     func saveEditHeaderSaveDeleteAction(_ saveEditHeader: SaveEditHeader) {
-        if saveEditHeader.deleteLabel.isHidden {
-            if !isEditing {
-                if settings.isOfflineMode {
-                    showSavePlaylistAlert(isLocal: true)
-                } else {
-                    let message = "Would you like to save this playlist to your device or to your Subsonic server?"
-                    let alert = UIAlertController(title: "Playlist Location", message: message, preferredStyle: .alert)
-                    alert.addAction(title: "Local", style: .default, handler: { _ in
-                        self.showSavePlaylistAlert(isLocal: true)
-                    })
-                    alert.addAction(title: "Server", style: .default, handler: { _ in
-                        self.showSavePlaylistAlert(isLocal: false)
-                    })
-                    alert.addCancelAction()
-                    present(alert, animated: true, completion: nil)
-                }
-            }
-        } else {
+        if saveEditHeader.isEditing {
             unregisterForNotifications()
             
             if selectedRowsCount == 0 {
@@ -297,6 +280,21 @@ extension PlayQueueViewController: SaveEditHeaderDelegate {
             }
             
             registerForNotifications()
+        } else {
+            if settings.isOfflineMode {
+                showSavePlaylistAlert(isLocal: true)
+            } else {
+                let message = "Would you like to save this playlist to your device or to your Subsonic server?"
+                let alert = UIAlertController(title: "Playlist Location", message: message, preferredStyle: .alert)
+                alert.addAction(title: "Local", style: .default, handler: { _ in
+                    self.showSavePlaylistAlert(isLocal: true)
+                })
+                alert.addAction(title: "Server", style: .default, handler: { _ in
+                    self.showSavePlaylistAlert(isLocal: false)
+                })
+                alert.addCancelAction()
+                present(alert, animated: true, completion: nil)
+            }
         }
     }
     

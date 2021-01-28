@@ -10,16 +10,15 @@ import Foundation
 import SnapKit
 import InflectorKit
 
-@objc protocol SaveEditHeaderDelegate {
+protocol SaveEditHeaderDelegate {
     func saveEditHeaderSaveDeleteAction(_ saveEditHeader: SaveEditHeader)
     func saveEditHeaderEditAction(_ saveEditHeader: SaveEditHeader)
 }
 
-@objc final class SaveEditHeader: UIView {
+final class SaveEditHeader: UIView {
     private let saveLabel = UILabel()
     private let countLabel = UILabel()
-    // TODO: Make this private
-    @objc let deleteLabel = UILabel()
+    private let deleteLabel = UILabel()
     private let saveDeleteButton = UIButton(type: .custom)
     private let editLabel = UILabel()
     private let editButton = UIButton(type: .custom)
@@ -29,16 +28,16 @@ import InflectorKit
     private var pluralizeClearType: Bool
     private var isLargeCount: Bool
 
-    @objc var delegate: SaveEditHeaderDelegate?
-    @objc private(set) var isEditing = false
+    var delegate: SaveEditHeaderDelegate?
+    private(set) var isEditing = false
     
-    @objc var count = 0 {
+    var count = 0 {
         didSet {
             countLabel.text = "\(count) \(countType.pluralize(amount: count))"
         }
     }
     
-    @objc var selectedCount = 0 {
+    var selectedCount = 0 {
         didSet {
             if selectedCount == 0 {
                 deleteLabel.text = "Clear \((pluralizeClearType ? saveType.pluralized : saveType).capitalized)"
@@ -47,12 +46,8 @@ import InflectorKit
             }
         }
     }
-    
-    @objc convenience init(saveType: String, countType: String, pluralizeClearType: Bool, isLargeCount: Bool) {
-        self.init(saveType: saveType, countType: countType, pluralizeClearType: pluralizeClearType, isLargeCount: isLargeCount, delegate: nil)
-    }
         
-    @objc init(saveType: String, countType: String, pluralizeClearType: Bool, isLargeCount: Bool, delegate: SaveEditHeaderDelegate?) {
+    init(saveType: String, countType: String, pluralizeClearType: Bool, isLargeCount: Bool, delegate: SaveEditHeaderDelegate? = nil) {
         self.saveType = saveType
         self.countType = countType
         self.pluralizeClearType = pluralizeClearType
@@ -145,7 +140,7 @@ import InflectorKit
         delegate?.saveEditHeaderEditAction(self)
     }
     
-    @objc func setEditing(_ editing: Bool, animated: Bool) {
+    func setEditing(_ editing: Bool, animated: Bool) {
         guard isEditing != editing else { return }
         
         isEditing = editing

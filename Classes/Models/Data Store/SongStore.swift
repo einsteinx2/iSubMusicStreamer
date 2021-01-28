@@ -46,8 +46,7 @@ extension Song: FetchableRecord, PersistableRecord {
     }
 }
 
-@objc extension Store {
-    @objc(songWithServerId:songId:)
+extension Store {
     func song(serverId: Int, id: Int) -> Song? {
         do {
             return try pool.read { db in

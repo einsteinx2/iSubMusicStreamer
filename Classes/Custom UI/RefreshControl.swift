@@ -8,8 +8,8 @@
 
 import UIKit
 
-@objc final class RefreshControl: UIRefreshControl {
-    @objc init(handler: @escaping () -> ()) {
+final class RefreshControl: UIRefreshControl {
+    init(handler: @escaping () -> ()) {
         super.init()
         let attributes = [NSAttributedString.Key.foregroundColor: UIColor.label, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
         attributedTitle = NSAttributedString(string: "Pull to refresh...", attributes: attributes)

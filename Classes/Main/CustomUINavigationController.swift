@@ -9,7 +9,7 @@
 import UIKit
 import Resolver
 
-@objc final class CustomUINavigationController: UINavigationController {
+final class CustomUINavigationController: UINavigationController {
     @Injected private var settings: Settings
     
     override var shouldAutorotate: Bool {

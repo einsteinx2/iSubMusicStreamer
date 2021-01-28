@@ -12,7 +12,7 @@
 
 @interface CacheQueueSongUITableViewCell : UITableViewCell
 
-@property (strong) AsyncImageView *coverArtView;
+//@property (strong) AsyncImageView *coverArtView;
 @property (strong) UILabel *cacheInfoLabel;
 @property (strong) UIScrollView *nameScrollView;
 @property (strong) UILabel *songNameLabel;

@@ -296,7 +296,7 @@ extension Store {
         }
     }
     
-    @objc func downloadedSongsCount(serverId: Int) -> Int {
+    func downloadedSongsCount(serverId: Int) -> Int {
         do {
             return try pool.read { db in
                 try DownloadedSong.filter(literal:"serverId = \(serverId) AND isFinished = 1").fetchCount(db)

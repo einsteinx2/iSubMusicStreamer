@@ -65,7 +65,7 @@ import CocoaLumberjackSwift
     }
     
     private func scrobble(song: Song, isSubmission: Bool) {
-        let loader = ScrobbleLoader(song: song, isSubmission: isSubmission) { (success, error) in
+        let loader = ScrobbleLoader(song: song, isSubmission: isSubmission) { success, error in
             if success {
                 DDLogInfo("[Social] Scrobble successfully completed for song \(song.title)")
             } else {

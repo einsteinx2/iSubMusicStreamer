@@ -10,9 +10,9 @@ import UIKit
 import SnapKit
 import CocoaLumberjackSwift
 
-@objc final class AsyncImageView: UIImageView {
-    @objc var isLarge: Bool = false
-    @objc var coverArtId: String? = nil {
+final class AsyncImageView: UIImageView {
+    var isLarge: Bool = false
+    var coverArtId: String? = nil {
         didSet {
             load()
         }
@@ -21,12 +21,12 @@ import CocoaLumberjackSwift
     private var activityIndicator: UIActivityIndicatorView? = nil
     private var coverArtDAO: CoverArtDAO? = nil
     
-    @objc init() {
+    init() {
         super.init(frame: .zero)
         image = CoverArtDAO.defaultCoverArtImage(isLarge: isLarge)
     }
     
-    @objc init(frame: CGRect = .zero, coverArtId: String? = nil, isLarge: Bool = false) {
+    init(frame: CGRect = .zero, coverArtId: String? = nil, isLarge: Bool = false) {
         self.coverArtId = coverArtId
         self.isLarge = isLarge
         super.init(frame: frame)
@@ -37,7 +37,7 @@ import CocoaLumberjackSwift
         fatalError("unimplemented")
     }
     
-    @objc func load() {
+    func load() {
         // Make sure old activity indicator is gone
         activityIndicator?.removeFromSuperview()
         activityIndicator = nil

@@ -19,7 +19,7 @@ import SnapKit
 private let animationDuration = 0.2
 private let labelInset: Float = 12.5
 
-@objc final class SlidingNotification: UIView {
+final class SlidingNotification: UIView {
     static let defaultDuration = 2.0
     
     static var throttlingEnabled = true
@@ -114,11 +114,11 @@ private let labelInset: Float = 12.5
         }
     }
     
-    @objc static func showOnMainWindow(message: String) {
+    static func showOnMainWindow(message: String) {
         showOnMainWindow(message: message, duration: defaultDuration)
     }
     
-    @objc static func showOnMainWindow(message: String, duration: TimeInterval) {
+    static func showOnMainWindow(message: String, duration: TimeInterval) {
         guard !Self.activeMessages.contains(message) else { return }
         
         let slidingNotification = Self(message: message)

@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Resolver
 
-@objc final class PadMenuViewController: UIViewController {
+final class PadMenuViewController: UIViewController {
     @Injected private var settings: Settings
     
     private let tableContainer = UIView()
@@ -80,13 +80,13 @@ import Resolver
         }
     }
     
-    @objc func toggleOfflineMode() {
+    func toggleOfflineMode() {
         isFirstLoad = true
         loadCellContents()
         viewDidAppear(true)
     }
     
-    @objc func loadCellContents() {
+    func loadCellContents() {
         cellContents.removeAll()
         
         if AppDelegate.shared.referringAppUrl != nil {
@@ -113,7 +113,7 @@ import Resolver
         tableView.reloadData()
     }
     
-    @objc func showSettings() {
+    func showSettings() {
         let isShowingBackCell = AppDelegate.shared.referringAppUrl != nil
         let indexPath = IndexPath(row: isShowingBackCell ? 1 : 0, section: 0)
         tableView.selectRow(at: indexPath, animated: true, scrollPosition: .middle)
@@ -122,7 +122,7 @@ import Resolver
         tableView(tableView, didSelectRowAt: indexPath)
     }
     
-    @objc func showHome() {
+    func showHome() {
         let isShowingBackCell = AppDelegate.shared.referringAppUrl != nil
         let indexPath = IndexPath(row: isShowingBackCell ? 2 : 1, section: 0)
         tableView.selectRow(at: indexPath, animated: true, scrollPosition: .middle)

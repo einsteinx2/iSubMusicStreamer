@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-@objc final class LyricsLoader: APILoader {
+final class LyricsLoader: APILoader {
     @Injected private var store: Store
     
     let serverId: Int
@@ -23,7 +23,7 @@ import Resolver
         self.init(serverId: song.serverId, tagArtistName: tagArtistName, songTitle: song.title, delegate: delegate, callback: callback)
     }
     
-    @objc init(serverId: Int, tagArtistName: String, songTitle: String, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(serverId: Int, tagArtistName: String, songTitle: String, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
         self.serverId = serverId
         self.tagArtistName = tagArtistName
         self.songTitle = songTitle

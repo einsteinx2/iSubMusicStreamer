@@ -11,12 +11,12 @@ import UIKit
 final class CoverArtViewController: UIViewController {
     private let coverArt = AsyncImageView(isLarge: true)
     
-    @objc var coverArtId: String? {
+    var coverArtId: String? {
         get { return coverArt.coverArtId }
         set { coverArt.coverArtId = newValue }
     }
     
-    @objc var image: UIImage? {
+    var image: UIImage? {
         get { return coverArt.image }
         set { coverArt.image = newValue }
     }

@@ -34,7 +34,7 @@ final class ServerChecker: NSObject {
         // have internet access or if the host url entered was wrong.
         if let currentServer = settings.currentServer {
             statusLoader?.cancelLoad()
-            statusLoader = StatusLoader(server: currentServer) { [weak self] (success, error) in
+            statusLoader = StatusLoader(server: currentServer) { [weak self] success, error in
                 guard let self = self, let statusLoader = self.statusLoader else { return }
                 
                 if success {

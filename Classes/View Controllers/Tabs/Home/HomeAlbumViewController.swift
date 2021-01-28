@@ -48,7 +48,7 @@ final class HomeAlbumViewController: UIViewController {
         offset += 20
         
         loader = QuickAlbumsLoader(serverId: serverId, modifier: modifier, offset: offset)
-        loader?.callback = { [weak self] (success, error) in
+        loader?.callback = { [weak self] success, error in
             guard let self = self, let loader = self.loader else { return }
             
             if success {

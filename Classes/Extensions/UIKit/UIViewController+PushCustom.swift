@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc extension UIViewController {
+extension UIViewController {
     func pushViewControllerCustom(_ viewController: UIViewController) {
         if let self = self as? UINavigationController {
             self.pushViewController(viewController, animated: true)
@@ -17,7 +17,7 @@ import UIKit
         }
     }
     
-    func showPlayer() {
+    @objc func showPlayer() {
         if UIDevice.isPad() {
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         } else {

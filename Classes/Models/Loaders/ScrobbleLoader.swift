@@ -8,11 +8,11 @@
 
 import Foundation
 
-@objc final class ScrobbleLoader: APILoader {
-    @objc let song: Song
-    @objc let isSubmission: Bool
+final class ScrobbleLoader: APILoader {
+    let song: Song
+    let isSubmission: Bool
     
-    @objc init(song: Song, isSubmission: Bool, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(song: Song, isSubmission: Bool, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
         self.song = song
         self.isSubmission = isSubmission
         super.init(delegate: delegate, callback: callback)

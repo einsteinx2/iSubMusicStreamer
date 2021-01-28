@@ -10,7 +10,7 @@ import UIKit
 import CocoaLumberjackSwift
 import Resolver
 
-@objc final class ServerEditViewController: UIViewController {
+final class ServerEditViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
@@ -20,7 +20,7 @@ import Resolver
     let passwordField = InsetTextField(inset: 5)
     let closeButton = UIButton(type: .close)
     let saveButton = UIButton(type: .system)
-    @objc var serverToEdit: Server?
+    var serverToEdit: Server?
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)

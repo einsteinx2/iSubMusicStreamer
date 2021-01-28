@@ -206,7 +206,7 @@ extension LocalPlaylistsViewController: SaveEditHeaderDelegate {
     }
     
     func saveEditHeaderSaveDeleteAction(_ saveEditHeader: SaveEditHeader) {
-        if !saveEditHeader.deleteLabel.isHidden {
+        if saveEditHeader.isEditing {
             HUD.show(message: "Deleting")
             DispatchQueue.userInitiated.async {
                 if let indexPathsForSelectedRows = self.tableView.indexPathsForSelectedRows {

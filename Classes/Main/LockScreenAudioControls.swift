@@ -10,14 +10,14 @@ import UIKit
 import Resolver
 import MediaPlayer
 
-@objc final class LockScreenAudioControls: NSObject {
+struct LockScreenAudioControls {
     private static var remote: MPRemoteCommandCenter { MPRemoteCommandCenter.shared() }
     private static var settings: Settings { Resolver.resolve() }
     private static var jukebox: Jukebox { Resolver.resolve() }
     private static var player: BassGaplessPlayer { Resolver.resolve() }
     private static var playQueue: PlayQueue { Resolver.resolve() }
     
-    @objc static func setup() {
+    static func setup() {
         
         // Enable lock screen controls
         UIApplication.shared.beginReceivingRemoteControlEvents()

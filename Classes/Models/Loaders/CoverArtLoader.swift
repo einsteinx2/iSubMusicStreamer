@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-@objc final class CoverArtLoader: APILoader {
+final class CoverArtLoader: APILoader {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
@@ -30,11 +30,11 @@ import Resolver
         return "\(serverId)_\(coverArtId)"
     }
     
-    @objc var isCached: Bool {
+    var isCached: Bool {
         return store.isCoverArtCached(serverId: serverId, id: coverArtId, isLarge: isLarge)
     }
     
-    @objc init(serverId: Int, coverArtId: String, isLarge: Bool, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
+    init(serverId: Int, coverArtId: String, isLarge: Bool, delegate: APILoaderDelegate? = nil, callback: LoaderCallback? = nil) {
         self.serverId = serverId
         self.coverArtId = coverArtId
         self.isLarge = isLarge
@@ -48,7 +48,7 @@ import Resolver
         NotificationCenter.removeObserverOnMainThread(self)
     }
     
-    @objc func downloadArtIfNotExists() -> Bool {
+    func downloadArtIfNotExists() -> Bool {
         if !isCached {
             startLoad()
             return true

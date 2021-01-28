@@ -9,8 +9,15 @@
 import UIKit
 import SnapKit
 
-@objc class HUD: NSObject {
-    private static let defaultGraceTime = 0.5
+private class HUDDelegate: NSObject, MBProgressHUDDelegate {
+    func hudWasHidden(_ hud: MBProgressHUD) {
+        hud.removeFromSuperview()
+        HUD.hud = nil
+    }
+}
+
+struct HUD {
+    private static let defaultGraceTime = 0.3
     private static let defaultMessage = "Loading"
     private static let defaultCancelMessage = "tap to cancel"
     
@@ -20,18 +27,7 @@ import SnapKit
     // TODO: Update this to support multiple scenes
     private static var window: UIWindow? { UIApplication.keyWindow }
     
-    @objc @discardableResult
-    static func show() -> Bool {
-        return show(message: nil)
-    }
-    
-    @objc @discardableResult
-    static func show(closeHandler: @escaping () -> Void) -> Bool {
-        return show(message: nil, closeHandler: closeHandler)
-    }
-    
-    @objc @discardableResult
-    static func show(message: String?) -> Bool {
+    @discardableResult static func show(message: String? = nil, closeHandler: (() -> Void)? = nil) -> Bool {
         guard hud == nil, let window = window else { return false }
         
         DispatchQueue.main.async {
@@ -39,31 +35,17 @@ import SnapKit
             hud.delegate = hudDelegate
             hud.graceTime = defaultGraceTime
             hud.label.text = message ?? defaultMessage
-            window.addSubview(hud)
-            hud.show(animated: true)
-            self.hud = hud
-        }
-        return true
-    }
-    
-    @objc @discardableResult
-    static func show(message: String?, closeHandler: @escaping () -> Void) -> Bool {
-        guard hud == nil, let window = window else { return false }
-        
-        DispatchQueue.main.async {
-            let hud = MBProgressHUD(view: window)
-            hud.delegate = hudDelegate
-            hud.graceTime = defaultGraceTime
-            hud.label.text = message ?? defaultMessage
-            hud.detailsLabel.text = defaultCancelMessage
             
-            // TODO: verify on iPad
-            hud.isUserInteractionEnabled = true
-            let cancelButton = UIButton(type: .custom)
-            cancelButton.addClosure(for: .touchUpInside, closure: closeHandler)
-            hud.bezelView.addSubview(cancelButton)
-            cancelButton.snp.makeConstraints { make in
-                make.leading.trailing.top.bottom.equalToSuperview()
+            if let closeHandler = closeHandler {
+                // TODO: verify on iPad
+                hud.detailsLabel.text = defaultCancelMessage
+                hud.isUserInteractionEnabled = true
+                let cancelButton = UIButton(type: .custom)
+                cancelButton.addClosure(for: .touchUpInside, closure: closeHandler)
+                hud.bezelView.addSubview(cancelButton)
+                cancelButton.snp.makeConstraints { make in
+                    make.leading.trailing.top.bottom.equalToSuperview()
+                }
             }
             
             window.addSubview(hud)
@@ -73,20 +55,12 @@ import SnapKit
         return true
     }
     
-    @objc @discardableResult
-    static func hide() -> Bool {
+    @discardableResult static func hide() -> Bool {
         guard let hud = hud else { return false }
         
         DispatchQueue.main.async {
             hud.hide(animated: true)
         }
         return true
-    }
-}
-
-private class HUDDelegate: NSObject, MBProgressHUDDelegate {
-    func hudWasHidden(_ hud: MBProgressHUD) {
-        hud.removeFromSuperview()
-        HUD.hud = nil
     }
 }

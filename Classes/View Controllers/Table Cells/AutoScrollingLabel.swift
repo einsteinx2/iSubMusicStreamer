@@ -11,16 +11,16 @@ import SnapKit
 
 private let labelGap = 25.0
 
-@objc final class AutoScrollingLabel: UIView {
+final class AutoScrollingLabel: UIView {
     private let scrollView = UIScrollView()
     private let label1 = UILabel()
     private let label2 = UILabel()
     private var animator: UIViewPropertyAnimator?
     
-    @objc var autoScroll = true
-    @objc var repeatScroll = true
+    var autoScroll = true
+    var repeatScroll = true
     
-    @objc var font: UIFont? {
+    var font: UIFont? {
         get {
             label1.font
         }
@@ -36,7 +36,7 @@ private let labelGap = 25.0
         }
     }
     
-    @objc var textColor: UIColor? {
+    var textColor: UIColor? {
         get {
             label1.textColor
         }
@@ -46,7 +46,7 @@ private let labelGap = 25.0
         }
     }
     
-    @objc var text: String? {
+    var text: String? {
         get {
             label1.text
         }
@@ -195,7 +195,7 @@ private let labelGap = 25.0
         scrollView.contentOffset = .zero
     }
     
-    @objc func startScrolling(delay: TimeInterval = 2) {
+    func startScrolling(delay: TimeInterval = 2) {
         // Prevent iOS from killing the app for overusing the CPU in the background
         // NOTE: While the notification listeners stop the animation when the app enters
         //       the backgorund, whenever the song would change, it would kick off the
@@ -207,7 +207,7 @@ private let labelGap = 25.0
         animator?.startAnimation(afterDelay: delay)
     }
     
-    @objc func stopScrolling() {
+    func stopScrolling() {
         animator?.stopAnimation(true)
         animator = nil
         resetScrollView()

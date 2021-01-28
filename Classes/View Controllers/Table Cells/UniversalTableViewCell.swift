@@ -9,8 +9,8 @@
 import UIKit
 import SnapKit
 
-@objc final class UniversalTableViewCell: UITableViewCell {
-    @objc static let reuseId = "UniversalTableViewCell"
+final class UniversalTableViewCell: UITableViewCell {
+    static let reuseId = "UniversalTableViewCell"
     
     private var tableCellModel: TableCellModel?
     
@@ -38,39 +38,31 @@ import SnapKit
 //        }
 //    }
     
-    @objc var number: Int = 0 {
+    var number: Int = 0 {
         didSet { numberLabel.text = "\(number)" }
     }
-    
-    @objc var headerText: String = "" {
+    var headerText: String = "" {
         didSet { headerLabel.text = headerText }
     }
-    
-    @objc var hideCacheIndicator: Bool = true {
+    var hideCacheIndicator: Bool = true {
         didSet { cachedIndicator.isHidden = (hideCacheIndicator || !(tableCellModel?.isCached ?? false)) }
     }
-    
-    @objc var hideHeaderLabel: Bool = true {
+    var hideHeaderLabel: Bool = true {
         didSet { if oldValue != hideHeaderLabel { makeHeaderLabelConstraints() } }
     }
-    
-    @objc var hideNumberLabel: Bool = true {
+    var hideNumberLabel: Bool = true {
         didSet { if oldValue != hideNumberLabel { makeNumberLabelConstraints() } }
     }
-    
-    @objc var hideCoverArt: Bool = true {
+    var hideCoverArt: Bool = true {
         didSet { if oldValue != hideCoverArt { makeCoverArtConstraints(); makePrimaryLabelConstraints() } }
     }
-    
-    @objc var hideSecondaryLabel: Bool = true {
+    var hideSecondaryLabel: Bool = true {
         didSet { if oldValue != hideSecondaryLabel { makeSecondaryLabelConstraints() } }
     }
-    
-    @objc var hideDurationLabel: Bool = true {
+    var hideDurationLabel: Bool = true {
         didSet { if oldValue != hideDurationLabel { makeDurationLabelConstraints() } }
     }
     
-    @objc(showCached:number:art:secondary:duration:)
     func show(cached: Bool, number: Bool, art: Bool, secondary: Bool, duration: Bool) {
         hideCacheIndicator = !cached
         hideNumberLabel = !number
@@ -149,7 +141,7 @@ import SnapKit
         }
     }
     
-    @objc func update(primaryText: String, secondaryText: String?) {
+    func update(primaryText: String, secondaryText: String?) {
         tableCellModel = nil;
         hideNumberLabel = true
         hideCoverArt = true
@@ -160,7 +152,7 @@ import SnapKit
         cachedIndicator.isHidden = true;
     }
     
-    @objc func update(primaryText: String, secondaryText: String?, coverArtId: String?) {
+    func update(primaryText: String, secondaryText: String?, coverArtId: String?) {
         tableCellModel = nil;
         hideNumberLabel = true
         hideSecondaryLabel = (secondaryText == nil)

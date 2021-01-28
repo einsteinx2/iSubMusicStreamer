@@ -8,8 +8,8 @@
 
 import Foundation
 
-@objc extension NSString {
+extension String {
     var URLQueryEncoded: String {
-        return addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? self as String
+        return addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? self
     }
 }

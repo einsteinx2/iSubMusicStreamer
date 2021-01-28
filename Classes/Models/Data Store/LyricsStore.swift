@@ -34,7 +34,7 @@ extension Store {
         return false
     }
     
-    @objc func isLyricsCached(tagArtistName: String, songTitle: String) -> Bool {
+    func isLyricsCached(tagArtistName: String, songTitle: String) -> Bool {
         do {
             return try pool.read { db in
                 try Lyrics.filter(literal: "tagArtistName = \(tagArtistName) AND songTitle = \(songTitle)").fetchCount(db) > 0

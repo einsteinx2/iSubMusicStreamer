@@ -19,9 +19,9 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
 		_md5 = nil;
 		
-		_coverArtView = [[AsyncImageView alloc] init];
-		_coverArtView.isLarge = NO;
-		[self.contentView addSubview:_coverArtView];
+//		_coverArtView = [[AsyncImageView alloc] init];
+//		_coverArtView.isLarge = NO;
+//		[self.contentView addSubview:_coverArtView];
 		
 		_cacheInfoLabel = [[UILabel alloc] init];
 		_cacheInfoLabel.frame = CGRectMake(0, 0, 320, 20);
@@ -65,7 +65,7 @@
     [super layoutSubviews];
 	
 	//self.deleteToggleImage.frame = CGRectMake(4, 28.5, 23, 23);
-	self.coverArtView.frame = CGRectMake(0, 20, 60, 60);
+//	self.coverArtView.frame = CGRectMake(0, 20, 60, 60);
 	
 	// Automatically set the width based on the width of the text
 	self.songNameLabel.frame = CGRectMake(0, 0, 245, 35);

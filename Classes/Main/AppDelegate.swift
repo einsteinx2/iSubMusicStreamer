@@ -75,7 +75,7 @@ import CocoaLumberjackSwift
         batteryStateChanged()
         
         // Request authorization to send background notifications
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
             DDLogInfo("[AppDelegate] Request for local notifications granted: \(granted)")
             if !granted {
                 // TODO: Test this alert

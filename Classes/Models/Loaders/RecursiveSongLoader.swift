@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-@objc final class RecursiveSongLoader: NSObject, CancelableLoader {
+final class RecursiveSongLoader: CancelableLoader {
     var callback: LoaderCallback?
         
     let serverId: Int
@@ -25,21 +25,19 @@ import Resolver
     private var isLoading = false
     private var isCancelled = false
     
-    @objc init(serverId: Int, folderId: Int, callback: LoaderCallback? = nil) {
+    init(serverId: Int, folderId: Int, callback: LoaderCallback? = nil) {
         self.serverId = serverId
         self.folderIds.append(folderId)
         self.callback = callback
-        super.init()
     }
     
-    @objc init(serverId: Int, tagArtistId: Int, callback: LoaderCallback? = nil) {
+    init(serverId: Int, tagArtistId: Int, callback: LoaderCallback? = nil) {
         self.serverId = serverId
         self.tagArtistIds.append(tagArtistId)
         self.callback = callback
-        super.init()
     }
     
-    @objc func queueAll() {
+    func queueAll() {
         guard !isLoading else { return }
         
         isQueue = true
@@ -48,7 +46,7 @@ import Resolver
         startLoad()
     }
     
-    @objc func downloadAll() {
+    func downloadAll() {
         guard !isLoading else { return }
         
         isQueue = false
@@ -57,7 +55,7 @@ import Resolver
         startLoad()
     }
     
-    @objc func cancelLoad() {
+    func cancelLoad() {
         guard isLoading && !isCancelled else { return }
         
         cleanup()

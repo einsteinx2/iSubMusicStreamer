@@ -44,9 +44,9 @@
 	self.title = @"Bookmarks";
     
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
-    self.tableView.rowHeight = Defines.tallRowHeight;
+//    self.tableView.rowHeight = Defines.tallRowHeight;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
+//    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
 	    
     [NSNotificationCenter addObserverOnMainThread:self selector:@selector(addURLRefBackButton) name:UIApplicationDidBecomeActiveNotification object:nil];
 }

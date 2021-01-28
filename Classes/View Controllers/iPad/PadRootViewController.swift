@@ -9,10 +9,10 @@
 import UIKit
 import SnapKit
 
-@objc final class PadRootViewController: UIViewController {
+final class PadRootViewController: UIViewController {
     private let rootView = UIView()
-    @objc let menuViewController = PadMenuViewController()
-    @objc var currentContentNavigationController: UINavigationController?
+    let menuViewController = PadMenuViewController()
+    private(set) var currentContentNavigationController: UINavigationController?
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent

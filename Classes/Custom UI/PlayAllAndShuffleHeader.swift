@@ -9,11 +9,11 @@
 import UIKit
 import SnapKit
 
-@objc final class PlayAllAndShuffleHeader: UIView {
+final class PlayAllAndShuffleHeader: UIView {
     private let playAllButton = UIButton(type: .custom)
     private let shuffleButton = UIButton(type: .custom)
     
-    @objc init(playAllHandler: @escaping () -> (), shuffleHandler: @escaping () -> ()) {
+    init(playAllHandler: @escaping () -> (), shuffleHandler: @escaping () -> ()) {
         super.init(frame: CGRect.zero)
         
         backgroundColor = Colors.background

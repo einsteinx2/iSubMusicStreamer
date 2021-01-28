@@ -9,7 +9,7 @@
 import UIKit
 import Resolver
 
-@objc final class CustomUITabBarController: UITabBarController {
+final class CustomUITabBarController: UITabBarController {
     @Injected private var settings: Settings
     
     override var shouldAutorotate: Bool {
@@ -28,7 +28,7 @@ import Resolver
         
     }
     
-    @objc func customizeMoreTabTableView() {
+    func customizeMoreTabTableView() {
         moreNavigationController.navigationBar.barStyle = .black
         if let moreController = moreNavigationController.topViewController {
             if let moreTableView = moreController.view as? UITableView {

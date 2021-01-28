@@ -113,8 +113,6 @@ extension URLRequest {
     
     init?(serverId: Int, subsonicAction action: String, parameters: [String: Any]? = nil, byteOffset: Int = 0) {
         let store: Store = Resolver.resolve()
-//        let settings: Settings = Resolver.resolve()
-//        guard let server = store.server(id: serverId ?? settings.currentServerId) else { return nil }
         guard let server = store.server(id: serverId) else { return nil }
         
         self.init(subsonicAction: action,
@@ -123,12 +121,5 @@ extension URLRequest {
                   password: server.password,
                   parameters: parameters,
                   byteOffset: byteOffset)
-    }
-}
-
-// Temporary extra extension for Obj-C
-@objc extension NSURLRequest {
-    static func request(serverId: Int, subsonicAction action: String, parameters: [String: Any]? = nil, byteOffset: Int = 0) -> URLRequest? {
-        URLRequest(serverId: serverId, subsonicAction: action, parameters: parameters, byteOffset: byteOffset)
     }
 }

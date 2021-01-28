@@ -10,9 +10,9 @@ import InflectorKit
 
 import Foundation
 
-@objc extension NSString {
-    func pluralize(amount: Int) -> NSString {
-        return amount == 1 ? self : pluralized as NSString
+extension String {
+    func pluralize(amount: Int) -> String {
+        return amount == 1 ? self : self.pluralized
     }
 }
 

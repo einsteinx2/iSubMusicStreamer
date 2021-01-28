@@ -3,8 +3,8 @@
 import Foundation
 import CocoaLumberjackSwift
 
-@objc final class HLSReverseProxyServer: NSObject {
-    static let originURLKey = "__hls_origin_url"
+final class HLSReverseProxyServer {
+    private static let originURLKey = "__hls_origin_url"
 
     private let webServer = GCDWebServer()
     private let urlSessionDelegate = SelfSignedCertURLSessionDelegate()
@@ -16,21 +16,20 @@ import CocoaLumberjackSwift
         return URLSession(configuration: configuration, delegate: urlSessionDelegate, delegateQueue: nil)
     }()
 
-    @objc private(set) var port: Int = 8080
+    private(set) var port: Int = 8080
 
-    @objc override init() {
-        super.init()
+    init() {
         addRequestHandlers()
     }
 
     // MARK: Starting and Stopping Server
     
-    @objc func start() {
+    func start() {
         guard !webServer.isRunning else { return }
         webServer.start(withPort: UInt(port), bonjourName: nil)
     }
 
-    @objc func stop() {
+    func stop() {
         guard webServer.isRunning else { return }
         webServer.stop()
     }

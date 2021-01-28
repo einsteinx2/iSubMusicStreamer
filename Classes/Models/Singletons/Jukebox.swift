@@ -10,7 +10,7 @@ import Foundation
 import Resolver
 import CocoaLumberjackSwift
 
-@objc final class Jukebox: NSObject {
+final class Jukebox {
     @LazyInjected private var playQueue: PlayQueue
     @LazyInjected private var settings: Settings
     
@@ -27,22 +27,22 @@ import CocoaLumberjackSwift
         return URLSession(configuration: configuration, delegate: sessionDelegate, delegateQueue: nil)
     }()
     
-    @objc func playSong(index: Int) {
+    func playSong(index: Int) {
         queueDataTask(action: "skip", parameters: ["index": index])
         playQueue.currentIndex = index
     }
     
-    @objc func play() {
+    func play() {
         queueDataTask(action: "start")
         isPlaying = true
     }
     
-    @objc func stop() {
+    func stop() {
         queueDataTask(action: "stop")
         isPlaying = false
     }
     
-    @objc func skipPrev() {
+    func skipPrev() {
         let index = playQueue.currentIndex - 1
         if index >= 0 {
             playSong(index: index)
@@ -50,7 +50,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc func skipNext() {
+    func skipNext() {
         // TODO: implement this
 //        NSInteger index = PlayQueue.shared.currentIndex + 1;
 //        if (index <= ([databaseS.currentPlaylistDbQueue intForQuery:@"SELECT COUNT(*) FROM jukeboxCurrentPlaylist"] - 1)) {
@@ -63,30 +63,30 @@ import CocoaLumberjackSwift
 //        }
     }
     
-    @objc func setVolume(level: Float) {
+    func setVolume(level: Float) {
         queueDataTask(action: "setGain", parameters: ["gain": level])
     }
     
-    @objc func seek(seconds: Int) {
+    func seek(seconds: Int) {
         // TODO: implement this
         // Subsonic supports this using the "skip" action with the "offset" parameter and reports back the seek position with the "position" attribute of "jukeboxStatus"
     }
     
-    @objc func add(songId: Int) {
+    func add(songId: Int) {
         queueDataTask(action: "add", parameters: ["id": songId])
     }
     
-    @objc func add(songIds: [Int]) {
+    func add(songIds: [Int]) {
         if songIds.count > 0 {
             queueDataTask(action: "add", parameters: ["id": songIds])
         }
     }
     
-    @objc func remove(songId: Int) {
+    func remove(songId: Int) {
         queueDataTask(action: "remove", parameters: ["id": songId])
     }
     
-    @objc func replacePlaylistWithLocal() {
+    func replacePlaylistWithLocal() {
         // TODO: implement this
 //        [self clearRemotePlaylist];
 //
@@ -107,43 +107,44 @@ import CocoaLumberjackSwift
     }
     
     // TODO: Why are their 2 clear methods?
-    @objc func clearPlaylist() {
+    func clearPlaylist() {
         queueDataTask(action: "clear")
         // TODO: implement this
 //        [databaseS resetJukeboxPlaylist];
     }
     
-    @objc func clearRemotePlaylist() {
+    func clearRemotePlaylist() {
         queueDataTask(action: "clear")
     }
     
-    @objc func shuffle() {
+    func shuffle() {
         queueDataTask(action: "shuffle")
         // TODO: implement this
 //        [databaseS resetJukeboxPlaylist];
     }
     
-    @objc func getInfo() {
+    private var getInfoWorkItem: DispatchWorkItem?
+    func getInfo() {
         // Make sure this doesn't run a bunch of times in a row
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(getInfoInternal), object: nil)
-        perform(#selector(getInfoInternal), with: nil, afterDelay: 0.5)
-    }
-    
-    @objc private func getInfoInternal() {
-        // TODO: implement this
-        // Call the standard queueDataTask with action "get" and no parameters
-//        if (settingsS.isJukeboxEnabled) {
-//            [self queueGetInfoDataTask];
-//            if (PlayQueue.shared.isShuffle) {
-//                [databaseS resetShufflePlaylist];
-//            } else {
-//                [databaseS resetJukeboxPlaylist];
-//            }
-//
-//            // Keep reloading every 30 seconds if there is no activity so that the player stays updated if visible
-//            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(jukeboxGetInfoInternal) object:nil];
-//            [self performSelector:@selector(jukeboxGetInfoInternal) withObject:nil afterDelay:30.0];
-//        }
+        getInfoWorkItem?.cancel()
+        let getInfoWorkItem = DispatchWorkItem {
+            // TODO: implement this
+            // Call the standard queueDataTask with action "get" and no parameters
+    //        if (settingsS.isJukeboxEnabled) {
+    //            [self queueGetInfoDataTask];
+    //            if (PlayQueue.shared.isShuffle) {
+    //                [databaseS resetShufflePlaylist];
+    //            } else {
+    //                [databaseS resetJukeboxPlaylist];
+    //            }
+    //
+    //            // Keep reloading every 30 seconds if there is no activity so that the player stays updated if visible
+    //            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(jukeboxGetInfoInternal) object:nil];
+    //            [self performSelector:@selector(jukeboxGetInfoInternal) withObject:nil afterDelay:30.0];
+    //        }
+        }
+        self.getInfoWorkItem = getInfoWorkItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: getInfoWorkItem)
     }
     
     private func queueDataTask(action: String, parameters: [String: Any]? = nil) {

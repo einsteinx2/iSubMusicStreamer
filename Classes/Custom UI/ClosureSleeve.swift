@@ -12,7 +12,7 @@
 import UIKit
 
 // Simple wrapper for closure/blocks to "objectify" them allowing them to be used for things that require a selector
-@objc final class ClosureSleeve: NSObject {
+final class ClosureSleeve {
     let closure: ()->()
     
     init(closure: @escaping ()->()) {
@@ -25,7 +25,7 @@ import UIKit
     }
 }
 
-@objc extension UIControl {
+extension UIControl {
     // Adds a closure/block as an action instead of using an Objective-C method
     func addClosure(for controlEvents: UIControl.Event, closure: @escaping ()->()) {
         // "Sleeve" the closure to wrap it in an object so we can use the invoke method as the action handler

@@ -9,7 +9,7 @@
 import UIKit
 import Resolver
 
-@objc extension UIViewController {
+extension UIViewController {
     private var settings: Settings { Resolver.resolve() }
     
     @objc func addURLRefBackButton() {
