@@ -110,157 +110,18 @@ LOG_LEVEL_ISUB_DEFAULT
 void CALLBACK MyStreamSlideCallback(HSYNC handle, DWORD channel, DWORD data, void *user) {
     // Make sure we're using the right device
     BASS_SetDevice(ISMS_BassDeviceNumber);
-    
+
 	@autoreleasepool {
         BassGaplessPlayer *player = (__bridge BassGaplessPlayer *)user;
-        
+
         float volumeLevel;
         BOOL success = BASS_ChannelGetAttribute(player.outStream, BASS_ATTRIB_VOL, &volumeLevel);
-        
+
         if (success && volumeLevel == 0.0) {
             BASS_ChannelSlideAttribute(player.outStream, BASS_ATTRIB_VOL, 1, 200);
         }
     }
 }
-
-void CALLBACK MyStreamEndCallback(HSYNC handle, DWORD channel, DWORD data, void *user) {
-    // Make sure we're using the right device
-    BASS_SetDevice(ISMS_BassDeviceNumber);
-    
-	@autoreleasepool {
-        DDLogInfo(@"[BassGaplessPlayer] Stream End Callback called");
-        
-        // This must be done in the stream GCD queue because if we do it in this thread
-        // it will pause the audio output momentarily while it's loading the stream
-        BassStream *userInfo = (__bridge BassStream *)user;
-        if (userInfo) {
-            [EX2Dispatch runInQueue:userInfo.player.streamGcdQueue waitUntilDone:NO block:^{
-                // Prepare the next song in the queue
-                ISMSSong *nextSong = [userInfo.player nextSong];
-                DDLogInfo(@"[BassGaplessPlayer]  Preparing stream for: %@", nextSong);
-                BassStream *nextStream = [userInfo.player prepareStreamForSong:nextSong];
-                if (nextStream)
-                {
-                    DDLogInfo(@"[BassGaplessPlayer] Stream prepared successfully for: %@", nextSong);
-                    @synchronized(userInfo.player.streamQueue)
-                    {
-                        [userInfo.player.streamQueue addObject:nextStream];
-                    }
-                    BASS_Mixer_StreamAddChannel(userInfo.player.mixerStream, nextStream.stream, BASS_MIXER_NORAMPIN);
-                }
-                else
-                {
-                    DDLogInfo(@"[BassGaplessPlayer] Could NOT create stream for: %@", nextSong);
-                    userInfo.isNextSongStreamFailed = YES;
-                }
-                
-                // Mark as ended and set the buffer space til end for the UI
-                userInfo.bufferSpaceTilSongEnd = userInfo.player.ringBuffer.filledSpaceLength;
-                userInfo.isEnded = YES;
-            }];
-        }
-	}
-}
-
-void CALLBACK MyFileCloseProc(void *user) {
-	if (!user) return;
-	
-	@autoreleasepool {
-		// Get the user info object
-		BassStream *userInfo = (__bridge BassStream *)user;
-		
-		// Tell the read wait loop to break in case it's waiting
-		userInfo.shouldBreakWaitLoop = YES;
-		userInfo.shouldBreakWaitLoopForever = YES;
-		
-		// Close the file handle
-		if (userInfo.fileHandle) {
-			[userInfo.fileHandle closeFile];
-            userInfo.fileHandle = nil;
-        }
-	}
-}
-
-QWORD CALLBACK MyFileLenProc(void *user) {
-	if (!user) return 0;
-	
-	@autoreleasepool {
-		BassStream *userInfo = (__bridge BassStream *)user;
-		if (!userInfo.fileHandle) return 0;
-		
-		QWORD length = 0;
-		ISMSSong *theSong = userInfo.song;
-		if (userInfo.shouldBreakWaitLoopForever) {
-			return 0;
-		} else if (theSong.isFullyCached || userInfo.isTempCached) {
-			// Return actual file size on disk
-			length = theSong.localFileSize;
-		} else {
-			// Return server reported file size
-			length = theSong.size;
-		}
-		
-        DDLogInfo(@"[BassGaplessPlayer] checking %@ length: %llu", theSong.title, length);
-		return length;
-	}
-}
-
-DWORD CALLBACK MyFileReadProc(void *buffer, DWORD length, void *user) {
-	if (!buffer || !user) return 0;
-	
-	@autoreleasepool {
-		BassStream *userInfo = (__bridge BassStream *)user;
-		if (!userInfo.fileHandle) return 0;
-		
-		// Read from the file
-		NSData *readData;
-		@try {
-			readData = [userInfo.fileHandle readDataOfLength:length];
-		} @catch (NSException *exception) {
-			readData = nil;
-		}
-		
-		DWORD bytesRead = (DWORD)readData.length;
-		if (bytesRead > 0) {
-			// Copy the data to the buffer
-			[readData getBytes:buffer length:bytesRead];
-		}
-		
-		if (bytesRead < length && userInfo.isSongStarted && !userInfo.wasFileJustUnderrun) {
-			userInfo.isFileUnderrun = YES;
-		}
-		userInfo.wasFileJustUnderrun = NO;
-		return bytesRead;
-	}
-}
-
-BOOL CALLBACK MyFileSeekProc(QWORD offset, void *user) {
-	if (!user) return NO;
-	
-	@autoreleasepool {
-		// Seek to the requested offset (returns false if data not downloaded that far)
-		BassStream *userInfo = (__bridge BassStream *)user;
-		if (!userInfo.fileHandle) return NO;
-		
-		BOOL success = NO;
-		
-        // First check the file size to make sure we don't try and skip past the end of the file
-        if (userInfo.song.localFileSize >= offset) {
-            // File size is valid, so assume success unless the seek operation throws an exception
-            success = YES;
-            @try {
-                [userInfo.fileHandle seekToFileOffset:offset];
-            } @catch (NSException *exception) {
-                success = NO;
-            }
-        }
-		
-        DDLogInfo(@"[BassGaplessPlayer] seeking to %llu  success: %@", offset, NSStringFromBOOL(success));
-		return success;
-	}
-}
-
-static BASS_FILEPROCS fileProcs = {MyFileCloseProc, MyFileLenProc, MyFileReadProc, MyFileSeekProc};
 
 #pragma mark - Output Stream
 
@@ -595,71 +456,6 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
     return NO;
 }
 
-- (BassStream *)prepareStreamForSong:(ISMSSong *)aSong {
-    // Make sure we're using the right device
-    BASS_SetDevice(ISMS_BassDeviceNumber);
-    
-    DDLogInfo(@"[BassGaplessPlayer] preparing stream for %@  file: %@", aSong.title, aSong.currentPath);
-	if (aSong.fileExists) {
-		// Create the user info object for the stream
-		BassStream *userInfo = [[BassStream alloc] init];
-		userInfo.song = aSong;
-		userInfo.writePath = aSong.currentPath;
-		userInfo.isTempCached = aSong.isTempCached;
-		userInfo.fileHandle = [NSFileHandle fileHandleForReadingAtPath:userInfo.writePath];
-		if (!userInfo.fileHandle) {
-			// File failed to open
-			DDLogError(@"[BassGaplessPlayer] File failed to open");
-			return nil;
-		}
-		
-		// Create the stream
-		HSTREAM fileStream = BASS_StreamCreateFileUser(STREAMFILE_NOBUFFER, BASS_STREAM_DECODE|BASS_SAMPLE_FLOAT, &fileProcs, (__bridge void*)userInfo);
-        
-        // First check if the stream failed because of a BASS_Init error
-        if (!fileStream && BASS_ErrorGetCode() == BASS_ERROR_INIT) {
-            // Retry the regular hardware sampling stream
-            DDLogError(@"[BassGaplessPlayer] Failed to create stream for %@ with hardware sampling because BASS is not initialized, initializing BASS and trying again with hardware sampling", aSong.title);
-            
-            [Bass bassInit];
-            fileStream = BASS_StreamCreateFileUser(STREAMFILE_NOBUFFER, BASS_STREAM_DECODE|BASS_SAMPLE_FLOAT, &fileProcs, (__bridge void*)userInfo);
-        }
-        
-		if (!fileStream) {
-            DDLogError(@"[BassGaplessPlayer] Failed to create stream for %@ with hardware sampling, trying again with software sampling", aSong.title);
-            [Bass logCurrentError];
-            
-            fileStream = BASS_StreamCreateFileUser(STREAMFILE_NOBUFFER, BASS_STREAM_DECODE|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_FLOAT, &fileProcs, (__bridge void *)userInfo);
-        }
-        
-		if (fileStream) {
-			// Add the stream free callback
-			BASS_ChannelSetSync(fileStream, BASS_SYNC_END|BASS_SYNC_MIXTIME, 0, MyStreamEndCallback, (__bridge void*)userInfo);
-            
-            // Ask BASS how many channels are on this stream
-            BASS_CHANNELINFO info;
-            BASS_ChannelGetInfo(fileStream, &info);
-            userInfo.channelCount = info.chans;
-            userInfo.sampleRate = info.freq;
-			
-			// Stream successfully created
-			userInfo.stream = fileStream;
-			userInfo.player = self;
-			return userInfo;
-		}
-        
-        // Failed to create the stream
-        DDLogError(@"[BassGaplessPlayer] failed to create stream for song: %@  filename: %@", aSong.title, aSong.currentPath);
-        [Bass logCurrentError];
-		
-		return nil;
-	}
-	
-	// File doesn't exist
-    DDLogError(@"[BassGaplessPlayer] failed to create stream because file doesn't exist for song: %@  filename: %@", aSong.title, aSong.currentPath);
-	return nil;
-}
-
 - (void)startNewSong:(ISMSSong *)aSong atIndex:(NSInteger)index withOffsetInBytes:(NSNumber *)byteOffset orSeconds:(NSNumber *)seconds {
     // Stop the player
     [self stop];
@@ -698,7 +494,7 @@ DWORD CALLBACK MyStreamProc(HSTREAM handle, void *buffer, DWORD length, void *us
         [self cleanup];
         
         if (aSong.fileExists) {
-            BassStream *userInfo = [self prepareStreamForSong:aSong];
+            BassStream *userInfo = [Bass prepareStreamWithSong:aSong player:self];
             if (userInfo) {
                 self.mixerStream = BASS_Mixer_StreamCreate(ISMS_defaultSampleRate, 2, BASS_STREAM_DECODE);//|BASS_MIXER_END);
                 BASS_Mixer_StreamAddChannel(self.mixerStream, userInfo.stream, BASS_MIXER_NORAMPIN);

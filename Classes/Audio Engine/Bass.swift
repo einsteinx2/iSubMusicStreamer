@@ -16,7 +16,7 @@ private let defaultSampleRate = 44100
 @objc final class Bass: NSObject {
     // TODO: Device 1 is the first output device, need to test when multiple
     //       things are connected like an external DAC
-    @objc static let outputDeviceNumber: Int32 = 1
+    @objc static let outputDeviceNumber: DWORD = 1
     
     // TODO: decide best value for this
     // 50ms (also used for BASS_CONFIG_UPDATEPERIOD, so total latency is 100ms)
@@ -49,7 +49,7 @@ private let defaultSampleRate = 44100
         // Set DSP effects to use floating point math to avoid clipping within the effects chain
         BASS_SetConfig(DWORD(BASS_CONFIG_FLOATDSP), 1)
         // Initialize default device.
-        if (BASS_Init(outputDeviceNumber, sampleRate, 0, nil, nil)) {
+        if (BASS_Init(Int32(outputDeviceNumber), sampleRate, 0, nil, nil)) {
             bassOutputBufferLengthMillis = BASS_GetConfig(DWORD(BASS_CONFIG_BUFFER))
             bassLoadPlugins()
         } else {
@@ -249,7 +249,8 @@ private let defaultSampleRate = 44100
         let currentFilePosition = BASS_StreamGetFilePosition(stream, DWORD(BASS_FILEPOS_CURRENT))
         let filePosition = currentFilePosition - startFilePosition;
         let decodedPosition = BASS_ChannelGetPosition(stream, DWORD(BASS_POS_BYTE|BASS_POS_DECODE)) // decoded PCM position
-        let bitrateDouble = Double(filePosition) * 8.0 / BASS_ChannelBytes2Seconds(stream, decodedPosition)
+        let bytesToSeconds = BASS_ChannelBytes2Seconds(stream, decodedPosition)
+        let bitrateDouble = bytesToSeconds > 0 ? (Double(filePosition) * 8.0 / bytesToSeconds) : 0
         var kiloBitrate = Int(bitrateDouble / 1000.0)
         kiloBitrate = kiloBitrate > 1000000 ? -1 : kiloBitrate
         
@@ -297,6 +298,73 @@ private let defaultSampleRate = 44100
         return kiloBitrate
     }
 
+    @objc static func prepareStream(song: Song, player: BassGaplessPlayer) -> BassStream? {
+        // Make sure we're using the right device
+        BASS_SetDevice(outputDeviceNumber)
+        
+        DDLogInfo("[Bass] preparing stream for \(song) file: \(song.currentPath)")
+        guard song.fileExists else {
+            DDLogError("[Bass] failed to create stream because file doesn't exist for song: \(song) file: \(song.currentPath)")
+            return nil
+        }
+        guard let fileHandle = FileHandle(forReadingAtPath: song.currentPath) else {
+            DDLogError("[Bass] failed to create stream because failed to create file handle for song: \(song) file: \(song.currentPath)")
+            return nil
+        }
+        
+        // Create the BassStream object for the stream
+        let bassStream = BassStream()
+        bassStream.song = song
+        bassStream.writePath = song.currentPath
+        bassStream.isTempCached = song.isTempCached
+        bassStream.fileHandle = fileHandle
+        
+        func createStream(softwareDecoding: Bool = false) -> HSTREAM {
+            var flags = DWORD(BASS_STREAM_DECODE | BASS_SAMPLE_FLOAT | BASS_ASYNCFILE)
+            if softwareDecoding {
+                flags = flags | DWORD(BASS_SAMPLE_SOFTWARE)
+            }
+            return BASS_StreamCreateFileUser(DWORD(STREAMFILE_NOBUFFER), flags, &bassFileProcs, Bridging.bridge(obj: bassStream))
+        }
+        
+        // Create the stream
+        var fileStream = createStream()
+        
+        // First check if the stream failed because of a BASS_Init error
+        if fileStream == 0 && BASS_ErrorGetCode() == BASS_ERROR_INIT {
+            // Retry the regular hardware sampling stream
+            DDLogError("[Bass] Failed to create stream for \(song) with hardware sampling because BASS is not initialized, initializing BASS and trying again with hardware sampling")
+            bassInit()
+            fileStream = createStream()
+        }
+        
+        if fileStream == 0 {
+            DDLogError("[Bass] Failed to create stream for \(song) with hardware sampling, trying again with software sampling")
+            logCurrentError()
+            fileStream = createStream(softwareDecoding: true)
+        }
+        
+        guard fileStream != 0 else {
+            // Failed to create the stream
+            DDLogError("[Bass] failed to create stream for song: \(song) file: \(song.currentPath)")
+            logCurrentError()
+            return nil
+        }
+        
+        // Add the stream free callback
+        BASS_ChannelSetSync(fileStream, DWORD(BASS_SYNC_END | BASS_SYNC_MIXTIME), 0, bassEndSyncProc, Bridging.bridge(obj: bassStream))
+        
+        // Ask BASS how many channels are on this stream
+        var info = BASS_CHANNELINFO()
+        BASS_ChannelGetInfo(fileStream, &info)
+        bassStream.channelCount = Int(info.chans)
+        bassStream.sampleRate = Int(info.freq)
+        
+        // Stream successfully created
+        bassStream.stream = fileStream
+        bassStream.player = player
+        return bassStream
+    }
     
 //    static func testStream(forSong song: Song) -> Bool {
 //        guard song.fileExists else { return false }

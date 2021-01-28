@@ -31,6 +31,7 @@
 #import "basswv.h"
 #import "bass_mpc.h"
 #import "bass_ape.h"
+#import "EX2RingBuffer.h"
 
 // Frameworks
 #import "Flurry.h"

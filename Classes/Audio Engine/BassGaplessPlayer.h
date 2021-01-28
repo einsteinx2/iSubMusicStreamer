@@ -17,7 +17,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class EX2RingBuffer, SUSRegisterActionLoader;
+@class EX2RingBuffer, SUSRegisterActionLoader, ISMSSong;
 @interface BassGaplessPlayer : NSObject
 
 @property (nullable, weak) id<BassGaplessPlayerDelegate> delegate;
@@ -49,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong) BassVisualizer *visualizer;
 
 @property NSInteger currentPlaylistIndex;
+@property (nullable, readonly) ISMSSong *nextSong;
         
 + (instancetype)shared;
 
