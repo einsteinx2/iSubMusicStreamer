@@ -22,7 +22,7 @@ import CocoaLumberjackSwift
     @LazyInjected private var jukebox: Jukebox
     @LazyInjected private var streamManager: StreamManager
     @LazyInjected private var cacheQueue: CacheQueue
-    @LazyInjected private var player: BassGaplessPlayer
+    @LazyInjected private var player: BassPlayer
     
     // Temporary accessor for Objective-C classes using Resolver under the hood
     @objc static var shared: PlayQueue { Resolver.resolve() }
@@ -365,10 +365,7 @@ import CocoaLumberjackSwift
         // Check to see if the song is already cached
         if song.isFullyCached {
             // The song is fully cached, start streaming from the local copy
-            player.startNewSong(song,
-                                at: index,
-                                withOffsetInBytes: NSNumber(value: offsetInBytes),
-                                orSeconds: NSNumber(value: offsetInSeconds))
+            player.startNewSong(song, index: index, offsetInBytes: offsetInBytes, offsetInSeconds: offsetInSeconds)
             
             // Fill the stream queue
             if !settings.isOfflineMode {
@@ -387,10 +384,7 @@ import CocoaLumberjackSwift
                 // The song is caching, start streaming from the local copy
                 if let handler = streamManager.handler(song: song), !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
                     // Only start the player if the handler isn't going to do it itself
-                    player.startNewSong(song,
-                                        at: index,
-                                        withOffsetInBytes: NSNumber(value: offsetInBytes),
-                                        orSeconds: NSNumber(value: offsetInSeconds))
+                    player.startNewSong(song, index: index, offsetInBytes: offsetInBytes, offsetInSeconds: offsetInSeconds)
                 }
             } else if streamManager.isFirstInQueue(song: song) && !streamManager.isDownloading {
                 // The song is first in queue, but the queue is not downloading. Probably the song was downloading when the app quit. Resume the download and start the player
@@ -399,10 +393,7 @@ import CocoaLumberjackSwift
                 // The song is caching, start streaming from the local copy
                 if let handler = streamManager.handler(song: song), !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
                     // Only start the player if the handler isn't going to do it itself
-                    player.startNewSong(song,
-                                        at: index,
-                                        withOffsetInBytes: NSNumber(value: offsetInBytes),
-                                        orSeconds: NSNumber(value: offsetInSeconds))
+                    player.startNewSong(song, index: index, offsetInBytes: offsetInBytes, offsetInSeconds: offsetInSeconds)
                 }
             } else {
                 // Clear the stream manager

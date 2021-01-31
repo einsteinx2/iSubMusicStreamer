@@ -244,61 +244,59 @@ private let defaultSampleRate = 44100
     
     @objc static func estimateKiloBitrate(bassStream: BassStream) -> Int {
         // Default to the player bitrate
-        let stream = bassStream.stream
         let startFilePosition: QWORD = 0
-        let currentFilePosition = BASS_StreamGetFilePosition(stream, DWORD(BASS_FILEPOS_CURRENT))
+        let currentFilePosition = BASS_StreamGetFilePosition(bassStream.hstream, DWORD(BASS_FILEPOS_CURRENT))
         let filePosition = currentFilePosition - startFilePosition;
-        let decodedPosition = BASS_ChannelGetPosition(stream, DWORD(BASS_POS_BYTE|BASS_POS_DECODE)) // decoded PCM position
-        let bytesToSeconds = BASS_ChannelBytes2Seconds(stream, decodedPosition)
+        let decodedPosition = BASS_ChannelGetPosition(bassStream.hstream, DWORD(BASS_POS_BYTE|BASS_POS_DECODE)) // decoded PCM position
+        let bytesToSeconds = BASS_ChannelBytes2Seconds(bassStream.hstream, decodedPosition)
         let bitrateDouble = bytesToSeconds > 0 ? (Double(filePosition) * 8.0 / bytesToSeconds) : 0
         var kiloBitrate = Int(bitrateDouble / 1000.0)
         kiloBitrate = kiloBitrate > 1000000 ? -1 : kiloBitrate
         
         var info = BASS_CHANNELINFO()
-        BASS_ChannelGetInfo(stream, &info);
-        guard let songForStream = bassStream.song else { return kiloBitrate }
+        BASS_ChannelGetInfo(bassStream.hstream, &info);
         
         // Check the current stream format, and make sure that the bitrate is in the correct range otherwise use the song's estimated bitrate instead (to keep something like a 10000 kbitrate on an mp3 from being used for buffering)
         switch Int32(info.ctype) {
         case BASS_CTYPE_STREAM_WAV_PCM, BASS_CTYPE_STREAM_WAV_FLOAT, BASS_CTYPE_STREAM_WAV, BASS_CTYPE_STREAM_AIFF, BASS_CTYPE_STREAM_WV, BASS_CTYPE_STREAM_FLAC, BASS_CTYPE_STREAM_FLAC_OGG:
             if kiloBitrate < 330 || kiloBitrate > 12000 {
-                kiloBitrate = songForStream.estimatedKiloBitrate
+                kiloBitrate = bassStream.song.estimatedKiloBitrate
             }
         case BASS_CTYPE_STREAM_OGG, BASS_CTYPE_STREAM_MP1, BASS_CTYPE_STREAM_MP2, BASS_CTYPE_STREAM_MP3, BASS_CTYPE_STREAM_MPC:
             if kiloBitrate > 450 {
-                kiloBitrate = songForStream.estimatedKiloBitrate
+                kiloBitrate = bassStream.song.estimatedKiloBitrate
             }
         case BASS_CTYPE_STREAM_CA:
             // CoreAudio codec
-            guard let tags = BASS_ChannelGetTags(stream, UInt32(BASS_TAG_CA_CODEC)) else {
+            guard let tags = BASS_ChannelGetTags(bassStream.hstream, UInt32(BASS_TAG_CA_CODEC)) else {
                 // If we can't detect the format, use the estimated bitrate instead of player to be safe
-                return songForStream.estimatedKiloBitrate
+                return bassStream.song.estimatedKiloBitrate
             }
             tags.withMemoryRebound(to: TAG_CA_CODEC.self, capacity: 1) { pointer in
                 let codec: TAG_CA_CODEC = pointer.pointee
                 switch UInt32(codec.atype) {
                 case kAudioFormatLinearPCM, kAudioFormatAppleLossless:
                     if kiloBitrate < 330 || kiloBitrate > 12000 {
-                        kiloBitrate = songForStream.estimatedKiloBitrate
+                        kiloBitrate = bassStream.song.estimatedKiloBitrate
                     }
                 case kAudioFormatMPEG4AAC, kAudioFormatMPEG4AAC_HE, kAudioFormatMPEG4AAC_LD, kAudioFormatMPEG4AAC_ELD, kAudioFormatMPEG4AAC_ELD_SBR, kAudioFormatMPEG4AAC_HE_V2, kAudioFormatMPEG4AAC_Spatial, kAudioFormatMPEGLayer1, kAudioFormatMPEGLayer2, kAudioFormatMPEGLayer3:
                     if kiloBitrate > 450 {
-                        kiloBitrate = songForStream.estimatedKiloBitrate
+                        kiloBitrate = bassStream.song.estimatedKiloBitrate
                     }
                 default:
                     // If we can't detect the format, use the estimated bitrate instead of player to be safe
-                    kiloBitrate = songForStream.estimatedKiloBitrate
+                    kiloBitrate = bassStream.song.estimatedKiloBitrate
                 }
             }
         default:
             // If we can't detect the format, use the estimated bitrate instead of player to be safe
-            kiloBitrate = songForStream.estimatedKiloBitrate
+            kiloBitrate = bassStream.song.estimatedKiloBitrate
         }
         
         return kiloBitrate
     }
 
-    @objc static func prepareStream(song: Song, player: BassGaplessPlayer) -> BassStream? {
+    @objc static func prepareStream(song: Song, player: BassPlayer) -> BassStream? {
         // Make sure we're using the right device
         BASS_SetDevice(outputDeviceNumber)
         
@@ -307,17 +305,19 @@ private let defaultSampleRate = 44100
             DDLogError("[Bass] failed to create stream because file doesn't exist for song: \(song) file: \(song.currentPath)")
             return nil
         }
-        guard let fileHandle = FileHandle(forReadingAtPath: song.currentPath) else {
-            DDLogError("[Bass] failed to create stream because failed to create file handle for song: \(song) file: \(song.currentPath)")
+//        guard let fileHandle = FileHandle(forReadingAtPath: song.currentPath) else {
+//            DDLogError("[Bass] failed to create stream because failed to create file handle for song: \(song) file: \(song.currentPath)")
+//            return nil
+//        }
+        guard let bassStream = BassStream(song: song) else {
+            DDLogError("[Bass] failed to create stream because failed to create BassStream object for song: \(song) file: \(song.currentPath)")
             return nil
         }
-        
         // Create the BassStream object for the stream
-        let bassStream = BassStream()
-        bassStream.song = song
-        bassStream.writePath = song.currentPath
-        bassStream.isTempCached = song.isTempCached
-        bassStream.fileHandle = fileHandle
+//        bassStream.song = song
+//        bassStream.writePath = song.currentPath
+//        bassStream.isTempCached = song.isTempCached
+//        bassStream.fileHandle = fileHandle
         
         func createStream(softwareDecoding: Bool = false) -> HSTREAM {
             var flags = DWORD(BASS_STREAM_DECODE | BASS_SAMPLE_FLOAT)
@@ -361,28 +361,35 @@ private let defaultSampleRate = 44100
         bassStream.sampleRate = Int(info.freq)
         
         // Stream successfully created
-        bassStream.stream = fileStream
+        bassStream.hstream = fileStream
         bassStream.player = player
         return bassStream
     }
     
-//    static func testStream(forSong song: Song) -> Bool {
-//        guard song.fileExists else { return false }
-//
-//        BASS_SetDevice(0)
-//
-//        var fileStream: HSTREAM = 0
-//        song.fullPath.withCString { unsafePointer in
-//            fileStream = BASS_StreamCreateFile(false, unsafePointer, 0, UInt64(song.size), UInt32(BASS_STREAM_DECODE|BASS_SAMPLE_FLOAT))
+    @objc static func testStream(forSong song: Song) -> Bool {
+        guard song.fileExists else { return false }
+
+        // Device 0 for no sound output
+        BASS_SetDevice(0)
+
+        var fileStream: HSTREAM = 0
+//        song.localPath.withCString { unsafePointer in
+//            fileStream = BASS_StreamCreateFile(false, unsafePointer, 0, UInt64(song.size), UInt32(BASS_STREAM_DECODE | BASS_SAMPLE_FLOAT))
 //            if fileStream == 0 {
-//                fileStream = BASS_StreamCreateFile(false, unsafePointer, 0, UInt64(song.size), UInt32(BASS_STREAM_DECODE|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_FLOAT))
+//                fileStream = BASS_StreamCreateFile(false, unsafePointer, 0, UInt64(song.size), UInt32(BASS_STREAM_DECODE | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT))
 //            }
 //        }
-//
-//        if fileStream > 0 {
-//            BASS_StreamFree(fileStream)
-//            return true
-//        }
-//        return false
-//    }
+        
+        let localPath = song.localPath
+        fileStream = BASS_StreamCreateFile(false, localPath, 0, QWORD(song.size), DWORD(BASS_STREAM_DECODE | BASS_SAMPLE_FLOAT))
+        if fileStream == 0 {
+            fileStream = BASS_StreamCreateFile(false, localPath, 0, QWORD(song.size), DWORD(BASS_STREAM_DECODE | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT))
+        }
+
+        if fileStream > 0 {
+            BASS_StreamFree(fileStream)
+            return true
+        }
+        return false
+    }
 }

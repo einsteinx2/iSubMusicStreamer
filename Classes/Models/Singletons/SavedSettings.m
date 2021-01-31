@@ -7,7 +7,6 @@
 //
 
 #import "SavedSettings.h"
-#import "BassGaplessPlayer.h"
 #import "ISMSServer.h"
 #import "Defines.h"
 #import "Swift.h"
@@ -37,7 +36,7 @@ LOG_LEVEL_ISUB_DEFAULT
 @implementation SavedSettings
 
 - (void)loadState {
-    BassGaplessPlayer *player = BassGaplessPlayer.shared;
+    BassPlayer *player = BassPlayer.shared;
     PlayQueue *playQueue = PlayQueue.shared;
     
     if (self.isJukeboxEnabled) {
@@ -79,7 +78,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)saveState {
 	@autoreleasepool {
-        BassGaplessPlayer *player = BassGaplessPlayer.shared;
+        BassPlayer *player = BassPlayer.shared;
         PlayQueue *playQueue = PlayQueue.shared;
 		
         BOOL isDefaultsDirty = NO;

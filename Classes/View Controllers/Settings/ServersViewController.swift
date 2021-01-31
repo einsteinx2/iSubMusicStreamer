@@ -15,7 +15,7 @@ final class ServersViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var streamManager: StreamManager
-    @Injected private var player: BassGaplessPlayer
+    @Injected private var player: BassPlayer
     
     private let tableView = UITableView()
     private var originalBackButtonItem: UIBarButtonItem?

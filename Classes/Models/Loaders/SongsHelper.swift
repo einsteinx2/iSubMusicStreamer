@@ -13,7 +13,7 @@ struct SongsHelper {
     @Injected private static var store: Store
     @Injected private static var settings: Settings
     @Injected private static var jukebox: Jukebox
-    @Injected private static var player: BassGaplessPlayer
+    @Injected private static var player: BassPlayer
     @Injected private static var playQueue: PlayQueue
     @Injected private static var streamManager: StreamManager
     

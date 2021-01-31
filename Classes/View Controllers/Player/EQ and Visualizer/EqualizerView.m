@@ -236,7 +236,7 @@ typedef struct {
 }
 
 - (void)drawTheEq {
-    BassGaplessPlayer *player = BassGaplessPlayer.shared;
+    BassPlayer *player = BassPlayer.shared;
 	if (!player.isPlaying || self.visualType == ISMSBassVisualType_none)
 		return;
 	
@@ -506,7 +506,7 @@ typedef struct {
 }
 
 - (void)changeType:(ISMSBassVisualType)type {
-    BassGaplessPlayer *player = BassGaplessPlayer.shared;
+    BassPlayer *player = BassPlayer.shared;
 	switch (type) {
 		case ISMSBassVisualType_none:
             player.visualizer.type = BassVisualizerTypeNone;

@@ -14,7 +14,7 @@ import Resolver
 final class HomeViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var player: BassGaplessPlayer
+    @Injected private var player: BassPlayer
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
     

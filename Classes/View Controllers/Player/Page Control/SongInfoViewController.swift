@@ -11,7 +11,7 @@ import SnapKit
 import Resolver
 
 final class SongInfoViewController: UIViewController {
-    @Injected private var player: BassGaplessPlayer
+    @Injected private var player: BassPlayer
     @Injected private var playQueue: PlayQueue
     
     let stackView = UIStackView()

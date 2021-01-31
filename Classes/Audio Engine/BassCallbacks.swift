@@ -8,14 +8,16 @@
 import Foundation
 import CocoaLumberjackSwift
 
+// TODO: Test if autoreleasepool is actual necessary like it is in Obj-C
+
 // MARK: Main Output Callback
 
 func bassStreamProc(handle: HSYNC, buffer: UnsafeMutableRawPointer?, length: DWORD, userInfo: UnsafeMutableRawPointer?) -> DWORD {
-    guard let userInfo = userInfo, let buffer = buffer else { return 0 }
-    
-    return autoreleasepool {
-        let player: BassGaplessPlayer = Bridging.bridge(ptr: userInfo)
-        return player.bassGetOutputData(buffer, length: length)
+    autoreleasepool {
+        guard let userInfo = userInfo, let buffer = buffer else { return 0 }
+        let player: BassPlayer = Bridging.bridge(ptr: userInfo)
+        
+        return player.bassGetOutputData(buffer: buffer, length: length)
     }
 }
 
@@ -24,121 +26,55 @@ func bassStreamProc(handle: HSYNC, buffer: UnsafeMutableRawPointer?, length: DWO
 var bassFileProcs = BASS_FILEPROCS(close: bassFileCloseProc, length: bassLengthProc, read: bassReadProc, seek: bassSeekProc)
 
 func bassLengthProc(userInfo: UnsafeMutableRawPointer?) -> QWORD {
-    guard let userInfo = userInfo else { return 0 }
-    
-    return autoreleasepool {
+    autoreleasepool {
+        guard let userInfo = userInfo else { return 0 }
         let bassStream: BassStream = Bridging.bridge(ptr: userInfo)
-        guard let song = bassStream.song, bassStream.fileHandle != nil else { return 0 }
         
-        var length = 0
-        if bassStream.shouldBreakWaitLoopForever {
-            return 0
-        } else if song.isFullyCached || bassStream.isTempCached {
-            // Return actual file size on disk
-            length = song.localFileSize
-        } else {
-            // Return server reported file size
-            length = song.size
-        }
-        
-        DDLogInfo("[bassLengthProc] checking length: \(length) for song: \(song.title)")
-        return QWORD(length)
+        let length = bassStream.fileSize
+        DDLogInfo("[bassLengthProc] checking length: \(length) for song: \(bassStream.song)")
+        return length
     }
 }
 
 func bassReadProc(buffer: UnsafeMutableRawPointer?, length: DWORD, userInfo: UnsafeMutableRawPointer?) -> DWORD {
-    guard let userInfo = userInfo, let buffer = buffer else { return 0 }
-    
-    return autoreleasepool {
+    autoreleasepool {
+        guard let userInfo = userInfo, let buffer = buffer else { return 0 }
         let bassStream: BassStream = Bridging.bridge(ptr: userInfo)
-        guard let fileHandle = bassStream.fileHandle else { return 0 }
         
-        // Read from the file
-        var readData: Data?
-        do {
-            try ObjC.perform {
-                readData = fileHandle.readData(ofLength: Int(length))
-            }
-        } catch {
-            readData = nil
-        }
-        
-        guard let data = readData else { return 0 }
-        
-        var bytesRead = data.count
-        if bytesRead > 0 {
-            bytesRead = data.withUnsafeBytes { pointer in
-                guard let bytes = pointer.baseAddress?.assumingMemoryBound(to: UInt8.self) else { return 0 }
-                buffer.copyMemory(from: bytes, byteCount: data.count)
-                return data.count
-            }
-        }
-        
-        if bytesRead < length && bassStream.isSongStarted && !bassStream.wasFileJustUnderrun {
-            bassStream.isFileUnderrun = true
-        }
-        bassStream.wasFileJustUnderrun = false
-        return DWORD(bytesRead)
+        return bassStream.readBytes(buffer: buffer, length: length)
     }
 }
 
 func bassSeekProc(offset: QWORD, userInfo: UnsafeMutableRawPointer?) -> ObjCBool {
-    guard let userInfo = userInfo else { return false }
-    
-    return autoreleasepool {
-        // Seek to the requested offset (returns false if data not downloaded that far)
+    autoreleasepool {
+        guard let userInfo = userInfo else { return false }
         let bassStream: BassStream = Bridging.bridge(ptr: userInfo)
-        guard let song = bassStream.song, let fileHandle = bassStream.fileHandle else { return false }
         
-        var success = false
-        
-        // First check the file size to make sure we don't try and skip past the end of the file
-        if song.localFileSize >= offset {
-            // File size is valid, so assume success unless the seek operation throws an exception
-            success = true
-            do {
-                try fileHandle.seek(toOffset: offset)
-            } catch {
-                success = false
-            }
-        }
-        
+        let success = bassStream.seek(to: offset)
         DDLogInfo("[bassSeekProc] seeking to \(offset) success: \(success)")
         return ObjCBool(success)
     }
 }
 
 func bassFileCloseProc(userInfo: UnsafeMutableRawPointer?) {
-    guard let userInfo = userInfo else { return }
-    
     autoreleasepool {
+        guard let userInfo = userInfo else { return }
         let bassStream: BassStream = Bridging.bridge(ptr: userInfo)
         
-        // Tell the read wait loop to break in case it's waiting
-        bassStream.shouldBreakWaitLoop = true
-        bassStream.shouldBreakWaitLoopForever = true
-        
-        // Close the file handle
-        // TODO: implement this - switch to non-deprecated API
-        bassStream.fileHandle?.closeFile()
-        bassStream.fileHandle = nil
+        bassStream.shouldWaitForData = false
     }
 }
 
 // MARK: Seek Fade Callback
 
 func bassSlideSyncProc(handle: HSYNC, channel: DWORD, data: DWORD, userInfo: UnsafeMutableRawPointer?) {
-    guard let userInfo = userInfo else { return }
-    
-    // Make sure we're using the right device
-    BASS_SetDevice(Bass.outputDeviceNumber)
-
     autoreleasepool {
-        let player: BassGaplessPlayer = Bridging.bridge(ptr: userInfo)
+        guard let userInfo = userInfo else { return }
+        let player: BassPlayer = Bridging.bridge(ptr: userInfo)
         
+        BASS_SetDevice(Bass.outputDeviceNumber)
         var volumeLevel: Float = 0.0
         let success = BASS_ChannelGetAttribute(player.outStream, UInt32(BASS_ATTRIB_VOL), &volumeLevel)
-        
         if success && volumeLevel == 0 {
             BASS_ChannelSlideAttribute(player.outStream, UInt32(BASS_ATTRIB_VOL), 1, 200)
         }
@@ -163,22 +99,22 @@ func bassEndSyncProc(handle: HSYNC, channel: DWORD, data: DWORD, userInfo: Unsaf
         // it will pause the audio output momentarily while it's loading the stream
         player.streamGcdQueue.async {
             // Prepare the next song in the queue
-            guard let nextSong = player.nextSong else { return }
+            guard let nextSong = PlayQueue.shared.nextSong else { return }
             DDLogInfo("[bassEndSyncProc]  Preparing stream for: \(nextSong)")
             if let nextStream = Bass.prepareStream(song: nextSong, player: player) {
                 DDLogInfo("[bassEndSyncProc] Stream prepared successfully for: \(nextSong)")
-                synchronized(player.streamQueue) {
-                    player.streamQueue.add(nextStream)
+                synchronized(player.streamQueueSync) {
+                    player.streamQueue.append(nextStream)
                 }
-                BASS_Mixer_StreamAddChannel(player.mixerStream, nextStream.stream, DWORD(BASS_MIXER_NORAMPIN))
+                BASS_Mixer_StreamAddChannel(player.mixerStream, nextStream.hstream, DWORD(BASS_MIXER_NORAMPIN))
             } else {
                 DDLogInfo("[bassEndSyncProc] Could NOT create stream for: \(nextSong)")
                 bassStream.isNextSongStreamFailed = true
             }
             
             // Mark as ended and set the buffer space til end for the UI
-            bassStream.bufferSpaceTilSongEnd = player.ringBuffer.filledSpaceLength
-            bassStream.isEnded = true
+//            bassStream.bufferSpaceTilSongEnd = player.ringBuffer.filledSpaceLength
+//            bassStream.isEnded = true
         }
     }
 }
@@ -189,7 +125,7 @@ func bassEndSyncProc(handle: HSYNC, channel: DWORD, data: DWORD, userInfo: Unsaf
 //    guard let userInfo = userInfo else { return }
 //
 //    autoreleasepool {
-//        let player: BassGaplessPlayer = Bridging.bridge(ptr: userInfo)
+//        let player: BassPlayer = Bridging.bridge(ptr: userInfo)
 //        player.currentSongBPM = bpm
 //    }
 //}

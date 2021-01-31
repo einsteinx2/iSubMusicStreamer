@@ -122,7 +122,7 @@
 	[self.controlsContainer addSubview:self.deletePresetButton];
     
     self.effectDAO = [[BassEffectDAO alloc] initWithType:BassEffectType_ParametricEQ];
-    if (!BassGaplessPlayer.shared.equalizer.equalizerValues.count) {
+    if (!BassPlayer.shared.equalizer.equalizerValues.count) {
         [self.effectDAO selectPresetAtIndex:self.effectDAO.selectedPresetIndex];
     }
     
@@ -257,8 +257,8 @@
 - (void)createEqViews {
 	[self removeEqViews];
 		
-	self.equalizerPointViews = [[NSMutableArray alloc] initWithCapacity:BassGaplessPlayer.shared.equalizer.equalizerValues.count];
-	for (BassParamEqValue *value in BassGaplessPlayer.shared.equalizer.equalizerValues) {
+	self.equalizerPointViews = [[NSMutableArray alloc] initWithCapacity:BassPlayer.shared.equalizer.equalizerValues.count];
+	for (BassParamEqValue *value in BassPlayer.shared.equalizer.equalizerValues) {
 		//DLog(@"eq handle: %i", value.handle);
 		EqualizerPointView *eqView = [[EqualizerPointView alloc] initWithEqValue:value parentSize:self.equalizerView.frame.size];
 		[self.equalizerPointViews addObject:eqView];
@@ -290,7 +290,7 @@
 	[self.equalizerView stopEqDisplay];
 	[self.equalizerView removeFromSuperview];
 	self.equalizerView = nil;
-    BassGaplessPlayer.shared.visualizer.type = BassVisualizerTypeNone;
+    BassPlayer.shared.visualizer.type = BassVisualizerTypeNone;
 	self.navigationController.navigationBar.hidden = NO;
 }
 
@@ -422,7 +422,7 @@
 	CGFloat maxValue = self.gainSlider.maximumValue;
 	
 	settingsS.gainMultiplier = gainValue;
-    BassGaplessPlayer.shared.equalizer.gain = gainValue;
+    BassPlayer.shared.equalizer.gain = gainValue;
 	
 	CGFloat difference = fabs(gainValue - self.lastGainValue);
 	if (difference >= .1 || gainValue == minValue || gainValue == maxValue) {
@@ -448,7 +448,7 @@
 			// remove the point
 			//DLog(@"double tap, remove point");
 			
-			[BassGaplessPlayer.shared.equalizer removeEqualizerValue:self.selectedView.eqValue];
+			[BassPlayer.shared.equalizer removeEqualizerValue:self.selectedView.eqValue];
 			[self.equalizerPointViews removeObject:self.selectedView];
 			[self.selectedView removeFromSuperview];
 			self.selectedView = nil;
@@ -485,7 +485,7 @@
 				
 				// Create the eq view
 				EqualizerPointView *eqView = [[EqualizerPointView alloc] initWithCGPoint:point parentSize:self.equalizerView.bounds.size];
-				BassParamEqValue *value = [BassGaplessPlayer.shared.equalizer addEqualizerValue:eqView.eqValue.parameters];
+				BassParamEqValue *value = [BassPlayer.shared.equalizer addEqualizerValue:eqView.eqValue.parameters];
 				eqView.eqValue = value;
 				
 				// Add the view
@@ -506,7 +506,7 @@
 		CGPoint location = [touch locationInView:self.equalizerView];
 		if (CGRectContainsPoint(self.equalizerView.frame, location)) {
 			self.selectedView.center = [touch locationInView:self.view];
-			[BassGaplessPlayer.shared.equalizer updateEqParameter:self.selectedView.eqValue];
+			[BassPlayer.shared.equalizer updateEqParameter:self.selectedView.eqValue];
 			[self createAndDrawEqualizerPath];
 		}
 	}
@@ -515,7 +515,7 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	// Apply the EQ
 	if (self.selectedView != nil) {
-		[BassGaplessPlayer.shared.equalizer updateEqParameter:self.selectedView.eqValue];
+		[BassPlayer.shared.equalizer updateEqParameter:self.selectedView.eqValue];
 		self.selectedView = nil;
 		[self saveTempCustomPreset];
 	}
@@ -531,7 +531,7 @@
 
 - (IBAction)toggle:(id)sender {
 
-	if ([BassGaplessPlayer.shared.equalizer toggleEqualizer]) {
+	if ([BassPlayer.shared.equalizer toggleEqualizer]) {
 		[self removeEqViews];
 		[self createEqViews];
 	}

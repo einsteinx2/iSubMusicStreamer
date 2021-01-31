@@ -14,7 +14,7 @@ struct LockScreenAudioControls {
     private static var remote: MPRemoteCommandCenter { MPRemoteCommandCenter.shared() }
     private static var settings: Settings { Resolver.resolve() }
     private static var jukebox: Jukebox { Resolver.resolve() }
-    private static var player: BassGaplessPlayer { Resolver.resolve() }
+    private static var player: BassPlayer { Resolver.resolve() }
     private static var playQueue: PlayQueue { Resolver.resolve() }
     
     static func setup() {
@@ -155,7 +155,7 @@ struct LockScreenAudioControls {
             guard settings.isJukeboxEnabled || playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
             guard let positionEvent = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
             if player.isPlaying {
-                player.seekToPosition(inSeconds: positionEvent.positionTime, fadeVolume: true)
+                player.seekToPosition(seconds: positionEvent.positionTime, fadeVolume: true)
                 return .success
             }
             return .commandFailed

@@ -16,7 +16,7 @@ import Resolver
 final class PlayerViewController: UIViewController {
     @Injected private var settings: Settings
     @Injected private var jukebox: Jukebox
-    @Injected private var player: BassGaplessPlayer
+    @Injected private var player: BassPlayer
     @Injected private var playQueue: PlayQueue
     @Injected private var streamManager: StreamManager
     
@@ -562,7 +562,7 @@ final class PlayerViewController: UIViewController {
             progressDisplayLink?.isPaused = false
         } else {
             if currentSong.isFullyCached || byteOffset < currentSong.localFileSize {
-                player.seekToPosition(inSeconds: Double(progressSlider.value), fadeVolume: true)
+                player.seekToPosition(seconds: Double(progressSlider.value), fadeVolume: true)
                 progressDisplayLink?.isPaused = false
             } else {
                 let message = "You are trying to skip further than the song has cached. You can do this, but the song won't be cached. Or you can wait a little bit for the cache to catch up."

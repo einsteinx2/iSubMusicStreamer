@@ -15,7 +15,7 @@ import CocoaLumberjackSwift
     @LazyInjected private var store: Store
     @LazyInjected private var settings: Settings
     @LazyInjected private var playQueue: PlayQueue
-    @LazyInjected private var player: BassGaplessPlayer
+    @LazyInjected private var player: BassPlayer
     
     // Temporary accessor for Objective-C classes using Resolver under the hood
     @objc static var shared: StreamManager { Resolver.resolve() }
@@ -400,7 +400,7 @@ extension StreamManager: StreamHandlerDelegate {
         lastCachedSong = handler.song
         
         if let currentSong = playQueue.currentSong, currentSong == handler.song {
-            player.startNewSong(currentSong, at: playQueue.currentIndex, withOffsetInBytes: NSNumber(value: handler.byteOffset), orSeconds: NSNumber(value: handler.secondsOffset))
+            player.startNewSong(currentSong, index: playQueue.currentIndex, offsetInBytes: handler.byteOffset, offsetInSeconds: handler.secondsOffset)
         }
         
         // TODO: Is this needed? Are we actually changing the stack?

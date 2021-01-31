@@ -13,7 +13,7 @@ import Resolver
 @objc(ISMSSong) final class Song: NSObject, NSCopying, Codable {
     private var store: Store { Resolver.resolve() }
     private var settings: Settings { Resolver.resolve() }
-    private var player: BassGaplessPlayer { Resolver.resolve() }
+    private var player: BassPlayer { Resolver.resolve() }
     private var playQueue: PlayQueue { Resolver.resolve() }
     
 //    static let supportsSecureCoding: Bool = true

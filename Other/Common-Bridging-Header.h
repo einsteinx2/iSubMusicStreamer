@@ -21,7 +21,8 @@
 #import "SavedSettings.h"
 
 // Audio Engine
-#import "BassGaplessPlayer.h"
+#import "BassEqualizer.h"
+#import "BassVisualizer.h"
 #import "BassPluginLoad.h"
 #import "bass.h"
 #import "bass_fx.h"
@@ -31,7 +32,6 @@
 #import "basswv.h"
 #import "bass_mpc.h"
 #import "bass_ape.h"
-#import "EX2RingBuffer.h"
 
 // Frameworks
 #import "Flurry.h"

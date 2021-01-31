@@ -14,7 +14,7 @@ import CocoaLumberjackSwift
 @objc final class AppDelegate: UIResponder, UIApplicationDelegate {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var player: BassGaplessPlayer
+    @Injected private var player: BassPlayer
     @Injected private var playQueue: PlayQueue
     @Injected private var cache: Cache
     

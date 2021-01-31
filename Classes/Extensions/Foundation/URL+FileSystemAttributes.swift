@@ -43,9 +43,9 @@ extension URL {
             }
         } catch {
             // Don't log such file errors because it's common for the player to request the file size before the file exists
-            if !error.isNoSuchFileError {
+//            if !error.isNoSuchFileError {
                 DDLogError("[URL+FileSystemAttributes] Failed to get file size of \(self), \(error)")
-            }
+//            }
         }
         return nil
     }

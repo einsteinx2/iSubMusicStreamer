@@ -110,13 +110,7 @@ protocol StreamHandlerDelegate {
     
     // TODO: implement this - refactor for better error handling
     func start(resume: Bool = false) {
-        // DELETE ME
-        Thread.callStackSymbols.forEach { print($0) }
-        //
-        guard !isDownloading else {
-            print("DEBUG StreamHandler start called but already downloading")
-            return
-        }
+        guard !isDownloading else { return }
         
         isDownloading = true
         

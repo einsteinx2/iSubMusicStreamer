@@ -9,7 +9,6 @@
 #import "BassEffectDAO.h"
 #import "BassEffectValue.h"
 #import "BassParamEqValue.h"
-#import "BassGaplessPlayer.h"
 #import "SavedSettings.h"
 #import "Swift.h"
 
@@ -232,16 +231,16 @@ static CGPoint CGPointFromString(NSString *string)
 		
 	if (self.type == BassEffectType_ParametricEQ)
 	{
-		[BassGaplessPlayer.shared.equalizer removeAllEqualizerValues];
+		[BassPlayer.shared.equalizer removeAllEqualizerValues];
 		
 		for (int i = 0; i < [self.selectedPresetValues count]; i++)
 		{
 			BassEffectValue *value = [self valueForIndex:i];
-			[BassGaplessPlayer.shared.equalizer addEqualizerValue:BASS_DX8_PARAMEQFromPoint(value.percentX, value.percentY, DEFAULT_BANDWIDTH)];
+			[BassPlayer.shared.equalizer addEqualizerValue:BASS_DX8_PARAMEQFromPoint(value.percentX, value.percentY, DEFAULT_BANDWIDTH)];
 		}
 		
 		if (settingsS.isEqualizerOn)
-			[BassGaplessPlayer.shared.equalizer toggleEqualizer];
+			[BassPlayer.shared.equalizer toggleEqualizer];
 	}
 	
 	[NSNotificationCenter postOnMainThreadWithName:Notifications.bassEffectPresetLoaded object:nil userInfo:nil];
