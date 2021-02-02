@@ -95,27 +95,30 @@ func bassEndSyncProc(handle: HSYNC, channel: DWORD, data: DWORD, userInfo: Unsaf
         let bassStream: BassStream = Bridging.bridge(ptr: userInfo)
         guard let player = bassStream.player else { return }
         
-        // This must be done in the stream GCD queue because if we do it in this thread
-        // it will pause the audio output momentarily while it's loading the stream
-        player.streamGcdQueue.async {
-            // Prepare the next song in the queue
-            guard let nextSong = PlayQueue.shared.nextSong else { return }
-            DDLogInfo("[bassEndSyncProc]  Preparing stream for: \(nextSong)")
-            if let nextStream = Bass.prepareStream(song: nextSong, player: player) {
-                DDLogInfo("[bassEndSyncProc] Stream prepared successfully for: \(nextSong)")
-                synchronized(player.streamQueueSync) {
-                    player.streamQueue.append(nextStream)
-                }
-                BASS_Mixer_StreamAddChannel(player.mixerStream, nextStream.hstream, DWORD(BASS_MIXER_NORAMPIN))
-            } else {
-                DDLogInfo("[bassEndSyncProc] Could NOT create stream for: \(nextSong)")
-                bassStream.isNextSongStreamFailed = true
-            }
-            
-            // Mark as ended and set the buffer space til end for the UI
-//            bassStream.bufferSpaceTilSongEnd = player.ringBuffer.filledSpaceLength
-//            bassStream.isEnded = true
-        }
+        player.songEnded(bassStream: bassStream)
+        
+//        // This must be done in the stream GCD queue because if we do it in this thread
+//        // it will pause the audio output momentarily while it's loading the stream
+//        player.streamGcdQueue.async {
+//            // Prepare the next song in the queue
+//            guard let nextSong = PlayQueue.shared.nextSong else { return }
+//            DDLogInfo("[bassEndSyncProc]  Preparing stream for: \(nextSong)")
+//            if let nextStream = player.prepareStream(song: nextSong) {
+//                DDLogInfo("[bassEndSyncProc] Stream prepared successfully for: \(nextSong)")
+//                synchronized(player.streamQueueSync) {
+//                    player.streamQueue.append(nextStream)
+//                }
+//                BASS_Mixer_StreamAddChannel(player.mixerStream, nextStream.hstream, DWORD(BASS_MIXER_NORAMPIN))
+//            } else {
+//                DDLogInfo("[bassEndSyncProc] Could NOT create stream for: \(nextSong)")
+//                bassStream.isNextSongStreamFailed = true
+//            }
+//
+//            // Mark as ended and set the buffer space til end for the UI
+////            bassStream.bufferSpaceTilSongEnd = player.ringBuffer.filledSpaceLength
+////            bassStream.isEnded = true
+//            bassStream.player?.songEnded(bassStream: bassStream)
+//        }
     }
 }
 

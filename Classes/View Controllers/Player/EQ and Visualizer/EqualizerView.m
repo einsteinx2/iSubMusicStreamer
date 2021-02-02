@@ -524,21 +524,21 @@ typedef struct {
 			break;
 			
 		case ISMSBassVisualType_skinnyBar:
-            player.visualizer.type = BassVisualizerTypeFFT;
+            player.visualizer.type = BassVisualizerTypeFft;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			self.visualType = ISMSBassVisualType_skinnyBar;
             [self startEqDisplay];
 			break;
 			
 		case ISMSBassVisualType_fatBar:
-            player.visualizer.type = BassVisualizerTypeFFT;
+            player.visualizer.type = BassVisualizerTypeFft;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			self.visualType = ISMSBassVisualType_fatBar;
             [self startEqDisplay];
 			break;
 			
 		case ISMSBassVisualType_aphexFace:
-            player.visualizer.type = BassVisualizerTypeFFT;
+            player.visualizer.type = BassVisualizerTypeFft;
 			[self eraseBitBuffer];
             specpos = 0;
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

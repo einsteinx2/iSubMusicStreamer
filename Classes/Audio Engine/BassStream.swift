@@ -8,30 +8,26 @@
 
 import Foundation
 
-@objc final class BassStream: NSObject {//, Equatable {
-    @objc let song: Song
-    @objc var hstream: HSTREAM = 0
+final class BassStream: Equatable, CustomStringConvertible {
+    let song: Song
+    var hstream: HSTREAM = 0
     
-    @objc var channelCount = 0
-    @objc var sampleRate = 0
+    var channelCount = 0
+    var sampleRate = 0
     
     // TODO: Get rid of this reference
-    @objc weak var player: BassPlayer?
-    // TODO: Get rid of these properties and combine the songEnded and songEndProc functions together
-    @objc var isNextSongStreamFailed = false
-    @objc var isEnded = false
-    @objc var isEndedCalled = false
+    weak var player: BassPlayer?
     // TODO: Get rid of these properties (or greatly simplify)
-    @objc var shouldWaitForData = false
-    @objc var isWaiting = false
-    @objc var shouldBreakWaitLoop = false
-    @objc var shouldBreakWaitLoopForever = false
+    var shouldWaitForData = false
+    var isWaiting = false
+    var shouldBreakWaitLoop = false
+    var shouldBreakWaitLoopForever = false
     
     // Using C file handle to directly copy to the buffer (FileHandle would require
     // first reading into a Data object then copying to the actual buffer)
     private let file: UnsafeMutablePointer<FILE>
     
-    @objc var fileSize: QWORD {
+    var fileSize: QWORD {
         if song.isFullyCached || song.isTempCached {
             // Return actual file size on disk
             return QWORD(sizeOnDisk)
@@ -42,7 +38,7 @@ import Foundation
     }
     
     // TODO: Better to use stat or the URL attributes? Should do some testing to confirm the numbers are equal and if there's any performance difference. For now, using stat to keep with the "everything using C" theme...
-    @objc var sizeOnDisk: Int {
+    var sizeOnDisk: Int {
         var st = stat()
         stat(song.currentPath.cString(using: .utf8), &st)
         return Int(st.st_size)
@@ -50,10 +46,8 @@ import Foundation
     
     init?(song: Song) {
         guard let cFileHandle = fopen(song.currentPath, "rb") else { return nil }
-        
         self.song = song
         self.file = cFileHandle
-        super.init()
     }
     
     deinit {
@@ -70,7 +64,7 @@ import Foundation
         return fseek(file, Int(offset), SEEK_SET) == 0
     }
     
-//    static func ==(lhs: BassStream, rhs: BassStream) -> Bool {
-//        return lhs === rhs
-//    }
+    static func ==(lhs: BassStream, rhs: BassStream) -> Bool {
+        return lhs === rhs
+    }
 }

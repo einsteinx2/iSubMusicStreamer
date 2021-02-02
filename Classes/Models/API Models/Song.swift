@@ -73,7 +73,11 @@ import Resolver
     }
     
     @objc var localFileSize: Int {
-        return URL(fileURLWithPath: currentPath).fileSize ?? 0
+        var st = stat()
+        stat(currentPath, &st)
+        return Int(st.st_size)
+        
+//        return URL(fileURLWithPath: currentPath).fileSize ?? 0
         
         
         // NOTE: This is almost certainly no longer the case

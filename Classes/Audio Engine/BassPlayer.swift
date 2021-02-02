@@ -29,8 +29,8 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
 
     var streamQueue = [BassStream]()
     let streamQueueSync = NSObject()
-    var outStream: HSTREAM = 0
-    var mixerStream: HSTREAM = 0
+    private(set) var outStream: HSTREAM = 0
+    private(set) var mixerStream: HSTREAM = 0
     
     @objc var isPlaying = false
     var waitLoopStream: BassStream?
@@ -96,7 +96,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         BASS_SetDevice(Bass.outputDeviceNumber)
         let pcmBytePosition = BASS_Mixer_ChannelGetPosition(currentStream.hstream, DWORD(BASS_POS_BYTE))
         let seconds = BASS_ChannelBytes2Seconds(currentStream.hstream, pcmBytePosition < 0 ? 0 : pcmBytePosition)
-        return seconds + startSecondsOffset
+        return seconds //+ startSecondsOffset
     }
     
     var isStarted: Bool {
@@ -169,41 +169,64 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         }
     }
     
+    func initializeOutput() {
+        guard mixerStream == 0 && outStream == 0 else { return }
+        
+        Bass.bassInit()
+        
+        mixerStream = BASS_Mixer_StreamCreate(Bass.outputSampleRate, 2, DWORD(BASS_STREAM_DECODE))
+        outStream = BASS_StreamCreate(Bass.outputSampleRate, 2, 0, bassStreamProc(handle:buffer:length:userInfo:), Bridging.bridge(obj: self))
+        
+        // Add the slide callback to handle fades
+        BASS_ChannelSetSync(outStream, DWORD(BASS_SYNC_SLIDE), 0, bassSlideSyncProc(handle:channel:data:userInfo:), Bridging.bridge(obj: self))
+        
+        visualizer.channel = outStream
+        equalizer.channel = outStream
+        
+        // Prepare the EQ
+        // This will load the values, and if the EQ was previously enabled, will automatically
+        // add the EQ values to the stream
+        let effectDAO = BassEffectDAO(type: BassEffectType_ParametricEQ)!
+        effectDAO.selectPreset(at: effectDAO.selectedPresetId)
+        
+        // Add gain amplification
+        equalizer.createVolumeFx()
+        
+        // Add limiter to prevent distortion
+        equalizer.createLimiterFx()
+    }
+    
     func cleanup() {
         BASS_SetDevice(Bass.outputDeviceNumber)
         
-        synchronized(visualizer) {
-            cancelRetrySongOperation()
-            
-            synchronized(streamQueueSync) {
-                for bassStream in streamQueue {
-                    bassStream.shouldBreakWaitLoopForever = true
-                    BASS_StreamFree(bassStream.hstream)
-                }
+        cancelRetrySongOperation()
+        
+        synchronized(streamQueueSync) {
+            for bassStream in streamQueue {
+                bassStream.shouldBreakWaitLoopForever = true
+                BASS_Mixer_ChannelRemove(bassStream.hstream)
+                BASS_StreamFree(bassStream.hstream)
             }
-            
-            BASS_StreamFree(mixerStream)
-            BASS_StreamFree(outStream)
-            
-            equalizer = BassEqualizer()
-            visualizer = BassVisualizer()
-            
-            isPlaying = false
-            
-            social.playerClearSocial()
-            
-            synchronized(streamQueueSync) {
-                streamQueue.removeAll()
-            }
-            
-            do {
-                try AVAudioSession.sharedInstance().setActive(false)
-            } catch {
-                DDLogError("[BassGaplessPlayer] Failed to deactivate audio session for audio playback: \(error)")
-            }
-            
-            NotificationCenter.postOnMainThread(name: Notifications.bassFreed)
+            streamQueue.removeAll()
         }
+        
+        // Clear output buffer
+        BASS_ChannelStop(outStream)
+        
+//        equalizer = BassEqualizer()
+//        visualizer = BassVisualizer()
+        
+        isPlaying = false
+        
+        social.playerClearSocial()
+        
+        do {
+            try AVAudioSession.sharedInstance().setActive(false)
+        } catch {
+            DDLogError("[BassGaplessPlayer] Failed to deactivate audio session for audio playback: \(error)")
+        }
+        
+        NotificationCenter.postOnMainThread(name: Notifications.bassFreed)
     }
     
     func startNewSong(_ song: Song, index: Int, offsetInBytes: Int, offsetInSeconds: Double) {
@@ -236,36 +259,9 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
             
             guard song.fileExists else { return }
             
-            let bassStream = Bass.prepareStream(song: song, player: self)
-            if let bassStream = bassStream {
-                mixerStream = BASS_Mixer_StreamCreate(Bass.outputSampleRate, 2, DWORD(BASS_STREAM_DECODE))
+            if let bassStream = prepareStream(song: song) {
                 BASS_Mixer_StreamAddChannel(mixerStream, bassStream.hstream, DWORD(BASS_MIXER_NORAMPIN))
-                outStream = BASS_StreamCreate(Bass.outputSampleRate, 2, 0, bassStreamProc(handle:buffer:length:userInfo:), Bridging.bridge(obj: self))
-                
                 BASS_Start()
-                
-                // Add the slide callback to handle fades
-                BASS_ChannelSetSync(outStream, DWORD(BASS_SYNC_SLIDE), 0, bassSlideSyncProc(handle:channel:data:userInfo:), Bridging.bridge(obj: self))
-                
-                visualizer.channel = outStream
-                equalizer.channel = outStream
-                
-                // Prepare the EQ
-                // This will load the values, and if the EQ was previously enabled, will automatically
-                // add the EQ values to the stream
-                let effectDAO = BassEffectDAO(type: BassEffectType_ParametricEQ)!
-                effectDAO.selectPreset(at: effectDAO.selectedPresetId)
-                
-                // Add gain amplification
-                equalizer.createVolumeFx()
-                
-                // Add limiter to prevent distortion
-                equalizer.createLimiterFx()
-                
-                // Add the stream to the queue
-                synchronized(streamQueueSync) {
-                    streamQueue.append(bassStream)
-                }
                 
                 if song.isTempCached {
                     // If temp cached, just set the offset but don't actually seek
@@ -298,6 +294,9 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
                 NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
                 
                 _ = store.update(playedDate: Date(), song: song)
+                
+                // Prepare the next song stream if it's available
+                prepareNextStream()
             } else if !song.isFullyCached && song.localFileSize < bassStreamMinFilesizeToFail {
                 if settings.isOfflineMode {
                     moveToNextSong()
@@ -325,6 +324,98 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
                 _ = store.deleteDownloadedSong(song: song)
                 playQueue.playCurrentSong()
             }
+        }
+    }
+    
+    func prepareStream(song: Song) -> BassStream? {
+        // Make sure we're using the right device
+        BASS_SetDevice(Bass.outputDeviceNumber)
+        
+        DDLogInfo("[Bass] preparing stream for \(song) file: \(song.currentPath)")
+        guard song.fileExists else {
+            DDLogError("[Bass] failed to create stream because file doesn't exist for song: \(song) file: \(song.currentPath)")
+            return nil
+        }
+
+        guard let bassStream = BassStream(song: song) else {
+            DDLogError("[Bass] failed to create stream because failed to create BassStream object for song: \(song) file: \(song.currentPath)")
+            return nil
+        }
+
+        func createStream(softwareDecoding: Bool = false) -> HSTREAM {
+            var flags = DWORD(BASS_STREAM_DECODE | BASS_SAMPLE_FLOAT)
+            if softwareDecoding {
+                flags = flags | DWORD(BASS_SAMPLE_SOFTWARE)
+            }
+            return BASS_StreamCreateFileUser(DWORD(STREAMFILE_NOBUFFER), flags, &bassFileProcs, Bridging.bridge(obj: bassStream))
+        }
+        
+        // Create the stream
+        var fileStream = createStream()
+        
+        // First check if the stream failed because of a BASS_Init error
+        if fileStream == 0 && BASS_ErrorGetCode() == BASS_ERROR_INIT {
+            // Retry the regular hardware sampling stream
+            DDLogError("[Bass] Failed to create stream for \(song) with hardware sampling because BASS is not initialized, initializing BASS and trying again with hardware sampling")
+            initializeOutput()
+            fileStream = createStream()
+        }
+        
+        if fileStream == 0 {
+            DDLogError("[Bass] Failed to create stream for \(song) with hardware sampling, trying again with software sampling")
+            Bass.logCurrentError()
+            fileStream = createStream(softwareDecoding: true)
+        }
+        
+        guard fileStream != 0 else {
+            // Failed to create the stream
+            DDLogError("[Bass] failed to create stream for song: \(song) file: \(song.currentPath)")
+            Bass.logCurrentError()
+            return nil
+        }
+        
+        // Add the stream free callback
+        BASS_ChannelSetSync(fileStream, DWORD(BASS_SYNC_END | BASS_SYNC_MIXTIME), 0, bassEndSyncProc, Bridging.bridge(obj: bassStream))
+        
+        // Ask BASS how many channels are on this stream
+        var info = BASS_CHANNELINFO()
+        BASS_ChannelGetInfo(fileStream, &info)
+        bassStream.channelCount = Int(info.chans)
+        bassStream.sampleRate = Int(info.freq)
+        
+        // Stream successfully created
+        bassStream.hstream = fileStream
+        bassStream.player = self
+        
+        // Add stream to queue
+        synchronized(streamQueueSync) {
+            streamQueue.append(bassStream)
+            print("\n\nDEBUG streamQueue count: \(streamQueue.count)")
+            for stream in streamQueue {
+                print("DEBUG \(stream)")
+            }
+        }
+
+        return bassStream
+    }
+    
+    func prepareNextStream() {
+        synchronized(streamQueueSync) {
+            guard streamQueue.count == 1, let nextSong = playQueue.nextSong, nextSong.fileExists else { return }
+            _ = prepareStream(song: nextSong)
+        }
+    }
+    
+    func streamReadyToStartPlayback(handler: StreamHandler) {
+        if !isPlaying, let currentSong = playQueue.currentSong, currentSong == handler.song {
+            // We were waiting for the current song to download before playing and now it's ready, so start playback
+            startNewSong(handler.song, index: playQueue.currentIndex, offsetInBytes: handler.byteOffset, offsetInSeconds: handler.secondsOffset)
+        } else if isPlaying, let nextSong = playQueue.nextSong, nextSong == handler.song {
+            // The next song is ready to start playback so create the stream
+            if streamQueue.count > 1 {
+                streamQueue.remove(at: 1)
+            }
+            prepareNextStream()
         }
     }
     
@@ -371,85 +462,59 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         if bytesRead < length {
             pauseIfUnderrun(bassStream: currentStream)
         }
-        
-        if currentStream.isEnded {
-            songEnded(bassStream: currentStream)
-        }
-        
-        if bytesRead == 0 && BASS_ChannelIsActive(currentStream.hstream) == 0 && (currentStream.song.isFullyCached || currentStream.song.isTempCached) {
-            isPlaying = false
-            
-            if !currentStream.isEndedCalled {
-                // Somehow songEnded: was never called
-                songEnded(bassStream: currentStream)
-            }
-            
-            // The stream should end, because there is no more music to play
-            NotificationCenter.postOnMainThread(name: Notifications.songPlaybackEnded)
-            
-            DDLogInfo("[BassGaplessPlayer] Stream not active, freeing BASS")
-            DispatchQueue.main.async {
-                self.cleanup()
-            }
-            
-            // Start the next song if for some reason this one isn't ready
-            playQueue.playCurrentSong()
-            return BASS_STREAMPROC_END
-        }
-        
+
         return bytesRead
     }
     
-    // songEnded: is called AFTER MyStreamEndCallback, so the next song is already actually decoding into the ring buffer
     func songEnded(bassStream: BassStream) {
-        BASS_SetDevice(Bass.outputDeviceNumber)
+        // Plug in the next stream if available for gapless playback
+        synchronized(streamQueueSync) {
+            if streamQueue.count > 1 {
+                BASS_Mixer_StreamAddChannel(mixerStream, streamQueue[1].hstream, DWORD(BASS_MIXER_NORAMPIN))
+            }
+        }
         
-        autoreleasepool {
-            bassStream.isEndedCalled = true
+        // This must be done in the stream GCD queue because if we do it in this thread
+        // it will pause the audio output momentarily while it's loading the stream
+        streamGcdQueue.async { [unowned self] in
+            BASS_SetDevice(Bass.outputDeviceNumber)
             
-            // Increment current playlist index
-            playQueue.incrementIndex()
-            
-            // Clear the social post status
-            social.playerClearSocial()
-            
-            playQueue.updateLockScreenInfo()
-            
-            // Remove the stream from the queue
-            BASS_StreamFree(bassStream.hstream)
-            synchronized(streamQueueSync) {
-                streamQueue.removeAll { $0 == bassStream }
-            }
-            
-            // Instead wait for the playlist index changed notification
-            /*// Update our index position
-            self.currentPlaylistIndex = [self nextIndex];*/
-            
-            // Send song end notification
-            NotificationCenter.postOnMainThread(name: Notifications.songPlaybackEnded)
-            
-            if isPlaying {
-                DDLogInfo("[BassGaplessPlayer] songEnded: self.isPlaying = YES")
-                startSecondsOffset = 0
-                startByteOffset = 0
+            autoreleasepool {
+                // Increment current playlist index
+                playQueue.incrementIndex()
                 
-                // Send song start notification
-                NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
+                // Clear the social post status
+                social.playerClearSocial()
                 
-                // Mark the last played time in the database for cache cleanup
-                _ = store.update(playedDate: Date(), song: bassStream.song)
-            }
-            
-            if bassStream.isNextSongStreamFailed {
-                DispatchQueue.main.async {
-                    // The song ended, and we tried to make the next stream but it failed
-                    if let song = self.playQueue.song(index: self.playQueue.currentIndex), let handler = self.streamManager.handler(song: song) {
-                        if !handler.isDownloading || handler.isDelegateNotifiedToStartPlayback {
-                            // If the song isn't downloading, or it is and it already informed the player to play (i.e. the playlist will stop if we don't force a retry), then retry
-                            self.playQueue.playCurrentSong()
-                        }
-                    }
+                playQueue.updateLockScreenInfo()
+                
+                // Remove the stream from the queue
+                BASS_StreamFree(bassStream.hstream)
+                synchronized(streamQueueSync) {
+                    streamQueue.removeAll { $0 == bassStream }
                 }
+                
+                // Instead wait for the playlist index changed notification
+                /*// Update our index position
+                self.currentPlaylistIndex = [self nextIndex];*/
+                
+                // Send song end notification
+                NotificationCenter.postOnMainThread(name: Notifications.songPlaybackEnded)
+                
+                if isPlaying {
+                    DDLogInfo("[BassGaplessPlayer] songEnded: self.isPlaying = YES")
+                    startSecondsOffset = 0
+                    startByteOffset = 0
+                    
+                    // Send song start notification
+                    NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
+                    
+                    // Mark the last played time in the database for cache cleanup
+                    _ = store.update(playedDate: Date(), song: bassStream.song)
+                }
+                
+                // If the next song stream was somehow not prepared, prepare it
+                prepareNextStream()
             }
         }
     }

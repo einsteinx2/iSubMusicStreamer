@@ -299,7 +299,9 @@ extension StreamHandler: URLSessionDataDelegate {
             // Notify delegate if enough bytes received to start playback
             if !isDelegateNotifiedToStartPlayback && totalBytesTransferred > minBytesToStartLimiting(kiloBitrate: kiloBitrate) {
                 isDelegateNotifiedToStartPlayback = true
-                DispatchQueue.main.async { self.delegate?.streamHandlerStartPlayback(handler: self) }
+                DispatchQueue.main.async {
+                    self.delegate?.streamHandlerStartPlayback(handler: self)
+                }
             }
             
             // Log progress

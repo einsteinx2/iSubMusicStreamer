@@ -10,30 +10,27 @@ import Foundation
 import AudioToolbox
 import CocoaLumberjackSwift
 
-private let bassBufferSize = 800
-private let defaultSampleRate = 44100
-
-@objc final class Bass: NSObject {
+struct Bass {
     // TODO: Device 1 is the first output device, need to test when multiple
     //       things are connected like an external DAC
-    @objc static let outputDeviceNumber: DWORD = 1
+    static let outputDeviceNumber: DWORD = 1
     
     // TODO: decide best value for this
-    // 50ms (also used for BASS_CONFIG_UPDATEPERIOD, so total latency is 100ms)
-    @objc static let outputBufferSize: DWORD = 50
+    // 250ms (also used for BASS_CONFIG_UPDATEPERIOD, so total latency is 500ms)
+    static let outputBufferSize: DWORD = 250
     
     // TODO: 48Khz is the default hardware sample rate of the iPhone,
     //       but since most released music is 44.1KHz, need to confirm if it's better
     //       to let BASS to the upsampling, or let the DAC do it...
-    @objc static let outputSampleRate: DWORD = 44100
+    static let outputSampleRate: DWORD = 44100
     
-    @objc private(set) static var bassOutputBufferLengthMillis: DWORD = 0
+    private(set) static var bassOutputBufferLengthMillis: DWORD = 0
     
-    @objc static func bassInit() {
+    static func bassInit() {
         bassInit(sampleRate: outputSampleRate)
     }
     
-    @objc static func bassInit(sampleRate: DWORD) {
+    static func bassInit(sampleRate: DWORD) {
         // Free BASS just in case we use this after launch
         BASS_Free()
         
@@ -59,11 +56,11 @@ private let defaultSampleRate = 44100
         }
     }
     
-    @objc static func bytesForSecondsAtBitRate(seconds: Int, bitRate: Int) -> Int64 {
+    static func bytesForSecondsAtBitRate(seconds: Int, bitRate: Int) -> Int64 {
         return (Int64(bitRate) / 8) * 1024 * Int64(seconds)
     }
     
-    @objc static func printChannelInfo(_ channel: HSTREAM) {
+    static func printChannelInfo(_ channel: HSTREAM) {
         var i = BASS_CHANNELINFO()
         BASS_ChannelGetInfo(channel, &i)
         let bytes = BASS_ChannelGetLength(channel, UInt32(BASS_POS_BYTE))
@@ -71,7 +68,7 @@ private let defaultSampleRate = 44100
         DDLogVerbose("channel type = \(i.ctype) (\(self.formatForChannel(channel)))\nlength = \(bytes) (seconds: \(time)  flags: \(i.flags)  freq: \(i.freq)  origres: \(i.origres)")
     }
     
-    @objc static func formatForChannel(_ channel: HSTREAM) -> String {
+    static func formatForChannel(_ channel: HSTREAM) -> String {
         var i = BASS_CHANNELINFO()
         BASS_ChannelGetInfo(channel, &i)
         
@@ -153,7 +150,7 @@ private let defaultSampleRate = 44100
         }
     }
     
-    @objc static func string(fromErrorCode errorCode: Int32) -> String {
+    static func string(fromErrorCode errorCode: Int32) -> String {
         switch errorCode {
         case BASS_OK:                   return "No error! All OK"
         case BASS_ERROR_MEM:            return "Memory error"
@@ -195,17 +192,17 @@ private let defaultSampleRate = 44100
         }
     }
     
-//    @objc static func printBassError(file: String = #file, function: String = #function, line: UInt = #line) {
+//    static func printBassError(file: String = #file, function: String = #function, line: UInt = #line) {
 //        let errorCode = BASS_ErrorGetCode()
 //        DDLogError("BASS error: \(errorCode) - \(string(fromErrorCode: errorCode))", file: StaticString(file), function: StaticString(function), line: line)
 //    }
     
-    @objc static func logCurrentError() {
+    static func logCurrentError() {
         let errorCode = BASS_ErrorGetCode()
         DDLogError("[Bass] BASS error: \(errorCode) - \(string(fromErrorCode: errorCode))")
     }
     
-    @objc static func bytesToBuffer(kiloBitrate: Int, bytesPerSec: Int) -> Int {
+    static func bytesToBuffer(kiloBitrate: Int, bytesPerSec: Int) -> Int {
         // If start date is nil somehow, or total bytes transferred is 0 somehow,
         guard kiloBitrate > 0 && bytesPerSec > 0 else { return bytesForSeconds(seconds: 10, kiloBitrate: kiloBitrate) }
         
@@ -242,7 +239,7 @@ private let defaultSampleRate = 44100
         return Int(numberOfBytesToBuffer)
     }
     
-    @objc static func estimateKiloBitrate(bassStream: BassStream) -> Int {
+    static func estimateKiloBitrate(bassStream: BassStream) -> Int {
         // Default to the player bitrate
         let startFilePosition: QWORD = 0
         let currentFilePosition = BASS_StreamGetFilePosition(bassStream.hstream, DWORD(BASS_FILEPOS_CURRENT))
@@ -295,78 +292,8 @@ private let defaultSampleRate = 44100
         
         return kiloBitrate
     }
-
-    @objc static func prepareStream(song: Song, player: BassPlayer) -> BassStream? {
-        // Make sure we're using the right device
-        BASS_SetDevice(outputDeviceNumber)
-        
-        DDLogInfo("[Bass] preparing stream for \(song) file: \(song.currentPath)")
-        guard song.fileExists else {
-            DDLogError("[Bass] failed to create stream because file doesn't exist for song: \(song) file: \(song.currentPath)")
-            return nil
-        }
-//        guard let fileHandle = FileHandle(forReadingAtPath: song.currentPath) else {
-//            DDLogError("[Bass] failed to create stream because failed to create file handle for song: \(song) file: \(song.currentPath)")
-//            return nil
-//        }
-        guard let bassStream = BassStream(song: song) else {
-            DDLogError("[Bass] failed to create stream because failed to create BassStream object for song: \(song) file: \(song.currentPath)")
-            return nil
-        }
-        // Create the BassStream object for the stream
-//        bassStream.song = song
-//        bassStream.writePath = song.currentPath
-//        bassStream.isTempCached = song.isTempCached
-//        bassStream.fileHandle = fileHandle
-        
-        func createStream(softwareDecoding: Bool = false) -> HSTREAM {
-            var flags = DWORD(BASS_STREAM_DECODE | BASS_SAMPLE_FLOAT)
-            if softwareDecoding {
-                flags = flags | DWORD(BASS_SAMPLE_SOFTWARE)
-            }
-            return BASS_StreamCreateFileUser(DWORD(STREAMFILE_NOBUFFER), flags, &bassFileProcs, Bridging.bridge(obj: bassStream))
-        }
-        
-        // Create the stream
-        var fileStream = createStream()
-        
-        // First check if the stream failed because of a BASS_Init error
-        if fileStream == 0 && BASS_ErrorGetCode() == BASS_ERROR_INIT {
-            // Retry the regular hardware sampling stream
-            DDLogError("[Bass] Failed to create stream for \(song) with hardware sampling because BASS is not initialized, initializing BASS and trying again with hardware sampling")
-            bassInit()
-            fileStream = createStream()
-        }
-        
-        if fileStream == 0 {
-            DDLogError("[Bass] Failed to create stream for \(song) with hardware sampling, trying again with software sampling")
-            logCurrentError()
-            fileStream = createStream(softwareDecoding: true)
-        }
-        
-        guard fileStream != 0 else {
-            // Failed to create the stream
-            DDLogError("[Bass] failed to create stream for song: \(song) file: \(song.currentPath)")
-            logCurrentError()
-            return nil
-        }
-        
-        // Add the stream free callback
-        BASS_ChannelSetSync(fileStream, DWORD(BASS_SYNC_END | BASS_SYNC_MIXTIME), 0, bassEndSyncProc, Bridging.bridge(obj: bassStream))
-        
-        // Ask BASS how many channels are on this stream
-        var info = BASS_CHANNELINFO()
-        BASS_ChannelGetInfo(fileStream, &info)
-        bassStream.channelCount = Int(info.chans)
-        bassStream.sampleRate = Int(info.freq)
-        
-        // Stream successfully created
-        bassStream.hstream = fileStream
-        bassStream.player = player
-        return bassStream
-    }
     
-    @objc static func testStream(forSong song: Song) -> Bool {
+    static func testStream(forSong song: Song) -> Bool {
         guard song.fileExists else { return false }
 
         // Device 0 for no sound output

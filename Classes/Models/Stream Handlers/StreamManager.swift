@@ -398,12 +398,10 @@ extension StreamManager: StreamHandlerDelegate {
     
     func streamHandlerStartPlayback(handler: StreamHandler) {
         lastCachedSong = handler.song
-        
-        if let currentSong = playQueue.currentSong, currentSong == handler.song {
-            player.startNewSong(currentSong, index: playQueue.currentIndex, offsetInBytes: handler.byteOffset, offsetInSeconds: handler.secondsOffset)
-        }
+        player.streamReadyToStartPlayback(handler: handler)
         
         // TODO: Is this needed? Are we actually changing the stack?
+        // I guess this is to save the isDelegateNotifiedToStartPlayback property?
         saveHandlerStack()
     }
     

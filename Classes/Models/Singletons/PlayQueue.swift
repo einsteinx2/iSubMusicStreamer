@@ -382,7 +382,7 @@ import CocoaLumberjackSwift
             
             if streamManager.isDownloading(song: song) {
                 // The song is caching, start streaming from the local copy
-                if let handler = streamManager.handler(song: song), !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
+                if let handler = streamManager.handler(song: song), !player.isPlaying, !handler.isDelegateNotifiedToStartPlayback {
                     // Only start the player if the handler isn't going to do it itself
                     player.startNewSong(song, index: index, offsetInBytes: offsetInBytes, offsetInSeconds: offsetInSeconds)
                 }
@@ -391,7 +391,7 @@ import CocoaLumberjackSwift
                 streamManager.resumeQueue()
                 
                 // The song is caching, start streaming from the local copy
-                if let handler = streamManager.handler(song: song), !player.isPlaying, handler.isDelegateNotifiedToStartPlayback {
+                if let handler = streamManager.handler(song: song), !player.isPlaying, !handler.isDelegateNotifiedToStartPlayback {
                     // Only start the player if the handler isn't going to do it itself
                     player.startNewSong(song, index: index, offsetInBytes: offsetInBytes, offsetInSeconds: offsetInSeconds)
                 }

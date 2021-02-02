@@ -22,7 +22,6 @@
 
 // Audio Engine
 #import "BassEqualizer.h"
-#import "BassVisualizer.h"
 #import "BassPluginLoad.h"
 #import "bass.h"
 #import "bass_fx.h"

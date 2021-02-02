@@ -17,6 +17,9 @@ extension DispatchQueue {
     // Work is nearly instantaneous, such as a few seconds or less.
     static var userInitiated: DispatchQueue   { return DispatchQueue.global(qos: .userInitiated) }
     
+    // Default tasks have a lower priority than user-initiated and user-interactive tasks, but a higher priority than utility and background tasks. Assign this class to tasks or queues that your app initiates or uses to perform active work on the user's behalf.
+    static var `default`: DispatchQueue       { return DispatchQueue.global(qos: .default) }
+    
     // Work that may take some time to complete and doesn’t require an immediate result, such as downloading or importing data. Utility tasks typically have a progress bar that is visible to the user. Focuses on providing a balance between responsiveness, performance, and energy efficiency.
     // Work takes a few seconds to a few minutes.
     static var utility: DispatchQueue         { return DispatchQueue.global(qos: .utility) }
