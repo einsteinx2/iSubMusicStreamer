@@ -8,7 +8,6 @@
 
 #import "EqualizerViewController.h"
 #import "EqualizerView.h"
-#import "EqualizerPointView.h"
 #import "EqualizerPathView.h"
 #import "Flurry.h"
 #import "SavedSettings.h"
@@ -260,7 +259,7 @@
 	self.equalizerPointViews = [[NSMutableArray alloc] initWithCapacity:BassPlayer.shared.equalizer.equalizerValues.count];
 	for (BassParamEqValue *value in BassPlayer.shared.equalizer.equalizerValues) {
 		//DLog(@"eq handle: %i", value.handle);
-		EqualizerPointView *eqView = [[EqualizerPointView alloc] initWithEqValue:value parentSize:self.equalizerView.frame.size];
+        EqualizerPointView *eqView = [[EqualizerPointView alloc] initWithEqValue:value parentSize:self.equalizerView.frame.size];
 		[self.equalizerPointViews addObject:eqView];
 		
 		[self.view insertSubview:eqView aboveSubview:self.equalizerPath];
@@ -484,7 +483,7 @@
 				CGPoint point = [touch locationInView:self.equalizerView];
 				
 				// Create the eq view
-				EqualizerPointView *eqView = [[EqualizerPointView alloc] initWithCGPoint:point parentSize:self.equalizerView.bounds.size];
+				EqualizerPointView *eqView = [[EqualizerPointView alloc] initWithPoint:point parentSize:self.equalizerView.bounds.size];
 				BassParamEqValue *value = [BassPlayer.shared.equalizer addEqualizerValue:eqView.eqValue.parameters];
 				eqView.eqValue = value;
 				

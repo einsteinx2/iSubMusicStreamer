@@ -10,102 +10,69 @@
 
 @implementation BassParamEqValue
 
-- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)params handle:(HFX)theHandle arrayIndex:(NSInteger)index
-{
-	if ((self = [super init]))
-	{
-		_parameters = params;
-		_handle = theHandle;
+- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)parameters handle:(HFX)handle arrayIndex:(NSInteger)index {
+    if (self = [super init]) {
+		_parameters = parameters;
+		_handle = handle;
 		_arrayIndex = index;
 	}
-	
 	return self;
 }
 
-+ (BassParamEqValue *)valueWithParams:(BASS_DX8_PARAMEQ)params handle:(HFX)theHandle arrayIndex:(NSInteger)index
-{
-	return [[BassParamEqValue alloc] initWithParameters:params handle:theHandle arrayIndex:index];
+- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)params arrayIndex:(NSInteger)index {
+    return [self initWithParameters:params handle:0 arrayIndex:index];
 }
 
-- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)params
-{
+- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)params {
 	return [self initWithParameters:params handle:0 arrayIndex:NSIntegerMax];
 }
 
-+ (BassParamEqValue *)valueWithParams:(BASS_DX8_PARAMEQ)params
-{
-	return [[BassParamEqValue alloc] initWithParameters:params handle:0 arrayIndex:NSIntegerMax];
-}
-
-- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)params arrayIndex:(NSInteger)index
-{
-	return [self initWithParameters:params handle:0 arrayIndex:index];
-}
-
-+ (BassParamEqValue *)valueWithParams:(BASS_DX8_PARAMEQ)params arrayIndex:(NSInteger)index
-{
-	return [[BassParamEqValue alloc] initWithParameters:params handle:0 arrayIndex:index];
-}
-
-- (float)frequency
-{
+- (float)frequency {
 	return _parameters.fCenter;
 }
 
-- (void)setFrequency:(float)frequency
-{
+- (void)setFrequency:(float)frequency {
 	_parameters.fCenter = frequency;
 }
 
-- (float)gain
-{
+- (float)gain {
 	return _parameters.fGain;
 }
 
-- (void)setGain:(float)gain
-{
+- (void)setGain:(float)gain {
 	_parameters.fGain = gain;
 }
 
-- (float)bandwidth
-{
+- (float)bandwidth {
 	return _parameters.fBandwidth;
 }
 
-- (void)setBandwidth:(float)bandwidth
-{
+- (void)setBandwidth:(float)bandwidth {
 	_parameters.fBandwidth = bandwidth;
 }
 
-BASS_DX8_PARAMEQ BASS_DX8_PARAMEQMake(float center, float gain, float bandwidth)
-{
+BASS_DX8_PARAMEQ BASS_DX8_PARAMEQMake(float center, float gain, float bandwidth) {
 	BASS_DX8_PARAMEQ p;
 	p.fCenter = center;
 	p.fGain = gain;
 	p.fBandwidth = bandwidth;
-	
 	return p;
 }
 
-BASS_DX8_PARAMEQ BASS_DX8_PARAMEQFromPoint(float percentX, float percentY, float bandwidth)
-{	
+BASS_DX8_PARAMEQ BASS_DX8_PARAMEQFromPoint(float percentX, float percentY, float bandwidth) {
 	BASS_DX8_PARAMEQ p;
 	p.fCenter = exp2f((percentX * RANGE_OF_EXPONENTS) + 5);
 	p.fGain = (.5 - percentY) * (CGFloat)(MAX_GAIN * 2);;
 	p.fBandwidth = bandwidth;
-	
 	return p;
 }
 
-- (NSUInteger)hash
-{
+- (NSUInteger)hash {
 	return fabsf(self.parameters.fCenter) + fabsf(self.parameters.fGain) + fabsf(self.parameters.fBandwidth) + self.handle;
 }
 
-- (BOOL)isEqualToBassParamEqValue:(BassParamEqValue *)otherValue
-{
-	if (self == otherValue)
-        return YES;
+- (BOOL)isEqualToBassParamEqValue:(BassParamEqValue *)otherValue {
+	if (self == otherValue) return YES;
 	
 	if (self.parameters.fCenter == otherValue.parameters.fCenter &&
 		self.parameters.fGain == otherValue.parameters.fGain &&

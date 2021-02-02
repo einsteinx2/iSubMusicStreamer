@@ -28,14 +28,9 @@
 @property float gain;
 @property float bandwidth;
 
-- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)params handle:(HFX)theHandle arrayIndex:(NSInteger)index;
-+ (BassParamEqValue *)valueWithParams:(BASS_DX8_PARAMEQ)params handle:(HFX)theHandle arrayIndex:(NSInteger)index;
-
-- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)parameters;
-+ (BassParamEqValue *)valueWithParams:(BASS_DX8_PARAMEQ)parameters;
-
+- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)parameters handle:(HFX)handle arrayIndex:(NSInteger)index;
 - (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)parameters arrayIndex:(NSInteger)index;
-+ (BassParamEqValue *)valueWithParams:(BASS_DX8_PARAMEQ)parameters arrayIndex:(NSInteger)index;
+- (instancetype)initWithParameters:(BASS_DX8_PARAMEQ)parameters;
 
 BASS_DX8_PARAMEQ BASS_DX8_PARAMEQMake(float center, float gain, float bandwidth);
 BASS_DX8_PARAMEQ BASS_DX8_PARAMEQFromPoint(float percentX, float percentY, float bandwidth);

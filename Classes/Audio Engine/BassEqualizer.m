@@ -122,7 +122,7 @@ LOG_LEVEL_ISUB_DEFAULT
     @synchronized(self.eqValues) {
         index = [self.eqValues count];
     }
-	BassParamEqValue *eqValue = [BassParamEqValue valueWithParams:value arrayIndex:index];
+	BassParamEqValue *eqValue = [[BassParamEqValue alloc] initWithParameters:value arrayIndex:index];
     
     @synchronized(self.eqValues) {
         [self.eqValues addObject:eqValue];

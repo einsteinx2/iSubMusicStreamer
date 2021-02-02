@@ -6,14 +6,14 @@
 //  Copyright (c) 2011 Ben Baron. All rights reserved.
 //
 
-#import <QuartzCore/QuartzCore.h>
-#import <OpenGLES/EAGLDrawable.h>
-#import "OpenGLCommon.h"
-#import "ConstantsAndMacros.h"
+
 #import "EqualizerView.h"
 #import "SavedSettings.h"
 #import "Swift.h"
 #import <stdlib.h>
+#import <QuartzCore/QuartzCore.h>
+#import <OpenGLES/EAGLDrawable.h>
+#import <OpenGLES/ES1/glext.h>
 
 //CLASS IMPLEMENTATIONS:
 
@@ -183,14 +183,14 @@ typedef struct {
 
 // The GL view is stored in the nib file. When it's unarchived it's sent -initWithCoder:
 - (instancetype)initWithCoder:(NSCoder*)coder  {
-    if ((self = [super initWithCoder:coder])) {
+    if (self = [super initWithCoder:coder]) {
 		return [self setup];
 	}
 	return self;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
-	if ((self = [super initWithFrame:frame])) {
+	if (self = [super initWithFrame:frame]) {
 		return [self setup];
 	}
 	return self;
@@ -250,18 +250,19 @@ typedef struct {
 			break;
         case ISMSBassVisualType_line: {
 			[self eraseBitBuffer];
-			for (x = 0; x < specWidth; x++) 
-			{
+			for (x = 0; x < specWidth; x++) {
 				int v=(32767 - [player.visualizer lineSpecData:x]) * specHeight/65536; // invert and scale to fit display
-				if (!x) 
+                if (!x) {
 					y = v;
-				do 
-				{ 
+                }
+                
+				do {
 					// draw line from previous sample...
-					if (y < v)
+                    if (y < v) {
 						y++;
-					else if (y > v)
+                    } else if (y > v) {
 						y--;
+                    }
                     
                     int specbufIndex = y * specWidth + x;
                     int palletIndex = abs(y - specHeight / 2) * 2 + 1;
@@ -302,7 +303,8 @@ typedef struct {
                 }
 			}
 			break;
-		} case ISMSBassVisualType_fatBar: {
+		}
+        case ISMSBassVisualType_fatBar: {
 			int b0 = 0;
 			[self eraseBitBuffer];
 #define BANDS 28
@@ -340,7 +342,8 @@ typedef struct {
 				}
 			}
 			break;
-		} case ISMSBassVisualType_aphexFace: {
+		}
+        case ISMSBassVisualType_aphexFace: {
 			for (x=0; x < specHeight; x++) {
 				y = sqrt([player.visualizer fftData:x + 1]) * 3 * 127; // scale it (sqrt to make low values more visible)
                 if (y > 127) {
@@ -419,11 +422,6 @@ typedef struct {
 // This is the perfect opportunity to also update the framebuffer so that it is
 // the same size as our display area.
 - (void)layoutSubviews {
-	//DLog(@"self.layer.frame: %@", NSStringFromCGRect(self.layer.frame));
-	//self.layer.frame = self.frame;
-	//DLog(@"self.layer.frame: %@", NSStringFromCGRect(self.layer.frame));
-	NSLog(@"  ");
-	
 	[EAGLContext setCurrentContext:context];
 	
 	glMatrixMode(GL_PROJECTION);
@@ -444,8 +442,7 @@ typedef struct {
 	}
 }
 
-- (BOOL)createFramebuffer
-{
+- (BOOL)createFramebuffer {
 	// Generate IDs for a framebuffer object and a color renderbuffer
 	glGenFramebuffersOES(1, &viewFramebuffer);
 	glGenRenderbuffersOES(1, &viewRenderbuffer);
@@ -550,7 +547,6 @@ typedef struct {
 			break;
 	}
 	settingsS.currentVisualizerType = self.visualType;
-	//DLog(@"visualType: %i   currentVisualizerType: %i", visualType, settingsS.currentVisualizerType);
 }
 
 - (void)nextType {
@@ -570,24 +566,5 @@ typedef struct {
     
 	[self changeType:newType];
 }
-
-/*- (void)changeType
-{
-	ISMSBassVisualType type = 0;
-	switch (visualType)
-	{
-		case ISMSBassVisualType_none:
-			type = ISMSBassVisualType_skinnyBar; break;
-		case ISMSBassVisualType_skinnyBar:
-			type = ISMSBassVisualType_fatBar; break;
-		case ISMSBassVisualType_fatBar:
-			type = ISMSBassVisualType_aphexFace; break;
-		case ISMSBassVisualType_aphexFace:
-			type = ISMSBassVisualType_line; break;
-		case ISMSBassVisualType_line:
-			type = ISMSBassVisualType_none; break;
-	}
-	[self changeType:type];
-}*/
 
 @end
