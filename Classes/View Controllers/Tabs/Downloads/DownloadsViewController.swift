@@ -22,17 +22,26 @@ final class DownloadsViewController: AbstractDownloadsViewController {//UIViewCo
     }
     
     @objc override func reloadTable() {
-        downloadedSongsCount = store.downloadedSongsCount()
+        downloadedSongsCount = store.downloadedSongsCount() ?? 0
         super.reloadTable()
     }
 }
 
 extension DownloadsViewController: UITableViewConfiguration {
-    private enum RowType: Int {
+    private enum RowType: Int, CaseIterable {
         case folders = 0
         case artists = 1
         case albums = 2
         case songs = 3
+        
+        var name: String {
+            switch self {
+            case .folders: return "Folders"
+            case .artists: return "Artists"
+            case .albums: return "Albums"
+            case .songs: return "Songs"
+            }
+        }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -40,7 +49,7 @@ extension DownloadsViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return downloadedSongsCount > 0 ? 4 : 0
+        return downloadedSongsCount > 0 ? RowType.allCases.count : 0
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -53,13 +62,8 @@ extension DownloadsViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
-        cell.show(cached: false, number: false, art: false, secondary: false, duration: false)
-        switch RowType(rawValue: indexPath.row) {
-        case .folders: cell.update(primaryText: "Folders", secondaryText: nil)
-        case .artists: cell.update(primaryText: "Artists", secondaryText: nil)
-        case .albums:  cell.update(primaryText: "Albums", secondaryText: nil)
-        case .songs:   cell.update(primaryText: "Songs", secondaryText: nil)
-        default: break
+        if let rowType = RowType(rawValue: indexPath.row) {
+            cell.update(primaryText: rowType.name)
         }
         return cell
     }

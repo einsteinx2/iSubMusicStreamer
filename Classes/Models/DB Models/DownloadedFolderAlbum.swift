@@ -21,8 +21,15 @@ extension DownloadedFolderAlbum: TableCellModel {
     
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? {
-        // TODO: implement this using number of songs downloaded
-        nil
+        var subfoldersText: String? = nil
+        var songsText: String? = nil
+        if let count = store.downloadedFolderAlbumsCount(downloadedFolderAlbum: self), count > 0 {
+            subfoldersText = "\(count) \("Folder".pluralize(amount: count))"
+        }
+        if let count = store.downloadedSongsCount(downloadedFolderAlbum: self), count > 0 {
+            songsText = "\(count) \("Song".pluralize(amount: count))"
+        }
+        return [subfoldersText, songsText].compactMap({ $0 }).joined(separator: " • ")
     }
     var durationLabelText: String? { nil }
     var isCached: Bool { true }

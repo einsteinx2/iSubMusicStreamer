@@ -44,7 +44,7 @@ final class ArtistsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Colors.background
-        title = "Folders"
+        title = dataModel.itemType.pluralized
         
         dataModel.delegate = self
         dataModel.reset()
@@ -85,7 +85,7 @@ final class ArtistsViewController: UIViewController {
     
     private func updateCount() {
         let count = dataModel.count
-        countLabel.text = "\(count) \("Folder".pluralize(amount: count))"
+        countLabel.text = "\(count) \(dataModel.itemType.pluralize(amount: count))"
         if let reloadDate = dataModel.reloadDate {
             let formatter = DateFormatter()
             formatter.dateStyle = .medium

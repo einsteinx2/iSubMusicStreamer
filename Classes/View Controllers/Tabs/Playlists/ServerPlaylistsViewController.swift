@@ -130,20 +130,17 @@ final class ServerPlaylistsViewController: UIViewController {
     private func loadServerPlaylists() {
         cancelLoad()
         HUD.show(closeHandler: cancelLoad)
-        self.serverPlaylistsLoader = ServerPlaylistsLoader(serverId: serverId)
-        self.serverPlaylistsLoader?.callback = { [unowned self] _, success, error in
+        serverPlaylistsLoader = ServerPlaylistsLoader(serverId: serverId)
+        serverPlaylistsLoader?.callback = { [unowned self] _, success, error in
+            HUD.hide()
+            tableView.refreshControl?.endRefreshing()
             if success {
-                self.serverPlaylists = self.serverPlaylistsLoader?.serverPlaylists ?? []
-                self.saveEditHeader.count = self.serverPlaylists.count
-                self.tableView.reloadData()
-                self.addSaveEditHeader()
+                reloadData()
             } else {
                 // TODO: Show error message
             }
-            HUD.hide()
-            self.tableView.refreshControl?.endRefreshing()
         }
-        self.serverPlaylistsLoader?.startLoad()
+        serverPlaylistsLoader?.startLoad()
     }
     
     @objc func cancelLoad() {

@@ -21,6 +21,8 @@ final class FolderArtistsViewModel: ArtistsViewModel {
         }
     }
     
+    let itemType = "Folder"
+    
     private var metadata: RootListMetadata?
     var tableSections = [TableSection]()
     

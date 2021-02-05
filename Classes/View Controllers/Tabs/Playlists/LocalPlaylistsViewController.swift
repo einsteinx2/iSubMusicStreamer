@@ -24,9 +24,8 @@ final class LocalPlaylistsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = Colors.background
         title = "Local Playlists"
-        
-        tableView.allowsMultipleSelectionDuringEditing = true
         setupDefaultTableView(tableView)
+        tableView.allowsMultipleSelectionDuringEditing = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -37,7 +36,7 @@ final class LocalPlaylistsViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.setEditing(false, animated: false)
+        setEditing(false, animated: false)
     }
     
     private func addSaveEditHeader() {
@@ -59,9 +58,7 @@ final class LocalPlaylistsViewController: UIViewController {
     
     private func removeSaveEditHeader() {
         guard saveEditHeader.superview != nil else { return }
-        
         saveEditHeader.removeFromSuperview()
-        
         tableView.snp.updateConstraints { make in
             make.top.equalToSuperview().offset(0)
         }
@@ -74,6 +71,8 @@ final class LocalPlaylistsViewController: UIViewController {
         localPlaylists = store.localPlaylists()
         if localPlaylists.count > 0 {
             addSaveEditHeader()
+        } else {
+            removeSaveEditHeader()
         }
         tableView.reloadData()
     }
@@ -212,9 +211,7 @@ extension LocalPlaylistsViewController: SaveEditHeaderDelegate {
                 if let indexPathsForSelectedRows = self.tableView.indexPathsForSelectedRows {
                     self.deleteLocalPlaylists(indexPaths: indexPathsForSelectedRows)
                 }
-                DispatchQueue.main.async {
-                    HUD.hide()
-                }
+                HUD.hide()
             }
         }
     }

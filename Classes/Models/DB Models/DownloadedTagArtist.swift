@@ -24,10 +24,13 @@ struct DownloadedTagArtist: Codable, Equatable {
 }
 
 extension DownloadedTagArtist: TableCellModel {
+    private var store: Store { Resolver.resolve() }
+    
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? {
-        // TODO: implement this grabbing the number of albums cached not number of albums in the record
-        //"\(albumCount) \("Album".pluralize(amount: albumCount))"
+        if let albumCount = store.downloadedTagAlbumsCount(downloadedTagArtist: self) {
+            return "\(albumCount) \("Album".pluralize(amount: albumCount))"
+        }
         return nil
     }
     var durationLabelText: String? { nil }

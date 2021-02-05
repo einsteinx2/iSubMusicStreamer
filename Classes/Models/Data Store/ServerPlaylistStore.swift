@@ -73,25 +73,25 @@ extension ServerPlaylist: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
-    func serverPlaylistsCount() -> Int {
+    func serverPlaylistsCount() -> Int? {
         do {
             return try pool.read { db in
                 try ServerPlaylist.fetchCount(db)
             }
         } catch {
             DDLogError("Failed to select count of server playlists: \(error)")
-            return -1
+            return nil
         }
     }
     
-    func serverPlaylistsCount(serverId: Int) -> Int {
+    func serverPlaylistsCount(serverId: Int) -> Int? {
         do {
             return try pool.read { db in
                 try ServerPlaylist.filter(literal: "serverId = \(serverId)").fetchCount(db)
             }
         } catch {
             DDLogError("Failed to select count of server playlists for server \(serverId): \(error)")
-            return -1
+            return nil
         }
     }
     

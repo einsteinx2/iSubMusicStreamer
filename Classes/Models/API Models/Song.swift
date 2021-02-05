@@ -244,3 +244,15 @@ extension Song: TableCellModel {
         _ = store.queue(song: self)
     }
 }
+
+extension UniversalTableViewCell {
+    func update(song: Song) {
+        var showNumber = false
+        if song.track > 0 {
+            showNumber = true
+            number = song.track
+        }
+        show(cached: true, number: showNumber, art: false, secondary: true, duration: true)
+        update(model: song)
+    }
+}

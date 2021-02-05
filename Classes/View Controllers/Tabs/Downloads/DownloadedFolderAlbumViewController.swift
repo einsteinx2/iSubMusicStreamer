@@ -80,19 +80,13 @@ extension DownloadedFolderAlbumViewController: UITableViewConfiguration {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let cell = tableView.dequeueUniversalCell()
-            cell.show(cached: false, number: false, art: true, secondary: false, duration: false)
+            cell.show(cached: false, number: false, art: true, secondary: true, duration: false)
             cell.update(model: downloadedFolderAlbums[indexPath.row])
             return cell
         } else {
             let cell = tableView.dequeueUniversalCell()
             if let song = store.song(downloadedSong: downloadedSongs[indexPath.row]) {
-                var showNumber = false
-                if song.track > 0 {
-                    showNumber = true
-                    cell.number = song.track
-                }
-                cell.show(cached: true, number: showNumber, art: true, secondary: true, duration: true)
-                cell.update(model: song)
+                cell.update(song: song)
             }
             return cell
         }
@@ -102,10 +96,8 @@ extension DownloadedFolderAlbumViewController: UITableViewConfiguration {
         if indexPath.section == 0 {
             let controller = DownloadedFolderAlbumViewController(folderAlbum: downloadedFolderAlbums[indexPath.row])
             pushViewControllerCustom(controller)
-        } else {
-            if let song = store.playSong(position: indexPath.row, downloadedSongs: downloadedSongs), !song.isVideo {
-                showPlayer()
-            }
+        } else if let song = store.playSong(position: indexPath.row, downloadedSongs: downloadedSongs), !song.isVideo {
+            showPlayer()
         }
     }
     

@@ -63,12 +63,13 @@ final class UniversalTableViewCell: UITableViewCell {
         didSet { if oldValue != hideDurationLabel { makeDurationLabelConstraints() } }
     }
     
-    func show(cached: Bool, number: Bool, art: Bool, secondary: Bool, duration: Bool) {
+    func show(cached: Bool, number: Bool, art: Bool, secondary: Bool, duration: Bool, header: Bool = false) {
         hideCacheIndicator = !cached
         hideNumberLabel = !number
         hideCoverArt = !art
         hideSecondaryLabel = !secondary
         hideDurationLabel = !duration
+        hideHeaderLabel = !header
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -141,26 +142,17 @@ final class UniversalTableViewCell: UITableViewCell {
         }
     }
     
-    func update(primaryText: String, secondaryText: String?) {
-        tableCellModel = nil;
-        hideNumberLabel = true
-        hideCoverArt = true
-        hideSecondaryLabel = (secondaryText == nil)
-        hideDurationLabel = true
-        primaryLabel.text = primaryText
-        secondaryLabel.text = secondaryText;
-        cachedIndicator.isHidden = true;
-    }
-    
-    func update(primaryText: String, secondaryText: String?, coverArtId: String?) {
-        tableCellModel = nil;
+    func update(primaryText: String, secondaryText: String? = nil, coverArtId: String? = nil) {
+        tableCellModel = nil
+        
         hideNumberLabel = true
         hideSecondaryLabel = (secondaryText == nil)
         hideDurationLabel = true
+        hideCoverArt = (coverArtId == nil)
+        
         primaryLabel.text = primaryText
-        secondaryLabel.text = secondaryText;
-        coverArtView.coverArtId = coverArtId;
-        cachedIndicator.isHidden = true;
+        secondaryLabel.text = secondaryText
+        coverArtView.coverArtId = coverArtId
     }
     
 //    @objc func startScrollingLabels() {

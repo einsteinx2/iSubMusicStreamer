@@ -49,9 +49,8 @@ extension DownloadedSongsViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
-        cell.show(cached: false, number: false, art: true, secondary: true, duration: true)
         if let song = store.song(downloadedSong: downloadedSongs[indexPath.row]) {
-            cell.update(model: song)
+            cell.update(song: song)
         }
         return cell
     }

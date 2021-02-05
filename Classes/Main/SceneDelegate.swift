@@ -24,9 +24,8 @@ import CocoaLumberjackSwift
     @objc private(set) var tabBarController: CustomUITabBarController?
     @objc private(set) var padRootViewController: PadRootViewController?
     
-    // TODO: Get rid of these
-    @objc private(set) var foldersTab: CustomUINavigationController?
-    @objc private(set) var artistsTab: CustomUINavigationController?
+    // TODO: Get rid of this
+    @objc private(set) var libraryTab: CustomUINavigationController?
     
     private let serverChecker = ServerChecker()
     
@@ -56,17 +55,9 @@ import CocoaLumberjackSwift
             let homeTab = CustomUINavigationController(rootViewController: HomeViewController())
             homeTab.tabBarItem = UITabBarItem(title: "Home", image: UIImage(named: "tabbaricon-home"), tag: 0)
             
-            let foldersMediaFolderId = settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
-            let foldersDataModel = FolderArtistsViewModel(serverId: settings.currentServerId, mediaFolderId: foldersMediaFolderId)
-            let foldersTab = CustomUINavigationController(rootViewController: ArtistsViewController(dataModel: foldersDataModel))
-            foldersTab.tabBarItem = UITabBarItem(title: "Folders", image: UIImage(named: "tabbaricon-folders"), tag: 0)
-            self.foldersTab = foldersTab
-            
-            let artistsMediaFolderId = settings.rootArtistsSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
-            let artistsDataModel = TagArtistsViewModel(serverId: settings.currentServerId, mediaFolderId: artistsMediaFolderId)
-            let artistsTab = CustomUINavigationController(rootViewController: ArtistsViewController(dataModel: artistsDataModel))
-            artistsTab.tabBarItem = UITabBarItem(title: "Artists", image: UIImage(named: "tabbaricon-folders"), tag: 0)
-            self.artistsTab = artistsTab
+            let libraryTab = CustomUINavigationController(rootViewController: LibraryViewController())
+            libraryTab.tabBarItem = UITabBarItem(title: "Library", image: UIImage(named: "tabbaricon-folders"), tag: 0)
+            self.libraryTab = libraryTab
             
             let playlistsTab = CustomUINavigationController(rootViewController: PlaylistsViewController())
             playlistsTab.tabBarItem = UITabBarItem(title: "Playlists", image: UIImage(named: "tabbaricon-playlists"), tag: 0)
@@ -76,14 +67,8 @@ import CocoaLumberjackSwift
             
             let bookmarksTab = CustomUINavigationController(rootViewController: BookmarksViewController())
             bookmarksTab.tabBarItem = UITabBarItem(title: "Bookmarks", image: UIImage(named: "tabbaricon-bookmarks"), tag: 0)
-            
-            let nowPlayingTab = CustomUINavigationController(rootViewController: NowPlayingViewController())
-            nowPlayingTab.tabBarItem = UITabBarItem(title: "Playing", image: UIImage(named: "tabbaricon-playing"), tag: 0)
-            
-            let chatTab = CustomUINavigationController(rootViewController: ChatViewController())
-            chatTab.tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "tabbaricon-chat"), tag: 0)
-            
-            tabBarController.viewControllers = [homeTab, foldersTab, artistsTab, playlistsTab, downloadsTab, bookmarksTab, nowPlayingTab, chatTab]
+
+            tabBarController.viewControllers = [homeTab, libraryTab, playlistsTab, downloadsTab, bookmarksTab]
             
             window.rootViewController = tabBarController
         }

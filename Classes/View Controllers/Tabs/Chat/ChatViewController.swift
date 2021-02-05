@@ -41,13 +41,15 @@ final class ChatViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         addURLRefBackButton()
         addShowPlayerButton()
-        
         startLoad()
-        
         Flurry.logEvent("ChatTab")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        textInput.becomeFirstResponder()
     }
     
     deinit {

@@ -11,13 +11,11 @@
 #import "ObjcExceptionCatcher.h"
 
 // User Interface Components
-#import "BookmarksViewController.h"
 #import "EqualizerViewController.h"
 #import "FolderDropdownControl.h"
 #import "OptionsViewController.h"
 
 // Data Model
-#import "ISMSBookmarkDAO.h"
 #import "SavedSettings.h"
 
 // Audio Engine

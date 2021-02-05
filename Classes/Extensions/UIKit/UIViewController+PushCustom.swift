@@ -21,9 +21,11 @@ extension UIViewController {
         if UIDevice.isPad {
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         } else {
-            let controller = PlayerViewController()
-            controller.hidesBottomBarWhenPushed = true
-            navigationController?.pushViewController(controller, animated: true)
+            DispatchQueue.mainSyncSafe {
+                let controller = PlayerViewController()
+                controller.hidesBottomBarWhenPushed = true
+                navigationController?.pushViewController(controller, animated: true)
+            }
         }
     }
 }

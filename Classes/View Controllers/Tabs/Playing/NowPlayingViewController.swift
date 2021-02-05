@@ -104,17 +104,14 @@ extension NowPlayingViewController: UITableViewConfiguration {
         } else {
             cell.headerText = "\(nowPlayingSong.username) - \(playTime)"
         }
-        cell.hideHeaderLabel = false
-        cell.show(cached: true, number: false, art: true, secondary: true, duration: true)
+        cell.show(cached: true, number: false, art: true, secondary: true, duration: true, header: true)
         cell.update(model: song(indexPath: indexPath))
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let song = song(indexPath: indexPath) {
-            if let playingSong = store.playSong(position: indexPath.row, songs: [song]), !playingSong.isVideo {
-                showPlayer()
-            }
+        if let song = song(indexPath: indexPath), let playingSong = store.playSong(position: indexPath.row, songs: [song]), !playingSong.isVideo {
+            showPlayer()
         }
     }
     

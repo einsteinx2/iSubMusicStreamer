@@ -14,6 +14,8 @@ protocol ArtistsViewModel: AnyObject {
     var serverId: Int { get set }
     var mediaFolderId: Int { get set }
     
+    var itemType: String { get }
+    
     var tableSections: [TableSection] { get }
     
     var isCached: Bool { get }

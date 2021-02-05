@@ -84,5 +84,4 @@
 - (IBAction)viewOpenSourceLicensesAction;
 - (void)textFieldDidChange:(UITextField *)textField;
 
-- (void)popFoldersTab;
 @end

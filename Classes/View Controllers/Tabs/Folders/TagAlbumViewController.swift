@@ -174,13 +174,7 @@ extension TagAlbumViewController: UITableViewConfiguration {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
         if let song = song(indexPath: indexPath) {
-            var showNumber = false
-            if song.track > 0 {
-                showNumber = true
-                cell.number = song.track
-            }
-            cell.show(cached: true, number: showNumber, art: false, secondary: true, duration: true)
-            cell.update(model: song)
+            cell.update(song: song)
         }
         return cell
     }

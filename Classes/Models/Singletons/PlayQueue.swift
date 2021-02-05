@@ -29,7 +29,7 @@ import CocoaLumberjackSwift
     
     @Injected private var store: Store
     
-    private var currentPlaylistId: Int {
+    var currentPlaylistId: Int {
         let id: Int
         if settings.isJukeboxEnabled {
             id = isShuffle ? LocalPlaylist.Default.jukeboxShuffleQueueId : LocalPlaylist.Default.jukeboxPlayQueueId
@@ -39,7 +39,7 @@ import CocoaLumberjackSwift
         return id
     }
     
-    private var currentPlaylist: LocalPlaylist? {
+    var currentPlaylist: LocalPlaylist? {
         store.localPlaylist(id: currentPlaylistId)
     }
     

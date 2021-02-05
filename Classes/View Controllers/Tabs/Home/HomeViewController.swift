@@ -41,10 +41,10 @@ final class HomeViewController: UIViewController {
     private let serverShuffleButton = HomeViewButton(icon: UIImage(named: "home-shuffle"), title: "Server\nShuffle")
     private let jukeboxButton = HomeViewButton(icon: UIImage(named: "home-jukebox-off"), title: "Jukebox\nMode OFF")
     private let settingsButton = HomeViewButton(icon: UIImage(named: "home-settings"), title: "App\nSettings")
-    private let spacerButton = HomeViewButton(icon: nil, title: "")
+    private let nowPlayingButton = HomeViewButton(icon: UIImage(systemName: "headphones", withConfiguration: UIImage.SymbolConfiguration(pointSize: 42, weight: .light, scale: .large)), title: "Now\nPlaying")
     private let chatButton = HomeViewButton(icon: UIImage(named: "home-chat"), title: "Server\nChat")
     private var buttons: [HomeViewButton] {
-        return [quickAlbumsButton, serverShuffleButton, jukeboxButton, settingsButton, spacerButton, chatButton]
+        return [quickAlbumsButton, serverShuffleButton, jukeboxButton, settingsButton, nowPlayingButton, chatButton]
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -59,6 +59,7 @@ final class HomeViewController: UIViewController {
             for button in buttons {
                 button.showLabel()
             }
+            songInfoButton.alpha = 1
             searchSegment.snp.remakeConstraints { make in
                 make.leading.equalToSuperview().offset(13)
                 make.trailing.equalToSuperview().offset(-13)
@@ -71,16 +72,11 @@ final class HomeViewController: UIViewController {
                 make.centerY.equalToSuperview().offset(15)
                 make.height.equalToSuperview().multipliedBy(UIDevice.isPad ? 0.50 : 0.75)
             }
-            songInfoButton.snp.remakeConstraints { make in
-                make.height.equalTo(80)
-                make.leading.equalToSuperview().offset(35)
-                make.trailing.equalToSuperview().offset(-30)
-                make.centerY.equalTo(verticalStack)
-            }
         } else {
             for button in buttons {
                 button.hideLabel()
             }
+            songInfoButton.alpha = 0
             searchSegment.snp.remakeConstraints { make in
                 make.leading.equalToSuperview().offset(52)
                 make.trailing.equalToSuperview().offset(-52)
@@ -92,12 +88,6 @@ final class HomeViewController: UIViewController {
                 make.trailing.equalToSuperview().offset(-20)
                 make.centerY.equalToSuperview().offset(15)
                 make.height.equalToSuperview().multipliedBy(0.60)
-            }
-            songInfoButton.snp.remakeConstraints { make in
-                make.height.equalTo(80)
-                make.width.equalToSuperview().dividedBy(2)
-                make.centerX.equalToSuperview()
-                make.centerY.equalTo(bottomRowStack)
             }
         }
     }
@@ -198,15 +188,20 @@ final class HomeViewController: UIViewController {
         settingsButton.setAction {
             SceneDelegate.shared.showSettings()
         }
-        
-        spacerButton.isUserInteractionEnabled = false
+                
+        // Match the slightly different color of the other icons
+        // TODO: Edit the other icon images to match the default blue color instead
+        nowPlayingButton.setIconTint(color: UIColor(red: 21.0/255.0, green: 122.0/255.0, blue: 251.0/255.0, alpha: 1))
+        nowPlayingButton.setAction { [unowned self] in
+            navigationController?.pushViewController(NowPlayingViewController(), animated: true)
+        }
         
         chatButton.setAction { [unowned self] in
             navigationController?.pushViewController(ChatViewController(), animated: true)
         }
         
         bottomRowStack.translatesAutoresizingMaskIntoConstraints = false
-        bottomRowStack.addArrangedSubviews([settingsButton, spacerButton, chatButton])
+        bottomRowStack.addArrangedSubviews([settingsButton, nowPlayingButton, chatButton])
         bottomRowStack.axis = .horizontal
         bottomRowStack.distribution = .equalCentering
 
@@ -254,9 +249,15 @@ final class HomeViewController: UIViewController {
         }
         songInfoButton.translatesAutoresizingMaskIntoConstraints = false
         songInfoButton.setAction { [unowned self] in
-            self.showPlayer()
+            showPlayer()
         }
         view.addSubview(songInfoButton)
+        songInfoButton.snp.remakeConstraints { make in
+            make.height.equalTo(80)
+            make.leading.equalToSuperview().offset(35)
+            make.trailing.equalToSuperview().offset(-30)
+            make.centerY.equalTo(verticalStack)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -307,19 +308,19 @@ final class HomeViewController: UIViewController {
     private func performServerShuffle(mediaFolderId: Int) {
         HUD.show(closeHandler: cancelLoad)
         let loader = ServerShuffleLoader(serverId: serverId, mediaFolderId: mediaFolderId)
-        loader.callback = { _, success, _ in
+        loader.callback = { [unowned self] _, success, _ in
             HUD.hide()
             if success {
-                self.playQueue.playSong(position: 0)
-                self.showPlayer()
+                playQueue.playSong(position: 0)
+                showPlayer()
             } else {
-                if self.settings.isPopupsEnabled {
+                if settings.isPopupsEnabled {
                     let alert = UIAlertController(title: "Error", message: "There was an error creating the server shuffle list.\n\nThe connection could not be created", preferredStyle: .alert)
                     alert.addAction(title: "OK", style: .cancel, handler: nil)
-                    self.present(alert, animated: true, completion: nil)
+                    present(alert, animated: true, completion: nil)
                 }
             }
-            self.serverShuffleLoader = nil
+            serverShuffleLoader = nil
         }
         loader.startLoad()
         serverShuffleLoader = loader
@@ -512,6 +513,10 @@ private final class HomeViewButton: UIView {
     
     func setIcon(image: UIImage?) {
         button.setImage(image, for: .normal)
+    }
+    
+    func setIconTint(color: UIColor) {
+        button.tintColor = color
     }
     
     func setTitle(title: String) {

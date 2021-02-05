@@ -50,7 +50,7 @@ extension DownloadedTagArtistsViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
-        cell.show(cached: false, number: false, art: true, secondary: false, duration: false)
+        cell.show(cached: false, number: false, art: true, secondary: true, duration: false)
         cell.update(model: downloadedTagArtists[indexPath.row])
         return cell
     }

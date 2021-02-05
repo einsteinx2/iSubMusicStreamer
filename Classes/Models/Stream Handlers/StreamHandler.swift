@@ -181,7 +181,7 @@ protocol StreamHandlerDelegate {
             }
         }
             
-        // TODO: implement this - Make sure that sending estimateContentLength as a book instead of a string works
+        // TODO: implement this - Make sure that sending estimateContentLength as a bool instead of a string works
         var parameters: [String: Any] = ["id": song.id, "estimateContentLength": true]
         if maxBitrateSetting == nil {
             maxBitrateSetting = settings.currentMaxBitrate

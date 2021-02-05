@@ -140,6 +140,7 @@ final class PlayQueueViewController: UIViewController {
         return tableView.indexPathsForSelectedRows?.count ?? 0
     }
     
+    // TODO: implement this - error handling
     private func showSavePlaylistAlert(isLocal: Bool) {
         let alert = UIAlertController(title: "Save Playlist", message: nil, preferredStyle: .alert)
         alert.addTextField { textField in
@@ -152,17 +153,17 @@ final class PlayQueueViewController: UIViewController {
                 // TODO: Add error handling
                 HUD.show()
                 DispatchQueue.userInitiated.async {
-                    let localPlaylist = LocalPlaylist(id: self.store.nextLocalPlaylistId(), name: name, songCount: 0)
-                    if self.store.add(localPlaylist: localPlaylist) {
-                        for i in 0..<self.playQueue.count {
-                            if let song = self.playQueue.song(index: i) {
-                                _ = self.store.add(song: song, localPlaylistId: localPlaylist.id)
+                    if let nextLocalPlaylistId = self.store.nextLocalPlaylistId {
+                        let localPlaylist = LocalPlaylist(id: nextLocalPlaylistId, name: name)
+                        if self.store.add(localPlaylist: localPlaylist) {
+                            for i in 0..<self.playQueue.count {
+                                if let song = self.playQueue.song(index: i) {
+                                    _ = self.store.add(song: song, localPlaylistId: localPlaylist.id)
+                                }
                             }
                         }
                     }
-                    DispatchQueue.main.async {
-                        HUD.hide()
-                    }
+                    HUD.hide()
                 }
                 
             } else {

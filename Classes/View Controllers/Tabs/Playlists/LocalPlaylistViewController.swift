@@ -137,12 +137,10 @@ extension LocalPlaylistViewController: UITableViewConfiguration {
         DispatchQueue.userInitiated.async {
             // TODO: implement this
             
-            DispatchQueue.main.async {
-                HUD.hide()
-//                if !song.isVideo {
-//                    showPlayer()
-//                }
-            }
+            HUD.hide()
+//            if !song.isVideo {
+//                showPlayer()
+//            }
         }
     }
     

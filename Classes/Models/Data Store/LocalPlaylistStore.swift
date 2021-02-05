@@ -17,7 +17,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
     }
     
     enum Column: String, ColumnExpression {
-        case id, name, songCount
+        case id, name, songCount, isBookmark, createdDate
     }
     enum RelatedColumn: String, ColumnExpression {
         case localPlaylistId, serverId, songId, position
@@ -28,13 +28,15 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
             t.column(Column.id, .integer).notNull().primaryKey()
             t.column(Column.name, .text).notNull()
             t.column(Column.songCount, .integer).notNull()
+            t.column(Column.isBookmark, .boolean).notNull().indexed()
+            t.column(Column.createdDate, .datetime).notNull()
         }
         
         // Create default playlists
-        let defaultPlaylists = [LocalPlaylist(id: LocalPlaylist.Default.playQueueId, name: "Play Queue", songCount: 0),
-                                LocalPlaylist(id: LocalPlaylist.Default.shuffleQueueId, name: "Shuffle Queue", songCount: 0),
-                                LocalPlaylist(id: LocalPlaylist.Default.jukeboxPlayQueueId, name: "Jukebox Play Queue", songCount: 0),
-                                LocalPlaylist(id: LocalPlaylist.Default.jukeboxShuffleQueueId, name: "Jukebox Shuffle Queue", songCount: 0)]
+        let defaultPlaylists = [LocalPlaylist(id: LocalPlaylist.Default.playQueueId, name: "Play Queue"),
+                                LocalPlaylist(id: LocalPlaylist.Default.shuffleQueueId, name: "Shuffle Queue"),
+                                LocalPlaylist(id: LocalPlaylist.Default.jukeboxPlayQueueId, name: "Jukebox Play Queue"),
+                                LocalPlaylist(id: LocalPlaylist.Default.jukeboxShuffleQueueId, name: "Jukebox Shuffle Queue")]
         for playlist in defaultPlaylists {
             try playlist.save(db)
         }
@@ -47,6 +49,13 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
         }
         try db.create(indexOn: Table.localPlaylistSong, columns: [RelatedColumn.localPlaylistId, RelatedColumn.position])
     }
+    
+//    static func add(_ db: Database, id: Int? = nil, name: String, isBookmark: Bool = false) throws {
+//        let store: Store = Resolver.resolve()
+//        let localPlaylistId = id ?? store.nextLocalPlaylistId()
+//        let localPlaylist = LocalPlaylist(id: localPlaylistId, name: name, isBookmark: isBookmark)
+//        try localPlaylist.save(db)
+//    }
     
     static func fetchSong(_ db: Database, playlistId: Int, position: Int) throws -> Song? {
         let sql: SQLLiteral = """
@@ -61,11 +70,20 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
     }
     
     static func insertSong(_ db: Database, song: Song, position: Int, playlistId: Int) throws {
+        try insertSong(db, serverId: song.serverId, songId: song.id, position: position, playlistId: playlistId)
+    }
+    
+    static func insertSong(_ db: Database, serverId: Int, songId: Int, position: Int, playlistId: Int) throws {
         let sql: SQLLiteral = """
             INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
-            VALUES (\(playlistId), \(position), \(song.serverId), \(song.id))
+            VALUES (\(playlistId), \(position), \(serverId), \(songId))
             """
         try db.execute(literal: sql)
+    }
+    
+    static func delete(_ db: Database, id: Int) throws {
+        try db.execute(literal: "DELETE FROM \(LocalPlaylist.self) WHERE id = \(id)")
+        try db.execute(literal: "DELETE FROM localPlaylistSong WHERE localPlaylistId = \(id)")
     }
 }
 
@@ -74,33 +92,35 @@ extension Store {
     private var settings: Settings { Resolver.resolve() }
     private var playQueue: PlayQueue { Resolver.resolve() }
     
-    func nextLocalPlaylistId() -> Int {
+    var nextLocalPlaylistId: Int? {
         do {
             return try pool.read { db in
-                let maxId = try SQLRequest<Int>(literal: "SELECT MAX(id) FROM \(LocalPlaylist.self)").fetchOne(db) ?? 0
-                return maxId + 1
+                if let maxId = try SQLRequest<Int>(literal: "SELECT MAX(id) FROM \(LocalPlaylist.self)").fetchOne(db) {
+                    return maxId + 1
+                }
+                return nil
             }
         } catch {
             DDLogError("Failed to select next local playlist ID: \(error)")
-            return -1
+            return nil
         }
     }
     
-    func localPlaylistsCount() -> Int {
+    func localPlaylistsCount(isBookmark: Bool = false) -> Int? {
         do {
             return try pool.read { db in
-                try LocalPlaylist.filter(literal: "id > \(LocalPlaylist.Default.maxDefaultId)").fetchCount(db)
+                try LocalPlaylist.filter(literal: "id > \(LocalPlaylist.Default.maxDefaultId) AND isBookmark = \(isBookmark)").fetchCount(db)
             }
         } catch {
-            DDLogError("Failed to select count of local playlists: \(error)")
-            return -1
+            DDLogError("Failed to select count of local playlists, isBookmark \(isBookmark): \(error)")
+            return nil
         }
     }
     
-    func localPlaylists() -> [LocalPlaylist] {
+    func localPlaylists(isBookmark: Bool = false) -> [LocalPlaylist] {
         do {
             return try pool.read { db in
-                try LocalPlaylist.filter(literal: "id > \(LocalPlaylist.Default.maxDefaultId)").fetchAll(db)
+                try LocalPlaylist.filter(literal: "id > \(LocalPlaylist.Default.maxDefaultId) AND isBookmark = \(isBookmark)").fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select all local playlists: \(error)")
@@ -119,6 +139,18 @@ extension Store {
         }
     }
     
+//    func addLocalPlaylist(id: Int? = nil, name: String, isBookmark: Bool = false) -> Bool {
+//        do {
+//            return try pool.write { db in
+//                try LocalPlaylist.add(db, id: id, name: name)
+//                return true
+//            }
+//        } catch {
+//            DDLogError("Failed to insert local playlist \(name): \(error)")
+//            return false
+//        }
+//    }
+    
     func add(localPlaylist: LocalPlaylist) -> Bool {
         do {
             return try pool.write { db in
@@ -134,8 +166,7 @@ extension Store {
     func delete(localPlaylistId: Int) -> Bool {
         do {
             return try pool.write { db in
-                try db.execute(literal: "DELETE FROM \(LocalPlaylist.self) WHERE id = \(localPlaylistId)")
-                try db.execute(literal: "DELETE FROM localPlaylistSong WHERE localPlaylistId = \(localPlaylistId)")
+                try LocalPlaylist.delete(db, id: localPlaylistId)
                 return true
             }
         } catch {
@@ -225,9 +256,9 @@ extension Store {
                 // Add the song to the playlist
                 for (index, songId) in songIds.enumerated() {
                     let sql: SQLLiteral = """
-                    INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
-                    VALUES (\(localPlaylistId), \(index + playlist.songCount), \(serverId), \(songId))
-                    """
+                        INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
+                        VALUES (\(localPlaylistId), \(index + playlist.songCount), \(serverId), \(songId))
+                        """
                     try db.execute(literal: sql)
                 }
                 
@@ -354,6 +385,46 @@ extension Store {
     func playSong(position: Int, downloadedSongs: [DownloadedSong]) -> Song? {
         let songs = downloadedSongs.compactMap { song(downloadedSong: $0) }
         return playSong(position: position, songs: songs)
+    }
+    
+    // TODO: implement this - handle Jukebox mode and shuffle
+    func playSong(position: Int, localPlaylistId: Int, secondsOffset: Double = 0.0, byteOffset: Int = 0) -> Song? {
+        guard clearPlayQueue() else { return nil }
+        
+        do {
+            // Fill the play queue
+            try pool.write { db in
+                // Add the songs from the playlist to the play queue
+                // NOTE: This is NOT an SQLLiteral as that string interpolation doesn't work in the SELECT statement.
+                //       There is no security risk directly interpolating the values here as they are integers and
+                //       there is no posibility of SQL injection. Plus the values come from the code not user input.
+                let sql = """
+                    INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
+                    SELECT \(playQueue.currentPlaylistId) AS localPlaylistId, position, serverId, songId
+                    FROM localPlaylistSong
+                    WHERE localPlaylistId = \(localPlaylistId)
+                    ORDER BY position ASC
+                    """
+                try db.execute(sql: sql)
+            }
+            
+            // Set player defaults
+            playQueue.isShuffle = false
+            
+            NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
+            
+            // Start the song
+            playQueue.currentIndex = position
+            playQueue.startSong(offsetInBytes: byteOffset, offsetInSeconds: secondsOffset)
+            return playQueue.currentSong
+        } catch {
+            DDLogError("Failed to play song at position \(position) from local playlist \(localPlaylistId) at secondsOffset \(secondsOffset) and byteOffset \(byteOffset): \(error)")
+            return nil
+        }
+    }
+    
+    func playSong(bookmark: Bookmark) -> Song? {
+        return playSong(position: bookmark.songIndex, localPlaylistId: bookmark.localPlaylistId, secondsOffset: bookmark.offsetInSeconds, byteOffset: bookmark.offsetInBytes)
     }
     
     func move(songAtPosition from: Int, toPosition to: Int, localPlaylistId: Int) -> Bool {

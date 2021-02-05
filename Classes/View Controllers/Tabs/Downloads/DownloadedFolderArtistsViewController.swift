@@ -52,7 +52,7 @@ extension DownloadedFolderArtistsViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
-        cell.show(cached: false, number: false, art: false, secondary: false, duration: false)
+        cell.show(cached: false, number: false, art: false, secondary: true, duration: false)
         cell.update(model: downloadedFolderArtists[indexPath.row])
         return cell
     }
@@ -101,9 +101,7 @@ extension DownloadedFolderArtistsViewController: UITableViewConfiguration {
                         self.cacheQueue.start()
                     }
                 }
-                DispatchQueue.main.async {
-                    HUD.hide()
-                }
+                HUD.hide()
             }
         })
     }

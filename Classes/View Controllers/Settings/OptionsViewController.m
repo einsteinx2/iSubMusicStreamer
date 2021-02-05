@@ -339,7 +339,7 @@ LOG_LEVEL_ISUB_DEFAULT
     (void)[Store.shared resetFolderAlbumCacheWithServerId:serverId];
     (void)[Store.shared deleteTagAlbumsWithServerId:serverId];
 //	[HUD hide];
-	[self popFoldersTab];
+	[self popLibraryTab];
 }
 
 - (void)resetAlbumArtCache {
@@ -348,7 +348,7 @@ LOG_LEVEL_ISUB_DEFAULT
     (void)[Store.shared resetCoverArtCacheWithServerId:serverId];
     (void)[Store.shared resetArtistArtCacheWithServerId:serverId];
 //	[HUD hide];
-	[self popFoldersTab];
+	[self popLibraryTab];
 }
 
 - (IBAction)shareAppLogsAction {
@@ -377,9 +377,8 @@ LOG_LEVEL_ISUB_DEFAULT
     [self presentViewController:navController animated:YES completion:nil];
 }
 
-- (void)popFoldersTab {
-    [SceneDelegate.shared.foldersTab popToRootViewControllerAnimated:NO];
-    [SceneDelegate.shared.artistsTab popToRootViewControllerAnimated:NO];
+- (void)popLibraryTab {
+    [SceneDelegate.shared.libraryTab popToRootViewControllerAnimated:NO];
 }
 
 - (void)updateCacheSpaceSlider {

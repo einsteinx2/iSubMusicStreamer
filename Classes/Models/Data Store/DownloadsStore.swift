@@ -47,6 +47,36 @@ extension DownloadedSong: FetchableRecord, PersistableRecord {
     static func fetchOne(_ db: Database, serverId: Int, songId: Int) throws -> DownloadedSong? {
         try DownloadedSong.filter(literal: "serverId = \(serverId) AND songId = \(songId)").fetchOne(db)
     }
+    
+    static func downloadedSongs(serverId: Int, level: Int, parentPathComponent: String) -> SQLRequest<DownloadedSong> {
+        let sql: SQLLiteral = """
+            SELECT *
+            FROM \(DownloadedSong.self)
+            JOIN \(DownloadedSongPathComponent.self)
+            ON \(DownloadedSong.self).serverId = \(DownloadedSongPathComponent.self).serverId
+                AND \(DownloadedSong.self).songId = \(DownloadedSongPathComponent.self).songId
+            WHERE \(DownloadedSongPathComponent.self).serverId = \(serverId)
+                AND \(DownloadedSongPathComponent.self).level = \(level)
+                AND \(DownloadedSongPathComponent.self).maxLevel = \(level)
+                AND \(DownloadedSongPathComponent.self).parentPathComponent = \(parentPathComponent)
+            ORDER BY \(DownloadedSongPathComponent.self).pathComponent COLLATE NOCASE
+            """
+        return SQLRequest<DownloadedSong>(literal: sql)
+    }
+    
+    static func downloadedSongs(downloadedTagAlbum: DownloadedTagAlbum) -> SQLRequest<DownloadedSong> {
+        let sql: SQLLiteral = """
+            SELECT *
+            FROM \(DownloadedSong.self)
+            JOIN \(Song.self)
+            ON \(DownloadedSong.self).serverId = \(Song.self).serverId
+                AND \(DownloadedSong.self).songId = \(Song.self).id
+            WHERE \(Song.self).serverId = \(downloadedTagAlbum.serverId)
+                AND \(Song.self).tagAlbumId = \(downloadedTagAlbum.id)
+            ORDER BY \(Song.self).discNumber, \(Song.self).track, \(Song.self).title COLLATE NOCASE
+            """
+        return SQLRequest<DownloadedSong>(literal: sql)
+    }
 }
 
 extension DownloadedSongPathComponent: FetchableRecord, PersistableRecord {
@@ -88,12 +118,49 @@ extension DownloadedFolderArtist: FetchableRecord, PersistableRecord {
 }
 
 extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
+    static func downloadedFolderAlbums(serverId: Int, level: Int, parentPathComponent: String) -> SQLRequest<DownloadedFolderAlbum> {
+        let sql: SQLLiteral = """
+            SELECT \(DownloadedSongPathComponent.self).serverId,
+                \(DownloadedSongPathComponent.self).level,
+                \(DownloadedSongPathComponent.self).pathComponent AS name,
+                \(Song.self).coverArtId
+            FROM \(DownloadedSongPathComponent.self)
+            JOIN \(Song.self)
+            ON \(DownloadedSongPathComponent.self).serverId = \(Song.self).serverId
+                AND \(DownloadedSongPathComponent.self).songId = \(Song.self).id
+            WHERE \(DownloadedSongPathComponent.self).serverId = \(serverId)
+                AND \(DownloadedSongPathComponent.self).level = \(level)
+                AND \(DownloadedSongPathComponent.self).maxLevel != \(level)
+                AND \(DownloadedSongPathComponent.self).parentPathComponent = \(parentPathComponent)
+            GROUP BY \(DownloadedSongPathComponent.self).pathComponent
+            ORDER BY \(DownloadedSongPathComponent.self).pathComponent COLLATE NOCASE
+            """
+        return SQLRequest<DownloadedFolderAlbum>(literal: sql)
+    }
 }
 
 extension DownloadedTagArtist: FetchableRecord, PersistableRecord {
 }
 
 extension DownloadedTagAlbum: FetchableRecord, PersistableRecord {
+    // TODO: Check query plan and try different join orders and group by tables to see which is fastest (i.e. TagAlbum.id vs Song.tagAlbumId)
+    static func downloadedTagAlbums(downloadedTagArtist: DownloadedTagArtist) -> SQLRequest<DownloadedTagAlbum> {
+        let sql: SQLLiteral = """
+            SELECT \(TagAlbum.self).*
+            FROM \(DownloadedSong.self)
+            JOIN \(Song.self)
+            ON \(DownloadedSong.self).serverId = \(Song.self).serverId
+                AND \(DownloadedSong.self).songId = \(Song.self).id
+            JOIN \(TagAlbum.self)
+            ON \(DownloadedSong.self).serverId = \(TagAlbum.self).serverId
+                AND \(Song.self).tagAlbumId = \(TagAlbum.self).id
+            WHERE \(DownloadedSong.self).serverId = \(downloadedTagArtist.serverId)
+                AND \(TagAlbum.self).tagArtistId = \(downloadedTagArtist.id)
+            GROUP BY \(TagAlbum.self).id
+            ORDER BY \(TagAlbum.self).name COLLATE NOCASE ASC
+            """
+        return SQLRequest<DownloadedTagAlbum>(literal: sql)
+    }
 }
 
 extension Store {
@@ -152,27 +219,44 @@ extension Store {
     func downloadedFolderAlbums(serverId: Int, level: Int, parentPathComponent: String) -> [DownloadedFolderAlbum] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
-                    SELECT \(DownloadedSongPathComponent.self).serverId,
-                        \(DownloadedSongPathComponent.self).level,
-                        \(DownloadedSongPathComponent.self).pathComponent AS name,
-                        \(Song.self).coverArtId
-                    FROM \(DownloadedSongPathComponent.self)
-                    JOIN \(Song.self)
-                    ON \(DownloadedSongPathComponent.self).serverId = \(Song.self).serverId
-                        AND \(DownloadedSongPathComponent.self).songId = \(Song.self).id
-                    WHERE \(DownloadedSongPathComponent.self).serverId = \(serverId)
-                        AND \(DownloadedSongPathComponent.self).level = \(level)
-                        AND \(DownloadedSongPathComponent.self).maxLevel != \(level)
-                        AND \(DownloadedSongPathComponent.self).parentPathComponent = \(parentPathComponent)
-                    GROUP BY \(DownloadedSongPathComponent.self).pathComponent
-                    ORDER BY \(DownloadedSongPathComponent.self).pathComponent COLLATE NOCASE
-                    """
-                return try SQLRequest<DownloadedFolderAlbum>(literal: sql).fetchAll(db)
+                return try DownloadedFolderAlbum.downloadedFolderAlbums(serverId: serverId, level: level, parentPathComponent: parentPathComponent).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select all downloaded folder albums for server \(serverId) level \(level) parent \(parentPathComponent): \(error)")
             return []
+        }
+    }
+    
+    func downloadedFolderAlbumsCount(serverId: Int, level: Int, parentPathComponent: String) -> Int? {
+        do {
+            return try pool.read { db in
+                return try DownloadedFolderAlbum.downloadedFolderAlbums(serverId: serverId, level: level, parentPathComponent: parentPathComponent).fetchCount(db)
+            }
+        } catch {
+            DDLogError("Failed to count all downloaded folder albums for server \(serverId) level \(level) parent \(parentPathComponent): \(error)")
+            return nil
+        }
+    }
+    
+    func downloadedFolderAlbumsCount(downloadedFolderArtist: DownloadedFolderArtist) -> Int? {
+        do {
+            return try pool.read { db in
+                try DownloadedFolderAlbum.downloadedFolderAlbums(serverId: downloadedFolderArtist.serverId, level: 1, parentPathComponent: downloadedFolderArtist.name).fetchCount(db)
+            }
+        } catch {
+            DDLogError("Failed to count all downloaded folder albums for downloadedFolderArtist \(downloadedFolderArtist): \(error)")
+            return nil
+        }
+    }
+
+    func downloadedFolderAlbumsCount(downloadedFolderAlbum: DownloadedFolderAlbum) -> Int? {
+        do {
+            return try pool.read { db in
+                try DownloadedFolderAlbum.downloadedFolderAlbums(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level + 1, parentPathComponent: downloadedFolderAlbum.name).fetchCount(db)
+            }
+        } catch {
+            DDLogError("Failed to count all downloaded folder albums for downloadedFolderAlbum \(downloadedFolderAlbum): \(error)")
+            return nil
         }
     }
     
@@ -226,29 +310,25 @@ extension Store {
         }
     }
     
-    // TODO: Check query plan and try different join orders and group by tables to see which is fastest (i.e. TagAlbum.id vs Song.tagAlbumId)
     func downloadedTagAlbums(downloadedTagArtist: DownloadedTagArtist) -> [DownloadedTagAlbum] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
-                    SELECT \(TagAlbum.self).*
-                    FROM \(DownloadedSong.self)
-                    JOIN \(Song.self)
-                    ON \(DownloadedSong.self).serverId = \(Song.self).serverId
-                        AND \(DownloadedSong.self).songId = \(Song.self).id
-                    JOIN \(TagAlbum.self)
-                    ON \(DownloadedSong.self).serverId = \(TagAlbum.self).serverId
-                        AND \(Song.self).tagAlbumId = \(TagAlbum.self).id
-                    WHERE \(DownloadedSong.self).serverId = \(downloadedTagArtist.serverId)
-                        AND \(TagAlbum.self).tagArtistId = \(downloadedTagArtist.id)
-                    GROUP BY \(TagAlbum.self).id
-                    ORDER BY \(TagAlbum.self).name COLLATE NOCASE ASC
-                    """
-                return try SQLRequest<DownloadedTagAlbum>(literal: sql).fetchAll(db)
+                return try DownloadedTagAlbum.downloadedTagAlbums(downloadedTagArtist: downloadedTagArtist).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select all downloaded tag albums for artist \(downloadedTagArtist): \(error)")
             return []
+        }
+    }
+    
+    func downloadedTagAlbumsCount(downloadedTagArtist: DownloadedTagArtist) -> Int? {
+        do {
+            return try pool.read { db in
+                return try DownloadedTagAlbum.downloadedTagAlbums(downloadedTagArtist: downloadedTagArtist).fetchCount(db)
+            }
+        } catch {
+            DDLogError("Failed to count all downloaded tag albums for artist \(downloadedTagArtist): \(error)")
+            return nil
         }
     }
     
@@ -285,44 +365,32 @@ extension Store {
         return songsRecursive(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level, parentPathComponent: downloadedFolderAlbum.name)
     }
     
-    func downloadedSongsCount() -> Int {
+    func downloadedSongsCount() -> Int? {
         do {
             return try pool.read { db in
                 try DownloadedSong.filter(literal: "isFinished = 1").fetchCount(db)
             }
         } catch {
             DDLogError("Failed to select downloaded songs count: \(error)")
-            return 0
+            return nil
         }
     }
     
-    func downloadedSongsCount(serverId: Int) -> Int {
+    func downloadedSongsCount(serverId: Int) -> Int? {
         do {
             return try pool.read { db in
                 try DownloadedSong.filter(literal:"serverId = \(serverId) AND isFinished = 1").fetchCount(db)
             }
         } catch {
             DDLogError("Failed to select downloaded songs count for server \(serverId): \(error)")
-            return 0
+            return nil
         }
     }
     
     func downloadedSongs(serverId: Int, level: Int, parentPathComponent: String) -> [DownloadedSong] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
-                    SELECT *
-                    FROM \(DownloadedSong.self)
-                    JOIN \(DownloadedSongPathComponent.self)
-                    ON \(DownloadedSong.self).serverId = \(DownloadedSongPathComponent.self).serverId
-                        AND \(DownloadedSong.self).songId = \(DownloadedSongPathComponent.self).songId
-                    WHERE \(DownloadedSongPathComponent.self).serverId = \(serverId)
-                        AND \(DownloadedSongPathComponent.self).level = \(level)
-                        AND \(DownloadedSongPathComponent.self).maxLevel = \(level)
-                        AND \(DownloadedSongPathComponent.self).parentPathComponent = \(parentPathComponent)
-                    ORDER BY \(DownloadedSongPathComponent.self).pathComponent COLLATE NOCASE
-                    """
-                return try SQLRequest<DownloadedSong>(literal: sql).fetchAll(db)
+                return try DownloadedSong.downloadedSongs(serverId: serverId, level: level, parentPathComponent: parentPathComponent).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select downloaded songs at level \(level) for server \(serverId): \(error)")
@@ -330,24 +398,58 @@ extension Store {
         }
     }
     
+    func downloadedSongsCount(serverId: Int, level: Int, parentPathComponent: String) -> Int? {
+        do {
+            return try pool.read { db in
+                try DownloadedSong.downloadedSongs(serverId: serverId, level: level, parentPathComponent: parentPathComponent).fetchCount(db)
+            }
+        } catch {
+            DDLogError("Failed to select downloaded songs count at level \(level) for server \(serverId): \(error)")
+            return nil
+        }
+    }
+    
+    func downloadedSongsCount(downloadedFolderArtist: DownloadedFolderArtist) -> Int? {
+        do {
+            return try pool.read { db in
+                try DownloadedSong.downloadedSongs(serverId: downloadedFolderArtist.serverId, level: 1, parentPathComponent: downloadedFolderArtist.name).fetchCount(db)
+            }
+        } catch {
+            DDLogError("Failed to select downloaded songs count for downloaded folder artist \(downloadedFolderArtist): \(error)")
+            return nil
+        }
+    }
+    
+    func downloadedSongsCount(downloadedFolderAlbum: DownloadedFolderAlbum) -> Int? {
+        do {
+            return try pool.read { db in
+                try DownloadedSong.downloadedSongs(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level + 1, parentPathComponent: downloadedFolderAlbum.name).fetchCount(db)
+            }
+        } catch {
+            DDLogError("Failed to select downloaded songs count for downloaded folder album \(downloadedFolderAlbum): \(error)")
+            return nil
+        }
+    }
+    
     func downloadedSongs(downloadedTagAlbum: DownloadedTagAlbum) -> [DownloadedSong] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
-                    SELECT *
-                    FROM \(DownloadedSong.self)
-                    JOIN \(Song.self)
-                    ON \(DownloadedSong.self).serverId = \(Song.self).serverId
-                        AND \(DownloadedSong.self).songId = \(Song.self).id
-                    WHERE \(Song.self).serverId = \(downloadedTagAlbum.serverId)
-                        AND \(Song.self).tagAlbumId = \(downloadedTagAlbum.id)
-                    ORDER BY \(Song.self).discNumber, \(Song.self).track, \(Song.self).title COLLATE NOCASE
-                    """
-                return try SQLRequest<DownloadedSong>(literal: sql).fetchAll(db)
+                try DownloadedSong.downloadedSongs(downloadedTagAlbum: downloadedTagAlbum).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select downloaded songs for downloaded tag album \(downloadedTagAlbum): \(error)")
             return []
+        }
+    }
+    
+    func downloadedSongsCount(downloadedTagAlbum: DownloadedTagAlbum) -> Int? {
+        do {
+            return try pool.read { db in
+                try DownloadedSong.downloadedSongs(downloadedTagAlbum: downloadedTagAlbum).fetchCount(db)
+            }
+        } catch {
+            DDLogError("Failed to count downloaded songs for downloaded tag album \(downloadedTagAlbum): \(error)")
+            return nil
         }
     }
     
@@ -691,14 +793,14 @@ extension Store {
         return songFromDownloadQueue(position: 0)
     }
     
-    func downloadQueueCount() -> Int {
+    func downloadQueueCount() -> Int? {
         do {
             return try pool.read { db in
                 return try SQLRequest<Int>(literal: "SELECT COUNT(*) FROM downloadQueue").fetchOne(db) ?? 0
             }
         } catch {
             DDLogError("Failed to select download queue count: \(error)")
-            return 0
+            return nil
         }
     }
 }

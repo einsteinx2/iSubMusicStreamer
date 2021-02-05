@@ -14,6 +14,7 @@ import Resolver
 // TODO: Add bitrate and file type labels
 // TODO: Add bookmark button
 final class PlayerViewController: UIViewController {
+    @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var jukebox: Jukebox
     @Injected private var player: BassPlayer
@@ -348,23 +349,28 @@ final class PlayerViewController: UIViewController {
         updateRepeatButtonIcon()
         
         bookmarksButton.addClosure(for: .touchUpInside) { [unowned self] in
-            let position = Int(self.progressSlider.value);
-            let bytePosition = Int(player.currentByteOffset);
-            let song = self.currentSong
+            let songIndex = playQueue.currentIndex
+            let offsetInSeconds = Double(self.progressSlider.value)
+            let offsetInBytes = player.currentByteOffset
+            
             let alert = UIAlertController(title: "Create Bookmark", message: nil, preferredStyle: .alert)
             alert.addTextField { textField in
                 textField.placeholder = "Bookmark name"
             }
-            alert.addAction(title: "Save", style: .default) { action in
-                guard let song = song, let name = alert.textFields?.first?.text else {
+            alert.addAction(title: "Save", style: .default) { [unowned self] action in
+                var success = false
+                if let name = alert.textFields?.first?.text {
+                    success = store.addBookmark(name: name, songIndex: songIndex, offsetInSeconds: offsetInSeconds, offsetInBytes: offsetInBytes)
+                }
+                
+                if !success {
                     let errorAlert = UIAlertController(title: "Error", message: "Failed to create the bookmark, please try again.", preferredStyle: .alert)
                     errorAlert.addAction(title: "OK", style: .cancel, handler: nil)
                     self.present(errorAlert, animated: true, completion: nil)
                     return
                 }
                 
-                ISMSBookmarkDAO.createBookmark(for: song, name: name, bookmarkPosition: position, bytePosition: bytePosition)
-                self.updateBookmarkButton()
+                updateBookmarkButton()
             }
             alert.addCancelAction()
             self.present(alert, animated: true, completion: nil)
@@ -769,27 +775,16 @@ final class PlayerViewController: UIViewController {
     }
     
     private func updateBookmarkButton() {
-        // TODO: implement this
-//        var bookmarkCount: Int32 = 0
-//        if let songId = self.currentSong?.id {
-//            DatabaseOld.shared().bookmarksDbQueue?.inDatabase { db in
-//                do {
-//                    let result = try db.executeQuery("SELECT COUNT(*) FROM bookmarks WHERE songId = ?", values: [songId])
-//                    if result.next() {
-//                        bookmarkCount = result.int(forColumnIndex: 0)
-//                    }
-//                    result.close()
-//                } catch {
-//                    DDLogError("[PlayerViewController] Failed to query the bookmark count: \(error)")
-//                }
-//            }
-//        }
-//
-//        let imageName = bookmarkCount > 0 ? "bookmark.fill" : "bookmark"
-//        let tintColor = bookmarkCount > 0 ? iconActivatedColor : iconDefaultColor
-//        let config = UIImage.SymbolConfiguration(pointSize: 21, weight: .light, scale: .large)
-//        bookmarksButton.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
-//        bookmarksButton.tintColor = tintColor
+        var bookmarksCount = 0
+        if let song = currentSong, let count = store.bookmarksCount(song: song) {
+            bookmarksCount = count
+        }
+        
+        let imageName = bookmarksCount > 0 ? "bookmark.fill" : "bookmark"
+        let tintColor = bookmarksCount > 0 ? iconActivatedColor : iconDefaultColor
+        let config = UIImage.SymbolConfiguration(pointSize: 21, weight: .light, scale: .large)
+        bookmarksButton.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
+        bookmarksButton.tintColor = tintColor
     }
     
     @objc private func updateQuickSkipButtons() {

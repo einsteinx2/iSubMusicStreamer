@@ -21,6 +21,16 @@ struct LocalPlaylist: Codable, Equatable {
     let id: Int
     var name: String
     var songCount: Int
+    var isBookmark: Bool
+    var createdDate: Date
+    
+    init(id: Int, name: String, songCount: Int = 0, isBookmark: Bool = false, createdDate: Date = Date()) {
+        self.id = id
+        self.name = name
+        self.songCount = songCount
+        self.isBookmark = isBookmark
+        self.createdDate = createdDate
+    }
 
     static func ==(lhs: LocalPlaylist, rhs: LocalPlaylist) -> Bool {
         return lhs.id == rhs.id

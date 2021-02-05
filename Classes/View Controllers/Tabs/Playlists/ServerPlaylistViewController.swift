@@ -51,24 +51,22 @@ final class ServerPlaylistViewController: UIViewController {
         cancelLoad()
         serverPlaylistLoader = ServerPlaylistLoader(serverPlaylist: serverPlaylist)
         serverPlaylistLoader?.callback = { [unowned self] _, success, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    if self.settings.isPopupsEnabled {
-                        let message = "There was an error loading the playlist.\n\nError: \(error)"
-                        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-                        alert.addOKAction()
-                        present(alert, animated: true, completion: nil)
-                    }
-                } else {
-                    // Reload the server playlist to get the updated loaded song count
-                    if let serverPlaylist = store.serverPlaylist(serverId: serverPlaylist.serverId, id: serverPlaylist.id) {
-                        self.serverPlaylist = serverPlaylist
-                    }
-                    tableView.reloadData()
+            if let error = error {
+                if settings.isPopupsEnabled {
+                    let message = "There was an error loading the playlist.\n\nError: \(error)"
+                    let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+                    alert.addOKAction()
+                    present(alert, animated: true, completion: nil)
                 }
-                HUD.hide()
-                self.tableView.refreshControl?.endRefreshing()
+            } else {
+                // Reload the server playlist to get the updated loaded song count
+                if let serverPlaylist = store.serverPlaylist(serverId: serverPlaylist.serverId, id: serverPlaylist.id) {
+                    self.serverPlaylist = serverPlaylist
+                }
+                tableView.reloadData()
             }
+            HUD.hide()
+            tableView.refreshControl?.endRefreshing()
         }
         serverPlaylistLoader?.startLoad()
         HUD.show(closeHandler: cancelLoad)
@@ -108,12 +106,9 @@ extension ServerPlaylistViewController: UITableViewConfiguration {
         HUD.show()
         DispatchQueue.userInitiated.async { [unowned self] in
             let song = store.playSongFromServerPlaylist(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id, position: indexPath.row)
-            
-            DispatchQueue.main.async {
-                HUD.hide()
-                if let song = song, !song.isVideo {
-                    showPlayer()
-                }
+            HUD.hide()
+            if let song = song, !song.isVideo {
+                showPlayer()
             }
         }
     }

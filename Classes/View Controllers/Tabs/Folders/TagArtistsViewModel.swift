@@ -21,6 +21,8 @@ final class TagArtistsViewModel: ArtistsViewModel {
         }
     }
     
+    let itemType = "Artist"
+    
     private var metadata: RootListMetadata?
     var tableSections = [TableSection]()
     

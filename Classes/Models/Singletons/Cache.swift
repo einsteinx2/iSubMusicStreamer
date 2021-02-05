@@ -26,7 +26,7 @@ import CocoaLumberjackSwift
     
     @objc var totalSpace: Int { FileSystem.downloadsDirectory.systemTotalSpace ?? 0 }
     @objc var freeSpace: Int { FileSystem.downloadsDirectory.systemAvailableSpace ?? 0 }
-    @objc var numberOfCachedSongs: Int { store.downloadedSongsCount() }
+    @objc var numberOfCachedSongs: Int { store.downloadedSongsCount() ?? 0 }
     
     func setup() {
         // TODO: implement this
