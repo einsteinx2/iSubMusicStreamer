@@ -243,7 +243,7 @@ static CGPoint CGPointFromString(NSString *string)
 			[BassPlayer.shared.equalizer toggleEqualizer];
 	}
 	
-	[NSNotificationCenter postOnMainThreadWithName:Notifications.bassEffectPresetLoaded object:nil userInfo:nil];
+	[NSNotificationCenter postOnMainThreadWithName:Notifications_ObjcDeleteMe.bassEffectPresetLoaded object:nil userInfo:nil];
 }
 
 - (void)selectPresetAtIndex:(NSInteger)presetIndex

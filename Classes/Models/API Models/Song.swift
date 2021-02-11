@@ -9,39 +9,36 @@
 import Foundation
 import Resolver
 
-// TODO: implement this - Remove NSSecureCoding and use only Codable protocol
-@objc(ISMSSong) final class Song: NSObject, NSCopying, Codable {
+final class Song: Codable, Hashable, CustomStringConvertible {
     private var store: Store { Resolver.resolve() }
     private var settings: Settings { Resolver.resolve() }
     private var player: BassPlayer { Resolver.resolve() }
     private var playQueue: PlayQueue { Resolver.resolve() }
+            
+    let serverId: Int
+    let id: Int
+    let title: String
+    let coverArtId: String?
+    let parentFolderId: Int
+    let tagArtistName: String?
+    let tagAlbumName: String?
+    let playCount: Int
+    let year: Int
+    let tagArtistId: Int
+    let tagAlbumId: Int
+    let genre: String?
+    let path: String
+    let suffix: String
+    let transcodedSuffix: String?
+    let duration: Int
+    let kiloBitrate: Int
+    let track: Int
+    let discNumber: Int
+    let size: Int
+    let isVideo: Bool
     
-//    static let supportsSecureCoding: Bool = true
-        
-    @objc let serverId: Int
-    @objc(songId) let id: Int
-    @objc let title: String
-    @objc let coverArtId: String?
-    @objc let parentFolderId: Int
-    @objc let tagArtistName: String?
-    @objc let tagAlbumName: String?
-    @objc let playCount: Int
-    @objc let year: Int
-    @objc let tagArtistId: Int
-    @objc let tagAlbumId: Int
-    @objc let genre: String?
-    @objc let path: String
-    @objc let suffix: String
-    @objc let transcodedSuffix: String?
-    @objc let duration: Int
-    @objc let kiloBitrate: Int
-    @objc let track: Int
-    @objc let discNumber: Int
-    @objc let size: Int
-    @objc let isVideo: Bool
-    
-    @objc var localSuffix: String? { transcodedSuffix ?? suffix }
-    @objc var localPath: String {
+    var localSuffix: String? { transcodedSuffix ?? suffix }
+    var localPath: String {
         let serverPathPrefix: String
         if let server = store.server(id: serverId) {
             serverPathPrefix = server.path
@@ -52,7 +49,7 @@ import Resolver
         return localPath
     }
     
-    @objc var localTempPath: String {
+    var localTempPath: String {
         let serverPathPrefix: String
         if let server = store.server(id: serverId) {
             serverPathPrefix = server.path
@@ -62,9 +59,9 @@ import Resolver
         let localPath = FileSystem.tempDownloadsDirectory.appendingPathComponent(serverPathPrefix).appendingPathComponent(path).path
         return localPath
     }
-    @objc var currentPath: String { isTempCached ? localTempPath : localPath }
+    var currentPath: String { isTempCached ? localTempPath : localPath }
     
-    @objc var isTempCached: Bool {
+    var isTempCached: Bool {
         // If the song is fully cached, then it doesn't matter if there is a temp cache file
         //if self.isFullyCached { return false }
         
@@ -72,7 +69,7 @@ import Resolver
         return FileManager.default.fileExists(atPath: localTempPath)
     }
     
-    @objc var localFileSize: Int {
+    var localFileSize: Int {
         var st = stat()
         stat(currentPath, &st)
         return Int(st.st_size)
@@ -91,7 +88,7 @@ import Resolver
 //        return FileManager.default.attributesOfItem(atPath: currentPath)[.size]
     }
     
-    @objc var fileExists: Bool {
+    var fileExists: Bool {
         // Filesystem check
         return FileManager.default.fileExists(atPath: currentPath)
         
@@ -99,7 +96,7 @@ import Resolver
         //return [self.db stringForQuery:@"SELECT md5 FROM cachedSongs WHERE md5 = ?", [self.path md5]] ? YES : NO;
     }
     
-    @objc var estimatedKiloBitrate: Int {
+    var estimatedKiloBitrate: Int {
         let currentMaxBitrate = settings.currentMaxBitrate
         
         // Default to 128 if there is no bitrate for this song object (should never happen)
@@ -123,7 +120,7 @@ import Resolver
         return rate
     }
     
-    @objc init(serverId: Int, id: Int, title: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int, tagArtistId: Int, tagAlbumId: Int, genre: String?, path: String, suffix: String, transcodedSuffix: String?, duration: Int, kiloBitrate: Int, track: Int, discNumber: Int, size: Int, isVideo: Bool) {
+    init(serverId: Int, id: Int, title: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int, tagArtistId: Int, tagAlbumId: Int, genre: String?, path: String, suffix: String, transcodedSuffix: String?, duration: Int, kiloBitrate: Int, track: Int, discNumber: Int, size: Int, isVideo: Bool) {
         self.serverId = serverId
         self.id = id
         self.title = title
@@ -145,10 +142,9 @@ import Resolver
         self.discNumber = discNumber
         self.size = size
         self.isVideo = isVideo
-        super.init()
     }
     
-    @objc init(serverId: Int, element: RXMLElement) {
+    init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
         self.id = element.attribute("id").intXML
         self.title = element.attribute("title").stringXML
@@ -170,35 +166,26 @@ import Resolver
         self.discNumber = element.attribute("discNumber").intXML
         self.size = element.attribute("size").intXML
         self.isVideo = element.attribute("isVideo").boolXML
-        super.init()
     }
     
-    func copy(with zone: NSZone? = nil) -> Any {
-        Song(serverId: serverId, id: id, title: title, coverArtId: coverArtId, parentFolderId: parentFolderId, tagArtistName: tagArtistName, tagAlbumName: tagAlbumName, playCount: playCount, year: year, tagArtistId: tagArtistId, tagAlbumId: tagAlbumId, genre: genre, path: path, suffix: suffix, transcodedSuffix: transcodedSuffix, duration: duration, kiloBitrate: kiloBitrate, track: track, discNumber: discNumber, size: size, isVideo: isVideo)
+    // MARK: Hashable
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(serverId)
+        hasher.combine(id)
     }
     
-    override var description: String {
-        "\(super.description): serverId: \(serverId), id: \(id), title: \(title)"
-    }
-    
-    override var hash: Int {
-        id.hashValue
-    }
-    
-    override func isEqual(_ object: Any?) -> Bool {
-        if let object = object as? Song {
-            return self === object || (serverId == object.serverId && id == object.id)
-        }
-        return false
+    static func ==(lhs: Song, rhs: Song) -> Bool {
+        return lhs.serverId == rhs.serverId && lhs.id == rhs.id
     }
     
     // MARK: ISMSSong+DAO
     
-    @objc var isFullyCached: Bool {
+    var isFullyCached: Bool {
         return store.isDownloadFinished(song: self)
     }
 
-    @objc var downloadProgress: Float {
+    var downloadProgress: Float {
         var downloadProgress: Float = 0
         
         if isFullyCached {

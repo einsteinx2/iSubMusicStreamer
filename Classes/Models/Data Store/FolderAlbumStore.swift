@@ -76,7 +76,7 @@ extension FolderMetadata: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
-    @objc func resetFolderAlbumCache(serverId: Int) -> Bool {
+    func resetFolderAlbumCache(serverId: Int) -> Bool {
         do {
             return try pool.write { db in
                 try db.execute(literal: "DELETE FROM folderAlbumList WHERE serverId = \(serverId)")

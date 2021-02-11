@@ -28,6 +28,8 @@ final class PlayerViewController: UIViewController {
     
     private var notificationObservers = [NSObjectProtocol]()
     
+    private let backgroundView = UIView()
+    
     // Cover Art
     private let coverArtPageControl = PageControlViewController()
     
@@ -80,7 +82,8 @@ final class PlayerViewController: UIViewController {
         if UIApplication.orientation.isPortrait || UIDevice.isPad {
             coverArtPageControl.view.snp.remakeConstraints { make in
                 make.height.equalTo(coverArtPageControl.view.snp.width).offset(20)
-                make.top.leading.equalToSuperview().offset(20)
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
+                make.leading.equalToSuperview().offset(20)
                 make.trailing.equalToSuperview().offset(-20)
             }
             
@@ -92,7 +95,7 @@ final class PlayerViewController: UIViewController {
                 }
                 make.centerX.equalTo(coverArtPageControl.view)
                 make.top.equalTo(coverArtPageControl.view.snp.bottom)
-                make.bottom.equalToSuperview()
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             }
             
             verticalStack.snp.remakeConstraints { make in
@@ -108,8 +111,8 @@ final class PlayerViewController: UIViewController {
         } else {
             coverArtPageControl.view.snp.remakeConstraints { make in
                 make.width.equalTo(coverArtPageControl.view.snp.height).offset(-20)
-                make.top.equalToSuperview().offset(20)
-                make.bottom.equalToSuperview().offset(-20)
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
                 if UIDevice.isSmall {
                     make.leading.equalToSuperview().offset(20)
                 } else {
@@ -121,7 +124,7 @@ final class PlayerViewController: UIViewController {
                 make.leading.equalTo(coverArtPageControl.view.snp.trailing).offset(40)
                 make.trailing.equalToSuperview().offset(-40)
                 make.top.equalToSuperview()
-                make.bottom.equalToSuperview()
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             }
             
             verticalStack.snp.remakeConstraints { make in
@@ -138,8 +141,16 @@ final class PlayerViewController: UIViewController {
         
         view.overrideUserInterfaceStyle = .dark
         view.backgroundColor = Colors.background
+        title = "Player"
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image:  UIImage(systemName: "list.number"), style: .plain, target: self, action: #selector(showCurrentPlaylist))
+        
+        backgroundView.backgroundColor = Colors.background
+        view.addSubview(backgroundView)
+        backgroundView.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+        }
         
         //
         // Cover art
@@ -234,7 +245,6 @@ final class PlayerViewController: UIViewController {
         downloadProgressView.backgroundColor = UIColor.systemGray4
         progressBarContainer.insertSubview(downloadProgressView, belowSubview: progressSlider)
         downloadProgressView.snp.makeConstraints { make in
-//            make.width.equalTo(0)
             make.width.equalTo(0)
             make.leading.equalTo(progressSlider).offset(-5)
             make.top.equalTo(progressSlider).offset(-3)
@@ -437,6 +447,7 @@ final class PlayerViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+//        tabBarItem.title = "Player"
         equalizerButton.isHidden = UIApplication.orientation.isLandscape
         updateSongInfo()
         startUpdatingSlider()
@@ -764,9 +775,9 @@ final class PlayerViewController: UIViewController {
         progressSlider.isEnabled = !jukeboxEnabled
         progressSlider.alpha = jukeboxEnabled ? 0.5 : 1.0
         downloadProgressView.isHidden = jukeboxEnabled
-        title = jukeboxEnabled ? "Jukebox Mode" : ""
+        view.backgroundColor = jukeboxEnabled ? Colors.jukeboxWindowColor : Colors.background
         if UIDevice.isPad {
-            view.backgroundColor = jukeboxEnabled ? Colors.jukeboxWindowColor.withAlphaComponent(0.5) : Colors.background
+            backgroundView.backgroundColor = view.backgroundColor
         }
     }
     

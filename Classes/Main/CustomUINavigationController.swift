@@ -31,9 +31,9 @@ extension CustomUINavigationController: UINavigationControllerDelegate {
         // Prevent view controllers from going under the navigation bar
         viewController.edgesForExtendedLayout = []
         
-        // Customizing the more tab controller
-        if !(viewController.navigationController is CustomUINavigationController) {
-            SceneDelegate.shared.tabBarController?.customizeMoreTabTableView()
-        }
+//        // Customizing the more tab controller
+//        if !(viewController.navigationController is CustomUINavigationController) {
+//            SceneDelegate.shared.tabBarController?.customizeMoreTabTableView()
+//        }
     }
 }

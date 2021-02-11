@@ -19,7 +19,8 @@ final class ArtistsViewController: UIViewController {
     var serverId: Int { Settings.shared().currentServerId }
     
     private let tableView = UITableView()
-    private lazy var dropdown = FolderDropdownControl(frame: CGRect(x: 50, y: 61, width: 220, height: 40))
+//    private lazy var dropdown = FolderDropdownControl(frame: CGRect(x: 50, y: 61, width: 220, height: 40))
+    private lazy var dropdownMenu = { DropdownMenu(delegate: self) }()
     private let searchBar = UISearchBar()
     private var searchOverlay: UIVisualEffectView?
     private let countLabel = UILabel()
@@ -57,11 +58,12 @@ final class ArtistsViewController: UIViewController {
         
         if dataModel.isCached {
             addCount()
-            tableView.setContentOffset(CGPoint.zero, animated: false)
+            tableView.setContentOffset(.zero, animated: false)
+            dropdownMenu.selectedIndex = dataModel.mediaFolderIndex
         }
         
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(serverSwitched), name: Notifications.serverSwitched)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateFolders), name: Notifications.serverCheckPassed)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadAction), name: Notifications.serverCheckPassed)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification)
     }
     
@@ -75,10 +77,15 @@ final class ArtistsViewController: UIViewController {
         Flurry.logEvent("FoldersTab")
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        dropdownMenu.close(animated: false)
+    }
+    
     deinit {
         NotificationCenter.removeObserverOnMainThread(self)
         dataModel.delegate = nil
-        dropdown.delegate = nil
+        dropdownMenu.delegate = nil
     }
     
     // MARK: Loading
@@ -98,69 +105,77 @@ final class ArtistsViewController: UIViewController {
     }
     
     private func removeCount() {
+        guard isCountShowing else { return }
         tableView.tableHeaderView = nil
         isCountShowing = false
     }
     
     private func addCount() {
+        guard !isCountShowing else { return }
         isCountShowing = true
         
+        // NOTE: Unfortunately the header container view must not use autolayout or the
+        //       header resizing won't work, but all of it's subviews can use it at least.
         let headerView = UIView()
-        headerView.frame = CGRect(x: 0, y: 0, width: 320, height: 157)
+        headerView.frame = CGRect(x: 0, y: 0, width: 320, height: 154)
         headerView.autoresizingMask = .flexibleWidth
         headerView.backgroundColor = view.backgroundColor
-
-        countLabel.frame = CGRect(x: 0, y: 9, width: 320, height: 30)
-        countLabel.autoresizingMask = .flexibleWidth
+        tableView.tableHeaderView = headerView
+        
         countLabel.textColor = .label
         countLabel.textAlignment = .center
         countLabel.font = .boldSystemFont(ofSize: 32)
         headerView.addSubview(countLabel)
-        
-        reloadTimeLabel.frame = CGRect(x: 0, y: 40, width: 320, height: 14)
-        reloadTimeLabel.autoresizingMask = .flexibleWidth
+        countLabel.snp.makeConstraints { make in
+            make.height.equalTo(30)
+            make.leading.trailing.equalToSuperview()
+            make.top.equalToSuperview().offset(10)
+        }
+
         reloadTimeLabel.textColor = .secondaryLabel
         reloadTimeLabel.textAlignment = .center
         reloadTimeLabel.font = .systemFont(ofSize: 11)
         headerView.addSubview(reloadTimeLabel)
-        
-        dropdown = FolderDropdownControl(frame: CGRect(x: 50, y: 61, width: 220, height: 40))
-        dropdown.frame = CGRect(x: 50, y: 61, width: 220, height: 40)
-        dropdown.delegate = self
-        dropdown.selectFolder(withId: dataModel.mediaFolderId)
-        headerView.addSubview(dropdown)
-        // TODO: Why is this hack needed in the Swift port but not in the original Obj-C version??
-        DispatchQueue.main.async(after: 0.1) {
-            self.dropdown.frame = CGRect(x: 50, y: 61, width: self.view.frame.width - 100, height: 40)
-            print(self.dropdown.frame)
+        reloadTimeLabel.snp.makeConstraints { make in
+            make.height.equalTo(14)
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(countLabel.snp.bottom).offset(5)
         }
-
-
-        searchBar.frame = CGRect(x: 0, y: 111, width: 320, height: 40)
-        searchBar.autoresizingMask = .flexibleWidth
+        
+        headerView.addSubview(dropdownMenu)
+        dropdownMenu.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(50).priority(.high)
+            make.trailing.equalToSuperview().offset(-50).priority(.high)
+            make.top.equalTo(reloadTimeLabel.snp.bottom).offset(5)
+        }
+        
         searchBar.searchBarStyle = .minimal
         searchBar.delegate = self
         searchBar.autocorrectionType = .no
         searchBar.placeholder = "Folder name"
         headerView.addSubview(searchBar)
+        searchBar.snp.makeConstraints { make in
+            make.height.equalTo(40)
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(dropdownMenu.snp.bottom).offset(5)
+            make.bottom.equalToSuperview().offset(-5)
+        }
 
         updateCount()
-        
-        // Special handling for voice over users
-        if UIAccessibility.isVoiceOverRunning {
-            // Add a refresh button
-            let voiceOverRefresh = UIButton(type: .custom)
-            voiceOverRefresh.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-            voiceOverRefresh.addTarget(self, action: #selector(reloadAction), for: .touchUpInside)
-            voiceOverRefresh.accessibilityLabel = "Reload Folders"
-            headerView.addSubview(voiceOverRefresh)
 
-            // Resize the two labels at the top so the refresh button can be pressed
-            countLabel.frame = CGRect(x: 50, y: 5, width: 220, height: 30)
-            reloadTimeLabel.frame = CGRect(x: 50, y: 36, width: 220, height: 12)
-        }
-        
-        tableView.tableHeaderView = headerView
+//        // Special handling for voice over users
+//        if UIAccessibility.isVoiceOverRunning {
+//            // Add a refresh button
+//            let voiceOverRefresh = UIButton(type: .custom)
+//            voiceOverRefresh.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+//            voiceOverRefresh.addTarget(self, action: #selector(reloadAction), for: .touchUpInside)
+//            voiceOverRefresh.accessibilityLabel = "Reload Folders"
+//            headerView.addSubview(voiceOverRefresh)
+//
+//            // Resize the two labels at the top so the refresh button can be pressed
+//            countLabel.frame = CGRect(x: 50, y: 5, width: 220, height: 30)
+//            reloadTimeLabel.frame = CGRect(x: 50, y: 36, width: 220, height: 12)
+//        }
     }
     
     @objc private func reloadAction() {
@@ -168,11 +183,19 @@ final class ArtistsViewController: UIViewController {
     }
 
     private func loadData(serverId: Int, mediaFolderId: Int) {
-        dropdown.updateFolders()
         HUD.show(closeHandler: cancelLoad)
         dataModel.serverId = serverId
         dataModel.mediaFolderId = mediaFolderId
         dataModel.startLoad()
+    }
+    
+    @objc private func serverSwitched() {
+        dataModel.reset()
+        if !dataModel.isCached {
+            tableView.reloadData()
+            removeCount()
+        }
+        dropdownMenu.selectedIndex = 0
     }
 }
 
@@ -184,6 +207,8 @@ extension ArtistsViewController: APILoaderDelegate {
     }
     
     func loadingFinished(loader: APILoader?) {
+        dropdownMenu.selectedIndex = dataModel.mediaFolderIndex
+        dropdownMenu.updateItems()
         if isCountShowing {
             updateCount()
         } else {
@@ -215,56 +240,6 @@ extension ArtistsViewController: APILoaderDelegate {
     }
 }
 
-extension ArtistsViewController: FolderDropdownDelegate {
-    func folderDropdownMoveViewsY(_ y: Float) {
-        tableView.performBatchUpdates({
-            tableView.tableHeaderView?.frame.size.height += CGFloat(y)
-            searchBar.frame.origin.y += CGFloat(y)
-            tableView.tableHeaderView = tableView.tableHeaderView
-            
-            let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows ?? []
-            let visibleSections = Set<Int>(indexPathsForVisibleRows.map({ $0.section }))
-            for section in visibleSections {
-                if let sectionHeader = tableView.headerView(forSection: section) {
-                    sectionHeader.frame.origin.y += CGFloat(y)
-                }
-            }
-        }, completion: nil)
-    }
-    
-    func folderDropdownSelectFolder(_ mediaFolderId: Int) {
-        // Save the default
-        settings.rootFoldersSelectedFolderId = NSNumber(value: mediaFolderId)
-        
-        // Reload the data
-        dataModel.mediaFolderId = mediaFolderId
-        isSearching = false
-        if dataModel.isCached {
-            tableView.reloadData()
-            updateCount()
-        } else {
-            loadData(serverId: serverId, mediaFolderId: mediaFolderId)
-        }
-    }
-    
-    func folderDropdownViewsFinishedMoving() {
-        
-    }
-    
-    @objc private func serverSwitched() {
-        dataModel.reset()
-        if !dataModel.isCached {
-            tableView.reloadData()
-            removeCount()
-        }
-        folderDropdownSelectFolder(MediaFolder.allFoldersId)
-    }
-    
-    @objc private func updateFolders() {
-        dropdown.updateFolders()
-    }
-}
-
 extension ArtistsViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         guard !isSearching else { return }
@@ -272,7 +247,7 @@ extension ArtistsViewController: UISearchBarDelegate {
         isSearching = true
         dataModel.clearSearch()
         
-        dropdown.closeDropdownFast()
+        dropdownMenu.close(animated: false)
         tableView.setContentOffset(CGPoint(x: 0, y: 104), animated: true)
         
         if (searchBar.text?.count ?? 0) == 0 {
@@ -292,11 +267,8 @@ extension ArtistsViewController: UISearchBarDelegate {
         if searchText.count > 0 {
             hideSearchOverlay()
             dataModel.search(name: searchText)
-//            tableView.setContentOffset(CGPoint(x: 0, y: 45), animated: false)
         } else {
             createSearchOverlay()
-//            tableView.setContentOffset(CGPoint(x: 0, y: 104), animated: false)
-//            tableView.setContentOffset(CGPoint(x: 0, y: 45), animated: false)
         }
         tableView.reloadData()
         tableView.setContentOffset(CGPoint(x: 0, y: 45), animated: false)
@@ -414,7 +386,7 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
         if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) { return -1 }
         
         if index == 0 {
-            let yOffset: CGFloat = dropdown.hasMultipleMediaFolders() ? 54 : 104
+            let yOffset: CGFloat = dataModel.mediaFolders.count > 1 ? 54 : 104
             tableView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)
             return -1
         }
@@ -422,6 +394,7 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if let artist = artist(indexPath: indexPath) {
             if let artist = artist as? FolderArtist {
                 pushViewControllerCustom(FolderAlbumViewController(folderArtist: artist))
@@ -433,5 +406,62 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         return SwipeAction.downloadAndQueueConfig(model: artist(indexPath: indexPath))
+    }
+}
+
+extension ArtistsViewController: DropdownMenuDelegate {
+    func dropdownMenuNumberOfItems(_ dropdownMenu: DropdownMenu) -> Int {
+        return dataModel.mediaFolders.count + 1
+    }
+    
+    func dropdownMenu(_ dropdownMenu: DropdownMenu, titleForIndex index: Int) -> String {
+        guard index >= 0 && index < dataModel.mediaFolders.count else { return "" }
+        return dataModel.mediaFolders[index].name
+    }
+    
+    func dropdownMenu(_ dropdownMenu: DropdownMenu, selectedItemAt index: Int) {
+        guard index >= 0 && index < dataModel.mediaFolders.count else { return }
+        
+        // Save the default
+        let mediaFolderId = dataModel.mediaFolders[index].id
+        settings.rootFoldersSelectedFolderId = NSNumber(value: mediaFolderId)
+
+        // Reload the data
+        dataModel.mediaFolderId = mediaFolderId
+        isSearching = false
+        if dataModel.isCached {
+            tableView.reloadData()
+            updateCount()
+        } else {
+            loadData(serverId: serverId, mediaFolderId: mediaFolderId)
+        }
+    }
+
+    func dropdownMenu(_ dropdownMenu: DropdownMenu, willToggleWithHeightChange heightChange: CGFloat, animated: Bool, animationDuration: Double) {
+        func resizeHeader() {
+            do {
+                try ObjC.perform {
+                    tableView.performBatchUpdates({
+                        tableView.tableHeaderView?.frame.size.height += heightChange
+                        tableView.tableHeaderView = tableView.tableHeaderView
+                        tableView.tableHeaderView?.layoutIfNeeded()
+                        
+                        for section in 0..<dataModel.tableSections.count {
+                            if let sectionHeader = tableView.headerView(forSection: section) {
+                                sectionHeader.frame.origin.y += heightChange
+                            }
+                        }
+                    }, completion: nil)
+                }
+            } catch {}
+        }
+        
+        if animated {
+            UIView.animate(withDuration: animationDuration) {
+                resizeHeader()
+            }
+        } else {
+            resizeHeader()
+        }
     }
 }

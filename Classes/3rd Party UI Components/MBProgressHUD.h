@@ -309,9 +309,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@protocol MBProgressHUDDelegate <NSObject>
-
-@optional
+@protocol MBProgressHUDDelegate
 
 /**
  * Called after the HUD was fully hidden from the screen.

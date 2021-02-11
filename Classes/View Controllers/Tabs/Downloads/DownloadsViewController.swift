@@ -29,11 +29,7 @@ final class DownloadsViewController: AbstractDownloadsViewController {//UIViewCo
 
 extension DownloadsViewController: UITableViewConfiguration {
     private enum RowType: Int, CaseIterable {
-        case folders = 0
-        case artists = 1
-        case albums = 2
-        case songs = 3
-        
+        case folders = 0, artists, albums, songs
         var name: String {
             switch self {
             case .folders: return "Folders"

@@ -9,13 +9,6 @@
 import UIKit
 import SnapKit
 
-private class HUDDelegate: NSObject, MBProgressHUDDelegate {
-    func hudWasHidden(_ hud: MBProgressHUD) {
-        hud.removeFromSuperview()
-        HUD.hud = nil
-    }
-}
-
 struct HUD {
     private static let defaultGraceTime = 0.3
     private static let defaultMessage = "Loading"
@@ -27,9 +20,9 @@ struct HUD {
     // TODO: Update this to support multiple scenes
     private static var window: UIWindow? { UIApplication.keyWindow }
     
-    @discardableResult static func show(message: String? = nil, closeHandler: (() -> Void)? = nil) -> Bool {
+    @discardableResult
+    static func show(message: String? = nil, closeHandler: (() -> Void)? = nil) -> Bool {
         guard hud == nil, let window = window else { return false }
-        
         DispatchQueue.main.async {
             let hud = MBProgressHUD(view: window)
             hud.delegate = hudDelegate
@@ -55,12 +48,19 @@ struct HUD {
         return true
     }
     
-    @discardableResult static func hide() -> Bool {
+    @discardableResult
+    static func hide() -> Bool {
         guard let hud = hud else { return false }
-        
         DispatchQueue.main.async {
             hud.hide(animated: true)
         }
         return true
+    }
+}
+
+private class HUDDelegate: MBProgressHUDDelegate {
+    func hudWasHidden(_ hud: MBProgressHUD) {
+        hud.removeFromSuperview()
+        HUD.hud = nil
     }
 }

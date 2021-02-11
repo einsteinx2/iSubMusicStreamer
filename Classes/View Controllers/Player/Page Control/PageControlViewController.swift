@@ -10,12 +10,15 @@ import UIKit
 import SnapKit
 
 final class PageControlViewController: UIViewController {
+    private enum PageType: Int, CaseIterable {
+        case coverArt = 0, playQueue, lyrics, songInfo, cacheStatus
+    }
+    
     private let scrollView = UIScrollView()
     private let pageControl = UIPageControl()
     private var pageControlUsed = false
     private var isRotating = false
     
-    private let numberOfPages = 4
     private var viewControllers = [UIViewController]()
     
     private var coverArtViewController: CoverArtViewController?
@@ -60,7 +63,7 @@ final class PageControlViewController: UIViewController {
             make.leading.trailing.top.equalToSuperview()
         }
         
-        pageControl.numberOfPages = numberOfPages
+        pageControl.numberOfPages = PageType.allCases.count
         pageControl.currentPage = 0
         pageControl.addTarget(self, action: #selector(changePage), for: .valueChanged)
         view.addSubview(pageControl)
@@ -71,19 +74,20 @@ final class PageControlViewController: UIViewController {
         }
         
         var prevController: UIViewController? = nil
-        for index in 0..<numberOfPages {
+        for page in PageType.allCases {
             var controller: UIViewController? = nil
-            switch index {
-            case 0:
+            switch page {
+            case .coverArt:
                 coverArtViewController = CoverArtViewController()
                 controller = coverArtViewController
-            case 1:
+            case .playQueue:
+                controller = PlayQueueViewController(backgroundColor: .black)
+            case .lyrics:
                 controller = LyricsViewController()
-            case 2:
+            case .songInfo:
                 controller = SongInfoViewController()
-            case 3:
+            case .cacheStatus:
                 controller = CacheStatusViewController()
-            default: break
             }
             
             if let controller = controller {
@@ -98,7 +102,7 @@ final class PageControlViewController: UIViewController {
                     } else {
                         make.leading.equalToSuperview()
                     }
-                    if index == numberOfPages - 1 {
+                    if page.rawValue == PageType.allCases.count - 1 {
                         make.trailing.equalToSuperview()
                     }
                 }
@@ -108,7 +112,7 @@ final class PageControlViewController: UIViewController {
     }
     
     @objc private func changePage() {
-        let page = pageControl.currentPage;
+        let page = pageControl.currentPage
         
         // update the scroll view to the appropriate page
         scrollView.setContentOffset(CGPoint(x: scrollView.bounds.width * CGFloat(page), y: 0), animated: true)
@@ -131,8 +135,8 @@ extension PageControlViewController: UIScrollViewDelegate {
         // Switch the indicator when more than 50% of the previous/next page is visible
         let pageWidth = scrollView.bounds.size.width;
         if pageWidth > 0 {
-            let page = Int(floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1);
-            self.pageControl.currentPage = page;
+            let page = Int(floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1)
+            self.pageControl.currentPage = page
         }
     }
     

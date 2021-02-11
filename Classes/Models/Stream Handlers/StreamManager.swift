@@ -10,22 +10,21 @@ import Foundation
 import Resolver
 import CocoaLumberjackSwift
 
-@objc final class StreamManager: NSObject {
+final class StreamManager {
     @LazyInjected private var cacheQueue: CacheQueue
     @LazyInjected private var store: Store
     @LazyInjected private var settings: Settings
     @LazyInjected private var playQueue: PlayQueue
     @LazyInjected private var player: BassPlayer
     
-    // Temporary accessor for Objective-C classes using Resolver under the hood
-    @objc static var shared: StreamManager { Resolver.resolve() }
-    
     private let defaultNumberOfStreamsToQueue = 2
     private let maxNumberOfReconnects = 5
     
     private var handlerStack = [StreamHandler]()
-    @objc private(set) var lastCachedSong: Song?
-    @objc private(set) var lastTempCachedSong: Song?
+    private(set) var lastCachedSong: Song?
+    private(set) var lastTempCachedSong: Song?
+    
+    private var resumeHandlerWorkItem: DispatchWorkItem?
     
     func setup() {
         // Load the handler stack, it may have been full when iSub was closed
@@ -66,7 +65,7 @@ import CocoaLumberjackSwift
         return handlerStack.first
     }
     
-    @objc func handler(song: Song) -> StreamHandler? {
+    func handler(song: Song) -> StreamHandler? {
         return handlerStack.first { $0.song == song }
     }
     
@@ -170,7 +169,7 @@ import CocoaLumberjackSwift
         removeAllStreams(except: [handler])
     }
     
-    @objc func removeAllStreams() {
+    func removeAllStreams() {
         removeAllStreams(except: [] as [StreamHandler])
     }
     
@@ -197,10 +196,11 @@ import CocoaLumberjackSwift
     }
     
     private func cancelResume(handler: StreamHandler) {
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(resume(handler:)), object: handler)
+        resumeHandlerWorkItem?.cancel()
+        resumeHandlerWorkItem = nil
     }
     
-    @objc func resume(handler: StreamHandler) {
+    @objc private func resume(handler: StreamHandler) {
         // As an added check, verify that this handler is still in the stack
         guard isInQueue(song: handler.song) else { return }
         if cacheQueue.isDownloading, let currentQueuedSong = cacheQueue.currentQueuedSong, currentQueuedSong == handler.song {
@@ -272,7 +272,7 @@ import CocoaLumberjackSwift
     
     // MARK: Handler Stealing
     
-    @objc func stealForCacheQueue(handler: StreamHandler) {
+    func stealForCacheQueue(handler: StreamHandler) {
         DDLogInfo("[StreamManager] cache queue manager stole handler for song \(handler.song)")
         handlerStack.removeAll { $0 == handler }
         saveHandlerStack()
@@ -349,11 +349,11 @@ import CocoaLumberjackSwift
         DDLogInfo("[StreamManager] fillStreamQueue: handlerStack: \(handlerStack)")
     }
     
-    @objc func fillStreamQueue() {
+    @objc private func fillStreamQueue() {
         fillStreamQueue(startDownload: true)
     }
     
-    @objc func songCachingToggled() {
+    @objc private func songCachingToggled() {
         if settings.isSongCachingEnabled {
             NotificationCenter.addObserverOnMainThread(self, selector: #selector(fillStreamQueue as () -> Void), name: Notifications.songPlaybackEnded)
         } else {
@@ -361,7 +361,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc func currentPlaylistIndexChanged() {
+    @objc private func currentPlaylistIndexChanged() {
         // TODO: implement this
         // TODO: Fix this logic, it's wrong
         if let prevSong = playQueue.prevSong {
@@ -369,7 +369,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc func currentPlaylistOrderChanged() {
+    @objc private func currentPlaylistOrderChanged() {
         var songs = [Song]()
         if let currentSong = playQueue.currentSong {
             songs.append(currentSong)
@@ -382,7 +382,7 @@ import CocoaLumberjackSwift
         fillStreamQueue(startDownload: player.isStarted)
     }
     
-    @objc func songPlaybackEnded() {
+    @objc private func songPlaybackEnded() {
         if settings.isSongCachingEnabled {
             fillStreamQueue()
         }
@@ -470,7 +470,11 @@ extension StreamManager: StreamHandlerDelegate {
             // Less than max number of reconnections, so try again
             handler.numberOfReconnects += 1
             // Retry connection after a delay to prevent a tight loop
-            perform(#selector(resume(handler:)), with: handler, afterDelay: 1.5)
+            let resumeHandlerWorkItem = DispatchWorkItem { [weak self] in
+                self?.resume(handler: handler)
+            }
+            self.resumeHandlerWorkItem = resumeHandlerWorkItem
+            DispatchQueue.main.async(after: 1.5, execute: resumeHandlerWorkItem)            
         } else {
             // Tried max number of times so remove
             NotificationCenter.postOnMainThread(name: Notifications.streamHandlerSongFailed)

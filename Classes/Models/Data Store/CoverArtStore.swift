@@ -43,7 +43,7 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
-    @objc func resetCoverArtCache(serverId: Int) -> Bool {
+    func resetCoverArtCache(serverId: Int) -> Bool {
         do {
             return try pool.write { db in
                 try db.execute(literal: "DELETE FROM \(CoverArt.self) WHERE serverId = \(serverId)")
@@ -55,7 +55,7 @@ extension Store {
         }
     }
     
-    @objc func resetArtistArtCache(serverId: Int) -> Bool {
+    func resetArtistArtCache(serverId: Int) -> Bool {
         do {
             return try pool.write { db in
                 try db.execute(literal: "DELETE FROM \(ArtistArt.self) WHERE serverId = \(serverId)")

@@ -63,10 +63,10 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.enableNextSongCacheSwitch.on = settingsS.isNextSongCacheEnabled;
     self.enableBackupCacheSwitch.on = settingsS.isBackupCacheEnabled;
     [self.cacheSpaceSlider setThumbImage:[UIImage imageNamed:@"controller-slider-thumb"] forState:UIControlStateNormal];
-	self.totalSpace = Cache.shared.totalSpace;
-	self.freeSpace = Cache.shared.freeSpace;
-	self.freeSpaceLabel.text = [NSString stringWithFormat:@"Free space: %@", [ObjCDeleteMe formatFileSizeWithBytes:self.freeSpace]];
-	self.totalSpaceLabel.text = [NSString stringWithFormat:@"Total space: %@", [ObjCDeleteMe formatFileSizeWithBytes:self.totalSpace]];
+	self.totalSpace = Cache_ObjCDeleteMe.totalSpace;
+	self.freeSpace = Cache_ObjCDeleteMe.freeSpace;
+	self.freeSpaceLabel.text = [NSString stringWithFormat:@"Free space: %@", [Defines_ObjCDeleteMe formatFileSizeWithBytes:self.freeSpace]];
+	self.totalSpaceLabel.text = [NSString stringWithFormat:@"Total space: %@", [Defines_ObjCDeleteMe formatFileSizeWithBytes:self.totalSpace]];
 	float percentFree = (float) self.freeSpace / (float) self.totalSpace;
 	CGRect frame = self.freeSpaceBackground.frame;
 	frame.size.width *= percentFree;
@@ -115,11 +115,11 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)cachingTypeToggle {
 	if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 0) {
 		self.cacheSpaceLabel1.text = @"Minimum free space:";
-		self.cacheSpaceLabel2.text = [ObjCDeleteMe formatFileSizeWithBytes:settingsS.minFreeSpace];
+		self.cacheSpaceLabel2.text = [Defines_ObjCDeleteMe formatFileSizeWithBytes:settingsS.minFreeSpace];
 		self.cacheSpaceSlider.value = ((float)settingsS.minFreeSpace / self.totalSpace);
 	} else if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 1) {
 		self.cacheSpaceLabel1.text = @"Maximum cache size:";
-		self.cacheSpaceLabel2.text = [ObjCDeleteMe formatFileSizeWithBytes:settingsS.maxCacheSize];
+		self.cacheSpaceLabel2.text = [Defines_ObjCDeleteMe formatFileSizeWithBytes:settingsS.maxCacheSize];
 		self.cacheSpaceSlider.value = ((float)settingsS.maxCacheSize / self.totalSpace);
 	}
 }
@@ -156,7 +156,7 @@ LOG_LEVEL_ISUB_DEFAULT
 			
             if (UIDevice.isPad) {
                 // Update the quick skip buttons in the player with the new values on iPad since player is always visible
-                [NSNotificationCenter postOnMainThreadWithName:Notifications.quickSkipSecondsSettingChanged object:nil userInfo:nil];
+                [NSNotificationCenter postOnMainThreadWithName:Notifications_ObjcDeleteMe.quickSkipSecondsSettingChanged object:nil userInfo:nil];
             }
 		} else if (sender == self.maxVideoBitrate3GSegmentedControl) {
             settingsS.maxVideoBitrate3G = self.maxVideoBitrate3GSegmentedControl.selectedSegmentIndex;
@@ -336,8 +336,8 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)resetFolderCache {
 //    [HUD showWithMessage:@"Processing"];
     NSInteger serverId = settingsS.currentServerId;
-    (void)[Store.shared resetFolderAlbumCacheWithServerId:serverId];
-    (void)[Store.shared deleteTagAlbumsWithServerId:serverId];
+    (void)[Store_ObjCDeleteMe resetFolderAlbumCacheWithServerId:serverId];
+    (void)[Store_ObjCDeleteMe deleteTagAlbumsWithServerId:serverId];
 //	[HUD hide];
 	[self popLibraryTab];
 }
@@ -345,8 +345,8 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)resetAlbumArtCache {
 //    [HUD showWithMessage:@"Processing"];
     NSInteger serverId = settingsS.currentServerId;
-    (void)[Store.shared resetCoverArtCacheWithServerId:serverId];
-    (void)[Store.shared resetArtistArtCacheWithServerId:serverId];
+    (void)[Store_ObjCDeleteMe resetCoverArtCacheWithServerId:serverId];
+    (void)[Store_ObjCDeleteMe resetArtistArtCacheWithServerId:serverId];
 //	[HUD hide];
 	[self popLibraryTab];
 }
@@ -382,12 +382,12 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)updateCacheSpaceSlider {
-    NSInteger fileSize = [ObjCDeleteMe fileSizeFromFormat:self.cacheSpaceLabel2.text];
+    NSInteger fileSize = [Defines_ObjCDeleteMe fileSizeFromFormat:self.cacheSpaceLabel2.text];
 	self.cacheSpaceSlider.value = ((double)fileSize / (double)self.totalSpace);
 }
 
 - (IBAction)updateMinFreeSpaceLabel {
-	self.cacheSpaceLabel2.text = [ObjCDeleteMe formatFileSizeWithBytes:(self.cacheSpaceSlider.value * self.totalSpace)];
+	self.cacheSpaceLabel2.text = [Defines_ObjCDeleteMe formatFileSizeWithBytes:(self.cacheSpaceSlider.value * self.totalSpace)];
 }
 
 - (IBAction)updateMinFreeSpaceSetting {
@@ -402,7 +402,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		} else {
 			settingsS.minFreeSpace = (self.cacheSpaceSlider.value * (float)self.totalSpace);
 		}
-		//cacheSpaceLabel2.text = [ObjCDeleteMe formatFileSizeWithBytes:settingsS.minFreeSpace];
+		//cacheSpaceLabel2.text = [Defines_ObjCDeleteMe formatFileSizeWithBytes:settingsS.minFreeSpace];
 	} else if (self.cachingTypeSegmentedControl.selectedSegmentIndex == 1) {
 		
 		// Check if the user is trying to assign a larger max cache size than there is available space - 50MB
@@ -415,13 +415,13 @@ LOG_LEVEL_ISUB_DEFAULT
 		} else {
 			settingsS.maxCacheSize = (self.cacheSpaceSlider.value * self.totalSpace);
 		}
-		//cacheSpaceLabel2.text = [ObjCDeleteMe formatFileSizeWithBytes:settingsS.maxCacheSize];
+		//cacheSpaceLabel2.text = [Defines_ObjCDeleteMe formatFileSizeWithBytes:settingsS.maxCacheSize];
 	}
 	[self updateMinFreeSpaceLabel];
 }
 
 - (IBAction)revertMinFreeSpaceSlider {
-	self.cacheSpaceLabel2.text = [ObjCDeleteMe formatFileSizeWithBytes:settingsS.minFreeSpace];
+	self.cacheSpaceLabel2.text = [Defines_ObjCDeleteMe formatFileSizeWithBytes:settingsS.minFreeSpace];
 	self.cacheSpaceSlider.value = (float)settingsS.minFreeSpace / self.totalSpace;
 }
 
@@ -455,7 +455,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 - (void)textFieldDidChange:(UITextField *)textField {
 	[self updateCacheSpaceSlider];
-//DLog(@"file size: %llu   formatted: %@", [ObjCDeleteMe fileSizeFromFormat:textField.text], [ObjCDeleteMe formatFileSizeWithBytes:[ObjCDeleteMe fileSizeFromFormat:textField.text]]);
+//DLog(@"file size: %llu   formatted: %@", [Defines_ObjCDeleteMe fileSizeFromFormat:textField.text], [Defines_ObjCDeleteMe formatFileSizeWithBytes:[Defines_ObjCDeleteMe fileSizeFromFormat:textField.text]]);
 }
 
 @end

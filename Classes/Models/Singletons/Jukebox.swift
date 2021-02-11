@@ -144,7 +144,7 @@ final class Jukebox {
     //        }
         }
         self.getInfoWorkItem = getInfoWorkItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: getInfoWorkItem)
+        DispatchQueue.main.async(after: 0.5, execute: getInfoWorkItem)
     }
     
     private func queueDataTask(action: String, parameters: [String: Any]? = nil) {

@@ -19,6 +19,16 @@ final class PlayQueueViewController: UIViewController {
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "song", pluralizeClearType: false, isLargeCount: false)
     private let tableView = UITableView()
+    private let backgroundColor: UIColor?
+    
+    init(backgroundColor: UIColor? = Colors.background) {
+        self.backgroundColor = backgroundColor
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("unimplemented")
+    }
         
     deinit {
         NotificationCenter.removeObserverOnMainThread(self)
@@ -45,7 +55,7 @@ final class PlayQueueViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = Colors.background
+        view.backgroundColor = backgroundColor
         title = "Play Queue"
         
         if isModal {
@@ -67,6 +77,7 @@ final class PlayQueueViewController: UIViewController {
             make.top.equalTo(self.saveEditHeader.snp.bottom)
             make.leading.trailing.bottom.equalToSuperview()
         }
+        tableView.backgroundColor = backgroundColor
     }
     
     override func viewWillAppear(_ animated: Bool) {

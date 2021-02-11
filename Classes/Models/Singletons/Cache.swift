@@ -13,20 +13,18 @@ import CocoaLumberjackSwift
 // TODO: implement this
 // TODO: Refactor this and make sure it works correctly
 // TODO: Refactor this so everything happens in a background thread
-@objc final class Cache: NSObject {
+final class Cache {
     @LazyInjected private var settings: Settings
     @LazyInjected private var store: Store
     @LazyInjected private var cacheQueue: CacheQueue
-    
-    // Temporary accessor for Objective-C classes using Resolver under the hood
-    @objc static var shared: Cache { Resolver.resolve() }
-    
+
     private var cacheCheckInterval = 60.0
+    private var cacheCheckWorkItem: DispatchWorkItem?
     private(set) var cacheSize: Int = 0
     
-    @objc var totalSpace: Int { FileSystem.downloadsDirectory.systemTotalSpace ?? 0 }
-    @objc var freeSpace: Int { FileSystem.downloadsDirectory.systemAvailableSpace ?? 0 }
-    @objc var numberOfCachedSongs: Int { store.downloadedSongsCount() ?? 0 }
+    var totalSpace: Int { FileSystem.downloadsDirectory.systemTotalSpace ?? 0 }
+    var freeSpace: Int { FileSystem.downloadsDirectory.systemAvailableSpace ?? 0 }
+    var numberOfCachedSongs: Int { store.downloadedSongsCount() ?? 0 }
     
     func setup() {
         // TODO: implement this
@@ -36,10 +34,10 @@ import CocoaLumberjackSwift
         clearTempCache()
         
         // Start checking the cache size after 2 seconds to allow the app to load quicker
-        perform(#selector(checkCache), with: nil, afterDelay: 2)
+        checkCache(after: 2)
     }
     
-    @objc func clearTempCache() {
+    func clearTempCache() {
         // Clear the temp cache directory
         do {
             try FileManager.default.removeItem(at: FileSystem.tempDownloadsDirectory)
@@ -56,10 +54,11 @@ import CocoaLumberjackSwift
     }
     
     func stopCacheCheckTimer() {
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(checkCache), object: nil)
+        cacheCheckWorkItem?.cancel()
+        cacheCheckWorkItem = nil
     }
     
-    @objc private func checkCache() {
+    private func checkCache() {
         stopCacheCheckTimer()
         
         findCacheSize()
@@ -106,7 +105,15 @@ import CocoaLumberjackSwift
             }
         }
         
-        perform(#selector(checkCache), with: nil, afterDelay: cacheCheckInterval)
+        checkCache(after: cacheCheckInterval)
+    }
+    
+    private func checkCache(after delay: Double) {
+        let cacheCheckWorkItem = DispatchWorkItem { [weak self] in
+            self?.checkCache()
+        }
+        self.cacheCheckWorkItem = cacheCheckWorkItem
+        DispatchQueue.main.async(after: delay, execute: cacheCheckWorkItem)
     }
     
     private func adjustCacheSize() {
@@ -196,13 +203,28 @@ import CocoaLumberjackSwift
     
     // TODO: implement this
     // NOTE: The docs say that you can just set it on a single directory and it will apply to all subfolders/files, however various people have tested and found this to be incorrect. So what needs to be done is to use the directory enumerator to enumerate all files and subdirectories in the downloads directory and mark them all. Then any time a new file is created, like in the stream handler, the flag needs to be set according to the user's setting because apparently it won't apply to newly created files, especially in the documents directory. See discussion here: https://stackoverflow.com/a/26683417/299262
-    @objc func setAllCachedSongsToBackup() {
+    func setAllCachedSongsToBackup() {
         // Set the flag on the downloads directory, no need to set it on all individual files
 //        (FileSystem.downloadsDirectory as NSURL).removeSkipBackupAttribute()
     }
     
-    @objc func setAllCachedSongsToNotBackup() {
+    func setAllCachedSongsToNotBackup() {
         // Set the flag on the downloads directory, no need to set it on all individual files
 //        (FileSystem.downloadsDirectory as NSURL).addSkipBackupAttribute()
+    }
+}
+
+@objc final class Cache_ObjCDeleteMe: NSObject {
+    private static var cache: Cache { Resolver.resolve() }
+    
+    @objc static var totalSpace: Int { cache.totalSpace }
+    @objc static var freeSpace: Int { cache.freeSpace }
+    
+    @objc static func setAllCachedSongsToBackup() {
+        cache.setAllCachedSongsToBackup()
+    }
+    
+    @objc static func setAllCachedSongsToNotBackup() {
+        cache.setAllCachedSongsToNotBackup()
     }
 }

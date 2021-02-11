@@ -21,7 +21,7 @@ extension UIViewController {
     @objc func addShowPlayerButton() {
         navigationItem.rightBarButtonItem = nil
         if settings.showPlayerIcon {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "music.quarternote.3"), style: .plain, target: self, action: #selector(showPlayer))
+//            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "music.quarternote.3"), style: .plain, target: self, action: #selector(showPlayer))
         }
     }
 }

@@ -14,12 +14,7 @@ import Resolver
 // Enable this to debug queries
 fileprivate let debugPrintAllQueries = false
 
-// Make available to Obj-C
-@objc final class Store: NSObject {
-    
-    // Temporary accessor for Objective-C classes using Resolver under the hood
-    @objc static var shared: Store { Resolver.resolve() }
-    
+final class Store {
     // Main database, contains records for all servers
     var pool: DatabasePool!
     
@@ -106,5 +101,41 @@ extension TableSection: FetchableRecord, PersistableRecord {
 extension RootListMetadata: FetchableRecord, PersistableRecord {
     enum Column: String, ColumnExpression {
         case serverId, mediaFolderId, itemCount, reloadDate
+    }
+}
+
+@objc final class Store_ObjCDeleteMe: NSObject {
+    private static var store: Store { Resolver.resolve() }
+    
+    @objc static func resetFolderAlbumCache(serverId: Int) -> Bool {
+        return store.resetFolderAlbumCache(serverId: serverId)
+    }
+    
+    @objc static func deleteTagAlbums(serverId: Int) -> Bool {
+        return store.deleteTagAlbums(serverId: serverId)
+    }
+    
+    @objc static func resetCoverArtCache(serverId: Int) -> Bool {
+        return store.resetCoverArtCache(serverId: serverId)
+    }
+    
+    @objc static func resetArtistArtCache(serverId: Int) -> Bool {
+        return store.resetArtistArtCache(serverId: serverId)
+    }
+    
+    @objc static func servers() -> [Server] {
+        return store.servers()
+    }
+    
+    @objc static func server(id: Int) -> Server? {
+        return store.server(id: id)
+    }
+    
+    @objc static func nextServerId() -> Int {
+        return store.nextServerId()
+    }
+    
+    @objc static func add(server: Server) -> Bool {
+        return store.add(server: server)
     }
 }

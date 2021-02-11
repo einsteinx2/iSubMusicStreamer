@@ -536,7 +536,7 @@ extension Store {
         }
     }
     
-    @objc func deleteDownloadedSong(song: Song) -> Bool {
+    func deleteDownloadedSong(song: Song) -> Bool {
         return deleteDownloadedSong(serverId: song.serverId, songId: song.id)
     }
     
@@ -608,7 +608,7 @@ extension Store {
         }
     }
     
-    @objc func update(playedDate: Date, song: Song) -> Bool {
+    func update(playedDate: Date, song: Song) -> Bool {
         return update(playedDate: playedDate, serverId: song.serverId, songId: song.id)
     }
     

@@ -41,10 +41,7 @@ final class LibraryViewController: UIViewController {
 
 extension LibraryViewController: UITableViewConfiguration {
     private enum RowType: Int, CaseIterable {
-        case folders = 0
-        case artists = 1
-        case bookmarks = 2
-        
+        case folders = 0, artists, bookmarks
         var name: String {
             switch self {
             case .folders: return "Folders"
@@ -53,6 +50,7 @@ extension LibraryViewController: UITableViewConfiguration {
             }
         }
     }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -70,6 +68,7 @@ extension LibraryViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if let controller = controllerCache[indexPath.row] {
             pushViewControllerCustom(controller)
             return
@@ -95,6 +94,5 @@ extension LibraryViewController: UITableViewConfiguration {
             controllerCache[indexPath.row] = controller
             pushViewControllerCustom(controller)
         }
-        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

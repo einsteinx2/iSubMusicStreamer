@@ -22,9 +22,10 @@ extension UIViewController {
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         } else {
             DispatchQueue.mainSyncSafe {
-                let controller = PlayerViewController()
-                controller.hidesBottomBarWhenPushed = true
-                navigationController?.pushViewController(controller, animated: true)
+//                let controller = PlayerViewController()
+//                controller.hidesBottomBarWhenPushed = true
+//                navigationController?.pushViewController(controller, animated: true)
+                tabBarController?.selectedIndex = 4
             }
         }
     }

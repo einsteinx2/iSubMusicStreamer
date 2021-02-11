@@ -22,7 +22,7 @@ protocol StreamHandlerDelegate {
 }
 
 // TODO: implement this - refactor to clean up the code
-@objc final class StreamHandler: NSObject, Codable {
+final class StreamHandler: NSObject, Codable {
     private enum CodingKeys: String, CodingKey {
         case serverId, songId, byteOffset, secondsOffset, isDelegateNotifiedToStartPlayback, isTempCache, isDownloading, contentLength, maxBitrateSetting
     }
@@ -39,11 +39,11 @@ protocol StreamHandlerDelegate {
     private(set) var secondsOffset: Double
     let isTempCache: Bool
     
-    @objc private(set) var isDelegateNotifiedToStartPlayback = false
-    @objc private(set) var isDownloading = false
+    private(set) var isDelegateNotifiedToStartPlayback = false
+    private(set) var isDownloading = false
     private(set) var totalBytesTransferred = 0
     var numberOfReconnects = 0
-    @objc private(set) var recentDownloadSpeedInBytesPerSec = 0
+    private(set) var recentDownloadSpeedInBytesPerSec = 0
     
     private lazy var session: URLSession = {
         let configuration = URLSessionConfiguration.ephemeral

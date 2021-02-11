@@ -24,8 +24,8 @@ import CocoaLumberjackSwift
     @objc private(set) var tabBarController: CustomUITabBarController?
     @objc private(set) var padRootViewController: PadRootViewController?
     
-    // TODO: Get rid of this
     @objc private(set) var libraryTab: CustomUINavigationController?
+//    @objc let player = PlayerViewController()
     
     private let serverChecker = ServerChecker()
     
@@ -59,16 +59,16 @@ import CocoaLumberjackSwift
             libraryTab.tabBarItem = UITabBarItem(title: "Library", image: UIImage(named: "tabbaricon-folders"), tag: 0)
             self.libraryTab = libraryTab
             
+            let playerTab = PlayerViewController()//CustomUINavigationController(rootViewController: PlayerViewController())
+            playerTab.tabBarItem = UITabBarItem(title: "Player", image: UIImage(systemName: "music.quarternote.3"), tag: 0)
+            
             let playlistsTab = CustomUINavigationController(rootViewController: PlaylistsViewController())
             playlistsTab.tabBarItem = UITabBarItem(title: "Playlists", image: UIImage(named: "tabbaricon-playlists"), tag: 0)
             
             let downloadsTab = CustomUINavigationController(rootViewController: DownloadsViewController())
             downloadsTab.tabBarItem = UITabBarItem(title: "Downloads", image: UIImage(named: "tabbaricon-cache"), tag: 0)
-            
-            let bookmarksTab = CustomUINavigationController(rootViewController: BookmarksViewController())
-            bookmarksTab.tabBarItem = UITabBarItem(title: "Bookmarks", image: UIImage(named: "tabbaricon-bookmarks"), tag: 0)
 
-            tabBarController.viewControllers = [homeTab, libraryTab, playlistsTab, downloadsTab, bookmarksTab]
+            tabBarController.viewControllers = [homeTab, libraryTab, playerTab, playlistsTab, downloadsTab]
             
             window.rootViewController = tabBarController
         }

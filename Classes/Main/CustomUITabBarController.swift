@@ -18,24 +18,24 @@ final class CustomUITabBarController: UITabBarController {
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask { .all }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        createTabs()
-        customizeMoreTabTableView()
-    }
-    
-    private func createTabs() {
-        
-    }
-    
-    func customizeMoreTabTableView() {
-        moreNavigationController.navigationBar.barStyle = .black
-        if let moreController = moreNavigationController.topViewController {
-            if let moreTableView = moreController.view as? UITableView {
-                moreTableView.backgroundColor = Colors.background
-                moreTableView.rowHeight = Defines.rowHeight
-                moreTableView.separatorStyle = .none
-            }
-        }
-    }
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        createTabs()
+//        customizeMoreTabTableView()
+//    }
+//
+//    private func createTabs() {
+//
+//    }
+//    
+//    func customizeMoreTabTableView() {
+//        moreNavigationController.navigationBar.barStyle = .black
+//        if let moreController = moreNavigationController.topViewController {
+//            if let moreTableView = moreController.view as? UITableView {
+//                moreTableView.backgroundColor = Colors.background
+//                moreTableView.rowHeight = Defines.rowHeight
+//                moreTableView.separatorStyle = .none
+//            }
+//        }
+//    }
 }

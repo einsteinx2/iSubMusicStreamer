@@ -16,14 +16,12 @@ protocol CancelableLoader {
 // APILoader callback block, make sure to always check success bool, not error, as error can be nil when success is NO
 typealias APILoaderCallback = (_ loader: APILoader?, _ success: Bool, _ error: Error?) -> Void
 
-@objc protocol APILoaderDelegate {
-    @objc(loadingFinished:)
+protocol APILoaderDelegate: AnyObject {
     func loadingFinished(loader: APILoader?)
-    @objc(loadingFailed:error:)
     func loadingFailed(loader: APILoader?, error: Error?)
 }
 
-@objc enum APILoaderType: Int {
+enum APILoaderType: Int {
     case generic            =  0
     case rootFolders        =  1
     case subFolders         =  2
@@ -36,7 +34,7 @@ typealias APILoaderCallback = (_ loader: APILoader?, _ success: Bool, _ error: E
     case nowPlaying         =  9
     case status             = 10
     case quickAlbums        = 11
-    case dropdownFolder     = 12
+    case mediaFolders       = 12
     case serverShuffle      = 13
     case scrobble           = 14
     case rootArtists        = 15
@@ -45,9 +43,9 @@ typealias APILoaderCallback = (_ loader: APILoader?, _ success: Bool, _ error: E
     case song               = 18
 }
 
-@objc class APILoader: NSObject, CancelableLoader {
+class APILoader: CancelableLoader {
     static private let sessionDelegate = SelfSignedCertURLSessionDelegate()
-    @objc final class var sharedSession: URLSession {
+    final class var sharedSession: URLSession {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.waitsForConnectivity = true
         configuration.networkServiceType = .responsiveData
@@ -56,10 +54,10 @@ typealias APILoaderCallback = (_ loader: APILoader?, _ success: Bool, _ error: E
         return URLSession(configuration: configuration, delegate: sessionDelegate, delegateQueue: nil)
     }
     
-    @objc weak var delegate: APILoaderDelegate?
-    @objc var callback: APILoaderCallback?
+    weak var delegate: APILoaderDelegate?
+    var callback: APILoaderCallback?
     
-    @objc var type: APILoaderType { .generic }
+    var type: APILoaderType { .generic }
     
     private var selfRef: APILoader?
     private var dataTask: URLSessionDataTask?
@@ -67,14 +65,13 @@ typealias APILoaderCallback = (_ loader: APILoader?, _ success: Bool, _ error: E
     init(delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.delegate = delegate
         self.callback = callback
-        super.init()
     }
     
     func createRequest() -> URLRequest? {
         return nil
     }
     
-    @objc func startLoad() {
+    func startLoad() {
         guard let request = createRequest() else { return }
         
         // Cancel any existing request
@@ -102,7 +99,7 @@ typealias APILoaderCallback = (_ loader: APILoader?, _ success: Bool, _ error: E
         dataTask?.resume()
     }
     
-    @objc func cancelLoad() {
+    func cancelLoad() {
         dataTask?.cancel()
         cleanup()
     }

@@ -455,11 +455,11 @@ LOG_LEVEL_ISUB_DEFAULT
     
     if (isBackupCacheEnabled) {
         //Set all cached songs to removeSkipBackup
-        [Cache.shared setAllCachedSongsToBackup];
+        [Cache_ObjCDeleteMe setAllCachedSongsToBackup];
  
     } else {
         // Set all cached songs to removeSkipBackup
-        [Cache.shared setAllCachedSongsToNotBackup];
+        [Cache_ObjCDeleteMe setAllCachedSongsToNotBackup];
     }
 }
 
@@ -473,7 +473,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
     
     if (!AppDelegate.shared.isWifi) {
-        isManualCachingOnWWANEnabled ? [CacheQueue.shared start] : [CacheQueue.shared stop];
+        isManualCachingOnWWANEnabled ? [CacheQueue_ObjCDeleteMe start] : [CacheQueue_ObjCDeleteMe stop];
     }
 }
 
@@ -848,9 +848,9 @@ LOG_LEVEL_ISUB_DEFAULT
     [self migrate];
     
     NSNumber *currentServerId = [_userDefaults objectForKey:@"currentServerId"];
-    if (Store.shared.servers.count > 0 && currentServerId) {
+    if (Store_ObjCDeleteMe.servers.count > 0 && currentServerId) {
         // Load the new server object
-        _currentServer = [Store.shared serverWithId:[_userDefaults integerForKey:@"currentServerId"]];
+        _currentServer = [Store_ObjCDeleteMe serverWithId:[_userDefaults integerForKey:@"currentServerId"]];
     } else {
         // Load the old server objects
         NSData *servers = [_userDefaults objectForKey:@"servers"];
@@ -862,8 +862,8 @@ LOG_LEVEL_ISUB_DEFAULT
             NSSet *classes = [NSSet setWithArray:@[NSArray.class, ISMSServer.class]];
             NSArray *serverList = [NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:servers error:nil];
             for (ISMSServer *oldServer in serverList) {
-                Server *server = [[Server alloc] initWithId:Store.shared.nextServerId type:ServerTypeSubsonic url:[NSURL URLWithString:oldServer.url] username:oldServer.username password:oldServer.password];
-                (void)[Store.shared addWithServer:server];
+                Server *server = [[Server alloc] initWithId:Store_ObjCDeleteMe.nextServerId type:ServerTypeSubsonic url:[NSURL URLWithString:oldServer.url] username:oldServer.username password:oldServer.password];
+                (void)[Store_ObjCDeleteMe addWithServer:server];
                 if ([oldServer.url isEqual:urlString] && [oldServer.username isEqual:username]) {
                     self.currentServer = server;
                 }

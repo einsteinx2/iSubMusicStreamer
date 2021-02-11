@@ -8,14 +8,10 @@
 
 import Foundation
 
-struct NotificationKeys {
-    static let serverId = "serverId"
-}
-
-class Notifications: NSObject {
-    @objc static let songPlaybackStarted = Notification.Name("iSub.songPlaybackStarted")
-    @objc static let songPlaybackPaused = Notification.Name("iSub.songPlaybackPaused")
-    @objc static let songPlaybackEnded = Notification.Name("iSub.songPlaybackEnded")
+struct Notifications {
+    static let songPlaybackStarted = Notification.Name("iSub.songPlaybackStarted")
+    static let songPlaybackPaused = Notification.Name("iSub.songPlaybackPaused")
+    static let songPlaybackEnded = Notification.Name("iSub.songPlaybackEnded")
     static let songPlaybackFailed = Notification.Name("iSub.songPlaybackFailed")
     
     static let albumArtLargeDownloaded = Notification.Name("iSub.albumArtLargeDownloaded")
@@ -34,11 +30,11 @@ class Notifications: NSObject {
     
     static let repeatModeChanged = Notification.Name("iSub.repeatModeChanged")
     
-    @objc static let bassEffectPresetLoaded = Notification.Name("iSub.bassEffectPresetLoaded")
+    static let bassEffectPresetLoaded = Notification.Name("iSub.bassEffectPresetLoaded")
     
-    @objc static let currentPlaylistOrderChanged = Notification.Name("iSub.currentPlaylistOrderChanged")
-    @objc static let currentPlaylistShuffleToggled = Notification.Name("iSub.currentPlaylistShuffleToggled")
-    @objc static let currentPlaylistIndexChanged = Notification.Name("iSub.currentPlaylistIndexChanged")
+    static let currentPlaylistOrderChanged = Notification.Name("iSub.currentPlaylistOrderChanged")
+    static let currentPlaylistShuffleToggled = Notification.Name("iSub.currentPlaylistShuffleToggled")
+    static let currentPlaylistIndexChanged = Notification.Name("iSub.currentPlaylistIndexChanged")
     static let currentPlaylistSongsQueued = Notification.Name("iSub.currentPlaylistSongsQueued")
 
     static let songCachingEnabled = Notification.Name("iSub.songCachingEnabled")
@@ -59,7 +55,7 @@ class Notifications: NSObject {
     static let willEnterOnlineMode = Notification.Name("iSub.willEnterOnlineMode")
 
     static let bassInitialized = Notification.Name("iSub.bassInitialized")
-    @objc static let bassFreed = Notification.Name("iSub.bassFreed")
+    static let bassFreed = Notification.Name("iSub.bassFreed")
 
     static let jukeboxEnabled = Notification.Name("iSub.jukeboxEnabled")
     static let jukeboxDisabled = Notification.Name("iSub.jukeboxDisabled")
@@ -74,5 +70,10 @@ class Notifications: NSObject {
 
     static let cachedSongDeleted = Notification.Name("iSub.cachedSongDeleted")
 
+    static let quickSkipSecondsSettingChanged = Notification.Name("iSub.quickSkipSecondsSettingChanged")
+}
+
+@objc final class Notifications_ObjcDeleteMe: NSObject {
+    @objc static let bassEffectPresetLoaded = Notification.Name("iSub.bassEffectPresetLoaded")
     @objc static let quickSkipSecondsSettingChanged = Notification.Name("iSub.quickSkipSecondsSettingChanged")
 }

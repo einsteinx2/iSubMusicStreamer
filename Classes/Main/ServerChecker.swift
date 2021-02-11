@@ -10,15 +10,15 @@ import Foundation
 import Resolver
 import CocoaLumberjackSwift
 
-final class ServerChecker: NSObject {
+final class ServerChecker {
     @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var cacheQueue: CacheQueue
     
     private var statusLoader: StatusLoader?
+    private var serverCheckWorkItem: DispatchWorkItem?
     
-    override init() {
-        super.init()
+    init() {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(checkServer), name: Notifications.checkServer)
     }
     
@@ -71,14 +71,19 @@ final class ServerChecker: NSObject {
         
         // Check every 30 minutes
         cancelNextServerCheck()
-        perform(#selector(checkServer), with: nil, afterDelay: 30 * 60)
+        let serverCheckWorkItem = DispatchWorkItem { [weak self] in
+            self?.checkServer()
+        }
+        self.serverCheckWorkItem = serverCheckWorkItem
+        DispatchQueue.main.async(after: 30 * 60, execute: serverCheckWorkItem)
     }
     
     func cancelNextServerCheck() {
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(checkServer), object: nil)
+        serverCheckWorkItem?.cancel()
+        serverCheckWorkItem = nil
     }
     
-    @objc func cancelLoad() {
+    func cancelLoad() {
         statusLoader?.cancelLoad()
         statusLoader?.callback = nil
         statusLoader = nil

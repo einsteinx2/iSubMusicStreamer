@@ -10,31 +10,28 @@ import Foundation
 import Resolver
 import CocoaLumberjackSwift
 
-@objc final class CacheQueue: NSObject {
+final class CacheQueue {
     @LazyInjected private var store: Store
     @LazyInjected private var settings: Settings
     @LazyInjected private var cache: Cache
     @LazyInjected private var streamManager: StreamManager
     
-    // Temporary accessor for Objective-C classes using Resolver under the hood
-    @objc static var shared: CacheQueue { Resolver.resolve() }
-    
     private let maxNumberOfReconnects = 5
     
-    @objc private(set) var isDownloading = false
-    @objc private(set) var currentQueuedSong: Song?
-    @objc private(set) var currentStreamHandler: StreamHandler?
+    private(set) var isDownloading = false
+    private(set) var currentQueuedSong: Song?
+    private(set) var currentStreamHandler: StreamHandler?
     
-    @objc var currentQueuedSongInDb: Song? {
+    var currentQueuedSongInDb: Song? {
         return store.firstSongInDownloadQueue()
     }
     
-    @objc func isInQueue(song: Song) -> Bool {
+    func isInQueue(song: Song) -> Bool {
         return store.isSongInDownloadQueue(song: song)
     }
     
     // TODO: implement this - check return values from store operations
-    @objc func start() {
+    func start() {
         guard !isDownloading else { return }
         
         currentQueuedSong = currentQueuedSongInDb
@@ -133,12 +130,12 @@ import CocoaLumberjackSwift
     }
     
     // TODO: implement this - why did this take a byteOffset if it didn't use it?
-    @objc func resume(byteOffset: Int) {
+    func resume(byteOffset: Int) {
         guard let currentStreamHandler = currentStreamHandler, !settings.isOfflineMode else { return }
         currentStreamHandler.start(resume: true)
     }
     
-    @objc func stop() {
+    func stop() {
         guard !isDownloading else { return }
         
         isDownloading = false
@@ -147,7 +144,7 @@ import CocoaLumberjackSwift
         NotificationCenter.postOnMainThread(name: Notifications.cacheQueueStopped)
     }
     
-    @objc func removeCurrentSong() {
+    func removeCurrentSong() {
         guard let song = currentQueuedSong else { return }
         
         stop()
@@ -232,7 +229,9 @@ extension CacheQueue: StreamHandlerDelegate {
             // Less than max number of reconnections, so try again
             handler.numberOfReconnects += 1
             // Retry connection after a delay to prevent a tight loop
-            perform(#selector(resume(byteOffset:)), with: nil, afterDelay: 1.5)
+            DispatchQueue.main.async(after: 1.5) { [weak self] in
+                self?.resume(byteOffset: 0)
+            }
         } else {
             SlidingNotification.showOnMainWindow(message: "Song failed to download")
             
@@ -242,5 +241,17 @@ extension CacheQueue: StreamHandlerDelegate {
             currentStreamHandler = nil
             start()
         }
+    }
+}
+
+@objc final class CacheQueue_ObjCDeleteMe: NSObject {
+    private static var cacheQueue: CacheQueue { Resolver.resolve() }
+    
+    @objc static func start() {
+        cacheQueue.start()
+    }
+    
+    @objc static func stop() {
+        cacheQueue.stop()
     }
 }

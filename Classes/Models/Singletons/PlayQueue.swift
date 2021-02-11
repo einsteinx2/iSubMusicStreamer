@@ -111,7 +111,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc var currentDisplaySong: Song? {
+    var currentDisplaySong: Song? {
         // Either the current song, or the previous song if we're past the end of the playlist
         if let song = currentSong {
             return song
@@ -120,15 +120,15 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc var currentSong: Song? {
+    var currentSong: Song? {
         return song(index: currentIndex)
     }
     
-    @objc var prevSong: Song? {
+    var prevSong: Song? {
         return song(index: prevIndex)
     }
     
-    @objc var nextSong: Song? {
+    var nextSong: Song? {
         return song(index: nextIndex)
     }
     
@@ -137,7 +137,7 @@ import CocoaLumberjackSwift
         fatalError("implement this")
     }
     
-    @objc func song(index: Int) -> Song? {
+    func song(index: Int) -> Song? {
         store.song(localPlaylistId: currentPlaylistId, position: index)
     }
     
@@ -221,7 +221,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc @discardableResult
+    @discardableResult
     func playSong(position: Int) -> Song? {
         currentIndex = position
         guard let currentSong = self.currentSong else { return nil }
@@ -251,7 +251,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc @discardableResult
+    @discardableResult
     func playPrevSong() -> Song? {
         DDLogVerbose("[PlayQueue] playPrevSong called");
         if player.progress > 10.0 {
@@ -265,20 +265,20 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc @discardableResult
+    @discardableResult
     func playNextSong() -> Song? {
         DDLogVerbose("[PlayQueue] playNextSong called, calling playSong(position: \(nextIndex))")
         return playSong(position: nextIndex)
     }
     
-    @objc @discardableResult
+    @discardableResult
     func playCurrentSong() -> Song? {
         DDLogVerbose("[PlayQueue] playCurrentSong called, calling playSong(position: \(currentIndex))")
         return playSong(position: currentIndex)
     }
     
     // Resume song after iSub shuts down
-    @objc @discardableResult
+    @discardableResult
     func resumeSong() -> Song? {
         if let currentSong = currentSong, settings.isRecover {
             startSong(offsetInBytes: settings.byteOffset, offsetInSeconds: settings.seekTime)
@@ -415,3 +415,4 @@ import CocoaLumberjackSwift
         }
     }
 }
+

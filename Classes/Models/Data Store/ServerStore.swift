@@ -29,7 +29,7 @@ extension Server: FetchableRecord, PersistableRecord {
     }
 }
 
-@objc extension Store {
+extension Store {
     func nextServerId() -> Int {
         do {
             return try pool.read { db in

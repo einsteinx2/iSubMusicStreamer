@@ -85,7 +85,7 @@ extension Store {
         }
     }
     
-    @objc func deleteTagAlbums(serverId: Int) -> Bool {
+    func deleteTagAlbums(serverId: Int) -> Bool {
         do {
             return try pool.write { db in
                 try db.execute(literal: "DELETE FROM \(TagAlbum.self) WHERE serverId = \(serverId)")
