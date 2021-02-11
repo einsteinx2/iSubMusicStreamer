@@ -25,7 +25,7 @@ extension MediaFolder: FetchableRecord, PersistableRecord {
     }
 }
 
-@objc extension Store {
+extension Store {
     func mediaFolders(serverId: Int) -> [MediaFolder] {
         do {
             return try pool.read { db in

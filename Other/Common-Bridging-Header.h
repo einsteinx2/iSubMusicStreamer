@@ -12,7 +12,6 @@
 
 // User Interface Components
 #import "EqualizerViewController.h"
-#import "FolderDropdownControl.h"
 #import "OptionsViewController.h"
 
 // Data Model

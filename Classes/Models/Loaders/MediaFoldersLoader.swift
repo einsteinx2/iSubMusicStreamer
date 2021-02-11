@@ -1,5 +1,5 @@
 //
-//  DropdownFolderLoader.swift
+//  MediaFoldersLoader.swift
 //  iSub
 //
 //  Created by Benjamin Baron on 1/5/21.
@@ -8,19 +8,19 @@
 
 import Foundation
 
-@objc final class DropdownFolderLoader: APILoader {
-    @objc let serverId: Int
+final class MediaFoldersLoader: APILoader {
+    let serverId: Int
     
-    @objc private(set) var mediaFolders = [MediaFolder]()
+    private(set) var mediaFolders = [MediaFolder]()
     
-    @objc init(serverId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
+    init(serverId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         super.init(delegate: delegate, callback: callback)
     }
     
     // MARK: APILoader Overrides
     
-    override var type: APILoaderType { .dropdownFolder }
+    override var type: APILoaderType { .mediaFolders }
     
     override func createRequest() -> URLRequest? {
         URLRequest(serverId: serverId, subsonicAction: "getMusicFolders")
