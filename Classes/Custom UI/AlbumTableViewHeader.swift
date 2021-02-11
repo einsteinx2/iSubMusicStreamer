@@ -15,7 +15,7 @@ final class AlbumTableViewHeader: UIView {
     private let artistLabel = AutoScrollingLabel()
     private let albumLabel = AutoScrollingLabel()
     private let tracksLabel = UILabel()
-    
+        
     init(folderAlbum: FolderAlbum, tracks: Int, duration: Double) {
         super.init(frame: CGRect.zero)
         setup(coverArtId: folderAlbum.coverArtId, artistName: folderAlbum.tagArtistName, name: folderAlbum.name, tracks: tracks, duration: duration)
@@ -29,7 +29,7 @@ final class AlbumTableViewHeader: UIView {
     private func setup(coverArtId: String?, artistName: String?, name: String, tracks: Int, duration: Double) {
         backgroundColor = Colors.background
         snp.makeConstraints { make in
-            make.height.equalTo(100)
+            make.height.equalTo(100).priority(.high)
         }
         
         // NOTE: Set to false because scaling down very large images causes flickering
@@ -39,10 +39,9 @@ final class AlbumTableViewHeader: UIView {
         coverArtView.backgroundColor = .label
         addSubview(coverArtView)
         coverArtView.snp.makeConstraints { make in
-            make.width.equalTo(coverArtView.snp.height)
+            make.width.height.equalTo(80)
             make.leading.equalToSuperview().offset(10)
-            make.top.equalToSuperview().offset(10)
-            make.bottom.equalToSuperview().offset(-10)
+            make.centerY.equalToSuperview()
         }
         
         if let coverArtId = coverArtId {

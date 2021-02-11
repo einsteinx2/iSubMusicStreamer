@@ -33,8 +33,8 @@ final class BlurredSectionHeader: UITableViewHeaderFooterView {
         label.textColor = .label
         contentView.addSubview(label)
         label.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(10)
-            make.trailing.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview().offset(10).priority(.high)
+            make.trailing.top.bottom.equalToSuperview().priority(.high)
         }
     }
     

@@ -18,7 +18,7 @@ final class PlayAllAndShuffleHeader: UIView {
         
         backgroundColor = Colors.background
         snp.makeConstraints { make in
-            make.height.equalTo(50)
+            make.height.equalTo(50).priority(.high)
         }
         
         playAllButton.setTitle("Play All", for: .normal)
