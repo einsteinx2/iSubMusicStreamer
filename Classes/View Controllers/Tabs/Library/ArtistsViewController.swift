@@ -19,8 +19,7 @@ final class ArtistsViewController: UIViewController {
     var serverId: Int { Settings.shared().currentServerId }
     
     private let tableView = UITableView()
-//    private lazy var dropdown = FolderDropdownControl(frame: CGRect(x: 50, y: 61, width: 220, height: 40))
-    private lazy var dropdownMenu = { DropdownMenu(delegate: self) }()
+    private let dropdownMenu = DropdownMenu()
     private let searchBar = UISearchBar()
     private var searchOverlay: UIVisualEffectView?
     private let countLabel = UILabel()
@@ -49,6 +48,7 @@ final class ArtistsViewController: UIViewController {
         
         dataModel.delegate = self
         dataModel.reset()
+        dropdownMenu.delegate = self
         
         setupDefaultTableView(tableView)
         tableView.register(BlurredSectionHeader.self, forHeaderFooterViewReuseIdentifier: BlurredSectionHeader.reuseId)
@@ -58,7 +58,6 @@ final class ArtistsViewController: UIViewController {
         
         if dataModel.isCached {
             addCount()
-            tableView.setContentOffset(.zero, animated: false)
             dropdownMenu.selectedIndex = dataModel.mediaFolderIndex
         }
         
@@ -91,7 +90,7 @@ final class ArtistsViewController: UIViewController {
     // MARK: Loading
     
     private func updateCount() {
-        let count = dataModel.count
+        let count = isSearching ? dataModel.searchCount : dataModel.count
         countLabel.text = "\(count) \(dataModel.itemType.pluralize(amount: count))"
         if let reloadDate = dataModel.reloadDate {
             let formatter = DateFormatter()
@@ -117,7 +116,7 @@ final class ArtistsViewController: UIViewController {
         // NOTE: Unfortunately the header container view must not use autolayout or the
         //       header resizing won't work, but all of it's subviews can use it at least.
         let headerView = UIView()
-        headerView.frame = CGRect(x: 0, y: 0, width: 320, height: 154)
+        headerView.frame = CGRect(x: 0, y: 0, width: 320, height: 158)
         headerView.autoresizingMask = .flexibleWidth
         headerView.backgroundColor = view.backgroundColor
         tableView.tableHeaderView = headerView
@@ -242,24 +241,7 @@ extension ArtistsViewController: APILoaderDelegate {
 
 extension ArtistsViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        guard !isSearching else { return }
-        
-        isSearching = true
-        dataModel.clearSearch()
-        
-        dropdownMenu.close(animated: false)
-        tableView.setContentOffset(CGPoint(x: 0, y: 104), animated: true)
-        
-        if (searchBar.text?.count ?? 0) == 0 {
-            createSearchOverlay()
-        }
-        
-        // Add the done button
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(searchBarSearchButtonClicked(_:)))
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
+        beginSearching()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -271,24 +253,70 @@ extension ArtistsViewController: UISearchBarDelegate {
             createSearchOverlay()
         }
         tableView.reloadData()
-        tableView.setContentOffset(CGPoint(x: 0, y: 45), animated: false)
+        scrollTableViewToSearchBar(animated: false)
+        updateCount()
     }
     
-    @objc func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        updateCount()
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        // Dismiss the keyboard
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        // Dismiss the keyboard
+        searchBar.resignFirstResponder()
+    }
+    
+    private func scrollTableViewToSearchBar(animated: Bool) {
+        // Fixes issues with scrolling the content offset when there are a small number of cells
+        tableView.setNeedsLayout()
+        tableView.layoutIfNeeded()
         
-        self.searchBar.text = ""
-        self.searchBar.resignFirstResponder()
-        hideSearchOverlay()
+        // Scroll to the offset
+        let offsetY = searchBar.frame.origin.y - 5
+        if animated {
+            UIView.animate(withDuration: 0.15) {
+                self.tableView.setContentOffset(CGPoint(x: 0, y: offsetY), animated: false)
+            }
+        } else {
+            tableView.setContentOffset(CGPoint(x: 0, y: offsetY), animated: false)
+        }
+    }
+    
+    private func beginSearching() {
+        guard !isSearching else { return }
+        
+        isSearching = true
+        title = "Searching \(dataModel.itemType.pluralized)"
+        dataModel.clearSearch()
+        tableView.reloadData()
+        dropdownMenu.close(animated: false)
+        scrollTableViewToSearchBar(animated: true)
+        if (searchBar.text?.count ?? 0) == 0 {
+            createSearchOverlay()
+        }
+        
+        // Add the done button
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(finishSearching))
+    }
+    
+    @objc private func finishSearching() {
+        guard isSearching else { return }
+        
         isSearching = false
-        
+        title = dataModel.itemType.pluralized
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        hideSearchOverlay()
         navigationItem.leftBarButtonItem = nil
         dataModel.clearSearch()
         tableView.reloadData()
-        tableView.setContentOffset(CGPoint(x: 0, y: 104), animated: true)
+        updateCount()
     }
     
     private func createSearchOverlay() {
+        guard searchOverlay == nil else { return }
+        
         let effectStyle: UIBlurEffect.Style = traitCollection.userInterfaceStyle == .dark ? .systemUltraThinMaterialLight : .systemUltraThinMaterialDark
         let searchOverlay = UIVisualEffectView(effect: UIBlurEffect(style: effectStyle))
         self.searchOverlay = searchOverlay
@@ -299,7 +327,7 @@ extension ArtistsViewController: UISearchBarDelegate {
         }
         
         let dismissButton = UIButton(type: .custom)
-        dismissButton.addTarget(self, action: #selector(searchBarSearchButtonClicked(_:)), for: .touchUpInside)
+        dismissButton.addTarget(self, action: #selector(finishSearching), for: .touchUpInside)
         searchOverlay.contentView.addSubview(dismissButton)
         dismissButton.snp.makeConstraints { make in
             make.leading.trailing.top.bottom.equalToSuperview()
@@ -307,7 +335,7 @@ extension ArtistsViewController: UISearchBarDelegate {
         
         // Animate the search overlay on screen
         searchOverlay.alpha = 0
-        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseOut, animations: {
             searchOverlay.alpha = 1
         }, completion: nil)
     }
@@ -315,7 +343,7 @@ extension ArtistsViewController: UISearchBarDelegate {
     private func hideSearchOverlay() {
         if let searchOverlay = searchOverlay {
             // Animate the search overlay off screen
-            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
+            UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseOut) {
                 searchOverlay.alpha = 0
             } completion: { _ in
                 searchOverlay.removeFromSuperview()
@@ -327,7 +355,7 @@ extension ArtistsViewController: UISearchBarDelegate {
 
 extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
     private func artist(indexPath: IndexPath) -> Artist? {
-        if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) {
+        if isSearching {
             return dataModel.artistInSearch(indexPath: indexPath)
         } else {
             return dataModel.artist(indexPath: indexPath)
@@ -335,14 +363,14 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) {
+        if isSearching {
             return 1
         }
         return dataModel.tableSections.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) {
+        if isSearching {
             return dataModel.searchCount
         } else if section < dataModel.tableSections.count {
             return dataModel.tableSections[section].itemCount
@@ -357,7 +385,7 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) { return nil }
+        if isSearching { return nil }
         if section >= dataModel.tableSections.count { return nil }
         
         let sectionHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: BlurredSectionHeader.reuseId) as! BlurredSectionHeader
@@ -366,14 +394,14 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) { return 0 }
+        if isSearching { return 0 }
         if section >= dataModel.tableSections.count { return 0 }
         
         return Defines.rowHeight - 5
     }
     
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) { return nil }
+        if isSearching { return nil }
         
         var titles = ["{search}"]
         for section in dataModel.tableSections {
@@ -383,7 +411,7 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
-        if isSearching && (dataModel.searchCount > 0 || (searchBar.text?.count ?? 0) > 0) { return -1 }
+        if isSearching { return -1 }
         
         if index == 0 {
             let yOffset: CGFloat = dataModel.mediaFolders.count > 1 ? 54 : 104
@@ -451,9 +479,13 @@ extension ArtistsViewController: DropdownMenuDelegate {
                                 sectionHeader.frame.origin.y += heightChange
                             }
                         }
-                    }, completion: nil)
+                    })
                 }
-            } catch {}
+            } catch {
+                // This is only a failsafe for certain cases where UITableView throws an exception due to the
+                // number of sections changing, but doesn't cause any actual UI issues and only occurs rarely.
+                DDLogError("[ArtistsViewController] exception thrown resizing table header: \(error)")
+            }
         }
         
         if animated {

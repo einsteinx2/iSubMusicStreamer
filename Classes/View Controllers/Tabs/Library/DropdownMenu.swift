@@ -18,8 +18,8 @@ protocol DropdownMenuDelegate {
 
 final class DropdownMenu: UIView {
     
-    private let animationDuration = 0.2
-    private let height: CGFloat = 40
+    private let animationDuration = 0.15
+    private let height: CGFloat = 44
     private let borderColor = UIColor.systemGray
     private let labelFont = UIFont.boldSystemFont(ofSize: 20)
     private let labelTextColor = UIColor.label
@@ -46,15 +46,6 @@ final class DropdownMenu: UIView {
         super.traitCollectionDidChange(previousTraitCollection)
         layer.borderColor = borderColor.cgColor
     }
-    
-//    override var intrinsicContentSize: CGSize {
-////        let numberOfItems = delegate.dropdownMenuNumberOfItems(self)
-////        let intrinsicHeight = isOpen ? (numberOfItems + 1) * height : height
-////        return CGSize(width: 0, height: intrinsicHeight)
-//        let intrinsicHeight = isOpen ? height + itemStackView.frame.height : height
-//        print("intrinsicHeight: \(intrinsicHeight)")
-//        return CGSize(width: 0, height: intrinsicHeight)
-//    }
     
     init(delegate: DropdownMenuDelegate? = nil, defaultTitle: String = "Loading...") {
         self.delegate = delegate
@@ -145,7 +136,11 @@ final class DropdownMenu: UIView {
     @objc private func itemButtonAction(button: UIButton) {
         close()
         selectedIndex = button.tag
-        delegate?.dropdownMenu(self, selectedItemAt: selectedIndex)
+        
+        // Wait for the menu to close before informing the delegate
+        DispatchQueue.main.async(after: animationDuration) {
+            self.delegate?.dropdownMenu(self, selectedItemAt: self.selectedIndex)
+        }
     }
     
     func toggle(animated: Bool = true) {
