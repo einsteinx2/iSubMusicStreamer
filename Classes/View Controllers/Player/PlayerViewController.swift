@@ -11,8 +11,16 @@ import SnapKit
 import CocoaLumberjackSwift
 import Resolver
 
+private let controlStackHeight: CGFloat = UIDevice.isSmall ? 34 : 44
+private let controlButtonWidth: CGFloat = UIDevice.isSmall ? 40 : 60
+private let iconDefaultColor = UIColor(white: 0.8, alpha: 1.0)
+private let iconActivatedColor = UIColor.systemBlue
+private let pointSize: CGFloat = UIDevice.isSmall ? 20 : 24
+private let ultralightConfig = UIImage.SymbolConfiguration(pointSize: pointSize, weight: .ultraLight, scale: .large)
+private let lightConfig = UIImage.SymbolConfiguration(pointSize: pointSize, weight: .light, scale: .large)
+private let regularConfig = UIImage.SymbolConfiguration(pointSize: pointSize, weight: .regular, scale: .large)
+
 // TODO: Add bitrate and file type labels
-// TODO: Add bookmark button
 final class PlayerViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
@@ -20,9 +28,6 @@ final class PlayerViewController: UIViewController {
     @Injected private var player: BassPlayer
     @Injected private var playQueue: PlayQueue
     @Injected private var streamManager: StreamManager
-    
-    let iconDefaultColor = UIColor(white: 0.8, alpha: 1.0)
-    let iconActivatedColor = UIColor.systemBlue
     
     var currentSong: Song?
     
@@ -81,10 +86,11 @@ final class PlayerViewController: UIViewController {
         updateDownloadProgress(animated: false)
         if UIApplication.orientation.isPortrait || UIDevice.isPad {
             coverArtPageControl.view.snp.remakeConstraints { make in
-                make.height.equalTo(coverArtPageControl.view.snp.width).offset(20)
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
-                make.leading.equalToSuperview().offset(20)
-                make.trailing.equalToSuperview().offset(-20)
+                let offset = UIDevice.isSmall ? 10 : 20
+                make.height.equalTo(coverArtPageControl.view.snp.width).offset(offset)
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(offset)
+                make.leading.equalToSuperview().offset(offset)
+                make.trailing.equalToSuperview().offset(-offset)
             }
             
             verticalStackContainer.snp.remakeConstraints { make in
@@ -207,7 +213,7 @@ final class PlayerViewController: UIViewController {
         //
         
         progressBarContainer.snp.makeConstraints { make in
-            make.height.equalTo(20)
+            make.height.equalTo(UIDevice.isSmall ? 20 : 40)
             make.leading.trailing.equalToSuperview()
         }
 
@@ -260,12 +266,11 @@ final class PlayerViewController: UIViewController {
         controlsStack.distribution = .equalCentering
         controlsStack.addArrangedSubviews([quickSkipBackButton, previousButton, playPauseButton, nextButton, quickSkipForwardButton])
         controlsStack.snp.makeConstraints { make in
-            make.height.equalTo(40)
+            make.height.equalTo(controlStackHeight)
             make.leading.trailing.equalToSuperview()
         }
         
-        let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
-        playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
+        playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: ultralightConfig), for: .normal)
         playPauseButton.tintColor = iconDefaultColor
         playPauseButton.addClosure(for: .touchUpInside) { [unowned self] in
             if settings.isJukeboxEnabled {
@@ -285,8 +290,7 @@ final class PlayerViewController: UIViewController {
             }
         }
         
-        let previousButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
-        previousButton.setImage(UIImage(systemName: "backward.end.fill", withConfiguration: previousButtonConfig), for: .normal)
+        previousButton.setImage(UIImage(systemName: "backward.end.fill", withConfiguration: ultralightConfig), for: .normal)
         previousButton.tintColor = iconDefaultColor
         previousButton.addClosure(for: .touchUpInside) { [unowned self] in
             if player.progress > 10.0 {
@@ -298,18 +302,16 @@ final class PlayerViewController: UIViewController {
             }
         }
         
-        let nextButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
-        nextButton.setImage(UIImage(systemName: "forward.end.fill", withConfiguration: nextButtonConfig), for: .normal)
+        nextButton.setImage(UIImage(systemName: "forward.end.fill", withConfiguration: ultralightConfig), for: .normal)
         nextButton.tintColor = iconDefaultColor
         nextButton.addClosure(for: .touchUpInside) { [unowned self] in
             playQueue.playNextSong()
         }
 
-        let quickSkipBackButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .light, scale: .large)
-        quickSkipBackButton.setBackgroundImage(UIImage(systemName: "gobackward", withConfiguration: quickSkipBackButtonConfig), for: .normal)
+        quickSkipBackButton.setBackgroundImage(UIImage(systemName: "gobackward", withConfiguration: lightConfig), for: .normal)
         quickSkipBackButton.tintColor = iconDefaultColor
         quickSkipBackButton.setTitleColor(iconDefaultColor, for: .normal)
-        quickSkipBackButton.titleLabel?.font = .systemFont(ofSize: 10)
+        quickSkipBackButton.titleLabel?.font = .systemFont(ofSize: UIDevice.isSmall ? 7 : 10)
         quickSkipBackButton.addClosure(for: .touchUpInside) { [unowned self] in
             let value = progressSlider.value - Float(settings.quickSkipNumberOfSeconds);
             progressSlider.value = value > 0.0 ? value : 0.0;
@@ -317,11 +319,10 @@ final class PlayerViewController: UIViewController {
             Flurry.logEvent("QuickSkip")
         }
         
-        let quickSkipForwardButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .light, scale: .large)
-        quickSkipForwardButton.setBackgroundImage(UIImage(systemName: "goforward", withConfiguration: quickSkipForwardButtonConfig), for: .normal)
+        quickSkipForwardButton.setBackgroundImage(UIImage(systemName: "goforward", withConfiguration: lightConfig), for: .normal)
         quickSkipForwardButton.tintColor = iconDefaultColor
         quickSkipForwardButton.setTitleColor(iconDefaultColor, for: .normal)
-        quickSkipForwardButton.titleLabel?.font = .systemFont(ofSize: 10)
+        quickSkipForwardButton.titleLabel?.font = .systemFont(ofSize: UIDevice.isSmall ? 7 : 10)
         quickSkipForwardButton.addClosure(for: .touchUpInside) { [unowned self] in
             let value = progressSlider.value + Float(settings.quickSkipNumberOfSeconds)
             if value >= progressSlider.maximumValue {
@@ -344,7 +345,7 @@ final class PlayerViewController: UIViewController {
         moreControlsStack.distribution = .equalCentering
         moreControlsStack.addArrangedSubviews([repeatButton, bookmarksButton, equalizerButton, shuffleButton])
         moreControlsStack.snp.makeConstraints { make in
-            make.height.equalTo(40)
+            make.height.equalTo(controlStackHeight)
             make.leading.trailing.equalToSuperview()
         }
         
@@ -387,8 +388,7 @@ final class PlayerViewController: UIViewController {
         }
         updateBookmarkButton()
         
-        let equalizerButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular, scale: .large)
-        equalizerButton.setImage(UIImage(systemName: "slider.vertical.3", withConfiguration: equalizerButtonConfig), for: .normal)
+        equalizerButton.setImage(UIImage(systemName: "slider.vertical.3", withConfiguration: regularConfig), for: .normal)
         equalizerButton.addClosure(for: .touchUpInside) { [unowned self] in
             let controller = EqualizerViewController(nibName: "EqualizerViewController", bundle: nil)
             if UIDevice.isPad {
@@ -399,8 +399,7 @@ final class PlayerViewController: UIViewController {
         }
         updateEqualizerButton()
         
-        let shuffleButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
-        shuffleButton.setImage(UIImage(systemName: "shuffle", withConfiguration: shuffleButtonConfig), for: .normal)
+        shuffleButton.setImage(UIImage(systemName: "shuffle", withConfiguration: ultralightConfig), for: .normal)
         shuffleButton.addClosure(for: .touchUpInside) { [unowned self] in
             let message = playQueue.isShuffle ? "Unshuffling" : "Shuffling"
             HUD.show(message: message)
@@ -412,6 +411,33 @@ final class PlayerViewController: UIViewController {
             }
         }
         updateShuffleButtonIcon()
+        
+        // Adjust button sizes and image scaling modes
+        for arrangedSubview in (controlsStack.arrangedSubviews + moreControlsStack.arrangedSubviews) {
+            // Set the size and content mode on buttons that have background images
+            if let button = arrangedSubview as? UIButton, button.backgroundImage(for: .normal) != nil {
+                // Force layout so the button creates it's background view
+                button.layoutIfNeeded()
+                
+                if let backgroundImageView = button.subviews.first as? UIImageView {
+                    // Set the content mode on the background image view
+                    backgroundImageView.contentMode = .scaleAspectFit
+                    
+                    // Set the size of the background image view to better match other buttons
+                    backgroundImageView.snp.makeConstraints { make in
+                        make.width.height.equalTo(controlStackHeight - 10)
+                        make.centerX.centerY.equalToSuperview()
+                    }
+                }
+            }
+            
+            // Set the size and content mode (content mode only applies to buttons with images not background images)
+            arrangedSubview.contentMode = .scaleAspectFit
+            arrangedSubview.snp.makeConstraints { make in
+                make.width.equalTo(controlButtonWidth)
+                make.height.equalTo(controlStackHeight)
+            }
+        }
         
         //
         // Jukebox
@@ -447,7 +473,6 @@ final class PlayerViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        tabBarItem.title = "Player"
         equalizerButton.isHidden = UIApplication.orientation.isLandscape
         updateSongInfo()
         startUpdatingSlider()
@@ -484,19 +509,16 @@ final class PlayerViewController: UIViewController {
         }
         
         notificationObservers.append(NotificationCenter.addObserverOnMainThread(name: Notifications.songPlaybackEnded) { [unowned self] _ in
-            let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
-            self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
-            self.playPauseButton.tintColor = self.iconDefaultColor
+            self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: ultralightConfig), for: .normal)
+            self.playPauseButton.tintColor = iconDefaultColor
         })
         notificationObservers.append(NotificationCenter.addObserverOnMainThread(name: Notifications.songPlaybackPaused) { [unowned self] _ in
-            let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
-            self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
-            self.playPauseButton.tintColor = self.iconDefaultColor
+            self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: ultralightConfig), for: .normal)
+            self.playPauseButton.tintColor = iconDefaultColor
         })
         notificationObservers.append(NotificationCenter.addObserverOnMainThread(name: Notifications.songPlaybackStarted) { [unowned self] _ in
-            let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
-            self.playPauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: playButtonConfig), for: .normal)
-            self.playPauseButton.tintColor = self.iconDefaultColor
+            self.playPauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: ultralightConfig), for: .normal)
+            self.playPauseButton.tintColor = iconDefaultColor
         })
         
         notificationObservers.append(NotificationCenter.addObserverOnMainThread(name: Notifications.currentPlaylistShuffleToggled) { [unowned self] _ in
@@ -603,7 +625,7 @@ final class PlayerViewController: UIViewController {
         }
     }
     
-    @objc private func updateSlider() {
+    @objc private func updateSlider(animated: Bool = true) {
         guard let currentSong = currentSong, let progressDisplayLink = progressDisplayLink else { return }
         
         // Prevent temporary movement after seeking temp cached song
@@ -622,7 +644,7 @@ final class PlayerViewController: UIViewController {
             
             // Only animate when it's moving forward
             let value = Float(player.progress)
-            if value < progressSlider.value {
+            if !animated || value < progressSlider.value {
                 progressSlider.value = value
             } else {
                 let actualFramesPerSecond = 1 / (progressDisplayLink.targetTimestamp - progressDisplayLink.timestamp)
@@ -643,7 +665,7 @@ final class PlayerViewController: UIViewController {
             progressSlider.value = 0
             downloadProgressView.isHidden = true
             updateBookmarkButton()
-            updateSlider()
+            updateSlider(animated: false)
             return
         }
         
@@ -654,7 +676,7 @@ final class PlayerViewController: UIViewController {
         progressSlider.maximumValue = Float(song.duration)
         updateDownloadProgress(animated: false)
         updateBookmarkButton()
-        updateSlider()
+        updateSlider(animated: false)
     }
     
     private var previousDownloadProgress: Float = 0.0;
@@ -725,8 +747,7 @@ final class PlayerViewController: UIViewController {
         case .all: imageName = "repeat"
         }
         
-        let config = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
-        repeatButton.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
+        repeatButton.setImage(UIImage(systemName: imageName, withConfiguration: ultralightConfig), for: .normal)
         repeatButton.tintColor = playQueue.repeatMode == .none ? iconDefaultColor : iconActivatedColor
     }
     
@@ -737,21 +758,19 @@ final class PlayerViewController: UIViewController {
     @objc private func updateJukeboxControls() {
         let jukeboxEnabled = settings.isJukeboxEnabled
         equalizerButton.isHidden = jukeboxEnabled
-//        view.backgroundColor = jukeboxEnabled ? viewObjects.jukeboxColor : Colors.background
         
-        let playButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .ultraLight, scale: .large)
-        self.playPauseButton.tintColor = self.iconDefaultColor
+        self.playPauseButton.tintColor = iconDefaultColor
         if jukeboxEnabled {
             if jukebox.isPlaying {
-                self.playPauseButton.setImage(UIImage(systemName: "stop.fill", withConfiguration: playButtonConfig), for: .normal)
+                self.playPauseButton.setImage(UIImage(systemName: "stop.fill", withConfiguration: ultralightConfig), for: .normal)
             } else {
-                self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
+                self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: ultralightConfig), for: .normal)
             }
         } else {
             if player.isPlaying {
-                self.playPauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: playButtonConfig), for: .normal)
+                self.playPauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: ultralightConfig), for: .normal)
             } else {
-                self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: playButtonConfig), for: .normal)
+                self.playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: ultralightConfig), for: .normal)
             }
         }
         
@@ -793,7 +812,7 @@ final class PlayerViewController: UIViewController {
         
         let imageName = bookmarksCount > 0 ? "bookmark.fill" : "bookmark"
         let tintColor = bookmarksCount > 0 ? iconActivatedColor : iconDefaultColor
-        let config = UIImage.SymbolConfiguration(pointSize: 21, weight: .light, scale: .large)
+        let config = UIImage.SymbolConfiguration(pointSize: UIDevice.isSmall ? 18 : 21, weight: .light, scale: .large)
         bookmarksButton.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
         bookmarksButton.tintColor = tintColor
     }

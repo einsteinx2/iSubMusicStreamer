@@ -244,7 +244,7 @@ extension FolderAlbumViewController: UITableViewConfiguration {
             }
         } else {
             if let song = playSong(indexPath: indexPath), !song.isVideo {
-                showPlayer()
+                NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
             }
         }
     }

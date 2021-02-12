@@ -149,7 +149,7 @@ extension BookmarksViewController: UITableViewConfiguration {
         }
         
         if let song = store.playSong(bookmark: bookmarks[indexPath.row]), !song.isVideo {
-            showPlayer()
+            NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
     }
     

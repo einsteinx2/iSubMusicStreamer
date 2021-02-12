@@ -139,7 +139,7 @@ extension LocalPlaylistViewController: UITableViewConfiguration {
             
             HUD.hide()
 //            if !song.isVideo {
-//                showPlayer()
+//                NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
 //            }
         }
     }

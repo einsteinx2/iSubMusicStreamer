@@ -11,7 +11,7 @@ import SnapKit
 
 final class PageControlViewController: UIViewController {
     private enum PageType: Int, CaseIterable {
-        case coverArt = 0, playQueue, lyrics, songInfo, cacheStatus
+        case coverArt = 0, lyrics, songInfo, cacheStatus
     }
     
     private let scrollView = UIScrollView()
@@ -80,8 +80,6 @@ final class PageControlViewController: UIViewController {
             case .coverArt:
                 coverArtViewController = CoverArtViewController()
                 controller = coverArtViewController
-            case .playQueue:
-                controller = PlayQueueViewController(backgroundColor: .black)
             case .lyrics:
                 controller = LyricsViewController()
             case .songInfo:

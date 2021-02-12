@@ -108,7 +108,7 @@ extension ServerPlaylistViewController: UITableViewConfiguration {
             let song = store.playSongFromServerPlaylist(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id, position: indexPath.row)
             HUD.hide()
             if let song = song, !song.isVideo {
-                showPlayer()
+                NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
             }
         }
     }

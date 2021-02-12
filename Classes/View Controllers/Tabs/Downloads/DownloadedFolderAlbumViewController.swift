@@ -97,7 +97,7 @@ extension DownloadedFolderAlbumViewController: UITableViewConfiguration {
             let controller = DownloadedFolderAlbumViewController(folderAlbum: downloadedFolderAlbums[indexPath.row])
             pushViewControllerCustom(controller)
         } else if let song = store.playSong(position: indexPath.row, downloadedSongs: downloadedSongs), !song.isVideo {
-            showPlayer()
+            NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
     }
     

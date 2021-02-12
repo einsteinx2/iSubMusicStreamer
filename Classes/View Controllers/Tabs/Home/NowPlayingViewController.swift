@@ -111,7 +111,7 @@ extension NowPlayingViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let song = song(indexPath: indexPath), let playingSong = store.playSong(position: indexPath.row, songs: [song]), !playingSong.isVideo {
-            showPlayer()
+            NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
     }
     

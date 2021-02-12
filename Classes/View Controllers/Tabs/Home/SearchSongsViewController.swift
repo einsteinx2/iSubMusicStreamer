@@ -219,7 +219,7 @@ extension SearchSongsViewController: UITableViewConfiguration {
         case .songs:
             if indexPath.row < songs.count {
                 if let song = store.playSong(position: indexPath.row, songs: songs), !song.isVideo {
-                    showPlayer()
+                    NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
                 }
                 return
             }

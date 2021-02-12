@@ -248,8 +248,8 @@ final class HomeViewController: UIViewController {
             songInfoButton.isUserInteractionEnabled = false
         }
         songInfoButton.translatesAutoresizingMaskIntoConstraints = false
-        songInfoButton.setAction { [unowned self] in
-            showPlayer()
+        songInfoButton.setAction {
+            NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
         view.addSubview(songInfoButton)
         songInfoButton.snp.remakeConstraints { make in
@@ -312,7 +312,7 @@ final class HomeViewController: UIViewController {
             HUD.hide()
             if success {
                 playQueue.playSong(position: 0)
-                showPlayer()
+                NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
             } else {
                 if settings.isPopupsEnabled {
                     let alert = UIAlertController(title: "Error", message: "There was an error creating the server shuffle list.\n\nThe connection could not be created", preferredStyle: .alert)

@@ -16,17 +16,4 @@ extension UIViewController {
             navigationController?.pushViewController(viewController, animated: true)
         }
     }
-    
-    @objc func showPlayer() {
-        if UIDevice.isPad {
-            NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
-        } else {
-            DispatchQueue.mainSyncSafe {
-//                let controller = PlayerViewController()
-//                controller.hidesBottomBarWhenPushed = true
-//                navigationController?.pushViewController(controller, animated: true)
-                tabBarController?.selectedIndex = 4
-            }
-        }
-    }
 }

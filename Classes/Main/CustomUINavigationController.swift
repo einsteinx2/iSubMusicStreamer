@@ -31,9 +31,10 @@ extension CustomUINavigationController: UINavigationControllerDelegate {
         // Prevent view controllers from going under the navigation bar
         viewController.edgesForExtendedLayout = []
         
-//        // Customizing the more tab controller
-//        if !(viewController.navigationController is CustomUINavigationController) {
-//            SceneDelegate.shared.tabBarController?.customizeMoreTabTableView()
-//        }
+        // Hide navigation bar in player
+        if navigationController.viewControllers.first is PlayerViewController {
+            let hide = (viewController === navigationController.viewControllers.first)
+            navigationController.setNavigationBarHidden(hide, animated: true)
+        }
     }
 }

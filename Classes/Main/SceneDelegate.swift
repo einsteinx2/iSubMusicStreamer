@@ -12,6 +12,10 @@ import CocoaLumberjackSwift
 
 // TODO: Refactor to support multiple scenes/windows
 @objc final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    enum TabType: Int, CaseIterable {
+        case home = 0, library, player, playlists, downloads
+    }
+    
     @Injected private var settings: Settings
     @Injected private var cacheQueue: CacheQueue
     @Injected private var playQueue: PlayQueue
@@ -52,24 +56,31 @@ import CocoaLumberjackSwift
             let tabBarController = CustomUITabBarController()
             self.tabBarController = tabBarController
             
-            let homeTab = CustomUINavigationController(rootViewController: HomeViewController())
-            homeTab.tabBarItem = UITabBarItem(title: "Home", image: UIImage(named: "tabbaricon-home"), tag: 0)
-            
-            let libraryTab = CustomUINavigationController(rootViewController: LibraryViewController())
-            libraryTab.tabBarItem = UITabBarItem(title: "Library", image: UIImage(named: "tabbaricon-folders"), tag: 0)
-            self.libraryTab = libraryTab
-            
-            let playerTab = PlayerViewController()//CustomUINavigationController(rootViewController: PlayerViewController())
-            playerTab.tabBarItem = UITabBarItem(title: "Player", image: UIImage(systemName: "music.quarternote.3"), tag: 0)
-            
-            let playlistsTab = CustomUINavigationController(rootViewController: PlaylistsViewController())
-            playlistsTab.tabBarItem = UITabBarItem(title: "Playlists", image: UIImage(named: "tabbaricon-playlists"), tag: 0)
-            
-            let downloadsTab = CustomUINavigationController(rootViewController: DownloadsViewController())
-            downloadsTab.tabBarItem = UITabBarItem(title: "Downloads", image: UIImage(named: "tabbaricon-cache"), tag: 0)
-
-            tabBarController.viewControllers = [homeTab, libraryTab, playerTab, playlistsTab, downloadsTab]
-            
+            var viewControllers = [UIViewController]()
+            for type in TabType.allCases {
+                let controller: CustomUINavigationController
+                switch type {
+                case .home:
+                    controller = CustomUINavigationController(rootViewController: HomeViewController())
+                    controller.tabBarItem = UITabBarItem(title: "Home", image: UIImage(named: "tabbaricon-home"), tag: type.rawValue)
+                case .library:
+                    controller = CustomUINavigationController(rootViewController: LibraryViewController())
+                    controller.tabBarItem = UITabBarItem(title: "Library", image: UIImage(named: "tabbaricon-folders"), tag: type.rawValue)
+                    self.libraryTab = controller
+                case .player:
+                    controller = CustomUINavigationController(rootViewController: PlayerViewController())
+                    controller.setNavigationBarHidden(true, animated: false)
+                    controller.tabBarItem = UITabBarItem(title: "Player", image: UIImage(systemName: "music.quarternote.3"), tag: type.rawValue)
+                case .playlists:
+                    controller = CustomUINavigationController(rootViewController: PlaylistsViewController())
+                    controller.tabBarItem = UITabBarItem(title: "Playlists", image: UIImage(named: "tabbaricon-playlists"), tag: type.rawValue)
+                case .downloads:
+                    controller = CustomUINavigationController(rootViewController: DownloadsViewController())
+                    controller.tabBarItem = UITabBarItem(title: "Downloads", image: UIImage(named: "tabbaricon-cache"), tag: 0)
+                }
+                viewControllers.append(controller)
+            }
+            tabBarController.viewControllers = viewControllers
             window.rootViewController = tabBarController
         }
         window.makeKeyAndVisible()
@@ -209,22 +220,16 @@ import CocoaLumberjackSwift
         } else if let tabBarController = tabBarController {
             let controller = SettingsViewController()
             controller.hidesBottomBarWhenPushed = true
-            
-            if tabBarController.selectedIndex >= 4 || tabBarController.selectedIndex == NSNotFound {
-                tabBarController.moreNavigationController.pushViewController(controller, animated: true)
-            } else if let navigationController = tabBarController.selectedViewController as? UINavigationController {
+            if let navigationController = tabBarController.selectedViewController as? UINavigationController {
                 navigationController.pushViewController(controller, animated: true)
             }
         }
     }
     
-    @objc private func showPlayer() {
+    @objc func showPlayer() {
         guard !UIDevice.isPad else { return }
-        
-        let controller = PlayerViewController()
-        controller.hidesBottomBarWhenPushed = true
-        if let navigationController = tabBarController?.selectedViewController as? UINavigationController {
-            navigationController.pushViewController(controller, animated: true)
+        DispatchQueue.mainSyncSafe {
+            tabBarController?.selectedIndex = TabType.player.rawValue
         }
     }
     
