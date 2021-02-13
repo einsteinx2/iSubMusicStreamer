@@ -48,12 +48,7 @@ final class LocalPlaylistViewController: UIViewController {
             tableView.tableHeaderView = headerView
         }
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        addShowPlayerButton()
-    }
-    
+
     @objc private func uploadPlaylist() {
         // TODO: implement this
     //    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(self.title), @"name", nil];

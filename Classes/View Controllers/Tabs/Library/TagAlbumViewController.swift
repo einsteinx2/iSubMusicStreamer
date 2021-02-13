@@ -54,19 +54,14 @@ final class TagAlbumViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        addShowPlayerButton()
         tableView.reloadData()
-        
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadData), name: Notifications.currentPlaylistIndexChanged)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadData), name: Notifications.songPlaybackStarted)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
         cancelLoad()
-        
         NotificationCenter.removeObserverOnMainThread(self, name: Notifications.currentPlaylistIndexChanged)
         NotificationCenter.removeObserverOnMainThread(self, name: Notifications.songPlaybackStarted)
     }

@@ -41,10 +41,7 @@ final class NowPlayingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         addURLRefBackButton()
-        addShowPlayerButton()
-        
         loadData()
         Flurry.logEvent("NowPlayingTab")
     }

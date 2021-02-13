@@ -42,7 +42,6 @@ final class ChatViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addURLRefBackButton()
-        addShowPlayerButton()
         startLoad()
         Flurry.logEvent("ChatTab")
     }
@@ -97,11 +96,8 @@ final class ChatViewController: UIViewController {
     
     @objc private func sendAction() {
         guard let text = textInput.text, text.count > 0 else { return }
-        
         textInput.resignFirstResponder()
         textInput.text = ""
-        
-        addShowPlayerButton()
         send(message: text)
     }
     

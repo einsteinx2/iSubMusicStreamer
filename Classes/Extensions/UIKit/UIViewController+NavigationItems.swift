@@ -17,11 +17,4 @@ extension UIViewController {
             navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: AppDelegate.shared, action: #selector(AppDelegate.backToReferringApp))
         }
     }
-    
-    @objc func addShowPlayerButton() {
-        navigationItem.rightBarButtonItem = nil
-        if settings.showPlayerIcon {
-//            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "music.quarternote.3"), style: .plain, target: self, action: #selector(showPlayer))
-        }
-    }
 }

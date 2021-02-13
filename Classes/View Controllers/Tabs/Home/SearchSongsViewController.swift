@@ -49,11 +49,6 @@ final class SearchSongsViewController: UIViewController {
         dataTask?.cancel()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        addShowPlayerButton()
-    }
-    
     private func loadMoreResults() {
         guard !isLoading else { return }
         

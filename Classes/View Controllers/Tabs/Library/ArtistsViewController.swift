@@ -69,7 +69,6 @@ final class ArtistsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addURLRefBackButton()
-        addShowPlayerButton()
         if !dataModel.isCached {
             loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId)
         }

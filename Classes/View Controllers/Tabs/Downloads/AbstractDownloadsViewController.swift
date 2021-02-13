@@ -43,7 +43,6 @@ class AbstractDownloadsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         registerForNotifications()
-        addShowPlayerButton()
         reloadTable()
     }
     

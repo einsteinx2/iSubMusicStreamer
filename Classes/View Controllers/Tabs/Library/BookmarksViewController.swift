@@ -31,7 +31,6 @@ final class BookmarksViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addURLRefBackButton()
-        addShowPlayerButton()
         reloadData()
         Flurry.logEvent("BookmarksTab")
     }
