@@ -29,6 +29,8 @@ final class PlayerViewController: UIViewController {
     @Injected private var playQueue: PlayQueue
     @Injected private var streamManager: StreamManager
     
+    override var prefersStatusBarHidden: Bool { true }
+    
     var currentSong: Song?
     
     private var notificationObservers = [NSObjectProtocol]()
