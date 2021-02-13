@@ -40,6 +40,11 @@ final class ServerPlaylistsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reloadData()
+        if serverPlaylists.count > 0 {
+            addSaveEditHeader()
+        } else {
+            loadServerPlaylists()
+        }
         Flurry.logEvent("ServerPlaylistsTab")
     }
     
@@ -76,17 +81,11 @@ final class ServerPlaylistsViewController: UIViewController {
         tableView.setNeedsUpdateConstraints()
     }
     
-    // TODO: implement this - this is causing an infinite loop when no server playlists due to loadServerPlaylists() calling reloadData() after it finishes loading
     private func reloadData() {
         tableView.refreshControl = nil
         setEditing(false, animated: false)
         removeSaveEditHeader()
         serverPlaylists = store.serverPlaylists(serverId: serverId)
-        if serverPlaylists.count > 0 {
-            addSaveEditHeader()
-        } else {
-            loadServerPlaylists()
-        }
         tableView.reloadData()
         tableView.refreshControl = RefreshControl { [unowned self] in
             loadServerPlaylists()
