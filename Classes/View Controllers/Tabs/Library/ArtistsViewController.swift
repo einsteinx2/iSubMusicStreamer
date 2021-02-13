@@ -115,7 +115,7 @@ final class ArtistsViewController: UIViewController {
         // NOTE: Unfortunately the header container view must not use autolayout or the
         //       header resizing won't work, but all of it's subviews can use it at least.
         let headerView = UIView()
-        headerView.frame = CGRect(x: 0, y: 0, width: 320, height: 158)
+        headerView.frame = CGRect(x: 0, y: 0, width: 320, height: UIDevice.isSmall ? 154 : 158)
         headerView.autoresizingMask = .flexibleWidth
         headerView.backgroundColor = view.backgroundColor
         tableView.tableHeaderView = headerView

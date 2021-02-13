@@ -17,16 +17,17 @@ protocol DropdownMenuDelegate {
 }
 
 final class DropdownMenu: UIView {
+    static let defaultHeight: CGFloat = UIDevice.isSmall ? 40 : 44
     
     private let animationDuration = 0.15
-    private let height: CGFloat = 44
     private let borderColor = UIColor.systemGray
     private let labelFont = UIFont.boldSystemFont(ofSize: 20)
     private let labelTextColor = UIColor.label
     private let labelBackgroundColor = Colors.background
     
     var delegate: DropdownMenuDelegate? { didSet { updateItems() }}
-    let defaultTitle: String
+    let loadingTitle: String
+    let height: CGFloat
     
     private(set) var isOpen = false
     var selectedIndex = -1 {
@@ -47,9 +48,10 @@ final class DropdownMenu: UIView {
         layer.borderColor = borderColor.cgColor
     }
     
-    init(delegate: DropdownMenuDelegate? = nil, defaultTitle: String = "Loading...") {
+    init(closedHeight: CGFloat = defaultHeight, loadingTitle: String = "Loading...", delegate: DropdownMenuDelegate? = nil) {
+        self.height = closedHeight
+        self.loadingTitle = loadingTitle
         self.delegate = delegate
-        self.defaultTitle = defaultTitle
         super.init(frame: .zero)
         setupViews()
         updateItems()
@@ -69,7 +71,7 @@ final class DropdownMenu: UIView {
         layer.masksToBounds = true
         
         selectedItemButton.addTarget(self, action: #selector(toggleAction), for: .touchUpInside)
-        selectedItemButton.setTitle(defaultTitle, for: .normal)
+        selectedItemButton.setTitle(loadingTitle, for: .normal)
         selectedItemButton.setTitleColor(labelTextColor, for: .normal)
         selectedItemButton.titleLabel?.textAlignment = .center
         selectedItemButton.titleLabel?.font = labelFont
