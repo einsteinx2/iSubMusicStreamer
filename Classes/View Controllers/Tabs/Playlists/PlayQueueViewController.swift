@@ -54,35 +54,20 @@ final class PlayQueueViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = backgroundColor
         title = "Play Queue"
-        
+        setupDefaultTableView(tableView)
+        tableView.allowsMultipleSelectionDuringEditing = true
+        registerForNotifications()
         if isModal {
             navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(dismiss(sender:)))
         }
-        
-        registerForNotifications()
-        
-        saveEditHeader.delegate = self
-        saveEditHeader.count = playQueue.count
-        view.addSubview(saveEditHeader)
-        saveEditHeader.snp.makeConstraints { make in
-            make.height.equalTo(50)
-            make.leading.trailing.top.equalToSuperview()
-        }
-        
-        tableView.allowsMultipleSelectionDuringEditing = true
-        setupDefaultTableView(tableView) { make in
-            make.top.equalTo(self.saveEditHeader.snp.bottom)
-            make.leading.trailing.bottom.equalToSuperview()
-        }
-        tableView.backgroundColor = backgroundColor
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         selectRow()
+        addOrRemoveSaveEditHeader()
         Flurry.logEvent(isModal ? "PlayerPlayQueue" : "PlayQueueTab")
         if settings.isJukeboxEnabled {
             jukebox.getInfo()
@@ -97,6 +82,40 @@ final class PlayQueueViewController: UIViewController {
         }
     }
     
+    private func addOrRemoveSaveEditHeader() {
+        if playQueue.count > 0 {
+            addSaveEditHeader()
+        } else {
+            removeSaveEditHeader()
+        }
+    }
+    
+    private func addSaveEditHeader() {
+        guard saveEditHeader.superview == nil else { return }
+        
+        saveEditHeader.delegate = self
+        saveEditHeader.count = playQueue.count
+        view.addSubview(saveEditHeader)
+        saveEditHeader.snp.makeConstraints { make in
+            make.height.equalTo(50)
+            make.leading.trailing.top.equalToSuperview()
+        }
+        
+        tableView.snp.updateConstraints { make in
+            make.top.equalToSuperview().offset(50)
+        }
+        tableView.setNeedsUpdateConstraints()
+    }
+    
+    private func removeSaveEditHeader() {
+        guard saveEditHeader.superview != nil else { return }
+        saveEditHeader.removeFromSuperview()
+        tableView.snp.updateConstraints { make in
+            make.top.equalToSuperview().offset(0)
+        }
+        tableView.setNeedsUpdateConstraints()
+    }
+    
     @objc private func selectRow() {
         tableView.reloadData()
         let currentIndex = playQueue.currentIndex
@@ -107,13 +126,14 @@ final class PlayQueueViewController: UIViewController {
     
     @objc private func jukeboxSongInfoUpdated() {
         saveEditHeader.count = playQueue.count
-        tableView.reloadData()
         selectRow()
+        addOrRemoveSaveEditHeader()
     }
     
     @objc private func songsQueued() {
         saveEditHeader.count = playQueue.count
         tableView.reloadData()
+        addOrRemoveSaveEditHeader()
     }
     
     @objc private func dismiss(sender: Any) {
@@ -292,6 +312,7 @@ extension PlayQueueViewController: SaveEditHeaderDelegate {
             }
             
             registerForNotifications()
+            addOrRemoveSaveEditHeader()
         } else {
             if settings.isOfflineMode {
                 showSavePlaylistAlert(isLocal: true)
@@ -376,6 +397,7 @@ extension PlayQueueViewController: UITableViewConfiguration {
                 playQueue.removeSongs(indexes: [indexPath.row])
                 self.saveEditHeader.count = playQueue.count
                 self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                self.addOrRemoveSaveEditHeader()
             }
         }
         return nil
