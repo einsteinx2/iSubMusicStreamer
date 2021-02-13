@@ -55,6 +55,7 @@ final class HomeViewController: UIViewController {
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
+        let iphoneOffset = UIDevice.isSmall ? 0 : 20
         if UIApplication.orientation.isPortrait || UIDevice.isPad {
             for button in buttons {
                 button.showLabel()
@@ -67,8 +68,8 @@ final class HomeViewController: UIViewController {
                 make.bottom.equalToSuperview().offset(-10)
             }
             verticalStack.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(UIDevice.isPad ? 50 : 20)
-                make.trailing.equalToSuperview().offset(UIDevice.isPad ? -50 : -20)
+                make.leading.equalToSuperview().offset(UIDevice.isPad ? 50 : iphoneOffset)
+                make.trailing.equalToSuperview().offset(UIDevice.isPad ? -50 : -iphoneOffset)
                 make.centerY.equalToSuperview().offset(15)
                 make.height.equalToSuperview().multipliedBy(UIDevice.isPad ? 0.50 : 0.75)
             }
@@ -84,8 +85,8 @@ final class HomeViewController: UIViewController {
                 make.bottom.equalToSuperview().offset(-10)
             }
             verticalStack.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(20)
-                make.trailing.equalToSuperview().offset(-20)
+                make.leading.equalToSuperview().offset(iphoneOffset)
+                make.trailing.equalToSuperview().offset(-iphoneOffset)
                 make.centerY.equalToSuperview().offset(15)
                 make.height.equalToSuperview().multipliedBy(0.60)
             }
@@ -253,9 +254,9 @@ final class HomeViewController: UIViewController {
         }
         view.addSubview(songInfoButton)
         songInfoButton.snp.remakeConstraints { make in
-            make.height.equalTo(80)
-            make.leading.equalToSuperview().offset(35)
-            make.trailing.equalToSuperview().offset(-30)
+            make.height.equalTo(UIDevice.isSmall ? 60 : 80)
+            make.leading.equalToSuperview().offset(UIDevice.isSmall ? 15 : 35)
+            make.trailing.equalToSuperview().offset(UIDevice.isSmall ? -15 : -30)
             make.centerY.equalTo(verticalStack)
         }
     }
@@ -263,7 +264,6 @@ final class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addURLRefBackButton()
-        addShowPlayerButton()
         
         let jukeboxImageName = settings.isJukeboxEnabled ? "home-jukebox-on" : "home-jukebox-off"
         jukeboxButton.setIcon(image: UIImage(named: jukeboxImageName))
