@@ -148,7 +148,6 @@ final class PlayQueueViewController: UIViewController {
         super.setEditing(editing, animated: animated)
         tableView.setEditing(editing, animated: animated)
         saveEditHeader.setEditing(editing, animated: animated)
-        
         if isEditing {
             // Deselect all the rows
             for i in 0..<playQueue.count {
@@ -157,7 +156,6 @@ final class PlayQueueViewController: UIViewController {
         } else {
             selectRow()
         }
-        saveEditHeader.selectedCount = 0
     }
     
     var selectedRows: [Int] {

@@ -76,6 +76,7 @@ final class ServerPlaylistsViewController: UIViewController {
         tableView.setNeedsUpdateConstraints()
     }
     
+    // TODO: implement this - this is causing an infinite loop when no server playlists due to loadServerPlaylists() calling reloadData() after it finishes loading
     private func reloadData() {
         tableView.refreshControl = nil
         setEditing(false, animated: false)
@@ -96,14 +97,6 @@ final class ServerPlaylistsViewController: UIViewController {
         super.setEditing(editing, animated: animated)
         tableView.setEditing(editing, animated: animated)
         saveEditHeader.setEditing(editing, animated: animated)
-        
-        if isEditing {
-            // Deselect all the rows
-            for i in 0..<serverPlaylists.count {
-                tableView.deselectRow(at: IndexPath(row: i, section: 0), animated: false)
-            }
-        }
-        saveEditHeader.selectedCount = 0
     }
     
     private func deleteServerPlaylists(indexPaths: [IndexPath]) {

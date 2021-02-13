@@ -14,49 +14,54 @@ import CocoaLumberjackSwift
 final class DownloadedSongsViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
+    @Injected private var cache: Cache
+    @Injected private var cacheQueue: CacheQueue
     
     var serverId: Int { Settings.shared().currentServerId }
     
     private var downloadedSongs = [DownloadedSong]()
+    override var itemCount: Int { downloadedSongs.count }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Downloaded Songs"
+        saveEditHeader.set(saveType: "Song", countType: "Song", isLargeCount: true)
     }
 
     @objc override func reloadTable() {
         downloadedSongs = store.downloadedSongs(serverId: serverId)
         super.reloadTable()
+        addOrRemoveSaveEditHeader()
+    }
+    
+    override func deleteItems(indexPaths: [IndexPath]) {
+        HUD.show()
+        DispatchQueue.userInitiated.async {
+            for indexPath in indexPaths {
+                _ = self.store.delete(downloadedSong: self.downloadedSongs[indexPath.row])
+            }
+            self.cache.findCacheSize()
+            NotificationCenter.postOnMainThread(name: Notifications.cachedSongDeleted)
+            if (!self.cacheQueue.isDownloading) {
+                self.cacheQueue.start()
+            }
+            HUD.hide()
+        }
     }
 }
 
-extension DownloadedSongsViewController: UITableViewConfiguration {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return downloadedSongs.count
-    }
-    
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .delete
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+extension DownloadedSongsViewController {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
         if let song = store.song(downloadedSong: downloadedSongs[indexPath.row]) {
-            cell.update(song: song)
+            cell.update(song: song, number: false, cached: false, art: true)
         }
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let song = store.playSong(position: indexPath.row, downloadedSongs: downloadedSongs), !song.isVideo {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        super.tableView(tableView, didSelectRowAt: indexPath)
+        if !isEditing, let song = store.playSong(position: indexPath.row, downloadedSongs: downloadedSongs), !song.isVideo {
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
     }

@@ -82,14 +82,6 @@ final class BookmarksViewController: UIViewController {
         super.setEditing(editing, animated: animated)
         tableView.setEditing(editing, animated: animated)
         saveEditHeader.setEditing(editing, animated: animated)
-        
-        if isEditing {
-            // Deselect all the rows
-            for i in 0..<bookmarks.count {
-                tableView.deselectRow(at: IndexPath(row: i, section: 0), animated: false)
-            }
-        }
-        saveEditHeader.selectedCount = 0
     }
 }
 

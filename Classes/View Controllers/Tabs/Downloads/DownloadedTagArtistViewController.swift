@@ -18,6 +18,7 @@ final class DownloadedTagArtistViewController: AbstractDownloadsViewController {
         
     private let downloadedTagArtist: DownloadedTagArtist
     private var downloadedTagAlbums = [DownloadedTagAlbum]()
+    override var itemCount: Int { downloadedTagAlbums.count }
     
     init(downloadedTagArtist: DownloadedTagArtist) {
         self.downloadedTagArtist = downloadedTagArtist
@@ -39,31 +40,15 @@ final class DownloadedTagArtistViewController: AbstractDownloadsViewController {
     }
 }
 
-extension DownloadedTagArtistViewController: UITableViewConfiguration {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return downloadedTagAlbums.count
-    }
-    
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .delete
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+extension DownloadedTagArtistViewController {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
         cell.show(cached: false, number: false, art: true, secondary: true, duration: false)
         cell.update(model: downloadedTagAlbums[indexPath.row])
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let controller = DownloadedTagAlbumViewController(downloadedTagAlbum: downloadedTagAlbums[indexPath.row])
         pushViewControllerCustom(controller)
     }

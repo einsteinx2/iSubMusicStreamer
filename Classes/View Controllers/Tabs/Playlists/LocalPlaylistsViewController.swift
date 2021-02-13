@@ -81,14 +81,6 @@ final class LocalPlaylistsViewController: UIViewController {
         super.setEditing(editing, animated: animated)
         tableView.setEditing(editing, animated: animated)
         saveEditHeader.setEditing(editing, animated: animated)
-        
-        if isEditing {
-            // Deselect all the rows
-            for i in 0..<localPlaylists.count {
-                tableView.deselectRow(at: IndexPath(row: i, section: 0), animated: false)
-            }
-        }
-        saveEditHeader.selectedCount = 0
     }
     
     private func uploadPlaylist(name: String) {

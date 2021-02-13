@@ -30,7 +30,6 @@ final class DownloadedFolderAlbumViewController: AbstractDownloadsViewController
         self.serverId = folderArtist.serverId
         self.level = 1
         self.parentPathComponent = folderArtist.name
-//        self.parentFolderId = folderArtist.id
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -40,7 +39,6 @@ final class DownloadedFolderAlbumViewController: AbstractDownloadsViewController
         self.serverId = folderAlbum.serverId
         self.level = folderAlbum.level + 1
         self.parentPathComponent = folderAlbum.name
-//        self.parentFolderId = folderAlbum.id
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -60,24 +58,16 @@ final class DownloadedFolderAlbumViewController: AbstractDownloadsViewController
     }
 }
 
-extension DownloadedFolderAlbumViewController: UITableViewConfiguration {
-    func numberOfSections(in tableView: UITableView) -> Int {
+extension DownloadedFolderAlbumViewController {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return section == 0 ? downloadedFolderAlbums.count : downloadedSongs.count
     }
     
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .delete
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let cell = tableView.dequeueUniversalCell()
             cell.show(cached: false, number: false, art: true, secondary: true, duration: false)
@@ -86,13 +76,13 @@ extension DownloadedFolderAlbumViewController: UITableViewConfiguration {
         } else {
             let cell = tableView.dequeueUniversalCell()
             if let song = store.song(downloadedSong: downloadedSongs[indexPath.row]) {
-                cell.update(song: song)
+                cell.update(song: song, cached: false)
             }
             return cell
         }
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             let controller = DownloadedFolderAlbumViewController(folderAlbum: downloadedFolderAlbums[indexPath.row])
             pushViewControllerCustom(controller)

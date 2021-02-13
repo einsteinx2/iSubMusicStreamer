@@ -233,13 +233,13 @@ extension Song: TableCellModel {
 }
 
 extension UniversalTableViewCell {
-    func update(song: Song) {
+    func update(song: Song, number: Bool = true, cached: Bool = true, art: Bool = false, secondary: Bool = true, duration: Bool = true) {
         var showNumber = false
-        if song.track > 0 {
+        if number && song.track > 0 {
             showNumber = true
-            number = song.track
+            self.number = song.track
         }
-        show(cached: true, number: showNumber, art: false, secondary: true, duration: true)
+        show(cached: cached, number: showNumber, art: art, secondary: secondary, duration: duration)
         update(model: song)
     }
 }

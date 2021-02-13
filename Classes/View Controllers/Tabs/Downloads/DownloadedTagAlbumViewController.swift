@@ -18,6 +18,7 @@ final class DownloadedTagAlbumViewController: AbstractDownloadsViewController {
         
     private let downloadedTagAlbum: DownloadedTagAlbum
     private var downloadedSongs = [DownloadedSong]()
+    override var itemCount: Int { downloadedSongs.count }
     
     init(downloadedTagAlbum: DownloadedTagAlbum) {
         self.downloadedTagAlbum = downloadedTagAlbum
@@ -39,32 +40,16 @@ final class DownloadedTagAlbumViewController: AbstractDownloadsViewController {
     }
 }
 
-extension DownloadedTagAlbumViewController: UITableViewConfiguration {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return downloadedSongs.count
-    }
-    
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .delete
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+extension DownloadedTagAlbumViewController {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
         if let song = store.song(downloadedSong: downloadedSongs[indexPath.row]) {
-            cell.update(song: song)
+            cell.update(song: song, cached: false)
         }
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let song = store.playSong(position: indexPath.row, downloadedSongs: downloadedSongs), !song.isVideo {
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
