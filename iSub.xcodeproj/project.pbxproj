@@ -331,6 +331,8 @@
 		53A2BE2A147DF14600E44822 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A2BE27147DF13600E44822 /* OpenGLES.framework */; };
 		53B38C12147593FA00CD8A99 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B38C11147593F900CD8A99 /* AVFoundation.framework */; };
 		53B38C141475940700CD8A99 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B38C11147593F900CD8A99 /* AVFoundation.framework */; };
+		53B5DB3525D73018006149B6 /* Tabman in Frameworks */ = {isa = PBXBuildFile; productRef = 53B5DB3425D73018006149B6 /* Tabman */; };
+		53B5DB3A25D73026006149B6 /* Tabman in Frameworks */ = {isa = PBXBuildFile; productRef = 53B5DB3925D73026006149B6 /* Tabman */; };
 		53B9C48325A789D3007E9E3C /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B9C48225A789D3007E9E3C /* Song.swift */; };
 		53B9C48425A789D3007E9E3C /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B9C48225A789D3007E9E3C /* Song.swift */; };
 		53B9C48E25A7A51F007E9E3C /* MediaFolderStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B9C48D25A7A51F007E9E3C /* MediaFolderStore.swift */; };
@@ -1006,6 +1008,7 @@
 				533D18E325602530003F962C /* CocoaLumberjack.framework in Frameworks */,
 				53F7A128131B7F3B002C829D /* Security.framework in Frameworks */,
 				536D620B1144495400DFCE56 /* SystemConfiguration.framework in Frameworks */,
+				53B5DB3525D73018006149B6 /* Tabman in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				539148C52559EAAF004AAC3F /* libFlurry_11.1.1.a in Frameworks */,
 				5381884C25A67A2F00C59CDE /* Resolver in Frameworks */,
@@ -1049,6 +1052,7 @@
 				533D18E725602539003F962C /* CocoaLumberjack.framework in Frameworks */,
 				53BC285F139AF0DD00A825F1 /* Security.framework in Frameworks */,
 				53BC2858139AF0DD00A825F1 /* SystemConfiguration.framework in Frameworks */,
+				53B5DB3A25D73026006149B6 /* Tabman in Frameworks */,
 				53BC2851139AF0DD00A825F1 /* UIKit.framework in Frameworks */,
 				539148BA2559E597004AAC3F /* CoreServices.framework in Frameworks */,
 				5381884E25A67A4300C59CDE /* Resolver in Frameworks */,
@@ -1807,6 +1811,7 @@
 				5389478725A4E7700078FBAF /* GRDB */,
 				5381884B25A67A2F00C59CDE /* Resolver */,
 				537C93EA25B1161200175DF6 /* InflectorKit */,
+				53B5DB3425D73018006149B6 /* Tabman */,
 			);
 			productName = iSubTESTING;
 			productReference = 1D6058910D05DD3D006BFB54 /* iSub.app */;
@@ -1832,6 +1837,7 @@
 				5389478925A4E7880078FBAF /* GRDB */,
 				5381884D25A67A4300C59CDE /* Resolver */,
 				537C93EC25B1162100175DF6 /* InflectorKit */,
+				53B5DB3925D73026006149B6 /* Tabman */,
 			);
 			productName = iSubTESTING;
 			productReference = 53BC2865139AF0DD00A825F1 /* iSub Beta.app */;
@@ -1872,6 +1878,7 @@
 				5389478625A4E7700078FBAF /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 				5381884A25A67A2F00C59CDE /* XCRemoteSwiftPackageReference "Resolver" */,
 				537C93E925B1161200175DF6 /* XCRemoteSwiftPackageReference "InflectorKit" */,
+				53B5DB3325D73018006149B6 /* XCRemoteSwiftPackageReference "Tabman" */,
 			);
 			projectDirPath = "";
 			projectReferences = (
@@ -2829,6 +2836,14 @@
 				minimumVersion = 5.2.0;
 			};
 		};
+		53B5DB3325D73018006149B6 /* XCRemoteSwiftPackageReference "Tabman" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/uias/Tabman";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.10.0;
+			};
+		};
 		53D97404255BFD9100AABF7F /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -2869,6 +2884,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5389478625A4E7700078FBAF /* XCRemoteSwiftPackageReference "GRDB.swift" */;
 			productName = GRDB;
+		};
+		53B5DB3425D73018006149B6 /* Tabman */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 53B5DB3325D73018006149B6 /* XCRemoteSwiftPackageReference "Tabman" */;
+			productName = Tabman;
+		};
+		53B5DB3925D73026006149B6 /* Tabman */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 53B5DB3325D73018006149B6 /* XCRemoteSwiftPackageReference "Tabman" */;
+			productName = Tabman;
 		};
 		53D97405255BFD9100AABF7F /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;

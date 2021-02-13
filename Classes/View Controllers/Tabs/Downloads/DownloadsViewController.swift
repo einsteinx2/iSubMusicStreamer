@@ -7,75 +7,86 @@
 //
 
 import UIKit
-import SnapKit
-import Resolver
+import Tabman
+import Pageboy
 
-final class DownloadsViewController: AbstractDownloadsViewController {//UIViewController {
-    @Injected private var store: Store
-        
-    // TODO: Separately track downloaded folders, artists, albums, and songs to show the appropriate table cells
-    private var downloadedSongsCount = 0
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        title = "Downloads"
-    }
-    
-    @objc override func reloadTable() {
-        downloadedSongsCount = store.downloadedSongsCount() ?? 0
-        super.reloadTable()
-    }
-}
-
-extension DownloadsViewController: UITableViewConfiguration {
-    private enum RowType: Int, CaseIterable {
+final class DownloadsViewController: TabmanViewController {
+    private enum TabType: Int, CaseIterable {
         case folders = 0, artists, albums, songs
         var name: String {
             switch self {
             case .folders: return "Folders"
             case .artists: return "Artists"
-            case .albums: return "Albums"
-            case .songs: return "Songs"
+            case .albums:  return "Albums"
+            case .songs:   return "Songs"
             }
         }
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+    private let buttonBar = TMBar.ButtonBar()
+    private var controllerCache = [TabType: UIViewController]()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = Colors.background
+        title = "Downloads"
+        
+        // TODO: implement this - make a function like setupDefaultTableView to add this and the two buttons in viewWillAppear automatically when in the tab bar and the controller is the root of the nav stack (do this for all view controllers to remove the duplicate code)
+        // Or maybe just make a superclass that sets up the default table and handles all this
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification)
+
+        // Setup ButtonBar
+        isScrollEnabled = false
+        dataSource = self
+        buttonBar.backgroundView.style = .clear
+        buttonBar.layout.transitionStyle = .snap
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return downloadedSongsCount > 0 ? RowType.allCases.count : 0
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        addURLRefBackButton()
+        addBar(buttonBar, dataSource: self, at: .navigationItem(item: navigationItem))
+        Flurry.logEvent("DownloadsTab")
     }
     
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+    deinit {
+        NotificationCenter.removeObserverOnMainThread(self)
     }
     
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .delete
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueUniversalCell()
-        if let rowType = RowType(rawValue: indexPath.row) {
-            cell.update(primaryText: rowType.name)
+    private func viewController(index: Int) -> UIViewController? {
+        guard let type = TabType(rawValue: index) else { return nil }
+        
+        if let viewController = controllerCache[type] {
+            return viewController
+        } else {
+            let controller: UIViewController
+            switch type {
+            case .folders: controller = DownloadedFolderArtistsViewController()
+            case .artists: controller = DownloadedTagArtistsViewController()
+            case .albums:  controller = DownloadedTagAlbumsViewController()
+            case .songs:   controller = DownloadedSongsViewController()
+            }
+            controllerCache[type] = controller
+            return controller
         }
-        return cell
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let controller: UIViewController?
-        switch RowType(rawValue: indexPath.row) {
-        case .folders: controller = DownloadedFolderArtistsViewController()
-        case .artists: controller = DownloadedTagArtistsViewController()
-        case .albums:  controller = DownloadedTagAlbumsViewController()
-        case .songs:   controller = DownloadedSongsViewController()
-        default: controller = nil
-        }
-        if let controller = controller {
-            pushViewControllerCustom(controller)
-        }
+}
+
+extension DownloadsViewController: PageboyViewControllerDataSource, TMBarDataSource {
+    func numberOfViewControllers(in pageboyViewController: PageboyViewController) -> Int {
+        return TabType.allCases.count
     }
 
+    func viewController(for pageboyViewController: PageboyViewController, at index: PageboyViewController.PageIndex) -> UIViewController? {
+        return viewController(index: index)
+    }
+
+    func defaultPage(for pageboyViewController: PageboyViewController) -> PageboyViewController.Page? {
+        return nil
+    }
+
+    func barItem(for bar: TMBar, at index: Int) -> TMBarItemable {
+        return TMBarItem(title: TabType(rawValue: index)?.name ?? "")
+    }
 }

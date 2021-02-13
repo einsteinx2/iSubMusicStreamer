@@ -20,6 +20,15 @@
         }
       },
       {
+        "package": "Pageboy",
+        "repositoryURL": "https://github.com/uias/Pageboy",
+        "state": {
+          "branch": null,
+          "revision": "34ecb6e7c4e0e07494960ab2f7cc9a02293915a6",
+          "version": "3.6.2"
+        }
+      },
+      {
         "package": "Resolver",
         "repositoryURL": "https://github.com/hmlongco/Resolver.git",
         "state": {
@@ -35,6 +44,15 @@
           "branch": null,
           "revision": "d458564516e5676af9c70b4f4b2a9178294f1bc6",
           "version": "5.0.1"
+        }
+      },
+      {
+        "package": "Tabman",
+        "repositoryURL": "https://github.com/uias/Tabman",
+        "state": {
+          "branch": null,
+          "revision": "2f01f14128c0762476d0a0c9b1bcf2bd52ed4e98",
+          "version": "2.10.0"
         }
       }
     ]
