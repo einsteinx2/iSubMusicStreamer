@@ -390,7 +390,13 @@ final class PlayerViewController: UIViewController {
         }
         updateBookmarkButton()
         
-        equalizerButton.setImage(UIImage(systemName: "slider.vertical.3", withConfiguration: regularConfig), for: .normal)
+        let equalizerButtonImage: UIImage?
+        if #available(iOS 14.0, *) {
+            equalizerButtonImage = UIImage(systemName: "slider.vertical.3", withConfiguration: regularConfig)
+        } else {
+            equalizerButtonImage = UIImage(systemName: "slider.horizontal.3", withConfiguration: regularConfig)
+        }
+        equalizerButton.setImage(equalizerButtonImage, for: .normal)
         equalizerButton.addClosure(for: .touchUpInside) { [unowned self] in
             let controller = EqualizerViewController(nibName: "EqualizerViewController", bundle: nil)
             if UIDevice.isPad {

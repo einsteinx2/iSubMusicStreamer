@@ -71,7 +71,12 @@ import CocoaLumberjackSwift
                     controller = CustomUINavigationController(rootViewController: PlayerViewController())
                     controller.setNavigationBarHidden(true, animated: false)
                     let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular, scale: .large)
-                    let image = UIImage(systemName: "music.quarternote.3", withConfiguration: imageConfig)
+                    let image: UIImage?
+                    if #available(iOS 14.0, *) {
+                        image = UIImage(systemName: "music.quarternote.3", withConfiguration: imageConfig)
+                    } else {
+                        image = UIImage(systemName: "music.note", withConfiguration: imageConfig)
+                    }
                     controller.tabBarItem = UITabBarItem(title: "Player", image: image, tag: type.rawValue)
                 case .playlists:
                     controller = CustomUINavigationController(rootViewController: PlaylistsViewController())
