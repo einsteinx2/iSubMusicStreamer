@@ -70,7 +70,9 @@ import CocoaLumberjackSwift
                 case .player:
                     controller = CustomUINavigationController(rootViewController: PlayerViewController())
                     controller.setNavigationBarHidden(true, animated: false)
-                    controller.tabBarItem = UITabBarItem(title: "Player", image: UIImage(systemName: "music.quarternote.3"), tag: type.rawValue)
+                    let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular, scale: .large)
+                    let image = UIImage(systemName: "music.quarternote.3", withConfiguration: imageConfig)
+                    controller.tabBarItem = UITabBarItem(title: "Player", image: image, tag: type.rawValue)
                 case .playlists:
                     controller = CustomUINavigationController(rootViewController: PlaylistsViewController())
                     controller.tabBarItem = UITabBarItem(title: "Playlists", image: UIImage(named: "tabbaricon-playlists"), tag: type.rawValue)
