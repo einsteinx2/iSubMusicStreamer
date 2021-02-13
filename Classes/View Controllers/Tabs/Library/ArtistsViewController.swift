@@ -413,7 +413,7 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
         if isSearching { return -1 }
         
         if index == 0 {
-            let yOffset: CGFloat = dataModel.mediaFolders.count > 1 ? 54 : 104
+            let yOffset: CGFloat = dataModel.mediaFolders.count > 1 ? dropdownMenu.frame.origin.y - 5 : searchBar.frame.origin.y - 5
             tableView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)
             return -1
         }

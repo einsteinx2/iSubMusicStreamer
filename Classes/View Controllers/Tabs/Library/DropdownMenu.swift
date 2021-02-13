@@ -41,6 +41,7 @@ final class DropdownMenu: UIView {
     private let selectedItemButton = UIButton(type: .custom)
     private let itemStackView = UIStackView()
     private var itemButtons = [UIButton]()
+    private var itemHighlightView = UIView()
     
     // Re-draw colors
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -114,6 +115,8 @@ final class DropdownMenu: UIView {
             let title = delegate.dropdownMenu(self, titleForIndex: i)
             let button = UIButton(type: .custom)
             button.addTarget(self, action: #selector(itemButtonAction(button:)), for: .touchUpInside)
+            button.addTarget(self, action: #selector(itemButtonTouchDownAction(button:)), for: .touchDown)
+            button.addTarget(self, action: #selector(itemButtonTouchUpAction(button:)), for: [.touchUpInside, .touchUpOutside])
             button.backgroundColor = labelBackgroundColor
             button.setTitle(title, for: .normal)
             button.setTitleColor(labelTextColor, for: .normal)
@@ -127,12 +130,36 @@ final class DropdownMenu: UIView {
                 make.height.equalTo(height)
             }
         }
+        
+        itemHighlightView.backgroundColor = labelTextColor.withAlphaComponent(0.3)
+        itemHighlightView.alpha = 0
+        itemHighlightView.removeFromSuperview()
+        if let firstButton = itemButtons.first {
+            itemStackView.addSubview(itemHighlightView)
+            itemHighlightView.snp.makeConstraints { make in
+                make.height.leading.trailing.equalTo(firstButton)
+                make.top.equalTo(0)
+            }
+        }
             
 //        dropdownButton.accessibilityLabel = selectedItemLabel.text
     }
     
     @objc private func toggleAction() {
         toggle(animated: true)
+    }
+    
+    @objc private func itemButtonTouchDownAction(button: UIButton) {
+        itemHighlightView.alpha = 1
+        itemHighlightView.snp.updateConstraints { make in
+            make.top.equalTo(CGFloat(button.tag) * height)
+        }
+    }
+    
+    @objc private func itemButtonTouchUpAction(button: UIButton) {
+        UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseOut) {
+            self.itemHighlightView.alpha = 0
+        }
     }
     
     @objc private func itemButtonAction(button: UIButton) {
@@ -163,8 +190,12 @@ final class DropdownMenu: UIView {
         
         // Inform delegate to resize height
         // TODO: Make this more universal so it's capable of resizing itself when not in a table header
-        let stackHeight = itemStackView.frame.height - height
-        delegate?.dropdownMenu(self, willToggleWithHeightChange: isOpen ? stackHeight : -stackHeight, animated: animated, animationDuration: animationDuration)
+        DispatchQueue.main.async(after: animationDuration) {
+            // Wait for the highlight view to fade before calling the delegate to close the menu
+            let stackHeight = self.itemStackView.frame.height - self.height
+            self.delegate?.dropdownMenu(self, willToggleWithHeightChange: self.isOpen ? stackHeight : -stackHeight, animated: animated, animationDuration: self.animationDuration)
+        }
+        
     }
     
     func open(animated: Bool = true) {
