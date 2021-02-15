@@ -377,6 +377,8 @@
 		53CB554C25C9D4AB004F2BAB /* BookmarkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CB554A25C9D4AB004F2BAB /* BookmarkStore.swift */; };
 		53CB554E25C9FAAD004F2BAB /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CB554D25C9FAAD004F2BAB /* BookmarksViewController.swift */; };
 		53CB554F25C9FAAD004F2BAB /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CB554D25C9FAAD004F2BAB /* BookmarksViewController.swift */; };
+		53CC751025D9F31500D10AB6 /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC750F25D9F31500D10AB6 /* String+Hex.swift */; };
+		53CC751125D9F31500D10AB6 /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC750F25D9F31500D10AB6 /* String+Hex.swift */; };
 		53CF64F725843ADA00BD47DC /* SlidingNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF64F625843ADA00BD47DC /* SlidingNotification.swift */; };
 		53CF64F825843ADA00BD47DC /* SlidingNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF64F625843ADA00BD47DC /* SlidingNotification.swift */; };
 		53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D44F8415AA621A00CDD3B8 /* Accelerate.framework */; };
@@ -818,6 +820,7 @@
 		53CB554725C9D2E1004F2BAB /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		53CB554A25C9D4AB004F2BAB /* BookmarkStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkStore.swift; sourceTree = "<group>"; };
 		53CB554D25C9FAAD004F2BAB /* BookmarksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
+		53CC750F25D9F31500D10AB6 /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
 		53CF64F625843ADA00BD47DC /* SlidingNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingNotification.swift; sourceTree = "<group>"; };
 		53D44F8415AA621A00CDD3B8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		53D4FCA22599335900C6F1AE /* FolderMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderMetadata.swift; sourceTree = "<group>"; };
@@ -1601,6 +1604,7 @@
 				535F824625C0FE950024C82C /* Decoding+Generic.swift */,
 				53ED673F25B88B5B0002BFAF /* NotificationCenter+MainThread.swift */,
 				53D632D825A65CBC004EC117 /* String+Clean.swift */,
+				53CC750F25D9F31500D10AB6 /* String+Hex.swift */,
 				53ED673325B7A1360002BFAF /* String+URLEncode.swift */,
 				5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */,
 				532C624525B6186800185998 /* URL+QueryParameters.swift */,
@@ -2029,6 +2033,7 @@
 				53762C7A25ACE86D00476F2D /* ServerPlaylistStore.swift in Sources */,
 				537B05BC256B04360008892C /* PadMenuViewController.swift in Sources */,
 				53FE37881EA961720058B925 /* SavedSettings.m in Sources */,
+				53CC751025D9F31500D10AB6 /* String+Hex.swift in Sources */,
 				538C8FEA2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53ED674325B88C390002BFAF /* Notifications.swift in Sources */,
 				534BC83F25CCE03700964D82 /* HomeViewButton.swift in Sources */,
@@ -2268,6 +2273,7 @@
 				53FE38971EA961C80058B925 /* NSDictionary+ZKAdditions.m in Sources */,
 				5389478125A4E7170078FBAF /* MediaFolder.swift in Sources */,
 				53FE67AD256DE9600015FC83 /* Defines.swift in Sources */,
+				53CC751125D9F31500D10AB6 /* String+Hex.swift in Sources */,
 				53FE378A1EA961720058B925 /* SavedSettings.m in Sources */,
 				537B05BD256B04360008892C /* PadMenuViewController.swift in Sources */,
 				534BC84025CCE03700964D82 /* HomeViewButton.swift in Sources */,

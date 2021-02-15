@@ -51,6 +51,12 @@ extension URLRequest {
         } else {
             finalUrlString = "\(urlString)/rest/\(action).view"
         }
+        
+        var finalPassword = password
+        if let hexValue = password.hexValue {
+            finalPassword = "enc:\(hexValue)"
+        }
+        
         var version: String?
         
         // Set the API version for this call by checking the arrays
@@ -69,7 +75,7 @@ extension URLRequest {
             return nil
         }
 
-        let queryString = Self.parseQueryString(parameters: parameters, version: finalVersion, username: username, password: password)
+        let queryString = Self.parseQueryString(parameters: parameters, version: finalVersion, username: username, password: finalPassword)
         
         // Handle special case when loading playlists
         var loadingTimeout = 240.0
