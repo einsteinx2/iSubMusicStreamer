@@ -29,6 +29,16 @@ final class ArtistsViewController: UIViewController {
     private var isCountShowing = false
     
     private let dataModel: ArtistsViewModel
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        // Resize the section headers on rotation
+        for section in 0..<dataModel.tableSections.count {
+            if let sectionHeader = tableView.headerView(forSection: section) as? BlurredSectionHeader {
+                sectionHeader.viewWillTransition(to: size, with: coordinator)
+            }
+        }
+    }
         
     // MARK: Lifecycle
     
@@ -389,6 +399,7 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
         
         let sectionHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: BlurredSectionHeader.reuseId) as! BlurredSectionHeader
         sectionHeader.text = dataModel.tableSections[section].name
+        sectionHeader.updateFont()
         return sectionHeader
     }
     
@@ -396,7 +407,8 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
         if isSearching { return 0 }
         if section >= dataModel.tableSections.count { return 0 }
         
-        return Defines.rowHeight - 5
+        let landscapeHeight: CGFloat = UIDevice.isSmall ? 20 : 24
+        return UIApplication.orientation.isPortrait ? Defines.rowHeight - 5 : landscapeHeight
     }
     
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
