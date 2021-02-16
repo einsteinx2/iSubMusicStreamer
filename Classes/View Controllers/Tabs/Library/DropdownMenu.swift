@@ -188,14 +188,13 @@ final class DropdownMenu: UIView {
             rotateArrow()
         }
         
-        // Inform delegate to resize height
+        // Inform delegate to resize height on next runloop iteration to allow for item highlight to display
         // TODO: Make this more universal so it's capable of resizing itself when not in a table header
-        DispatchQueue.main.async(after: animationDuration) {
+        DispatchQueue.main.async {
             // Wait for the highlight view to fade before calling the delegate to close the menu
             let stackHeight = self.itemStackView.frame.height - self.height
             self.delegate?.dropdownMenu(self, willToggleWithHeightChange: self.isOpen ? stackHeight : -stackHeight, animated: animated, animationDuration: self.animationDuration)
         }
-        
     }
     
     func open(animated: Bool = true) {
