@@ -154,6 +154,7 @@ final class DropdownMenu: UIView {
         itemHighlightView.snp.updateConstraints { make in
             make.top.equalTo(CGFloat(button.tag) * height)
         }
+        itemHighlightView.layoutIfNeeded()
     }
     
     @objc private func itemButtonTouchUpAction(button: UIButton) {
