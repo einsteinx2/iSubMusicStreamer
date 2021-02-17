@@ -10,6 +10,8 @@ import UIKit
 import CocoaLumberjackSwift
 import Resolver
 
+// TODO: implement this - for some reason, after an incorrect password on first server addition, it still adds the entry so you end up with 2 entries
+// Not sure why that's able to happen as it only saves the server on the success callback...
 final class ServerEditViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
@@ -193,8 +195,10 @@ final class ServerEditViewController: UIViewController {
             }
             present(alert, animated: true, completion: nil)
         } else {
-            HUD.show(message: "Checking Server")
             let loader = StatusLoader(urlString: urlField.text ?? "", username: usernameField.text ?? "", password: passwordField.text ?? "", delegate: self)
+            HUD.show(message: "Checking Server") {
+                loader.cancelLoad()
+            }
             loader.startLoad()
         }
     }
@@ -236,7 +240,6 @@ extension ServerEditViewController: UITextFieldDelegate {
 extension ServerEditViewController: APILoaderDelegate {
     func loadingFinished(loader: APILoader?) {
         HUD.hide()
-        
         guard let statusLoader = loader as? StatusLoader else { return }
         
         if let serverToEdit = serverToEdit {
@@ -268,6 +271,9 @@ extension ServerEditViewController: APILoaderDelegate {
     
     func loadingFailed(loader: APILoader?, error: Error?) {
         HUD.hide()
+        if let error = error, error.isCanceledURLRequest {
+            return
+        }
         
         var message = "Unknown error occured, please try again."
         if let error = error as? SubsonicError, case .badCredentials = error {
