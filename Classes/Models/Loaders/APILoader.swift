@@ -41,6 +41,7 @@ enum APILoaderType: Int {
     case tagArtist          = 16
     case tagAlbum           = 17
     case song               = 18
+    case search             = 19
 }
 
 class APILoader: CancelableLoader {

@@ -10,133 +10,128 @@ import UIKit
 import Resolver
 import CocoaLumberjackSwift
 
-enum SearchType: Int {
-    case artists = 0
-    case albums  = 1
-    case songs   = 2
-}
-
 final class SearchSongsViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
     
-    var serverId: Int { Settings.shared().currentServerId }
+    let serverId: Int
+    let query: String
+    let searchType: SearchLoader.SearchType
+    let searchItemType: SearchLoader.SearchItemType
     
-    var query = ""
-    var searchType = SearchType.songs
-    
-    var folderArtists = [FolderArtist]()
-    var folderAlbums = [FolderAlbum]()
-    var songs = [Song]()
+    private(set) var folderArtists: [FolderArtist]
+    private(set) var folderAlbums: [FolderAlbum]
+    private(set) var tagArtists: [TagArtist]
+    private(set) var tagAlbums: [TagAlbum]
+    private(set) var songs: [Song]
     
     private let tableView = UITableView()
     
     private var offset = 0
     private var isMoreResults = true
     private var isLoading = false
-    private var dataTask: URLSessionDataTask?
+    private var searchLoader: SearchLoader
+    
+    init(serverId: Int, query: String, searchType: SearchLoader.SearchType, searchItemType: SearchLoader.SearchItemType, folderArtists: [FolderArtist] = [], folderAlbums: [FolderAlbum] = [], tagArtists: [TagArtist] = [], tagAlbums: [TagAlbum] = [], songs: [Song] = []) {
+        self.serverId = serverId
+        self.query = query
+        self.searchType = searchType
+        self.searchItemType = searchItemType
+        self.folderArtists = folderArtists
+        self.folderAlbums = folderAlbums
+        self.tagArtists = tagArtists
+        self.tagAlbums = tagAlbums
+        self.songs = songs
+        self.searchLoader = SearchLoader(serverId: serverId, searchType: searchType, searchItemType: searchItemType, query: query)
+        
+        switch searchItemType {
+        case .artists:
+            let artists: [Any] = searchType == .folder ? folderArtists : tagArtists
+            isMoreResults = artists.count >= SearchLoader.searchItemCount
+        case .albums:
+            let albums: [Any] = searchType == .folder ? folderAlbums : tagAlbums
+            isMoreResults = albums.count >= SearchLoader.searchItemCount
+        case .songs:
+            isMoreResults = songs.count >= SearchLoader.searchItemCount
+        default:
+            isMoreResults = true
+        }
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("unimplemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        title = "Search Results"
         view.backgroundColor = Colors.background
         setupDefaultTableView(tableView)
     }
     
     deinit {
-        dataTask?.cancel()
+        searchLoader.cancelLoad()
+        searchLoader.callback = nil
     }
     
     private func loadMoreResults() {
         guard !isLoading else { return }
-        
         isLoading = true
-        offset += 20
-        
-        var action = ""
-        var parameters = [String: Any]()
-        if settings.currentServer?.isNewSearchSupported == true {
-            action = "search2"
-            let queryString = "\(query)*"
-            switch searchType {
-            case .artists:
-                parameters = ["artistCount": 20,
-                              "albumCount": 0,
-                              "songCount": 0,
-                              "query": queryString,
-                              "artistOffset": offset]
-            case .albums:
-                parameters = ["artistCount": 0,
-                              "albumCount": 20,
-                              "songCount": 0,
-                              "query": queryString,
-                              "albumOffset": offset]
-            case .songs:
-                parameters = ["artistCount": 0,
-                              "albumCount": 0,
-                              "songCount": 20,
-                              "query": queryString,
-                              "songOffset": offset]
-            }
-        } else {
-            action = "search"
-            parameters = ["count": 20, "any": query, "offset": offset]
-        }
-        
-        // TODO: implement this
-        // TODO: Don't hard code server id
-        guard let request = URLRequest(serverId: serverId, subsonicAction: action, parameters: parameters) else {
-            DDLogError("[SearchSongsViewController] failed to create URLRequest to load more results with action \(action) and parameters \(parameters)")
-            isMoreResults = false
-            tableView.reloadData()
-            isLoading = false
-            return
-        }
-        
-        dataTask = APILoader.sharedSession.dataTask(with: request) { [weak self] data, response, error in
+        searchLoader.offset += SearchLoader.searchItemCount
+        searchLoader.callback = { [weak self] _, success, error in
             guard let self = self else { return }
+            self.isLoading = false
             
-            if let data = data {
-                let parser = SearchXMLParser(serverId: self.serverId, data: data)
-                switch self.searchType {
+            if success {
+                switch self.searchItemType {
                 case .artists:
-                    if parser.folderArtists.count == 0 {
-                        self.isMoreResults = false
+                    if self.searchType == .folder {
+                        self.folderArtists.append(contentsOf: self.searchLoader.folderArtists)
+                        if self.searchLoader.folderArtists.count == 0 {
+                            self.isMoreResults = false
+                        }
                     } else {
-                        self.folderArtists.append(contentsOf: parser.folderArtists)
+                        self.tagArtists.append(contentsOf: self.searchLoader.tagArtists)
+                        if self.searchLoader.tagArtists.count == 0 {
+                            self.isMoreResults = false
+                        }
                     }
                 case .albums:
-                    if parser.folderAlbums.count == 0 {
-                        self.isMoreResults = false
+                    if self.searchType == .folder {
+                        self.folderAlbums.append(contentsOf: self.searchLoader.folderAlbums)
+                        if self.searchLoader.folderAlbums.count == 0 {
+                            self.isMoreResults = false
+                        }
                     } else {
-                        self.folderAlbums.append(contentsOf: parser.folderAlbums)
+                        self.tagAlbums.append(contentsOf: self.searchLoader.tagAlbums)
+                        if self.searchLoader.tagAlbums.count == 0 {
+                            self.isMoreResults = false
+                        }
                     }
                 case .songs:
-                    if parser.folderAlbums.count == 0 {
+                    self.songs.append(contentsOf: self.searchLoader.songs)
+                    if self.searchLoader.songs.count == 0 {
                         self.isMoreResults = false
-                    } else {
-                        self.songs.append(contentsOf: parser.songs)
                     }
+                default:
+                    break
                 }
+                self.tableView.reloadData()
+            } else if let error = error, self.settings.isPopupsEnabled {
+                self.isMoreResults = false
+                self.tableView.reloadData()
                 
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    self.isLoading = false
-                }
-            } else if let error = error {
-                if self.settings.isPopupsEnabled {
-                    DispatchQueue.main.async {
-                        let message = "There was an error performing the search.\n\nError: \(error.localizedDescription)"
-                        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-                        alert.addOKAction()
-                        self.present(alert, animated: true, completion: nil)
-                    }
-                }
+                let message = "There was an error performing the search.\n\nError: \(error.localizedDescription)"
+                let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+                alert.addOKAction()
+                self.present(alert, animated: true, completion: nil)
             }
         }
-        dataTask?.resume()
+        searchLoader.startLoad()
     }
 }
 
@@ -146,27 +141,30 @@ extension SearchSongsViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch searchType {
-        case .artists: return folderArtists.count + 1
-        case .albums: return folderAlbums.count + 1
-        case .songs: return songs.count + 1
+        switch searchItemType {
+        case .artists: return (searchType == .folder ? folderArtists.count : tagArtists.count) + 1
+        case .albums:  return (searchType == .folder ? folderAlbums.count : tagAlbums.count) + 1
+        case .songs:   return songs.count + 1
+        default:       return 0
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch searchType {
+        switch searchItemType {
         case .artists:
-            if indexPath.row < folderArtists.count {
+            let artists: [TableCellModel] = searchType == .folder ? folderArtists : tagArtists
+            if indexPath.row < artists.count {
                 let cell = tableView.dequeueUniversalCell()
                 cell.show(cached: false, number: false, art: false, secondary: false, duration: false)
-                cell.update(model: folderArtists[indexPath.row])
+                cell.update(model: artists[indexPath.row])
                 return cell
             }
         case .albums:
-            if indexPath.row < folderAlbums.count {
+            let albums: [TableCellModel] = searchType == .folder ? folderAlbums : tagAlbums
+            if indexPath.row < albums.count {
                 let cell = tableView.dequeueUniversalCell()
                 cell.show(cached: false, number: false, art: true, secondary: false, duration: false)
-                cell.update(model: folderAlbums[indexPath.row])
+                cell.update(model: albums[indexPath.row])
                 return cell
             }
         case .songs:
@@ -176,6 +174,8 @@ extension SearchSongsViewController: UITableViewConfiguration {
                 cell.update(model: songs[indexPath.row])
                 return cell
             }
+        default:
+            break
         }
         
         // This is the last cell and there could be more results, load the next 20 songs;
@@ -198,18 +198,34 @@ extension SearchSongsViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch searchType {
+        switch searchItemType {
         case .artists:
-            if indexPath.row < folderArtists.count {
-                let controller = FolderAlbumViewController(folderArtist: folderArtists[indexPath.row])
-                pushViewControllerCustom(controller)
-                return
+            if searchType == .folder {
+                if indexPath.row < folderArtists.count {
+                    let controller = FolderAlbumViewController(folderArtist: folderArtists[indexPath.row])
+                    pushViewControllerCustom(controller)
+                    return
+                }
+            } else {
+                if indexPath.row < tagArtists.count {
+                    let controller = TagArtistViewController(tagArtist: tagArtists[indexPath.row])
+                    pushViewControllerCustom(controller)
+                    return
+                }
             }
         case .albums:
-            if indexPath.row < folderAlbums.count {
-                let controller = FolderAlbumViewController(folderAlbum: folderAlbums[indexPath.row])
-                pushViewControllerCustom(controller)
-                return
+            if searchType == .folder {
+                if indexPath.row < folderAlbums.count {
+                    let controller = FolderAlbumViewController(folderAlbum: folderAlbums[indexPath.row])
+                    pushViewControllerCustom(controller)
+                    return
+                }
+            } else {
+                if indexPath.row < tagAlbums.count {
+                    let controller = TagAlbumViewController(tagAlbum: tagAlbums[indexPath.row])
+                    pushViewControllerCustom(controller)
+                    return
+                }
             }
         case .songs:
             if indexPath.row < songs.count {
@@ -218,6 +234,8 @@ extension SearchSongsViewController: UITableViewConfiguration {
                 }
                 return
             }
+        default:
+            break
         }
         
         // Loading cell
@@ -225,19 +243,45 @@ extension SearchSongsViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        switch searchType {
+        switch searchItemType {
         case .artists:
-            if indexPath.row < folderArtists.count {
-                return SwipeAction.downloadAndQueueConfig(model: folderArtists[indexPath.row])
+            let artists: [TableCellModel] = searchType == .folder ? folderArtists : tagArtists
+            if indexPath.row < artists.count {
+                return SwipeAction.downloadAndQueueConfig(model: artists[indexPath.row])
             }
         case .albums:
-            if indexPath.row < folderAlbums.count {
-                return SwipeAction.downloadAndQueueConfig(model: folderAlbums[indexPath.row])
+            let albums: [TableCellModel] = searchType == .folder ? folderAlbums : tagAlbums
+            if indexPath.row < albums.count {
+                return SwipeAction.downloadAndQueueConfig(model: albums[indexPath.row])
             }
         case .songs:
             if indexPath.row < songs.count {
                 return SwipeAction.downloadAndQueueConfig(model: songs[indexPath.row])
             }
+        default:
+            break
+        }
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        switch searchItemType {
+        case .artists:
+            let artists: [TableCellModel] = searchType == .folder ? folderArtists : tagArtists
+            if indexPath.row < artists.count {
+                return contextMenuDownloadAndQueueConfig(model: artists[indexPath.row])
+            }
+        case .albums:
+            let albums: [TableCellModel] = searchType == .folder ? folderAlbums : tagAlbums
+            if indexPath.row < albums.count {
+                return contextMenuDownloadAndQueueConfig(model: albums[indexPath.row])
+            }
+        case .songs:
+            if indexPath.row < songs.count {
+                return contextMenuDownloadAndQueueConfig(model: songs[indexPath.row])
+            }
+        default:
+            break
         }
         return nil
     }

@@ -17,7 +17,7 @@ private let ver1_3_0 = ["getUser", "deleteUser", "1.3.0"]
 private let ver1_4_0 = ["search2", "1.4.0"]
 private let ver1_5_0 = ["scrobble", "1.5.0"]
 private let ver1_6_0 = ["getPodcasts", "getShares", "createShare", "updateShare", "deleteShare", "setRating", "1.6.0"]
-private let ver1_8_0 = ["hls", "getAlbumList2", "getArtists", "getArtist", "getAlbum", "getSong", "1.8.0"]
+private let ver1_8_0 = ["hls", "getAlbumList2", "getArtists", "getArtist", "getAlbum", "getSong", "search3", "1.8.0"]
 private let versions = Set<[String]>([ver1_0_0, ver1_2_0, ver1_3_0, ver1_4_0, ver1_5_0, ver1_6_0, ver1_8_0])
 
 extension URLRequest {

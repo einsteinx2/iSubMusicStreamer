@@ -22,7 +22,7 @@ final class HomeViewController: UIViewController {
     
     private var quickAlbumsLoader: QuickAlbumsLoader?
     private var serverShuffleLoader: ServerShuffleLoader?
-    private var dataTask: URLSessionDataTask?
+    private var searchLoader: SearchLoader?
     
     private let searchBarContainer = UIView()
     private let searchBar = UISearchBar()
@@ -55,7 +55,7 @@ final class HomeViewController: UIViewController {
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
-        let iphoneOffset = UIDevice.isSmall ? 0 : 20
+        let iphoneOffset = UIDevice.isSmall ? -10 : 20
         if UIApplication.orientation.isPortrait || UIDevice.isPad {
             for button in buttons {
                 button.showLabel()
@@ -237,11 +237,9 @@ final class HomeViewController: UIViewController {
             make.leading.trailing.equalToSuperview()
         }
         
-        searchSegment.insertSegment(withTitle: "Artists", at: 0, animated: false)
-        searchSegment.insertSegment(withTitle: "Albums", at: 1, animated: false)
-        searchSegment.insertSegment(withTitle: "Songs", at: 2, animated: false)
-        searchSegment.insertSegment(withTitle: "All", at: 3, animated: false)
-        searchSegment.selectedSegmentIndex = 3
+        searchSegment.insertSegment(withTitle: "Folders", at: 0, animated: false)
+        searchSegment.insertSegment(withTitle: "Tags", at: 1, animated: false)
+        searchSegment.selectedSegmentIndex = 0
         searchSegmentContainer.addSubview(searchSegment)
         
         if UIDevice.isPad {
@@ -255,8 +253,8 @@ final class HomeViewController: UIViewController {
         view.addSubview(songInfoButton)
         songInfoButton.snp.remakeConstraints { make in
             make.height.equalTo(UIDevice.isSmall ? 60 : 80)
-            make.leading.equalToSuperview().offset(UIDevice.isSmall ? 15 : 35)
-            make.trailing.equalToSuperview().offset(UIDevice.isSmall ? -15 : -30)
+            make.leading.equalToSuperview().offset(UIDevice.isSmall ? 20 : 35)
+            make.trailing.equalToSuperview().offset(UIDevice.isSmall ? -20 : -30)
             make.centerY.equalTo(verticalStack)
         }
     }
@@ -327,13 +325,13 @@ final class HomeViewController: UIViewController {
     }
     
     @objc private func cancelLoad() {
+        HUD.hide()
         quickAlbumsLoader?.cancelLoad()
         quickAlbumsLoader = nil
         serverShuffleLoader?.cancelLoad()
         serverShuffleLoader = nil
-        dataTask?.cancel()
-        dataTask = nil
-        HUD.hide()
+        searchLoader?.cancelLoad()
+        searchLoader = nil
     }
     
     @objc private func jukeboxOff() {
@@ -343,7 +341,7 @@ final class HomeViewController: UIViewController {
 }
 
 extension HomeViewController: UISearchBarDelegate {
-    private var isNewSearchSupported: Bool { settings.currentServer?.isNewSearchSupported ?? false }
+    private var isTagSearchSupported: Bool { settings.currentServer?.isTagSearchSupported ?? false }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         if traitCollection.userInterfaceStyle == .dark {
@@ -353,7 +351,7 @@ extension HomeViewController: UISearchBarDelegate {
         }
         
         view.addSubview(searchOverlay)
-        if settings.currentServer?.isNewSearchSupported == true {
+        if isTagSearchSupported {
             searchOverlay.snp.makeConstraints { make in
                 make.top.equalTo(searchSegmentContainer.snp.bottom)
                 make.leading.trailing.bottom.equalToSuperview()
@@ -372,7 +370,7 @@ extension HomeViewController: UISearchBarDelegate {
         }
         
         UIView.animate(withDuration: 0.2) {
-            if self.isNewSearchSupported {
+            if self.isTagSearchSupported {
                 self.searchSegment.isEnabled = true
                 self.searchSegment.alpha = 1
                 self.searchSegmentContainer.alpha = 1
@@ -383,7 +381,7 @@ extension HomeViewController: UISearchBarDelegate {
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         UIView.animate(withDuration: 0.2) {
-            if self.isNewSearchSupported {
+            if self.isTagSearchSupported {
                 self.searchSegment.isEnabled = false
                 self.searchSegment.alpha = 0
                 self.searchSegmentContainer.alpha = 0
@@ -398,85 +396,34 @@ extension HomeViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         
-        var query = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        var parameters = [String: Any]()
-        var action = ""
-        if isNewSearchSupported {
-            // Due to a Subsonic bug, to get good search results, we need to add a * to the end of
-            // Latin based languages, but not to unicode languages like Japanese.
-            if query.canBeConverted(to: .isoLatin1) {
-                query += "*"
-            }
-
-            action = "search2"
-            parameters = ["query": query, "artistCount": 0, "albumCount": 0, "songCount": 0]
-            switch searchSegment.selectedSegmentIndex {
-            case 0: parameters["artistCount"] = 20
-            case 1: parameters["albumCount"] = 20
-            case 2: parameters["songCount"] = 20
-            default:
-                parameters["artistCount"] = 20
-                parameters["albumCount"] = 20
-                parameters["songCount"] = 20
-            }
-        } else {
-            action = "search"
-            parameters = ["count": 20, "any": query]
-        }
+        guard let query = searchBar.text else { return }
         
-        // TODO: implement this
-        // TODO: Don't hard code server id
-        guard let request = URLRequest(serverId: serverId, subsonicAction: action, parameters: parameters) else {
-            DDLogError("[HomeViewController] failed to create URLRequest to search with action \(action) and parameters \(parameters)")
-            return
+        var searchType = SearchLoader.SearchType.old
+        if isTagSearchSupported {
+            searchType = searchSegment.selectedSegmentIndex == 0 ? .folder : .tag
         }
-        
-        dataTask = APILoader.sharedSession.dataTask(with: request) { data, _, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    if self.settings.isPopupsEnabled {
-                        let alert = UIAlertController(title: "Error", message: "There was an error completing the search.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
-                        alert.addAction(title: "OK", style: .cancel, handler: nil)
-                        self.present(alert, animated: true, completion: nil)
-                    }
-                } else if let data = data {
-                    DDLogVerbose("search results: \(String(data: data, encoding: .utf8)!)")
-                    let parser = SearchXMLParser(serverId: self.serverId, data: data)
-                    
-                    if self.isNewSearchSupported && self.searchSegment.selectedSegmentIndex == 3 {
-                        let controller = SearchAllViewController()
-                        controller.folderArtists = parser.folderArtists
-                        controller.folderAlbums = parser.folderAlbums
-                        controller.songs = parser.songs
-                        controller.query = query
-                        self.pushViewControllerCustom(controller)
-                    } else {
-                        let controller = SearchSongsViewController()
-                        controller.title = "Search"
-                        if self.isNewSearchSupported {
-                            if self.searchSegment.selectedSegmentIndex == 0 {
-                                controller.folderArtists = parser.folderArtists
-                                controller.searchType = .artists
-                            } else if self.searchSegment.selectedSegmentIndex == 1 {
-                                controller.folderAlbums = parser.folderAlbums
-                                controller.searchType = .albums
-                            } else if self.searchSegment.selectedSegmentIndex == 2 {
-                                controller.songs = parser.songs
-                                controller.searchType = .songs
-                            }
-                            controller.query = query
-                        } else {
-                            controller.songs = parser.songs
-                            controller.searchType = .songs
-                            controller.query = query
-                        }
-                        self.pushViewControllerCustom(controller)
-                    }
+        searchLoader = SearchLoader(serverId: serverId, searchType: searchType, searchItemType: .all, query: query)
+        searchLoader?.callback = { [weak self] _, success, error in
+            HUD.hide()
+            guard let self = self, let searchLoader = self.searchLoader else { return }
+            
+            if success {
+                if searchLoader.searchType == .old {
+                    let controller = SearchSongsViewController(serverId: self.serverId, query: query, searchType: searchType, searchItemType: .songs, songs: searchLoader.songs)
+                    self.pushViewControllerCustom(controller)
+                } else {
+                    let controller = SearchAllViewController(serverId: self.serverId, query: query, searchType: searchType, folderArtists: searchLoader.folderArtists, folderAlbums: searchLoader.folderAlbums, tagArtists: searchLoader.tagArtists, tagAlbums: searchLoader.tagAlbums, songs: searchLoader.songs)
+                    self.pushViewControllerCustom(controller)
                 }
-                HUD.hide()
+            } else if let error = error {
+                if self.settings.isPopupsEnabled {
+                    let alert = UIAlertController(title: "Error", message: "There was an error completing the search.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
+                    alert.addAction(title: "OK", style: .cancel, handler: nil)
+                    self.present(alert, animated: true, completion: nil)
+                }
             }
         }
-        dataTask?.resume()
+        searchLoader?.startLoad()
         HUD.show()
     }
 }

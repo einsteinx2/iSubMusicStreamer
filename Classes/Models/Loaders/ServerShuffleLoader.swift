@@ -27,16 +27,30 @@ final class ServerShuffleLoader: APILoader {
     
     override func createRequest() -> URLRequest? {
         // Start the 100 record open search to create shuffle list
-        var parameters: [String: Any] = ["size": "100"]
+        var parameters: [String: Any] = ["size": 100]
         if let mediaFolderId = mediaFolderId, mediaFolderId != MediaFolder.allFoldersId {
-            parameters["musicFolderId"] = "\(mediaFolderId)"
+            parameters["musicFolderId"] = mediaFolderId
         }
         return URLRequest(serverId: serverId, subsonicAction: "getRandomSongs", parameters: parameters)
     }
     
     override func processResponse(data: Data) {
-        let parser = SearchXMLParser(serverId: serverId, data: data)
-        _ = store.playSong(position: 0, songs: parser.songs)
-        informDelegateLoadingFinished()
+        guard let root = validate(data: data) else { return }
+        
+        var songs = [Song]()
+        let success = root.iterate("randomSongs.song") { element, stop in
+            let song = Song(serverId: self.serverId, element: element)
+            guard self.store.add(song: song) else {
+                stop.pointee = true
+                return
+            }
+            songs.append(song)
+        }
+        
+        if success, let _ = store.playSong(position: 0, songs: songs) {
+            informDelegateLoadingFinished()
+        } else {
+            informDelegateLoadingFailed(error: APIError.database)
+        }
     }
 }
