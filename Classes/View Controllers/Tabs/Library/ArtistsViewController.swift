@@ -152,6 +152,8 @@ final class ArtistsViewController: UIViewController {
         
         headerView.addSubview(dropdownMenu)
         dropdownMenu.snp.makeConstraints { make in
+            make.width.lessThanOrEqualTo(300)
+            make.centerX.equalToSuperview()
             make.leading.equalToSuperview().offset(50).priority(.high)
             make.trailing.equalToSuperview().offset(-50).priority(.high)
             make.top.equalTo(reloadTimeLabel.snp.bottom).offset(5)
