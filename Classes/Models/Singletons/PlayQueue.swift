@@ -79,7 +79,7 @@ import CocoaLumberjackSwift
             if isShuffle && shuffleIndex != newValue {
                 shuffleIndex = newValue
                 indexChanged = true
-            } else if self.normalIndex != newValue {
+            } else if normalIndex != newValue {
                 normalIndex = newValue
                 indexChanged = true
             }
@@ -111,6 +111,11 @@ import CocoaLumberjackSwift
         }
     }
     
+    var nextIndexIgnoringRepeatMode: Int {
+        let index = currentIndex
+        return song(index: index) == nil && song(index: index + 1) == nil ? index : index + 1
+    }
+    
     var currentDisplaySong: Song? {
         // Either the current song, or the previous song if we're past the end of the playlist
         if let song = currentSong {
@@ -133,8 +138,13 @@ import CocoaLumberjackSwift
     }
     
     @objc func removeSongs(indexes: [Int]) {
-        // TODO: implement this
-        fatalError("implement this")
+        if store.remove(songsAtPositions: indexes, localPlaylistId: currentPlaylistId) {
+            // Stop the player if we deleted the current song
+            if indexes.contains(currentIndex) {
+                player.stop()
+                currentIndex = 0
+            }
+        }
     }
     
     func song(index: Int) -> Song? {
