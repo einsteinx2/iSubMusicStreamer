@@ -23,11 +23,11 @@ final class HomeViewButton: UIView {
         }
         addSubview(button)
         button.snp.makeConstraints { make in
-            make.width.height.equalTo(70)
+            make.width.height.equalTo(UIDevice.isSmall ? 60 : 70)
             make.top.centerX.equalToSuperview()
         }
         
-        label.font = .boldSystemFont(ofSize: 20)
+        label.font = .boldSystemFont(ofSize: UIDevice.isSmall ? 16 : 20)
         label.numberOfLines = 2
         label.text = title;
         label.textAlignment = .center
