@@ -46,6 +46,9 @@ final class ServerPlaylistViewController: UIViewController {
         cancelLoad()
         serverPlaylistLoader = ServerPlaylistLoader(serverPlaylist: serverPlaylist)
         serverPlaylistLoader?.callback = { [unowned self] _, success, error in
+            HUD.hide()
+            tableView.refreshControl?.endRefreshing()
+            
             if let error = error {
                 if settings.isPopupsEnabled {
                     let message = "There was an error loading the playlist.\n\nError: \(error)"
@@ -60,8 +63,6 @@ final class ServerPlaylistViewController: UIViewController {
                 }
                 tableView.reloadData()
             }
-            HUD.hide()
-            tableView.refreshControl?.endRefreshing()
         }
         serverPlaylistLoader?.startLoad()
         HUD.show(closeHandler: cancelLoad)
@@ -113,5 +114,9 @@ extension ServerPlaylistViewController: UITableViewConfiguration {
             return SwipeAction.downloadAndQueueConfig(model: song)
         }
         return nil
+    }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        return contextMenuDownloadAndQueueConfig(model: song(indexPath: indexPath))
     }
 }

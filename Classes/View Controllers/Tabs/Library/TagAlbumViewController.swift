@@ -115,6 +115,7 @@ final class TagAlbumViewController: UIViewController {
     func startLoad() {
         HUD.show(closeHandler: cancelLoad)
         loader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbum.id) { [weak self] _, success, error in
+            HUD.hide()
             guard let self = self else { return }
             
             self.songIds = self.loader?.songIds ?? []
@@ -131,19 +132,17 @@ final class TagAlbumViewController: UIViewController {
                     self.present(alert, animated: true, completion: nil)
                 }
             }
-            HUD.hide()
             self.tableView.refreshControl?.endRefreshing()
         }
         loader?.startLoad()
     }
     
     func cancelLoad() {
+        HUD.hide()
         loader?.cancelLoad()
         loader?.callback = nil
         loader = nil
-        
         tableView.refreshControl?.endRefreshing()
-        HUD.hide()
     }
 }
 
@@ -181,9 +180,10 @@ extension TagAlbumViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if let song = song(indexPath: indexPath), !song.isVideo {
-            return SwipeAction.downloadAndQueueConfig(model: song)
-        }
-        return nil
+        return SwipeAction.downloadAndQueueConfig(model: song(indexPath: indexPath))
+    }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        return contextMenuDownloadAndQueueConfig(model: song(indexPath: indexPath))
     }
 }

@@ -51,6 +51,8 @@ final class NowPlayingViewController: UIViewController {
         HUD.show(closeHandler: cancelLoad)
         nowPlayingLoader = NowPlayingLoader(serverId: serverId)
         nowPlayingLoader?.callback = { [unowned self] _, success, error in
+            HUD.hide()
+            tableView.refreshControl?.endRefreshing()
             if let error = error {
                 if settings.isPopupsEnabled {
                     let message = "There was an error loading the now playing list.\n\nError: \(error)"
@@ -62,18 +64,16 @@ final class NowPlayingViewController: UIViewController {
                 nowPlayingSongs = nowPlayingLoader?.nowPlayingSongs ?? []
                 tableView.reloadData()
             }
-            HUD.hide()
-            tableView.refreshControl?.endRefreshing()
             nowPlayingLoader = nil
         }
         nowPlayingLoader?.startLoad()
     }
     
     @objc func cancelLoad() {
+        HUD.hide()
         nowPlayingLoader?.cancelLoad()
         nowPlayingLoader?.callback = nil
         nowPlayingLoader = nil
-        HUD.hide()
         tableView.refreshControl?.endRefreshing()
     }
     

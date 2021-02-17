@@ -41,11 +41,11 @@ final class DownloadedSongsViewController: AbstractDownloadsViewController {
                 _ = self.store.delete(downloadedSong: self.downloadedSongs[indexPath.row])
             }
             self.cache.findCacheSize()
+            HUD.hide()
             NotificationCenter.postOnMainThread(name: Notifications.cachedSongDeleted)
             if (!self.cacheQueue.isDownloading) {
                 self.cacheQueue.start()
             }
-            HUD.hide()
         }
     }
 }
@@ -69,5 +69,10 @@ extension DownloadedSongsViewController {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         // TODO: implement this
         return nil
+    }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let song = store.song(downloadedSong: downloadedSongs[indexPath.row])
+        return contextMenuDownloadAndQueueConfig(model: song)
     }
 }

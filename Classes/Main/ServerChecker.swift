@@ -35,6 +35,7 @@ final class ServerChecker {
         if let currentServer = settings.currentServer {
             statusLoader?.cancelLoad()
             statusLoader = StatusLoader(server: currentServer) { [weak self] _, success, error in
+                HUD.hide()
                 guard let self = self, let statusLoader = self.statusLoader else { return }
                 
                 if success {
@@ -62,8 +63,6 @@ final class ServerChecker {
                         // TODO: change the setting value here?
                     }
                 }
-                
-                HUD.hide()
                 self.statusLoader = nil
             }
             statusLoader?.startLoad()

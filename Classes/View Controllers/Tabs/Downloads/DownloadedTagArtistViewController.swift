@@ -57,4 +57,8 @@ extension DownloadedTagArtistViewController {
         // TODO: implement this
         return nil
     }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        return contextMenuDownloadAndQueueConfig(model: downloadedTagAlbums[indexPath.row])
+    }
 }

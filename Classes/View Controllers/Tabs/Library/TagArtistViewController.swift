@@ -78,6 +78,7 @@ final class TagArtistViewController: UIViewController {
     func startLoad() {
         HUD.show(closeHandler: cancelLoad)
         loader = TagArtistLoader(serverId: serverId, tagArtistId: tagArtist.id) { [weak self] _, success, error in
+            HUD.hide()
             guard let self = self else { return }
             
             self.tagAlbumIds = self.loader?.tagAlbumIds ?? []
@@ -94,19 +95,17 @@ final class TagArtistViewController: UIViewController {
                     self.present(alert, animated: true, completion: nil)
                 }
             }
-            HUD.hide()
             self.tableView.refreshControl?.endRefreshing()
         }
         loader?.startLoad()
     }
     
     func cancelLoad() {
+        HUD.hide()
         loader?.cancelLoad()
         loader?.callback = nil
         loader = nil
-        
         tableView.refreshControl?.endRefreshing()
-        HUD.hide()
     }
 }
 
@@ -139,5 +138,9 @@ extension TagArtistViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         return SwipeAction.downloadAndQueueConfig(model: tagAlbum(indexPath: indexPath))
+    }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        return contextMenuDownloadAndQueueConfig(model: tagAlbum(indexPath: indexPath))
     }
 }

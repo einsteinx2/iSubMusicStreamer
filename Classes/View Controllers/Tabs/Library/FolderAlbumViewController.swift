@@ -11,6 +11,10 @@ import SnapKit
 import Resolver
 
 final class FolderAlbumViewController: UIViewController {
+    private enum SectionType: Int, CaseIterable {
+        case albums = 0, songs
+    }
+    
     @Injected private var store: Store
     @Injected private var settings: Settings
     
@@ -159,6 +163,7 @@ final class FolderAlbumViewController: UIViewController {
     func startLoad() {
         HUD.show(closeHandler: cancelLoad)
         loader = SubfolderLoader(serverId: serverId, parentFolderId: parentFolderId) { [weak self] _, success, error in
+            HUD.hide()
             guard let self = self else { return }
             
             if let loader = self.loader {
@@ -180,80 +185,89 @@ final class FolderAlbumViewController: UIViewController {
                     self.present(alert, animated: true, completion: nil)
                 }
             }
-            HUD.hide()
             self.tableView.refreshControl?.endRefreshing()
         }
         loader?.startLoad()
     }
     
     func cancelLoad() {
+        HUD.hide()
         loader?.cancelLoad()
         loader?.callback = nil
         loader = nil
-        
         tableView.refreshControl?.endRefreshing()
-        HUD.hide()
     }
 }
 
 extension FolderAlbumViewController: UITableViewConfiguration {
     private func folderAlbum(indexPath: IndexPath) -> FolderAlbum? {
-        guard indexPath.row < folderAlbumIds.count else { return nil }
+        guard indexPath.section == SectionType.albums.rawValue && indexPath.row < folderAlbumIds.count else { return nil }
         return store.folderAlbum(serverId: serverId, id: folderAlbumIds[indexPath.row])
     }
     
     private func song(indexPath: IndexPath) -> Song? {
-        guard indexPath.row < songIds.count else { return nil }
+        guard indexPath.section == SectionType.songs.rawValue && indexPath.row < songIds.count else { return nil }
         return store.song(serverId: serverId, id: songIds[indexPath.row])
     }
     
     private func playSong(indexPath: IndexPath) -> Song? {
-        guard indexPath.section == 1, indexPath.row < songIds.count else { return nil }
+        guard indexPath.section == SectionType.songs.rawValue, indexPath.row < songIds.count else { return nil }
         return store.playSong(position: indexPath.row, songIds: songIds, serverId: serverId)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return SectionType.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? folderAlbumIds.count : songIds.count
+        return section == SectionType.albums.rawValue ? folderAlbumIds.count : songIds.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
-        if indexPath.section == 0 {
+        if let folderAlbum = folderAlbum(indexPath: indexPath) {
             cell.show(cached: false, number: false, art: true, secondary: false, duration: false)
-            cell.update(model: folderAlbum(indexPath: indexPath))
-        } else {
-            if let song = song(indexPath: indexPath) {
-                cell.update(song: song)
-            }
+            cell.update(model: folderAlbum)
+        } else if let song = song(indexPath: indexPath) {
+            cell.update(song: song)
         }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            if let folderAlbum = folderAlbum(indexPath: indexPath) {
-                let controller = FolderAlbumViewController(folderAlbum: folderAlbum)
-                pushViewControllerCustom(controller)
-            }
-        } else {
-            if let song = playSong(indexPath: indexPath), !song.isVideo {
-                NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
-            }
+        if let folderAlbum = folderAlbum(indexPath: indexPath) {
+            let controller = FolderAlbumViewController(folderAlbum: folderAlbum)
+            pushViewControllerCustom(controller)
+        } else if let song = playSong(indexPath: indexPath), !song.isVideo {
+            NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if indexPath.section == 0 {
-            return SwipeAction.downloadAndQueueConfig(model: folderAlbum(indexPath: indexPath))
-        } else {
-            if let song = song(indexPath: indexPath), !song.isVideo {
-                return SwipeAction.downloadAndQueueConfig(model: song)
-            }
-        }
-        return nil
+        let model: TableCellModel? = folderAlbum(indexPath: indexPath) ?? song(indexPath: indexPath)
+        return SwipeAction.downloadAndQueueConfig(model: model)
+    }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let model: TableCellModel? = folderAlbum(indexPath: indexPath) ?? song(indexPath: indexPath)
+        return contextMenuDownloadAndQueueConfig(model: model)
+    }
+}
+
+extension UIImage {
+    func with(insets: CGFloat) -> UIImage? {
+        with(insets: UIEdgeInsets(top: insets, left: insets, bottom: insets, right: insets))
+    }
+    
+    func with(insets: UIEdgeInsets) -> UIImage? {
+        let cgSize = CGSize(width: size.width + (insets.left * scale) + (insets.right * scale),
+                            height: size.height + (insets.top * scale) + (insets.bottom * scale))
+
+        UIGraphicsBeginImageContextWithOptions(cgSize, false, scale)
+        defer { UIGraphicsEndImageContext() }
+
+        let origin = CGPoint(x: insets.left * scale, y: insets.top * scale)
+        draw(at: origin)
+        return UIGraphicsGetImageFromCurrentImageContext()?.withRenderingMode(renderingMode)
     }
 }

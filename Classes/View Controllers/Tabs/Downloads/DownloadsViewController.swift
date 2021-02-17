@@ -75,7 +75,7 @@ final class DownloadsViewController: TabmanViewController {
 
 extension DownloadsViewController: PageboyViewControllerDataSource, TMBarDataSource {
     func numberOfViewControllers(in pageboyViewController: PageboyViewController) -> Int {
-        return TabType.allCases.count
+        return TabType.count
     }
 
     func viewController(for pageboyViewController: PageboyViewController, at index: PageboyViewController.PageIndex) -> UIViewController? {

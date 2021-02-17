@@ -400,4 +400,8 @@ extension PlayQueueViewController: UITableViewConfiguration {
         }
         return nil
     }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        return contextMenuDownloadAndQueueConfig(model: playQueue.song(index: indexPath.row))
+    }
 }

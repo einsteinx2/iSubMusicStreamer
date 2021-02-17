@@ -254,4 +254,8 @@ extension LocalPlaylistsViewController: UITableViewConfiguration {
             self.deleteLocalPlaylists(indexPaths: [indexPath])
         }
     }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        return contextMenuDownloadAndQueueConfig(model: localPlaylists[indexPath.row])
+    }
 }

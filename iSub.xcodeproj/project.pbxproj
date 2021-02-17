@@ -20,8 +20,6 @@
 		530A16742592468C00E9294E /* FolderArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A16722592468C00E9294E /* FolderArtist.swift */; };
 		530A1679259255D200E9294E /* FolderAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A1678259255D200E9294E /* FolderAlbum.swift */; };
 		530A167A259255D200E9294E /* FolderAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A1678259255D200E9294E /* FolderAlbum.swift */; };
-		530A167C2592767400E9294E /* SearchXMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A167B2592767400E9294E /* SearchXMLParser.swift */; };
-		530A167D2592767400E9294E /* SearchXMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A167B2592767400E9294E /* SearchXMLParser.swift */; };
 		530A167F259277E700E9294E /* SearchAllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A167E259277E700E9294E /* SearchAllViewController.swift */; };
 		530A1680259277E700E9294E /* SearchAllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A167E259277E700E9294E /* SearchAllViewController.swift */; };
 		530A168E259299C800E9294E /* TagArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A168D259299C800E9294E /* TagArtist.swift */; };
@@ -379,6 +377,12 @@
 		53CB554F25C9FAAD004F2BAB /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CB554D25C9FAAD004F2BAB /* BookmarksViewController.swift */; };
 		53CC751025D9F31500D10AB6 /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC750F25D9F31500D10AB6 /* String+Hex.swift */; };
 		53CC751125D9F31500D10AB6 /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC750F25D9F31500D10AB6 /* String+Hex.swift */; };
+		53CC751725DB59B600D10AB6 /* ContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC751625DB59B600D10AB6 /* ContextMenu.swift */; };
+		53CC751825DB59B600D10AB6 /* ContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC751625DB59B600D10AB6 /* ContextMenu.swift */; };
+		53CC751A25DC5B3B00D10AB6 /* CaseIterable+Count.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC751925DC5B3B00D10AB6 /* CaseIterable+Count.swift */; };
+		53CC751B25DC5B3B00D10AB6 /* CaseIterable+Count.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC751925DC5B3B00D10AB6 /* CaseIterable+Count.swift */; };
+		53CC751D25DCA9B700D10AB6 /* SearchLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC751C25DCA9B700D10AB6 /* SearchLoader.swift */; };
+		53CC751E25DCA9B700D10AB6 /* SearchLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC751C25DCA9B700D10AB6 /* SearchLoader.swift */; };
 		53CF64F725843ADA00BD47DC /* SlidingNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF64F625843ADA00BD47DC /* SlidingNotification.swift */; };
 		53CF64F825843ADA00BD47DC /* SlidingNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF64F625843ADA00BD47DC /* SlidingNotification.swift */; };
 		53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D44F8415AA621A00CDD3B8 /* Accelerate.framework */; };
@@ -629,7 +633,6 @@
 		530738F31FAF6A72005C2650 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		530A16722592468C00E9294E /* FolderArtist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderArtist.swift; sourceTree = "<group>"; };
 		530A1678259255D200E9294E /* FolderAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAlbum.swift; sourceTree = "<group>"; };
-		530A167B2592767400E9294E /* SearchXMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchXMLParser.swift; sourceTree = "<group>"; };
 		530A167E259277E700E9294E /* SearchAllViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAllViewController.swift; sourceTree = "<group>"; };
 		530A168D259299C800E9294E /* TagArtist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagArtist.swift; sourceTree = "<group>"; };
 		530A16AC2592D22100E9294E /* TagAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagAlbum.swift; sourceTree = "<group>"; };
@@ -821,6 +824,9 @@
 		53CB554A25C9D4AB004F2BAB /* BookmarkStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkStore.swift; sourceTree = "<group>"; };
 		53CB554D25C9FAAD004F2BAB /* BookmarksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
 		53CC750F25D9F31500D10AB6 /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
+		53CC751625DB59B600D10AB6 /* ContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenu.swift; sourceTree = "<group>"; };
+		53CC751925DC5B3B00D10AB6 /* CaseIterable+Count.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CaseIterable+Count.swift"; sourceTree = "<group>"; };
+		53CC751C25DCA9B700D10AB6 /* SearchLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLoader.swift; sourceTree = "<group>"; };
 		53CF64F625843ADA00BD47DC /* SlidingNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingNotification.swift; sourceTree = "<group>"; };
 		53D44F8415AA621A00CDD3B8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		53D4FCA22599335900C6F1AE /* FolderMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderMetadata.swift; sourceTree = "<group>"; };
@@ -1194,6 +1200,7 @@
 				53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */,
 				53D97439255C0DA900AABF7F /* AutoScrollingLabel.swift */,
 				53D97453255C51CA00AABF7F /* SwipeAction.swift */,
+				53CC751625DB59B600D10AB6 /* ContextMenu.swift */,
 				5358083611CEB5F200A09386 /* CacheQueueSongUITableViewCell.h */,
 				5358083711CEB5F200A09386 /* CacheQueueSongUITableViewCell.m */,
 				53A0EDDC25B5F8E000B78DAA /* ChatTableViewCell.swift */,
@@ -1348,7 +1355,6 @@
 				531D39FB255AB575000CB0DF /* API Models */,
 				531D39FA255AB554000CB0DF /* Singletons */,
 				535F824C25C1E7130024C82C /* Errors */,
-				530A167B2592767400E9294E /* SearchXMLParser.swift */,
 				5347A1E3256D866A00BFB70A /* HLSReverseProxyServer.swift */,
 			);
 			path = Models;
@@ -1437,6 +1443,7 @@
 				53762C8225AD0EED00476F2D /* ScrobbleLoader.swift */,
 				53762C8825AD122500476F2D /* NowPlayingLoader.swift */,
 				53762C8B25AD166400476F2D /* StatusLoader.swift */,
+				53CC751C25DCA9B700D10AB6 /* SearchLoader.swift */,
 			);
 			path = Loaders;
 			sourceTree = "<group>";
@@ -1594,6 +1601,7 @@
 				53FE342C1EA961540058B925 /* UIKit */,
 				5373C69B25B60B9300CAA859 /* InflectorKit+Helper.swift */,
 				53ED674525B8976F0002BFAF /* CustomStringConvertable+Default.swift */,
+				53CC751925DC5B3B00D10AB6 /* CaseIterable+Count.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1986,6 +1994,7 @@
 				539D32E525A9400400F53797 /* Synchronized.swift in Sources */,
 				5359C859256EA8FE00C8F8DC /* ObjC.swift in Sources */,
 				530A16732592468C00E9294E /* FolderArtist.swift in Sources */,
+				53CC751D25DCA9B700D10AB6 /* SearchLoader.swift in Sources */,
 				535F824425C0F64C0024C82C /* RuntimeError.swift in Sources */,
 				53FE38A71EA961C80058B925 /* ZKCDTrailer.m in Sources */,
 				53FE6796256DD0F00015FC83 /* GCDWebServerConnection.m in Sources */,
@@ -2035,6 +2044,7 @@
 				53FE37881EA961720058B925 /* SavedSettings.m in Sources */,
 				53CC751025D9F31500D10AB6 /* String+Hex.swift in Sources */,
 				538C8FEA2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
+				53CC751A25DC5B3B00D10AB6 /* CaseIterable+Count.swift in Sources */,
 				53ED674325B88C390002BFAF /* Notifications.swift in Sources */,
 				534BC83F25CCE03700964D82 /* HomeViewButton.swift in Sources */,
 				539D330325AA336600F53797 /* DownloadedSong.swift in Sources */,
@@ -2046,12 +2056,12 @@
 				5357CE9325B8D56B00FA825A /* Cache.swift in Sources */,
 				53329648255F2E770027C51A /* PlayAllAndShuffleHeader.swift in Sources */,
 				53FE38B91EA961C80058B925 /* ZKLFHeader.m in Sources */,
-				530A167C2592767400E9294E /* SearchXMLParser.swift in Sources */,
 				539D32F725AA207400F53797 /* LyricsLoader.swift in Sources */,
 				53D4FCA32599335900C6F1AE /* FolderMetadata.swift in Sources */,
 				53B9C48E25A7A51F007E9E3C /* MediaFolderStore.swift in Sources */,
 				53FE388C1EA961C80058B925 /* GMAppleDouble.m in Sources */,
 				53B9C49725A7A650007E9E3C /* SongStore.swift in Sources */,
+				53CC751725DB59B600D10AB6 /* ContextMenu.swift in Sources */,
 				538B3EBC25B65BCF00824068 /* ArtistsViewModel.swift in Sources */,
 				53FE38B31EA961C80058B925 /* ZKDefs.m in Sources */,
 				53762C8F25AD1BA200476F2D /* APILoader.swift in Sources */,
@@ -2226,6 +2236,7 @@
 				530A16742592468C00E9294E /* FolderArtist.swift in Sources */,
 				53246AAA256C324500E11EC4 /* InsetTextField.swift in Sources */,
 				535F824525C0F64C0024C82C /* RuntimeError.swift in Sources */,
+				53CC751E25DCA9B700D10AB6 /* SearchLoader.swift in Sources */,
 				538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53FE38A91EA961C80058B925 /* ZKCDTrailer.m in Sources */,
 				53FE6799256DD0F00015FC83 /* GCDWebServerErrorResponse.m in Sources */,
@@ -2275,6 +2286,7 @@
 				53FE67AD256DE9600015FC83 /* Defines.swift in Sources */,
 				53CC751125D9F31500D10AB6 /* String+Hex.swift in Sources */,
 				53FE378A1EA961720058B925 /* SavedSettings.m in Sources */,
+				53CC751B25DC5B3B00D10AB6 /* CaseIterable+Count.swift in Sources */,
 				537B05BD256B04360008892C /* PadMenuViewController.swift in Sources */,
 				534BC84025CCE03700964D82 /* HomeViewButton.swift in Sources */,
 				53ED674425B88C390002BFAF /* Notifications.swift in Sources */,
@@ -2285,13 +2297,13 @@
 				53FE38BB1EA961C80058B925 /* ZKLFHeader.m in Sources */,
 				5357CE9425B8D56B00FA825A /* Cache.swift in Sources */,
 				53FE388E1EA961C80058B925 /* GMAppleDouble.m in Sources */,
-				530A167D2592767400E9294E /* SearchXMLParser.swift in Sources */,
 				539D32F825AA207400F53797 /* LyricsLoader.swift in Sources */,
 				53D4FCA42599335900C6F1AE /* FolderMetadata.swift in Sources */,
 				53B9C48F25A7A51F007E9E3C /* MediaFolderStore.swift in Sources */,
 				53B9C49825A7A650007E9E3C /* SongStore.swift in Sources */,
 				53FE38B51EA961C80058B925 /* ZKDefs.m in Sources */,
 				53FE38A31EA961C80058B925 /* ZKArchive.m in Sources */,
+				53CC751825DB59B600D10AB6 /* ContextMenu.swift in Sources */,
 				53762C9025AD1BA200476F2D /* APILoader.swift in Sources */,
 				538B3EBD25B65BCF00824068 /* ArtistsViewModel.swift in Sources */,
 				53FE38911EA961C80058B925 /* NSData+ZKAdditions.m in Sources */,

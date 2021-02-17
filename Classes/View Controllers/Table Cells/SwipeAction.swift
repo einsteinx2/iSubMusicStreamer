@@ -14,7 +14,7 @@ struct SwipeAction {
     static func downloadAndQueueConfig(model: TableCellModel?) -> UISwipeActionsConfiguration? {
         guard let model = model else { return nil }
         
-        let actions = model.isCached ? [queue(model: model)] : [download(model: model), queue(model: model)];
+        let actions = model.isDownloaded ? [queue(model: model)] : [download(model: model), queue(model: model)];
         let config = UISwipeActionsConfiguration(actions: actions)
         config.performsFirstActionWithFullSwipe = false;
         return config;
@@ -23,7 +23,7 @@ struct SwipeAction {
     static func downloadQueueAndDeleteConfig(model: TableCellModel?, deleteHandler: @escaping () -> ()) -> UISwipeActionsConfiguration? {
         guard let model = model else { return nil }
         
-        let actions = model.isCached ? [queue(model: model), delete(handler: deleteHandler)] : [download(model: model), queue(model: model), delete(handler: deleteHandler)];
+        let actions = !model.isDownloaded && model.isDownloadable ? [download(model: model), queue(model: model), delete(handler: deleteHandler)] : [queue(model: model), delete(handler: deleteHandler)]
         let config = UISwipeActionsConfiguration(actions: actions)
         config.performsFirstActionWithFullSwipe = false;
         return config;
@@ -46,15 +46,15 @@ struct SwipeAction {
         return config;
     }
     
-    static func download(model: TableCellModel) -> UIContextualAction {
+    private static func download(model: TableCellModel) -> UIContextualAction {
         return download(handler: model.download)
     }
     
-    static func queue(model: TableCellModel) -> UIContextualAction {
+    private static func queue(model: TableCellModel) -> UIContextualAction {
         return queue(handler: model.queue)
     }
     
-    static func download(handler: @escaping () -> ()) -> UIContextualAction {
+    private static func download(handler: @escaping () -> ()) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Download") { _, _, completionHandler in
             handler()
             SlidingNotification.showOnMainWindow(message: "Added to download queue", duration: 1.0)
@@ -65,7 +65,7 @@ struct SwipeAction {
         return action
     }
     
-    static func queue(handler: @escaping () -> ()) -> UIContextualAction {
+    private static func queue(handler: @escaping () -> ()) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Queue") { _, _, completionHandler in
             handler()
             SlidingNotification.showOnMainWindow(message: "Added to play queue", duration: 1.0)
@@ -76,7 +76,7 @@ struct SwipeAction {
         return action
     }
     
-    static func delete(handler: @escaping () -> ()) -> UIContextualAction {
+    private static func delete(handler: @escaping () -> ()) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Delete") { _, _, completionHandler in
             handler()
             UINotificationFeedbackGenerator().notificationOccurred(.success)

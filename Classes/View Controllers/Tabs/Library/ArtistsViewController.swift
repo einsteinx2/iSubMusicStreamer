@@ -209,12 +209,13 @@ final class ArtistsViewController: UIViewController {
 
 extension ArtistsViewController: APILoaderDelegate {
     func cancelLoad() {
+        HUD.hide()
         dataModel.cancelLoad()
         tableView.refreshControl?.endRefreshing()
-        HUD.hide()
     }
     
     func loadingFinished(loader: APILoader?) {
+        HUD.hide()
         dropdownMenu.selectedIndex = dataModel.mediaFolderIndex
         dropdownMenu.updateItems()
         if isCountShowing {
@@ -224,7 +225,6 @@ extension ArtistsViewController: APILoaderDelegate {
         }
         
         tableView.reloadData()
-        HUD.hide()
         tableView.refreshControl?.endRefreshing()
     }
     
@@ -445,6 +445,10 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         return SwipeAction.downloadAndQueueConfig(model: artist(indexPath: indexPath))
+    }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        return contextMenuDownloadAndQueueConfig(model: artist(indexPath: indexPath))
     }
 }
 

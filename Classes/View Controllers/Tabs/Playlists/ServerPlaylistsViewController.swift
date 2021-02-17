@@ -199,4 +199,8 @@ extension ServerPlaylistsViewController: UITableViewConfiguration {
             self.deleteServerPlaylists(indexPaths: [indexPath])
         }
     }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        return contextMenuDownloadAndQueueConfig(model: serverPlaylists[indexPath.row])
+    }
 }

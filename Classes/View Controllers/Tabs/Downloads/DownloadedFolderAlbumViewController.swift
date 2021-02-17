@@ -12,6 +12,10 @@ import SnapKit
 import CocoaLumberjackSwift
 
 final class DownloadedFolderAlbumViewController: AbstractDownloadsViewController {
+    private enum SectionType: Int, CaseIterable {
+        case albums = 0, songs
+    }
+    
     @Injected private var store: Store
     @Injected private var settings: Settings
     
@@ -60,15 +64,15 @@ final class DownloadedFolderAlbumViewController: AbstractDownloadsViewController
 
 extension DownloadedFolderAlbumViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return SectionType.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? downloadedFolderAlbums.count : downloadedSongs.count
+        return section == SectionType.albums.rawValue ? downloadedFolderAlbums.count : downloadedSongs.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
+        if indexPath.section == SectionType.albums.rawValue {
             let cell = tableView.dequeueUniversalCell()
             cell.show(cached: false, number: false, art: true, secondary: true, duration: false)
             cell.update(model: downloadedFolderAlbums[indexPath.row])
@@ -83,7 +87,7 @@ extension DownloadedFolderAlbumViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
+        if indexPath.section == SectionType.albums.rawValue {
             let controller = DownloadedFolderAlbumViewController(folderAlbum: downloadedFolderAlbums[indexPath.row])
             pushViewControllerCustom(controller)
         } else if let song = store.playSong(position: indexPath.row, downloadedSongs: downloadedSongs), !song.isVideo {
@@ -94,5 +98,14 @@ extension DownloadedFolderAlbumViewController {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         // TODO: implement this
         return nil
+    }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        if indexPath.section == SectionType.albums.rawValue {
+            return contextMenuDownloadAndQueueConfig(model: downloadedFolderAlbums[indexPath.row])
+        } else {
+            let song = store.song(downloadedSong: downloadedSongs[indexPath.row])
+            return contextMenuDownloadAndQueueConfig(model: song)
+        }
     }
 }

@@ -63,7 +63,7 @@ final class PageControlViewController: UIViewController {
             make.leading.trailing.top.equalToSuperview()
         }
         
-        pageControl.numberOfPages = PageType.allCases.count
+        pageControl.numberOfPages = PageType.count
         pageControl.currentPage = 0
         pageControl.addTarget(self, action: #selector(changePage), for: .valueChanged)
         view.addSubview(pageControl)
@@ -100,7 +100,7 @@ final class PageControlViewController: UIViewController {
                     } else {
                         make.leading.equalToSuperview()
                     }
-                    if page.rawValue == PageType.allCases.count - 1 {
+                    if page.rawValue == PageType.count - 1 {
                         make.trailing.equalToSuperview()
                     }
                 }
