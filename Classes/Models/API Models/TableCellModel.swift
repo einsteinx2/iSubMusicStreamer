@@ -13,8 +13,15 @@ protocol TableCellModel {
     var secondaryLabelText: String? { get }
     var durationLabelText: String? { get }
     var coverArtId: String? { get }
-    var isCached: Bool { get }
+    var isDownloaded: Bool { get }
+    var isDownloadable: Bool { get }
+    
+    var serverId: Int { get }
+    var tagArtistId: Int? { get }
+    var tagAlbumId: Int? { get }
+    var parentFolderId: Int? { get }
     
     func download()
     func queue()
+    func queueNext()
 }

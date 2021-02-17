@@ -13,11 +13,16 @@ struct FolderAlbum: Codable, Equatable {
     let id: Int
     let name: String
     let coverArtId: String?
-    let parentFolderId: Int
+    let parentFolderId: Int?
     let tagArtistName: String?
     let tagAlbumName: String?
     let playCount: Int
-    let year: Int
+    let year: Int?
+    let genre: String?
+    let userRating: Int?
+    let averageRating: Double?
+    let createdDate: Date
+    let starredDate: Date?
     
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
@@ -28,7 +33,12 @@ struct FolderAlbum: Codable, Equatable {
         self.tagArtistName = element.attribute("artist").stringXMLOptional
         self.tagAlbumName = element.attribute("artist").stringXMLOptional
         self.playCount = element.attribute("playCount").intXML
-        self.year = element.attribute("year").intXML
+        self.year = element.attribute("year").intXMLOptional
+        self.genre = element.attribute("genre")
+        self.userRating = element.attribute("userRating").intXMLOptional
+        self.averageRating = element.attribute("averageRating").doubleXMLOptional
+        self.createdDate = element.attribute("created").dateXML
+        self.starredDate = element.attribute("starred").dateXMLOptional
     }
     
     static func ==(lhs: FolderAlbum, rhs: FolderAlbum) -> Bool {
@@ -37,10 +47,19 @@ struct FolderAlbum: Codable, Equatable {
 }
 
 extension FolderAlbum: TableCellModel {
-    var primaryLabelText: String? { return name }
-    var secondaryLabelText: String? { return nil }
-    var durationLabelText: String? { return nil }
-    var isCached: Bool { return false }
+    var primaryLabelText: String? { name }
+    var secondaryLabelText: String? { nil }
+    var durationLabelText: String? { nil }
+    var isDownloaded: Bool { false }
+    var isDownloadable: Bool { true }
+    
+    var tagArtistId: Int? { nil }
+    var tagAlbumId: Int? { nil }
+    
     func download() { SongsHelper.downloadAll(serverId: serverId, folderId: id) }
     func queue() { SongsHelper.queueAll(serverId: serverId, folderId: id) }
+    func queueNext() {
+        // TODO: implement this
+        fatalError("implement this")
+    }
 }

@@ -14,7 +14,7 @@ extension Song: FetchableRecord, PersistableRecord {
     static var databaseTableName: String = "song"
     
     enum Column: String, ColumnExpression {
-        case serverId, id, title, coverArtId, parentFolderId, tagArtistName, tagAlbumName, playCount, year, tagArtistId, tagAlbumId, genre, path, suffix, transcodedSuffix, duration, kiloBitrate, track, discNumber, size, isVideo
+        case serverId, id, title, coverArtId, parentFolderId, tagArtistName, tagAlbumName, playCount, year, tagArtistId, tagAlbumId, genre, path, suffix, transcodedSuffix, duration, kiloBitrate, track, discNumber, size, isVideo, createdDate, starredDate
     }
     
     static func createInitialSchema(_ db: Database) throws {
@@ -37,10 +37,12 @@ extension Song: FetchableRecord, PersistableRecord {
             t.column(Column.transcodedSuffix, .text)
             t.column(Column.duration, .integer).notNull()
             t.column(Column.kiloBitrate, .integer).notNull()
-            t.column(Column.track, .integer).notNull()
+            t.column(Column.track, .integer)
             t.column(Column.discNumber, .integer)
             t.column(Column.size, .integer).notNull()
             t.column(Column.isVideo, .boolean).notNull()
+            t.column(Column.createdDate, .datetime).notNull()
+            t.column(Column.starredDate, .datetime)
             t.primaryKey([Column.serverId, Column.id])
         }
     }

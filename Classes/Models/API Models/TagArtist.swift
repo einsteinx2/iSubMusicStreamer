@@ -16,6 +16,7 @@ struct TagArtist: Artist, Codable, Equatable {
     let coverArtId: String?
     let artistImageUrl: String?
     let albumCount: Int
+    let starredDate: Date?
     
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
@@ -24,6 +25,7 @@ struct TagArtist: Artist, Codable, Equatable {
         self.coverArtId = element.attribute("coverArt").stringXMLOptional
         self.artistImageUrl = element.attribute("artistImageUrl").stringXMLOptional
         self.albumCount = element.attribute("albumCount").intXML
+        self.starredDate = element.attribute("starred").dateXMLOptional
     }
     
     static func ==(lhs: TagArtist, rhs: TagArtist) -> Bool {
@@ -35,7 +37,17 @@ extension TagArtist: TableCellModel {
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? { "\(albumCount) \("Album".pluralize(amount: albumCount))" }
     var durationLabelText: String? { nil }
-    var isCached: Bool { false }
+    var isDownloaded: Bool { false }
+    var isDownloadable: Bool { true }
+    
+    var tagArtistId: Int? { nil }
+    var tagAlbumId: Int? { nil }
+    var parentFolderId: Int? { nil }
+    
     func download() { SongsHelper.downloadAll(serverId: serverId, tagArtistId: id) }
     func queue() { SongsHelper.queueAll(serverId: serverId, tagArtistId: id) }
+    func queueNext() {
+        // TODO: implement this
+        fatalError("implement this")
+    }
 }

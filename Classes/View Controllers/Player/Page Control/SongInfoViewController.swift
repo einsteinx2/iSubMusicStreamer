@@ -138,9 +138,9 @@ final class SongInfoViewController: UIViewController {
                 stackView.addArrangedSubview(createInfoLabel(text: tagAlbumName))
             }
             
-            if song.year > 0 {
+            if let year = song.year {
                 stackView.addArrangedSubview(createTitleLabel(text: "Year"))
-                stackView.addArrangedSubview(createInfoLabel(text: "\(song.year)"))
+                stackView.addArrangedSubview(createInfoLabel(text: "\(year)"))
             }
             
             if let genre = song.genre {
@@ -148,14 +148,14 @@ final class SongInfoViewController: UIViewController {
                 stackView.addArrangedSubview(createInfoLabel(text: genre))
             }
             
-            if song.track > 0 {
+            if let track = song.track {
                 stackView.addArrangedSubview(createTitleLabel(text: "Track Number"))
-                stackView.addArrangedSubview(createInfoLabel(text: "\(song.track)"))
+                stackView.addArrangedSubview(createInfoLabel(text: "\(track)"))
             }
             
-            if song.discNumber > 0 {
+            if let discNumber = song.discNumber {
                 stackView.addArrangedSubview(createTitleLabel(text: "Disc Number"))
-                stackView.addArrangedSubview(createInfoLabel(text: "\(song.discNumber)"))
+                stackView.addArrangedSubview(createInfoLabel(text: "\(discNumber)"))
             }
         }
     }

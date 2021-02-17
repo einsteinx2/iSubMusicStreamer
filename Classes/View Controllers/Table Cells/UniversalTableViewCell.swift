@@ -45,7 +45,7 @@ final class UniversalTableViewCell: UITableViewCell {
         didSet { headerLabel.text = headerText }
     }
     var hideCacheIndicator: Bool = true {
-        didSet { cachedIndicator.isHidden = (hideCacheIndicator || !(tableCellModel?.isCached ?? false)) }
+        didSet { cachedIndicator.isHidden = (hideCacheIndicator || !(tableCellModel?.isDownloaded ?? false)) }
     }
     var hideHeaderLabel: Bool = true {
         didSet { if oldValue != hideHeaderLabel { makeHeaderLabelConstraints() } }
@@ -138,7 +138,7 @@ final class UniversalTableViewCell: UITableViewCell {
             primaryLabel.text = model.primaryLabelText
             if !hideSecondaryLabel { secondaryLabel.text = model.secondaryLabelText }
             if !hideDurationLabel { durationLabel.text = model.durationLabelText }
-            cachedIndicator.isHidden = hideCacheIndicator || !model.isCached
+            cachedIndicator.isHidden = hideCacheIndicator || !model.isDownloaded
         }
     }
     

@@ -44,7 +44,14 @@ extension LocalPlaylist: TableCellModel {
     var secondaryLabelText: String? { songCount == 1 ? "1 song" : "\(songCount) songs" }
     var durationLabelText: String? { nil }
     var coverArtId: String? { nil }
-    var isCached: Bool { false }
+    var isDownloaded: Bool { false }
+    var isDownloadable: Bool { true }
+    
+    var serverId: Int { -1 }
+    var tagArtistId: Int? { nil }
+    var tagAlbumId: Int? { nil }
+    var parentFolderId: Int? { nil }
+    
     func download() {
         for position in 0..<self.songCount {
             store.song(localPlaylistId: id, position: position)?.download()
@@ -54,5 +61,9 @@ extension LocalPlaylist: TableCellModel {
         for position in 0..<self.songCount {
             store.song(localPlaylistId: id, position: position)?.queue()
         }
+    }
+    func queueNext() {
+        // TODO: implement this
+        fatalError("implement this")
     }
 }

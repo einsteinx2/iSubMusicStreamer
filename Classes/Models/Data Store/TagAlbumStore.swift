@@ -15,7 +15,7 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
         static let tagSongList = "tagSongList"
     }
     enum Column: String, ColumnExpression {
-        case serverId, id, name, coverArtId, tagArtistId, tagArtistName, songCount, duration, playCount, year, genre
+        case serverId, id, name, coverArtId, tagArtistId, tagArtistName, songCount, duration, playCount, year, genre, createdDate, starredDate
     }
     enum RelatedColumn: String, ColumnExpression {
         case tagAlbumId, songId
@@ -35,6 +35,8 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
             t.column(Column.playCount, .integer)
             t.column(Column.year, .integer)
             t.column(Column.genre, .text)
+            t.column(Column.createdDate, .datetime).notNull()
+            t.column(Column.starredDate, .datetime)
             t.primaryKey([Column.serverId, Column.id])
         }
         
@@ -199,6 +201,11 @@ extension Store {
     }
     
     func add(tagSong song: Song) -> Bool {
+        guard let tagAlbumId = song.tagAlbumId else {
+            DDLogError("Failed to insert tag song \(song) in tag album because it's missing a tag album id")
+            return false
+        }
+        
         do {
             return try pool.write { db in
                 // Insert or update shared song record
@@ -208,13 +215,13 @@ extension Store {
                 let sql: SQLLiteral = """
                     INSERT INTO tagSongList
                     (serverId, tagAlbumId, songId)
-                    VALUES (\(song.serverId), \(song.tagAlbumId), \(song.id))
+                    VALUES (\(song.serverId), \(tagAlbumId), \(song.id))
                     """
                 try db.execute(literal: sql)
                 return true
             }
         } catch {
-            DDLogError("Failed to insert tag song \(song) in tag album \(song.tagAlbumId): \(error)")
+            DDLogError("Failed to insert tag song \(song) in tag album \(tagAlbumId): \(error)")
             return false
         }
     }

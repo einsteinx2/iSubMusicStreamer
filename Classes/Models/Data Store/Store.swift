@@ -11,6 +11,8 @@ import GRDB
 import CocoaLumberjackSwift
 import Resolver
 
+// TODO: implement this - replace some complex joins with views
+
 // Enable this to debug queries
 fileprivate let debugPrintAllQueries = false
 

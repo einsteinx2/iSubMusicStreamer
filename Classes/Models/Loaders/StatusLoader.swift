@@ -13,10 +13,11 @@ final class StatusLoader: APILoader {
     let username: String
     let password: String
     
-    private(set) var isNewSearchSupported = false
     private(set) var isVideoSupported = false
-    private(set) var majorVersion = 0
-    private(set) var minorVersion = 0
+    private(set) var isNewSearchSupported = false
+    private(set) var isTagSerachSupported = false
+    private(set) var majorAPIVersion = 0
+    private(set) var minorAPIVersion = 0
     private(set) var versionString: String?
     
     convenience init(server: Server, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
@@ -39,10 +40,11 @@ final class StatusLoader: APILoader {
     }
     
     override func processResponse(data: Data) {
-        isNewSearchSupported = false
         isVideoSupported = false
-        majorVersion = 0
-        minorVersion = 0
+        isNewSearchSupported = false
+        isTagSerachSupported = false
+        majorAPIVersion = 0
+        minorAPIVersion = 0
         versionString = nil
         guard let root = validate(data: data) else { return }
         guard let version = validateAttribute(element: root, attribute: "version") else { return }
@@ -52,21 +54,22 @@ final class StatusLoader: APILoader {
         let splitVersion = version.components(separatedBy: ".")
         if splitVersion.count > 0 {
             // Check major version
-            majorVersion = Int(splitVersion[0]) ?? 0
-            if majorVersion >= 2 {
-                isNewSearchSupported = true
+            majorAPIVersion = Int(splitVersion[0]) ?? 0
+            if majorAPIVersion >= 2 {
                 isVideoSupported = true
+                isNewSearchSupported = true
             }
             
             // Check minor version
             if splitVersion.count > 1 {
-                minorVersion = Int(splitVersion[1]) ?? 0
-                if majorVersion >= 1 {
-                    if minorVersion >= 4 {
+                minorAPIVersion = Int(splitVersion[1]) ?? 0
+                if majorAPIVersion >= 1 {
+                    if minorAPIVersion >= 4 {
                         isNewSearchSupported = true
                     }
-                    if minorVersion >= 7 {
+                    if minorAPIVersion >= 7 {
                         isVideoSupported = true
+                        isTagSerachSupported = true
                     }
                 }
             }

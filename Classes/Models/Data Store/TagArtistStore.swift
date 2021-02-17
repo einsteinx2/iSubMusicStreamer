@@ -17,7 +17,7 @@ extension TagArtist: FetchableRecord, PersistableRecord {
         static let tagArtistListMetadata = "tagArtistListMetadata"
     }
     enum Column: String, ColumnExpression {
-        case serverId, id, name, coverArtId, artistImageUrl, albumCount
+        case serverId, id, name, coverArtId, artistImageUrl, albumCount, starredDate
     }
     enum RelatedColumn: String, ColumnExpression {
         case mediaFolderId, tagArtistId
@@ -32,6 +32,7 @@ extension TagArtist: FetchableRecord, PersistableRecord {
             t.column(Column.coverArtId, .text)
             t.column(Column.artistImageUrl, .text)
             t.column(Column.albumCount, .integer).notNull()
+            t.column(Column.starredDate, .datetime)
             t.primaryKey([Column.serverId, Column.id])
         }
         

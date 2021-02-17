@@ -32,7 +32,13 @@ extension DownloadedFolderAlbum: TableCellModel {
         return [subfoldersText, songsText].compactMap({ $0 }).joined(separator: " • ")
     }
     var durationLabelText: String? { nil }
-    var isCached: Bool { true }
+    var isDownloaded: Bool { true }
+    var isDownloadable: Bool { false }
+    
+    var tagArtistId: Int? { nil }
+    var tagAlbumId: Int? { nil }
+    var parentFolderId: Int? { nil }
+    
     func download() {
         let songs = store.songsRecursive(serverId: serverId, level: level, parentPathComponent: name)
         for song in songs {
@@ -44,5 +50,9 @@ extension DownloadedFolderAlbum: TableCellModel {
         for song in songs {
             song.queue()
         }
+    }
+    func queueNext() {
+        // TODO: implement this
+        fatalError("implement this")
     }
 }

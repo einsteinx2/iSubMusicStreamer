@@ -48,6 +48,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
             t.column(RelatedColumn.songId, .integer).notNull()
         }
         try db.create(indexOn: Table.localPlaylistSong, columns: [RelatedColumn.localPlaylistId, RelatedColumn.position])
+        try db.create(indexOn: Table.localPlaylistSong, columns: [RelatedColumn.localPlaylistId, RelatedColumn.serverId, RelatedColumn.songId])
     }
     
 //    static func add(_ db: Database, id: Int? = nil, name: String, isBookmark: Bool = false) throws {
@@ -294,6 +295,35 @@ extension Store {
         return success
     }
     
+    func queueNext(song: Song) -> Bool {
+        var success = true
+        if settings.isJukeboxEnabled {
+            if playQueue.isShuffle {
+                // Add next
+                success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxShuffleQueueId, position: playQueue.nextIndexIgnoringRepeatMode)
+                if success {
+                    // Add to end
+                    success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId)
+                }
+            } else {
+                // Add next
+                success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId, position: playQueue.nextIndexIgnoringRepeatMode)
+            }
+        } else {
+            if playQueue.isShuffle {
+                // Add next
+                success = add(song: song, localPlaylistId: LocalPlaylist.Default.shuffleQueueId, position: playQueue.nextIndexIgnoringRepeatMode)
+                if success {
+                    // Add to end
+                    success = add(song: song, localPlaylistId: LocalPlaylist.Default.playQueueId)
+                }
+            } else {
+                success = add(song: song, localPlaylistId: LocalPlaylist.Default.playQueueId, position: playQueue.nextIndexIgnoringRepeatMode)
+            }
+        }
+        return success
+    }
+    
     // TODO: Move this to a single transaction
     func queue(songIds: [Int], serverId: Int) -> Bool {
         var success = true
@@ -441,7 +471,7 @@ extension Store {
                 // Remove the song from the playlist
                 let removeSongSql: SQLLiteral = """
                     DELETE FROM localPlaylistSong
-                    WHERE position = \(from) AND localPlaylistId = \(localPlaylistId)
+                    WHERE localPlaylistId = \(localPlaylistId) AND position = \(from)
                     """
                 try db.execute(literal: removeSongSql)
                 
@@ -450,14 +480,14 @@ extension Store {
                     let positionSql: SQLLiteral = """
                         UPDATE localPlaylistSong
                         SET position = position + 1
-                        WHERE position >= \(to) AND position < \(from)
+                        WHERE localPlaylistId = \(localPlaylistId) AND position >= \(to) AND position < \(from)
                         """
                     try db.execute(literal: positionSql)
                 } else {
                     let positionSql: SQLLiteral = """
                         UPDATE localPlaylistSong
                         SET position = position - 1
-                        WHERE position > \(from) AND position <= \(to)
+                        WHERE localPlaylistId = \(localPlaylistId) AND position > \(from) AND position <= \(to)
                         """
                     try db.execute(literal: positionSql)
                 }
@@ -468,6 +498,50 @@ extension Store {
             }
         } catch {
             DDLogError("Failed to move song from position \(from) to position \(to) in local playlist \(localPlaylistId): \(error)")
+            return false
+        }
+    }
+    
+    func remove(songsAtPositions positions: [Int], localPlaylistId: Int) -> Bool {
+        do {
+            return try pool.write { db in
+                // Select the playlist to get the count as it's O(1) instead of MAX(position) which is O(N)
+                guard var playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId) else { return false }
+                
+                // Filter the valid positions
+                let validPositions = positions.filter { $0 >= 0 && $0 < playlist.songCount }
+                
+                // Remove the songs from the playlist
+                let removeSongsSql: SQLLiteral = """
+                    DELETE FROM localPlaylistSong
+                    WHERE localPlaylistId = \(localPlaylistId) AND position IN \(validPositions)
+                    """
+                try db.execute(literal: removeSongsSql)
+                
+                // Update song positions
+                let songRequestSql: SQLLiteral = """
+                    SELECT serverId, songId
+                    FROM localPlaylistSong
+                    WHERE localPlaylistId = \(localPlaylistId)
+                    ORDER BY position ASC
+                    """
+                let songTuples = try SQLRequest<Row>(literal: songRequestSql).fetchAll(db).map({ ($0[0] as Int, $0[1] as Int) })
+                for (index, tuple) in songTuples.enumerated() {
+                    let updateSql: SQLLiteral = """
+                        UPDATE localPlaylistSong
+                        SET position = \(index)
+                        WHERE localPlaylistId = \(localPlaylistId) AND serverId = \(tuple.0) AND songId = \(tuple.1)
+                        """
+                    try db.execute(literal: updateSql)
+                }
+                
+                // Update the playlist count
+                playlist.songCount = songTuples.count
+                try playlist.save(db)
+                return true
+            }
+        } catch {
+            DDLogError("Failed to remove songs from positions \(positions) in local playlist \(localPlaylistId): \(error)")
             return false
         }
     }

@@ -13,26 +13,30 @@ struct TagAlbum: Codable, Equatable {
     let id: Int
     let name: String
     let coverArtId: String?
-    let tagArtistId: String?
+    let tagArtistId: Int?
     let tagArtistName: String?
     let songCount: Int
     let duration: Int
     let playCount: Int
     let year: Int
     let genre: String?
+    let createdDate: Date
+    let starredDate: Date?
     
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
         self.id = element.attribute("id").intXML
         self.name = element.attribute("name").stringXML
         self.coverArtId = element.attribute("coverArt").stringXMLOptional
-        self.tagArtistId = element.attribute("artistId").stringXMLOptional
+        self.tagArtistId = element.attribute("artistId").intXMLOptional
         self.tagArtistName = element.attribute("artist").stringXMLOptional
         self.songCount = element.attribute("songCount").intXML
         self.duration = element.attribute("duration").intXML
         self.playCount = element.attribute("playCount").intXML
         self.year = element.attribute("year").intXML
         self.genre = element.attribute("genre").stringXML
+        self.createdDate = element.attribute("created").dateXML
+        self.starredDate = element.attribute("starred").dateXMLOptional
     }
     
     static func ==(lhs: TagAlbum, rhs: TagAlbum) -> Bool {
@@ -55,7 +59,16 @@ extension TagAlbum: TableCellModel {
         return text
     }
     var durationLabelText: String? { nil }
-    var isCached: Bool { false }
+    
+    var tagAlbumId: Int? { nil }
+    var parentFolderId: Int? { nil }
+    var isDownloaded: Bool { false }
+    var isDownloadable: Bool { true }
+    
     func download() { SongsHelper.downloadAll(serverId: serverId, tagAlbumId: id) }
     func queue() { SongsHelper.queueAll(serverId: serverId, tagAlbumId: id) }
+    func queueNext() {
+        // TODO: implement this
+        fatalError("implement this")
+    }
 }

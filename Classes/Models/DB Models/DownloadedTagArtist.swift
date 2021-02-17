@@ -34,12 +34,22 @@ extension DownloadedTagArtist: TableCellModel {
         return nil
     }
     var durationLabelText: String? { nil }
-    var isCached: Bool { true }
+    var isDownloaded: Bool { true }
+    var isDownloadable: Bool { false }
+    
+    var tagArtistId: Int? { id }
+    var tagAlbumId: Int? { nil }
+    var parentFolderId: Int? { nil }
+    
     func download() {
         // TODO: implement this
         fatalError("implement this")
     }
     func queue() {
+        // TODO: implement this
+        fatalError("implement this")
+    }
+    func queueNext() {
         // TODO: implement this
         fatalError("implement this")
     }

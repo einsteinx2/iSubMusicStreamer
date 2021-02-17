@@ -10,28 +10,6 @@ import Foundation
 import Resolver
 
 struct ServerPlaylist: Codable, Equatable {
-    // This is the format that my server seems to reply with
-    private static let iso8601FormatterWithMilliseconds: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.calendar = Calendar(identifier: .iso8601)
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        return dateFormatter
-    }()
-    // This is the format shown in the documentation
-    private static let iso8601FormatterWithoutTimezone: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.calendar = Calendar(identifier: .iso8601)
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        return dateFormatter
-    }()
-    static func formatDate(dateString: String) -> Date? {
-        iso8601FormatterWithMilliseconds.date(from: dateString) ?? iso8601FormatterWithoutTimezone.date(from: dateString)
-    }
-    
     let serverId: Int
     let id: Int
     var coverArtId: String?
@@ -41,8 +19,8 @@ struct ServerPlaylist: Codable, Equatable {
     var duration: Int
     var owner: String
     var isPublic: Bool
-    var createdDate: Date? = nil
-    var changedDate: Date? = nil
+    var createdDate: Date?
+    var changedDate: Date?
     var loadedSongCount: Int
     // TODO: Add allowed users array
     
@@ -58,12 +36,8 @@ struct ServerPlaylist: Codable, Equatable {
         self.duration = element.attribute("duration").intXML
         self.owner = element.attribute("owner").stringXML
         self.isPublic = element.attribute("public").boolXML
-        if let createdDateString = element.attribute("created") {
-            self.createdDate = Self.formatDate(dateString: createdDateString)
-        }
-        if let changedDateString = element.attribute("changed") {
-            self.changedDate = Self.formatDate(dateString: changedDateString)
-        }
+        self.createdDate = element.attribute("created").dateXMLOptional
+        self.changedDate = element.attribute("changed").dateXMLOptional
         self.loadedSongCount = 0
     }
     
@@ -82,7 +56,13 @@ extension ServerPlaylist: TableCellModel {
         return secondaryLabelText
     }
     var durationLabelText: String? { formatTime(seconds: duration) }
-    var isCached: Bool { false }
+    var isDownloaded: Bool { false }
+    var isDownloadable: Bool { true }
+    
+    var tagArtistId: Int? { nil }
+    var tagAlbumId: Int? { nil }
+    var parentFolderId: Int? { nil }
+    
     func download() {
         for position in 0..<self.songCount {
             store.song(serverId: serverId, serverPlaylistId: id, position: position)?.download()
@@ -92,5 +72,9 @@ extension ServerPlaylist: TableCellModel {
         for position in 0..<self.songCount {
             store.song(serverId: serverId, serverPlaylistId: id, position: position)?.queue()
         }
+    }
+    func queueNext() {
+        // TODO: implement this
+        fatalError("implement this")
     }
 }

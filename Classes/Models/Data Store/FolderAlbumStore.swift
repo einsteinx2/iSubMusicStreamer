@@ -16,7 +16,7 @@ extension FolderAlbum: FetchableRecord, PersistableRecord {
         static let folderSongList = "folderSongList"
     }
     enum Column: String, ColumnExpression {
-        case serverId, id, name, coverArtId, parentFolderId, tagArtistName, tagAlbumName, playCount, year
+        case serverId, id, name, coverArtId, parentFolderId, tagArtistName, tagAlbumName, playCount, year, genre, userRating, averageRating, createdDate, starredDate
     }
     enum RelatedColumn: String, ColumnExpression {
         case parentFolderId, folderId, songId
@@ -32,8 +32,13 @@ extension FolderAlbum: FetchableRecord, PersistableRecord {
             t.column(Column.parentFolderId, .integer)
             t.column(Column.tagArtistName, .text)
             t.column(Column.tagAlbumName, .text)
-            t.column(Column.playCount, .integer)
+            t.column(Column.playCount, .integer).notNull()
             t.column(Column.year, .integer)
+            t.column(Column.genre, .text)
+            t.column(Column.userRating, .integer)
+            t.column(Column.averageRating, .double)
+            t.column(Column.createdDate, .datetime).notNull()
+            t.column(Column.starredDate, .datetime)
             t.primaryKey([Column.serverId, Column.id])
         }
         
@@ -169,6 +174,11 @@ extension Store {
     }
     
     func add(folderSong song: Song) -> Bool {
+        guard let parentFolderId = song.parentFolderId else {
+            DDLogError("Failed to insert folder song \(song) in folder because it's missing a parent folder id")
+            return false
+        }
+        
         do {
             return try pool.write { db in
                 // Insert or update shared song record
@@ -178,13 +188,13 @@ extension Store {
                 let sql: SQLLiteral = """
                     INSERT INTO folderSongList
                     (serverId, parentFolderId, songId)
-                    VALUES (\(song.serverId), \(song.parentFolderId), \(song.id))
+                    VALUES (\(song.serverId), \(parentFolderId), \(song.id))
                     """
                 try db.execute(literal: sql)
                 return true
             }
         } catch {
-            DDLogError("Failed to insert folder song \(song) in folder \(song.parentFolderId): \(error)")
+            DDLogError("Failed to insert folder song \(song) in folder \(parentFolderId): \(error)")
             return false
         }
     }

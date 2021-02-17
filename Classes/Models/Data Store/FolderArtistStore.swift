@@ -17,7 +17,7 @@ extension FolderArtist: FetchableRecord, PersistableRecord {
         static let folderArtistListMetadata = "folderArtistListMetadata"
     }
     enum Column: String, ColumnExpression {
-        case serverId, id, name
+        case serverId, id, name, userRating, averageRating, starredDate
     }
     enum RelatedColumn: String, ColumnExpression {
         case mediaFolderId, folderArtistId
@@ -29,6 +29,9 @@ extension FolderArtist: FetchableRecord, PersistableRecord {
             t.column(Column.serverId, .integer).notNull()
             t.column(Column.id, .integer).notNull()
             t.column(Column.name, .text).notNull().indexed()
+            t.column(Column.userRating, .integer)
+            t.column(Column.averageRating, .double)
+            t.column(Column.starredDate, .datetime)
             t.primaryKey([Column.serverId, Column.id])
         }
         

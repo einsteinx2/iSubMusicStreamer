@@ -30,6 +30,7 @@ import Foundation
     
     @objc var isVideoSupported: Bool = true
     @objc var isNewSearchSupported: Bool = true
+    @objc var isTagSearchSupported: Bool = true
     
     static func generatePathFromURL(url: URL) -> String {
         let scheme = url.scheme ?? "scheme"
@@ -50,7 +51,7 @@ import Foundation
         return path
     }
     
-    @objc init(id: Int, type: ServerType, url: URL, username: String, password: String, path: String, isVideoSupported: Bool, isNewSearchSupported: Bool) {
+    @objc init(id: Int, type: ServerType, url: URL, username: String, password: String, path: String, isVideoSupported: Bool, isNewSearchSupported: Bool, isTagSearchSupported: Bool) {
         self.id = id
         self.type = type
         self.url = url
@@ -59,6 +60,7 @@ import Foundation
         self.path = path
         self.isVideoSupported = isVideoSupported
         self.isNewSearchSupported = isNewSearchSupported
+        self.isTagSearchSupported = isTagSearchSupported
         super.init()
     }
     

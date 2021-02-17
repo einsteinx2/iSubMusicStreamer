@@ -19,23 +19,25 @@ final class Song: Codable, Hashable, CustomStringConvertible {
     let id: Int
     let title: String
     let coverArtId: String?
-    let parentFolderId: Int
+    let parentFolderId: Int?
     let tagArtistName: String?
     let tagAlbumName: String?
-    let playCount: Int
-    let year: Int
-    let tagArtistId: Int
-    let tagAlbumId: Int
+    let playCount: Int?
+    let year: Int?
+    let tagArtistId: Int?
+    let tagAlbumId: Int?
     let genre: String?
     let path: String
     let suffix: String
     let transcodedSuffix: String?
     let duration: Int
     let kiloBitrate: Int
-    let track: Int
-    let discNumber: Int
+    let track: Int?
+    let discNumber: Int?
     let size: Int
     let isVideo: Bool
+    let createdDate: Date
+    let starredDate: Date?
     
     var localSuffix: String? { transcodedSuffix ?? suffix }
     var localPath: String {
@@ -120,7 +122,7 @@ final class Song: Codable, Hashable, CustomStringConvertible {
         return rate
     }
     
-    init(serverId: Int, id: Int, title: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int, tagArtistId: Int, tagAlbumId: Int, genre: String?, path: String, suffix: String, transcodedSuffix: String?, duration: Int, kiloBitrate: Int, track: Int, discNumber: Int, size: Int, isVideo: Bool) {
+    init(serverId: Int, id: Int, title: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int, tagArtistId: Int, tagAlbumId: Int, genre: String?, path: String, suffix: String, transcodedSuffix: String?, duration: Int, kiloBitrate: Int, track: Int, discNumber: Int, size: Int, isVideo: Bool, createdDate: Date, starredDate: Date?) {
         self.serverId = serverId
         self.id = id
         self.title = title
@@ -142,6 +144,8 @@ final class Song: Codable, Hashable, CustomStringConvertible {
         self.discNumber = discNumber
         self.size = size
         self.isVideo = isVideo
+        self.createdDate = createdDate
+        self.starredDate = starredDate
     }
     
     init(serverId: Int, element: RXMLElement) {
@@ -153,19 +157,21 @@ final class Song: Codable, Hashable, CustomStringConvertible {
         self.tagArtistName = element.attribute("artist").stringXMLOptional
         self.tagAlbumName = element.attribute("album").stringXMLOptional
         self.playCount = element.attribute("playCount").intXML
-        self.year = element.attribute("year").intXML
-        self.tagArtistId = element.attribute("artistId").intXML
-        self.tagAlbumId = element.attribute("albumId").intXML
+        self.year = element.attribute("year").intXMLOptional
+        self.tagArtistId = element.attribute("artistId").intXMLOptional
+        self.tagAlbumId = element.attribute("albumId").intXMLOptional
         self.genre = element.attribute("genre").stringXMLOptional
         self.path = element.attribute("path").stringXML
         self.suffix = element.attribute("suffix").stringXML
         self.transcodedSuffix = element.attribute("transcodedSuffix").stringXMLOptional
         self.duration = element.attribute("duration").intXML
         self.kiloBitrate = element.attribute("bitRate").intXML
-        self.track = element.attribute("track").intXML
-        self.discNumber = element.attribute("discNumber").intXML
+        self.track = element.attribute("track").intXMLOptional
+        self.discNumber = element.attribute("discNumber").intXMLOptional
         self.size = element.attribute("size").intXML
         self.isVideo = element.attribute("isVideo").boolXML
+        self.createdDate = element.attribute("created").dateXML
+        self.starredDate = element.attribute("starred").dateXMLOptional
     }
     
     // MARK: Hashable
@@ -223,21 +229,20 @@ extension Song: TableCellModel {
     var primaryLabelText: String? { title }
     var secondaryLabelText: String? { tagArtistName }
     var durationLabelText: String? { formatTime(seconds: duration) }
-    var isCached: Bool { isFullyCached }
-    func download() {
-        _ = store.addToDownloadQueue(song: self)
-    }
-    func queue() {
-        _ = store.queue(song: self)
-    }
+    var isDownloaded: Bool { isFullyCached }
+    var isDownloadable: Bool { !isVideo && !isFullyCached }
+    
+    func download() { _ = store.addToDownloadQueue(song: self) }
+    func queue() { _ = store.queue(song: self) }
+    func queueNext() { _ = store.queueNext(song: self) }
 }
 
 extension UniversalTableViewCell {
     func update(song: Song, number: Bool = true, cached: Bool = true, art: Bool = false, secondary: Bool = true, duration: Bool = true) {
         var showNumber = false
-        if number && song.track > 0 {
+        if number, let track = song.track {
             showNumber = true
-            self.number = song.track
+            self.number = track
         }
         show(cached: cached, number: showNumber, art: art, secondary: secondary, duration: duration)
         update(model: song)

@@ -12,7 +12,7 @@ import CocoaLumberjackSwift
 
 extension Server: FetchableRecord, PersistableRecord {
     enum Column: String, ColumnExpression {
-        case id, type, url, username, password, path, isVideoSupported, isNewSearchSupported
+        case id, type, url, username, password, path, isVideoSupported, isNewSearchSupported, isTagSearchSupported
     }
     
     static func createInitialSchema(_ db: Database) throws {
@@ -25,6 +25,7 @@ extension Server: FetchableRecord, PersistableRecord {
             t.column(Column.path, .text).notNull()
             t.column(Column.isVideoSupported, .boolean).notNull()
             t.column(Column.isNewSearchSupported, .boolean).notNull()
+            t.column(Column.isTagSearchSupported, .boolean).notNull()
         }
     }
 }

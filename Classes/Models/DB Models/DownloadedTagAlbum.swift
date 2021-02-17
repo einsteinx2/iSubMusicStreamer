@@ -14,7 +14,7 @@ struct DownloadedTagAlbum: Codable, Equatable {
     let id: Int
     let name: String
     let coverArtId: String?
-    let tagArtistId: String?
+    let tagArtistId: Int?
     let tagArtistName: String?
     let songCount: Int
     let duration: Int
@@ -38,12 +38,21 @@ extension DownloadedTagAlbum: TableCellModel {
         return nil
     }
     var durationLabelText: String? { nil }
-    var isCached: Bool { true }
+    var isDownloaded: Bool { true }
+    var isDownloadable: Bool { false }
+    
+    var tagAlbumId: Int? { id }
+    var parentFolderId: Int? { nil }
+    
     func download() {
         // TODO: implement this
         fatalError("implement this")
     }
     func queue() {
+        // TODO: implement this
+        fatalError("implement this")
+    }
+    func queueNext() {
         // TODO: implement this
         fatalError("implement this")
     }

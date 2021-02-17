@@ -305,14 +305,14 @@ final class StreamManager {
         }
         
         // Download the TagArtist to ensure it exists for the Downloads tab
-        if song.tagArtistId > 0, !store.isTagArtistCached(serverId: song.serverId, id: song.tagArtistId) {
-            TagArtistLoader(serverId: song.serverId, tagArtistId: song.tagArtistId).startLoad()
+        if let tagArtistId = song.tagArtistId, !store.isTagArtistCached(serverId: song.serverId, id: tagArtistId) {
+            TagArtistLoader(serverId: song.serverId, tagArtistId: tagArtistId).startLoad()
         }
         
         // Download the TagAlbum to ensure it's songs exist when offline if opening the tag album from the song in the Downloads tab
         // NOTE: The TagAlbum itself will be downloaded by the TagArtistLoader, but not the songs, so we need to make this second request
-        if song.tagAlbumId > 0, (!store.isTagAlbumCached(serverId: song.serverId, id: song.tagAlbumId) || !store.isTagAlbumSongsCached(serverId: song.serverId, id: song.tagAlbumId)) {
-            TagAlbumLoader(serverId: song.serverId, tagAlbumId: song.tagAlbumId).startLoad()
+        if let tagAlbumId = song.tagAlbumId, (!store.isTagAlbumCached(serverId: song.serverId, id: tagAlbumId) || !store.isTagAlbumSongsCached(serverId: song.serverId, id: tagAlbumId)) {
+            TagAlbumLoader(serverId: song.serverId, tagAlbumId: tagAlbumId).startLoad()
         }
         
         saveHandlerStack()
