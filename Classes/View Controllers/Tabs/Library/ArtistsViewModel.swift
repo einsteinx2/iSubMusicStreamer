@@ -124,6 +124,10 @@ class ArtistsViewModel {
         fatalError("Must override this in subclass")
     }
     
+    var showCoverArt: Bool {
+        fatalError("Must override this in subclass")
+    }
+    
     fileprivate func loadFromCache() {
         fatalError("Must override this in subclass")
     }
@@ -151,6 +155,7 @@ class ArtistsViewModel {
 
 final class FolderArtistsViewModel: ArtistsViewModel {
     override var itemType: String { "Folder" }
+    override var showCoverArt: Bool { false }
         
     override fileprivate func loadFromCache() {
         mediaFolders = store.mediaFolders(serverId: serverId)
@@ -211,6 +216,7 @@ final class FolderArtistsViewModel: ArtistsViewModel {
 
 final class TagArtistsViewModel: ArtistsViewModel {
     override var itemType: String { "Artist" }
+    override var showCoverArt: Bool { true }
     
     override fileprivate func loadFromCache() {
         mediaFolders = store.mediaFolders(serverId: serverId)

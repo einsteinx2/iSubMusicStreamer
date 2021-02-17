@@ -155,7 +155,7 @@ extension SearchSongsViewController: UITableViewConfiguration {
             let artists: [TableCellModel] = searchType == .folder ? folderArtists : tagArtists
             if indexPath.row < artists.count {
                 let cell = tableView.dequeueUniversalCell()
-                cell.show(cached: false, number: false, art: false, secondary: false, duration: false)
+                cell.show(cached: false, number: false, art: searchType == .tag, secondary: false, duration: false)
                 cell.update(model: artists[indexPath.row])
                 return cell
             }

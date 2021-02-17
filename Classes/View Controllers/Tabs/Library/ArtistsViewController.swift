@@ -391,6 +391,7 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
+        cell.hideCoverArt = !dataModel.showCoverArt
         cell.update(model: artist(indexPath: indexPath))
         return cell
     }
