@@ -12,13 +12,14 @@ import Pageboy
 
 final class DownloadsViewController: TabmanViewController {
     private enum TabType: Int, CaseIterable {
-        case folders = 0, artists, albums, songs
+        case folders = 0, artists, albums, songs, queue
         var name: String {
             switch self {
             case .folders: return "Folders"
             case .artists: return "Artists"
             case .albums:  return "Albums"
             case .songs:   return "Songs"
+            case .queue:   return "Download Queue"
             }
         }
     }
@@ -66,6 +67,7 @@ final class DownloadsViewController: TabmanViewController {
             case .artists: controller = DownloadedTagArtistsViewController()
             case .albums:  controller = DownloadedTagAlbumsViewController()
             case .songs:   controller = DownloadedSongsViewController()
+            case .queue:   controller = DownloadQueueViewController()
             }
             controllerCache[type] = controller
             return controller
