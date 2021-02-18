@@ -687,6 +687,7 @@ extension Store {
                     VALUES (\(serverId), \(songId), \(Date()))
                     """
                 try db.execute(literal: sql)
+                NotificationCenter.postOnMainThread(name: Notifications.cacheQueueSongAdded)
                 return true
             }
         } catch {
@@ -709,6 +710,7 @@ extension Store {
                         """
                     try db.execute(literal: sql)
                 }
+                NotificationCenter.postOnMainThread(name: Notifications.cacheQueueSongAdded)
                 return true
             }
         } catch {
@@ -722,9 +724,10 @@ extension Store {
             return try pool.write { db in
                 let sql: SQLLiteral = """
                     DELETE FROM downloadQueue
-                    WHERE serverId = (\(serverId) AND songId = \(songId)
+                    WHERE serverId = (\(serverId) AND songId = \(songId))
                     """
                 try db.execute(literal: sql)
+                NotificationCenter.postOnMainThread(name: Notifications.cacheQueueSongRemoved)
                 return true
             }
         } catch {

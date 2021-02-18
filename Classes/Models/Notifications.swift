@@ -46,6 +46,8 @@ struct Notifications {
     static let cacheQueueStopped = Notification.Name("iSub.cacheQueueStopped")
     static let cacheQueueSongDownloaded = Notification.Name("iSub.cacheQueueSongDownloaded")
     static let cacheQueueSongFailed = Notification.Name("iSub.cacheQueueSongFailed")
+    static let cacheQueueSongAdded = Notification.Name("iSub.cacheQueueSongAdded")
+    static let cacheQueueSongRemoved = Notification.Name("iSub.cacheQueueSongRemoved")
     static let streamHandlerSongDownloaded = Notification.Name("iSub.streamHandlerSongDownloaded")
     static let streamHandlerSongFailed = Notification.Name("iSub.streamHandlerSongFailed")
 
@@ -69,7 +71,7 @@ struct Notifications {
     static let hideDeleteButton = Notification.Name("iSub.hideDeleteButton")
 
     static let cachedSongDeleted = Notification.Name("iSub.cachedSongDeleted")
-
+    
     static let quickSkipSecondsSettingChanged = Notification.Name("iSub.quickSkipSecondsSettingChanged")
 }
 

@@ -40,8 +40,10 @@ import CocoaLumberjackSwift
         cache.setup()
         
         // Detect app crash on previous launch
+        #if RELEASE
         settings.appCrashedOnLastRun = !settings.appTerminatedCleanly
         settings.appTerminatedCleanly = false
+        #endif
         
         // Initialize the lock screen controls
         LockScreenAudioControls.setup()

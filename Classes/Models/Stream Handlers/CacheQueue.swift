@@ -75,7 +75,9 @@ final class CacheQueue {
             NotificationCenter.postOnMainThread(name: Notifications.cacheQueueSongDownloaded, userInfo: ["songId": song.id])
             
             // Continue the queue
-            start()
+            DispatchQueue.main.async {
+                self.start()
+            }
             return
         }
         
