@@ -10,8 +10,11 @@ import UIKit
 
 struct Colors {
     static let background = UIColor(named: "isubBackgroundColor")
-    static let windowColor = UIColor(white: 0.3, alpha: 1)
-    static let jukeboxWindowColor = UIColor(red: 140.0/255.0, green: 0, blue: 0, alpha: 1)
+    static let window = UIColor(white: 0.3, alpha: 1)
+    static let jukeboxWindow = UIColor(red: 140.0/255.0, green: 0, blue: 0, alpha: 1)
+    
+    static let playerButton = UIColor(named: "isubPlayerButtonColor")
+    static let playerButtonActivated = UIColor.systemBlue
     
     // Table cell cache status colors
     static let cellRed = UIColor(red: 226.0/255.0, green: 0, blue: 0, alpha: 1)

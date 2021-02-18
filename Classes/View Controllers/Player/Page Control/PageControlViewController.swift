@@ -63,6 +63,8 @@ final class PageControlViewController: UIViewController {
             make.leading.trailing.top.equalToSuperview()
         }
         
+        pageControl.pageIndicatorTintColor = .secondaryLabel
+        pageControl.currentPageIndicatorTintColor = .label
         pageControl.numberOfPages = PageType.count
         pageControl.currentPage = 0
         pageControl.addTarget(self, action: #selector(changePage), for: .valueChanged)
@@ -117,6 +119,13 @@ final class PageControlViewController: UIViewController {
         
         // Set the boolean used when scrolls originate from the UIPageControl. See scrollViewDidScroll.
         pageControlUsed = true
+    }
+    
+    func showCoverArt(animated: Bool) {
+        guard pageControl.currentPage != PageType.coverArt.rawValue else { return }
+        pageControlUsed = false
+        pageControl.currentPage = PageType.coverArt.rawValue
+        scrollView.setContentOffset(CGPoint(x: scrollView.bounds.width * CGFloat(pageControl.currentPage), y: 0), animated: animated)
     }
 }
 

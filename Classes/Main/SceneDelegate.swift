@@ -47,7 +47,7 @@ import CocoaLumberjackSwift
         // Manually create window to remove need for useless Storyboard file
         let window = UIWindow(windowScene: windowScene)
         window.frame = windowScene.coordinateSpace.bounds
-        window.backgroundColor = settings.isJukeboxEnabled ? Colors.jukeboxWindowColor : Colors.windowColor
+        window.backgroundColor = settings.isJukeboxEnabled ? Colors.jukeboxWindow : Colors.window
         
         if UIDevice.isPad {
             
@@ -241,7 +241,7 @@ import CocoaLumberjackSwift
     }
     
     @objc private func jukeboxToggled() {
-        window?.backgroundColor = settings.isJukeboxEnabled ? Colors.jukeboxWindowColor : Colors.windowColor
+        window?.backgroundColor = settings.isJukeboxEnabled ? Colors.jukeboxWindow : Colors.window
     }
     
     // MARK: Multitasking
