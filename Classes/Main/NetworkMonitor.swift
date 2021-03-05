@@ -45,13 +45,13 @@ final class NetworkMonitor {
                 // Change over to offline mode
                 if !self.settings.isOfflineMode {
                     DDLogVerbose("[NetworkMonitor] Reachability changed to NotReachable, entering offline mode");
-                    NotificationCenter.postOnMainThread(name: Notifications.willEnterOfflineMode)
+                    NotificationCenter.postOnMainThread(name: Notifications.enterOfflineMode)
                 }
             } else if status == ReachableViaWWAN && self.settings.isDisableUsageOver3G {
                 // Change over to offline mode
                 if !self.settings.isOfflineMode {
                     DDLogVerbose("[NetworkMonitor] Reachability changed to ReachableViaWWAN and usage over 3G is disabled, entering offline mode");
-                    NotificationCenter.postOnMainThread(name: Notifications.willEnterOfflineMode)
+                    NotificationCenter.postOnMainThread(name: Notifications.enterOfflineMode)
                     SlidingNotification.showOnMainWindow(message: "You have chosen to disable usage over cellular in settings and are no longer on Wifi. Entering offline mode.")
                 }
             } else {

@@ -53,6 +53,8 @@ struct Notifications {
 
     static let cacheSizeChecked = Notification.Name("iSub.cacheSizeChecked")
 
+    static let enterOfflineMode = Notification.Name("iSub.enterOfflineMode")
+    static let enterOnlineMode = Notification.Name("iSub.enterOnlineMode")
     static let willEnterOfflineMode = Notification.Name("iSub.willEnterOfflineMode")
     static let willEnterOnlineMode = Notification.Name("iSub.willEnterOnlineMode")
 
@@ -76,6 +78,8 @@ struct Notifications {
 }
 
 @objc final class Notifications_ObjcDeleteMe: NSObject {
-    @objc static let bassEffectPresetLoaded = Notification.Name("iSub.bassEffectPresetLoaded")
-    @objc static let quickSkipSecondsSettingChanged = Notification.Name("iSub.quickSkipSecondsSettingChanged")
+    @objc static let bassEffectPresetLoaded = Notifications.bassEffectPresetLoaded
+    @objc static let quickSkipSecondsSettingChanged = Notifications.quickSkipSecondsSettingChanged
+    @objc static let enterOfflineMode = Notifications.enterOfflineMode
+    @objc static let enterOnlineMode = Notifications.enterOnlineMode
 }

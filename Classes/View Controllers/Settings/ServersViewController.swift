@@ -106,7 +106,7 @@ final class ServersViewController: UIViewController {
         } else {
             navigationController?.popToRootViewController(animated: true)
             
-            guard AppDelegate.shared.isNetworkReachable else { return }
+            guard SceneDelegate.shared.isNetworkReachable else { return }
             
             // Cancel any caching
             streamManager.removeAllStreams()

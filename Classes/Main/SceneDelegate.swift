@@ -20,6 +20,7 @@ import CocoaLumberjackSwift
     @Injected private var cacheQueue: CacheQueue
     @Injected private var playQueue: PlayQueue
     @Injected private var streamManager: StreamManager
+    @Injected private var jukebox: Jukebox
     
     // Temporary singleton access until multiple scenes are properly supported
     @objc static var shared: SceneDelegate { UIApplication.shared.connectedScenes.first!.delegate as! SceneDelegate }
@@ -30,6 +31,11 @@ import CocoaLumberjackSwift
     
     @objc private(set) var libraryTab: CustomUINavigationController?
 //    @objc let player = PlayerViewController()
+    
+    private let networkMonitor = NetworkMonitor()
+    
+    @objc var isWifi: Bool { networkMonitor.isWifi }
+    @objc var isNetworkReachable: Bool { networkMonitor.isNetworkReachable }
     
     private let serverChecker = ServerChecker()
     
@@ -88,7 +94,7 @@ import CocoaLumberjackSwift
                 viewControllers.append(controller)
             }
             tabBarController.viewControllers = viewControllers
-            window.rootViewController = tabBarController
+            window.rootViewController = CustomRootViewController(mainViewController: tabBarController)
         }
         window.makeKeyAndVisible()
         self.window = window
@@ -173,6 +179,8 @@ import CocoaLumberjackSwift
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(showPlayer), name: Notifications.showPlayer)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxToggled), name: Notifications.jukeboxDisabled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxToggled), name: Notifications.jukeboxEnabled)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(enterOnlineMode), name: Notifications.enterOnlineMode)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(enterOfflineMode), name: Notifications.enterOfflineMode)
         
         // Recover current state if player was interrupted
         streamManager.setup()
@@ -242,6 +250,24 @@ import CocoaLumberjackSwift
     
     @objc private func jukeboxToggled() {
         window?.backgroundColor = settings.isJukeboxEnabled ? Colors.jukeboxWindow : Colors.window
+    }
+    
+    @objc private func enterOnlineMode() {
+        guard settings.isOfflineMode && !settings.isForceOfflineMode && isNetworkReachable && (isWifi || !settings.isDisableUsageOver3G) else { return }
+        settings.isOfflineMode = false
+        NotificationCenter.postOnMainThread(name: Notifications.willEnterOnlineMode)
+    }
+    
+    @objc private func enterOfflineMode() {
+        guard !settings.isOfflineMode else { return }
+        settings.isOfflineMode = true
+        NotificationCenter.postOnMainThread(name: Notifications.willEnterOfflineMode)
+        
+        if settings.isJukeboxEnabled {
+            settings.isJukeboxEnabled = false
+            NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
+            Flurry.logEvent("JukeboxDisabled")
+        }
     }
     
     // MARK: Multitasking

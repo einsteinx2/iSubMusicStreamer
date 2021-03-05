@@ -26,6 +26,11 @@ final class CacheQueue {
         return store.firstSongInDownloadQueue()
     }
     
+    init() {
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(willEnterOnlineMode), name: Notifications.willEnterOnlineMode)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(willEnterOfflineMode), name: Notifications.willEnterOfflineMode)
+    }
+    
     func isInQueue(song: Song) -> Bool {
         return store.isSongInDownloadQueue(song: song)
     }
@@ -38,7 +43,7 @@ final class CacheQueue {
         guard let song = currentQueuedSongInDb else { return }
         
         // Check if there's another queued song and that were are on Wifi
-        if settings.isOfflineMode || (!AppDelegate.shared.isWifi && !settings.isManualCachingOnWWANEnabled) {
+        if settings.isOfflineMode || (!SceneDelegate.shared.isWifi && !settings.isManualCachingOnWWANEnabled) {
             return
         }
         
@@ -152,6 +157,20 @@ final class CacheQueue {
         stop()
         _ = store.removeFromDownloadQueue(song: song)
         start()
+    }
+    
+    // MARK: Notifications
+    
+    @objc private func willEnterOnlineMode() {
+        if SceneDelegate.shared.isWifi || settings.isManualCachingOnWWANEnabled {
+            start()
+        } else {
+            stop()
+        }
+    }
+    
+    @objc private func willEnterOfflineMode() {
+        stop()
     }
 }
 

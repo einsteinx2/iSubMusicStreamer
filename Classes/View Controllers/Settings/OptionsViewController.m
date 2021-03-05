@@ -217,17 +217,9 @@ LOG_LEVEL_ISUB_DEFAULT
 		if (sender == self.manualOfflineModeSwitch) {
 			settingsS.isForceOfflineMode = self.manualOfflineModeSwitch.on;
 			if (self.manualOfflineModeSwitch.on) {
-				[AppDelegate.shared enterOfflineModeForce];
+                [NSNotificationCenter postOnMainThreadWithName:Notifications_ObjcDeleteMe.enterOfflineMode object:nil userInfo:nil];
 			} else {
-				[AppDelegate.shared enterOnlineModeForce];
-			}
-			
-			// Handle the moreNavigationController stupidity
-            UITabBarController *tabBarController = SceneDelegate.shared.tabBarController;
-			if (tabBarController.selectedIndex == 4) {
-				[tabBarController.moreNavigationController popToViewController:tabBarController.moreNavigationController.viewControllers[1] animated:YES];
-			} else {
-				[(UINavigationController*)tabBarController.selectedViewController popToRootViewControllerAnimated:YES];
+                [NSNotificationCenter postOnMainThreadWithName:Notifications_ObjcDeleteMe.enterOnlineMode object:nil userInfo:nil];
 			}
 		}
 		else if (sender == self.enableScrobblingSwitch) {
@@ -295,26 +287,12 @@ LOG_LEVEL_ISUB_DEFAULT
 			settingsS.isLockScreenArtEnabled = self.enableLockScreenArt.on;
 		} else if (sender == self.disableCellUsageSwitch) {
             settingsS.isDisableUsageOver3G = self.disableCellUsageSwitch.on;
-            
-            BOOL handleStupidity = NO;
-            if (!settingsS.isOfflineMode && settingsS.isDisableUsageOver3G && !AppDelegate.shared.isWifi) {
+            if (!settingsS.isOfflineMode && settingsS.isDisableUsageOver3G && !SceneDelegate.shared.isWifi) {
                 // We're on 3G and we just disabled use on 3G, so go offline
-                [AppDelegate.shared enterOfflineModeForce];
-                handleStupidity = YES;
-            } else if (settingsS.isOfflineMode && !settingsS.isDisableUsageOver3G && !AppDelegate.shared.isWifi) {
+                [NSNotificationCenter postOnMainThreadWithName:Notifications_ObjcDeleteMe.enterOfflineMode object:nil userInfo:nil];
+            } else if (settingsS.isOfflineMode && !settingsS.isDisableUsageOver3G && !SceneDelegate.shared.isWifi) {
                 // We're on 3G and we just enabled use on 3G, so go online if we're offline
-                [AppDelegate.shared enterOfflineModeForce];
-                handleStupidity = YES;
-            }
-            
-            if (handleStupidity) {
-                // Handle the moreNavigationController stupidity
-                UITabBarController *tabBarController = SceneDelegate.shared.tabBarController;
-                if (tabBarController.selectedIndex == 4) {
-                    [tabBarController.moreNavigationController popToViewController:tabBarController.moreNavigationController.viewControllers[1] animated:YES];
-                } else {
-                    [(UINavigationController*)tabBarController.selectedViewController popToRootViewControllerAnimated:YES];
-                }
+                [NSNotificationCenter postOnMainThreadWithName:Notifications_ObjcDeleteMe.enterOnlineMode object:nil userInfo:nil];
             }
         }
 	}

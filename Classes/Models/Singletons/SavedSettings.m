@@ -373,7 +373,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (NSInteger)currentMaxBitrate {
-    switch (AppDelegate.shared.isWifi ? self.maxBitrateWifi : self.maxBitrate3G) {
+    switch (SceneDelegate.shared.isWifi ? self.maxBitrateWifi : self.maxBitrate3G) {
         case 0: return 64;
         case 1: return 96;
         case 2: return 128;
@@ -404,7 +404,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (NSArray *)currentVideoBitrates {
-    if (AppDelegate.shared.isWifi) {
+    if (SceneDelegate.shared.isWifi) {
         switch (self.maxVideoBitrateWifi) {
             case 0: return @[@512];
             case 1: return @[@1024, @512];
@@ -472,7 +472,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults setBool:isManualCachingOnWWANEnabled forKey:@"isManualCachingOnWWANEnabled"];
     [_userDefaults synchronize];
     
-    if (!AppDelegate.shared.isWifi) {
+    if (!SceneDelegate.shared.isWifi) {
         isManualCachingOnWWANEnabled ? [CacheQueue_ObjCDeleteMe start] : [CacheQueue_ObjCDeleteMe stop];
     }
 }

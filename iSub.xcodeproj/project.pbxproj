@@ -143,6 +143,8 @@
 		5357FE3225C760B7001BDE29 /* BassVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE3025C760B7001BDE29 /* BassVisualizer.swift */; };
 		5359C859256EA8FE00C8F8DC /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359C858256EA8FE00C8F8DC /* ObjC.swift */; };
 		5359C85A256EA8FE00C8F8DC /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359C858256EA8FE00C8F8DC /* ObjC.swift */; };
+		5359FA5025DF59F400DCC390 /* CustomRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359FA4F25DF59F400DCC390 /* CustomRootViewController.swift */; };
+		5359FA5125DF59F400DCC390 /* CustomRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359FA4F25DF59F400DCC390 /* CustomRootViewController.swift */; };
 		535E142625A7B2020039BCAA /* FolderArtistStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E142525A7B2020039BCAA /* FolderArtistStore.swift */; };
 		535E142725A7B2020039BCAA /* FolderArtistStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E142525A7B2020039BCAA /* FolderArtistStore.swift */; };
 		535E142C25A7B4600039BCAA /* RootFoldersLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E142B25A7B4600039BCAA /* RootFoldersLoader.swift */; };
@@ -698,6 +700,7 @@
 		5357FE3025C760B7001BDE29 /* BassVisualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassVisualizer.swift; sourceTree = "<group>"; };
 		5359C854256EA8C400C8F8DC /* ObjcExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjcExceptionCatcher.h; sourceTree = "<group>"; };
 		5359C858256EA8FE00C8F8DC /* ObjC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjC.swift; sourceTree = "<group>"; };
+		5359FA4F25DF59F400DCC390 /* CustomRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRootViewController.swift; sourceTree = "<group>"; };
 		535E142525A7B2020039BCAA /* FolderArtistStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderArtistStore.swift; sourceTree = "<group>"; };
 		535E142B25A7B4600039BCAA /* RootFoldersLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootFoldersLoader.swift; sourceTree = "<group>"; };
 		535E143425A7BB910039BCAA /* FolderAlbumStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAlbumStore.swift; sourceTree = "<group>"; };
@@ -1291,6 +1294,7 @@
 			children = (
 				5373C6A425B610FF00CAA859 /* AppDelegate.swift */,
 				5373C6A125B610F800CAA859 /* SceneDelegate.swift */,
+				5359FA4F25DF59F400DCC390 /* CustomRootViewController.swift */,
 				5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */,
 				5373C69525B6064D00CAA859 /* CustomUINavigationController.swift */,
 				532C624A25B6197E00185998 /* VideoPlayer.swift */,
@@ -2153,6 +2157,7 @@
 				539D32F425AA1F7200F53797 /* Lyrics.swift in Sources */,
 				53B9C49125A7A5D6007E9E3C /* TagArtistStore.swift in Sources */,
 				53762C8C25AD166400476F2D /* StatusLoader.swift in Sources */,
+				5359FA5025DF59F400DCC390 /* CustomRootViewController.swift in Sources */,
 				53ED672B25B776CB0002BFAF /* SearchSongsViewController.swift in Sources */,
 				53ED673A25B7A4550002BFAF /* Jukebox.swift in Sources */,
 				53ED675825B8B1050002BFAF /* DownloadedFolderAlbumViewController.swift in Sources */,
@@ -2395,6 +2400,7 @@
 				539D32EC25AA196900F53797 /* ChatMessage.swift in Sources */,
 				53ED673825B7A3020002BFAF /* URLRequest+Subsonic.swift in Sources */,
 				53762C8D25AD166400476F2D /* StatusLoader.swift in Sources */,
+				5359FA5125DF59F400DCC390 /* CustomRootViewController.swift in Sources */,
 				531EC88D25B33E5E0076973A /* CountReloadTimeHeader.swift in Sources */,
 				539D32F525AA1F7200F53797 /* Lyrics.swift in Sources */,
 				53ED672C25B776CB0002BFAF /* SearchSongsViewController.swift in Sources */,
