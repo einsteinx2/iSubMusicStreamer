@@ -258,7 +258,7 @@ import SnapKit
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addURLRefBackButton()
-        navigationItem.rightBarButtonItem = Music.shared().showPlayerIcon ? UIBarButtonItem(image: UIImage(systemName: "music.quarternote.3"), style: .plain, target: self, action: #selector(nowPlayingAction(sender:))) : nil
+        navigationItem.rightBarButtonItem = Music.shared().showPlayerIcon ? UIBarButtonItem(image: UIImage(systemName: Defines.musicNoteImageSystemName), style: .plain, target: self, action: #selector(nowPlayingAction(sender:))) : nil
         
         let jukeboxImageName = Settings.shared().isJukeboxEnabled ? "home-jukebox-on" : "home-jukebox-off"
         jukeboxButton.setIcon(image: UIImage(named: jukeboxImageName))

@@ -76,7 +76,7 @@ static NSInteger trackSort(id obj1, id obj2, void *context) {
 	[super viewWillAppear:animated];
 		
 	if (musicS.showPlayerIcon) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"music.quarternote.3"] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:Defines.musicNoteImageSystemName] style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 	} else {
 		self.navigationItem.rightBarButtonItem = nil;
 	}

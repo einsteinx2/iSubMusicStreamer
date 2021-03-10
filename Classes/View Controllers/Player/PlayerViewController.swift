@@ -366,7 +366,7 @@ import CocoaLumberjackSwift
         updateBookmarkButton()
         
         let equalizerButtonConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular, scale: .large)
-        equalizerButton.setImage(UIImage(systemName: "slider.vertical.3", withConfiguration: equalizerButtonConfig), for: .normal)
+        equalizerButton.setImage(UIImage(systemName: Defines.equalizerSliderImageSystemName, withConfiguration: equalizerButtonConfig), for: .normal)
         equalizerButton.addClosure(for: .touchUpInside) { [unowned self] in
             let controller = EqualizerViewController(nibName: "EqualizerViewController", bundle: nil)
             if UIDevice.isPad() {

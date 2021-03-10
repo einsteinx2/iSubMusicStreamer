@@ -59,7 +59,7 @@
 	
     self.navigationItem.rightBarButtonItem = nil;
 	if (musicS.showPlayerIcon) {
-		UIImage *playingImage = [UIImage systemImageNamed:@"music.quarternote.3"];
+		UIImage *playingImage = [UIImage systemImageNamed:Defines.musicNoteImageSystemName];
 		UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithImage:playingImage style:UIBarButtonItemStylePlain target:self action:@selector(nowPlayingAction:)];
 		self.navigationItem.rightBarButtonItem = buttonItem;
 	}
