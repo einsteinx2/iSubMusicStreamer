@@ -1,3 +1,5 @@
+## April 2021 Update: iSub is back under development! In December 2020, an iOS 14 fix and partial UI modernization was released, and a major internal modernization and port to Swift 5 is currently in progress.
+
 GPL3 Licensed unless otherwise noted. 
 
 This repo contains the code for the currently released version of iSub. Unfortunately I'm no longer actively developing the app. I was working on a complete Swift port and modernization (http://github.com/einsteinx2/iSub), however it became clear that I no longer have the time to complete that project. 
