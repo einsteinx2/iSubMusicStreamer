@@ -9,7 +9,6 @@
 import Foundation
 import CocoaLumberjackSwift
 
-// Set up this way to be accessible in both Swift and Obj-C
 struct Defines {
     static var rowHeight: CGFloat { UIDevice.isSmall ? 50 : 65 }
     static var tallRowHeight: CGFloat { UIDevice.isSmall ? 70 : 85 }

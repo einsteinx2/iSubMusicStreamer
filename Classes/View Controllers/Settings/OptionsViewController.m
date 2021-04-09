@@ -317,7 +317,7 @@ LOG_LEVEL_ISUB_DEFAULT
     (void)[Store_ObjCDeleteMe resetFolderAlbumCacheWithServerId:serverId];
     (void)[Store_ObjCDeleteMe deleteTagAlbumsWithServerId:serverId];
 //	[HUD hide];
-	[self popLibraryTab];
+	[SceneDelegate.shared popLibraryTab];
 }
 
 - (void)resetAlbumArtCache {
@@ -326,7 +326,7 @@ LOG_LEVEL_ISUB_DEFAULT
     (void)[Store_ObjCDeleteMe resetCoverArtCacheWithServerId:serverId];
     (void)[Store_ObjCDeleteMe resetArtistArtCacheWithServerId:serverId];
 //	[HUD hide];
-	[self popLibraryTab];
+	[SceneDelegate.shared popLibraryTab];
 }
 
 - (IBAction)shareAppLogsAction {
@@ -353,10 +353,6 @@ LOG_LEVEL_ISUB_DEFAULT
     LicensesViewController *controller = [[LicensesViewController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
     [self presentViewController:navController animated:YES completion:nil];
-}
-
-- (void)popLibraryTab {
-    [SceneDelegate.shared.libraryTab popToRootViewControllerAnimated:NO];
 }
 
 - (void)updateCacheSpaceSlider {
