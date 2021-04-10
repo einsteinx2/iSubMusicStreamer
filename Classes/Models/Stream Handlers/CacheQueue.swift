@@ -88,33 +88,6 @@ final class CacheQueue {
         
         isDownloading = true
         
-        // TODO: implement this (queue the 5 loaders so that they execute sequentially)
-        // TODO: implement this (share this logic between CacheQueue and StreamManager)
-        
-        // Download the lyrics
-        if song.tagArtistName != nil && song.title.count > 0 {
-            if !store.isLyricsCached(song: song) {
-                LyricsLoader(song: song)?.startLoad()
-            }
-        }
-        
-        // Download the cover art
-        if let coverArtId = song.coverArtId {
-            _ = CoverArtLoader(serverId: song.serverId, coverArtId: coverArtId, isLarge: true).downloadArtIfNotExists()
-            _ = CoverArtLoader(serverId: song.serverId, coverArtId: coverArtId, isLarge: false).downloadArtIfNotExists()
-        }
-        
-        // Download the TagArtist to ensure it exists for the Downloads tab
-        if let tagArtistId = song.tagArtistId, !store.isTagArtistCached(serverId: song.serverId, id: tagArtistId) {
-            TagArtistLoader(serverId: song.serverId, tagArtistId: tagArtistId).startLoad()
-        }
-        
-        // Download the TagAlbum to ensure it's songs exist when offline if opening the tag album from the song in the Downloads tab
-        // NOTE: The TagAlbum itself will be downloaded by the TagArtistLoader, but not the songs, so we need to make this second request
-        if let tagAlbumId = song.tagAlbumId, (!store.isTagAlbumCached(serverId: song.serverId, id: tagAlbumId) || !store.isTagAlbumSongsCached(serverId: song.serverId, id: tagAlbumId)) {
-            TagAlbumLoader(serverId: song.serverId, tagAlbumId: tagAlbumId).startLoad()
-        }
-        
         // Create the stream handler
         if let handler = streamManager.handler(song: song) {
             DDLogInfo("[CacheQueue] stealing \(song) from stream manager")
@@ -132,6 +105,8 @@ final class CacheQueue {
             currentStreamHandler = handler
             handler.start()
         }
+        
+        SongsHelper.downloadMetadata(song: song)
         
         NotificationCenter.postOnMainThread(name: Notifications.cacheQueueStarted)
     }

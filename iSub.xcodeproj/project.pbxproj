@@ -213,6 +213,12 @@
 		53762C8D25AD166400476F2D /* StatusLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C8B25AD166400476F2D /* StatusLoader.swift */; };
 		53762C8F25AD1BA200476F2D /* APILoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C8E25AD1BA200476F2D /* APILoader.swift */; };
 		53762C9025AD1BA200476F2D /* APILoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C8E25AD1BA200476F2D /* APILoader.swift */; };
+		537AE8142622491E0073DEF2 /* AsyncBlockOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537AE8132622491E0073DEF2 /* AsyncBlockOperation.swift */; };
+		537AE8152622491E0073DEF2 /* AsyncBlockOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537AE8132622491E0073DEF2 /* AsyncBlockOperation.swift */; };
+		537AE81A26224A090073DEF2 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537AE81926224A090073DEF2 /* AsyncOperation.swift */; };
+		537AE81B26224A090073DEF2 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537AE81926224A090073DEF2 /* AsyncOperation.swift */; };
+		537AE81D26224C360073DEF2 /* AsyncLoaderOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537AE81C26224C360073DEF2 /* AsyncLoaderOperation.swift */; };
+		537AE81E26224C360073DEF2 /* AsyncLoaderOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537AE81C26224C360073DEF2 /* AsyncLoaderOperation.swift */; };
 		537B05B9256B03830008892C /* PadRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05B8256B03830008892C /* PadRootViewController.swift */; };
 		537B05BA256B03830008892C /* PadRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05B8256B03830008892C /* PadRootViewController.swift */; };
 		537B05BC256B04360008892C /* PadMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05BB256B04360008892C /* PadMenuViewController.swift */; };
@@ -739,6 +745,9 @@
 		53762C8825AD122500476F2D /* NowPlayingLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingLoader.swift; sourceTree = "<group>"; };
 		53762C8B25AD166400476F2D /* StatusLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusLoader.swift; sourceTree = "<group>"; };
 		53762C8E25AD1BA200476F2D /* APILoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APILoader.swift; sourceTree = "<group>"; };
+		537AE8132622491E0073DEF2 /* AsyncBlockOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncBlockOperation.swift; sourceTree = "<group>"; };
+		537AE81926224A090073DEF2 /* AsyncOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
+		537AE81C26224C360073DEF2 /* AsyncLoaderOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLoaderOperation.swift; sourceTree = "<group>"; };
 		537B05B8256B03830008892C /* PadRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadRootViewController.swift; sourceTree = "<group>"; };
 		537B05BB256B04360008892C /* PadMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadMenuViewController.swift; sourceTree = "<group>"; };
 		537B05BE256B0E4B0008892C /* PadMenuTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadMenuTableCell.swift; sourceTree = "<group>"; };
@@ -1309,6 +1318,9 @@
 				531EC86425B220E10076973A /* Colors.swift */,
 				53ED671825B74B4C0002BFAF /* HUD.swift */,
 				5357FE1625C320C3001BDE29 /* Bridging.swift */,
+				537AE81926224A090073DEF2 /* AsyncOperation.swift */,
+				537AE8132622491E0073DEF2 /* AsyncBlockOperation.swift */,
+				537AE81C26224C360073DEF2 /* AsyncLoaderOperation.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -2035,6 +2047,7 @@
 				53E03D0025C2330D0043355F /* NSError+Description.swift in Sources */,
 				53762C8625AD105E00476F2D /* NowPlayingSong.swift in Sources */,
 				53FE67AC256DE9600015FC83 /* Defines.swift in Sources */,
+				537AE8142622491E0073DEF2 /* AsyncBlockOperation.swift in Sources */,
 				53FE38BC1EA961C80058B925 /* ZKLog.m in Sources */,
 				5373C6A225B610F800CAA859 /* SceneDelegate.swift in Sources */,
 				538B3EC225B65E1E00824068 /* Artist.swift in Sources */,
@@ -2090,6 +2103,7 @@
 				536C890725BB37F5008FE1AC /* CacheQueue.swift in Sources */,
 				531EC88025B24DB80076973A /* UIViewController+NavigationItems.swift in Sources */,
 				5381884225A65F6100C59CDE /* RootListMetadata.swift in Sources */,
+				537AE81D26224C360073DEF2 /* AsyncLoaderOperation.swift in Sources */,
 				53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
 				532C625E25B6559A00185998 /* main.swift in Sources */,
 				534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
@@ -2117,6 +2131,7 @@
 				53FE67A0256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
 				5398F26D11DA61DA00007870 /* OptionsViewController.m in Sources */,
 				53FE36E61EA961720058B925 /* BassEffectDAO.m in Sources */,
+				537AE81A26224A090073DEF2 /* AsyncOperation.swift in Sources */,
 				537C93F625B125AE00175DF6 /* PlayQueueViewController.swift in Sources */,
 				5389479D25A53C7F0078FBAF /* TableSection.swift in Sources */,
 				530A168E259299C800E9294E /* TagArtist.swift in Sources */,
@@ -2278,6 +2293,7 @@
 				53E03D0125C2330D0043355F /* NSError+Description.swift in Sources */,
 				538C8FE225606299005D6CA9 /* RefreshControl.swift in Sources */,
 				53329642255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */,
+				537AE8152622491E0073DEF2 /* AsyncBlockOperation.swift in Sources */,
 				5373C6A325B610F800CAA859 /* SceneDelegate.swift in Sources */,
 				53FE38BE1EA961C80058B925 /* ZKLog.m in Sources */,
 				538B3EC325B65E1E00824068 /* Artist.swift in Sources */,
@@ -2333,6 +2349,7 @@
 				531EC88125B24DB80076973A /* UIViewController+NavigationItems.swift in Sources */,
 				53ED673225B780070002BFAF /* UIApplication+Helper.swift in Sources */,
 				536C890825BB37F5008FE1AC /* CacheQueue.swift in Sources */,
+				537AE81E26224C360073DEF2 /* AsyncLoaderOperation.swift in Sources */,
 				53EA2DE3257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
 				5381884325A65F6100C59CDE /* RootListMetadata.swift in Sources */,
 				534B20EA256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
@@ -2360,6 +2377,7 @@
 				531EC88425B250BB0076973A /* UIViewController+TableView.swift in Sources */,
 				5389479B25A4EFAE0078FBAF /* ServerShuffleLoader.swift in Sources */,
 				53B9C49B25A7A6D7007E9E3C /* GRDB+Helper.swift in Sources */,
+				537AE81B26224A090073DEF2 /* AsyncOperation.swift in Sources */,
 				53BC27E2139AF0DD00A825F1 /* OptionsViewController.m in Sources */,
 				53FE36E81EA961720058B925 /* BassEffectDAO.m in Sources */,
 				537C93F725B125AE00175DF6 /* PlayQueueViewController.swift in Sources */,

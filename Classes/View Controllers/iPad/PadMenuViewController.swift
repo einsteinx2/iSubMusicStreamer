@@ -153,6 +153,12 @@ final class PadMenuViewController: UIViewController {
         }
         lastSelectedRow = indexPath.row
     }
+    
+    func popLibraryTab(animated: Bool = false) {
+        if let navController = cachedTabs[.library] {
+            navController.popToRootViewController(animated: animated)
+        }
+    }
 }
 
 extension PadMenuViewController: UITableViewConfiguration {

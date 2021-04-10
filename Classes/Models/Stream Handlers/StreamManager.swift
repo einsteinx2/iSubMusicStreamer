@@ -281,7 +281,6 @@ final class StreamManager {
     
     // MARK: Download
     
-    // TODO: implement this (queue the 5 loaders so that they execute sequentially)
     func queueStream(song: Song, byteOffset: Int = 0, secondsOffset: Double = 0.0, index: Int, tempCache: Bool, startDownload: Bool) {
         guard index >= 0 && index <= handlerStack.count, !isInQueue(song: song) else { return }
         
@@ -290,32 +289,9 @@ final class StreamManager {
         if handlerStack.count == 1 && startDownload {
             start(handler: handler)
         }
-        
-        // Download the lyrics
-        if handler.song.tagArtistName != nil && handler.song.title.count > 0 {
-            if !store.isLyricsCached(song: handler.song) {
-                LyricsLoader(song: handler.song)?.startLoad()
-            }
-        }
-        
-        // Download the cover art
-        if let coverArtId = song.coverArtId {
-            _ = CoverArtLoader(serverId: song.serverId, coverArtId: coverArtId, isLarge: true).downloadArtIfNotExists()
-            _ = CoverArtLoader(serverId: song.serverId, coverArtId: coverArtId, isLarge: false).downloadArtIfNotExists()
-        }
-        
-        // Download the TagArtist to ensure it exists for the Downloads tab
-        if let tagArtistId = song.tagArtistId, !store.isTagArtistCached(serverId: song.serverId, id: tagArtistId) {
-            TagArtistLoader(serverId: song.serverId, tagArtistId: tagArtistId).startLoad()
-        }
-        
-        // Download the TagAlbum to ensure it's songs exist when offline if opening the tag album from the song in the Downloads tab
-        // NOTE: The TagAlbum itself will be downloaded by the TagArtistLoader, but not the songs, so we need to make this second request
-        if let tagAlbumId = song.tagAlbumId, (!store.isTagAlbumCached(serverId: song.serverId, id: tagAlbumId) || !store.isTagAlbumSongsCached(serverId: song.serverId, id: tagAlbumId)) {
-            TagAlbumLoader(serverId: song.serverId, tagAlbumId: tagAlbumId).startLoad()
-        }
-        
         saveHandlerStack()
+        
+        SongsHelper.downloadMetadata(song: song)
     }
     
     func queueStream(song: Song, tempCache: Bool, startDownload: Bool) {

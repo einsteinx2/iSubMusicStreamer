@@ -119,6 +119,47 @@ struct SongsHelper {
         showLoadingScreen(loader: albumLoader)
     }
     
+    private static var metadataQueue: OperationQueue = {
+        let metadataQueue = OperationQueue()
+        metadataQueue.maxConcurrentOperationCount = 2
+        return metadataQueue
+    }()
+    
+    static func downloadMetadata(song: Song) {
+        // Download the lyrics
+        if song.tagArtistName != nil && song.title.count > 0 {
+            if !store.isLyricsCached(song: song), let loader = LyricsLoader(song: song) {
+                metadataQueue.addOperation(AsyncLoaderOperation(loader: loader))
+            }
+        }
+        
+        // Download the cover art
+        if let coverArtId = song.coverArtId {
+            let largeLoader = CoverArtLoader(serverId: song.serverId, coverArtId: coverArtId, isLarge: true)
+            if !largeLoader.isCached {
+                metadataQueue.addOperation(AsyncLoaderOperation(loader: largeLoader))
+            }
+            
+            let smallLoader = CoverArtLoader(serverId: song.serverId, coverArtId: coverArtId, isLarge: false)
+            if !smallLoader.isCached {
+                metadataQueue.addOperation(AsyncLoaderOperation(loader: smallLoader))
+            }
+        }
+        
+        // Download the TagArtist to ensure it exists for the Downloads tab
+        if let tagArtistId = song.tagArtistId, !store.isTagArtistCached(serverId: song.serverId, id: tagArtistId) {
+            let loader = TagArtistLoader(serverId: song.serverId, tagArtistId: tagArtistId)
+            metadataQueue.addOperation(AsyncLoaderOperation(loader: loader))
+        }
+        
+        // Download the TagAlbum to ensure it's songs exist when offline if opening the tag album from the song in the Downloads tab
+        // NOTE: The TagAlbum itself will be downloaded by the TagArtistLoader, but not the songs, so we need to make this second request
+        if let tagAlbumId = song.tagAlbumId, (!store.isTagAlbumCached(serverId: song.serverId, id: tagAlbumId) || !store.isTagAlbumSongsCached(serverId: song.serverId, id: tagAlbumId)) {
+            let loader = TagAlbumLoader(serverId: song.serverId, tagAlbumId: tagAlbumId)
+            metadataQueue.addOperation(AsyncLoaderOperation(loader: loader))
+        }
+    }
+    
     // MARK: Callbacks
     
     private static func downloadCallback(success: Bool, error: Error?) {
