@@ -46,8 +46,5 @@ extension TagArtist: TableCellModel {
     
     func download() { SongsHelper.downloadAll(serverId: serverId, tagArtistId: id) }
     func queue() { SongsHelper.queueAll(serverId: serverId, tagArtistId: id) }
-    func queueNext() {
-        // TODO: implement this
-        fatalError("implement this")
-    }
+    func queueNext() { SongsHelper.queueAllNext(serverId: serverId, tagArtistId: id) }
 }

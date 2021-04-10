@@ -21,9 +21,12 @@ final class RecursiveSongLoader: CancelableLoader {
     private var tagAlbumLoader: TagAlbumLoader?
     
     private var isQueue = false
+    private var isQueueNext = false
     private var isDownload = false
     private var isLoading = false
     private var isCancelled = false
+    
+    private var queueNextOffset = 0
     
     init(serverId: Int, folderId: Int, callback: SuccessErrorCallback? = nil) {
         self.serverId = serverId
@@ -41,8 +44,21 @@ final class RecursiveSongLoader: CancelableLoader {
         guard !isLoading else { return }
         
         isQueue = true
+        isQueueNext = false
         isDownload = false
         isCancelled = false
+        queueNextOffset = 0
+        startLoad()
+    }
+    
+    func queueAllNext() {
+        guard !isLoading else { return }
+        
+        isQueue = false
+        isQueueNext = true
+        isDownload = false
+        isCancelled = false
+        queueNextOffset = 0
         startLoad()
     }
     
@@ -50,8 +66,10 @@ final class RecursiveSongLoader: CancelableLoader {
         guard !isLoading else { return }
         
         isQueue = false
+        isQueueNext = false
         isDownload = true
         isCancelled = false
+        queueNextOffset = 0
         startLoad()
     }
     
@@ -146,6 +164,9 @@ final class RecursiveSongLoader: CancelableLoader {
     private func handleSong(song: Song) {
         if isQueue {
             song.queue()
+        } else if isQueueNext {
+            song.queueNext(offset: queueNextOffset)
+            queueNextOffset += 1
         } else if isDownload {
             song.download()
         }
@@ -155,6 +176,13 @@ final class RecursiveSongLoader: CancelableLoader {
         let store: Store = Resolver.resolve()
         if isQueue {
             _ = store.queue(songIds: songIds, serverId: serverId)
+        } else if isQueueNext {
+            for songId in songIds {
+                if let song = store.song(serverId: serverId, id: songId) {
+                    song.queueNext(offset: queueNextOffset)
+                    queueNextOffset += 1
+                }
+            }
         } else {
             _ = store.addToDownloadQueue(serverId: serverId, songIds: songIds)
         }
@@ -167,7 +195,7 @@ final class RecursiveSongLoader: CancelableLoader {
     }
     
     private func finishLoad() {
-        if isQueue {
+        if isQueue || isQueueNext {
             NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
             
 //            if Settings.shared().isJukeboxEnabled {

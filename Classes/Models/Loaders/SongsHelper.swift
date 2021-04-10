@@ -62,6 +62,23 @@ struct SongsHelper {
         showLoadingScreen(loader: albumLoader)
     }
     
+    static func queueAllNext(serverId: Int, folderId: Int) {
+        recursiveLoader = RecursiveSongLoader(serverId: serverId, folderId: folderId, callback: queueCallback(success:error:))
+        recursiveLoader?.queueAllNext()
+        showLoadingScreen(loader: recursiveLoader)
+    }
+    
+    static func queueAllNext(serverId: Int, tagArtistId: Int) {
+        recursiveLoader = RecursiveSongLoader(serverId: serverId, tagArtistId: tagArtistId, callback: queueCallback(success:error:))
+        recursiveLoader?.queueAllNext()
+        showLoadingScreen(loader: recursiveLoader)
+    }
+    
+    static func queueAllNext(serverId: Int, tagAlbumId: Int) {
+        queueNextTagAlbum(serverId: serverId, tagAlbumId: tagAlbumId, callback: queueCallback(success:error:))
+        showLoadingScreen(loader: albumLoader)
+    }
+    
     static func playAll(serverId: Int, folderId: Int) {
         preparePlayAll()
         recursiveLoader = RecursiveSongLoader(serverId: serverId, folderId: folderId, callback: playCallback(success:error:))
@@ -164,6 +181,22 @@ struct SongsHelper {
         albumLoader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId) { _, success, error in
             if success, let albumLoader = albumLoader {
                 _ = store.queue(songIds: albumLoader.songIds, serverId: serverId)
+            }
+            callback(success, error)
+        }
+        albumLoader?.startLoad()
+    }
+    
+    private static func queueNextTagAlbum(serverId: Int, tagAlbumId: Int, callback: @escaping SuccessErrorCallback) {
+        albumLoader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId) { _, success, error in
+            if success, let albumLoader = albumLoader {
+                var offset = 0
+                for songId in albumLoader.songIds {
+                    if let song = store.song(serverId: serverId, id: songId) {
+                        song.queueNext(offset: offset)
+                        offset += 1
+                    }
+                }
             }
             callback(success, error)
         }

@@ -379,6 +379,48 @@ extension Store {
         return songsRecursive(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level, parentPathComponent: downloadedFolderAlbum.name)
     }
     
+    func songsRecursive(downloadedTagArtist: DownloadedTagArtist) -> [Song] {
+        do {
+            return try pool.read { db in
+                let sql: SQLLiteral = """
+                    SELECT *
+                    FROM \(Song.self)
+                    JOIN \(DownloadedSong.self)
+                    ON \(DownloadedSong.self).serverId = \(Song.self).serverId
+                        AND \(DownloadedSong.self).songId = \(Song.self).id
+                    WHERE \(Song.self).serverId = \(downloadedTagArtist.serverId)
+                        AND \(Song.self).tagArtistId = \(downloadedTagArtist.id)
+                    ORDER BY \(Song.self).discNumber, \(Song.self).track, \(Song.self).title COLLATE NOCASE
+                    """
+                return try SQLRequest<Song>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select all songs recursively for downloaded tag artist \(downloadedTagArtist): \(error)")
+            return []
+        }
+    }
+    
+    func songsRecursive(downloadedTagAlbum: DownloadedTagAlbum) -> [Song] {
+        do {
+            return try pool.read { db in
+                let sql: SQLLiteral = """
+                    SELECT *
+                    FROM \(Song.self)
+                    JOIN \(DownloadedSong.self)
+                    ON \(DownloadedSong.self).serverId = \(Song.self).serverId
+                        AND \(DownloadedSong.self).songId = \(Song.self).id
+                    WHERE \(Song.self).serverId = \(downloadedTagAlbum.serverId)
+                        AND \(Song.self).tagAlbumId = \(downloadedTagAlbum.id)
+                    ORDER BY \(Song.self).discNumber, \(Song.self).track, \(Song.self).title COLLATE NOCASE
+                    """
+                return try SQLRequest<Song>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select all songs recursively for downloaded tag album \(downloadedTagAlbum): \(error)")
+            return []
+        }
+    }
+    
     func downloadedSongsCount() -> Int? {
         do {
             return try pool.read { db in

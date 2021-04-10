@@ -24,7 +24,6 @@ import CocoaLumberjackSwift
     @objc var window: UIWindow?
     @objc private(set) var tabBarController: CustomUITabBarController?
     @objc private(set) var padRootViewController: PadRootViewController?
-//    @objc private(set) var splitViewController: UISplitViewController?
         
     private let networkMonitor = NetworkMonitor()
     
@@ -50,14 +49,6 @@ import CocoaLumberjackSwift
         window.backgroundColor = settings.isJukeboxEnabled ? Colors.jukeboxWindow : Colors.window
         
         if UIDevice.isPad {
-//            let splitViewController = UISplitViewController()
-//            self.splitViewController = splitViewController
-//            splitViewController.preferredDisplayMode = .oneBesideSecondary
-//            splitViewController.minimumPrimaryColumnWidth = 300
-//            splitViewController.maximumPrimaryColumnWidth = 300
-//            splitViewController.viewControllers = [PadMenuViewController()]
-//            window.rootViewController = CustomRootViewController(mainViewController: splitViewController)
-            
             let padRootViewController = PadRootViewController()
             self.padRootViewController = padRootViewController
             window.rootViewController = CustomRootViewController(mainViewController: padRootViewController)
@@ -110,37 +101,6 @@ import CocoaLumberjackSwift
                 showSettings()
             }
         }
-        
-        // Create and display UI
-//        if (UIDevice.isPad) {
-//            self.padRootViewController = [[PadRootViewController alloc] initWithNibName:nil bundle:nil];
-//            [self.window setBackgroundColor:[UIColor clearColor]];
-//            self.window.rootViewController = self.padRootViewController;
-//            [self.window makeKeyAndVisible];
-//
-//            if (self.showIntro) {
-//                [self showSettings];
-//            }
-//        } else {
-//            [UITabBar.appearance setBarTintColor:UIColor.blackColor];
-//            self.mainTabBarController.tabBar.translucent = NO;
-//            self.offlineTabBarController.tabBar.translucent = NO;
-//
-//            if (settingsS.isOfflineMode) {
-//                self.currentTabBarController = self.offlineTabBarController;
-//                self.window.rootViewController = self.offlineTabBarController;
-//            } else {
-//                // Recover the tab order and load the main tabBarController
-//                self.currentTabBarController = self.mainTabBarController;
-//                self.window.rootViewController = self.mainTabBarController;
-//            }
-//
-//            [self.window makeKeyAndVisible];
-//
-//            if (self.showIntro) {
-//                [self showSettings];
-//            }
-//        }
         
         // Start checking the server status
         serverChecker.checkServer()

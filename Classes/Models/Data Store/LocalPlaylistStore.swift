@@ -295,30 +295,30 @@ extension Store {
         return success
     }
     
-    func queueNext(song: Song) -> Bool {
+    func queueNext(song: Song, offset: Int = 0) -> Bool {
         var success = true
         if settings.isJukeboxEnabled {
             if playQueue.isShuffle {
                 // Add next
-                success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxShuffleQueueId, position: playQueue.nextIndexIgnoringRepeatMode)
+                success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxShuffleQueueId, position: playQueue.nextIndexIgnoringRepeatMode + offset)
                 if success {
                     // Add to end
                     success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId)
                 }
             } else {
                 // Add next
-                success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId, position: playQueue.nextIndexIgnoringRepeatMode)
+                success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId, position: playQueue.nextIndexIgnoringRepeatMode + offset)
             }
         } else {
             if playQueue.isShuffle {
                 // Add next
-                success = add(song: song, localPlaylistId: LocalPlaylist.Default.shuffleQueueId, position: playQueue.nextIndexIgnoringRepeatMode)
+                success = add(song: song, localPlaylistId: LocalPlaylist.Default.shuffleQueueId, position: playQueue.nextIndexIgnoringRepeatMode + offset)
                 if success {
                     // Add to end
                     success = add(song: song, localPlaylistId: LocalPlaylist.Default.playQueueId)
                 }
             } else {
-                success = add(song: song, localPlaylistId: LocalPlaylist.Default.playQueueId, position: playQueue.nextIndexIgnoringRepeatMode)
+                success = add(song: song, localPlaylistId: LocalPlaylist.Default.playQueueId, position: playQueue.nextIndexIgnoringRepeatMode + offset)
             }
         }
         return success

@@ -234,7 +234,8 @@ extension Song: TableCellModel {
     
     func download() { _ = store.addToDownloadQueue(song: self) }
     func queue() { _ = store.queue(song: self) }
-    func queueNext() { _ = store.queueNext(song: self) }
+    func queueNext() { queueNext(offset: 0) }
+    func queueNext(offset: Int = 0) { _ = store.queueNext(song: self, offset: offset) }
 }
 
 extension UniversalTableViewCell {

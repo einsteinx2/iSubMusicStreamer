@@ -43,12 +43,6 @@ final class Store {
         migrate()
     }
     
-    // TODO: implement this - Remove this as we now share the same DB for all servers and offline mode
-    func close() {
-        // Underlying dataabases are closed on deallocation
-        pool = nil
-    }
-    
     private func migrate() {
         guard let pool = pool else { DDLogError("mainDb not initialized"); return }
         

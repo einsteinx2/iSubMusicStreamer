@@ -74,7 +74,10 @@ extension ServerPlaylist: TableCellModel {
         }
     }
     func queueNext() {
-        // TODO: implement this
-        fatalError("implement this")
+        var offset = 0
+        for position in 0..<self.songCount {
+            store.song(serverId: serverId, serverPlaylistId: id, position: position)?.queueNext(offset: offset)
+            offset += 1
+        }
     }
 }

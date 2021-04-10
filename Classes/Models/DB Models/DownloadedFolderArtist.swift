@@ -51,7 +51,11 @@ extension DownloadedFolderArtist: TableCellModel {
         }
     }
     func queueNext() {
-        // TODO: implement this
-        fatalError("implement this")
+        var offset = 0
+        let songs = store.songsRecursive(serverId: serverId, level: 0, parentPathComponent: name)
+        for song in songs {
+            song.queueNext(offset: offset)
+            offset += 1
+        }
     }
 }

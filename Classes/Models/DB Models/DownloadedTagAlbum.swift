@@ -44,16 +44,19 @@ extension DownloadedTagAlbum: TableCellModel {
     var tagAlbumId: Int? { id }
     var parentFolderId: Int? { nil }
     
-    func download() {
-        // TODO: implement this
-        fatalError("implement this")
-    }
+    func download() { }
     func queue() {
-        // TODO: implement this
-        fatalError("implement this")
+        let songs = store.songsRecursive(downloadedTagAlbum: self)
+        for song in songs {
+            song.queue()
+        }
     }
     func queueNext() {
-        // TODO: implement this
-        fatalError("implement this")
+        var offset = 0
+        let songs = store.songsRecursive(downloadedTagAlbum: self)
+        for song in songs {
+            song.queueNext(offset: offset)
+            offset += 1
+        }
     }
 }

@@ -58,8 +58,5 @@ extension FolderAlbum: TableCellModel {
     
     func download() { SongsHelper.downloadAll(serverId: serverId, folderId: id) }
     func queue() { SongsHelper.queueAll(serverId: serverId, folderId: id) }
-    func queueNext() {
-        // TODO: implement this
-        fatalError("implement this")
-    }
+    func queueNext() { SongsHelper.queueAllNext(serverId: serverId, folderId: id) }
 }

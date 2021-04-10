@@ -63,7 +63,10 @@ extension LocalPlaylist: TableCellModel {
         }
     }
     func queueNext() {
-        // TODO: implement this
-        fatalError("implement this")
+        var offset = 0
+        for position in 0..<self.songCount {
+            store.song(localPlaylistId: id, position: position)?.queueNext(offset: offset)
+            offset += 1
+        }
     }
 }
