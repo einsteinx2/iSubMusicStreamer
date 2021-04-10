@@ -24,6 +24,7 @@ import CocoaLumberjackSwift
     @objc var window: UIWindow?
     @objc private(set) var tabBarController: CustomUITabBarController?
     @objc private(set) var padRootViewController: PadRootViewController?
+//    @objc private(set) var splitViewController: UISplitViewController?
         
     private let networkMonitor = NetworkMonitor()
     
@@ -49,9 +50,18 @@ import CocoaLumberjackSwift
         window.backgroundColor = settings.isJukeboxEnabled ? Colors.jukeboxWindow : Colors.window
         
         if UIDevice.isPad {
+//            let splitViewController = UISplitViewController()
+//            self.splitViewController = splitViewController
+//            splitViewController.preferredDisplayMode = .oneBesideSecondary
+//            splitViewController.minimumPrimaryColumnWidth = 300
+//            splitViewController.maximumPrimaryColumnWidth = 300
+//            splitViewController.viewControllers = [PadMenuViewController()]
+//            window.rootViewController = CustomRootViewController(mainViewController: splitViewController)
             
+            let padRootViewController = PadRootViewController()
+            self.padRootViewController = padRootViewController
+            window.rootViewController = CustomRootViewController(mainViewController: padRootViewController)
         } else {
-            // Manually create tab bar controller
             let tabBarController = CustomUITabBarController()
             self.tabBarController = tabBarController
             window.rootViewController = CustomRootViewController(mainViewController: tabBarController)

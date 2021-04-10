@@ -11,15 +11,20 @@ import SnapKit
 import Resolver
 
 final class PadMenuViewController: UIViewController {
+    enum TabType: Int, CaseIterable {
+        case settings = 0, home, library, playlists, downloads, back
+    }
+    
     @Injected private var settings: Settings
     
     private let tableContainer = UIView()
     private let tableView = UITableView(frame: .zero, style: .plain)
     private let playerController = PlayerViewController()
+//    private var cellContents = [TabType: (imageName: String, text: String)]()
     private var cellContents = [(imageName: String, text: String)]()
     private var isFirstLoad = true
     private var lastSelectedRow = -1
-    private var cachedTabs = [String: UINavigationController]()
+    private var cachedTabs = [TabType: UINavigationController]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,23 +97,20 @@ final class PadMenuViewController: UIViewController {
         if AppDelegate.shared.referringAppUrl != nil {
             cellContents.append((imageName: "tabbaricon-back", text: "Back"))
         }
+
+        cellContents.append((imageName: "tabbaricon-settings", text: "Settings"))
+        cellContents.append((imageName: "tabbaricon-folders", text: "Library"))
+        cellContents.append((imageName: "tabbaricon-playlists", text: "Playlists"))
+        cellContents.append((imageName: "tabbaricon-cache", text: "Downloads"))
         
-        if settings.isOfflineMode {
-            cellContents.append((imageName: "tabbaricon-settings", text: "Settings"))
-            cellContents.append((imageName: "tabbaricon-folders", text: "Folders"))
-            cellContents.append((imageName: "tabbaricon-genres", text: "Genres"))
-            cellContents.append((imageName: "tabbaricon-playlists", text: "Playlists"))
-            cellContents.append((imageName: "tabbaricon-bookmarks", text: "Bookmarks"))
-        } else {
-            cellContents.append((imageName: "tabbaricon-settings", text: "Settings"))
-            cellContents.append((imageName: "tabbaricon-home", text: "Home"))
-            cellContents.append((imageName: "tabbaricon-folders", text: "Folders"))
-            cellContents.append((imageName: "tabbaricon-playlists", text: "Playlists"))
-            cellContents.append((imageName: "tabbaricon-cache", text: "Cache"))
-            cellContents.append((imageName: "tabbaricon-bookmarks", text: "Bookmarks"))
-            cellContents.append((imageName: "tabbaricon-playing", text: "Playing"))
-            cellContents.append((imageName: "tabbaricon-chat", text: "Chat"))
-        }
+//        if AppDelegate.shared.referringAppUrl != nil {
+//            cellContents[.back] = (imageName: "tabbaricon-back", text: "Back")
+//        }
+//
+//        cellContents[.settings] = (imageName: "tabbaricon-settings", text: "Settings")
+//        cellContents[.library] = (imageName: "tabbaricon-folders", text: "Library")
+//        cellContents[.playlists] = (imageName: "tabbaricon-playlists", text: "Playlists")
+//        cellContents[.downloads] = (imageName: "tabbaricon-cache", text: "Downloads")
         
         tableView.reloadData()
     }
@@ -135,135 +137,34 @@ final class PadMenuViewController: UIViewController {
     private func showController(indexPath: IndexPath) {
         // If we have the back button displayed, subtract 1 from the row to get the correct action
         let row = AppDelegate.shared.referringAppUrl == nil ? indexPath.row : indexPath.row - 1
+        guard let type = TabType(rawValue: row) else { return }
         
         // Present the view controller
-        var controller: UINavigationController?
-        if settings.isOfflineMode {
-            switch row {
-            case 0:
-                if let cachedController = cachedTabs["SettingsViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: SettingsViewController())
-                    cachedTabs["SettingsViewController"] = controller
-                }
-//            case 1:
-//                if let cachedController = cachedTabs["CacheOfflineFoldersViewController"] {
-//                    controller = cachedController
-//                } else {
-//                    controller = CustomUINavigationController(rootViewController: CacheOfflineFoldersViewController())
-//                    cachedTabs["CacheOfflineFoldersViewController"] = controller
-//                }
-//            case 2:
-//                if let cachedController = cachedTabs["GenresViewController"] {
-//                    controller = cachedController
-//                } else {
-//                    controller = CustomUINavigationController(rootViewController: GenresViewController())
-//                    cachedTabs["GenresViewController"] = controller
-//                }
-            case 3:
-                if let cachedController = cachedTabs["PlaylistsViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: PlaylistsViewController())
-                    cachedTabs["PlaylistsViewController"] = controller
-                }
-            case 4:
-                if let cachedController = cachedTabs["BookmarksViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: BookmarksViewController())
-                    cachedTabs["BookmarksViewController"] = controller
-                }
-            default: controller = nil
-            }
+        var navController: UINavigationController? = nil
+        if let cachedController = cachedTabs[type] {
+            navController = cachedController
         } else {
-            switch row {
-            case 0:
-                if let cachedController = cachedTabs["SettingsViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: SettingsViewController())
-                    cachedTabs["SettingsViewController"] = controller
-                }
-            case 1:
-                if let cachedController = cachedTabs["HomeViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: HomeViewController())
-                    cachedTabs["HomeViewController"] = controller
-                }
-            case 2:
-                if let cachedController = cachedTabs["FoldersViewController"] {
-                    controller = cachedController
-                } else {
-                    let mediaFolderId = settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId
-                    let dataModel = FolderArtistsViewModel(serverId: settings.currentServerId, mediaFolderId: mediaFolderId)
-                    controller = CustomUINavigationController(rootViewController: ArtistsViewController(dataModel: dataModel))
-                    cachedTabs["FoldersViewController"] = controller
-                }
-            case 3:
-                if let cachedController = cachedTabs["PlaylistsViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: PlaylistsViewController())
-                    cachedTabs["PlaylistsViewController"] = controller
-                }
-            case 4:
-                if let cachedController = cachedTabs["DownloadsViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: DownloadsViewController())
-                    cachedTabs["DownloadsViewController"] = controller
-                }
-            case 5:
-                if let cachedController = cachedTabs["BookmarksViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: BookmarksViewController())
-                    cachedTabs["BookmarksViewController"] = controller
-                }
-            case 6:
-                if let cachedController = cachedTabs["NowPlayingViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: NowPlayingViewController())
-                    cachedTabs["NowPlayingViewController"] = controller
-                }
-            case 7:
-                if let cachedController = cachedTabs["ChatViewController"] {
-                    controller = cachedController
-                } else {
-                    controller = CustomUINavigationController(rootViewController: ChatViewController())
-                    cachedTabs["ChatViewController"] = controller
-                }
-//            case 8:
-//                if let cachedController = cachedTabs["GenresViewController"] {
-//                    controller = cachedController
-//                } else {
-//                    controller = CustomUINavigationController(rootViewController: GenresViewController())
-//                    cachedTabs["GenresViewController"] = controller
-//                }
-//            case 9:
-//                if let cachedController = cachedTabs["AllAlbumsViewController"] {
-//                    controller = cachedController
-//                } else {
-//                    controller = CustomUINavigationController(rootViewController: AllAlbumsViewController())
-//                    cachedTabs["AllAlbumsViewController"] = controller
-//                }
-//            case 10:
-//                if let cachedController = cachedTabs["AllSongsViewController"] {
-//                    controller = cachedController
-//                } else {
-//                    controller = CustomUINavigationController(rootViewController: AllSongsViewController())
-//                    cachedTabs["AllSongsViewController"] = controller
-//                }
-            default: controller = nil
+            var controller: UIViewController? = nil
+            switch type {
+            case .settings:  controller = SettingsViewController()
+            case .home:      controller = HomeViewController()
+            case .library:   controller = LibraryViewController()
+            case .playlists: controller = PlaylistsViewController()
+            case .downloads: controller = DownloadsViewController()
+            default: break
+            }
+            if let controller = controller {
+                navController = CustomUINavigationController(rootViewController: controller)
+                cachedTabs[type] = navController
             }
         }
         
-        if let controller = controller, let padRootViewController = parent as? PadRootViewController {
-            padRootViewController.switchContentViewController(controller: controller)
+        if let navController = navController {
+            if let padRootViewController = parent as? PadRootViewController {
+                padRootViewController.switchContentViewController(controller: navController)
+            } else if let splitViewController = parent as? UISplitViewController {
+                splitViewController.showDetailViewController(navController, sender: self)
+            }
         }
         lastSelectedRow = indexPath.row
     }
