@@ -64,6 +64,20 @@ extension DownloadedSong: FetchableRecord, PersistableRecord {
         return SQLRequest<DownloadedSong>(literal: sql)
     }
     
+    static func downloadedSongs(downloadedTagArtist: DownloadedTagArtist) -> SQLRequest<DownloadedSong> {
+        let sql: SQLLiteral = """
+            SELECT *
+            FROM \(DownloadedSong.self)
+            JOIN \(Song.self)
+            ON \(DownloadedSong.self).serverId = \(Song.self).serverId
+                AND \(DownloadedSong.self).songId = \(Song.self).id
+            WHERE \(Song.self).serverId = \(downloadedTagArtist.serverId)
+                AND \(Song.self).tagArtistId = \(downloadedTagArtist.id)
+            ORDER BY \(Song.self).discNumber, \(Song.self).track, \(Song.self).title COLLATE NOCASE
+            """
+        return SQLRequest<DownloadedSong>(literal: sql)
+    }
+    
     static func downloadedSongs(downloadedTagAlbum: DownloadedTagAlbum) -> SQLRequest<DownloadedSong> {
         let sql: SQLLiteral = """
             SELECT *
@@ -431,6 +445,28 @@ extension Store {
         }
     }
     
+    func downloadedSongs(downloadedTagArtist: DownloadedTagArtist) -> [DownloadedSong] {
+        do {
+            return try pool.read { db in
+                try DownloadedSong.downloadedSongs(downloadedTagArtist: downloadedTagArtist).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select downloaded songs for downloaded tag artist \(downloadedTagArtist): \(error)")
+            return []
+        }
+    }
+    
+    func downloadedSongsCount(downloadedTagArtist: DownloadedTagArtist) -> Int? {
+        do {
+            return try pool.read { db in
+                try DownloadedSong.downloadedSongs(downloadedTagArtist: downloadedTagArtist).fetchCount(db)
+            }
+        } catch {
+            DDLogError("Failed to count downloaded songs for downloaded tag artist \(downloadedTagArtist): \(error)")
+            return nil
+        }
+    }
+    
     func downloadedSongs(downloadedTagAlbum: DownloadedTagAlbum) -> [DownloadedSong] {
         do {
             return try pool.read { db in
@@ -577,6 +613,48 @@ extension Store {
     
     func deleteDownloadedSongs(downloadedFolderAlbum: DownloadedFolderAlbum) -> Bool {
         return deleteDownloadedSongs(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level)
+    }
+    
+    func deleteDownloadedSongs(downloadedTagArtist: DownloadedTagArtist) -> Bool {
+        do {
+            return try pool.write { db in
+                let downloadedSongs = try DownloadedSong.downloadedSongs(downloadedTagArtist: downloadedTagArtist).fetchAll(db)
+                for downloadedSong in downloadedSongs {
+                    // Remove song file
+                    if let song = self.song(serverId: downloadedSong.serverId, id: downloadedSong.songId), FileManager.default.fileExists(atPath: song.localPath) {
+                        try FileManager.default.removeItem(atPath: song.localPath)
+                    }
+                    
+                    try db.execute(literal: "DELETE FROM \(DownloadedSong.self) WHERE serverId = \(downloadedSong.serverId) AND songId = \(downloadedSong.songId)")
+                    try db.execute(literal: "DELETE FROM \(DownloadedSongPathComponent.self) WHERE serverId = \(downloadedSong.serverId) AND songId = \(downloadedSong.songId)")
+                }
+                return true
+            }
+        } catch {
+            DDLogError("Failed to delete downloaded songs for downloaded tag artist \(downloadedTagArtist): \(error)")
+            return false
+        }
+    }
+    
+    func deleteDownloadedSongs(downloadedTagAlbum: DownloadedTagAlbum) -> Bool {
+        do {
+            return try pool.write { db in
+                let downloadedSongs = try DownloadedSong.downloadedSongs(downloadedTagAlbum: downloadedTagAlbum).fetchAll(db)
+                for downloadedSong in downloadedSongs {
+                    // Remove song file
+                    if let song = self.song(serverId: downloadedSong.serverId, id: downloadedSong.songId), FileManager.default.fileExists(atPath: song.localPath) {
+                        try FileManager.default.removeItem(atPath: song.localPath)
+                    }
+                    
+                    try db.execute(literal: "DELETE FROM \(DownloadedSong.self) WHERE serverId = \(downloadedSong.serverId) AND songId = \(downloadedSong.songId)")
+                    try db.execute(literal: "DELETE FROM \(DownloadedSongPathComponent.self) WHERE serverId = \(downloadedSong.serverId) AND songId = \(downloadedSong.songId)")
+                }
+                return true
+            }
+        } catch {
+            DDLogError("Failed to delete downloaded songs for downloaded tag album \(downloadedTagAlbum): \(error)")
+            return false
+        }
     }
     
     func add(downloadedSong: DownloadedSong) -> Bool {

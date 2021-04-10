@@ -67,8 +67,15 @@ extension DownloadedSongsViewController {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        // TODO: implement this
-        return nil
+        SwipeAction.downloadQueueAndDeleteConfig(downloadHandler: nil, queueHandler: {
+            HUD.show()
+            DispatchQueue.userInitiated.async {
+                self.store.song(downloadedSong: self.downloadedSongs[indexPath.row])?.queue()
+                HUD.hide()
+            }
+        }, deleteHandler: {
+            self.deleteItems(indexPaths: [indexPath])
+        })
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {

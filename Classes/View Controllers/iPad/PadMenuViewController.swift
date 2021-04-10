@@ -20,7 +20,6 @@ final class PadMenuViewController: UIViewController {
     private let tableContainer = UIView()
     private let tableView = UITableView(frame: .zero, style: .plain)
     private let playerController = PlayerViewController()
-//    private var cellContents = [TabType: (imageName: String, text: String)]()
     private var cellContents = [(imageName: String, text: String)]()
     private var isFirstLoad = true
     private var lastSelectedRow = -1
@@ -60,7 +59,6 @@ final class PadMenuViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         if UIApplication.orientation.isLandscape {
             let fade = CAGradientLayer()
             fade.frame = CGRect(x: 0, y: 0, width: tableContainer.frame.size.width, height: tableContainer.frame.size.height)
@@ -93,25 +91,13 @@ final class PadMenuViewController: UIViewController {
     
     func loadCellContents() {
         cellContents.removeAll()
-        
         if AppDelegate.shared.referringAppUrl != nil {
             cellContents.append((imageName: "tabbaricon-back", text: "Back"))
         }
-
         cellContents.append((imageName: "tabbaricon-settings", text: "Settings"))
         cellContents.append((imageName: "tabbaricon-folders", text: "Library"))
         cellContents.append((imageName: "tabbaricon-playlists", text: "Playlists"))
         cellContents.append((imageName: "tabbaricon-cache", text: "Downloads"))
-        
-//        if AppDelegate.shared.referringAppUrl != nil {
-//            cellContents[.back] = (imageName: "tabbaricon-back", text: "Back")
-//        }
-//
-//        cellContents[.settings] = (imageName: "tabbaricon-settings", text: "Settings")
-//        cellContents[.library] = (imageName: "tabbaricon-folders", text: "Library")
-//        cellContents[.playlists] = (imageName: "tabbaricon-playlists", text: "Playlists")
-//        cellContents[.downloads] = (imageName: "tabbaricon-cache", text: "Downloads")
-        
         tableView.reloadData()
     }
     
@@ -133,7 +119,6 @@ final class PadMenuViewController: UIViewController {
         tableView(tableView, didSelectRowAt: indexPath)
     }
     
-    // TODO: implement this
     private func showController(indexPath: IndexPath) {
         // If we have the back button displayed, subtract 1 from the row to get the correct action
         let row = AppDelegate.shared.referringAppUrl == nil ? indexPath.row : indexPath.row - 1

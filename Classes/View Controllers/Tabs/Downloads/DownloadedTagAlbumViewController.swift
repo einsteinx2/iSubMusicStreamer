@@ -15,6 +15,8 @@ import CocoaLumberjackSwift
 final class DownloadedTagAlbumViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
+    @Injected private var cache: Cache
+    @Injected private var cacheQueue: CacheQueue
         
     private let downloadedTagAlbum: DownloadedTagAlbum
     private var downloadedSongs = [DownloadedSong]()
@@ -38,6 +40,21 @@ final class DownloadedTagAlbumViewController: AbstractDownloadsViewController {
         downloadedSongs = store.downloadedSongs(downloadedTagAlbum: downloadedTagAlbum)
         super.reloadTable()
     }
+    
+    override func deleteItems(indexPaths: [IndexPath]) {
+        HUD.show()
+        DispatchQueue.userInitiated.async {
+            for indexPath in indexPaths {
+                _ = self.store.delete(downloadedSong: self.downloadedSongs[indexPath.row])
+            }
+            self.cache.findCacheSize()
+            NotificationCenter.postOnMainThread(name: Notifications.cachedSongDeleted)
+            if (!self.cacheQueue.isDownloading) {
+                self.cacheQueue.start()
+            }
+            HUD.hide()
+        }
+    }
 }
 
 extension DownloadedTagAlbumViewController {
@@ -56,8 +73,15 @@ extension DownloadedTagAlbumViewController {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        // TODO: implement this
-        return nil
+        SwipeAction.downloadQueueAndDeleteConfig(downloadHandler: nil, queueHandler: {
+            HUD.show()
+            DispatchQueue.userInitiated.async {
+                self.store.song(downloadedSong: self.downloadedSongs[indexPath.row])?.queue()
+                HUD.hide()
+            }
+        }, deleteHandler: {
+            self.deleteItems(indexPaths: [indexPath])
+        })
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {

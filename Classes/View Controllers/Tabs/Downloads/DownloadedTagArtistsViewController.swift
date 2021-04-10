@@ -15,6 +15,8 @@ import CocoaLumberjackSwift
 final class DownloadedTagArtistsViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
+    @Injected private var cache: Cache
+    @Injected private var cacheQueue: CacheQueue
     
     var serverId: Int { Settings.shared().currentServerId }
         
@@ -33,20 +35,19 @@ final class DownloadedTagArtistsViewController: AbstractDownloadsViewController 
         addOrRemoveSaveEditHeader()
     }
     
-    // TODO: implement this
     override func deleteItems(indexPaths: [IndexPath]) {
-//        HUD.show()
-//        DispatchQueue.userInitiated.async {
-//            for indexPath in indexPaths {
-//                _ = self.store.deleteDownloadedSongs(downloadedTagArtist: self.downloadedTagArtists[indexPath.row])
-//            }
-//            self.cache.findCacheSize()
-//            NotificationCenter.postOnMainThread(name: Notifications.cachedSongDeleted)
-//            if (!self.cacheQueue.isDownloading) {
-//                self.cacheQueue.start()
-//            }
-//            HUD.hide()
-//        }
+        HUD.show()
+        DispatchQueue.userInitiated.async {
+            for indexPath in indexPaths {
+                _ = self.store.deleteDownloadedSongs(downloadedTagArtist: self.downloadedTagArtists[indexPath.row])
+            }
+            self.cache.findCacheSize()
+            NotificationCenter.postOnMainThread(name: Notifications.cachedSongDeleted)
+            if (!self.cacheQueue.isDownloading) {
+                self.cacheQueue.start()
+            }
+            HUD.hide()
+        }
     }
 }
 
@@ -67,8 +68,15 @@ extension DownloadedTagArtistsViewController {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        // TODO: implement this
-        return nil
+        SwipeAction.downloadQueueAndDeleteConfig(downloadHandler: nil, queueHandler: {
+            HUD.show()
+            DispatchQueue.userInitiated.async {
+                self.downloadedTagArtists[indexPath.row].queue()
+                HUD.hide()
+            }
+        }, deleteHandler: {
+            self.deleteItems(indexPaths: [indexPath])
+        })
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {

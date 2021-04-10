@@ -19,7 +19,6 @@ final class DownloadQueueViewController: AbstractDownloadsViewController {
     
     var serverId: Int { Settings.shared().currentServerId }
     
-//    private var downloadedSongs = [DownloadedSong]()
     override var itemCount: Int { store.downloadQueueCount() ?? 0 }
     
     override func viewDidLoad() {
@@ -35,33 +34,36 @@ final class DownloadQueueViewController: AbstractDownloadsViewController {
     }
 
     @objc override func reloadTable() {
-//        downloadedSongs = store.downloadedSongs(serverId: serverId)
         super.reloadTable()
         addOrRemoveSaveEditHeader()
     }
     
     override func deleteItems(indexPaths: [IndexPath]) {
-//        HUD.show()
-//        DispatchQueue.userInitiated.async {
-//            for indexPath in indexPaths {
-//                _ = self.store.delete(downloadedSong: self.downloadedSongs[indexPath.row])
-//            }
-//            self.cache.findCacheSize()
-//            HUD.hide()
-//            NotificationCenter.postOnMainThread(name: Notifications.cachedSongDeleted)
-//            if (!self.cacheQueue.isDownloading) {
-//                self.cacheQueue.start()
-//            }
-//        }
+        HUD.show()
+        DispatchQueue.userInitiated.async {
+            var songs = [Song]()
+            for indexPath in indexPaths {
+                if let song = self.store.songFromDownloadQueue(position: indexPath.row) {
+                    songs.append(song)
+                }
+            }
+            for song in songs {
+                _ = self.store.removeFromDownloadQueue(song: song)
+            }
+            HUD.hide()
+            if (!self.cacheQueue.isDownloading) {
+                self.cacheQueue.start()
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
 }
 
 extension DownloadQueueViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
-//        if let song = store.song(downloadedSong: downloadedSongs[indexPath.row]) {
-//            cell.update(song: song, number: false, cached: false, art: true)
-//        }
         if let song = store.songFromDownloadQueue(position: indexPath.row) {
             cell.update(song: song, number: false, cached: false, art: true)
             cell.hideHeaderLabel = false
@@ -82,8 +84,15 @@ extension DownloadQueueViewController {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        // TODO: implement this
-        return nil
+        SwipeAction.downloadQueueAndDeleteConfig(downloadHandler: nil, queueHandler: {
+            HUD.show()
+            DispatchQueue.userInitiated.async {
+                self.store.songFromDownloadQueue(position: indexPath.row)?.queue()
+                HUD.hide()
+            }
+        }, deleteHandler: {
+            self.deleteItems(indexPaths: [indexPath])
+        })
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
