@@ -275,6 +275,12 @@ final class HomeViewController: UIViewController {
         Flurry.logEvent("HomeTab")
     }
     
+    @objc private func addURLRefBackButton() {
+        if AppDelegate.shared.referringAppUrl != nil {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: AppDelegate.shared, action: #selector(AppDelegate.backToReferringApp))
+        }
+    }
+    
     @objc private func initSongInfo() {
         songInfoButton.update(song: playQueue.currentSong ?? playQueue.prevSong)
     }

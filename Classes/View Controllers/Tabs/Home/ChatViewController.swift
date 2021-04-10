@@ -35,13 +35,10 @@ final class ChatViewController: UIViewController {
         }
         
         addHeader()
-                
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        addURLRefBackButton()
         startLoad()
         Flurry.logEvent("ChatTab")
     }
@@ -54,7 +51,6 @@ final class ChatViewController: UIViewController {
     deinit {
         loader?.cancelLoad()
         loader?.delegate = nil
-        NotificationCenter.removeObserverOnMainThread(self)
     }
     
     private func addHeader() {

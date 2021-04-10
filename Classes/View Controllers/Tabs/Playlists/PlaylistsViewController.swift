@@ -30,10 +30,6 @@ final class PlaylistsViewController: TabmanViewController {
         
         view.backgroundColor = Colors.background
         title = "Playlists"
-        
-        // TODO: implement this - make a function like setupDefaultTableView to add this and the two buttons in viewWillAppear automatically when in the tab bar and the controller is the root of the nav stack (do this for all view controllers to remove the duplicate code)
-        // Or maybe just make a superclass that sets up the default table and handles all this
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification)
 
         // Setup ButtonBar
         isScrollEnabled = false
@@ -44,13 +40,8 @@ final class PlaylistsViewController: TabmanViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        addURLRefBackButton()
         addBar(buttonBar, dataSource: self, at: .navigationItem(item: navigationItem))
         Flurry.logEvent("PlaylistsTab")
-    }
-    
-    deinit {
-        NotificationCenter.removeObserverOnMainThread(self)
     }
     
     private func viewController(index: Int) -> UIViewController? {

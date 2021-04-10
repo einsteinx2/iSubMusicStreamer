@@ -73,12 +73,10 @@ final class ArtistsViewController: UIViewController {
         
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(serverSwitched), name: Notifications.serverSwitched)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadAction), name: Notifications.serverCheckPassed)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        addURLRefBackButton()
         if !dataModel.isCached {
             loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId)
         }

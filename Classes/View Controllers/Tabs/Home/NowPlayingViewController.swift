@@ -31,17 +31,14 @@ final class NowPlayingViewController: UIViewController {
         tableView.refreshControl = RefreshControl { [unowned self] in
             loadData()
         }
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification)
     }
     
     deinit {
         cancelLoad()
-        NotificationCenter.removeObserverOnMainThread(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        addURLRefBackButton()
         loadData()
         Flurry.logEvent("NowPlayingTab")
     }

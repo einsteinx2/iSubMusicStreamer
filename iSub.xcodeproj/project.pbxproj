@@ -58,8 +58,6 @@
 		531EC87B25B232EC0076973A /* DownloadedSongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC87925B232EC0076973A /* DownloadedSongsViewController.swift */; };
 		531EC87D25B24B6B0076973A /* ArtistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC87C25B24B6B0076973A /* ArtistsViewController.swift */; };
 		531EC87E25B24B6B0076973A /* ArtistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC87C25B24B6B0076973A /* ArtistsViewController.swift */; };
-		531EC88025B24DB80076973A /* UIViewController+NavigationItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC87F25B24DB80076973A /* UIViewController+NavigationItems.swift */; };
-		531EC88125B24DB80076973A /* UIViewController+NavigationItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC87F25B24DB80076973A /* UIViewController+NavigationItems.swift */; };
 		531EC88325B250BB0076973A /* UIViewController+TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC88225B250BB0076973A /* UIViewController+TableView.swift */; };
 		531EC88425B250BB0076973A /* UIViewController+TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC88225B250BB0076973A /* UIViewController+TableView.swift */; };
 		531EC88C25B33E5E0076973A /* CountReloadTimeHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC88B25B33E5E0076973A /* CountReloadTimeHeader.swift */; };
@@ -661,7 +659,6 @@
 		531EC87625B230920076973A /* DownloadedTagAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadedTagAlbum.swift; sourceTree = "<group>"; };
 		531EC87925B232EC0076973A /* DownloadedSongsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadedSongsViewController.swift; sourceTree = "<group>"; };
 		531EC87C25B24B6B0076973A /* ArtistsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistsViewController.swift; sourceTree = "<group>"; };
-		531EC87F25B24DB80076973A /* UIViewController+NavigationItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+NavigationItems.swift"; sourceTree = "<group>"; };
 		531EC88225B250BB0076973A /* UIViewController+TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+TableView.swift"; sourceTree = "<group>"; };
 		531EC88B25B33E5E0076973A /* CountReloadTimeHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountReloadTimeHeader.swift; sourceTree = "<group>"; };
 		53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEditViewController.swift; sourceTree = "<group>"; };
@@ -1645,7 +1642,6 @@
 				53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */,
 				53EA2DE1257D7B4D0003F38D /* UIView+ViewController.swift */,
 				537C93F825B127BF00175DF6 /* UIViewController+IsModal.swift */,
-				531EC87F25B24DB80076973A /* UIViewController+NavigationItems.swift */,
 				5373C69825B60A6900CAA859 /* UIViewController+PushCustom.swift */,
 				531EC88225B250BB0076973A /* UIViewController+TableView.swift */,
 			);
@@ -2101,7 +2097,6 @@
 				53ED673125B780070002BFAF /* UIApplication+Helper.swift in Sources */,
 				53A0EDC825B5DCF400B78DAA /* TagArtistViewController.swift in Sources */,
 				536C890725BB37F5008FE1AC /* CacheQueue.swift in Sources */,
-				531EC88025B24DB80076973A /* UIViewController+NavigationItems.swift in Sources */,
 				5381884225A65F6100C59CDE /* RootListMetadata.swift in Sources */,
 				537AE81D26224C360073DEF2 /* AsyncLoaderOperation.swift in Sources */,
 				53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
@@ -2346,7 +2341,6 @@
 				53ED672025B74BD40002BFAF /* DownloadedIndicatorView.swift in Sources */,
 				53A0EDC925B5DCF400B78DAA /* TagArtistViewController.swift in Sources */,
 				53E03CF825C1F6EF0043355F /* APIError.swift in Sources */,
-				531EC88125B24DB80076973A /* UIViewController+NavigationItems.swift in Sources */,
 				53ED673225B780070002BFAF /* UIApplication+Helper.swift in Sources */,
 				536C890825BB37F5008FE1AC /* CacheQueue.swift in Sources */,
 				537AE81E26224C360073DEF2 /* AsyncLoaderOperation.swift in Sources */,
