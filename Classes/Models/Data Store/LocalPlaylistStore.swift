@@ -58,6 +58,17 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
 //        try localPlaylist.save(db)
 //    }
     
+    static func fetchSongs(_ db: Database, playlistId: Int) throws -> [Song] {
+        let sql: SQLLiteral = """
+            SELECT *
+            FROM \(Song.self)
+            JOIN localPlaylistSong
+            ON \(Song.self).serverId = localPlaylistSong.serverId AND \(Song.self).id = localPlaylistSong.songId
+            WHERE localPlaylistSong.localPlaylistId = \(playlistId)
+            """
+        return try SQLRequest<Song>(literal: sql).fetchAll(db)
+    }
+    
     static func fetchSong(_ db: Database, playlistId: Int, position: Int) throws -> Song? {
         let sql: SQLLiteral = """
             SELECT *
@@ -186,6 +197,17 @@ extension Store {
         } catch {
             DDLogError("Failed to clear local playlist \(localPlaylistId): \(error)")
             return false
+        }
+    }
+    
+    func songs(localPlaylistId: Int) -> [Song] {
+        do {
+            return try pool.read { db in
+                return try LocalPlaylist.fetchSongs(db, playlistId: localPlaylistId)
+            }
+        } catch {
+            DDLogError("Failed to select songs in local playlist \(localPlaylistId): \(error)")
+            return []
         }
     }
     

@@ -11,6 +11,13 @@ import Resolver
 import CocoaLumberjackSwift
 
 final class Jukebox {
+    enum ActionType: String {
+        case get, status, set, start, stop, skip, add, clear, remove, shuffle, setGain
+    }
+    enum ParameterType: String {
+        case action, index, offset, id, gain
+    }
+    
     @LazyInjected private var playQueue: PlayQueue
     @LazyInjected private var settings: Settings
     
@@ -20,6 +27,8 @@ final class Jukebox {
     private(set) var position = 0
     private(set) var positionLastReportedAt = Date()
     
+    private var serverId: Int { settings.currentServerId }
+    
     private let sessionDelegate = SelfSignedCertURLSessionDelegate()
     private lazy var session: URLSession = {
         let configuration = URLSessionConfiguration.ephemeral
@@ -28,22 +37,22 @@ final class Jukebox {
     }()
     
     func playSong(index: Int) {
-        queueDataTask(action: "skip", parameters: ["index": index])
+        queueDataTask(action: .skip, parameters: [.index: index])
         playQueue.currentIndex = index
     }
     
     func play() {
-        queueDataTask(action: "start")
+        queueDataTask(action: .start)
         isPlaying = true
     }
     
     func stop() {
-        queueDataTask(action: "stop")
+        queueDataTask(action: .stop)
         isPlaying = false
     }
     
     func skipPrev() {
-        let index = playQueue.currentIndex - 1
+        let index = playQueue.prevIndex
         if index >= 0 {
             playSong(index: index)
             isPlaying = true
@@ -51,109 +60,73 @@ final class Jukebox {
     }
     
     func skipNext() {
-        // TODO: implement this
-//        NSInteger index = PlayQueue.shared.currentIndex + 1;
-//        if (index <= ([databaseS.currentPlaylistDbQueue intForQuery:@"SELECT COUNT(*) FROM jukeboxCurrentPlaylist"] - 1)) {
-//            [self playSongAtPosition:@(index)];
-//            self.isPlaying = YES;
-//        } else {
-//            [NSNotificationCenter postNotificationToMainThreadWithName:Notifications.songPlaybackEnded];
-//            [self stop];
-//            self.isPlaying = NO;
-//        }
+        let index = playQueue.nextIndex
+        if index < playQueue.count {
+            playSong(index: index)
+        } else {
+            NotificationCenter.postOnMainThread(name: Notifications.songPlaybackEnded)
+            stop()
+        }
     }
     
     func setVolume(level: Float) {
-        queueDataTask(action: "setGain", parameters: ["gain": level])
+        queueDataTask(action: .setGain, parameters: [.gain: level])
     }
     
     func seek(seconds: Int) {
-        // TODO: implement this
         // Subsonic supports this using the "skip" action with the "offset" parameter and reports back the seek position with the "position" attribute of "jukeboxStatus"
+        queueDataTask(action: .skip, parameters: [.offset: seconds])
     }
     
     func add(songId: Int) {
-        queueDataTask(action: "add", parameters: ["id": songId])
+        queueDataTask(action: .add, parameters: [.id: songId])
     }
     
     func add(songIds: [Int]) {
         if songIds.count > 0 {
-            queueDataTask(action: "add", parameters: ["id": songIds])
+            queueDataTask(action: .add, parameters: [.id: songIds])
         }
     }
     
     func remove(songId: Int) {
-        queueDataTask(action: "remove", parameters: ["id": songId])
+        queueDataTask(action: .remove, parameters: [.id: songId])
     }
     
     func replacePlaylistWithLocal() {
-        // TODO: implement this
-//        [self clearRemotePlaylist];
-//
-//        __block NSMutableArray *songIds = [[NSMutableArray alloc] init];
-//        [databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
-//            NSString *table = PlayQueue.shared.isShuffle ? @"jukeboxShufflePlaylist" : @"jukeboxCurrentPlaylist";
-//            FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"SELECT songId FROM %@", table]];
-//            while ([result next]) {
-//                @autoreleasepool {
-//                    NSString *songId = [result stringForColumnIndex:0];
-//                    if (songId) [songIds addObject:songId];
-//                }
-//            }
-//            [result close];
-//        }];
-//
-//        [self addSongs:songIds];
+        clearPlaylist(remoteOnly: true)
+        add(songIds: playQueue.songs().filter({ $0.serverId == serverId }).map({ $0.id }))
     }
     
-    // TODO: Why are their 2 clear methods?
-    func clearPlaylist() {
-        queueDataTask(action: "clear")
-        // TODO: implement this
-//        [databaseS resetJukeboxPlaylist];
-    }
-    
-    func clearRemotePlaylist() {
-        queueDataTask(action: "clear")
+    func clearPlaylist(remoteOnly: Bool = false) {
+        queueDataTask(action: .clear)
+        if !remoteOnly {
+            _ = playQueue.clear()
+        }
     }
     
     func shuffle() {
-        queueDataTask(action: "shuffle")
-        // TODO: implement this
-//        [databaseS resetJukeboxPlaylist];
+        queueDataTask(action: .shuffle)
+        _ = playQueue.clear()
     }
     
     private var getInfoWorkItem: DispatchWorkItem?
-    func getInfo() {
+    func getInfo(delay: Double = 0.5) {
         // Make sure this doesn't run a bunch of times in a row
         getInfoWorkItem?.cancel()
         let getInfoWorkItem = DispatchWorkItem {
-            // TODO: implement this
-            // Call the standard queueDataTask with action "get" and no parameters
-    //        if (settingsS.isJukeboxEnabled) {
-    //            [self queueGetInfoDataTask];
-    //            if (PlayQueue.shared.isShuffle) {
-    //                [databaseS resetShufflePlaylist];
-    //            } else {
-    //                [databaseS resetJukeboxPlaylist];
-    //            }
-    //
-    //            // Keep reloading every 30 seconds if there is no activity so that the player stays updated if visible
-    //            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(jukeboxGetInfoInternal) object:nil];
-    //            [self performSelector:@selector(jukeboxGetInfoInternal) withObject:nil afterDelay:30.0];
-    //        }
+            self.queueDataTask(action: .get)
         }
         self.getInfoWorkItem = getInfoWorkItem
-        DispatchQueue.main.async(after: 0.5, execute: getInfoWorkItem)
+        DispatchQueue.main.async(after: delay, execute: getInfoWorkItem)
     }
     
-    private func queueDataTask(action: String, parameters: [String: Any]? = nil) {
-        var finalParameters = parameters ?? [:]
-        finalParameters["action"] = action
+    private func queueDataTask(action: ActionType, parameters: [ParameterType: Any] = [:]) {
+        var finalParameters: [String: Any] = [ParameterType.action.rawValue: action.rawValue]
+        for (key, value) in parameters {
+            finalParameters[key.rawValue] = value
+        }
         
-        // TODO: implement this
-        // TODO: Don't hard code server id
-        guard let request = URLRequest(serverId: settings.currentServerId, subsonicAction: "jukeboxControl", parameters: finalParameters) else {
+        guard let request = URLRequest(serverId: serverId, subsonicAction: "jukeboxControl", parameters: finalParameters) else {
             DDLogError("[Jukebox] Failed to create URLRequest with parameters \(finalParameters)")
             return
         }
@@ -169,29 +142,17 @@ final class Jukebox {
                 
                 // Songs are only returned when calling the "get" action
                 if let songs = jukeboxResponse.songs {
-                    // TODO: Implement this
-                    if self.playQueue.isShuffle {
-                        //[databaseS resetShufflePlaylist];
-                    } else {
-                        //[databaseS resetJukeboxPlaylist];
-                    }
-                    
+                    _ = self.playQueue.clear()
                     for song in songs {
-                        if song.path.count > 0 {
-                            // TODO: implement this
-                            if self.playQueue.isShuffle {
-                                //[aSong insertIntoTable:@"jukeboxShufflePlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
-                            } else {
-                                // [aSong insertIntoTable:@"jukeboxCurrentPlaylist" inDatabaseQueue:databaseS.currentPlaylistDbQueue];
-                            }
-                        }
+                        song.queue()
                     }
                     
                     NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
                     NotificationCenter.postOnMainThread(name: Notifications.jukeboxSongInfo)
                 }
                 
-                self.getInfo()
+                let delay = action == .get ? 30 : 0.5
+                self.getInfo(delay: delay)
             } else if let error = error {
                 self.handleConnectionError(error: error)
             }
@@ -235,9 +196,7 @@ final class Jukebox {
             } else if let playlist = root.child("jukeboxPlaylist") {
                 var songs = [Song]()
                 playlist.iterate("entry") { e, _ in
-                    // TODO: implement this
-                    // TODO: Support multiple server IDs
-                    songs.append(Song(serverId: self.settings.currentServerId, element: e))
+                    songs.append(Song(serverId: self.serverId, element: e))
                 }
                 return JukeboxResponse(songs: songs,
                                        currentIndex: playlist.attribute("currentIndex").intXML,

@@ -151,9 +151,6 @@ struct SongsHelper {
     
     private static func shuffleCallback(success: Bool, error: Error?) {
         if success {
-            if settings.isJukeboxEnabled {
-                jukebox.clearRemotePlaylist()
-            }
             playQueue.shuffleToggle()
             if settings.isJukeboxEnabled {
                 jukebox.replacePlaylistWithLocal()

@@ -298,7 +298,7 @@ extension PlayQueueViewController: SaveEditHeaderDelegate {
                 saveEditHeader.selectedCount = playQueue.count
             } else {
                 // Delete action
-                playQueue.removeSongs(indexes: selectedRows)
+                _ = playQueue.removeSongs(indexes: selectedRows)
                 saveEditHeader.count = playQueue.count
                 tableView.deleteRows(at: tableView.indexPathsForSelectedRows ?? [], with: .automatic)
                 updateTableCellNumbers()
@@ -392,7 +392,7 @@ extension PlayQueueViewController: UITableViewConfiguration {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if let song = playQueue.song(index: indexPath.row), !song.isVideo {
             return SwipeAction.downloadQueueAndDeleteConfig(model: song) { [unowned self] in
-                playQueue.removeSongs(indexes: [indexPath.row])
+                _ = playQueue.removeSongs(indexes: [indexPath.row])
                 self.saveEditHeader.count = playQueue.count
                 self.tableView.deleteRows(at: [indexPath], with: .automatic)
                 self.addOrRemoveSaveEditHeader()

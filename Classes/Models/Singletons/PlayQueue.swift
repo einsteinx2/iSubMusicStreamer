@@ -137,18 +137,28 @@ import CocoaLumberjackSwift
         return song(index: nextIndex)
     }
     
-    @objc func removeSongs(indexes: [Int]) {
+    @objc func removeSongs(indexes: [Int]) -> Bool {
         if store.remove(songsAtPositions: indexes, localPlaylistId: currentPlaylistId) {
             // Stop the player if we deleted the current song
             if indexes.contains(currentIndex) {
                 player.stop()
                 currentIndex = 0
             }
+            return true
         }
+        return false
+    }
+    
+    func clear() -> Bool {
+        return store.clearPlayQueue()
+    }
+    
+    func songs() -> [Song] {
+        return store.songs(localPlaylistId: currentPlaylistId)
     }
     
     func song(index: Int) -> Song? {
-        store.song(localPlaylistId: currentPlaylistId, position: index)
+        return store.song(localPlaylistId: currentPlaylistId, position: index)
     }
     
     @objc func moveSong(fromIndex: Int, toIndex: Int) -> Bool {
