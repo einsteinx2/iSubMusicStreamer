@@ -21,7 +21,7 @@ private let ver1_8_0 = ["hls", "getAlbumList2", "getArtists", "getArtist", "getA
 private let versions = Set<[String]>([ver1_0_0, ver1_2_0, ver1_3_0, ver1_4_0, ver1_5_0, ver1_6_0, ver1_8_0])
 
 extension URLRequest {
-    private static func parseQueryString(parameters: [String: Any]?, version: String, username: String, password: String) -> String {
+    private static func createPostBody(parameters: [String: Any]?, version: String, username: String, password: String) -> Data? {
         var queryString = "v=\(version)&c=iSub&u=\(username.URLQueryEncoded)&p=\(password.URLQueryEncoded)"
         if let parameters = parameters {
             for (key, value) in parameters {
@@ -41,7 +41,7 @@ extension URLRequest {
                 }
             }
         }
-        return queryString
+        return queryString.data(using: .utf8)
     }
     
     init?(subsonicAction action: String, urlString: String, username: String, password: String, parameters: [String: Any]?, byteOffset: Int) {
@@ -74,8 +74,6 @@ extension URLRequest {
             DDLogError("Subsonic API call version number not set!")
             return nil
         }
-
-        let queryString = Self.parseQueryString(parameters: parameters, version: finalVersion, username: username, password: finalPassword)
         
         // Handle special case when loading playlists
         var loadingTimeout = 240.0
@@ -87,16 +85,14 @@ extension URLRequest {
             loadingTimeout = 15.0;
         }
         
-        // Create the request
-        // TODO: implement this
-        // TODO: Either use POST for all requests (I think there was some problem with them for some requests though) or use POST at least for requests that can be very large, for example sending playlist contents or jukebox play queue contents
-        finalUrlString += "?\(queryString)"
+        // Create the POST request
         guard let url = URL(string: finalUrlString) else {
             DDLogError("[URLRequest] Failed to convert finalUrlString to URL")
             return nil
         }
-        
         self.init(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: loadingTimeout)
+        httpMethod = "POST"
+        httpBody = Self.createPostBody(parameters: parameters, version: finalVersion, username: username, password: finalPassword)
         
         // Set the HTTP Basic Auth header if needed
         let settings: Settings = Resolver.resolve()
