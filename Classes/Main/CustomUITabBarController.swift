@@ -64,7 +64,7 @@ final class CustomUITabBarController: UITabBarController {
         self.viewControllers = controllers
     }
     
-    func popLibraryTab() {
-        libraryTab?.popToRootViewController(animated: false)
+    func popLibraryTab(animated: Bool = false) {
+        libraryTab?.popToRootViewController(animated: animated)
     }
 }

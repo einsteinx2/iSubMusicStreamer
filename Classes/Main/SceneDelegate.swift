@@ -251,9 +251,8 @@ import CocoaLumberjackSwift
     }
     
     @objc func popLibraryTab() {
-        // TODO: implement this for ipad
         if UIDevice.isPad {
-            
+            padRootViewController?.menuViewController.popLibraryTab()
         } else {
             tabBarController?.popLibraryTab()
         }
