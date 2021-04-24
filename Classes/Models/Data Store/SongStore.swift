@@ -21,16 +21,16 @@ extension Song: FetchableRecord, PersistableRecord {
         // Shared table of unique song records
         try db.create(table: Song.databaseTableName) { t in
             t.column(Column.serverId, .integer).notNull()
-            t.column(Column.id, .integer).notNull()
+            t.column(Column.id, .text).notNull()
             t.column(Column.title, .text).notNull()
             t.column(Column.coverArtId, .text)
-            t.column(Column.parentFolderId, .integer)
+            t.column(Column.parentFolderId, .text)
             t.column(Column.tagArtistName, .text)
             t.column(Column.tagAlbumName, .text)
             t.column(Column.playCount, .integer)
             t.column(Column.year, .integer)
-            t.column(Column.tagArtistId, .integer)
-            t.column(Column.tagAlbumId, .integer)
+            t.column(Column.tagArtistId, .text)
+            t.column(Column.tagAlbumId, .text)
             t.column(Column.genre, .text)
             t.column(Column.path, .text).notNull()
             t.column(Column.suffix, .text).notNull()
@@ -49,7 +49,7 @@ extension Song: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
-    func song(serverId: Int, id: Int) -> Song? {
+    func song(serverId: Int, id: String) -> Song? {
         do {
             return try pool.read { db in
                 try Song.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)

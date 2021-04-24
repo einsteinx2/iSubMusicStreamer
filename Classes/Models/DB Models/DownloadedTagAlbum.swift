@@ -11,10 +11,10 @@ import Resolver
 
 struct DownloadedTagAlbum: Codable, Equatable {
     let serverId: Int
-    let id: Int
+    let id: String
     let name: String
     let coverArtId: String?
-    let tagArtistId: Int?
+    let tagArtistId: String?
     let tagArtistName: String?
     let songCount: Int
     let duration: Int
@@ -41,8 +41,8 @@ extension DownloadedTagAlbum: TableCellModel {
     var isDownloaded: Bool { true }
     var isDownloadable: Bool { false }
     
-    var tagAlbumId: Int? { id }
-    var parentFolderId: Int? { nil }
+    var tagAlbumId: String? { id }
+    var parentFolderId: String? { nil }
     
     func download() { }
     func queue() {

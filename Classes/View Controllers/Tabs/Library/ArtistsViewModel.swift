@@ -32,8 +32,8 @@ class ArtistsViewModel {
     fileprivate(set) var metadata: RootListMetadata?
     fileprivate(set) var tableSections = [TableSection]()
     fileprivate(set) var mediaFolders = [MediaFolder]()
-    fileprivate(set) var artistIds = [Int]()
-    fileprivate(set) var searchArtistIds = [Int]()
+    fileprivate(set) var artistIds = [String]()
+    fileprivate(set) var searchArtistIds = [String]()
     
     fileprivate var mediaFoldersLoader: MediaFoldersLoader?
     fileprivate var artistsLoader: APILoader?

@@ -10,10 +10,10 @@ import Foundation
 
 struct TagAlbum: Codable, Equatable {
     let serverId: Int
-    let id: Int
+    let id: String
     let name: String
     let coverArtId: String?
-    let tagArtistId: Int?
+    let tagArtistId: String?
     let tagArtistName: String?
     let songCount: Int
     let duration: Int
@@ -25,10 +25,10 @@ struct TagAlbum: Codable, Equatable {
     
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
-        self.id = element.attribute("id").intXML
+        self.id = element.attribute("id").stringXML
         self.name = element.attribute("name").stringXML
         self.coverArtId = element.attribute("coverArt").stringXMLOptional
-        self.tagArtistId = element.attribute("artistId").intXMLOptional
+        self.tagArtistId = element.attribute("artistId").stringXMLOptional
         self.tagArtistName = element.attribute("artist").stringXMLOptional
         self.songCount = element.attribute("songCount").intXML
         self.duration = element.attribute("duration").intXML
@@ -60,8 +60,8 @@ extension TagAlbum: TableCellModel {
     }
     var durationLabelText: String? { nil }
     
-    var tagAlbumId: Int? { nil }
-    var parentFolderId: Int? { nil }
+    var tagAlbumId: String? { nil }
+    var parentFolderId: String? { nil }
     var isDownloaded: Bool { false }
     var isDownloadable: Bool { true }
     

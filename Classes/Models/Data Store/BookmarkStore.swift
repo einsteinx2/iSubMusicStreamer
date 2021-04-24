@@ -20,7 +20,7 @@ extension Bookmark: FetchableRecord, PersistableRecord {
         try db.create(table: Bookmark.databaseTableName) { t in
             t.column(Column.id, .integer).notNull().primaryKey()
             t.column(Column.songServerId, .integer).notNull()
-            t.column(Column.songId, .integer).notNull()
+            t.column(Column.songId, .text).notNull()
             t.column(Column.localPlaylistId, .integer).notNull().indexed()
             t.column(Column.songIndex, .integer).notNull()
             t.column(Column.offsetInSeconds, .double).notNull()
@@ -70,7 +70,7 @@ extension Store {
                 let rows = try SQLRequest<Row>(literal: sql).fetchCursor(db)
                 while let row = try rows.next() {
                     let serverId: Int = row["serverId"]
-                    let songId: Int = row["songId"]
+                    let songId: String = row["songId"]
                     try LocalPlaylist.insertSong(db, serverId: serverId, songId: songId, position: playlist.songCount, playlistId: playlist.id)
                     playlist.songCount += 1
                 }

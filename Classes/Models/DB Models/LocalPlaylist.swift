@@ -48,9 +48,9 @@ extension LocalPlaylist: TableCellModel {
     var isDownloadable: Bool { true }
     
     var serverId: Int { -1 }
-    var tagArtistId: Int? { nil }
-    var tagAlbumId: Int? { nil }
-    var parentFolderId: Int? { nil }
+    var tagArtistId: String? { nil }
+    var tagAlbumId: String? { nil }
+    var parentFolderId: String? { nil }
     
     func download() {
         for position in 0..<self.songCount {

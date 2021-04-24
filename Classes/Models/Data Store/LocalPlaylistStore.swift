@@ -45,7 +45,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
             t.column(RelatedColumn.localPlaylistId, .integer).notNull()
             t.column(RelatedColumn.position, .integer).notNull()
             t.column(RelatedColumn.serverId, .integer).notNull()
-            t.column(RelatedColumn.songId, .integer).notNull()
+            t.column(RelatedColumn.songId, .text).notNull()
         }
         try db.create(indexOn: Table.localPlaylistSong, columns: [RelatedColumn.localPlaylistId, RelatedColumn.position])
         try db.create(indexOn: Table.localPlaylistSong, columns: [RelatedColumn.localPlaylistId, RelatedColumn.serverId, RelatedColumn.songId])
@@ -85,7 +85,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
         try insertSong(db, serverId: song.serverId, songId: song.id, position: position, playlistId: playlistId)
     }
     
-    static func insertSong(_ db: Database, serverId: Int, songId: Int, position: Int, playlistId: Int) throws {
+    static func insertSong(_ db: Database, serverId: Int, songId: String, position: Int, playlistId: Int) throws {
         let sql: SQLLiteral = """
             INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
             VALUES (\(playlistId), \(position), \(serverId), \(songId))
@@ -270,7 +270,7 @@ extension Store {
         }
     }
     
-    func add(songIds: [Int], serverId: Int, localPlaylistId: Int) -> Bool {
+    func add(songIds: [String], serverId: Int, localPlaylistId: Int) -> Bool {
         do {
             return try pool.write { db in
                 // Select the playlist to get the count as it's O(1) instead of MAX(position) which is O(N)
@@ -347,7 +347,7 @@ extension Store {
     }
     
     // TODO: Move this to a single transaction
-    func queue(songIds: [Int], serverId: Int) -> Bool {
+    func queue(songIds: [String], serverId: Int) -> Bool {
         var success = true
         if settings.isJukeboxEnabled {
             if playQueue.isShuffle {
@@ -388,7 +388,7 @@ extension Store {
     }
     
     // TODO: Move this to a single transaction
-    func clearAndQueue(songIds: [Int], serverId: Int) -> Bool {
+    func clearAndQueue(songIds: [String], serverId: Int) -> Bool {
         if clearPlayQueue() {
             return queue(songIds: songIds, serverId: serverId)
         }
@@ -407,7 +407,7 @@ extension Store {
         return true
     }
     
-    func playSong(position: Int, songIds: [Int], serverId: Int) -> Song? {
+    func playSong(position: Int, songIds: [String], serverId: Int) -> Song? {
         if clearAndQueue(songIds: songIds, serverId: serverId) {
             // Set player defaults
             playQueue.isShuffle = false

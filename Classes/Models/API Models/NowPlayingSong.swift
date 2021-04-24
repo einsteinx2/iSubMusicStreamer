@@ -10,7 +10,7 @@ import Foundation
 
 struct NowPlayingSong: Codable, Equatable {
     let serverId: Int
-    let songId: Int
+    let songId: String
     let username: String
     let minutesAgo: Int
     let playerId: Int
@@ -18,7 +18,7 @@ struct NowPlayingSong: Codable, Equatable {
     
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
-        self.songId = element.attribute("id").intXML
+        self.songId = element.attribute("id").stringXML
         self.username = element.attribute("username").stringXML
         self.minutesAgo = element.attribute("minutesAgo").intXML
         self.playerId = element.attribute("playerId").intXML

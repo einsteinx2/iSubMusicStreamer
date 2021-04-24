@@ -10,7 +10,7 @@ import Foundation
 
 struct FolderMetadata: Codable, Equatable {
     let serverId: Int
-    let parentFolderId: Int
+    let parentFolderId: String
     let folderCount: Int
     let songCount: Int
     let duration: Int

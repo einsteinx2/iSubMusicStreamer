@@ -10,7 +10,7 @@ import Foundation
 
 struct DownloadedSong: Codable, Equatable {
     let serverId: Int
-    let songId: Int
+    let songId: String
     let path: String
     var isFinished: Bool = false
     var isPinned: Bool = false

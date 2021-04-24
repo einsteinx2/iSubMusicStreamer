@@ -21,7 +21,7 @@ struct Defines {
             #if SILENT
                 dynamicLogLevel = DDLogLevel.off
             #else
-                dynamicLogLevel = DDLogLevel.info//all
+                dynamicLogLevel = DDLogLevel.all
             #endif
         #else
             dynamicLogLevel = DDLogLevel.info

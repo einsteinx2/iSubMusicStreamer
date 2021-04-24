@@ -19,16 +19,16 @@ final class SubfolderLoader: APILoader {
     override var type: APILoaderType { .subFolders }
     
     let serverId: Int
-    let parentFolderId: Int
+    let parentFolderId: String
     
     private(set) var folderMetadata: FolderMetadata?
-    private(set) var folderAlbumIds = [Int]()
-    private(set) var songIds = [Int]()
+    private(set) var folderAlbumIds = [String]()
+    private(set) var songIds = [String]()
     
     var onProcessFolderAlbum: FolderAlbumHandler?
     var onProcessSong: SongHandler?
     
-    init(serverId: Int, parentFolderId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil, folderAlbumHandler: FolderAlbumHandler? = nil, songHandler: SongHandler? = nil) {
+    init(serverId: Int, parentFolderId: String, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil, folderAlbumHandler: FolderAlbumHandler? = nil, songHandler: SongHandler? = nil) {
         self.serverId = serverId
         self.parentFolderId = parentFolderId
         self.onProcessFolderAlbum = folderAlbumHandler

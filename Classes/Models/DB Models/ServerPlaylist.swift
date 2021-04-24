@@ -51,7 +51,7 @@ extension ServerPlaylist: TableCellModel {
     
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? {
-        var secondaryLabelText = (songCount == 1 ? "1 song" : "\(songCount) songs")
+        var secondaryLabelText = "\(songCount) \("Song".pluralize(amount: songCount))"
         secondaryLabelText += " • \(formatTime(seconds: duration))"
         return secondaryLabelText
     }
@@ -59,9 +59,9 @@ extension ServerPlaylist: TableCellModel {
     var isDownloaded: Bool { false }
     var isDownloadable: Bool { true }
     
-    var tagArtistId: Int? { nil }
-    var tagAlbumId: Int? { nil }
-    var parentFolderId: Int? { nil }
+    var tagArtistId: String? { nil }
+    var tagAlbumId: String? { nil }
+    var parentFolderId: String? { nil }
     
     func download() {
         for position in 0..<self.songCount {

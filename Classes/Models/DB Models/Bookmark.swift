@@ -11,7 +11,7 @@ import Foundation
 struct Bookmark: Codable, Equatable {
     let id: Int
     let songServerId: Int
-    let songId: Int
+    let songId: String
     let localPlaylistId: Int
     let songIndex: Int
     let offsetInSeconds: Double

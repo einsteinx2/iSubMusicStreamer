@@ -78,17 +78,17 @@ final class Jukebox {
         queueDataTask(action: .skip, parameters: [.offset: seconds])
     }
     
-    func add(songId: Int) {
+    func add(songId: String) {
         queueDataTask(action: .add, parameters: [.id: songId])
     }
     
-    func add(songIds: [Int]) {
+    func add(songIds: [String]) {
         if songIds.count > 0 {
             queueDataTask(action: .add, parameters: [.id: songIds])
         }
     }
     
-    func remove(songId: Int) {
+    func remove(songId: String) {
         queueDataTask(action: .remove, parameters: [.id: songId])
     }
     

@@ -18,7 +18,7 @@ final class TagAlbumViewController: UIViewController {
     
     private let tagAlbum: TagAlbum
     private var loader: TagAlbumLoader?
-    private var songIds = [Int]()
+    private var songIds = [String]()
     
     private let tableView = UITableView()
     

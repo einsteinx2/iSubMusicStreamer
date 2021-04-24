@@ -215,7 +215,7 @@ extension Store {
         }
     }
     
-    func songIds(serverId: Int, serverPlaylistId: Int) -> [Int] {
+    func songIds(serverId: Int, serverPlaylistId: Int) -> [String] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -224,7 +224,7 @@ extension Store {
                     WHERE serverId = \(serverId) AND serverPlaylistId = \(serverPlaylistId)
                     ORDER BY position ASC
                     """
-                return try SQLRequest<Int>(literal: sql).fetchAll(db)
+                return try SQLRequest<String>(literal: sql).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select songIds in server playlist \(serverPlaylistId) server \(serverId): \(error)")

@@ -22,12 +22,12 @@ final class FolderAlbumViewController: UIViewController {
     
     private let folderArtist: FolderArtist?
     private let folderAlbum: FolderAlbum?
-    private let parentFolderId: Int
+    private let parentFolderId: String
     private var loader: SubfolderLoader?
     
     private var metadata: FolderMetadata?
-    private var folderAlbumIds = [Int]()
-    private var songIds = [Int]()
+    private var folderAlbumIds = [String]()
+    private var songIds = [String]()
     
     private let tableView = UITableView()
     

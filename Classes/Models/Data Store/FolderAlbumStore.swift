@@ -26,10 +26,10 @@ extension FolderAlbum: FetchableRecord, PersistableRecord {
         // Shared table of unique album records
         try db.create(table: FolderAlbum.databaseTableName) { t in
             t.column(Column.serverId, .integer).notNull()
-            t.column(Column.id, .integer).notNull()
+            t.column(Column.id, .text).notNull()
             t.column(Column.name, .text).notNull()
             t.column(Column.coverArtId, .text)
-            t.column(Column.parentFolderId, .integer)
+            t.column(Column.parentFolderId, .text)
             t.column(Column.tagArtistName, .text)
             t.column(Column.tagAlbumName, .text)
             t.column(Column.playCount, .integer).notNull()
@@ -46,8 +46,8 @@ extension FolderAlbum: FetchableRecord, PersistableRecord {
         try db.create(table: FolderAlbum.Table.folderAlbumList) { t in
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
             t.column(Column.serverId, .integer).notNull()
-            t.column(RelatedColumn.parentFolderId, .integer).notNull()
-            t.column(RelatedColumn.folderId, .integer).notNull()
+            t.column(RelatedColumn.parentFolderId, .text).notNull()
+            t.column(RelatedColumn.folderId, .text).notNull()
         }
         try db.create(indexOn: FolderAlbum.Table.folderAlbumList, columns: [Column.serverId, RelatedColumn.parentFolderId])
         
@@ -55,8 +55,8 @@ extension FolderAlbum: FetchableRecord, PersistableRecord {
         try db.create(table: FolderAlbum.Table.folderSongList) { t in
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
             t.column(Column.serverId, .integer).notNull()
-            t.column(RelatedColumn.parentFolderId, .integer).notNull()
-            t.column(RelatedColumn.songId, .integer).notNull()
+            t.column(RelatedColumn.parentFolderId, .text).notNull()
+            t.column(RelatedColumn.songId, .text).notNull()
         }
         try db.create(indexOn: FolderAlbum.Table.folderSongList, columns: [Column.serverId, RelatedColumn.parentFolderId])
     }
@@ -94,7 +94,7 @@ extension Store {
         }
     }
     
-    func resetFolderAlbumCache(serverId: Int, parentFolderId: Int) -> Bool {
+    func resetFolderAlbumCache(serverId: Int, parentFolderId: String) -> Bool {
         do {
             return try pool.write { db in
                 try db.execute(literal: "DELETE FROM folderAlbumList WHERE serverId = \(serverId) AND parentFolderId = \(parentFolderId)")
@@ -107,7 +107,7 @@ extension Store {
         }
     }
     
-    func folderAlbumIds(serverId: Int, parentFolderId: Int) -> [Int] {
+    func folderAlbumIds(serverId: Int, parentFolderId: String) -> [String] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -116,7 +116,7 @@ extension Store {
                     WHERE serverId = \(serverId) AND parentFolderId = \(parentFolderId)
                     ORDER BY \(Column.rowID) ASC
                     """
-                return try SQLRequest<Int>(literal: sql).fetchAll(db)
+                return try SQLRequest<String>(literal: sql).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select folder album IDs for server \(serverId) and parent folder \(parentFolderId): \(error)")
@@ -124,7 +124,7 @@ extension Store {
         }
     }
     
-    func folderAlbum(serverId: Int, id: Int) -> FolderAlbum? {
+    func folderAlbum(serverId: Int, id: String) -> FolderAlbum? {
         do {
             return try pool.read { db in
                 try FolderAlbum.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
@@ -156,7 +156,7 @@ extension Store {
         }
     }
     
-    func songIds(serverId: Int, parentFolderId: Int) -> [Int] {
+    func songIds(serverId: Int, parentFolderId: String) -> [String] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -165,7 +165,7 @@ extension Store {
                     WHERE serverId = \(serverId) AND parentFolderId = \(parentFolderId)
                     ORDER BY \(Column.rowID) ASC
                     """
-                return try SQLRequest<Int>(literal: sql).fetchAll(db)
+                return try SQLRequest<String>(literal: sql).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select song IDs for server \(serverId) and parent folder \(parentFolderId): \(error)")
@@ -199,7 +199,7 @@ extension Store {
         }
     }
     
-    func folderMetadata(serverId: Int, parentFolderId: Int) -> FolderMetadata? {
+    func folderMetadata(serverId: Int, parentFolderId: String) -> FolderMetadata? {
         do {
             return try pool.read { db in
                 try FolderMetadata.filter(literal: "serverId = \(serverId) AND parentFolderId = \(parentFolderId)").fetchOne(db)

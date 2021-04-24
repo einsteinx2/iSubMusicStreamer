@@ -25,7 +25,7 @@ extension DownloadedSong: FetchableRecord, PersistableRecord {
     static func createInitialSchema(_ db: Database) throws {
         try db.create(table: DownloadedSong.databaseTableName) { t in
             t.column(Column.serverId, .integer).notNull()
-            t.column(Column.songId, .integer).notNull()
+            t.column(Column.songId, .text).notNull()
             t.column(Column.path, .integer).notNull()
             t.column(Column.isFinished, .boolean).notNull()
             t.column(Column.isPinned, .boolean).notNull()
@@ -38,13 +38,13 @@ extension DownloadedSong: FetchableRecord, PersistableRecord {
         try db.create(table: Table.downloadQueue) { t in
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID)
             t.column(Column.serverId, .integer).notNull()
-            t.column(Column.songId, .integer).notNull()
+            t.column(Column.songId, .text).notNull()
             t.column(RelatedColumn.queuedDate, .datetime).notNull()
             t.uniqueKey([Column.serverId, Column.songId])
         }
     }
     
-    static func fetchOne(_ db: Database, serverId: Int, songId: Int) throws -> DownloadedSong? {
+    static func fetchOne(_ db: Database, serverId: Int, songId: String) throws -> DownloadedSong? {
         try DownloadedSong.filter(literal: "serverId = \(serverId) AND songId = \(songId)").fetchOne(db)
     }
     
@@ -547,7 +547,7 @@ extension Store {
         }
     }
     
-    func downloadedSong(serverId: Int, songId: Int) -> DownloadedSong? {
+    func downloadedSong(serverId: Int, songId: String) -> DownloadedSong? {
         do {
             return try pool.read { db in
                 try DownloadedSong.fetchOne(db, serverId: serverId, songId: songId)
@@ -597,7 +597,7 @@ extension Store {
         }
     }
     
-    func deleteDownloadedSong(serverId: Int, songId: Int) -> Bool {
+    func deleteDownloadedSong(serverId: Int, songId: String) -> Bool {
         do {
             if let song = self.song(serverId: serverId, id: songId), FileManager.default.fileExists(atPath: song.localPath) {
                 try FileManager.default.removeItem(atPath: song.localPath)
@@ -631,7 +631,7 @@ extension Store {
                     WHERE serverId = \(serverId) AND level = \(level)
                     GROUP BY serverId, songId
                     """
-                let songIds = try SQLRequest<Int>(literal: songIdsSql).fetchAll(db)
+                let songIds = try SQLRequest<String>(literal: songIdsSql).fetchAll(db)
                 for songId in songIds {
                     // Remove song file
                     if let song = self.song(serverId: serverId, id: songId), FileManager.default.fileExists(atPath: song.localPath) {
@@ -711,7 +711,7 @@ extension Store {
         }
     }
     
-    func update(playedDate: Date, serverId: Int, songId: Int) -> Bool {
+    func update(playedDate: Date, serverId: Int, songId: String) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -732,7 +732,7 @@ extension Store {
         return update(playedDate: playedDate, serverId: song.serverId, songId: song.id)
     }
     
-    func update(downloadFinished: Bool, serverId: Int, songId: Int) -> Bool {
+    func update(downloadFinished: Bool, serverId: Int, songId: String) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -758,7 +758,7 @@ extension Store {
         return update(downloadFinished: downloadFinished, serverId: song.serverId, songId: song.id)
     }
     
-    func update(isPinned: Bool, serverId: Int, songId: Int) -> Bool {
+    func update(isPinned: Bool, serverId: Int, songId: String) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -779,7 +779,7 @@ extension Store {
         return update(isPinned: isPinned, serverId: song.serverId, songId: song.id)
     }
     
-    func isDownloadFinished(serverId: Int, songId: Int) -> Bool {
+    func isDownloadFinished(serverId: Int, songId: String) -> Bool {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -799,7 +799,7 @@ extension Store {
         return isDownloadFinished(serverId: song.serverId, songId: song.id)
     }
     
-    func addToDownloadQueue(serverId: Int, songId: Int) -> Bool {
+    func addToDownloadQueue(serverId: Int, songId: String) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """
@@ -820,7 +820,7 @@ extension Store {
         return addToDownloadQueue(serverId: song.serverId, songId: song.id)
     }
     
-    func addToDownloadQueue(serverId: Int, songIds: [Int]) -> Bool {
+    func addToDownloadQueue(serverId: Int, songIds: [String]) -> Bool {
         do {
             return try pool.write { db in
                 for songId in songIds {
@@ -839,7 +839,7 @@ extension Store {
         }
     }
     
-    func removeFromDownloadQueue(serverId: Int, songId: Int) -> Bool {
+    func removeFromDownloadQueue(serverId: Int, songId: String) -> Bool {
         do {
             return try pool.write { db in
                 let sql: SQLLiteral = """

@@ -14,11 +14,11 @@ final class SongLoader: APILoader {
     @Injected private var store: Store
 
     let serverId: Int
-    let songId: Int
+    let songId: String
     
     private(set) var song: Song?
     
-    init(serverId: Int, songId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
+    init(serverId: Int, songId: String, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         self.songId = songId
         super.init(delegate: delegate, callback: callback)

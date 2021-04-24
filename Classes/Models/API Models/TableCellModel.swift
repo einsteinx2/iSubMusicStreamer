@@ -17,9 +17,9 @@ protocol TableCellModel {
     var isDownloadable: Bool { get }
     
     var serverId: Int { get }
-    var tagArtistId: Int? { get }
-    var tagAlbumId: Int? { get }
-    var parentFolderId: Int? { get }
+    var tagArtistId: String? { get }
+    var tagAlbumId: String? { get }
+    var parentFolderId: String? { get }
     
     func download()
     func queue()

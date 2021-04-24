@@ -10,7 +10,7 @@ import Foundation
 
 protocol Artist: TableCellModel {
     var serverId: Int { get }
-    var id: Int { get }
+    var id: String { get }
     var name: String { get }
     var coverArtId: String? { get }
     var artistImageUrl: String? { get }

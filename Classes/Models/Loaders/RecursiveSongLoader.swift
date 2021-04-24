@@ -13,8 +13,8 @@ final class RecursiveSongLoader: CancelableLoader {
     var callback: SuccessErrorCallback?
         
     let serverId: Int
-    private var folderIds = [Int]()
-    private var tagArtistIds = [Int]()
+    private var folderIds = [String]()
+    private var tagArtistIds = [String]()
     
     private var subfolderLoader: SubfolderLoader?
     private var tagArtistLoader: TagArtistLoader?
@@ -28,13 +28,13 @@ final class RecursiveSongLoader: CancelableLoader {
     
     private var queueNextOffset = 0
     
-    init(serverId: Int, folderId: Int, callback: SuccessErrorCallback? = nil) {
+    init(serverId: Int, folderId: String, callback: SuccessErrorCallback? = nil) {
         self.serverId = serverId
         self.folderIds.append(folderId)
         self.callback = callback
     }
     
-    init(serverId: Int, tagArtistId: Int, callback: SuccessErrorCallback? = nil) {
+    init(serverId: Int, tagArtistId: String, callback: SuccessErrorCallback? = nil) {
         self.serverId = serverId
         self.tagArtistIds.append(tagArtistId)
         self.callback = callback
@@ -143,7 +143,7 @@ final class RecursiveSongLoader: CancelableLoader {
         tagArtistLoader?.startLoad()
     }
     
-    private func loadAlbums(tagAlbumIds: [Int]) {
+    private func loadAlbums(tagAlbumIds: [String]) {
         tagAlbumIds.forEach { tagAlbumId in
             tagAlbumLoader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId) { [unowned self] _, success, error in
                 if success {
@@ -172,7 +172,7 @@ final class RecursiveSongLoader: CancelableLoader {
         }
     }
     
-    private func handleSongIds(songIds: [Int], serverId: Int) {
+    private func handleSongIds(songIds: [String], serverId: Int) {
         let store: Store = Resolver.resolve()
         if isQueue {
             _ = store.queue(songIds: songIds, serverId: serverId)

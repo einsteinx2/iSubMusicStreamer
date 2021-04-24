@@ -12,7 +12,7 @@ import InflectorKit
 
 struct DownloadedTagArtist: Codable, Equatable {
     let serverId: Int
-    let id: Int
+    let id: String
     let name: String
     let coverArtId: String?
     let artistImageUrl: String?
@@ -37,9 +37,9 @@ extension DownloadedTagArtist: TableCellModel {
     var isDownloaded: Bool { true }
     var isDownloadable: Bool { false }
     
-    var tagArtistId: Int? { id }
-    var tagAlbumId: Int? { nil }
-    var parentFolderId: Int? { nil }
+    var tagArtistId: String? { id }
+    var tagAlbumId: String? { nil }
+    var parentFolderId: String? { nil }
     
     func download() { }
     func queue() {

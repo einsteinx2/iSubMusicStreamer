@@ -27,7 +27,7 @@ extension TagArtist: FetchableRecord, PersistableRecord {
         // Shared table of unique artist records
         try db.create(table: TagArtist.databaseTableName) { t in
             t.column(Column.serverId, .integer).notNull()
-            t.column(Column.id, .integer).notNull()
+            t.column(Column.id, .text).notNull()
             t.column(Column.name, .text).notNull().indexed()
             t.column(Column.coverArtId, .text)
             t.column(Column.artistImageUrl, .text)
@@ -41,7 +41,7 @@ extension TagArtist: FetchableRecord, PersistableRecord {
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
             t.column(Column.serverId).notNull()
             t.column(RelatedColumn.mediaFolderId, .integer).notNull()
-            t.column(RelatedColumn.tagArtistId, .integer).notNull()
+            t.column(RelatedColumn.tagArtistId, .text).notNull()
         }
         try db.create(indexOn: TagArtist.Table.tagArtistList, columns: [Column.serverId, RelatedColumn.mediaFolderId])
         
@@ -67,7 +67,7 @@ extension TagArtist: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
-    func isTagArtistCached(serverId: Int, id: Int) -> Bool {
+    func isTagArtistCached(serverId: Int, id: String) -> Bool {
         do {
             return try pool.read { db in
                 try TagArtist.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchCount(db) > 0
@@ -92,7 +92,7 @@ extension Store {
         }
     }
     
-    func tagArtistIds(serverId: Int, mediaFolderId: Int) -> [Int] {
+    func tagArtistIds(serverId: Int, mediaFolderId: Int) -> [String] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -101,7 +101,7 @@ extension Store {
                     WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)
                     ORDER BY \(Column.rowID) ASC
                     """
-                return try SQLRequest<Int>(literal: sql).fetchAll(db)
+                return try SQLRequest<String>(literal: sql).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select tag artist IDs for server \(serverId) and media folder \(mediaFolderId): \(error)")
@@ -109,7 +109,7 @@ extension Store {
         }
     }
     
-    func tagArtist(serverId: Int, id: Int) -> TagArtist? {
+    func tagArtist(serverId: Int, id: String) -> TagArtist? {
         do {
             return try pool.read { db in
                 try TagArtist.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
@@ -209,7 +209,7 @@ extension Store {
     }
     
     // Returns a list of matching tag artist IDs
-    func search(tagArtistName name: String, serverId: Int, mediaFolderId: Int, offset: Int, limit: Int) -> [Int] {
+    func search(tagArtistName name: String, serverId: Int, mediaFolderId: Int, offset: Int, limit: Int) -> [String] {
         do {
             return try pool.read { db in
                 let searchTerm = "%\(name)%"
@@ -222,7 +222,7 @@ extension Store {
                     AND \(TagArtist.self).name LIKE \(searchTerm)
                     LIMIT \(limit) OFFSET \(offset)
                     """
-                return try SQLRequest<Int>(literal: sql).fetchAll(db)
+                return try SQLRequest<String>(literal: sql).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to search for tag artist \(name) in server \(serverId) and media folder \(mediaFolderId): \(error)")

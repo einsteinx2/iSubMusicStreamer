@@ -25,10 +25,10 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
         // Shared table of unique album records
         try db.create(table: TagAlbum.databaseTableName) { t in
             t.column(Column.serverId, .integer).notNull()
-            t.column(Column.id, .integer).notNull()
+            t.column(Column.id, .text).notNull()
             t.column(Column.name, .text).notNull()
             t.column(Column.coverArtId, .text)
-            t.column(Column.tagArtistId, .integer).indexed()
+            t.column(Column.tagArtistId, .text).indexed()
             t.column(Column.tagArtistName, .text)
             t.column(Column.songCount, .integer).notNull()
             t.column(Column.duration, .integer).notNull()
@@ -44,7 +44,7 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
         try db.create(table: TagAlbum.Table.tagSongList) { t in
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
             t.column(Column.serverId, .integer).notNull()
-            t.column(RelatedColumn.tagAlbumId, .integer).notNull()
+            t.column(RelatedColumn.tagAlbumId, .text).notNull()
             t.column(RelatedColumn.songId, .integer).notNull()
         }
         try db.create(indexOn: TagAlbum.Table.tagSongList, columns: [Column.serverId, RelatedColumn.tagAlbumId])
@@ -52,7 +52,7 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
-    func isTagAlbumCached(serverId: Int, id: Int) -> Bool {
+    func isTagAlbumCached(serverId: Int, id: String) -> Bool {
         do {
             return try pool.read { db in
                 try TagAlbum.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchCount(db) > 0
@@ -64,7 +64,7 @@ extension Store {
     }
     
     // Checks if all songs from the tag album are in the database
-    func isTagAlbumSongsCached(serverId: Int, id: Int) -> Bool {
+    func isTagAlbumSongsCached(serverId: Int, id: String) -> Bool {
         do {
             return try pool.read { db in
                 // If the tag album itself isn't cached, then assume it's songs aren't cached
@@ -99,7 +99,7 @@ extension Store {
         }
     }
     
-    func deleteTagAlbums(serverId: Int, tagArtistId: Int) -> Bool {
+    func deleteTagAlbums(serverId: Int, tagArtistId: String) -> Bool {
         do {
             return try pool.write { db in
                 try db.execute(literal: "DELETE FROM \(TagAlbum.self) WHERE serverId = \(serverId) AND tagArtistId = \(tagArtistId)")
@@ -130,7 +130,7 @@ extension Store {
 //        }
 //    }
     
-    func tagAlbumIds(serverId: Int, tagArtistId: Int, orderBy: TagAlbum.Column = .name) -> [Int] {
+    func tagAlbumIds(serverId: Int, tagArtistId: String, orderBy: TagAlbum.Column = .name) -> [String] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -139,7 +139,7 @@ extension Store {
                     WHERE serverId = \(serverId) AND tagArtistId = \(tagArtistId)
                     ORDER BY \(orderBy) ASC
                     """
-                return try SQLRequest<Int>(literal: sql).fetchAll(db)
+                return try SQLRequest<String>(literal: sql).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select tag album IDs for server \(serverId) and tag artist \(tagArtistId) ordered by \(orderBy): \(error)")
@@ -147,7 +147,7 @@ extension Store {
         }
     }
     
-    func tagAlbum(serverId: Int, id: Int) -> TagAlbum? {
+    func tagAlbum(serverId: Int, id: String) -> TagAlbum? {
         do {
             return try pool.read { db in
                 try TagAlbum.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
@@ -171,7 +171,7 @@ extension Store {
         }
     }
     
-    func songIds(serverId: Int, tagAlbumId: Int) -> [Int] {
+    func songIds(serverId: Int, tagAlbumId: String) -> [String] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -180,7 +180,7 @@ extension Store {
                     WHERE serverId = \(serverId) AND tagAlbumId = \(tagAlbumId)
                     ORDER BY \(Column.rowID) ASC
                     """
-                return try SQLRequest<Int>(literal: sql).fetchAll(db)
+                return try SQLRequest<String>(literal: sql).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select song IDs for server \(serverId) and tag album \(tagAlbumId): \(error)")
@@ -188,7 +188,7 @@ extension Store {
         }
     }
     
-    func deleteTagSongs(serverId: Int, tagAlbumId: Int) -> Bool {
+    func deleteTagSongs(serverId: Int, tagAlbumId: String) -> Bool {
         do {
             return try pool.write { db in
                 try db.execute(literal: "DELETE FROM tagSongList WHERE serverId = \(serverId) AND tagAlbumId = \(tagAlbumId)")

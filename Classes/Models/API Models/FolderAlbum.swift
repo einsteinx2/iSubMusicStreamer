@@ -10,10 +10,10 @@ import Foundation
 
 struct FolderAlbum: Codable, Equatable {
     let serverId: Int
-    let id: Int
+    let id: String
     let name: String
     let coverArtId: String?
-    let parentFolderId: Int?
+    let parentFolderId: String?
     let tagArtistName: String?
     let tagAlbumName: String?
     let playCount: Int
@@ -26,15 +26,15 @@ struct FolderAlbum: Codable, Equatable {
     
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
-        self.id = element.attribute("id").intXML
+        self.id = element.attribute("id").stringXML
         self.name = element.attribute("title").stringXML
         self.coverArtId = element.attribute("coverArt").stringXMLOptional
-        self.parentFolderId = element.attribute("parent").intXML
+        self.parentFolderId = element.attribute("parent").stringXMLOptional
         self.tagArtistName = element.attribute("artist").stringXMLOptional
         self.tagAlbumName = element.attribute("artist").stringXMLOptional
         self.playCount = element.attribute("playCount").intXML
         self.year = element.attribute("year").intXMLOptional
-        self.genre = element.attribute("genre")
+        self.genre = element.attribute("genre").stringXMLOptional
         self.userRating = element.attribute("userRating").intXMLOptional
         self.averageRating = element.attribute("averageRating").doubleXMLOptional
         self.createdDate = element.attribute("created").dateXML
@@ -53,8 +53,8 @@ extension FolderAlbum: TableCellModel {
     var isDownloaded: Bool { false }
     var isDownloadable: Bool { true }
     
-    var tagArtistId: Int? { nil }
-    var tagAlbumId: Int? { nil }
+    var tagArtistId: String? { nil }
+    var tagAlbumId: String? { nil }
     
     func download() { SongsHelper.downloadAll(serverId: serverId, folderId: id) }
     func queue() { SongsHelper.queueAll(serverId: serverId, folderId: id) }

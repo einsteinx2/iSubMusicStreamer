@@ -27,7 +27,7 @@ extension FolderArtist: FetchableRecord, PersistableRecord {
         // Shared table of unique artist records
         try db.create(table: FolderArtist.databaseTableName) { t in
             t.column(Column.serverId, .integer).notNull()
-            t.column(Column.id, .integer).notNull()
+            t.column(Column.id, .text).notNull()
             t.column(Column.name, .text).notNull().indexed()
             t.column(Column.userRating, .integer)
             t.column(Column.averageRating, .double)
@@ -40,7 +40,7 @@ extension FolderArtist: FetchableRecord, PersistableRecord {
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
             t.column(Column.serverId, .integer).notNull()
             t.column(RelatedColumn.mediaFolderId, .integer).notNull()
-            t.column(RelatedColumn.folderArtistId, .integer).notNull()
+            t.column(RelatedColumn.folderArtistId, .text).notNull()
         }
         try db.create(indexOn: FolderArtist.Table.folderArtistList, columns: [Column.serverId, RelatedColumn.mediaFolderId])
         
@@ -80,7 +80,7 @@ extension Store {
         }
     }
     
-    func folderArtistIds(serverId: Int, mediaFolderId: Int) -> [Int] {
+    func folderArtistIds(serverId: Int, mediaFolderId: Int) -> [String] {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
@@ -89,7 +89,7 @@ extension Store {
                     WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)
                     ORDER BY \(Column.rowID) ASC
                     """
-                return try SQLRequest<Int>(literal: sql).fetchAll(db)
+                return try SQLRequest<String>(literal: sql).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select folder artist IDs for server \(serverId) and media folder \(mediaFolderId): \(error)")
@@ -97,7 +97,7 @@ extension Store {
         }
     }
     
-    func folderArtist(serverId: Int, id: Int) -> FolderArtist? {
+    func folderArtist(serverId: Int, id: String) -> FolderArtist? {
         do {
             return try pool.read { db in
                 try FolderArtist.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db)
@@ -197,7 +197,7 @@ extension Store {
     }
     
     // Returns a list of matching tag artist IDs
-    func search(folderArtistName name: String, serverId: Int, mediaFolderId: Int, offset: Int, limit: Int) -> [Int] {
+    func search(folderArtistName name: String, serverId: Int, mediaFolderId: Int, offset: Int, limit: Int) -> [String] {
         do {
             return try pool.read { db in
                 let searchTerm = "%\(name)%"
@@ -210,7 +210,7 @@ extension Store {
                     AND \(FolderArtist.self).name LIKE \(searchTerm)
                     LIMIT \(limit) OFFSET \(offset)
                     """
-                return try SQLRequest<Int>(literal: sql).fetchAll(db)
+                return try SQLRequest<String>(literal: sql).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to search for folder artist \(name) in media folder \(mediaFolderId): \(error)")

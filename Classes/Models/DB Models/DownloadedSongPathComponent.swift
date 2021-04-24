@@ -14,5 +14,5 @@ struct DownloadedSongPathComponent: Codable, Equatable {
     let pathComponent: String
     let parentPathComponent: String?
     let serverId: Int
-    let songId: Int
+    let songId: String
 }

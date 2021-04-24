@@ -79,7 +79,7 @@ final class StreamHandler: NSObject, Codable {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let serverId: Int = try values.decode(forKey: .serverId)
-        let songId: Int = try values.decode(forKey: .songId)
+        let songId: String = try values.decode(forKey: .songId)
         let store: Store = Resolver.resolve()
         guard let song = store.song(serverId: serverId, id: songId) else {
             throw RuntimeError(message: "Error decoding StreamHandler, Song doesn't exist for serverId \(serverId) and songId \(songId)")
@@ -231,7 +231,7 @@ final class StreamHandler: NSObject, Codable {
     
     // MARK: Equality
     
-    override var hash: Int { song.serverId | song.id }
+    override var hash: Int { song.serverId | song.id.hash }
     
     override func isEqual(_ object: Any?) -> Bool {
         if let object = object as? StreamHandler {

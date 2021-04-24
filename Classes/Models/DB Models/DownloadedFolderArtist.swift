@@ -34,9 +34,9 @@ extension DownloadedFolderArtist: TableCellModel {
     var isDownloaded: Bool { true }
     var isDownloadable: Bool { false }
     
-    var tagArtistId: Int? { nil }
-    var tagAlbumId: Int? { nil }
-    var parentFolderId: Int? { nil }
+    var tagArtistId: String? { nil }
+    var tagAlbumId: String? { nil }
+    var parentFolderId: String? { nil }
     
     func download() {
         let songs = store.songsRecursive(serverId: serverId, level: 0, parentPathComponent: name)

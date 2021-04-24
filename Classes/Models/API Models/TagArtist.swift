@@ -11,7 +11,7 @@ import InflectorKit
 
 struct TagArtist: Artist, Codable, Equatable {
     let serverId: Int
-    let id: Int
+    let id: String
     let name: String
     let coverArtId: String?
     let artistImageUrl: String?
@@ -20,7 +20,7 @@ struct TagArtist: Artist, Codable, Equatable {
     
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
-        self.id = element.attribute("id").intXML
+        self.id = element.attribute("id").stringXML
         self.name = element.attribute("name").stringXML
         self.coverArtId = element.attribute("coverArt").stringXMLOptional
         self.artistImageUrl = element.attribute("artistImageUrl").stringXMLOptional
@@ -40,9 +40,9 @@ extension TagArtist: TableCellModel {
     var isDownloaded: Bool { false }
     var isDownloadable: Bool { true }
     
-    var tagArtistId: Int? { nil }
-    var tagAlbumId: Int? { nil }
-    var parentFolderId: Int? { nil }
+    var tagArtistId: String? { nil }
+    var tagAlbumId: String? { nil }
+    var parentFolderId: String? { nil }
     
     func download() { SongsHelper.downloadAll(serverId: serverId, tagArtistId: id) }
     func queue() { SongsHelper.queueAll(serverId: serverId, tagArtistId: id) }

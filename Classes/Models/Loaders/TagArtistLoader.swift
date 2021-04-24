@@ -14,11 +14,11 @@ final class TagArtistLoader: APILoader {
     @Injected private var store: Store
     
     let serverId: Int
-    let tagArtistId: Int
+    let tagArtistId: String
     
-    private(set) var tagAlbumIds = [Int]()
+    private(set) var tagAlbumIds = [String]()
     
-    init(serverId: Int, tagArtistId: Int, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
+    init(serverId: Int, tagArtistId: String, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         self.tagArtistId = tagArtistId
         super.init(delegate: delegate, callback: callback)

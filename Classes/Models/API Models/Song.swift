@@ -16,16 +16,16 @@ final class Song: Codable, Hashable, CustomStringConvertible {
     private var playQueue: PlayQueue { Resolver.resolve() }
             
     let serverId: Int
-    let id: Int
+    let id: String
     let title: String
     let coverArtId: String?
-    let parentFolderId: Int?
+    let parentFolderId: String?
     let tagArtistName: String?
     let tagAlbumName: String?
     let playCount: Int?
     let year: Int?
-    let tagArtistId: Int?
-    let tagAlbumId: Int?
+    let tagArtistId: String?
+    let tagAlbumId: String?
     let genre: String?
     let path: String
     let suffix: String
@@ -122,7 +122,7 @@ final class Song: Codable, Hashable, CustomStringConvertible {
         return rate
     }
     
-    init(serverId: Int, id: Int, title: String, coverArtId: String?, parentFolderId: Int, tagArtistName: String?, tagAlbumName: String?, playCount: Int, year: Int, tagArtistId: Int, tagAlbumId: Int, genre: String?, path: String, suffix: String, transcodedSuffix: String?, duration: Int, kiloBitrate: Int, track: Int, discNumber: Int, size: Int, isVideo: Bool, createdDate: Date, starredDate: Date?) {
+    init(serverId: Int, id: String, title: String, coverArtId: String?, parentFolderId: String?, tagArtistName: String?, tagAlbumName: String?, playCount: Int?, year: Int?, tagArtistId: String?, tagAlbumId: String?, genre: String?, path: String, suffix: String, transcodedSuffix: String?, duration: Int, kiloBitrate: Int, track: Int?, discNumber: Int?, size: Int, isVideo: Bool, createdDate: Date, starredDate: Date?) {
         self.serverId = serverId
         self.id = id
         self.title = title
@@ -150,16 +150,16 @@ final class Song: Codable, Hashable, CustomStringConvertible {
     
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
-        self.id = element.attribute("id").intXML
+        self.id = element.attribute("id").stringXML
         self.title = element.attribute("title").stringXML
         self.coverArtId = element.attribute("coverArt").stringXMLOptional
-        self.parentFolderId = element.attribute("parent").intXML
+        self.parentFolderId = element.attribute("parent").stringXMLOptional
         self.tagArtistName = element.attribute("artist").stringXMLOptional
         self.tagAlbumName = element.attribute("album").stringXMLOptional
-        self.playCount = element.attribute("playCount").intXML
+        self.playCount = element.attribute("playCount").intXMLOptional
         self.year = element.attribute("year").intXMLOptional
-        self.tagArtistId = element.attribute("artistId").intXMLOptional
-        self.tagAlbumId = element.attribute("albumId").intXMLOptional
+        self.tagArtistId = element.attribute("artistId").stringXMLOptional
+        self.tagAlbumId = element.attribute("albumId").stringXMLOptional
         self.genre = element.attribute("genre").stringXMLOptional
         self.path = element.attribute("path").stringXML
         self.suffix = element.attribute("suffix").stringXML
