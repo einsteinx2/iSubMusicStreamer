@@ -47,7 +47,7 @@ final class HomeViewButton: UIView {
     }
     
     func setTitle(title: String) {
-        button.setTitle(title, for: .normal)
+        label.text = title
     }
     
     func setAction(handler: @escaping () -> ()) {

@@ -40,7 +40,7 @@ final class HomeViewController: UIViewController {
     
     private let quickAlbumsButton = HomeViewButton(icon: UIImage(named: "home-quick"), title: "Quick\nAlbums")
     private let serverShuffleButton = HomeViewButton(icon: UIImage(named: "home-shuffle"), title: "Server\nShuffle")
-    private let jukeboxButton = HomeViewButton(icon: UIImage(named: "home-jukebox-off"), title: "Jukebox\nMode OFF")
+    private let jukeboxButton = HomeViewButton(icon: UIImage(named: "home-jukebox-off"), title: "Jukebox\nMode is OFF")
     private let settingsButton = HomeViewButton(icon: UIImage(named: "home-settings"), title: "App\nSettings")
     private let nowPlayingButton = HomeViewButton(icon: UIImage(systemName: "headphones", withConfiguration: UIImage.SymbolConfiguration(pointSize: 42, weight: .light, scale: .large)), title: "Now\nPlaying")
     private let chatButton = HomeViewButton(icon: UIImage(named: "home-chat"), title: "Server\nChat")
@@ -168,12 +168,14 @@ final class HomeViewController: UIViewController {
         jukeboxButton.setAction { [unowned self] in
             if settings.isJukeboxEnabled {
                 self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-off"))
+                self.jukeboxButton.setTitle(title: "Jukebox\nMode is OFF")
                 settings.isJukeboxEnabled = false
                 NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
                 analytics.log(event: .jukeboxDisabled)
             } else {
                 player.stop()
                 self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-on"))
+                self.jukeboxButton.setTitle(title: "Jukebox\nMode is ON")
                 settings.isJukeboxEnabled = true
                 self.jukebox.getInfo()
                 NotificationCenter.postOnMainThread(name: Notifications.jukeboxEnabled)
@@ -265,7 +267,9 @@ final class HomeViewController: UIViewController {
         addURLRefBackButton()
         
         let jukeboxImageName = settings.isJukeboxEnabled ? "home-jukebox-on" : "home-jukebox-off"
+        let jukeboxTitle = "Jukebox\nMode is \(settings.isJukeboxEnabled ? "ON" : "OFF")"
         jukeboxButton.setIcon(image: UIImage(named: jukeboxImageName))
+        jukeboxButton.setTitle(title: jukeboxTitle)
         
         searchSegment.alpha = 0.0
         searchSegment.isEnabled = false
@@ -343,6 +347,7 @@ final class HomeViewController: UIViewController {
     
     @objc private func jukeboxOff() {
         jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-off"))
+        jukeboxButton.setTitle(title: "Jukebox\nMode is OFF")
         initSongInfo()
     }
 }
