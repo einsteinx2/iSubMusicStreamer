@@ -201,7 +201,7 @@ final class UniversalTableViewCell: UITableViewCell {
     private func makePrimaryLabelConstraints() {
         primaryLabel.snp.remakeConstraints { make in
             if hideSecondaryLabel {
-                make.height.equalTo(coverArtView).multipliedBy(0.66)
+                make.height.equalTo(coverArtView).multipliedBy(0.5)
             } else {
                 make.bottom.equalTo(secondaryLabel.snp.top)
             }
@@ -214,7 +214,7 @@ final class UniversalTableViewCell: UITableViewCell {
     private func makeSecondaryLabelConstraints() {
         secondaryLabel.snp.remakeConstraints { make in
             if hideSecondaryLabel { make.height.equalTo(0) }
-            else { make.height.equalTo(coverArtView).multipliedBy(0.33) }
+            else { make.height.equalTo(coverArtView).multipliedBy(0.25) }
             make.leading.equalTo(primaryLabel)
             make.trailing.equalTo(primaryLabel)
             make.bottom.equalToSuperview().offset(UIDevice.isSmall ? -5 : -10)
