@@ -55,12 +55,10 @@ class APILoader: CancelableLoader {
         return URLSession(configuration: configuration, delegate: sessionDelegate, delegateQueue: nil)
     }
     
-    weak var delegate: APILoaderDelegate?
-    var callback: APILoaderCallback?
-    
     var type: APILoaderType { .generic }
     
-    private var selfRef: APILoader?
+    weak var delegate: APILoaderDelegate?
+    var callback: APILoaderCallback?
     private var dataTask: URLSessionDataTask?
     
     init(delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
@@ -77,15 +75,9 @@ class APILoader: CancelableLoader {
         
         // Cancel any existing request
         cancelLoad()
-        
-        // Keep a strong reference to self to allow loading without saving a loader reference
-        if selfRef == nil {
-            selfRef = self
-        }
-        
+                
         // Load the API endpoint
-        dataTask = Self.sharedSession.dataTask(with: request) { [weak self] data, response, error in
-            guard let self = self else { return }
+        dataTask = Self.sharedSession.dataTask(with: request) { data, response, error in
             if let error = error {
                 DDLogError("[SUSLoader] loader type: \(self.type.rawValue) failed: \(error)")
                 self.informDelegateLoadingFailed(error: error)
@@ -107,10 +99,8 @@ class APILoader: CancelableLoader {
     
     private func cleanup() {
         // Clean up the connection
+        dataTask?.cancel()
         dataTask = nil
-        
-        // Remove strong reference to self so the loader can deallocate
-        selfRef = nil
     }
     
     func processResponse(data: Data) {
