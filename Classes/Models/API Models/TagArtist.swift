@@ -8,6 +8,7 @@
 
 import Foundation
 import InflectorKit
+import Resolver
 
 struct TagArtist: Artist, Codable, Equatable {
     let serverId: Int
@@ -34,11 +35,14 @@ struct TagArtist: Artist, Codable, Equatable {
 }
 
 extension TagArtist: TableCellModel {
+    private var store: Store { Resolver.resolve() }
+    
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? { "\(albumCount) \("Album".pluralize(amount: albumCount))" }
     var durationLabelText: String? { nil }
     var isDownloaded: Bool { false }
     var isDownloadable: Bool { true }
+    var isAvailableOffline: Bool { store.isTagArtistAlbumsCached(serverId: serverId, id: id) }
     
     var tagArtistId: String? { nil }
     var tagAlbumId: String? { nil }

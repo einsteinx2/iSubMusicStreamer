@@ -27,8 +27,8 @@ final class CacheQueue {
     }
     
     init() {
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(willEnterOnlineMode), name: Notifications.willEnterOnlineMode)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(willEnterOfflineMode), name: Notifications.willEnterOfflineMode)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(didEnterOnlineMode), name: Notifications.didEnterOnlineMode)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(didEnterOfflineMode), name: Notifications.didEnterOfflineMode)
     }
     
     func isInQueue(song: Song) -> Bool {
@@ -136,7 +136,7 @@ final class CacheQueue {
     
     // MARK: Notifications
     
-    @objc private func willEnterOnlineMode() {
+    @objc private func didEnterOnlineMode() {
         if SceneDelegate.shared.isWifi || settings.isManualCachingOnWWANEnabled {
             start()
         } else {
@@ -144,7 +144,7 @@ final class CacheQueue {
         }
     }
     
-    @objc private func willEnterOfflineMode() {
+    @objc private func didEnterOfflineMode() {
         stop()
     }
 }

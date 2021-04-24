@@ -58,7 +58,7 @@ extension Store {
                 try TagAlbum.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchCount(db) > 0
             }
         } catch {
-            DDLogError("Failed to select tag album count for \(id) server \(serverId): \(error)")
+            DDLogError("Failed to check if tag album \(id) is cached for server \(serverId): \(error)")
             return false
         }
     }
@@ -82,7 +82,7 @@ extension Store {
                 return tagAlbum.songCount == songIdsCount
             }
         } catch {
-            DDLogError("Failed to select tag album count for \(id) server \(serverId): \(error)")
+            DDLogError("Failed to check if songs from tag album \(id) are cached for server \(serverId): \(error)")
             return false
         }
     }

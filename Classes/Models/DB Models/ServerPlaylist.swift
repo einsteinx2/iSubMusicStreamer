@@ -58,6 +58,7 @@ extension ServerPlaylist: TableCellModel {
     var durationLabelText: String? { formatTime(seconds: duration) }
     var isDownloaded: Bool { false }
     var isDownloadable: Bool { true }
+    var isAvailableOffline: Bool { store.isServerPlaylistSongsCached(serverId: serverId, id: id) }
     
     var tagArtistId: String? { nil }
     var tagAlbumId: String? { nil }

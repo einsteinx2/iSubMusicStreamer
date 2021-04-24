@@ -48,6 +48,11 @@ final class DownloadedSongsViewController: AbstractDownloadsViewController {
             }
         }
     }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        guard indexPath.row < downloadedSongs.count else { return nil }
+        return store.song(downloadedSong: downloadedSongs[indexPath.row])
+    }
 }
 
 extension DownloadedSongsViewController {

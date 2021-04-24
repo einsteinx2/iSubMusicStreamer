@@ -73,6 +73,30 @@ extension ServerPlaylist: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
+    // Checks if all songs from the playlist are in the database
+    func isServerPlaylistSongsCached(serverId: Int, id: Int) -> Bool {
+        do {
+            return try pool.read { db in
+                // If the server playlist itself isn't cached, then assume it's songs aren't cached
+                guard let serverPlaylist = try ServerPlaylist.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db) else {
+                    return false
+                }
+                
+                // Check if the songIds count matches the number of songs this album should have
+                let sql: SQLLiteral = """
+                    SELECT songId
+                    FROM serverPlaylistSong
+                    WHERE serverId = \(serverId) AND serverPlaylistId = \(id)
+                    """
+                let songIdsCount = try SQLRequest<Int>(literal: sql).fetchCount(db)
+                return serverPlaylist.songCount == songIdsCount
+            }
+        } catch {
+            DDLogError("Failed to check if songs from tag album \(id) are cached for server \(serverId): \(error)")
+            return false
+        }
+    }
+    
     func serverPlaylistsCount() -> Int? {
         do {
             return try pool.read { db in

@@ -189,6 +189,10 @@
 		536C8DFC2633961A007B81FB /* libbassopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36091EA961670058B925 /* libbassopus.a */; };
 		536C8DFD2633961A007B81FB /* libbass.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36031EA961670058B925 /* libbass.a */; };
 		536C8DFE26339620007B81FB /* libFlurry_11.1.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148C42559EAAF004AAC3F /* libFlurry_11.1.1.a */; };
+		536C8E0026349B46007B81FB /* UIView+EnableDisable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8DFF26349B45007B81FB /* UIView+EnableDisable.swift */; };
+		536C8E0126349B47007B81FB /* UIView+EnableDisable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8DFF26349B45007B81FB /* UIView+EnableDisable.swift */; };
+		536C8E032634A1F5007B81FB /* CustomUITableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8E022634A1F4007B81FB /* CustomUITableViewController.swift */; };
+		536C8E042634A1F5007B81FB /* CustomUITableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8E022634A1F4007B81FB /* CustomUITableViewController.swift */; };
 		536D620B1144495400DFCE56 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 536D620A1144495400DFCE56 /* SystemConfiguration.framework */; };
 		5373C69025B6040900CAA859 /* CustomUITabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */; };
 		5373C69125B6040900CAA859 /* CustomUITabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */; };
@@ -728,6 +732,8 @@
 		536C890F25BF92D1008FE1AC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		536C891225BF93FF008FE1AC /* ServersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServersViewController.swift; sourceTree = "<group>"; };
 		536C8DED26338EAA007B81FB /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
+		536C8DFF26349B45007B81FB /* UIView+EnableDisable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+EnableDisable.swift"; sourceTree = "<group>"; };
+		536C8E022634A1F4007B81FB /* CustomUITableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUITableViewController.swift; sourceTree = "<group>"; };
 		536D620A1144495400DFCE56 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUITabBarController.swift; sourceTree = "<group>"; };
 		5373C69525B6064D00CAA859 /* CustomUINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUINavigationController.swift; sourceTree = "<group>"; };
@@ -1305,6 +1311,7 @@
 				5359FA4F25DF59F400DCC390 /* CustomRootViewController.swift */,
 				5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */,
 				5373C69525B6064D00CAA859 /* CustomUINavigationController.swift */,
+				536C8E022634A1F4007B81FB /* CustomUITableViewController.swift */,
 				532C624A25B6197E00185998 /* VideoPlayer.swift */,
 				532C624E25B6230600185998 /* ServerChecker.swift */,
 				532C625125B62F5800185998 /* NetworkMonitor.swift */,
@@ -1646,6 +1653,7 @@
 				537C93F825B127BF00175DF6 /* UIViewController+IsModal.swift */,
 				5373C69825B60A6900CAA859 /* UIViewController+PushCustom.swift */,
 				531EC88225B250BB0076973A /* UIViewController+TableView.swift */,
+				536C8DFF26349B45007B81FB /* UIView+EnableDisable.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -2112,6 +2120,7 @@
 				53246AB3256C918500E11EC4 /* LyricsViewController.swift in Sources */,
 				53FE38AD1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
 				532C625225B62F5800185998 /* NetworkMonitor.swift in Sources */,
+				536C8E032634A1F5007B81FB /* CustomUITableViewController.swift in Sources */,
 				53D9743A255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */,
 				5357CE9C25B90C5B00FA825A /* Social.swift in Sources */,
 				53D4FCA925993C4E00C6F1AE /* TagArtistLoader.swift in Sources */,
@@ -2160,6 +2169,7 @@
 				531EC85425B1EBCA0076973A /* ServerPlaylistsViewController.swift in Sources */,
 				53D4FCB625995BB900C6F1AE /* TagAlbumLoader.swift in Sources */,
 				539D32E825A9490E00F53797 /* CoverArtDAO.swift in Sources */,
+				536C8E0026349B46007B81FB /* UIView+EnableDisable.swift in Sources */,
 				53FE679A256DD0F00015FC83 /* GCDWebServerFileResponse.m in Sources */,
 				531EC87A25B232EC0076973A /* DownloadedSongsViewController.swift in Sources */,
 				53FE38861EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */,
@@ -2358,6 +2368,7 @@
 				539148D12559EB1D004AAC3F /* FlurryEmpty.m in Sources */,
 				53FE38AC1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
 				53ED674725B8976F0002BFAF /* CustomStringConvertable+Default.swift in Sources */,
+				536C8E042634A1F5007B81FB /* CustomUITableViewController.swift in Sources */,
 				537B05C3256B40930008892C /* SongInfoViewController.swift in Sources */,
 				53FE679D256DD0F00015FC83 /* GCDWebServerDataResponse.m in Sources */,
 				532C625325B62F5800185998 /* NetworkMonitor.swift in Sources */,
@@ -2406,6 +2417,7 @@
 				53329653255F30220027C51A /* ClosureSleeve.swift in Sources */,
 				539D32DF25A8E78F00F53797 /* ServerStore.swift in Sources */,
 				531EC85525B1EBCA0076973A /* ServerPlaylistsViewController.swift in Sources */,
+				536C8E0126349B47007B81FB /* UIView+EnableDisable.swift in Sources */,
 				53D4FCB725995BB900C6F1AE /* TagAlbumLoader.swift in Sources */,
 				531EC87B25B232EC0076973A /* DownloadedSongsViewController.swift in Sources */,
 				539D32E925A9490E00F53797 /* CoverArtDAO.swift in Sources */,

@@ -36,6 +36,7 @@ extension DownloadedTagArtist: TableCellModel {
     var durationLabelText: String? { nil }
     var isDownloaded: Bool { true }
     var isDownloadable: Bool { false }
+    var isAvailableOffline: Bool { true }
     
     var tagArtistId: String? { id }
     var tagAlbumId: String? { nil }

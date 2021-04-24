@@ -48,6 +48,11 @@ final class DownloadedFolderArtistsViewController: AbstractDownloadsViewControll
             }
         }
     }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        guard indexPath.row < downloadedFolderArtists.count else { return nil }
+        return downloadedFolderArtists[indexPath.row]
+    }
 }
 
 extension DownloadedFolderArtistsViewController {

@@ -81,6 +81,16 @@ final class DownloadedFolderAlbumViewController: AbstractDownloadsViewController
             }
         }
     }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        if indexPath.section == SectionType.albums.rawValue {
+            guard indexPath.row < downloadedFolderAlbums.count else { return nil }
+            return downloadedFolderAlbums[indexPath.row]
+        } else {
+            guard indexPath.row < downloadedSongs.count else { return nil }
+            return store.song(downloadedSong: downloadedSongs[indexPath.row])
+        }
+    }
 }
 
 extension DownloadedFolderAlbumViewController {

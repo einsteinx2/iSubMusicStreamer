@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Resolver
 
-final class FolderAlbumViewController: UIViewController {
+final class FolderAlbumViewController: CustomUITableViewController {
     private enum SectionType: Int, CaseIterable {
         case albums = 0, songs
     }
@@ -28,9 +28,7 @@ final class FolderAlbumViewController: UIViewController {
     private var metadata: FolderMetadata?
     private var folderAlbumIds = [String]()
     private var songIds = [String]()
-    
-    private let tableView = UITableView()
-    
+        
     var hasLoaded: Bool { metadata != nil }
     var folderCount: Int { metadata?.folderCount ?? 0 }
     var songCount: Int { metadata?.songCount ?? 0 }
@@ -70,6 +68,7 @@ final class FolderAlbumViewController: UIViewController {
             startLoad()
         }
         
+        loadFromCache()
         if hasLoaded {
             addHeader()
             addSectionIndex()
@@ -197,6 +196,15 @@ final class FolderAlbumViewController: UIViewController {
         loader = nil
         tableView.refreshControl?.endRefreshing()
     }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        if let folderAlbum = folderAlbum(indexPath: indexPath) {
+            return folderAlbum
+        } else if let song = song(indexPath: indexPath) {
+            return song
+        }
+        return nil
+    }
 }
 
 extension FolderAlbumViewController: UITableViewConfiguration {
@@ -231,6 +239,7 @@ extension FolderAlbumViewController: UITableViewConfiguration {
         } else if let song = song(indexPath: indexPath) {
             cell.update(song: song)
         }
+        handleOfflineMode(cell: cell, at: indexPath)
         return cell
     }
     

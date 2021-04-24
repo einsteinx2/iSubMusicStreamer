@@ -10,14 +10,12 @@ import UIKit
 import SnapKit
 import Resolver
 
-final class LocalPlaylistViewController: UIViewController {
+final class LocalPlaylistViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
     private let localPlaylist: LocalPlaylist
-    
-    private let tableView = UITableView()
-    
+        
     init(localPlaylist: LocalPlaylist) {
         self.localPlaylist = localPlaylist
         super.init(nibName: nil, bundle: nil)
@@ -103,6 +101,10 @@ final class LocalPlaylistViewController: UIViewController {
     //
     //    self.tableView.scrollEnabled = NO;
     //    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
+    }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        return song(indexPath: indexPath)
     }
 }
 

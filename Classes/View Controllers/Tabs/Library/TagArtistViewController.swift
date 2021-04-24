@@ -9,7 +9,7 @@
 import UIKit
 import Resolver
 
-final class TagArtistViewController: UIViewController {
+final class TagArtistViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
@@ -18,9 +18,7 @@ final class TagArtistViewController: UIViewController {
     private let tagArtist: TagArtist
     private var loader: TagArtistLoader?
     private var tagAlbumIds = [String]()
-    
-    private let tableView = UITableView()
-    
+        
     init(tagArtist: TagArtist) {
         self.tagArtist = tagArtist
         super.init(nibName: nil, bundle: nil)
@@ -107,6 +105,10 @@ final class TagArtistViewController: UIViewController {
         loader = nil
         tableView.refreshControl?.endRefreshing()
     }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        return tagAlbum(indexPath: indexPath)
+    }
 }
 
 extension TagArtistViewController: UITableViewConfiguration {
@@ -127,6 +129,7 @@ extension TagArtistViewController: UITableViewConfiguration {
         let cell = tableView.dequeueUniversalCell()
         cell.show(cached: false, number: false, art: true, secondary: true, duration: false)
         cell.update(model: tagAlbum(indexPath: indexPath))
+        handleOfflineMode(cell: cell, at: indexPath)
         return cell
     }
     

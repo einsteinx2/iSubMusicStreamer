@@ -46,6 +46,7 @@ extension LocalPlaylist: TableCellModel {
     var coverArtId: String? { nil }
     var isDownloaded: Bool { false }
     var isDownloadable: Bool { true }
+    var isAvailableOffline: Bool { true }
     
     var serverId: Int { -1 }
     var tagArtistId: String? { nil }

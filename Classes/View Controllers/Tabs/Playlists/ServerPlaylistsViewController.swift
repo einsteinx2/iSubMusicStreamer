@@ -11,7 +11,7 @@ import SnapKit
 import CocoaLumberjackSwift
 import Resolver
 
-final class ServerPlaylistsViewController: UIViewController {
+final class ServerPlaylistsViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var playQueue: PlayQueue
@@ -20,7 +20,6 @@ final class ServerPlaylistsViewController: UIViewController {
     var serverId: Int { Settings.shared().currentServerId }
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "playlist", pluralizeClearType: false, isLargeCount: true)
-    private let tableView = UITableView()
     
     private var serverPlaylistsLoader: ServerPlaylistsLoader?
     private var serverPlaylists = [ServerPlaylist]()
@@ -141,6 +140,11 @@ final class ServerPlaylistsViewController: UIViewController {
         serverPlaylistsLoader?.cancelLoad()
         serverPlaylistsLoader?.callback = nil
         serverPlaylistsLoader = nil
+    }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        guard indexPath.row < serverPlaylists.count else { return nil }
+        return serverPlaylists[indexPath.row]
     }
 }
 

@@ -11,13 +11,12 @@ import SnapKit
 import CocoaLumberjackSwift
 import Resolver
 
-final class LocalPlaylistsViewController: UIViewController {
+final class LocalPlaylistsViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var playQueue: PlayQueue
     @Injected private var analytics: Analytics
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "song", pluralizeClearType: false, isLargeCount: false)
-    private let tableView = UITableView()
     
     private var localPlaylists = [LocalPlaylist]()
     
@@ -189,6 +188,11 @@ final class LocalPlaylistsViewController: UIViewController {
         }
         alert.addCancelAction()
         present(alert, animated: true, completion: nil)
+    }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        guard indexPath.row < localPlaylists.count else { return nil }
+        return localPlaylists[indexPath.row]
     }
 }
 

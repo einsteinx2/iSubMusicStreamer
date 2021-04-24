@@ -10,7 +10,7 @@ import UIKit
 import Resolver
 import CocoaLumberjackSwift
 
-final class SearchSongsViewController: UIViewController {
+final class SearchSongsViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var jukebox: Jukebox
@@ -26,9 +26,7 @@ final class SearchSongsViewController: UIViewController {
     private(set) var tagArtists: [TagArtist]
     private(set) var tagAlbums: [TagAlbum]
     private(set) var songs: [Song]
-    
-    private let tableView = UITableView()
-    
+        
     private var offset = 0
     private var isMoreResults = true
     private var isLoading = false
@@ -133,6 +131,24 @@ final class SearchSongsViewController: UIViewController {
         }
         searchLoader.startLoad()
     }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        switch searchItemType {
+        case .artists:
+            let artists: [TableCellModel] = searchType == .folder ? folderArtists : tagArtists
+            guard indexPath.row < artists.count else { return nil }
+            return artists[indexPath.row]
+        case .albums:
+            let albums: [TableCellModel] = searchType == .folder ? folderAlbums : tagAlbums
+            guard indexPath.row < albums.count else { return nil }
+            return albums[indexPath.row]
+        case .songs:
+            guard indexPath.row < songs.count else { return nil }
+            return songs[indexPath.row]
+        default:
+            return nil
+        }
+    }
 }
 
 extension SearchSongsViewController: UITableViewConfiguration {
@@ -194,6 +210,8 @@ extension SearchSongsViewController: UITableViewConfiguration {
         } else {
             cell.textLabel?.text = "No results"
         }
+        
+        handleOfflineMode(cell: cell, at: indexPath)
         return cell
     }
     

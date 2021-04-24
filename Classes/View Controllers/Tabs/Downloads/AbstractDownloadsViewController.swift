@@ -8,9 +8,8 @@
 
 import UIKit
 
-class AbstractDownloadsViewController: UIViewController {
+class AbstractDownloadsViewController: CustomUITableViewController {
     let saveEditHeader = SaveEditHeader()
-    let tableView = UITableView()
     
     var selectedRowsCount: Int { tableView.indexPathsForSelectedRows?.count ?? 0 }
     var itemCount: Int { fatalError("Must override in subclass") }

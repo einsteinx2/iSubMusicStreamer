@@ -40,6 +40,7 @@ extension DownloadedTagAlbum: TableCellModel {
     var durationLabelText: String? { nil }
     var isDownloaded: Bool { true }
     var isDownloadable: Bool { false }
+    var isAvailableOffline: Bool { true }
     
     var tagAlbumId: String? { id }
     var parentFolderId: String? { nil }

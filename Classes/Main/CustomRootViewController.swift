@@ -18,8 +18,8 @@ final class CustomRootViewController: UIViewController {
         self.mainViewController = mainViewController
         super.init(nibName: nil, bundle: nil)
         
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(showOfflineIndicator), name: Notifications.willEnterOfflineMode)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(hideOfflineIndicator), name: Notifications.willEnterOnlineMode)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(showOfflineIndicator), name: Notifications.didEnterOfflineMode)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(hideOfflineIndicator), name: Notifications.didEnterOnlineMode)
     }
     
     required init?(coder: NSCoder) {
@@ -54,13 +54,6 @@ final class CustomRootViewController: UIViewController {
             make.leading.trailing.equalToSuperview()
             make.top.equalToSuperview().offset(UIDevice.isSmall ? 0 : 5)
         }
-        
-//        DispatchQueue.main.async(after: 2.0) {
-//            self.showOfflineIndicator()
-////            DispatchQueue.main.async(after: 2.0) {
-////                self.hideOfflineIndicator()
-////            }
-//        }
     }
     
     @objc func showOfflineIndicator() {

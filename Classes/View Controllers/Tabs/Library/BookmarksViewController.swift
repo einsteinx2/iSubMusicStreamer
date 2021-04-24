@@ -11,12 +11,12 @@ import SnapKit
 import CocoaLumberjackSwift
 import Resolver
 
-final class BookmarksViewController: UIViewController {
+final class BookmarksViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var analytics: Analytics
+    @Injected private var settings: Settings
     
     private let saveEditHeader = SaveEditHeader(saveType: "bookmark", countType: "bookmark", pluralizeClearType: false, isLargeCount: false)
-    private let tableView = UITableView()
     
     private var bookmarks = [Bookmark]()
     
@@ -83,6 +83,11 @@ final class BookmarksViewController: UIViewController {
         tableView.setEditing(editing, animated: animated)
         saveEditHeader.setEditing(editing, animated: animated)
     }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        guard indexPath.row < bookmarks.count else { return nil }
+        return store.song(bookmark: bookmarks[indexPath.row])
+    }
 }
 
 extension BookmarksViewController: SaveEditHeaderDelegate {
@@ -124,12 +129,12 @@ extension BookmarksViewController: UITableViewConfiguration {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
         cell.show(cached: true, number: true, art: true, secondary: true, duration: true, header: true)
-        
         let bookmark = bookmarks[indexPath.row]
         if let song = store.song(bookmark: bookmark), let playlist = store.localPlaylist(bookmark: bookmark) {
             cell.headerText = "\(playlist.name) - \(formatTime(seconds: bookmark.offsetInSeconds))"
             cell.update(model: song)
         }
+        handleOfflineMode(cell: cell, at: indexPath)
         return cell
     }
     

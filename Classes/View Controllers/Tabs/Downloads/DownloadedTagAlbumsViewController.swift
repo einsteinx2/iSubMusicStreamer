@@ -49,6 +49,11 @@ final class DownloadedTagAlbumsViewController: AbstractDownloadsViewController {
             }
         }
     }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        guard indexPath.row < downloadedTagAlbums.count else { return nil }
+        return downloadedTagAlbums[indexPath.row]
+    }
 }
 
 extension DownloadedTagAlbumsViewController {

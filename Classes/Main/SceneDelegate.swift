@@ -160,13 +160,13 @@ import CocoaLumberjackSwift
     @objc private func enterOnlineMode() {
         guard settings.isOfflineMode && !settings.isForceOfflineMode && isNetworkReachable && (isWifi || !settings.isDisableUsageOver3G) else { return }
         settings.isOfflineMode = false
-        NotificationCenter.postOnMainThread(name: Notifications.willEnterOnlineMode)
+        NotificationCenter.postOnMainThread(name: Notifications.didEnterOnlineMode)
     }
     
     @objc private func enterOfflineMode() {
         guard !settings.isOfflineMode else { return }
         settings.isOfflineMode = true
-        NotificationCenter.postOnMainThread(name: Notifications.willEnterOfflineMode)
+        NotificationCenter.postOnMainThread(name: Notifications.didEnterOfflineMode)
         
         if settings.isJukeboxEnabled {
             settings.isJukeboxEnabled = false

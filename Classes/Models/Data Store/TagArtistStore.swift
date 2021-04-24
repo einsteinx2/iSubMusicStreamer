@@ -73,10 +73,35 @@ extension Store {
                 try TagArtist.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchCount(db) > 0
             }
         } catch {
-            DDLogError("Failed to select tag artist count for \(id) server \(serverId): \(error)")
+            DDLogError("Failed to check if tag artist \(id) is cached for server \(serverId): \(error)")
             return false
         }
     }
+    
+    // Checks if all albums from the tag album are in the database
+    func isTagArtistAlbumsCached(serverId: Int, id: String) -> Bool {
+        do {
+            return try pool.read { db in
+                // If the tag artist itself isn't cached, then assume it's songs aren't cached
+                guard let tagArtist = try TagArtist.filter(literal: "serverId = \(serverId) AND id = \(id)").fetchOne(db) else {
+                    return false
+                }
+                
+                // Check if the songIds count matches the number of songs this album should have
+                let sql: SQLLiteral = """
+                    SELECT id
+                    FROM tagAlbum
+                    WHERE serverId = \(serverId) AND tagArtistId = \(id)
+                    """
+                let albumIdsCount = try SQLRequest<Int>(literal: sql).fetchCount(db)
+                return tagArtist.albumCount == albumIdsCount
+            }
+        } catch {
+            DDLogError("Failed to check if albums for tag artist \(id) are cached for server \(serverId): \(error)")
+            return false
+        }
+    }
+    
     
     func deleteTagArtists(serverId: Int, mediaFolderId: Int) -> Bool {
         do {

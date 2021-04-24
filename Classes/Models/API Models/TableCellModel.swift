@@ -15,6 +15,7 @@ protocol TableCellModel {
     var coverArtId: String? { get }
     var isDownloaded: Bool { get }
     var isDownloadable: Bool { get }
+    var isAvailableOffline: Bool { get }
     
     var serverId: Int { get }
     var tagArtistId: String? { get }

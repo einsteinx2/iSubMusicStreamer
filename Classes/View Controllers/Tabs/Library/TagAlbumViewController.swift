@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Resolver
 
-final class TagAlbumViewController: UIViewController {
+final class TagAlbumViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     
@@ -19,9 +19,7 @@ final class TagAlbumViewController: UIViewController {
     private let tagAlbum: TagAlbum
     private var loader: TagAlbumLoader?
     private var songIds = [String]()
-    
-    private let tableView = UITableView()
-    
+        
     init(tagAlbum: TagAlbum) {
         self.tagAlbum = tagAlbum
         super.init(nibName: nil, bundle: nil)
@@ -144,6 +142,10 @@ final class TagAlbumViewController: UIViewController {
         loader = nil
         tableView.refreshControl?.endRefreshing()
     }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        return song(indexPath: indexPath)
+    }
 }
 
 extension TagAlbumViewController: UITableViewConfiguration {
@@ -170,6 +172,7 @@ extension TagAlbumViewController: UITableViewConfiguration {
         if let song = song(indexPath: indexPath) {
             cell.update(song: song)
         }
+        handleOfflineMode(cell: cell, at: indexPath)
         return cell
     }
     

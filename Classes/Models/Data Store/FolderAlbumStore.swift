@@ -199,6 +199,17 @@ extension Store {
         }
     }
     
+    func isFolderMetadataCached(serverId: Int, parentFolderId: String) -> Bool {
+        do {
+            return try pool.read { db in
+                try FolderMetadata.filter(literal: "serverId = \(serverId) AND parentFolderId = \(parentFolderId)").fetchCount(db) > 0
+            }
+        } catch {
+            DDLogError("Failed to check if folder metadata is cached for server \(serverId) and parent folder \(parentFolderId): \(error)")
+            return false
+        }
+    }
+    
     func folderMetadata(serverId: Int, parentFolderId: String) -> FolderMetadata? {
         do {
             return try pool.read { db in

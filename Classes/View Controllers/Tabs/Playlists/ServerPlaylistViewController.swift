@@ -10,15 +10,13 @@ import UIKit
 import SnapKit
 import Resolver
 
-final class ServerPlaylistViewController: UIViewController {
+final class ServerPlaylistViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
         
     private var serverPlaylistLoader: ServerPlaylistLoader?
     private var serverPlaylist: ServerPlaylist
-    
-    private let tableView = UITableView()
-    
+        
     init(serverPlaylist: ServerPlaylist) {
         self.serverPlaylist = serverPlaylist
         super.init(nibName: nil, bundle: nil)
@@ -74,6 +72,10 @@ final class ServerPlaylistViewController: UIViewController {
         serverPlaylistLoader?.callback = nil
         serverPlaylistLoader = nil
         self.tableView.refreshControl?.endRefreshing()
+    }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        return song(indexPath: indexPath)
     }
 }
  

@@ -33,6 +33,7 @@ final class HomeViewController: UIViewController {
     private let dismissButton = UIButton(type: .custom)
     
     private let songInfoButton = HomeSongInfoButton()
+    private var songInfoButtonAlpha: CGFloat = 1
     
     private let topRowStack = UIStackView()
     private let bottomRowStack = UIStackView()
@@ -61,7 +62,7 @@ final class HomeViewController: UIViewController {
             for button in buttons {
                 button.showLabel()
             }
-            songInfoButton.alpha = 1
+            songInfoButton.alpha = songInfoButtonAlpha
             searchSegment.snp.remakeConstraints { make in
                 make.leading.equalToSuperview().offset(13)
                 make.trailing.equalToSuperview().offset(-13)
@@ -99,6 +100,8 @@ final class HomeViewController: UIViewController {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(initSongInfo), name: Notifications.songPlaybackStarted)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(initSongInfo), name: Notifications.serverSwitched)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(addURLRefBackButton), name: UIApplication.didBecomeActiveNotification)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(didEnterOnlineMode), name: Notifications.didEnterOnlineMode)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(didEnterOfflineMode), name: Notifications.didEnterOfflineMode)
     }
     
     deinit {
@@ -260,6 +263,10 @@ final class HomeViewController: UIViewController {
             make.trailing.equalToSuperview().offset(UIDevice.isSmall ? -20 : -30)
             make.centerY.equalTo(verticalStack)
         }
+        
+        if settings.isOfflineMode {
+            didEnterOfflineMode()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -349,6 +356,24 @@ final class HomeViewController: UIViewController {
         jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-off"))
         jukeboxButton.setTitle(title: "Jukebox\nMode is OFF")
         initSongInfo()
+    }
+    
+    @objc private func didEnterOnlineMode() {
+        searchBar.enable()
+        topRowStack.enable()
+        songInfoButton.enable()
+        nowPlayingButton.enable()
+        chatButton.enable()
+        songInfoButtonAlpha = 1
+    }
+    
+    @objc private func didEnterOfflineMode() {
+        searchBar.disable()
+        topRowStack.disable()
+        songInfoButton.disable()
+        nowPlayingButton.disable()
+        chatButton.disable()
+        songInfoButtonAlpha = songInfoButton.alpha
     }
 }
 

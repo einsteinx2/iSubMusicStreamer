@@ -230,7 +230,8 @@ extension Song: TableCellModel {
     var secondaryLabelText: String? { tagArtistName }
     var durationLabelText: String? { formatTime(seconds: duration) }
     var isDownloaded: Bool { isFullyCached }
-    var isDownloadable: Bool { !isVideo && !isFullyCached }
+    var isDownloadable: Bool { !isVideo && !isDownloaded }
+    var isAvailableOffline: Bool { isDownloaded }
     
     func download() { _ = store.addToDownloadQueue(song: self) }
     func queue() { _ = store.queue(song: self) }

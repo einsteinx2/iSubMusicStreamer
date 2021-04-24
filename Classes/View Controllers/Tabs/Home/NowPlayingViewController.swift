@@ -11,15 +11,13 @@ import Resolver
 import InflectorKit
 import SnapKit
 
-final class NowPlayingViewController: UIViewController {
+final class NowPlayingViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var analytics: Analytics
     
     var serverId: Int { Settings.shared().currentServerId }
-    
-    private let tableView = UITableView()
-    
+        
     private var nowPlayingLoader: NowPlayingLoader?
     private var nowPlayingSongs = [NowPlayingSong]()
     
@@ -79,6 +77,10 @@ final class NowPlayingViewController: UIViewController {
         let nowPlayingSong = nowPlayingSongs[indexPath.row]
         return store.song(serverId: nowPlayingSong.serverId, id: nowPlayingSong.songId)
     }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        return song(indexPath: indexPath)
+    }
 }
 
 extension NowPlayingViewController: UITableViewConfiguration {
@@ -101,6 +103,7 @@ extension NowPlayingViewController: UITableViewConfiguration {
         }
         cell.show(cached: true, number: false, art: true, secondary: true, duration: true, header: true)
         cell.update(model: song(indexPath: indexPath))
+        handleOfflineMode(cell: cell, at: indexPath)
         return cell
     }
     

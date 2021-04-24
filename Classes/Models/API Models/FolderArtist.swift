@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Resolver
 
 struct FolderArtist: Codable, Equatable {
     let serverId: Int
@@ -31,12 +32,15 @@ struct FolderArtist: Codable, Equatable {
 }
 
 extension FolderArtist: TableCellModel {
+    private var store: Store { Resolver.resolve() }
+    
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? { nil }
     var durationLabelText: String? { nil }
     var coverArtId: String? { nil }
     var isDownloaded: Bool { false }
     var isDownloadable: Bool { true }
+    var isAvailableOffline: Bool { store.isFolderMetadataCached(serverId: serverId, parentFolderId: id) }
     
     var tagArtistId: String? { nil }
     var tagAlbumId: String? { nil }

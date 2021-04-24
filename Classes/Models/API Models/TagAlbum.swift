@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Resolver
 
 struct TagAlbum: Codable, Equatable {
     let serverId: Int
@@ -45,6 +46,8 @@ struct TagAlbum: Codable, Equatable {
 }
 
 extension TagAlbum: TableCellModel {
+    private var store: Store { Resolver.resolve() }
+    
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? {
         var textParts = [String]()
@@ -64,6 +67,7 @@ extension TagAlbum: TableCellModel {
     var parentFolderId: String? { nil }
     var isDownloaded: Bool { false }
     var isDownloadable: Bool { true }
+    var isAvailableOffline: Bool { store.isTagAlbumSongsCached(serverId: serverId, id: id) }
     
     func download() { SongsHelper.downloadAll(serverId: serverId, tagAlbumId: id) }
     func queue() { SongsHelper.queueAll(serverId: serverId, tagAlbumId: id) }

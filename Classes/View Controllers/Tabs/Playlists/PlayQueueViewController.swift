@@ -11,7 +11,7 @@ import SnapKit
 import CocoaLumberjackSwift
 import Resolver
 
-final class PlayQueueViewController: UIViewController {
+final class PlayQueueViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var jukebox: Jukebox
@@ -19,7 +19,6 @@ final class PlayQueueViewController: UIViewController {
     @Injected private var analytics: Analytics
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "song", pluralizeClearType: false, isLargeCount: false)
-    private let tableView = UITableView()
     private let backgroundColor: UIColor?
     
     init(backgroundColor: UIColor? = Colors.background) {
@@ -283,7 +282,9 @@ final class PlayQueueViewController: UIViewController {
     //    }
     //}
     
-    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        return playQueue.song(index: indexPath.row)
+    }
 }
 
 extension PlayQueueViewController: SaveEditHeaderDelegate {

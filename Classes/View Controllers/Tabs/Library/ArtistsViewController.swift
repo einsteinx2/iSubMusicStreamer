@@ -12,14 +12,13 @@ import SnapKit
 import CocoaLumberjackSwift
 
 // TODO: implement this - refactor the loadData method to handle serverId better
-final class ArtistsViewController: UIViewController {
+final class ArtistsViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var analytics: Analytics
     
     var serverId: Int { Settings.shared().currentServerId }
     
-    private let tableView = UITableView()
     private let dropdownMenu = DropdownMenu()
     private let searchBar = UISearchBar()
     private var searchOverlay: UIVisualEffectView?
@@ -71,6 +70,8 @@ final class ArtistsViewController: UIViewController {
             addCount()
             dropdownMenu.selectedIndex = dataModel.mediaFolderIndex
         }
+        
+        offlineDisabledViews.append(dropdownMenu)
         
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(serverSwitched), name: Notifications.serverSwitched)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadAction), name: Notifications.serverCheckPassed)
@@ -205,6 +206,10 @@ final class ArtistsViewController: UIViewController {
             removeCount()
         }
         dropdownMenu.selectedIndex = 0
+    }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        return artist(indexPath: indexPath)
     }
 }
 
@@ -392,6 +397,7 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueUniversalCell()
         cell.hideCoverArt = !dataModel.showCoverArt
         cell.update(model: artist(indexPath: indexPath))
+        handleOfflineMode(cell: cell, at: indexPath)
         return cell
     }
     
@@ -415,7 +421,6 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
         if isSearching { return nil }
-        
         var titles = ["{search}"]
         for section in dataModel.tableSections {
             titles.append(section.name)
@@ -425,7 +430,6 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
         if isSearching { return -1 }
-        
         if index == 0 {
             let yOffset: CGFloat = dataModel.mediaFolders.count > 1 ? dropdownMenu.frame.origin.y - 5 : searchBar.frame.origin.y - 5
             tableView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)

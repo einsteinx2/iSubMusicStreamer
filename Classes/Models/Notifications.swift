@@ -55,8 +55,8 @@ struct Notifications {
 
     static let goOffline = Notification.Name("iSub.goOffline")
     static let goOnline = Notification.Name("iSub.goOnline")
-    static let willEnterOfflineMode = Notification.Name("iSub.willEnterOfflineMode")
-    static let willEnterOnlineMode = Notification.Name("iSub.willEnterOnlineMode")
+    static let didEnterOfflineMode = Notification.Name("iSub.didEnterOfflineMode")
+    static let didEnterOnlineMode = Notification.Name("iSub.didEnterOnlineMode")
 
     static let bassInitialized = Notification.Name("iSub.bassInitialized")
     static let bassFreed = Notification.Name("iSub.bassFreed")

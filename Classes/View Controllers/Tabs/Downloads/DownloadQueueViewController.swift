@@ -59,6 +59,10 @@ final class DownloadQueueViewController: AbstractDownloadsViewController {
             }
         }
     }
+    
+    override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
+        return store.songFromDownloadQueue(position: indexPath.row)
+    }
 }
 
 extension DownloadQueueViewController {
