@@ -60,6 +60,6 @@ final class NetworkMonitor {
             }
         }
         self.reachabilityChangedWorkItem = reachabilityChangedWorkItem
-        DispatchQueue.main.async(after: 5, execute: reachabilityChangedWorkItem)
+        DispatchQueue.main.async(after: 2, execute: reachabilityChangedWorkItem)
     }
 }

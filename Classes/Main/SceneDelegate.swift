@@ -61,33 +61,6 @@ import CocoaLumberjackSwift
         window.makeKeyAndVisible()
         self.window = window
         
-        // Handle offline mode
-        // TODO: implement this
-//        NSString *offlineModeAlertMessage = nil;
-//        if (settingsS.isForceOfflineMode) {
-//            settingsS.isOfflineMode = YES;
-//            offlineModeAlertMessage = @"Offline mode switch on, entering offline mode.";
-//        } else if (self.wifiReach.currentReachabilityStatus == NotReachable) {
-//            settingsS.isOfflineMode = YES;
-//            offlineModeAlertMessage = @"No network detected, entering offline mode.";
-//        } else if (self.wifiReach.currentReachabilityStatus == ReachableViaWWAN && settingsS.isDisableUsageOver3G) {
-//            settingsS.isOfflineMode = YES;
-//            offlineModeAlertMessage = @"You are not on Wifi, and have chosen to disable use over cellular. Entering offline mode.";
-//        } else {
-//            settingsS.isOfflineMode = NO;
-//        }
-        
-//        // Optionally show offline mode alert
-//        if (offlineModeAlertMessage && settingsS.isPopupsEnabled) {
-//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notice" message:offlineModeAlertMessage preferredStyle:UIAlertControllerStyleAlert];
-//            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-//            [EX2Dispatch runInMainThreadAfterDelay:1.1 block:^{
-//                [UIApplication.keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
-//            }];
-//        }
-        
-        
-        
         if settings.currentServer == nil {
             if settings.isOfflineMode {
                 DispatchQueue.main.async(after: 1) {

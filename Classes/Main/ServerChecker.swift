@@ -48,7 +48,7 @@ final class ServerChecker {
                     }
                     
                     if self.settings.isOfflineMode {
-                        NotificationCenter.postOnMainThread(name: Notifications.willEnterOnlineMode)
+                        NotificationCenter.postOnMainThread(name: Notifications.enterOnlineMode)
                         // TODO: change the setting value here?
                     }
                     
