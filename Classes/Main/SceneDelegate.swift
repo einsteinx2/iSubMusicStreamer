@@ -76,15 +76,12 @@ import CocoaLumberjackSwift
             }
         }
         
-        // Start checking the server status
-        serverChecker.checkServer()
-        
         // TODO: Handle these properly for multiple scenes/windows
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(showPlayer), name: Notifications.showPlayer)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxToggled), name: Notifications.jukeboxDisabled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxToggled), name: Notifications.jukeboxEnabled)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(enterOnlineMode), name: Notifications.enterOnlineMode)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(enterOfflineMode), name: Notifications.enterOfflineMode)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(enterOnlineMode), name: Notifications.goOnline)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(enterOfflineMode), name: Notifications.goOffline)
         
         // Recover current state if player was interrupted
         streamManager.setup()

@@ -37,7 +37,7 @@ final class NetworkMonitor {
         // Perform the actual check after a few seconds to make sure it's the last message received
         // this prevents a bug where the status changes from wifi to not reachable, but first it receives
         // some messages saying it's still on wifi, then gets the not reachable messages
-        // TODO: Check if this bug still exists in iOS 13+
+        // NOTE: This bug does not appear to still exist in iOS 13+ so I've reduced the wait time significantly
         reachabilityChangedWorkItem?.cancel()
         let reachabilityChangedWorkItem = DispatchWorkItem {
             let status = self.wifiReach.currentReachabilityStatus()
@@ -45,13 +45,13 @@ final class NetworkMonitor {
                 // Change over to offline mode
                 if !self.settings.isOfflineMode {
                     DDLogVerbose("[NetworkMonitor] Reachability changed to NotReachable, entering offline mode");
-                    NotificationCenter.postOnMainThread(name: Notifications.enterOfflineMode)
+                    NotificationCenter.postOnMainThread(name: Notifications.goOffline)
                 }
             } else if status == ReachableViaWWAN && self.settings.isDisableUsageOver3G {
                 // Change over to offline mode
                 if !self.settings.isOfflineMode {
                     DDLogVerbose("[NetworkMonitor] Reachability changed to ReachableViaWWAN and usage over 3G is disabled, entering offline mode");
-                    NotificationCenter.postOnMainThread(name: Notifications.enterOfflineMode)
+                    NotificationCenter.postOnMainThread(name: Notifications.goOffline)
                     SlidingNotification.showOnMainWindow(message: "You have chosen to disable usage over cellular in settings and are no longer on Wifi. Entering offline mode.")
                 }
             } else {
@@ -60,6 +60,6 @@ final class NetworkMonitor {
             }
         }
         self.reachabilityChangedWorkItem = reachabilityChangedWorkItem
-        DispatchQueue.main.async(after: 2, execute: reachabilityChangedWorkItem)
+        DispatchQueue.main.async(after: 0.5, execute: reachabilityChangedWorkItem)
     }
 }

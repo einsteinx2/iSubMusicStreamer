@@ -48,7 +48,7 @@ final class ServerChecker {
                     }
                     
                     if self.settings.isOfflineMode {
-                        NotificationCenter.postOnMainThread(name: Notifications.enterOnlineMode)
+                        NotificationCenter.postOnMainThread(name: Notifications.goOnline)
                         // TODO: change the setting value here?
                     }
                     
@@ -59,7 +59,7 @@ final class ServerChecker {
                 } else {
                     if !self.settings.isOfflineMode {
                         DDLogVerbose("[ServerChecker] Loading failed for loading type \(statusLoader.type), entering offline mode. Error: \(error?.localizedDescription ?? "unknown")")
-                        NotificationCenter.postOnMainThread(name: Notifications.enterOfflineMode)
+                        NotificationCenter.postOnMainThread(name: Notifications.goOffline)
                         // TODO: change the setting value here?
                     }
                 }
