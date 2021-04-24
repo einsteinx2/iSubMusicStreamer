@@ -95,6 +95,7 @@ final class PadMenuViewController: UIViewController {
             cellContents.append((imageName: "tabbaricon-back", text: "Back"))
         }
         cellContents.append((imageName: "tabbaricon-settings", text: "Settings"))
+        cellContents.append((imageName: "tabbaricon-home", text: "Home"))
         cellContents.append((imageName: "tabbaricon-folders", text: "Library"))
         cellContents.append((imageName: "tabbaricon-playlists", text: "Playlists"))
         cellContents.append((imageName: "tabbaricon-cache", text: "Downloads"))
