@@ -33,6 +33,7 @@ NS_SWIFT_NAME(Settings)
 
 @property (readonly) NSInteger currentServerId;
 @property (nullable, strong) Server *currentServer;
+@property (nullable, strong) NSString *currentServerRedirectUrlString;
 
 // Root Folders Settings
 @property (nullable, strong) NSDate *rootFoldersReloadTime;

@@ -244,6 +244,7 @@ LOG_LEVEL_ISUB_DEFAULT
 }
 
 - (void)setCurrentServer:(Server *)currentServer {
+    _currentServerRedirectUrlString = nil;
     _currentServer = currentServer;
     [_userDefaults setInteger:currentServer.serverId forKey:@"currentServerId"];
     [_userDefaults synchronize];

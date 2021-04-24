@@ -21,7 +21,12 @@ private let ver1_8_0 = ["hls", "getAlbumList2", "getArtists", "getArtist", "getA
 private let versions = Set<[String]>([ver1_0_0, ver1_2_0, ver1_3_0, ver1_4_0, ver1_5_0, ver1_6_0, ver1_8_0])
 
 extension URLRequest {
-    private static func createPostBody(parameters: [String: Any]?, version: String, username: String, password: String) -> Data? {
+    // Always perform status checks using GET so that redirection work on connection, as well as other small requests
+    private static func isGetRequest(action: String) -> Bool {
+        return action == "hls" || action == "ping"
+    }
+    
+    private static func createQueryString(parameters: [String: Any]?, version: String, username: String, password: String) -> String {
         var queryString = "v=\(version)&c=iSub&u=\(username.URLQueryEncoded)&p=\(password.URLQueryEncoded)"
         if let parameters = parameters {
             for (key, value) in parameters {
@@ -41,7 +46,7 @@ extension URLRequest {
                 }
             }
         }
-        return queryString.data(using: .utf8)
+        return queryString
     }
     
     init?(subsonicAction action: String, urlString: String, username: String, password: String, parameters: [String: Any]?, byteOffset: Int) {
@@ -85,14 +90,23 @@ extension URLRequest {
             loadingTimeout = 15.0;
         }
         
-        // Create the POST request
+        // If performing a GET request, append the query string
+        let queryString = Self.createQueryString(parameters: parameters, version: finalVersion, username: username, password: finalPassword)
+        if Self.isGetRequest(action: action) {
+            finalUrlString += "?\(queryString)"
+        }
+        
+        // Create the request
         guard let url = URL(string: finalUrlString) else {
             DDLogError("[URLRequest] Failed to convert finalUrlString to URL")
             return nil
         }
         self.init(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: loadingTimeout)
-        httpMethod = "POST"
-        httpBody = Self.createPostBody(parameters: parameters, version: finalVersion, username: username, password: finalPassword)
+        if !Self.isGetRequest(action: action) {
+            httpMethod = "POST"
+            httpBody = queryString.data(using: .utf8)
+            setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        }
         
         // Set the HTTP Basic Auth header if needed
         let settings: Settings = Resolver.resolve()
@@ -115,10 +129,11 @@ extension URLRequest {
     
     init?(serverId: Int, subsonicAction action: String, parameters: [String: Any]? = nil, byteOffset: Int = 0) {
         let store: Store = Resolver.resolve()
+        let settings: Settings = Resolver.resolve()
         guard let server = store.server(id: serverId) else { return nil }
         
         self.init(subsonicAction: action,
-                  urlString: server.url.absoluteString,
+                  urlString: settings.currentServerRedirectUrlString ?? server.url.absoluteString,
                   username: server.username,
                   password: server.password,
                   parameters: parameters,
