@@ -41,6 +41,7 @@ final class DownloadQueueViewController: AbstractDownloadsViewController {
     override func deleteItems(indexPaths: [IndexPath]) {
         HUD.show()
         DispatchQueue.userInitiated.async {
+            defer { HUD.hide() }
             var songs = [Song]()
             for indexPath in indexPaths {
                 if let song = self.store.songFromDownloadQueue(position: indexPath.row) {
@@ -50,7 +51,6 @@ final class DownloadQueueViewController: AbstractDownloadsViewController {
             for song in songs {
                 _ = self.store.removeFromDownloadQueue(song: song)
             }
-            HUD.hide()
             if (!self.cacheQueue.isDownloading) {
                 self.cacheQueue.start()
             }
@@ -87,8 +87,8 @@ extension DownloadQueueViewController {
         SwipeAction.downloadQueueAndDeleteConfig(downloadHandler: nil, queueHandler: {
             HUD.show()
             DispatchQueue.userInitiated.async {
+                defer { HUD.hide() }
                 self.store.songFromDownloadQueue(position: indexPath.row)?.queue()
-                HUD.hide()
             }
         }, deleteHandler: {
             self.deleteItems(indexPaths: [indexPath])

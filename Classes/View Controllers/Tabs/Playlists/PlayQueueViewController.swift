@@ -183,6 +183,7 @@ final class PlayQueueViewController: UIViewController {
                 // TODO: Add error handling
                 HUD.show()
                 DispatchQueue.userInitiated.async {
+                    defer { HUD.hide() }
                     if let nextLocalPlaylistId = self.store.nextLocalPlaylistId {
                         let localPlaylist = LocalPlaylist(id: nextLocalPlaylistId, name: name)
                         if self.store.add(localPlaylist: localPlaylist) {
@@ -193,7 +194,6 @@ final class PlayQueueViewController: UIViewController {
                             }
                         }
                     }
-                    HUD.hide()
                 }
                 
             } else {

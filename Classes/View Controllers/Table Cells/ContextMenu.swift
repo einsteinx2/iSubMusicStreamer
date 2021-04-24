@@ -84,7 +84,7 @@ extension UIViewController {
                 } else {
                     HUD.show()
                     let loader = TagAlbumLoader(serverId: model.serverId, tagAlbumId: tagAlbumId) { _, success, error in
-                        defer { HUD.hide() }
+                        HUD.hide()
                         if success, let tagAlbum = self.store.tagAlbum(serverId: model.serverId, id: tagAlbumId) {
                             self.pushViewControllerCustom(TagAlbumViewController(tagAlbum: tagAlbum))
                         } else {

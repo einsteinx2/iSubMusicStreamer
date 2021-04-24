@@ -83,9 +83,9 @@ final class ServerChecker {
     }
     
     func cancelLoad() {
+        HUD.hide()
         statusLoader?.cancelLoad()
         statusLoader?.callback = nil
         statusLoader = nil
-        HUD.hide()
     }
 }

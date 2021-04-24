@@ -413,6 +413,7 @@ final class PlayerViewController: UIViewController {
             let message = playQueue.isShuffle ? "Unshuffling" : "Shuffling"
             HUD.show(message: message)
             DispatchQueue.userInitiated.async {
+                defer { HUD.hide() }
                 playQueue.shuffleToggle()
                 DispatchQueue.main.async {
                     self.updateShuffleButtonIcon()
@@ -531,9 +532,9 @@ final class PlayerViewController: UIViewController {
         })
         
         notificationObservers.append(NotificationCenter.addObserverOnMainThread(name: Notifications.currentPlaylistShuffleToggled) { [unowned self] _ in
+            defer { HUD.hide() }
             self.updateShuffleButtonIcon()
             self.updateSongInfo()
-            HUD.hide()
         })
     }
     

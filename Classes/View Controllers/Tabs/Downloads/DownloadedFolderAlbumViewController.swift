@@ -66,6 +66,7 @@ final class DownloadedFolderAlbumViewController: AbstractDownloadsViewController
     override func deleteItems(indexPaths: [IndexPath]) {
         HUD.show()
         DispatchQueue.userInitiated.async {
+            defer { HUD.hide() }
             for indexPath in indexPaths {
                 if indexPath.section == SectionType.albums.rawValue {
                     _ = self.store.deleteDownloadedSongs(downloadedFolderAlbum: self.downloadedFolderAlbums[indexPath.row])
@@ -78,7 +79,6 @@ final class DownloadedFolderAlbumViewController: AbstractDownloadsViewController
             if (!self.cacheQueue.isDownloading) {
                 self.cacheQueue.start()
             }
-            HUD.hide()
         }
     }
 }
@@ -120,12 +120,12 @@ extension DownloadedFolderAlbumViewController {
         SwipeAction.downloadQueueAndDeleteConfig(downloadHandler: nil, queueHandler: {
             HUD.show()
             DispatchQueue.userInitiated.async {
+                defer { HUD.hide() }
                 if indexPath.section == SectionType.albums.rawValue {
                     self.downloadedFolderAlbums[indexPath.row].queue()
                 } else if indexPath.section == SectionType.songs.rawValue {
                     self.store.song(downloadedSong: self.downloadedSongs[indexPath.row])?.queue()
                 }
-                HUD.hide()
             }
         }, deleteHandler: {
             self.deleteItems(indexPaths: [indexPath])

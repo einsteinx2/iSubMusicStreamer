@@ -201,10 +201,10 @@ extension LocalPlaylistsViewController: SaveEditHeaderDelegate {
         if saveEditHeader.isEditing {
             HUD.show(message: "Deleting")
             DispatchQueue.userInitiated.async {
+                defer { HUD.hide() }
                 if let indexPathsForSelectedRows = self.tableView.indexPathsForSelectedRows {
                     self.deleteLocalPlaylists(indexPaths: indexPathsForSelectedRows)
                 }
-                HUD.hide()
             }
         }
     }

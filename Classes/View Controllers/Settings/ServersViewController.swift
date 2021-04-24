@@ -228,8 +228,8 @@ extension ServersViewController: UITableViewConfiguration {
 
 extension ServersViewController: APILoaderDelegate {
     func loadingFinished(loader: APILoader?) {
-        DDLogInfo("[ServersViewController] server verification passed, hiding loading screen")
         HUD.hide()
+        DDLogInfo("[ServersViewController] server verification passed, hiding loading screen")
         
         // Update server properties
         if let statusLoader = loader as? StatusLoader {
@@ -246,8 +246,8 @@ extension ServersViewController: APILoaderDelegate {
     }
     
     func loadingFailed(loader: APILoader?, error: Error?) {
-        DDLogError("[ServersViewController] server verification failed, hiding loading screen")
         HUD.hide()
+        DDLogError("[ServersViewController] server verification failed, hiding loading screen")
         
         var message: String
         if let error = error as? SubsonicError, case .badCredentials = error {

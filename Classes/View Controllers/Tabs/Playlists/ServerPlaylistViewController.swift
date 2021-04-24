@@ -44,6 +44,7 @@ final class ServerPlaylistViewController: UIViewController {
     
     private func loadData() {
         cancelLoad()
+        HUD.show(closeHandler: cancelLoad)
         serverPlaylistLoader = ServerPlaylistLoader(serverPlaylist: serverPlaylist)
         serverPlaylistLoader?.callback = { [unowned self] _, success, error in
             HUD.hide()
@@ -65,14 +66,13 @@ final class ServerPlaylistViewController: UIViewController {
             }
         }
         serverPlaylistLoader?.startLoad()
-        HUD.show(closeHandler: cancelLoad)
     }
     
     @objc func cancelLoad() {
+        HUD.hide()
         serverPlaylistLoader?.cancelLoad()
         serverPlaylistLoader?.callback = nil
         serverPlaylistLoader = nil
-        HUD.hide()
         self.tableView.refreshControl?.endRefreshing()
     }
 }
@@ -101,8 +101,8 @@ extension ServerPlaylistViewController: UITableViewConfiguration {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         HUD.show()
         DispatchQueue.userInitiated.async { [unowned self] in
+            defer { HUD.hide() }
             let song = store.playSongFromServerPlaylist(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id, position: indexPath.row)
-            HUD.hide()
             if let song = song, !song.isVideo {
                 NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
             }

@@ -197,6 +197,7 @@ final class ServerEditViewController: UIViewController {
         } else {
             let loader = StatusLoader(urlString: urlField.text ?? "", username: usernameField.text ?? "", password: passwordField.text ?? "", delegate: self)
             HUD.show(message: "Checking Server") {
+                HUD.hide()
                 loader.cancelLoad()
             }
             loader.startLoad()

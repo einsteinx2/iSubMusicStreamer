@@ -414,6 +414,7 @@ extension HomeViewController: UISearchBarDelegate {
         if isTagSearchSupported {
             searchType = searchSegment.selectedSegmentIndex == 0 ? .folder : .tag
         }
+        HUD.show()
         searchLoader = SearchLoader(serverId: serverId, searchType: searchType, searchItemType: .all, query: query)
         searchLoader?.callback = { [weak self] _, success, error in
             HUD.hide()
@@ -436,6 +437,5 @@ extension HomeViewController: UISearchBarDelegate {
             }
         }
         searchLoader?.startLoad()
-        HUD.show()
     }
 }

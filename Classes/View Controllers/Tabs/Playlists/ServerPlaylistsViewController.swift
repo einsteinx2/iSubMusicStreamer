@@ -137,6 +137,7 @@ final class ServerPlaylistsViewController: UIViewController {
     }
     
     @objc func cancelLoad() {
+        HUD.hide()
         serverPlaylistsLoader?.cancelLoad()
         serverPlaylistsLoader?.callback = nil
         serverPlaylistsLoader = nil
@@ -152,7 +153,6 @@ extension ServerPlaylistsViewController: SaveEditHeaderDelegate {
         if let indexPathsForSelectedRows = tableView.indexPathsForSelectedRows {
             deleteServerPlaylists(indexPaths: indexPathsForSelectedRows)
         }
-        HUD.hide()
     }
 }
 

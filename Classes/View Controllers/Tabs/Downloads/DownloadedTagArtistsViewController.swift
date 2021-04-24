@@ -38,6 +38,7 @@ final class DownloadedTagArtistsViewController: AbstractDownloadsViewController 
     override func deleteItems(indexPaths: [IndexPath]) {
         HUD.show()
         DispatchQueue.userInitiated.async {
+            defer { HUD.hide() }
             for indexPath in indexPaths {
                 _ = self.store.deleteDownloadedSongs(downloadedTagArtist: self.downloadedTagArtists[indexPath.row])
             }
@@ -46,7 +47,6 @@ final class DownloadedTagArtistsViewController: AbstractDownloadsViewController 
             if (!self.cacheQueue.isDownloading) {
                 self.cacheQueue.start()
             }
-            HUD.hide()
         }
     }
 }
@@ -71,8 +71,8 @@ extension DownloadedTagArtistsViewController {
         SwipeAction.downloadQueueAndDeleteConfig(downloadHandler: nil, queueHandler: {
             HUD.show()
             DispatchQueue.userInitiated.async {
+                defer { HUD.hide() }
                 self.downloadedTagArtists[indexPath.row].queue()
-                HUD.hide()
             }
         }, deleteHandler: {
             self.deleteItems(indexPaths: [indexPath])
