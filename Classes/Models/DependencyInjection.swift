@@ -25,5 +25,6 @@ struct DependencyInjection {
         main.register(factory: { Jukebox() as Jukebox }).scope(Resolver.application)
         main.register(factory: { PlayQueue() as PlayQueue }).scope(Resolver.application)
         main.register(factory: { Social() as Social }).scope(Resolver.application)
+        main.register(factory: { Analytics() as Analytics }).scope(Resolver.application)
     }
 }

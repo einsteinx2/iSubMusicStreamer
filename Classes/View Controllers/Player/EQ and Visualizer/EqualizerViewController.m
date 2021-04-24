@@ -9,7 +9,6 @@
 #import "EqualizerViewController.h"
 #import "EqualizerView.h"
 #import "EqualizerPathView.h"
-#import "Flurry.h"
 #import "SavedSettings.h"
 #import "Swift.h"
 #import "UIView+ObjCFrameHelper.h"
@@ -182,7 +181,7 @@
         [self.view addSubview:self.closeButton];
     }
     
-	[Flurry logEvent:@"Equalizer"];
+    [Analytics_ObjCDeleteMe logEventWithName:@"Equalizer"];
 }
 
 - (void)swipeLeft {

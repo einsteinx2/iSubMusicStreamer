@@ -14,6 +14,7 @@ import Resolver
 final class LocalPlaylistsViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var playQueue: PlayQueue
+    @Injected private var analytics: Analytics
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "song", pluralizeClearType: false, isLargeCount: false)
     private let tableView = UITableView()
@@ -31,7 +32,7 @@ final class LocalPlaylistsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reloadData()
-        Flurry.logEvent("LocalPlaylistsTab")
+        analytics.log(event: .localPlaylistsTab)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

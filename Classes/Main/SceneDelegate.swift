@@ -17,6 +17,7 @@ import CocoaLumberjackSwift
     @Injected private var playQueue: PlayQueue
     @Injected private var streamManager: StreamManager
     @Injected private var jukebox: Jukebox
+    @Injected private var analytics: Analytics
     
     // Temporary singleton access until multiple scenes are properly supported
     @objc static var shared: SceneDelegate { UIApplication.shared.connectedScenes.first!.delegate as! SceneDelegate }
@@ -196,7 +197,7 @@ import CocoaLumberjackSwift
         if settings.isJukeboxEnabled {
             settings.isJukeboxEnabled = false
             NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
-            Flurry.logEvent("JukeboxDisabled")
+            analytics.log(event: .jukeboxDisabled)
         }
     }
     

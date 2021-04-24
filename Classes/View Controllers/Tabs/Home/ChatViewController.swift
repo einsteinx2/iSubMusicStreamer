@@ -10,7 +10,9 @@ import UIKit
 import SnapKit
 import Resolver
 
-final class ChatViewController: UIViewController {    
+final class ChatViewController: UIViewController {
+    @Injected private var analytics: Analytics
+    
     var serverId: Int { Settings.shared().currentServerId }
     
     private var loader: ChatLoader?
@@ -40,7 +42,7 @@ final class ChatViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         startLoad()
-        Flurry.logEvent("ChatTab")
+        analytics.log(event: .chatTab)
     }
     
     override func viewDidAppear(_ animated: Bool) {

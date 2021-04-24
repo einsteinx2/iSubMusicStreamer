@@ -15,6 +15,7 @@ import CocoaLumberjackSwift
 final class ArtistsViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
+    @Injected private var analytics: Analytics
     
     var serverId: Int { Settings.shared().currentServerId }
     
@@ -80,7 +81,7 @@ final class ArtistsViewController: UIViewController {
         if !dataModel.isCached {
             loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId)
         }
-        Flurry.logEvent("FoldersTab")
+        analytics.log(event: .foldersTab)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

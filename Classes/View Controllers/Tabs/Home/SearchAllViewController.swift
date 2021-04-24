@@ -24,6 +24,7 @@ final class SearchAllViewController: TabmanViewController {
     }
 
     @Injected private var settings: Settings
+    @Injected private var analytics: Analytics
     
     let serverId: Int
     let query: String
@@ -76,7 +77,7 @@ final class SearchAllViewController: TabmanViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addBar(buttonBar, dataSource: self, at: .navigationItem(item: navigationItem))
-        Flurry.logEvent("SearchAll")
+        analytics.log(event: .searchAll)
     }
     
     deinit {

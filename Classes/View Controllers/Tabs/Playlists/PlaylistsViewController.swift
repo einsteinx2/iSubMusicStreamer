@@ -9,6 +9,7 @@
 import UIKit
 import Tabman
 import Pageboy
+import Resolver
 
 final class PlaylistsViewController: TabmanViewController {
     private enum TabType: Int, CaseIterable {
@@ -21,6 +22,8 @@ final class PlaylistsViewController: TabmanViewController {
             }
         }
     }
+    
+    @Injected private var analytics: Analytics
     
     private let buttonBar = TMBar.ButtonBar()
     private var controllerCache = [TabType: UIViewController]()
@@ -41,7 +44,7 @@ final class PlaylistsViewController: TabmanViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addBar(buttonBar, dataSource: self, at: .navigationItem(item: navigationItem))
-        Flurry.logEvent("PlaylistsTab")
+        analytics.log(event: .playlistsTab)
     }
     
     private func viewController(index: Int) -> UIViewController? {

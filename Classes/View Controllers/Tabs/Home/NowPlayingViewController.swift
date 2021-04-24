@@ -14,6 +14,7 @@ import SnapKit
 final class NowPlayingViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
+    @Injected private var analytics: Analytics
     
     var serverId: Int { Settings.shared().currentServerId }
     
@@ -40,7 +41,7 @@ final class NowPlayingViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadData()
-        Flurry.logEvent("NowPlayingTab")
+        analytics.log(event: .nowPlayingTab)
     }
     
     private func loadData() {

@@ -17,6 +17,7 @@ final class HomeViewController: UIViewController {
     @Injected private var player: BassPlayer
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
+    @Injected private var analytics: Analytics
     
     var serverId: Int { Settings.shared().currentServerId }
     
@@ -169,14 +170,14 @@ final class HomeViewController: UIViewController {
                 self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-off"))
                 settings.isJukeboxEnabled = false
                 NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
-                Flurry.logEvent("JukeboxDisabled")
+                analytics.log(event: .jukeboxDisabled)
             } else {
                 player.stop()
                 self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-on"))
                 settings.isJukeboxEnabled = true
                 self.jukebox.getInfo()
                 NotificationCenter.postOnMainThread(name: Notifications.jukeboxEnabled)
-                Flurry.logEvent("JukeboxEnabled")
+                analytics.log(event: .jukeboxEnabled)
             }
             self.initSongInfo()
         }
@@ -272,7 +273,7 @@ final class HomeViewController: UIViewController {
         
         initSongInfo()
         
-        Flurry.logEvent("HomeTab")
+        analytics.log(event: .homeTab)
     }
     
     @objc private func addURLRefBackButton() {

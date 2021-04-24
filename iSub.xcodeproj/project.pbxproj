@@ -178,6 +178,17 @@
 		536C891125BF92D1008FE1AC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890F25BF92D1008FE1AC /* SettingsViewController.swift */; };
 		536C891325BF93FF008FE1AC /* ServersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C891225BF93FF008FE1AC /* ServersViewController.swift */; };
 		536C891425BF93FF008FE1AC /* ServersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C891225BF93FF008FE1AC /* ServersViewController.swift */; };
+		536C8DEE26338EAA007B81FB /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8DED26338EAA007B81FB /* Analytics.swift */; };
+		536C8DEF26338FAF007B81FB /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8DED26338EAA007B81FB /* Analytics.swift */; };
+		536C8DF62633961A007B81FB /* libbass_fx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36051EA961670058B925 /* libbass_fx.a */; };
+		536C8DF72633961A007B81FB /* libbass_mpc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36061EA961670058B925 /* libbass_mpc.a */; };
+		536C8DF82633961A007B81FB /* libbasswv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE360A1EA961670058B925 /* libbasswv.a */; };
+		536C8DF92633961A007B81FB /* libbass_ape.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36041EA961670058B925 /* libbass_ape.a */; };
+		536C8DFA2633961A007B81FB /* libbassflac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36071EA961670058B925 /* libbassflac.a */; };
+		536C8DFB2633961A007B81FB /* libbassmix.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36081EA961670058B925 /* libbassmix.a */; };
+		536C8DFC2633961A007B81FB /* libbassopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36091EA961670058B925 /* libbassopus.a */; };
+		536C8DFD2633961A007B81FB /* libbass.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36031EA961670058B925 /* libbass.a */; };
+		536C8DFE26339620007B81FB /* libFlurry_11.1.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148C42559EAAF004AAC3F /* libFlurry_11.1.1.a */; };
 		536D620B1144495400DFCE56 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 536D620A1144495400DFCE56 /* SystemConfiguration.framework */; };
 		5373C69025B6040900CAA859 /* CustomUITabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */; };
 		5373C69125B6040900CAA859 /* CustomUITabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */; };
@@ -273,7 +284,6 @@
 		538C8FEF2560C8C4005D6CA9 /* CocoaLumberjackSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DD25602526003F962C /* CocoaLumberjackSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		539148BA2559E597004AAC3F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148B92559E597004AAC3F /* CoreServices.framework */; };
 		539148C52559EAAF004AAC3F /* libFlurry_11.1.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148C42559EAAF004AAC3F /* libFlurry_11.1.1.a */; };
-		539148C62559EAAF004AAC3F /* libFlurry_11.1.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148C42559EAAF004AAC3F /* libFlurry_11.1.1.a */; };
 		539148D02559EB1D004AAC3F /* FlurryEmpty.m in Sources */ = {isa = PBXBuildFile; fileRef = 539148CE2559EB1D004AAC3F /* FlurryEmpty.m */; };
 		539148D12559EB1D004AAC3F /* FlurryEmpty.m in Sources */ = {isa = PBXBuildFile; fileRef = 539148CE2559EB1D004AAC3F /* FlurryEmpty.m */; };
 		539148E02559FEFD004AAC3F /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 539148DF2559FEFD004AAC3F /* Launch Screen.storyboard */; };
@@ -483,21 +493,13 @@
 		53FE356D1EA961540058B925 /* UIView+ObjCFrameHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */; };
 		53FE356F1EA961540058B925 /* UIView+ObjCFrameHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */; };
 		53FE360B1EA961670058B925 /* libbass.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36031EA961670058B925 /* libbass.a */; };
-		53FE360D1EA961670058B925 /* libbass.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36031EA961670058B925 /* libbass.a */; };
 		53FE360E1EA961670058B925 /* libbass_ape.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36041EA961670058B925 /* libbass_ape.a */; };
-		53FE36101EA961670058B925 /* libbass_ape.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36041EA961670058B925 /* libbass_ape.a */; };
 		53FE36111EA961670058B925 /* libbass_fx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36051EA961670058B925 /* libbass_fx.a */; };
-		53FE36131EA961670058B925 /* libbass_fx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36051EA961670058B925 /* libbass_fx.a */; };
 		53FE36141EA961670058B925 /* libbass_mpc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36061EA961670058B925 /* libbass_mpc.a */; };
-		53FE36161EA961670058B925 /* libbass_mpc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36061EA961670058B925 /* libbass_mpc.a */; };
 		53FE36171EA961670058B925 /* libbassflac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36071EA961670058B925 /* libbassflac.a */; };
-		53FE36191EA961670058B925 /* libbassflac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36071EA961670058B925 /* libbassflac.a */; };
 		53FE361A1EA961670058B925 /* libbassmix.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36081EA961670058B925 /* libbassmix.a */; };
-		53FE361C1EA961670058B925 /* libbassmix.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36081EA961670058B925 /* libbassmix.a */; };
 		53FE361D1EA961670058B925 /* libbassopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36091EA961670058B925 /* libbassopus.a */; };
-		53FE361F1EA961670058B925 /* libbassopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE36091EA961670058B925 /* libbassopus.a */; };
 		53FE36201EA961670058B925 /* libbasswv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE360A1EA961670058B925 /* libbasswv.a */; };
-		53FE36221EA961680058B925 /* libbasswv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53FE360A1EA961670058B925 /* libbasswv.a */; };
 		53FE36E61EA961720058B925 /* BassEffectDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36271EA961710058B925 /* BassEffectDAO.m */; };
 		53FE36E81EA961720058B925 /* BassEffectDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36271EA961710058B925 /* BassEffectDAO.m */; };
 		53FE36E91EA961720058B925 /* BassEffectValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36291EA961710058B925 /* BassEffectValue.m */; };
@@ -725,6 +727,7 @@
 		536C890925BB5FED008FE1AC /* StreamHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamHandler.swift; sourceTree = "<group>"; };
 		536C890F25BF92D1008FE1AC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		536C891225BF93FF008FE1AC /* ServersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServersViewController.swift; sourceTree = "<group>"; };
+		536C8DED26338EAA007B81FB /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		536D620A1144495400DFCE56 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUITabBarController.swift; sourceTree = "<group>"; };
 		5373C69525B6064D00CAA859 /* CustomUINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUINavigationController.swift; sourceTree = "<group>"; };
@@ -1037,29 +1040,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53FE360D1EA961670058B925 /* libbass.a in Frameworks */,
-				53FE361C1EA961670058B925 /* libbassmix.a in Frameworks */,
-				53FE36131EA961670058B925 /* libbass_fx.a in Frameworks */,
-				53FE36191EA961670058B925 /* libbassflac.a in Frameworks */,
-				53FE361F1EA961670058B925 /* libbassopus.a in Frameworks */,
-				53FE36101EA961670058B925 /* libbass_ape.a in Frameworks */,
-				53FE36161EA961670058B925 /* libbass_mpc.a in Frameworks */,
-				53FE36221EA961680058B925 /* libbasswv.a in Frameworks */,
 				53329611255EF23B0027C51A /* libsqlite3.tbd in Frameworks */,
+				536C8DFB2633961A007B81FB /* libbassmix.a in Frameworks */,
 				5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */,
 				53D97406255BFD9100AABF7F /* SnapKit in Frameworks */,
+				536C8DFA2633961A007B81FB /* libbassflac.a in Frameworks */,
+				536C8DFE26339620007B81FB /* libFlurry_11.1.1.a in Frameworks */,
+				536C8DFC2633961A007B81FB /* libbassopus.a in Frameworks */,
 				538C8FEE2560C8C4005D6CA9 /* CocoaLumberjackSwift.framework in Frameworks */,
 				5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */,
 				5367C6D51EA92D2400B1C242 /* libz.tbd in Frameworks */,
 				53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */,
 				53F8917E1EB137E900B3F131 /* AudioToolbox.framework in Frameworks */,
 				53B38C12147593FA00CD8A99 /* AVFoundation.framework in Frameworks */,
+				536C8DF72633961A007B81FB /* libbass_mpc.a in Frameworks */,
 				5389478A25A4E7880078FBAF /* GRDB in Frameworks */,
 				53BC2854139AF0DD00A825F1 /* CFNetwork.framework in Frameworks */,
 				53BC2857139AF0DD00A825F1 /* CoreFoundation.framework in Frameworks */,
+				536C8DF62633961A007B81FB /* libbass_fx.a in Frameworks */,
 				53BC2852139AF0DD00A825F1 /* CoreGraphics.framework in Frameworks */,
 				53DE598314F1932C00206529 /* CoreText.framework in Frameworks */,
 				537C93ED25B1162100175DF6 /* InflectorKit in Frameworks */,
+				536C8DFD2633961A007B81FB /* libbass.a in Frameworks */,
+				536C8DF92633961A007B81FB /* libbass_ape.a in Frameworks */,
+				536C8DF82633961A007B81FB /* libbasswv.a in Frameworks */,
 				53BC2850139AF0DD00A825F1 /* Foundation.framework in Frameworks */,
 				53BC2853139AF0DD00A825F1 /* MediaPlayer.framework in Frameworks */,
 				53C7FD9E150F0EA9008DA51C /* MessageUI.framework in Frameworks */,
@@ -1073,7 +1077,6 @@
 				53BC2851139AF0DD00A825F1 /* UIKit.framework in Frameworks */,
 				539148BA2559E597004AAC3F /* CoreServices.framework in Frameworks */,
 				5381884E25A67A4300C59CDE /* Resolver in Frameworks */,
-				539148C62559EAAF004AAC3F /* libFlurry_11.1.1.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1402,6 +1405,7 @@
 				53ED673925B7A4550002BFAF /* Jukebox.swift */,
 				5357CE9225B8D56B00FA825A /* Cache.swift */,
 				5357CE9B25B90C5B00FA825A /* Social.swift */,
+				536C8DED26338EAA007B81FB /* Analytics.swift */,
 			);
 			path = Singletons;
 			sourceTree = "<group>";
@@ -1660,12 +1664,12 @@
 				53FE36011EA961670058B925 /* bassopus.h */,
 				53FE36021EA961670058B925 /* basswv.h */,
 				53FE36031EA961670058B925 /* libbass.a */,
-				53FE36041EA961670058B925 /* libbass_ape.a */,
-				53FE36051EA961670058B925 /* libbass_fx.a */,
-				53FE36061EA961670058B925 /* libbass_mpc.a */,
-				53FE36071EA961670058B925 /* libbassflac.a */,
 				53FE36081EA961670058B925 /* libbassmix.a */,
+				53FE36051EA961670058B925 /* libbass_fx.a */,
+				53FE36071EA961670058B925 /* libbassflac.a */,
 				53FE36091EA961670058B925 /* libbassopus.a */,
+				53FE36041EA961670058B925 /* libbass_ape.a */,
+				53FE36061EA961670058B925 /* libbass_mpc.a */,
 				53FE360A1EA961670058B925 /* libbasswv.a */,
 			);
 			name = libBASS;
@@ -2205,6 +2209,7 @@
 				538C8FE125606299005D6CA9 /* RefreshControl.swift in Sources */,
 				537B05BF256B0E4B0008892C /* PadMenuTableCell.swift in Sources */,
 				5373C69025B6040900CAA859 /* CustomUITabBarController.swift in Sources */,
+				536C8DEE26338EAA007B81FB /* Analytics.swift in Sources */,
 				531EC84625B1D4800076973A /* UIAlertController+Actions.swift in Sources */,
 				535E143525A7BB910039BCAA /* FolderAlbumStore.swift in Sources */,
 				53CB554825C9D2E1004F2BAB /* Bookmark.swift in Sources */,
@@ -2450,6 +2455,7 @@
 				535E142725A7B2020039BCAA /* FolderArtistStore.swift in Sources */,
 				53FE679B256DD0F00015FC83 /* GCDWebServerFileResponse.m in Sources */,
 				5373C69125B6040900CAA859 /* CustomUITabBarController.swift in Sources */,
+				536C8DEF26338FAF007B81FB /* Analytics.swift in Sources */,
 				531EC84725B1D4800076973A /* UIAlertController+Actions.swift in Sources */,
 				535E143625A7BB910039BCAA /* FolderAlbumStore.swift in Sources */,
 				53CB554925C9D2E1004F2BAB /* Bookmark.swift in Sources */,

@@ -13,6 +13,7 @@ import Resolver
 
 final class BookmarksViewController: UIViewController {
     @Injected private var store: Store
+    @Injected private var analytics: Analytics
     
     private let saveEditHeader = SaveEditHeader(saveType: "bookmark", countType: "bookmark", pluralizeClearType: false, isLargeCount: false)
     private let tableView = UITableView()
@@ -31,7 +32,7 @@ final class BookmarksViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reloadData()
-        Flurry.logEvent("BookmarksTab")
+        analytics.log(event: .bookmarksTab)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

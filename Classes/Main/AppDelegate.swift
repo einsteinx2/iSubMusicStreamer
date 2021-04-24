@@ -17,6 +17,7 @@ import CocoaLumberjackSwift
     @Injected private var player: BassPlayer
     @Injected private var playQueue: PlayQueue
     @Injected private var cache: Cache
+    @Injected private var analytics: Analytics
     
     @objc static var shared: AppDelegate { UIApplication.shared.delegate as! AppDelegate }
     
@@ -92,7 +93,7 @@ import CocoaLumberjackSwift
         }
         
         // Load Flurry
-        loadFlurryAnalytics()
+        analytics.setup()
         
         return true
     }
@@ -166,25 +167,6 @@ import CocoaLumberjackSwift
     @objc func backToReferringApp() {
         if let referringAppUrl = referringAppUrl {
             UIApplication.shared.open(referringAppUrl, options: [:], completionHandler: nil)
-        }
-    }
-    
-    private func loadFlurryAnalytics() {
-        var apiKey: String? = nil
-        #if DEBUG
-            apiKey = nil
-        #elseif RELEASE
-            apiKey = "3KK4KKD2PSEU5APF7PNX"
-        #elseif BETA
-            apiKey = "KNN9DUXQEENZUG4Q12UA"
-        #endif
-        
-        if let apiKey = apiKey {
-            Flurry.startSession(apiKey)
-            
-            // Send basic device model and OS information
-            let parameters = ["FirmwareVersion": UIDevice.completeOSVersion, "HardwareVersion": UIDevice.deviceModel]
-            Flurry.logEvent("DeviceInfo", withParameters: parameters)
         }
     }
     

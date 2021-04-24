@@ -9,6 +9,7 @@
 import UIKit
 import Tabman
 import Pageboy
+import Resolver
 
 final class DownloadsViewController: TabmanViewController {
     private enum TabType: Int, CaseIterable {
@@ -23,6 +24,8 @@ final class DownloadsViewController: TabmanViewController {
             }
         }
     }
+    
+    @Injected private var analytics: Analytics
     
     private let buttonBar = TMBar.ButtonBar()
     private var controllerCache = [TabType: UIViewController]()
@@ -43,7 +46,7 @@ final class DownloadsViewController: TabmanViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addBar(buttonBar, dataSource: self, at: .navigationItem(item: navigationItem))
-        Flurry.logEvent("DownloadsTab")
+        analytics.log(event: .downloadsTab)
     }
     
     private func viewController(index: Int) -> UIViewController? {

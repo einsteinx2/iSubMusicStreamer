@@ -16,6 +16,7 @@ final class PlayQueueViewController: UIViewController {
     @Injected private var settings: Settings
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
+    @Injected private var analytics: Analytics
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "song", pluralizeClearType: false, isLargeCount: false)
     private let tableView = UITableView()
@@ -68,7 +69,7 @@ final class PlayQueueViewController: UIViewController {
         super.viewWillAppear(animated)
         selectRow()
         addOrRemoveSaveEditHeader()
-        Flurry.logEvent(isModal ? "PlayerPlayQueue" : "PlayQueueTab")
+        analytics.log(event: isModal ? .playerPlayQueue : .playQueueTab)
         if settings.isJukeboxEnabled {
             jukebox.getInfo()
         }

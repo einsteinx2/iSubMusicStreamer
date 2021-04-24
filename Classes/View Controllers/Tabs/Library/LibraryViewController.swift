@@ -24,6 +24,7 @@ final class LibraryViewController: TabmanViewController {
     }
 
     @Injected private var settings: Settings
+    @Injected private var analytics: Analytics
     
     private let buttonBar = TMBar.ButtonBar()
     private var controllerCache = [TabType: UIViewController]()
@@ -44,7 +45,7 @@ final class LibraryViewController: TabmanViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addBar(buttonBar, dataSource: self, at: .navigationItem(item: navigationItem))
-        Flurry.logEvent("LibraryTab")
+        analytics.log(event: .libraryTab)
     }
     
     private func viewController(index: Int) -> UIViewController? {

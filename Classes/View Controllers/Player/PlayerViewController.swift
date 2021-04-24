@@ -26,6 +26,7 @@ final class PlayerViewController: UIViewController {
     @Injected private var player: BassPlayer
     @Injected private var playQueue: PlayQueue
     @Injected private var streamManager: StreamManager
+    @Injected private var analytics: Analytics
     
     override var prefersStatusBarHidden: Bool { true }
     
@@ -318,7 +319,7 @@ final class PlayerViewController: UIViewController {
             let value = progressSlider.value - Float(settings.quickSkipNumberOfSeconds);
             progressSlider.value = value > 0.0 ? value : 0.0;
             seekedAction()
-            Flurry.logEvent("QuickSkip")
+            analytics.log(event: .quickSkip)
         }
         
         quickSkipForwardButton.setBackgroundImage(UIImage(systemName: "goforward", withConfiguration: lightConfig), for: .normal)
@@ -332,8 +333,8 @@ final class PlayerViewController: UIViewController {
             } else {
                 progressSlider.value = value
                 seekedAction()
-                Flurry.logEvent("QuickSkip")
             }
+            analytics.log(event: .quickSkip)
         }
         
         updateQuickSkipButtons()

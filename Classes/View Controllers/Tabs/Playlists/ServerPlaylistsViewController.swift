@@ -15,6 +15,7 @@ final class ServerPlaylistsViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var playQueue: PlayQueue
+    @Injected private var analytics: Analytics
     
     var serverId: Int { Settings.shared().currentServerId }
     
@@ -45,7 +46,7 @@ final class ServerPlaylistsViewController: UIViewController {
         } else {
             loadServerPlaylists()
         }
-        Flurry.logEvent("ServerPlaylistsTab")
+        analytics.log(event: .serverPlaylistsTab)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
