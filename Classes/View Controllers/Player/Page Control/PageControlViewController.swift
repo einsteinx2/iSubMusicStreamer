@@ -87,7 +87,7 @@ final class PageControlViewController: UIViewController {
             case .songInfo:
                 controller = SongInfoViewController()
             case .cacheStatus:
-                controller = CacheStatusViewController()
+                controller = DownloadStatusViewController()
             }
             
             if let controller = controller {

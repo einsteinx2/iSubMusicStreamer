@@ -15,7 +15,9 @@ final class ServersViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
     @Injected private var streamManager: StreamManager
+    @Injected private var downloadQueue: DownloadQueue
     @Injected private var player: BassPlayer
+    @Injected private var playQueue: PlayQueue
     
     private let tableView = UITableView()
     private var originalBackButtonItem: UIBarButtonItem?
@@ -128,10 +130,9 @@ final class ServersViewController: UIViewController {
                 }
             }
             
-            // Reset the databases
-            // TODO: This should no longer be necessary
-//            store.close()
-//            store.setup()
+            // Reset the data model
+            _ = playQueue.clear()
+            _ = downloadQueue.clear()
             
             // Reset the tabs
             if !UIDevice.isPad, let viewControllers = SceneDelegate.shared.tabBarController?.viewControllers  {

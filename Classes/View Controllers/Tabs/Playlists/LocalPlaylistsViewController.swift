@@ -233,7 +233,7 @@ extension LocalPlaylistsViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
-        cell.show(cached: false, number: false, art: false, secondary: true, duration: false)
+        cell.show(downloaded: false, number: false, art: false, secondary: true, duration: false)
         cell.update(model: localPlaylists[indexPath.row])
         return cell
     }

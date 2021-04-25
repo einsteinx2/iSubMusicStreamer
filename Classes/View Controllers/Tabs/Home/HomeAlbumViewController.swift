@@ -81,7 +81,7 @@ extension HomeAlbumViewController: UITableViewConfiguration {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row < folderAlbums.count {
             let cell = tableView.dequeueUniversalCell()
-            cell.show(cached: false, number: false, art: true, secondary: true, duration: false)
+            cell.show(downloaded: false, number: false, art: true, secondary: true, duration: false)
             cell.update(model: folderAlbums[indexPath.row])
             return cell
         } else {

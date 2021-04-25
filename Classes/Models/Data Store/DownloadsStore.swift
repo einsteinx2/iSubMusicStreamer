@@ -16,7 +16,7 @@ extension DownloadedSong: FetchableRecord, PersistableRecord {
     }
     
     enum Column: String, ColumnExpression {
-        case serverId, songId, path, isFinished, isPinned, size, cachedDate, playedDate
+        case serverId, songId, path, isFinished, isPinned, size, downloadedDate, playedDate
     }
     enum RelatedColumn: String, ColumnExpression {
         case queuedDate
@@ -30,7 +30,7 @@ extension DownloadedSong: FetchableRecord, PersistableRecord {
             t.column(Column.isFinished, .boolean).notNull()
             t.column(Column.isPinned, .boolean).notNull()
             t.column(Column.size, .integer).notNull()
-            t.column(Column.cachedDate, .datetime)
+            t.column(Column.downloadedDate, .datetime)
             t.column(Column.playedDate, .datetime)
             t.primaryKey([Column.serverId, Column.songId])
         }
@@ -537,7 +537,7 @@ extension Store {
                 let sql: SQLLiteral = """
                     SELECT *
                     FROM \(DownloadedSong.self)
-                    ORDER BY \(DownloadedSong.self).cachedDate COLLATE NOCASE DESC
+                    ORDER BY \(DownloadedSong.self).downloadedDate COLLATE NOCASE DESC
                     """
                 return try SQLRequest<DownloadedSong>(literal: sql).fetchAll(db)
             }
@@ -560,20 +560,20 @@ extension Store {
     
     // TODO: Confirm if LIMIT 1 makes any performance difference when using fetchOne()
     // NOTE: Excludes pinned songs
-    func oldestDownloadedSongByCachedDate() -> DownloadedSong? {
+    func oldestDownloadedSongByDownloadedDate() -> DownloadedSong? {
         do {
             return try pool.read { db in
                 let sql: SQLLiteral = """
                     SELECT *
                     FROM \(DownloadedSong.self)
                     WHERE isFinished = 1 AND isPinned = 0
-                    ORDER BY cachedDate ASC
+                    ORDER BY downloadedDate ASC
                     LIMIT 1
                     """
                 return try SQLRequest<DownloadedSong>(literal: sql).fetchOne(db)
             }
         } catch {
-            DDLogError("Failed to select oldest downloaded song by cached date: \(error)")
+            DDLogError("Failed to select oldest downloaded song by downloaded date: \(error)")
             return nil
         }
     }
@@ -592,7 +592,7 @@ extension Store {
                 return try SQLRequest<DownloadedSong>(literal: sql).fetchOne(db)
             }
         } catch {
-            DDLogError("Failed to select oldest downloaded song by cached date: \(error)")
+            DDLogError("Failed to select oldest downloaded song by played date: \(error)")
             return nil
         }
     }
@@ -807,7 +807,7 @@ extension Store {
                     VALUES (\(serverId), \(songId), \(Date()))
                     """
                 try db.execute(literal: sql)
-                NotificationCenter.postOnMainThread(name: Notifications.cacheQueueSongAdded)
+                NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongAdded)
                 return true
             }
         } catch {
@@ -830,11 +830,24 @@ extension Store {
                         """
                     try db.execute(literal: sql)
                 }
-                NotificationCenter.postOnMainThread(name: Notifications.cacheQueueSongAdded)
+                NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongAdded)
                 return true
             }
         } catch {
             DDLogError("Failed to add songIds \(songIds) server \(serverId) to download queue: \(error)")
+            return false
+        }
+    }
+    
+    func clearDownloadQueue() -> Bool {
+        do {
+            return try pool.write { db in
+                try db.execute(literal: "DELETE FROM downloadQueue")
+                NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongRemoved)
+                return true
+            }
+        } catch {
+            DDLogError("Failed to clear download queue: \(error)")
             return false
         }
     }
@@ -847,7 +860,7 @@ extension Store {
                     WHERE serverId = (\(serverId) AND songId = \(songId))
                     """
                 try db.execute(literal: sql)
-                NotificationCenter.postOnMainThread(name: Notifications.cacheQueueSongRemoved)
+                NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongRemoved)
                 return true
             }
         } catch {
@@ -859,7 +872,7 @@ extension Store {
     func removeFromDownloadQueue(song: Song) -> Bool {
         return removeFromDownloadQueue(serverId: song.serverId, songId: song.id)
     }
-    
+        
     func songFromDownloadQueue(position: Int) -> Song? {
         do {
             return try pool.read { db in

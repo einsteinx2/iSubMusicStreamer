@@ -63,7 +63,7 @@ NS_SWIFT_NAME(Settings)
 @property NSInteger minFreeSpace;
 @property BOOL isAutoDeleteCacheEnabled;
 @property NSInteger autoDeleteCacheType;
-@property NSInteger cachedSongCellColorType;
+@property NSInteger downloadedSongCellColorType;
 @property BOOL isAutoReloadArtistsEnabled;
 @property float scrobblePercent;
 @property BOOL isScrobbleEnabled;

@@ -15,7 +15,7 @@ struct DownloadedSong: Codable, Equatable {
     var isFinished: Bool = false
     var isPinned: Bool = false
     var size: Int = 0
-    var cachedDate: Date? = nil
+    var downloadedDate: Date? = nil
     var playedDate: Date? = nil
 
     init(song: Song) {

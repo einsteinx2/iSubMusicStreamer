@@ -128,7 +128,7 @@ extension BookmarksViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
-        cell.show(cached: true, number: true, art: true, secondary: true, duration: true, header: true)
+        cell.show(downloaded: true, number: true, art: true, secondary: true, duration: true, header: true)
         let bookmark = bookmarks[indexPath.row]
         if let song = store.song(bookmark: bookmark), let playlist = store.localPlaylist(bookmark: bookmark) {
             cell.headerText = "\(playlist.name) - \(formatTime(seconds: bookmark.offsetInSeconds))"

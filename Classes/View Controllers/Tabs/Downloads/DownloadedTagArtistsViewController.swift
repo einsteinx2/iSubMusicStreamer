@@ -15,8 +15,8 @@ import CocoaLumberjackSwift
 final class DownloadedTagArtistsViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var cache: Cache
-    @Injected private var cacheQueue: CacheQueue
+    @Injected private var downloadsManager: DownloadsManager
+    @Injected private var downloadQueue: DownloadQueue
     
     var serverId: Int { Settings.shared().currentServerId }
         
@@ -42,10 +42,10 @@ final class DownloadedTagArtistsViewController: AbstractDownloadsViewController 
             for indexPath in indexPaths {
                 _ = self.store.deleteDownloadedSongs(downloadedTagArtist: self.downloadedTagArtists[indexPath.row])
             }
-            self.cache.findCacheSize()
-            NotificationCenter.postOnMainThread(name: Notifications.cachedSongDeleted)
-            if (!self.cacheQueue.isDownloading) {
-                self.cacheQueue.start()
+            self.downloadsManager.findCacheSize()
+            NotificationCenter.postOnMainThread(name: Notifications.downloadedSongDeleted)
+            if (!self.downloadQueue.isDownloading) {
+                self.downloadQueue.start()
             }
         }
     }
@@ -59,7 +59,7 @@ final class DownloadedTagArtistsViewController: AbstractDownloadsViewController 
 extension DownloadedTagArtistsViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
-        cell.show(cached: false, number: false, art: true, secondary: true, duration: false)
+        cell.show(downloaded: false, number: false, art: true, secondary: true, duration: false)
         cell.update(model: downloadedTagArtists[indexPath.row])
         return cell
     }

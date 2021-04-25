@@ -68,8 +68,8 @@
 		53246AAA256C324500E11EC4 /* InsetTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA8256C324500E11EC4 /* InsetTextField.swift */; };
 		53246AB3256C918500E11EC4 /* LyricsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB2256C918500E11EC4 /* LyricsViewController.swift */; };
 		53246AB4256C918500E11EC4 /* LyricsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB2256C918500E11EC4 /* LyricsViewController.swift */; };
-		53246AB6256C975600E11EC4 /* CacheStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB5256C975600E11EC4 /* CacheStatusViewController.swift */; };
-		53246AB7256C975600E11EC4 /* CacheStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB5256C975600E11EC4 /* CacheStatusViewController.swift */; };
+		53246AB6256C975600E11EC4 /* DownloadStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB5256C975600E11EC4 /* DownloadStatusViewController.swift */; };
+		53246AB7256C975600E11EC4 /* DownloadStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB5256C975600E11EC4 /* DownloadStatusViewController.swift */; };
 		5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; };
 		5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; };
 		53266BFA2562D4D0002C64BB /* PageControlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53266BF92562D4D0002C64BB /* PageControlViewController.swift */; };
@@ -119,8 +119,8 @@
 		534BC84025CCE03700964D82 /* HomeViewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534BC83E25CCE03700964D82 /* HomeViewButton.swift */; };
 		534BC84225CCE05400964D82 /* HomeSongInfoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534BC84125CCE05400964D82 /* HomeSongInfoButton.swift */; };
 		534BC84325CCE05400964D82 /* HomeSongInfoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534BC84125CCE05400964D82 /* HomeSongInfoButton.swift */; };
-		5357CE9325B8D56B00FA825A /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9225B8D56B00FA825A /* Cache.swift */; };
-		5357CE9425B8D56B00FA825A /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9225B8D56B00FA825A /* Cache.swift */; };
+		5357CE9325B8D56B00FA825A /* DownloadsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9225B8D56B00FA825A /* DownloadsManager.swift */; };
+		5357CE9425B8D56B00FA825A /* DownloadsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9225B8D56B00FA825A /* DownloadsManager.swift */; };
 		5357CE9925B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */; };
 		5357CE9A25B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */; };
 		5357CE9C25B90C5B00FA825A /* Social.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9B25B90C5B00FA825A /* Social.swift */; };
@@ -170,8 +170,8 @@
 		5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D21EA92D1A00B1C242 /* libxml2.tbd */; };
 		5367C6D51EA92D2400B1C242 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D41EA92D2400B1C242 /* libz.tbd */; };
 		5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D61EA92D3000B1C242 /* libSystem.tbd */; };
-		536C890725BB37F5008FE1AC /* CacheQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890625BB37F5008FE1AC /* CacheQueue.swift */; };
-		536C890825BB37F5008FE1AC /* CacheQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890625BB37F5008FE1AC /* CacheQueue.swift */; };
+		536C890725BB37F5008FE1AC /* DownloadQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890625BB37F5008FE1AC /* DownloadQueue.swift */; };
+		536C890825BB37F5008FE1AC /* DownloadQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890625BB37F5008FE1AC /* DownloadQueue.swift */; };
 		536C890A25BB5FED008FE1AC /* StreamHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890925BB5FED008FE1AC /* StreamHandler.swift */; };
 		536C890B25BB5FED008FE1AC /* StreamHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890925BB5FED008FE1AC /* StreamHandler.swift */; };
 		536C891025BF92D1008FE1AC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890F25BF92D1008FE1AC /* SettingsViewController.swift */; };
@@ -670,7 +670,7 @@
 		53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEditViewController.swift; sourceTree = "<group>"; };
 		53246AA8256C324500E11EC4 /* InsetTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetTextField.swift; sourceTree = "<group>"; };
 		53246AB2256C918500E11EC4 /* LyricsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsViewController.swift; sourceTree = "<group>"; };
-		53246AB5256C975600E11EC4 /* CacheStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheStatusViewController.swift; sourceTree = "<group>"; };
+		53246AB5256C975600E11EC4 /* DownloadStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadStatusViewController.swift; sourceTree = "<group>"; };
 		532590FF14EE22C100DF4BDB /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		5325910014EE22C400DF4BDB /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		53266BF92562D4D0002C64BB /* PageControlViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlViewController.swift; sourceTree = "<group>"; };
@@ -696,7 +696,7 @@
 		534BC83E25CCE03700964D82 /* HomeViewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewButton.swift; sourceTree = "<group>"; };
 		534BC84125CCE05400964D82 /* HomeSongInfoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSongInfoButton.swift; sourceTree = "<group>"; };
 		5354914A11B03FC900928E0F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		5357CE9225B8D56B00FA825A /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		5357CE9225B8D56B00FA825A /* DownloadsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsManager.swift; sourceTree = "<group>"; };
 		5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+FileSystemAttributes.swift"; sourceTree = "<group>"; };
 		5357CE9B25B90C5B00FA825A /* Social.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Social.swift; sourceTree = "<group>"; };
 		5357FE1625C320C3001BDE29 /* Bridging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bridging.swift; sourceTree = "<group>"; };
@@ -727,7 +727,7 @@
 		5367C6D21EA92D1A00B1C242 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		5367C6D41EA92D2400B1C242 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		5367C6D61EA92D3000B1C242 /* libSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.tbd; path = usr/lib/libSystem.tbd; sourceTree = SDKROOT; };
-		536C890625BB37F5008FE1AC /* CacheQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheQueue.swift; sourceTree = "<group>"; };
+		536C890625BB37F5008FE1AC /* DownloadQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueue.swift; sourceTree = "<group>"; };
 		536C890925BB5FED008FE1AC /* StreamHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamHandler.swift; sourceTree = "<group>"; };
 		536C890F25BF92D1008FE1AC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		536C891225BF93FF008FE1AC /* ServersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServersViewController.swift; sourceTree = "<group>"; };
@@ -1409,7 +1409,7 @@
 				53FE36A01EA961720058B925 /* SavedSettings.m */,
 				539D331125AB691B00F53797 /* PlayQueue.swift */,
 				53ED673925B7A4550002BFAF /* Jukebox.swift */,
-				5357CE9225B8D56B00FA825A /* Cache.swift */,
+				5357CE9225B8D56B00FA825A /* DownloadsManager.swift */,
 				5357CE9B25B90C5B00FA825A /* Social.swift */,
 				536C8DED26338EAA007B81FB /* Analytics.swift */,
 			);
@@ -1472,7 +1472,7 @@
 			isa = PBXGroup;
 			children = (
 				5302DE4025BA2AA00036A9B1 /* StreamManager.swift */,
-				536C890625BB37F5008FE1AC /* CacheQueue.swift */,
+				536C890625BB37F5008FE1AC /* DownloadQueue.swift */,
 				536C890925BB5FED008FE1AC /* StreamHandler.swift */,
 			);
 			path = "Stream Handlers";
@@ -1522,7 +1522,7 @@
 				53752BEB2562CEF800438636 /* CoverArtViewController.swift */,
 				537B05C1256B40930008892C /* SongInfoViewController.swift */,
 				53246AB2256C918500E11EC4 /* LyricsViewController.swift */,
-				53246AB5256C975600E11EC4 /* CacheStatusViewController.swift */,
+				53246AB5256C975600E11EC4 /* DownloadStatusViewController.swift */,
 			);
 			path = "Page Control";
 			sourceTree = "<group>";
@@ -2021,7 +2021,7 @@
 				53266BFA2562D4D0002C64BB /* PageControlViewController.swift in Sources */,
 				5347A1E4256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */,
 				535E143825A7C6D60039BCAA /* QuickAlbumsLoader.swift in Sources */,
-				53246AB6256C975600E11EC4 /* CacheStatusViewController.swift in Sources */,
+				53246AB6256C975600E11EC4 /* DownloadStatusViewController.swift in Sources */,
 				53CB554E25C9FAAD004F2BAB /* BookmarksViewController.swift in Sources */,
 				530A167F259277E700E9294E /* SearchAllViewController.swift in Sources */,
 				53FE36F21EA961720058B925 /* BassParamEqValue.m in Sources */,
@@ -2074,7 +2074,7 @@
 				5357FE1A25C320EF001BDE29 /* Bass.swift in Sources */,
 				531EC86225B21F360076973A /* DownloadedFolderArtistsViewController.swift in Sources */,
 				53329652255F30220027C51A /* ClosureSleeve.swift in Sources */,
-				5357CE9325B8D56B00FA825A /* Cache.swift in Sources */,
+				5357CE9325B8D56B00FA825A /* DownloadsManager.swift in Sources */,
 				53329648255F2E770027C51A /* PlayAllAndShuffleHeader.swift in Sources */,
 				53FE38B91EA961C80058B925 /* ZKLFHeader.m in Sources */,
 				539D32F725AA207400F53797 /* LyricsLoader.swift in Sources */,
@@ -2106,7 +2106,7 @@
 				53E03CF725C1F6EF0043355F /* APIError.swift in Sources */,
 				53ED673125B780070002BFAF /* UIApplication+Helper.swift in Sources */,
 				53A0EDC825B5DCF400B78DAA /* TagArtistViewController.swift in Sources */,
-				536C890725BB37F5008FE1AC /* CacheQueue.swift in Sources */,
+				536C890725BB37F5008FE1AC /* DownloadQueue.swift in Sources */,
 				5381884225A65F6100C59CDE /* RootListMetadata.swift in Sources */,
 				537AE81D26224C360073DEF2 /* AsyncLoaderOperation.swift in Sources */,
 				53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
@@ -2294,7 +2294,7 @@
 				5359C85A256EA8FE00C8F8DC /* ObjC.swift in Sources */,
 				53762C8125AD012200476F2D /* ServerPlaylistLoader.swift in Sources */,
 				532C625025B6230600185998 /* ServerChecker.swift in Sources */,
-				53246AB7256C975600E11EC4 /* CacheStatusViewController.swift in Sources */,
+				53246AB7256C975600E11EC4 /* DownloadStatusViewController.swift in Sources */,
 				53FE36EE1EA961720058B925 /* BassEqualizer.m in Sources */,
 				53E03CFE25C213D30043355F /* SongLoader.swift in Sources */,
 				53762C8725AD105E00476F2D /* NowPlayingSong.swift in Sources */,
@@ -2322,7 +2322,7 @@
 				531EC86325B21F360076973A /* DownloadedFolderArtistsViewController.swift in Sources */,
 				5357FE1B25C320EF001BDE29 /* Bass.swift in Sources */,
 				53FE38BB1EA961C80058B925 /* ZKLFHeader.m in Sources */,
-				5357CE9425B8D56B00FA825A /* Cache.swift in Sources */,
+				5357CE9425B8D56B00FA825A /* DownloadsManager.swift in Sources */,
 				53FE388E1EA961C80058B925 /* GMAppleDouble.m in Sources */,
 				539D32F825AA207400F53797 /* LyricsLoader.swift in Sources */,
 				53D4FCA42599335900C6F1AE /* FolderMetadata.swift in Sources */,
@@ -2355,7 +2355,7 @@
 				53A0EDC925B5DCF400B78DAA /* TagArtistViewController.swift in Sources */,
 				53E03CF825C1F6EF0043355F /* APIError.swift in Sources */,
 				53ED673225B780070002BFAF /* UIApplication+Helper.swift in Sources */,
-				536C890825BB37F5008FE1AC /* CacheQueue.swift in Sources */,
+				536C890825BB37F5008FE1AC /* DownloadQueue.swift in Sources */,
 				537AE81E26224C360073DEF2 /* AsyncLoaderOperation.swift in Sources */,
 				53EA2DE3257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
 				5381884325A65F6100C59CDE /* RootListMetadata.swift in Sources */,

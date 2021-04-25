@@ -234,7 +234,7 @@ extension FolderAlbumViewController: UITableViewConfiguration {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
         if let folderAlbum = folderAlbum(indexPath: indexPath) {
-            cell.show(cached: false, number: false, art: true, secondary: false, duration: false)
+            cell.show(downloaded: false, number: false, art: true, secondary: false, duration: false)
             cell.update(model: folderAlbum)
         } else if let song = song(indexPath: indexPath) {
             cell.update(song: song)

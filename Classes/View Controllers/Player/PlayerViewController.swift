@@ -614,8 +614,8 @@ final class PlayerViewController: UIViewController {
                 player.seekToPosition(seconds: Double(progressSlider.value), fadeVolume: true)
                 progressDisplayLink?.isPaused = false
             } else {
-                let message = "You are trying to skip further than the song has cached. You can do this, but the song won't be cached. Or you can wait a little bit for the cache to catch up."
-                let alert = UIAlertController(title: "Past Cache Point", message: message, preferredStyle: .alert)
+                let message = "You are trying to skip further than the song has downloaded. You can do this, but the song won't be downloaded. Or you can wait a little bit for the download to catch up."
+                let alert = UIAlertController(title: "Past Download Point", message: message, preferredStyle: .alert)
                 alert.addAction(title: "OK", style: .default) { _ in
                     self.player.stop()
                     self.player.startByteOffset = byteOffset

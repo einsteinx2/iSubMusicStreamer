@@ -1,5 +1,5 @@
 //
-//  CacheQueue.swift
+//  DownloadQueue.swift
 //  iSub
 //
 //  Created by Benjamin Baron on 1/22/21.
@@ -10,10 +10,10 @@ import Foundation
 import Resolver
 import CocoaLumberjackSwift
 
-final class CacheQueue {
+final class DownloadQueue {
     @LazyInjected private var store: Store
     @LazyInjected private var settings: Settings
-    @LazyInjected private var cache: Cache
+    @LazyInjected private var downloadsManager: DownloadsManager
     @LazyInjected private var streamManager: StreamManager
     
     private let maxNumberOfReconnects = 5
@@ -47,10 +47,10 @@ final class CacheQueue {
             return
         }
         
-        DDLogInfo("[CacheQueue] starting download queue for \(song)")
+        DDLogInfo("[DownloadQueue] starting download queue for \(song)")
         
         // For simplicity sake, just make sure we never go under 25 MB and let the cache check process take care of the rest
-        if cache.freeSpace <= 25 * 1024 * 1024 {
+        if downloadsManager.freeSpace <= 25 * 1024 * 1024 {
             /*[EX2Dispatch runInMainThread:^
              {
                  [cacheS showNoFreeSpaceMessage:NSLocalizedString(@"Your device has run out of space and cannot download any more music. Please free some space and try again", @"Download manager, device out of space message")];
@@ -71,13 +71,13 @@ final class CacheQueue {
         
         // Check if the song is fully cached and if so, remove it from the queue and return
         if song.isFullyCached {
-            DDLogInfo("[CacheQueue] Marking \(song) as downloaded because it's already fully cached")
+            DDLogInfo("[DownloadQueue] Marking \(song) as downloaded because it's already fully cached")
             
             // The song is fully cached, so delete it from the cache queue database
             _ = store.removeFromDownloadQueue(song: song)
             
             // Notify any tables
-            NotificationCenter.postOnMainThread(name: Notifications.cacheQueueSongDownloaded, userInfo: ["songId": song.id])
+            NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongDownloaded, userInfo: ["songId": song.id])
             
             // Continue the queue
             DispatchQueue.main.async {
@@ -90,17 +90,17 @@ final class CacheQueue {
         
         // Create the stream handler
         if let handler = streamManager.handler(song: song) {
-            DDLogInfo("[CacheQueue] stealing \(song) from stream manager")
+            DDLogInfo("[DownloadQueue] stealing \(song) from stream manager")
             
             // It's in the stream queue so steal the handler
             currentStreamHandler = handler
             handler.delegate = self
-            streamManager.stealForCacheQueue(handler: handler)
+            streamManager.stealForDownloadQueue(handler: handler)
             if !handler.isDownloading {
                 handler.start(resume: true)
             }
         } else {
-            DDLogInfo("[CacheQueue] creating download handler for \(song)")
+            DDLogInfo("[DownloadQueue] creating download handler for \(song)")
             let handler = StreamHandler(song: song, tempCache: false, delegate: self)
             currentStreamHandler = handler
             handler.start()
@@ -108,7 +108,7 @@ final class CacheQueue {
         
         SongsHelper.downloadMetadata(song: song)
         
-        NotificationCenter.postOnMainThread(name: Notifications.cacheQueueStarted)
+        NotificationCenter.postOnMainThread(name: Notifications.downloadQueueStarted)
     }
     
     // TODO: implement this - why did this take a byteOffset if it didn't use it?
@@ -123,15 +123,23 @@ final class CacheQueue {
         isDownloading = false
         currentStreamHandler?.cancel()
         currentStreamHandler = nil
-        NotificationCenter.postOnMainThread(name: Notifications.cacheQueueStopped)
+        NotificationCenter.postOnMainThread(name: Notifications.downloadQueueStopped)
     }
     
-    func removeCurrentSong() {
-        guard let song = currentQueuedSong else { return }
+    func removeCurrentSong() -> Bool {
+        guard let song = currentQueuedSong else { return false }
         
         stop()
-        _ = store.removeFromDownloadQueue(song: song)
-        start()
+        if store.removeFromDownloadQueue(song: song) {
+            start()
+            return true
+        }
+        return false
+    }
+    
+    func clear() -> Bool {
+        stop()
+        return store.clearDownloadQueue()
     }
     
     // MARK: Notifications
@@ -149,7 +157,7 @@ final class CacheQueue {
     }
 }
 
-extension CacheQueue: StreamHandlerDelegate {
+extension DownloadQueue: StreamHandlerDelegate {
     func streamHandlerStarted(handler: StreamHandler) {
         // Do nothing here (handled in StreamManager only)
     }
@@ -212,7 +220,7 @@ extension CacheQueue: StreamHandlerDelegate {
         currentStreamHandler = nil;
         
         // Tell the cache queue view to reload
-        NotificationCenter.postOnMainThread(name: Notifications.cacheQueueSongDownloaded, userInfo: ["songId": handler.song.id])
+        NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongDownloaded, userInfo: ["songId": handler.song.id])
         
         // Download the next song in the queue
         isDownloading = false
@@ -232,7 +240,7 @@ extension CacheQueue: StreamHandlerDelegate {
             SlidingNotification.showOnMainWindow(message: "Song failed to download")
             
             // Tried max number of times so remove
-            NotificationCenter.postOnMainThread(name: Notifications.cacheQueueSongFailed)
+            NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongFailed)
             _ = store.removeFromDownloadQueue(song: handler.song)
             currentStreamHandler = nil
             start()
@@ -240,14 +248,14 @@ extension CacheQueue: StreamHandlerDelegate {
     }
 }
 
-@objc final class CacheQueue_ObjCDeleteMe: NSObject {
-    private static var cacheQueue: CacheQueue { Resolver.resolve() }
+@objc final class DownloadQueue_ObjCDeleteMe: NSObject {
+    private static var downloadQueue: DownloadQueue { Resolver.resolve() }
     
     @objc static func start() {
-        cacheQueue.start()
+        downloadQueue.start()
     }
     
     @objc static func stop() {
-        cacheQueue.stop()
+        downloadQueue.stop()
     }
 }

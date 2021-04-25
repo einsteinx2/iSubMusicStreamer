@@ -28,7 +28,7 @@ final class StreamHandler: NSObject, Codable {
     }
     
     @Injected private var playQueue: PlayQueue
-    @Injected private var cache: Cache
+    @Injected private var downloadsManager: DownloadsManager
     @Injected private var settings: Settings
     @Injected private var store: Store
     
@@ -116,7 +116,7 @@ final class StreamHandler: NSObject, Codable {
         
         // Clear temp cache if this is a temp file and we're not resuming
         if !resume && isTempCache {
-            cache.clearTempCache()
+            downloadsManager.clearTempCache()
         }
         
         DDLogInfo("[StreamHandler] \(super.description) start(resume: \(resume) for: \(song)")

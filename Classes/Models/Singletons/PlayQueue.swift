@@ -21,7 +21,7 @@ import CocoaLumberjackSwift
     @LazyInjected private var settings: Settings
     @LazyInjected private var jukebox: Jukebox
     @LazyInjected private var streamManager: StreamManager
-    @LazyInjected private var cacheQueue: CacheQueue
+    @LazyInjected private var downloadQueue: DownloadQueue
     @LazyInjected private var player: BassPlayer
     
     // Temporary accessor for Objective-C classes using Resolver under the hood
@@ -395,9 +395,9 @@ import CocoaLumberjackSwift
         } else if !song.isFullyCached && settings.isOfflineMode {
             playNextSong()
         } else {
-            if let currentQueuedSong = cacheQueue.currentQueuedSong, currentQueuedSong == song {
+            if let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == song {
                 // The cache queue is downloading this song, remove it before continuing
-                cacheQueue.removeCurrentSong()
+                _ = downloadQueue.removeCurrentSong()
             }
             
             if streamManager.isDownloading(song: song) {

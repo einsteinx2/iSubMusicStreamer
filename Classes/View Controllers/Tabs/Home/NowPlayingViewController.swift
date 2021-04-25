@@ -101,7 +101,7 @@ extension NowPlayingViewController: UITableViewConfiguration {
         } else {
             cell.headerText = "\(nowPlayingSong.username) - \(playTime)"
         }
-        cell.show(cached: true, number: false, art: true, secondary: true, duration: true, header: true)
+        cell.show(downloaded: true, number: false, art: true, secondary: true, duration: true, header: true)
         cell.update(model: song(indexPath: indexPath))
         handleOfflineMode(cell: cell, at: indexPath)
         return cell

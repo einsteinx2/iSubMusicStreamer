@@ -13,7 +13,7 @@ import CocoaLumberjackSwift
 final class ServerChecker {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var cacheQueue: CacheQueue
+    @Injected private var downloadQueue: DownloadQueue
     
     private var statusLoader: StatusLoader?
     private var serverCheckWorkItem: DispatchWorkItem?
@@ -54,7 +54,7 @@ final class ServerChecker {
                     
                     // Since the download queue has been a frequent source of crashes in the past, and we start this on launch automatically potentially resulting in a crash loop, do NOT start the download queue automatically if the app crashed on last launch.
                     if !self.settings.appCrashedOnLastRun {
-                        self.cacheQueue.start()
+                        self.downloadQueue.start()
                     }
                 } else {
                     if !self.settings.isOfflineMode {

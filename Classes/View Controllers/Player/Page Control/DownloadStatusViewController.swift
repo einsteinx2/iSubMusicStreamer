@@ -1,5 +1,5 @@
 //
-//  CacheStatusViewController.swift
+//  DownloadStatusViewController.swift
 //  iSub
 //
 //  Created by Benjamin Baron on 11/23/20.
@@ -9,17 +9,17 @@
 import UIKit
 import Resolver
 
-final class CacheStatusViewController: UIViewController {
+final class DownloadStatusViewController: UIViewController {
     @Injected private var settings: Settings
-    @Injected private var cache: Cache
+    @Injected private var downloadsManager: DownloadsManager
     @Injected private var playQueue: PlayQueue
     
     let currentSongProgressBar = UIProgressView(progressViewStyle: .default)
     let nextSongProgressBar = UIProgressView(progressViewStyle: .default)
         
-    lazy var songsCachedLabel: UILabel = { return makeInfoLabel(text: "0") }()
-    lazy var cachedUsedLabel: UILabel = { return makeInfoLabel(text: "0") }()
-    lazy var cacheSizeLabel: UILabel = { return makeInfoLabel(text: "0") }()
+    lazy var songsDownloadedLabel: UILabel = { return makeInfoLabel(text: "0") }()
+    lazy var downloadSpaceUsedLabel: UILabel = { return makeInfoLabel(text: "0") }()
+    lazy var downloadSizeLabel: UILabel = { return makeInfoLabel(text: "0") }()
     lazy var freeSpaceLabel: UILabel = { return makeInfoLabel(text: "0") }()
     
     var currentSong: Song?
@@ -48,7 +48,7 @@ final class CacheStatusViewController: UIViewController {
         titleLabel.textColor = .white
         titleLabel.font = .boldSystemFont(ofSize: 30)
         titleLabel.textAlignment = .center
-        titleLabel.text = "Cache Status"
+        titleLabel.text = "Download Status"
         view.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.height.equalTo(45)
@@ -97,14 +97,14 @@ final class CacheStatusViewController: UIViewController {
         infoTitleStackView.axis = .vertical
         infoTitleStackView.distribution = .equalSpacing
         infoTitleStackView.spacing = 3
-        let cacheSizeTitle = settings.cachingType == ISMSCachingType_minSpace.rawValue ? "Min Free Space:" : "Max Cache Size:"
-        infoTitleStackView.addArrangedSubviews([makeInfoLabel(text: "Songs Cached:"),
-                                                makeInfoLabel(text: "Cache Used:"),
-                                                makeInfoLabel(text: cacheSizeTitle),
+        let downloadSizeTitle = settings.cachingType == ISMSCachingType_minSpace.rawValue ? "Min Free Space:" : "Max Download Space:"
+        infoTitleStackView.addArrangedSubviews([makeInfoLabel(text: "Songs Downloaded:"),
+                                                makeInfoLabel(text: "Download Space Used:"),
+                                                makeInfoLabel(text: downloadSizeTitle),
                                                 makeInfoLabel(text: "Free Space:")])
         containerView.addSubview(infoTitleStackView)
         infoTitleStackView.snp.makeConstraints { make in
-            make.width.equalTo(130)
+            make.width.equalTo(180)
             make.leading.bottom.equalToSuperview()
             make.top.equalTo(progressBarStackView.snp.bottom).offset(20)
         }
@@ -113,9 +113,9 @@ final class CacheStatusViewController: UIViewController {
         infoLabelStackView.axis = .vertical
         infoLabelStackView.distribution = .equalSpacing
         infoLabelStackView.spacing = 3
-        infoLabelStackView.addArrangedSubviews([songsCachedLabel,
-                                                cachedUsedLabel,
-                                                cacheSizeLabel,
+        infoLabelStackView.addArrangedSubviews([songsDownloadedLabel,
+                                                downloadSpaceUsedLabel,
+                                                downloadSizeLabel,
                                                 freeSpaceLabel])
         containerView.addSubview(infoLabelStackView)
         infoLabelStackView.snp.makeConstraints { make in
@@ -127,10 +127,10 @@ final class CacheStatusViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(cacheSongObjects), name: Notifications.songPlaybackStarted)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(cacheSongObjects), name: Notifications.songPlaybackEnded)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(cacheSongObjects), name: Notifications.currentPlaylistIndexChanged)
-        cacheSongObjects()
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(songDownloadObjects), name: Notifications.songPlaybackStarted)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(songDownloadObjects), name: Notifications.songPlaybackEnded)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(songDownloadObjects), name: Notifications.currentPlaylistIndexChanged)
+        songDownloadObjects()
         startUpdatingStats()
     }
     
@@ -140,7 +140,7 @@ final class CacheStatusViewController: UIViewController {
         NotificationCenter.removeObserverOnMainThread(self)
     }
     
-    @objc private func cacheSongObjects() {
+    @objc private func songDownloadObjects() {
         currentSong = playQueue.currentSong
         nextSong = playQueue.nextSong
     }
@@ -171,15 +171,15 @@ final class CacheStatusViewController: UIViewController {
             }
         }
         
-        let numCachedSongs = cache.numberOfCachedSongs
-        songsCachedLabel.text = numCachedSongs == 1 ? "1 song" : "\(numCachedSongs) songs"
-        cachedUsedLabel.text = formatFileSize(bytes: cache.cacheSize)
+        let numCachedSongs = downloadsManager.numberOfCachedSongs
+        songsDownloadedLabel.text = numCachedSongs == 1 ? "1 song" : "\(numCachedSongs) songs"
+        downloadSpaceUsedLabel.text = formatFileSize(bytes: downloadsManager.cacheSize)
         if settings.cachingType == ISMSCachingType_minSpace.rawValue {
-            cacheSizeLabel.text = formatFileSize(bytes: settings.minFreeSpace)
+            downloadSizeLabel.text = formatFileSize(bytes: settings.minFreeSpace)
         } else {
-            cacheSizeLabel.text = formatFileSize(bytes: settings.minFreeSpace)
+            downloadSizeLabel.text = formatFileSize(bytes: settings.minFreeSpace)
         }
-        freeSpaceLabel.text = formatFileSize(bytes: cache.freeSpace)
+        freeSpaceLabel.text = formatFileSize(bytes: downloadsManager.freeSpace)
         
         perform(#selector(startUpdatingStats), with: nil, afterDelay: 1.0)
     }

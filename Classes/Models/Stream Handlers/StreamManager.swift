@@ -11,7 +11,7 @@ import Resolver
 import CocoaLumberjackSwift
 
 final class StreamManager {
-    @LazyInjected private var cacheQueue: CacheQueue
+    @LazyInjected private var downloadQueue: DownloadQueue
     @LazyInjected private var store: Store
     @LazyInjected private var settings: Settings
     @LazyInjected private var playQueue: PlayQueue
@@ -135,9 +135,9 @@ final class StreamManager {
         
         // Remove the song from downloads if necessary
         let song = handler.song
-        guard let currentQueuedSong = cacheQueue.currentQueuedSong, currentQueuedSong == song else { return }
-        // TODO: Why is this checking if the CacheQueue is downloading?
-        if currentQueuedSong != song && !song.isFullyCached && !song.isTempCached && cacheQueue.isDownloading {
+        guard let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == song else { return }
+        // TODO: Why is this checking if the DownloadQueue is downloading?
+        if currentQueuedSong != song && !song.isFullyCached && !song.isTempCached && downloadQueue.isDownloading {
             DDLogInfo("[StreamManager] Removing song from cached songs table: \(song)")
             _ = store.deleteDownloadedSong(song: song)
         }
@@ -203,8 +203,8 @@ final class StreamManager {
     @objc private func resume(handler: StreamHandler) {
         // As an added check, verify that this handler is still in the stack
         guard isInQueue(song: handler.song) else { return }
-        if cacheQueue.isDownloading, let currentQueuedSong = cacheQueue.currentQueuedSong, currentQueuedSong == handler.song {
-            // This song is already being downloaded by the cache queue, so just start the player
+        if downloadQueue.isDownloading, let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == handler.song {
+            // This song is already being downloaded by the download queue, so just start the player
             streamHandlerStartPlayback(handler: handler)
             
             // Remove the handler from the stack
@@ -228,8 +228,8 @@ final class StreamManager {
         // As an added check, verify that this handler is still in the stack
         guard isInQueue(song: handler.song) else { return }
         DDLogInfo("[StreamManager] starting handler \(handler) resume: \(resume), handlerStack: \(handlerStack)")
-        if cacheQueue.isDownloading, let currentQueuedSong = cacheQueue.currentQueuedSong, currentQueuedSong == handler.song {
-            // This song is already being downloaded by the cache queue, so just start the player
+        if downloadQueue.isDownloading, let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == handler.song {
+            // This song is already being downloaded by the download queue, so just start the player
             streamHandlerStartPlayback(handler: handler)
             
             // Remove the handler from the stack
@@ -272,8 +272,8 @@ final class StreamManager {
     
     // MARK: Handler Stealing
     
-    func stealForCacheQueue(handler: StreamHandler) {
-        DDLogInfo("[StreamManager] cache queue manager stole handler for song \(handler.song)")
+    func stealForDownloadQueue(handler: StreamHandler) {
+        DDLogInfo("[StreamManager] download queue manager stole handler for song \(handler.song)")
         handlerStack.removeAll { $0 == handler }
         saveHandlerStack()
         fillStreamQueue()
@@ -312,7 +312,7 @@ final class StreamManager {
                 }
                 
                 var isCurrentQueuedSong = false
-                if let currentQueuedSong = cacheQueue.currentQueuedSong, currentQueuedSong == song {
+                if let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == song {
                     isCurrentQueuedSong = true
                 }
                 
@@ -419,7 +419,7 @@ extension StreamManager: StreamHandlerDelegate {
         
         // TODO: Should check store return values and do some extra error handling?
         if !handler.isTempCache {
-            if cacheQueue.isInQueue(song: handler.song) {
+            if downloadQueue.isInQueue(song: handler.song) {
                 _ = store.removeFromDownloadQueue(song: handler.song)
             }
             DDLogInfo("[StreamManager] Marking download finished for \(handler.song)")

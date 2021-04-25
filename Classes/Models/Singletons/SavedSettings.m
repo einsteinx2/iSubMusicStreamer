@@ -456,11 +456,11 @@ LOG_LEVEL_ISUB_DEFAULT
     
     if (isBackupCacheEnabled) {
         //Set all cached songs to removeSkipBackup
-        [Cache_ObjCDeleteMe setAllCachedSongsToBackup];
+        [DownloadsManager_ObjCDeleteMe setAllCachedSongsToBackup];
  
     } else {
         // Set all cached songs to removeSkipBackup
-        [Cache_ObjCDeleteMe setAllCachedSongsToNotBackup];
+        [DownloadsManager_ObjCDeleteMe setAllCachedSongsToNotBackup];
     }
 }
 
@@ -474,7 +474,7 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
     
     if (!SceneDelegate.shared.isWifi) {
-        isManualCachingOnWWANEnabled ? [CacheQueue_ObjCDeleteMe start] : [CacheQueue_ObjCDeleteMe stop];
+        isManualCachingOnWWANEnabled ? [DownloadQueue_ObjCDeleteMe start] : [DownloadQueue_ObjCDeleteMe stop];
     }
 }
 
@@ -523,12 +523,12 @@ LOG_LEVEL_ISUB_DEFAULT
     [_userDefaults synchronize];
 }
 
-- (NSInteger)cachedSongCellColorType {
+- (NSInteger)downloadedSongCellColorType {
     return [_userDefaults integerForKey:@"cacheSongCellColorSetting"];
 }
 
-- (void)setCachedSongCellColorType:(NSInteger)cachedSongCellColorType {
-    [_userDefaults setInteger:cachedSongCellColorType forKey:@"cacheSongCellColorSetting"];
+- (void)setDownloadedSongCellColorType:(NSInteger)downloadedSongCellColorType {
+    [_userDefaults setInteger:downloadedSongCellColorType forKey:@"cacheSongCellColorSetting"];
     [_userDefaults synchronize];
 }
 

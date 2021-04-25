@@ -14,8 +14,8 @@ import CocoaLumberjackSwift
 final class DownloadQueueViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
     @Injected private var settings: Settings
-    @Injected private var cache: Cache
-    @Injected private var cacheQueue: CacheQueue
+    @Injected private var downloadsManager: DownloadsManager
+    @Injected private var downloadQueue: DownloadQueue
     
     var serverId: Int { Settings.shared().currentServerId }
     
@@ -29,8 +29,8 @@ final class DownloadQueueViewController: AbstractDownloadsViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.cacheQueueSongAdded)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.cacheQueueSongRemoved)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.downloadQueueSongAdded)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.downloadQueueSongRemoved)
     }
 
     @objc override func reloadTable() {
@@ -51,8 +51,8 @@ final class DownloadQueueViewController: AbstractDownloadsViewController {
             for song in songs {
                 _ = self.store.removeFromDownloadQueue(song: song)
             }
-            if (!self.cacheQueue.isDownloading) {
-                self.cacheQueue.start()
+            if (!self.downloadQueue.isDownloading) {
+                self.downloadQueue.start()
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -69,7 +69,7 @@ extension DownloadQueueViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
         if let song = store.songFromDownloadQueue(position: indexPath.row) {
-            cell.update(song: song, number: false, cached: false, art: true)
+            cell.update(song: song, number: false, downloaded: false, art: true)
             cell.hideHeaderLabel = false
             if indexPath.row == 0 {
                 cell.headerText = "Downloading!"

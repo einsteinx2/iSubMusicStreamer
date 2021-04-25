@@ -42,16 +42,16 @@ struct Notifications {
 
     static let showPlayer = Notification.Name("iSub.showPlayer")
 
-    static let cacheQueueStarted = Notification.Name("iSub.cacheQueueStarted")
-    static let cacheQueueStopped = Notification.Name("iSub.cacheQueueStopped")
-    static let cacheQueueSongDownloaded = Notification.Name("iSub.cacheQueueSongDownloaded")
-    static let cacheQueueSongFailed = Notification.Name("iSub.cacheQueueSongFailed")
-    static let cacheQueueSongAdded = Notification.Name("iSub.cacheQueueSongAdded")
-    static let cacheQueueSongRemoved = Notification.Name("iSub.cacheQueueSongRemoved")
+    static let downloadQueueStarted = Notification.Name("iSub.downloadQueueStarted")
+    static let downloadQueueStopped = Notification.Name("iSub.downloadQueueStopped")
+    static let downloadQueueSongDownloaded = Notification.Name("iSub.downloadQueueSongDownloaded")
+    static let downloadQueueSongFailed = Notification.Name("iSub.downloadQueueSongFailed")
+    static let downloadQueueSongAdded = Notification.Name("iSub.downloadQueueSongAdded")
+    static let downloadQueueSongRemoved = Notification.Name("iSub.downloadQueueSongRemoved")
     static let streamHandlerSongDownloaded = Notification.Name("iSub.streamHandlerSongDownloaded")
     static let streamHandlerSongFailed = Notification.Name("iSub.streamHandlerSongFailed")
 
-    static let cacheSizeChecked = Notification.Name("iSub.cacheSizeChecked")
+    static let downloadsSizeChecked = Notification.Name("iSub.downloadsSizeChecked")
 
     static let goOffline = Notification.Name("iSub.goOffline")
     static let goOnline = Notification.Name("iSub.goOnline")
@@ -72,7 +72,7 @@ struct Notifications {
     static let showDeleteButton = Notification.Name("iSub.showDeleteButton")
     static let hideDeleteButton = Notification.Name("iSub.hideDeleteButton")
 
-    static let cachedSongDeleted = Notification.Name("iSub.cachedSongDeleted")
+    static let downloadedSongDeleted = Notification.Name("iSub.downloadedSongDeleted")
     
     static let quickSkipSecondsSettingChanged = Notification.Name("iSub.quickSkipSecondsSettingChanged")
 }

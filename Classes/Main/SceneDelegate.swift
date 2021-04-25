@@ -13,7 +13,7 @@ import CocoaLumberjackSwift
 // TODO: Refactor to support multiple scenes/windows
 @objc final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @Injected private var settings: Settings
-    @Injected private var cacheQueue: CacheQueue
+    @Injected private var downloadQueue: DownloadQueue
     @Injected private var playQueue: PlayQueue
     @Injected private var streamManager: StreamManager
     @Injected private var jukebox: Jukebox
@@ -127,7 +127,7 @@ import CocoaLumberjackSwift
         settings.saveState()
         UserDefaults.standard.synchronize()
         
-        if cacheQueue.isDownloading {
+        if downloadQueue.isDownloading {
             backgroundTask = UIApplication.shared.beginBackgroundTask(expirationHandler: backgroundTaskExpirationHandler)
             isInBackground = true
             checkRemainingBackgroundTime()
@@ -178,9 +178,9 @@ import CocoaLumberjackSwift
     // MARK: Multitasking
     
     private func backgroundTaskExpirationHandler() {
-        // App is about to be put to sleep, stop the cache download queue
-        if cacheQueue.isDownloading {
-            cacheQueue.stop()
+        // App is about to be put to sleep, stop the download queue
+        if downloadQueue.isDownloading {
+            downloadQueue.stop()
         }
         
         // Make sure to end the background so we don't get killed by the OS
@@ -198,8 +198,8 @@ import CocoaLumberjackSwift
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(checkRemainingBackgroundTime), object: nil)
         guard isInBackground else { return }
         
-        if timeRemaining < 30 && cacheQueue.isDownloading {
-            // Warn at 30 second mark if cache queue is downloading
+        if timeRemaining < 30 && downloadQueue.isDownloading {
+            // Warn at 30 second mark if download queue is downloading
             // TODO: Test this implementation
             let content = UNMutableNotificationContent()
             content.body = "Songs are still downloading. Please return to iSub within 30 seconds, or it will be put to sleep."
@@ -207,7 +207,7 @@ import CocoaLumberjackSwift
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-        } else if !cacheQueue.isDownloading {
+        } else if !downloadQueue.isDownloading {
             // Cancel the next server check otherwise it will fire immediately on launch
             // TODO: See if this is necessary since the expiration handler should fire and handle it...
             serverChecker.cancelLoad()

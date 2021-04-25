@@ -553,8 +553,8 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
 
                             // Get the stream for this song
                             StreamHandler *handler = [StreamManager.shared handlerWithSong:userInfo.song];
-                            if (!handler && [CacheQueue.shared.currentQueuedSong isEqual:userInfo.song])
-                                handler = [CacheQueue.shared currentStreamHandler];
+                            if (!handler && [DownloadQueue.shared.currentQueuedSong isEqual:userInfo.song])
+                                handler = [DownloadQueue.shared currentStreamHandler];
 
                             // Calculate the bytes to wait based on the recent download speed. If the handler is nil or recent download speed is 0
                             // it will just use the default (currently 10 seconds)

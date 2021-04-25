@@ -123,7 +123,7 @@ extension LocalPlaylistViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueUniversalCell()
-        cell.show(cached: true, number: true, art: true, secondary: true, duration: true)
+        cell.show(downloaded: true, number: true, art: true, secondary: true, duration: true)
         cell.number = indexPath.row + 1
         cell.update(model: song(indexPath: indexPath))
         return cell

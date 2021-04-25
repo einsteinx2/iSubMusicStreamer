@@ -171,7 +171,7 @@ extension SearchSongsViewController: UITableViewConfiguration {
             let artists: [TableCellModel] = searchType == .folder ? folderArtists : tagArtists
             if indexPath.row < artists.count {
                 let cell = tableView.dequeueUniversalCell()
-                cell.show(cached: false, number: false, art: searchType == .tag, secondary: false, duration: false)
+                cell.show(downloaded: false, number: false, art: searchType == .tag, secondary: false, duration: false)
                 cell.update(model: artists[indexPath.row])
                 return cell
             }
@@ -179,14 +179,14 @@ extension SearchSongsViewController: UITableViewConfiguration {
             let albums: [TableCellModel] = searchType == .folder ? folderAlbums : tagAlbums
             if indexPath.row < albums.count {
                 let cell = tableView.dequeueUniversalCell()
-                cell.show(cached: false, number: false, art: true, secondary: false, duration: false)
+                cell.show(downloaded: false, number: false, art: true, secondary: false, duration: false)
                 cell.update(model: albums[indexPath.row])
                 return cell
             }
         case .songs:
             if indexPath.row < songs.count {
                 let cell = tableView.dequeueUniversalCell()
-                cell.show(cached: true, number: false, art: true, secondary: true, duration: true)
+                cell.show(downloaded: true, number: false, art: true, secondary: true, duration: true)
                 cell.update(model: songs[indexPath.row])
                 return cell
             }

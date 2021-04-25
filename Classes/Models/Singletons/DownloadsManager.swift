@@ -1,5 +1,5 @@
 //
-//  Cache.swift
+//  DownloadsManager.swift
 //  iSub
 //
 //  Created by Benjamin Baron on 1/20/21.
@@ -13,10 +13,10 @@ import CocoaLumberjackSwift
 // TODO: implement this
 // TODO: Refactor this and make sure it works correctly
 // TODO: Refactor this so everything happens in a background thread
-final class Cache {
+final class DownloadsManager {
     @LazyInjected private var settings: Settings
     @LazyInjected private var store: Store
-    @LazyInjected private var cacheQueue: CacheQueue
+    @LazyInjected private var downloadQueue: DownloadQueue
 
     private var cacheCheckInterval = 60.0
     private var cacheCheckWorkItem: DispatchWorkItem?
@@ -43,7 +43,7 @@ final class Cache {
             try FileManager.default.removeItem(at: FileSystem.tempDownloadsDirectory)
             try FileManager.default.createDirectory(at: FileSystem.tempDownloadsDirectory, withIntermediateDirectories: true, attributes: .none)
         } catch {
-            DDLogError("[Cache] Failed to recreate temp downloads directory, \(error)")
+            DDLogError("[DownloadsManager] Failed to recreate temp downloads directory, \(error)")
         }
     }
     
@@ -121,7 +121,7 @@ final class Cache {
         if settings.cachingType == Int(ISMSCachingType_maxSize.rawValue) {
             let possibleSize = freeSpace + cacheSize
             let maxCacheSize = settings.maxCacheSize
-            DDLogInfo("[Cache] adjustCacheSize:  possibleSize = \(possibleSize)  maxCacheSize = \(maxCacheSize)")
+            DDLogInfo("[DownloadsManager] adjustCacheSize:  possibleSize = \(possibleSize)  maxCacheSize = \(maxCacheSize)")
             if possibleSize < maxCacheSize {
                 // Set the max cache size to 25MB less than the free space
                 settings.maxCacheSize = possibleSize - (25 * 1024 * 1024)
@@ -134,10 +134,10 @@ final class Cache {
         if settings.cachingType == Int(ISMSCachingType_minSpace.rawValue) {
             // Remove the oldest songs based on either oldest played or oldest cached until free space is more than minFreeSpace
             while freeSpace < settings.minFreeSpace {
-                if let downloadedSong = settings.autoDeleteCacheType == 0 ? store.oldestDownloadedSongByPlayedDate() : store.oldestDownloadedSongByCachedDate() {
-                    DDLogInfo("[Cache] removeOldestCachedSongs: min space removing \(downloadedSong)")
+                if let downloadedSong = settings.autoDeleteCacheType == 0 ? store.oldestDownloadedSongByPlayedDate() : store.oldestDownloadedSongByDownloadedDate() {
+                    DDLogInfo("[DownloadsManager] removeOldestCachedSongs: min space removing \(downloadedSong)")
                     if !store.delete(downloadedSong: downloadedSong) {
-                        DDLogError("[Cache] removeOldestCachedSongs: Failed to delete \(downloadedSong), so bailing")
+                        DDLogError("[DownloadsManager] removeOldestCachedSongs: Failed to delete \(downloadedSong), so bailing")
                         break
                     }
                 }
@@ -146,16 +146,16 @@ final class Cache {
             // Remove the oldest songs based on either oldest played or oldest cached until cache size is less than maxCacheSize
             var size = cacheSize
             while size > settings.maxCacheSize {
-                if let downloadedSong = settings.autoDeleteCacheType == 0 ? store.oldestDownloadedSongByPlayedDate() : store.oldestDownloadedSongByCachedDate(), let song = store.song(downloadedSong: downloadedSong) {
+                if let downloadedSong = settings.autoDeleteCacheType == 0 ? store.oldestDownloadedSongByPlayedDate() : store.oldestDownloadedSongByDownloadedDate(), let song = store.song(downloadedSong: downloadedSong) {
                     if let songSize = URL(fileURLWithPath: song.localPath).fileSize {
                         if store.delete(downloadedSong: downloadedSong) {
                             size -= songSize
                         } else {
-                            DDLogError("[Cache] removeOldestCachedSongs: Failed to delete \(downloadedSong), so bailing")
+                            DDLogError("[DownloadsManager] removeOldestCachedSongs: Failed to delete \(downloadedSong), so bailing")
                             break
                         }
                     } else {
-                        DDLogError("[Cache] removeOldestCachedSongs: Failed to get file size of \(downloadedSong), so bailing")
+                        DDLogError("[DownloadsManager] removeOldestCachedSongs: Failed to get file size of \(downloadedSong), so bailing")
                         break
                     }
                 }
@@ -163,8 +163,8 @@ final class Cache {
             
             findCacheSize()
             
-            if !cacheQueue.isDownloading {
-                cacheQueue.start()
+            if !downloadQueue.isDownloading {
+                downloadQueue.start()
             }
         }
     }
@@ -173,12 +173,12 @@ final class Cache {
         let directoryEnumerator = FileManager.default.enumerator(at: FileSystem.downloadsDirectory,
                                                                  includingPropertiesForKeys: [.isDirectoryKey, .totalFileAllocatedSizeKey],
                                                                  options: .skipsHiddenFiles) { (url, error) -> Bool in
-            DDLogError("[Cache] findCacheSize: Error enumerating file at url \(url), \(error)")
+            DDLogError("[DownloadsManager] findCacheSize: Error enumerating file at url \(url), \(error)")
             return true
         }
         
         guard let enumerator = directoryEnumerator else {
-            DDLogError("[Cache] findCacheSize: Failed to initialize directory enumerator")
+            DDLogError("[DownloadsManager] findCacheSize: Failed to initialize directory enumerator")
             return
         }
         
@@ -191,14 +191,14 @@ final class Cache {
                     }
                 }
             } catch {
-                DDLogError("[Cache] findCacheSize: failed to read resource value of \(url), \(error)")
+                DDLogError("[DownloadsManager] findCacheSize: failed to read resource value of \(url), \(error)")
             }
         }
         
-        DDLogVerbose("[Cache] Total cache size was found to be \(size)")
+        DDLogVerbose("[DownloadsManager] Total cache size was found to be \(size)")
         cacheSize = size
         
-        NotificationCenter.postOnMainThread(name: Notifications.cacheSizeChecked)
+        NotificationCenter.postOnMainThread(name: Notifications.downloadsSizeChecked)
     }
     
     // TODO: implement this
@@ -214,17 +214,17 @@ final class Cache {
     }
 }
 
-@objc final class Cache_ObjCDeleteMe: NSObject {
-    private static var cache: Cache { Resolver.resolve() }
+@objc final class DownloadsManager_ObjCDeleteMe: NSObject {
+    private static var downloadsManager: DownloadsManager { Resolver.resolve() }
     
-    @objc static var totalSpace: Int { cache.totalSpace }
-    @objc static var freeSpace: Int { cache.freeSpace }
+    @objc static var totalSpace: Int { downloadsManager.totalSpace }
+    @objc static var freeSpace: Int { downloadsManager.freeSpace }
     
     @objc static func setAllCachedSongsToBackup() {
-        cache.setAllCachedSongsToBackup()
+        downloadsManager.setAllCachedSongsToBackup()
     }
     
     @objc static func setAllCachedSongsToNotBackup() {
-        cache.setAllCachedSongsToNotBackup()
+        downloadsManager.setAllCachedSongsToNotBackup()
     }
 }

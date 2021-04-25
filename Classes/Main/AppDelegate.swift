@@ -16,7 +16,7 @@ import CocoaLumberjackSwift
     @Injected private var settings: Settings
     @Injected private var player: BassPlayer
     @Injected private var playQueue: PlayQueue
-    @Injected private var cache: Cache
+    @Injected private var downloadsManager: DownloadsManager
     @Injected private var analytics: Analytics
     
     @objc static var shared: AppDelegate { UIApplication.shared.delegate as! AppDelegate }
@@ -34,7 +34,7 @@ import CocoaLumberjackSwift
         // Setup singletons
         // TODO: Don't have so many singletons lol
         settings.setup()
-        cache.setup()
+        downloadsManager.setup()
         
         // Detect app crash on previous launch
         #if RELEASE

@@ -17,10 +17,10 @@ class AbstractDownloadsViewController: CustomUITableViewController {
     func registerForNotifications() {
         // Set notification receiver for when queued songs finish downloading to reload the table
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.streamHandlerSongDownloaded)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.cacheQueueSongDownloaded)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.downloadQueueSongDownloaded)
         
         // Set notification receiver for when cached songs are deleted to reload the table
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.cachedSongDeleted)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.downloadedSongDeleted)
         
         // Set notification receiver for when network status changes to reload the table
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name:NSNotification.Name.reachabilityChanged)
@@ -28,8 +28,8 @@ class AbstractDownloadsViewController: CustomUITableViewController {
     
     func unregisterForNotifications() {
         NotificationCenter.removeObserverOnMainThread(self, name: Notifications.streamHandlerSongDownloaded)
-        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.cacheQueueSongDownloaded)
-        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.cachedSongDeleted)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.downloadQueueSongDownloaded)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.downloadedSongDeleted)
         NotificationCenter.removeObserverOnMainThread(self, name: NSNotification.Name.reachabilityChanged)
     }
     

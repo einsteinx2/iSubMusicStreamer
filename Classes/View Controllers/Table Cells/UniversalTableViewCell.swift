@@ -15,7 +15,7 @@ final class UniversalTableViewCell: UITableViewCell {
     private var tableCellModel: TableCellModel?
     
     private let headerLabel = UILabel()
-    private let cachedIndicator = DownloadedIndicatorView()
+    private let downloadedIndicator = DownloadedIndicatorView()
     private let numberLabel = UILabel()
     private let coverArtView = AsyncImageView()
     private let primaryLabel = UILabel()
@@ -44,8 +44,8 @@ final class UniversalTableViewCell: UITableViewCell {
     var headerText: String = "" {
         didSet { headerLabel.text = headerText }
     }
-    var hideCacheIndicator: Bool = true {
-        didSet { cachedIndicator.isHidden = (hideCacheIndicator || !(tableCellModel?.isDownloaded ?? false)) }
+    var hideDownloadIndicator: Bool = true {
+        didSet { downloadedIndicator.isHidden = (hideDownloadIndicator || !(tableCellModel?.isDownloaded ?? false)) }
     }
     var hideHeaderLabel: Bool = true {
         didSet { if oldValue != hideHeaderLabel { makeHeaderLabelConstraints() } }
@@ -63,8 +63,8 @@ final class UniversalTableViewCell: UITableViewCell {
         didSet { if oldValue != hideDurationLabel { makeDurationLabelConstraints() } }
     }
     
-    func show(cached: Bool, number: Bool, art: Bool, secondary: Bool, duration: Bool, header: Bool = false) {
-        hideCacheIndicator = !cached
+    func show(downloaded: Bool, number: Bool, art: Bool, secondary: Bool, duration: Bool, header: Bool = false) {
+        hideDownloadIndicator = !downloaded
         hideNumberLabel = !number
         hideCoverArt = !art
         hideSecondaryLabel = !secondary
@@ -112,9 +112,9 @@ final class UniversalTableViewCell: UITableViewCell {
         contentView.addSubview(durationLabel)
         
         // TODO: Flip for RTL
-        cachedIndicator.isHidden = true
-        contentView.addSubview(cachedIndicator)
-        cachedIndicator.snp.makeConstraints { make in
+        downloadedIndicator.isHidden = true
+        contentView.addSubview(downloadedIndicator)
+        downloadedIndicator.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.top.equalTo(headerLabel.snp.bottom)
         }
@@ -138,7 +138,7 @@ final class UniversalTableViewCell: UITableViewCell {
             primaryLabel.text = model.primaryLabelText
             if !hideSecondaryLabel { secondaryLabel.text = model.secondaryLabelText }
             if !hideDurationLabel { durationLabel.text = model.durationLabelText }
-            cachedIndicator.isHidden = hideCacheIndicator || !model.isDownloaded
+            downloadedIndicator.isHidden = hideDownloadIndicator || !model.isDownloaded
         }
     }
     

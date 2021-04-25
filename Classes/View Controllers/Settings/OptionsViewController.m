@@ -63,8 +63,8 @@ LOG_LEVEL_ISUB_DEFAULT
 	self.enableNextSongCacheSwitch.on = settingsS.isNextSongCacheEnabled;
     self.enableBackupCacheSwitch.on = settingsS.isBackupCacheEnabled;
     [self.cacheSpaceSlider setThumbImage:[UIImage imageNamed:@"controller-slider-thumb"] forState:UIControlStateNormal];
-	self.totalSpace = Cache_ObjCDeleteMe.totalSpace;
-	self.freeSpace = Cache_ObjCDeleteMe.freeSpace;
+	self.totalSpace = DownloadsManager_ObjCDeleteMe.totalSpace;
+	self.freeSpace = DownloadsManager_ObjCDeleteMe.freeSpace;
 	self.freeSpaceLabel.text = [NSString stringWithFormat:@"Free space: %@", [Defines_ObjCDeleteMe formatFileSizeWithBytes:self.freeSpace]];
 	self.totalSpaceLabel.text = [NSString stringWithFormat:@"Total space: %@", [Defines_ObjCDeleteMe formatFileSizeWithBytes:self.totalSpace]];
 	float percentFree = (float) self.freeSpace / (float) self.totalSpace;
@@ -77,7 +77,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	
 	self.autoDeleteCacheSwitch.on = settingsS.isAutoDeleteCacheEnabled;
 	self.autoDeleteCacheTypeSegmentedControl.selectedSegmentIndex = settingsS.autoDeleteCacheType;
-	self.cacheSongCellColorSegmentedControl.selectedSegmentIndex = settingsS.cachedSongCellColorType;
+    self.cacheSongCellColorSegmentedControl.selectedSegmentIndex = settingsS.downloadedSongCellColorType;
     
 	switch (settingsS.quickSkipNumberOfSeconds) {
 		case 5: self.quickSkipSegmentControl.selectedSegmentIndex = 0; break;
@@ -139,7 +139,7 @@ LOG_LEVEL_ISUB_DEFAULT
 		} else if (sender == self.autoDeleteCacheTypeSegmentedControl) {
 			settingsS.autoDeleteCacheType = self.autoDeleteCacheTypeSegmentedControl.selectedSegmentIndex;
 		} else if (sender == self.cacheSongCellColorSegmentedControl) {
-			settingsS.cachedSongCellColorType = self.cacheSongCellColorSegmentedControl.selectedSegmentIndex;
+			settingsS.downloadedSongCellColorType = self.cacheSongCellColorSegmentedControl.selectedSegmentIndex;
 		} else if (sender == self.quickSkipSegmentControl) {
 			switch (self.quickSkipSegmentControl.selectedSegmentIndex)  {
 				case 0: settingsS.quickSkipNumberOfSeconds = 5; break;
