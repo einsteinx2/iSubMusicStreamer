@@ -64,7 +64,7 @@ import CocoaLumberjackSwift
         urlField.delegate = self
         urlField.backgroundColor = .white
         urlField.textColor = .black
-        urlField.keyboardType = .default
+        urlField.keyboardType = .URL
         urlField.textContentType = .URL
         urlField.autocapitalizationType = .none
         urlField.autocorrectionType = .no
