@@ -182,6 +182,27 @@ static BOOL _isAllSongsLoading = NO;
 			[db executeUpdate:@"CREATE TABLE subalbums2 (title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
 			[db executeUpdate:@"CREATE TABLE subalbums3 (title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
 			[db executeUpdate:@"CREATE TABLE subalbums4 (title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT)"];
+
+            // Configure for correct sorting (i.e. like the Finder)
+            [db makeFunctionNamed:@"unaccented" arguments:1 block:^(void * _Nonnull context, int argc, void * _Nonnull * _Nonnull argv) {
+                SqliteValueType type = [db valueType:argv[0]];
+                if (type == SqliteValueTypeNull) {
+                    [db resultNullInContext:context];
+                    return;
+                }
+                if (type != SqliteValueTypeText) {
+                    [db resultError:@"Expected text" context:context];
+                    return;
+                }
+
+                NSStringCompareOptions options = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch | NSDiacriticInsensitiveSearch;
+                NSString* result = [[db valueString: argv[0]] stringByFoldingWithOptions: options locale: nil];
+                if (result) {
+                    [db resultString: result context:context];
+                } else {
+                    [db resultNullInContext: context];
+                }
+            }];
 		}];
 		
 		// Initialize allSongs db
@@ -266,7 +287,7 @@ static BOOL _isAllSongsLoading = NO;
 			// Sort the tables
 			[db executeUpdate:@"DROP TABLE IF EXISTS allAlbums"];
 			[db executeUpdate:@"CREATE VIRTUAL TABLE allAlbums USING FTS3(title TEXT, albumId TEXT, coverArtId TEXT, artistName TEXT, artistId TEXT, tokenize=porter)"];
-			[db executeUpdate:@"INSERT INTO allAlbums SELECT * FROM allAlbumsUnsorted ORDER BY title COLLATE NOCASE"];
+			[db executeUpdate:@"INSERT INTO allAlbums SELECT * FROM allAlbumsUnsorted ORDER BY unaccented(title)"];
 		}];
 		
 		[databaseS.allSongsDbQueue inDatabase:^(FMDatabase *db) {
