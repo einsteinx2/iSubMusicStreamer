@@ -18,7 +18,7 @@ LOG_LEVEL_ISUB_DEFAULT
 
 @implementation BassWrapper
 
-extern void BASSFLACplugin, BASSWVplugin, BASS_APEplugin, BASS_MPCplugin, BASSOPUSplugin;
+extern void BASSFLACplugin, BASSWVplugin, BASSAPEplugin, BASS_MPCplugin, BASSOPUSplugin;
 
 static NSUInteger _bassOutputBufferLengthMillis = 0;
 
@@ -42,7 +42,7 @@ static NSUInteger _bassOutputBufferLengthMillis = 0;
         
         BASS_PluginLoad(&BASSFLACplugin, 0); // load the Flac plugin
         BASS_PluginLoad(&BASSWVplugin, 0); // load the WavePack plugin
-        BASS_PluginLoad(&BASS_APEplugin, 0); // load the Monkey's Audio plugin
+        BASS_PluginLoad(&BASSAPEplugin, 0); // load the Monkey's Audio plugin
         //BASS_PluginLoad(&BASS_MPCplugin, 0); // load the MusePack plugin
         BASS_PluginLoad(&BASSOPUSplugin, 0); // load the OPUS plugin
 	}

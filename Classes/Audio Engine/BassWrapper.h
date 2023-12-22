@@ -13,7 +13,7 @@
 #import "bassopus.h"
 #import "basswv.h"
 #import "bass_mpc.h"
-#import "bass_ape.h"
+#import "bassape.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import "BassStream.h"
 
