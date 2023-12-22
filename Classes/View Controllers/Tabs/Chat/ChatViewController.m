@@ -218,8 +218,8 @@
 	NSDate *date = [NSDate dateWithTimeIntervalSince1970:unixtime];
 	
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-	formatter.dateStyle = kCFDateFormatterShortStyle;
-	formatter.timeStyle = kCFDateFormatterShortStyle;
+	formatter.dateStyle = NSDateFormatterShortStyle;
+	formatter.timeStyle = NSDateFormatterShortStyle;
 	formatter.locale = [NSLocale currentLocale];
 	NSString *formattedDate = [formatter stringFromDate:date];
 	
