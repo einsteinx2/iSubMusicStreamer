@@ -51,7 +51,9 @@ LOG_LEVEL_ISUB_DEFAULT
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	
     if (settingsS.serverList == nil || [settingsS.serverList count] == 0) {
-		[self addAction:nil];
+        [EX2Dispatch runInMainThreadAfterDelay:0.3 block:^{
+            [self addAction:nil];
+        }];
     }
 	
     self.segmentControlContainer = [[UIView alloc] init];

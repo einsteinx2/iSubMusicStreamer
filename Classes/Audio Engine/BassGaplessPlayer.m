@@ -231,8 +231,8 @@ DWORD CALLBACK MyFileReadProc(void *buffer, DWORD length, void *user)
 	}
 }
 
-BOOL CALLBACK MyFileSeekProc(QWORD offset, void *user)
-{	
+BOOL32 CALLBACK MyFileSeekProc(QWORD offset, void *user)
+{
 	if (user == NULL)
 		return NO;
 	

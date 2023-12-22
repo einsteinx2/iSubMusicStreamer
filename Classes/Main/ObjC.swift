@@ -10,7 +10,7 @@
 
 import Foundation
 
-public struct NSExceptionError: Error, CustomStringConvertible {
+public struct NSExceptionError: Error, CustomStringConvertible, @unchecked Sendable {
     public let exception: NSException
 
     public init(exception: NSException) {
