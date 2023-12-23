@@ -67,10 +67,18 @@
         [weakSelf.dataModel startLoad];
     }];
     
-    self.tableView.rowHeight = Defines.rowHeight;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    self.tableView.separatorColor = UIColor.clearColor;
-    [self.tableView registerClass:UniversalTableViewCell.class forCellReuseIdentifier:UniversalTableViewCell.reuseId];
+    if (self.myAlbum) {
+        [self.tableView registerClass: TrackTableViewCell.class forCellReuseIdentifier: UniversalTableViewCell.reuseId];
+        self.tableView.estimatedRowHeight = Defines.rowHeight;
+        self.tableView.rowHeight = UITableViewAutomaticDimension;
+        self.tableView.separatorColor = UIColor.labelColor;
+        self.tableView.separatorInset = UIEdgeInsetsZero;
+    } else {
+        [self.tableView registerClass: UniversalTableViewCell.class forCellReuseIdentifier: UniversalTableViewCell.reuseId];
+        self.tableView.rowHeight = Defines.rowHeight;
+        self.tableView.separatorColor = UIColor.clearColor;
+    }
 }
 
 - (void)reloadData {

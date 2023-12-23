@@ -9,19 +9,19 @@
 import UIKit
 import SnapKit
 
-@objc final class UniversalTableViewCell: UITableViewCell {
+@objc class UniversalTableViewCell: UITableViewCell {
     @objc static let reuseId = "UniversalTableViewCell"
     
     private var tableCellModel: TableCellModel?
     
-    private let headerLabel = UILabel()
-    private let cachedIndicator = CellCachedIndicatorView()
-    private let numberLabel = UILabel()
-    private let coverArtView = AsyncImageView()
-    private let primaryLabel = UILabel()
-    private let secondaryLabel = UILabel()
-    private let durationLabel = UILabel()
-    
+    fileprivate let headerLabel = UILabel()
+    fileprivate let cachedIndicator = CellCachedIndicatorView()
+    fileprivate let numberLabel = UILabel()
+    fileprivate let coverArtView = AsyncImageView()
+    fileprivate let primaryLabel = UILabel()
+    fileprivate let secondaryLabel = UILabel()
+    fileprivate let durationLabel = UILabel()
+
 //    @objc var autoScroll: Bool {
 //        get { return primaryLabel.autoScroll }
 //        set {
@@ -128,7 +128,7 @@ import SnapKit
     required init?(coder: NSCoder) {
         fatalError("unimplemented")
     }
-    
+
     @objc func update(model: TableCellModel?) {
         tableCellModel = model;
         if let model = model {
@@ -178,7 +178,7 @@ import SnapKit
     
     // MARK: AutoLayout
     
-    private func makeHeaderLabelConstraints() {
+    fileprivate func makeHeaderLabelConstraints() {
         headerLabel.snp.remakeConstraints { make in
             if hideHeaderLabel { make.height.equalTo(0) }
             else { make.height.equalTo(20)}
@@ -186,7 +186,7 @@ import SnapKit
         }
     }
     
-    private func makeNumberLabelConstraints() {
+    fileprivate func makeNumberLabelConstraints() {
         numberLabel.snp.remakeConstraints { make in
             if hideNumberLabel { make.width.equalTo(0) }
             else { make.width.equalTo(30) }
@@ -195,7 +195,7 @@ import SnapKit
         }
     }
     
-    private func makeCoverArtConstraints() {
+    fileprivate func makeCoverArtConstraints() {
         coverArtView.snp.remakeConstraints { make in
             if hideCoverArt { make.width.equalTo(0) }
             else { make.width.equalTo(coverArtView.snp.height) }
@@ -205,7 +205,7 @@ import SnapKit
         }
     }
     
-    private func makePrimaryLabelConstraints() {
+    fileprivate func makePrimaryLabelConstraints() {
         primaryLabel.snp.remakeConstraints { make in
             if hideSecondaryLabel {
                 make.height.equalTo(coverArtView).multipliedBy(0.66)
@@ -218,7 +218,7 @@ import SnapKit
         }
     }
     
-    private func makeSecondaryLabelConstraints() {
+    fileprivate func makeSecondaryLabelConstraints() {
         secondaryLabel.snp.remakeConstraints { make in
             if hideSecondaryLabel { make.height.equalTo(0) }
             else { make.height.equalTo(coverArtView).multipliedBy(0.33) }
@@ -228,13 +228,62 @@ import SnapKit
         }
     }
     
-    private func makeDurationLabelConstraints() {
+    fileprivate func makeDurationLabelConstraints() {
         durationLabel.snp.remakeConstraints { make in
             if hideDurationLabel { make.width.equalTo(0) }
             else { make.width.equalTo(30) }
             make.trailing.equalToSuperview().offset(hideDurationLabel ? 0 : -10)
             make.top.equalTo(headerLabel.snp.bottom)
             make.bottom.equalToSuperview()
+        }
+    }
+}
+
+@objc final class TrackTableViewCell: UniversalTableViewCell {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        primaryLabel.numberOfLines = 0
+        primaryLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        primaryLabel.setContentHuggingPriority(.required, for: .vertical)
+        if #available(iOS 14.0, *) {
+            primaryLabel.lineBreakStrategy = .init()
+        }
+
+        secondaryLabel.numberOfLines = 0
+        secondaryLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        secondaryLabel.setContentHuggingPriority(.required, for: .vertical)
+        if #available(iOS 14.0, *) {
+            secondaryLabel.lineBreakStrategy = .init()
+        }
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    fileprivate override func makePrimaryLabelConstraints() {
+        primaryLabel.snp.remakeConstraints { make in
+            if hideSecondaryLabel {
+                make.bottom.equalToSuperview().offset(UIDevice.isSmall() ? -5 : -10)
+            } else {
+                make.bottom.equalTo(secondaryLabel.snp.top)
+            }
+            make.leading.equalTo(coverArtView.snp.trailing).offset(hideCoverArt ? 5 : 10)
+            make.trailing.equalTo(durationLabel.snp.leading).offset(-10)
+            make.top.equalTo(headerLabel.snp.bottom).offset(UIDevice.isSmall() ? 5 : 10)
+        }
+    }
+
+    fileprivate override func makeSecondaryLabelConstraints() {
+        secondaryLabel.snp.remakeConstraints { make in
+            if hideSecondaryLabel {
+                make.height.equalTo(0)
+            } else {
+                make.height.equalTo(1).priority(10) // resolve potential "ambiguity"
+            }
+            make.leading.equalTo(primaryLabel)
+            make.trailing.equalTo(primaryLabel)
+            make.bottom.equalToSuperview().offset(UIDevice.isSmall() ? -5 : -10)
         }
     }
 }
