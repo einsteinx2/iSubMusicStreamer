@@ -223,6 +223,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear: animated];
 	if (settingsS.isShouldShowEQViewInstructions) {
         NSString *message = @"Double tap to create a new EQ point and double tap any existing EQ points to remove them.";
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Instructions" message:message preferredStyle:UIAlertControllerStyleAlert];
@@ -289,6 +290,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear: animated];
 	[NSNotificationCenter removeObserverOnMainThread:self name:ISMSNotification_BassEffectPresetLoaded];
 	[NSNotificationCenter removeObserverOnMainThread:self name:@"hidePresetPicker"];
 	[self removeEqViews];
