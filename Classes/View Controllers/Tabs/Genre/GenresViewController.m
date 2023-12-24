@@ -102,6 +102,7 @@
 
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear: animated];
 	if (self.isNoGenresScreenShowing == YES) {
 		[self.noGenresScreen removeFromSuperview];
 		self.isNoGenresScreenShowing = NO;

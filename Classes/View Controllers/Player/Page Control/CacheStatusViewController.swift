@@ -37,6 +37,7 @@ final class CacheStatusViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         view.backgroundColor = .black
         
         let titleLabel = UILabel()

@@ -68,7 +68,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+    [self doViewWillAppearTasks];
+}
+
+- (void)doViewWillAppearTasks {
     [self addURLRefBackButton];
 	
     self.navigationItem.rightBarButtonItem = nil;
@@ -224,6 +227,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear: animated];
 	self.bookmarkIds = nil;
 }
 
@@ -289,7 +293,7 @@
 		
 		// Reload the table
 		//[self.tableView reloadData];
-		[self viewWillAppear:NO];
+		[self doViewWillAppearTasks];
 	}
 }
 

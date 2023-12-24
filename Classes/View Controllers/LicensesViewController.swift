@@ -14,6 +14,7 @@ import SnapKit
     let webView = WKWebView()
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneAction))
         
         webView.allowsBackForwardNavigationGestures = true
