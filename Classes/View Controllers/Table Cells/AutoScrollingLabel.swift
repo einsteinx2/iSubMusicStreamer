@@ -226,7 +226,7 @@ private let labelGap = 25.0
         //       the backgorund, whenever the song would change, it would kick off the
         //       animations again which would short-circuit and eat up CPU.
         //       This check prevents any animation while in the background.
-        guard UIApplication.shared.applicationState != .background else { return }
+        guard UIApplication.shared.applicationState == .active else { return }
         guard !isScrolling else { return }
 
         createAnimator(delay: delay)
