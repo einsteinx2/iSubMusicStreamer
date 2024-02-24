@@ -14,6 +14,11 @@
 #error conflicting BASS and BASSOPUS versions
 #endif
 
+#ifdef __OBJC__
+typedef int BOOL32;
+#define BOOL BOOL32 // override objc's BOOL
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,6 +52,10 @@ static inline HSTREAM BASS_OPUS_StreamCreateURL(const WCHAR *url, DWORD offset, 
 	return BASS_OPUS_StreamCreateURL((const char*)url, offset, flags|BASS_UNICODE, proc, user);
 }
 #endif
+#endif
+
+#ifdef __OBJC__
+#undef BOOL
 #endif
 
 #endif

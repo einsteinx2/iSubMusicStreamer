@@ -72,7 +72,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         // Make sure we're using the right device
         BASS_SetDevice(Bass.outputDeviceNumber)
         
-        guard BASS_Mixer_ChannelSetPosition(currentStream.hstream, bytes, DWORD(BASS_POS_BYTE)) else {
+        guard BASS_Mixer_ChannelSetPosition(currentStream.hstream, bytes, DWORD(BASS_POS_BYTE)) != 0 else {
             Bass.logCurrentError()
             return false
         }
@@ -283,7 +283,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
                 }
                 
                 // Start playback
-                BASS_ChannelPlay(outStream, false)
+                BASS_ChannelPlay(outStream, 0)
                 isPlaying = true
                 
                 social.playerClearSocial()

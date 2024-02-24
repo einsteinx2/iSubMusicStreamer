@@ -46,7 +46,7 @@ struct Bass {
         // Set DSP effects to use floating point math to avoid clipping within the effects chain
         BASS_SetConfig(DWORD(BASS_CONFIG_FLOATDSP), 1)
         // Initialize default device.
-        if (BASS_Init(Int32(outputDeviceNumber), sampleRate, 0, nil, nil)) {
+        if (BASS_Init(Int32(outputDeviceNumber), sampleRate, 0, nil, nil) != 0) {
             bassOutputBufferLengthMillis = BASS_GetConfig(DWORD(BASS_CONFIG_BUFFER))
             bassLoadPlugins()
         } else {
@@ -308,9 +308,9 @@ struct Bass {
 //        }
         
         let localPath = song.localPath
-        fileStream = BASS_StreamCreateFile(false, localPath, 0, QWORD(song.size), DWORD(BASS_STREAM_DECODE | BASS_SAMPLE_FLOAT))
+        fileStream = BASS_StreamCreateFile(0, localPath, 0, QWORD(song.size), DWORD(BASS_STREAM_DECODE | BASS_SAMPLE_FLOAT))
         if fileStream == 0 {
-            fileStream = BASS_StreamCreateFile(false, localPath, 0, QWORD(song.size), DWORD(BASS_STREAM_DECODE | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT))
+            fileStream = BASS_StreamCreateFile(0, localPath, 0, QWORD(song.size), DWORD(BASS_STREAM_DECODE | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT))
         }
 
         if fileStream > 0 {

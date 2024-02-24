@@ -25,7 +25,7 @@
 #import "bassopus.h"
 #import "basswv.h"
 #import "bass_mpc.h"
-#import "bass_ape.h"
+#import "bassape.h"
 
 // Frameworks
 #import "Flurry.h"

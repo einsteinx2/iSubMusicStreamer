@@ -17,6 +17,13 @@
 #ifndef BASS_FX_H
 #define BASS_FX_H
 
+#include "bass.h"
+
+#ifdef __OBJC__
+typedef int BOOL32;
+#define BOOL BOOL32 // override objc's BOOL
+#endif
+
 #ifdef __cplusplus
 	extern "C" {
 #endif
@@ -33,7 +40,7 @@
 #define BASS_FX_FREESOURCE			0x10000	// Free the source handle as well?
 
 // BASS_FX Version
-DWORD BASS_FXDEF(BASS_FX_GetVersion)(void);
+DWORD BASS_FXDEF(BASS_FX_GetVersion)();
 
 /*===========================================================================
 	DSP (Digital Signal Processing)

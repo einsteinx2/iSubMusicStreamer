@@ -45,14 +45,14 @@ func bassReadProc(buffer: UnsafeMutableRawPointer?, length: DWORD, userInfo: Uns
     }
 }
 
-func bassSeekProc(offset: QWORD, userInfo: UnsafeMutableRawPointer?) -> ObjCBool {
+func bassSeekProc(offset: QWORD, userInfo: UnsafeMutableRawPointer?) -> Int32 {
     autoreleasepool {
-        guard let userInfo = userInfo else { return false }
+        guard let userInfo = userInfo else { return 0 }
         let bassStream: BassStream = Bridging.bridge(ptr: userInfo)
         
         let success = bassStream.seek(to: offset)
         DDLogInfo("[bassSeekProc] seeking to \(offset) success: \(success)")
-        return ObjCBool(success)
+        return success ? 1 : 0
     }
 }
 
@@ -75,7 +75,7 @@ func bassSlideSyncProc(handle: HSYNC, channel: DWORD, data: DWORD, userInfo: Uns
         BASS_SetDevice(Bass.outputDeviceNumber)
         var volumeLevel: Float = 0.0
         let success = BASS_ChannelGetAttribute(player.outStream, UInt32(BASS_ATTRIB_VOL), &volumeLevel)
-        if success && volumeLevel == 0 {
+        if success != 0 && volumeLevel == 0 {
             BASS_ChannelSlideAttribute(player.outStream, UInt32(BASS_ATTRIB_VOL), 1, 200)
         }
     }
