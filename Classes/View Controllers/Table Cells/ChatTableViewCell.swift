@@ -79,7 +79,7 @@ final class ChatTableViewCell: UITableViewCell {
         
         // Automatically set the height based on the height of the message text
         let maxSize = CGSize(width: frame.size.width, height: CGFloat.greatestFiniteMagnitude)
-        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)]
+        let attributes = [NSAttributedString.Key.font: messageLabel.font ?? UIFont.systemFont(ofSize: 20)]
         let message = messageLabel.text ?? ""
         let height = message.boundingRect(with: maxSize,
                                           options: .usesLineFragmentOrigin,

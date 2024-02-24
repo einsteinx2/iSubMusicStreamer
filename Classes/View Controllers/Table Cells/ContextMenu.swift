@@ -35,20 +35,20 @@ extension UIViewController {
         }
     }
     
-    private func menu(actions: [UIAction?], displayInline: Bool = true) -> UIMenu? {
+    private func menu(actions: [UIAction?], title: String = "", displayInline: Bool = true) -> UIMenu? {
         let children = actions.compactMap({ $0 })
         if children.count > 0 {
             let options: UIMenu.Options = displayInline ? [.displayInline] : []
-            return UIMenu(title: "", options: options, children: children)
+            return UIMenu(title: title, options: options, children: children)
         }
         return nil
     }
     
-    private func menu(submenus: [UIMenu?], displayInline: Bool = true) -> UIMenu? {
+    private func menu(submenus: [UIMenu?], title: String = "", displayInline: Bool = true) -> UIMenu? {
         let children = submenus.compactMap({ $0 })
         if children.count > 0 {
             let options: UIMenu.Options = displayInline ? [.displayInline] : []
-            return UIMenu(title: "", options: options, children: children)
+            return UIMenu(title: title, options: options, children: children)
         }
         return nil
     }
