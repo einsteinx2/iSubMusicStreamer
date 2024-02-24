@@ -342,6 +342,8 @@
 		53A6A9FF2B89770C007ABD7A /* CocoaLumberjackSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 53A6A9FE2B89770C007ABD7A /* CocoaLumberjackSwift */; };
 		53A6AA012B897728007ABD7A /* CocoaLumberjack in Frameworks */ = {isa = PBXBuildFile; productRef = 53A6AA002B897728007ABD7A /* CocoaLumberjack */; };
 		53A6AA032B89772E007ABD7A /* CocoaLumberjack in Frameworks */ = {isa = PBXBuildFile; productRef = 53A6AA022B89772E007ABD7A /* CocoaLumberjack */; };
+		53A6AA0A2B89797C007ABD7A /* GCDWebDAVServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A6AA092B89797C007ABD7A /* GCDWebDAVServer.m */; };
+		53A6AA0B2B89797C007ABD7A /* GCDWebDAVServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A6AA092B89797C007ABD7A /* GCDWebDAVServer.m */; };
 		53B38C12147593FA00CD8A99 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B38C11147593F900CD8A99 /* AVFoundation.framework */; };
 		53B38C141475940700CD8A99 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B38C11147593F900CD8A99 /* AVFoundation.framework */; };
 		53B5DB3525D73018006149B6 /* Tabman in Frameworks */ = {isa = PBXBuildFile; productRef = 53B5DB3425D73018006149B6 /* Tabman */; };
@@ -784,6 +786,8 @@
 		53A0EDD625B5EDEE00B78DAA /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		53A0EDDC25B5F8E000B78DAA /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
 		53A2BE27147DF13600E44822 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		53A6AA082B89797C007ABD7A /* GCDWebDAVServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebDAVServer.h; sourceTree = "<group>"; };
+		53A6AA092B89797C007ABD7A /* GCDWebDAVServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebDAVServer.m; sourceTree = "<group>"; };
 		53B38C11147593F900CD8A99 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		53B9C48225A789D3007E9E3C /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
 		53B9C48D25A7A51F007E9E3C /* MediaFolderStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFolderStore.swift; sourceTree = "<group>"; };
@@ -1108,6 +1112,7 @@
 			isa = PBXGroup;
 			children = (
 				53FE37EB1EA961780058B925 /* Flurry */,
+				53A6AA072B89797C007ABD7A /* GCDWebDAVServer */,
 				53FE676E256DD0F00015FC83 /* GCDWebServer */,
 				53E03D0B25C26FBD0043355F /* GTMNSString */,
 				53FE35FA1EA961670058B925 /* libBASS */,
@@ -1549,6 +1554,16 @@
 			path = Deprecated;
 			sourceTree = "<group>";
 		};
+		53A6AA072B89797C007ABD7A /* GCDWebDAVServer */ = {
+			isa = PBXGroup;
+			children = (
+				53A6AA082B89797C007ABD7A /* GCDWebDAVServer.h */,
+				53A6AA092B89797C007ABD7A /* GCDWebDAVServer.m */,
+			);
+			name = GCDWebDAVServer;
+			path = Frameworks/GCDWebServer/GCDWebDAVServer;
+			sourceTree = "<group>";
+		};
 		53E03D0B25C26FBD0043355F /* GTMNSString */ = {
 			isa = PBXGroup;
 			children = (
@@ -1970,6 +1985,7 @@
 				53ED675B25B8B5190002BFAF /* DownloadedTagArtistViewController.swift in Sources */,
 				539D330625AA353C00F53797 /* DownloadedSongPathComponent.swift in Sources */,
 				534BC84225CCE05400964D82 /* HomeSongInfoButton.swift in Sources */,
+				53A6AA0A2B89797C007ABD7A /* GCDWebDAVServer.m in Sources */,
 				53ED674025B88B5B0002BFAF /* NotificationCenter+MainThread.swift in Sources */,
 				534BC83925CCC83700964D82 /* LibraryViewController.swift in Sources */,
 				53FE38981EA961C80058B925 /* NSFileHandle+ZKAdditions.m in Sources */,
@@ -2217,6 +2233,7 @@
 				539D330725AA353C00F53797 /* DownloadedSongPathComponent.swift in Sources */,
 				53ED675C25B8B5190002BFAF /* DownloadedTagArtistViewController.swift in Sources */,
 				53ED674125B88B5B0002BFAF /* NotificationCenter+MainThread.swift in Sources */,
+				53A6AA0B2B89797C007ABD7A /* GCDWebDAVServer.m in Sources */,
 				534BC84325CCE05400964D82 /* HomeSongInfoButton.swift in Sources */,
 				5389479525A4EA9B0078FBAF /* MediaFoldersLoader.swift in Sources */,
 				534BC83A25CCC83A00964D82 /* LibraryViewController.swift in Sources */,
