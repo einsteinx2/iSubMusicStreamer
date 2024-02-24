@@ -148,12 +148,12 @@ final class HomeViewController: UIViewController {
                 } else {
                     let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                     sheet.addAction(title: "All Media Folders", style: .default) { action in
-                        performServerShuffle(mediaFolderId: MediaFolder.allFoldersId)
+                        self.performServerShuffle(mediaFolderId: MediaFolder.allFoldersId)
                     }
                     for mediaFolder in mediaFolders {
                         if mediaFolder.id != MediaFolder.allFoldersId {
                             sheet.addAction(title: mediaFolder.name, style: .default) { action in
-                                performServerShuffle(mediaFolderId: mediaFolder.id)
+                                self.performServerShuffle(mediaFolderId: mediaFolder.id)
                             }
                         }
                     }

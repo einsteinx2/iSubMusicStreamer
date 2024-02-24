@@ -1,61 +1,68 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "GRDB",
-        "repositoryURL": "https://github.com/groue/GRDB.swift.git",
-        "state": {
-          "branch": null,
-          "revision": "2a917823ed2511ec5cb21a83f8a4f389e45d7038",
-          "version": "5.2.0"
-        }
-      },
-      {
-        "package": "InflectorKit",
-        "repositoryURL": "https://github.com/mattt/InflectorKit.git",
-        "state": {
-          "branch": null,
-          "revision": "d8cbcc04972690aaa5fc760a2b9ddb3e9f0decd7",
-          "version": "1.0.0"
-        }
-      },
-      {
-        "package": "Pageboy",
-        "repositoryURL": "https://github.com/uias/Pageboy",
-        "state": {
-          "branch": null,
-          "revision": "34ecb6e7c4e0e07494960ab2f7cc9a02293915a6",
-          "version": "3.6.2"
-        }
-      },
-      {
-        "package": "Resolver",
-        "repositoryURL": "https://github.com/hmlongco/Resolver.git",
-        "state": {
-          "branch": null,
-          "revision": "f1f7c1040b3fb0029324a7b2bcc3d64b435840ac",
-          "version": "1.3.0"
-        }
-      },
-      {
-        "package": "SnapKit",
-        "repositoryURL": "https://github.com/SnapKit/SnapKit.git",
-        "state": {
-          "branch": null,
-          "revision": "d458564516e5676af9c70b4f4b2a9178294f1bc6",
-          "version": "5.0.1"
-        }
-      },
-      {
-        "package": "Tabman",
-        "repositoryURL": "https://github.com/uias/Tabman",
-        "state": {
-          "branch": null,
-          "revision": "2f01f14128c0762476d0a0c9b1bcf2bd52ed4e98",
-          "version": "2.10.0"
-        }
+  "pins" : [
+    {
+      "identity" : "cwlcatchexception",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattgallagher/CwlCatchException",
+      "state" : {
+        "revision" : "3b123999de19bf04905bc1dfdb76f817b0f2cc00",
+        "version" : "2.1.2"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "grdb.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/groue/GRDB.swift.git",
+      "state" : {
+        "revision" : "2a917823ed2511ec5cb21a83f8a4f389e45d7038",
+        "version" : "5.2.0"
+      }
+    },
+    {
+      "identity" : "inflectorkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattt/InflectorKit.git",
+      "state" : {
+        "revision" : "d8cbcc04972690aaa5fc760a2b9ddb3e9f0decd7",
+        "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "pageboy",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/uias/Pageboy",
+      "state" : {
+        "revision" : "34ecb6e7c4e0e07494960ab2f7cc9a02293915a6",
+        "version" : "3.6.2"
+      }
+    },
+    {
+      "identity" : "resolver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hmlongco/Resolver.git",
+      "state" : {
+        "revision" : "f1f7c1040b3fb0029324a7b2bcc3d64b435840ac",
+        "version" : "1.3.0"
+      }
+    },
+    {
+      "identity" : "snapkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SnapKit/SnapKit.git",
+      "state" : {
+        "revision" : "d458564516e5676af9c70b4f4b2a9178294f1bc6",
+        "version" : "5.0.1"
+      }
+    },
+    {
+      "identity" : "tabman",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/uias/Tabman",
+      "state" : {
+        "revision" : "2f01f14128c0762476d0a0c9b1bcf2bd52ed4e98",
+        "version" : "2.10.0"
+      }
+    }
+  ],
+  "version" : 2
 }

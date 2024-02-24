@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import CocoaLumberjackSwift
 import Resolver
+import CwlCatchException
 
 private let controlStackHeight: CGFloat = UIDevice.isSmall ? 34 : 44
 private let controlButtonWidth: CGFloat = UIDevice.isSmall ? 40 : 60
@@ -414,7 +415,7 @@ final class PlayerViewController: UIViewController {
             HUD.show(message: message)
             DispatchQueue.userInitiated.async {
                 defer { HUD.hide() }
-                playQueue.shuffleToggle()
+                self.playQueue.shuffleToggle()
                 DispatchQueue.main.async {
                     self.updateShuffleButtonIcon()
                 }
@@ -731,10 +732,10 @@ final class PlayerViewController: UIViewController {
         
         func updateConstraints() {
             do {
-                try ObjC.perform {
+                try catchExceptionAsError {
                     self.downloadProgressView.snp.updateConstraints { make in
                         do {
-                            try ObjC.perform {
+                            _ = try catchExceptionAsError {
                                 make.width.equalTo(width)
                             }
                         } catch {

@@ -10,6 +10,7 @@ import UIKit
 import Resolver
 import SnapKit
 import CocoaLumberjackSwift
+import CwlCatchException
 
 final class ServersViewController: UIViewController {
     @Injected private var store: Store
@@ -220,7 +221,9 @@ extension ServersViewController: UITableViewConfiguration {
         }
         
         do {
-            try ObjC.perform { tableView.deleteRows(at: [indexPath], with: .automatic) }
+            try catchExceptionAsError {
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+            }
         } catch {
             tableView.reloadData()
         }

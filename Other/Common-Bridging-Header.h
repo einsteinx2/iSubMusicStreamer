@@ -8,8 +8,6 @@
 
 #pragma once
 
-#import "ObjcExceptionCatcher.h"
-
 // User Interface Components
 #import "EqualizerViewController.h"
 #import "OptionsViewController.h"

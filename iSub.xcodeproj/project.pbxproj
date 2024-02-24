@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -139,8 +139,6 @@
 		5357FE2925C39FDB001BDE29 /* BassStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE2725C39FDB001BDE29 /* BassStream.swift */; };
 		5357FE3125C760B7001BDE29 /* BassVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE3025C760B7001BDE29 /* BassVisualizer.swift */; };
 		5357FE3225C760B7001BDE29 /* BassVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE3025C760B7001BDE29 /* BassVisualizer.swift */; };
-		5359C859256EA8FE00C8F8DC /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359C858256EA8FE00C8F8DC /* ObjC.swift */; };
-		5359C85A256EA8FE00C8F8DC /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359C858256EA8FE00C8F8DC /* ObjC.swift */; };
 		5359FA5025DF59F400DCC390 /* CustomRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359FA4F25DF59F400DCC390 /* CustomRootViewController.swift */; };
 		5359FA5125DF59F400DCC390 /* CustomRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359FA4F25DF59F400DCC390 /* CustomRootViewController.swift */; };
 		535E142625A7B2020039BCAA /* FolderArtistStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E142525A7B2020039BCAA /* FolderArtistStore.swift */; };
@@ -346,6 +344,8 @@
 		53A0EDDE25B5F8E000B78DAA /* ChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A0EDDC25B5F8E000B78DAA /* ChatTableViewCell.swift */; };
 		53A2BE28147DF13600E44822 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A2BE27147DF13600E44822 /* OpenGLES.framework */; };
 		53A2BE2A147DF14600E44822 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A2BE27147DF13600E44822 /* OpenGLES.framework */; };
+		53A6A9F82B89738F007ABD7A /* CwlCatchException in Frameworks */ = {isa = PBXBuildFile; productRef = 53A6A9F72B89738F007ABD7A /* CwlCatchException */; };
+		53A6A9FA2B8973AB007ABD7A /* CwlCatchException in Frameworks */ = {isa = PBXBuildFile; productRef = 53A6A9F92B8973AB007ABD7A /* CwlCatchException */; };
 		53B38C12147593FA00CD8A99 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B38C11147593F900CD8A99 /* AVFoundation.framework */; };
 		53B38C141475940700CD8A99 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B38C11147593F900CD8A99 /* AVFoundation.framework */; };
 		53B5DB3525D73018006149B6 /* Tabman in Frameworks */ = {isa = PBXBuildFile; productRef = 53B5DB3425D73018006149B6 /* Tabman */; };
@@ -707,8 +707,6 @@
 		5357FE2425C39F96001BDE29 /* BassPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassPlayer.swift; sourceTree = "<group>"; };
 		5357FE2725C39FDB001BDE29 /* BassStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BassStream.swift; sourceTree = "<group>"; };
 		5357FE3025C760B7001BDE29 /* BassVisualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassVisualizer.swift; sourceTree = "<group>"; };
-		5359C854256EA8C400C8F8DC /* ObjcExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjcExceptionCatcher.h; sourceTree = "<group>"; };
-		5359C858256EA8FE00C8F8DC /* ObjC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjC.swift; sourceTree = "<group>"; };
 		5359FA4F25DF59F400DCC390 /* CustomRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRootViewController.swift; sourceTree = "<group>"; };
 		535E142525A7B2020039BCAA /* FolderArtistStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderArtistStore.swift; sourceTree = "<group>"; };
 		535E142B25A7B4600039BCAA /* RootFoldersLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootFoldersLoader.swift; sourceTree = "<group>"; };
@@ -1010,6 +1008,7 @@
 				53FE36141EA961670058B925 /* libbass_mpc.a in Frameworks */,
 				53FE36201EA961670058B925 /* libbasswv.a in Frameworks */,
 				53329607255EF21D0027C51A /* libsqlite3.tbd in Frameworks */,
+				53A6A9F82B89738F007ABD7A /* CwlCatchException in Frameworks */,
 				53F8917B1EB1351D00B3F131 /* libSystem.tbd in Frameworks */,
 				53D9740A255BFDE900AABF7F /* SnapKit in Frameworks */,
 				538C8FEC2560C8BA005D6CA9 /* CocoaLumberjackSwift.framework in Frameworks */,
@@ -1054,6 +1053,7 @@
 				536C8DFC2633961A007B81FB /* libbassopus.a in Frameworks */,
 				538C8FEE2560C8C4005D6CA9 /* CocoaLumberjackSwift.framework in Frameworks */,
 				5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */,
+				53A6A9FA2B8973AB007ABD7A /* CwlCatchException in Frameworks */,
 				5367C6D51EA92D2400B1C242 /* libz.tbd in Frameworks */,
 				53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */,
 				53F8917E1EB137E900B3F131 /* AudioToolbox.framework in Frameworks */,
@@ -1318,8 +1318,6 @@
 				534B20E52561E444007FF1D7 /* LockScreenAudioControls.swift */,
 				53FE67AB256DE9600015FC83 /* Defines.swift */,
 				533F651C160533F4000098E1 /* Defines.h */,
-				5359C854256EA8C400C8F8DC /* ObjcExceptionCatcher.h */,
-				5359C858256EA8FE00C8F8DC /* ObjC.swift */,
 				539D32E425A9400400F53797 /* Synchronized.swift */,
 				531EC86425B220E10076973A /* Colors.swift */,
 				53ED671825B74B4C0002BFAF /* HUD.swift */,
@@ -1844,6 +1842,7 @@
 				5381884B25A67A2F00C59CDE /* Resolver */,
 				537C93EA25B1161200175DF6 /* InflectorKit */,
 				53B5DB3425D73018006149B6 /* Tabman */,
+				53A6A9F72B89738F007ABD7A /* CwlCatchException */,
 			);
 			productName = iSubTESTING;
 			productReference = 1D6058910D05DD3D006BFB54 /* iSub.app */;
@@ -1870,6 +1869,7 @@
 				5381884D25A67A4300C59CDE /* Resolver */,
 				537C93EC25B1162100175DF6 /* InflectorKit */,
 				53B5DB3925D73026006149B6 /* Tabman */,
+				53A6A9F92B8973AB007ABD7A /* CwlCatchException */,
 			);
 			productName = iSubTESTING;
 			productReference = 53BC2865139AF0DD00A825F1 /* iSub Beta.app */;
@@ -1911,6 +1911,7 @@
 				5381884A25A67A2F00C59CDE /* XCRemoteSwiftPackageReference "Resolver" */,
 				537C93E925B1161200175DF6 /* XCRemoteSwiftPackageReference "InflectorKit" */,
 				53B5DB3325D73018006149B6 /* XCRemoteSwiftPackageReference "Tabman" */,
+				53A6A9F62B89738F007ABD7A /* XCRemoteSwiftPackageReference "CwlCatchException" */,
 			);
 			projectDirPath = "";
 			projectReferences = (
@@ -2012,7 +2013,6 @@
 				5389478425A4E72E0078FBAF /* Store.swift in Sources */,
 				5357FE2825C39FDB001BDE29 /* BassStream.swift in Sources */,
 				539D32E525A9400400F53797 /* Synchronized.swift in Sources */,
-				5359C859256EA8FE00C8F8DC /* ObjC.swift in Sources */,
 				530A16732592468C00E9294E /* FolderArtist.swift in Sources */,
 				53CC751D25DCA9B700D10AB6 /* SearchLoader.swift in Sources */,
 				535F824425C0F64C0024C82C /* RuntimeError.swift in Sources */,
@@ -2291,7 +2291,6 @@
 				534BC83A25CCC83A00964D82 /* LibraryViewController.swift in Sources */,
 				539D330A25AA3B5200F53797 /* TableCellModel.swift in Sources */,
 				535E144225A7D3480039BCAA /* ArtistArt.swift in Sources */,
-				5359C85A256EA8FE00C8F8DC /* ObjC.swift in Sources */,
 				53762C8125AD012200476F2D /* ServerPlaylistLoader.swift in Sources */,
 				532C625025B6230600185998 /* ServerChecker.swift in Sources */,
 				53246AB7256C975600E11EC4 /* DownloadStatusViewController.swift in Sources */,
@@ -2886,6 +2885,14 @@
 				minimumVersion = 5.2.0;
 			};
 		};
+		53A6A9F62B89738F007ABD7A /* XCRemoteSwiftPackageReference "CwlCatchException" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mattgallagher/CwlCatchException";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.2;
+			};
+		};
 		53B5DB3325D73018006149B6 /* XCRemoteSwiftPackageReference "Tabman" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/uias/Tabman";
@@ -2934,6 +2941,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5389478625A4E7700078FBAF /* XCRemoteSwiftPackageReference "GRDB.swift" */;
 			productName = GRDB;
+		};
+		53A6A9F72B89738F007ABD7A /* CwlCatchException */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 53A6A9F62B89738F007ABD7A /* XCRemoteSwiftPackageReference "CwlCatchException" */;
+			productName = CwlCatchException;
+		};
+		53A6A9F92B8973AB007ABD7A /* CwlCatchException */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 53A6A9F62B89738F007ABD7A /* XCRemoteSwiftPackageReference "CwlCatchException" */;
+			productName = CwlCatchException;
 		};
 		53B5DB3425D73018006149B6 /* Tabman */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -10,6 +10,7 @@ import UIKit
 import Resolver
 import SnapKit
 import CocoaLumberjackSwift
+import CwlCatchException
 
 // TODO: implement this - refactor the loadData method to handle serverId better
 final class ArtistsViewController: CustomUITableViewController {
@@ -489,7 +490,7 @@ extension ArtistsViewController: DropdownMenuDelegate {
     func dropdownMenu(_ dropdownMenu: DropdownMenu, willToggleWithHeightChange heightChange: CGFloat, animated: Bool, animationDuration: Double) {
         func resizeHeader() {
             do {
-                try ObjC.perform {
+                try catchExceptionAsError {
                     tableView.performBatchUpdates({
                         tableView.tableHeaderView?.frame.size.height += heightChange
                         tableView.tableHeaderView = tableView.tableHeaderView

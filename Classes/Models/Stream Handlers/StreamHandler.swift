@@ -9,6 +9,7 @@
 import Foundation
 import Resolver
 import CocoaLumberjackSwift
+import CwlCatchException
 
 private let isProgressLoggingEnabled = false
 private let isThrottleLoggingEnabled = true
@@ -289,7 +290,7 @@ extension StreamHandler: URLSessionDataDelegate {
             // Save the data to the file
             // TODO: implement this - use non-deprecated API
             do {
-                try ObjC.perform {
+                try catchExceptionAsError {
                     fileHandle.write(data)
                 }
             } catch {
