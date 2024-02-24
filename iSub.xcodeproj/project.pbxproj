@@ -96,10 +96,6 @@
 		533C65D015ABB9D6003EAF29 /* OptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65D415ABB9D6003EAF29 /* OptionsViewController.xib */; };
 		533C65DC15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */; };
 		533C65DE15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */; };
-		533D18E325602530003F962C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DB25602526003F962C /* CocoaLumberjack.framework */; };
-		533D18E425602530003F962C /* CocoaLumberjack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DB25602526003F962C /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		533D18E725602539003F962C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DB25602526003F962C /* CocoaLumberjack.framework */; };
-		533D18E825602539003F962C /* CocoaLumberjack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DB25602526003F962C /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5347A1E4256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5347A1E3256D866A00BFB70A /* HLSReverseProxyServer.swift */; };
 		5347A1E5256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5347A1E3256D866A00BFB70A /* HLSReverseProxyServer.swift */; };
 		53493F3015FC6BD90059492E /* KeychainAccessGroups.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53493F2C15FC6BD90059492E /* KeychainAccessGroups.plist */; };
@@ -280,10 +276,6 @@
 		538C8FE825609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE625609F4F005D6CA9 /* BlurredSectionHeader.swift */; };
 		538C8FEA2560C7AB005D6CA9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */; };
 		538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */; };
-		538C8FEC2560C8BA005D6CA9 /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DD25602526003F962C /* CocoaLumberjackSwift.framework */; };
-		538C8FED2560C8BA005D6CA9 /* CocoaLumberjackSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DD25602526003F962C /* CocoaLumberjackSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		538C8FEE2560C8C4005D6CA9 /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DD25602526003F962C /* CocoaLumberjackSwift.framework */; };
-		538C8FEF2560C8C4005D6CA9 /* CocoaLumberjackSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 533D18DD25602526003F962C /* CocoaLumberjackSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		539148BA2559E597004AAC3F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148B92559E597004AAC3F /* CoreServices.framework */; };
 		539148C52559EAAF004AAC3F /* libFlurry_11.1.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148C42559EAAF004AAC3F /* libFlurry_11.1.1.a */; };
 		539148D02559EB1D004AAC3F /* FlurryEmpty.m in Sources */ = {isa = PBXBuildFile; fileRef = 539148CE2559EB1D004AAC3F /* FlurryEmpty.m */; };
@@ -346,6 +338,10 @@
 		53A2BE2A147DF14600E44822 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A2BE27147DF13600E44822 /* OpenGLES.framework */; };
 		53A6A9F82B89738F007ABD7A /* CwlCatchException in Frameworks */ = {isa = PBXBuildFile; productRef = 53A6A9F72B89738F007ABD7A /* CwlCatchException */; };
 		53A6A9FA2B8973AB007ABD7A /* CwlCatchException in Frameworks */ = {isa = PBXBuildFile; productRef = 53A6A9F92B8973AB007ABD7A /* CwlCatchException */; };
+		53A6A9FD2B897701007ABD7A /* CocoaLumberjackSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 53A6A9FC2B897701007ABD7A /* CocoaLumberjackSwift */; };
+		53A6A9FF2B89770C007ABD7A /* CocoaLumberjackSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 53A6A9FE2B89770C007ABD7A /* CocoaLumberjackSwift */; };
+		53A6AA012B897728007ABD7A /* CocoaLumberjack in Frameworks */ = {isa = PBXBuildFile; productRef = 53A6AA002B897728007ABD7A /* CocoaLumberjack */; };
+		53A6AA032B89772E007ABD7A /* CocoaLumberjack in Frameworks */ = {isa = PBXBuildFile; productRef = 53A6AA022B89772E007ABD7A /* CocoaLumberjack */; };
 		53B38C12147593FA00CD8A99 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B38C11147593F900CD8A99 /* AVFoundation.framework */; };
 		53B38C141475940700CD8A99 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B38C11147593F900CD8A99 /* AVFoundation.framework */; };
 		53B5DB3525D73018006149B6 /* Tabman in Frameworks */ = {isa = PBXBuildFile; productRef = 53B5DB3425D73018006149B6 /* Tabman */; };
@@ -583,30 +579,6 @@
 		53FE67AD256DE9600015FC83 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FE67AB256DE9600015FC83 /* Defines.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		533D18D825602526003F962C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 533D18D225602526003F962C /* Lumberjack.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 18F3BFD71A81E06E00692297;
-			remoteInfo = "CocoaLumberjack-Static";
-		};
-		533D18DA25602526003F962C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 533D18D225602526003F962C /* Lumberjack.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 19FF46021B8B4CF400B43179;
-			remoteInfo = CocoaLumberjack;
-		};
-		533D18DC25602526003F962C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 533D18D225602526003F962C /* Lumberjack.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 19FF460F1B8B4D1400B43179;
-			remoteInfo = CocoaLumberjackSwift;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		533D18E525602530003F962C /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -614,8 +586,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				538C8FED2560C8BA005D6CA9 /* CocoaLumberjackSwift.framework in Embed Frameworks */,
-				533D18E425602530003F962C /* CocoaLumberjack.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -626,8 +596,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				538C8FEF2560C8C4005D6CA9 /* CocoaLumberjackSwift.framework in Embed Frameworks */,
-				533D18E825602539003F962C /* CocoaLumberjack.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -682,7 +650,6 @@
 		53329640255F2B960027C51A /* AlbumTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumTableViewHeader.swift; sourceTree = "<group>"; };
 		53329647255F2E770027C51A /* PlayAllAndShuffleHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayAllAndShuffleHeader.swift; sourceTree = "<group>"; };
 		53329651255F30220027C51A /* ClosureSleeve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosureSleeve.swift; sourceTree = "<group>"; };
-		533D18D225602526003F962C /* Lumberjack.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Lumberjack.xcodeproj; path = Frameworks/CocoaLumberjack/Lumberjack.xcodeproj; sourceTree = "<group>"; };
 		533F651C160533F4000098E1 /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
 		5347A1E3256D866A00BFB70A /* HLSReverseProxyServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HLSReverseProxyServer.swift; sourceTree = "<group>"; };
 		53493F1A15FC6AA60059492E /* iSub-Info-Beta.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "iSub-Info-Beta.plist"; path = "Other/iSub-Info-Beta.plist"; sourceTree = "<group>"; };
@@ -1003,6 +970,7 @@
 				53FE361A1EA961670058B925 /* libbassmix.a in Frameworks */,
 				53FE36111EA961670058B925 /* libbass_fx.a in Frameworks */,
 				53FE36171EA961670058B925 /* libbassflac.a in Frameworks */,
+				53A6AA032B89772E007ABD7A /* CocoaLumberjack in Frameworks */,
 				53FE361D1EA961670058B925 /* libbassopus.a in Frameworks */,
 				53FE360E1EA961670058B925 /* libbass_ape.a in Frameworks */,
 				53FE36141EA961670058B925 /* libbass_mpc.a in Frameworks */,
@@ -1011,7 +979,6 @@
 				53A6A9F82B89738F007ABD7A /* CwlCatchException in Frameworks */,
 				53F8917B1EB1351D00B3F131 /* libSystem.tbd in Frameworks */,
 				53D9740A255BFDE900AABF7F /* SnapKit in Frameworks */,
-				538C8FEC2560C8BA005D6CA9 /* CocoaLumberjackSwift.framework in Frameworks */,
 				53F8917A1EB1351400B3F131 /* libxml2.tbd in Frameworks */,
 				53F8917C1EB1352300B3F131 /* libz.tbd in Frameworks */,
 				5349DF87161E408A0044A781 /* Accelerate.framework in Frameworks */,
@@ -1029,7 +996,7 @@
 				53A2BE2A147DF14600E44822 /* OpenGLES.framework in Frameworks */,
 				53F8917D1EB1354B00B3F131 /* Photos.framework in Frameworks */,
 				53F675E2113B095900822059 /* QuartzCore.framework in Frameworks */,
-				533D18E325602530003F962C /* CocoaLumberjack.framework in Frameworks */,
+				53A6A9FD2B897701007ABD7A /* CocoaLumberjackSwift in Frameworks */,
 				53F7A128131B7F3B002C829D /* Security.framework in Frameworks */,
 				536D620B1144495400DFCE56 /* SystemConfiguration.framework in Frameworks */,
 				53B5DB3525D73018006149B6 /* Tabman in Frameworks */,
@@ -1048,10 +1015,10 @@
 				536C8DFB2633961A007B81FB /* libbassmix.a in Frameworks */,
 				5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */,
 				53D97406255BFD9100AABF7F /* SnapKit in Frameworks */,
+				53A6AA012B897728007ABD7A /* CocoaLumberjack in Frameworks */,
 				536C8DFA2633961A007B81FB /* libbassflac.a in Frameworks */,
 				536C8DFE26339620007B81FB /* libFlurry_11.1.1.a in Frameworks */,
 				536C8DFC2633961A007B81FB /* libbassopus.a in Frameworks */,
-				538C8FEE2560C8C4005D6CA9 /* CocoaLumberjackSwift.framework in Frameworks */,
 				5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */,
 				53A6A9FA2B8973AB007ABD7A /* CwlCatchException in Frameworks */,
 				5367C6D51EA92D2400B1C242 /* libz.tbd in Frameworks */,
@@ -1074,8 +1041,8 @@
 				53C7FD9E150F0EA9008DA51C /* MessageUI.framework in Frameworks */,
 				53A2BE28147DF13600E44822 /* OpenGLES.framework in Frameworks */,
 				5381F8061E96FBFB00AAA9BD /* Photos.framework in Frameworks */,
+				53A6A9FF2B89770C007ABD7A /* CocoaLumberjackSwift in Frameworks */,
 				53BC2855139AF0DD00A825F1 /* QuartzCore.framework in Frameworks */,
-				533D18E725602539003F962C /* CocoaLumberjack.framework in Frameworks */,
 				53BC285F139AF0DD00A825F1 /* Security.framework in Frameworks */,
 				53BC2858139AF0DD00A825F1 /* SystemConfiguration.framework in Frameworks */,
 				53B5DB3A25D73026006149B6 /* Tabman in Frameworks */,
@@ -1147,7 +1114,6 @@
 				53FE38011EA961970058B925 /* RaptureXML */,
 				53E03D0C25C26FD70043355F /* Reachability */,
 				53FE38551EA961C80058B925 /* ZipKit */,
-				533D18D225602526003F962C /* Lumberjack.xcodeproj */,
 				53329606255EF21D0027C51A /* libsqlite3.tbd */,
 				5367C6D61EA92D3000B1C242 /* libSystem.tbd */,
 				5367C6D41EA92D2400B1C242 /* libz.tbd */,
@@ -1474,16 +1440,6 @@
 				536C890925BB5FED008FE1AC /* StreamHandler.swift */,
 			);
 			path = "Stream Handlers";
-			sourceTree = "<group>";
-		};
-		533D18D325602526003F962C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				533D18D925602526003F962C /* libCocoaLumberjack.a */,
-				533D18DB25602526003F962C /* CocoaLumberjack.framework */,
-				533D18DD25602526003F962C /* CocoaLumberjackSwift.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		534BC84425CCE0BA00964D82 /* Library */ = {
@@ -1843,6 +1799,8 @@
 				537C93EA25B1161200175DF6 /* InflectorKit */,
 				53B5DB3425D73018006149B6 /* Tabman */,
 				53A6A9F72B89738F007ABD7A /* CwlCatchException */,
+				53A6A9FC2B897701007ABD7A /* CocoaLumberjackSwift */,
+				53A6AA022B89772E007ABD7A /* CocoaLumberjack */,
 			);
 			productName = iSubTESTING;
 			productReference = 1D6058910D05DD3D006BFB54 /* iSub.app */;
@@ -1870,6 +1828,8 @@
 				537C93EC25B1162100175DF6 /* InflectorKit */,
 				53B5DB3925D73026006149B6 /* Tabman */,
 				53A6A9F92B8973AB007ABD7A /* CwlCatchException */,
+				53A6A9FE2B89770C007ABD7A /* CocoaLumberjackSwift */,
+				53A6AA002B897728007ABD7A /* CocoaLumberjack */,
 			);
 			productName = iSubTESTING;
 			productReference = 53BC2865139AF0DD00A825F1 /* iSub Beta.app */;
@@ -1912,14 +1872,9 @@
 				537C93E925B1161200175DF6 /* XCRemoteSwiftPackageReference "InflectorKit" */,
 				53B5DB3325D73018006149B6 /* XCRemoteSwiftPackageReference "Tabman" */,
 				53A6A9F62B89738F007ABD7A /* XCRemoteSwiftPackageReference "CwlCatchException" */,
+				53A6A9FB2B897701007ABD7A /* XCRemoteSwiftPackageReference "CocoaLumberjack" */,
 			);
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 533D18D325602526003F962C /* Products */;
-					ProjectRef = 533D18D225602526003F962C /* Lumberjack.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* iSub Release */,
@@ -1927,30 +1882,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		533D18D925602526003F962C /* libCocoaLumberjack.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libCocoaLumberjack.a;
-			remoteRef = 533D18D825602526003F962C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		533D18DB25602526003F962C /* CocoaLumberjack.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = CocoaLumberjack.framework;
-			remoteRef = 533D18DA25602526003F962C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		533D18DD25602526003F962C /* CocoaLumberjackSwift.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = CocoaLumberjackSwift.framework;
-			remoteRef = 533D18DC25602526003F962C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1D60588D0D05DD3D006BFB54 /* Resources */ = {
@@ -2893,6 +2824,14 @@
 				minimumVersion = 2.1.2;
 			};
 		};
+		53A6A9FB2B897701007ABD7A /* XCRemoteSwiftPackageReference "CocoaLumberjack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CocoaLumberjack/CocoaLumberjack";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.8.4;
+			};
+		};
 		53B5DB3325D73018006149B6 /* XCRemoteSwiftPackageReference "Tabman" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/uias/Tabman";
@@ -2951,6 +2890,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 53A6A9F62B89738F007ABD7A /* XCRemoteSwiftPackageReference "CwlCatchException" */;
 			productName = CwlCatchException;
+		};
+		53A6A9FC2B897701007ABD7A /* CocoaLumberjackSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 53A6A9FB2B897701007ABD7A /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;
+			productName = CocoaLumberjackSwift;
+		};
+		53A6A9FE2B89770C007ABD7A /* CocoaLumberjackSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 53A6A9FB2B897701007ABD7A /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;
+			productName = CocoaLumberjackSwift;
+		};
+		53A6AA002B897728007ABD7A /* CocoaLumberjack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 53A6A9FB2B897701007ABD7A /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;
+			productName = CocoaLumberjack;
+		};
+		53A6AA022B89772E007ABD7A /* CocoaLumberjack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 53A6A9FB2B897701007ABD7A /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;
+			productName = CocoaLumberjack;
 		};
 		53B5DB3425D73018006149B6 /* Tabman */ = {
 			isa = XCSwiftPackageProductDependency;

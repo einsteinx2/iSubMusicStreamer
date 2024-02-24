@@ -28,7 +28,7 @@ final class Store {
         if debugPrintAllQueries {
             // Print all SQL statements
             config.prepareDatabase { db in
-                db.trace { DDLogDebug($0) }
+                db.trace { DDLogDebug("\($0)") }
             }
         }
         

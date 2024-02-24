@@ -10,7 +10,7 @@
 #import "SavedSettings.h"
 #import "Swift.h"
 #import "UIView+ObjCFrameHelper.h"
-#import <CocoaLumberjack/CocoaLumberjack.h>
+@import CocoaLumberjack;
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
 

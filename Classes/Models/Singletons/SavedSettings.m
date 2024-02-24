@@ -11,7 +11,7 @@
 #import "Defines.h"
 #import "Swift.h"
 #import "ZipKit.h"
-#import <CocoaLumberjack/CocoaLumberjack.h>
+@import CocoaLumberjack;
 
 LOG_LEVEL_ISUB_DEFAULT
 

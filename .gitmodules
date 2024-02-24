@@ -1,6 +1,3 @@
-[submodule "Frameworks/CocoaLumberjack"]
-	path = Frameworks/CocoaLumberjack
-	url = https://github.com/CocoaLumberjack/CocoaLumberjack.git
 [submodule "Frameworks/GCDWebServer"]
 	path = Frameworks/GCDWebServer
 	url = https://github.com/swisspol/GCDWebServer.git
