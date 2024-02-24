@@ -130,13 +130,20 @@ final class StreamHandler: NSObject, Codable {
         if let fileHandle = fileHandle {
             if (resume) {
                 // File exists so seek to end
-                // TODO: implement this - Handle this Obj-C exception or better, switch to non-deprecated API
-                totalBytesTransferred = Int(fileHandle.seekToEndOfFile())
-                byteOffset += totalBytesTransferred
+                do {
+                    let endOfFile = try fileHandle.seekToEnd()
+                    totalBytesTransferred = Int(endOfFile)
+                    byteOffset += totalBytesTransferred
+                } catch {
+                    DDLogError("[StreamHandler] Failed to seek to end existing file \(filePath), error: \(error)")
+                }
             } else {
                 // File exists so remove it
-                // TODO: implement this - Switch to non-deprecated API
-                fileHandle.closeFile()
+                do {
+                    try fileHandle.close()
+                } catch {
+                    DDLogError("[StreamHandler] Failed to close file handle for existing file \(filePath)")
+                }
                 self.fileHandle = nil
                 do {
                     try FileManager.default.removeItem(atPath: filePath)
@@ -146,7 +153,6 @@ final class StreamHandler: NSObject, Codable {
                     delegate?.streamHandlerConnectionFailed(handler: self, error: APIError.filesystem)
                     return
                 }
-                
             }
         }
         
@@ -225,8 +231,11 @@ final class StreamHandler: NSObject, Codable {
         }
         
         // Close the file handle
-        // TODO: implement this - use non-deprecated API
-        fileHandle?.closeFile()
+        do {
+            try fileHandle?.close()
+        } catch {
+            DDLogError("[StreamHandler] Error closing file handle for \(song)")
+        }
         fileHandle = nil
     }
     
@@ -288,11 +297,8 @@ extension StreamHandler: URLSessionDataDelegate {
         
         if let fileHandle = fileHandle {
             // Save the data to the file
-            // TODO: implement this - use non-deprecated API
             do {
-                try catchExceptionAsError {
-                    fileHandle.write(data)
-                }
+                try fileHandle.write(contentsOf: data)
             } catch {
                 DispatchQueue.main.async { self.cancel() }
             }
@@ -371,8 +377,11 @@ extension StreamHandler: URLSessionDataDelegate {
             dataTask = nil
             
             // Close the file handle
-            // TODO: implement this - switch to non-deprecated API
-            fileHandle?.closeFile()
+            do {
+                try fileHandle?.close()
+            } catch {
+                DDLogError("[StreamHandler] Failed to close file handle after completion for \(song)")
+            }
             fileHandle = nil
             
             DispatchQueue.main.async {
@@ -389,8 +398,11 @@ extension StreamHandler: URLSessionDataDelegate {
         dataTask = nil
         
         // Close the file handle
-        // TODO: implement this - switch to non-deprecated API
-        fileHandle?.closeFile()
+        do {
+            try fileHandle?.close()
+        } catch {
+            DDLogError("[StreamHandler] Failed to close file handle after connection failed for \(song)")
+        }
         fileHandle = nil
                 
         delegate?.streamHandlerConnectionFailed(handler: self, error: error)

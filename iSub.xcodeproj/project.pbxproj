@@ -1454,8 +1454,8 @@
 			isa = PBXGroup;
 			children = (
 				534BC83825CCC83700964D82 /* LibraryViewController.swift */,
-				538B3EBB25B65BCF00824068 /* ArtistsViewModel.swift */,
 				531EC87C25B24B6B0076973A /* ArtistsViewController.swift */,
+				538B3EBB25B65BCF00824068 /* ArtistsViewModel.swift */,
 				53A0EDD025B5E6DA00B78DAA /* FolderAlbumViewController.swift */,
 				53A0EDC725B5DCF400B78DAA /* TagArtistViewController.swift */,
 				53A0EDCD25B5E2DE00B78DAA /* TagAlbumViewController.swift */,
@@ -2691,7 +2691,7 @@
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Classes\"",
 					"\"$(SRCROOT)\"",
@@ -2759,7 +2759,7 @@
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Classes\"",
 					"\"$(SRCROOT)\"",
