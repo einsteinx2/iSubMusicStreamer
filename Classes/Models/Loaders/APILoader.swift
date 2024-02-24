@@ -67,11 +67,18 @@ class APILoader: CancelableLoader {
     }
     
     func createRequest() -> URLRequest? {
-        return nil
+        fatalError("[APILoader \(type)] createRequest function MUST be overridden")
     }
     
     func startLoad() {
         guard let request = createRequest() else { return }
+        
+        // Optional debug logging
+        if Debug.apiRequests {
+            let urlString = request.url?.absoluteString ?? ""
+            let httpBodyString = String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "(failed to convert request body data to string)"
+            DDLogInfo("[APILoader \(type)] request url: \(urlString)  body: \(httpBodyString)")
+        }
         
         // Cancel any existing request
         cancelLoad()
@@ -79,13 +86,17 @@ class APILoader: CancelableLoader {
         // Load the API endpoint
         dataTask = Self.sharedSession.dataTask(with: request) { data, response, error in
             if let error = error {
-                DDLogError("[SUSLoader] loader type: \(self.type.rawValue) failed: \(error)")
+                DDLogError("[APILoader \(self.type)] failed: \(error)")
                 self.informDelegateLoadingFailed(error: error)
             } else if let data = data {
-                DDLogVerbose("[SUSLoader] loader type: \(self.type.rawValue) response:\n\(String(data: data, encoding: .utf8) ?? "Failed to convert data to string.")")
+                // Optional debug logging
+                if Debug.apiResponses {
+                    let dataString = String(data: data, encoding: .utf8) ?? "(failed to convert response data to string)"
+                    DDLogInfo("[APILoader \(self.type)] response: \(dataString)")
+                }
                 self.processResponse(data: data)
             } else {
-                DDLogError("[SUSLoader] loader type: \(self.type.rawValue) did not receive any data")
+                DDLogError("[APILoader \(self.type)] did not receive any data")
                 self.informDelegateLoadingFailed(error: APIError.responseNotXML)
             }
         }
@@ -104,6 +115,7 @@ class APILoader: CancelableLoader {
     }
     
     func processResponse(data: Data) {
+        fatalError("[APILoader \(type)] processResponse function MUST be overridden")
     }
     
     func informDelegateLoadingFinished() {

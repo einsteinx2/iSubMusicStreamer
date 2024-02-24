@@ -31,7 +31,11 @@ func bassLengthProc(userInfo: UnsafeMutableRawPointer?) -> QWORD {
         let bassStream: BassStream = Bridging.bridge(ptr: userInfo)
         
         let length = bassStream.fileSize
-        DDLogInfo("[bassLengthProc] checking length: \(length) for song: \(bassStream.song)")
+        
+        if Debug.audioEngine {
+            DDLogInfo("[bassLengthProc] checking length: \(length) for song: \(bassStream.song)")
+        }
+        
         return length
     }
 }
@@ -51,7 +55,11 @@ func bassSeekProc(offset: QWORD, userInfo: UnsafeMutableRawPointer?) -> Int32 {
         let bassStream: BassStream = Bridging.bridge(ptr: userInfo)
         
         let success = bassStream.seek(to: offset)
-        DDLogInfo("[bassSeekProc] seeking to \(offset) success: \(success)")
+        
+        if Debug.audioEngine {
+            DDLogInfo("[bassSeekProc] seeking to \(offset) success: \(success)")
+        }
+        
         return success ? 1 : 0
     }
 }
@@ -90,7 +98,9 @@ func bassEndSyncProc(handle: HSYNC, channel: DWORD, data: DWORD, userInfo: Unsaf
     BASS_SetDevice(Bass.outputDeviceNumber)
     
     autoreleasepool {
-        DDLogInfo("[bassEndSyncProc] Stream End Callback called")
+        if Debug.audioEngine {
+            DDLogInfo("[bassEndSyncProc] Stream End Callback called")
+        }
         
         let bassStream: BassStream = Bridging.bridge(ptr: userInfo)
         guard let player = bassStream.player else { return }

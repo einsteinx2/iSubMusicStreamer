@@ -120,7 +120,9 @@ final class StreamHandler: NSObject, Codable {
             downloadsManager.clearTempCache()
         }
         
-        DDLogInfo("[StreamHandler] \(super.description) start(resume: \(resume) for: \(song)")
+        if Debug.streamManager {
+            DDLogInfo("[StreamHandler] \(super.description) start(resume: \(resume) for: \(song)")
+        }
         
         totalBytesTransferred = 0
         bytesTransfered = 0
@@ -209,7 +211,9 @@ final class StreamHandler: NSObject, Codable {
         
         dataTask = session.dataTask(with: request)
         dataTask?.resume()
-        DDLogInfo("[StreamHandler] \(super.description) Stream handler connection started successfully for \(song)")
+        if Debug.streamManager {
+            DDLogInfo("[StreamHandler] \(super.description) Stream handler connection started successfully for \(song)")
+        }
         
         if !isTempCache {
             // TODO: implement this - error handling
@@ -225,7 +229,9 @@ final class StreamHandler: NSObject, Codable {
         isDownloading = false
         
         if let dataTask = dataTask {
-            DDLogInfo("[StreamHandler] Stream handler request canceled for \(song)")
+            if Debug.streamManager {
+                DDLogInfo("[StreamHandler] Stream handler request canceled for \(song)")
+            }
             dataTask.cancel()
             self.dataTask = nil
         }
@@ -264,7 +270,9 @@ extension StreamHandler: URLSessionDataDelegate {
     }
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
-        DDLogInfo("[StreamHandler] Stream handler didReceiveResponse for \(song)")
+        if Debug.streamManager {
+            DDLogInfo("[StreamHandler] Stream handler didReceiveResponse for \(song)")
+        }
         
         if let response = response as? HTTPURLResponse {
             if response.statusCode >= 500 {
@@ -322,7 +330,7 @@ extension StreamHandler: URLSessionDataDelegate {
                 bytesTransfered = 0
             }
         } else {
-            DDLogInfo("[StreamHandler] received data but file handle was nil for \(song)")
+            DDLogError("[StreamHandler] received data but file handle was nil for \(song)")
             if dataTask.state != .canceling {
                 // There is no file handle for some reason, cancel the connection
                 dataTask.cancel()
@@ -357,7 +365,9 @@ extension StreamHandler: URLSessionDataDelegate {
         if let error = error {
             DispatchQueue.main.async { self.connectionFailed(error: error) }
         } else {
-            DDLogInfo("[StreamHandler] Stream handler didFinishLoadingInternal for \(song)")
+            if Debug.streamManager {
+                DDLogInfo("[StreamHandler] Stream handler didFinishLoadingInternal for \(song)")
+            }
             
             // Check to see if we're at the contentLength (to allow some leeway for contentLength estimation of transcoded songs)
             if let contentLength = contentLength, song.localFileSize < contentLength && numberOfContentLengthFailures < maxContentLengthFailures {

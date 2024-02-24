@@ -15,9 +15,7 @@ final class BassStream: Equatable, CustomStringConvertible {
     var channelCount = 0
     var sampleRate = 0
     
-    // TODO: Get rid of this reference
     weak var player: BassPlayer?
-    // TODO: Get rid of these properties (or greatly simplify)
     var shouldWaitForData = false
     var isWaiting = false
     var shouldBreakWaitLoop = false

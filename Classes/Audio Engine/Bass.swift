@@ -65,7 +65,9 @@ struct Bass {
         BASS_ChannelGetInfo(channel, &i)
         let bytes = BASS_ChannelGetLength(channel, UInt32(BASS_POS_BYTE))
         let time = BASS_ChannelBytes2Seconds(channel, bytes)
-        DDLogVerbose("channel type = \(i.ctype) (\(self.formatForChannel(channel)))\nlength = \(bytes) (seconds: \(time)  flags: \(i.flags)  freq: \(i.freq)  origres: \(i.origres)")
+        if Debug.audioEngine {
+            DDLogInfo("channel type = \(i.ctype) (\(self.formatForChannel(channel)))\nlength = \(bytes) (seconds: \(time)  flags: \(i.flags)  freq: \(i.freq)  origres: \(i.origres)")
+        }
     }
     
     static func formatForChannel(_ channel: HSTREAM) -> String {

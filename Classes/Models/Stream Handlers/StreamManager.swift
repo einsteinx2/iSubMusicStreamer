@@ -138,7 +138,9 @@ final class StreamManager {
         guard let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == song else { return }
         // TODO: Why is this checking if the DownloadQueue is downloading?
         if currentQueuedSong != song && !song.isFullyCached && !song.isTempCached && downloadQueue.isDownloading {
-            DDLogInfo("[StreamManager] Removing song from cached songs table: \(song)")
+            if Debug.streamManager {
+                DDLogInfo("[StreamManager] Removing song from cached songs table: \(song)")
+            }
             _ = store.deleteDownloadedSong(song: song)
         }
     }
@@ -227,7 +229,9 @@ final class StreamManager {
     func start(handler: StreamHandler, resume: Bool) {
         // As an added check, verify that this handler is still in the stack
         guard isInQueue(song: handler.song) else { return }
-        DDLogInfo("[StreamManager] starting handler \(handler) resume: \(resume), handlerStack: \(handlerStack)")
+        if Debug.streamManager {
+            DDLogInfo("[StreamManager] starting handler \(handler) resume: \(resume), handlerStack: \(handlerStack)")
+        }
         if downloadQueue.isDownloading, let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == handler.song {
             // This song is already being downloaded by the download queue, so just start the player
             streamHandlerStartPlayback(handler: handler)
@@ -264,7 +268,9 @@ final class StreamManager {
             guard let data = UserDefaults.standard.object(forKey: handlerStackKey) as? Data else { return }
             handlerStack = try JSONDecoder().decode(from: data)
             handlerStack.forEach { $0.delegate = self }
-            DDLogInfo("[StreamManager] loaded handler stack \(handlerStack)")
+            if Debug.streamManager {
+                DDLogInfo("[StreamManager] loaded handler stack \(handlerStack)")
+            }
         } catch {
             DDLogError("[StreamManager] saveHandlerStack: failed to unarchive handler stack \(error)")
         }
@@ -273,7 +279,9 @@ final class StreamManager {
     // MARK: Handler Stealing
     
     func stealForDownloadQueue(handler: StreamHandler) {
-        DDLogInfo("[StreamManager] download queue manager stole handler for song \(handler.song)")
+        if Debug.streamManager {
+            DDLogInfo("[StreamManager] download queue manager stole handler for song \(handler.song)")
+        }
         handlerStack.removeAll { $0 == handler }
         saveHandlerStack()
         fillStreamQueue()
@@ -322,7 +330,9 @@ final class StreamManager {
             }
         }
         
-        DDLogInfo("[StreamManager] fillStreamQueue: handlerStack: \(handlerStack)")
+        if Debug.streamManager {
+            DDLogInfo("[StreamManager] fillStreamQueue: handlerStack: \(handlerStack)")
+        }
     }
     
     @objc private func fillStreamQueue() {
@@ -422,7 +432,9 @@ extension StreamManager: StreamHandlerDelegate {
             if downloadQueue.isInQueue(song: handler.song) {
                 _ = store.removeFromDownloadQueue(song: handler.song)
             }
-            DDLogInfo("[StreamManager] Marking download finished for \(handler.song)")
+            if Debug.streamManager {
+                DDLogInfo("[StreamManager] Marking download finished for \(handler.song)")
+            }
             _ = store.update(downloadFinished: true, song: handler.song)
         }
         

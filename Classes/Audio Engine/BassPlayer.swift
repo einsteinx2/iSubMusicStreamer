@@ -223,7 +223,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         do {
             try AVAudioSession.sharedInstance().setActive(false)
         } catch {
-            DDLogError("[BassGaplessPlayer] Failed to deactivate audio session for audio playback: \(error)")
+            DDLogError("[BassPlayer] Failed to deactivate audio session for audio playback: \(error)")
         }
         
         NotificationCenter.postOnMainThread(name: Notifications.bassFreed)
@@ -240,13 +240,13 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         do {
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
-            DDLogError("[BassGaplessPlayer] Failed to activate audio session for audio playback: \(error)")
+            DDLogError("[BassPlayer] Failed to activate audio session for audio playback: \(error)")
         }
         
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
         } catch {
-            DDLogError("[BassGaplessPlayer] Failed to set audio session category/mode for audio playback: \(error)")
+            DDLogError("[BassPlayer] Failed to set audio session category/mode for audio playback: \(error)")
         }
         
         streamGcdQueue.async { [unowned self] in
@@ -301,12 +301,12 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
                 if settings.isOfflineMode {
                     moveToNextSong()
                 } else if !song.fileExists {
-                    DDLogError("[BassGaplessPlayer] Stream for song \(song) failed, file is not on disk, so retrying the song");
+                    DDLogError("[BassPlayer] Stream for song \(song) failed, file is not on disk, so retrying the song");
                     _ = store.deleteDownloadedSong(song: song)
                     playQueue.playCurrentSong()
                 } else {
                     // Failed to create the stream, retrying
-                    DDLogError("[BassGaplessPlayer] ------failed to create stream, retrying in 2 seconds------")
+                    DDLogError("[BassPlayer] ------failed to create stream, retrying in 2 seconds------")
                     
                     cancelRetrySongOperation()
                     
@@ -331,14 +331,17 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         // Make sure we're using the right device
         BASS_SetDevice(Bass.outputDeviceNumber)
         
-        DDLogInfo("[Bass] preparing stream for \(song) file: \(song.currentPath)")
+        if Debug.audioEngine {
+            DDLogInfo("[BassPlayer] preparing stream for \(song) file: \(song.currentPath)")
+        }
+        
         guard song.fileExists else {
-            DDLogError("[Bass] failed to create stream because file doesn't exist for song: \(song) file: \(song.currentPath)")
+            DDLogError("[BassPlayer] failed to create stream because file doesn't exist for song: \(song) file: \(song.currentPath)")
             return nil
         }
 
         guard let bassStream = BassStream(song: song) else {
-            DDLogError("[Bass] failed to create stream because failed to create BassStream object for song: \(song) file: \(song.currentPath)")
+            DDLogError("[BassPlayer] failed to create stream because failed to create BassStream object for song: \(song) file: \(song.currentPath)")
             return nil
         }
 
@@ -356,20 +359,20 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         // First check if the stream failed because of a BASS_Init error
         if fileStream == 0 && BASS_ErrorGetCode() == BASS_ERROR_INIT {
             // Retry the regular hardware sampling stream
-            DDLogError("[Bass] Failed to create stream for \(song) with hardware sampling because BASS is not initialized, initializing BASS and trying again with hardware sampling")
+            DDLogError("[BassPlayer] Failed to create stream for \(song) with hardware sampling because BASS is not initialized, initializing BASS and trying again with hardware sampling")
             initializeOutput()
             fileStream = createStream()
         }
         
         if fileStream == 0 {
-            DDLogError("[Bass] Failed to create stream for \(song) with hardware sampling, trying again with software sampling")
+            DDLogError("[BassPlayer] Failed to create stream for \(song) with hardware sampling, trying again with software sampling")
             Bass.logCurrentError()
             fileStream = createStream(softwareDecoding: true)
         }
         
         guard fileStream != 0 else {
             // Failed to create the stream
-            DDLogError("[Bass] failed to create stream for song: \(song) file: \(song.currentPath)")
+            DDLogError("[BassPlayer] failed to create stream for song: \(song) file: \(song.currentPath)")
             Bass.logCurrentError()
             return nil
         }
@@ -390,9 +393,12 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         // Add stream to queue
         synchronized(streamQueueSync) {
             streamQueue.append(bassStream)
-            print("\n\nDEBUG streamQueue count: \(streamQueue.count)")
-            for stream in streamQueue {
-                print("DEBUG \(stream)")
+            if Debug.audioEngineStreamQueue {
+                DDLogDebug("\n\n[BassPlayer] streamQueue count: \(streamQueue.count)")
+                for stream in streamQueue {
+                    DDLogDebug("[BassPlayer] \(stream)")
+                }
+                DDLogDebug("\n\n")
             }
         }
 
@@ -428,7 +434,10 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         guard let interruptionType = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? AVAudioSession.InterruptionType else { return }
         
         if interruptionType == .began {
-            DDLogInfo("[BassGaplessPlayer] audio session begin interruption")
+            if Debug.audioEngine {
+                DDLogInfo("[BassPlayer] audio session begin interruption")
+            }
+            
             if isPlaying {
                 shouldResumeFromInterruption = true
                 pause()
@@ -436,7 +445,10 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
                 shouldResumeFromInterruption = false
             }
         } else if interruptionType == .ended {
-            DDLogInfo("[BassGaplessPlayer] audio session interruption ended, isPlaying: \(isPlaying) isMainThread: \(Thread.isMainThread)")
+            if Debug.audioEngine {
+                DDLogInfo("[BassPlayer] audio session interruption ended, isPlaying: \(isPlaying) isMainThread: \(Thread.isMainThread)")
+            }
+            
             let interruptionOptions = notification.userInfo?[AVAudioSessionInterruptionOptionKey] as? AVAudioSession.InterruptionOptions
             if let interruptionOptions = interruptionOptions, interruptionOptions == .shouldResume {
                 playPause()
@@ -502,7 +514,9 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
                 NotificationCenter.postOnMainThread(name: Notifications.songPlaybackEnded)
                 
                 if isPlaying {
-                    DDLogInfo("[BassGaplessPlayer] songEnded: self.isPlaying = YES")
+                    if Debug.audioEngine {
+                        DDLogInfo("[BassPlayer] songEnded: self.isPlaying = YES")
+                    }
                     startSecondsOffset = 0
                     startByteOffset = 0
                     
@@ -562,8 +576,8 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
 
                             NSInteger neededSize = size + bytesToWait;
 
-                            DDLogInfo(@"[BassGaplessPlayer] AUDIO ENGINE - calculating wait, bitrate: %ld, recentBytesPerSec: %ld, bytesToWait: %ld", (long)bitrate, (long)handler.recentDownloadSpeedInBytesPerSec, (long)bytesToWait);
-                            DDLogInfo(@"[BassGaplessPlayer] AUDIO ENGINE - waiting for %ld, neededSize: %ld", (long)bytesToWait, (long)neededSize);
+                            DDLogInfo(@"[BassPlayer] AUDIO ENGINE - calculating wait, bitrate: %ld, recentBytesPerSec: %ld, bytesToWait: %ld", (long)bitrate, (long)handler.recentDownloadSpeedInBytesPerSec, (long)bytesToWait);
+                            DDLogInfo(@"[BassPlayer] AUDIO ENGINE - waiting for %ld, neededSize: %ld", (long)bytesToWait, (long)neededSize);
 
                             // Sleep for 10000 microseconds, or 1/100th of a second
                             static const QWORD sleepTime = 10000;
@@ -607,7 +621,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
                                     }
                                 }
                             }
-                            DDLogInfo(@"[BassGaplessPlayer] done waiting");
+                            DDLogInfo(@"[BassPlayer] done waiting");
                         }
                     }
 
