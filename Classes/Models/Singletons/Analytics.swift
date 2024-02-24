@@ -31,7 +31,7 @@ final class Analytics {
     }
     
     func setup() {
-        loadFlurryAnalytics()
+//        loadFlurryAnalytics()
     }
     
     func log(event: EventType) {
@@ -39,27 +39,27 @@ final class Analytics {
     }
     
     fileprivate func logEvent(name: String) {
-        Flurry.logEvent(name)
+        //Flurry.logEvent(name)
     }
     
-    private func loadFlurryAnalytics() {
-        var apiKey: String? = nil
-        #if DEBUG
-            apiKey = nil
-        #elseif RELEASE
-            apiKey = "3KK4KKD2PSEU5APF7PNX"
-        #elseif BETA
-            apiKey = "KNN9DUXQEENZUG4Q12UA"
-        #endif
-        
-        if let apiKey = apiKey {
-            Flurry.startSession(apiKey)
-            
-            // Send basic device model and OS information
-            let parameters = ["FirmwareVersion": UIDevice.completeOSVersion, "HardwareVersion": UIDevice.deviceModel]
-            Flurry.logEvent("DeviceInfo", withParameters: parameters)
-        }
-    }
+//    private func loadFlurryAnalytics() {
+//        var apiKey: String? = nil
+//        #if DEBUG
+//            apiKey = nil
+//        #elseif RELEASE
+//            apiKey = "3KK4KKD2PSEU5APF7PNX"
+//        #elseif BETA
+//            apiKey = "KNN9DUXQEENZUG4Q12UA"
+//        #endif
+//        
+//        if let apiKey = apiKey {
+//            Flurry.startSession(apiKey)
+//            
+//            // Send basic device model and OS information
+//            let parameters = ["FirmwareVersion": UIDevice.completeOSVersion, "HardwareVersion": UIDevice.deviceModel]
+//            Flurry.logEvent("DeviceInfo", withParameters: parameters)
+//        }
+//    }
 }
 
 @objc final class Analytics_ObjCDeleteMe: NSObject {

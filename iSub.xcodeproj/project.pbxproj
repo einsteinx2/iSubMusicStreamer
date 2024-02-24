@@ -174,7 +174,6 @@
 		536C891425BF93FF008FE1AC /* ServersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C891225BF93FF008FE1AC /* ServersViewController.swift */; };
 		536C8DEE26338EAA007B81FB /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8DED26338EAA007B81FB /* Analytics.swift */; };
 		536C8DEF26338FAF007B81FB /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8DED26338EAA007B81FB /* Analytics.swift */; };
-		536C8DFE26339620007B81FB /* libFlurry_11.1.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148C42559EAAF004AAC3F /* libFlurry_11.1.1.a */; };
 		536C8E0026349B46007B81FB /* UIView+EnableDisable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8DFF26349B45007B81FB /* UIView+EnableDisable.swift */; };
 		536C8E0126349B47007B81FB /* UIView+EnableDisable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8DFF26349B45007B81FB /* UIView+EnableDisable.swift */; };
 		536C8E032634A1F5007B81FB /* CustomUITableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8E022634A1F4007B81FB /* CustomUITableViewController.swift */; };
@@ -269,9 +268,6 @@
 		538C8FEA2560C7AB005D6CA9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */; };
 		538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */; };
 		539148BA2559E597004AAC3F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148B92559E597004AAC3F /* CoreServices.framework */; };
-		539148C52559EAAF004AAC3F /* libFlurry_11.1.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148C42559EAAF004AAC3F /* libFlurry_11.1.1.a */; };
-		539148D02559EB1D004AAC3F /* FlurryEmpty.m in Sources */ = {isa = PBXBuildFile; fileRef = 539148CE2559EB1D004AAC3F /* FlurryEmpty.m */; };
-		539148D12559EB1D004AAC3F /* FlurryEmpty.m in Sources */ = {isa = PBXBuildFile; fileRef = 539148CE2559EB1D004AAC3F /* FlurryEmpty.m */; };
 		539148E02559FEFD004AAC3F /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 539148DF2559FEFD004AAC3F /* Launch Screen.storyboard */; };
 		5398F26D11DA61DA00007870 /* OptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5398F26B11DA61DA00007870 /* OptionsViewController.m */; };
 		539D32D825A8E07E00F53797 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D32D725A8E07E00F53797 /* Server.swift */; };
@@ -764,14 +760,6 @@
 		539148A72559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/EqualizerViewController.xib; sourceTree = "<group>"; };
 		539148A82559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OptionsViewController.xib; sourceTree = "<group>"; };
 		539148B92559E597004AAC3F /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
-		539148C42559EAAF004AAC3F /* libFlurry_11.1.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_11.1.1.a; sourceTree = "<group>"; };
-		539148C72559EAC5004AAC3F /* Flurry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
-		539148CA2559EB1C004AAC3F /* FlurrySKAdNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurrySKAdNetwork.h; sourceTree = "<group>"; };
-		539148CB2559EB1C004AAC3F /* FlurryUserProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryUserProperties.h; sourceTree = "<group>"; };
-		539148CC2559EB1D004AAC3F /* FlurryConsent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryConsent.h; sourceTree = "<group>"; };
-		539148CD2559EB1D004AAC3F /* FlurrySessionBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurrySessionBuilder.h; sourceTree = "<group>"; };
-		539148CE2559EB1D004AAC3F /* FlurryEmpty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlurryEmpty.m; sourceTree = "<group>"; };
-		539148CF2559EB1D004AAC3F /* FlurryCCPA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryCCPA.h; sourceTree = "<group>"; };
 		539148DF2559FEFD004AAC3F /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		5398F26A11DA61DA00007870 /* OptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsViewController.h; sourceTree = "<group>"; };
 		5398F26B11DA61DA00007870 /* OptionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionsViewController.m; sourceTree = "<group>"; };
@@ -1019,7 +1007,6 @@
 				536D620B1144495400DFCE56 /* SystemConfiguration.framework in Frameworks */,
 				53B5DB3525D73018006149B6 /* Tabman in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
-				539148C52559EAAF004AAC3F /* libFlurry_11.1.1.a in Frameworks */,
 				5381884C25A67A2F00C59CDE /* Resolver in Frameworks */,
 				53A6AA5B2B897D7F007ABD7A /* bassflac.xcframework in Frameworks */,
 				53A6AA552B897D7E007ABD7A /* bass_mpc.xcframework in Frameworks */,
@@ -1038,7 +1025,6 @@
 				53A6AA482B897D52007ABD7A /* basswv.xcframework in Frameworks */,
 				53A6AA012B897728007ABD7A /* CocoaLumberjack in Frameworks */,
 				53A6AA4A2B897D52007ABD7A /* bassflac.xcframework in Frameworks */,
-				536C8DFE26339620007B81FB /* libFlurry_11.1.1.a in Frameworks */,
 				5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */,
 				53A6A9FA2B8973AB007ABD7A /* CwlCatchException in Frameworks */,
 				5367C6D51EA92D2400B1C242 /* libz.tbd in Frameworks */,
@@ -1128,7 +1114,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				53FE37EB1EA961780058B925 /* Flurry */,
 				53A6AA072B89797C007ABD7A /* GCDWebDAVServer */,
 				53FE676E256DD0F00015FC83 /* GCDWebServer */,
 				53E03D0B25C26FBD0043355F /* GTMNSString */,
@@ -1669,22 +1654,6 @@
 			path = Frameworks/libBASS;
 			sourceTree = "<group>";
 		};
-		53FE37EB1EA961780058B925 /* Flurry */ = {
-			isa = PBXGroup;
-			children = (
-				539148C72559EAC5004AAC3F /* Flurry.h */,
-				539148CF2559EB1D004AAC3F /* FlurryCCPA.h */,
-				539148CC2559EB1D004AAC3F /* FlurryConsent.h */,
-				539148CE2559EB1D004AAC3F /* FlurryEmpty.m */,
-				539148CD2559EB1D004AAC3F /* FlurrySessionBuilder.h */,
-				539148CA2559EB1C004AAC3F /* FlurrySKAdNetwork.h */,
-				539148CB2559EB1C004AAC3F /* FlurryUserProperties.h */,
-				539148C42559EAAF004AAC3F /* libFlurry_11.1.1.a */,
-			);
-			name = Flurry;
-			path = Frameworks/Flurry;
-			sourceTree = "<group>";
-		};
 		53FE38011EA961970058B925 /* RaptureXML */ = {
 			isa = PBXGroup;
 			children = (
@@ -2067,7 +2036,6 @@
 				537C93F925B127BF00175DF6 /* UIViewController+IsModal.swift in Sources */,
 				53ED671F25B74BD40002BFAF /* DownloadedIndicatorView.swift in Sources */,
 				53FE6798256DD0F00015FC83 /* GCDWebServerErrorResponse.m in Sources */,
-				539148D02559EB1D004AAC3F /* FlurryEmpty.m in Sources */,
 				53E03CF725C1F6EF0043355F /* APIError.swift in Sources */,
 				53ED673125B780070002BFAF /* UIApplication+Helper.swift in Sources */,
 				53A0EDC825B5DCF400B78DAA /* TagArtistViewController.swift in Sources */,
@@ -2330,7 +2298,6 @@
 				5347A1E5256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */,
 				53E03D1225C279AC0043355F /* SnappySlider.swift in Sources */,
 				531EC85D25B1F43A0076973A /* ServerPlaylistViewController.swift in Sources */,
-				539148D12559EB1D004AAC3F /* FlurryEmpty.m in Sources */,
 				53FE38AC1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
 				53ED674725B8976F0002BFAF /* CustomStringConvertable+Default.swift in Sources */,
 				536C8E042634A1F5007B81FB /* CustomUITableViewController.swift in Sources */,
