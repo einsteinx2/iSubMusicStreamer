@@ -62,6 +62,7 @@ func percentY(gain: Float) -> CGFloat {
     }
     
     @objc init(eqValue: BassParamEqValue, parentSize: CGSize) {
+        print("BEN eqValue.parameters: \(eqValue.parameters)\n")
         self._eqValue = eqValue
         self.parentSize = parentSize
         let x = percentX(frequency: eqValue.parameters.fCenter)

@@ -9,14 +9,14 @@
 #pragma once
 
 // User Interface Components
-#import "EqualizerViewController.h"
+#import "EqualizerView.h"
 #import "OptionsViewController.h"
+#import "DDSocialDialog.h"
 
 // Data Model
 #import "SavedSettings.h"
 
 // Audio Engine
-#import "BassEqualizer.h"
 #import "BassPluginLoad.h"
 #import "bass.h"
 #import "bass_fx.h"

@@ -7,10 +7,20 @@
 //
 
 #import "BassEffectDAO.h"
-#import "BassEffectValue.h"
-#import "BassParamEqValue.h"
 #import "SavedSettings.h"
 #import "Swift.h"
+
+#define RANGE_OF_EXPONENTS 9
+#define MAX_GAIN 6
+#define DEFAULT_BANDWIDTH 18
+
+static BASS_DX8_PARAMEQ BASS_DX8_PARAMEQFromPoint(float percentX, float percentY, float bandwidth) {
+    BASS_DX8_PARAMEQ p;
+    p.fCenter = exp2f((percentX * RANGE_OF_EXPONENTS) + 5);
+    p.fGain = (.5 - percentY) * (CGFloat)(MAX_GAIN * 2);;
+    p.fBandwidth = bandwidth;
+    return p;
+}
 
 @implementation BassEffectDAO
 
@@ -89,7 +99,7 @@ NSInteger presetSort(id preset1, id preset2, void *context)
 - (NSDictionary *)userPresets
 {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	return [[defaults objectForKey:@"BassEffectUserPresets"] objectForKey:[@(self.type) stringValue]];
+    return [[defaults objectForKey:@"BassEffectUserPresets"] objectForKey:[@(self.type) stringValue]] ?: @{};
 }
 
 - (NSArray *)userPresetsArray
@@ -165,7 +175,7 @@ NSInteger presetSort(id preset1, id preset2, void *context)
 
 - (NSDictionary *)selectedPreset
 {
-	return [self.presets objectForKey:[@(self.selectedPresetId) stringValue]];
+    return [self.presets objectForKey:[@(self.selectedPresetId) stringValue]];
 }
 
 - (NSArray *)selectedPresetValues
@@ -216,12 +226,10 @@ static CGPoint CGPointFromString(NSString *string)
 		return nil;
 	
 	CGPoint point = CGPointFromString(self.selectedPresetValues[valueIndex]);
-	BassEffectValue  *value = [[BassEffectValue alloc] init];
-	value.type = self.type;
-	value.percentX = point.x;
-	value.percentY = point.y;
-	value.isDefault = [[self.selectedPreset objectForKey:@"isDefault"] boolValue];
-	
+    BassEffectValue *value = [[BassEffectValue alloc] initWithType:self.type
+                                                          percentX:point.x
+                                                          percentY:point.y
+                                                         isDefault:[[self.selectedPreset objectForKey:@"isDefault"] boolValue]];
 	return value;
 }
 

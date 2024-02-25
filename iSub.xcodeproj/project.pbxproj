@@ -12,8 +12,6 @@
 		2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */; };
 		5302DE4125BA2AA00036A9B1 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5302DE4025BA2AA00036A9B1 /* StreamManager.swift */; };
 		5302DE4225BA2AA50036A9B1 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5302DE4025BA2AA00036A9B1 /* StreamManager.swift */; };
-		5306236D14D3295300D320A8 /* EqualizerPathView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306236C14D3295300D320A8 /* EqualizerPathView.m */; };
-		5306236F14D3295300D320A8 /* EqualizerPathView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306236C14D3295300D320A8 /* EqualizerPathView.m */; };
 		530738F41FAF6A72005C2650 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 530738F31FAF6A72005C2650 /* Media.xcassets */; };
 		530738F51FAF6A72005C2650 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 530738F31FAF6A72005C2650 /* Media.xcassets */; };
 		530A16732592468C00E9294E /* FolderArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A16722592468C00E9294E /* FolderArtist.swift */; };
@@ -157,8 +155,6 @@
 		535F824825C0FE950024C82C /* Decoding+Generic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535F824625C0FE950024C82C /* Decoding+Generic.swift */; };
 		535F824A25C1D30C0024C82C /* SubsonicError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535F824925C1D30C0024C82C /* SubsonicError.swift */; };
 		535F824B25C1D30C0024C82C /* SubsonicError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535F824925C1D30C0024C82C /* SubsonicError.swift */; };
-		536585811478920D00FE57A5 /* EqualizerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365857F1478920B00FE57A5 /* EqualizerViewController.m */; };
-		536585831478920D00FE57A5 /* EqualizerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365857F1478920B00FE57A5 /* EqualizerViewController.m */; };
 		5365859314789ADA00FE57A5 /* EqualizerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365859214789AD900FE57A5 /* EqualizerView.m */; };
 		5365859514789ADA00FE57A5 /* EqualizerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365859214789AD900FE57A5 /* EqualizerView.m */; };
 		5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D21EA92D1A00B1C242 /* libxml2.tbd */; };
@@ -178,6 +174,8 @@
 		536C8E0126349B47007B81FB /* UIView+EnableDisable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8DFF26349B45007B81FB /* UIView+EnableDisable.swift */; };
 		536C8E032634A1F5007B81FB /* CustomUITableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8E022634A1F4007B81FB /* CustomUITableViewController.swift */; };
 		536C8E042634A1F5007B81FB /* CustomUITableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8E022634A1F4007B81FB /* CustomUITableViewController.swift */; };
+		536CD55C2B8BA0C300C2BFEC /* NSLocking+Sync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536CD55B2B8BA0C300C2BFEC /* NSLocking+Sync.swift */; };
+		536CD55D2B8BA0C300C2BFEC /* NSLocking+Sync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536CD55B2B8BA0C300C2BFEC /* NSLocking+Sync.swift */; };
 		536D620B1144495400DFCE56 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 536D620A1144495400DFCE56 /* SystemConfiguration.framework */; };
 		5373C69025B6040900CAA859 /* CustomUITabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */; };
 		5373C69125B6040900CAA859 /* CustomUITabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */; };
@@ -211,6 +209,14 @@
 		53762C8D25AD166400476F2D /* StatusLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C8B25AD166400476F2D /* StatusLoader.swift */; };
 		53762C8F25AD1BA200476F2D /* APILoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C8E25AD1BA200476F2D /* APILoader.swift */; };
 		53762C9025AD1BA200476F2D /* APILoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53762C8E25AD1BA200476F2D /* APILoader.swift */; };
+		5376D5B22B8AB2D9000C3184 /* BassEffectValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5376D5B12B8AB2D9000C3184 /* BassEffectValue.swift */; };
+		5376D5B32B8AB2D9000C3184 /* BassEffectValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5376D5B12B8AB2D9000C3184 /* BassEffectValue.swift */; };
+		5376D5B52B8AB430000C3184 /* BassEffectDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5376D5B42B8AB430000C3184 /* BassEffectDAO.swift */; };
+		5376D5B62B8AB430000C3184 /* BassEffectDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5376D5B42B8AB430000C3184 /* BassEffectDAO.swift */; };
+		5376D5B82B8ABD30000C3184 /* EqualizerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5376D5B72B8ABD30000C3184 /* EqualizerViewController.swift */; };
+		5376D5B92B8ABD30000C3184 /* EqualizerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5376D5B72B8ABD30000C3184 /* EqualizerViewController.swift */; };
+		5376D5BB2B8B8ABD000C3184 /* EqualizerPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5376D5BA2B8B8ABD000C3184 /* EqualizerPathView.swift */; };
+		5376D5BC2B8B8ABD000C3184 /* EqualizerPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5376D5BA2B8B8ABD000C3184 /* EqualizerPathView.swift */; };
 		537AE8142622491E0073DEF2 /* AsyncBlockOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537AE8132622491E0073DEF2 /* AsyncBlockOperation.swift */; };
 		537AE8152622491E0073DEF2 /* AsyncBlockOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537AE8132622491E0073DEF2 /* AsyncBlockOperation.swift */; };
 		537AE81A26224A090073DEF2 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537AE81926224A090073DEF2 /* AsyncOperation.swift */; };
@@ -358,6 +364,10 @@
 		53A6AA622B897D7F007ABD7A /* basswv.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA372B897D51007ABD7A /* basswv.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		53A6AA642B8A8A22007ABD7A /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A6AA632B8A8A22007ABD7A /* Debug.swift */; };
 		53A6AA652B8A8A22007ABD7A /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A6AA632B8A8A22007ABD7A /* Debug.swift */; };
+		53A6AA672B8A98B6007ABD7A /* BassParamEqValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A6AA662B8A98B6007ABD7A /* BassParamEqValue.swift */; };
+		53A6AA682B8A98B6007ABD7A /* BassParamEqValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A6AA662B8A98B6007ABD7A /* BassParamEqValue.swift */; };
+		53A6AA6A2B8AA066007ABD7A /* BassEqualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A6AA692B8AA066007ABD7A /* BassEqualizer.swift */; };
+		53A6AA6B2B8AA066007ABD7A /* BassEqualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A6AA692B8AA066007ABD7A /* BassEqualizer.swift */; };
 		53B38C12147593FA00CD8A99 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B38C11147593F900CD8A99 /* AVFoundation.framework */; };
 		53B38C141475940700CD8A99 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B38C11147593F900CD8A99 /* AVFoundation.framework */; };
 		53B5DB3525D73018006149B6 /* Tabman in Frameworks */ = {isa = PBXBuildFile; productRef = 53B5DB3425D73018006149B6 /* Tabman */; };
@@ -510,12 +520,6 @@
 		53FE356F1EA961540058B925 /* UIView+ObjCFrameHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */; };
 		53FE36E61EA961720058B925 /* BassEffectDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36271EA961710058B925 /* BassEffectDAO.m */; };
 		53FE36E81EA961720058B925 /* BassEffectDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36271EA961710058B925 /* BassEffectDAO.m */; };
-		53FE36E91EA961720058B925 /* BassEffectValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36291EA961710058B925 /* BassEffectValue.m */; };
-		53FE36EB1EA961720058B925 /* BassEffectValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36291EA961710058B925 /* BassEffectValue.m */; };
-		53FE36EC1EA961720058B925 /* BassEqualizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE362B1EA961710058B925 /* BassEqualizer.m */; };
-		53FE36EE1EA961720058B925 /* BassEqualizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE362B1EA961710058B925 /* BassEqualizer.m */; };
-		53FE36F21EA961720058B925 /* BassParamEqValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36301EA961710058B925 /* BassParamEqValue.m */; };
-		53FE36F41EA961720058B925 /* BassParamEqValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36301EA961710058B925 /* BassParamEqValue.m */; };
 		53FE37371EA961720058B925 /* ISMSServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36651EA961720058B925 /* ISMSServer.m */; };
 		53FE37391EA961720058B925 /* ISMSServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36651EA961720058B925 /* ISMSServer.m */; };
 		53FE37881EA961720058B925 /* SavedSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A01EA961720058B925 /* SavedSettings.m */; };
@@ -624,8 +628,6 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		5302DE4025BA2AA00036A9B1 /* StreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamManager.swift; sourceTree = "<group>"; };
-		5306236B14D3295300D320A8 /* EqualizerPathView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerPathView.h; sourceTree = "<group>"; };
-		5306236C14D3295300D320A8 /* EqualizerPathView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EqualizerPathView.m; sourceTree = "<group>"; };
 		530738F31FAF6A72005C2650 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		530A16722592468C00E9294E /* FolderArtist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderArtist.swift; sourceTree = "<group>"; };
 		530A1678259255D200E9294E /* FolderAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAlbum.swift; sourceTree = "<group>"; };
@@ -701,8 +703,6 @@
 		535F824325C0F64C0024C82C /* RuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeError.swift; sourceTree = "<group>"; };
 		535F824625C0FE950024C82C /* Decoding+Generic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decoding+Generic.swift"; sourceTree = "<group>"; };
 		535F824925C1D30C0024C82C /* SubsonicError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubsonicError.swift; sourceTree = "<group>"; };
-		5365857E1478920B00FE57A5 /* EqualizerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerViewController.h; sourceTree = "<group>"; };
-		5365857F1478920B00FE57A5 /* EqualizerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EqualizerViewController.m; sourceTree = "<group>"; };
 		5365859114789AD800FE57A5 /* EqualizerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerView.h; sourceTree = "<group>"; };
 		5365859214789AD900FE57A5 /* EqualizerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EqualizerView.m; sourceTree = "<group>"; };
 		5367C6D21EA92D1A00B1C242 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -715,6 +715,7 @@
 		536C8DED26338EAA007B81FB /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		536C8DFF26349B45007B81FB /* UIView+EnableDisable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+EnableDisable.swift"; sourceTree = "<group>"; };
 		536C8E022634A1F4007B81FB /* CustomUITableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUITableViewController.swift; sourceTree = "<group>"; };
+		536CD55B2B8BA0C300C2BFEC /* NSLocking+Sync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLocking+Sync.swift"; sourceTree = "<group>"; };
 		536D620A1144495400DFCE56 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5373C68F25B6040900CAA859 /* CustomUITabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUITabBarController.swift; sourceTree = "<group>"; };
 		5373C69525B6064D00CAA859 /* CustomUINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUINavigationController.swift; sourceTree = "<group>"; };
@@ -732,6 +733,10 @@
 		53762C8825AD122500476F2D /* NowPlayingLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingLoader.swift; sourceTree = "<group>"; };
 		53762C8B25AD166400476F2D /* StatusLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusLoader.swift; sourceTree = "<group>"; };
 		53762C8E25AD1BA200476F2D /* APILoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APILoader.swift; sourceTree = "<group>"; };
+		5376D5B12B8AB2D9000C3184 /* BassEffectValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassEffectValue.swift; sourceTree = "<group>"; };
+		5376D5B42B8AB430000C3184 /* BassEffectDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassEffectDAO.swift; sourceTree = "<group>"; };
+		5376D5B72B8ABD30000C3184 /* EqualizerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualizerViewController.swift; sourceTree = "<group>"; };
+		5376D5BA2B8B8ABD000C3184 /* EqualizerPathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualizerPathView.swift; sourceTree = "<group>"; };
 		537AE8132622491E0073DEF2 /* AsyncBlockOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncBlockOperation.swift; sourceTree = "<group>"; };
 		537AE81926224A090073DEF2 /* AsyncOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
 		537AE81C26224C360073DEF2 /* AsyncLoaderOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLoaderOperation.swift; sourceTree = "<group>"; };
@@ -812,6 +817,8 @@
 		53A6AA412B897D51007ABD7A /* bassmix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bassmix.h; sourceTree = "<group>"; };
 		53A6AA422B897D51007ABD7A /* basswv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basswv.h; sourceTree = "<group>"; };
 		53A6AA632B8A8A22007ABD7A /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
+		53A6AA662B8A98B6007ABD7A /* BassParamEqValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassParamEqValue.swift; sourceTree = "<group>"; };
+		53A6AA692B8AA066007ABD7A /* BassEqualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassEqualizer.swift; sourceTree = "<group>"; };
 		53B38C11147593F900CD8A99 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		53B9C48225A789D3007E9E3C /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
 		53B9C48D25A7A51F007E9E3C /* MediaFolderStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFolderStore.swift; sourceTree = "<group>"; };
@@ -893,12 +900,6 @@
 		53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ObjCFrameHelper.m"; sourceTree = "<group>"; };
 		53FE36261EA961710058B925 /* BassEffectDAO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BassEffectDAO.h; sourceTree = "<group>"; };
 		53FE36271EA961710058B925 /* BassEffectDAO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BassEffectDAO.m; sourceTree = "<group>"; };
-		53FE36281EA961710058B925 /* BassEffectValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BassEffectValue.h; sourceTree = "<group>"; };
-		53FE36291EA961710058B925 /* BassEffectValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BassEffectValue.m; sourceTree = "<group>"; };
-		53FE362A1EA961710058B925 /* BassEqualizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BassEqualizer.h; sourceTree = "<group>"; };
-		53FE362B1EA961710058B925 /* BassEqualizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BassEqualizer.m; sourceTree = "<group>"; };
-		53FE362F1EA961710058B925 /* BassParamEqValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BassParamEqValue.h; sourceTree = "<group>"; };
-		53FE36301EA961710058B925 /* BassParamEqValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BassParamEqValue.m; sourceTree = "<group>"; };
 		53FE36641EA961720058B925 /* ISMSServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSServer.h; sourceTree = "<group>"; };
 		53FE36651EA961720058B925 /* ISMSServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSServer.m; sourceTree = "<group>"; };
 		53FE369F1EA961720058B925 /* SavedSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedSettings.h; sourceTree = "<group>"; };
@@ -1366,12 +1367,10 @@
 				5357FE3025C760B7001BDE29 /* BassVisualizer.swift */,
 				53FE36261EA961710058B925 /* BassEffectDAO.h */,
 				53FE36271EA961710058B925 /* BassEffectDAO.m */,
-				53FE36281EA961710058B925 /* BassEffectValue.h */,
-				53FE36291EA961710058B925 /* BassEffectValue.m */,
-				53FE362A1EA961710058B925 /* BassEqualizer.h */,
-				53FE362B1EA961710058B925 /* BassEqualizer.m */,
-				53FE362F1EA961710058B925 /* BassParamEqValue.h */,
-				53FE36301EA961710058B925 /* BassParamEqValue.m */,
+				5376D5B42B8AB430000C3184 /* BassEffectDAO.swift */,
+				5376D5B12B8AB2D9000C3184 /* BassEffectValue.swift */,
+				53A6AA692B8AA066007ABD7A /* BassEqualizer.swift */,
+				53A6AA662B8A98B6007ABD7A /* BassParamEqValue.swift */,
 				5357FE1C25C32C6E001BDE29 /* BassPluginLoad.h */,
 				5357FE1D25C32C6E001BDE29 /* BassPluginLoad.c */,
 			);
@@ -1496,14 +1495,12 @@
 		53752BEA2562CEDE00438636 /* EQ and Visualizer */ = {
 			isa = PBXGroup;
 			children = (
-				5365857E1478920B00FE57A5 /* EqualizerViewController.h */,
-				5365857F1478920B00FE57A5 /* EqualizerViewController.m */,
+				5376D5B72B8ABD30000C3184 /* EqualizerViewController.swift */,
 				533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */,
 				5365859114789AD800FE57A5 /* EqualizerView.h */,
 				5365859214789AD900FE57A5 /* EqualizerView.m */,
 				53CB553E25C915F2004F2BAB /* EqualizerPointView.swift */,
-				5306236B14D3295300D320A8 /* EqualizerPathView.h */,
-				5306236C14D3295300D320A8 /* EqualizerPathView.m */,
+				5376D5BA2B8B8ABD000C3184 /* EqualizerPathView.swift */,
 				53BD84A52566F41F00F7A197 /* ISMSBassVisualType.h */,
 			);
 			path = "EQ and Visualizer";
@@ -1612,6 +1609,7 @@
 				53ED673325B7A1360002BFAF /* String+URLEncode.swift */,
 				5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */,
 				532C624525B6186800185998 /* URL+QueryParameters.swift */,
+				536CD55B2B8BA0C300C2BFEC /* NSLocking+Sync.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -1963,7 +1961,6 @@
 				53246AB6256C975600E11EC4 /* DownloadStatusViewController.swift in Sources */,
 				53CB554E25C9FAAD004F2BAB /* BookmarksViewController.swift in Sources */,
 				530A167F259277E700E9294E /* SearchAllViewController.swift in Sources */,
-				53FE36F21EA961720058B925 /* BassParamEqValue.m in Sources */,
 				531EC87125B22D870076973A /* DownloadedTagArtistsViewController.swift in Sources */,
 				53762C8325AD0EED00476F2D /* ScrobbleLoader.swift in Sources */,
 				53ED675525B8AD0F0002BFAF /* AbstractDownloadsViewController.swift in Sources */,
@@ -1985,11 +1982,12 @@
 				5389479425A4EA9B0078FBAF /* MediaFoldersLoader.swift in Sources */,
 				539D330925AA3B5200F53797 /* TableCellModel.swift in Sources */,
 				535E144125A7D3480039BCAA /* ArtistArt.swift in Sources */,
+				536CD55C2B8BA0C300C2BFEC /* NSLocking+Sync.swift in Sources */,
 				532C624F25B6230600185998 /* ServerChecker.swift in Sources */,
 				53762C8025AD012200476F2D /* ServerPlaylistLoader.swift in Sources */,
 				53C3AB73257DDA1000B35B99 /* LicensesViewController.swift in Sources */,
 				53E03CFD25C213D30043355F /* SongLoader.swift in Sources */,
-				53FE36EC1EA961720058B925 /* BassEqualizer.m in Sources */,
+				53A6AA6A2B8AA066007ABD7A /* BassEqualizer.swift in Sources */,
 				53E03D0025C2330D0043355F /* NSError+Description.swift in Sources */,
 				53762C8625AD105E00476F2D /* NowPlayingSong.swift in Sources */,
 				53FE67AC256DE9600015FC83 /* Defines.swift in Sources */,
@@ -2021,6 +2019,7 @@
 				53D4FCA32599335900C6F1AE /* FolderMetadata.swift in Sources */,
 				53B9C48E25A7A51F007E9E3C /* MediaFolderStore.swift in Sources */,
 				53FE388C1EA961C80058B925 /* GMAppleDouble.m in Sources */,
+				5376D5B82B8ABD30000C3184 /* EqualizerViewController.swift in Sources */,
 				53B9C49725A7A650007E9E3C /* SongStore.swift in Sources */,
 				53CC751725DB59B600D10AB6 /* ContextMenu.swift in Sources */,
 				538B3EBC25B65BCF00824068 /* ArtistsViewModel.swift in Sources */,
@@ -2051,6 +2050,7 @@
 				53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
 				532C625E25B6559A00185998 /* main.swift in Sources */,
 				534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
+				5376D5B52B8AB430000C3184 /* BassEffectDAO.swift in Sources */,
 				531EC85C25B1F43A0076973A /* ServerPlaylistViewController.swift in Sources */,
 				53FE38AA1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
 				53E03D1125C279AC0043355F /* SnappySlider.swift in Sources */,
@@ -2059,6 +2059,7 @@
 				53246AB3256C918500E11EC4 /* LyricsViewController.swift in Sources */,
 				53FE38AD1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
 				532C625225B62F5800185998 /* NetworkMonitor.swift in Sources */,
+				5376D5BB2B8B8ABD000C3184 /* EqualizerPathView.swift in Sources */,
 				536C8E032634A1F5007B81FB /* CustomUITableViewController.swift in Sources */,
 				53D9743A255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */,
 				5357CE9C25B90C5B00FA825A /* Social.swift in Sources */,
@@ -2078,6 +2079,7 @@
 				53FE36E61EA961720058B925 /* BassEffectDAO.m in Sources */,
 				537AE81A26224A090073DEF2 /* AsyncOperation.swift in Sources */,
 				537C93F625B125AE00175DF6 /* PlayQueueViewController.swift in Sources */,
+				53A6AA672B8A98B6007ABD7A /* BassParamEqValue.swift in Sources */,
 				5389479D25A53C7F0078FBAF /* TableSection.swift in Sources */,
 				530A168E259299C800E9294E /* TagArtist.swift in Sources */,
 				53E03D0325C236260043355F /* NSURLError+isCanceledURLRequest.swift in Sources */,
@@ -2125,6 +2127,7 @@
 				531EC88C25B33E5E0076973A /* CountReloadTimeHeader.swift in Sources */,
 				53FE679E256DD0F00015FC83 /* GCDWebServerStreamedResponse.m in Sources */,
 				5373C69625B6064D00CAA859 /* CustomUINavigationController.swift in Sources */,
+				5376D5B22B8AB2D9000C3184 /* BassEffectValue.swift in Sources */,
 				5357FE2525C39F96001BDE29 /* BassPlayer.swift in Sources */,
 				53B9C48325A789D3007E9E3C /* Song.swift in Sources */,
 				53ED673425B7A1360002BFAF /* String+URLEncode.swift in Sources */,
@@ -2153,7 +2156,6 @@
 				53FE38B61EA961C80058B925 /* ZKFileArchive.m in Sources */,
 				53762C8925AD122500476F2D /* NowPlayingLoader.swift in Sources */,
 				535E142625A7B2020039BCAA /* FolderArtistStore.swift in Sources */,
-				536585811478920D00FE57A5 /* EqualizerViewController.m in Sources */,
 				538C8FE125606299005D6CA9 /* RefreshControl.swift in Sources */,
 				537B05BF256B0E4B0008892C /* PadMenuTableCell.swift in Sources */,
 				5373C69025B6040900CAA859 /* CustomUITabBarController.swift in Sources */,
@@ -2167,9 +2169,7 @@
 				531EC85025B1E6420076973A /* LocalPlaylistsViewController.swift in Sources */,
 				531EC87D25B24B6B0076973A /* ArtistsViewController.swift in Sources */,
 				53B9C49425A7A5F9007E9E3C /* TagAlbumStore.swift in Sources */,
-				5306236D14D3295300D320A8 /* EqualizerPathView.m in Sources */,
 				532C624B25B6197E00185998 /* VideoPlayer.swift in Sources */,
-				53FE36E91EA961720058B925 /* BassEffectValue.m in Sources */,
 				5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
 				53D632D925A65CBC004EC117 /* String+Clean.swift in Sources */,
 				534B20E9256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
@@ -2206,7 +2206,6 @@
 				538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53FE38A91EA961C80058B925 /* ZKCDTrailer.m in Sources */,
 				53FE6799256DD0F00015FC83 /* GCDWebServerErrorResponse.m in Sources */,
-				53FE36F41EA961720058B925 /* BassParamEqValue.m in Sources */,
 				535E143925A7C6D60039BCAA /* QuickAlbumsLoader.swift in Sources */,
 				530A1680259277E700E9294E /* SearchAllViewController.swift in Sources */,
 				531EC87225B22D870076973A /* DownloadedTagArtistsViewController.swift in Sources */,
@@ -2233,11 +2232,12 @@
 				539D330A25AA3B5200F53797 /* TableCellModel.swift in Sources */,
 				535E144225A7D3480039BCAA /* ArtistArt.swift in Sources */,
 				53762C8125AD012200476F2D /* ServerPlaylistLoader.swift in Sources */,
+				536CD55D2B8BA0C300C2BFEC /* NSLocking+Sync.swift in Sources */,
 				532C625025B6230600185998 /* ServerChecker.swift in Sources */,
 				53246AB7256C975600E11EC4 /* DownloadStatusViewController.swift in Sources */,
-				53FE36EE1EA961720058B925 /* BassEqualizer.m in Sources */,
 				53E03CFE25C213D30043355F /* SongLoader.swift in Sources */,
 				53762C8725AD105E00476F2D /* NowPlayingSong.swift in Sources */,
+				53A6AA6B2B8AA066007ABD7A /* BassEqualizer.swift in Sources */,
 				53E03D0125C2330D0043355F /* NSError+Description.swift in Sources */,
 				538C8FE225606299005D6CA9 /* RefreshControl.swift in Sources */,
 				53329642255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */,
@@ -2269,6 +2269,7 @@
 				53B9C48F25A7A51F007E9E3C /* MediaFolderStore.swift in Sources */,
 				53B9C49825A7A650007E9E3C /* SongStore.swift in Sources */,
 				53FE38B51EA961C80058B925 /* ZKDefs.m in Sources */,
+				5376D5B92B8ABD30000C3184 /* EqualizerViewController.swift in Sources */,
 				53FE38A31EA961C80058B925 /* ZKArchive.m in Sources */,
 				53CC751825DB59B600D10AB6 /* ContextMenu.swift in Sources */,
 				53762C9025AD1BA200476F2D /* APILoader.swift in Sources */,
@@ -2299,6 +2300,7 @@
 				537AE81E26224C360073DEF2 /* AsyncLoaderOperation.swift in Sources */,
 				53EA2DE3257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
 				5381884325A65F6100C59CDE /* RootListMetadata.swift in Sources */,
+				5376D5B62B8AB430000C3184 /* BassEffectDAO.swift in Sources */,
 				534B20EA256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
 				53FE67A7256DD0F00015FC83 /* GCDWebServerFileRequest.m in Sources */,
 				532C625D25B6559A00185998 /* main.swift in Sources */,
@@ -2307,6 +2309,7 @@
 				531EC85D25B1F43A0076973A /* ServerPlaylistViewController.swift in Sources */,
 				53FE38AC1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
 				53ED674725B8976F0002BFAF /* CustomStringConvertable+Default.swift in Sources */,
+				5376D5BC2B8B8ABD000C3184 /* EqualizerPathView.swift in Sources */,
 				536C8E042634A1F5007B81FB /* CustomUITableViewController.swift in Sources */,
 				537B05C3256B40930008892C /* SongInfoViewController.swift in Sources */,
 				53FE679D256DD0F00015FC83 /* GCDWebServerDataResponse.m in Sources */,
@@ -2326,6 +2329,7 @@
 				53B9C49B25A7A6D7007E9E3C /* GRDB+Helper.swift in Sources */,
 				537AE81B26224A090073DEF2 /* AsyncOperation.swift in Sources */,
 				53BC27E2139AF0DD00A825F1 /* OptionsViewController.m in Sources */,
+				53A6AA682B8A98B6007ABD7A /* BassParamEqValue.swift in Sources */,
 				53FE36E81EA961720058B925 /* BassEffectDAO.m in Sources */,
 				537C93F725B125AE00175DF6 /* PlayQueueViewController.swift in Sources */,
 				53FE67A3256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m in Sources */,
@@ -2373,6 +2377,7 @@
 				53ED673B25B7A4550002BFAF /* Jukebox.swift in Sources */,
 				53ED675925B8B1050002BFAF /* DownloadedFolderAlbumViewController.swift in Sources */,
 				5373C69725B6064D00CAA859 /* CustomUINavigationController.swift in Sources */,
+				5376D5B32B8AB2D9000C3184 /* BassEffectValue.swift in Sources */,
 				5357FE2625C39F96001BDE29 /* BassPlayer.swift in Sources */,
 				53B9C49225A7A5D6007E9E3C /* TagArtistStore.swift in Sources */,
 				53B9C48425A789D3007E9E3C /* Song.swift in Sources */,
@@ -2399,7 +2404,6 @@
 				53ED672925B76FA60002BFAF /* HomeAlbumViewController.swift in Sources */,
 				53FE38B81EA961C80058B925 /* ZKFileArchive.m in Sources */,
 				5357CE9A25B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */,
-				536585831478920D00FE57A5 /* EqualizerViewController.m in Sources */,
 				53762C8A25AD122500476F2D /* NowPlayingLoader.swift in Sources */,
 				5365859514789ADA00FE57A5 /* EqualizerView.m in Sources */,
 				535E142725A7B2020039BCAA /* FolderArtistStore.swift in Sources */,
@@ -2416,8 +2420,6 @@
 				53FE37391EA961720058B925 /* ISMSServer.m in Sources */,
 				53FE67A5256DD0F00015FC83 /* GCDWebServerDataRequest.m in Sources */,
 				53B9C49525A7A5F9007E9E3C /* TagAlbumStore.swift in Sources */,
-				5306236F14D3295300D320A8 /* EqualizerPathView.m in Sources */,
-				53FE36EB1EA961720058B925 /* BassEffectValue.m in Sources */,
 				5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
 				53D632DA25A65CBC004EC117 /* String+Clean.swift in Sources */,
 				53FE389D1EA961C80058B925 /* NSFileManager+ZKAdditions.m in Sources */,
