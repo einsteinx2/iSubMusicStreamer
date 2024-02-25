@@ -18,7 +18,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
 @objc final class BassPlayer: NSObject {
     @LazyInjected private var playQueue: PlayQueue
     @LazyInjected private var store: Store
-    @LazyInjected private var settings: Settings
+    @LazyInjected private var settings: SavedSettings
     @LazyInjected private var social: Social
     @LazyInjected private var streamManager: StreamManager
     

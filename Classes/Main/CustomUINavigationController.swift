@@ -10,7 +10,7 @@ import UIKit
 import Resolver
 
 final class CustomUINavigationController: UINavigationController {
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     
     override var shouldAutorotate: Bool {
         !(settings.isRotationLockEnabled && UIDevice.current.orientation != .portrait)

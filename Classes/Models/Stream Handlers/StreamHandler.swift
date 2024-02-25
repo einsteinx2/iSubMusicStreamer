@@ -30,7 +30,7 @@ final class StreamHandler: NSObject, Codable {
     
     @Injected private var playQueue: PlayQueue
     @Injected private var downloadsManager: DownloadsManager
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     @Injected private var store: Store
     
     var delegate: StreamHandlerDelegate?

@@ -10,7 +10,7 @@ import UIKit
 import Resolver
 
 final class DownloadStatusViewController: UIViewController {
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var playQueue: PlayQueue
     

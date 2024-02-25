@@ -12,9 +12,9 @@ import Resolver
 
 final class TagAlbumViewController: CustomUITableViewController {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     
-    var serverId: Int { Settings.shared().currentServerId }
+    var serverId: Int = { SavedSettings.shared().currentServerId }()
     
     private let tagAlbum: TagAlbum
     private var loader: TagAlbumLoader?

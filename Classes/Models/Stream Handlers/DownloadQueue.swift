@@ -12,7 +12,7 @@ import CocoaLumberjackSwift
 
 final class DownloadQueue {
     @LazyInjected private var store: Store
-    @LazyInjected private var settings: Settings
+    @LazyInjected private var settings: SavedSettings
     @LazyInjected private var downloadsManager: DownloadsManager
     @LazyInjected private var streamManager: StreamManager
     

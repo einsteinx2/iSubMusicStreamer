@@ -13,7 +13,7 @@ import CocoaLumberjackSwift
 // TODO: Refactor to support multiple scenes/windows
 @objc final class AppDelegate: UIResponder, UIApplicationDelegate {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     @Injected private var player: BassPlayer
     @Injected private var playQueue: PlayQueue
     @Injected private var downloadsManager: DownloadsManager

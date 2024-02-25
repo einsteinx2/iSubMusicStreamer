@@ -12,7 +12,7 @@ import Resolver
 
 final class ServerPlaylistViewController: CustomUITableViewController {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
         
     private var serverPlaylistLoader: ServerPlaylistLoader?
     private var serverPlaylist: ServerPlaylist

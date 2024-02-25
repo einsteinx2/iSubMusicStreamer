@@ -14,7 +14,7 @@ final class CustomUITabBarController: UITabBarController {
         case home = 0, library, player, playlists, downloads
     }
     
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     
     private(set) var libraryTab: CustomUINavigationController?
     

@@ -12,11 +12,12 @@ import Resolver
 // TODO: Get rid of this class and just use the CoverArtLoader
 final class CoverArtDAO {
     @Injected private var store: Store
+    @Injected private var settings: SavedSettings
     
     weak var delegate: APILoaderDelegate?
     private var loader: CoverArtLoader?
     
-    var serverId = Settings.shared().currentServerId
+    var serverId: Int = { SavedSettings.shared().currentServerId }()
     private let coverArtId: String
     private let isLarge: Bool
     

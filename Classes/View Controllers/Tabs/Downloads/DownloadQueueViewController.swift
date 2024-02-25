@@ -13,11 +13,11 @@ import CocoaLumberjackSwift
 
 final class DownloadQueueViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var downloadQueue: DownloadQueue
     
-    var serverId: Int { Settings.shared().currentServerId }
+    var serverId: Int = { SavedSettings.shared().currentServerId }()
     
     override var itemCount: Int { store.downloadQueueCount() ?? 0 }
     

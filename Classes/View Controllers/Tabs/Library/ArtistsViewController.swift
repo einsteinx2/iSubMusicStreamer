@@ -15,10 +15,10 @@ import CwlCatchException
 // TODO: implement this - refactor the loadData method to handle serverId better
 final class ArtistsViewController: CustomUITableViewController {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     @Injected private var analytics: Analytics
     
-    var serverId: Int { Settings.shared().currentServerId }
+    var serverId: Int = { SavedSettings.shared().currentServerId }()
     
     private let dropdownMenu = DropdownMenu()
     private let searchBar = UISearchBar()

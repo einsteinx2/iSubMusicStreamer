@@ -11,9 +11,9 @@ import Resolver
 
 final class TagArtistViewController: CustomUITableViewController {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     
-    var serverId: Int { Settings.shared().currentServerId }
+    var serverId: Int { settings.currentServerId }
     
     private let tagArtist: TagArtist
     private var loader: TagArtistLoader?

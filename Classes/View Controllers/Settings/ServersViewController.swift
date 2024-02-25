@@ -14,7 +14,7 @@ import CwlCatchException
 
 final class ServersViewController: UIViewController {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     @Injected private var streamManager: StreamManager
     @Injected private var downloadQueue: DownloadQueue
     @Injected private var player: BassPlayer

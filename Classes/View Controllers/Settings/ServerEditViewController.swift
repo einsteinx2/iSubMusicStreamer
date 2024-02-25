@@ -14,7 +14,7 @@ import Resolver
 // Not sure why that's able to happen as it only saves the server on the success callback...
 final class ServerEditViewController: UIViewController {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     
     let backgroundImageView = UIImageView(image: UIImage(named: "settings-page"))
     let urlField = InsetTextField(inset: 5)

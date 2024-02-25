@@ -24,8 +24,7 @@ typedef enum
 NS_ASSUME_NONNULL_BEGIN
 
 @class Server;
-NS_SWIFT_NAME(Settings)
-@interface SavedSettings : NSObject 
+@interface SavedSettings : NSObject
 
 @property BOOL isOfflineMode;
 

@@ -12,7 +12,7 @@ import CocoaLumberjackSwift
 
 final class ServerChecker {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     @Injected private var downloadQueue: DownloadQueue
     
     private var statusLoader: StatusLoader?

@@ -13,13 +13,13 @@ import Resolver
 
 final class HomeViewController: UIViewController {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     @Injected private var player: BassPlayer
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
     @Injected private var analytics: Analytics
     
-    var serverId: Int { Settings.shared().currentServerId }
+    var serverId: Int = { SavedSettings.shared().currentServerId }()
     
     private var quickAlbumsLoader: QuickAlbumsLoader?
     private var serverShuffleLoader: ServerShuffleLoader?

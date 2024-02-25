@@ -11,7 +11,7 @@ import Resolver
 
 final class Song: Codable, Hashable, CustomStringConvertible {
     private var store: Store { Resolver.resolve() }
-    private var settings: Settings { Resolver.resolve() }
+    private var settings: SavedSettings { Resolver.resolve() }
     private var player: BassPlayer { Resolver.resolve() }
     private var playQueue: PlayQueue { Resolver.resolve() }
             

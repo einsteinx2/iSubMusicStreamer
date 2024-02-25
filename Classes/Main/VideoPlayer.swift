@@ -12,7 +12,7 @@ import CocoaLumberjackSwift
 import Resolver
 
 final class VideoPlayer: NSObject {
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     @Injected private var player: BassPlayer
     
     private var videoPlayerController: AVPlayerViewController?

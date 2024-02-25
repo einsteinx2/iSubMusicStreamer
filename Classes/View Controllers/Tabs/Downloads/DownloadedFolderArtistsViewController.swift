@@ -13,11 +13,11 @@ import CocoaLumberjackSwift
 
 final class DownloadedFolderArtistsViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var downloadQueue: DownloadQueue
         
-    var serverId: Int { Settings.shared().currentServerId }
+    var serverId: Int = { SavedSettings.shared().currentServerId }()
     
     private var downloadedFolderArtists = [DownloadedFolderArtist]()
     override var itemCount: Int { downloadedFolderArtists.count }

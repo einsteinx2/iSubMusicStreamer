@@ -12,7 +12,7 @@ import MediaPlayer
 
 struct LockScreenAudioControls {
     private static var remote: MPRemoteCommandCenter { MPRemoteCommandCenter.shared() }
-    private static var settings: Settings { Resolver.resolve() }
+    private static var settings: SavedSettings { Resolver.resolve() }
     private static var jukebox: Jukebox { Resolver.resolve() }
     private static var player: BassPlayer { Resolver.resolve() }
     private static var playQueue: PlayQueue { Resolver.resolve() }

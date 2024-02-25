@@ -12,7 +12,7 @@ import Resolver
 
 final class CoverArtLoader: APILoader {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     
     private struct PrivateNotifications {
         static let downloadFinished = Notification.Name("CoverArtLoader.downloadFinished")

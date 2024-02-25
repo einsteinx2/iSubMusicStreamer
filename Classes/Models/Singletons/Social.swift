@@ -12,7 +12,7 @@ import CocoaLumberjackSwift
 
 final class Social {
     @LazyInjected private var player: BassPlayer
-    @LazyInjected private var settings: Settings
+    @LazyInjected private var settings: SavedSettings
     @LazyInjected private var playQueue: PlayQueue
     
     private let nowPlayingDelay = 10.0

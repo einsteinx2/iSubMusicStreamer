@@ -23,7 +23,7 @@ final class LibraryViewController: TabmanViewController {
         }
     }
 
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     @Injected private var analytics: Analytics
     
     private let buttonBar = TMBar.ButtonBar()

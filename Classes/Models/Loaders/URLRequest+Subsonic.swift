@@ -109,7 +109,7 @@ extension URLRequest {
         }
         
         // Set the HTTP Basic Auth header if needed
-        let settings: Settings = Resolver.resolve()
+        let settings: SavedSettings = Resolver.resolve()
         if settings.isBasicAuthEnabled {
             let authString = "\(username.URLQueryEncoded):\(password.URLQueryEncoded)"
             if let authData = authString.data(using: .utf8) {
@@ -129,7 +129,7 @@ extension URLRequest {
     
     init?(serverId: Int, subsonicAction action: String, parameters: [String: Any]? = nil, byteOffset: Int = 0) {
         let store: Store = Resolver.resolve()
-        let settings: Settings = Resolver.resolve()
+        let settings: SavedSettings = Resolver.resolve()
         guard let server = store.server(id: serverId) else { return nil }
         
         self.init(subsonicAction: action,

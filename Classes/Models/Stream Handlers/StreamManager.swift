@@ -13,7 +13,7 @@ import CocoaLumberjackSwift
 final class StreamManager {
     @LazyInjected private var downloadQueue: DownloadQueue
     @LazyInjected private var store: Store
-    @LazyInjected private var settings: Settings
+    @LazyInjected private var settings: SavedSettings
     @LazyInjected private var playQueue: PlayQueue
     @LazyInjected private var player: BassPlayer
     

@@ -13,7 +13,7 @@ import Resolver
 
 final class PlayQueueViewController: CustomUITableViewController {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
     @Injected private var analytics: Analytics

@@ -19,7 +19,7 @@ final class Jukebox {
     }
     
     @LazyInjected private var playQueue: PlayQueue
-    @LazyInjected private var settings: Settings
+    @LazyInjected private var settings: SavedSettings
     
     private(set) var isPlaying = false
     private(set) var currentIndex = -1

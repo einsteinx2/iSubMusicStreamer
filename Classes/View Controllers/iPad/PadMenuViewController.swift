@@ -15,7 +15,7 @@ final class PadMenuViewController: UIViewController {
         case settings = 0, home, library, playlists, downloads, back
     }
     
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     
     private let tableContainer = UIView()
     private let tableView = UITableView(frame: .zero, style: .plain)

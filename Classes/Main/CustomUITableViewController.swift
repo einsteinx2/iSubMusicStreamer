@@ -10,7 +10,7 @@ import UIKit
 import Resolver
 
 class CustomUITableViewController: UIViewController {
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     
     let tableView = UITableView()
     

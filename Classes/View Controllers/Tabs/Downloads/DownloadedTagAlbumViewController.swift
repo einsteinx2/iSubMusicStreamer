@@ -14,7 +14,7 @@ import CocoaLumberjackSwift
 // TODO: Make sure to call the getAlbum API for all downloaded songs or they won't show up here
 final class DownloadedTagAlbumViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var downloadQueue: DownloadQueue
         

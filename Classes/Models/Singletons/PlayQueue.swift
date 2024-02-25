@@ -18,7 +18,7 @@ import CocoaLumberjackSwift
 }
 
 @objc final class PlayQueue: NSObject {
-    @LazyInjected private var settings: Settings
+    @LazyInjected private var settings: SavedSettings
     @LazyInjected private var jukebox: Jukebox
     @LazyInjected private var streamManager: StreamManager
     @LazyInjected private var downloadQueue: DownloadQueue

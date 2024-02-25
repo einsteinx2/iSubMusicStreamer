@@ -11,7 +11,7 @@ import Resolver
 import CocoaLumberjackSwift
 
 final class NetworkMonitor {
-    @Injected private var settings: Settings
+    @Injected private var settings: SavedSettings
     
     private let wifiReach = Reachability.forInternetConnection()
     var isWifi: Bool { wifiReach.currentReachabilityStatus() == ReachableViaWiFi }

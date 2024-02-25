@@ -14,7 +14,7 @@ import CocoaLumberjackSwift
 // TODO: Refactor this and make sure it works correctly
 // TODO: Refactor this so everything happens in a background thread
 final class DownloadsManager {
-    @LazyInjected private var settings: Settings
+    @LazyInjected private var settings: SavedSettings
     @LazyInjected private var store: Store
     @LazyInjected private var downloadQueue: DownloadQueue
 
