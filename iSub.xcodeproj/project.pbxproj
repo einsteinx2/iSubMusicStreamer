@@ -516,8 +516,6 @@
 		53F8917F1EB137F300B3F131 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675E7113B096400822059 /* AudioToolbox.framework */; };
 		53FE34F81EA961540058B925 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34021EA961540058B925 /* GTMNSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		53FE34FA1EA961540058B925 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34021EA961540058B925 /* GTMNSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		53FE356D1EA961540058B925 /* UIView+ObjCFrameHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */; };
-		53FE356F1EA961540058B925 /* UIView+ObjCFrameHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */; };
 		53FE36E61EA961720058B925 /* BassEffectDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36271EA961710058B925 /* BassEffectDAO.m */; };
 		53FE36E81EA961720058B925 /* BassEffectDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36271EA961710058B925 /* BassEffectDAO.m */; };
 		53FE37371EA961720058B925 /* ISMSServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36651EA961720058B925 /* ISMSServer.m */; };
@@ -894,8 +892,6 @@
 		53FE34001EA961540058B925 /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
 		53FE34011EA961540058B925 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSString+HTML.h"; sourceTree = "<group>"; };
 		53FE34021EA961540058B925 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
-		53FE34541EA961540058B925 /* UIView+ObjCFrameHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ObjCFrameHelper.h"; sourceTree = "<group>"; };
-		53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ObjCFrameHelper.m"; sourceTree = "<group>"; };
 		53FE36261EA961710058B925 /* BassEffectDAO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BassEffectDAO.h; sourceTree = "<group>"; };
 		53FE36271EA961710058B925 /* BassEffectDAO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BassEffectDAO.m; sourceTree = "<group>"; };
 		53FE36641EA961720058B925 /* ISMSServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSServer.h; sourceTree = "<group>"; };
@@ -1617,8 +1613,6 @@
 				53ED673025B780070002BFAF /* UIApplication+Helper.swift */,
 				53E03D0D25C270630043355F /* UIDevice+Info.swift */,
 				534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */,
-				53FE34541EA961540058B925 /* UIView+ObjCFrameHelper.h */,
-				53FE34551EA961540058B925 /* UIView+ObjCFrameHelper.m */,
 				53EA2DE1257D7B4D0003F38D /* UIView+ViewController.swift */,
 				537C93F825B127BF00175DF6 /* UIViewController+IsModal.swift */,
 				5373C69825B60A6900CAA859 /* UIViewController+PushCustom.swift */,
@@ -2133,7 +2127,6 @@
 				53FE38921EA961C80058B925 /* NSDate+ZKAdditions.m in Sources */,
 				53D973FE255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
 				53246AA3256C209E00E11EC4 /* ServerEditViewController.swift in Sources */,
-				53FE356D1EA961540058B925 /* UIView+ObjCFrameHelper.m in Sources */,
 				53A6AA642B8A8A22007ABD7A /* Debug.swift in Sources */,
 				53C3AB64257DA71000B35B99 /* Reachability.m in Sources */,
 				535E142C25A7B4600039BCAA /* RootFoldersLoader.swift in Sources */,
@@ -2386,7 +2379,6 @@
 				53FE38941EA961C80058B925 /* NSDate+ZKAdditions.m in Sources */,
 				53A6AA652B8A8A22007ABD7A /* Debug.swift in Sources */,
 				53D973FF255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
-				53FE356F1EA961540058B925 /* UIView+ObjCFrameHelper.m in Sources */,
 				535E142D25A7B4600039BCAA /* RootFoldersLoader.swift in Sources */,
 				53CB554025C915F2004F2BAB /* EqualizerPointView.swift in Sources */,
 				532C624C25B6197E00185998 /* VideoPlayer.swift in Sources */,

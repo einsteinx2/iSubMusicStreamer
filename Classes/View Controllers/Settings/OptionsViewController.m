@@ -9,10 +9,9 @@
 #import "OptionsViewController.h"
 #import "SavedSettings.h"
 #import "Swift.h"
-#import "UIView+ObjCFrameHelper.h"
 @import CocoaLumberjack;
-#import <Accounts/Accounts.h>
-#import <Social/Social.h>
+@import Accounts;
+@import Social;
 
 LOG_LEVEL_ISUB_DEFAULT
 
@@ -22,7 +21,9 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)viewDidLoad  {
     [super viewDidLoad];
     
-    self.scrollViewContents.width = self.view.width;
+    CGRect scrollViewContentsFrame = self.scrollViewContents.frame;
+    scrollViewContentsFrame.size.width = self.view.frame.size.width;
+    self.scrollViewContents.frame = scrollViewContentsFrame;
     
     self.scrollView.scrollEnabled = YES;
     self.scrollView.showsVerticalScrollIndicator = YES;
