@@ -72,7 +72,7 @@ private let bassEffectUserPresetStartId = 1000
                     self.controlsContainer.isUserInteractionEnabled = true
                     
                     if self.wasVisualizerOffBeforeRotation {
-                        self.equalizerView?.change(ISMSBassVisualType_none)
+                        self.equalizerView?.changeType(.none)
                     }
                 }
             } else {
@@ -93,7 +93,7 @@ private let bassEffectUserPresetStartId = 1000
                     self.controlsContainer.alpha = 0.0
                     self.controlsContainer.isUserInteractionEnabled = false
                     
-                    self.wasVisualizerOffBeforeRotation = (self.equalizerView?.visualType == ISMSBassVisualType_none)
+                    self.wasVisualizerOffBeforeRotation = (self.equalizerView?.visualizerType == VisualizerType.none)
                     if self.wasVisualizerOffBeforeRotation {
                         self.equalizerView?.nextType()
                     }
@@ -175,7 +175,7 @@ private let bassEffectUserPresetStartId = 1000
             controlsContainer.alpha = 0.0
             controlsContainer.isUserInteractionEnabled = false
             
-            wasVisualizerOffBeforeRotation = (equalizerView?.visualType == ISMSBassVisualType_none)
+            wasVisualizerOffBeforeRotation = (equalizerView?.visualizerType == VisualizerType.none)
             if wasVisualizerOffBeforeRotation {
                 equalizerView?.nextType()
             }

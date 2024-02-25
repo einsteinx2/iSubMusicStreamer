@@ -11,11 +11,19 @@
 
 #import "BassEffectDAO.h"
 #import "Defines.h"
-#import "ISMSBassVisualType.h"
 
 #define settingsS ((SavedSettings *)[SavedSettings sharedInstance])
 
-typedef enum 
+typedef enum {
+    ISMSBassVisualType_none      = 0,
+    ISMSBassVisualType_line      = 1,
+    ISMSBassVisualType_skinnyBar = 2,
+    ISMSBassVisualType_fatBar    = 3,
+    ISMSBassVisualType_aphexFace = 4,
+    ISMSBassVisualType_maxValue  = 5
+} ISMSBassVisualType;
+
+typedef enum
 {
 	ISMSCachingType_minSpace = 0,
 	ISMSCachingType_maxSize = 1

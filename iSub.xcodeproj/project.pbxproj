@@ -155,8 +155,6 @@
 		535F824825C0FE950024C82C /* Decoding+Generic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535F824625C0FE950024C82C /* Decoding+Generic.swift */; };
 		535F824A25C1D30C0024C82C /* SubsonicError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535F824925C1D30C0024C82C /* SubsonicError.swift */; };
 		535F824B25C1D30C0024C82C /* SubsonicError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535F824925C1D30C0024C82C /* SubsonicError.swift */; };
-		5365859314789ADA00FE57A5 /* EqualizerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365859214789AD900FE57A5 /* EqualizerView.m */; };
-		5365859514789ADA00FE57A5 /* EqualizerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5365859214789AD900FE57A5 /* EqualizerView.m */; };
 		5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D21EA92D1A00B1C242 /* libxml2.tbd */; };
 		5367C6D51EA92D2400B1C242 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D41EA92D2400B1C242 /* libz.tbd */; };
 		5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D61EA92D3000B1C242 /* libSystem.tbd */; };
@@ -263,6 +261,8 @@
 		5389479B25A4EFAE0078FBAF /* ServerShuffleLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5389479925A4EFAE0078FBAF /* ServerShuffleLoader.swift */; };
 		5389479D25A53C7F0078FBAF /* TableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5389479C25A53C7F0078FBAF /* TableSection.swift */; };
 		5389479E25A53C7F0078FBAF /* TableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5389479C25A53C7F0078FBAF /* TableSection.swift */; };
+		538A7F282B8BA5360060DF38 /* EqualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538A7F272B8BA5360060DF38 /* EqualizerView.swift */; };
+		538A7F292B8BA5360060DF38 /* EqualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538A7F272B8BA5360060DF38 /* EqualizerView.swift */; };
 		538B3EBC25B65BCF00824068 /* ArtistsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538B3EBB25B65BCF00824068 /* ArtistsViewModel.swift */; };
 		538B3EBD25B65BCF00824068 /* ArtistsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538B3EBB25B65BCF00824068 /* ArtistsViewModel.swift */; };
 		538B3EC225B65E1E00824068 /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538B3EC125B65E1E00824068 /* Artist.swift */; };
@@ -703,8 +703,6 @@
 		535F824325C0F64C0024C82C /* RuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeError.swift; sourceTree = "<group>"; };
 		535F824625C0FE950024C82C /* Decoding+Generic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decoding+Generic.swift"; sourceTree = "<group>"; };
 		535F824925C1D30C0024C82C /* SubsonicError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubsonicError.swift; sourceTree = "<group>"; };
-		5365859114789AD800FE57A5 /* EqualizerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EqualizerView.h; sourceTree = "<group>"; };
-		5365859214789AD900FE57A5 /* EqualizerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EqualizerView.m; sourceTree = "<group>"; };
 		5367C6D21EA92D1A00B1C242 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		5367C6D41EA92D2400B1C242 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		5367C6D61EA92D3000B1C242 /* libSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.tbd; path = usr/lib/libSystem.tbd; sourceTree = SDKROOT; };
@@ -759,6 +757,7 @@
 		5389479325A4EA9B0078FBAF /* MediaFoldersLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFoldersLoader.swift; sourceTree = "<group>"; };
 		5389479925A4EFAE0078FBAF /* ServerShuffleLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerShuffleLoader.swift; sourceTree = "<group>"; };
 		5389479C25A53C7F0078FBAF /* TableSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSection.swift; sourceTree = "<group>"; };
+		538A7F272B8BA5360060DF38 /* EqualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualizerView.swift; sourceTree = "<group>"; };
 		538B3EBB25B65BCF00824068 /* ArtistsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistsViewModel.swift; sourceTree = "<group>"; };
 		538B3EC125B65E1E00824068 /* Artist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
 		538C8FE025606299005D6CA9 /* RefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshControl.swift; sourceTree = "<group>"; };
@@ -827,7 +826,6 @@
 		53B9C49625A7A650007E9E3C /* SongStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongStore.swift; sourceTree = "<group>"; };
 		53B9C49925A7A6D7007E9E3C /* GRDB+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GRDB+Helper.swift"; sourceTree = "<group>"; };
 		53BC2865139AF0DD00A825F1 /* iSub Beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iSub Beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		53BD84A52566F41F00F7A197 /* ISMSBassVisualType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISMSBassVisualType.h; sourceTree = "<group>"; };
 		53BDC4DB25D4CEB400126D06 /* DropdownMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownMenu.swift; sourceTree = "<group>"; };
 		53C3AB5F257DA71000B35B99 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		53C3AB63257DA71000B35B99 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
@@ -1497,11 +1495,9 @@
 			children = (
 				5376D5B72B8ABD30000C3184 /* EqualizerViewController.swift */,
 				533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */,
-				5365859114789AD800FE57A5 /* EqualizerView.h */,
-				5365859214789AD900FE57A5 /* EqualizerView.m */,
+				538A7F272B8BA5360060DF38 /* EqualizerView.swift */,
 				53CB553E25C915F2004F2BAB /* EqualizerPointView.swift */,
 				5376D5BA2B8B8ABD000C3184 /* EqualizerPathView.swift */,
-				53BD84A52566F41F00F7A197 /* ISMSBassVisualType.h */,
 			);
 			path = "EQ and Visualizer";
 			sourceTree = "<group>";
@@ -1989,6 +1985,7 @@
 				53E03CFD25C213D30043355F /* SongLoader.swift in Sources */,
 				53A6AA6A2B8AA066007ABD7A /* BassEqualizer.swift in Sources */,
 				53E03D0025C2330D0043355F /* NSError+Description.swift in Sources */,
+				538A7F282B8BA5360060DF38 /* EqualizerView.swift in Sources */,
 				53762C8625AD105E00476F2D /* NowPlayingSong.swift in Sources */,
 				53FE67AC256DE9600015FC83 /* Defines.swift in Sources */,
 				537AE8142622491E0073DEF2 /* AsyncBlockOperation.swift in Sources */,
@@ -2164,7 +2161,6 @@
 				535E143525A7BB910039BCAA /* FolderAlbumStore.swift in Sources */,
 				53CB554825C9D2E1004F2BAB /* Bookmark.swift in Sources */,
 				5302DE4125BA2AA00036A9B1 /* StreamManager.swift in Sources */,
-				5365859314789ADA00FE57A5 /* EqualizerView.m in Sources */,
 				53FE37371EA961720058B925 /* ISMSServer.m in Sources */,
 				531EC85025B1E6420076973A /* LocalPlaylistsViewController.swift in Sources */,
 				531EC87D25B24B6B0076973A /* ArtistsViewController.swift in Sources */,
@@ -2239,6 +2235,7 @@
 				53762C8725AD105E00476F2D /* NowPlayingSong.swift in Sources */,
 				53A6AA6B2B8AA066007ABD7A /* BassEqualizer.swift in Sources */,
 				53E03D0125C2330D0043355F /* NSError+Description.swift in Sources */,
+				538A7F292B8BA5360060DF38 /* EqualizerView.swift in Sources */,
 				538C8FE225606299005D6CA9 /* RefreshControl.swift in Sources */,
 				53329642255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */,
 				537AE8152622491E0073DEF2 /* AsyncBlockOperation.swift in Sources */,
@@ -2405,7 +2402,6 @@
 				53FE38B81EA961C80058B925 /* ZKFileArchive.m in Sources */,
 				5357CE9A25B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */,
 				53762C8A25AD122500476F2D /* NowPlayingLoader.swift in Sources */,
-				5365859514789ADA00FE57A5 /* EqualizerView.m in Sources */,
 				535E142725A7B2020039BCAA /* FolderArtistStore.swift in Sources */,
 				53FE679B256DD0F00015FC83 /* GCDWebServerFileResponse.m in Sources */,
 				5373C69125B6040900CAA859 /* CustomUITabBarController.swift in Sources */,

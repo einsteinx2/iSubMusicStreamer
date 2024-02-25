@@ -12,7 +12,7 @@
                 <outlet property="controlsContainer" destination="37" id="38"/>
                 <outlet property="equalizerPath" destination="31" id="gQl-Ow-Ssm"/>
                 <outlet property="equalizerSeparatorLine" destination="22" id="Dz7-ed-xQQ"/>
-                <outlet property="equalizerView" destination="17" id="18"/>
+                <outlet property="equalizerView" destination="17" id="TLs-bv-ErE"/>
                 <outlet property="gainBoostAmountLabel" destination="43" id="44"/>
                 <outlet property="gainBoostLabel" destination="35" id="36"/>
                 <outlet property="gainSlider" destination="24" id="30"/>
@@ -31,7 +31,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <subviews>
-                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="17" customClass="EqualizerView">
+                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="17" customClass="EqualizerView" customModule="iSub" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

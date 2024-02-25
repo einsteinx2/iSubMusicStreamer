@@ -9,7 +9,6 @@
 #pragma once
 
 // User Interface Components
-#import "EqualizerView.h"
 #import "OptionsViewController.h"
 #import "DDSocialDialog.h"
 
