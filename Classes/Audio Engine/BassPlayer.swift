@@ -186,8 +186,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         // Prepare the EQ
         // This will load the values, and if the EQ was previously enabled, will automatically
         // add the EQ values to the stream
-        let effectDAO = BassEffectDAO(type: BassEffectType_ParametricEQ)!
-        effectDAO.selectPreset(at: effectDAO.selectedPresetId)
+        BassEffectDAO(type: .parametricEQ).selectCurrentPreset()
         
         // Add gain amplification
         equalizer.createVolumeFx()
@@ -232,8 +231,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
     func startNewSong(_ song: Song, index: Int, offsetInBytes: Int, offsetInSeconds: Double) {
         stop()
         startSong(song, index: index, offsetInBytes: offsetInBytes, offsetInSeconds: offsetInSeconds)
-        let effectDAO = BassEffectDAO(type: BassEffectType_ParametricEQ)!
-        effectDAO.selectPreset(at: effectDAO.selectedPresetId)
+        BassEffectDAO(type: .parametricEQ).selectCurrentPreset()
     }
     
     func startSong(_ song: Song, index: Int, offsetInBytes: Int, offsetInSeconds: Double) {

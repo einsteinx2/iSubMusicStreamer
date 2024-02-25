@@ -9,9 +9,6 @@
 import Foundation
 import Resolver
 
-private let bassEffectTempCustomPresetId = 1000000
-private let bassEffectUserPresetStartId = 1000
-
 @objc final class EqualizerViewController: UIViewController {
     
     @Injected private var settings: SavedSettings
@@ -34,7 +31,7 @@ private let bassEffectUserPresetStartId = 1000
     @IBOutlet var gainBoostAmountLabel: UILabel!
     @IBOutlet var gainBoostLabel: UILabel!
     var lastGainValue: Float = 0
-    var effectDAO = BassEffectDAO(type: BassEffectType_ParametricEQ)!
+    var effectDAO = BassEffectDAO(type: .parametricEQ)
     var selectedView: EqualizerPointView?
     let deletePresetButton = UIButton(type: .roundedRect)
     let savePresetButton = UIButton(type: .roundedRect)
@@ -141,9 +138,8 @@ private let bassEffectUserPresetStartId = 1000
         deletePresetButton.autoresizingMask = [.flexibleTopMargin, .flexibleBottomMargin]
         controlsContainer.addSubview(deletePresetButton)
 
-        
         if BassPlayer.shared.equalizer.equalizerValues.count == 0 {
-            effectDAO.selectPreset(at: effectDAO.selectedPresetIndex)
+            effectDAO.selectCurrentPreset()
         }
 
         updatePresetPicker()
@@ -335,23 +331,23 @@ private let bassEffectUserPresetStartId = 1000
         }
     }
     
-    func serializedEqPoints() -> [String] {
-        return equalizerPointViews.map { NSCoder.string(for: $0.position) }
+    func eqPoints() -> [CGPoint] {
+        return equalizerPointViews.map { $0.position }
     }
     
     func saveTempCustomPreset() {
-        effectDAO.saveTempCustomPreset(serializedEqPoints())
+        effectDAO.saveTempCustomPreset(points: eqPoints())
         updatePresetPicker()
     }
     
     @objc func promptToDeleteCustomPreset() {
         // TODO: Better default name
-        let presetName = effectDAO.selectedPreset["name"] as? String ?? ""
+        let presetName = effectDAO.selectedPreset?.name ?? ""
         let title = "\"\(presetName)\""
         let message = "Are you sure you want to delete this preset?"
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(title: "Delete", style: .destructive) { _ in
-            self.effectDAO.deleteCustomPreset(forId: self.effectDAO.selectedPresetId)
+            self.effectDAO.deleteCustomPreset(id: self.effectDAO.selectedPresetId)
             self.updatePresetPicker()
             self.presetPicker.selectRow(0, inComponent: 0, animated: false)
             self.pickerView(self.presetPicker, didSelectRow: 0, inComponent: 0)
@@ -361,12 +357,7 @@ private let bassEffectUserPresetStartId = 1000
     }
 
     @objc func promptToSaveCustomPreset() {
-        var count = effectDAO.userPresetsCount
-        if effectDAO.userPresets["\(bassEffectTempCustomPresetId)"] != nil {
-            count -= 1
-        }
-        
-        if count > 0 {
+        if effectDAO.userPresetsMinusCustom.count > 0 {
             if let saveDialog = DDSocialDialog(frame: CGRect(x: 0, y: 0, width: 300, height: 300), theme: DDSocialDialogThemeISub) {
                 saveDialog.titleLabel.text = "Choose Preset To Save"
                 let saveTable = UITableView(frame: saveDialog.contentView.frame, style: .plain)
@@ -390,7 +381,7 @@ private let bassEffectUserPresetStartId = 1000
         alert.addAction(title: "Save", style: .default) { _ in
             // TODO: Better default name
             let name = alert.textFields?.first?.text ?? ""
-            self.effectDAO.saveCustomPreset(self.serializedEqPoints(), name: name)
+            self.effectDAO.saveCustomPreset(name: name, points: self.eqPoints())
             self.effectDAO.deleteTempCustomPreset()
             self.updatePresetPicker()
         }
@@ -513,13 +504,14 @@ private let bassEffectUserPresetStartId = 1000
 extension EqualizerViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func updatePresetPicker() {
+        let selectedPreset = effectDAO.selectedPreset
         presetPicker.reloadAllComponents()
         presetPicker.selectRow(effectDAO.selectedPresetIndex, inComponent: 0, animated: true)
-        presetLabel.text = effectDAO.selectedPreset["name"] as? String
+        presetLabel.text = selectedPreset?.name as? String
         
-        if effectDAO.selectedPresetId == bassEffectTempCustomPresetId {
+        if effectDAO.selectedPresetId == BassEffectDAO.bassEffectTempCustomPresetId {
             showSavePresetButton(animated: false)
-        } else if let isDefault = effectDAO.selectedPreset["isDefault"] as? Bool, isDefault {
+        } else if let isDefault = selectedPreset?.isDefault, isDefault {
             showDeletePresetButton(animated: false)
         }
     }
@@ -584,19 +576,20 @@ extension EqualizerViewController: UIPickerViewDelegate, UIPickerViewDataSource 
         }
     }
     
+    // TODO: Fix this logic, it's not properly hiding the delete button
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        effectDAO.selectPreset(at: row)
+        effectDAO.selectPreset(index: row)
         
-        let isDefault = effectDAO.selectedPreset["isDefault"] as? Bool ?? false
-        if effectDAO.selectedPresetId == bassEffectTempCustomPresetId && !isSavePresetButtonShowing {
+        let isDefault = effectDAO.selectedPreset?.isDefault ?? false
+        if effectDAO.selectedPresetId == BassEffectDAO.bassEffectTempCustomPresetId && !isSavePresetButtonShowing {
             showSavePresetButton(animated: true)
-        } else if effectDAO.selectedPresetId != bassEffectTempCustomPresetId && isSavePresetButtonShowing {
+        } else if effectDAO.selectedPresetId != BassEffectDAO.bassEffectTempCustomPresetId && isSavePresetButtonShowing {
             hideSavePresetButton(animated: true)
         }
     
-        if effectDAO.selectedPresetId != bassEffectTempCustomPresetId && !isDeletePresetButtonShowing && !isDefault {
+        if effectDAO.selectedPresetId != BassEffectDAO.bassEffectTempCustomPresetId && !isDeletePresetButtonShowing && !isDefault {
             showDeletePresetButton(animated: true)
-        } else if (effectDAO.selectedPresetId == bassEffectTempCustomPresetId || isDefault) && isDeletePresetButtonShowing {
+        } else if (effectDAO.selectedPresetId == BassEffectDAO.bassEffectTempCustomPresetId || isDefault) && isDeletePresetButtonShowing {
             hideDeletePresetButton(animated: true)
         }
         
@@ -604,8 +597,7 @@ extension EqualizerViewController: UIPickerViewDelegate, UIPickerViewDataSource 
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        guard let preset = effectDAO.presetsArray[row] as? NSDictionary, let name = preset["name"] as? String else { return nil }
-        return name
+        return effectDAO.presets[row].name
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -627,7 +619,7 @@ extension EqualizerViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return 1
-        case 1: return effectDAO.userPresetsArrayMinusCustom.count
+        case 1: return effectDAO.userPresetsMinusCustom.count
         default: return 0
         }
     }
@@ -638,10 +630,9 @@ extension EqualizerViewController: UITableViewDelegate, UITableViewDataSource {
         case 0: 
             cell.textLabel?.text = "New Preset"
         case 1:
-            if let preset = effectDAO.userPresetsArrayMinusCustom[indexPath.row] as? NSDictionary, let presetId = preset["presetId"] as? Int, let name = preset["name"] as? String {
-                cell.tag = presetId
-                cell.textLabel?.text = name
-            }
+            let preset = effectDAO.userPresetsMinusCustom[indexPath.row]
+            cell.tag = preset.presetId
+            cell.textLabel?.text = preset.name
         default:
             break
         }
@@ -663,7 +654,7 @@ extension EqualizerViewController: UITableViewDelegate, UITableViewDataSource {
             // Save over an existing preset
             let currentTableCell = self.tableView(tableView, cellForRowAt: indexPath)
             // TODO: Better default name
-            effectDAO.saveCustomPreset(serializedEqPoints(), name: currentTableCell.textLabel?.text ?? "", presetId: currentTableCell.tag)
+            effectDAO.saveCustomPreset(id: currentTableCell.tag, name: currentTableCell.textLabel?.text ?? "", points: eqPoints())
             effectDAO.deleteTempCustomPreset()
             updatePresetPicker()
         }

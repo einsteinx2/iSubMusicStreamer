@@ -9,7 +9,6 @@
 #ifndef iSub_SavedSettings_h
 #define iSub_SavedSettings_h
 
-#import "BassEffectDAO.h"
 #import "Defines.h"
 
 #define settingsS ((SavedSettings *)[SavedSettings sharedInstance])

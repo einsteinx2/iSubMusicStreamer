@@ -8,14 +8,14 @@
 
 import Resolver
 
-private let MIN_FREQUENCY = 32
-private let MAX_FREQUENCY = 16384
-private let RANGE_OF_EXPONENTS = 9
+let MIN_FREQUENCY = 32
+let MAX_FREQUENCY = 16384
+let RANGE_OF_EXPONENTS = 9
 
-private let MIN_GAIN = -6
-private let MAX_GAIN = 6
+let MIN_GAIN = -6
+let MAX_GAIN = 6
 
-private let DEFAULT_BANDWIDTH = 18
+let DEFAULT_BANDWIDTH = 18
 
 @objc final class EqualizerPathView: UIView {
     

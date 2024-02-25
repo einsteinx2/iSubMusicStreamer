@@ -516,8 +516,6 @@
 		53F8917F1EB137F300B3F131 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675E7113B096400822059 /* AudioToolbox.framework */; };
 		53FE34F81EA961540058B925 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34021EA961540058B925 /* GTMNSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		53FE34FA1EA961540058B925 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34021EA961540058B925 /* GTMNSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		53FE36E61EA961720058B925 /* BassEffectDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36271EA961710058B925 /* BassEffectDAO.m */; };
-		53FE36E81EA961720058B925 /* BassEffectDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36271EA961710058B925 /* BassEffectDAO.m */; };
 		53FE37371EA961720058B925 /* ISMSServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36651EA961720058B925 /* ISMSServer.m */; };
 		53FE37391EA961720058B925 /* ISMSServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36651EA961720058B925 /* ISMSServer.m */; };
 		53FE37881EA961720058B925 /* SavedSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE36A01EA961720058B925 /* SavedSettings.m */; };
@@ -892,8 +890,6 @@
 		53FE34001EA961540058B925 /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
 		53FE34011EA961540058B925 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSString+HTML.h"; sourceTree = "<group>"; };
 		53FE34021EA961540058B925 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
-		53FE36261EA961710058B925 /* BassEffectDAO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BassEffectDAO.h; sourceTree = "<group>"; };
-		53FE36271EA961710058B925 /* BassEffectDAO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BassEffectDAO.m; sourceTree = "<group>"; };
 		53FE36641EA961720058B925 /* ISMSServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISMSServer.h; sourceTree = "<group>"; };
 		53FE36651EA961720058B925 /* ISMSServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISMSServer.m; sourceTree = "<group>"; };
 		53FE369F1EA961720058B925 /* SavedSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedSettings.h; sourceTree = "<group>"; };
@@ -1359,8 +1355,6 @@
 				5357FE2025C335B5001BDE29 /* BassCallbacks.swift */,
 				5357FE2725C39FDB001BDE29 /* BassStream.swift */,
 				5357FE3025C760B7001BDE29 /* BassVisualizer.swift */,
-				53FE36261EA961710058B925 /* BassEffectDAO.h */,
-				53FE36271EA961710058B925 /* BassEffectDAO.m */,
 				5376D5B42B8AB430000C3184 /* BassEffectDAO.swift */,
 				5376D5B12B8AB2D9000C3184 /* BassEffectValue.swift */,
 				53A6AA692B8AA066007ABD7A /* BassEqualizer.swift */,
@@ -2067,7 +2061,6 @@
 				53B9C49A25A7A6D7007E9E3C /* GRDB+Helper.swift in Sources */,
 				53FE67A0256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
 				5398F26D11DA61DA00007870 /* OptionsViewController.m in Sources */,
-				53FE36E61EA961720058B925 /* BassEffectDAO.m in Sources */,
 				537AE81A26224A090073DEF2 /* AsyncOperation.swift in Sources */,
 				537C93F625B125AE00175DF6 /* PlayQueueViewController.swift in Sources */,
 				53A6AA672B8A98B6007ABD7A /* BassParamEqValue.swift in Sources */,
@@ -2320,7 +2313,6 @@
 				537AE81B26224A090073DEF2 /* AsyncOperation.swift in Sources */,
 				53BC27E2139AF0DD00A825F1 /* OptionsViewController.m in Sources */,
 				53A6AA682B8A98B6007ABD7A /* BassParamEqValue.swift in Sources */,
-				53FE36E81EA961720058B925 /* BassEffectDAO.m in Sources */,
 				537C93F725B125AE00175DF6 /* PlayQueueViewController.swift in Sources */,
 				53FE67A3256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m in Sources */,
 				53E03D0425C236260043355F /* NSURLError+isCanceledURLRequest.swift in Sources */,
