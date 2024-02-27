@@ -37,6 +37,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func deleteMediaFolders() -> Bool {
         do {
             return try pool.write { db in

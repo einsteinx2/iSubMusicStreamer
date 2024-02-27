@@ -121,11 +121,13 @@ extension Store {
         }
     }
     
+    @discardableResult
     func delete(bookmarkId: Int) -> Bool {
         guard let bookmark = bookmark(id: bookmarkId) else { return false }
         return delete(bookmark: bookmark)
     }
     
+    @discardableResult
     func delete(bookmark: Bookmark) -> Bool {
         do {
             return try pool.write { db in

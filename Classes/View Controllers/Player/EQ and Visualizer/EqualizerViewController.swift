@@ -233,7 +233,7 @@ import Resolver
             alert.addAction(title: "Don't Show Again", style: .destructive) { _ in
                 self.settings.isShouldShowEQViewInstructions = false
             }
-            alert.addAction(title: "Cancel", style: .cancel)
+            alert.addCancelAction()
             present(alert, animated: true)
         }
     }
@@ -352,7 +352,7 @@ import Resolver
             self.presetPicker.selectRow(0, inComponent: 0, animated: false)
             self.pickerView(self.presetPicker, didSelectRow: 0, inComponent: 0)
         }
-        alert.addAction(title: "Cancel", style: .cancel)
+        alert.addCancelAction()
         present(alert, animated: true)
     }
 
@@ -385,7 +385,7 @@ import Resolver
             self.effectDAO.deleteTempCustomPreset()
             self.updatePresetPicker()
         }
-        alert.addAction(title: "Cancel", style: .cancel)
+        alert.addCancelAction()
         present(alert, animated: true)
     }
     

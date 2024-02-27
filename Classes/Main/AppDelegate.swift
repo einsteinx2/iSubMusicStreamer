@@ -102,8 +102,6 @@ import CocoaLumberjackSwift
     func applicationWillTerminate(_ application: UIApplication) {
         // Save settings and state
         settings.appTerminatedCleanly = true
-        settings.setup()
-        UserDefaults.standard.synchronize()
         
         // Cleanly terminate audio
         UIApplication.shared.endReceivingRemoteControlEvents()

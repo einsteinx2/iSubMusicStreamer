@@ -17,7 +17,7 @@ final class CoverArtDAO {
     weak var delegate: APILoaderDelegate?
     private var loader: CoverArtLoader?
     
-    var serverId: Int = { SavedSettings.shared().currentServerId }()
+    var serverId: Int = { (Resolver.resolve() as SavedSettings).currentServerId }()
     private let coverArtId: String
     private let isLarge: Bool
     

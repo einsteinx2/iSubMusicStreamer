@@ -97,7 +97,7 @@ final class DownloadStatusViewController: UIViewController {
         infoTitleStackView.axis = .vertical
         infoTitleStackView.distribution = .equalSpacing
         infoTitleStackView.spacing = 3
-        let downloadSizeTitle = settings.cachingType == ISMSCachingType_minSpace.rawValue ? "Min Free Space:" : "Max Download Space:"
+        let downloadSizeTitle = settings.cachingType == CachingType.minSpace.rawValue ? "Min Free Space:" : "Max Download Space:"
         infoTitleStackView.addArrangedSubviews([makeInfoLabel(text: "Songs Downloaded:"),
                                                 makeInfoLabel(text: "Download Space Used:"),
                                                 makeInfoLabel(text: downloadSizeTitle),
@@ -174,7 +174,7 @@ final class DownloadStatusViewController: UIViewController {
         let numCachedSongs = downloadsManager.numberOfCachedSongs
         songsDownloadedLabel.text = numCachedSongs == 1 ? "1 song" : "\(numCachedSongs) songs"
         downloadSpaceUsedLabel.text = formatFileSize(bytes: downloadsManager.cacheSize)
-        if settings.cachingType == ISMSCachingType_minSpace.rawValue {
+        if settings.cachingType == CachingType.minSpace.rawValue {
             downloadSizeLabel.text = formatFileSize(bytes: settings.minFreeSpace)
         } else {
             downloadSizeLabel.text = formatFileSize(bytes: settings.minFreeSpace)

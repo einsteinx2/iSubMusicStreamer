@@ -102,7 +102,7 @@ extension Store {
         }
     }
     
-    
+    @discardableResult
     func deleteTagArtists(serverId: Int, mediaFolderId: Int) -> Bool {
         do {
             return try pool.write { db in

@@ -17,7 +17,7 @@ struct DependencyInjection {
         
         // Singletons
         main.register(factory: { Store() as Store }).scope(Resolver.application)
-        main.register(factory: { SavedSettings.shared() as SavedSettings }).scope(Resolver.application)
+        main.register(factory: { SavedSettings() as SavedSettings }).scope(Resolver.application)
         main.register(factory: { BassPlayer() as BassPlayer }).scope(Resolver.application)
         main.register(factory: { DownloadsManager() as DownloadsManager }).scope(Resolver.application)
         main.register(factory: { DownloadQueue() as DownloadQueue }).scope(Resolver.application)

@@ -66,6 +66,7 @@ extension FolderArtist: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
+    @discardableResult
     func deleteFolderArtists(serverId: Int, mediaFolderId: Int) -> Bool {
         do {
             return try pool.write { db in

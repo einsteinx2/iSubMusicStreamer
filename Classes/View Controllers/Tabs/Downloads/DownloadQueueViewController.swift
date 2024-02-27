@@ -17,7 +17,7 @@ final class DownloadQueueViewController: AbstractDownloadsViewController {
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var downloadQueue: DownloadQueue
     
-    var serverId: Int = { SavedSettings.shared().currentServerId }()
+    var serverId: Int = { (Resolver.resolve() as SavedSettings).currentServerId }()
     
     override var itemCount: Int { store.downloadQueueCount() ?? 0 }
     

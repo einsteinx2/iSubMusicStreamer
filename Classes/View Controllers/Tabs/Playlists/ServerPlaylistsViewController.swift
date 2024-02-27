@@ -17,7 +17,7 @@ final class ServerPlaylistsViewController: CustomUITableViewController {
     @Injected private var playQueue: PlayQueue
     @Injected private var analytics: Analytics
     
-    var serverId: Int = { SavedSettings.shared().currentServerId }()
+    var serverId: Int = { (Resolver.resolve() as SavedSettings).currentServerId }()
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "playlist", pluralizeClearType: false, isLargeCount: true)
     

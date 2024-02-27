@@ -12,7 +12,7 @@ import Resolver
 final class HomeAlbumViewController: UIViewController {
     @Injected private var settings: SavedSettings
     
-    var serverId: Int = { SavedSettings.shared().currentServerId }()
+    var serverId: Int = { (Resolver.resolve() as SavedSettings).currentServerId }()
     
     var modifier = ""
     var folderAlbums = [FolderAlbum]()

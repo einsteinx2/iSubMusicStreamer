@@ -87,6 +87,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func deleteTagAlbums(serverId: Int) -> Bool {
         do {
             return try pool.write { db in
@@ -99,6 +100,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func deleteTagAlbums(serverId: Int, tagArtistId: String) -> Bool {
         do {
             return try pool.write { db in
@@ -188,6 +190,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func deleteTagSongs(serverId: Int, tagAlbumId: String) -> Bool {
         do {
             return try pool.write { db in

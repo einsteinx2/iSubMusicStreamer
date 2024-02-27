@@ -66,7 +66,7 @@ final class DownloadsManager {
         // Adjust the cache size if needed
         adjustCacheSize()
         
-        if settings.cachingType == Int(ISMSCachingType_minSpace.rawValue) && settings.isSongCachingEnabled {
+        if settings.cachingType == CachingType.minSpace.rawValue && settings.isSongCachingEnabled {
             // Check to see if the free space left is lower than the setting
             if freeSpace < settings.minFreeSpace {
                 // Check to see if the cache size + free space is still less than minFreeSpace
@@ -90,7 +90,7 @@ final class DownloadsManager {
                     }
                 }
             }
-        } else if settings.cachingType == Int(ISMSCachingType_maxSize.rawValue) && settings.isSongCachingEnabled {
+        } else if settings.cachingType == CachingType.maxSize.rawValue && settings.isSongCachingEnabled {
             // Check to see if the cache size is higher than the max
             if cacheSize > settings.maxCacheSize {
                 if settings.isAutoDeleteCacheEnabled {
@@ -118,7 +118,7 @@ final class DownloadsManager {
     
     private func adjustCacheSize() {
         // Only adjust if the user is using max cache size as option
-        if settings.cachingType == Int(ISMSCachingType_maxSize.rawValue) {
+        if settings.cachingType == CachingType.maxSize.rawValue {
             let possibleSize = freeSpace + cacheSize
             let maxCacheSize = settings.maxCacheSize
             DDLogInfo("[DownloadsManager] adjustCacheSize:  possibleSize = \(possibleSize)  maxCacheSize = \(maxCacheSize)")
@@ -131,7 +131,7 @@ final class DownloadsManager {
     
     // TODO: Refactor this to improve the logic
     private func removeOldestCachedSongs() {
-        if settings.cachingType == Int(ISMSCachingType_minSpace.rawValue) {
+        if settings.cachingType == CachingType.minSpace.rawValue {
             // Remove the oldest songs based on either oldest played or oldest cached until free space is more than minFreeSpace
             while freeSpace < settings.minFreeSpace {
                 if let downloadedSong = settings.autoDeleteCacheType == 0 ? store.oldestDownloadedSongByPlayedDate() : store.oldestDownloadedSongByDownloadedDate() {
@@ -142,7 +142,7 @@ final class DownloadsManager {
                     }
                 }
             }
-        } else if settings.cachingType == Int(ISMSCachingType_maxSize.rawValue) {
+        } else if settings.cachingType == CachingType.maxSize.rawValue {
             // Remove the oldest songs based on either oldest played or oldest cached until cache size is less than maxCacheSize
             var size = cacheSize
             while size > settings.maxCacheSize {

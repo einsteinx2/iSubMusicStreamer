@@ -176,21 +176,21 @@ final class ServerEditViewController: UIViewController {
         if !checkURL() {
             let message = "The URL must be in the format: http://mywebsite.com:port/folder\n\nBoth the :port and /folder are optional"
             let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-            alert.addAction(title: "OK", style: .cancel) { _ in
+            alert.addOKAction() { _ in
                 self.urlField.becomeFirstResponder()
             }
             present(alert, animated: true, completion: nil)
         } else if !checkUsername() {
             let message = "Please enter a username"
             let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-            alert.addAction(title: "OK", style: .cancel) { _ in
+            alert.addOKAction() { _ in
                 self.usernameField.becomeFirstResponder()
             }
             present(alert, animated: true, completion: nil)
         } else if !checkPassword() {
             let message = "Please enter a password"
             let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-            alert.addAction(title: "OK", style: .cancel) { _ in
+            alert.addOKAction() { _ in
                 self.passwordField.becomeFirstResponder()
             }
             present(alert, animated: true, completion: nil)
@@ -287,7 +287,7 @@ extension ServerEditViewController: APILoaderDelegate {
         }
         
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        alert.addAction(title: "OK", style: .cancel, handler: nil)
-        present(alert, animated: true, completion: nil)
+        alert.addOKAction()
+        present(alert, animated: true)
     }
 }

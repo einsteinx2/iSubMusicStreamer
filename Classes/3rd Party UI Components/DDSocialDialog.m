@@ -42,7 +42,6 @@
  */
 
 #import "DDSocialDialog.h"
-#import "Defines.h"
 #import "Swift.h"
 
 static CGFloat kDDSocialDialogBorderWidth = 10;

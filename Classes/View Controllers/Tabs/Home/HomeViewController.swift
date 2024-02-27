@@ -19,7 +19,7 @@ final class HomeViewController: UIViewController {
     @Injected private var playQueue: PlayQueue
     @Injected private var analytics: Analytics
     
-    var serverId: Int = { SavedSettings.shared().currentServerId }()
+    var serverId: Int = { (Resolver.resolve() as SavedSettings).currentServerId }()
     
     private var quickAlbumsLoader: QuickAlbumsLoader?
     private var serverShuffleLoader: ServerShuffleLoader?
@@ -305,8 +305,8 @@ final class HomeViewController: UIViewController {
             if let error = error {
                 if self.settings.isPopupsEnabled && !error.isCanceledURLRequest {
                     let alert = UIAlertController(title: "Error", message: "There was an error grabbing the album list.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
-                    alert.addAction(title: "OK", style: .cancel, handler: nil)
-                    self.present(alert, animated: true, completion: nil)
+                    alert.addOKAction()
+                    self.present(alert, animated: true)
                 }
             } else {
                 let controller = HomeAlbumViewController()
@@ -332,8 +332,8 @@ final class HomeViewController: UIViewController {
             } else {
                 if settings.isPopupsEnabled {
                     let alert = UIAlertController(title: "Error", message: "There was an error creating the server shuffle list.\n\nThe connection could not be created", preferredStyle: .alert)
-                    alert.addAction(title: "OK", style: .cancel, handler: nil)
-                    present(alert, animated: true, completion: nil)
+                    alert.addOKAction()
+                    present(alert, animated: true)
                 }
             }
             serverShuffleLoader = nil
@@ -456,8 +456,8 @@ extension HomeViewController: UISearchBarDelegate {
             } else if let error = error {
                 if self.settings.isPopupsEnabled {
                     let alert = UIAlertController(title: "Error", message: "There was an error completing the search.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
-                    alert.addAction(title: "OK", style: .cancel, handler: nil)
-                    self.present(alert, animated: true, completion: nil)
+                    alert.addOKAction()
+                    self.present(alert, animated: true)
                 }
             }
         }

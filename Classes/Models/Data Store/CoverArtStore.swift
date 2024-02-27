@@ -43,6 +43,7 @@ extension ArtistArt: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
+    @discardableResult
     func resetCoverArtCache(serverId: Int) -> Bool {
         do {
             return try pool.write { db in
@@ -55,6 +56,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func resetArtistArtCache(serverId: Int) -> Bool {
         do {
             return try pool.write { db in

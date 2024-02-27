@@ -597,6 +597,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func deleteDownloadedSong(serverId: Int, songId: String) -> Bool {
         do {
             if let song = self.song(serverId: serverId, id: songId), FileManager.default.fileExists(atPath: song.localPath) {
@@ -614,14 +615,17 @@ extension Store {
         }
     }
     
+    @discardableResult
     func deleteDownloadedSong(song: Song) -> Bool {
         return deleteDownloadedSong(serverId: song.serverId, songId: song.id)
     }
     
+    @discardableResult
     func delete(downloadedSong: DownloadedSong) -> Bool {
         return deleteDownloadedSong(serverId: downloadedSong.serverId, songId: downloadedSong.songId);
     }
     
+    @discardableResult
     func deleteDownloadedSongs(serverId: Int, level: Int) -> Bool {
         do {
             return try pool.write { db in
@@ -649,14 +653,17 @@ extension Store {
         }
     }
     
+    @discardableResult
     func deleteDownloadedSongs(downloadedFolderArtist: DownloadedFolderArtist) -> Bool {
         return deleteDownloadedSongs(serverId: downloadedFolderArtist.serverId, level: 0)
     }
     
+    @discardableResult
     func deleteDownloadedSongs(downloadedFolderAlbum: DownloadedFolderAlbum) -> Bool {
         return deleteDownloadedSongs(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level)
     }
     
+    @discardableResult
     func deleteDownloadedSongs(downloadedTagArtist: DownloadedTagArtist) -> Bool {
         do {
             return try pool.write { db in
@@ -678,6 +685,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func deleteDownloadedSongs(downloadedTagAlbum: DownloadedTagAlbum) -> Bool {
         do {
             return try pool.write { db in
@@ -839,6 +847,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func clearDownloadQueue() -> Bool {
         do {
             return try pool.write { db in
@@ -852,6 +861,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func removeFromDownloadQueue(serverId: Int, songId: String) -> Bool {
         do {
             return try pool.write { db in
@@ -869,6 +879,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func removeFromDownloadQueue(song: Song) -> Bool {
         return removeFromDownloadQueue(serverId: song.serverId, songId: song.id)
     }

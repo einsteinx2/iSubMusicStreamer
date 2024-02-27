@@ -48,12 +48,9 @@ final class VideoPlayer: NSObject {
     
     // MARK: Video Playback
     
-    func playVideo(song: Song, bitrates: [Int]? = nil) {
+    func playVideo(song: Song, bitrates: [String]? = nil) {
         let isVideoSupported = settings.currentServer?.isVideoSupported ?? false
-        guard song.isVideo && isVideoSupported else { return }
-        
-        // Get the default bitrates if none provided
-        let bitRate = bitrates ?? settings.currentVideoBitrates.map { $0.intValue }
+        guard let bitRate = bitrates ?? settings.currentVideoBitrates, song.isVideo && isVideoSupported else { return }
         
         // Stop the player
         player.stop()

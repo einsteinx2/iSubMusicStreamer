@@ -380,8 +380,8 @@ final class PlayerViewController: UIViewController {
                 
                 if !success {
                     let errorAlert = UIAlertController(title: "Error", message: "Failed to create the bookmark, please try again.", preferredStyle: .alert)
-                    errorAlert.addAction(title: "OK", style: .cancel, handler: nil)
-                    self.present(errorAlert, animated: true, completion: nil)
+                    errorAlert.addOKAction(title: "OK")
+                    self.present(errorAlert, animated: true)
                     return
                 }
                 
@@ -617,7 +617,7 @@ final class PlayerViewController: UIViewController {
             } else {
                 let message = "You are trying to skip further than the song has downloaded. You can do this, but the song won't be downloaded. Or you can wait a little bit for the download to catch up."
                 let alert = UIAlertController(title: "Past Download Point", message: message, preferredStyle: .alert)
-                alert.addAction(title: "OK", style: .default) { _ in
+                alert.addOKAction(style: .default) { _ in
                     self.player.stop()
                     self.player.startByteOffset = byteOffset
                     self.player.startSecondsOffset = secondsOffset

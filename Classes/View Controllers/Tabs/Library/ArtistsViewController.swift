@@ -18,7 +18,7 @@ final class ArtistsViewController: CustomUITableViewController {
     @Injected private var settings: SavedSettings
     @Injected private var analytics: Analytics
     
-    var serverId: Int = { SavedSettings.shared().currentServerId }()
+    var serverId: Int = { (Resolver.resolve() as SavedSettings).currentServerId }()
     
     private let dropdownMenu = DropdownMenu()
     private let searchBar = UISearchBar()
@@ -64,7 +64,7 @@ final class ArtistsViewController: CustomUITableViewController {
         setupDefaultTableView(tableView)
         tableView.register(BlurredSectionHeader.self, forHeaderFooterViewReuseIdentifier: BlurredSectionHeader.reuseId)
         tableView.refreshControl = RefreshControl(handler: { [unowned self] in
-            loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId)
+            loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId)
         })
         
         if dataModel.isCached {
@@ -81,7 +81,7 @@ final class ArtistsViewController: CustomUITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if !dataModel.isCached {
-            loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId)
+            loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId)
         }
         analytics.log(event: .foldersTab)
     }
@@ -190,7 +190,7 @@ final class ArtistsViewController: CustomUITableViewController {
     }
     
     @objc private func reloadAction() {
-        loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId?.intValue ?? MediaFolder.allFoldersId)
+        loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId)
     }
 
     private func loadData(serverId: Int, mediaFolderId: Int) {
@@ -474,7 +474,7 @@ extension ArtistsViewController: DropdownMenuDelegate {
         
         // Save the default
         let mediaFolderId = dataModel.mediaFolders[index].id
-        settings.rootFoldersSelectedFolderId = NSNumber(value: mediaFolderId)
+        settings.rootFoldersSelectedFolderId = mediaFolderId
 
         // Reload the data
         dataModel.mediaFolderId = mediaFolderId

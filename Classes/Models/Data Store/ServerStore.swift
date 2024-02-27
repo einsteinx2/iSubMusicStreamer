@@ -77,6 +77,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func deleteServer(id: Int) -> Bool {
         do {
             return try pool.write { db in

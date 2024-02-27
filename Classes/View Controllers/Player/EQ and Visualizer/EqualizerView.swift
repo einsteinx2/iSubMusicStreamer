@@ -493,7 +493,7 @@ final class EqualizerView: UIView {
         case .maxValue:
             break
         }
-        settings.currentVisualizerType = ISMSBassVisualType(rawValue: UInt32(visualizerType.rawValue))
+        settings.currentVisualizerType = visualizerType
     }
     
     func nextType() {

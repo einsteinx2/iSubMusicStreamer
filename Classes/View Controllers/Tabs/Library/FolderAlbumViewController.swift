@@ -18,7 +18,7 @@ final class FolderAlbumViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
     
-    var serverId: Int = { SavedSettings.shared().currentServerId }()
+    var serverId: Int = { (Resolver.resolve() as SavedSettings).currentServerId }()
     
     private let folderArtist: FolderArtist?
     private let folderAlbum: FolderAlbum?

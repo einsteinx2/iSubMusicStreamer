@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Resolver
 
 struct Colors {
     static let background = UIColor(named: "isubBackgroundColor")
@@ -22,7 +23,8 @@ struct Colors {
     static let cellGreen = UIColor(red: 103.0/255.0, green: 227.0/255.0, blue: 0, alpha: 1)
     static let cellBlue = UIColor(red: 28.0/255.0, green: 163.0/255.0, blue: 1, alpha: 1)
     static var currentCellColor: UIColor {
-        switch SavedSettings.shared().downloadedSongCellColorType {
+        let settings: SavedSettings = Resolver.resolve()
+        switch settings.downloadedSongCellColorType {
             case 0: return cellRed;
             case 1: return cellYellow;
             case 2: return cellGreen;

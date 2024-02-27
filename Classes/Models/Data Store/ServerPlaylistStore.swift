@@ -164,6 +164,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func clear(serverId: Int, serverPlaylistId: Int) -> Bool {
         do {
             return try pool.write { db in
@@ -183,10 +184,12 @@ extension Store {
         }
     }
     
+    @discardableResult
     func clear(serverPlaylist: ServerPlaylist) -> Bool {
         return clear(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id)
     }
     
+    @discardableResult
     func delete(serverId: Int, serverPlaylistId: Int) -> Bool {
         do {
             return try pool.write { db in
@@ -200,6 +203,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func delete(serverPlaylist: ServerPlaylist) -> Bool {
         return delete(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id)
     }
@@ -257,6 +261,7 @@ extension Store {
     }
     
     // TODO: Optimize this
+    @discardableResult
     func queueServerPlaylist(serverId: Int, serverPlaylistId: Int) -> Bool {
         let songIds = self.songIds(serverId: serverId, serverPlaylistId: serverPlaylistId)
         return queue(songIds: songIds, serverId: serverId)

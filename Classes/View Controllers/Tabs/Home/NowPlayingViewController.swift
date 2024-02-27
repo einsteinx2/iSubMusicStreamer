@@ -16,7 +16,7 @@ final class NowPlayingViewController: CustomUITableViewController {
     @Injected private var settings: SavedSettings
     @Injected private var analytics: Analytics
     
-    var serverId: Int = { SavedSettings.shared().currentServerId }()
+    var serverId: Int = { (Resolver.resolve() as SavedSettings).currentServerId }()
         
     private var nowPlayingLoader: NowPlayingLoader?
     private var nowPlayingSongs = [NowPlayingSong]()

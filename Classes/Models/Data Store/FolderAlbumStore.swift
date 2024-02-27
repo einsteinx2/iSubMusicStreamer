@@ -81,6 +81,7 @@ extension FolderMetadata: FetchableRecord, PersistableRecord {
 }
 
 extension Store {
+    @discardableResult
     func resetFolderAlbumCache(serverId: Int) -> Bool {
         do {
             return try pool.write { db in
@@ -94,6 +95,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func resetFolderAlbumCache(serverId: Int, parentFolderId: String) -> Bool {
         do {
             return try pool.write { db in

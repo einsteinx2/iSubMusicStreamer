@@ -175,6 +175,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func delete(localPlaylistId: Int) -> Bool {
         do {
             return try pool.write { db in
@@ -187,6 +188,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func clear(localPlaylistId: Int) -> Bool {
         do {
             return try pool.write { db in
@@ -297,6 +299,7 @@ extension Store {
     }
     
     // TODO: Move this to a single transaction
+    @discardableResult
     func queue(song: Song) -> Bool {
         var success = true
         if settings.isJukeboxEnabled {
@@ -317,6 +320,7 @@ extension Store {
         return success
     }
     
+    @discardableResult
     func queueNext(song: Song, offset: Int = 0) -> Bool {
         var success = true
         if settings.isJukeboxEnabled {
@@ -347,6 +351,7 @@ extension Store {
     }
     
     // TODO: Move this to a single transaction
+    @discardableResult
     func queue(songIds: [String], serverId: Int) -> Bool {
         var success = true
         if settings.isJukeboxEnabled {
@@ -367,6 +372,7 @@ extension Store {
         return success
     }
     
+    @discardableResult
     func clearPlayQueue() -> Bool {
         var success = true
         if settings.isJukeboxEnabled {
@@ -388,6 +394,7 @@ extension Store {
     }
     
     // TODO: Move this to a single transaction
+    @discardableResult
     func clearAndQueue(songIds: [String], serverId: Int) -> Bool {
         if clearPlayQueue() {
             return queue(songIds: songIds, serverId: serverId)
@@ -396,6 +403,7 @@ extension Store {
     }
     
     // TODO: Move this to a single transaction
+    @discardableResult
     func clearAndQueue(songs: [Song]) -> Bool {
         if clearPlayQueue() {
             for song in songs {
@@ -524,6 +532,7 @@ extension Store {
         }
     }
     
+    @discardableResult
     func remove(songsAtPositions positions: [Int], localPlaylistId: Int) -> Bool {
         do {
             return try pool.write { db in
