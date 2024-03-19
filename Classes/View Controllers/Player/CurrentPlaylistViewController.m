@@ -176,12 +176,14 @@ LOG_LEVEL_ISUB_DEFAULT
 - (void)viewWillAppear:(BOOL)animated  {
 	[super viewWillAppear:animated];
 	
+    [NSNotificationCenter postNotificationToMainThreadWithName: @"playlistAppearing"];
 	[self selectRow];
 }
 
 - (void)viewWillDisappear:(BOOL)animated  {
     [super viewWillDisappear:animated];
 	
+    [NSNotificationCenter postNotificationToMainThreadWithName: @"playlistDisappearing"];
 	[self unregisterForNotifications];
 
 	if (self.isEditing) {

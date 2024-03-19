@@ -29,8 +29,8 @@ import CocoaLumberjackSwift
     
     // Song info
     private let songInfoContainer = UIView()
-    private let songNameLabel = AutoScrollingLabel()
-    private let artistNameLabel = AutoScrollingLabel()
+    private let songNameLabel = AutoScrollingLabel(centerIfPossible: true)
+    private let artistNameLabel = AutoScrollingLabel(centerIfPossible: true)
     
     // Player controls
     private let controlsStack = UIStackView()
@@ -170,8 +170,7 @@ import CocoaLumberjackSwift
         songInfoContainer.addSubview(songNameLabel)
         songNameLabel.snp.makeConstraints { make in
             make.height.equalToSuperview().multipliedBy(0.6)
-            make.width.lessThanOrEqualToSuperview()
-            make.centerX.top.equalToSuperview()
+            make.leading.trailing.top.equalToSuperview()
         }
         
         artistNameLabel.font = .boldSystemFont(ofSize: UIDevice.isSmall() || UIDevice.isPad() ? 18 : 16)
@@ -179,8 +178,7 @@ import CocoaLumberjackSwift
         songInfoContainer.addSubview(artistNameLabel)
         artistNameLabel.snp.makeConstraints { make in
             make.height.equalToSuperview().multipliedBy(0.4)
-            make.width.lessThanOrEqualToSuperview()
-            make.centerX.bottom.equalToSuperview()
+            make.leading.trailing.bottom.equalToSuperview()
         }
         
         //
@@ -226,7 +224,6 @@ import CocoaLumberjackSwift
         downloadProgressView.backgroundColor = UIColor.systemGray4
         progressBarContainer.insertSubview(downloadProgressView, belowSubview: progressSlider)
         downloadProgressView.snp.makeConstraints { make in
-//            make.width.equalTo(0)
             make.width.equalTo(0)
             make.leading.equalTo(progressSlider).offset(-5)
             make.top.equalTo(progressSlider).offset(-3)
