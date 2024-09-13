@@ -577,10 +577,8 @@ extension Store {
         }
     }
     
-    
-    // Prepare the shuffle queue and update the localPlaylist scores
     @discardableResult
-    func createShuffleQueue( localPlaylistId: Int) -> Bool {
+    func createShuffleQueue() -> Bool {
         do {
             // Clear the existing shuffle play queue playlist
             clear(localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
@@ -593,7 +591,7 @@ extension Store {
                     INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
                     SELECT 2 AS localPlaylistId, ROW_NUMBER() OVER (ORDER BY RANDOM()) - 1 AS position, serverId, songId
                     FROM localPlaylistSong
-                    WHERE localPlaylistId = \(localPlaylistId)
+                    WHERE localPlaylistId = \(LocalPlaylist.Default.playQueueId)
                     """
                 try db.execute(literal: randomizeSql)
                 
@@ -606,7 +604,7 @@ extension Store {
             }
             return true
         } catch {
-            DDLogError("Failed to create Shuffle queue in local playlist \(localPlaylistId): \(error)")
+            DDLogError("Failed to create Shuffle queue: \(error)")
             return false
         }
     }
