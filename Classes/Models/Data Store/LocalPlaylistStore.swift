@@ -584,9 +584,8 @@ extension Store {
             clear(localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
             
             try pool.write { db in
-                //Delete the songs from Local playlist songs with id = 2 Shuffle Queue
-                //Create a random list of songs from play queue
-                //Insert into local playlist songs the new shuffle queue
+                // Create a random list of songs from play queue
+                // Insert the shuffled queue into local playlist songs
                 let randomizeSql: SQLLiteral = """
                     INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
                     SELECT 2 AS localPlaylistId, ROW_NUMBER() OVER (ORDER BY RANDOM()) - 1 AS position, serverId, songId
@@ -595,6 +594,7 @@ extension Store {
                     """
                 try db.execute(literal: randomizeSql)
                 
+                // Update the shuffle queue songCount in localPlaylist
                 let updateCountSql: SQLLiteral = """
                     UPDATE localPlaylist
                     SET songCount = (SELECT songCount FROM localPlaylist WHERE id = \(LocalPlaylist.Default.playQueueId))
