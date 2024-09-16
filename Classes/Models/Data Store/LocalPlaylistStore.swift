@@ -59,7 +59,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
 //    }
     
     static func fetchSongs(_ db: Database, playlistId: Int) throws -> [Song] {
-        let sql: SQLLiteral = """
+        let sql: SQL = """
             SELECT *
             FROM \(Song.self)
             JOIN localPlaylistSong
@@ -70,7 +70,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
     }
     
     static func fetchSong(_ db: Database, playlistId: Int, position: Int) throws -> Song? {
-        let sql: SQLLiteral = """
+        let sql: SQL = """
             SELECT *
             FROM \(Song.self)
             JOIN localPlaylistSong
@@ -86,7 +86,7 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
     }
     
     static func insertSong(_ db: Database, serverId: Int, songId: String, position: Int, playlistId: Int) throws {
-        let sql: SQLLiteral = """
+        let sql: SQL = """
             INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
             VALUES (\(playlistId), \(position), \(serverId), \(songId))
             """
@@ -251,7 +251,7 @@ extension Store {
                 guard var playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId), position <= playlist.songCount else { return false }
                     
                 // Update all song positions after the current position
-                let positionSql: SQLLiteral = """
+                let positionSql: SQL = """
                     UPDATE localPlaylistSong
                     SET position = position + 1
                     WHERE position >= \(position) AND localPlaylistId = \(localPlaylistId)
@@ -280,7 +280,7 @@ extension Store {
                     
                 // Add the song to the playlist
                 for (index, songId) in songIds.enumerated() {
-                    let sql: SQLLiteral = """
+                    let sql: SQL = """
                         INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
                         VALUES (\(localPlaylistId), \(index + playlist.songCount), \(serverId), \(songId))
                         """
@@ -393,6 +393,38 @@ extension Store {
         return success
     }
     
+    @discardableResult
+    func createShuffleQueue() -> Bool {
+        do {
+            // Clear the existing shuffle play queue playlist
+            clear(localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
+            
+            try pool.write { db in
+                // Create a random list of songs from play queue
+                // Insert the shuffled queue into local playlist songs
+                let randomizeSql: SQL = """
+                    INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
+                    SELECT 2 AS localPlaylistId, ROW_NUMBER() OVER (ORDER BY RANDOM()) - 1 AS position, serverId, songId
+                    FROM localPlaylistSong
+                    WHERE localPlaylistId = \(LocalPlaylist.Default.playQueueId)
+                    """
+                try db.execute(literal: randomizeSql)
+                
+                // Update the shuffle queue songCount in localPlaylist
+                let updateCountSql: SQL = """
+                    UPDATE localPlaylist
+                    SET songCount = (SELECT songCount FROM localPlaylist WHERE id = \(LocalPlaylist.Default.playQueueId))
+                    WHERE id = \(LocalPlaylist.Default.shuffleQueueId)
+                    """
+                try db.execute(literal: updateCountSql)
+            }
+            return true
+        } catch {
+            DDLogError("Failed to create Shuffle queue: \(error)")
+            return false
+        }
+    }
+    
     // TODO: Move this to a single transaction
     @discardableResult
     func clearAndQueue(songIds: [String], serverId: Int) -> Bool {
@@ -499,7 +531,7 @@ extension Store {
                 guard let song = try LocalPlaylist.fetchSong(db, playlistId: localPlaylistId, position: from) else { return false }
                 
                 // Remove the song from the playlist
-                let removeSongSql: SQLLiteral = """
+                let removeSongSql: SQL = """
                     DELETE FROM localPlaylistSong
                     WHERE localPlaylistId = \(localPlaylistId) AND position = \(from)
                     """
@@ -507,14 +539,14 @@ extension Store {
                 
                 // Update song positions
                 if to < from {
-                    let positionSql: SQLLiteral = """
+                    let positionSql: SQL = """
                         UPDATE localPlaylistSong
                         SET position = position + 1
                         WHERE localPlaylistId = \(localPlaylistId) AND position >= \(to) AND position < \(from)
                         """
                     try db.execute(literal: positionSql)
                 } else {
-                    let positionSql: SQLLiteral = """
+                    let positionSql: SQL = """
                         UPDATE localPlaylistSong
                         SET position = position - 1
                         WHERE localPlaylistId = \(localPlaylistId) AND position > \(from) AND position <= \(to)
@@ -543,14 +575,14 @@ extension Store {
                 let validPositions = positions.filter { $0 >= 0 && $0 < playlist.songCount }
                 
                 // Remove the songs from the playlist
-                let removeSongsSql: SQLLiteral = """
+                let removeSongsSql: SQL = """
                     DELETE FROM localPlaylistSong
                     WHERE localPlaylistId = \(localPlaylistId) AND position IN \(validPositions)
                     """
                 try db.execute(literal: removeSongsSql)
                 
                 // Update song positions
-                let songRequestSql: SQLLiteral = """
+                let songRequestSql: SQL = """
                     SELECT serverId, songId
                     FROM localPlaylistSong
                     WHERE localPlaylistId = \(localPlaylistId)
@@ -558,7 +590,7 @@ extension Store {
                     """
                 let songTuples = try SQLRequest<Row>(literal: songRequestSql).fetchAll(db).map({ ($0[0] as Int, $0[1] as Int) })
                 for (index, tuple) in songTuples.enumerated() {
-                    let updateSql: SQLLiteral = """
+                    let updateSql: SQL = """
                         UPDATE localPlaylistSong
                         SET position = \(index)
                         WHERE localPlaylistId = \(localPlaylistId) AND serverId = \(tuple.0) AND songId = \(tuple.1)
@@ -573,38 +605,6 @@ extension Store {
             }
         } catch {
             DDLogError("Failed to remove songs from positions \(positions) in local playlist \(localPlaylistId): \(error)")
-            return false
-        }
-    }
-    
-    @discardableResult
-    func createShuffleQueue() -> Bool {
-        do {
-            // Clear the existing shuffle play queue playlist
-            clear(localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
-            
-            try pool.write { db in
-                // Create a random list of songs from play queue
-                // Insert the shuffled queue into local playlist songs
-                let randomizeSql: SQLLiteral = """
-                    INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
-                    SELECT 2 AS localPlaylistId, ROW_NUMBER() OVER (ORDER BY RANDOM()) - 1 AS position, serverId, songId
-                    FROM localPlaylistSong
-                    WHERE localPlaylistId = \(LocalPlaylist.Default.playQueueId)
-                    """
-                try db.execute(literal: randomizeSql)
-                
-                // Update the shuffle queue songCount in localPlaylist
-                let updateCountSql: SQLLiteral = """
-                    UPDATE localPlaylist
-                    SET songCount = (SELECT songCount FROM localPlaylist WHERE id = \(LocalPlaylist.Default.playQueueId))
-                    WHERE id = \(LocalPlaylist.Default.shuffleQueueId)
-                    """
-                try db.execute(literal: updateCountSql)
-            }
-            return true
-        } catch {
-            DDLogError("Failed to create Shuffle queue: \(error)")
             return false
         }
     }

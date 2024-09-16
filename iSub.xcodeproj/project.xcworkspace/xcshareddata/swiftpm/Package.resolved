@@ -1,12 +1,13 @@
 {
+  "originHash" : "be96200582eb940f5589fd195b1cb9649d8b33d7aee364701fb2ab9b3eb96a36",
   "pins" : [
     {
       "identity" : "cocoalumberjack",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CocoaLumberjack/CocoaLumberjack",
       "state" : {
-        "revision" : "af4973721172dd7850a42a58a9ffcec0ec82e5a9",
-        "version" : "3.8.4"
+        "revision" : "4b8714a7fb84d42393314ce897127b3939885ec3",
+        "version" : "3.8.5"
       }
     },
     {
@@ -14,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattgallagher/CwlCatchException",
       "state" : {
-        "revision" : "3b123999de19bf04905bc1dfdb76f817b0f2cc00",
-        "version" : "2.1.2"
+        "revision" : "07b2ba21d361c223e25e3c1e924288742923f08c",
+        "version" : "2.2.1"
       }
     },
     {
@@ -23,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDB.swift.git",
       "state" : {
-        "revision" : "2a917823ed2511ec5cb21a83f8a4f389e45d7038",
-        "version" : "5.2.0"
+        "revision" : "dd7e7f39e8e4d7a22d258d9809a882f914690b01",
+        "version" : "5.26.1"
       }
     },
     {
@@ -41,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/uias/Pageboy",
       "state" : {
-        "revision" : "34ecb6e7c4e0e07494960ab2f7cc9a02293915a6",
-        "version" : "3.6.2"
+        "revision" : "af8fa81788b893205e1ff42ddd88c5b0b315d7c5",
+        "version" : "3.7.0"
       }
     },
     {
@@ -50,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hmlongco/Resolver.git",
       "state" : {
-        "revision" : "f1f7c1040b3fb0029324a7b2bcc3d64b435840ac",
-        "version" : "1.3.0"
+        "revision" : "47602af1ac8d7952299fbd0bda3cfbd12cf3a8ca",
+        "version" : "1.5.1"
       }
     },
     {
@@ -59,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SnapKit/SnapKit.git",
       "state" : {
-        "revision" : "d458564516e5676af9c70b4f4b2a9178294f1bc6",
-        "version" : "5.0.1"
+        "revision" : "2842e6e84e82eb9a8dac0100ca90d9444b0307f4",
+        "version" : "5.7.1"
       }
     },
     {
@@ -68,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log",
       "state" : {
-        "revision" : "e97a6fcb1ab07462881ac165fdbb37f067e205d5",
-        "version" : "1.5.4"
+        "revision" : "9cb486020ebf03bfa5b5df985387a14a98744537",
+        "version" : "1.6.1"
       }
     },
     {
@@ -77,10 +78,10 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/uias/Tabman",
       "state" : {
-        "revision" : "2f01f14128c0762476d0a0c9b1bcf2bd52ed4e98",
-        "version" : "2.10.0"
+        "revision" : "4a4f7c755b875ffd4f9ef10d67a67883669d2465",
+        "version" : "2.13.0"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

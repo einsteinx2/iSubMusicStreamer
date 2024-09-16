@@ -16,15 +16,15 @@ struct DependencyInjection {
         let main = Resolver.main
         
         // Singletons
-        main.register(factory: { Store() as Store }).scope(Resolver.application)
-        main.register(factory: { SavedSettings() as SavedSettings }).scope(Resolver.application)
-        main.register(factory: { BassPlayer() as BassPlayer }).scope(Resolver.application)
-        main.register(factory: { DownloadsManager() as DownloadsManager }).scope(Resolver.application)
-        main.register(factory: { DownloadQueue() as DownloadQueue }).scope(Resolver.application)
-        main.register(factory: { StreamManager() as StreamManager }).scope(Resolver.application)
-        main.register(factory: { Jukebox() as Jukebox }).scope(Resolver.application)
-        main.register(factory: { PlayQueue() as PlayQueue }).scope(Resolver.application)
-        main.register(factory: { Social() as Social }).scope(Resolver.application)
-        main.register(factory: { Analytics() as Analytics }).scope(Resolver.application)
+        main.register(factory: { Store() as Store }).scope(ResolverScope.application)
+        main.register(factory: { SavedSettings() as SavedSettings }).scope(ResolverScope.application)
+        main.register(factory: { BassPlayer() as BassPlayer }).scope(ResolverScope.application)
+        main.register(factory: { DownloadsManager() as DownloadsManager }).scope(ResolverScope.application)
+        main.register(factory: { DownloadQueue() as DownloadQueue }).scope(ResolverScope.application)
+        main.register(factory: { StreamManager() as StreamManager }).scope(ResolverScope.application)
+        main.register(factory: { Jukebox() as Jukebox }).scope(ResolverScope.application)
+        main.register(factory: { PlayQueue() as PlayQueue }).scope(ResolverScope.application)
+        main.register(factory: { Social() as Social }).scope(ResolverScope.application)
+        main.register(factory: { Analytics() as Analytics }).scope(ResolverScope.application)
     }
 }
