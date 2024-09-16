@@ -576,4 +576,36 @@ extension Store {
             return false
         }
     }
+    
+    @discardableResult
+    func createShuffleQueue() -> Bool {
+        do {
+            // Clear the existing shuffle play queue playlist
+            clear(localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
+            
+            try pool.write { db in
+                // Create a random list of songs from play queue
+                // Insert the shuffled queue into local playlist songs
+                let randomizeSql: SQLLiteral = """
+                    INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
+                    SELECT 2 AS localPlaylistId, ROW_NUMBER() OVER (ORDER BY RANDOM()) - 1 AS position, serverId, songId
+                    FROM localPlaylistSong
+                    WHERE localPlaylistId = \(LocalPlaylist.Default.playQueueId)
+                    """
+                try db.execute(literal: randomizeSql)
+                
+                // Update the shuffle queue songCount in localPlaylist
+                let updateCountSql: SQLLiteral = """
+                    UPDATE localPlaylist
+                    SET songCount = (SELECT songCount FROM localPlaylist WHERE id = \(LocalPlaylist.Default.playQueueId))
+                    WHERE id = \(LocalPlaylist.Default.shuffleQueueId)
+                    """
+                try db.execute(literal: updateCountSql)
+            }
+            return true
+        } catch {
+            DDLogError("Failed to create Shuffle queue: \(error)")
+            return false
+        }
+    }
 }

@@ -233,12 +233,15 @@ import CocoaLumberjackSwift
     }
     
     @objc func shuffleToggle() {
-        fatalError("implement this")
-        if isShuffle {
-            
-        } else {
-            
-        }
+       if isShuffle {
+           isShuffle = false
+           playSong(position: 0)
+       } else {
+           if store.createShuffleQueue() {
+               isShuffle = true
+               playSong(position: 0)
+           }
+       }
     }
     
     @discardableResult
