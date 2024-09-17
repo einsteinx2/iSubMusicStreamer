@@ -49,7 +49,7 @@ extension ServerPlaylist: FetchableRecord, PersistableRecord {
     }
     
     static func fetchSong(_ db: Database, serverId: Int, playlistId: Int, position: Int) throws -> Song? {
-        let sql: SQLLiteral = """
+        let sql: SQL = """
             SELECT *
             FROM \(Song.self)
             JOIN serverPlaylistSong
@@ -64,7 +64,7 @@ extension ServerPlaylist: FetchableRecord, PersistableRecord {
     }
     
     static func insertSong(_ db: Database, song: Song, position: Int, serverId: Int, playlistId: Int) throws {
-        let sql: SQLLiteral = """
+        let sql: SQL = """
             INSERT INTO serverPlaylistSong (serverId, serverPlaylistId, position, songId)
             VALUES (\(serverId), \(playlistId), \(position), \(song.id))
             """
@@ -83,7 +83,7 @@ extension Store {
                 }
                 
                 // Check if the songIds count matches the number of songs this album should have
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT songId
                     FROM serverPlaylistSong
                     WHERE serverId = \(serverId) AND serverPlaylistId = \(id)
@@ -246,7 +246,7 @@ extension Store {
     func songIds(serverId: Int, serverPlaylistId: Int) -> [String] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT songId
                     FROM serverPlaylistSong
                     WHERE serverId = \(serverId) AND serverPlaylistId = \(serverPlaylistId)

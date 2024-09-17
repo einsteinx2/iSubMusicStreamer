@@ -81,7 +81,7 @@ extension Store {
     func deleteServer(id: Int) -> Bool {
         do {
             return try pool.write { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                 DELETE FROM \(Server.self)
                 WHERE id = \(id)
                 """

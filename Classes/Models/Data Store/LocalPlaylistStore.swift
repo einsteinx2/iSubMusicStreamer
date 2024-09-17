@@ -487,7 +487,7 @@ extension Store {
             // Fill the play queue
             try pool.write { db in
                 // Add the songs from the playlist to the play queue
-                // NOTE: This is NOT an SQLLiteral as that string interpolation doesn't work in the SELECT statement.
+                // NOTE: This is NOT an SQL as that string interpolation doesn't work in the SELECT statement.
                 //       There is no security risk directly interpolating the values here as they are integers and
                 //       there is no posibility of SQL injection. Plus the values come from the code not user input.
                 let sql = """

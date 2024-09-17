@@ -81,3 +81,5 @@ sqlcipher/Makefile
 sqlcipher/config.log
 sqlcipher/config.status
 sqlcipher/libtool
+iSub.xcodeproj/project.pbxproj
+iSub.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved

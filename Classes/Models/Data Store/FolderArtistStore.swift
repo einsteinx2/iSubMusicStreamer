@@ -84,7 +84,7 @@ extension Store {
     func folderArtistIds(serverId: Int, mediaFolderId: Int) -> [String] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT folderArtistId
                     FROM folderArtistList
                     WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)
@@ -116,7 +116,7 @@ extension Store {
                 try folderArtist.save(db)
                 
                 // Insert artist id into list cache
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     INSERT INTO folderArtistList
                     (serverId, mediaFolderId, folderArtistId)
                     VALUES (\(folderArtist.serverId), \(mediaFolderId), \(folderArtist.id))
@@ -133,7 +133,7 @@ extension Store {
     func folderArtistSections(serverId: Int, mediaFolderId: Int) -> [TableSection] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT *
                     FROM folderArtistTableSection
                     WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)
@@ -150,7 +150,7 @@ extension Store {
         do {
             return try pool.write { db in
                 // Insert artist id into list cache
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     INSERT INTO folderArtistTableSection
                     (serverId, mediaFolderId, name, position, itemCount)
                     VALUES (\(section.serverId), \(section.mediaFolderId), \(section.name), \(section.position), \(section.itemCount))
@@ -167,7 +167,7 @@ extension Store {
     func folderArtistMetadata(serverId: Int, mediaFolderId: Int) -> RootListMetadata? {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT *
                     FROM folderArtistListMetadata
                     WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)
@@ -183,7 +183,7 @@ extension Store {
     func add(folderArtistListMetadata metadata: RootListMetadata) -> Bool {
         do {
             return try pool.write { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     INSERT INTO folderArtistListMetadata
                     (serverId, mediaFolderId, itemCount, reloadDate)
                     VALUES (\(metadata.serverId), \(metadata.mediaFolderId), \(metadata.itemCount), \(metadata.reloadDate))
@@ -202,7 +202,7 @@ extension Store {
         do {
             return try pool.read { db in
                 let searchTerm = "%\(name)%"
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT folderArtistId
                     FROM folderArtistList
                     JOIN \(FolderArtist.self)

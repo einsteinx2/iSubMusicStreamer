@@ -112,7 +112,7 @@ extension Store {
     func folderAlbumIds(serverId: Int, parentFolderId: String) -> [String] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT folderId
                     FROM folderAlbumList
                     WHERE serverId = \(serverId) AND parentFolderId = \(parentFolderId)
@@ -144,7 +144,7 @@ extension Store {
                 try folderAlbum.save(db)
                 
                 // Insert folder id into list cache
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     INSERT INTO folderAlbumList
                     (serverId, parentFolderId, folderId)
                     VALUES (\(folderAlbum.serverId), \(folderAlbum.parentFolderId), \(folderAlbum.id))
@@ -161,7 +161,7 @@ extension Store {
     func songIds(serverId: Int, parentFolderId: String) -> [String] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT songId
                     FROM folderSongList
                     WHERE serverId = \(serverId) AND parentFolderId = \(parentFolderId)
@@ -187,7 +187,7 @@ extension Store {
                 try song.save(db)
                 
                 // Insert song id into list cache
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     INSERT INTO folderSongList
                     (serverId, parentFolderId, songId)
                     VALUES (\(song.serverId), \(parentFolderId), \(song.id))
