@@ -224,6 +224,24 @@ extension Store {
         }
     }
     
+    func getSongPosition(localPlaylistId: Int, songId: String) -> Int? {
+        
+        do {
+            return try pool.read { db in
+                let sql: SQL = """
+                    SELECT position
+                    FROM localPlaylistSong
+                    WHERE localPlaylistId = \(localPlaylistId)
+                    AND songId = \(Int(songId))
+                    """
+                return try SQLRequest<Int>(literal: sql).fetchOne(db)
+            }
+        } catch {
+            DDLogError("Failed to get the position of song with id \(songId) in local playlist \(localPlaylistId): \(error.localizedDescription) ")
+            return nil
+        }
+    }
+    
     func add(song: Song, localPlaylistId: Int) -> Bool {
         do {
             return try pool.write { db in
@@ -394,19 +412,32 @@ extension Store {
     }
     
     @discardableResult
-    func createShuffleQueue() -> Bool {
+    func createShuffleQueue(currentPosition: Int) -> Bool {
         do {
             // Clear the existing shuffle play queue playlist
-            clear(localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
+            clearPlayQueue()
+            //clear(localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
             
             try pool.write { db in
-                // Create a random list of songs from play queue
-                // Insert the shuffled queue into local playlist songs
-                let randomizeSql: SQL = """
+                //Insert current playing song into the localPlaylistSong at the first position
+                let insertCurrentSongSQL: SQL = """
                     INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
-                    SELECT 2 AS localPlaylistId, ROW_NUMBER() OVER (ORDER BY RANDOM()) - 1 AS position, serverId, songId
+                    SELECT \(LocalPlaylist.Default.shuffleQueueId) AS localPlaylistId, 0 AS position, serverId, songId 
                     FROM localPlaylistSong
                     WHERE localPlaylistId = \(LocalPlaylist.Default.playQueueId)
+                    AND position = \(currentPosition)                    
+                    """
+                try db.execute(literal: insertCurrentSongSQL)
+                
+                // Create a random list of songs from play queue
+                // Insert the shuffled queue into local playlist songs excluding the first position
+                let randomizeSql: SQL = """
+                    INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
+                    SELECT \(LocalPlaylist.Default.shuffleQueueId) 
+                    AS localPlaylistId, ROW_NUMBER() OVER (ORDER BY RANDOM()) AS position, serverId, songId
+                    FROM localPlaylistSong
+                    WHERE localPlaylistId = \(LocalPlaylist.Default.playQueueId)
+                    AND position != \(currentPosition)
                     """
                 try db.execute(literal: randomizeSql)
                 
