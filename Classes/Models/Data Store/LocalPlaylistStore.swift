@@ -415,8 +415,7 @@ extension Store {
     func createShuffleQueue(currentPosition: Int) -> Bool {
         do {
             // Clear the existing shuffle play queue playlist
-            clearPlayQueue()
-            //clear(localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
+            clear(localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
             
             try pool.write { db in
                 //Insert current playing song into the localPlaylistSong at the first position
