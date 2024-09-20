@@ -59,7 +59,7 @@ extension Store {
     func lyricsText(tagArtistName: String, songTitle: String) -> String? {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT lyricsText
                     FROM \(Lyrics.self)
                     WHERE tagArtistName = \(tagArtistName) AND songTitle = \(songTitle)

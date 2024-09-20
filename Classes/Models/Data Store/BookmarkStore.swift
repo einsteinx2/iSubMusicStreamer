@@ -61,7 +61,7 @@ extension Store {
                 let bookmark = Bookmark(id: nextBookmarkId, song: song, localPlaylist: playlist, songIndex: songIndex, offsetInSeconds: offsetInSeconds, offsetInBytes: offsetInBytes)
 
                 // Add the songs from current play queue to the new playlist
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT serverId, songId
                     FROM localPlaylistSong
                     WHERE localPlaylistId = \(playQueue.currentPlaylistId)

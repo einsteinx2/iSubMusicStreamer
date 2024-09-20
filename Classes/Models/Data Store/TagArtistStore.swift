@@ -88,7 +88,7 @@ extension Store {
                 }
                 
                 // Check if the songIds count matches the number of songs this album should have
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT id
                     FROM tagAlbum
                     WHERE serverId = \(serverId) AND tagArtistId = \(id)
@@ -120,7 +120,7 @@ extension Store {
     func tagArtistIds(serverId: Int, mediaFolderId: Int) -> [String] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT tagArtistId
                     FROM tagArtistList
                     WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)
@@ -152,7 +152,7 @@ extension Store {
                 try tagArtist.save(db)
                 
                 // Insert artist id into list cache
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     INSERT INTO tagArtistList
                     (serverId, mediaFolderId, tagArtistId)
                     VALUES (\(tagArtist.serverId), \(mediaFolderId), \(tagArtist.id))
@@ -169,7 +169,7 @@ extension Store {
     func tagArtistSections(serverId: Int, mediaFolderId: Int) -> [TableSection] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT *
                     FROM tagArtistTableSection
                     WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)
@@ -186,7 +186,7 @@ extension Store {
         do {
             return try pool.write { db in
                 // Insert artist id into list cache
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     INSERT INTO tagArtistTableSection
                     (serverId, mediaFolderId, name, position, itemCount)
                     VALUES (\(section.serverId), \(section.mediaFolderId), \(section.name), \(section.position), \(section.itemCount))
@@ -203,7 +203,7 @@ extension Store {
     func tagArtistMetadata(serverId: Int, mediaFolderId: Int) -> RootListMetadata? {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT *
                     FROM tagArtistListMetadata
                     WHERE serverId = \(serverId) AND mediaFolderId = \(mediaFolderId)
@@ -219,7 +219,7 @@ extension Store {
     func add(tagArtistListMetadata metadata: RootListMetadata) -> Bool {
         do {
             return try pool.write { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     INSERT INTO tagArtistListMetadata
                     (serverId, mediaFolderId, itemCount, reloadDate)
                     VALUES (\(metadata.serverId), \(metadata.mediaFolderId), \(metadata.itemCount), \(metadata.reloadDate))
@@ -238,7 +238,7 @@ extension Store {
         do {
             return try pool.read { db in
                 let searchTerm = "%\(name)%"
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT tagArtistId
                     FROM tagArtistList
                     JOIN \(TagArtist.self)

@@ -73,7 +73,7 @@ extension Store {
                 }
                 
                 // Check if the songIds count matches the number of songs this album should have
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT songId
                     FROM tagSongList
                     WHERE serverId = \(serverId) AND tagAlbumId = \(id)
@@ -117,7 +117,7 @@ extension Store {
 //    func tagAlbumIds(mediaFolderId: Int, orderBy: TagAlbum.Column = .name) -> [String] {
 //        do {
 //            return try serverDb.read { db in
-//                let sql: SQLLiteral = """
+//                let sql: SQL = """
 //                    SELECT id
 //                    FROM \(TagAlbum.self)
 //                    JOIN
@@ -135,7 +135,7 @@ extension Store {
     func tagAlbumIds(serverId: Int, tagArtistId: String, orderBy: TagAlbum.Column = .name) -> [String] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT id
                     FROM \(TagAlbum.self)
                     WHERE serverId = \(serverId) AND tagArtistId = \(tagArtistId)
@@ -176,7 +176,7 @@ extension Store {
     func songIds(serverId: Int, tagAlbumId: String) -> [String] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT songId
                     FROM tagSongList
                     WHERE serverId = \(serverId) AND tagAlbumId = \(tagAlbumId)
@@ -215,7 +215,7 @@ extension Store {
                 try song.save(db)
                 
                 // Insert song id into list cache
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     INSERT INTO tagSongList
                     (serverId, tagAlbumId, songId)
                     VALUES (\(song.serverId), \(tagAlbumId), \(song.id))

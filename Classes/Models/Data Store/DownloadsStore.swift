@@ -49,7 +49,7 @@ extension DownloadedSong: FetchableRecord, PersistableRecord {
     }
     
     static func downloadedSongs(serverId: Int, level: Int, parentPathComponent: String) -> SQLRequest<DownloadedSong> {
-        let sql: SQLLiteral = """
+        let sql: SQL = """
             SELECT *
             FROM \(DownloadedSong.self)
             JOIN \(DownloadedSongPathComponent.self)
@@ -65,7 +65,7 @@ extension DownloadedSong: FetchableRecord, PersistableRecord {
     }
     
     static func downloadedSongs(downloadedTagArtist: DownloadedTagArtist) -> SQLRequest<DownloadedSong> {
-        let sql: SQLLiteral = """
+        let sql: SQL = """
             SELECT *
             FROM \(DownloadedSong.self)
             JOIN \(Song.self)
@@ -79,7 +79,7 @@ extension DownloadedSong: FetchableRecord, PersistableRecord {
     }
     
     static func downloadedSongs(downloadedTagAlbum: DownloadedTagAlbum) -> SQLRequest<DownloadedSong> {
-        let sql: SQLLiteral = """
+        let sql: SQL = """
             SELECT *
             FROM \(DownloadedSong.self)
             JOIN \(Song.self)
@@ -133,7 +133,7 @@ extension DownloadedFolderArtist: FetchableRecord, PersistableRecord {
 
 extension DownloadedFolderAlbum: FetchableRecord, PersistableRecord {
     static func downloadedFolderAlbums(serverId: Int, level: Int, parentPathComponent: String) -> SQLRequest<DownloadedFolderAlbum> {
-        let sql: SQLLiteral = """
+        let sql: SQL = """
             SELECT \(DownloadedSongPathComponent.self).serverId,
                 \(DownloadedSongPathComponent.self).level,
                 \(DownloadedSongPathComponent.self).pathComponent AS name,
@@ -159,7 +159,7 @@ extension DownloadedTagArtist: FetchableRecord, PersistableRecord {
 extension DownloadedTagAlbum: FetchableRecord, PersistableRecord {
     // TODO: Check query plan and try different join orders and group by tables to see which is fastest (i.e. TagAlbum.id vs Song.tagAlbumId)
     static func downloadedTagAlbums(downloadedTagArtist: DownloadedTagArtist) -> SQLRequest<DownloadedTagAlbum> {
-        let sql: SQLLiteral = """
+        let sql: SQL = """
             SELECT \(TagAlbum.self).*
             FROM \(DownloadedSong.self)
             JOIN \(Song.self)
@@ -181,7 +181,7 @@ extension Store {
 //    func downloadedFolderArtists() -> [DownloadedFolderArtist] {
 //        do {
 //            return try pool.read { db in
-//                let sql: SQLLiteral = """
+//                let sql: SQL = """
 //                    SELECT serverId, pathComponent AS name
 //                    FROM \(DownloadedSongPathComponent.self)
 //                    WHERE level = 0
@@ -198,7 +198,7 @@ extension Store {
     func downloadedFolderArtists(serverId: Int) -> [DownloadedFolderArtist] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT serverId, pathComponent AS name
                     FROM \(DownloadedSongPathComponent.self)
                     WHERE serverId = \(serverId) AND level = 0
@@ -216,7 +216,7 @@ extension Store {
 //    func downloadedFolderAlbums(level: Int) -> [DownloadedFolderArtist] {
 //        do {
 //            return try pool.read { db in
-//                let sql: SQLLiteral = """
+//                let sql: SQL = """
 //                    SELECT serverId, level, pathComponent AS name
 //                    FROM \(DownloadedSongPathComponent.self)
 //                    WHERE serverId = \(serverId) AND level = \(level)
@@ -278,7 +278,7 @@ extension Store {
     func downloadedTagArtists(serverId: Int) -> [DownloadedTagArtist] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT \(TagArtist.self).*
                     FROM \(DownloadedSong.self)
                     JOIN \(Song.self)
@@ -303,7 +303,7 @@ extension Store {
     func downloadedTagAlbums(serverId: Int) -> [DownloadedTagAlbum] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT \(TagAlbum.self).*
                     FROM \(DownloadedSong.self)
                     JOIN \(Song.self)
@@ -353,7 +353,7 @@ extension Store {
     func songsRecursive(serverId: Int, level: Int, parentPathComponent: String) -> [Song] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT *
                     FROM \(Song.self)
                     JOIN \(DownloadedSongPathComponent.self)
@@ -382,7 +382,7 @@ extension Store {
     func songsRecursive(downloadedTagArtist: DownloadedTagArtist) -> [Song] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT *
                     FROM \(Song.self)
                     JOIN \(DownloadedSong.self)
@@ -403,7 +403,7 @@ extension Store {
     func songsRecursive(downloadedTagAlbum: DownloadedTagAlbum) -> [Song] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT *
                     FROM \(Song.self)
                     JOIN \(DownloadedSong.self)
@@ -534,7 +534,7 @@ extension Store {
     func downloadedSongs(serverId: Int) -> [DownloadedSong] {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT *
                     FROM \(DownloadedSong.self)
                     ORDER BY \(DownloadedSong.self).downloadedDate COLLATE NOCASE DESC
@@ -563,7 +563,7 @@ extension Store {
     func oldestDownloadedSongByDownloadedDate() -> DownloadedSong? {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT *
                     FROM \(DownloadedSong.self)
                     WHERE isFinished = 1 AND isPinned = 0
@@ -582,7 +582,7 @@ extension Store {
     func oldestDownloadedSongByPlayedDate() -> DownloadedSong? {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT *
                     FROM \(DownloadedSong.self)
                     WHERE isFinished = 1 AND isPinned = 0
@@ -629,7 +629,7 @@ extension Store {
     func deleteDownloadedSongs(serverId: Int, level: Int) -> Bool {
         do {
             return try pool.write { db in
-                let songIdsSql: SQLLiteral = """
+                let songIdsSql: SQL = """
                     SELECT songId
                     FROM \(DownloadedSongPathComponent.self)
                     WHERE serverId = \(serverId) AND level = \(level)
@@ -722,7 +722,7 @@ extension Store {
     func update(playedDate: Date, serverId: Int, songId: String) -> Bool {
         do {
             return try pool.write { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     UPDATE \(DownloadedSong.self)
                     SET playedDate = \(playedDate)
                     WHERE serverId = \(serverId) AND songId = \(songId)
@@ -743,7 +743,7 @@ extension Store {
     func update(downloadFinished: Bool, serverId: Int, songId: String) -> Bool {
         do {
             return try pool.write { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     UPDATE \(DownloadedSong.self)
                     SET isFinished = \(downloadFinished)
                     WHERE serverId = \(serverId) AND songId = \(songId)
@@ -769,7 +769,7 @@ extension Store {
     func update(isPinned: Bool, serverId: Int, songId: String) -> Bool {
         do {
             return try pool.write { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     UPDATE \(DownloadedSong.self)
                     SET isPinned = \(isPinned)
                     WHERE serverId = \(serverId) AND songId = \(songId)
@@ -790,7 +790,7 @@ extension Store {
     func isDownloadFinished(serverId: Int, songId: String) -> Bool {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT isFinished
                     FROM \(DownloadedSong.self)
                     WHERE serverId = \(serverId) AND songId = \(songId)
@@ -810,7 +810,7 @@ extension Store {
     func addToDownloadQueue(serverId: Int, songId: String) -> Bool {
         do {
             return try pool.write { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     INSERT OR IGNORE INTO downloadQueue (serverId, songId, queuedDate)
                     VALUES (\(serverId), \(songId), \(Date()))
                     """
@@ -832,7 +832,7 @@ extension Store {
         do {
             return try pool.write { db in
                 for songId in songIds {
-                    let sql: SQLLiteral = """
+                    let sql: SQL = """
                         INSERT OR IGNORE INTO downloadQueue (serverId, songId)
                         VALUES (\(serverId), \(songId)
                         """
@@ -865,7 +865,7 @@ extension Store {
     func removeFromDownloadQueue(serverId: Int, songId: String) -> Bool {
         do {
             return try pool.write { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     DELETE FROM downloadQueue
                     WHERE serverId = (\(serverId) AND songId = \(songId))
                     """
@@ -887,7 +887,7 @@ extension Store {
     func songFromDownloadQueue(position: Int) -> Song? {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT *
                     FROM \(Song.self)
                     JOIN downloadQueue
@@ -906,7 +906,7 @@ extension Store {
     func queuedDateForSongFromDownloadQueue(position: Int) -> Date? {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT queuedDate
                     FROM downloadQueue
                     ORDER BY downloadQueue.rowid ASC
@@ -923,7 +923,7 @@ extension Store {
     func isSongInDownloadQueue(song: Song) -> Bool {
         do {
             return try pool.read { db in
-                let sql: SQLLiteral = """
+                let sql: SQL = """
                     SELECT songId
                     FROM downloadQueue
                     WHERE downloadQueue.serverId = \(song.serverId) AND downloadQueue.songId = \(song.id)

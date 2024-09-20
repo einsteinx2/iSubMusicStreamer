@@ -414,10 +414,10 @@ final class PlayerViewController: UIViewController {
             let message = playQueue.isShuffle ? "Unshuffling" : "Shuffling"
             HUD.show(message: message)
             DispatchQueue.userInitiated.async {
-                defer { HUD.hide() }
                 self.playQueue.shuffleToggle()
                 DispatchQueue.main.async {
                     self.updateShuffleButtonIcon()
+                    HUD.hide()
                 }
             }
         }

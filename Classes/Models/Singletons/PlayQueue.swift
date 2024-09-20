@@ -234,12 +234,25 @@ import CocoaLumberjackSwift
     
     @objc func shuffleToggle() {
        if isShuffle {
-           isShuffle = false
-           playSong(position: 0)
+           if let shuffleCurrentSong = currentSong {
+               print(shuffleCurrentSong)
+               isShuffle = false
+               if let currentPosition = store.getSongPosition(localPlaylistId: LocalPlaylist.Default.playQueueId, songId: shuffleCurrentSong.id) {
+                   normalIndex = currentPosition
+                   if let shuffleQueueCurrentSong = song(index: currentPosition) {
+                       streamManager.removeAllStreams(except: shuffleQueueCurrentSong)
+                       streamManager.fillStreamQueue(startDownload: true)
+                   }
+               }
+           }
        } else {
-           if store.createShuffleQueue() {
+           if store.createShuffleQueue(currentPosition: normalIndex) {
+               shuffleIndex = 0
                isShuffle = true
-               playSong(position: 0)
+               if let currentSong = song(index: normalIndex) {
+                   streamManager.removeAllStreams(except: currentSong)
+                   streamManager.fillStreamQueue(startDownload: true)
+               }
            }
        }
     }
