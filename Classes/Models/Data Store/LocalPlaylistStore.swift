@@ -192,14 +192,18 @@ extension Store {
     func clear(localPlaylistId: Int) -> Bool {
         do {
             return try pool.write { db in
-                try db.execute(literal: "UPDATE \(LocalPlaylist.self) SET songCount = 0 WHERE id = \(localPlaylistId)")
-                try db.execute(literal: "DELETE FROM localPlaylistSong WHERE localPlaylistId = \(localPlaylistId)")
+                try clear(db: db, localPlaylistId: localPlaylistId)
                 return true
             }
         } catch {
             DDLogError("Failed to clear local playlist \(localPlaylistId): \(error)")
             return false
         }
+    }
+    
+    private func clear(db: Database, localPlaylistId: Int) throws {
+        try db.execute(literal: "UPDATE \(LocalPlaylist.self) SET songCount = 0 WHERE id = \(localPlaylistId)")
+        try db.execute(literal: "DELETE FROM localPlaylistSong WHERE localPlaylistId = \(localPlaylistId)")
     }
     
     func songs(localPlaylistId: Int) -> [Song] {
@@ -225,7 +229,6 @@ extension Store {
     }
     
     func getSongPosition(localPlaylistId: Int, songId: String) -> Int? {
-        
         do {
             return try pool.read { db in
                 let sql: SQL = """
@@ -245,15 +248,7 @@ extension Store {
     func add(song: Song, localPlaylistId: Int) -> Bool {
         do {
             return try pool.write { db in
-                // Select the playlist to get the count as it's O(1) instead of MAX(position) which is O(N)
-                guard var playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId) else { return false }
-                    
-                // Add the song to the playlist
-                try LocalPlaylist.insertSong(db, song: song, position: playlist.songCount, playlistId: localPlaylistId)
-                
-                // Update the playlist count
-                playlist.songCount += 1
-                try playlist.save(db)
+                try add(db: db, song: song, localPlaylistId: localPlaylistId)
                 return true
             }
         } catch {
@@ -262,26 +257,22 @@ extension Store {
         }
     }
     
+    private func add(db: Database, song: Song, localPlaylistId: Int) throws {
+        // Select the playlist to get the count as it's O(1) instead of MAX(position) which is O(N)
+        guard var playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId) else { throw RuntimeError(message: "Local playlist not found") }
+            
+        // Add the song to the playlist
+        try LocalPlaylist.insertSong(db, song: song, position: playlist.songCount, playlistId: localPlaylistId)
+        
+        // Update the playlist count
+        playlist.songCount += 1
+        try playlist.save(db)
+    }
+    
     func add(song: Song, localPlaylistId: Int, position: Int) -> Bool {
         do {
             return try pool.write { db in
-                // Select the playlist to get the count as it's O(1) instead of MAX(position) which is O(N)
-                guard var playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId), position <= playlist.songCount else { return false }
-                    
-                // Update all song positions after the current position
-                let positionSql: SQL = """
-                    UPDATE localPlaylistSong
-                    SET position = position + 1
-                    WHERE position >= \(position) AND localPlaylistId = \(localPlaylistId)
-                    """
-                try db.execute(literal: positionSql)
-
-                // Add the song to the playlist
-                try LocalPlaylist.insertSong(db, song: song, position: position, playlistId: localPlaylistId)
-                
-                // Update the playlist count
-                playlist.songCount += 1
-                try playlist.save(db)
+                try add(db: db, song: song, localPlaylistId: localPlaylistId, position: position)
                 return true
             }
         } catch {
@@ -290,125 +281,147 @@ extension Store {
         }
     }
     
+    private func add(db: Database, song: Song, localPlaylistId: Int, position: Int) throws {
+        // Select the playlist to get the count as it's O(1) instead of MAX(position) which is O(N)
+        guard var playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId), position <= playlist.songCount else { throw RuntimeError(message: "Local playlist not found") }
+            
+        // Update all song positions after the current position
+        let positionSql: SQL = """
+            UPDATE localPlaylistSong
+            SET position = position + 1
+            WHERE position >= \(position) AND localPlaylistId = \(localPlaylistId)
+            """
+        try db.execute(literal: positionSql)
+
+        // Add the song to the playlist
+        try LocalPlaylist.insertSong(db, song: song, position: position, playlistId: localPlaylistId)
+        
+        // Update the playlist count
+        playlist.songCount += 1
+        try playlist.save(db)
+    }
+    
     func add(songIds: [String], serverId: Int, localPlaylistId: Int) -> Bool {
         do {
             return try pool.write { db in
-                // Select the playlist to get the count as it's O(1) instead of MAX(position) which is O(N)
-                guard var playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId) else { return false }
-                    
-                // Add the song to the playlist
-                for (index, songId) in songIds.enumerated() {
-                    let sql: SQL = """
-                        INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
-                        VALUES (\(localPlaylistId), \(index + playlist.songCount), \(serverId), \(songId))
-                        """
-                    try db.execute(literal: sql)
-                }
-                
-                // Update the playlist count
-                playlist.songCount += songIds.count
-                try playlist.save(db)
+                try add(db: db, songIds: songIds, serverId: serverId, localPlaylistId: localPlaylistId)
                 return true
             }
         } catch {
-            DDLogError("Failed to add song to end of local playlist \(localPlaylistId): \(error)")
+            DDLogError("Failed to add songs to end of local playlist \(localPlaylistId): \(error)")
             return false
         }
     }
     
-    // TODO: Move this to a single transaction
+    private func add(db: Database, songIds: [String], serverId: Int, localPlaylistId: Int) throws {
+        // Select the playlist to get the count as it's O(1) instead of MAX(position) which is O(N)
+        guard var playlist = try LocalPlaylist.fetchOne(db, key: localPlaylistId) else { throw RuntimeError(message: "Local playlist not found") }
+            
+        // Add the song to the playlist
+        for (index, songId) in songIds.enumerated() {
+            let sql: SQL = """
+                INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
+                VALUES (\(localPlaylistId), \(index + playlist.songCount), \(serverId), \(songId))
+                """
+            try db.execute(literal: sql)
+        }
+        
+        // Update the playlist count
+        playlist.songCount += songIds.count
+        try playlist.save(db)
+    }
+    
+    private func queuePlaylistIds() -> (playQueueId: Int, shuffleQueueId: Int) {
+        let isJukeboxEnabled = settings.isJukeboxEnabled
+        let playQueuePlaylistId = isJukeboxEnabled ? LocalPlaylist.Default.jukeboxPlayQueueId : LocalPlaylist.Default.playQueueId
+        let shuffleQueuePlaylistId = isJukeboxEnabled ? LocalPlaylist.Default.jukeboxShuffleQueueId : LocalPlaylist.Default.shuffleQueueId
+        return (playQueueId: playQueuePlaylistId, shuffleQueueId: shuffleQueuePlaylistId)
+    }
+    
     @discardableResult
     func queue(song: Song) -> Bool {
-        var success = true
-        if settings.isJukeboxEnabled {
-            if playQueue.isShuffle {
-                success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxShuffleQueueId)
+        let (playQueueId, shuffleQueueId) = queuePlaylistIds()
+        do {
+            return try pool.write { db in
+                try queue(db: db, song: song, playQueueId: playQueueId, shuffleQueueId: shuffleQueueId)
+                return true
             }
-            if success {
-                success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId)
-            }
-        } else {
-            if playQueue.isShuffle {
-                success = add(song: song, localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
-            }
-            if success {
-                success = add(song: song, localPlaylistId: LocalPlaylist.Default.playQueueId)
-            }
+        } catch {
+            DDLogError("Failed to queue song: \(error)")
+            return false
         }
-        return success
+    }
+    
+    private func queue(db: Database, song: Song, playQueueId: Int, shuffleQueueId: Int) throws {
+        if playQueue.isShuffle {
+            try add(db: db, song: song, localPlaylistId: shuffleQueueId)
+        }
+        try add(db: db, song: song, localPlaylistId: playQueueId)
     }
     
     @discardableResult
     func queueNext(song: Song, offset: Int = 0) -> Bool {
-        var success = true
-        if settings.isJukeboxEnabled {
-            if playQueue.isShuffle {
-                // Add next
-                success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxShuffleQueueId, position: playQueue.nextIndexIgnoringRepeatMode + offset)
-                if success {
+        let (playQueueId, shuffleQueueId) = queuePlaylistIds()
+        do {
+            return try pool.write { db in
+                if playQueue.isShuffle {
+                    // Add next
+                    try add(db: db, song: song, localPlaylistId: shuffleQueueId, position: playQueue.nextIndexIgnoringRepeatMode + offset)
+                    
                     // Add to end
-                    success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId)
+                    try add(db: db, song: song, localPlaylistId: playQueueId)
+                } else {
+                    // Add next
+                    try add(db: db, song: song, localPlaylistId: playQueueId, position: playQueue.nextIndexIgnoringRepeatMode + offset)
                 }
-            } else {
-                // Add next
-                success = add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId, position: playQueue.nextIndexIgnoringRepeatMode + offset)
+                return true
             }
-        } else {
-            if playQueue.isShuffle {
-                // Add next
-                success = add(song: song, localPlaylistId: LocalPlaylist.Default.shuffleQueueId, position: playQueue.nextIndexIgnoringRepeatMode + offset)
-                if success {
-                    // Add to end
-                    success = add(song: song, localPlaylistId: LocalPlaylist.Default.playQueueId)
-                }
-            } else {
-                success = add(song: song, localPlaylistId: LocalPlaylist.Default.playQueueId, position: playQueue.nextIndexIgnoringRepeatMode + offset)
-            }
+        } catch {
+            DDLogError("Failed to queue song: \(error)")
+            return false
         }
-        return success
     }
     
-    // TODO: Move this to a single transaction
     @discardableResult
     func queue(songIds: [String], serverId: Int) -> Bool {
-        var success = true
-        if settings.isJukeboxEnabled {
-            if playQueue.isShuffle {
-                success = add(songIds: songIds, serverId: serverId, localPlaylistId: LocalPlaylist.Default.jukeboxShuffleQueueId)
+        let (playQueueId, shuffleQueueId) = queuePlaylistIds()
+        do {
+            return try pool.write { db in
+                try queue(db: db, songIds: songIds, serverId: serverId, playQueueId: playQueueId, shuffleQueueId: shuffleQueueId)
+                return true
             }
-            if success {
-                success = add(songIds: songIds, serverId: serverId, localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId)
-            }
-        } else {
-            if playQueue.isShuffle {
-                success = add(songIds: songIds, serverId: serverId, localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
-            }
-            if success {
-                success = add(songIds: songIds, serverId: serverId, localPlaylistId: LocalPlaylist.Default.playQueueId)
-            }
+        } catch {
+            DDLogError("Failed to queue song: \(error)")
+            return false
         }
-        return success
+    }
+    
+    private func queue(db: Database, songIds: [String], serverId: Int, playQueueId: Int, shuffleQueueId: Int) throws {
+        if playQueue.isShuffle {
+            try add(db: db, songIds: songIds, serverId: serverId, localPlaylistId: shuffleQueueId)
+        }
+        try add(db: db, songIds: songIds, serverId: serverId, localPlaylistId: playQueueId)
     }
     
     @discardableResult
     func clearPlayQueue() -> Bool {
-        var success = true
-        if settings.isJukeboxEnabled {
-            if playQueue.isShuffle {
-                success = clear(localPlaylistId: LocalPlaylist.Default.jukeboxShuffleQueueId)
+        let (playQueueId, shuffleQueueId) = queuePlaylistIds()
+        do {
+            return try pool.write { db in
+                try clearPlayQueue(db: db, playQueueId: playQueueId, shuffleQueueId: shuffleQueueId)
+                return true
             }
-            if success {
-                success = clear(localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId)
-            }
-        } else {
-            if playQueue.isShuffle {
-                success = clear(localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
-            }
-            if success {
-                success = clear(localPlaylistId: LocalPlaylist.Default.playQueueId)
-            }
+        } catch {
+            DDLogError("Failed to queue song: \(error)")
+            return false
         }
-        return success
+    }
+    
+    private func clearPlayQueue(db: Database, playQueueId: Int, shuffleQueueId: Int) throws {
+        if playQueue.isShuffle {
+            try clear(db: db, localPlaylistId: shuffleQueueId)
+        }
+        try clear(db: db, localPlaylistId: playQueueId)
     }
     
     @discardableResult
@@ -455,26 +468,36 @@ extension Store {
         }
     }
     
-    // TODO: Move this to a single transaction
     @discardableResult
     func clearAndQueue(songIds: [String], serverId: Int) -> Bool {
-        if clearPlayQueue() {
-            return queue(songIds: songIds, serverId: serverId)
+        let (playQueueId, shuffleQueueId) = queuePlaylistIds()
+        do {
+            return try pool.write { db in
+                try clearPlayQueue(db: db, playQueueId: playQueueId, shuffleQueueId: shuffleQueueId)
+                try queue(db: db, songIds: songIds, serverId: serverId, playQueueId: playQueueId, shuffleQueueId: shuffleQueueId)
+                return true
+            }
+        } catch {
+            DDLogError("Failed to clear and queue songIds: \(error)")
+            return false
         }
-        return false
     }
     
-    // TODO: Move this to a single transaction
     @discardableResult
     func clearAndQueue(songs: [Song]) -> Bool {
-        if clearPlayQueue() {
-            for song in songs {
-                if !queue(song: song) {
-                    return false
+        let (playQueueId, shuffleQueueId) = queuePlaylistIds()
+        do {
+            return try pool.write { db in
+                try clearPlayQueue(db: db, playQueueId: playQueueId, shuffleQueueId: shuffleQueueId)
+                for song in songs {
+                    try queue(db: db, song: song, playQueueId: playQueueId, shuffleQueueId: shuffleQueueId)
                 }
+                return true
             }
+        } catch {
+            DDLogError("Failed to clear and queue songIds: \(error)")
+            return false
         }
-        return true
     }
     
     func playSong(position: Int, songIds: [String], serverId: Int) -> Song? {
