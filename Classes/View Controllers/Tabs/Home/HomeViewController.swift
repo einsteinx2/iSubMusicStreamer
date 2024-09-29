@@ -19,7 +19,7 @@ final class HomeViewController: UIViewController {
     @Injected private var playQueue: PlayQueue
     @Injected private var analytics: Analytics
     
-    var serverId: Int = { (Resolver.resolve() as SavedSettings).currentServerId }()
+    var serverId: Int { (Resolver.resolve() as SavedSettings).currentServerId }
     
     private var quickAlbumsLoader: QuickAlbumsLoader?
     private var serverShuffleLoader: ServerShuffleLoader?
@@ -141,30 +141,29 @@ final class HomeViewController: UIViewController {
         
         serverShuffleButton.setAction { [unowned self] in
             let mediaFolders = store.mediaFolders(serverId: serverId)
-            if mediaFolders.count > 0 {
+            if mediaFolders.count <= 2 {
                 // 2 media folders means the "All Media Folders" option plus one folder aka only 1 actual media folder
-                if mediaFolders.count == 2 {
-                    performServerShuffle(mediaFolderId: MediaFolder.allFoldersId)
-                } else {
-                    let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                    sheet.addAction(title: "All Media Folders", style: .default) { action in
-                        self.performServerShuffle(mediaFolderId: MediaFolder.allFoldersId)
-                    }
-                    for mediaFolder in mediaFolders {
-                        if mediaFolder.id != MediaFolder.allFoldersId {
-                            sheet.addAction(title: mediaFolder.name, style: .default) { action in
-                                self.performServerShuffle(mediaFolderId: mediaFolder.id)
-                            }
+                // If we don't have any media folders loaded, just shuffle all media folders since that always works
+                performServerShuffle(mediaFolderId: MediaFolder.allFoldersId)
+            } else {
+                let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                sheet.addAction(title: "All Media Folders", style: .default) { action in
+                    self.performServerShuffle(mediaFolderId: MediaFolder.allFoldersId)
+                }
+                for mediaFolder in mediaFolders {
+                    if mediaFolder.id != MediaFolder.allFoldersId {
+                        sheet.addAction(title: mediaFolder.name, style: .default) { action in
+                            self.performServerShuffle(mediaFolderId: mediaFolder.id)
                         }
                     }
-                    sheet.addCancelAction()
-                    if let popoverPresentationController = sheet.popoverPresentationController {
-                        // Fix exception on iPad
-                        popoverPresentationController.sourceView = self.serverShuffleButton
-                        popoverPresentationController.sourceRect = self.serverShuffleButton.bounds
-                    }
-                    present(sheet, animated: true, completion: nil)
                 }
+                sheet.addCancelAction()
+                if let popoverPresentationController = sheet.popoverPresentationController {
+                    // Fix exception on iPad
+                    popoverPresentationController.sourceView = self.serverShuffleButton
+                    popoverPresentationController.sourceRect = self.serverShuffleButton.bounds
+                }
+                present(sheet, animated: true, completion: nil)
             }
         }
         
