@@ -2797,7 +2797,7 @@
 			repositoryURL = "https://github.com/groue/GRDB.swift.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.2.0;
+				minimumVersion = 6.29.3;
 			};
 		};
 		53A6A9F62B89738F007ABD7A /* XCRemoteSwiftPackageReference "CwlCatchException" */ = {
