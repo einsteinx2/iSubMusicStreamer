@@ -125,10 +125,10 @@ final class SavedSettings {
         }
     }
     
-    @UserDefault(key: .enableSongCachingSetting, defaultValue: false)
+    @UserDefault(key: .enableSongCachingSetting, defaultValue: true)
     var isSongCachingEnabled: Bool
     
-    @UserDefault(key: .enableNextSongCacheSetting, defaultValue: false)
+    @UserDefault(key: .enableNextSongCacheSetting, defaultValue: true)
     var isNextSongCacheEnabled: Bool
     
     @UserDefault(key: .isBackupCacheEnabled, defaultValue: false)
