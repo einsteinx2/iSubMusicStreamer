@@ -96,7 +96,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         BASS_SetDevice(Bass.outputDeviceNumber)
         let pcmBytePosition = BASS_Mixer_ChannelGetPosition(currentStream.hstream, DWORD(BASS_POS_BYTE))
         let seconds = BASS_ChannelBytes2Seconds(currentStream.hstream, pcmBytePosition < 0 ? 0 : pcmBytePosition)
-        return seconds //+ startSecondsOffset
+        return seconds + startSecondsOffset
     }
     
     var isStarted: Bool {
