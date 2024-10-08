@@ -232,10 +232,10 @@ import CocoaLumberjackSwift
         return currentIndex
     }
     
+    /// Called when the shuffle button is pushed.
     @objc func shuffleToggle() {
        if isShuffle {
            if let shuffleCurrentSong = currentSong {
-               print(shuffleCurrentSong)
                isShuffle = false
                if let currentPosition = store.getSongPosition(localPlaylistId: LocalPlaylist.Default.playQueueId, songId: shuffleCurrentSong.id) {
                    normalIndex = currentPosition
