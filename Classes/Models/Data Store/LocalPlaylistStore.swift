@@ -424,6 +424,9 @@ extension Store {
         try clear(db: db, localPlaylistId: playQueueId)
     }
     
+    /// Create the shuffle queue for the playlist.
+    /// - Parameter currentPosition: Current song position in localplaylist.
+    /// - Returns: True or False.
     @discardableResult
     func createShuffleQueue(currentPosition: Int) -> Bool {
         do {
@@ -431,7 +434,7 @@ extension Store {
             clear(localPlaylistId: LocalPlaylist.Default.shuffleQueueId)
             
             try pool.write { db in
-                //Insert current playing song into the localPlaylistSong at the first position
+                //Insert current playing song into the localPlaylistSong at the first position.
                 let insertCurrentSongSQL: SQL = """
                     INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
                     SELECT \(LocalPlaylist.Default.shuffleQueueId) AS localPlaylistId, 0 AS position, serverId, songId 
@@ -441,8 +444,8 @@ extension Store {
                     """
                 try db.execute(literal: insertCurrentSongSQL)
                 
-                // Create a random list of songs from play queue
-                // Insert the shuffled queue into local playlist songs excluding the first position
+                // Create a random list of songs from play queue.
+                // Insert the shuffled queue into local playlist songs excluding the first position.
                 let randomizeSql: SQL = """
                     INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
                     SELECT \(LocalPlaylist.Default.shuffleQueueId) 
@@ -453,7 +456,7 @@ extension Store {
                     """
                 try db.execute(literal: randomizeSql)
                 
-                // Update the shuffle queue songCount in localPlaylist
+                // Update the shuffle queue songCount in localPlaylist.
                 let updateCountSql: SQL = """
                     UPDATE localPlaylist
                     SET songCount = (SELECT songCount FROM localPlaylist WHERE id = \(LocalPlaylist.Default.playQueueId))
@@ -572,6 +575,12 @@ extension Store {
         return playSong(position: bookmark.songIndex, localPlaylistId: bookmark.localPlaylistId, secondsOffset: bookmark.offsetInSeconds, byteOffset: bookmark.offsetInBytes)
     }
     
+    /// Change the song position in a playlist.
+    /// - Parameters:
+    ///   - from: The current song position.
+    ///   - to: The new song position.
+    ///   - localPlaylistId: The ID of the local playlist.
+    /// - Returns: True or False.
     func move(songAtPosition from: Int, toPosition to: Int, localPlaylistId: Int) -> Bool {
         guard from != to, to >= 0 else { return false }
         
