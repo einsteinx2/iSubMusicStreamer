@@ -575,7 +575,7 @@ extension Store {
         return playSong(position: bookmark.songIndex, localPlaylistId: bookmark.localPlaylistId, secondsOffset: bookmark.offsetInSeconds, byteOffset: bookmark.offsetInBytes)
     }
     
-    /// Chance the song position in a playlist.
+    /// Change the song position in a playlist.
     /// - Parameters:
     ///   - from: The current song position.
     ///   - to: The new song position.
