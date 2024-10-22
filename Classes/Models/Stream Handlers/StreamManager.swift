@@ -369,9 +369,7 @@ final class StreamManager {
     }
     
     @objc private func songPlaybackEnded() {
-        if settings.isSongCachingEnabled {
-            fillStreamQueue()
-        }
+        fillStreamQueue()
     }
 }
 
@@ -379,6 +377,7 @@ extension StreamManager: StreamHandlerDelegate {
     func streamHandlerStarted(handler: StreamHandler) {
         if handler.isTempCache {
             lastTempCachedSong = nil
+            player.startSong(handler.song, index: handlerStack.startIndex, offsetInBytes: handler.byteOffset, offsetInSeconds: handler.secondsOffset)
         }
     }
     
