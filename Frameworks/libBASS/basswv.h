@@ -25,7 +25,7 @@ extern "C" {
 // BASS_CHANNELINFO type
 #define BASS_CTYPE_STREAM_WV	0x10500
 
-HSTREAM BASSWVDEF(BASS_WV_StreamCreateFile)(BOOL mem, const void *file, QWORD offset, QWORD length, DWORD flags);
+HSTREAM BASSWVDEF(BASS_WV_StreamCreateFile)(BOOL32 mem, const void *file, QWORD offset, QWORD length, DWORD flags);
 HSTREAM BASSWVDEF(BASS_WV_StreamCreateURL)(const char *url, DWORD offset, DWORD flags, DOWNLOADPROC *proc, void *user);
 HSTREAM BASSWVDEF(BASS_WV_StreamCreateFileUser)(DWORD system, DWORD flags, const BASS_FILEPROCS *procs, void *user);
 HSTREAM BASSWVDEF(BASS_WV_StreamCreateFileUserEx)(DWORD system, DWORD flags, const BASS_FILEPROCS *procs, void *user, void *userwvc);

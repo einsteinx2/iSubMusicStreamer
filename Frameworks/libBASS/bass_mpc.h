@@ -18,7 +18,7 @@ extern "C" {
 #define BASS_CTYPE_STREAM_MPC	0x10a00
 
 
-HSTREAM BASSMPCDEF(BASS_MPC_StreamCreateFile)(BOOL mem, const void *file, QWORD offset, QWORD length, DWORD flags);
+HSTREAM BASSMPCDEF(BASS_MPC_StreamCreateFile)(BOOL32 mem, const void *file, QWORD offset, QWORD length, DWORD flags);
 HSTREAM BASSMPCDEF(BASS_MPC_StreamCreateURL)(const char *url, DWORD offset, DWORD flags, DOWNLOADPROC *proc, void *user);
 HSTREAM BASSMPCDEF(BASS_MPC_StreamCreateFileUser)(DWORD system, DWORD flags, const BASS_FILEPROCS *proc, void *user);
 

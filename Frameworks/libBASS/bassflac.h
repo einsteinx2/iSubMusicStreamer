@@ -60,7 +60,7 @@ typedef struct {
 typedef struct {
 	const char *catalog;	// media catalog number
 	DWORD leadin;			// lead-in (samples)
-	BOOL iscd;				// a CD?
+	BOOL32 iscd;				// a CD?
 	DWORD ntracks;			// number of tracks
 	const TAG_FLAC_CUE_TRACK *tracks; // the tracks
 } TAG_FLAC_CUE;
@@ -75,7 +75,7 @@ typedef struct {
 	const void *data;
 } TAG_FLAC_METADATA;
 
-HSTREAM BASSFLACDEF(BASS_FLAC_StreamCreateFile)(BOOL mem, const void *file, QWORD offset, QWORD length, DWORD flags);
+HSTREAM BASSFLACDEF(BASS_FLAC_StreamCreateFile)(BOOL32 mem, const void *file, QWORD offset, QWORD length, DWORD flags);
 HSTREAM BASSFLACDEF(BASS_FLAC_StreamCreateURL)(const char *url, DWORD offset, DWORD flags, DOWNLOADPROC *proc, void *user);
 HSTREAM BASSFLACDEF(BASS_FLAC_StreamCreateFileUser)(DWORD system, DWORD flags, const BASS_FILEPROCS *procs, void *user);
 

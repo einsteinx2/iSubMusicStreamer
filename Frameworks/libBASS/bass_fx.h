@@ -33,7 +33,7 @@
 #define BASS_FX_FREESOURCE			0x10000	// Free the source handle as well?
 
 // BASS_FX Version
-DWORD BASS_FXDEF(BASS_FX_GetVersion)(void);
+DWORD BASS_FXDEF(BASS_FX_GetVersion)();
 
 /*===========================================================================
 	DSP (Digital Signal Processing)
@@ -256,7 +256,7 @@ typedef struct {
 	int   lChannel;							// BASS_BFX_CHANxxx flag/s
 	int   lNodeCount;						// number of nodes
 	const struct BASS_BFX_ENV_NODE *pNodes;	// the nodes
-	BOOL  bFollow;							// follow source position
+	BOOL32  bFollow;							// follow source position
 } BASS_BFX_VOLUME_ENV;
 
 #pragma pack(push,4)
@@ -299,7 +299,7 @@ typedef struct {
 	float fWetMix;							// wet (affected) signal mix				[-2.......2]
 	float fFeedback;						// output signal to feed back into input	[-1.......1]
 	float fDelay;							// delay sec								[0<.......n]
-	BOOL  bStereo;							// echo adjoining channels to each other	[TRUE/FALSE]
+	BOOL32  bStereo;							// echo adjoining channels to each other	[TRUE/FALSE]
 	int   lChannel;							// BASS_BFX_CHANxxx flag/s
 } BASS_BFX_ECHO4;
 
@@ -408,10 +408,10 @@ typedef void (CALLBACK BPMPROGRESSPROC)(DWORD chan, float percent, void *user);
 typedef BPMPROGRESSPROC BPMPROCESSPROC;	// back-compatibility
 
 float BASS_FXDEF(BASS_FX_BPM_DecodeGet)(DWORD chan, double startSec, double endSec, DWORD minMaxBPM, DWORD flags, BPMPROGRESSPROC *proc, void *user);
-BOOL  BASS_FXDEF(BASS_FX_BPM_CallbackSet)(DWORD handle, BPMPROC *proc, double period, DWORD minMaxBPM, DWORD flags, void *user);
-BOOL  BASS_FXDEF(BASS_FX_BPM_CallbackReset)(DWORD handle);
+BOOL32  BASS_FXDEF(BASS_FX_BPM_CallbackSet)(DWORD handle, BPMPROC *proc, double period, DWORD minMaxBPM, DWORD flags, void *user);
+BOOL32  BASS_FXDEF(BASS_FX_BPM_CallbackReset)(DWORD handle);
 float BASS_FXDEF(BASS_FX_BPM_Translate)(DWORD handle, float val2tran, DWORD trans);	// deprecated
-BOOL  BASS_FXDEF(BASS_FX_BPM_Free)(DWORD handle);
+BOOL32  BASS_FXDEF(BASS_FX_BPM_Free)(DWORD handle);
 
 /*===========================================================================
 	Beat position trigger
@@ -419,12 +419,12 @@ BOOL  BASS_FXDEF(BASS_FX_BPM_Free)(DWORD handle);
 
 typedef void (CALLBACK BPMBEATPROC)(DWORD chan, double beatpos, void *user);
 
-BOOL BASS_FXDEF(BASS_FX_BPM_BeatCallbackSet)(DWORD handle, BPMBEATPROC *proc, void *user);
-BOOL BASS_FXDEF(BASS_FX_BPM_BeatCallbackReset)(DWORD handle);
-BOOL BASS_FXDEF(BASS_FX_BPM_BeatDecodeGet)(DWORD chan, double startSec, double endSec, DWORD flags, BPMBEATPROC *proc, void *user);
-BOOL BASS_FXDEF(BASS_FX_BPM_BeatSetParameters)(DWORD handle, float bandwidth, float centerfreq, float beat_rtime);
-BOOL BASS_FXDEF(BASS_FX_BPM_BeatGetParameters)(DWORD handle, float *bandwidth, float *centerfreq, float *beat_rtime);
-BOOL BASS_FXDEF(BASS_FX_BPM_BeatFree)(DWORD handle);
+BOOL32 BASS_FXDEF(BASS_FX_BPM_BeatCallbackSet)(DWORD handle, BPMBEATPROC *proc, void *user);
+BOOL32 BASS_FXDEF(BASS_FX_BPM_BeatCallbackReset)(DWORD handle);
+BOOL32 BASS_FXDEF(BASS_FX_BPM_BeatDecodeGet)(DWORD chan, double startSec, double endSec, DWORD flags, BPMBEATPROC *proc, void *user);
+BOOL32 BASS_FXDEF(BASS_FX_BPM_BeatSetParameters)(DWORD handle, float bandwidth, float centerfreq, float beat_rtime);
+BOOL32 BASS_FXDEF(BASS_FX_BPM_BeatGetParameters)(DWORD handle, float *bandwidth, float *centerfreq, float *beat_rtime);
+BOOL32 BASS_FXDEF(BASS_FX_BPM_BeatFree)(DWORD handle);
 
 /*===========================================================================
 	Macros
