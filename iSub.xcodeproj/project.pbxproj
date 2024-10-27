@@ -229,6 +229,22 @@
 		537B05C0256B0E4B0008892C /* PadMenuTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05BE256B0E4B0008892C /* PadMenuTableCell.swift */; };
 		537B05C2256B40930008892C /* SongInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05C1256B40930008892C /* SongInfoViewController.swift */; };
 		537B05C3256B40930008892C /* SongInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B05C1256B40930008892C /* SongInfoViewController.swift */; };
+		537C52872CCEA1130046AF02 /* bass_fx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA402B897D51007ABD7A /* bass_fx.xcframework */; };
+		537C52882CCEA1130046AF02 /* bass_fx.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA402B897D51007ABD7A /* bass_fx.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		537C52892CCEA1150046AF02 /* bass_mpc.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA3F2B897D51007ABD7A /* bass_mpc.xcframework */; };
+		537C528A2CCEA1150046AF02 /* bass_mpc.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA3F2B897D51007ABD7A /* bass_mpc.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		537C528B2CCEA1160046AF02 /* bass.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA342B897D51007ABD7A /* bass.xcframework */; };
+		537C528C2CCEA1160046AF02 /* bass.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA342B897D51007ABD7A /* bass.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		537C528D2CCEA1170046AF02 /* bassape.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA352B897D51007ABD7A /* bassape.xcframework */; };
+		537C528E2CCEA1170046AF02 /* bassape.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA352B897D51007ABD7A /* bassape.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		537C528F2CCEA1180046AF02 /* bassflac.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA382B897D51007ABD7A /* bassflac.xcframework */; };
+		537C52902CCEA1180046AF02 /* bassflac.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA382B897D51007ABD7A /* bassflac.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		537C52912CCEA1190046AF02 /* bassmix.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA3E2B897D51007ABD7A /* bassmix.xcframework */; };
+		537C52922CCEA1190046AF02 /* bassmix.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA3E2B897D51007ABD7A /* bassmix.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		537C52932CCEA11B0046AF02 /* bassopus.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA3D2B897D51007ABD7A /* bassopus.xcframework */; };
+		537C52942CCEA11B0046AF02 /* bassopus.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA3D2B897D51007ABD7A /* bassopus.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		537C52952CCEA11C0046AF02 /* basswv.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA372B897D51007ABD7A /* basswv.xcframework */; };
+		537C52962CCEA11C0046AF02 /* basswv.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA372B897D51007ABD7A /* basswv.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		537C93E125B1051200175DF6 /* SaveEditHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93E025B1051200175DF6 /* SaveEditHeader.swift */; };
 		537C93E225B1051200175DF6 /* SaveEditHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93E025B1051200175DF6 /* SaveEditHeader.swift */; };
 		537C93EB25B1161200175DF6 /* InflectorKit in Frameworks */ = {isa = PBXBuildFile; productRef = 537C93EA25B1161200175DF6 /* InflectorKit */; };
@@ -337,14 +353,6 @@
 		53A6AA032B89772E007ABD7A /* CocoaLumberjack in Frameworks */ = {isa = PBXBuildFile; productRef = 53A6AA022B89772E007ABD7A /* CocoaLumberjack */; };
 		53A6AA0A2B89797C007ABD7A /* GCDWebDAVServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A6AA092B89797C007ABD7A /* GCDWebDAVServer.m */; };
 		53A6AA0B2B89797C007ABD7A /* GCDWebDAVServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A6AA092B89797C007ABD7A /* GCDWebDAVServer.m */; };
-		53A6AA442B897D52007ABD7A /* bass.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA342B897D51007ABD7A /* bass.xcframework */; };
-		53A6AA462B897D52007ABD7A /* bassape.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA352B897D51007ABD7A /* bassape.xcframework */; };
-		53A6AA482B897D52007ABD7A /* basswv.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA372B897D51007ABD7A /* basswv.xcframework */; };
-		53A6AA4A2B897D52007ABD7A /* bassflac.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA382B897D51007ABD7A /* bassflac.xcframework */; };
-		53A6AA4C2B897D52007ABD7A /* bassopus.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA3D2B897D51007ABD7A /* bassopus.xcframework */; };
-		53A6AA4E2B897D52007ABD7A /* bassmix.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA3E2B897D51007ABD7A /* bassmix.xcframework */; };
-		53A6AA502B897D52007ABD7A /* bass_mpc.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA3F2B897D51007ABD7A /* bass_mpc.xcframework */; };
-		53A6AA522B897D52007ABD7A /* bass_fx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA402B897D51007ABD7A /* bass_fx.xcframework */; };
 		53A6AA532B897D7E007ABD7A /* bass_fx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA402B897D51007ABD7A /* bass_fx.xcframework */; };
 		53A6AA542B897D7E007ABD7A /* bass_fx.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA402B897D51007ABD7A /* bass_fx.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		53A6AA552B897D7E007ABD7A /* bass_mpc.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA3F2B897D51007ABD7A /* bass_mpc.xcframework */; };
@@ -610,6 +618,14 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				537C52902CCEA1180046AF02 /* bassflac.xcframework in Embed Frameworks */,
+				537C52882CCEA1130046AF02 /* bass_fx.xcframework in Embed Frameworks */,
+				537C528E2CCEA1170046AF02 /* bassape.xcframework in Embed Frameworks */,
+				537C52942CCEA11B0046AF02 /* bassopus.xcframework in Embed Frameworks */,
+				537C528A2CCEA1150046AF02 /* bass_mpc.xcframework in Embed Frameworks */,
+				537C528C2CCEA1160046AF02 /* bass.xcframework in Embed Frameworks */,
+				537C52922CCEA1190046AF02 /* bassmix.xcframework in Embed Frameworks */,
+				537C52962CCEA11C0046AF02 /* basswv.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1008,41 +1024,41 @@
 			files = (
 				53329611255EF23B0027C51A /* libsqlite3.tbd in Frameworks */,
 				5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */,
+				537C528D2CCEA1170046AF02 /* bassape.xcframework in Frameworks */,
 				53D97406255BFD9100AABF7F /* SnapKit in Frameworks */,
-				53A6AA482B897D52007ABD7A /* basswv.xcframework in Frameworks */,
 				53A6AA012B897728007ABD7A /* CocoaLumberjack in Frameworks */,
-				53A6AA4A2B897D52007ABD7A /* bassflac.xcframework in Frameworks */,
+				537C52892CCEA1150046AF02 /* bass_mpc.xcframework in Frameworks */,
+				537C52952CCEA11C0046AF02 /* basswv.xcframework in Frameworks */,
 				5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */,
 				53A6A9FA2B8973AB007ABD7A /* CwlCatchException in Frameworks */,
 				5367C6D51EA92D2400B1C242 /* libz.tbd in Frameworks */,
 				53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */,
 				53F8917E1EB137E900B3F131 /* AudioToolbox.framework in Frameworks */,
+				537C528F2CCEA1180046AF02 /* bassflac.xcframework in Frameworks */,
 				53B38C12147593FA00CD8A99 /* AVFoundation.framework in Frameworks */,
 				5389478A25A4E7880078FBAF /* GRDB in Frameworks */,
 				53BC2854139AF0DD00A825F1 /* CFNetwork.framework in Frameworks */,
 				53BC2857139AF0DD00A825F1 /* CoreFoundation.framework in Frameworks */,
 				53BC2852139AF0DD00A825F1 /* CoreGraphics.framework in Frameworks */,
 				53DE598314F1932C00206529 /* CoreText.framework in Frameworks */,
-				53A6AA442B897D52007ABD7A /* bass.xcframework in Frameworks */,
 				537C93ED25B1162100175DF6 /* InflectorKit in Frameworks */,
 				53BC2850139AF0DD00A825F1 /* Foundation.framework in Frameworks */,
 				53BC2853139AF0DD00A825F1 /* MediaPlayer.framework in Frameworks */,
+				537C52872CCEA1130046AF02 /* bass_fx.xcframework in Frameworks */,
 				53C7FD9E150F0EA9008DA51C /* MessageUI.framework in Frameworks */,
-				53A6AA462B897D52007ABD7A /* bassape.xcframework in Frameworks */,
 				53A2BE28147DF13600E44822 /* OpenGLES.framework in Frameworks */,
 				5381F8061E96FBFB00AAA9BD /* Photos.framework in Frameworks */,
+				537C52932CCEA11B0046AF02 /* bassopus.xcframework in Frameworks */,
 				53A6A9FF2B89770C007ABD7A /* CocoaLumberjackSwift in Frameworks */,
 				53BC2855139AF0DD00A825F1 /* QuartzCore.framework in Frameworks */,
+				537C528B2CCEA1160046AF02 /* bass.xcframework in Frameworks */,
 				53BC285F139AF0DD00A825F1 /* Security.framework in Frameworks */,
 				53BC2858139AF0DD00A825F1 /* SystemConfiguration.framework in Frameworks */,
 				53B5DB3A25D73026006149B6 /* Tabman in Frameworks */,
 				53BC2851139AF0DD00A825F1 /* UIKit.framework in Frameworks */,
-				53A6AA522B897D52007ABD7A /* bass_fx.xcframework in Frameworks */,
+				537C52912CCEA1190046AF02 /* bassmix.xcframework in Frameworks */,
 				539148BA2559E597004AAC3F /* CoreServices.framework in Frameworks */,
-				53A6AA4E2B897D52007ABD7A /* bassmix.xcframework in Frameworks */,
 				5381884E25A67A4300C59CDE /* Resolver in Frameworks */,
-				53A6AA502B897D52007ABD7A /* bass_mpc.xcframework in Frameworks */,
-				53A6AA4C2B897D52007ABD7A /* bassopus.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
