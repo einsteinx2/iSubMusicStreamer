@@ -369,9 +369,7 @@ final class StreamManager {
     }
     
     @objc private func songPlaybackEnded() {
-        if settings.isSongCachingEnabled {
-            fillStreamQueue()
-        }
+        fillStreamQueue()
     }
 }
 

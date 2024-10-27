@@ -411,7 +411,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
     }
     
     func streamReadyToStartPlayback(handler: StreamHandler) {
-        if !isPlaying, let currentSong = playQueue.currentSong, currentSong == handler.song {
+        if !isPlaying || handler.isTempCache, let currentSong = playQueue.currentSong, currentSong == handler.song {
             // We were waiting for the current song to download before playing and now it's ready, so start playback
             startNewSong(handler.song, index: playQueue.currentIndex, offsetInBytes: handler.byteOffset, offsetInSeconds: handler.secondsOffset)
         } else if isPlaying, let nextSong = playQueue.nextSong, nextSong == handler.song {
