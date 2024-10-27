@@ -96,7 +96,7 @@ LOG_LEVEL_ISUB_DEFAULT
         [self.quickSkipSegmentControl setTitleTextAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:11]} forState:UIControlStateNormal];
     }
 	
-	[self.cacheSpaceLabel2 addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+	[self.cacheSpaceLabel2 addTarget:self action:@selector(updateCacheSpaceSlider) forControlEvents:UIControlEventEditingChanged];
     
     self.maxVideoBitrate3GSegmentedControl.selectedSegmentIndex = settingsS.maxVideoBitrate3G;
     self.maxVideoBitrateWifiSegmentedControl.selectedSegmentIndex = settingsS.maxVideoBitrateWifi;
