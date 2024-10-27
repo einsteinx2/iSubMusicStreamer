@@ -859,7 +859,7 @@ LOG_LEVEL_ISUB_DEFAULT
 	// Load the servers array
     NSData *servers = [_userDefaults objectForKey:@"servers"];
     if (servers) {
-        NSSet *classes = [NSSet setWithArray:@[NSArray.class, ISMSServer.class]];
+        NSSet *classes = [NSSet setWithArray:@[NSArray.class, ISMSServer.class, NSString.class]];
         self.serverList = [[NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:servers error:nil] mutableCopy];
     }
 }

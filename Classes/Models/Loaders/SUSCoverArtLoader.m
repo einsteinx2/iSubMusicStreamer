@@ -22,7 +22,7 @@ static NSMutableArray *_loadingImageNames;
 static NSObject *_syncObject;
 
 __attribute__((constructor))
-static void initialize_navigationBarImages() {
+static void initialize_navigationBarImages(void) {
 	_loadingImageNames = [[NSMutableArray alloc] init];
 	_syncObject = [[NSObject alloc] init];
 }
