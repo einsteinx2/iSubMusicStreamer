@@ -389,7 +389,7 @@ import Resolver
         present(alert, animated: true)
     }
     
-    @IBAction func movedGainSlider(sender: Any?) {
+    @IBAction func movedGainSlider(_ sender: Any?) {
         let gainValue = gainSlider.value
         let minValue = gainSlider.minimumValue
         let maxValue = gainSlider.maximumValue
