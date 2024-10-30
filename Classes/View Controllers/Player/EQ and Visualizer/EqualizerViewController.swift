@@ -505,9 +505,15 @@ extension EqualizerViewController: UIPickerViewDelegate, UIPickerViewDataSource 
     
     func updatePresetPicker() {
         let selectedPreset = effectDAO.selectedPreset
+        let isCustomPreset = effectDAO.selectedPresetId == BassEffectDAO.bassEffectTempCustomPresetId
+        let isDefaultPreset = effectDAO.selectedPreset?.isDefault ?? false
+        
         presetPicker.reloadAllComponents()
         presetPicker.selectRow(effectDAO.selectedPresetIndex, inComponent: 0, animated: true)
         presetLabel.text = selectedPreset?.name as? String
+        
+        updateSavePresetButton(isCustomPreset: isCustomPreset)
+        updateDeletePresetButton(isCustomPreset: isCustomPreset, isDefault: isDefaultPreset)
     }
     
     @objc func showPresetPicker() {
