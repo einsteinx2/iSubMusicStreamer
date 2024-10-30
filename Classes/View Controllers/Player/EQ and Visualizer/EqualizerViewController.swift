@@ -508,12 +508,6 @@ extension EqualizerViewController: UIPickerViewDelegate, UIPickerViewDataSource 
         presetPicker.reloadAllComponents()
         presetPicker.selectRow(effectDAO.selectedPresetIndex, inComponent: 0, animated: true)
         presetLabel.text = selectedPreset?.name as? String
-        
-        if effectDAO.selectedPresetId == BassEffectDAO.bassEffectTempCustomPresetId {
-            showSavePresetButton(animated: false)
-        } else if let isDefault = selectedPreset?.isDefault, isDefault {
-            showDeletePresetButton(animated: false)
-        }
     }
     
     @objc func showPresetPicker() {
@@ -575,8 +569,7 @@ extension EqualizerViewController: UIPickerViewDelegate, UIPickerViewDataSource 
             self.isPresetPickerShowing = false
         }
     }
-    
-    // TODO: Fix this logic, it's not properly hiding the delete button
+
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         effectDAO.selectPreset(index: row)
         
