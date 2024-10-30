@@ -573,20 +573,29 @@ extension EqualizerViewController: UIPickerViewDelegate, UIPickerViewDataSource 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         effectDAO.selectPreset(index: row)
         
-        let isDefault = effectDAO.selectedPreset?.isDefault ?? false
-        if effectDAO.selectedPresetId == BassEffectDAO.bassEffectTempCustomPresetId && !isSavePresetButtonShowing {
-            showSavePresetButton(animated: true)
-        } else if effectDAO.selectedPresetId != BassEffectDAO.bassEffectTempCustomPresetId && isSavePresetButtonShowing {
-            hideSavePresetButton(animated: true)
-        }
-    
-        if effectDAO.selectedPresetId != BassEffectDAO.bassEffectTempCustomPresetId && !isDeletePresetButtonShowing && !isDefault {
-            showDeletePresetButton(animated: true)
-        } else if (effectDAO.selectedPresetId == BassEffectDAO.bassEffectTempCustomPresetId || isDefault) && isDeletePresetButtonShowing {
-            hideDeletePresetButton(animated: true)
-        }
+        let isCustomPreset = effectDAO.selectedPresetId == BassEffectDAO.bassEffectTempCustomPresetId
+        let isDefaultPreset = effectDAO.selectedPreset?.isDefault ?? false
+        
+        updateSavePresetButton(isCustomPreset: isCustomPreset)
+        updateDeletePresetButton(isCustomPreset: isCustomPreset, isDefault: isDefaultPreset)
         
         updatePresetPicker()
+    }
+    
+    private func updateSavePresetButton(isCustomPreset: Bool) {
+        if isCustomPreset && !isSavePresetButtonShowing {
+            showSavePresetButton(animated: true)
+        } else if !isCustomPreset && isSavePresetButtonShowing {
+            hideSavePresetButton(animated: true)
+        }
+    }
+
+    private func updateDeletePresetButton(isCustomPreset: Bool, isDefault: Bool) {
+        if !isCustomPreset && !isDeletePresetButtonShowing && !isDefault {
+            showDeletePresetButton(animated: true)
+        } else if (isCustomPreset || isDefault) && isDeletePresetButtonShowing {
+            hideDeletePresetButton(animated: true)
+        }
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
