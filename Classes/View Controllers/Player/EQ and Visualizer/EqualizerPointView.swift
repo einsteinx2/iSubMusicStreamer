@@ -53,10 +53,13 @@ func percentY(gain: Float) -> CGFloat {
     @objc init(point: CGPoint, parentSize: CGSize) {
         let p = BASS_DX8_PARAMEQ(fCenter: 0, fBandwidth: Float(defaultBandwidth), fGain: 0)
         self._eqValue = BassParamEqValue(parameters: p)
-        self.position = CGPoint(x: point.x / parentSize.width, y: point.y / parentSize.height)
+        
+        // Scale point to parentSize
+        let scaledPoint = CGPoint(x: point.x * parentSize.width, y: point.y * parentSize.height)
+        self.position = CGPoint(x: point.x, y: point.y)
         self.parentSize = parentSize
         super.init(frame: CGRect(x: 0, y: 0, width: defaultWidth, height: defaultHeight))
-        self.center = point
+        self.center = scaledPoint  // Set scaled point as center
         self.image = UIImage(named: "eqView")
         self.isUserInteractionEnabled = true
     }
