@@ -143,6 +143,7 @@ private let equalizerGainReduction: Float = 0.45
     
     @objc(removeEqualizerValue:)
     func removeEqualizerValue(value: BassParamEqValue) {
+        guard value.arrayIndex >= eqValues.count else { return }
         print("removeEqualizerValue");
         if isEqActive && channel > 0 {
             // Disable the effect channel
