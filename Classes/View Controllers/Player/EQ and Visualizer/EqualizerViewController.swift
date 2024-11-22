@@ -251,6 +251,13 @@ import Resolver
             return eqView
         }
         
+        if equalizerPointViews.isEmpty {
+            for eqValue in effectDAO.selectedPreset?.values ?? [] {
+                let eqView = EqualizerPointView(point: eqValue, parentSize: equalizerView?.frame.size ?? .zero)
+                view.insertSubview(eqView, aboveSubview: equalizerPath)
+                equalizerPointViews.append(eqView)
+            }
+        }
         createAndDrawEqualizerPath()
     }
     
@@ -427,13 +434,13 @@ import Resolver
             
             // Only create EQ points in portrait mode when EQ is visible
             if UIDevice.isPad || UIApplication.orientation.isPortrait {
-                // Add a point
-                
-                // Find the tap point
-                let point = touch.location(in: eqView)
+
+                // Normalize tap point
+                let rawPoint = touch.location(in: eqView)
+                let normalizedPoint = CGPoint(x: rawPoint.x / eqView.bounds.width, y: rawPoint.y / eqView.bounds.height)
                 
                 // Create the eq view
-                let pointView = EqualizerPointView(point: point, parentSize: eqView.bounds.size)
+                let pointView = EqualizerPointView(point: normalizedPoint, parentSize: eqView.bounds.size)
                 let eqValue = BassPlayer.shared.equalizer.addEqualizerValue(value: pointView.eqValue.parameters)
                 pointView.eqValue = eqValue
 
