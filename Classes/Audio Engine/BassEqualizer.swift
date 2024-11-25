@@ -185,24 +185,34 @@ private let equalizerGainReduction: Float = 0.45
     
     @objc @discardableResult
     func toggleEqualizer() -> Bool {
+        // Update the state of the equalizer
         settings.isEqualizerOn = !isEqActive
         
         if isEqActive {
-            clearEqualizerValues()
-        } else {
-            // TODO: See if this lock and copy is necessary
-            let values = eqValuesLock.sync {
-                let values = eqValues
-                return values
-            }
-//            eqValuesLock.lock()
-//            let values = eqValues
-//            eqValuesLock.unlock()
-            applyEqualizerValues(values: values)
+            deactivateEqualizer()
+        } else{
+            activateEqualizer()
         }
+        
+        // Set the gain level
         gain = settings.gainMultiplier
         
         return !isEqActive
+    }
+    
+    private func deactivateEqualizer() {
+        clearEqualizerValues()
+        isEqActive = false
+    }
+    
+    private func activateEqualizer() {
+        if settings.isPlaying {
+            let values = eqValuesLock.sync { eqValues }
+            applyEqualizerValues(values: values)
+        } else {
+            // Even is not playing force to activate the equalizer
+            isEqActive = true
+        }
     }
     
     @objc func createVolumeFx() {
