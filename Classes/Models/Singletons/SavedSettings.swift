@@ -125,9 +125,6 @@ final class SavedSettings {
         }
     }
     
-    @UserDefault(key: .isPlaying, defaultValue: false)
-    var isPlaying: Bool
-    
     @UserDefault(key: .enableSongCachingSetting, defaultValue: true)
     var isSongCachingEnabled: Bool
     

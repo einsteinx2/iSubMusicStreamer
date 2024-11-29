@@ -46,6 +46,8 @@ private let equalizerGainReduction: Float = 0.45
 //        return values
     }
     
+    var isPlayerInitialized: Bool = false
+    
     private var eqHandles = [HFX]()
     private var eqValues = [BassParamEqValue]()
     private let eqValuesLock = NSRecursiveLock()
@@ -206,11 +208,11 @@ private let equalizerGainReduction: Float = 0.45
     }
     
     private func activateEqualizer() {
-        if settings.isPlaying {
+        if isPlayerInitialized {
             let values = eqValuesLock.sync { eqValues }
             applyEqualizerValues(values: values)
         } else {
-            // Even is not playing force to activate the equalizer
+            // Even the Player is off, force to activate the equalizer
             isEqActive = true
         }
     }

@@ -193,6 +193,8 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         
         // Add limiter to prevent distortion
         equalizer.createLimiterFx()
+        
+        equalizer.isPlayerInitialized = true
     }
     
     func cleanup() {
