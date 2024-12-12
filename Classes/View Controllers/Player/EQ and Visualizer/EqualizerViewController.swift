@@ -279,6 +279,12 @@ import Resolver
         navigationController?.navigationBar.isHidden = false
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        navigationController?.popToRootViewController(animated: false)
+    }
+    
     func hideSavePresetButton(animated: Bool) {
         isSavePresetButtonShowing = false
         if animated {
