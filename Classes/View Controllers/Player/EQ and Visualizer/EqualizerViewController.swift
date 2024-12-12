@@ -8,28 +8,45 @@
 
 import Foundation
 import Resolver
+import SnapKit
 
 @objc final class EqualizerViewController: UIViewController {
     
     @Injected private var settings: SavedSettings
     @Injected private var analytics: Analytics
     
-    let closeButton = UIButton(type: .close)
-    var overlay: UIView?
-    let dismissButton = UIButton(type: .custom)
-    @IBOutlet var controlsContainer: UIView!
+    let equalizerContainerView = UIView()
+    let visualizerView = VisualizerView()
+    let equalizerPathView = EqualizerPathView()
+    let equalizerSeparatorLineView = UIView()
+
+    let controlsContainerView = UIView()
+    
+    let gainContainerView = UIView()
+    let gainLabel = UILabel()
+    let gainAmountLabel = UILabel()
+    let gainSliderContainerView = UIView()
+    let gainSliderTickContainerView = UIView()
+    var gainSliderTicksViews = [UIView]()
+    let gainSlider = SnappySlider()
+    
+    let presetLabelContainerView = UIView()
+    let presetLabel = UILabel()
     var isPresetPickerShowing = false
     let presetPicker = UIPickerView()
     let presetPickerBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
-    @IBOutlet var presetLabel: UILabel!
-    @IBOutlet var toggleButton: UIButton!
-    @IBOutlet var equalizerSeparatorLine: UIView!
-    @IBOutlet var equalizerPath: EqualizerPathView!
-    @IBOutlet var equalizerView: EqualizerView?
+    
+    let buttonsContainerView = UIView()
+    let visualizerButton = UIButton(type: .custom)
+    let toggleButton = UIButton(type: .custom)
+        
+    
+    let closeButton = UIButton(type: .close)
+    var overlay: UIView?
+    let dismissButton = UIButton(type: .custom)
+    
     var equalizerPointViews = [EqualizerPointView]()
-    @IBOutlet var gainSlider: SnappySlider!
-    @IBOutlet var gainBoostAmountLabel: UILabel!
-    @IBOutlet var gainBoostLabel: UILabel!
+    
     var lastGainValue: Float = 0
     var effectDAO = BassEffectDAO(type: .parametricEQ)
     var selectedView: EqualizerPointView?
@@ -39,9 +56,8 @@ import Resolver
     var isDeletePresetButtonShowing = false
     var saveDialog: DDSocialDialog?
     var wasVisualizerOffBeforeRotation = false
-    let swipeDetectorLeft: UISwipeGestureRecognizer = { UISwipeGestureRecognizer(target: EqualizerViewController.self, action: #selector(swipeLeft)) }()
-    let swipeDetectorRight: UISwipeGestureRecognizer = { UISwipeGestureRecognizer(target: EqualizerViewController.self, action: #selector(swipeRight)) }()
-    @IBOutlet var landscapeButtonsHolder: UIView!
+    
+    
     
 
 
@@ -50,9 +66,9 @@ import Resolver
             if UIApplication.orientation.isPortrait {
                 self.navigationController?.isNavigationBarHidden = false
                 
-                self.equalizerSeparatorLine.alpha = 1.0
-                self.equalizerPath.alpha = 1.0
-                self.equalizerView?.frame = self.equalizerPath.frame
+                self.equalizerSeparatorLineView.alpha = 1.0
+                self.equalizerPathView.alpha = 1.0
+                self.visualizerView.frame = self.equalizerPathView.frame
                 for eqPointview in self.equalizerPointViews {
                     eqPointview.alpha = 1.0
                 }
@@ -65,19 +81,19 @@ import Resolver
                 }
                 
                 if !UIDevice.isPad {
-                    self.controlsContainer.alpha = 1.0
-                    self.controlsContainer.isUserInteractionEnabled = true
+                    self.controlsContainerView.alpha = 1.0
+                    self.controlsContainerView.isUserInteractionEnabled = true
                     
                     if self.wasVisualizerOffBeforeRotation {
-                        self.equalizerView?.changeType(.none)
+                        self.visualizerView.changeType(.none)
                     }
                 }
             } else {
                 self.navigationController?.isNavigationBarHidden = true
                 
-                self.equalizerSeparatorLine.alpha = 0.0
-                self.equalizerPath.alpha = 0.0
-                self.equalizerView?.frame = self.view.bounds
+                self.equalizerSeparatorLineView.alpha = 0.0
+                self.equalizerPathView.alpha = 0.0
+                self.visualizerView.frame = self.view.bounds
                 for eqPointview in self.equalizerPointViews {
                     eqPointview.alpha = 0.0
                 }
@@ -87,12 +103,12 @@ import Resolver
                 if !UIDevice.isPad {
                     self.dismissPicker()
                     
-                    self.controlsContainer.alpha = 0.0
-                    self.controlsContainer.isUserInteractionEnabled = false
+                    self.controlsContainerView.alpha = 0.0
+                    self.controlsContainerView.isUserInteractionEnabled = false
                     
-                    self.wasVisualizerOffBeforeRotation = (self.equalizerView?.visualizerType == VisualizerType.none)
+                    self.wasVisualizerOffBeforeRotation = (self.visualizerView.visualizerType == VisualizerType.none)
                     if self.wasVisualizerOffBeforeRotation {
-                        self.equalizerView?.nextType()
+                        self.visualizerView.nextType()
                     }
                 }
             }
@@ -111,15 +127,187 @@ import Resolver
         super.viewDidLoad()
         
         overrideUserInterfaceStyle = .dark
+        view.backgroundColor = .black
+                
+        //
+        // Equalizer
+        //
         
-        toggleButton.layer.masksToBounds = true
-        toggleButton.layer.cornerRadius = 2
+        view.addSubview(equalizerContainerView)
+        equalizerContainerView.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.width.equalTo(equalizerContainerView.snp.height)
+        }
         
-        presetLabel.superview?.layer.cornerRadius = 4
-        presetLabel.superview?.layer.masksToBounds = true
+        equalizerContainerView.addSubview(visualizerView)
+        visualizerView.snp.makeConstraints { make in
+            make.leading.trailing.top.bottom.equalToSuperview()
+        }
+        
+        equalizerPathView.backgroundColor = .clear
+        equalizerContainerView.addSubview(equalizerPathView)
+        equalizerPathView.snp.makeConstraints { make in
+            make.leading.trailing.top.bottom.equalToSuperview()
+        }
+        
+        equalizerSeparatorLineView.backgroundColor = .white
+        equalizerContainerView.addSubview(equalizerSeparatorLineView)
+        equalizerSeparatorLineView.snp.makeConstraints { make in
+            make.height.equalTo(1)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+        
+        //
+        // Controls
+        //
+        
+        view.addSubview(controlsContainerView)
+        controlsContainerView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(equalizerContainerView.snp.bottom).offset(10)
+        }
+        
+        //
+        // Gain
+        //
+        
+        controlsContainerView.addSubview(gainContainerView)
+        gainContainerView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.centerY.equalToSuperview().multipliedBy(0.5)
+            make.height.equalTo(50)
+        }
+        
+        gainLabel.font = .systemFont(ofSize: 20)
+        gainLabel.textColor = .lightGray
+        gainLabel.text = "Gain:"
+        gainContainerView.addSubview(gainLabel)
+        gainLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(10)
+            make.centerY.equalToSuperview()
+            make.width.equalTo(55)
+        }
+        
+        gainAmountLabel.font = .systemFont(ofSize: 20)
+        gainAmountLabel.textColor = .lightGray
+        gainContainerView.addSubview(gainAmountLabel)
+        gainAmountLabel.snp.makeConstraints { make in
+            make.leading.equalTo(gainLabel.snp.trailing).offset(10)
+            make.centerY.equalToSuperview()
+            make.width.equalTo(50)
+        }
+        
+        gainContainerView.addSubview(gainSliderContainerView)
+        gainSliderContainerView.snp.makeConstraints { make in
+            make.leading.equalTo(gainAmountLabel.snp.trailing).offset(10)
+            make.trailing.equalToSuperview().offset(-10)
+            make.top.bottom.equalToSuperview()
+        }
+        
+        gainSliderContainerView.addSubview(gainSliderTickContainerView)
+        gainSliderTickContainerView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(13)
+            make.trailing.equalToSuperview().offset(-13)
+            make.top.bottom.equalToSuperview()
+        }
+        
+        for i in 0..<3 {
+            let tickView = UIView()
+            tickView.backgroundColor = .lightGray
+            gainSliderTickContainerView.addSubview(tickView)
+            tickView.snp.makeConstraints { make in
+                make.width.equalTo(2)
+                make.top.bottom.equalToSuperview()
+                make.centerX.equalToSuperview().multipliedBy(0.5 + (0.5 * Double(i)))
+            }
+            gainSliderTicksViews.append(tickView)
+        }
+        
+        gainSlider.minimumValue = 0
+        gainSlider.maximumValue = 4
+        let detents: [Float] = [1.0, 2.0, 3.0]
+        gainSlider.snapDistance = 0.13
+        gainSlider.detents = detents
+        gainSlider.value = settings.gainMultiplier
+        lastGainValue = gainSlider.value
+        gainAmountLabel.text = String(format: "%.1fx", gainSlider.value)
+        gainSlider.addTarget(self, action: #selector(movedGainSlider(_:)), for: .touchDragInside)
+        gainSlider.addTarget(self, action: #selector(movedGainSlider(_:)), for: .valueChanged)
+        // TODO: Fix for iPad
+//        if UIDevice.isPad {
+//            gainSlider.frame.origin.y += 7
+//            gainLabel.frame.origin.y += 7
+//            gainAmountLabel.frame.origin.y += 7
+//            savePresetButton.frame.origin.y -= 10
+//            deletePresetButton.frame.origin.y -= 10
+//        }
+        gainSliderContainerView.addSubview(gainSlider)
+        gainSlider.snp.makeConstraints { make in
+            make.leading.trailing.top.bottom.equalToSuperview()
+        }
+
+        //
+        // Presets
+        //
+        
+        presetLabelContainerView.layer.cornerRadius = 4
+        presetLabelContainerView.layer.masksToBounds = true
+        presetLabelContainerView.backgroundColor = .white
+        controlsContainerView.addSubview(presetLabelContainerView)
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(showPresetPicker))
-        presetLabel.superview?.addGestureRecognizer(recognizer)
+        presetLabelContainerView.addGestureRecognizer(recognizer)
+        presetLabelContainerView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(10)
+            make.trailing.equalToSuperview().offset(-10)
+            make.height.equalTo(50)
+        }
         
+        presetLabel.font = .systemFont(ofSize: 17)
+        presetLabel.textColor = .black
+        presetLabelContainerView.addSubview(presetLabel)
+        presetLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(10)
+            make.trailing.equalToSuperview().offset(-10)
+            make.centerY.equalToSuperview()
+        }
+        
+        //
+        // Buttons
+        //
+        
+        controlsContainerView.addSubview(buttonsContainerView)
+        buttonsContainerView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.centerY.equalToSuperview().multipliedBy(1.5)
+        }
+        
+        visualizerButton.addTarget(self, action: #selector(type(_:)), for: .touchUpInside)
+        visualizerButton.setTitle("Visualizer", for: .normal)
+        visualizerButton.titleLabel?.font = .boldSystemFont(ofSize: 20)
+        visualizerButton.setTitleColor(.systemBlue, for: .normal)
+        buttonsContainerView.addSubview(visualizerButton)
+        visualizerButton.snp.makeConstraints { make in
+            make.leading.top.bottom.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.5)
+        }
+        
+        toggleButton.addTarget(self, action: #selector(toggle(_:)), for: .touchUpInside)
+        toggleButton.setTitle("EQ is OFF", for: .normal)
+        toggleButton.titleLabel?.font = .boldSystemFont(ofSize: 20)
+        toggleButton.setTitleColor(.systemBlue, for: .normal)
+        buttonsContainerView.addSubview(toggleButton)
+        toggleButton.snp.makeConstraints { make in
+            make.trailing.top.bottom.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.5)
+        }
+        
+        ///
+        /// TODO:
+        ///
+        
+        
+
         isSavePresetButtonShowing = false
         let f = self.presetLabel.superview?.frame ?? .zero
         savePresetButton.frame = CGRectMake(f.origin.x + f.size.width - 65, f.origin.y, 60, 30)
@@ -128,7 +316,7 @@ import Resolver
         savePresetButton.alpha = 0
         savePresetButton.isEnabled = false
         savePresetButton.autoresizingMask = [.flexibleTopMargin, .flexibleBottomMargin]
-        controlsContainer.addSubview(savePresetButton)
+        controlsContainerView.addSubview(savePresetButton)
 
         deletePresetButton.frame = CGRectMake(f.origin.x + f.size.width - 65, f.origin.y, 60, 30)
         deletePresetButton.setTitle("Delete", for: .normal)
@@ -136,7 +324,7 @@ import Resolver
         deletePresetButton.alpha = 0
         deletePresetButton.isEnabled = false
         deletePresetButton.autoresizingMask = [.flexibleTopMargin, .flexibleBottomMargin]
-        controlsContainer.addSubview(deletePresetButton)
+        controlsContainerView.addSubview(deletePresetButton)
 
         if BassPlayer.shared.equalizer.equalizerValues.count == 0 {
             effectDAO.selectCurrentPreset()
@@ -144,44 +332,33 @@ import Resolver
 
         updatePresetPicker()
         updateToggleButton()
-        equalizerView?.startEqDisplay()
+        visualizerView.startEqDisplay()
 
-        let detents: [Float] = [1.0, 2.0, 3.0]
-        gainSlider.snapDistance = 0.13
-        gainSlider.detents = detents
-        gainSlider.value = settings.gainMultiplier
-        lastGainValue = gainSlider.value
-        gainBoostAmountLabel.text = String(format: "%.1fx", gainSlider.value)
-
-        if UIDevice.isPad {
-            gainSlider.frame.origin.y += 7
-            gainBoostLabel.frame.origin.y += 7
-            gainBoostAmountLabel.frame.origin.y += 7
-            savePresetButton.frame.origin.y -= 10
-            deletePresetButton.frame.origin.y -= 10
-        }
         
-        controlsContainer.bringSubviewToFront(savePresetButton)
-        controlsContainer.bringSubviewToFront(deletePresetButton)
+        
+        controlsContainerView.bringSubviewToFront(savePresetButton)
+        controlsContainerView.bringSubviewToFront(deletePresetButton)
         
         savePresetButton.frame.origin.x -= 5
         deletePresetButton.frame.origin.x -= 5
         
         if UIApplication.orientation.isLandscape && !UIDevice.isPad {
-            controlsContainer.alpha = 0.0
-            controlsContainer.isUserInteractionEnabled = false
+            controlsContainerView.alpha = 0.0
+            controlsContainerView.isUserInteractionEnabled = false
             
-            wasVisualizerOffBeforeRotation = (equalizerView?.visualizerType == VisualizerType.none)
+            wasVisualizerOffBeforeRotation = (visualizerView.visualizerType == VisualizerType.none)
             if wasVisualizerOffBeforeRotation {
-                equalizerView?.nextType()
+                visualizerView.nextType()
             }
         }
                 
+        let swipeDetectorLeft = UISwipeGestureRecognizer(target: self, action: #selector(swipeLeft))
         swipeDetectorLeft.direction = .left
-        equalizerView?.addGestureRecognizer(swipeDetectorLeft)
+        visualizerView.addGestureRecognizer(swipeDetectorLeft)
 
+        let swipeDetectorRight = UISwipeGestureRecognizer(target: self, action: #selector(swipeRight))
         swipeDetectorRight.direction = .right
-        equalizerView?.addGestureRecognizer(swipeDetectorRight)
+        visualizerView.addGestureRecognizer(swipeDetectorRight)
         
         if isBeingPresented {
             closeButton.frame.origin = CGPoint(x: 20, y: 20)
@@ -190,28 +367,12 @@ import Resolver
             view.addSubview(closeButton)
         }
         
-        analytics.log(event: .equalizer)
-    }
-    
-    @objc func swipeLeft() {
-        if UIApplication.orientation.isLandscape {
-            equalizerView?.nextType()
+        DispatchQueue.main.async {
+            self.createEqViews()
         }
-    }
-    
-    @objc func swipeRight() {
-        if UIApplication.orientation.isLandscape {
-            equalizerView?.prevType()
-        }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        createEqViews()
         
         if !UIDevice.isPad && UIApplication.orientation.isLandscape {
-            equalizerPath.alpha = 0
+            equalizerPathView.alpha = 0
             
             for eqPointView in equalizerPointViews {
                 eqPointView.alpha = 0
@@ -222,6 +383,20 @@ import Resolver
         
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(createEqViews), name: Notifications.bassEffectPresetLoaded)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(dismissPicker), name: NSNotification.Name(rawValue: "hidePresetPicker"))
+        
+        analytics.log(event: .equalizer)
+    }
+    
+    @objc func swipeLeft() {
+        if UIApplication.orientation.isLandscape {
+            visualizerView.nextType()
+        }
+    }
+    
+    @objc func swipeRight() {
+        if UIApplication.orientation.isLandscape {
+            visualizerView.prevType()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -239,22 +414,22 @@ import Resolver
     }
     
     func createAndDrawEqualizerPath() {
-        equalizerPath.points = equalizerPointViews.map { $0.center }
+        equalizerPathView.points = equalizerPointViews.map { $0.center }
     }
     
     @objc func createEqViews() {
         removeEqViews()
             
         equalizerPointViews = BassPlayer.shared.equalizer.equalizerValues.map { eqValue in
-            let eqView = EqualizerPointView(eqValue: eqValue, parentSize: equalizerView?.frame.size ?? .zero)
-            view.insertSubview(eqView, aboveSubview: equalizerPath)
+            let eqView = EqualizerPointView(eqValue: eqValue, parentSize: visualizerView.frame.size)
+            view.insertSubview(eqView, aboveSubview: equalizerPathView)
             return eqView
         }
         
         if equalizerPointViews.isEmpty {
             for eqValue in effectDAO.selectedPreset?.values ?? [] {
-                let eqView = EqualizerPointView(point: eqValue, parentSize: equalizerView?.frame.size ?? .zero)
-                view.insertSubview(eqView, aboveSubview: equalizerPath)
+                let eqView = EqualizerPointView(point: eqValue, parentSize: visualizerView.frame.size)
+                view.insertSubview(eqView, aboveSubview: equalizerPathView)
                 equalizerPointViews.append(eqView)
             }
         }
@@ -266,21 +441,17 @@ import Resolver
         equalizerPointViews.removeAll()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
         NotificationCenter.removeObserverOnMainThread(self, name: Notifications.bassEffectPresetLoaded)
         NotificationCenter.removeObserverOnMainThread(self, name: Notification.Name(rawValue: "hidePresetPicker"))
         removeEqViews()
-        equalizerView?.stopEqDisplay()
-        equalizerView?.removeFromSuperview()
-        equalizerView = nil
+        visualizerView.stopEqDisplay()
+        visualizerView.removeFromSuperview()
+//        visualizerView = nil
         BassPlayer.shared.visualizer.type = .none
         navigationController?.navigationBar.isHidden = false
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
         
         navigationController?.popToRootViewController(animated: false)
     }
@@ -402,7 +573,7 @@ import Resolver
         present(alert, animated: true)
     }
     
-    @IBAction func movedGainSlider(_ sender: Any?) {
+    @objc func movedGainSlider(_ sender: Any) {
         let gainValue = gainSlider.value
         let minValue = gainSlider.minimumValue
         let maxValue = gainSlider.maximumValue
@@ -412,7 +583,7 @@ import Resolver
         
         let difference = abs(gainValue - lastGainValue)
         if difference >= 0.1 || gainValue == minValue || gainValue == maxValue {
-            gainBoostAmountLabel.text = String(format: "%.1fx", gainValue)
+            gainAmountLabel.text = String(format: "%.1fx", gainValue)
             lastGainValue = gainValue
         }
     }
@@ -435,7 +606,7 @@ import Resolver
                 
                 createAndDrawEqualizerPath()
             }
-        } else if let eqView = touchedView as? EqualizerView, touch.tapCount == 2 {
+        } else if let eqView = touchedView as? VisualizerView, touch.tapCount == 2 {
             NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(type(_:)), object: nil)
             
             // Only create EQ points in portrait mode when EQ is visible
@@ -462,10 +633,10 @@ import Resolver
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let selectedView = selectedView, let equalizerView = equalizerView, let touch = touches.first else { return }
+        guard let selectedView = selectedView, let touch = touches.first else { return }
         
-        let location = touch.location(in: equalizerView)
-        if CGRectContainsPoint(equalizerView.frame, location) {
+        let location = touch.location(in: visualizerView)
+        if CGRectContainsPoint(visualizerView.frame, location) {
             selectedView.center = touch.location(in: view)
             BassPlayer.shared.equalizer.updateEqParameter(value: selectedView.eqValue)
             createAndDrawEqualizerPath()
@@ -488,13 +659,13 @@ import Resolver
         }
     }
     
-    @IBAction func toggle(_ sender: Any?) {
+    @objc func toggle(_ sender: Any) {
         if BassPlayer.shared.equalizer.toggleEqualizer() {
             removeEqViews()
             createEqViews()
         }
         updateToggleButton()
-        equalizerPath.setNeedsDisplay()
+        equalizerPathView.setNeedsDisplay()
     }
     
     func updateToggleButton() {
@@ -507,8 +678,8 @@ import Resolver
         }
     }
     
-    @IBAction func type(_ sender: Any?) {
-        equalizerView?.nextType()
+    @objc func type(_ sender: Any) {
+        visualizerView.nextType()
     }
 }
 
@@ -530,7 +701,7 @@ extension EqualizerViewController: UIPickerViewDelegate, UIPickerViewDataSource 
     }
     
     @objc func showPresetPicker() {
-        guard let controlsContainer = controlsContainer, let equalizerView = equalizerView, !isPresetPickerShowing else { return }
+        guard !isPresetPickerShowing else { return }
         
         isPresetPickerShowing = true
         
@@ -538,7 +709,7 @@ extension EqualizerViewController: UIPickerViewDelegate, UIPickerViewDataSource 
         overlay.translatesAutoresizingMaskIntoConstraints = false
         overlay.backgroundColor = UIColor(white: 0, alpha: 0.80)
         overlay.alpha = 0.0
-        view.insertSubview(overlay, belowSubview: controlsContainer)
+        view.insertSubview(overlay, belowSubview: controlsContainerView)
         NSLayoutConstraint.activate([
             overlay.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             overlay.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -549,15 +720,15 @@ extension EqualizerViewController: UIPickerViewDelegate, UIPickerViewDataSource 
         
         dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         dismissButton.addTarget(self, action: #selector(dismissPicker), for: .touchUpInside)
-        dismissButton.frame = equalizerView.frame
+        dismissButton.frame = visualizerView.frame
         dismissButton.isEnabled = false
         overlay.addSubview(dismissButton)
         
-        presetPicker.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - equalizerView.frame.height)
+        presetPicker.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - visualizerView.frame.height)
         presetPicker.dataSource = self
         presetPicker.delegate = self
 
-        presetPickerBlurView.frame = CGRect(x: 0, y: view.frame.height, width: view.frame.width, height: view.frame.height - equalizerView.frame.height)
+        presetPickerBlurView.frame = CGRect(x: 0, y: view.frame.height, width: view.frame.width, height: view.frame.height - visualizerView.frame.height)
         presetPickerBlurView.contentView.addSubview(presetPicker)
         view.addSubview(presetPickerBlurView)
         view.bringSubviewToFront(overlay)
@@ -567,7 +738,7 @@ extension EqualizerViewController: UIPickerViewDelegate, UIPickerViewDataSource 
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut) {
             overlay.alpha = 1
             self.dismissButton.isEnabled = true
-            self.presetPickerBlurView.frame.origin.y = equalizerView.frame.height
+            self.presetPickerBlurView.frame.origin.y = self.visualizerView.frame.height
         }
     }
     

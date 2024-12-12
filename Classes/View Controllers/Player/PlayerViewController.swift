@@ -400,7 +400,7 @@ final class PlayerViewController: UIViewController {
         }
         equalizerButton.setImage(equalizerButtonImage, for: .normal)
         equalizerButton.addClosure(for: .touchUpInside) { [unowned self] in
-            let controller = EqualizerViewController(nibName: "EqualizerViewController", bundle: nil)
+            let controller = EqualizerViewController()
             if UIDevice.isPad {
                 self.present(controller, animated: true, completion: nil)
             } else {

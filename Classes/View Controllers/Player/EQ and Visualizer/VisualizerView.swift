@@ -34,7 +34,7 @@ private let specHeight: Int = 512 // 256 or 512
 private let specbufLength: Int = specWidth * specHeight
 private let palleteLength: Int = specHeight + 128
 
-final class EqualizerView: UIView {
+final class VisualizerView: UIView {
     
     @Injected private var settings: SavedSettings
     @Injected private var player: BassPlayer
