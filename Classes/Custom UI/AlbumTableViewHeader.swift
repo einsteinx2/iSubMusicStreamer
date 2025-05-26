@@ -18,15 +18,15 @@ final class AlbumTableViewHeader: UIView {
         
     init(folderAlbum: FolderAlbum, tracks: Int, duration: Double) {
         super.init(frame: CGRect.zero)
-        setup(coverArtId: folderAlbum.coverArtId, artistName: folderAlbum.tagArtistName, name: folderAlbum.name, tracks: tracks, duration: duration)
+        setup(serverId: folderAlbum.serverId, coverArtId: folderAlbum.coverArtId, artistName: folderAlbum.tagArtistName, name: folderAlbum.name, tracks: tracks, duration: duration)
     }
     
     init(tagAlbum: TagAlbum) {
         super.init(frame: CGRect.zero)
-        setup(coverArtId: tagAlbum.coverArtId, artistName: tagAlbum.tagArtistName, name: tagAlbum.name, tracks: tagAlbum.songCount, duration: Double(tagAlbum.duration))
+        setup(serverId: tagAlbum.serverId, coverArtId: tagAlbum.coverArtId, artistName: tagAlbum.tagArtistName, name: tagAlbum.name, tracks: tagAlbum.songCount, duration: Double(tagAlbum.duration))
     }
     
-    private func setup(coverArtId: String?, artistName: String?, name: String, tracks: Int, duration: Double) {
+    private func setup(serverId: Int, coverArtId: String?, artistName: String?, name: String, tracks: Int, duration: Double) {
         backgroundColor = Colors.background
         snp.makeConstraints { make in
             make.height.equalTo(100).priority(.high)
@@ -35,7 +35,7 @@ final class AlbumTableViewHeader: UIView {
         // NOTE: Set to false because scaling down very large images causes flickering
         //       when the view is scaled while dismissing a modal view
         coverArtView.isLarge = false
-        coverArtView.coverArtId = coverArtId
+        coverArtView.setIdsAndLoad(serverId: serverId, coverArtId: coverArtId)
         coverArtView.backgroundColor = .label
         addSubview(coverArtView)
         coverArtView.snp.makeConstraints { make in
@@ -47,8 +47,8 @@ final class AlbumTableViewHeader: UIView {
         if let coverArtId = coverArtId {
             coverArtButton.addClosure(for: .touchUpInside) { [unowned self] in
                 let controller = ModalCoverArtViewController()
-                controller.coverArtId = coverArtId
-                self.viewController?.present(controller, animated: true, completion: nil)
+                controller.setIdsAndLoad(serverId: serverId, coverArtId: coverArtId)
+                 self.viewController?.present(controller, animated: true, completion: nil)
             }
         }
         addSubview(coverArtButton)
@@ -103,16 +103,11 @@ final class AlbumTableViewHeader: UIView {
 private final class ModalCoverArtViewController: UIViewController {
     private let closeButton = UIButton(type: .close)
     
-    private let coverArt = AsyncImageView(isLarge: true)
-    
-    var coverArtId: String? {
-        get { return coverArt.coverArtId }
-        set { coverArt.coverArtId = newValue }
-    }
+    private let coverArtImageView = AsyncImageView(isLarge: true)
     
     var image: UIImage? {
-        get { return coverArt.image }
-        set { coverArt.image = newValue }
+        get { return coverArtImageView.image }
+        set { coverArtImageView.image = newValue }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -123,15 +118,15 @@ private final class ModalCoverArtViewController: UIViewController {
     override func updateViewConstraints() {
         super.updateViewConstraints()
         if UIApplication.orientation.isPortrait {
-            coverArt.snp.remakeConstraints { make in
+            coverArtImageView.snp.remakeConstraints { make in
                 make.width.equalToSuperview()
-                make.height.equalTo(coverArt.snp.width)
+                make.height.equalTo(coverArtImageView.snp.width)
                 make.centerY.equalToSuperview()
             }
         } else {
-            coverArt.snp.remakeConstraints { make in
+            coverArtImageView.snp.remakeConstraints { make in
                 make.height.equalToSuperview()
-                make.width.equalTo(coverArt.snp.height)
+                make.width.equalTo(coverArtImageView.snp.height)
                 make.centerX.equalToSuperview()
             }
         }
@@ -143,8 +138,8 @@ private final class ModalCoverArtViewController: UIViewController {
         view.overrideUserInterfaceStyle = .dark
         view.backgroundColor = Colors.background
         
-        coverArt.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(coverArt)
+        coverArtImageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(coverArtImageView)
         
         closeButton.addClosure(for: .touchUpInside) { [unowned self] in
             self.dismiss(animated: true, completion: nil)
@@ -153,5 +148,9 @@ private final class ModalCoverArtViewController: UIViewController {
         closeButton.snp.makeConstraints { make in
             make.leading.top.equalToSuperview().offset(10)
         }
+    }
+    
+    func setIdsAndLoad(serverId: Int?, coverArtId: String?) {
+        coverArtImageView.setIdsAndLoad(serverId: serverId, coverArtId: coverArtId)
     }
 }

@@ -67,7 +67,7 @@ final class HomeSongInfoButton: UIView {
     
     func update(song: Song?) {
         if let song = song {
-            coverArt.coverArtId = song.coverArtId
+            coverArt.setIdsAndLoad(serverId: song.serverId, coverArtId: song.coverArtId)
             songLabel.text = song.title
             artistLabel.text = song.tagArtistName
         } else {

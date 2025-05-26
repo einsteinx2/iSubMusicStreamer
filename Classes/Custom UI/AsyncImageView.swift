@@ -12,63 +12,71 @@ import CocoaLumberjackSwift
 
 final class AsyncImageView: UIImageView {
     var isLarge: Bool = false
-    var coverArtId: String? = nil {
-        didSet {
-            load()
-        }
-    }
+    private(set) var serverId: Int? = nil
+    private(set) var coverArtId: String? = nil
     
     private var activityIndicator: UIActivityIndicatorView? = nil
-    private var coverArtDAO: CoverArtDAO? = nil
+    private var coverArtLoader: CoverArtLoader? = nil
     
     init() {
         super.init(frame: .zero)
-        image = CoverArtDAO.defaultCoverArtImage(isLarge: isLarge)
+        image = CoverArtLoader.defaultCoverArtImage(isLarge: isLarge)
     }
     
-    init(frame: CGRect = .zero, coverArtId: String? = nil, isLarge: Bool = false) {
-        self.coverArtId = coverArtId
+    init(frame: CGRect = .zero, isLarge: Bool = false) {
         self.isLarge = isLarge
         super.init(frame: frame)
-        image = CoverArtDAO.defaultCoverArtImage(isLarge: isLarge)
+        image = CoverArtLoader.defaultCoverArtImage(isLarge: isLarge)
     }
     
     required init?(coder: NSCoder) {
         fatalError("unimplemented")
     }
     
-    func load() {
+    func setIdsAndLoad(serverId: Int?, coverArtId: String?) {
+        self.serverId = serverId
+        self.coverArtId = coverArtId
+        load()
+    }
+    
+    func reset() {
+        serverId = nil
+        coverArtId = nil
+        image = CoverArtLoader.defaultCoverArtImage(isLarge: isLarge)
+    }
+    
+    private func load() {
         // Make sure old activity indicator is gone
         activityIndicator?.removeFromSuperview()
         activityIndicator = nil
         
         // Cancel any previous loading
-        coverArtDAO?.cancelLoad()
-        coverArtDAO?.delegate = nil
-        coverArtDAO = nil
+        coverArtLoader?.cancelLoad()
+        coverArtLoader?.delegate = nil
+        coverArtLoader = nil
         
-        guard let coverArtId = coverArtId else {
+        guard let coverArtId = coverArtId, let serverId = serverId else {
             // Set default cover art
-            image = CoverArtDAO.defaultCoverArtImage(isLarge: isLarge)
+            image = CoverArtLoader.defaultCoverArtImage(isLarge: isLarge)
             return
         }
         
-        let dao = CoverArtDAO(coverArtId: coverArtId, isLarge: isLarge, delegate: self)
-        if dao.isCached {
-            image = dao.coverArtImage
+        let loader = CoverArtLoader(serverId: serverId, coverArtId: coverArtId, isLarge: isLarge, delegate: self)
+        if loader.isCached {
+            image = loader.coverArtImage
         } else {
             var usedSmallCoverArt = false
             if isLarge {
                 // Try and use the small cover art temporarily
-                let smallDAO = CoverArtDAO(coverArtId: coverArtId, isLarge: false, delegate: nil)
-                if smallDAO.isCached {
-                    image = smallDAO.coverArtImage
+                let smallLoader = CoverArtLoader(serverId: serverId, coverArtId: coverArtId, isLarge: false)
+                if smallLoader.isCached {
+                    image = smallLoader.coverArtImage
                     usedSmallCoverArt = true
                 } else {
-                    image = dao.defaultCoverArtImage
+                    image = loader.defaultCoverArtImage
                 }
             } else {
-                image = dao.defaultCoverArtImage
+                image = loader.defaultCoverArtImage
             }
             
             if isLarge && !usedSmallCoverArt {
@@ -80,9 +88,9 @@ final class AsyncImageView: UIImageView {
                 indicator.startAnimating()
                 activityIndicator = indicator
             }
-            dao.startLoad()
+            loader.startLoad()
         }
-        coverArtDAO = dao
+        coverArtLoader = loader
     }
 }
 
@@ -91,14 +99,14 @@ extension AsyncImageView: APILoaderDelegate {
         DDLogInfo("[AsyncImageView] async cover art loading finished for: \(coverArtId ?? "nil")")
         activityIndicator?.removeFromSuperview()
         activityIndicator = nil
-        image = coverArtDAO?.coverArtImage
-        coverArtDAO = nil
+        image = coverArtLoader?.coverArtImage
+        coverArtLoader = nil
     }
     
     func loadingFailed(loader: APILoader?, error: Error?) {
         DDLogError("[AsyncImageView] async cover art loading failed: \(error?.localizedDescription ?? "unknown error")")
         activityIndicator?.removeFromSuperview()
         activityIndicator = nil
-        coverArtDAO = nil
+        coverArtLoader = nil
     }
 }

@@ -22,14 +22,14 @@ final class PageControlViewController: UIViewController {
     private var viewControllers = [UIViewController]()
     
     private var coverArtViewController: CoverArtViewController?
-    var coverArtId: String? {
-        get { return coverArtViewController?.coverArtId }
-        set { coverArtViewController?.coverArtId = newValue }
-    }
-    var coverArtImage: UIImage? {
-        get { return coverArtViewController?.image }
-        set { coverArtViewController?.image = newValue }
-    }
+//    var coverArtId: String? {
+//        get { return coverArtViewController?.coverArtId }
+//        set { coverArtViewController?.coverArtId = newValue }
+//    }
+//    var coverArtImage: UIImage? {
+//        get { return coverArtViewController?.image }
+//        set { coverArtViewController?.image = newValue }
+//    }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
@@ -126,6 +126,14 @@ final class PageControlViewController: UIViewController {
         pageControlUsed = false
         pageControl.currentPage = PageType.coverArt.rawValue
         scrollView.setContentOffset(CGPoint(x: scrollView.bounds.width * CGFloat(pageControl.currentPage), y: 0), animated: animated)
+    }
+    
+    func reset() {
+        coverArtViewController?.reset()
+    }
+    
+    func setIdsAndLoad(serverId: Int?, coverArtId: String?) {
+        coverArtViewController?.setIdsAndLoad(serverId: serverId, coverArtId: coverArtId)
     }
 }
 

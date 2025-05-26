@@ -344,8 +344,8 @@ import CocoaLumberjackSwift
                 info[MPNowPlayingInfoPropertyPlaybackRate] = 1
                 
                 if let coverArtId = song.coverArtId, self.settings.isLockScreenArtEnabled {
-                    let artDataModel = CoverArtDAO(coverArtId: coverArtId, isLarge: true, delegate: nil)
-                    if let image = artDataModel.coverArtImage {
+                    let artLoader = CoverArtLoader(serverId: song.serverId, coverArtId: coverArtId, isLarge: true)
+                    if let image = artLoader.coverArtImage {
                         let artwork = MPMediaItemArtwork(boundsSize: image.size) { size -> UIImage in
                             return image
                         }

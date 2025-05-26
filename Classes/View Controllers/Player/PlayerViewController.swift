@@ -690,8 +690,7 @@ final class PlayerViewController: UIViewController {
         
         guard let song = playQueue.currentSong else {
             currentSong = nil
-            coverArtPageControl.coverArtId = nil
-            coverArtPageControl.coverArtImage = UIImage(named: "default-album-art")
+            coverArtPageControl.reset()
             songNameLabel.text = nil
             artistNameLabel.text = nil
             elapsedTimeLabel.text = nil
@@ -705,7 +704,7 @@ final class PlayerViewController: UIViewController {
         }
         
         currentSong = song
-        coverArtPageControl.coverArtId = song.coverArtId
+        coverArtPageControl.setIdsAndLoad(serverId: song.serverId, coverArtId: song.coverArtId)
         songNameLabel.text = song.title
         artistNameLabel.text = song.tagArtistName
         progressSlider.maximumValue = Float(song.duration)

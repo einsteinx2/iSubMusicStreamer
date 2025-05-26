@@ -299,8 +299,6 @@
 		539D32E325A93E9A00F53797 /* CoverArtLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D32E125A93E9A00F53797 /* CoverArtLoader.swift */; };
 		539D32E525A9400400F53797 /* Synchronized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D32E425A9400400F53797 /* Synchronized.swift */; };
 		539D32E625A9400400F53797 /* Synchronized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D32E425A9400400F53797 /* Synchronized.swift */; };
-		539D32E825A9490E00F53797 /* CoverArtDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D32E725A9490E00F53797 /* CoverArtDAO.swift */; };
-		539D32E925A9490E00F53797 /* CoverArtDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D32E725A9490E00F53797 /* CoverArtDAO.swift */; };
 		539D32EB25AA196900F53797 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D32EA25AA196900F53797 /* ChatMessage.swift */; };
 		539D32EC25AA196900F53797 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D32EA25AA196900F53797 /* ChatMessage.swift */; };
 		539D32EE25AA1B1800F53797 /* ChatLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D32ED25AA1B1800F53797 /* ChatLoader.swift */; };
@@ -780,7 +778,6 @@
 		539D32DD25A8E78F00F53797 /* ServerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStore.swift; sourceTree = "<group>"; };
 		539D32E125A93E9A00F53797 /* CoverArtLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverArtLoader.swift; sourceTree = "<group>"; };
 		539D32E425A9400400F53797 /* Synchronized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synchronized.swift; sourceTree = "<group>"; };
-		539D32E725A9490E00F53797 /* CoverArtDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverArtDAO.swift; sourceTree = "<group>"; };
 		539D32EA25AA196900F53797 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		539D32ED25AA1B1800F53797 /* ChatLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLoader.swift; sourceTree = "<group>"; };
 		539D32F325AA1F7200F53797 /* Lyrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lyrics.swift; sourceTree = "<group>"; };
@@ -1421,7 +1418,6 @@
 				5389479325A4EA9B0078FBAF /* MediaFoldersLoader.swift */,
 				5389479925A4EFAE0078FBAF /* ServerShuffleLoader.swift */,
 				535E143725A7C6D60039BCAA /* QuickAlbumsLoader.swift */,
-				539D32E725A9490E00F53797 /* CoverArtDAO.swift */,
 				539D32E125A93E9A00F53797 /* CoverArtLoader.swift */,
 				539D32ED25AA1B1800F53797 /* ChatLoader.swift */,
 				53A0EDD325B5EC6500B78DAA /* ChatSendLoader.swift */,
@@ -2088,7 +2084,6 @@
 				53329641255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */,
 				531EC85425B1EBCA0076973A /* ServerPlaylistsViewController.swift in Sources */,
 				53D4FCB625995BB900C6F1AE /* TagAlbumLoader.swift in Sources */,
-				539D32E825A9490E00F53797 /* CoverArtDAO.swift in Sources */,
 				536C8E0026349B46007B81FB /* UIView+EnableDisable.swift in Sources */,
 				53FE679A256DD0F00015FC83 /* GCDWebServerFileResponse.m in Sources */,
 				531EC87A25B232EC0076973A /* DownloadedSongsViewController.swift in Sources */,
@@ -2339,7 +2334,6 @@
 				536C8E0126349B47007B81FB /* UIView+EnableDisable.swift in Sources */,
 				53D4FCB725995BB900C6F1AE /* TagAlbumLoader.swift in Sources */,
 				531EC87B25B232EC0076973A /* DownloadedSongsViewController.swift in Sources */,
-				539D32E925A9490E00F53797 /* CoverArtDAO.swift in Sources */,
 				531D3A17255ABA20000CB0DF /* DDSocialDialog.m in Sources */,
 				53FE34FA1EA961540058B925 /* GTMNSString+HTML.m in Sources */,
 				53C3AB6E257DB7D200B35B99 /* AsyncImageView.swift in Sources */,

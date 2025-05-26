@@ -9,25 +9,31 @@
 import UIKit
 
 final class CoverArtViewController: UIViewController {
-    private let coverArt = AsyncImageView(isLarge: true)
+    private let coverArtImageView = AsyncImageView(isLarge: true)
     
-    var coverArtId: String? {
-        get { return coverArt.coverArtId }
-        set { coverArt.coverArtId = newValue }
-    }
+    var serverId: Int? { return coverArtImageView.serverId }
+    var coverArtId: String? { return coverArtImageView.coverArtId }
     
     var image: UIImage? {
-        get { return coverArt.image }
-        set { coverArt.image = newValue }
+        get { return coverArtImageView.image }
+        set { coverArtImageView.image = newValue }
+    }
+    
+    func setIdsAndLoad(serverId: Int?, coverArtId: String?) {
+        coverArtImageView.setIdsAndLoad(serverId: serverId, coverArtId: coverArtId)
+    }
+    
+    func reset() {
+        coverArtImageView.reset()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(coverArt)
-        coverArt.snp.makeConstraints { make in
+        view.addSubview(coverArtImageView)
+        coverArtImageView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(coverArt.snp.width)
+            make.height.equalTo(coverArtImageView.snp.width)
         }
     }
 }

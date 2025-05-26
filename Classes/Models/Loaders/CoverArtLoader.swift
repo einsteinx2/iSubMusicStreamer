@@ -34,6 +34,18 @@ final class CoverArtLoader: APILoader {
         return store.isCoverArtCached(serverId: serverId, id: coverArtId, isLarge: isLarge)
     }
     
+    static func defaultCoverArtImage(isLarge: Bool) -> UIImage? {
+        isLarge ? UIImage(named: "default-album-art") : UIImage(named: "default-album-art-small")
+    }
+    
+    var defaultCoverArtImage: UIImage? {
+        Self.defaultCoverArtImage(isLarge: isLarge)
+    }
+    
+    var coverArtImage: UIImage? {
+        store.coverArt(serverId: serverId, id: coverArtId, isLarge: isLarge)?.image ?? defaultCoverArtImage
+    }
+    
     init(serverId: Int, coverArtId: String, isLarge: Bool, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
         self.serverId = serverId
         self.coverArtId = coverArtId

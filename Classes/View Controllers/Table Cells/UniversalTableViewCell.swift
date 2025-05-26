@@ -134,7 +134,7 @@ final class UniversalTableViewCell: UITableViewCell {
     func update(model: TableCellModel?) {
         tableCellModel = model;
         if let model = model {
-            if !hideCoverArt { coverArtView.coverArtId = model.coverArtId }
+            updateCoverArtView(hideCoverArt: hideCoverArt, serverId: model.serverId, coverArtId: model.coverArtId)
             primaryLabel.text = model.primaryLabelText
             if !hideSecondaryLabel { secondaryLabel.text = model.secondaryLabelText }
             if !hideDurationLabel { durationLabel.text = model.durationLabelText }
@@ -142,17 +142,25 @@ final class UniversalTableViewCell: UITableViewCell {
         }
     }
     
-    func update(primaryText: String, secondaryText: String? = nil, coverArtId: String? = nil) {
+    func update(primaryText: String, secondaryText: String? = nil, serverId: Int? = nil, coverArtId: String? = nil) {
         tableCellModel = nil
         
         hideNumberLabel = true
         hideSecondaryLabel = (secondaryText == nil)
         hideDurationLabel = true
-        hideCoverArt = (coverArtId == nil)
+        hideCoverArt = (serverId == nil || coverArtId == nil)
         
         primaryLabel.text = primaryText
         secondaryLabel.text = secondaryText
-        coverArtView.coverArtId = coverArtId
+        updateCoverArtView(hideCoverArt: hideCoverArt, serverId: serverId, coverArtId: coverArtId)
+    }
+    
+    private func updateCoverArtView(hideCoverArt: Bool, serverId: Int?, coverArtId: String? = nil) {
+        if hideCoverArt {
+            coverArtView.reset()
+        } else {
+            coverArtView.setIdsAndLoad(serverId: serverId, coverArtId: coverArtId)
+        }
     }
     
 //    @objc func startScrollingLabels() {
