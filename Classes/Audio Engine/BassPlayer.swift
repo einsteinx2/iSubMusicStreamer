@@ -22,9 +22,6 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
     @LazyInjected private var social: Social
     @LazyInjected private var streamManager: StreamManager
     
-    // Temporary accessor for Objective-C classes using Resolver under the hood
-    @objc static var shared: BassPlayer { Resolver.resolve() }
-    
     let streamGcdQueue = DispatchQueue(label: "com.isubapp.BassStreamQueue")
 
     var streamQueue = [BassStream]()

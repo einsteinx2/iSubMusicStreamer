@@ -85,13 +85,3 @@ func fileSize(formatted: String) -> Int? {
     }
     return Int(fileSize)
 }
-
-// Temporary backfill for Obj-C
-@objc final class Defines_ObjCDeleteMe: NSObject {
-    @objc static func formatFileSizeWithBytes(_ bytes: Int) -> String {
-        return formatFileSize(bytes: bytes)
-    }
-    @objc static func fileSizeFromFormat(_ formatted: String) -> Int {
-        return fileSize(formatted: formatted) ?? 0
-    }
-}

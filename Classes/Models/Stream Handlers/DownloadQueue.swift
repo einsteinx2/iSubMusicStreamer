@@ -247,15 +247,3 @@ extension DownloadQueue: StreamHandlerDelegate {
         }
     }
 }
-
-@objc final class DownloadQueue_ObjCDeleteMe: NSObject {
-    private static var downloadQueue: DownloadQueue { Resolver.resolve() }
-    
-    @objc static func start() {
-        downloadQueue.start()
-    }
-    
-    @objc static func stop() {
-        downloadQueue.stop()
-    }
-}

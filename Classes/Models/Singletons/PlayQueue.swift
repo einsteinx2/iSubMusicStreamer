@@ -23,10 +23,6 @@ import CocoaLumberjackSwift
     @LazyInjected private var streamManager: StreamManager
     @LazyInjected private var downloadQueue: DownloadQueue
     @LazyInjected private var player: BassPlayer
-    
-    // Temporary accessor for Objective-C classes using Resolver under the hood
-    @objc static var shared: PlayQueue { Resolver.resolve() }
-    
     @Injected private var store: Store
     
     var currentPlaylistId: Int {

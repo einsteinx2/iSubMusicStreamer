@@ -13,6 +13,7 @@ import Resolver
     
     @Injected private var settings: SavedSettings
     @Injected private var analytics: Analytics
+    @Injected private var bassPlayer: BassPlayer
     
     let closeButton = UIButton(type: .close)
     var overlay: UIView?
@@ -138,7 +139,7 @@ import Resolver
         deletePresetButton.autoresizingMask = [.flexibleTopMargin, .flexibleBottomMargin]
         controlsContainer.addSubview(deletePresetButton)
 
-        if BassPlayer.shared.equalizer.equalizerValues.count == 0 {
+        if bassPlayer.equalizer.equalizerValues.count == 0 {
             effectDAO.selectCurrentPreset()
         }
 
@@ -245,7 +246,7 @@ import Resolver
     @objc func createEqViews() {
         removeEqViews()
             
-        equalizerPointViews = BassPlayer.shared.equalizer.equalizerValues.map { eqValue in
+        equalizerPointViews = bassPlayer.equalizer.equalizerValues.map { eqValue in
             let eqView = EqualizerPointView(eqValue: eqValue, parentSize: equalizerView?.frame.size ?? .zero)
             view.insertSubview(eqView, aboveSubview: equalizerPath)
             return eqView
@@ -275,7 +276,7 @@ import Resolver
         equalizerView?.stopEqDisplay()
         equalizerView?.removeFromSuperview()
         equalizerView = nil
-        BassPlayer.shared.visualizer.type = .none
+        bassPlayer.visualizer.type = .none
         navigationController?.navigationBar.isHidden = false
     }
     
@@ -408,7 +409,7 @@ import Resolver
         let maxValue = gainSlider.maximumValue
         
         settings.gainMultiplier = gainValue
-        BassPlayer.shared.equalizer.gain = gainValue
+        bassPlayer.equalizer.gain = gainValue
         
         let difference = abs(gainValue - lastGainValue)
         if difference >= 0.1 || gainValue == minValue || gainValue == maxValue {
@@ -428,7 +429,7 @@ import Resolver
             
             if touch.tapCount == 2 {
                 // Remove the point
-                BassPlayer.shared.equalizer.removeEqualizerValue(value: pointView.eqValue)
+                bassPlayer.equalizer.removeEqualizerValue(value: pointView.eqValue)
                 equalizerPointViews.removeAll { $0 == pointView }
                 pointView.removeFromSuperview()
                 selectedView = nil
@@ -447,7 +448,7 @@ import Resolver
                 
                 // Create the eq view
                 let pointView = EqualizerPointView(point: normalizedPoint, parentSize: eqView.bounds.size)
-                let eqValue = BassPlayer.shared.equalizer.addEqualizerValue(value: pointView.eqValue.parameters)
+                let eqValue = bassPlayer.equalizer.addEqualizerValue(value: pointView.eqValue.parameters)
                 pointView.eqValue = eqValue
 
                 // Add the view
@@ -467,7 +468,7 @@ import Resolver
         let location = touch.location(in: equalizerView)
         if CGRectContainsPoint(equalizerView.frame, location) {
             selectedView.center = touch.location(in: view)
-            BassPlayer.shared.equalizer.updateEqParameter(value: selectedView.eqValue)
+            bassPlayer.equalizer.updateEqParameter(value: selectedView.eqValue)
             createAndDrawEqualizerPath()
         }
     }
@@ -475,7 +476,7 @@ import Resolver
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let selectedView = selectedView else { return }
         
-        BassPlayer.shared.equalizer.updateEqParameter(value: selectedView.eqValue)
+        bassPlayer.equalizer.updateEqParameter(value: selectedView.eqValue)
         self.selectedView = nil
         saveTempCustomPreset()
     }
@@ -489,7 +490,7 @@ import Resolver
     }
     
     @IBAction func toggle(_ sender: Any?) {
-        if BassPlayer.shared.equalizer.toggleEqualizer() {
+        if bassPlayer.equalizer.toggleEqualizer() {
             removeEqViews()
             createEqViews()
         }

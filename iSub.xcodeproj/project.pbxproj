@@ -859,7 +859,6 @@
 		53D973FD255BFCF500AABF7F /* UniversalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalTableViewCell.swift; sourceTree = "<group>"; };
 		53D97416255BFE9D00AABF7F /* iSub-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "iSub-Bridging-Header.h"; path = "Other/iSub-Bridging-Header.h"; sourceTree = "<group>"; };
 		53D97417255BFE9E00AABF7F /* iSub_Beta-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "iSub_Beta-Bridging-Header.h"; path = "Other/iSub_Beta-Bridging-Header.h"; sourceTree = "<group>"; };
-		53D97426255C02B100AABF7F /* Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Swift.h; sourceTree = "<group>"; };
 		53D9742A255C04A400AABF7F /* Common-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Common-Bridging-Header.h"; path = "Other/Common-Bridging-Header.h"; sourceTree = "<group>"; };
 		53D97439255C0DA900AABF7F /* AutoScrollingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoScrollingLabel.swift; sourceTree = "<group>"; };
 		53D97453255C51CA00AABF7F /* SwipeAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeAction.swift; sourceTree = "<group>"; };
@@ -1087,7 +1086,6 @@
 			isa = PBXGroup;
 			children = (
 				5381885B25A68F0300C59CDE /* main.swift */,
-				53D97426255C02B100AABF7F /* Swift.h */,
 				53D97417255BFE9E00AABF7F /* iSub_Beta-Bridging-Header.h */,
 				53D97416255BFE9D00AABF7F /* iSub-Bridging-Header.h */,
 				53D9742A255C04A400AABF7F /* Common-Bridging-Header.h */,

@@ -42,7 +42,11 @@
  */
 
 #import "DDSocialDialog.h"
-#import "Swift.h"
+#if BETA
+#import "iSub_Beta-Swift.h"
+#else
+#import "iSub-Swift.h"
+#endif
 
 static CGFloat kDDSocialDialogBorderWidth = 10;
 static CGFloat kDDSocialDialogTransitionDuration = 0.3;

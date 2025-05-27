@@ -213,18 +213,3 @@ final class DownloadsManager {
 //        (FileSystem.downloadsDirectory as NSURL).addSkipBackupAttribute()
     }
 }
-
-@objc final class DownloadsManager_ObjCDeleteMe: NSObject {
-    private static var downloadsManager: DownloadsManager { Resolver.resolve() }
-    
-    @objc static var totalSpace: Int { downloadsManager.totalSpace }
-    @objc static var freeSpace: Int { downloadsManager.freeSpace }
-    
-    @objc static func setAllCachedSongsToBackup() {
-        downloadsManager.setAllCachedSongsToBackup()
-    }
-    
-    @objc static func setAllCachedSongsToNotBackup() {
-        downloadsManager.setAllCachedSongsToNotBackup()
-    }
-}

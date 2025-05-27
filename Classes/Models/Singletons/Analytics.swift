@@ -61,11 +61,3 @@ final class Analytics {
 //        }
 //    }
 }
-
-@objc final class Analytics_ObjCDeleteMe: NSObject {
-    private static var analytics: Analytics { Resolver.resolve() }
-    
-    @objc static func logEvent(name: String) {
-        analytics.logEvent(name: name)
-    }
-}
