@@ -24,8 +24,6 @@
 		530A168F259299C800E9294E /* TagArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A168D259299C800E9294E /* TagArtist.swift */; };
 		530A16AD2592D22100E9294E /* TagAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A16AC2592D22100E9294E /* TagAlbum.swift */; };
 		530A16AE2592D22100E9294E /* TagAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530A16AC2592D22100E9294E /* TagAlbum.swift */; };
-		531D3A16255ABA20000CB0DF /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A15255ABA20000CB0DF /* DDSocialDialog.m */; };
-		531D3A17255ABA20000CB0DF /* DDSocialDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 531D3A15255ABA20000CB0DF /* DDSocialDialog.m */; };
 		531EC84625B1D4800076973A /* UIAlertController+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC84525B1D4800076973A /* UIAlertController+Actions.swift */; };
 		531EC84725B1D4800076973A /* UIAlertController+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC84525B1D4800076973A /* UIAlertController+Actions.swift */; };
 		531EC85025B1E6420076973A /* LocalPlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC84F25B1E6420076973A /* LocalPlaylistsViewController.swift */; };
@@ -135,6 +133,8 @@
 		5357FE3225C760B7001BDE29 /* BassVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE3025C760B7001BDE29 /* BassVisualizer.swift */; };
 		5359FA5025DF59F400DCC390 /* CustomRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359FA4F25DF59F400DCC390 /* CustomRootViewController.swift */; };
 		5359FA5125DF59F400DCC390 /* CustomRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359FA4F25DF59F400DCC390 /* CustomRootViewController.swift */; };
+		535E05772DE5412C00BF3477 /* DDSocialDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E05762DE5412900BF3477 /* DDSocialDialog.swift */; };
+		535E05782DE5412C00BF3477 /* DDSocialDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E05762DE5412900BF3477 /* DDSocialDialog.swift */; };
 		535E142625A7B2020039BCAA /* FolderArtistStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E142525A7B2020039BCAA /* FolderArtistStore.swift */; };
 		535E142725A7B2020039BCAA /* FolderArtistStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E142525A7B2020039BCAA /* FolderArtistStore.swift */; };
 		535E142C25A7B4600039BCAA /* RootFoldersLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E142B25A7B4600039BCAA /* RootFoldersLoader.swift */; };
@@ -642,8 +642,6 @@
 		530A167E259277E700E9294E /* SearchAllViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAllViewController.swift; sourceTree = "<group>"; };
 		530A168D259299C800E9294E /* TagArtist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagArtist.swift; sourceTree = "<group>"; };
 		530A16AC2592D22100E9294E /* TagAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagAlbum.swift; sourceTree = "<group>"; };
-		531D3A14255ABA20000CB0DF /* DDSocialDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDSocialDialog.h; sourceTree = "<group>"; };
-		531D3A15255ABA20000CB0DF /* DDSocialDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDSocialDialog.m; sourceTree = "<group>"; };
 		531EC84525B1D4800076973A /* UIAlertController+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Actions.swift"; sourceTree = "<group>"; };
 		531EC84F25B1E6420076973A /* LocalPlaylistsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPlaylistsViewController.swift; sourceTree = "<group>"; };
 		531EC85325B1EBCA0076973A /* ServerPlaylistsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerPlaylistsViewController.swift; sourceTree = "<group>"; };
@@ -700,6 +698,7 @@
 		5357FE2725C39FDB001BDE29 /* BassStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BassStream.swift; sourceTree = "<group>"; };
 		5357FE3025C760B7001BDE29 /* BassVisualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassVisualizer.swift; sourceTree = "<group>"; };
 		5359FA4F25DF59F400DCC390 /* CustomRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRootViewController.swift; sourceTree = "<group>"; };
+		535E05762DE5412900BF3477 /* DDSocialDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DDSocialDialog.swift; sourceTree = "<group>"; };
 		535E142525A7B2020039BCAA /* FolderArtistStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderArtistStore.swift; sourceTree = "<group>"; };
 		535E142B25A7B4600039BCAA /* RootFoldersLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootFoldersLoader.swift; sourceTree = "<group>"; };
 		535E143425A7BB910039BCAA /* FolderAlbumStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAlbumStore.swift; sourceTree = "<group>"; };
@@ -1320,8 +1319,7 @@
 		531D39F3255AB3B0000CB0DF /* 3rd Party UI Components */ = {
 			isa = PBXGroup;
 			children = (
-				531D3A14255ABA20000CB0DF /* DDSocialDialog.h */,
-				531D3A15255ABA20000CB0DF /* DDSocialDialog.m */,
+				535E05762DE5412900BF3477 /* DDSocialDialog.swift */,
 				532590FF14EE22C100DF4BDB /* MBProgressHUD.h */,
 				5325910014EE22C400DF4BDB /* MBProgressHUD.m */,
 				53E03D1625C27CE90043355F /* OBSlider.swift */,
@@ -2074,7 +2072,6 @@
 				5389477D25A4E6F60078FBAF /* FileSystem.swift in Sources */,
 				53E03D0E25C270630043355F /* UIDevice+Info.swift in Sources */,
 				531EC85F25B1F8070076973A /* NowPlayingViewController.swift in Sources */,
-				531D3A16255ABA20000CB0DF /* DDSocialDialog.m in Sources */,
 				5373C6A525B610FF00CAA859 /* AppDelegate.swift in Sources */,
 				5357FE1725C320C3001BDE29 /* Bridging.swift in Sources */,
 				53FE34F81EA961540058B925 /* GTMNSString+HTML.m in Sources */,
@@ -2126,6 +2123,7 @@
 				538C8FE725609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */,
 				5357CE9925B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */,
 				53FE38B61EA961C80058B925 /* ZKFileArchive.m in Sources */,
+				535E05782DE5412C00BF3477 /* DDSocialDialog.swift in Sources */,
 				53762C8925AD122500476F2D /* NowPlayingLoader.swift in Sources */,
 				535E142625A7B2020039BCAA /* FolderArtistStore.swift in Sources */,
 				538C8FE125606299005D6CA9 /* RefreshControl.swift in Sources */,
@@ -2332,7 +2330,6 @@
 				536C8E0126349B47007B81FB /* UIView+EnableDisable.swift in Sources */,
 				53D4FCB725995BB900C6F1AE /* TagAlbumLoader.swift in Sources */,
 				531EC87B25B232EC0076973A /* DownloadedSongsViewController.swift in Sources */,
-				531D3A17255ABA20000CB0DF /* DDSocialDialog.m in Sources */,
 				53FE34FA1EA961540058B925 /* GTMNSString+HTML.m in Sources */,
 				53C3AB6E257DB7D200B35B99 /* AsyncImageView.swift in Sources */,
 				539D32EC25AA196900F53797 /* ChatMessage.swift in Sources */,
@@ -2372,6 +2369,7 @@
 				53ED672925B76FA60002BFAF /* HomeAlbumViewController.swift in Sources */,
 				53FE38B81EA961C80058B925 /* ZKFileArchive.m in Sources */,
 				5357CE9A25B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */,
+				535E05772DE5412C00BF3477 /* DDSocialDialog.swift in Sources */,
 				53762C8A25AD122500476F2D /* NowPlayingLoader.swift in Sources */,
 				535E142725A7B2020039BCAA /* FolderArtistStore.swift in Sources */,
 				53FE679B256DD0F00015FC83 /* GCDWebServerFileResponse.m in Sources */,

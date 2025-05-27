@@ -237,6 +237,10 @@ import Resolver
             alert.addCancelAction()
             present(alert, animated: true)
         }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.promptToSaveCustomPreset()
+        }
     }
     
     func createAndDrawEqualizerPath() {
@@ -372,16 +376,15 @@ import Resolver
 
     @objc func promptToSaveCustomPreset() {
         if effectDAO.userPresetsMinusCustom.count > 0 {
-            if let saveDialog = DDSocialDialog(frame: CGRect(x: 0, y: 0, width: 300, height: 300), theme: DDSocialDialogThemeISub) {
-                saveDialog.titleLabel.text = "Choose Preset To Save"
-                let saveTable = UITableView(frame: saveDialog.contentView.frame, style: .plain)
-                saveTable.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-                saveTable.dataSource = self
-                saveTable.delegate = self
-                saveDialog.contentView.addSubview(saveTable)
-                self.saveDialog = saveDialog
-                saveDialog.show()
-            }
+            let saveDialog = DDSocialDialog(frame: CGRect(x: 0, y: 0, width: 300, height: 300), theme: .iSub)
+            saveDialog.titleLabel.text = "Choose Preset To Save"
+            let saveTable = UITableView(frame: saveDialog.contentView.frame, style: .plain)
+            saveTable.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            saveTable.dataSource = self
+            saveTable.delegate = self
+            saveDialog.contentView.addSubview(saveTable)
+            self.saveDialog = saveDialog
+            saveDialog.show()
         } else {
             promptForSavePresetName()
         }
@@ -680,6 +683,6 @@ extension EqualizerViewController: UITableViewDelegate, UITableViewDataSource {
             effectDAO.deleteTempCustomPreset()
             updatePresetPicker()
         }
-        saveDialog?.dismiss(true)
+        saveDialog?.dismiss(animated: true)
     }
 }
