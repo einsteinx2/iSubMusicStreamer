@@ -23,9 +23,9 @@ func percentY(gain: Float) -> CGFloat {
     return CGFloat(0.5 - (gain / (maxGain * 2)))
 }
 
-@objc final class EqualizerPointView: UIImageView {
+final class EqualizerPointView: UIImageView {
     private var _eqValue: BassParamEqValue
-    @objc var eqValue: BassParamEqValue {
+    var eqValue: BassParamEqValue {
         get {
             _eqValue.gain = gain
             _eqValue.frequency = frequency
@@ -36,12 +36,12 @@ func percentY(gain: Float) -> CGFloat {
             _eqValue = newValue
         }
     }
-    @objc var position: CGPoint
-    @objc var parentSize: CGSize
-    @objc var handle: HFX = 0
+    var position: CGPoint
+    var parentSize: CGSize
+    var handle: HFX = 0
     
-    @objc var frequency: Float { exp2((Float(position.x) * rangeOfExponents) + 5) }
-    @objc var gain: Float { (0.5 - Float(position.y)) * Float(maxGain * 2) }
+    var frequency: Float { exp2((Float(position.x) * rangeOfExponents) + 5) }
+    var gain: Float { (0.5 - Float(position.y)) * Float(maxGain * 2) }
     
     override var center: CGPoint {
         didSet {
@@ -50,7 +50,7 @@ func percentY(gain: Float) -> CGFloat {
         }
     }
     
-    @objc init(point: CGPoint, parentSize: CGSize) {
+    init(point: CGPoint, parentSize: CGSize) {
         let p = BASS_DX8_PARAMEQ(fCenter: 0, fBandwidth: Float(defaultBandwidth), fGain: 0)
         self._eqValue = BassParamEqValue(parameters: p)
         
@@ -64,7 +64,7 @@ func percentY(gain: Float) -> CGFloat {
         self.isUserInteractionEnabled = true
     }
     
-    @objc init(eqValue: BassParamEqValue, parentSize: CGSize) {
+    init(eqValue: BassParamEqValue, parentSize: CGSize) {
         print("BEN eqValue.parameters: \(eqValue.parameters)\n")
         self._eqValue = eqValue
         self.parentSize = parentSize
@@ -81,7 +81,7 @@ func percentY(gain: Float) -> CGFloat {
         fatalError("unimplemented")
     }
     
-    @objc func compare(other: EqualizerPointView) -> ComparisonResult {
+    func compare(other: EqualizerPointView) -> ComparisonResult {
         let myX = frame.origin.x
         let otherX = other.frame.origin.x
         if myX < otherX {

@@ -66,7 +66,7 @@ final class ServerPlaylistViewController: CustomUITableViewController {
         serverPlaylistLoader?.startLoad()
     }
     
-    @objc func cancelLoad() {
+    func cancelLoad() {
         HUD.hide()
         serverPlaylistLoader?.cancelLoad()
         serverPlaylistLoader?.callback = nil

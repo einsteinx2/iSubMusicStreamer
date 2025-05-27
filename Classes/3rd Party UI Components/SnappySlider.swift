@@ -33,9 +33,9 @@
 
 import UIKit
 
-@objc final class SnappySlider: UISlider {
-    @objc var snapDistance: Float = 0
-    @objc var detents = [Float]() {
+final class SnappySlider: UISlider {
+    var snapDistance: Float = 0
+    var detents = [Float]() {
         didSet { detents = detents.sorted() }
     }
     

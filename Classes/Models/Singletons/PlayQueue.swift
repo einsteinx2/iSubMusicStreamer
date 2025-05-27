@@ -11,13 +11,13 @@ import MediaPlayer
 import Resolver
 import CocoaLumberjackSwift
 
-@objc enum RepeatMode: Int {
+enum RepeatMode: Int {
     case none = 0
     case one = 1
     case all = 2
 }
 
-@objc final class PlayQueue: NSObject {
+final class PlayQueue: NSObject {
     @LazyInjected private var settings: SavedSettings
     @LazyInjected private var jukebox: Jukebox
     @LazyInjected private var streamManager: StreamManager
@@ -39,9 +39,9 @@ import CocoaLumberjackSwift
         store.localPlaylist(id: currentPlaylistId)
     }
     
-    @objc var isShuffle = false
+    var isShuffle = false
     
-    @objc var repeatMode: RepeatMode = .none {
+    var repeatMode: RepeatMode = .none {
         didSet {
             if repeatMode != oldValue {
                 NotificationCenter.postOnMainThread(name: Notifications.repeatModeChanged)
@@ -57,16 +57,16 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc var count: Int {
+    var count: Int {
         if let localPlaylist = store.localPlaylist(id: currentPlaylistId) {
             return localPlaylist.songCount
         }
         return 0
     }
     
-    @objc var normalIndex: Int = 0
-    @objc var shuffleIndex: Int = 0
-    @objc var currentIndex: Int {
+    var normalIndex: Int = 0
+    var shuffleIndex: Int = 0
+    var currentIndex: Int {
         get {
             isShuffle ? shuffleIndex : normalIndex
         }
@@ -86,7 +86,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc var prevIndex: Int {
+    var prevIndex: Int {
         let index = currentIndex
         switch repeatMode {
         case .none: return index == 0 ? index : index - 1
@@ -95,7 +95,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc var nextIndex: Int {
+    var nextIndex: Int {
         let index = currentIndex
         switch repeatMode {
         case .none:
@@ -133,7 +133,7 @@ import CocoaLumberjackSwift
         return song(index: nextIndex)
     }
     
-    @objc func removeSongs(indexes: [Int]) -> Bool {
+    func removeSongs(indexes: [Int]) -> Bool {
         if store.remove(songsAtPositions: indexes, localPlaylistId: currentPlaylistId) {
             // Stop the player if we deleted the current song
             if indexes.contains(currentIndex) {
@@ -157,7 +157,7 @@ import CocoaLumberjackSwift
         return store.song(localPlaylistId: currentPlaylistId, position: index)
     }
     
-    @objc func moveSong(fromIndex: Int, toIndex: Int) -> Bool {
+    func moveSong(fromIndex: Int, toIndex: Int) -> Bool {
         if store.move(songAtPosition: fromIndex, toPosition: toIndex, localPlaylistId: currentPlaylistId) {
             if settings.isJukeboxEnabled {
                 jukebox.replacePlaylistWithLocal()
@@ -177,7 +177,7 @@ import CocoaLumberjackSwift
     }
     
     // TODO: Fix this logic and write unit tests
-    @objc func index(offset: Int, fromIndex: Int) -> Int {
+    func index(offset: Int, fromIndex: Int) -> Int {
         guard let playlist = currentPlaylist else { return 0 }
         var newIndex = offset + fromIndex
         switch repeatMode {
@@ -212,24 +212,24 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc func indexFromCurrentIndex(offset: Int) -> Int {
+    func indexFromCurrentIndex(offset: Int) -> Int {
         return index(offset: offset, fromIndex: currentIndex)
     }
     
-    @objc @discardableResult
+    @discardableResult
     func decrementIndex() -> Int {
         currentIndex = prevIndex
         return currentIndex
     }
     
-    @objc @discardableResult
+    @discardableResult
     func incrementIndex() -> Int {
         currentIndex = nextIndex
         return currentIndex
     }
     
     /// Called when the shuffle button is pushed.
-    @objc func shuffleToggle() {
+    func shuffleToggle() {
        if isShuffle {
            if let shuffleCurrentSong = currentSong {
                isShuffle = false
@@ -361,13 +361,13 @@ import CocoaLumberjackSwift
     // MARK: Old MusicSingleton start song functions
     // TODO: Refactor this craziness
     
-    @objc func startSong() {
+    func startSong() {
         startSong(offsetInBytes: 0, offsetInSeconds: 0)
     }
     
     private var offsetInBytes = 0
     private var offsetInSeconds = 0.0
-    @objc func startSong(offsetInBytes bytes: Int, offsetInSeconds seconds: Double) {
+    func startSong(offsetInBytes bytes: Int, offsetInSeconds seconds: Double) {
         DispatchQueue.mainSyncSafe {
             // Destroy the streamer/video player to start a new song
             player.stop()

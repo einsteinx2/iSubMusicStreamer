@@ -8,13 +8,13 @@
 
 import Foundation
 
-@objc class BassEffectValue: NSObject {
-    @objc let type: BassEffectType
-    @objc let percentX: Float
-    @objc let percentY: Float
-    @objc let isDefault: Bool
+class BassEffectValue: NSObject {
+    let type: BassEffectType
+    let percentX: Float
+    let percentY: Float
+    let isDefault: Bool
     
-    @objc init(type: BassEffectType, percentX: Float, percentY: Float, isDefault: Bool) {
+    init(type: BassEffectType, percentX: Float, percentY: Float, isDefault: Bool) {
         self.type = type
         self.percentX = percentX
         self.percentY = percentY

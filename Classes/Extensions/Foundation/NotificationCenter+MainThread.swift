@@ -18,7 +18,7 @@ private func runOnMainThread(_ block: @escaping () -> Void) {
     }
 }
 
-@objc extension NotificationCenter {
+extension NotificationCenter {
     static func postOnMainThread(name: NSNotification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
         runOnMainThread {
             NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)

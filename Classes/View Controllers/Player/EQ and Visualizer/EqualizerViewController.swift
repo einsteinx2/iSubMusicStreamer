@@ -9,7 +9,7 @@
 import Foundation
 import Resolver
 
-@objc final class EqualizerViewController: UIViewController {
+final class EqualizerViewController: UIViewController {
     
     @Injected private var settings: SavedSettings
     @Injected private var analytics: Analytics

@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc extension UIApplication {
+extension UIApplication {
     static var orientation: UIInterfaceOrientation {
         UIApplication.shared.windows.first?.windowScene?.interfaceOrientation ?? .portrait
     }

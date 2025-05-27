@@ -11,7 +11,7 @@ import Resolver
 import CocoaLumberjackSwift
 
 // TODO: Refactor to support multiple scenes/windows
-@objc final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @Injected private var settings: SavedSettings
     @Injected private var downloadQueue: DownloadQueue
     @Injected private var playQueue: PlayQueue
@@ -20,16 +20,16 @@ import CocoaLumberjackSwift
     @Injected private var analytics: Analytics
     
     // Temporary singleton access until multiple scenes are properly supported
-    @objc static var shared: SceneDelegate { UIApplication.shared.connectedScenes.first!.delegate as! SceneDelegate }
+    static var shared: SceneDelegate { UIApplication.shared.connectedScenes.first!.delegate as! SceneDelegate }
     
-    @objc var window: UIWindow?
-    @objc private(set) var tabBarController: CustomUITabBarController?
-    @objc private(set) var padRootViewController: PadRootViewController?
+    var window: UIWindow?
+    private(set) var tabBarController: CustomUITabBarController?
+    private(set) var padRootViewController: PadRootViewController?
         
     private let networkMonitor = NetworkMonitor()
     
-    @objc var isWifi: Bool { networkMonitor.isWifi }
-    @objc var isNetworkReachable: Bool { networkMonitor.isNetworkReachable }
+    var isWifi: Bool { networkMonitor.isWifi }
+    var isNetworkReachable: Bool { networkMonitor.isNetworkReachable }
     
     private let serverChecker = ServerChecker()
     
@@ -134,7 +134,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc func showSettings() {
+    func showSettings() {
         if UIDevice.isPad {
             padRootViewController?.menuViewController.showSettings()
         } else if let tabBarController = tabBarController {
@@ -146,7 +146,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc func showPlayer() {
+    @objc  func showPlayer() {
         guard !UIDevice.isPad else { return }
         DispatchQueue.mainSyncSafe {
             tabBarController?.selectedIndex = CustomUITabBarController.TabType.player.rawValue
@@ -225,7 +225,7 @@ import CocoaLumberjackSwift
         }
     }
     
-    @objc func popLibraryTab() {
+    func popLibraryTab() {
         if UIDevice.isPad {
             padRootViewController?.menuViewController.popLibraryTab()
         } else {

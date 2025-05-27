@@ -17,7 +17,7 @@ let MAX_GAIN = 6
 
 let DEFAULT_BANDWIDTH = 18
 
-@objc final class EqualizerPathView: UIView {
+final class EqualizerPathView: UIView {
     
     @Injected private var settings: SavedSettings
     
@@ -127,7 +127,7 @@ let DEFAULT_BANDWIDTH = 18
         }
     }
         
-    @objc override func draw(_ rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         // Draw the axis labels
         drawTicksAndLabels()
             

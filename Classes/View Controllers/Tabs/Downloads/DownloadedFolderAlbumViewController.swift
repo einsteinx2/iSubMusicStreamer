@@ -57,7 +57,7 @@ final class DownloadedFolderAlbumViewController: AbstractDownloadsViewController
         title = parentPathComponent
     }
     
-    @objc override func reloadTable() {
+    override func reloadTable() {
         downloadedFolderAlbums = store.downloadedFolderAlbums(serverId: serverId, level: level, parentPathComponent: parentPathComponent)
         downloadedSongs = store.downloadedSongs(serverId: serverId, level: level, parentPathComponent: parentPathComponent)
         super.reloadTable()

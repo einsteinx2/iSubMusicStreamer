@@ -11,7 +11,7 @@ import Resolver
 import CocoaLumberjackSwift
 
 // TODO: Refactor to support multiple scenes/windows
-@objc final class AppDelegate: UIResponder, UIApplicationDelegate {
+final class AppDelegate: UIResponder, UIApplicationDelegate {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
     @Injected private var player: BassPlayer
@@ -19,9 +19,9 @@ import CocoaLumberjackSwift
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var analytics: Analytics
     
-    @objc static var shared: AppDelegate { UIApplication.shared.delegate as! AppDelegate }
+    static var shared: AppDelegate { UIApplication.shared.delegate as! AppDelegate }
     
-    @objc var referringAppUrl: URL?
+    var referringAppUrl: URL?
     
     private let videoPlayer = VideoPlayer()
     

@@ -36,7 +36,7 @@ final class DownloadedTagAlbumViewController: AbstractDownloadsViewController {
         title = downloadedTagAlbum.name
     }
     
-    @objc override func reloadTable() {
+    override func reloadTable() {
         downloadedSongs = store.downloadedSongs(downloadedTagAlbum: downloadedTagAlbum)
         super.reloadTable()
     }

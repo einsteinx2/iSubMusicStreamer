@@ -202,7 +202,7 @@ final class StreamManager {
         resumeHandlerWorkItem = nil
     }
     
-    @objc private func resume(handler: StreamHandler) {
+    private func resume(handler: StreamHandler) {
         // As an added check, verify that this handler is still in the stack
         guard isInQueue(song: handler.song) else { return }
         if downloadQueue.isDownloading, let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == handler.song {

@@ -29,7 +29,7 @@ final class DownloadedTagAlbumsViewController: AbstractDownloadsViewController {
         saveEditHeader.set(saveType: "Album", countType: "Album", isLargeCount: true)
     }
     
-    @objc override func reloadTable() {
+    override func reloadTable() {
         downloadedTagAlbums = store.downloadedTagAlbums(serverId: serverId)
         super.reloadTable()
         addOrRemoveSaveEditHeader()

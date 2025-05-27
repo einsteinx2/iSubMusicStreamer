@@ -330,7 +330,7 @@ final class OptionsViewController: UIViewController {
         present(alert, animated: true)
     }
     
-    @objc func resetFolderCache() {
+    func resetFolderCache() {
         let serverId = settings.currentServerId
         store.resetFolderAlbumCache(serverId: serverId)
         store.deleteTagAlbums(serverId: serverId)
@@ -432,7 +432,7 @@ final class OptionsViewController: UIViewController {
 
 extension OptionsViewController: UITextFieldDelegate {
     
-    @objc func textFieldDidEndEditing(_ textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         guard let tableView = view.superview as? UITableView else { return }
         
         var rect = CGRect(x: 0, y: 500, width: 320, height: 5)
@@ -441,7 +441,7 @@ extension OptionsViewController: UITextFieldDelegate {
         tableView.scrollRectToVisible(rect, animated: false)
     }
     
-    @objc func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         updateMinFreeSpaceSetting()
         textField.resignFirstResponder()
         return true

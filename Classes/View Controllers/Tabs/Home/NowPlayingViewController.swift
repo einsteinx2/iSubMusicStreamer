@@ -65,7 +65,7 @@ final class NowPlayingViewController: CustomUITableViewController {
         nowPlayingLoader?.startLoad()
     }
     
-    @objc func cancelLoad() {
+    func cancelLoad() {
         HUD.hide()
         nowPlayingLoader?.cancelLoad()
         nowPlayingLoader?.callback = nil

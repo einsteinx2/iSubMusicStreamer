@@ -77,9 +77,9 @@ struct Notifications {
     static let quickSkipSecondsSettingChanged = Notification.Name("iSub.quickSkipSecondsSettingChanged")
 }
 
-@objc final class Notifications_ObjcDeleteMe: NSObject {
-    @objc static let bassEffectPresetLoaded = Notifications.bassEffectPresetLoaded
-    @objc static let quickSkipSecondsSettingChanged = Notifications.quickSkipSecondsSettingChanged
-    @objc static let enterOfflineMode = Notifications.goOffline
-    @objc static let enterOnlineMode = Notifications.goOnline
+final class Notifications_ObjcDeleteMe: NSObject {
+    static let bassEffectPresetLoaded = Notifications.bassEffectPresetLoaded
+    static let quickSkipSecondsSettingChanged = Notifications.quickSkipSecondsSettingChanged
+    static let enterOfflineMode = Notifications.goOffline
+    static let enterOnlineMode = Notifications.goOnline
 }

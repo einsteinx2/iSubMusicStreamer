@@ -8,15 +8,15 @@
 
 import Foundation
 
-@objc enum BassVisualizerType: Int {
+enum BassVisualizerType: Int {
     case none = 0
     case fft  = 1
     case line = 2
 }
 
-@objc class BassVisualizer: NSObject {
-    @objc var type: BassVisualizerType = .none
-    @objc var channel: HSTREAM = 0
+class BassVisualizer: NSObject {
+    var type: BassVisualizerType = .none
+    var channel: HSTREAM = 0
     
     private let syncObject = NSObject()
     private let fftDataSize = 1024
@@ -35,7 +35,7 @@ import Foundation
         return synchronized(syncObject) { lineSpecBuf[index] }
     }
     
-    @objc func readAudioData() {
+    func readAudioData() {
         DispatchQueue.default.async {
             synchronized(self.syncObject) {
                 guard self.channel > 0 else { return }

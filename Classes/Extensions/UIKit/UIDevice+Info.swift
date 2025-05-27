@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc extension UIDevice {
+extension UIDevice {
     static var isPad: Bool {
         Self.current.userInterfaceIdiom == .pad
     }

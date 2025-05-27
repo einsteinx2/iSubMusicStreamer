@@ -12,11 +12,11 @@ import Resolver
 
 private let equalizerGainReduction: Float = 0.45
 
-@objc final class BassEqualizer: NSObject {
+final class BassEqualizer: NSObject {
     @LazyInjected private var settings: SavedSettings
     
     private(set) var isEqActive = false
-    @objc var channel: HCHANNEL = 0 {
+    var channel: HCHANNEL = 0 {
         willSet {
             if channel != newValue {
                 // Remove any EQ points
@@ -24,7 +24,7 @@ private let equalizerGainReduction: Float = 0.45
             }
         }
     }
-    @objc var gain: Float = 0.0 {
+    var gain: Float = 0.0 {
         didSet {
             var modifiedGainValue = isEqActive ? gain - equalizerGainReduction : gain
             modifiedGainValue = modifiedGainValue < 0.0 ? 0.0 : modifiedGainValue
@@ -35,7 +35,7 @@ private let equalizerGainReduction: Float = 0.45
     }
     
     // TODO: See if this can be removed since Swift should copy the array anyway
-    @objc var equalizerValues: [BassParamEqValue] {
+    var equalizerValues: [BassParamEqValue] {
         return eqValuesLock.sync {
             let values = eqValues
             return values
@@ -54,7 +54,7 @@ private let equalizerGainReduction: Float = 0.45
     private var volumeFx: HFX = 0
     private var limiterFx: HFX = 0
     
-    @objc func clearEqualizerValues() {
+    func clearEqualizerValues() {
         if channel > 0 {
             for handle in eqHandles {
                 BASS_ChannelRemoveFX(channel, handle)
@@ -76,7 +76,7 @@ private let equalizerGainReduction: Float = 0.45
         isEqActive = false
     }
     
-    @objc func applyEqualizerValues() {
+    func applyEqualizerValues() {
         applyEqualizerValues(values: eqValues)
     }
     
@@ -172,7 +172,7 @@ private let equalizerGainReduction: Float = 0.45
 //        eqValuesLock.unlock()
     }
     
-    @objc func removeAllEqualizerValues() {
+    func removeAllEqualizerValues() {
         clearEqualizerValues()
         
         eqValuesLock.sync {
@@ -185,7 +185,7 @@ private let equalizerGainReduction: Float = 0.45
         isEqActive = false
     }
     
-    @objc @discardableResult
+    @discardableResult
     func toggleEqualizer() -> Bool {
         // Update the state of the equalizer
         settings.isEqualizerOn = !isEqActive
@@ -217,7 +217,7 @@ private let equalizerGainReduction: Float = 0.45
         }
     }
     
-    @objc func createVolumeFx() {
+    func createVolumeFx() {
         guard channel > 0 else { return }
         
         if volumeFx > 0 {
@@ -231,7 +231,7 @@ private let equalizerGainReduction: Float = 0.45
         gain = settings.gainMultiplier
     }
     
-    @objc func createLimiterFx() {
+    func createLimiterFx() {
         guard channel > 0 else { return }
         
         if limiterFx > 0 {

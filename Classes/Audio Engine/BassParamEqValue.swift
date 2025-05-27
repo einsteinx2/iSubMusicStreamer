@@ -14,26 +14,26 @@ extension BASS_DX8_PARAMEQ: Equatable {
     }
 }
 
-@objc final class BassParamEqValue: NSObject {
+final class BassParamEqValue: NSObject {
     
-    @objc var parameters: BASS_DX8_PARAMEQ
-    @objc var handle: HFX
-    @objc var arrayIndex: Int
+    var parameters: BASS_DX8_PARAMEQ
+    var handle: HFX
+    var arrayIndex: Int
     
-    @objc var frequency: Float {
+    var frequency: Float {
         get { return parameters.fCenter }
         set { parameters.fCenter = newValue }
     }
-    @objc var bandwidth: Float {
+    var bandwidth: Float {
         get { return parameters.fBandwidth }
         set { parameters.fBandwidth = newValue }
     }
-    @objc var gain: Float {
+    var gain: Float {
         get { return parameters.fGain }
         set { parameters.fGain = newValue }
     }
     
-    @objc init(parameters: BASS_DX8_PARAMEQ, handle: HFX = 0, arrayIndex: Int = Int.max) {
+    init(parameters: BASS_DX8_PARAMEQ, handle: HFX = 0, arrayIndex: Int = Int.max) {
         self.parameters = parameters
         self.handle = handle
         self.arrayIndex = arrayIndex

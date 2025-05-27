@@ -121,7 +121,7 @@ final class CoverArtLoader: APILoader {
         }
     }
     
-    @objc override func cancelLoad() {
+    override func cancelLoad() {
         super.cancelLoad()
         synchronized(Self.syncObject) {
             _ = Self.loadingIds.remove(mergedId)

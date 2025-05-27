@@ -8,17 +8,17 @@
 
 import Foundation
 
-@objc enum ServerType: Int, Codable {
+enum ServerType: Int, Codable {
     case none = 0
     case subsonic = 1
 }
 
-@objc final class Server: NSObject, Codable {
+final class Server: NSObject, Codable {
     @objc(serverId) var id: Int
-    @objc let type: ServerType
-    @objc let url: URL
-    @objc let username: String
-    @objc let password: String
+    let type: ServerType
+    let url: URL
+    let username: String
+    let password: String
     
     // Server URL in the format "scheme_host_port_path"
     // I.e. https://plex:4041 is "https_plex_4041",
@@ -26,11 +26,11 @@ import Foundation
     //      http://test.com:8080/subsonic is "http_test.com_8080_subsonic"
     //      https://myserver.net:4041/subsonic/server1 is "https_myserver.net_4041_subsonic_server1"
     // This gives a unique filesystem path that can be used when storing downloaded songs
-    @objc let path: String
+    let path: String
     
-    @objc var isVideoSupported: Bool = true
-    @objc var isNewSearchSupported: Bool = true
-    @objc var isTagSearchSupported: Bool = true
+    var isVideoSupported: Bool = true
+    var isNewSearchSupported: Bool = true
+    var isTagSearchSupported: Bool = true
     
     static func generatePathFromURL(url: URL) -> String {
         let scheme = url.scheme ?? "scheme"
@@ -51,7 +51,7 @@ import Foundation
         return path
     }
     
-    @objc init(id: Int, type: ServerType, url: URL, username: String, password: String, path: String, isVideoSupported: Bool, isNewSearchSupported: Bool, isTagSearchSupported: Bool) {
+    init(id: Int, type: ServerType, url: URL, username: String, password: String, path: String, isVideoSupported: Bool, isNewSearchSupported: Bool, isTagSearchSupported: Bool) {
         self.id = id
         self.type = type
         self.url = url
@@ -64,7 +64,7 @@ import Foundation
         super.init()
     }
     
-    @objc init(id: Int, type: ServerType, url: URL, username: String, password: String) {
+    init(id: Int, type: ServerType, url: URL, username: String, password: String) {
         self.id = id
         self.type = type
         self.url = url

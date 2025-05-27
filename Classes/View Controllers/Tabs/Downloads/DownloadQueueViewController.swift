@@ -33,7 +33,7 @@ final class DownloadQueueViewController: AbstractDownloadsViewController {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.downloadQueueSongRemoved)
     }
 
-    @objc override func reloadTable() {
+    override func reloadTable() {
         super.reloadTable()
         addOrRemoveSaveEditHeader()
     }

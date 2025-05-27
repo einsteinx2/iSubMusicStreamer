@@ -15,7 +15,7 @@ private let bassStreamRetryDelay = 2.0
 private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
 
 // TODO: Is it necessary to keep setting BASS_SetDevice all the time?
-@objc final class BassPlayer: NSObject {
+final class BassPlayer: NSObject {
     @LazyInjected private var playQueue: PlayQueue
     @LazyInjected private var store: Store
     @LazyInjected private var settings: SavedSettings
@@ -29,14 +29,14 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
     private(set) var outStream: HSTREAM = 0
     private(set) var mixerStream: HSTREAM = 0
     
-    @objc var isPlaying = false
+    var isPlaying = false
     var waitLoopStream: BassStream?
     
-    @objc var startByteOffset = 0
-    @objc var startSecondsOffset = 0.0
+    var startByteOffset = 0
+    var startSecondsOffset = 0.0
     
-    @objc var equalizer = BassEqualizer()
-    @objc var visualizer = BassVisualizer()
+    var equalizer = BassEqualizer()
+    var visualizer = BassVisualizer()
     
     var retrySongOperation: Operation?
     var shouldResumeFromInterruption = false
@@ -52,7 +52,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         NotificationCenter.removeObserverOnMainThread(self)
     }
     
-    @objc @discardableResult
+    @discardableResult
     func seekToPosition(seconds: Double, fadeVolume: Bool = true) -> Bool {
         guard let currentStream = currentStream else { return false }
         
@@ -62,7 +62,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         return seekToPosition(bytes: bytes, fadeVolume: fadeVolume)
     }
     
-    @objc @discardableResult
+    @discardableResult
     func seekToPosition(bytes: QWORD, fadeVolume: Bool = true) -> Bool {
         guard let currentStream = currentStream else { return false }
         
@@ -87,7 +87,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         return true
     }
     
-    @objc var progress: Double {
+    var progress: Double {
         guard let currentStream = currentStream else { return 0 }
         
         BASS_SetDevice(Bass.outputDeviceNumber)
@@ -100,7 +100,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         return (currentStream?.hstream ?? 0) != 0
     }
     
-    @objc var currentByteOffset: Int {
+    var currentByteOffset: Int {
         guard let currentStream = currentStream else { return 0 }
         return Int(BASS_StreamGetFilePosition(currentStream.hstream, DWORD(BASS_FILEPOS_CURRENT))) + startByteOffset
     }
@@ -111,7 +111,7 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
         }
     }
     
-    @objc var kiloBitrate: Int {
+    var kiloBitrate: Int {
         guard let currentStream = currentStream else { return 0 }
         return Bass.estimateKiloBitrate(bassStream: currentStream)
     }

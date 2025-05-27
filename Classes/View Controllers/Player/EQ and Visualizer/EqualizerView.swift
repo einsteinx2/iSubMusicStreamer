@@ -12,7 +12,7 @@ import OpenGLES
 import Resolver
 import CocoaLumberjackSwift
 
-@objc enum VisualizerType: Int {
+enum VisualizerType: Int {
     case none      = 0
     case line      = 1
     case skinnyBar = 2

@@ -165,7 +165,7 @@ final class LocalPlaylistsViewController: CustomUITableViewController {
     //    [self reloadData];
     }
     
-    @objc func cancelLoad() {
+    func cancelLoad() {
         // TODO: Cancel the upload
         HUD.hide()
     }

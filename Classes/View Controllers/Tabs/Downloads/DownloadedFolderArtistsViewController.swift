@@ -28,7 +28,7 @@ final class DownloadedFolderArtistsViewController: AbstractDownloadsViewControll
         saveEditHeader.set(saveType: "Folder", countType: "Folder", isLargeCount: true)
     }
     
-    @objc override func reloadTable() {
+    override func reloadTable() {
         downloadedFolderArtists = store.downloadedFolderArtists(serverId: serverId)
         super.reloadTable()
         addOrRemoveSaveEditHeader()

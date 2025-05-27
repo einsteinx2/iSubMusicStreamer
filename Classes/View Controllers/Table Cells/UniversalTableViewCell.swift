@@ -22,7 +22,7 @@ final class UniversalTableViewCell: UITableViewCell {
     private let secondaryLabel = UILabel()
     private let durationLabel = UILabel()
     
-//    @objc var autoScroll: Bool {
+//    var autoScroll: Bool {
 //        get { return primaryLabel.autoScroll }
 //        set {
 //            primaryLabel.autoScroll = newValue
@@ -30,7 +30,7 @@ final class UniversalTableViewCell: UITableViewCell {
 //        }
 //    }
 //    
-//    @objc var repeatScroll: Bool {
+//    var repeatScroll: Bool {
 //        get { return primaryLabel.repeatScroll }
 //        set {
 //            primaryLabel.repeatScroll = newValue
@@ -163,14 +163,14 @@ final class UniversalTableViewCell: UITableViewCell {
         }
     }
     
-//    @objc func startScrollingLabels() {
+//    func startScrollingLabels() {
 //        primaryLabel.startScrolling()
 //        if !hideSecondaryLabel {
 //            secondaryLabel.startScrolling()
 //        }
 //    }
 //
-//    @objc func stopScrollingLabels() {
+//    func stopScrollingLabels() {
 //        primaryLabel.stopScrolling()
 //        if !hideSecondaryLabel {
 //            secondaryLabel.stopScrolling()

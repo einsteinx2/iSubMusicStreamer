@@ -341,7 +341,7 @@ final class HomeViewController: UIViewController {
         serverShuffleLoader = loader
     }
     
-    @objc private func cancelLoad() {
+    private func cancelLoad() {
         HUD.hide()
         quickAlbumsLoader?.cancelLoad()
         quickAlbumsLoader = nil

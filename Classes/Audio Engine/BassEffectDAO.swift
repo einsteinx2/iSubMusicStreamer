@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjackSwift
 import Resolver
 
-@objc enum BassEffectType: Int {
+enum BassEffectType: Int {
     case parametricEQ = 1
 }
 
