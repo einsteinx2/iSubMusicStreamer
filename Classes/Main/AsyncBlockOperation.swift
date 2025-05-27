@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class AsyncBlockOperation: AsyncOperation {
+final class AsyncBlockOperation: AsyncOperation, @unchecked Sendable {
     private let block: (_ completion: @escaping () -> Void) -> Void
     
     init(block: @escaping (_ completion: @escaping () -> Void) -> ()) {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class AsyncLoaderOperation: AsyncOperation {
+final class AsyncLoaderOperation: AsyncOperation, @unchecked Sendable {
     private let loader: APILoader
     
     init(loader: APILoader) {

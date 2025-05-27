@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 import Foundation
 
-open class AsyncOperation: Operation {
+open class AsyncOperation: Operation, @unchecked Sendable {
     private let lockQueue = DispatchQueue(label: "com.swiftlee.asyncoperation", attributes: .concurrent)
 
     override open var isAsynchronous: Bool {
