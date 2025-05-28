@@ -127,6 +127,7 @@ extension URLRequest {
         setValue("no-cache", forHTTPHeaderField: "Cache-Control")
     }
     
+    // TODO: Replace subsonicAction with a string enum
     init?(serverId: Int, subsonicAction action: String, parameters: [String: Any]? = nil, byteOffset: Int = 0) {
         let store: Store = Resolver.resolve()
         let settings: SavedSettings = Resolver.resolve()

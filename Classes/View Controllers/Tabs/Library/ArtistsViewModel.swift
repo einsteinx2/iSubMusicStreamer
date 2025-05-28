@@ -9,8 +9,15 @@
 import Foundation
 import Resolver
 
+enum ArtistsViewModelType {
+    case folders
+    case tags
+}
+
 class ArtistsViewModel {
     @Injected fileprivate var store: Store
+    
+    let type: ArtistsViewModelType
     
     weak var delegate: APILoaderDelegate?
     var serverId: Int
@@ -35,15 +42,15 @@ class ArtistsViewModel {
     fileprivate(set) var artistIds = [String]()
     fileprivate(set) var searchArtistIds = [String]()
     
-    fileprivate var mediaFoldersLoader: MediaFoldersLoader?
-    fileprivate var artistsLoader: APILoader?
+    fileprivate var loaderTask: Task<Void, Never>?
     fileprivate let searchLimit = 100
     fileprivate var searchName: String?
     fileprivate var shouldContinueSearch = true
     
-    init(serverId: Int, mediaFolderId: Int, delegate: APILoaderDelegate? = nil) {
+    init(serverId: Int, mediaFolderId: Int, type: ArtistsViewModelType, delegate: APILoaderDelegate? = nil) {
         self.serverId = serverId
         self.mediaFolderId = mediaFolderId
+        self.type = type
         self.delegate = delegate
     }
     
@@ -52,9 +59,8 @@ class ArtistsViewModel {
     }
     
     func reset() {
-        artistsLoader?.cancelLoad()
-        artistsLoader?.delegate = nil
-        artistsLoader = nil
+        loaderTask?.cancel()
+        loaderTask = nil
         
         metadata = nil
         tableSections.removeAll()
@@ -72,205 +78,96 @@ class ArtistsViewModel {
         shouldContinueSearch = true
     }
     
-    fileprivate func loadMediaFolders(completion: @escaping APILoaderCallback) {
-        mediaFoldersLoader = MediaFoldersLoader(serverId: serverId) { [weak self] loader, success, error in
-            guard let self = self, let loader = loader as? MediaFoldersLoader else { return }
-            if success {
-                self.mediaFolders = loader.mediaFolders
-                // TODO: Handle store errors
-                _ = self.store.deleteMediaFolders()
-                _ = self.store.add(mediaFolders: self.mediaFolders)
-//                self.delegate?.loadingFinished(loader: loader)
-            } else {
-//                self.delegate?.loadingFailed(loader: loader, error: error)
-            }
-            self.mediaFoldersLoader?.callback = nil
-            self.mediaFoldersLoader = nil
-            completion(loader, success, error)
-        }
-        mediaFoldersLoader?.startLoad()
-    }
-    
     func startLoad() {
         cancelLoad()
-        loadMediaFolders() { [weak self] _, success, error in
-            if success {
-                self?.loadArtists() { [weak self] _, success, error in
-                    if success {
-                        self?.delegate?.loadingFinished(loader: nil)
-                    } else {
-                        self?.delegate?.loadingFailed(loader: nil, error: error)
+    
+        loaderTask = Task {
+            do {
+                let mediaFoldersLoader = AsyncMediaFoldersLoader(serverId: serverId)
+                self.mediaFolders = try await mediaFoldersLoader.load()
+                _ = self.store.deleteMediaFolders()
+                _ = self.store.add(mediaFolders: self.mediaFolders)
+                
+                let artistsLoader = type == .folders ? AsyncRootFoldersLoader(serverId: serverId, mediaFolderId: mediaFolderId) : AsyncRootArtistsLoader(serverId: serverId, mediaFolderId: mediaFolderId)
+                if let artistsResponse = try await artistsLoader.load() {
+                    self.metadata = artistsResponse.metadata
+                    self.tableSections = artistsResponse.tableSections
+                    self.artistIds = artistsResponse.artistIds
+                }
+                
+                await MainActor.run {
+                    self.delegate?.loadingFinished(loader: nil)
+                }
+            } catch {
+                if !(error is CancellationError) {
+                    await MainActor.run {
+                        self.delegate?.loadingFailed(loader: nil, error: error)
                     }
                 }
-            } else {
-                self?.delegate?.loadingFailed(loader: nil, error: error)
             }
         }
     }
     
     func cancelLoad() {
-        mediaFoldersLoader?.cancelLoad()
-        mediaFoldersLoader?.callback = nil
-        mediaFoldersLoader = nil
-        
-        artistsLoader?.cancelLoad()
-        artistsLoader?.callback = nil
-        artistsLoader = nil
+        loaderTask?.cancel()
+        loaderTask = nil
     }
     
     // MARK: Overrides
     
     var itemType: String {
-        fatalError("Must override this in subclass")
+        return type == .folders ? "Folder" : "Artist"
     }
     
     var showCoverArt: Bool {
-        fatalError("Must override this in subclass")
+        return type == .tags
     }
     
     fileprivate func loadFromCache() {
-        fatalError("Must override this in subclass")
-    }
-    
-    fileprivate func loadArtists(completion: @escaping APILoaderCallback) {
-        fatalError("Must override this in subclass")
+        mediaFolders = store.mediaFolders(serverId: serverId)
+        
+        let metadataFunc = type == .folders ? store.folderArtistMetadata : store.tagArtistMetadata
+        metadata = metadataFunc(serverId, mediaFolderId)
+        if metadata != nil {
+            let tableSectionsFunc = type == .folders ? store.folderArtistSections : store.tagArtistSections
+            tableSections = tableSectionsFunc(serverId, mediaFolderId)
+            
+            let artistIdsFunc = type == .folders ? store.folderArtistIds : store.tagArtistIds
+            artistIds = artistIdsFunc(serverId, mediaFolderId)
+        } else {
+            tableSections.removeAll()
+            artistIds.removeAll()
+        }
     }
     
     func artist(indexPath: IndexPath) -> Artist? {
-        fatalError("Must override this in subclass")
+        let index = tableSections[indexPath.section].position + indexPath.row
+        guard index < artistIds.count else { return nil }
+        
+        let id = artistIds[index]
+        return type == .folders ? store.folderArtist(serverId: serverId, id: id) : store.tagArtist(serverId: serverId, id: id)
     }
     
     func artistInSearch(indexPath: IndexPath) -> Artist? {
-        fatalError("Must override this in subclass")
+        guard indexPath.row < searchArtistIds.count else { return nil }
+        
+        let id = searchArtistIds[indexPath.row]
+        return type == .folders ? store.folderArtist(serverId: serverId, id: id) : store.tagArtist(serverId: serverId, id: id)
     }
     
     func search(name: String) {
-        fatalError("Must override this in subclass")
+        searchName = name
+        
+        let searchFunc = type == .folders ? store.search(folderArtistName:serverId:mediaFolderId:offset:limit:) : store.search(tagArtistName:serverId:mediaFolderId:offset:limit:)
+        searchArtistIds = searchFunc(name, serverId, mediaFolderId, 0, searchLimit)
     }
     
     func continueSearch() {
-        fatalError("Must override this in subclass")
-    }
-}
-
-final class FolderArtistsViewModel: ArtistsViewModel {
-    override var itemType: String { "Folder" }
-    override var showCoverArt: Bool { false }
-        
-    override fileprivate func loadFromCache() {
-        mediaFolders = store.mediaFolders(serverId: serverId)
-        
-        metadata = store.folderArtistMetadata(serverId: serverId, mediaFolderId: mediaFolderId)
-        if metadata != nil {
-            tableSections = store.folderArtistSections(serverId: serverId, mediaFolderId: mediaFolderId)
-            artistIds = store.folderArtistIds(serverId: serverId, mediaFolderId: mediaFolderId)
-        } else {
-            tableSections.removeAll()
-            artistIds.removeAll()
-        }
-    }
-    
-    override fileprivate func loadArtists(completion: @escaping APILoaderCallback) {
-        artistsLoader = RootFoldersLoader(serverId: serverId, mediaFolderId: mediaFolderId) { [weak self] loader, success, error in
-            guard let self = self, let loader = loader as? RootFoldersLoader else { return }
-            if success {
-                self.metadata = loader.metadata
-                self.tableSections = loader.tableSections
-                self.artistIds = loader.folderArtistIds
-//                self.delegate?.loadingFinished(loader: loader)
-            } else {
-//                self.delegate?.loadingFailed(loader: loader, error: error)
-            }
-            self.artistsLoader?.callback = nil
-            self.artistsLoader = nil
-            completion(loader, success, error)
-        }
-        artistsLoader?.startLoad()
-    }
-    
-    override func artist(indexPath: IndexPath) -> Artist? {
-        let index = tableSections[indexPath.section].position + indexPath.row
-        guard index < artistIds.count else { return nil }
-        
-        return store.folderArtist(serverId: serverId, id: artistIds[index])
-    }
-    
-    override func artistInSearch(indexPath: IndexPath) -> Artist? {
-        guard indexPath.row < searchArtistIds.count else { return nil }
-        return store.folderArtist(serverId: serverId, id: searchArtistIds[indexPath.row])
-    }
-    
-    override func search(name: String) {
-        searchName = name
-        searchArtistIds = store.search(folderArtistName: name, serverId: serverId, mediaFolderId: mediaFolderId, offset: 0, limit: searchLimit)
-    }
-    
-    override func continueSearch() {
         if let searchName = searchName, shouldContinueSearch {
-            let folderIds = store.search(folderArtistName: searchName, serverId: serverId, mediaFolderId: mediaFolderId, offset: searchArtistIds.count, limit: searchLimit)
-            shouldContinueSearch = (folderIds.count == searchLimit)
-            searchArtistIds.append(contentsOf: folderIds)
-        }
-    }
-}
-
-final class TagArtistsViewModel: ArtistsViewModel {
-    override var itemType: String { "Artist" }
-    override var showCoverArt: Bool { true }
-    
-    override fileprivate func loadFromCache() {
-        mediaFolders = store.mediaFolders(serverId: serverId)
-        
-        metadata = store.tagArtistMetadata(serverId: serverId, mediaFolderId: mediaFolderId)
-        if metadata != nil {
-            tableSections = store.tagArtistSections(serverId: serverId, mediaFolderId: mediaFolderId)
-            artistIds = store.tagArtistIds(serverId: serverId, mediaFolderId: mediaFolderId)
-        } else {
-            tableSections.removeAll()
-            artistIds.removeAll()
-        }
-    }
-    
-    override fileprivate func loadArtists(completion: @escaping APILoaderCallback) {
-        artistsLoader = RootArtistsLoader(serverId: serverId, mediaFolderId: mediaFolderId) { [weak self] loader, success, error in
-            guard let self = self, let loader = loader as? RootArtistsLoader else { return }
-            if success {
-                self.metadata = loader.metadata
-                self.tableSections = loader.tableSections
-                self.artistIds = loader.tagArtistIds
-//                self.delegate?.loadingFinished(loader: loader)
-            } else {
-//                self.delegate?.loadingFailed(loader: loader, error: error)
-            }
-            self.artistsLoader?.callback = nil
-            self.artistsLoader = nil
-            completion(loader, success, error)
-        }
-        artistsLoader?.startLoad()
-    }
-    
-    override func artist(indexPath: IndexPath) -> Artist? {
-        let index = tableSections[indexPath.section].position + indexPath.row
-        guard index < artistIds.count else { return nil }
-        
-        return store.tagArtist(serverId: serverId, id: artistIds[index])
-    }
-    
-    override func artistInSearch(indexPath: IndexPath) -> Artist? {
-        guard indexPath.row < searchArtistIds.count else { return nil }
-        return store.tagArtist(serverId: serverId, id: searchArtistIds[indexPath.row])
-    }
-    
-    override func search(name: String) {
-        searchName = name
-        searchArtistIds = store.search(tagArtistName: name, serverId: serverId, mediaFolderId: mediaFolderId, offset: 0, limit: searchLimit)
-    }
-    
-    override func continueSearch() {
-        if let searchName = searchName, shouldContinueSearch {
-            let artistIds = store.search(tagArtistName: searchName, serverId: serverId, mediaFolderId: mediaFolderId, offset: searchArtistIds.count, limit: searchLimit)
-            shouldContinueSearch = (artistIds.count == searchLimit)
-            searchArtistIds.append(contentsOf: artistIds)
+            let searchFunc = type == .folders ? store.search(folderArtistName:serverId:mediaFolderId:offset:limit:) : store.search(tagArtistName:serverId:mediaFolderId:offset:limit:)
+            let ids = searchFunc(searchName, serverId, mediaFolderId, searchArtistIds.count, searchLimit)
+            shouldContinueSearch = (ids.count == searchLimit)
+            searchArtistIds.append(contentsOf: ids)
         }
     }
 }
