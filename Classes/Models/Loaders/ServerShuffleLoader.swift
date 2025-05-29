@@ -31,7 +31,7 @@ final class ServerShuffleLoader: APILoader {
         if let mediaFolderId = mediaFolderId, mediaFolderId != MediaFolder.allFoldersId {
             parameters["musicFolderId"] = mediaFolderId
         }
-        return URLRequest(serverId: serverId, subsonicAction: "getRandomSongs", parameters: parameters)
+        return URLRequest(serverId: serverId, subsonicAction: .getRandomSongs, parameters: parameters)
     }
     
     override func processResponse(data: Data) {

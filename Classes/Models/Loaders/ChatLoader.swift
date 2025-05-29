@@ -23,7 +23,7 @@ final class ChatLoader: APILoader {
     override var type: APILoaderType { .chat }
     
     override func createRequest() -> URLRequest? {
-        URLRequest(serverId: serverId, subsonicAction: "getChatMessages")
+        URLRequest(serverId: serverId, subsonicAction: .getChatMessages)
     }
     
     override func processResponse(data: Data) {

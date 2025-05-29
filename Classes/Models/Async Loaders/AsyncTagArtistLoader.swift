@@ -25,7 +25,7 @@ final class AsyncTagArtistLoader: AsyncAPILoader<[String]> {
     override var type: APILoaderType { .tagArtist }
     
     override func createRequest() -> URLRequest? {
-        URLRequest(serverId: serverId, subsonicAction: "getArtist", parameters: ["id": tagArtistId])
+        URLRequest(serverId: serverId, subsonicAction: .getArtist, parameters: ["id": tagArtistId])
     }
     
     override func processResponse(data: Data) async throws -> [String] {

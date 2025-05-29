@@ -29,7 +29,7 @@ final class TagAlbumLoader: APILoader {
     override var type: APILoaderType { .tagAlbum }
     
     override func createRequest() -> URLRequest? {
-        URLRequest(serverId: serverId, subsonicAction: "getAlbum", parameters: ["id": tagAlbumId])
+        URLRequest(serverId: serverId, subsonicAction: .getAlbum, parameters: ["id": tagAlbumId])
     }
     
     override func processResponse(data: Data) {

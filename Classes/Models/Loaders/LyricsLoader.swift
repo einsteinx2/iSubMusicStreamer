@@ -35,7 +35,7 @@ final class LyricsLoader: APILoader {
     override var type: APILoaderType { .lyrics }
 
     override func createRequest() -> URLRequest? {
-        URLRequest(serverId: serverId, subsonicAction: "getLyrics", parameters: ["artist": tagArtistName, "title": songTitle])
+        URLRequest(serverId: serverId, subsonicAction: .getLyrics, parameters: ["artist": tagArtistName, "title": songTitle])
     }
     
     override func processResponse(data: Data) {

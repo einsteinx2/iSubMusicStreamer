@@ -19,7 +19,7 @@ final class AsyncMediaFoldersLoader: AsyncAPILoader<[MediaFolder]> {
     override var type: APILoaderType { .mediaFolders }
     
     override func createRequest() -> URLRequest? {
-        URLRequest(serverId: serverId, subsonicAction: "getMusicFolders")
+        URLRequest(serverId: serverId, subsonicAction: .getMusicFolders)
     }
     
     override func processResponse(data: Data) async throws -> [MediaFolder] {

@@ -29,7 +29,7 @@ final class QuickAlbumsLoader: APILoader {
     
     override func createRequest() -> URLRequest? {
         let parameters: [String: Any] = ["size": 20, "type": modifier, "offset": offset]
-        return URLRequest(serverId: serverId, subsonicAction: "getAlbumList", parameters: parameters)
+        return URLRequest(serverId: serverId, subsonicAction: .getAlbumList, parameters: parameters)
     }
     
     override func processResponse(data: Data) {

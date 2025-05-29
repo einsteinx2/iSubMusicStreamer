@@ -13,11 +13,11 @@ final class SearchLoader: APILoader {
     
     enum SearchType {
         case old, folder, tag
-        var action: String {
+        var action: SubsonicAction {
             switch self {
-            case .old:    return "search"
-            case .folder: return "search2"
-            case .tag:    return "search3"
+            case .old:    return .search
+            case .folder: return .search2
+            case .tag:    return .search3
             }
         }
         var queryKey: String {

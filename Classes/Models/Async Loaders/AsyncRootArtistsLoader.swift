@@ -26,7 +26,7 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
         
     override func createRequest() -> URLRequest? {
         let parameters: [String: Any]? = mediaFolderId != MediaFolder.allFoldersId ? ["musicFolderId": mediaFolderId] : nil
-        return URLRequest(serverId: serverId, subsonicAction: "getArtists", parameters: parameters)
+        return URLRequest(serverId: serverId, subsonicAction: .getArtists, parameters: parameters)
     }
     
     override func processResponse(data: Data) async throws -> ArtistsAPIResponseData? {

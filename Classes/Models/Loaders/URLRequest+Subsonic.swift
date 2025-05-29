@@ -20,10 +20,37 @@ private let ver1_6_0 = ["getPodcasts", "getShares", "createShare", "updateShare"
 private let ver1_8_0 = ["hls", "getAlbumList2", "getArtists", "getArtist", "getAlbum", "getSong", "search3", "1.8.0"]
 private let versions = Set<[String]>([ver1_0_0, ver1_2_0, ver1_3_0, ver1_4_0, ver1_5_0, ver1_6_0, ver1_8_0])
 
+enum SubsonicAction: String {
+    case hls
+    case stream
+    case getMusicFolders
+    case getIndexes
+    case getArtists
+    case getMusicDirectory
+    case getArtist
+    case getAlbum
+    case getSong
+    case getRandomSongs
+    case getAlbumList
+    case getCoverArt
+    case getChatMessages
+    case addChatMessage
+    case getLyrics
+    case getPlaylists
+    case getPlaylist
+    case scrobble
+    case getNowPlaying
+    case ping
+    case search
+    case search2
+    case search3
+    case jukeboxControl
+}
+
 extension URLRequest {
     // Always perform status checks using GET so that redirection work on connection, as well as other small requests
-    private static func isGetRequest(action: String) -> Bool {
-        return action == "hls" || action == "ping"
+    private static func isGetRequest(action: SubsonicAction) -> Bool {
+        return action == .hls || action == .ping
     }
     
     private static func createQueryString(parameters: [String: Any]?, version: String, username: String, password: String) -> String {
@@ -49,9 +76,9 @@ extension URLRequest {
         return queryString
     }
     
-    init?(subsonicAction action: String, urlString: String, username: String, password: String, parameters: [String: Any]?, byteOffset: Int) {
+    init?(subsonicAction action: SubsonicAction, urlString: String, username: String, password: String, parameters: [String: Any]?, byteOffset: Int) {
         var finalUrlString: String
-        if action == "hls" {
+        if action == .hls {
             finalUrlString = "\(urlString)/rest/\(action).m3u8"
         } else {
             finalUrlString = "\(urlString)/rest/\(action).view"
@@ -68,7 +95,7 @@ extension URLRequest {
         // NOTE: I'm always sending whatever URL version this specific API call belongs to, even though that's not really correct. You're supposed to send a single version all the time, and if the server is too old, it will return an error and tell you to upgrade. To provide the greatest compatibility, I always send the lowest possible version number, so only the unsupported API calls return that error rather than all of them.
         // TODO: Actually test this on different Subsonic versions (see what happens when different versions are sent)
         for versionArray in versions {
-            if versionArray.contains(action) {
+            if versionArray.contains(action.rawValue) {
                 version = versionArray.last
                 break
             }
@@ -82,10 +109,10 @@ extension URLRequest {
         
         // Handle special case when loading playlists
         var loadingTimeout = 240.0
-        if action == "getPlaylist" {
+        if action == .getPlaylist {
             // Timeout set to 60 mins to prevent timeout errors
             loadingTimeout = 3600.0
-        } else if action == "ping" {
+        } else if action == .ping {
             // Short timeout for pings to detect server outages faster
             loadingTimeout = 15.0;
         }
@@ -128,7 +155,7 @@ extension URLRequest {
     }
     
     // TODO: Replace subsonicAction with a string enum
-    init?(serverId: Int, subsonicAction action: String, parameters: [String: Any]? = nil, byteOffset: Int = 0) {
+    init?(serverId: Int, subsonicAction action: SubsonicAction, parameters: [String: Any]? = nil, byteOffset: Int = 0) {
         let store: Store = Resolver.resolve()
         let settings: SavedSettings = Resolver.resolve()
         guard let server = store.server(id: serverId) else { return nil }

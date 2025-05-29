@@ -36,7 +36,7 @@ final class StatusLoader: APILoader {
     override var type: APILoaderType { .status }
     
     override func createRequest() -> URLRequest? {
-        URLRequest(subsonicAction: "ping", urlString: urlString, username: username, password: password, parameters: nil, byteOffset: 0)
+        URLRequest(subsonicAction: .ping, urlString: urlString, username: username, password: password, parameters: nil, byteOffset: 0)
     }
     
     override func processResponse(data: Data) {

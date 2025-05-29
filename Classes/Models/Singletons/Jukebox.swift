@@ -126,7 +126,7 @@ final class Jukebox {
             finalParameters[key.rawValue] = value
         }
         
-        guard let request = URLRequest(serverId: serverId, subsonicAction: "jukeboxControl", parameters: finalParameters) else {
+        guard let request = URLRequest(serverId: serverId, subsonicAction: .jukeboxControl, parameters: finalParameters) else {
             DDLogError("[Jukebox] Failed to create URLRequest with parameters \(finalParameters)")
             return
         }

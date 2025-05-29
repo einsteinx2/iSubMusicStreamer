@@ -29,7 +29,7 @@ final class SongLoader: APILoader {
     override var type: APILoaderType { .song }
     
     override func createRequest() -> URLRequest? {
-        URLRequest(serverId: serverId, subsonicAction: "getSong", parameters: ["id": songId])
+        URLRequest(serverId: serverId, subsonicAction: .getSong, parameters: ["id": songId])
     }
     
     override func processResponse(data: Data) {

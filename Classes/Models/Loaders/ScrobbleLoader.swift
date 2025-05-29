@@ -23,7 +23,7 @@ final class ScrobbleLoader: APILoader {
     override var type: APILoaderType { .scrobble }
     
     override func createRequest() -> URLRequest? {
-        URLRequest(serverId: song.serverId, subsonicAction: "scrobble", parameters: ["id": song.id, "submission": isSubmission])
+        URLRequest(serverId: song.serverId, subsonicAction: .scrobble, parameters: ["id": song.id, "submission": isSubmission])
     }
     
     override func processResponse(data: Data) {

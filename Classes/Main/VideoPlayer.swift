@@ -63,7 +63,7 @@ final class VideoPlayer: NSObject {
         
         // Play the video
         let parameters: [String: Any] = ["id": song.id, "bitRate": bitRate]
-        guard let request = URLRequest(serverId: song.serverId, subsonicAction: "hls", parameters: parameters) else {
+        guard let request = URLRequest(serverId: song.serverId, subsonicAction: .hls, parameters: parameters) else {
             DDLogError("[VideoPlayer] failed to create URLRequest to load HLS video with parameters \(parameters)")
             return
         }

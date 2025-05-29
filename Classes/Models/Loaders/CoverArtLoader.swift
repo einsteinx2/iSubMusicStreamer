@@ -98,7 +98,7 @@ final class CoverArtLoader: APILoader {
                 if isLarge {
                     size = UIDevice.isPad ? scale * 1080 : scale * 640
                 }
-                return URLRequest(serverId: serverId, subsonicAction: "getCoverArt", parameters: ["id": coverArtId, "size": size])
+                return URLRequest(serverId: serverId, subsonicAction: .getCoverArt, parameters: ["id": coverArtId, "size": size])
             }
             return nil
         }

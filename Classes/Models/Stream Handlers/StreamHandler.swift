@@ -199,7 +199,7 @@ final class StreamHandler: NSObject, Codable {
             parameters["maxBitRate"] = maxBitrateSetting
         }
         
-        request = URLRequest(serverId: song.serverId, subsonicAction: "stream", parameters: parameters, byteOffset: byteOffset)
+        request = URLRequest(serverId: song.serverId, subsonicAction: .stream, parameters: parameters, byteOffset: byteOffset)
         guard let request = request else {
             DDLogError("[StreamHandler] start connection failed to create request")
             isDownloading = false

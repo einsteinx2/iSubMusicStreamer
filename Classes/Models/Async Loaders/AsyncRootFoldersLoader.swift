@@ -33,7 +33,7 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
     
     override func createRequest() -> URLRequest? {
         let parameters: [String: Any]? = mediaFolderId != MediaFolder.allFoldersId ? ["musicFolderId": mediaFolderId] : nil
-        return URLRequest(serverId: serverId, subsonicAction: "getIndexes", parameters: parameters)
+        return URLRequest(serverId: serverId, subsonicAction: .getIndexes, parameters: parameters)
     }
     
     override func processResponse(data: Data) async throws -> ArtistsAPIResponseData? {

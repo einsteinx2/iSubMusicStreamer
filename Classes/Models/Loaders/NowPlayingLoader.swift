@@ -26,7 +26,7 @@ final class NowPlayingLoader: APILoader {
     override var type: APILoaderType { .nowPlaying }
     
     override func createRequest() -> URLRequest? {
-        URLRequest(serverId: serverId, subsonicAction: "getNowPlaying")
+        URLRequest(serverId: serverId, subsonicAction: .getNowPlaying)
     }
     
     override func processResponse(data: Data) {
