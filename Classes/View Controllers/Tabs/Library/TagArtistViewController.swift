@@ -16,7 +16,7 @@ final class TagArtistViewController: CustomUITableViewController {
     var serverId: Int { settings.currentServerId }
     
     private let tagArtist: TagArtist
-    private var loader: TagArtistLoader?
+    private var loaderTask: Task<Void, Never>?
     private var tagAlbumIds = [String]()
         
     init(tagArtist: TagArtist) {
@@ -75,17 +75,21 @@ final class TagArtistViewController: CustomUITableViewController {
     
     func startLoad() {
         HUD.show(closeHandler: cancelLoad)
-        loader = TagArtistLoader(serverId: serverId, tagArtistId: tagArtist.id) { [weak self] _, success, error in
-            HUD.hide()
-            guard let self = self else { return }
-            
-            self.tagAlbumIds = self.loader?.tagAlbumIds ?? []
-            self.loader = nil
-            
-            if success {
+        
+        cancelLoad()
+        
+        loaderTask = Task {
+            do {
+                defer {
+                    HUD.hide()
+                    self.tableView.refreshControl?.endRefreshing()
+                }
+                
+                let tagArtistLoader = AsyncTagArtistLoader(serverId: serverId, tagArtistId: tagArtist.id)
+                self.tagAlbumIds = try await tagArtistLoader.load()
+                
                 self.tableView.reloadData()
-//                self.addHeaderAndIndex()
-            } else if let error = error {
+            } catch {
                 if self.settings.isPopupsEnabled {
                     let message = "There was an error loading the artist.\n\nError: \(error)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
@@ -93,16 +97,13 @@ final class TagArtistViewController: CustomUITableViewController {
                     self.present(alert, animated: true, completion: nil)
                 }
             }
-            self.tableView.refreshControl?.endRefreshing()
         }
-        loader?.startLoad()
     }
     
     func cancelLoad() {
         HUD.hide()
-        loader?.cancelLoad()
-        loader?.callback = nil
-        loader = nil
+        loaderTask?.cancel()
+        loaderTask = nil
         tableView.refreshControl?.endRefreshing()
     }
     

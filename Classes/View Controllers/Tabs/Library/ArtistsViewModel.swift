@@ -15,7 +15,7 @@ enum ArtistsViewModelType {
 }
 
 class ArtistsViewModel {
-    @Injected fileprivate var store: Store
+    @Injected private var store: Store
     
     let type: ArtistsViewModelType
     
@@ -36,16 +36,16 @@ class ArtistsViewModel {
     var searchCount: Int { searchArtistIds.count }
     var reloadDate: Date? { metadata?.reloadDate }
     
-    fileprivate(set) var metadata: RootListMetadata?
-    fileprivate(set) var tableSections = [TableSection]()
-    fileprivate(set) var mediaFolders = [MediaFolder]()
-    fileprivate(set) var artistIds = [String]()
-    fileprivate(set) var searchArtistIds = [String]()
+    private(set) var metadata: RootListMetadata?
+    private(set) var tableSections = [TableSection]()
+    private(set) var mediaFolders = [MediaFolder]()
+    private(set) var artistIds = [String]()
+    private(set) var searchArtistIds = [String]()
     
-    fileprivate var loaderTask: Task<Void, Never>?
-    fileprivate let searchLimit = 100
-    fileprivate var searchName: String?
-    fileprivate var shouldContinueSearch = true
+    private var loaderTask: Task<Void, Never>?
+    private let searchLimit = 100
+    private var searchName: String?
+    private var shouldContinueSearch = true
     
     init(serverId: Int, mediaFolderId: Int, type: ArtistsViewModelType, delegate: APILoaderDelegate? = nil) {
         self.serverId = serverId

@@ -32,7 +32,8 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
     override func processResponse(data: Data) async throws -> ArtistsAPIResponseData? {
         try Task.checkCancellation()
         
-        var responseData = ArtistsAPIResponseData()
+        var tableSections = [TableSection]()
+        var artistIds = [String]()
         
         guard let root = try await validate(data: data), let artists = try await validateChild(parent: root, childTag: "artists") else {
             return nil
@@ -56,7 +57,7 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
                 guard self.store.add(tagArtist: tagArtist, mediaFolderId: self.mediaFolderId) else {
                     throw APIError.database
                 }
-                responseData.artistIds.append(tagArtist.id)
+                artistIds.append(tagArtist.id)
                 rowCount += 1
                 sectionCount += 1
             }
@@ -69,7 +70,7 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
             guard self.store.add(tagArtistSection: section) else {
                 throw APIError.database
             }
-            responseData.tableSections.append(section)
+            tableSections.append(section)
         }
         
         try Task.checkCancellation()
@@ -80,7 +81,6 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
             throw APIError.database
         }
                 
-        responseData.metadata = metadata
-        return responseData
+        return ArtistsAPIResponseData(metadata: metadata, tableSections: tableSections, artistIds: artistIds)
     }
 }

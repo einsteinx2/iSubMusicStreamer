@@ -70,6 +70,10 @@
 		5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; };
 		53266BFA2562D4D0002C64BB /* PageControlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53266BF92562D4D0002C64BB /* PageControlViewController.swift */; };
 		53266BFB2562D4D0002C64BB /* PageControlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53266BF92562D4D0002C64BB /* PageControlViewController.swift */; };
+		5329492A2DE8BF670088B5CE /* AsyncSubfolderLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 532949292DE8BF610088B5CE /* AsyncSubfolderLoader.swift */; };
+		5329492B2DE8BF670088B5CE /* AsyncSubfolderLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 532949292DE8BF610088B5CE /* AsyncSubfolderLoader.swift */; };
+		5329492D2DE90D270088B5CE /* AsyncTagArtistLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5329492C2DE90D200088B5CE /* AsyncTagArtistLoader.swift */; };
+		5329492E2DE90D270088B5CE /* AsyncTagArtistLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5329492C2DE90D200088B5CE /* AsyncTagArtistLoader.swift */; };
 		532C624625B6186800185998 /* URL+QueryParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 532C624525B6186800185998 /* URL+QueryParameters.swift */; };
 		532C624B25B6197E00185998 /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 532C624A25B6197E00185998 /* VideoPlayer.swift */; };
 		532C624C25B6197E00185998 /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 532C624A25B6197E00185998 /* VideoPlayer.swift */; };
@@ -668,6 +672,8 @@
 		532590FF14EE22C100DF4BDB /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		5325910014EE22C400DF4BDB /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		53266BF92562D4D0002C64BB /* PageControlViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlViewController.swift; sourceTree = "<group>"; };
+		532949292DE8BF610088B5CE /* AsyncSubfolderLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncSubfolderLoader.swift; sourceTree = "<group>"; };
+		5329492C2DE90D200088B5CE /* AsyncTagArtistLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTagArtistLoader.swift; sourceTree = "<group>"; };
 		532C624525B6186800185998 /* URL+QueryParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+QueryParameters.swift"; sourceTree = "<group>"; };
 		532C624A25B6197E00185998 /* VideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayer.swift; sourceTree = "<group>"; };
 		532C624E25B6230600185998 /* ServerChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerChecker.swift; sourceTree = "<group>"; };
@@ -1460,6 +1466,8 @@
 				53530B362DE786C7007EFA3A /* AsyncMediaFoldersLoader.swift */,
 				53530B332DE6651E007EFA3A /* AsyncRootFoldersLoader.swift */,
 				53530B392DE7913C007EFA3A /* AsyncRootArtistsLoader.swift */,
+				532949292DE8BF610088B5CE /* AsyncSubfolderLoader.swift */,
+				5329492C2DE90D200088B5CE /* AsyncTagArtistLoader.swift */,
 			);
 			path = "Async Loaders";
 			sourceTree = "<group>";
@@ -2069,6 +2077,7 @@
 				53FE38A41EA961C80058B925 /* ZKCDHeader.m in Sources */,
 				53A0EDDD25B5F8E000B78DAA /* ChatTableViewCell.swift in Sources */,
 				5381885325A67A8F00C59CDE /* DependencyInjection.swift in Sources */,
+				5329492A2DE8BF670088B5CE /* AsyncSubfolderLoader.swift in Sources */,
 				539D32E225A93E9A00F53797 /* CoverArtLoader.swift in Sources */,
 				539D32EE25AA1B1800F53797 /* ChatLoader.swift in Sources */,
 				531EC87425B2305E0076973A /* DownloadedTagAlbumsViewController.swift in Sources */,
@@ -2154,6 +2163,7 @@
 				534B20E9256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
 				53E04947255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */,
 				539D331B25AC95A300F53797 /* DownloadedFolderAlbum.swift in Sources */,
+				5329492D2DE90D270088B5CE /* AsyncTagArtistLoader.swift in Sources */,
 				531EC87725B230920076973A /* DownloadedTagAlbum.swift in Sources */,
 				53FE389E1EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53752BEC2562CEF800438636 /* CoverArtViewController.swift in Sources */,
@@ -2316,6 +2326,7 @@
 				5389479E25A53C7F0078FBAF /* TableSection.swift in Sources */,
 				530A168F259299C800E9294E /* TagArtist.swift in Sources */,
 				539D330125AA2F4E00F53797 /* DownloadsStore.swift in Sources */,
+				5329492B2DE8BF670088B5CE /* AsyncSubfolderLoader.swift in Sources */,
 				53246AB4256C918500E11EC4 /* LyricsViewController.swift in Sources */,
 				53FE38A61EA961C80058B925 /* ZKCDHeader.m in Sources */,
 				53A0EDDE25B5F8E000B78DAA /* ChatTableViewCell.swift in Sources */,
@@ -2401,6 +2412,7 @@
 				53FE389D1EA961C80058B925 /* NSFileManager+ZKAdditions.m in Sources */,
 				53E04948255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */,
 				539D331C25AC95A300F53797 /* DownloadedFolderAlbum.swift in Sources */,
+				5329492E2DE90D270088B5CE /* AsyncTagArtistLoader.swift in Sources */,
 				531EC87825B230920076973A /* DownloadedTagAlbum.swift in Sources */,
 				53246AA4256C209E00E11EC4 /* ServerEditViewController.swift in Sources */,
 				53FE38A01EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,

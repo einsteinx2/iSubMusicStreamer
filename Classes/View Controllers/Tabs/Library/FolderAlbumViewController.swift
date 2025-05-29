@@ -23,7 +23,7 @@ final class FolderAlbumViewController: CustomUITableViewController {
     private let folderArtist: FolderArtist?
     private let folderAlbum: FolderAlbum?
     private let parentFolderId: String
-    private var loader: SubfolderLoader?
+    private var loaderTask: Task<Void, Never>?
     
     private var metadata: FolderMetadata?
     private var folderAlbumIds = [String]()
@@ -94,6 +94,7 @@ final class FolderAlbumViewController: CustomUITableViewController {
     }
     
     // Autolayout solution described here: https://medium.com/@aunnnn/table-header-view-with-autolayout-13de4cfc4343
+    @MainActor
     private func addHeader() {
         guard folderAlbumIds.count > 0 || songIds.count > 0 else {
             tableView.tableHeaderView = nil
@@ -140,6 +141,7 @@ final class FolderAlbumViewController: CustomUITableViewController {
         tableView.tableHeaderView = tableView.tableHeaderView
     }
     
+    @MainActor
     private func addSectionIndex() {
         
     }
@@ -159,24 +161,30 @@ final class FolderAlbumViewController: CustomUITableViewController {
         }
     }
     
+    @MainActor
     func startLoad() {
         HUD.show(closeHandler: cancelLoad)
-        loader = SubfolderLoader(serverId: serverId, parentFolderId: parentFolderId) { [weak self] _, success, error in
-            HUD.hide()
-            guard let self = self else { return }
-            
-            if let loader = self.loader {
-                self.metadata = loader.folderMetadata
-                self.folderAlbumIds = loader.folderAlbumIds
-                self.songIds = loader.songIds
-            }
-            self.loader = nil
-            
-            if success {
+        
+        cancelLoad()
+        
+        loaderTask = Task {
+            do {
+                defer {
+                    HUD.hide()
+                    self.tableView.refreshControl?.endRefreshing()
+                }
+                
+                let subfolderLoader = AsyncSubfolderLoader(serverId: serverId, parentFolderId: parentFolderId)
+                if let subfolderResponse = try await subfolderLoader.load() {
+                    self.metadata = subfolderResponse.folderMetadata
+                    self.folderAlbumIds = subfolderResponse.folderAlbumIds
+                    self.songIds = subfolderResponse.songIds
+                }
+                
                 self.tableView.reloadData()
                 self.addHeader()
                 self.addSectionIndex()
-            } else if let error = error {
+            } catch {
                 if self.settings.isPopupsEnabled {
                     let message = "There was an error loading the album.\n\nError: \(error)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
@@ -184,16 +192,13 @@ final class FolderAlbumViewController: CustomUITableViewController {
                     self.present(alert, animated: true, completion: nil)
                 }
             }
-            self.tableView.refreshControl?.endRefreshing()
         }
-        loader?.startLoad()
     }
     
     func cancelLoad() {
         HUD.hide()
-        loader?.cancelLoad()
-        loader?.callback = nil
-        loader = nil
+        loaderTask?.cancel()
+        loaderTask = nil
         tableView.refreshControl?.endRefreshing()
     }
     

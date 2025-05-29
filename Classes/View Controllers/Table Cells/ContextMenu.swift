@@ -60,15 +60,23 @@ extension UIViewController {
                     self.pushViewControllerCustom(TagArtistViewController(tagArtist: tagArtist))
                 } else {
                     HUD.show()
-                    let loader = TagArtistLoader(serverId: model.serverId, tagArtistId: tagArtistId) { _, success, error in
-                        HUD.hide()
-                        if success, let tagArtist = self.store.tagArtist(serverId: model.serverId, id: tagArtistId) {
-                            self.pushViewControllerCustom(TagArtistViewController(tagArtist: tagArtist))
-                        } else {
+                    Task {
+                        do {
+                            defer {
+                                HUD.hide()
+                            }
+                            let loader = AsyncTagArtistLoader(serverId: model.serverId, tagArtistId: tagArtistId)
+                            _ = try await loader.load()
+                            
+                            if let tagArtist = self.store.tagArtist(serverId: model.serverId, id: tagArtistId) {
+                                self.pushViewControllerCustom(TagArtistViewController(tagArtist: tagArtist))
+                            } else {
+                                throw APIError.dataNotFound
+                            }
+                        } catch {
                             SlidingNotification.showOnMainWindow(message: "Error loading the artist")
                         }
                     }
-                    loader.startLoad()
                 }
             }
         }
