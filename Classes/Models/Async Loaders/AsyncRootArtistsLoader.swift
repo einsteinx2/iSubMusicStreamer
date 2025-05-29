@@ -46,43 +46,30 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
         var rowCount = 0
         var sectionCount = 0
         var rowIndex = 0
-        let success: Bool = try await withCheckedThrowingContinuation { continuation in
-            let internalSuccess = artists.iterate("index") { e, stop in
-                sectionCount = 0
-                rowIndex = rowCount
-                let success = e.iterate("artist") { artist, bool in
-                    // Add the artist to the DB
-                    let tagArtist = TagArtist(serverId: self.serverId, element: artist)
-                    guard self.store.add(tagArtist: tagArtist, mediaFolderId: self.mediaFolderId) else {
-                        stop = true
-                        continuation.resume(throwing: APIError.database)
-                        return
-                    }
-                    responseData.artistIds.append(tagArtist.id)
-                    rowCount += 1
-                    sectionCount += 1
+        
+        for try await element in artists.iterate("index") {
+            sectionCount = 0
+            rowIndex = rowCount
+            for try await artist in element.iterate("artist") {
+                // Add the artist to the DB
+                let tagArtist = TagArtist(serverId: self.serverId, element: artist)
+                guard self.store.add(tagArtist: tagArtist, mediaFolderId: self.mediaFolderId) else {
+                    throw APIError.database
                 }
-                guard success else {
-                    stop = true
-                    return
-                }
-                
-                let section = TableSection(serverId: self.serverId,
-                                           mediaFolderId: self.mediaFolderId,
-                                           name: e.attribute("name").stringXML,
-                                           position: rowIndex,
-                                           itemCount: sectionCount)
-                guard self.store.add(tagArtistSection: section) else {
-                    stop = true
-                    continuation.resume(throwing: APIError.database)
-                    return
-                }
-                responseData.tableSections.append(section)
+                responseData.artistIds.append(tagArtist.id)
+                rowCount += 1
+                sectionCount += 1
             }
-            continuation.resume(returning: internalSuccess)
-        }
-        guard success else {
-            return nil
+            
+            let section = TableSection(serverId: self.serverId,
+                                       mediaFolderId: self.mediaFolderId,
+                                       name: element.attribute("name").stringXML,
+                                       position: rowIndex,
+                                       itemCount: sectionCount)
+            guard self.store.add(tagArtistSection: section) else {
+                throw APIError.database
+            }
+            responseData.tableSections.append(section)
         }
         
         try Task.checkCancellation()

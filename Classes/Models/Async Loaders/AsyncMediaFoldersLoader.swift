@@ -34,8 +34,8 @@ final class AsyncMediaFoldersLoader: AsyncAPILoader<[MediaFolder]> {
         try Task.checkCancellation()
         
         var mediaFolders = [allFoldersMediaFolder]
-        musicFolders.iterate("musicFolder") { e, _ in
-            mediaFolders.append(MediaFolder(serverId: self.serverId, element: e))
+        for try await element in musicFolders.iterate("musicFolder") {
+            mediaFolders.append(MediaFolder(serverId: self.serverId, element: element))
         }
         
         return mediaFolders

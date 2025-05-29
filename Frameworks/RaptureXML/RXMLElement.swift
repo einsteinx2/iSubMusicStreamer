@@ -290,3 +290,118 @@ final class RXMLElement {
         return text
     }
 }
+
+extension RXMLElement {
+    // MARK: - Async Iterator
+    
+    struct ElementIterator: AsyncIteratorProtocol {
+        private var currentNode: xmlNodePtr?
+        private let xmlDoc: RXMLDocHolder?
+        private let components: [String]?
+        private let lastTagName: String?
+        
+        init(node: xmlNodePtr?, xmlDoc: RXMLDocHolder?, query: String) {
+            self.xmlDoc = xmlDoc
+            self.components = query.components(separatedBy: ".")
+            self.lastTagName = components?.last ?? ""
+            guard !query.isEmpty, let node = node, let _ = xmlDoc, let components = self.components else { return }
+                        
+            var cur: xmlNodePtr? = node
+            for (index, tagName) in components.enumerated() {
+                if tagName == "*" {
+                    cur = cur?.pointee.children
+                    if index < components.count - 1, cur != nil {
+                        // Midstream: Process recursively (simplified for iterator)
+                        // We'll handle recursive cases in next()
+                        break
+                    }
+                } else {
+                    let tagNameC = tagName.cString(using: .utf8)
+                    cur = cur?.pointee.children
+                    while cur != nil {
+                        if cur?.pointee.type == XML_ELEMENT_NODE && xmlStrcmp(cur?.pointee.name, tagNameC) == 0 {
+                            break
+                        }
+                        cur = cur?.pointee.next
+                    }
+                }
+                
+                if cur == nil {
+                    return
+                }
+            }
+            
+            self.currentNode = cur
+        }
+        
+        mutating func next() async throws -> RXMLElement? {
+            guard let node = currentNode, let lastTagName = lastTagName else { return nil }
+            
+            if let components = components, components.count > 1 {
+                // Handle recursive midstream queries
+                let restOfQuery = components.dropLast().joined(separator: ".")
+                if lastTagName == "*" {
+                    while currentNode != nil {
+                        if currentNode!.pointee.type == XML_ELEMENT_NODE {
+                            let element = RXMLElement(xmlDoc: xmlDoc, node: node)
+                            // Recursively iterate over children
+                            for try await child in element.iterate(restOfQuery) {
+                                return child
+                            }
+                        }
+                        currentNode = currentNode!.pointee.next
+                    }
+                    return nil
+                }
+            }
+            
+            // Process current level
+            if node.pointee.type == XML_ELEMENT_NODE {
+                let element = RXMLElement(xmlDoc: xmlDoc, node: node)
+                if lastTagName == "*" {
+                    currentNode = currentNode?.pointee.next
+                } else {
+                    let tagNameC = lastTagName.cString(using: .utf8)
+                    currentNode = currentNode?.pointee.next
+                    while currentNode != nil {
+                        if currentNode?.pointee.type == XML_ELEMENT_NODE && xmlStrcmp(currentNode!.pointee.name, tagNameC) == 0 {
+                            break
+                        }
+                        currentNode = currentNode?.pointee.next
+                    }
+                }
+                return element
+            }
+            
+            if lastTagName == "*" {
+                currentNode = currentNode?.pointee.next
+            } else {
+                let tagNameC = lastTagName.cString(using: .utf8)
+                currentNode = currentNode?.pointee.next
+                while currentNode != nil {
+                    if currentNode?.pointee.type == XML_ELEMENT_NODE && xmlStrcmp(currentNode?.pointee.name, tagNameC) == 0 {
+                        break
+                    }
+                    currentNode = currentNode!.pointee.next
+                }
+            }
+            
+            return nil
+        }
+    }
+    
+    struct ElementSequence: AsyncSequence {
+        typealias Element = RXMLElement
+        let node: xmlNodePtr?
+        let xmlDoc: RXMLDocHolder?
+        let query: String
+        
+        func makeAsyncIterator() -> ElementIterator {
+            return ElementIterator(node: node, xmlDoc: xmlDoc, query: query)
+        }
+    }
+    
+    func iterate(_ query: String) -> ElementSequence {
+        return ElementSequence(node: node, xmlDoc: xmlDoc, query: query)
+    }
+}
