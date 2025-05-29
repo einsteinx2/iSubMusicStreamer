@@ -41,7 +41,7 @@ final class ServerShuffleLoader: APILoader {
         let success = root.iterate("randomSongs.song") { element, stop in
             let song = Song(serverId: self.serverId, element: element)
             guard self.store.add(song: song) else {
-                stop.pointee = true
+                stop = true
                 return
             }
             songs.append(song)

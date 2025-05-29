@@ -139,7 +139,7 @@ class APILoader: CancelableLoader {
 extension APILoader {
     // Returns a valid root XML element if it exists
     func validateRoot(data: Data, informDelegate: Bool = true) -> RXMLElement? {
-        let root = RXMLElement(fromXMLData: data)
+        let root = RXMLElement(xmlData: data)
         guard root.isValid else {
             if informDelegate { informDelegateLoadingFailed(error: APIError.responseNotXML) }
             return nil

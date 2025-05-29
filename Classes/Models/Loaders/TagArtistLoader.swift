@@ -51,7 +51,7 @@ final class TagArtistLoader: APILoader {
             let tagAlbum = TagAlbum(serverId: self.serverId, element: element)
             guard self.store.add(tagAlbum: tagAlbum) else {
                 self.informDelegateLoadingFailed(error: APIError.database)
-                stop.pointee = true
+                stop = true
                 return
             }
             self.tagAlbumIds.append(tagAlbum.id)

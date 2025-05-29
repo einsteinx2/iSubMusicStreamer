@@ -56,7 +56,7 @@ final class TagAlbumLoader: APILoader {
                 if song.suffix.lowercased() != "pdf" {
                     guard self.store.add(tagSong: song) else {
                         self.informDelegateLoadingFailed(error: APIError.database)
-                        stop.pointee = true
+                        stop = true
                         return
                     }
                     self.songIds.append(song.id)

@@ -54,7 +54,7 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
                     // Add the artist to the DB
                     let tagArtist = TagArtist(serverId: self.serverId, element: artist)
                     guard self.store.add(tagArtist: tagArtist, mediaFolderId: self.mediaFolderId) else {
-                        stop.pointee = true
+                        stop = true
                         continuation.resume(throwing: APIError.database)
                         return
                     }
@@ -63,7 +63,7 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
                     sectionCount += 1
                 }
                 guard success else {
-                    stop.pointee = true
+                    stop = true
                     return
                 }
                 
@@ -73,7 +73,7 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
                                            position: rowIndex,
                                            itemCount: sectionCount)
                 guard self.store.add(tagArtistSection: section) else {
-                    stop.pointee = true
+                    stop = true
                     continuation.resume(throwing: APIError.database)
                     return
                 }

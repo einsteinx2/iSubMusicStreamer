@@ -38,7 +38,7 @@ final class NowPlayingLoader: APILoader {
             let song = Song(serverId: self.serverId, element: e)
             guard self.store.add(song: song) else {
                 self.informDelegateLoadingFailed(error: APIError.database)
-                stop.pointee = true
+                stop = true
                 return
             }
             self.nowPlayingSongs.append(NowPlayingSong(serverId: self.serverId, element: e))

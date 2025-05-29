@@ -405,7 +405,7 @@ extension StreamManager: StreamHandlerDelegate {
         } else if handler.totalBytesTransferred < 1000 {
             // Verify that it's a license issue
             if let data = try? Data(contentsOf: URL(fileURLWithPath: handler.filePath)) {
-                let root = RXMLElement(fromXMLData: data)
+                let root = RXMLElement(xmlData: data)
                 if root.isValid {
                     if let error = root.child("error"), error.isValid {
                         let subsonicError = SubsonicError(element: error)

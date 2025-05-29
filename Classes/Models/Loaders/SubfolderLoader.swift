@@ -72,7 +72,7 @@ final class SubfolderLoader: APILoader {
                     if song.suffix.lowercased() != "pdf" {
                         guard self.store.add(folderSong: song) else {
                             self.informDelegateLoadingFailed(error: APIError.database)
-                            stop.pointee = true
+                            stop = true
                             return
                         }
                         

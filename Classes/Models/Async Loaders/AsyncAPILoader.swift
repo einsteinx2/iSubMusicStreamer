@@ -70,7 +70,7 @@ class AsyncAPILoader<T>: AsyncAPILoadable {
         }
         
         try Task.checkCancellation()
-        let (data, response) = try await sharedSession.data(for: request)
+        let (data, _) = try await sharedSession.data(for: request)
         if Debug.apiResponses {
             let dataString = String(data: data, encoding: .utf8) ?? "(failed to convert response data to string)"
             DDLogInfo("[APILoader \(self.type)] response: \(dataString)")
@@ -93,7 +93,7 @@ class AsyncAPILoader<T>: AsyncAPILoadable {
 extension AsyncAPILoader {
     // Returns a valid root XML element if it exists
     func validateRoot(data: Data) async throws -> RXMLElement? {
-        let root = RXMLElement(fromXMLData: data)
+        let root = RXMLElement(xmlData: data)
         guard root.isValid else {
             throw APIError.responseNotXML
         }

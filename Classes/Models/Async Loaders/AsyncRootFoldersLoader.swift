@@ -56,7 +56,7 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
             let internalSuccess = indexes.iterate("shortcut") { e, stop in
                 let shortcut = FolderArtist(serverId: self.serverId, element: e)
                 guard self.store.add(folderArtist: shortcut, mediaFolderId: self.mediaFolderId) else {
-                    stop.pointee = true
+                    stop = true
                     continuation.resume(throwing: APIError.database)
                     return
                 }
@@ -97,7 +97,7 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
                     // Prevent inserting .AppleDouble folders
                     if folderArtist.name != ".AppleDouble" {
                         guard self.store.add(folderArtist: folderArtist, mediaFolderId: self.mediaFolderId) else {
-                            stop.pointee = true
+                            stop = true
                             continuation.resume(throwing: APIError.database)
                             return
                         }
@@ -107,7 +107,7 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
                     }
                 }
                 guard success else {
-                    stop.pointee = true
+                    stop = true
                     return
                 }
                 
@@ -117,7 +117,7 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
                                            position: rowIndex,
                                            itemCount: sectionCount)
                 guard self.store.add(folderArtistSection: section) else {
-                    stop.pointee = true
+                    stop = true
                     continuation.resume(throwing: APIError.database)
                     return
                 }

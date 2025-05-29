@@ -38,7 +38,7 @@ final class ServerPlaylistsLoader: APILoader {
             let serverPlaylist = ServerPlaylist(serverId: self.serverId, element: e)
             guard self.store.add(serverPlaylist: serverPlaylist) else {
                 self.informDelegateLoadingFailed(error: APIError.database)
-                stop.pointee = true
+                stop = true
                 return
             }
             self.serverPlaylists.append(serverPlaylist)

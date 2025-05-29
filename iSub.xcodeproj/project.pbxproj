@@ -119,6 +119,8 @@
 		53530B382DE786CA007EFA3A /* AsyncMediaFoldersLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53530B362DE786C7007EFA3A /* AsyncMediaFoldersLoader.swift */; };
 		53530B3A2DE79147007EFA3A /* AsyncRootArtistsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53530B392DE7913C007EFA3A /* AsyncRootArtistsLoader.swift */; };
 		53530B3B2DE79147007EFA3A /* AsyncRootArtistsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53530B392DE7913C007EFA3A /* AsyncRootArtistsLoader.swift */; };
+		53530B3D2DE7C79E007EFA3A /* RXMLElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53530B3C2DE7C79A007EFA3A /* RXMLElement.swift */; };
+		53530B3E2DE7C79E007EFA3A /* RXMLElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53530B3C2DE7C79A007EFA3A /* RXMLElement.swift */; };
 		5357CE9325B8D56B00FA825A /* DownloadsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9225B8D56B00FA825A /* DownloadsManager.swift */; };
 		5357CE9425B8D56B00FA825A /* DownloadsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9225B8D56B00FA825A /* DownloadsManager.swift */; };
 		5357CE9925B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */; };
@@ -526,8 +528,6 @@
 		53F8917F1EB137F300B3F131 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675E7113B096400822059 /* AudioToolbox.framework */; };
 		53FE34F81EA961540058B925 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34021EA961540058B925 /* GTMNSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		53FE34FA1EA961540058B925 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34021EA961540058B925 /* GTMNSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		53FE38041EA961970058B925 /* RXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38031EA961970058B925 /* RXMLElement.m */; };
-		53FE38061EA961970058B925 /* RXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38031EA961970058B925 /* RXMLElement.m */; };
 		53FE38861EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38591EA961C80058B925 /* GMAppleDouble+ZKAdditions.m */; };
 		53FE38881EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38591EA961C80058B925 /* GMAppleDouble+ZKAdditions.m */; };
 		53FE388C1EA961C80058B925 /* GMAppleDouble.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE385D1EA961C80058B925 /* GMAppleDouble.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -691,6 +691,7 @@
 		53530B332DE6651E007EFA3A /* AsyncRootFoldersLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncRootFoldersLoader.swift; sourceTree = "<group>"; };
 		53530B362DE786C7007EFA3A /* AsyncMediaFoldersLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncMediaFoldersLoader.swift; sourceTree = "<group>"; };
 		53530B392DE7913C007EFA3A /* AsyncRootArtistsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncRootArtistsLoader.swift; sourceTree = "<group>"; };
+		53530B3C2DE7C79A007EFA3A /* RXMLElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RXMLElement.swift; sourceTree = "<group>"; };
 		5354914A11B03FC900928E0F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		5357CE9225B8D56B00FA825A /* DownloadsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsManager.swift; sourceTree = "<group>"; };
 		5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+FileSystemAttributes.swift"; sourceTree = "<group>"; };
@@ -901,8 +902,6 @@
 		53FE34001EA961540058B925 /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
 		53FE34011EA961540058B925 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSString+HTML.h"; sourceTree = "<group>"; };
 		53FE34021EA961540058B925 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
-		53FE38021EA961970058B925 /* RXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXMLElement.h; sourceTree = "<group>"; };
-		53FE38031EA961970058B925 /* RXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXMLElement.m; sourceTree = "<group>"; };
 		53FE38581EA961C80058B925 /* GMAppleDouble+ZKAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GMAppleDouble+ZKAdditions.h"; sourceTree = "<group>"; };
 		53FE38591EA961C80058B925 /* GMAppleDouble+ZKAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GMAppleDouble+ZKAdditions.m"; sourceTree = "<group>"; };
 		53FE385C1EA961C80058B925 /* GMAppleDouble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMAppleDouble.h; sourceTree = "<group>"; };
@@ -1643,8 +1642,7 @@
 		53FE38011EA961970058B925 /* RaptureXML */ = {
 			isa = PBXGroup;
 			children = (
-				53FE38021EA961970058B925 /* RXMLElement.h */,
-				53FE38031EA961970058B925 /* RXMLElement.m */,
+				53530B3C2DE7C79A007EFA3A /* RXMLElement.swift */,
 			);
 			name = RaptureXML;
 			path = Frameworks/RaptureXML;
@@ -2081,7 +2079,6 @@
 				53A0EDD725B5EDEE00B78DAA /* ChatViewController.swift in Sources */,
 				53530B352DE66522007EFA3A /* AsyncRootFoldersLoader.swift in Sources */,
 				53ED671925B74B4D0002BFAF /* HUD.swift in Sources */,
-				53FE38041EA961970058B925 /* RXMLElement.m in Sources */,
 				537B05C2256B40930008892C /* SongInfoViewController.swift in Sources */,
 				5389477D25A4E6F60078FBAF /* FileSystem.swift in Sources */,
 				53E03D0E25C270630043355F /* UIDevice+Info.swift in Sources */,
@@ -2127,6 +2124,7 @@
 				53BB796F2B8CD6D900677B46 /* OptionsViewController.swift in Sources */,
 				530A1679259255D200E9294E /* FolderAlbum.swift in Sources */,
 				536C891325BF93FF008FE1AC /* ServersViewController.swift in Sources */,
+				53530B3E2DE7C79E007EFA3A /* RXMLElement.swift in Sources */,
 				53EA2DE2257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
 				5357FE1E25C32C6E001BDE29 /* BassPluginLoad.c in Sources */,
 				53CB016825864D5200E2DF10 /* NSFileManager+ZKAdditions.m in Sources */,
@@ -2335,7 +2333,6 @@
 				530A16AE2592D22100E9294E /* TagAlbum.swift in Sources */,
 				53E03D0F25C270630043355F /* UIDevice+Info.swift in Sources */,
 				5389477E25A4E6F60078FBAF /* FileSystem.swift in Sources */,
-				53FE38061EA961970058B925 /* RXMLElement.m in Sources */,
 				5357FE1825C320C3001BDE29 /* Bridging.swift in Sources */,
 				531EC86025B1F8070076973A /* NowPlayingViewController.swift in Sources */,
 				53530B3A2DE79147007EFA3A /* AsyncRootArtistsLoader.swift in Sources */,
@@ -2374,6 +2371,7 @@
 				53BB79702B8CD6D900677B46 /* OptionsViewController.swift in Sources */,
 				532C624C25B6197E00185998 /* VideoPlayer.swift in Sources */,
 				53762C7825ACE7E700476F2D /* ServerPlaylist.swift in Sources */,
+				53530B3D2DE7C79E007EFA3A /* RXMLElement.swift in Sources */,
 				536C891425BF93FF008FE1AC /* ServersViewController.swift in Sources */,
 				5357FE1F25C32C6E001BDE29 /* BassPluginLoad.c in Sources */,
 				537B05C0256B0E4B0008892C /* PadMenuTableCell.swift in Sources */,

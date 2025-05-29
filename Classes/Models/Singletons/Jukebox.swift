@@ -170,7 +170,7 @@ final class Jukebox {
     }
     
     private func parse(data: Data) -> JukeboxResponse? {
-        let root = RXMLElement(fromXMLData: data)
+        let root = RXMLElement(xmlData: data)
         if root.isValid {
             if let error = root.child("error"), error.isValid {
                 let code = error.attribute("code").intXML
