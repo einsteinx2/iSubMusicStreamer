@@ -82,6 +82,8 @@
 		532C625325B62F5800185998 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 532C625125B62F5800185998 /* NetworkMonitor.swift */; };
 		532C625D25B6559A00185998 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5381885B25A68F0300C59CDE /* main.swift */; };
 		532C625E25B6559A00185998 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5381885B25A68F0300C59CDE /* main.swift */; };
+		53312ADE2DEA51EE004930B9 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = 53312ADD2DEA51EE004930B9 /* Reachability */; };
+		53312AE02DEA51FD004930B9 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = 53312ADF2DEA51FD004930B9 /* Reachability */; };
 		53329607255EF21D0027C51A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 53329606255EF21D0027C51A /* libsqlite3.tbd */; };
 		53329611255EF23B0027C51A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 53329606255EF21D0027C51A /* libsqlite3.tbd */; };
 		53329641255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53329640255F2B960027C51A /* AlbumTableViewHeader.swift */; };
@@ -414,8 +416,6 @@
 		53BC285F139AF0DD00A825F1 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F7A127131B7F3B002C829D /* Security.framework */; };
 		53BDC4DC25D4CEB400126D06 /* DropdownMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BDC4DB25D4CEB400126D06 /* DropdownMenu.swift */; };
 		53BDC4DD25D4CEB400126D06 /* DropdownMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BDC4DB25D4CEB400126D06 /* DropdownMenu.swift */; };
-		53C3AB64257DA71000B35B99 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB63257DA71000B35B99 /* Reachability.m */; };
-		53C3AB65257DA71000B35B99 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB63257DA71000B35B99 /* Reachability.m */; };
 		53C3AB6D257DB7D200B35B99 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB6C257DB7D200B35B99 /* AsyncImageView.swift */; };
 		53C3AB6E257DB7D200B35B99 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB6C257DB7D200B35B99 /* AsyncImageView.swift */; };
 		53C3AB70257DD38400B35B99 /* open_source_licenses.html in Resources */ = {isa = PBXBuildFile; fileRef = 53C3AB6F257DD38400B35B99 /* open_source_licenses.html */; };
@@ -837,8 +837,6 @@
 		53BB79712B8D1E6500677B46 /* SavedSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedSettings.swift; sourceTree = "<group>"; };
 		53BC2865139AF0DD00A825F1 /* iSub Beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iSub Beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		53BDC4DB25D4CEB400126D06 /* DropdownMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownMenu.swift; sourceTree = "<group>"; };
-		53C3AB5F257DA71000B35B99 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		53C3AB63257DA71000B35B99 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		53C3AB6C257DB7D200B35B99 /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
 		53C3AB6F257DD38400B35B99 /* open_source_licenses.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = open_source_licenses.html; sourceTree = "<group>"; };
 		53C3AB72257DDA1000B35B99 /* LicensesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicensesViewController.swift; sourceTree = "<group>"; };
@@ -993,6 +991,7 @@
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				53F675D8113B092C00822059 /* MediaPlayer.framework in Frameworks */,
 				53C7FDA0150F0EAF008DA51C /* MessageUI.framework in Frameworks */,
+				53312AE02DEA51FD004930B9 /* Reachability in Frameworks */,
 				53A6AA612B897D7F007ABD7A /* basswv.xcframework in Frameworks */,
 				53A2BE2A147DF14600E44822 /* OpenGLES.framework in Frameworks */,
 				53A6AA592B897D7F007ABD7A /* bassape.xcframework in Frameworks */,
@@ -1038,6 +1037,7 @@
 				53DE598314F1932C00206529 /* CoreText.framework in Frameworks */,
 				537C93ED25B1162100175DF6 /* InflectorKit in Frameworks */,
 				53BC2850139AF0DD00A825F1 /* Foundation.framework in Frameworks */,
+				53312ADE2DEA51EE004930B9 /* Reachability in Frameworks */,
 				53BC2853139AF0DD00A825F1 /* MediaPlayer.framework in Frameworks */,
 				537C52872CCEA1130046AF02 /* bass_fx.xcframework in Frameworks */,
 				53C7FD9E150F0EA9008DA51C /* MessageUI.framework in Frameworks */,
@@ -1115,7 +1115,6 @@
 				53FE676E256DD0F00015FC83 /* GCDWebServer */,
 				53FE35FA1EA961670058B925 /* libBASS */,
 				53FE38011EA961970058B925 /* RaptureXML */,
-				53E03D0C25C26FD70043355F /* Reachability */,
 				53FE38551EA961C80058B925 /* ZipKit */,
 				53329606255EF21D0027C51A /* libsqlite3.tbd */,
 				5367C6D61EA92D3000B1C242 /* libSystem.tbd */,
@@ -1549,15 +1548,6 @@
 			path = Frameworks/GCDWebServer/GCDWebDAVServer;
 			sourceTree = "<group>";
 		};
-		53E03D0C25C26FD70043355F /* Reachability */ = {
-			isa = PBXGroup;
-			children = (
-				53C3AB5F257DA71000B35B99 /* Reachability.h */,
-				53C3AB63257DA71000B35B99 /* Reachability.m */,
-			);
-			path = Reachability;
-			sourceTree = "<group>";
-		};
 		53EA2DE0257D7B050003F38D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1774,6 +1764,7 @@
 				53A6A9FC2B897701007ABD7A /* CocoaLumberjackSwift */,
 				53A6AA022B89772E007ABD7A /* CocoaLumberjack */,
 				537C53232DEA27E2007F6AFD /* ProgressHUD */,
+				53312ADF2DEA51FD004930B9 /* Reachability */,
 			);
 			productName = iSubTESTING;
 			productReference = 1D6058910D05DD3D006BFB54 /* iSub.app */;
@@ -1804,6 +1795,7 @@
 				53A6A9FE2B89770C007ABD7A /* CocoaLumberjackSwift */,
 				53A6AA002B897728007ABD7A /* CocoaLumberjack */,
 				537C53212DEA27D8007F6AFD /* ProgressHUD */,
+				53312ADD2DEA51EE004930B9 /* Reachability */,
 			);
 			productName = iSubTESTING;
 			productReference = 53BC2865139AF0DD00A825F1 /* iSub Beta.app */;
@@ -1849,6 +1841,7 @@
 				53A6A9F62B89738F007ABD7A /* XCRemoteSwiftPackageReference "CwlCatchException" */,
 				53A6A9FB2B897701007ABD7A /* XCRemoteSwiftPackageReference "CocoaLumberjack" */,
 				537C53202DEA27D8007F6AFD /* XCRemoteSwiftPackageReference "ProgressHUD" */,
+				53312ADC2DEA51EE004930B9 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
 			);
 			projectDirPath = "";
 			projectRoot = "";
@@ -2107,7 +2100,6 @@
 				53D973FE255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
 				53246AA3256C209E00E11EC4 /* ServerEditViewController.swift in Sources */,
 				53A6AA642B8A8A22007ABD7A /* Debug.swift in Sources */,
-				53C3AB64257DA71000B35B99 /* Reachability.m in Sources */,
 				53762C7725ACE7E700476F2D /* ServerPlaylist.swift in Sources */,
 				53CB553F25C915F2004F2BAB /* EqualizerPointView.swift in Sources */,
 				53BB796F2B8CD6D900677B46 /* OptionsViewController.swift in Sources */,
@@ -2378,7 +2370,6 @@
 				535E143625A7BB910039BCAA /* FolderAlbumStore.swift in Sources */,
 				53CB554925C9D2E1004F2BAB /* Bookmark.swift in Sources */,
 				5302DE4225BA2AA50036A9B1 /* StreamManager.swift in Sources */,
-				53C3AB65257DA71000B35B99 /* Reachability.m in Sources */,
 				531EC85125B1E6420076973A /* LocalPlaylistsViewController.swift in Sources */,
 				531EC87E25B24B6B0076973A /* ArtistsViewController.swift in Sources */,
 				53FE67A5256DD0F00015FC83 /* GCDWebServerDataRequest.m in Sources */,
@@ -2777,6 +2768,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		53312ADC2DEA51EE004930B9 /* XCRemoteSwiftPackageReference "Reachability.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ashleymills/Reachability.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 		537C53202DEA27D8007F6AFD /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/einsteinx2/ProgressHUD";
@@ -2844,6 +2843,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		53312ADD2DEA51EE004930B9 /* Reachability */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 53312ADC2DEA51EE004930B9 /* XCRemoteSwiftPackageReference "Reachability.swift" */;
+			productName = Reachability;
+		};
+		53312ADF2DEA51FD004930B9 /* Reachability */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 53312ADC2DEA51EE004930B9 /* XCRemoteSwiftPackageReference "Reachability.swift" */;
+			productName = Reachability;
+		};
 		537C53212DEA27D8007F6AFD /* ProgressHUD */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 537C53202DEA27D8007F6AFD /* XCRemoteSwiftPackageReference "ProgressHUD" */;

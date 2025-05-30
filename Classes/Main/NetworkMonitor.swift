@@ -10,57 +10,62 @@ import Foundation
 import Resolver
 import CocoaLumberjackSwift
 import ProgressHUD
+import Reachability
 
 final class NetworkMonitor {
     @Injected private var settings: SavedSettings
     
-    private let wifiReach = Reachability.forInternetConnection()
-    var isWifi: Bool { wifiReach.currentReachabilityStatus() == ReachableViaWiFi }
-    var isNetworkReachable: Bool { wifiReach.currentReachabilityStatus() != NotReachable }
+    private let wifiReach: Reachability? = {
+        do {
+            return try Reachability()
+        } catch {
+            DDLogError("[NetworkMonitor] Failed to create Reachability object, there will be no network change notifications")
+            return nil
+        }
+    }()
+    var isWifi: Bool {
+        wifiReach?.connection == .wifi
+    }
+    var isNetworkReachable: Bool {
+        wifiReach?.connection != .unavailable
+    }
     
     init() {
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reachabilityChanged(notification:)), name: NSNotification.Name.reachabilityChanged)
-        wifiReach.startNotifier()
-        
-        // TODO: Why was I calling this? I think it's to prime the values but I don't think it's necessary...
-        wifiReach.currentReachabilityStatus()
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reachabilityChanged(notification:)), name: Notification.Name.reachabilityChanged)
+        do {
+            try wifiReach?.startNotifier()
+            let _ = wifiReach?.connection
+        } catch {
+            DDLogError("[NetworkMonitor] Failed to start Reachability notifier, there will be no network change notifications")
+        }
     }
     
     deinit {
-        wifiReach.stopNotifier()
+        wifiReach?.stopNotifier()
         NotificationCenter.removeObserverOnMainThread(self)
     }
     
-    private var reachabilityChangedWorkItem: DispatchWorkItem?
     @objc private func reachabilityChanged(notification: Notification) {
-        guard !settings.isForceOfflineMode else { return }
+        guard !settings.isForceOfflineMode, let status = wifiReach?.connection else { return }
         
-        // Perform the actual check after a few seconds to make sure it's the last message received
-        // this prevents a bug where the status changes from wifi to not reachable, but first it receives
-        // some messages saying it's still on wifi, then gets the not reachable messages
-        // NOTE: This bug does not appear to still exist in iOS 13+ so I've reduced the wait time significantly
-        reachabilityChangedWorkItem?.cancel()
-        let reachabilityChangedWorkItem = DispatchWorkItem {
-            let status = self.wifiReach.currentReachabilityStatus()
-            if status == NotReachable {
-                // Change over to offline mode
-                if !self.settings.isOfflineMode {
-                    DDLogVerbose("[NetworkMonitor] Reachability changed to NotReachable, entering offline mode");
-                    NotificationCenter.postOnMainThread(name: Notifications.goOffline)
-                }
-            } else if status == ReachableViaWWAN && self.settings.isDisableUsageOver3G {
-                // Change over to offline mode
-                if !self.settings.isOfflineMode {
-                    DDLogVerbose("[NetworkMonitor] Reachability changed to ReachableViaWWAN and usage over 3G is disabled, entering offline mode");
-                    NotificationCenter.postOnMainThread(name: Notifications.goOffline)
-                    ProgressHUD.banner("You have chosen to disable usage over cellular in settings and are no longer on Wifi. Entering offline mode.", nil)
-                }
-            } else {
-                // Check that the server is available before entering online mode
-                NotificationCenter.postOnMainThread(name: Notifications.checkServer)
+        DDLogVerbose("[NetworkMonitor] Reachability changed to \(status)")
+        
+        if status == .unavailable {
+            // Change over to offline mode
+            if !settings.isOfflineMode {
+                DDLogVerbose("[NetworkMonitor] Reachability changed to unavailable, entering offline mode")
+                NotificationCenter.postOnMainThread(name: Notifications.goOffline)
             }
+        } else if status == .cellular && settings.isDisableUsageOver3G {
+            // Change over to offline mode
+            if !settings.isOfflineMode {
+                DDLogVerbose("[NetworkMonitor] Reachability changed to cellular and usage over cellular is disabled, entering offline mode")
+                NotificationCenter.postOnMainThread(name: Notifications.goOffline)
+                ProgressHUD.banner("You have chosen to disable usage over cellular in settings and are no longer on Wifi. Entering offline mode.", nil)
+            }
+        } else {
+            // Check that the server is available before entering online mode
+            NotificationCenter.postOnMainThread(name: Notifications.checkServer)
         }
-        self.reachabilityChangedWorkItem = reachabilityChangedWorkItem
-        DispatchQueue.main.async(after: 0.5, execute: reachabilityChangedWorkItem)
     }
 }

@@ -84,6 +84,13 @@ final class StatusLoader: APILoader {
     }
     
     override func informDelegateLoadingFailed(error: Error?) {
+        guard let error else { return }
+        let nsError = error as NSError
+        if nsError.domain == "NSURLErrorDomain" && nsError.code == -999 {
+            // Not actually an error, the request was just canceled, so bail
+            return
+        }
+        
         NotificationCenter.postOnMainThread(name: Notifications.serverCheckFailed)
         super.informDelegateLoadingFailed(error: error)
     }
