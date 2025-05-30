@@ -44,7 +44,7 @@ final class HomeAlbumViewController: UIViewController {
         
         loader = QuickAlbumsLoader(serverId: serverId, modifier: modifier, offset: offset)
         loader?.callback = { [weak self] _, success, error in
-            guard let self = self, let loader = self.loader else { return }
+            guard let self, let loader else { return }
             
             if success {
                 if loader.folderAlbums.count == 0 {
@@ -52,7 +52,7 @@ final class HomeAlbumViewController: UIViewController {
                 } else {
                     self.folderAlbums.append(contentsOf: loader.folderAlbums)
                 }
-            } else if let error = error {
+            } else if let error {
                 if self.settings.isPopupsEnabled {
                     let message = "There was an error performing the search.\n\nError: \(error.localizedDescription)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)

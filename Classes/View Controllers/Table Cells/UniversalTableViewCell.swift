@@ -133,7 +133,7 @@ final class UniversalTableViewCell: UITableViewCell {
     
     func update(model: TableCellModel?) {
         tableCellModel = model;
-        if let model = model {
+        if let model {
             updateCoverArtView(hideCoverArt: hideCoverArt, serverId: model.serverId, coverArtId: model.coverArtId)
             primaryLabel.text = model.primaryLabelText
             if !hideSecondaryLabel { secondaryLabel.text = model.secondaryLabelText }

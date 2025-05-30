@@ -301,7 +301,7 @@ final class HomeViewController: UIViewController {
         let loader = QuickAlbumsLoader(serverId: serverId, modifier: modifier)
         loader.callback = { _, _, error in
             HUD.hide()
-            if let error = error {
+            if let error {
                 if self.settings.isPopupsEnabled && !error.isCanceledURLRequest {
                     let alert = UIAlertController(title: "Error", message: "There was an error grabbing the album list.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
                     alert.addOKAction()
@@ -442,7 +442,7 @@ extension HomeViewController: UISearchBarDelegate {
         searchLoader = SearchLoader(serverId: serverId, searchType: searchType, searchItemType: .all, query: query)
         searchLoader?.callback = { [weak self] _, success, error in
             HUD.hide()
-            guard let self = self, let searchLoader = self.searchLoader else { return }
+            guard let self, let searchLoader else { return }
             
             if success {
                 if searchLoader.searchType == .old {
@@ -452,7 +452,7 @@ extension HomeViewController: UISearchBarDelegate {
                     let controller = SearchAllViewController(serverId: self.serverId, query: query, searchType: searchType, folderArtists: searchLoader.folderArtists, folderAlbums: searchLoader.folderAlbums, tagArtists: searchLoader.tagArtists, tagAlbums: searchLoader.tagAlbums, songs: searchLoader.songs)
                     self.pushViewControllerCustom(controller)
                 }
-            } else if let error = error {
+            } else if let error {
                 if self.settings.isPopupsEnabled {
                     let alert = UIAlertController(title: "Error", message: "There was an error completing the search.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
                     alert.addOKAction()

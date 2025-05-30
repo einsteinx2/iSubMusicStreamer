@@ -256,7 +256,7 @@ final class PlayQueue: NSObject {
     @discardableResult
     func playSong(position: Int) -> Song? {
         currentIndex = position
-        guard let currentSong = self.currentSong else { return nil }
+        guard let currentSong else { return nil }
         
         return DispatchQueue.mainSyncSafe {
             if !currentSong.isVideo {

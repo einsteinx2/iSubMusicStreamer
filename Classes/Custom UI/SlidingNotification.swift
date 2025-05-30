@@ -66,7 +66,7 @@ final class SlidingNotification: UIView {
     }
     
     private func show(duration: TimeInterval = defaultDuration) {
-        guard let superview = superview, !isAnimating && !isShowing else { return }
+        guard let superview, !isAnimating && !isShowing else { return }
         
         isAnimating = true
         Self.activeMessages.insert(message)
@@ -97,7 +97,7 @@ final class SlidingNotification: UIView {
     }
     
     @objc private func hide() {
-        guard let superview = superview, !isAnimating && isShowing else { return }
+        guard let superview, !isAnimating && isShowing else { return }
         
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(hide), object: nil)
         

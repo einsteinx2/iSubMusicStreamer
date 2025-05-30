@@ -57,16 +57,16 @@ final class HLSReverseProxyServer {
 
     private func addPlaylistHandler() {
         webServer.addHandler(forMethod: "GET", pathRegex: "^/.*\\.m3u8$", request: GCDWebServerRequest.self) { [weak self] request, completion in
-          guard let self = self else {
+          guard let self else {
             return completion(GCDWebServerDataResponse(statusCode: 500))
           }
 
-          guard let originURL = self.originURL(from: request) else {
+          guard let originURL = originURL(from: request) else {
             return completion(GCDWebServerErrorResponse(statusCode: 400))
           }
 
           let task = self.urlSession.dataTask(with: originURL) { data, response, error in
-            guard let data = data, let response = response else {
+            guard let data, let response else {
               return completion(GCDWebServerErrorResponse(statusCode: 500))
             }
             
@@ -84,16 +84,16 @@ final class HLSReverseProxyServer {
 
     private func addSegmentHandler() {
         webServer.addHandler(forMethod: "GET", pathRegex: "^/.*\\.ts$", request: GCDWebServerRequest.self) { [weak self] request, completion in
-          guard let self = self else {
+          guard let self else {
             return completion(GCDWebServerDataResponse(statusCode: 500))
           }
 
-          guard let originURL = self.originURL(from: request) else {
+          guard let originURL = originURL(from: request) else {
             return completion(GCDWebServerErrorResponse(statusCode: 400))
           }
 
           let task = self.urlSession.dataTask(with: originURL) { data, response, error in
-            guard let data = data, let response = response else {
+            guard let data, let response else {
               return completion(GCDWebServerErrorResponse(statusCode: 500))
             }
             

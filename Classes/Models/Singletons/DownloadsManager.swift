@@ -177,13 +177,13 @@ final class DownloadsManager {
             return true
         }
         
-        guard let enumerator = directoryEnumerator else {
+        guard let directoryEnumerator else {
             DDLogError("[DownloadsManager] findCacheSize: Failed to initialize directory enumerator")
             return
         }
         
         var size = 0
-        while let url = enumerator.nextObject() as? URL {
+        while let url = directoryEnumerator.nextObject() as? URL {
             do {
                 if let isDirectory = try url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory, !isDirectory {
                     if let songSize = try url.resourceValues(forKeys: [.totalFileAllocatedSizeKey]).totalFileAllocatedSize {

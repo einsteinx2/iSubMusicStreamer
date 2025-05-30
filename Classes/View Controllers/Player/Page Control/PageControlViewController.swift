@@ -90,14 +90,14 @@ final class PageControlViewController: UIViewController {
                 controller = DownloadStatusViewController()
             }
             
-            if let controller = controller {
+            if let controller {
                 viewControllers.append(controller)
     
                 addChild(controller)
                 scrollView.addSubview(controller.view)
                 controller.view.snp.makeConstraints { make in
                     make.width.height.equalTo(view.snp.width)
-                    if let prevController = prevController {
+                    if let prevController {
                         make.leading.equalTo(prevController.view.snp.trailing)
                     } else {
                         make.leading.equalToSuperview()

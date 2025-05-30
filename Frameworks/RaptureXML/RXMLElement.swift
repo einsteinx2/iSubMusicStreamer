@@ -66,7 +66,7 @@ final class RXMLElement {
             Int32(XML_PARSE_RECOVER.rawValue | XML_PARSE_NOENT.rawValue)
         )
         
-        guard let doc = doc else { return }
+        guard let doc else { return }
         xmlDoc = RXMLDocHolder(doc: doc)
         
         guard isValid else { return }
@@ -95,19 +95,19 @@ final class RXMLElement {
     // MARK: - Properties
     
     var tag: String? {
-        guard let node = node else { return nil }
+        guard let node else { return nil }
         return String(cString: node.pointee.name)
     }
     
     var text: String {
-        guard let node = node else { return "" }
+        guard let node else { return "" }
         guard let key = xmlNodeGetContent(node) else { return "" }
         defer { xmlFree(key) }
         return String(cString: key)
     }
     
     var xml: String {
-        guard let node = node else { return "" }
+        guard let node else { return "" }
         let buffer = xmlBufferCreate()
         defer { xmlBufferFree(buffer) }
         xmlNodeDump(buffer, node.pointee.doc, node, 0, 0)
@@ -115,7 +115,7 @@ final class RXMLElement {
     }
     
     var innerXml: String {
-        guard let node = node else { return "" }
+        guard let node else { return "" }
         var innerXml = ""
         var cur = node.pointee.children
         
@@ -152,14 +152,14 @@ final class RXMLElement {
     // MARK: - Attributes
     
     func attribute(_ name: String) -> String? {
-        guard let node = node else { return nil }
+        guard let node else { return nil }
         guard let attCStr = xmlGetProp(node, name.cString(using: .utf8)) else { return nil }
         defer { xmlFree(UnsafeMutableRawPointer(mutating: attCStr)) }
         return String(cString: attCStr)
     }
     
     var attributeNames: [String] {
-        guard let node = node else { return [] }
+        guard let node else { return [] }
         var names: [String] = []
         var attr = node.pointee.properties
         
@@ -182,7 +182,7 @@ final class RXMLElement {
     // MARK: - Child Navigation
     
     func child(_ tag: String) -> RXMLElement? {
-        guard let node = node else { return nil }
+        guard let node else { return nil }
         let components = tag.components(separatedBy: ".")
         var cur: xmlNodePtr? = node
         
@@ -209,7 +209,7 @@ final class RXMLElement {
             }
         }
         
-        guard let cur = cur else { return nil }
+        guard let cur else { return nil }
         return RXMLElement(xmlDoc: xmlDoc, node: cur)
     }
     
@@ -220,7 +220,7 @@ final class RXMLElement {
     @discardableResult
     func iterate(_ query: String?, using block: RXMLBlock) -> Bool {
         // check for a query
-        guard let query = query, let node = node else { return false }
+        guard let query, let node else { return false }
         let components = query.components(separatedBy: ".")
         var cur: xmlNodePtr? = node
         
@@ -335,7 +335,7 @@ extension RXMLElement {
         }
         
         mutating func next() async throws -> RXMLElement? {
-            guard let node = currentNode, let lastTagName = lastTagName else { return nil }
+            guard let node = currentNode, let lastTagName else { return nil }
             
             if let components = components, components.count > 1 {
                 // Handle recursive midstream queries

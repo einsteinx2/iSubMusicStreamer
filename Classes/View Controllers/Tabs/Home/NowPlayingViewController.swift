@@ -49,7 +49,7 @@ final class NowPlayingViewController: CustomUITableViewController {
         nowPlayingLoader?.callback = { [unowned self] _, success, error in
             HUD.hide()
             tableView.refreshControl?.endRefreshing()
-            if let error = error {
+            if let error {
                 if settings.isPopupsEnabled {
                     let message = "There was an error loading the now playing list.\n\nError: \(error)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)

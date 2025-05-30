@@ -48,7 +48,7 @@ final class ServerPlaylistViewController: CustomUITableViewController {
             HUD.hide()
             tableView.refreshControl?.endRefreshing()
             
-            if let error = error {
+            if let error {
                 if settings.isPopupsEnabled {
                     let message = "There was an error loading the playlist.\n\nError: \(error)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
@@ -105,7 +105,7 @@ extension ServerPlaylistViewController: UITableViewConfiguration {
         DispatchQueue.userInitiated.async { [unowned self] in
             defer { HUD.hide() }
             let song = store.playSongFromServerPlaylist(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id, position: indexPath.row)
-            if let song = song, !song.isVideo {
+            if let song, !song.isVideo {
                 NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
             }
         }

@@ -14,7 +14,7 @@ import CocoaLumberjackSwift
 
 func bassStreamProc(handle: HSYNC, buffer: UnsafeMutableRawPointer?, length: DWORD, userInfo: UnsafeMutableRawPointer?) -> DWORD {
     autoreleasepool {
-        guard let userInfo = userInfo, let buffer = buffer else { return 0 }
+        guard let userInfo, let buffer else { return 0 }
         let player: BassPlayer = Bridging.bridge(ptr: userInfo)
         
         return player.bassGetOutputData(buffer: buffer, length: length)
@@ -27,7 +27,7 @@ var bassFileProcs = BASS_FILEPROCS(close: bassFileCloseProc, length: bassLengthP
 
 func bassLengthProc(userInfo: UnsafeMutableRawPointer?) -> QWORD {
     autoreleasepool {
-        guard let userInfo = userInfo else { return 0 }
+        guard let userInfo else { return 0 }
         let bassStream: BassStream = Bridging.bridge(ptr: userInfo)
         
         let length = bassStream.fileSize
@@ -42,7 +42,7 @@ func bassLengthProc(userInfo: UnsafeMutableRawPointer?) -> QWORD {
 
 func bassReadProc(buffer: UnsafeMutableRawPointer?, length: DWORD, userInfo: UnsafeMutableRawPointer?) -> DWORD {
     autoreleasepool {
-        guard let userInfo = userInfo, let buffer = buffer else { return 0 }
+        guard let userInfo, let buffer else { return 0 }
         let bassStream: BassStream = Bridging.bridge(ptr: userInfo)
         
         return bassStream.readBytes(buffer: buffer, length: length)
@@ -51,7 +51,7 @@ func bassReadProc(buffer: UnsafeMutableRawPointer?, length: DWORD, userInfo: Uns
 
 func bassSeekProc(offset: QWORD, userInfo: UnsafeMutableRawPointer?) -> Int32 {
     autoreleasepool {
-        guard let userInfo = userInfo else { return 0 }
+        guard let userInfo else { return 0 }
         let bassStream: BassStream = Bridging.bridge(ptr: userInfo)
         
         let success = bassStream.seek(to: offset)
@@ -66,7 +66,7 @@ func bassSeekProc(offset: QWORD, userInfo: UnsafeMutableRawPointer?) -> Int32 {
 
 func bassFileCloseProc(userInfo: UnsafeMutableRawPointer?) {
     autoreleasepool {
-        guard let userInfo = userInfo else { return }
+        guard let userInfo else { return }
         let bassStream: BassStream = Bridging.bridge(ptr: userInfo)
         
         bassStream.shouldWaitForData = false
@@ -77,7 +77,7 @@ func bassFileCloseProc(userInfo: UnsafeMutableRawPointer?) {
 
 func bassSlideSyncProc(handle: HSYNC, channel: DWORD, data: DWORD, userInfo: UnsafeMutableRawPointer?) {
     autoreleasepool {
-        guard let userInfo = userInfo else { return }
+        guard let userInfo else { return }
         let player: BassPlayer = Bridging.bridge(ptr: userInfo)
         
         BASS_SetDevice(Bass.outputDeviceNumber)
@@ -92,7 +92,7 @@ func bassSlideSyncProc(handle: HSYNC, channel: DWORD, data: DWORD, userInfo: Uns
 // MARK: Song End Callback
 
 func bassEndSyncProc(handle: HSYNC, channel: DWORD, data: DWORD, userInfo: UnsafeMutableRawPointer?) {
-    guard let userInfo = userInfo else { return }
+    guard let userInfo else { return }
     
     // Make sure we're using the right device
     BASS_SetDevice(Bass.outputDeviceNumber)
@@ -135,7 +135,7 @@ func bassEndSyncProc(handle: HSYNC, channel: DWORD, data: DWORD, userInfo: Unsaf
 // MARK: BPM Callback
 
 //func bassBPMProc(handle: HSTREAM, bpm: Float, userInfo: UnsafeMutableRawPointer?) {
-//    guard let userInfo = userInfo else { return }
+//    guard let userInfo else { return }
 //
 //    autoreleasepool {
 //        let player: BassPlayer = Bridging.bridge(ptr: userInfo)

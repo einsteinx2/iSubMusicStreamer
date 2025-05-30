@@ -36,7 +36,7 @@ final class ServerChecker {
             statusLoader?.cancelLoad()
             statusLoader = StatusLoader(server: currentServer) { [weak self] _, success, error in
                 HUD.hide()
-                guard let self = self, let statusLoader = self.statusLoader else { return }
+                guard let self, let statusLoader else { return }
                 
                 if success {
                     if let server = self.settings.currentServer, server.isVideoSupported != statusLoader.isVideoSupported || server.isNewSearchSupported != statusLoader.isNewSearchSupported {

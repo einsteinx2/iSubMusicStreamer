@@ -12,7 +12,7 @@ import UIKit
 
 struct SwipeAction {
     static func downloadAndQueueConfig(model: TableCellModel?) -> UISwipeActionsConfiguration? {
-        guard let model = model else { return nil }
+        guard let model else { return nil }
         
         let actions = model.isDownloaded ? [queue(model: model)] : [download(model: model), queue(model: model)];
         let config = UISwipeActionsConfiguration(actions: actions)
@@ -21,7 +21,7 @@ struct SwipeAction {
     }
     
     static func downloadQueueAndDeleteConfig(model: TableCellModel?, deleteHandler: @escaping () -> ()) -> UISwipeActionsConfiguration? {
-        guard let model = model else { return nil }
+        guard let model else { return nil }
         
         let actions = !model.isDownloaded && model.isDownloadable ? [download(model: model), queue(model: model), delete(handler: deleteHandler)] : [queue(model: model), delete(handler: deleteHandler)]
         let config = UISwipeActionsConfiguration(actions: actions)
@@ -31,13 +31,13 @@ struct SwipeAction {
     
     static func downloadQueueAndDeleteConfig(downloadHandler: (() -> ())?, queueHandler: (() -> ())?, deleteHandler: (() -> ())?) -> UISwipeActionsConfiguration {
         var actions = [UIContextualAction]()
-        if let downloadHandler = downloadHandler {
+        if let downloadHandler {
             actions.append(download(handler: downloadHandler))
         }
-        if let queueHandler = queueHandler {
+        if let queueHandler {
             actions.append(queue(handler: queueHandler))
         }
-        if let deleteHandler = deleteHandler {
+        if let deleteHandler {
             actions.append(delete(handler: deleteHandler))
         }
         

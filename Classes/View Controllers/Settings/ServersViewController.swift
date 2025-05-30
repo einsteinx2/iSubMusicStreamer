@@ -239,7 +239,7 @@ extension ServersViewController: APILoaderDelegate {
         if let statusLoader = loader as? StatusLoader {
             serverToEdit?.isVideoSupported = statusLoader.isVideoSupported
             serverToEdit?.isNewSearchSupported = statusLoader.isNewSearchSupported
-            if let serverToEdit = serverToEdit {
+            if let serverToEdit {
                 _ = store.add(server: serverToEdit)
             }
         }
@@ -258,7 +258,7 @@ extension ServersViewController: APILoaderDelegate {
             message = "Either your username or password is incorrect\n\n☆☆ Choose a server to return to online mode. ☆☆\n\nError code \(error.code):\n\(error.localizedDescription)"
         } else {
             message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\n☆☆ Choose a server to return to online mode. ☆☆"
-            if let error = error {
+            if let error {
                 message += "\n\nError: \(error)"
             }
         }

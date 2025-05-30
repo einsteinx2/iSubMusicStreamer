@@ -114,7 +114,7 @@ final class TagAlbumViewController: CustomUITableViewController {
         HUD.show(closeHandler: cancelLoad)
         loader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbum.id) { [weak self] _, success, error in
             HUD.hide()
-            guard let self = self else { return }
+            guard let self else { return }
             
             self.songIds = self.loader?.songIds ?? []
             self.loader = nil
@@ -122,7 +122,7 @@ final class TagAlbumViewController: CustomUITableViewController {
             if success {
                 self.tableView.reloadData()
                 self.addHeader()
-            } else if let error = error {
+            } else if let error {
                 if self.settings.isPopupsEnabled {
                     let message = "There was an error loading the album.\n\nError: \(error)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)

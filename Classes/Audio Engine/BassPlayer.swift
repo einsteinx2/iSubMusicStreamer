@@ -54,7 +54,7 @@ final class BassPlayer: NSObject {
     
     @discardableResult
     func seekToPosition(seconds: Double, fadeVolume: Bool = true) -> Bool {
-        guard let currentStream = currentStream else { return false }
+        guard let currentStream else { return false }
         
         // Make sure we're using the right device
         BASS_SetDevice(Bass.outputDeviceNumber)
@@ -64,7 +64,7 @@ final class BassPlayer: NSObject {
     
     @discardableResult
     func seekToPosition(bytes: QWORD, fadeVolume: Bool = true) -> Bool {
-        guard let currentStream = currentStream else { return false }
+        guard let currentStream else { return false }
         
         // Make sure we're using the right device
         BASS_SetDevice(Bass.outputDeviceNumber)
@@ -88,7 +88,7 @@ final class BassPlayer: NSObject {
     }
     
     var progress: Double {
-        guard let currentStream = currentStream else { return 0 }
+        guard let currentStream else { return 0 }
         
         BASS_SetDevice(Bass.outputDeviceNumber)
         let pcmBytePosition = BASS_Mixer_ChannelGetPosition(currentStream.hstream, DWORD(BASS_POS_BYTE))
@@ -101,7 +101,7 @@ final class BassPlayer: NSObject {
     }
     
     var currentByteOffset: Int {
-        guard let currentStream = currentStream else { return 0 }
+        guard let currentStream else { return 0 }
         return Int(BASS_StreamGetFilePosition(currentStream.hstream, DWORD(BASS_FILEPOS_CURRENT))) + startByteOffset
     }
     
@@ -112,7 +112,7 @@ final class BassPlayer: NSObject {
     }
     
     var kiloBitrate: Int {
-        guard let currentStream = currentStream else { return 0 }
+        guard let currentStream else { return 0 }
         return Bass.estimateKiloBitrate(bassStream: currentStream)
     }
     
@@ -465,7 +465,7 @@ final class BassPlayer: NSObject {
     func bassGetOutputData(buffer: UnsafeMutableRawPointer?, length: DWORD) -> DWORD {
         social.playerHandleSocial()
         
-        guard let currentStream = currentStream else { return 0 }
+        guard let currentStream else { return 0 }
         
         let bytesRead = BASS_ChannelGetData(mixerStream, buffer, length)
         if bytesRead < length {

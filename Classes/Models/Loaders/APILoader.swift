@@ -85,10 +85,10 @@ class APILoader: CancelableLoader {
                 
         // Load the API endpoint
         dataTask = Self.sharedSession.dataTask(with: request) { data, response, error in
-            if let error = error {
+            if let error {
                 DDLogError("[APILoader \(self.type)] failed: \(error)")
                 self.informDelegateLoadingFailed(error: error)
-            } else if let data = data {
+            } else if let data {
                 // Optional debug logging
                 if Debug.apiResponses {
                     let dataString = String(data: data, encoding: .utf8) ?? "(failed to convert response data to string)"

@@ -109,7 +109,7 @@ final class DropdownMenu: UIView {
         itemButtons.removeAll()
         
         // Create new labels
-        guard let delegate = delegate else { return }
+        guard let delegate else { return }
         let numberOfItems = delegate.dropdownMenuNumberOfItems(self)
         for i in 0..<numberOfItems {
             let title = delegate.dropdownMenu(self, titleForIndex: i)

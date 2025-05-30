@@ -46,7 +46,7 @@ final class HomeSongInfoButton: UIView {
             make.bottom.equalToSuperview().offset(-5)
         }
         
-        if let actionHandler = actionHandler {
+        if let actionHandler {
             button.addClosure(for: .touchUpInside, closure: actionHandler)
         }
         addSubview(button)
@@ -66,7 +66,7 @@ final class HomeSongInfoButton: UIView {
     }
     
     func update(song: Song?) {
-        if let song = song {
+        if let song {
             coverArt.setIdsAndLoad(serverId: song.serverId, coverArtId: song.coverArtId)
             songLabel.text = song.title
             artistLabel.text = song.tagArtistName

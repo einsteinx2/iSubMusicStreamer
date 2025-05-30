@@ -44,7 +44,7 @@ final class AlbumTableViewHeader: UIView {
             make.centerY.equalToSuperview()
         }
         
-        if let coverArtId = coverArtId {
+        if let coverArtId {
             coverArtButton.addClosure(for: .touchUpInside) { [unowned self] in
                 let controller = ModalCoverArtViewController()
                 controller.setIdsAndLoad(serverId: serverId, coverArtId: coverArtId)

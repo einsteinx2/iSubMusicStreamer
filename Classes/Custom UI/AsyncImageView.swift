@@ -55,7 +55,7 @@ final class AsyncImageView: UIImageView {
         coverArtLoader?.delegate = nil
         coverArtLoader = nil
         
-        guard let coverArtId = coverArtId, let serverId = serverId else {
+        guard let coverArtId, let serverId else {
             // Set default cover art
             image = CoverArtLoader.defaultCoverArtImage(isLarge: isLarge)
             return

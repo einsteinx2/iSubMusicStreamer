@@ -27,7 +27,7 @@ final class ChatTableViewCell: UITableViewCell {
     
     var chatMessage: ChatMessage? = nil {
         didSet {
-            if let chatMessage = chatMessage {
+            if let chatMessage {
                 usernameLabel.text = "\(chatMessage.username) @ \(Self.formatDate(chatMessage: chatMessage))"
                 messageLabel.text = chatMessage.message
             }

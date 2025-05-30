@@ -52,7 +52,7 @@ final class Analytics {
 //            apiKey = "KNN9DUXQEENZUG4Q12UA"
 //        #endif
 //        
-//        if let apiKey = apiKey {
+//        if let apiKey {
 //            Flurry.startSession(apiKey)
 //            
 //            // Send basic device model and OS information

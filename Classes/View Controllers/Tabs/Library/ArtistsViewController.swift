@@ -245,7 +245,7 @@ extension ArtistsViewController: APILoaderDelegate {
             var message = "Unknown error, please try again."
             if let error = error as? SubsonicError, case .trialExpired = error {
                 message = "\(error.localizedDescription)"
-            } else if let error = error {
+            } else if let error {
                 message = "\(error)"
             }
             let alert = UIAlertController(title: "Subsonic Error", message: message, preferredStyle: .alert)

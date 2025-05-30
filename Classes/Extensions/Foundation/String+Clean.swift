@@ -52,7 +52,7 @@ extension Optional where Wrapped == String {
         intXMLOptional ?? 0
     }
     var intXMLOptional: Int? {
-        if let self = self {
+        if let self {
             return Int(self.clean())
         } else {
             return nil
@@ -63,7 +63,7 @@ extension Optional where Wrapped == String {
         floatXMLOptional ?? 0
     }
     var floatXMLOptional: Float? {
-        if let self = self {
+        if let self {
             return Float(self.clean())
         } else {
             return nil
@@ -74,7 +74,7 @@ extension Optional where Wrapped == String {
         doubleXMLOptional ?? 0
     }
     var doubleXMLOptional: Double? {
-        if let self = self {
+        if let self {
             return Double(self.clean())
         } else {
             return nil
@@ -85,7 +85,7 @@ extension Optional where Wrapped == String {
         boolXMLOptional ?? false
     }
     var boolXMLOptional: Bool? {
-        if let self = self {
+        if let self {
             return Bool(self.clean())
         } else {
             return nil
@@ -96,7 +96,7 @@ extension Optional where Wrapped == String {
         dateXMLOptional ?? .distantPast
     }
     var dateXMLOptional: Date? {
-        if let self = self {
+        if let self {
             return formatDate(dateString: self)
         } else {
             return nil

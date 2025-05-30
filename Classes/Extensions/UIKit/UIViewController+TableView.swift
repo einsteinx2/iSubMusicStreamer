@@ -22,7 +22,7 @@ extension UIViewController {
         tableView.separatorStyle = .none
         tableView.register(UniversalTableViewCell.self, forCellReuseIdentifier: UniversalTableViewCell.reuseId)
         view.addSubview(tableView)
-        if let constraints = constraints {
+        if let constraints {
             tableView.snp.makeConstraints(constraints)
         } else {
             tableView.snp.makeConstraints { make in

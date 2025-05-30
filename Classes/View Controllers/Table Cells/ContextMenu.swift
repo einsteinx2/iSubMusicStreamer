@@ -15,7 +15,7 @@ extension UIViewController {
     private var store: Store { Resolver.resolve() }
     
     func contextMenuDownloadAndQueueConfig(model: TableCellModel?) -> UIContextMenuConfiguration? {
-        guard let model = model else { return nil }
+        guard let model else { return nil }
         
         // Navigation Actions
         let artistAction = tagArtistAction(model: model)

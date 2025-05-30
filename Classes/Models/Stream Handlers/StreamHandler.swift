@@ -200,7 +200,7 @@ final class StreamHandler: NSObject, Codable {
         }
         
         request = URLRequest(serverId: song.serverId, subsonicAction: .stream, parameters: parameters, byteOffset: byteOffset)
-        guard let request = request else {
+        guard let request else {
             DDLogError("[StreamHandler] start connection failed to create request")
             isDownloading = false
             delegate?.streamHandlerConnectionFailed(handler: self, error: APIError.requestCreation)

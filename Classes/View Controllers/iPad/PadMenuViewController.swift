@@ -139,13 +139,13 @@ final class PadMenuViewController: UIViewController {
             case .downloads: controller = DownloadsViewController()
             default: break
             }
-            if let controller = controller {
+            if let controller {
                 navController = CustomUINavigationController(rootViewController: controller)
                 cachedTabs[type] = navController
             }
         }
         
-        if let navController = navController {
+        if let navController {
             if let padRootViewController = parent as? PadRootViewController {
                 padRootViewController.switchContentViewController(controller: navController)
             } else if let splitViewController = parent as? UISplitViewController {

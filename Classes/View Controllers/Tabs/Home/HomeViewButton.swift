@@ -18,7 +18,7 @@ final class HomeViewButton: UIView {
         button.setImage(icon, for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         button.setImage(icon, for: .normal)
-        if let actionHandler = actionHandler {
+        if let actionHandler {
             button.addClosure(for: .touchUpInside, closure: actionHandler)
         }
         addSubview(button)

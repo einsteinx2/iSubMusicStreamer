@@ -201,7 +201,7 @@ class DDSocialDialog: UIView {
     private func drawRoundedRect(in rect: CGRect, fill fillColor: CGColor?, radius: CGFloat) {
         guard let context = UIGraphicsGetCurrentContext() else { return }
 
-        if let fillColor = fillColor {
+        if let fillColor {
             context.saveGState()
             context.setFillColor(fillColor)
             if radius > 0 {

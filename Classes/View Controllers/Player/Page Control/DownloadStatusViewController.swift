@@ -154,7 +154,7 @@ final class DownloadStatusViewController: UIViewController {
             nextSongProgressBar.progress = 0
             nextSongProgressBar.alpha = 0.5
         } else {
-            if let currentSong = currentSong, !currentSong.isTempCached {
+            if let currentSong, !currentSong.isTempCached {
                 currentSongProgressBar.progress = Float(currentSong.downloadProgress)
                 currentSongProgressBar.alpha = 1
             } else {
@@ -162,7 +162,7 @@ final class DownloadStatusViewController: UIViewController {
                 currentSongProgressBar.alpha = 0.5
             }
             
-            if let nextSong = nextSong, !nextSong.isTempCached {
+            if let nextSong, !nextSong.isTempCached {
                 nextSongProgressBar.progress = Float(nextSong.downloadProgress)
                 nextSongProgressBar.alpha = 1
             } else {

@@ -81,7 +81,7 @@ final class SearchSongsViewController: CustomUITableViewController {
         isLoading = true
         searchLoader.offset += SearchLoader.searchItemCount
         searchLoader.callback = { [weak self] _, success, error in
-            guard let self = self else { return }
+            guard let self else { return }
             self.isLoading = false
             
             if success {

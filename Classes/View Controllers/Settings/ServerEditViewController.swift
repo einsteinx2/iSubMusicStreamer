@@ -139,7 +139,7 @@ final class ServerEditViewController: UIViewController {
             make.trailing.equalTo(stackView)
         }
         
-        if let serverToEdit = serverToEdit {
+        if let serverToEdit {
             urlField.text = serverToEdit.url.absoluteString
             usernameField.text = serverToEdit.username
             passwordField.text = serverToEdit.password
@@ -243,7 +243,7 @@ extension ServerEditViewController: APILoaderDelegate {
         HUD.hide()
         guard let statusLoader = loader as? StatusLoader else { return }
         
-        if let serverToEdit = serverToEdit {
+        if let serverToEdit {
             serverToEdit.isVideoSupported = statusLoader.isVideoSupported
             serverToEdit.isNewSearchSupported = statusLoader.isNewSearchSupported
             if store.add(server: serverToEdit) {
@@ -272,7 +272,7 @@ extension ServerEditViewController: APILoaderDelegate {
     
     func loadingFailed(loader: APILoader?, error: Error?) {
         HUD.hide()
-        if let error = error, error.isCanceledURLRequest {
+        if let error, error.isCanceledURLRequest {
             return
         }
         
@@ -281,7 +281,7 @@ extension ServerEditViewController: APILoaderDelegate {
             message = "Either your username or password is incorrect, please try again"
         } else {
             message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet."
-            if let error = error {
+            if let error {
                 message += "\n\nError: \(error)"
             }
         }

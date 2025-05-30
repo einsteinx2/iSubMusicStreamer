@@ -110,7 +110,7 @@ final class FolderAlbumViewController: CustomUITableViewController {
         
         // Create the album header view and constrain to the container view
         let albumHeader: AlbumTableViewHeader?
-        if let folderAlbum = folderAlbum {
+        if let folderAlbum {
             albumHeader = AlbumTableViewHeader(folderAlbum: folderAlbum, tracks: songCount, duration: Double(duration))
             headerView.addSubview(albumHeader!)
             albumHeader!.snp.makeConstraints { make in
@@ -128,7 +128,7 @@ final class FolderAlbumViewController: CustomUITableViewController {
         })
         headerView.addSubview(playAllAndShuffleHeader)
         playAllAndShuffleHeader.snp.makeConstraints { make in
-            if let albumHeader = albumHeader {
+            if let albumHeader {
                 make.top.equalTo(albumHeader.snp.bottom)
             } else {
                 make.top.equalToSuperview()

@@ -466,7 +466,7 @@ final class EqualizerViewController: UIViewController {
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let selectedView = selectedView, let equalizerView = equalizerView, let touch = touches.first else { return }
+        guard let selectedView, let equalizerView, let touch = touches.first else { return }
         
         let location = touch.location(in: equalizerView)
         if CGRectContainsPoint(equalizerView.frame, location) {
@@ -477,7 +477,7 @@ final class EqualizerViewController: UIViewController {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let selectedView = selectedView else { return }
+        guard let selectedView else { return }
         
         bassPlayer.equalizer.updateEqParameter(value: selectedView.eqValue)
         self.selectedView = nil
@@ -485,7 +485,7 @@ final class EqualizerViewController: UIViewController {
     }
     
     @IBAction func dismiss(_ sender: Any?) {
-        if let navigationController = navigationController {
+        if let navigationController {
             navigationController.popViewController(animated: true)
         } else {
             dismiss(animated: true)
@@ -534,7 +534,7 @@ extension EqualizerViewController: UIPickerViewDelegate, UIPickerViewDataSource 
     }
     
     @objc func showPresetPicker() {
-        guard let controlsContainer = controlsContainer, let equalizerView = equalizerView, !isPresetPickerShowing else { return }
+        guard let controlsContainer, let equalizerView, !isPresetPickerShowing else { return }
         
         isPresetPickerShowing = true
         

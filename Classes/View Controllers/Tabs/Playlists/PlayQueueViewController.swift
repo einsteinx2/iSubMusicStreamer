@@ -137,7 +137,7 @@ final class PlayQueueViewController: CustomUITableViewController {
     }
     
     @objc private func dismiss(sender: Any) {
-        if let navigationController = navigationController {
+        if let navigationController {
             navigationController.dismiss(animated: true, completion: nil)
         } else {
             dismiss(animated: true, completion: nil)

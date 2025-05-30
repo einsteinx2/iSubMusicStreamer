@@ -582,7 +582,7 @@ final class PlayerViewController: UIViewController {
     }
     
     @objc private func seekedAction() {
-        guard let currentSong = currentSong else {
+        guard let currentSong else {
             progressDisplayLink?.isPaused = false
             return
         }
@@ -637,7 +637,7 @@ final class PlayerViewController: UIViewController {
     }
     
     @objc private func updateSlider(animated: Bool = true) {
-        guard let currentSong = currentSong, let progressDisplayLink = progressDisplayLink else { return }
+        guard let currentSong, let progressDisplayLink else { return }
         
         // Prevent temporary movement after seeking temp cached song
         if currentSong.isTempCached && Date().timeIntervalSince(lastSeekTime) < 5.0 && player.progress == 0.0 {
@@ -717,7 +717,7 @@ final class PlayerViewController: UIViewController {
         
     private var previousDownloadProgress: Float = 0.0;
     private func updateDownloadProgress(animated: Bool) {
-        guard let currentSong = currentSong, !currentSong.isTempCached else {
+        guard let currentSong, !currentSong.isTempCached else {
             downloadProgressView.isHidden = true
             return
         }

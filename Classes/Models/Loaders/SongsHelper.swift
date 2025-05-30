@@ -242,7 +242,7 @@ struct SongsHelper {
     }
     
     private static func showLoadingScreen(loader: CancelableLoader?) {
-        guard let loader = loader else { return }
+        guard let loader else { return }
         HUD.show {
             HUD.hide()
             loader.cancelLoad()

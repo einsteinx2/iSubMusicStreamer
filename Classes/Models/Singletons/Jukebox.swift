@@ -153,7 +153,7 @@ final class Jukebox {
                 
                 let delay = action == .get ? 30 : 0.5
                 self.getInfo(delay: delay)
-            } else if let error = error {
+            } else if let error {
                 self.handleConnectionError(error: error)
             }
         }
