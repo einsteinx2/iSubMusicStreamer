@@ -6,7 +6,7 @@
 //  Copyright © 2021 Ben Baron. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import SnapKit
 import InflectorKit
 

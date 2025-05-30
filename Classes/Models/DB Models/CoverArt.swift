@@ -6,7 +6,7 @@
 //  Copyright © 2021 Ben Baron. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct CoverArt: Codable, Equatable {
     let serverId: Int

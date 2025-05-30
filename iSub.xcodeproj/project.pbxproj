@@ -66,8 +66,6 @@
 		53246AB4256C918500E11EC4 /* LyricsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB2256C918500E11EC4 /* LyricsViewController.swift */; };
 		53246AB6256C975600E11EC4 /* DownloadStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB5256C975600E11EC4 /* DownloadStatusViewController.swift */; };
 		53246AB7256C975600E11EC4 /* DownloadStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB5256C975600E11EC4 /* DownloadStatusViewController.swift */; };
-		5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; };
-		5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5325910014EE22C400DF4BDB /* MBProgressHUD.m */; };
 		53266BFA2562D4D0002C64BB /* PageControlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53266BF92562D4D0002C64BB /* PageControlViewController.swift */; };
 		53266BFB2562D4D0002C64BB /* PageControlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53266BF92562D4D0002C64BB /* PageControlViewController.swift */; };
 		5329492A2DE8BF670088B5CE /* AsyncSubfolderLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 532949292DE8BF610088B5CE /* AsyncSubfolderLoader.swift */; };
@@ -669,8 +667,6 @@
 		53246AA8256C324500E11EC4 /* InsetTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetTextField.swift; sourceTree = "<group>"; };
 		53246AB2256C918500E11EC4 /* LyricsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsViewController.swift; sourceTree = "<group>"; };
 		53246AB5256C975600E11EC4 /* DownloadStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadStatusViewController.swift; sourceTree = "<group>"; };
-		532590FF14EE22C100DF4BDB /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
-		5325910014EE22C400DF4BDB /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		53266BF92562D4D0002C64BB /* PageControlViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlViewController.swift; sourceTree = "<group>"; };
 		532949292DE8BF610088B5CE /* AsyncSubfolderLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncSubfolderLoader.swift; sourceTree = "<group>"; };
 		5329492C2DE90D200088B5CE /* AsyncTagArtistLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTagArtistLoader.swift; sourceTree = "<group>"; };
@@ -1328,8 +1324,6 @@
 			isa = PBXGroup;
 			children = (
 				535E05762DE5412900BF3477 /* DDSocialDialog.swift */,
-				532590FF14EE22C100DF4BDB /* MBProgressHUD.h */,
-				5325910014EE22C400DF4BDB /* MBProgressHUD.m */,
 				53E03D1625C27CE90043355F /* OBSlider.swift */,
 				53E03D1025C279AC0043355F /* SnappySlider.swift */,
 			);
@@ -2161,7 +2155,6 @@
 				531EC87D25B24B6B0076973A /* ArtistsViewController.swift in Sources */,
 				53B9C49425A7A5F9007E9E3C /* TagAlbumStore.swift in Sources */,
 				532C624B25B6197E00185998 /* VideoPlayer.swift in Sources */,
-				5325910114EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
 				53D632D925A65CBC004EC117 /* String+Clean.swift in Sources */,
 				534B20E9256202CF007FF1D7 /* PlayerViewController.swift in Sources */,
 				53E04947255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */,
@@ -2408,7 +2401,6 @@
 				531EC87E25B24B6B0076973A /* ArtistsViewController.swift in Sources */,
 				53FE67A5256DD0F00015FC83 /* GCDWebServerDataRequest.m in Sources */,
 				53B9C49525A7A5F9007E9E3C /* TagAlbumStore.swift in Sources */,
-				5325910314EE22C700DF4BDB /* MBProgressHUD.m in Sources */,
 				53D632DA25A65CBC004EC117 /* String+Clean.swift in Sources */,
 				53FE389D1EA961C80058B925 /* NSFileManager+ZKAdditions.m in Sources */,
 				53E04948255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */,

@@ -6,7 +6,7 @@
 //  Copyright © 2024 Ben Baron. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import Resolver
 
 final class EqualizerViewController: UIViewController {

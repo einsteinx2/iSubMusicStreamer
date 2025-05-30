@@ -6,6 +6,7 @@
 //  Copyright © 2024 Ben Baron. All rights reserved.
 //
 
+import UIKit
 import Resolver
 
 let MIN_FREQUENCY = 32
