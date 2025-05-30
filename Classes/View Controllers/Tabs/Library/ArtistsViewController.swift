@@ -451,11 +451,13 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        return SwipeAction.downloadAndQueueConfig(model: artist(indexPath: indexPath))
+        guard let model = artist(indexPath: indexPath) else { return nil }
+        return SwipeAction.downloadAndQueueConfig(model: model)
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        return contextMenuDownloadAndQueueConfig(model: artist(indexPath: indexPath))
+        guard let model = artist(indexPath: indexPath) else { return nil }
+        return contextMenuDownloadAndQueueConfig(model: model)
     }
 }
 

@@ -88,19 +88,14 @@ extension DownloadQueueViewController {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        SwipeAction.downloadQueueAndDeleteConfig(downloadHandler: nil, queueHandler: {
-            HUD.show()
-            DispatchQueue.userInitiated.async {
-                defer { HUD.hide() }
-                self.store.songFromDownloadQueue(position: indexPath.row)?.queue()
-            }
-        }, deleteHandler: {
+        guard let model = self.store.songFromDownloadQueue(position: indexPath.row) else { return nil }
+        return SwipeAction.downloadQueueAndDeleteConfig(model: model) {
             self.deleteItems(indexPaths: [indexPath])
-        })
+        }
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let song = store.songFromDownloadQueue(position: indexPath.row)
-        return contextMenuDownloadAndQueueConfig(model: song)
+        guard let model = store.songFromDownloadQueue(position: indexPath.row) else { return nil }
+        return contextMenuDownloadAndQueueConfig(model: model)
     }
 }

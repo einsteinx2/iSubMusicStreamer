@@ -156,20 +156,15 @@ extension BookmarksViewController: UITableViewConfiguration {
         }
     }
     
-    // TODO: implement this
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let bookmark = bookmarks[indexPath.row]
-        return SwipeAction.downloadQueueAndDeleteConfig(downloadHandler: {
-            guard let song = self.store.song(bookmark: bookmark) else { return }
-            song.download()
-        }, queueHandler: {
-            guard let song = self.store.song(bookmark: bookmark) else { return }
-            song.queue()
-        }, deleteHandler: {
+        guard let model = store.song(bookmark: bookmark) else { return nil }
+        
+        return SwipeAction.downloadQueueAndDeleteConfig(model: model) {
             if self.store.delete(bookmark: bookmark) {
                 self.bookmarks.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .automatic)
             }
-        })
+        }
     }
 }

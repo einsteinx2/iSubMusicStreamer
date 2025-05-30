@@ -10,6 +10,7 @@ import Foundation
 import MediaPlayer
 import Resolver
 import CocoaLumberjackSwift
+import ProgressHUD
 
 enum RepeatMode: Int {
     case none = 0
@@ -266,7 +267,7 @@ final class PlayQueue: NSObject {
             
             if settings.isJukeboxEnabled {
                 if currentSong.isVideo {
-                    SlidingNotification.showOnMainWindow(message: "Cannot play videos in Jukebox mode.")
+                    ProgressHUD.banner("Cannot play videos in Jukebox mode.", nil)
                     return nil
                 } else {
                     jukebox.playSong(index: position)

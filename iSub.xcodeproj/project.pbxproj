@@ -445,8 +445,6 @@
 		53CC751E25DCA9B700D10AB6 /* SearchLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC751C25DCA9B700D10AB6 /* SearchLoader.swift */; };
 		53CC752325DDF9FB00D10AB6 /* DownloadQueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC752225DDF9FB00D10AB6 /* DownloadQueueViewController.swift */; };
 		53CC752425DDF9FB00D10AB6 /* DownloadQueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC752225DDF9FB00D10AB6 /* DownloadQueueViewController.swift */; };
-		53CF64F725843ADA00BD47DC /* SlidingNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF64F625843ADA00BD47DC /* SlidingNotification.swift */; };
-		53CF64F825843ADA00BD47DC /* SlidingNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF64F625843ADA00BD47DC /* SlidingNotification.swift */; };
 		53D44F8515AA621B00CDD3B8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D44F8415AA621A00CDD3B8 /* Accelerate.framework */; };
 		53D4FCA32599335900C6F1AE /* FolderMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D4FCA22599335900C6F1AE /* FolderMetadata.swift */; };
 		53D4FCA42599335900C6F1AE /* FolderMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D4FCA22599335900C6F1AE /* FolderMetadata.swift */; };
@@ -860,7 +858,6 @@
 		53CC751925DC5B3B00D10AB6 /* CaseIterable+Count.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CaseIterable+Count.swift"; sourceTree = "<group>"; };
 		53CC751C25DCA9B700D10AB6 /* SearchLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLoader.swift; sourceTree = "<group>"; };
 		53CC752225DDF9FB00D10AB6 /* DownloadQueueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueViewController.swift; sourceTree = "<group>"; };
-		53CF64F625843ADA00BD47DC /* SlidingNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingNotification.swift; sourceTree = "<group>"; };
 		53D44F8415AA621A00CDD3B8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		53D4FCA22599335900C6F1AE /* FolderMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderMetadata.swift; sourceTree = "<group>"; };
 		53D4FCA825993C4E00C6F1AE /* TagArtistLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagArtistLoader.swift; sourceTree = "<group>"; };
@@ -1317,7 +1314,6 @@
 				53329651255F30220027C51A /* ClosureSleeve.swift */,
 				53246AA8256C324500E11EC4 /* InsetTextField.swift */,
 				53C3AB6C257DB7D200B35B99 /* AsyncImageView.swift */,
-				53CF64F625843ADA00BD47DC /* SlidingNotification.swift */,
 				538C8FE025606299005D6CA9 /* RefreshControl.swift */,
 				53329647255F2E770027C51A /* PlayAllAndShuffleHeader.swift */,
 				538C8FE625609F4F005D6CA9 /* BlurredSectionHeader.swift */,
@@ -2174,7 +2170,6 @@
 				531EC87725B230920076973A /* DownloadedTagAlbum.swift in Sources */,
 				53FE389E1EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53752BEC2562CEF800438636 /* CoverArtViewController.swift in Sources */,
-				53CF64F725843ADA00BD47DC /* SlidingNotification.swift in Sources */,
 				531EC85925B1F0390076973A /* LocalPlaylistViewController.swift in Sources */,
 				539D330F25AA61DD00F53797 /* LocalPlaylistStore.swift in Sources */,
 				53CC752325DDF9FB00D10AB6 /* DownloadQueueViewController.swift in Sources */,
@@ -2288,7 +2283,6 @@
 				537C93FA25B127BF00175DF6 /* UIViewController+IsModal.swift in Sources */,
 				534B20E72561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
 				53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */,
-				53CF64F825843ADA00BD47DC /* SlidingNotification.swift in Sources */,
 				53ED672025B74BD40002BFAF /* DownloadedIndicatorView.swift in Sources */,
 				53A0EDC925B5DCF400B78DAA /* TagArtistViewController.swift in Sources */,
 				53E03CF825C1F6EF0043355F /* APIError.swift in Sources */,

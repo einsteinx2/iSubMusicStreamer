@@ -141,10 +141,12 @@ extension TagArtistViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        return SwipeAction.downloadAndQueueConfig(model: tagAlbum(indexPath: indexPath))
+        guard let model = tagAlbum(indexPath: indexPath) else { return nil }
+        return SwipeAction.downloadAndQueueConfig(model: model)
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        return contextMenuDownloadAndQueueConfig(model: tagAlbum(indexPath: indexPath))
+        guard let model = tagAlbum(indexPath: indexPath) else { return nil }
+        return contextMenuDownloadAndQueueConfig(model: model)
     }
 }

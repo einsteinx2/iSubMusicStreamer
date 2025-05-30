@@ -112,13 +112,12 @@ extension ServerPlaylistViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if let song = song(indexPath: indexPath) {
-            return SwipeAction.downloadAndQueueConfig(model: song)
-        }
-        return nil
+        guard let model = song(indexPath: indexPath) else { return nil }
+        return SwipeAction.downloadAndQueueConfig(model: model)
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        return contextMenuDownloadAndQueueConfig(model: song(indexPath: indexPath))
+        guard let model = song(indexPath: indexPath) else { return nil }
+        return contextMenuDownloadAndQueueConfig(model: model)
     }
 }

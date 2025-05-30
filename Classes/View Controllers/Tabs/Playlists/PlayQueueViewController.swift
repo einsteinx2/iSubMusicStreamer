@@ -392,18 +392,17 @@ extension PlayQueueViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if let song = playQueue.song(index: indexPath.row), !song.isVideo {
-            return SwipeAction.downloadQueueAndDeleteConfig(model: song) { [unowned self] in
-                _ = playQueue.removeSongs(indexes: [indexPath.row])
-                self.saveEditHeader.count = playQueue.count
-                self.tableView.deleteRows(at: [indexPath], with: .automatic)
-                self.addOrRemoveSaveEditHeader()
-            }
+        guard let model = playQueue.song(index: indexPath.row), !model.isVideo else { return nil }
+        return SwipeAction.downloadQueueAndDeleteConfig(model: model) { [unowned self] in
+            _ = playQueue.removeSongs(indexes: [indexPath.row])
+            self.saveEditHeader.count = playQueue.count
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            self.addOrRemoveSaveEditHeader()
         }
-        return nil
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        return contextMenuDownloadAndQueueConfig(model: playQueue.song(index: indexPath.row))
+        guard let model = playQueue.song(index: indexPath.row), !model.isVideo else { return nil }
+        return contextMenuDownloadAndQueueConfig(model: model)
     }
 }

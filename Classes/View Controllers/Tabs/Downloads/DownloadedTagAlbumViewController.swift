@@ -78,19 +78,14 @@ extension DownloadedTagAlbumViewController {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        SwipeAction.downloadQueueAndDeleteConfig(downloadHandler: nil, queueHandler: {
-            HUD.show()
-            DispatchQueue.userInitiated.async {
-                defer { HUD.hide() }
-                self.store.song(downloadedSong: self.downloadedSongs[indexPath.row])?.queue()
-            }
-        }, deleteHandler: {
+        guard let model = store.song(downloadedSong: downloadedSongs[indexPath.row]) else { return nil }
+        return SwipeAction.downloadQueueAndDeleteConfig(model: model) {
             self.deleteItems(indexPaths: [indexPath])
-        })
+        }
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let song = store.song(downloadedSong: downloadedSongs[indexPath.row])
-        return contextMenuDownloadAndQueueConfig(model: song)
+        guard let model = store.song(downloadedSong: downloadedSongs[indexPath.row]) else { return nil }
+        return contextMenuDownloadAndQueueConfig(model: model)
     }
 }

@@ -73,11 +73,12 @@ extension DownloadedTagArtistsViewController {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        SwipeAction.downloadQueueAndDeleteConfig(downloadHandler: nil, queueHandler: {
+        let model = downloadedTagArtists[indexPath.row]
+        return SwipeAction.downloadQueueAndDeleteConfig(model: model, downloadHandler: nil, queueHandler: {
             HUD.show()
             DispatchQueue.userInitiated.async {
                 defer { HUD.hide() }
-                self.downloadedTagArtists[indexPath.row].queue()
+                model.queue()
             }
         }, deleteHandler: {
             self.deleteItems(indexPaths: [indexPath])

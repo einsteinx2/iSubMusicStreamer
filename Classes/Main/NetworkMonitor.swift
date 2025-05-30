@@ -9,6 +9,7 @@
 import Foundation
 import Resolver
 import CocoaLumberjackSwift
+import ProgressHUD
 
 final class NetworkMonitor {
     @Injected private var settings: SavedSettings
@@ -52,7 +53,7 @@ final class NetworkMonitor {
                 if !self.settings.isOfflineMode {
                     DDLogVerbose("[NetworkMonitor] Reachability changed to ReachableViaWWAN and usage over 3G is disabled, entering offline mode");
                     NotificationCenter.postOnMainThread(name: Notifications.goOffline)
-                    SlidingNotification.showOnMainWindow(message: "You have chosen to disable usage over cellular in settings and are no longer on Wifi. Entering offline mode.")
+                    ProgressHUD.banner("You have chosen to disable usage over cellular in settings and are no longer on Wifi. Entering offline mode.", nil)
                 }
             } else {
                 // Check that the server is available before entering online mode

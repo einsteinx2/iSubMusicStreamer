@@ -9,6 +9,7 @@
 import Foundation
 import Resolver
 import CocoaLumberjackSwift
+import ProgressHUD
 
 final class DownloadQueue {
     @LazyInjected private var store: Store
@@ -237,7 +238,7 @@ extension DownloadQueue: StreamHandlerDelegate {
                 self?.resume(byteOffset: 0)
             }
         } else {
-            SlidingNotification.showOnMainWindow(message: "Song failed to download")
+            ProgressHUD.banner("Song failed to download", handler.song.primaryLabelText)
             
             // Tried max number of times so remove
             NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongFailed)

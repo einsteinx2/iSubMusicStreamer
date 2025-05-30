@@ -8,15 +8,14 @@
 
 import UIKit
 import Resolver
+import ProgressHUD
 
 // NOTE: When exporting from Icons8, add a stroke width of 2px in black
 
 extension UIViewController {
     private var store: Store { Resolver.resolve() }
     
-    func contextMenuDownloadAndQueueConfig(model: TableCellModel?) -> UIContextMenuConfiguration? {
-        guard let model else { return nil }
-        
+    func contextMenuDownloadAndQueueConfig(model: TableCellModel) -> UIContextMenuConfiguration? {        
         // Navigation Actions
         let artistAction = tagArtistAction(model: model)
         let albumAction = tagAlbumAction(model: model)
@@ -74,7 +73,7 @@ extension UIViewController {
                                 throw APIError.dataNotFound
                             }
                         } catch {
-                            SlidingNotification.showOnMainWindow(message: "Error loading the artist")
+                            ProgressHUD.banner("Error loading the artist", nil)
                         }
                     }
                 }
@@ -96,7 +95,7 @@ extension UIViewController {
                         if success, let tagAlbum = self.store.tagAlbum(serverId: model.serverId, id: tagAlbumId) {
                             self.pushViewControllerCustom(TagAlbumViewController(tagAlbum: tagAlbum))
                         } else {
-                            SlidingNotification.showOnMainWindow(message: "Error loading the artist")
+                            ProgressHUD.banner("Error loading the artist", model.primaryLabelText)
                         }
                     }
                     loader.startLoad()
@@ -107,37 +106,37 @@ extension UIViewController {
     }
     
     private func download(model: TableCellModel) -> UIAction {
-        return download(handler: model.download)
+        return download(model: model, handler: model.download)
     }
     
     private func queue(model: TableCellModel) -> UIAction {
-        return queue(handler: model.queue)
+        return queue(model: model, handler: model.queue)
     }
     
     private func queueNext(model: TableCellModel) -> UIAction {
-        return queueNext(handler: model.queueNext)
+        return queueNext(model: model, handler: model.queueNext)
     }
     
-    private func download(handler: @escaping () -> ()) -> UIAction {
+    private func download(model: TableCellModel, handler: @escaping () -> ()) -> UIAction {
         return UIAction(title: "Download", image: UIImage(systemName: "square.and.arrow.down")) { _ in
             handler()
-            SlidingNotification.showOnMainWindow(message: "Added to download queue", duration: 1.0)
+            ProgressHUD.banner("Added to download queue", model.primaryLabelText)
             UINotificationFeedbackGenerator().notificationOccurred(.success)
         }
     }
     
-    private func queue(handler: @escaping () -> ()) -> UIAction {
+    private func queue(model: TableCellModel, handler: @escaping () -> ()) -> UIAction {
         return UIAction(title: "Queue", image: UIImage(systemName: "plus.square")) { _ in
             handler()
-            SlidingNotification.showOnMainWindow(message: "Added to play queue", duration: 1.0)
+            ProgressHUD.banner("Added to play queue", model.primaryLabelText)
             UINotificationFeedbackGenerator().notificationOccurred(.success)
         }
     }
     
-    private func queueNext(handler: @escaping () -> ()) -> UIAction {
+    private func queueNext(model: TableCellModel, handler: @escaping () -> ()) -> UIAction {
         return UIAction(title: "Queue Next", image: UIImage(systemName: "plus.circle")) { _ in
             handler()
-            SlidingNotification.showOnMainWindow(message: "Added next in play queue", duration: 1.0)
+            ProgressHUD.banner("Added next in play queue", model.primaryLabelText)
             UINotificationFeedbackGenerator().notificationOccurred(.success)
         }
     }

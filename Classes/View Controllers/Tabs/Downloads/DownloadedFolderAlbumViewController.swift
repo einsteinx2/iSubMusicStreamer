@@ -127,15 +127,25 @@ extension DownloadedFolderAlbumViewController {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        SwipeAction.downloadQueueAndDeleteConfig(downloadHandler: nil, queueHandler: {
-            HUD.show()
-            DispatchQueue.userInitiated.async {
-                defer { HUD.hide() }
-                if indexPath.section == SectionType.albums.rawValue {
-                    self.downloadedFolderAlbums[indexPath.row].queue()
-                } else if indexPath.section == SectionType.songs.rawValue {
-                    self.store.song(downloadedSong: self.downloadedSongs[indexPath.row])?.queue()
+        let model: TableCellModel?
+        if indexPath.section == SectionType.albums.rawValue {
+            model = downloadedFolderAlbums[indexPath.row]
+        } else if indexPath.section == SectionType.songs.rawValue {
+            model = store.song(downloadedSong: self.downloadedSongs[indexPath.row])
+        } else {
+            model = nil
+        }
+        guard let model else { return nil }
+        
+        return SwipeAction.downloadQueueAndDeleteConfig(model: model, downloadHandler: nil, queueHandler: {
+            if indexPath.section == SectionType.albums.rawValue {
+                HUD.show()
+                DispatchQueue.userInitiated.async {
+                    defer { HUD.hide() }
+                    model.queue()
                 }
+            } else if indexPath.section == SectionType.songs.rawValue {
+                model.queue()
             }
         }, deleteHandler: {
             self.deleteItems(indexPaths: [indexPath])
@@ -143,11 +153,12 @@ extension DownloadedFolderAlbumViewController {
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        // TODO: Support custom handlers like swipe action
         if indexPath.section == SectionType.albums.rawValue {
             return contextMenuDownloadAndQueueConfig(model: downloadedFolderAlbums[indexPath.row])
         } else {
-            let song = store.song(downloadedSong: downloadedSongs[indexPath.row])
-            return contextMenuDownloadAndQueueConfig(model: song)
+            guard let model = store.song(downloadedSong: downloadedSongs[indexPath.row]) else { return nil }
+            return contextMenuDownloadAndQueueConfig(model: model)
         }
     }
 }

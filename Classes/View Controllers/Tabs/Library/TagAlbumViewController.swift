@@ -183,10 +183,12 @@ extension TagAlbumViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        return SwipeAction.downloadAndQueueConfig(model: song(indexPath: indexPath))
+        guard let model = song(indexPath: indexPath) else { return nil }
+        return SwipeAction.downloadAndQueueConfig(model: model)
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        return contextMenuDownloadAndQueueConfig(model: song(indexPath: indexPath))
+        guard let model = song(indexPath: indexPath) else { return nil }
+        return contextMenuDownloadAndQueueConfig(model: model)
     }
 }

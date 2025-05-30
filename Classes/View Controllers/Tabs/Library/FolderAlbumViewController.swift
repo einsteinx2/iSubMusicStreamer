@@ -258,12 +258,12 @@ extension FolderAlbumViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let model: TableCellModel? = folderAlbum(indexPath: indexPath) ?? song(indexPath: indexPath)
+        guard let model: TableCellModel = folderAlbum(indexPath: indexPath) ?? song(indexPath: indexPath) else { return nil }
         return SwipeAction.downloadAndQueueConfig(model: model)
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let model: TableCellModel? = folderAlbum(indexPath: indexPath) ?? song(indexPath: indexPath)
+        guard let model: TableCellModel = folderAlbum(indexPath: indexPath) ?? song(indexPath: indexPath) else { return nil }
         return contextMenuDownloadAndQueueConfig(model: model)
     }
 }
