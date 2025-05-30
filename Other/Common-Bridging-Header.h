@@ -12,7 +12,6 @@
 #import "GCDWebServer.h"
 #import "GCDWebServerDataResponse.h"
 #import "GCDWebServerErrorResponse.h"
-#import "GTMNSString+HTML.h"
 #import "Reachability.h"
 #import "ZipKit.h"
 

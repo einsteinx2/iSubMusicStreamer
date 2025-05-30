@@ -33,10 +33,11 @@ private func formatDate(dateString: String) -> Date? {
 }
 
 private extension String {
-    // TODO: Investigate what problem I was solving using this process. I know I did it for some reason many years ago, but now I have no idea ¯\_(ツ)_/¯
-    // NOTE: Presumably Subsonic was sending back some characters using HTML encoding for some reason...need to confirm that.
+    // NOTE: Presumably Subsonic was sending back some characters using HTML encoding for some reason...but that doesn't seem to be the case anymore
+    // NOTE: Previously was using GTMNSString library to string HTML encoding from strings, leaving this here in case it need to be re-enabled
     func clean() -> String {
-        self.gtm_stringByUnescapingFromHTML()?.removingPercentEncoding ?? self
+        //self.gtm_stringByUnescapingFromHTML()?.removingPercentEncoding ?? self
+        return self
     }
 }
 

@@ -528,8 +528,6 @@
 		53F8917D1EB1354B00B3F131 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5381F8051E96FBFB00AAA9BD /* Photos.framework */; };
 		53F8917E1EB137E900B3F131 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675E7113B096400822059 /* AudioToolbox.framework */; };
 		53F8917F1EB137F300B3F131 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675E7113B096400822059 /* AudioToolbox.framework */; };
-		53FE34F81EA961540058B925 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34021EA961540058B925 /* GTMNSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		53FE34FA1EA961540058B925 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE34021EA961540058B925 /* GTMNSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		53FE38861EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38591EA961C80058B925 /* GMAppleDouble+ZKAdditions.m */; };
 		53FE38881EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38591EA961C80058B925 /* GMAppleDouble+ZKAdditions.m */; };
 		53FE388C1EA961C80058B925 /* GMAppleDouble.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE385D1EA961C80058B925 /* GMAppleDouble.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -900,9 +898,6 @@
 		53F675E1113B095900822059 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		53F675E7113B096400822059 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		53F7A127131B7F3B002C829D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		53FE34001EA961540058B925 /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
-		53FE34011EA961540058B925 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSString+HTML.h"; sourceTree = "<group>"; };
-		53FE34021EA961540058B925 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
 		53FE38581EA961C80058B925 /* GMAppleDouble+ZKAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GMAppleDouble+ZKAdditions.h"; sourceTree = "<group>"; };
 		53FE38591EA961C80058B925 /* GMAppleDouble+ZKAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GMAppleDouble+ZKAdditions.m"; sourceTree = "<group>"; };
 		53FE385C1EA961C80058B925 /* GMAppleDouble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMAppleDouble.h; sourceTree = "<group>"; };
@@ -1118,7 +1113,6 @@
 			children = (
 				53A6AA072B89797C007ABD7A /* GCDWebDAVServer */,
 				53FE676E256DD0F00015FC83 /* GCDWebServer */,
-				53E03D0B25C26FBD0043355F /* GTMNSString */,
 				53FE35FA1EA961670058B925 /* libBASS */,
 				53FE38011EA961970058B925 /* RaptureXML */,
 				53E03D0C25C26FD70043355F /* Reachability */,
@@ -1553,16 +1547,6 @@
 			);
 			name = GCDWebDAVServer;
 			path = Frameworks/GCDWebServer/GCDWebDAVServer;
-			sourceTree = "<group>";
-		};
-		53E03D0B25C26FBD0043355F /* GTMNSString */ = {
-			isa = PBXGroup;
-			children = (
-				53FE34001EA961540058B925 /* GTMDefines.h */,
-				53FE34011EA961540058B925 /* GTMNSString+HTML.h */,
-				53FE34021EA961540058B925 /* GTMNSString+HTML.m */,
-			);
-			path = GTMNSString;
 			sourceTree = "<group>";
 		};
 		53E03D0C25C26FD70043355F /* Reachability */ = {
@@ -2091,7 +2075,6 @@
 				531EC85F25B1F8070076973A /* NowPlayingViewController.swift in Sources */,
 				5373C6A525B610FF00CAA859 /* AppDelegate.swift in Sources */,
 				5357FE1725C320C3001BDE29 /* Bridging.swift in Sources */,
-				53FE34F81EA961540058B925 /* GTMNSString+HTML.m in Sources */,
 				539D32DE25A8E78F00F53797 /* ServerStore.swift in Sources */,
 				53329641255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */,
 				53530B3B2DE79147007EFA3A /* AsyncRootArtistsLoader.swift in Sources */,
@@ -2348,7 +2331,6 @@
 				536C8E0126349B47007B81FB /* UIView+EnableDisable.swift in Sources */,
 				53D4FCB725995BB900C6F1AE /* TagAlbumLoader.swift in Sources */,
 				531EC87B25B232EC0076973A /* DownloadedSongsViewController.swift in Sources */,
-				53FE34FA1EA961540058B925 /* GTMNSString+HTML.m in Sources */,
 				53C3AB6E257DB7D200B35B99 /* AsyncImageView.swift in Sources */,
 				539D32EC25AA196900F53797 /* ChatMessage.swift in Sources */,
 				53ED673825B7A3020002BFAF /* URLRequest+Subsonic.swift in Sources */,
