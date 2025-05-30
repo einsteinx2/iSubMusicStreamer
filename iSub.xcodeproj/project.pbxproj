@@ -257,6 +257,8 @@
 		537C52942CCEA11B0046AF02 /* bassopus.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA3D2B897D51007ABD7A /* bassopus.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		537C52952CCEA11C0046AF02 /* basswv.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA372B897D51007ABD7A /* basswv.xcframework */; };
 		537C52962CCEA11C0046AF02 /* basswv.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53A6AA372B897D51007ABD7A /* basswv.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		537C53222DEA27D8007F6AFD /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 537C53212DEA27D8007F6AFD /* ProgressHUD */; };
+		537C53242DEA27E2007F6AFD /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 537C53232DEA27E2007F6AFD /* ProgressHUD */; };
 		537C93E125B1051200175DF6 /* SaveEditHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93E025B1051200175DF6 /* SaveEditHeader.swift */; };
 		537C93E225B1051200175DF6 /* SaveEditHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537C93E025B1051200175DF6 /* SaveEditHeader.swift */; };
 		537C93EB25B1161200175DF6 /* InflectorKit in Frameworks */ = {isa = PBXBuildFile; productRef = 537C93EA25B1161200175DF6 /* InflectorKit */; };
@@ -984,6 +986,7 @@
 				53A6AA532B897D7E007ABD7A /* bass_fx.xcframework in Frameworks */,
 				53A6AA032B89772E007ABD7A /* CocoaLumberjack in Frameworks */,
 				53329607255EF21D0027C51A /* libsqlite3.tbd in Frameworks */,
+				537C53242DEA27E2007F6AFD /* ProgressHUD in Frameworks */,
 				53A6A9F82B89738F007ABD7A /* CwlCatchException in Frameworks */,
 				53F8917B1EB1351D00B3F131 /* libSystem.tbd in Frameworks */,
 				53D9740A255BFDE900AABF7F /* SnapKit in Frameworks */,
@@ -1028,6 +1031,7 @@
 				53329611255EF23B0027C51A /* libsqlite3.tbd in Frameworks */,
 				5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */,
 				537C528D2CCEA1170046AF02 /* bassape.xcframework in Frameworks */,
+				537C53222DEA27D8007F6AFD /* ProgressHUD in Frameworks */,
 				53D97406255BFD9100AABF7F /* SnapKit in Frameworks */,
 				53A6AA012B897728007ABD7A /* CocoaLumberjack in Frameworks */,
 				537C52892CCEA1150046AF02 /* bass_mpc.xcframework in Frameworks */,
@@ -1795,6 +1799,7 @@
 				53A6A9F72B89738F007ABD7A /* CwlCatchException */,
 				53A6A9FC2B897701007ABD7A /* CocoaLumberjackSwift */,
 				53A6AA022B89772E007ABD7A /* CocoaLumberjack */,
+				537C53232DEA27E2007F6AFD /* ProgressHUD */,
 			);
 			productName = iSubTESTING;
 			productReference = 1D6058910D05DD3D006BFB54 /* iSub.app */;
@@ -1824,6 +1829,7 @@
 				53A6A9F92B8973AB007ABD7A /* CwlCatchException */,
 				53A6A9FE2B89770C007ABD7A /* CocoaLumberjackSwift */,
 				53A6AA002B897728007ABD7A /* CocoaLumberjack */,
+				537C53212DEA27D8007F6AFD /* ProgressHUD */,
 			);
 			productName = iSubTESTING;
 			productReference = 53BC2865139AF0DD00A825F1 /* iSub Beta.app */;
@@ -1868,6 +1874,7 @@
 				53B5DB3325D73018006149B6 /* XCRemoteSwiftPackageReference "Tabman" */,
 				53A6A9F62B89738F007ABD7A /* XCRemoteSwiftPackageReference "CwlCatchException" */,
 				53A6A9FB2B897701007ABD7A /* XCRemoteSwiftPackageReference "CocoaLumberjack" */,
+				537C53202DEA27D8007F6AFD /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 			);
 			projectDirPath = "";
 			projectRoot = "";
@@ -2802,6 +2809,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		537C53202DEA27D8007F6AFD /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/einsteinx2/ProgressHUD";
+			requirement = {
+				branch = einsteinx2;
+				kind = branch;
+			};
+		};
 		537C93E925B1161200175DF6 /* XCRemoteSwiftPackageReference "InflectorKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mattt/InflectorKit.git";
@@ -2861,6 +2876,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		537C53212DEA27D8007F6AFD /* ProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 537C53202DEA27D8007F6AFD /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			productName = ProgressHUD;
+		};
+		537C53232DEA27E2007F6AFD /* ProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 537C53202DEA27D8007F6AFD /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			productName = ProgressHUD;
+		};
 		537C93EA25B1161200175DF6 /* InflectorKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 537C93E925B1161200175DF6 /* XCRemoteSwiftPackageReference "InflectorKit" */;

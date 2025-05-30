@@ -1,5 +1,5 @@
 {
-  "originHash" : "be96200582eb940f5589fd195b1cb9649d8b33d7aee364701fb2ab9b3eb96a36",
+  "originHash" : "712703762de4a4fe3c738b38a1a26458aa2000f99c253af6976400c32bf29fda",
   "pins" : [
     {
       "identity" : "cocoalumberjack",
@@ -44,6 +44,15 @@
       "state" : {
         "revision" : "af8fa81788b893205e1ff42ddd88c5b0b315d7c5",
         "version" : "3.7.0"
+      }
+    },
+    {
+      "identity" : "progresshud",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/einsteinx2/ProgressHUD",
+      "state" : {
+        "branch" : "einsteinx2",
+        "revision" : "3088718b42305f5061b7d370c4fc44b98739af0c"
       }
     },
     {
