@@ -345,10 +345,11 @@ final class OptionsViewController: UIViewController {
     }
     
     @IBAction func shareAppLogsAction() {
-        guard let path = settings.zipAllLogFiles(), let pathUrl = URL(string: path) else {
+        guard let path = settings.zipAllLogFiles() else {
             DDLogError("[OptionsViewController] Failed to share logs due to a problem with the path")
             return
         }
+        let pathUrl = URL(fileURLWithPath: path)
         
         let shareSheet = UIActivityViewController(activityItems: [pathUrl], applicationActivities: nil)
         if let popoverPresentationController = shareSheet.popoverPresentationController {

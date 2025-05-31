@@ -424,7 +424,6 @@
 		53C3AB74257DDA1000B35B99 /* LicensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB72257DDA1000B35B99 /* LicensesViewController.swift */; };
 		53C7FD9E150F0EA9008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
 		53C7FDA0150F0EAF008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
-		53CB016825864D5200E2DF10 /* NSFileManager+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38671EA961C80058B925 /* NSFileManager+ZKAdditions.m */; };
 		53CB553F25C915F2004F2BAB /* EqualizerPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CB553E25C915F2004F2BAB /* EqualizerPointView.swift */; };
 		53CB554025C915F2004F2BAB /* EqualizerPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CB553E25C915F2004F2BAB /* EqualizerPointView.swift */; };
 		53CB554825C9D2E1004F2BAB /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CB554725C9D2E1004F2BAB /* Bookmark.swift */; };
@@ -528,41 +527,6 @@
 		53F8917D1EB1354B00B3F131 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5381F8051E96FBFB00AAA9BD /* Photos.framework */; };
 		53F8917E1EB137E900B3F131 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675E7113B096400822059 /* AudioToolbox.framework */; };
 		53F8917F1EB137F300B3F131 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F675E7113B096400822059 /* AudioToolbox.framework */; };
-		53FE38861EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38591EA961C80058B925 /* GMAppleDouble+ZKAdditions.m */; };
-		53FE38881EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38591EA961C80058B925 /* GMAppleDouble+ZKAdditions.m */; };
-		53FE388C1EA961C80058B925 /* GMAppleDouble.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE385D1EA961C80058B925 /* GMAppleDouble.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		53FE388E1EA961C80058B925 /* GMAppleDouble.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE385D1EA961C80058B925 /* GMAppleDouble.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		53FE388F1EA961C80058B925 /* NSData+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE385F1EA961C80058B925 /* NSData+ZKAdditions.m */; };
-		53FE38911EA961C80058B925 /* NSData+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE385F1EA961C80058B925 /* NSData+ZKAdditions.m */; };
-		53FE38921EA961C80058B925 /* NSDate+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38611EA961C80058B925 /* NSDate+ZKAdditions.m */; };
-		53FE38941EA961C80058B925 /* NSDate+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38611EA961C80058B925 /* NSDate+ZKAdditions.m */; };
-		53FE38951EA961C80058B925 /* NSDictionary+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38631EA961C80058B925 /* NSDictionary+ZKAdditions.m */; };
-		53FE38971EA961C80058B925 /* NSDictionary+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38631EA961C80058B925 /* NSDictionary+ZKAdditions.m */; };
-		53FE38981EA961C80058B925 /* NSFileHandle+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38651EA961C80058B925 /* NSFileHandle+ZKAdditions.m */; };
-		53FE389A1EA961C80058B925 /* NSFileHandle+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38651EA961C80058B925 /* NSFileHandle+ZKAdditions.m */; };
-		53FE389D1EA961C80058B925 /* NSFileManager+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38671EA961C80058B925 /* NSFileManager+ZKAdditions.m */; };
-		53FE389E1EA961C80058B925 /* NSString+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38691EA961C80058B925 /* NSString+ZKAdditions.m */; };
-		53FE38A01EA961C80058B925 /* NSString+ZKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38691EA961C80058B925 /* NSString+ZKAdditions.m */; };
-		53FE38A11EA961C80058B925 /* ZKArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE386D1EA961C80058B925 /* ZKArchive.m */; };
-		53FE38A31EA961C80058B925 /* ZKArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE386D1EA961C80058B925 /* ZKArchive.m */; };
-		53FE38A41EA961C80058B925 /* ZKCDHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE386F1EA961C80058B925 /* ZKCDHeader.m */; };
-		53FE38A61EA961C80058B925 /* ZKCDHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE386F1EA961C80058B925 /* ZKCDHeader.m */; };
-		53FE38A71EA961C80058B925 /* ZKCDTrailer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38711EA961C80058B925 /* ZKCDTrailer.m */; };
-		53FE38A91EA961C80058B925 /* ZKCDTrailer.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38711EA961C80058B925 /* ZKCDTrailer.m */; };
-		53FE38AA1EA961C80058B925 /* ZKCDTrailer64.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38731EA961C80058B925 /* ZKCDTrailer64.m */; };
-		53FE38AC1EA961C80058B925 /* ZKCDTrailer64.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38731EA961C80058B925 /* ZKCDTrailer64.m */; };
-		53FE38AD1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38751EA961C80058B925 /* ZKCDTrailer64Locator.m */; };
-		53FE38AF1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38751EA961C80058B925 /* ZKCDTrailer64Locator.m */; };
-		53FE38B01EA961C80058B925 /* ZKDataArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38771EA961C80058B925 /* ZKDataArchive.m */; };
-		53FE38B21EA961C80058B925 /* ZKDataArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38771EA961C80058B925 /* ZKDataArchive.m */; };
-		53FE38B31EA961C80058B925 /* ZKDefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38791EA961C80058B925 /* ZKDefs.m */; };
-		53FE38B51EA961C80058B925 /* ZKDefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE38791EA961C80058B925 /* ZKDefs.m */; };
-		53FE38B61EA961C80058B925 /* ZKFileArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE387B1EA961C80058B925 /* ZKFileArchive.m */; };
-		53FE38B81EA961C80058B925 /* ZKFileArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE387B1EA961C80058B925 /* ZKFileArchive.m */; };
-		53FE38B91EA961C80058B925 /* ZKLFHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE387D1EA961C80058B925 /* ZKLFHeader.m */; };
-		53FE38BB1EA961C80058B925 /* ZKLFHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE387D1EA961C80058B925 /* ZKLFHeader.m */; };
-		53FE38BC1EA961C80058B925 /* ZKLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE387F1EA961C80058B925 /* ZKLog.m */; };
-		53FE38BE1EA961C80058B925 /* ZKLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE387F1EA961C80058B925 /* ZKLog.m */; };
 		53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6772256DD0F00015FC83 /* GCDWebServerResponse.m */; };
 		53FE678F256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6772256DD0F00015FC83 /* GCDWebServerResponse.m */; };
 		53FE6790256DD0F00015FC83 /* GCDWebServerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FE6775256DD0F00015FC83 /* GCDWebServerRequest.m */; };
@@ -896,43 +860,6 @@
 		53F675E1113B095900822059 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		53F675E7113B096400822059 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		53F7A127131B7F3B002C829D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		53FE38581EA961C80058B925 /* GMAppleDouble+ZKAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GMAppleDouble+ZKAdditions.h"; sourceTree = "<group>"; };
-		53FE38591EA961C80058B925 /* GMAppleDouble+ZKAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GMAppleDouble+ZKAdditions.m"; sourceTree = "<group>"; };
-		53FE385C1EA961C80058B925 /* GMAppleDouble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMAppleDouble.h; sourceTree = "<group>"; };
-		53FE385D1EA961C80058B925 /* GMAppleDouble.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMAppleDouble.m; sourceTree = "<group>"; };
-		53FE385E1EA961C80058B925 /* NSData+ZKAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ZKAdditions.h"; sourceTree = "<group>"; };
-		53FE385F1EA961C80058B925 /* NSData+ZKAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+ZKAdditions.m"; sourceTree = "<group>"; };
-		53FE38601EA961C80058B925 /* NSDate+ZKAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+ZKAdditions.h"; sourceTree = "<group>"; };
-		53FE38611EA961C80058B925 /* NSDate+ZKAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+ZKAdditions.m"; sourceTree = "<group>"; };
-		53FE38621EA961C80058B925 /* NSDictionary+ZKAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+ZKAdditions.h"; sourceTree = "<group>"; };
-		53FE38631EA961C80058B925 /* NSDictionary+ZKAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+ZKAdditions.m"; sourceTree = "<group>"; };
-		53FE38641EA961C80058B925 /* NSFileHandle+ZKAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileHandle+ZKAdditions.h"; sourceTree = "<group>"; };
-		53FE38651EA961C80058B925 /* NSFileHandle+ZKAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileHandle+ZKAdditions.m"; sourceTree = "<group>"; };
-		53FE38661EA961C80058B925 /* NSFileManager+ZKAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+ZKAdditions.h"; sourceTree = "<group>"; };
-		53FE38671EA961C80058B925 /* NSFileManager+ZKAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+ZKAdditions.m"; sourceTree = "<group>"; };
-		53FE38681EA961C80058B925 /* NSString+ZKAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ZKAdditions.h"; sourceTree = "<group>"; };
-		53FE38691EA961C80058B925 /* NSString+ZKAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ZKAdditions.m"; sourceTree = "<group>"; };
-		53FE386A1EA961C80058B925 /* ZipKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipKit.h; sourceTree = "<group>"; };
-		53FE386C1EA961C80058B925 /* ZKArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZKArchive.h; sourceTree = "<group>"; };
-		53FE386D1EA961C80058B925 /* ZKArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKArchive.m; sourceTree = "<group>"; };
-		53FE386E1EA961C80058B925 /* ZKCDHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZKCDHeader.h; sourceTree = "<group>"; };
-		53FE386F1EA961C80058B925 /* ZKCDHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKCDHeader.m; sourceTree = "<group>"; };
-		53FE38701EA961C80058B925 /* ZKCDTrailer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZKCDTrailer.h; sourceTree = "<group>"; };
-		53FE38711EA961C80058B925 /* ZKCDTrailer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKCDTrailer.m; sourceTree = "<group>"; };
-		53FE38721EA961C80058B925 /* ZKCDTrailer64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZKCDTrailer64.h; sourceTree = "<group>"; };
-		53FE38731EA961C80058B925 /* ZKCDTrailer64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKCDTrailer64.m; sourceTree = "<group>"; };
-		53FE38741EA961C80058B925 /* ZKCDTrailer64Locator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZKCDTrailer64Locator.h; sourceTree = "<group>"; };
-		53FE38751EA961C80058B925 /* ZKCDTrailer64Locator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKCDTrailer64Locator.m; sourceTree = "<group>"; };
-		53FE38761EA961C80058B925 /* ZKDataArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZKDataArchive.h; sourceTree = "<group>"; };
-		53FE38771EA961C80058B925 /* ZKDataArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKDataArchive.m; sourceTree = "<group>"; };
-		53FE38781EA961C80058B925 /* ZKDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZKDefs.h; sourceTree = "<group>"; };
-		53FE38791EA961C80058B925 /* ZKDefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKDefs.m; sourceTree = "<group>"; };
-		53FE387A1EA961C80058B925 /* ZKFileArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZKFileArchive.h; sourceTree = "<group>"; };
-		53FE387B1EA961C80058B925 /* ZKFileArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKFileArchive.m; sourceTree = "<group>"; };
-		53FE387C1EA961C80058B925 /* ZKLFHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZKLFHeader.h; sourceTree = "<group>"; };
-		53FE387D1EA961C80058B925 /* ZKLFHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKLFHeader.m; sourceTree = "<group>"; };
-		53FE387E1EA961C80058B925 /* ZKLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZKLog.h; sourceTree = "<group>"; };
-		53FE387F1EA961C80058B925 /* ZKLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKLog.m; sourceTree = "<group>"; };
 		53FE6770256DD0F00015FC83 /* GCDWebServerFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFunctions.h; sourceTree = "<group>"; };
 		53FE6771256DD0F00015FC83 /* GCDWebServerPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerPrivate.h; sourceTree = "<group>"; };
 		53FE6772256DD0F00015FC83 /* GCDWebServerResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerResponse.m; sourceTree = "<group>"; };
@@ -1115,7 +1042,6 @@
 				53FE676E256DD0F00015FC83 /* GCDWebServer */,
 				53FE35FA1EA961670058B925 /* libBASS */,
 				53FE38011EA961970058B925 /* RaptureXML */,
-				53FE38551EA961C80058B925 /* ZipKit */,
 				53329606255EF21D0027C51A /* libsqlite3.tbd */,
 				5367C6D61EA92D3000B1C242 /* libSystem.tbd */,
 				5367C6D41EA92D2400B1C242 /* libz.tbd */,
@@ -1624,59 +1550,6 @@
 			path = Frameworks/RaptureXML;
 			sourceTree = "<group>";
 		};
-		53FE38551EA961C80058B925 /* ZipKit */ = {
-			isa = PBXGroup;
-			children = (
-				53FE38581EA961C80058B925 /* GMAppleDouble+ZKAdditions.h */,
-				53FE38591EA961C80058B925 /* GMAppleDouble+ZKAdditions.m */,
-				53FE385A1EA961C80058B925 /* MacFUSE */,
-				53FE385E1EA961C80058B925 /* NSData+ZKAdditions.h */,
-				53FE385F1EA961C80058B925 /* NSData+ZKAdditions.m */,
-				53FE38601EA961C80058B925 /* NSDate+ZKAdditions.h */,
-				53FE38611EA961C80058B925 /* NSDate+ZKAdditions.m */,
-				53FE38621EA961C80058B925 /* NSDictionary+ZKAdditions.h */,
-				53FE38631EA961C80058B925 /* NSDictionary+ZKAdditions.m */,
-				53FE38641EA961C80058B925 /* NSFileHandle+ZKAdditions.h */,
-				53FE38651EA961C80058B925 /* NSFileHandle+ZKAdditions.m */,
-				53FE38661EA961C80058B925 /* NSFileManager+ZKAdditions.h */,
-				53FE38671EA961C80058B925 /* NSFileManager+ZKAdditions.m */,
-				53FE38681EA961C80058B925 /* NSString+ZKAdditions.h */,
-				53FE38691EA961C80058B925 /* NSString+ZKAdditions.m */,
-				53FE386A1EA961C80058B925 /* ZipKit.h */,
-				53FE386C1EA961C80058B925 /* ZKArchive.h */,
-				53FE386D1EA961C80058B925 /* ZKArchive.m */,
-				53FE386E1EA961C80058B925 /* ZKCDHeader.h */,
-				53FE386F1EA961C80058B925 /* ZKCDHeader.m */,
-				53FE38701EA961C80058B925 /* ZKCDTrailer.h */,
-				53FE38711EA961C80058B925 /* ZKCDTrailer.m */,
-				53FE38721EA961C80058B925 /* ZKCDTrailer64.h */,
-				53FE38731EA961C80058B925 /* ZKCDTrailer64.m */,
-				53FE38741EA961C80058B925 /* ZKCDTrailer64Locator.h */,
-				53FE38751EA961C80058B925 /* ZKCDTrailer64Locator.m */,
-				53FE38761EA961C80058B925 /* ZKDataArchive.h */,
-				53FE38771EA961C80058B925 /* ZKDataArchive.m */,
-				53FE38781EA961C80058B925 /* ZKDefs.h */,
-				53FE38791EA961C80058B925 /* ZKDefs.m */,
-				53FE387A1EA961C80058B925 /* ZKFileArchive.h */,
-				53FE387B1EA961C80058B925 /* ZKFileArchive.m */,
-				53FE387C1EA961C80058B925 /* ZKLFHeader.h */,
-				53FE387D1EA961C80058B925 /* ZKLFHeader.m */,
-				53FE387E1EA961C80058B925 /* ZKLog.h */,
-				53FE387F1EA961C80058B925 /* ZKLog.m */,
-			);
-			name = ZipKit;
-			path = Frameworks/ZipKit;
-			sourceTree = "<group>";
-		};
-		53FE385A1EA961C80058B925 /* MacFUSE */ = {
-			isa = PBXGroup;
-			children = (
-				53FE385C1EA961C80058B925 /* GMAppleDouble.h */,
-				53FE385D1EA961C80058B925 /* GMAppleDouble.m */,
-			);
-			path = MacFUSE;
-			sourceTree = "<group>";
-		};
 		53FE676E256DD0F00015FC83 /* GCDWebServer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1917,7 +1790,6 @@
 				530A16732592468C00E9294E /* FolderArtist.swift in Sources */,
 				53CC751D25DCA9B700D10AB6 /* SearchLoader.swift in Sources */,
 				535F824425C0F64C0024C82C /* RuntimeError.swift in Sources */,
-				53FE38A71EA961C80058B925 /* ZKCDTrailer.m in Sources */,
 				53FE6796256DD0F00015FC83 /* GCDWebServerConnection.m in Sources */,
 				53266BFA2562D4D0002C64BB /* PageControlViewController.swift in Sources */,
 				5347A1E4256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */,
@@ -1943,7 +1815,6 @@
 				53A6AA0A2B89797C007ABD7A /* GCDWebDAVServer.m in Sources */,
 				53ED674025B88B5B0002BFAF /* NotificationCenter+MainThread.swift in Sources */,
 				534BC83925CCC83700964D82 /* LibraryViewController.swift in Sources */,
-				53FE38981EA961C80058B925 /* NSFileHandle+ZKAdditions.m in Sources */,
 				539D330925AA3B5200F53797 /* TableCellModel.swift in Sources */,
 				535E144125A7D3480039BCAA /* ArtistArt.swift in Sources */,
 				536CD55C2B8BA0C300C2BFEC /* NSLocking+Sync.swift in Sources */,
@@ -1958,11 +1829,9 @@
 				53762C8625AD105E00476F2D /* NowPlayingSong.swift in Sources */,
 				53FE67AC256DE9600015FC83 /* Defines.swift in Sources */,
 				537AE8142622491E0073DEF2 /* AsyncBlockOperation.swift in Sources */,
-				53FE38BC1EA961C80058B925 /* ZKLog.m in Sources */,
 				5373C6A225B610F800CAA859 /* SceneDelegate.swift in Sources */,
 				538B3EC225B65E1E00824068 /* Artist.swift in Sources */,
 				535E143B25A7CC690039BCAA /* CoverArtStore.swift in Sources */,
-				53FE38951EA961C80058B925 /* NSDictionary+ZKAdditions.m in Sources */,
 				5389478025A4E7170078FBAF /* MediaFolder.swift in Sources */,
 				53762C7A25ACE86D00476F2D /* ServerPlaylistStore.swift in Sources */,
 				537B05BC256B04360008892C /* PadMenuViewController.swift in Sources */,
@@ -1979,25 +1848,20 @@
 				53329652255F30220027C51A /* ClosureSleeve.swift in Sources */,
 				5357CE9325B8D56B00FA825A /* DownloadsManager.swift in Sources */,
 				53329648255F2E770027C51A /* PlayAllAndShuffleHeader.swift in Sources */,
-				53FE38B91EA961C80058B925 /* ZKLFHeader.m in Sources */,
 				539D32F725AA207400F53797 /* LyricsLoader.swift in Sources */,
 				53D4FCA32599335900C6F1AE /* FolderMetadata.swift in Sources */,
 				53B9C48E25A7A51F007E9E3C /* MediaFolderStore.swift in Sources */,
-				53FE388C1EA961C80058B925 /* GMAppleDouble.m in Sources */,
 				5376D5B82B8ABD30000C3184 /* EqualizerViewController.swift in Sources */,
 				53B9C49725A7A650007E9E3C /* SongStore.swift in Sources */,
 				53CC751725DB59B600D10AB6 /* ContextMenu.swift in Sources */,
 				538B3EBC25B65BCF00824068 /* ArtistsViewModel.swift in Sources */,
-				53FE38B31EA961C80058B925 /* ZKDefs.m in Sources */,
 				53762C8F25AD1BA200476F2D /* APILoader.swift in Sources */,
 				53CB554B25C9D4AB004F2BAB /* BookmarkStore.swift in Sources */,
 				53246AA9256C324500E11EC4 /* InsetTextField.swift in Sources */,
 				53DD0DD9259A592B00494AEA /* RecursiveSongLoader.swift in Sources */,
 				539D32FA25AA21AA00F53797 /* LyricsStore.swift in Sources */,
 				53A0EDD125B5E6DA00B78DAA /* FolderAlbumViewController.swift in Sources */,
-				53FE38A11EA961C80058B925 /* ZKArchive.m in Sources */,
 				531EC86825B225C60076973A /* DownloadsViewController.swift in Sources */,
-				53FE388F1EA961C80058B925 /* NSData+ZKAdditions.m in Sources */,
 				53762C7D25ACEEB400476F2D /* ServerPlaylistsLoader.swift in Sources */,
 				5373C69C25B60B9300CAA859 /* InflectorKit+Helper.swift in Sources */,
 				531EC86E25B228BF0076973A /* DownloadedTagArtist.swift in Sources */,
@@ -2017,12 +1881,10 @@
 				534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
 				5376D5B52B8AB430000C3184 /* BassEffectDAO.swift in Sources */,
 				531EC85C25B1F43A0076973A /* ServerPlaylistViewController.swift in Sources */,
-				53FE38AA1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
 				53E03D1125C279AC0043355F /* SnappySlider.swift in Sources */,
 				53FE67A2256DD0F00015FC83 /* GCDWebServerMultiPartFormRequest.m in Sources */,
 				53ED674625B8976F0002BFAF /* CustomStringConvertable+Default.swift in Sources */,
 				53246AB3256C918500E11EC4 /* LyricsViewController.swift in Sources */,
-				53FE38AD1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
 				532C625225B62F5800185998 /* NetworkMonitor.swift in Sources */,
 				5376D5BB2B8B8ABD000C3184 /* EqualizerPathView.swift in Sources */,
 				536C8E032634A1F5007B81FB /* CustomUITableViewController.swift in Sources */,
@@ -2048,7 +1910,6 @@
 				530A168E259299C800E9294E /* TagArtist.swift in Sources */,
 				53E03D0325C236260043355F /* NSURLError+isCanceledURLRequest.swift in Sources */,
 				539D330025AA2F4E00F53797 /* DownloadsStore.swift in Sources */,
-				53FE38A41EA961C80058B925 /* ZKCDHeader.m in Sources */,
 				53A0EDDD25B5F8E000B78DAA /* ChatTableViewCell.swift in Sources */,
 				5381885325A67A8F00C59CDE /* DependencyInjection.swift in Sources */,
 				5329492A2DE8BF670088B5CE /* AsyncSubfolderLoader.swift in Sources */,
@@ -2076,7 +1937,6 @@
 				536C8E0026349B46007B81FB /* UIView+EnableDisable.swift in Sources */,
 				53FE679A256DD0F00015FC83 /* GCDWebServerFileResponse.m in Sources */,
 				531EC87A25B232EC0076973A /* DownloadedSongsViewController.swift in Sources */,
-				53FE38861EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */,
 				53FE6792256DD0F00015FC83 /* GCDWebServerFunctions.m in Sources */,
 				539D32EB25AA196900F53797 /* ChatMessage.swift in Sources */,
 				53ED673725B7A3020002BFAF /* URLRequest+Subsonic.swift in Sources */,
@@ -2094,9 +1954,7 @@
 				5357FE2525C39F96001BDE29 /* BassPlayer.swift in Sources */,
 				53B9C48325A789D3007E9E3C /* Song.swift in Sources */,
 				53ED673425B7A1360002BFAF /* String+URLEncode.swift in Sources */,
-				53FE38B01EA961C80058B925 /* ZKDataArchive.m in Sources */,
 				535E143E25A7CC870039BCAA /* CoverArt.swift in Sources */,
-				53FE38921EA961C80058B925 /* NSDate+ZKAdditions.m in Sources */,
 				53D973FE255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
 				53246AA3256C209E00E11EC4 /* ServerEditViewController.swift in Sources */,
 				53A6AA642B8A8A22007ABD7A /* Debug.swift in Sources */,
@@ -2108,13 +1966,11 @@
 				53530B3E2DE7C79E007EFA3A /* RXMLElement.swift in Sources */,
 				53EA2DE2257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
 				5357FE1E25C32C6E001BDE29 /* BassPluginLoad.c in Sources */,
-				53CB016825864D5200E2DF10 /* NSFileManager+ZKAdditions.m in Sources */,
 				537C93E125B1051200175DF6 /* SaveEditHeader.swift in Sources */,
 				539D330C25AA55E000F53797 /* LocalPlaylist.swift in Sources */,
 				53ED672825B76FA60002BFAF /* HomeAlbumViewController.swift in Sources */,
 				538C8FE725609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */,
 				5357CE9925B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */,
-				53FE38B61EA961C80058B925 /* ZKFileArchive.m in Sources */,
 				535E05782DE5412C00BF3477 /* DDSocialDialog.swift in Sources */,
 				53762C8925AD122500476F2D /* NowPlayingLoader.swift in Sources */,
 				535E142625A7B2020039BCAA /* FolderArtistStore.swift in Sources */,
@@ -2136,7 +1992,6 @@
 				539D331B25AC95A300F53797 /* DownloadedFolderAlbum.swift in Sources */,
 				5329492D2DE90D270088B5CE /* AsyncTagArtistLoader.swift in Sources */,
 				531EC87725B230920076973A /* DownloadedTagAlbum.swift in Sources */,
-				53FE389E1EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53752BEC2562CEF800438636 /* CoverArtViewController.swift in Sources */,
 				531EC85925B1F0390076973A /* LocalPlaylistViewController.swift in Sources */,
 				539D330F25AA61DD00F53797 /* LocalPlaylistStore.swift in Sources */,
@@ -2163,7 +2018,6 @@
 				535F824525C0F64C0024C82C /* RuntimeError.swift in Sources */,
 				53CC751E25DCA9B700D10AB6 /* SearchLoader.swift in Sources */,
 				538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
-				53FE38A91EA961C80058B925 /* ZKCDTrailer.m in Sources */,
 				53FE6799256DD0F00015FC83 /* GCDWebServerErrorResponse.m in Sources */,
 				535E143925A7C6D60039BCAA /* QuickAlbumsLoader.swift in Sources */,
 				530A1680259277E700E9294E /* SearchAllViewController.swift in Sources */,
@@ -2181,7 +2035,6 @@
 				536C890B25BB5FED008FE1AC /* StreamHandler.swift in Sources */,
 				53FE679F256DD0F00015FC83 /* GCDWebServerStreamedResponse.m in Sources */,
 				535F824825C0FE950024C82C /* Decoding+Generic.swift in Sources */,
-				53FE389A1EA961C80058B925 /* NSFileHandle+ZKAdditions.m in Sources */,
 				539D330725AA353C00F53797 /* DownloadedSongPathComponent.swift in Sources */,
 				53ED675C25B8B5190002BFAF /* DownloadedTagArtistViewController.swift in Sources */,
 				53ED674125B88B5B0002BFAF /* NotificationCenter+MainThread.swift in Sources */,
@@ -2204,12 +2057,10 @@
 				53329642255F2B960027C51A /* AlbumTableViewHeader.swift in Sources */,
 				537AE8152622491E0073DEF2 /* AsyncBlockOperation.swift in Sources */,
 				5373C6A325B610F800CAA859 /* SceneDelegate.swift in Sources */,
-				53FE38BE1EA961C80058B925 /* ZKLog.m in Sources */,
 				538B3EC325B65E1E00824068 /* Artist.swift in Sources */,
 				535E143C25A7CC690039BCAA /* CoverArtStore.swift in Sources */,
 				53C3AB74257DDA1000B35B99 /* LicensesViewController.swift in Sources */,
 				53762C7B25ACE86D00476F2D /* ServerPlaylistStore.swift in Sources */,
-				53FE38971EA961C80058B925 /* NSDictionary+ZKAdditions.m in Sources */,
 				5389478125A4E7170078FBAF /* MediaFolder.swift in Sources */,
 				53FE67AD256DE9600015FC83 /* Defines.swift in Sources */,
 				53CC751125D9F31500D10AB6 /* String+Hex.swift in Sources */,
@@ -2221,20 +2072,15 @@
 				539D330425AA336600F53797 /* DownloadedSong.swift in Sources */,
 				531EC86325B21F360076973A /* DownloadedFolderArtistsViewController.swift in Sources */,
 				5357FE1B25C320EF001BDE29 /* Bass.swift in Sources */,
-				53FE38BB1EA961C80058B925 /* ZKLFHeader.m in Sources */,
 				5357CE9425B8D56B00FA825A /* DownloadsManager.swift in Sources */,
-				53FE388E1EA961C80058B925 /* GMAppleDouble.m in Sources */,
 				539D32F825AA207400F53797 /* LyricsLoader.swift in Sources */,
 				53D4FCA42599335900C6F1AE /* FolderMetadata.swift in Sources */,
 				53B9C48F25A7A51F007E9E3C /* MediaFolderStore.swift in Sources */,
 				53B9C49825A7A650007E9E3C /* SongStore.swift in Sources */,
-				53FE38B51EA961C80058B925 /* ZKDefs.m in Sources */,
 				5376D5B92B8ABD30000C3184 /* EqualizerViewController.swift in Sources */,
-				53FE38A31EA961C80058B925 /* ZKArchive.m in Sources */,
 				53CC751825DB59B600D10AB6 /* ContextMenu.swift in Sources */,
 				53762C9025AD1BA200476F2D /* APILoader.swift in Sources */,
 				538B3EBD25B65BCF00824068 /* ArtistsViewModel.swift in Sources */,
-				53FE38911EA961C80058B925 /* NSData+ZKAdditions.m in Sources */,
 				53DD0DDA259A592B00494AEA /* RecursiveSongLoader.swift in Sources */,
 				53CB554C25C9D4AB004F2BAB /* BookmarkStore.swift in Sources */,
 				53A0EDD225B5E6DA00B78DAA /* FolderAlbumViewController.swift in Sources */,
@@ -2266,7 +2112,6 @@
 				5347A1E5256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */,
 				53E03D1225C279AC0043355F /* SnappySlider.swift in Sources */,
 				531EC85D25B1F43A0076973A /* ServerPlaylistViewController.swift in Sources */,
-				53FE38AC1EA961C80058B925 /* ZKCDTrailer64.m in Sources */,
 				53ED674725B8976F0002BFAF /* CustomStringConvertable+Default.swift in Sources */,
 				5376D5BC2B8B8ABD000C3184 /* EqualizerPathView.swift in Sources */,
 				536C8E042634A1F5007B81FB /* CustomUITableViewController.swift in Sources */,
@@ -2280,7 +2125,6 @@
 				53D4FCAA25993C4E00C6F1AE /* TagArtistLoader.swift in Sources */,
 				539D331325AB691B00F53797 /* PlayQueue.swift in Sources */,
 				53530B372DE786CA007EFA3A /* AsyncMediaFoldersLoader.swift in Sources */,
-				53FE38AF1EA961C80058B925 /* ZKCDTrailer64Locator.m in Sources */,
 				53ED675F25B8B6A50002BFAF /* DownloadedTagAlbumViewController.swift in Sources */,
 				53266BFB2562D4D0002C64BB /* PageControlViewController.swift in Sources */,
 				53D9743B255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */,
@@ -2297,7 +2141,6 @@
 				539D330125AA2F4E00F53797 /* DownloadsStore.swift in Sources */,
 				5329492B2DE8BF670088B5CE /* AsyncSubfolderLoader.swift in Sources */,
 				53246AB4256C918500E11EC4 /* LyricsViewController.swift in Sources */,
-				53FE38A61EA961C80058B925 /* ZKCDHeader.m in Sources */,
 				53A0EDDE25B5F8E000B78DAA /* ChatTableViewCell.swift in Sources */,
 				53FE6791256DD0F00015FC83 /* GCDWebServerRequest.m in Sources */,
 				5357FE3225C760B7001BDE29 /* BassVisualizer.swift in Sources */,
@@ -2339,11 +2182,8 @@
 				53B9C49225A7A5D6007E9E3C /* TagArtistStore.swift in Sources */,
 				53B9C48425A789D3007E9E3C /* Song.swift in Sources */,
 				53ED673525B7A1360002BFAF /* String+URLEncode.swift in Sources */,
-				53FE38881EA961C80058B925 /* GMAppleDouble+ZKAdditions.m in Sources */,
 				535E143F25A7CC870039BCAA /* CoverArt.swift in Sources */,
-				53FE38B21EA961C80058B925 /* ZKDataArchive.m in Sources */,
 				53FE6795256DD0F00015FC83 /* GCDWebServer.m in Sources */,
-				53FE38941EA961C80058B925 /* NSDate+ZKAdditions.m in Sources */,
 				53A6AA652B8A8A22007ABD7A /* Debug.swift in Sources */,
 				53D973FF255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
 				53CB554025C915F2004F2BAB /* EqualizerPointView.swift in Sources */,
@@ -2358,7 +2198,6 @@
 				537C93E225B1051200175DF6 /* SaveEditHeader.swift in Sources */,
 				539D330D25AA55E000F53797 /* LocalPlaylist.swift in Sources */,
 				53ED672925B76FA60002BFAF /* HomeAlbumViewController.swift in Sources */,
-				53FE38B81EA961C80058B925 /* ZKFileArchive.m in Sources */,
 				5357CE9A25B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */,
 				535E05772DE5412C00BF3477 /* DDSocialDialog.swift in Sources */,
 				53762C8A25AD122500476F2D /* NowPlayingLoader.swift in Sources */,
@@ -2375,13 +2214,11 @@
 				53FE67A5256DD0F00015FC83 /* GCDWebServerDataRequest.m in Sources */,
 				53B9C49525A7A5F9007E9E3C /* TagAlbumStore.swift in Sources */,
 				53D632DA25A65CBC004EC117 /* String+Clean.swift in Sources */,
-				53FE389D1EA961C80058B925 /* NSFileManager+ZKAdditions.m in Sources */,
 				53E04948255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift in Sources */,
 				539D331C25AC95A300F53797 /* DownloadedFolderAlbum.swift in Sources */,
 				5329492E2DE90D270088B5CE /* AsyncTagArtistLoader.swift in Sources */,
 				531EC87825B230920076973A /* DownloadedTagAlbum.swift in Sources */,
 				53246AA4256C209E00E11EC4 /* ServerEditViewController.swift in Sources */,
-				53FE38A01EA961C80058B925 /* NSString+ZKAdditions.m in Sources */,
 				53FE6797256DD0F00015FC83 /* GCDWebServerConnection.m in Sources */,
 				53FE67A1256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
 				531EC85A25B1F0390076973A /* LocalPlaylistViewController.swift in Sources */,

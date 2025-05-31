@@ -12,7 +12,6 @@
 #import "GCDWebServer.h"
 #import "GCDWebServerDataResponse.h"
 #import "GCDWebServerErrorResponse.h"
-#import "ZipKit.h"
 
 // Audio Engine
 #import "BassPluginLoad.h"

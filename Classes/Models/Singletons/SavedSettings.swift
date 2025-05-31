@@ -454,23 +454,34 @@ final class SavedSettings {
         DDLog.flushLog()
         
         let zipFileName = "iSub Logs.zip"
-        let zipFilePath = (cachesPath as NSString).appendingPathComponent(zipFileName)
-        let logsFolder = (cachesPath as NSString).appendingPathComponent("Logs")
+        let zipFilePath = "\(FileManager.default.temporaryDirectory.path)/\(zipFileName)"
+        let logsFolder = "\(cachesPath)/\("Logs")"
         
         // Delete the old zip if exists
-        do {
-            try FileManager.default.removeItem(atPath: zipFilePath)
-        } catch {
-            DDLogError("[SavedSettings] Failed to delete old zip file at path: \(zipFileName), error: \(error)")
-            return nil
+        if FileManager.default.fileExists(atPath: zipFilePath) {
+            do {
+                try FileManager.default.removeItem(atPath: zipFilePath)
+            } catch {
+                DDLogError("[SavedSettings] Failed to delete old zip file at path: \(zipFilePath), error: \(error)")
+                return nil
+            }
         }
         
-        // Zip the logs
-        let archive = ZKFileArchive(archivePath: zipFilePath)
-        if let result = archive?.deflateDirectory(logsFolder, relativeToPath: cachesPath, usingResourceFork: false), result == zkSucceeded.rawValue {
-            return zipFilePath
+        // Zip the logs and move to temp directory since the created zip file is only available inside the callback closure
+        var error: NSError?
+        let coordinator = NSFileCoordinator()
+        coordinator.coordinate(readingItemAt: URL(fileURLWithPath: logsFolder), options: [.forUploading], error: &error) { zipUrl in
+            do {
+                try FileManager.default.moveItem(atPath: zipUrl.path, toPath: zipFilePath)
+            } catch {
+                DDLogError("[SavedSettings] Failed to create zip file at path: \(zipFilePath), error: \(error)")
+            }
         }
-        return nil
+        
+        if let _ = error {
+            return nil
+        }
+        return zipFilePath
     }
     
     // MARK: Keys
