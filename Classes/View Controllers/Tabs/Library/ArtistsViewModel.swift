@@ -99,7 +99,7 @@ class ArtistsViewModel {
                     self.delegate?.loadingFinished(loader: nil)
                 }
             } catch {
-                if !(error is CancellationError) {
+                if !(error is CancellationError) && !((error as NSError).domain == "NSURLErrorDomain" && (error as NSError).code == -999) {
                     await MainActor.run {
                         self.delegate?.loadingFailed(loader: nil, error: error)
                     }
