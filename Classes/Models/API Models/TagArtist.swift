@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import InflectorKit
 import Resolver
 
 struct TagArtist: Artist, Codable, Equatable {

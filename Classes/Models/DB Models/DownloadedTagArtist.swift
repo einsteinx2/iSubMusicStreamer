@@ -8,7 +8,6 @@
 
 import Foundation
 import Resolver
-import InflectorKit
 
 struct DownloadedTagArtist: Codable, Equatable {
     let serverId: Int

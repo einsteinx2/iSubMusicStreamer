@@ -8,7 +8,6 @@
 
 import UIKit
 import Resolver
-import InflectorKit
 import SnapKit
 
 final class NowPlayingViewController: CustomUITableViewController {

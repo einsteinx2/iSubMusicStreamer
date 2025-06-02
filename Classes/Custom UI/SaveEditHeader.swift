@@ -8,7 +8,6 @@
 
 import UIKit
 import SnapKit
-import InflectorKit
 
 protocol SaveEditHeaderDelegate {
     func saveEditHeaderSaveDeleteAction(_ saveEditHeader: SaveEditHeader)
