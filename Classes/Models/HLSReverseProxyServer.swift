@@ -16,7 +16,7 @@ final class HLSReverseProxyServer {
         return URLSession(configuration: configuration, delegate: urlSessionDelegate, delegateQueue: nil)
     }()
 
-    private(set) var port: Int = 8080
+    static let port: Int = 8080
 
     init() {
         addRequestHandlers()
@@ -24,9 +24,9 @@ final class HLSReverseProxyServer {
 
     // MARK: Starting and Stopping Server
     
-    func start() {
-        guard !webServer.isRunning else { return }
-        webServer.start(withPort: UInt(port), bonjourName: nil)
+    func start() -> Bool {
+        guard !webServer.isRunning else { return false }
+        return webServer.start(withPort: UInt(Self.port), bonjourName: nil)
     }
 
     func stop() {
@@ -40,7 +40,7 @@ final class HLSReverseProxyServer {
         guard var components = URLComponents(url: originURL, resolvingAgainstBaseURL: false) else { return nil }
         components.scheme = "http"
         components.host = "127.0.0.1"
-        components.port = port
+        components.port = Self.port
 
         let originURLQueryItem = URLQueryItem(name: Self.originURLKey, value: originURL.absoluteString)
         components.queryItems = (components.queryItems ?? []) + [originURLQueryItem]
@@ -57,53 +57,53 @@ final class HLSReverseProxyServer {
 
     private func addPlaylistHandler() {
         webServer.addHandler(forMethod: "GET", pathRegex: "^/.*\\.m3u8$", request: GCDWebServerRequest.self) { [weak self] request, completion in
-          guard let self else {
-            return completion(GCDWebServerDataResponse(statusCode: 500))
-          }
-
-          guard let originURL = originURL(from: request) else {
-            return completion(GCDWebServerErrorResponse(statusCode: 400))
-          }
-
-          let task = self.urlSession.dataTask(with: originURL) { data, response, error in
-            guard let data, let response else {
-              return completion(GCDWebServerErrorResponse(statusCode: 500))
+            print("addPlaylistHandler \(request.url)")
+            guard let self else {
+                return completion(GCDWebServerDataResponse(statusCode: 500))
             }
-            
-            DDLogInfo("[HLSReverseProxyServer] HLS playlist data size: \(data.count)")
-            DDLogVerbose("[HLSReverseProxyServer] HLS playlist content: \(String(data: data, encoding: .utf8) ?? "")")
 
-            let playlistData = self.reverseProxyPlaylist(with: data, forOriginURL: originURL)
-            let contentType = response.mimeType ?? "application/x-mpegurl"
-            completion(GCDWebServerDataResponse(data: playlistData, contentType: contentType))
-          }
+            guard let originURL = originURL(from: request) else {
+                return completion(GCDWebServerErrorResponse(statusCode: 400))
+            }
 
-          task.resume()
+            let task = self.urlSession.dataTask(with: originURL) { data, response, error in
+                guard let data, let response else {
+                    return completion(GCDWebServerErrorResponse(statusCode: 500))
+                }
+                DDLogInfo("[HLSReverseProxyServer] HLS playlist data size: \(data.count)")
+                DDLogVerbose("[HLSReverseProxyServer] HLS playlist content: \(String(data: data, encoding: .utf8) ?? "")")
+
+                let playlistData = self.reverseProxyPlaylist(with: data, forOriginURL: originURL)
+                let contentType = response.mimeType ?? "application/x-mpegurl"
+                completion(GCDWebServerDataResponse(data: playlistData, contentType: contentType))
+            }
+
+            task.resume()
         }
     }
 
     private func addSegmentHandler() {
         webServer.addHandler(forMethod: "GET", pathRegex: "^/.*\\.ts$", request: GCDWebServerRequest.self) { [weak self] request, completion in
-          guard let self else {
-            return completion(GCDWebServerDataResponse(statusCode: 500))
-          }
-
-          guard let originURL = originURL(from: request) else {
-            return completion(GCDWebServerErrorResponse(statusCode: 400))
-          }
-
-          let task = self.urlSession.dataTask(with: originURL) { data, response, error in
-            guard let data, let response else {
-              return completion(GCDWebServerErrorResponse(statusCode: 500))
+            guard let self else {
+                return completion(GCDWebServerDataResponse(statusCode: 500))
             }
+
+            guard let originURL = originURL(from: request) else {
+                return completion(GCDWebServerErrorResponse(statusCode: 400))
+            }
+
+            let task = self.urlSession.dataTask(with: originURL) { data, response, error in
+                guard let data, let response else {
+                    return completion(GCDWebServerErrorResponse(statusCode: 500))
+                }
             
-            DDLogInfo("[HLSReverseProxyServer] HLS segment data size: \(data.count)")
+                DDLogInfo("[HLSReverseProxyServer] HLS segment data size: \(data.count)")
 
-            let contentType = response.mimeType ?? "video/mp2t"
-            completion(GCDWebServerDataResponse(data: data, contentType: contentType))
-          }
+                let contentType = response.mimeType ?? "video/mp2t"
+                completion(GCDWebServerDataResponse(data: data, contentType: contentType))
+            }
 
-          task.resume()
+            task.resume()
         }
     }
 
@@ -170,16 +170,20 @@ final class HLSReverseProxyServer {
 
         guard let scheme = originURL.scheme, let host = originURL.host else { return nil }
         
-        let originPort = originURL.port ?? 80
-
         let path: String
         if line.hasPrefix("/") {
           path = line
         } else {
           path = originURL.deletingLastPathComponent().appendingPathComponent(line).path
         }
+        
+        var originPort = ""
+        if let port = originURL.port {
+            originPort = String(port)
+        }
 
         let absoluteURL = URL(string: scheme + "://" + host + ":\(originPort)" + path)?.standardized
+        
         DDLogVerbose("[HLSReverseProxyServer] absoluteURL: \(absoluteURL?.absoluteString ?? "")")
         return absoluteURL
     }

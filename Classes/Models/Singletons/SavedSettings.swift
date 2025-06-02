@@ -65,6 +65,8 @@ final class SavedSettings {
     
     var isOfflineMode: Bool = false
     
+    var isInvalidSSLCert: Bool = false
+    
     var showPlayerIcon: Bool { !UIDevice.isPad }
     
     @UserDefault(key: .appTerminatedCleanly, defaultValue: true)

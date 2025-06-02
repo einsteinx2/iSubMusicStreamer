@@ -18,6 +18,10 @@ final class SelfSignedCertURLSessionDelegate: NSObject, URLSessionDelegate, URLS
         // Allow self-signed SSL certificates
         if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
             if let serverTrust = challenge.protectionSpace.serverTrust {
+                // Detect if this is a valid SSL cert as we'll need to know that for video playback
+                let settings: SavedSettings = Resolver.resolve()
+                settings.isInvalidSSLCert = !SecTrustEvaluateWithError(serverTrust, nil)
+                
                 completionHandler(.useCredential, URLCredential(trust: serverTrust))
             }
         }

@@ -55,12 +55,6 @@ final class VideoPlayer: NSObject {
         // Stop the player
         player.stop()
         
-        // If we're on HTTPS, use our proxy to allow for playback from a self signed server
-        // TODO: Right now we always use the proxy server as even if it's http, if the server has https enabled, it will forward requests there. In the future, it would be better to first test if it's possible to play without the proxy even with https (in case they are using a legit SSL cert) and then also enable picture in picture mode and airplay.
-        let proxyServer = HLSReverseProxyServer()
-        proxyServer.start()
-        self.hlsProxyServer = proxyServer
-        
         // Play the video
         let parameters: [String: Any] = ["id": song.id, "bitRate": bitRate]
         guard let request = URLRequest(serverId: song.serverId, subsonicAction: .hls, parameters: parameters) else {
@@ -68,37 +62,71 @@ final class VideoPlayer: NSObject {
             return
         }
         
-        if let url = request.url, let scheme = url.scheme, let host = url.host, let port = url.port {
-            var urlString = "http://localhost:\(proxyServer.port)\(url.relativePath)?\(url.path)"
-            let originUrlString = "\(scheme)://\(host):\(port)\(url.path)"
-            urlString += "&__hls_origin_url=\(originUrlString)"
-            
-            if let playerUrl = URL(string: urlString) {
-                let player = AVPlayer(url: playerUrl)
-                player.allowsExternalPlayback = false // Disable AirPlay since it won't work with the proxy server
+        if let url = request.url, let scheme = url.scheme, let host = url.host {
+            if url.scheme == "https" && settings.isInvalidSSLCert {
+                // While regular HTTP or valid HTTPS works fine with AVPlayer, self-signed SSL does not
+                // Many Subsonic servers are unfortunately set up with self-signed SSL, so we need to use a local HTTP proxy to work around this
+                // While it should be possible, and much cleaner, to use an AVAssetResourceLoader to do this, Apple explicitly prevents it from working...so this is the only working solution I've found
                 
-                let controller = AVPlayerViewController()
-                controller.delegate = self
-                controller.player = player
-                controller.allowsPictureInPicturePlayback = false
-                controller.entersFullScreenWhenPlaybackBegins = true
-                controller.exitsFullScreenWhenPlaybackEnds = true
-                self.videoPlayerController = controller
+                var originUrlComponents = URLComponents()
+                originUrlComponents.scheme = scheme
+                originUrlComponents.host = host
+                originUrlComponents.port = url.port
+                originUrlComponents.path = url.path
                 
-                UIApplication.keyWindow?.rootViewController?.present(controller, animated: true) {
-                    do {
-                        // Start audio session
-                        try AVAudioSession.sharedInstance().setActive(true)
+                guard let originUrlString = originUrlComponents.url?.absoluteString,
+                      let originalQueryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems else {
+                    return
+                }
+                
+                var urlComponents = URLComponents()
+                urlComponents.scheme = "http"
+                urlComponents.host = "localhost"
+                urlComponents.port = HLSReverseProxyServer.port
+                urlComponents.path = url.relativePath
+                urlComponents.queryItems = originalQueryItems + [URLQueryItem(name: "__hls_origin_url", value: originUrlString)]
+                
+                if let playerUrl = urlComponents.url {
+                    let proxyServer = HLSReverseProxyServer()
+                    if proxyServer.start() {
+                        hlsProxyServer = proxyServer
                         
-                        // Allow audio playback when mute switch is on
-                        try AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, options: [])
-                        
-                        // Auto-start playback
-                        player.play()
-                    } catch {
-                        DDLogError("[AppDelegate] Failed to prepare audio session for video playback: \(error)")
+                        // Don't allow external playback because it won't work using this local proxy
+                        startVideoPlayer(url: playerUrl, allowsExternalPlayback: false)
+                    } else {
+                        DDLogError("[VideoPlayer] failed to start the HTTP proxy")
                     }
                 }
+            } else {
+                startVideoPlayer(url: url, allowsExternalPlayback: true)
+            }
+        }
+    }
+    
+    private func startVideoPlayer(url: URL, allowsExternalPlayback: Bool) {
+        let player = AVPlayer(url: url)
+        player.allowsExternalPlayback = allowsExternalPlayback
+        
+        let controller = AVPlayerViewController()
+        controller.delegate = self
+        controller.player = player
+        controller.allowsPictureInPicturePlayback = false
+        controller.entersFullScreenWhenPlaybackBegins = true
+        controller.exitsFullScreenWhenPlaybackEnds = true
+        self.videoPlayerController = controller
+        
+        UIApplication.keyWindow?.rootViewController?.present(controller, animated: true) {
+            do {
+                // Start audio session
+                try AVAudioSession.sharedInstance().setActive(true)
+                
+                // Allow audio playback when mute switch is on
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, options: [])
+                
+                // Auto-start playback
+                player.play()
+            } catch {
+                DDLogError("[AppDelegate] Failed to prepare audio session for video playback: \(error)")
             }
         }
     }
