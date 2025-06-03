@@ -60,7 +60,7 @@ extension FolderAlbum: TableCellModel {
     var tagArtistId: String? { nil }
     var tagAlbumId: String? { nil }
     
-    func download() { SongsHelper.downloadAll(serverId: serverId, folderId: id) }
-    func queue() { SongsHelper.queueAll(serverId: serverId, folderId: id) }
-    func queueNext() { SongsHelper.queueAllNext(serverId: serverId, folderId: id) }
+    func download() { AsyncSongsHelper.downloadAll(serverId: serverId, folderId: id) }
+    func queue() { AsyncSongsHelper.queueAll(serverId: serverId, folderId: id) }
+    func queueNext() { AsyncSongsHelper.queueAllNext(serverId: serverId, folderId: id) }
 }

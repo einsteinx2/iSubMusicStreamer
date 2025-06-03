@@ -15,7 +15,7 @@ struct ArtistsAPIResponseData {
     let artistIds: [String]
 }
 
-final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
+final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData> {
     @Injected private var store: Store
     
     let serverId: Int
@@ -36,14 +36,14 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
         return URLRequest(serverId: serverId, subsonicAction: .getIndexes, parameters: parameters)
     }
     
-    override func processResponse(data: Data) async throws -> ArtistsAPIResponseData? {
+    override func processResponse(data: Data) async throws -> ArtistsAPIResponseData {
         try Task.checkCancellation()
         
         var tableSections = [TableSection]()
         var artistIds = [String]()
         
         guard let root = try await validate(data: data), let indexes = try await validateChild(parent: root, childTag: "indexes") else {
-            return nil
+            throw APIError.responseNotXML
         }
         guard store.deleteFolderArtists(serverId: serverId, mediaFolderId: mediaFolderId) else {
             throw APIError.database
@@ -57,8 +57,8 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
         var rowIndex = 0
         
         for try await element in indexes.iterate("shortcut") {
-            let shortcut = FolderArtist(serverId: self.serverId, element: element)
-            guard self.store.add(folderArtist: shortcut, mediaFolderId: self.mediaFolderId) else {
+            let shortcut = FolderArtist(serverId: serverId, element: element)
+            guard store.add(folderArtist: shortcut, mediaFolderId: mediaFolderId) else {
                 throw APIError.database
             }
             artistIds.append(shortcut.id)
@@ -69,8 +69,8 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
         try Task.checkCancellation()
         
         if sectionCount > 0 {
-            let section = TableSection(serverId: self.serverId,
-                                       mediaFolderId: self.mediaFolderId,
+            let section = TableSection(serverId: serverId,
+                                       mediaFolderId: mediaFolderId,
                                        name: "*",
                                        position: rowIndex,
                                        itemCount: sectionCount)
@@ -88,10 +88,10 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
             rowIndex = rowCount
             for try await artist in element.iterate("artist") {
                 // Add the artist to the DB
-                let folderArtist = FolderArtist(serverId: self.serverId, element: artist)
+                let folderArtist = FolderArtist(serverId: serverId, element: artist)
                 // Prevent inserting .AppleDouble folders
                 if folderArtist.name != ".AppleDouble" {
-                    guard self.store.add(folderArtist: folderArtist, mediaFolderId: self.mediaFolderId) else {
+                    guard store.add(folderArtist: folderArtist, mediaFolderId: mediaFolderId) else {
                         throw APIError.database
                     }
                     artistIds.append(folderArtist.id)
@@ -102,12 +102,12 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
             
             try Task.checkCancellation()
             
-            let section = TableSection(serverId: self.serverId,
-                                       mediaFolderId: self.mediaFolderId,
+            let section = TableSection(serverId: serverId,
+                                       mediaFolderId: mediaFolderId,
                                        name: element.attribute("name").stringXML,
                                        position: rowIndex,
                                        itemCount: sectionCount)
-            guard self.store.add(folderArtistSection: section) else {
+            guard store.add(folderArtistSection: section) else {
                 throw APIError.database
             }
             tableSections.append(section)
@@ -116,7 +116,7 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
         try Task.checkCancellation()
         
         // Update the metadata
-        let metadata = RootListMetadata(serverId: self.serverId, mediaFolderId: mediaFolderId, itemCount: rowCount, reloadDate: Date())
+        let metadata = RootListMetadata(serverId: serverId, mediaFolderId: mediaFolderId, itemCount: rowCount, reloadDate: Date())
         guard store.add(folderArtistListMetadata: metadata) else {
             throw APIError.database
         }

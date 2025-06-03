@@ -16,17 +16,20 @@ final class AsyncImageView: UIImageView {
     private(set) var coverArtId: String? = nil
     
     private var activityIndicator: UIActivityIndicatorView? = nil
-    private var coverArtLoader: CoverArtLoader? = nil
+    private let manager: AsyncCoverArtLoaderManager
+    private var downloadTask: Task<Void, Never>?
     
-    init() {
+    init(manager: AsyncCoverArtLoaderManager = AsyncCoverArtLoaderManager.shared) {
+        self.manager = manager
         super.init(frame: .zero)
-        image = CoverArtLoader.defaultCoverArtImage(isLarge: isLarge)
+        image = AsyncCoverArtLoaderManager.defaultCoverArtImage(isLarge: isLarge)
     }
     
-    init(frame: CGRect = .zero, isLarge: Bool = false) {
+    init(frame: CGRect = .zero, isLarge: Bool = false, manager: AsyncCoverArtLoaderManager = AsyncCoverArtLoaderManager.shared) {
         self.isLarge = isLarge
+        self.manager = manager
         super.init(frame: frame)
-        image = CoverArtLoader.defaultCoverArtImage(isLarge: isLarge)
+        image = AsyncCoverArtLoaderManager.defaultCoverArtImage(isLarge: isLarge)
     }
     
     required init?(coder: NSCoder) {
@@ -34,6 +37,12 @@ final class AsyncImageView: UIImageView {
     }
     
     func setIdsAndLoad(serverId: Int?, coverArtId: String?) {
+        if self.serverId != serverId || self.coverArtId != coverArtId, let oldServerId = self.serverId, let oldCoverArtId = self.coverArtId {
+            Task {
+                await manager.cancel(serverId: oldServerId, coverArtId: oldCoverArtId, isLarge: isLarge)
+            }
+        }
+        
         self.serverId = serverId
         self.coverArtId = coverArtId
         load()
@@ -42,7 +51,7 @@ final class AsyncImageView: UIImageView {
     func reset() {
         serverId = nil
         coverArtId = nil
-        image = CoverArtLoader.defaultCoverArtImage(isLarge: isLarge)
+        image = AsyncCoverArtLoaderManager.defaultCoverArtImage(isLarge: isLarge)
     }
     
     private func load() {
@@ -51,62 +60,56 @@ final class AsyncImageView: UIImageView {
         activityIndicator = nil
         
         // Cancel any previous loading
-        coverArtLoader?.cancelLoad()
-        coverArtLoader?.delegate = nil
-        coverArtLoader = nil
+        downloadTask?.cancel()
+        downloadTask = nil
         
         guard let coverArtId, let serverId else {
             // Set default cover art
-            image = CoverArtLoader.defaultCoverArtImage(isLarge: isLarge)
+            image = AsyncCoverArtLoaderManager.defaultCoverArtImage(isLarge: isLarge)
             return
         }
         
-        let loader = CoverArtLoader(serverId: serverId, coverArtId: coverArtId, isLarge: isLarge, delegate: self)
-        if loader.isCached {
-            image = loader.coverArtImage
+        let loadingId = CoverArtLoadingId(serverId: serverId, coverArtId: coverArtId, isLarge: isLarge)
+        
+        if manager.isCached(loadingId: loadingId) {
+            image = manager.coverArtImage(loadingId: loadingId)
         } else {
-            var usedSmallCoverArt = false
-            if isLarge {
-                // Try and use the small cover art temporarily
-                let smallLoader = CoverArtLoader(serverId: serverId, coverArtId: coverArtId, isLarge: false)
-                if smallLoader.isCached {
-                    image = smallLoader.coverArtImage
-                    usedSmallCoverArt = true
+            downloadTask = Task {
+                var usedSmallCoverArt = false
+                if isLarge {
+                    // Try and use the small cover art temporarily
+                    if manager.isCached(serverId: serverId, coverArtId: coverArtId, isLarge: false) {
+                        image = manager.coverArtImage(serverId: serverId, coverArtId: coverArtId, isLarge: false)
+                        usedSmallCoverArt = true
+                    } else {
+                        image = AsyncCoverArtLoaderManager.defaultCoverArtImage(isLarge: isLarge)
+                    }
                 } else {
-                    image = loader.defaultCoverArtImage
+                    image = AsyncCoverArtLoaderManager.defaultCoverArtImage(isLarge: true)
                 }
-            } else {
-                image = loader.defaultCoverArtImage
-            }
-            
-            if isLarge && !usedSmallCoverArt {
-                let indicator = UIActivityIndicatorView(style: .large)
-                addSubview(indicator)
-                indicator.snp.makeConstraints { make in
-                    make.leading.trailing.top.bottom.equalToSuperview()
+                
+                if isLarge && !usedSmallCoverArt {
+                    let indicator = UIActivityIndicatorView(style: .large)
+                    addSubview(indicator)
+                    indicator.snp.makeConstraints { make in
+                        make.leading.trailing.top.bottom.equalToSuperview()
+                    }
+                    indicator.startAnimating()
+                    activityIndicator = indicator
                 }
-                indicator.startAnimating()
-                activityIndicator = indicator
+                
+                if let coverArt = await manager.download(loadingId: loadingId) {
+                    DDLogInfo("[AsyncImageView] async cover art loading finished for \(loadingId)")
+                    activityIndicator?.removeFromSuperview()
+                    activityIndicator = nil
+                    image = coverArt.image
+                } else {
+                    DDLogError("[AsyncImageView] async cover art loading failed for \(loadingId)")
+                    activityIndicator?.removeFromSuperview()
+                    activityIndicator = nil
+                }
+                
             }
-            loader.startLoad()
         }
-        coverArtLoader = loader
-    }
-}
-
-extension AsyncImageView: APILoaderDelegate {
-    func loadingFinished(loader: APILoader?) {
-        DDLogInfo("[AsyncImageView] async cover art loading finished for: \(coverArtId ?? "nil")")
-        activityIndicator?.removeFromSuperview()
-        activityIndicator = nil
-        image = coverArtLoader?.coverArtImage
-        coverArtLoader = nil
-    }
-    
-    func loadingFailed(loader: APILoader?, error: Error?) {
-        DDLogError("[AsyncImageView] async cover art loading failed: \(error?.localizedDescription ?? "unknown error")")
-        activityIndicator?.removeFromSuperview()
-        activityIndicator = nil
-        coverArtLoader = nil
     }
 }

@@ -299,7 +299,7 @@ final class StreamManager {
         }
         saveHandlerStack()
         
-        SongsHelper.downloadMetadata(song: song)
+        AsyncSongsHelper.downloadMetadata(song: song)
     }
     
     func queueStream(song: Song, tempCache: Bool, startDownload: Bool) {

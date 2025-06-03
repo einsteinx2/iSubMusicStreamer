@@ -14,7 +14,7 @@ struct SubfolderAPIResponseData {
     let songIds: [String]
 }
 
-final class AsyncSubfolderLoader: AsyncAPILoader<SubfolderAPIResponseData?> {
+final class AsyncSubfolderLoader: AsyncAPILoader<SubfolderAPIResponseData> {
     @Injected private var store: Store
     
     override var type: APILoaderType { .subFolders }
@@ -22,14 +22,9 @@ final class AsyncSubfolderLoader: AsyncAPILoader<SubfolderAPIResponseData?> {
     let serverId: Int
     let parentFolderId: String
     
-    var onProcessFolderAlbum: FolderAlbumHandler?
-    var onProcessSong: SongHandler?
-    
-    init(serverId: Int, parentFolderId: String, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil, folderAlbumHandler: FolderAlbumHandler? = nil, songHandler: SongHandler? = nil) {
+    init(serverId: Int, parentFolderId: String) {
         self.serverId = serverId
         self.parentFolderId = parentFolderId
-        self.onProcessFolderAlbum = folderAlbumHandler
-        self.onProcessSong = songHandler
         super.init()
     }
     
@@ -37,14 +32,14 @@ final class AsyncSubfolderLoader: AsyncAPILoader<SubfolderAPIResponseData?> {
         URLRequest(serverId: serverId, subsonicAction: .getMusicDirectory, parameters: ["id": parentFolderId])
     }
     
-    override func processResponse(data: Data) async throws -> SubfolderAPIResponseData? {
+    override func processResponse(data: Data) async throws -> SubfolderAPIResponseData {
         try Task.checkCancellation()
         
         var folderAlbumIds = [String]()
         var songIds = [String]()
         
         guard let root = try await validate(data: data), let directory = try await validateChild(parent: root, childTag: "directory") else {
-            return nil
+            throw APIError.responseNotXML
         }
         guard store.resetFolderAlbumCache(serverId: serverId, parentFolderId: parentFolderId) else {
             throw APIError.database
@@ -57,30 +52,24 @@ final class AsyncSubfolderLoader: AsyncAPILoader<SubfolderAPIResponseData?> {
         var folderAlbums = [FolderAlbum]()
         for try await element in directory.iterate("child") {
             if element.attribute("isDir").boolXML {
-                let folderAlbum = FolderAlbum(serverId: self.serverId, element: element)
+                let folderAlbum = FolderAlbum(serverId: serverId, element: element)
                 if folderAlbum.name != ".AppleDouble" {
                     folderAlbums.append(folderAlbum)
-                    
-                    // Optionally the client can do something with the folder album object
-                    self.onProcessFolderAlbum?(folderAlbum)
                 }
             } else {
-                let song = Song(serverId: self.serverId, element: element)
-                let isVideoSupported = self.store.server(id: self.serverId)?.isVideoSupported ?? false
+                let song = Song(serverId: serverId, element: element)
+                let isVideoSupported = store.server(id: serverId)?.isVideoSupported ?? false
                 if song.path != "" && (isVideoSupported || !song.isVideo) {
                     // Fix for pdfs showing in directory listing
                     // TODO: See if this is still necessary
                     if song.suffix.lowercased() != "pdf" {
-                        guard self.store.add(folderSong: song) else {
+                        guard store.add(folderSong: song) else {
                             throw APIError.database
                         }
                         
                         songIds.append(song.id)
                         songCount += 1
                         duration += song.duration
-                        
-                        // Optionally the client can do something with the song object
-                        self.onProcessSong?(song)
                     }
                 }
             }

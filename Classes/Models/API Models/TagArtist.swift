@@ -47,7 +47,7 @@ extension TagArtist: TableCellModel {
     var tagAlbumId: String? { nil }
     var parentFolderId: String? { nil }
     
-    func download() { SongsHelper.downloadAll(serverId: serverId, tagArtistId: id) }
-    func queue() { SongsHelper.queueAll(serverId: serverId, tagArtistId: id) }
-    func queueNext() { SongsHelper.queueAllNext(serverId: serverId, tagArtistId: id) }
+    func download() { AsyncSongsHelper.downloadAll(serverId: serverId, tagArtistId: id) }
+    func queue() { AsyncSongsHelper.queueAll(serverId: serverId, tagArtistId: id) }
+    func queueNext() { AsyncSongsHelper.queueAllNext(serverId: serverId, tagArtistId: id) }
 }

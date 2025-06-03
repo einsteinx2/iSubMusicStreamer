@@ -8,7 +8,7 @@
 
 import Resolver
 
-final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
+final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData> {
     @Injected private var store: Store
     
     let serverId: Int
@@ -29,14 +29,14 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
         return URLRequest(serverId: serverId, subsonicAction: .getArtists, parameters: parameters)
     }
     
-    override func processResponse(data: Data) async throws -> ArtistsAPIResponseData? {
+    override func processResponse(data: Data) async throws -> ArtistsAPIResponseData {
         try Task.checkCancellation()
         
         var tableSections = [TableSection]()
         var artistIds = [String]()
         
         guard let root = try await validate(data: data), let artists = try await validateChild(parent: root, childTag: "artists") else {
-            return nil
+            throw APIError.responseNotXML
         }
         guard store.deleteTagArtists(serverId: serverId, mediaFolderId: mediaFolderId) else {
             throw APIError.database
@@ -53,8 +53,8 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
             rowIndex = rowCount
             for try await artist in element.iterate("artist") {
                 // Add the artist to the DB
-                let tagArtist = TagArtist(serverId: self.serverId, element: artist)
-                guard self.store.add(tagArtist: tagArtist, mediaFolderId: self.mediaFolderId) else {
+                let tagArtist = TagArtist(serverId: serverId, element: artist)
+                guard store.add(tagArtist: tagArtist, mediaFolderId: mediaFolderId) else {
                     throw APIError.database
                 }
                 artistIds.append(tagArtist.id)
@@ -62,12 +62,12 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
                 sectionCount += 1
             }
             
-            let section = TableSection(serverId: self.serverId,
-                                       mediaFolderId: self.mediaFolderId,
+            let section = TableSection(serverId: serverId,
+                                       mediaFolderId: mediaFolderId,
                                        name: element.attribute("name").stringXML,
                                        position: rowIndex,
                                        itemCount: sectionCount)
-            guard self.store.add(tagArtistSection: section) else {
+            guard store.add(tagArtistSection: section) else {
                 throw APIError.database
             }
             tableSections.append(section)
@@ -76,7 +76,7 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData?> {
         try Task.checkCancellation()
         
         // Update the metadata
-        let metadata = RootListMetadata(serverId: self.serverId, mediaFolderId: mediaFolderId, itemCount: rowCount, reloadDate: Date())
+        let metadata = RootListMetadata(serverId: serverId, mediaFolderId: mediaFolderId, itemCount: rowCount, reloadDate: Date())
         guard store.add(tagArtistListMetadata: metadata) else {
             throw APIError.database
         }

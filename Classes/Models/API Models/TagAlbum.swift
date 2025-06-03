@@ -69,7 +69,7 @@ extension TagAlbum: TableCellModel {
     var isDownloadable: Bool { true }
     var isAvailableOffline: Bool { store.isTagAlbumSongsCached(serverId: serverId, id: id) }
     
-    func download() { SongsHelper.downloadAll(serverId: serverId, tagAlbumId: id) }
-    func queue() { SongsHelper.queueAll(serverId: serverId, tagAlbumId: id) }
-    func queueNext() { SongsHelper.queueAllNext(serverId: serverId, tagAlbumId: id) }
+    func download() { AsyncSongsHelper.downloadAll(serverId: serverId, tagAlbumId: id) }
+    func queue() { AsyncSongsHelper.queueAll(serverId: serverId, tagAlbumId: id) }
+    func queueNext() { AsyncSongsHelper.queueAllNext(serverId: serverId, tagAlbumId: id) }
 }

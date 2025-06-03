@@ -107,7 +107,7 @@ final class DownloadQueue {
             handler.start()
         }
         
-        SongsHelper.downloadMetadata(song: song)
+        AsyncSongsHelper.downloadMetadata(song: song)
         
         NotificationCenter.postOnMainThread(name: Notifications.downloadQueueStarted)
     }

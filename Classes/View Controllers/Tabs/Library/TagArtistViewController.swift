@@ -85,8 +85,8 @@ final class TagArtistViewController: CustomUITableViewController {
                     self.tableView.refreshControl?.endRefreshing()
                 }
                 
-                let tagArtistLoader = AsyncTagArtistLoader(serverId: serverId, tagArtistId: tagArtist.id)
-                self.tagAlbumIds = try await tagArtistLoader.load()
+                let loader = AsyncTagArtistLoader(serverId: serverId, tagArtistId: tagArtist.id)
+                self.tagAlbumIds = try await loader.load()
                 
                 self.tableView.reloadData()
             } catch {

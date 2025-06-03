@@ -17,7 +17,7 @@ final class TagAlbumViewController: CustomUITableViewController {
     var serverId: Int { (Resolver.resolve() as SavedSettings).currentServerId }
     
     private let tagAlbum: TagAlbum
-    private var loader: TagAlbumLoader?
+    private var loaderTask: Task<Void, Never>?
     private var songIds = [String]()
         
     init(tagAlbum: TagAlbum) {
@@ -87,9 +87,9 @@ final class TagAlbumViewController: CustomUITableViewController {
         
         // Create the play all and shuffle buttons and constrain to the container view
         let playAllAndShuffleHeader = PlayAllAndShuffleHeader(playAllHandler: { [unowned self] in
-            SongsHelper.playAll(serverId: serverId, tagAlbumId: tagAlbum.id)
+            AsyncSongsHelper.playAll(serverId: serverId, tagAlbumId: tagAlbum.id)
         }, shuffleHandler: { [unowned self] in
-            SongsHelper.shuffleAll(serverId: serverId, tagAlbumId: tagAlbum.id)
+            AsyncSongsHelper.shuffleAll(serverId: serverId, tagAlbumId: tagAlbum.id)
         })
         headerView.addSubview(playAllAndShuffleHeader)
         playAllAndShuffleHeader.snp.makeConstraints { make in
@@ -112,17 +112,20 @@ final class TagAlbumViewController: CustomUITableViewController {
     
     func startLoad() {
         HUD.show(closeHandler: cancelLoad)
-        loader = TagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbum.id) { [weak self] _, success, error in
-            HUD.hide()
-            guard let self else { return }
-            
-            self.songIds = self.loader?.songIds ?? []
-            self.loader = nil
-            
-            if success {
+        
+        loaderTask = Task {
+            do {
+                defer {
+                    HUD.hide()
+                    self.tableView.refreshControl?.endRefreshing()
+                }
+                
+                let loader = AsyncTagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbum.id)
+                self.songIds = try await loader.load()
+                
                 self.tableView.reloadData()
                 self.addHeader()
-            } else if let error {
+            } catch {
                 if self.settings.isPopupsEnabled {
                     let message = "There was an error loading the album.\n\nError: \(error)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
@@ -130,16 +133,13 @@ final class TagAlbumViewController: CustomUITableViewController {
                     self.present(alert, animated: true, completion: nil)
                 }
             }
-            self.tableView.refreshControl?.endRefreshing()
         }
-        loader?.startLoad()
     }
     
     func cancelLoad() {
         HUD.hide()
-        loader?.cancelLoad()
-        loader?.callback = nil
-        loader = nil
+        loaderTask?.cancel()
+        loaderTask = nil
         tableView.refreshControl?.endRefreshing()
     }
     

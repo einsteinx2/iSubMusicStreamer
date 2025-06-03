@@ -650,7 +650,7 @@ extension Store {
                     WHERE localPlaylistId = \(localPlaylistId)
                     ORDER BY position ASC
                     """
-                let songTuples = try SQLRequest<Row>(literal: songRequestSql).fetchAll(db).map({ ($0[0] as Int, $0[1] as Int) })
+                let songTuples = try SQLRequest<Row>(literal: songRequestSql).fetchAll(db).map({ ($0[0] as Int, $0[1] as String) })
                 for (index, tuple) in songTuples.enumerated() {
                     let updateSql: SQL = """
                         UPDATE localPlaylistSong

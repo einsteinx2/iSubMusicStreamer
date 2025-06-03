@@ -73,7 +73,7 @@ extension UIViewController {
                                 throw APIError.dataNotFound
                             }
                         } catch {
-                            ProgressHUD.banner("Error loading the artist", nil)
+                            ProgressHUD.banner("Error loading the artist", model.primaryLabelText)
                         }
                     }
                 }
@@ -90,15 +90,24 @@ extension UIViewController {
                     self.pushViewControllerCustom(TagAlbumViewController(tagAlbum: tagAlbum))
                 } else {
                     HUD.show()
-                    let loader = TagAlbumLoader(serverId: model.serverId, tagAlbumId: tagAlbumId) { _, success, error in
-                        HUD.hide()
-                        if success, let tagAlbum = self.store.tagAlbum(serverId: model.serverId, id: tagAlbumId) {
-                            self.pushViewControllerCustom(TagAlbumViewController(tagAlbum: tagAlbum))
-                        } else {
+                    Task {
+                        do {
+                            defer {
+                                HUD.hide()
+                            }
+                            
+                            let loader = AsyncTagAlbumLoader(serverId: model.serverId, tagAlbumId: tagAlbumId)
+                            _ = try await loader.load()
+                            
+                            if let tagAlbum = self.store.tagAlbum(serverId: model.serverId, id: tagAlbumId) {
+                                self.pushViewControllerCustom(TagAlbumViewController(tagAlbum: tagAlbum))
+                            } else {
+                                throw APIError.dataNotFound
+                            }
+                        } catch {
                             ProgressHUD.banner("Error loading the artist", model.primaryLabelText)
                         }
                     }
-                    loader.startLoad()
                 }
             }
         }

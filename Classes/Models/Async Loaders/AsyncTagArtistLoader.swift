@@ -41,7 +41,7 @@ final class AsyncTagArtistLoader: AsyncAPILoader<[String]> {
         try Task.checkCancellation()
             
         let tagArtist = TagArtist(serverId: serverId, element: artist)
-        guard self.store.add(tagArtist: tagArtist, mediaFolderId: MediaFolder.allFoldersId) else {
+        guard store.add(tagArtist: tagArtist, mediaFolderId: MediaFolder.allFoldersId) else {
             throw APIError.database
         }
         
@@ -49,8 +49,8 @@ final class AsyncTagArtistLoader: AsyncAPILoader<[String]> {
         
         var tagAlbumIds = [String]()
         for try await element in artist.iterate("album") {
-            let tagAlbum = TagAlbum(serverId: self.serverId, element: element)
-            guard self.store.add(tagAlbum: tagAlbum) else {
+            let tagAlbum = TagAlbum(serverId: serverId, element: element)
+            guard store.add(tagAlbum: tagAlbum) else {
                 throw APIError.database
             }
             tagAlbumIds.append(tagAlbum.id)

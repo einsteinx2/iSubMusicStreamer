@@ -89,11 +89,10 @@ class ArtistsViewModel {
                 _ = self.store.add(mediaFolders: self.mediaFolders)
                 
                 let artistsLoader = type == .folders ? AsyncRootFoldersLoader(serverId: serverId, mediaFolderId: mediaFolderId) : AsyncRootArtistsLoader(serverId: serverId, mediaFolderId: mediaFolderId)
-                if let artistsResponse = try await artistsLoader.load() {
-                    self.metadata = artistsResponse.metadata
-                    self.tableSections = artistsResponse.tableSections
-                    self.artistIds = artistsResponse.artistIds
-                }
+                let artistsResponse = try await artistsLoader.load()
+                self.metadata = artistsResponse.metadata
+                self.tableSections = artistsResponse.tableSections
+                self.artistIds = artistsResponse.artistIds
                 
                 await MainActor.run {
                     self.delegate?.loadingFinished(loader: nil)

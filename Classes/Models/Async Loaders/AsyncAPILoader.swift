@@ -72,8 +72,10 @@ class AsyncAPILoader<T>: AsyncAPILoadable {
         try Task.checkCancellation()
         let (data, _) = try await sharedSession.data(for: request)
         if Debug.apiResponses {
-            let dataString = String(data: data, encoding: .utf8) ?? "(failed to convert response data to string)"
-            DDLogInfo("[APILoader \(self.type)] response: \(dataString)")
+            if type != .coverArt {
+                let dataString = String(data: data, encoding: .utf8) ?? "(failed to convert response data to string)"
+                DDLogInfo("[APILoader \(self.type)] response: \(dataString)")
+            }
         }
         
         try Task.checkCancellation()

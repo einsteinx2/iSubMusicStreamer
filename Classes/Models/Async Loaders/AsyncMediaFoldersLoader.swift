@@ -35,7 +35,7 @@ final class AsyncMediaFoldersLoader: AsyncAPILoader<[MediaFolder]> {
         
         var mediaFolders = [allFoldersMediaFolder]
         for try await element in musicFolders.iterate("musicFolder") {
-            mediaFolders.append(MediaFolder(serverId: self.serverId, element: element))
+            mediaFolders.append(MediaFolder(serverId: serverId, element: element))
         }
         
         return mediaFolders

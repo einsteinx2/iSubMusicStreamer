@@ -341,8 +341,7 @@ final class PlayQueue: NSObject {
                 info[MPNowPlayingInfoPropertyPlaybackRate] = 1
                 
                 if let coverArtId = song.coverArtId, self.settings.isLockScreenArtEnabled {
-                    let artLoader = CoverArtLoader(serverId: song.serverId, coverArtId: coverArtId, isLarge: true)
-                    if let image = artLoader.coverArtImage {
+                    if let image = AsyncCoverArtLoaderManager.shared.coverArtImage(serverId: song.serverId, coverArtId: coverArtId, isLarge: true) {
                         let artwork = MPMediaItemArtwork(boundsSize: image.size) { size -> UIImage in
                             return image
                         }

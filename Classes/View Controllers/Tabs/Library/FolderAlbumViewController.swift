@@ -122,9 +122,9 @@ final class FolderAlbumViewController: CustomUITableViewController {
         
         // Create the play all and shuffle buttons and constrain to the container view
         let playAllAndShuffleHeader = PlayAllAndShuffleHeader(playAllHandler: { [unowned self] in
-            SongsHelper.playAll(serverId: serverId, folderId: parentFolderId)
+            AsyncSongsHelper.playAll(serverId: serverId, folderId: parentFolderId)
         }, shuffleHandler: { [unowned self] in
-            SongsHelper.shuffleAll(serverId: serverId, folderId: parentFolderId)
+            AsyncSongsHelper.shuffleAll(serverId: serverId, folderId: parentFolderId)
         })
         headerView.addSubview(playAllAndShuffleHeader)
         playAllAndShuffleHeader.snp.makeConstraints { make in
@@ -175,11 +175,10 @@ final class FolderAlbumViewController: CustomUITableViewController {
                 }
                 
                 let subfolderLoader = AsyncSubfolderLoader(serverId: serverId, parentFolderId: parentFolderId)
-                if let subfolderResponse = try await subfolderLoader.load() {
-                    self.metadata = subfolderResponse.folderMetadata
-                    self.folderAlbumIds = subfolderResponse.folderAlbumIds
-                    self.songIds = subfolderResponse.songIds
-                }
+                let subfolderResponse = try await subfolderLoader.load()
+                self.metadata = subfolderResponse.folderMetadata
+                self.folderAlbumIds = subfolderResponse.folderAlbumIds
+                self.songIds = subfolderResponse.songIds
                 
                 self.tableView.reloadData()
                 self.addHeader()
