@@ -40,21 +40,22 @@ final class AsyncLyricsLoader: AsyncAPILoader<Lyrics> {
         try Task.checkCancellation()
         
         guard let root = try await validate(data: data), let element = try await validateChild(parent: root, childTag: "lyrics") else {
-            NotificationCenter.postOnMainThread(name: Notifications.lyricsFailed)
             throw APIError.responseNotXML
         }
 
         let lyrics = Lyrics(tagArtistName: tagArtistName, songTitle: songTitle, element: element)
         guard lyrics.lyricsText.count > 0 else {
-            NotificationCenter.postOnMainThread(name: Notifications.lyricsFailed)
             throw APIError.dataNotFound
         }
         guard store.add(lyrics: lyrics) else {
-            NotificationCenter.postOnMainThread(name: Notifications.lyricsFailed)
             throw APIError.database
         }
         
         NotificationCenter.postOnMainThread(name: Notifications.lyricsDownloaded)
         return lyrics
+    }
+    
+    override func handleFailure() {
+        NotificationCenter.postOnMainThread(name: Notifications.lyricsFailed)
     }
 }

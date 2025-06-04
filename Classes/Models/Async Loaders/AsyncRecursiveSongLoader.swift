@@ -41,8 +41,7 @@ struct AsyncRecursiveSongLoader {
         while let folderId = folderIds.popLast() {
             try Task.checkCancellation()
             
-            let loader = AsyncSubfolderLoader(serverId: serverId, parentFolderId: folderId)
-            let responseData = try await loader.load()
+            let responseData = try await AsyncSubfolderLoader(serverId: serverId, parentFolderId: folderId).load()
             
             try Task.checkCancellation()
             
@@ -58,8 +57,7 @@ struct AsyncRecursiveSongLoader {
         while let tagArtistId = tagArtistIds.popLast() {
             try Task.checkCancellation()
             
-            let loader = AsyncTagArtistLoader(serverId: serverId, tagArtistId: tagArtistId)
-            let tagAlbumIds = try await loader.load()
+            let tagAlbumIds = try await AsyncTagArtistLoader(serverId: serverId, tagArtistId: tagArtistId).load()
             
             try Task.checkCancellation()
             
@@ -73,8 +71,7 @@ struct AsyncRecursiveSongLoader {
         while let tagAlbumId = tagAlbumIds.popLast() {
             try Task.checkCancellation()
             
-            let loader = AsyncTagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId)
-            let songIds = try await loader.load()
+            let songIds = try await AsyncTagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId).load()
             
             try Task.checkCancellation()
             

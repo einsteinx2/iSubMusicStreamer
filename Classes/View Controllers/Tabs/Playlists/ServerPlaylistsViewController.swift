@@ -21,7 +21,7 @@ final class ServerPlaylistsViewController: CustomUITableViewController {
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "playlist", pluralizeClearType: false, isLargeCount: true)
     
-    private var serverPlaylistsLoader: ServerPlaylistsLoader?
+    private var loaderTask: Task<Void, Never>?
     private var serverPlaylists = [ServerPlaylist]()
     
     override func viewDidLoad() {
@@ -120,26 +120,27 @@ final class ServerPlaylistsViewController: CustomUITableViewController {
     }
     
     private func loadServerPlaylists() {
-        cancelLoad()
-        HUD.show(closeHandler: cancelLoad)
-        serverPlaylistsLoader = ServerPlaylistsLoader(serverId: serverId)
-        serverPlaylistsLoader?.callback = { [unowned self] _, success, error in
-            HUD.hide()
-            tableView.refreshControl?.endRefreshing()
-            if success {
+        loaderTask?.cancel()
+        loaderTask = Task {
+            do {
+                HUD.show(closeHandler: cancelLoad)
+                defer {
+                    HUD.hide()
+                    tableView.refreshControl?.endRefreshing()
+                }
+                
+                serverPlaylists = try await AsyncServerPlaylistsLoader(serverId: serverId).load()
                 reloadData()
-            } else {
+            } catch {
                 // TODO: Show error message
             }
         }
-        serverPlaylistsLoader?.startLoad()
     }
     
     func cancelLoad() {
         HUD.hide()
-        serverPlaylistsLoader?.cancelLoad()
-        serverPlaylistsLoader?.callback = nil
-        serverPlaylistsLoader = nil
+        loaderTask?.cancel()
+        loaderTask = nil
     }
     
     override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {

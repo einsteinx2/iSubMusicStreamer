@@ -1,24 +1,24 @@
 //
-//  ServerShuffleLoader.swift
+//  AsyncServerShuffleLoader.swift
 //  iSub
 //
-//  Created by Benjamin Baron on 1/5/21.
-//  Copyright © 2021 Ben Baron. All rights reserved.
+//  Created by Ben Baron on 6/3/25.
+//  Copyright © 2025 Ben Baron. All rights reserved.
 //
 
 import Foundation
 import Resolver
 
-final class ServerShuffleLoader: APILoader {
+final class AsyncServerShuffleLoader: AsyncAPILoader<[Song]> {
     @Injected private var store: Store
     
     let serverId: Int
     let mediaFolderId: Int?
     
-    init(serverId: Int, mediaFolderId: Int? = nil, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
+    init(serverId: Int, mediaFolderId: Int? = nil) {
         self.serverId = serverId
         self.mediaFolderId = mediaFolderId
-        super.init(delegate: delegate, callback: callback)
+        super.init()
     }
     
     // MARK: APILoader Overrides
@@ -34,23 +34,24 @@ final class ServerShuffleLoader: APILoader {
         return URLRequest(serverId: serverId, subsonicAction: .getRandomSongs, parameters: parameters)
     }
     
-    override func processResponse(data: Data) {
-        guard let root = validate(data: data) else { return }
+    override func processResponse(data: Data) async throws -> [Song] {
+        try Task.checkCancellation()
         
+        guard let root = try await validate(data: data) else {
+            throw APIError.responseNotXML
+        }
+        
+        try Task.checkCancellation()
+                
         var songs = [Song]()
-        let success = root.iterate("randomSongs.song") { element, stop in
-            let song = Song(serverId: self.serverId, element: element)
+        for try await element in root.iterate("randomSongs.song") {
+            let song = Song(serverId: serverId, element: element)
             guard self.store.add(song: song) else {
-                stop = true
-                return
+                throw APIError.database
             }
             songs.append(song)
         }
         
-        if success, let _ = store.playSong(position: 0, songs: songs) {
-            informDelegateLoadingFinished()
-        } else {
-            informDelegateLoadingFailed(error: APIError.database)
-        }
+        return songs
     }
 }

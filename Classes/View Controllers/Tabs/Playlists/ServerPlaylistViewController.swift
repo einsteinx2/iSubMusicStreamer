@@ -14,7 +14,7 @@ final class ServerPlaylistViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
         
-    private var serverPlaylistLoader: ServerPlaylistLoader?
+    private var loaderTask: Task<Void, Never>?
     private var serverPlaylist: ServerPlaylist
         
     init(serverPlaylist: ServerPlaylist) {
@@ -41,37 +41,35 @@ final class ServerPlaylistViewController: CustomUITableViewController {
     }
     
     private func loadData() {
-        cancelLoad()
-        HUD.show(closeHandler: cancelLoad)
-        serverPlaylistLoader = ServerPlaylistLoader(serverPlaylist: serverPlaylist)
-        serverPlaylistLoader?.callback = { [unowned self] _, success, error in
-            HUD.hide()
-            tableView.refreshControl?.endRefreshing()
-            
-            if let error {
-                if settings.isPopupsEnabled {
+        loaderTask?.cancel()
+        loaderTask = Task {
+            do {
+                HUD.show(closeHandler: cancelLoad)
+                defer {
+                    HUD.hide()
+                    tableView.refreshControl?.endRefreshing()
+                }
+                
+                // Reload the server playlist to get the updated loaded song count
+                serverPlaylist = try await AsyncServerPlaylistLoader(serverPlaylist: serverPlaylist).load()
+                tableView.reloadData()
+            } catch {
+                if settings.isPopupsEnabled && !error.isCanceled {
                     let message = "There was an error loading the playlist.\n\nError: \(error)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
                     alert.addOKAction()
                     present(alert, animated: true, completion: nil)
                 }
-            } else {
-                // Reload the server playlist to get the updated loaded song count
-                if let serverPlaylist = store.serverPlaylist(serverId: serverPlaylist.serverId, id: serverPlaylist.id) {
-                    self.serverPlaylist = serverPlaylist
-                }
-                tableView.reloadData()
             }
         }
-        serverPlaylistLoader?.startLoad()
     }
     
     func cancelLoad() {
+        // TODO: Double check if we still need to call HUD.hide() and other things we call in defer blocks, I think it's not since they should be called after canceling, but may be delayed so bad UX unless we call it directly here
         HUD.hide()
-        serverPlaylistLoader?.cancelLoad()
-        serverPlaylistLoader?.callback = nil
-        serverPlaylistLoader = nil
-        self.tableView.refreshControl?.endRefreshing()
+        loaderTask?.cancel()
+        loaderTask = nil
+        tableView.refreshControl?.endRefreshing()
     }
     
     override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {

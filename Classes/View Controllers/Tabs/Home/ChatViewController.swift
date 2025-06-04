@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import Resolver
+import CocoaLumberjackSwift
 
 final class ChatViewController: UIViewController {
     @Injected private var settings: SavedSettings
@@ -16,7 +17,7 @@ final class ChatViewController: UIViewController {
     
     var serverId: Int { (Resolver.resolve() as SavedSettings).currentServerId }
     
-    private var loader: ChatLoader?
+    private var loaderTask: Task<Void, Never>?
     
     private var chatMessages = [ChatMessage]()
     
@@ -52,8 +53,8 @@ final class ChatViewController: UIViewController {
     }
     
     deinit {
-        loader?.cancelLoad()
-        loader?.delegate = nil
+        loaderTask?.cancel()
+        loaderTask = nil
     }
     
     private func addHeader() {
@@ -101,53 +102,46 @@ final class ChatViewController: UIViewController {
     }
     
     private func send(message: String) {
-        HUD.show(message: "Sending")
-        let chatSendLoader = ChatSendLoader(serverId: serverId, message: message)
-        chatSendLoader.callback = { [weak self] _, success, error in
-            HUD.hide()
-            guard let self else { return }
-            if success {
-                self.startLoad()
-            } else {
-                self.textInput.text = message
+        Task {
+            do {
+                HUD.show(message: "Sending")
+                defer {
+                    HUD.hide()
+                }
+                
+                try await AsyncChatSendLoader(serverId: serverId, message: message).load()
+                startLoad()
+            } catch {
+                textInput.text = message
             }
         }
-        chatSendLoader.startLoad()
     }
     
     func startLoad() {
-        HUD.show(closeHandler: cancelLoad)
-        cancelLoad()
-        loader = ChatLoader(serverId: serverId, delegate: self)
-        loader?.startLoad()
+        loaderTask?.cancel()
+        loaderTask = Task {
+            do {
+                HUD.show(closeHandler: cancelLoad)
+                defer {
+                    HUD.hide()
+                    tableView.refreshControl?.endRefreshing()
+                }
+                
+                chatMessages = try await AsyncChatLoader(serverId: serverId).load()
+                tableView.reloadData()
+                tableView.setNeedsUpdateConstraints()
+            } catch {
+                if !error.isCanceled {
+                    DDLogError("[ChatViewController] Failed to load new chat messages: \(error)")
+                }
+            }
+        }
     }
     
     func cancelLoad() {
         HUD.hide()
-        loader?.cancelLoad()
-        loader?.delegate = nil
-        loader = nil
-    }
-}
-
-extension ChatViewController: APILoaderDelegate {
-    func loadingFinished(loader: APILoader?) {
-        HUD.hide()
-        if let loader = loader as? ChatLoader {
-            chatMessages = loader.chatMessages
-        }
-        self.loader?.delegate = nil
-        self.loader = nil
-        tableView.reloadData()
-        tableView.setNeedsUpdateConstraints()
-        tableView.refreshControl?.endRefreshing()
-    }
-    
-    func loadingFailed(loader: APILoader?, error: Error?) {
-        HUD.hide()
-        self.loader?.delegate = nil
-        self.loader = nil
-        tableView.refreshControl?.endRefreshing()
+        loaderTask?.cancel()
+        loaderTask = nil
     }
 }
 

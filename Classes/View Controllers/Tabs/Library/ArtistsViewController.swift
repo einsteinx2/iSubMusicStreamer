@@ -214,14 +214,14 @@ final class ArtistsViewController: CustomUITableViewController {
     }
 }
 
-extension ArtistsViewController: APILoaderDelegate {
+extension ArtistsViewController: ArtistsViewModelDelegate {
     func cancelLoad() {
         HUD.hide()
         dataModel.cancelLoad()
         tableView.refreshControl?.endRefreshing()
     }
     
-    func loadingFinished(loader: APILoader?) {
+    func loadingFinished() {
         HUD.hide()
         dropdownMenu.selectedIndex = dataModel.mediaFolderIndex
         dropdownMenu.updateItems()
@@ -235,7 +235,7 @@ extension ArtistsViewController: APILoaderDelegate {
         tableView.refreshControl?.endRefreshing()
     }
     
-    func loadingFailed(loader: APILoader?, error: Error?) {
+    func loadingFailed(error: Error?) {
         HUD.hide()
         tableView.refreshControl?.endRefreshing()
         

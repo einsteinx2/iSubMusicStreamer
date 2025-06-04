@@ -17,7 +17,7 @@ final class NowPlayingViewController: CustomUITableViewController {
     
     var serverId: Int { (Resolver.resolve() as SavedSettings).currentServerId }
         
-    private var nowPlayingLoader: NowPlayingLoader?
+    private var loadingTask: Task<Void, Never>?
     private var nowPlayingSongs = [NowPlayingSong]()
     
     override func viewDidLoad() {
@@ -42,33 +42,32 @@ final class NowPlayingViewController: CustomUITableViewController {
     }
     
     private func loadData() {
-        cancelLoad()
-        HUD.show(closeHandler: cancelLoad)
-        nowPlayingLoader = NowPlayingLoader(serverId: serverId)
-        nowPlayingLoader?.callback = { [unowned self] _, success, error in
-            HUD.hide()
-            tableView.refreshControl?.endRefreshing()
-            if let error {
-                if settings.isPopupsEnabled {
+        loadingTask?.cancel()
+        loadingTask = Task {
+            do {
+                HUD.show(closeHandler: cancelLoad)
+                defer {
+                    HUD.hide()
+                    tableView.refreshControl?.endRefreshing()
+                }
+                
+                nowPlayingSongs = try await AsyncNowPlayingLoader(serverId: serverId).load()
+                tableView.reloadData()
+            } catch {
+                if settings.isPopupsEnabled, !error.isCanceled {
                     let message = "There was an error loading the now playing list.\n\nError: \(error)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
                     alert.addOKAction()
                     present(alert, animated: true, completion: nil)
                 }
-            } else {
-                nowPlayingSongs = nowPlayingLoader?.nowPlayingSongs ?? []
-                tableView.reloadData()
             }
-            nowPlayingLoader = nil
         }
-        nowPlayingLoader?.startLoad()
     }
     
     func cancelLoad() {
         HUD.hide()
-        nowPlayingLoader?.cancelLoad()
-        nowPlayingLoader?.callback = nil
-        nowPlayingLoader = nil
+        loadingTask?.cancel()
+        loadingTask = nil
         tableView.refreshControl?.endRefreshing()
     }
     

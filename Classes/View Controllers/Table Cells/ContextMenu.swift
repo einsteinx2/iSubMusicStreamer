@@ -64,9 +64,7 @@ extension UIViewController {
                             defer {
                                 HUD.hide()
                             }
-                            let loader = AsyncTagArtistLoader(serverId: model.serverId, tagArtistId: tagArtistId)
-                            _ = try await loader.load()
-                            
+                            _ = try await AsyncTagArtistLoader(serverId: model.serverId, tagArtistId: tagArtistId).load()
                             if let tagArtist = self.store.tagArtist(serverId: model.serverId, id: tagArtistId) {
                                 self.pushViewControllerCustom(TagArtistViewController(tagArtist: tagArtist))
                             } else {
@@ -95,10 +93,7 @@ extension UIViewController {
                             defer {
                                 HUD.hide()
                             }
-                            
-                            let loader = AsyncTagAlbumLoader(serverId: model.serverId, tagAlbumId: tagAlbumId)
-                            _ = try await loader.load()
-                            
+                            _ = try await AsyncTagAlbumLoader(serverId: model.serverId, tagAlbumId: tagAlbumId).load()                            
                             if let tagAlbum = self.store.tagAlbum(serverId: model.serverId, id: tagAlbumId) {
                                 self.pushViewControllerCustom(TagAlbumViewController(tagAlbum: tagAlbum))
                             } else {

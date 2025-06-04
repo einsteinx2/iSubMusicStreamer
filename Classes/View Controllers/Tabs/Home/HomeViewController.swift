@@ -21,9 +21,7 @@ final class HomeViewController: UIViewController {
     
     var serverId: Int { (Resolver.resolve() as SavedSettings).currentServerId }
     
-    private var quickAlbumsLoader: QuickAlbumsLoader?
-    private var serverShuffleLoader: ServerShuffleLoader?
-    private var searchLoader: SearchLoader?
+    private var loaderTask: Task<Void, Never>?
     
     private let searchBarContainer = UIView()
     private let searchBar = UISearchBar()
@@ -119,16 +117,16 @@ final class HomeViewController: UIViewController {
         quickAlbumsButton.setAction { [unowned self] in
             let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             sheet.addAction(title: "Recently Played", style: .default) { action in
-                self.loadQuickAlbums(modifier: "recent", title: action.title ?? "")
+                self.loadQuickAlbums(modifier: .recent, title: action.title ?? "")
             }
             sheet.addAction(title: "Frequently Played", style: .default) { action in
-                self.loadQuickAlbums(modifier: "frequent", title: action.title ?? "")
+                self.loadQuickAlbums(modifier: .frequent, title: action.title ?? "")
             }
             sheet.addAction(title: "Recently Added", style: .default) { action in
-                self.loadQuickAlbums(modifier: "newest", title: action.title ?? "")
+                self.loadQuickAlbums(modifier: .newest, title: action.title ?? "")
             }
             sheet.addAction(title: "Random Albums", style: .default) { action in
-                self.loadQuickAlbums(modifier: "random", title: action.title ?? "")
+                self.loadQuickAlbums(modifier: .random, title: action.title ?? "")
             }
             sheet.addCancelAction()
             if let popoverPresentationController = sheet.popoverPresentationController {
@@ -296,59 +294,54 @@ final class HomeViewController: UIViewController {
         songInfoButton.update(song: playQueue.currentSong ?? playQueue.prevSong)
     }
     
-    private func loadQuickAlbums(modifier: String, title: String) {
-        HUD.show(closeHandler: cancelLoad)
-        let loader = QuickAlbumsLoader(serverId: serverId, modifier: modifier)
-        loader.callback = { _, _, error in
-            HUD.hide()
-            if let error {
-                if self.settings.isPopupsEnabled && !error.isCanceledURLRequest {
+    private func loadQuickAlbums(modifier: QuickAlbumsModifier, title: String) {
+        loaderTask?.cancel()
+        loaderTask = Task {
+            do {
+                HUD.show(closeHandler: cancelLoad)
+                defer {
+                    HUD.hide()
+                }
+                
+                let folderAlbums = try await AsyncQuickAlbumsLoader(serverId: serverId, modifier: modifier).load()
+                let controller = HomeAlbumViewController(modifier: modifier, folderAlbums: folderAlbums, title: title)
+                self.pushViewControllerCustom(controller)
+            } catch {
+                if self.settings.isPopupsEnabled && !error.isCanceled {
                     let alert = UIAlertController(title: "Error", message: "There was an error grabbing the album list.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
                     alert.addOKAction()
                     self.present(alert, animated: true)
                 }
-            } else {
-                let controller = HomeAlbumViewController()
-                controller.modifier = modifier
-                controller.title = title
-                controller.folderAlbums = loader.folderAlbums
-                self.pushViewControllerCustom(controller)
             }
-            self.quickAlbumsLoader = nil
         }
-        quickAlbumsLoader = loader
-        loader.startLoad()
     }
     
     private func performServerShuffle(mediaFolderId: Int) {
-        HUD.show(closeHandler: cancelLoad)
-        let loader = ServerShuffleLoader(serverId: serverId, mediaFolderId: mediaFolderId)
-        loader.callback = { [unowned self] _, success, _ in
-            HUD.hide()
-            if success {
-                playQueue.playSong(position: 0)
+        loaderTask?.cancel()
+        loaderTask = Task {
+            do {
+                HUD.show(closeHandler: cancelLoad)
+                defer {
+                    HUD.hide()
+                }
+                
+                let songs = try await AsyncServerShuffleLoader(serverId: serverId, mediaFolderId: mediaFolderId).load()
+                let _ = store.playSong(position: 0, songs: songs)
                 NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
-            } else {
-                if settings.isPopupsEnabled {
+            } catch {
+                if settings.isPopupsEnabled, !error.isCanceled {
                     let alert = UIAlertController(title: "Error", message: "There was an error creating the server shuffle list.\n\nThe connection could not be created", preferredStyle: .alert)
                     alert.addOKAction()
                     present(alert, animated: true)
                 }
             }
-            serverShuffleLoader = nil
         }
-        loader.startLoad()
-        serverShuffleLoader = loader
     }
     
     private func cancelLoad() {
         HUD.hide()
-        quickAlbumsLoader?.cancelLoad()
-        quickAlbumsLoader = nil
-        serverShuffleLoader?.cancelLoad()
-        serverShuffleLoader = nil
-        searchLoader?.cancelLoad()
-        searchLoader = nil
+        loaderTask?.cancel()
+        loaderTask = nil
     }
     
     @objc private func jukeboxOff() {
@@ -434,32 +427,34 @@ extension HomeViewController: UISearchBarDelegate {
         
         guard let query = searchBar.text else { return }
         
-        var searchType = SearchLoader.SearchType.old
+        var searchType = AsyncSearchLoader.SearchType.old
         if isTagSearchSupported {
             searchType = searchSegment.selectedSegmentIndex == 0 ? .folder : .tag
         }
-        HUD.show()
-        searchLoader = SearchLoader(serverId: serverId, searchType: searchType, searchItemType: .all, query: query)
-        searchLoader?.callback = { [weak self] _, success, error in
-            HUD.hide()
-            guard let self, let searchLoader else { return }
-            
-            if success {
-                if searchLoader.searchType == .old {
-                    let controller = SearchSongsViewController(serverId: self.serverId, query: query, searchType: searchType, searchItemType: .songs, songs: searchLoader.songs)
+        
+        loaderTask?.cancel()
+        loaderTask = Task {
+            do {
+                HUD.show(closeHandler: cancelLoad)
+                defer {
+                    HUD.hide()
+                }
+                
+                let responseData = try await AsyncSearchLoader(serverId: serverId, searchType: searchType, searchItemType: .all, query: query).load()
+                if searchType == .old {
+                    let controller = SearchSongsViewController(serverId: serverId, query: query, searchType: searchType, searchItemType: .songs, songs: responseData.songs)
                     self.pushViewControllerCustom(controller)
                 } else {
-                    let controller = SearchAllViewController(serverId: self.serverId, query: query, searchType: searchType, folderArtists: searchLoader.folderArtists, folderAlbums: searchLoader.folderAlbums, tagArtists: searchLoader.tagArtists, tagAlbums: searchLoader.tagAlbums, songs: searchLoader.songs)
+                    let controller = SearchAllViewController(serverId: serverId, query: query, searchType: searchType, folderArtists: responseData.folderArtists, folderAlbums: responseData.folderAlbums, tagArtists: responseData.tagArtists, tagAlbums: responseData.tagAlbums, songs: responseData.songs)
                     self.pushViewControllerCustom(controller)
                 }
-            } else if let error {
-                if self.settings.isPopupsEnabled {
+            } catch {
+                if self.settings.isPopupsEnabled, !error.isCanceled {
                     let alert = UIAlertController(title: "Error", message: "There was an error completing the search.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
                     alert.addOKAction()
                     self.present(alert, animated: true)
                 }
             }
         }
-        searchLoader?.startLoad()
     }
 }

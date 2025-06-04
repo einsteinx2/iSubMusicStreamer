@@ -195,12 +195,64 @@ final class ServerEditViewController: UIViewController {
             }
             present(alert, animated: true, completion: nil)
         } else {
-            let loader = StatusLoader(urlString: urlField.text ?? "", username: usernameField.text ?? "", password: passwordField.text ?? "", delegate: self)
-            HUD.show(message: "Checking Server") {
-                HUD.hide()
-                loader.cancelLoad()
+            checkServer()
+        }
+    }
+    
+    private func checkServer() {
+        let task = Task {
+            do {
+                defer {
+                    HUD.hide()
+                }
+                
+                let responseData = try await AsyncStatusLoader(urlString: urlField.text ?? "", username: usernameField.text ?? "", password: passwordField.text ?? "").load()
+                if let serverToEdit {
+                    serverToEdit.isVideoSupported = responseData.isVideoSupported
+                    serverToEdit.isNewSearchSupported = responseData.isNewSearchSupported
+                    if store.add(server: serverToEdit) {
+                        settings.currentServer = serverToEdit
+                    }
+                } else if let url = URL(string: urlField.text ?? ""), let username = usernameField.text, let password = passwordField.text {
+                    let server = Server(id: store.nextServerId(), type: .subsonic, url: url, username: username, password: password)
+                    server.isVideoSupported = responseData.isVideoSupported
+                    server.isNewSearchSupported = responseData.isNewSearchSupported
+                    if store.add(server: server) {
+                        settings.currentServer = server
+                    }
+                }
+                
+                NotificationCenter.postOnMainThread(name: Notifications.reloadServerList)
+                NotificationCenter.postOnMainThread(name: Notifications.showBackButton)
+                
+                self.dismiss(animated: true, completion: nil)
+                
+                if UIDevice.isPad {
+                    SceneDelegate.shared.padRootViewController?.menuViewController.showHome()
+                }
+                
+                NotificationCenter.postOnMainThread(name: Notifications.switchServer)
+            } catch {
+                if error.isCanceled {
+                    return
+                }
+                
+                var message = "Unknown error occured, please try again."
+                if let error = error as? SubsonicError, case .badCredentials = error {
+                    message = "Either your username or password is incorrect, please try again"
+                } else {
+                    message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\nError: \(error)"
+                }
+                
+                let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+                alert.addOKAction()
+                present(alert, animated: true)
             }
-            loader.startLoad()
+        }
+        
+        HUD.show(message: "Checking Server") {
+            HUD.hide()
+            task.cancel()
         }
     }
 }
@@ -235,59 +287,5 @@ extension ServerEditViewController: UITextFieldDelegate {
         usernameField.resignFirstResponder()
         passwordField.resignFirstResponder()
         super.touchesBegan(touches, with: event)
-    }
-}
-
-extension ServerEditViewController: APILoaderDelegate {
-    func loadingFinished(loader: APILoader?) {
-        HUD.hide()
-        guard let statusLoader = loader as? StatusLoader else { return }
-        
-        if let serverToEdit {
-            serverToEdit.isVideoSupported = statusLoader.isVideoSupported
-            serverToEdit.isNewSearchSupported = statusLoader.isNewSearchSupported
-            if store.add(server: serverToEdit) {
-                settings.currentServer = serverToEdit
-            }
-        } else if let url = URL(string: urlField.text ?? ""), let username = usernameField.text, let password = passwordField.text {
-            let server = Server(id: store.nextServerId(), type: .subsonic, url: url, username: username, password: password)
-            server.isVideoSupported = statusLoader.isVideoSupported
-            server.isNewSearchSupported = statusLoader.isNewSearchSupported
-            if store.add(server: server) {
-                settings.currentServer = server
-            }
-        }
-        
-        NotificationCenter.postOnMainThread(name: Notifications.reloadServerList)
-        NotificationCenter.postOnMainThread(name: Notifications.showBackButton)
-        
-        self.dismiss(animated: true, completion: nil)
-        
-        if UIDevice.isPad {
-            SceneDelegate.shared.padRootViewController?.menuViewController.showHome()
-        }
-        
-        NotificationCenter.postOnMainThread(name: Notifications.switchServer)
-    }
-    
-    func loadingFailed(loader: APILoader?, error: Error?) {
-        HUD.hide()
-        if let error, error.isCanceledURLRequest {
-            return
-        }
-        
-        var message = "Unknown error occured, please try again."
-        if let error = error as? SubsonicError, case .badCredentials = error {
-            message = "Either your username or password is incorrect, please try again"
-        } else {
-            message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet."
-            if let error {
-                message += "\n\nError: \(error)"
-            }
-        }
-        
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        alert.addOKAction()
-        present(alert, animated: true)
     }
 }

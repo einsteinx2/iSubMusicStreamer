@@ -119,10 +119,7 @@ final class TagAlbumViewController: CustomUITableViewController {
                     HUD.hide()
                     self.tableView.refreshControl?.endRefreshing()
                 }
-                
-                let loader = AsyncTagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbum.id)
-                self.songIds = try await loader.load()
-                
+                self.songIds = try await AsyncTagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbum.id).load()                
                 self.tableView.reloadData()
                 self.addHeader()
             } catch {

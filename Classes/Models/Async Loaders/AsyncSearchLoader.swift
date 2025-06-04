@@ -1,14 +1,22 @@
 //
-//  SearchLoader.swift
+//  AsyncSearchLoader.swift
 //  iSub
 //
-//  Created by Benjamin Baron on 2/16/21.
-//  Copyright © 2021 Ben Baron. All rights reserved.
+//  Created by Ben Baron on 6/3/25.
+//  Copyright © 2025 Ben Baron. All rights reserved.
 //
 
 import Foundation
 
-final class SearchLoader: APILoader {
+struct SearchAPIResponseData {
+    let folderArtists: [FolderArtist]
+    let folderAlbums: [FolderAlbum]
+    let tagArtists: [TagArtist]
+    let tagAlbums: [TagAlbum]
+    let songs: [Song]
+}
+
+final class AsyncSearchLoader: AsyncAPILoader<SearchAPIResponseData> {
     static let searchItemCount = 20
     
     enum SearchType {
@@ -55,19 +63,13 @@ final class SearchLoader: APILoader {
     let query: String
     var offset: Int
     
-    private(set) var folderArtists = [FolderArtist]()
-    private(set) var folderAlbums = [FolderAlbum]()
-    private(set) var tagArtists = [TagArtist]()
-    private(set) var tagAlbums = [TagAlbum]()
-    private(set) var songs = [Song]()
-    
-    init(serverId: Int, searchType: SearchType = .folder, searchItemType: SearchItemType = .all, query: String = "", offset: Int = 0, delegate: APILoaderDelegate? = nil, callback: APILoaderCallback? = nil) {
+    init(serverId: Int, searchType: SearchType = .folder, searchItemType: SearchItemType = .all, query: String = "", offset: Int = 0) {
         self.serverId = serverId
         self.searchType = searchType
         self.searchItemType = searchItemType
         self.query = query
         self.offset = offset
-        super.init(delegate: delegate, callback: callback)
+        super.init()
     }
     
     // MARK: APILoader Overrides
@@ -87,43 +89,54 @@ final class SearchLoader: APILoader {
         return URLRequest(serverId: serverId, subsonicAction: searchType.action, parameters: parameters)
     }
     
-    override func processResponse(data: Data) {
-        folderArtists.removeAll()
-        folderAlbums.removeAll()
-        tagArtists.removeAll()
-        tagAlbums.removeAll()
-        songs.removeAll()
-        guard let root = validate(data: data) else { return }
+    override func processResponse(data: Data) async throws -> SearchAPIResponseData {
+        try Task.checkCancellation()
+        
+        guard let root = try await validate(data: data) else {
+            throw APIError.responseNotXML
+        }
+        
+        try Task.checkCancellation()
+        
+        var folderArtists = [FolderArtist]()
+        var folderAlbums = [FolderAlbum]()
+        var tagArtists = [TagArtist]()
+        var tagAlbums = [TagAlbum]()
+        var songs = [Song]()
         
         if let searchResult = root.child("searchResult") {
             // Old search
-            searchResult.iterate("match") { element, _ in
-                self.songs.append(Song(serverId: self.serverId, element: element))
+            for try await element in searchResult.iterate("match") {
+                songs.append(Song(serverId: self.serverId, element: element))
             }
         } else if let searchResult2 = root.child("searchResult2") {
             // Folder search
-            searchResult2.iterate("artist") { element, _ in
-                self.folderArtists.append(FolderArtist(serverId: self.serverId, element: element))
+            for try await element in searchResult2.iterate("artist") {
+                folderArtists.append(FolderArtist(serverId: serverId, element: element))
             }
-            searchResult2.iterate("album") { element, _ in
-                self.folderAlbums.append(FolderAlbum(serverId: self.serverId, element: element))
+            try Task.checkCancellation()
+            for try await element in searchResult2.iterate("album") {
+                folderAlbums.append(FolderAlbum(serverId: serverId, element: element))
             }
-            searchResult2.iterate("song") { element, _ in
-                self.songs.append(Song(serverId: self.serverId, element: element))
+            try Task.checkCancellation()
+            for try await element in searchResult2.iterate("song") {
+                songs.append(Song(serverId: serverId, element: element))
             }
         } else if let searchResult3 = root.child("searchResult3") {
             // Tag search
-            searchResult3.iterate("artist") { element, _ in
-                self.tagArtists.append(TagArtist(serverId: self.serverId, element: element))
+            for try await element in searchResult3.iterate("artist") {
+                tagArtists.append(TagArtist(serverId: serverId, element: element))
             }
-            searchResult3.iterate("album") { element, _ in
-                self.tagAlbums.append(TagAlbum(serverId: self.serverId, element: element))
+            try Task.checkCancellation()
+            for try await element in searchResult3.iterate("album") {
+                tagAlbums.append(TagAlbum(serverId: serverId, element: element))
             }
-            searchResult3.iterate("song") { element, _ in
-                self.songs.append(Song(serverId: self.serverId, element: element))
+            try Task.checkCancellation()
+            for try await element in searchResult3.iterate("song") {
+                songs.append(Song(serverId: serverId, element: element))
             }
         }
         
-        informDelegateLoadingFinished()
+        return SearchAPIResponseData(folderArtists: folderArtists, folderAlbums: folderAlbums, tagArtists: tagArtists, tagAlbums: tagAlbums, songs: songs)
     }
 }

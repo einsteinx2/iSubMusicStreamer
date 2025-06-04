@@ -14,15 +14,27 @@ final class HomeAlbumViewController: UIViewController {
     
     var serverId: Int { (Resolver.resolve() as SavedSettings).currentServerId }
     
-    var modifier = ""
-    var folderAlbums = [FolderAlbum]()
+    let modifier: QuickAlbumsModifier
+    var folderAlbums: [FolderAlbum]
     
     private let tableView = UITableView()
     
-    private var isMoreAlbums = true
+    private var isMoreAlbums: Bool
     private var isLoading = false
     private var offset = 0
-    private var loader: QuickAlbumsLoader?
+    private var loaderTask: Task<Void, Never>?
+    
+    init(modifier: QuickAlbumsModifier, folderAlbums: [FolderAlbum], title: String) {
+        self.modifier = modifier
+        self.folderAlbums = folderAlbums
+        self.isMoreAlbums = folderAlbums.count >= AsyncSearchLoader.searchItemCount
+        super.init(nibName: nil, bundle: nil)
+        self.title = title
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,8 +44,7 @@ final class HomeAlbumViewController: UIViewController {
     }
     
     deinit {
-        loader?.cancelLoad()
-        loader?.callback = nil
+        loaderTask?.cancel()
     }
     
     private func loadMoreResults() {
@@ -42,17 +53,20 @@ final class HomeAlbumViewController: UIViewController {
         isLoading = true
         offset += 20
         
-        loader = QuickAlbumsLoader(serverId: serverId, modifier: modifier, offset: offset)
-        loader?.callback = { [weak self] _, success, error in
-            guard let self, let loader else { return }
-            
-            if success {
-                if loader.folderAlbums.count == 0 {
-                    self.isMoreAlbums = false
-                } else {
-                    self.folderAlbums.append(contentsOf: loader.folderAlbums)
+        loaderTask = Task {
+            do {
+                defer {
+                    tableView.reloadData()
+                    isLoading = false
                 }
-            } else if let error {
+                
+                let responseFolderAlbums = try await AsyncQuickAlbumsLoader(serverId: serverId, modifier: modifier, offset: offset).load()
+                if responseFolderAlbums.count == 0 {
+                    isMoreAlbums = false
+                } else {
+                    folderAlbums.append(contentsOf: responseFolderAlbums)
+                }
+            } catch {
                 if self.settings.isPopupsEnabled {
                     let message = "There was an error performing the search.\n\nError: \(error.localizedDescription)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
@@ -60,12 +74,7 @@ final class HomeAlbumViewController: UIViewController {
                     self.present(alert, animated: true, completion: nil)
                 }
             }
-            
-            self.tableView.reloadData()
-            self.isLoading = false
-            self.loader = nil
         }
-        loader?.startLoad()
     }
 }
 

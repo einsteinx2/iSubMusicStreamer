@@ -81,8 +81,7 @@ final class AsyncCoverArtLoaderManager {
             let isLoading = await loadingIds.contains(id: loadingId)
             if !isCached(serverId: serverId, coverArtId: coverArtId, isLarge: isLarge) && !isLoading {
                 let task = Task {
-                    let loader = AsyncCoverArtLoader(serverId: serverId, coverArtId: coverArtId, isLarge: isLarge)
-                    let coverArt = try await loader.load()
+                    let coverArt = try await AsyncCoverArtLoader(serverId: serverId, coverArtId: coverArtId, isLarge: isLarge).load()
                     await loadingIds.remove(id: loadingId)
                     
                     guard store.add(coverArt: coverArt) else {

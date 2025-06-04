@@ -18,8 +18,8 @@ final class SearchSongsViewController: CustomUITableViewController {
     
     let serverId: Int
     let query: String
-    let searchType: SearchLoader.SearchType
-    let searchItemType: SearchLoader.SearchItemType
+    let searchType: AsyncSearchLoader.SearchType
+    let searchItemType: AsyncSearchLoader.SearchItemType
     
     private(set) var folderArtists: [FolderArtist]
     private(set) var folderAlbums: [FolderAlbum]
@@ -30,9 +30,10 @@ final class SearchSongsViewController: CustomUITableViewController {
     private var offset = 0
     private var isMoreResults = true
     private var isLoading = false
-    private var searchLoader: SearchLoader
+//    private var searchLoader: SearchLoader
+    private var loaderTask: Task<Void, Never>?
     
-    init(serverId: Int, query: String, searchType: SearchLoader.SearchType, searchItemType: SearchLoader.SearchItemType, folderArtists: [FolderArtist] = [], folderAlbums: [FolderAlbum] = [], tagArtists: [TagArtist] = [], tagAlbums: [TagAlbum] = [], songs: [Song] = []) {
+    init(serverId: Int, query: String, searchType: AsyncSearchLoader.SearchType, searchItemType: AsyncSearchLoader.SearchItemType, folderArtists: [FolderArtist] = [], folderAlbums: [FolderAlbum] = [], tagArtists: [TagArtist] = [], tagAlbums: [TagAlbum] = [], songs: [Song] = []) {
         self.serverId = serverId
         self.query = query
         self.searchType = searchType
@@ -42,17 +43,17 @@ final class SearchSongsViewController: CustomUITableViewController {
         self.tagArtists = tagArtists
         self.tagAlbums = tagAlbums
         self.songs = songs
-        self.searchLoader = SearchLoader(serverId: serverId, searchType: searchType, searchItemType: searchItemType, query: query)
+//        self.searchLoader = SearchLoader(serverId: serverId, searchType: searchType, searchItemType: searchItemType, query: query)
         
         switch searchItemType {
         case .artists:
             let artists: [Any] = searchType == .folder ? folderArtists : tagArtists
-            isMoreResults = artists.count >= SearchLoader.searchItemCount
+            isMoreResults = artists.count >= AsyncSearchLoader.searchItemCount
         case .albums:
             let albums: [Any] = searchType == .folder ? folderAlbums : tagAlbums
-            isMoreResults = albums.count >= SearchLoader.searchItemCount
+            isMoreResults = albums.count >= AsyncSearchLoader.searchItemCount
         case .songs:
-            isMoreResults = songs.count >= SearchLoader.searchItemCount
+            isMoreResults = songs.count >= AsyncSearchLoader.searchItemCount
         default:
             isMoreResults = true
         }
@@ -72,64 +73,70 @@ final class SearchSongsViewController: CustomUITableViewController {
     }
     
     deinit {
-        searchLoader.cancelLoad()
-        searchLoader.callback = nil
+        loaderTask?.cancel()
+//        searchLoader.cancelLoad()
+//        searchLoader.callback = nil
     }
     
     private func loadMoreResults() {
         guard !isLoading else { return }
         isLoading = true
-        searchLoader.offset += SearchLoader.searchItemCount
-        searchLoader.callback = { [weak self] _, success, error in
-            guard let self else { return }
-            self.isLoading = false
-            
-            if success {
+        
+        offset += AsyncSearchLoader.searchItemCount
+        loaderTask = Task {
+            do {
+                defer {
+                    isLoading = false
+                }
+                
+                let responseData = try await AsyncSearchLoader(serverId: serverId, searchType: searchType, searchItemType: searchItemType, query: query, offset: offset).load()
                 switch self.searchItemType {
                 case .artists:
-                    if self.searchType == .folder {
-                        self.folderArtists.append(contentsOf: self.searchLoader.folderArtists)
-                        if self.searchLoader.folderArtists.count == 0 {
-                            self.isMoreResults = false
+                    if searchType == .folder {
+                        folderArtists.append(contentsOf: responseData.folderArtists)
+                        if responseData.folderArtists.count == 0 {
+                            isMoreResults = false
                         }
                     } else {
-                        self.tagArtists.append(contentsOf: self.searchLoader.tagArtists)
-                        if self.searchLoader.tagArtists.count == 0 {
-                            self.isMoreResults = false
+                        tagArtists.append(contentsOf: responseData.tagArtists)
+                        if responseData.tagArtists.count == 0 {
+                            isMoreResults = false
                         }
                     }
                 case .albums:
-                    if self.searchType == .folder {
-                        self.folderAlbums.append(contentsOf: self.searchLoader.folderAlbums)
-                        if self.searchLoader.folderAlbums.count == 0 {
-                            self.isMoreResults = false
+                    if searchType == .folder {
+                        folderAlbums.append(contentsOf: responseData.folderAlbums)
+                        if responseData.folderAlbums.count == 0 {
+                            isMoreResults = false
                         }
                     } else {
-                        self.tagAlbums.append(contentsOf: self.searchLoader.tagAlbums)
-                        if self.searchLoader.tagAlbums.count == 0 {
-                            self.isMoreResults = false
+                        tagAlbums.append(contentsOf: responseData.tagAlbums)
+                        if responseData.tagAlbums.count == 0 {
+                            isMoreResults = false
                         }
                     }
                 case .songs:
-                    self.songs.append(contentsOf: self.searchLoader.songs)
-                    if self.searchLoader.songs.count == 0 {
-                        self.isMoreResults = false
+                    songs.append(contentsOf: responseData.songs)
+                    if responseData.songs.count == 0 {
+                        isMoreResults = false
                     }
                 default:
                     break
                 }
-                self.tableView.reloadData()
-            } else if let error = error, self.settings.isPopupsEnabled {
-                self.isMoreResults = false
-                self.tableView.reloadData()
-                
-                let message = "There was an error performing the search.\n\nError: \(error.localizedDescription)"
-                let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-                alert.addOKAction()
-                self.present(alert, animated: true, completion: nil)
+                tableView.reloadData()
+            } catch {
+                if settings.isPopupsEnabled, !error.isCanceled {
+                    self.isMoreResults = false
+                    self.tableView.reloadData()
+                    
+                    // TODO: Verify if it's still necessary to use \(error.localizedDescription) or if I can just use \(error)
+                    let message = "There was an error performing the search.\n\nError: \(error.localizedDescription)"
+                    let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+                    alert.addOKAction()
+                    self.present(alert, animated: true, completion: nil)
+                }
             }
         }
-        searchLoader.startLoad()
     }
     
     override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {

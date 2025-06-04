@@ -14,78 +14,65 @@ final class ServerChecker {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
     @Injected private var downloadQueue: DownloadQueue
-    
-    private var statusLoader: StatusLoader?
-    private var serverCheckWorkItem: DispatchWorkItem?
+        
+    private var task: Task<Void, Never>?
     
     init() {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(checkServer), name: Notifications.checkServer)
     }
     
     deinit {
-        cancelLoad()
+        task?.cancel()
         NotificationCenter.removeObserverOnMainThread(self)
     }
     
     @objc func checkServer() {
+        task?.cancel()
+        
         // Check if the subsonic URL is valid by attempting to access the ping.view page,
         // if it's not then display an alert and allow user to change settings if they want.
         // This is in case the user is, for instance, connected to a wifi network but does not
         // have internet access or if the host url entered was wrong.
-        if let currentServer = settings.currentServer {
-            statusLoader?.cancelLoad()
-            statusLoader = StatusLoader(server: currentServer) { [weak self] _, success, error in
-                HUD.hide()
-                guard let self, let statusLoader else { return }
-                
-                if success {
-                    if let server = self.settings.currentServer, server.isVideoSupported != statusLoader.isVideoSupported || server.isNewSearchSupported != statusLoader.isNewSearchSupported {
+        task = Task { [weak self] in
+            while !Task.isCancelled, let self {
+                do {
+                    if let currentServer = settings.currentServer {
+                        let loader = AsyncStatusLoader(server: currentServer)
+                        let responseData = try await loader.load()
                         
-                        server.isVideoSupported = statusLoader.isVideoSupported
-                        server.isNewSearchSupported = statusLoader.isNewSearchSupported
-                        self.settings.currentServer = server
-                        _ = self.store.add(server: server)
+                        if let server = settings.currentServer, server.isVideoSupported != responseData.isVideoSupported || server.isNewSearchSupported != responseData.isNewSearchSupported {
+                            server.isVideoSupported = responseData.isVideoSupported
+                            server.isNewSearchSupported = responseData.isNewSearchSupported
+                            settings.currentServer = server
+                            _ = store.add(server: server)
+                        }
+                        
+                        if settings.isOfflineMode {
+                            NotificationCenter.postOnMainThread(name: Notifications.goOnline)
+                            // TODO: change the setting value here?
+                        }
+                        
+                        // Since the download queue has been a frequent source of crashes in the past, and we start this on launch automatically potentially resulting in a crash loop, do NOT start the download queue automatically if the app crashed on last launch.
+                        if !settings.appCrashedOnLastRun {
+                            downloadQueue.start()
+                        }
                     }
-                    
-                    if self.settings.isOfflineMode {
-                        NotificationCenter.postOnMainThread(name: Notifications.goOnline)
-                        // TODO: change the setting value here?
-                    }
-                    
-                    // Since the download queue has been a frequent source of crashes in the past, and we start this on launch automatically potentially resulting in a crash loop, do NOT start the download queue automatically if the app crashed on last launch.
-                    if !self.settings.appCrashedOnLastRun {
-                        self.downloadQueue.start()
-                    }
-                } else {
-                    if !self.settings.isOfflineMode {
-                        DDLogVerbose("[ServerChecker] Loading failed for loading type \(statusLoader.type), entering offline mode. Error: \(error?.localizedDescription ?? "unknown")")
+                } catch {
+                    if !settings.isOfflineMode, !error.isCanceled {
+                        DDLogError("[ServerChecker] Status loader failed, entering offline mode. Error: \(error)")
                         NotificationCenter.postOnMainThread(name: Notifications.goOffline)
                         // TODO: change the setting value here?
                     }
                 }
-                self.statusLoader = nil
+                
+                // Sleep for 30 minutes (30 * 60 seconds = 1800 seconds * 1 billion for nanoseconds)
+                try? await Task.sleep(nanoseconds: 1_800_000_000_000)
             }
-            statusLoader?.startLoad()
         }
-        
-        // Check every 30 minutes
-        cancelNextServerCheck()
-        let serverCheckWorkItem = DispatchWorkItem { [weak self] in
-            self?.checkServer()
-        }
-        self.serverCheckWorkItem = serverCheckWorkItem
-        DispatchQueue.main.async(after: 30 * 60, execute: serverCheckWorkItem)
     }
-    
+
     func cancelNextServerCheck() {
-        serverCheckWorkItem?.cancel()
-        serverCheckWorkItem = nil
-    }
-    
-    func cancelLoad() {
-        HUD.hide()
-        statusLoader?.cancelLoad()
-        statusLoader?.callback = nil
-        statusLoader = nil
+        task?.cancel()
+        task = nil
     }
 }

@@ -28,7 +28,7 @@ final class SearchAllViewController: TabmanViewController {
     
     let serverId: Int
     let query: String
-    let searchType: SearchLoader.SearchType
+    let searchType: AsyncSearchLoader.SearchType
     
     let folderArtists: [FolderArtist]
     let folderAlbums: [FolderAlbum]
@@ -40,7 +40,7 @@ final class SearchAllViewController: TabmanViewController {
     private let buttonBar = TMBar.ButtonBar()
     private var controllerCache = [TabType: UIViewController]()
     
-    init(serverId: Int, query: String, searchType: SearchLoader.SearchType, folderArtists: [FolderArtist] = [], folderAlbums: [FolderAlbum] = [], tagArtists: [TagArtist] = [], tagAlbums: [TagAlbum] = [], songs: [Song] = []) {
+    init(serverId: Int, query: String, searchType: AsyncSearchLoader.SearchType, folderArtists: [FolderArtist] = [], folderAlbums: [FolderAlbum] = [], tagArtists: [TagArtist] = [], tagAlbums: [TagAlbum] = [], songs: [Song] = []) {
         self.serverId = serverId
         self.query = query
         self.searchType = searchType

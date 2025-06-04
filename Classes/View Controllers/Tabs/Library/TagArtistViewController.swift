@@ -84,10 +84,7 @@ final class TagArtistViewController: CustomUITableViewController {
                     HUD.hide()
                     self.tableView.refreshControl?.endRefreshing()
                 }
-                
-                let loader = AsyncTagArtistLoader(serverId: serverId, tagArtistId: tagArtist.id)
-                self.tagAlbumIds = try await loader.load()
-                
+                self.tagAlbumIds = try await AsyncTagArtistLoader(serverId: serverId, tagArtistId: tagArtist.id).load()
                 self.tableView.reloadData()
             } catch {
                 if self.settings.isPopupsEnabled {

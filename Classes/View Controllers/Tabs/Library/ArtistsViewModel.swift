@@ -14,12 +14,18 @@ enum ArtistsViewModelType {
     case tags
 }
 
+// TODO: Get rid of this legacy protocol
+protocol ArtistsViewModelDelegate: AnyObject {
+    func loadingFinished()
+    func loadingFailed(error: Error?)
+}
+
 class ArtistsViewModel {
     @Injected private var store: Store
     
     let type: ArtistsViewModelType
     
-    weak var delegate: APILoaderDelegate?
+    weak var delegate: ArtistsViewModelDelegate?
     var serverId: Int
     var mediaFolderId: Int {
         didSet {
@@ -47,7 +53,7 @@ class ArtistsViewModel {
     private var searchName: String?
     private var shouldContinueSearch = true
     
-    init(serverId: Int, mediaFolderId: Int, type: ArtistsViewModelType, delegate: APILoaderDelegate? = nil) {
+    init(serverId: Int, mediaFolderId: Int, type: ArtistsViewModelType, delegate: ArtistsViewModelDelegate? = nil) {
         self.serverId = serverId
         self.mediaFolderId = mediaFolderId
         self.type = type
@@ -83,8 +89,7 @@ class ArtistsViewModel {
     
         loaderTask = Task {
             do {
-                let mediaFoldersLoader = AsyncMediaFoldersLoader(serverId: serverId)
-                self.mediaFolders = try await mediaFoldersLoader.load()
+                self.mediaFolders = try await AsyncMediaFoldersLoader(serverId: serverId).load()
                 _ = self.store.deleteMediaFolders()
                 _ = self.store.add(mediaFolders: self.mediaFolders)
                 
@@ -95,12 +100,12 @@ class ArtistsViewModel {
                 self.artistIds = artistsResponse.artistIds
                 
                 await MainActor.run {
-                    self.delegate?.loadingFinished(loader: nil)
+                    self.delegate?.loadingFinished()
                 }
             } catch {
-                if !(error is CancellationError) && !((error as NSError).domain == "NSURLErrorDomain" && (error as NSError).code == -999) {
+                if !error.isCanceled {
                     await MainActor.run {
-                        self.delegate?.loadingFailed(loader: nil, error: error)
+                        self.delegate?.loadingFailed(error: error)
                     }
                 }
             }

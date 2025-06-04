@@ -84,8 +84,8 @@ struct AsyncSongsHelper {
         Task {
             // Download the lyrics
             if song.tagArtistName != nil && song.title.count > 0 {
-                if !store.isLyricsCached(song: song), let loader = AsyncLyricsLoader(song: song) {
-                    _ = try? await loader.load()
+                if !store.isLyricsCached(song: song) {
+                    _ = try? await AsyncLyricsLoader(song: song)?.load()
                 }
             }
             
@@ -97,15 +97,13 @@ struct AsyncSongsHelper {
             
             // Download the TagArtist to ensure it exists for the Downloads tab
             if let tagArtistId = song.tagArtistId, !store.isTagArtistCached(serverId: song.serverId, id: tagArtistId) {
-                let loader = AsyncTagArtistLoader(serverId: song.serverId, tagArtistId: tagArtistId)
-                _ = try? await loader.load()
+                _ = try? await AsyncTagArtistLoader(serverId: song.serverId, tagArtistId: tagArtistId).load()
             }
             
             // Download the TagAlbum to ensure it's songs exist when offline if opening the tag album from the song in the Downloads tab
             // NOTE: The TagAlbum itself will be downloaded by the TagArtistLoader, but not the songs, so we need to make this second request
             if let tagAlbumId = song.tagAlbumId, (!store.isTagAlbumCached(serverId: song.serverId, id: tagAlbumId) || !store.isTagAlbumSongsCached(serverId: song.serverId, id: tagAlbumId)) {
-                let loader = AsyncTagAlbumLoader(serverId: song.serverId, tagAlbumId: tagAlbumId)
-                _ = try? await loader.load()
+                _ = try? await AsyncTagAlbumLoader(serverId: song.serverId, tagAlbumId: tagAlbumId).load()
             }
         }
     }
@@ -192,8 +190,7 @@ struct AsyncSongsHelper {
         
         let task = Task {
             do {
-                let loader = AsyncTagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId)
-                let songIds = try await loader.load()
+                let songIds = try await AsyncTagAlbumLoader(serverId: serverId, tagAlbumId: tagAlbumId).load()
                 
                 switch action {
                 case .downloadAll:

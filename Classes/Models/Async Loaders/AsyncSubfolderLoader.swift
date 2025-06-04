@@ -8,6 +8,7 @@
 
 import Resolver
 
+// TODO: Maybe move these structs inside the classes?
 struct SubfolderAPIResponseData {
     let folderMetadata: FolderMetadata?
     let folderAlbumIds: [String]
@@ -35,9 +36,6 @@ final class AsyncSubfolderLoader: AsyncAPILoader<SubfolderAPIResponseData> {
     override func processResponse(data: Data) async throws -> SubfolderAPIResponseData {
         try Task.checkCancellation()
         
-        var folderAlbumIds = [String]()
-        var songIds = [String]()
-        
         guard let root = try await validate(data: data), let directory = try await validateChild(parent: root, childTag: "directory") else {
             throw APIError.responseNotXML
         }
@@ -46,6 +44,9 @@ final class AsyncSubfolderLoader: AsyncAPILoader<SubfolderAPIResponseData> {
         }
         
         try Task.checkCancellation()
+        
+        var folderAlbumIds = [String]()
+        var songIds = [String]()
         
         var songCount = 0
         var duration = 0

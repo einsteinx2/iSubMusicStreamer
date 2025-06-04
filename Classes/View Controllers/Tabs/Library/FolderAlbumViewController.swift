@@ -174,8 +174,7 @@ final class FolderAlbumViewController: CustomUITableViewController {
                     self.tableView.refreshControl?.endRefreshing()
                 }
                 
-                let subfolderLoader = AsyncSubfolderLoader(serverId: serverId, parentFolderId: parentFolderId)
-                let subfolderResponse = try await subfolderLoader.load()
+                let subfolderResponse = try await AsyncSubfolderLoader(serverId: serverId, parentFolderId: parentFolderId).load()
                 self.metadata = subfolderResponse.folderMetadata
                 self.folderAlbumIds = subfolderResponse.folderAlbumIds
                 self.songIds = subfolderResponse.songIds

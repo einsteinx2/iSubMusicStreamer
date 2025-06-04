@@ -15,7 +15,7 @@ protocol AsyncAPILoadable {
     func load() async throws -> LoadedType
 }
 
-enum AsyncAPILoaderType: String {
+enum APILoaderType: String {
     case generic
     case rootFolders
     case subFolders
@@ -56,30 +56,35 @@ class AsyncAPILoader<T>: AsyncAPILoadable {
     var sharedSession: URLSession { defaultSharedSession }
     
     func load() async throws -> LoadedType {
-        try Task.checkCancellation()
-        guard let request = createRequest() else {
-            DDLogError("[AsyncAPILoader] Failed to create URLRequest")
-            throw APIError.requestCreation
-        }
-        
-        // Optional debug logging
-        if Debug.apiRequests {
-            let urlString = request.url?.absoluteString ?? ""
-            let httpBodyString = String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "(failed to convert request body data to string)"
-            DDLogInfo("[APILoader \(type)] request url: \(urlString)  body: \(httpBodyString)")
-        }
-        
-        try Task.checkCancellation()
-        let (data, _) = try await sharedSession.data(for: request)
-        if Debug.apiResponses {
-            if type != .coverArt {
-                let dataString = String(data: data, encoding: .utf8) ?? "(failed to convert response data to string)"
-                DDLogInfo("[APILoader \(self.type)] response: \(dataString)")
+        do {
+            try Task.checkCancellation()
+            guard let request = createRequest() else {
+                DDLogError("[AsyncAPILoader] Failed to create URLRequest")
+                throw APIError.requestCreation
             }
+            
+            // Optional debug logging
+            if Debug.apiRequests {
+                let urlString = request.url?.absoluteString ?? ""
+                let httpBodyString = String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "(failed to convert request body data to string)"
+                DDLogInfo("[APILoader \(type)] request url: \(urlString)  body: \(httpBodyString)")
+            }
+            
+            try Task.checkCancellation()
+            let (data, _) = try await sharedSession.data(for: request)
+            if Debug.apiResponses {
+                if type != .coverArt {
+                    let dataString = String(data: data, encoding: .utf8) ?? "(failed to convert response data to string)"
+                    DDLogInfo("[APILoader \(self.type)] response: \(dataString)")
+                }
+            }
+            
+            try Task.checkCancellation()
+            return try await processResponse(data: data)
+        } catch {
+            handleFailure()
+            throw error
         }
-        
-        try Task.checkCancellation()
-        return try await processResponse(data: data)
     }
     
     func createRequest() -> URLRequest? {
@@ -88,6 +93,11 @@ class AsyncAPILoader<T>: AsyncAPILoadable {
     
     func processResponse(data: Data) async throws -> T {
         fatalError("[APILoader \(type)] processResponse function MUST be overridden")
+    }
+    
+    // Optional method to override to do something extra on failure
+    func handleFailure() {
+        // Default implementation is empty
     }
 }
 

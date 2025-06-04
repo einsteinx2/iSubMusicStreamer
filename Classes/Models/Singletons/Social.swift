@@ -62,13 +62,13 @@ final class Social {
     }
     
     private func scrobble(song: Song, isSubmission: Bool) {
-        let loader = ScrobbleLoader(song: song, isSubmission: isSubmission) { _, success, error in
-            if success {
+        Task {
+            do {
+                try await AsyncScrobbleLoader(song: song, isSubmission: isSubmission).load()
                 DDLogInfo("[Social] Scrobble successfully completed for song \(song.title)")
-            } else {
-                DDLogError("[Social] Scrobble failed for song \(song.title), error: \(error?.localizedDescription ?? "Unknown")")
+            } catch {
+                DDLogError("[Social] Scrobble failed for song \(song.title), error: \(error)")
             }
         }
-        loader.startLoad()
     }
 }

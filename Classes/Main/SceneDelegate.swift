@@ -187,7 +187,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         cancelBackgroundTask()
         
         // Cancel the next server check otherwise it will fire immediately on launch
-        serverChecker.cancelLoad()
         serverChecker.cancelNextServerCheck()
     }
     
@@ -210,7 +209,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else if !downloadQueue.isDownloading {
             // Cancel the next server check otherwise it will fire immediately on launch
             // TODO: See if this is necessary since the expiration handler should fire and handle it...
-            serverChecker.cancelLoad()
             serverChecker.cancelNextServerCheck()
             cancelBackgroundTask()
         } else {

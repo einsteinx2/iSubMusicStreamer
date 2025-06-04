@@ -194,8 +194,45 @@ extension ServersViewController: UITableViewConfiguration {
             controller.serverToEdit = server
             present(controller, animated: true, completion: nil)
         } else {
-            HUD.show(message: "Checking Server")
-            StatusLoader(server: server, delegate: self).startLoad()
+            let task = Task {
+                do {
+                    defer {
+                        HUD.hide()
+                    }
+                    
+                    let responseData = try await AsyncStatusLoader(server: server).load()
+                    DDLogInfo("[ServersViewController] server verification passed")
+                    
+                    // Update server properties
+                    serverToEdit?.isVideoSupported = responseData.isVideoSupported
+                    serverToEdit?.isNewSearchSupported = responseData.isNewSearchSupported
+                    if let serverToEdit {
+                        _ = store.add(server: serverToEdit)
+                    }
+                    
+                    // Switch to the server
+                    settings.currentServer = serverToEdit
+                    switchServer()
+                } catch {
+                    DDLogError("[ServersViewController] server verification failed")
+                    
+                    var message: String
+                    if let error = error as? SubsonicError, case .badCredentials = error {
+                        message = "Either your username or password is incorrect\n\n☆☆ Choose a server to return to online mode. ☆☆\n\nError code \(error.code):\n\(error.localizedDescription)"
+                    } else {
+                        message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\n☆☆ Choose a server to return to online mode. ☆☆\n\nError: \(error)"
+                    }
+                    
+                    let alert = UIAlertController(title: "Server Unavailable", message: message, preferredStyle: .alert)
+                    alert.addOKAction()
+                    present(alert, animated: true, completion: nil)
+                }
+            }
+            
+            HUD.show(message: "Checking Server") {
+                HUD.hide()
+                task.cancel()
+            }
         }
     }
     
@@ -227,44 +264,5 @@ extension ServersViewController: UITableViewConfiguration {
         } catch {
             tableView.reloadData()
         }
-    }
-}
-
-extension ServersViewController: APILoaderDelegate {
-    func loadingFinished(loader: APILoader?) {
-        HUD.hide()
-        DDLogInfo("[ServersViewController] server verification passed, hiding loading screen")
-        
-        // Update server properties
-        if let statusLoader = loader as? StatusLoader {
-            serverToEdit?.isVideoSupported = statusLoader.isVideoSupported
-            serverToEdit?.isNewSearchSupported = statusLoader.isNewSearchSupported
-            if let serverToEdit {
-                _ = store.add(server: serverToEdit)
-            }
-        }
-        
-        // Switch to the server
-        settings.currentServer = serverToEdit
-        switchServer()
-    }
-    
-    func loadingFailed(loader: APILoader?, error: Error?) {
-        HUD.hide()
-        DDLogError("[ServersViewController] server verification failed, hiding loading screen")
-        
-        var message: String
-        if let error = error as? SubsonicError, case .badCredentials = error {
-            message = "Either your username or password is incorrect\n\n☆☆ Choose a server to return to online mode. ☆☆\n\nError code \(error.code):\n\(error.localizedDescription)"
-        } else {
-            message = "Either the Subsonic URL is incorrect, the Subsonic server is down, or you may be connected to Wifi but do not have access to the outside Internet.\n\n☆☆ Choose a server to return to online mode. ☆☆"
-            if let error {
-                message += "\n\nError: \(error)"
-            }
-        }
-        
-        let alert = UIAlertController(title: "Server Unavailable", message: message, preferredStyle: .alert)
-        alert.addOKAction()
-        present(alert, animated: true, completion: nil)
     }
 }
