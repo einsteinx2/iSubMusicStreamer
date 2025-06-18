@@ -23,14 +23,14 @@ class AbstractDownloadsViewController: CustomUITableViewController {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.downloadedSongDeleted)
         
         // Set notification receiver for when network status changes to reload the table
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name:NSNotification.Name.reachabilityChanged)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name:Notification.Name.reachabilityChanged)
     }
     
     func unregisterForNotifications() {
         NotificationCenter.removeObserverOnMainThread(self, name: Notifications.streamHandlerSongDownloaded)
         NotificationCenter.removeObserverOnMainThread(self, name: Notifications.downloadQueueSongDownloaded)
         NotificationCenter.removeObserverOnMainThread(self, name: Notifications.downloadedSongDeleted)
-        NotificationCenter.removeObserverOnMainThread(self, name: NSNotification.Name.reachabilityChanged)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notification.Name.reachabilityChanged)
     }
     
     deinit {

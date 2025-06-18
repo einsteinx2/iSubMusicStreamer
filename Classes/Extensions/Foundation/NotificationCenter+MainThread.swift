@@ -19,19 +19,19 @@ private func runOnMainThread(_ block: @escaping () -> Void) {
 }
 
 extension NotificationCenter {
-    static func postOnMainThread(name: NSNotification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
+    static func postOnMainThread(name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
         runOnMainThread {
             NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
         }
     }
     
-    static func addObserverOnMainThread(_ observer: AnyObject, selector: Selector, name: NSNotification.Name, object: AnyObject? = nil) {
+    static func addObserverOnMainThread(_ observer: AnyObject, selector: Selector, name: Notification.Name, object: AnyObject? = nil) {
         runOnMainThread {
             NotificationCenter.default.addObserver(observer, selector: selector, name: name, object: object)
         }
     }
     
-    static func addObserverOnMainThread(name: NSNotification.Name, object: Any? = nil, block: @escaping (_ notification: Notification) -> Void) -> NSObjectProtocol {
+    static func addObserverOnMainThread(name: Notification.Name, object: Any? = nil, block: @escaping (_ notification: Notification) -> Void) -> NSObjectProtocol {
         return NotificationCenter.default.addObserver(forName: name, object: object, queue: OperationQueue.main, using: block)
     }
     
@@ -41,7 +41,7 @@ extension NotificationCenter {
         }
     }
     
-    static func removeObserverOnMainThread(_ observer: AnyObject, name: NSNotification.Name, object: AnyObject? = nil) {
+    static func removeObserverOnMainThread(_ observer: AnyObject, name: Notification.Name, object: AnyObject? = nil) {
         runOnMainThread {
             NotificationCenter.default.removeObserver(observer, name: name, object: object)
         }

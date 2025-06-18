@@ -222,7 +222,7 @@ final class EqualizerViewController: UIViewController {
         navigationController?.navigationBar.isHidden = UIApplication.orientation.isLandscape
         
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(createEqViews), name: Notifications.bassEffectPresetLoaded)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(dismissPicker), name: NSNotification.Name(rawValue: "hidePresetPicker"))
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(dismissPicker), name: Notification.Name(rawValue: "hidePresetPicker"))
     }
     
     override func viewDidAppear(_ animated: Bool) {
