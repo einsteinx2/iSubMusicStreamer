@@ -2604,7 +2604,7 @@
 			repositoryURL = "https://github.com/groue/GRDB.swift.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 6.29.3;
+				minimumVersion = 7.0.0;
 			};
 		};
 		53A6A9F62B89738F007ABD7A /* XCRemoteSwiftPackageReference "CwlCatchException" */ = {
@@ -2628,7 +2628,7 @@
 			repositoryURL = "https://github.com/uias/Tabman";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.10.0;
+				minimumVersion = 3.0.0;
 			};
 		};
 		53D97404255BFD9100AABF7F /* XCRemoteSwiftPackageReference "SnapKit" */ = {
