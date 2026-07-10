@@ -569,13 +569,16 @@ final class LockScreenAudioControlsTests: StoreTestCase {
                        "lock-screen scrubbing must drive the jukebox, not the (idle) local player")
         XCTAssertTrue(player.seeks.isEmpty)
 
+        // Scan all received requests: the jukebox schedules a follow-up "get" 0.5s
+        // after every command, so the seek is not necessarily the last request
         let deadline = Date(timeIntervalSinceNow: 5)
-        var request: MockSubsonicServer.ReceivedRequest?
+        var seekRequest: MockSubsonicServer.ReceivedRequest?
         repeat {
             RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
-            request = MockSubsonicServer.receivedRequests(action: .jukeboxControl).last
-        } while (request?.parameter("action") != "skip" || request?.parameter("offset") != "42") && Date() < deadline
-        XCTAssertEqual(request?.parameter("action"), "skip")
-        XCTAssertEqual(request?.parameter("offset"), "42")
+            seekRequest = MockSubsonicServer.receivedRequests(action: .jukeboxControl).first {
+                $0.parameter("action") == "skip" && $0.parameter("offset") == "42"
+            }
+        } while seekRequest == nil && Date() < deadline
+        XCTAssertNotNil(seekRequest, "no jukebox skip request with offset 42 was sent")
     }
 }

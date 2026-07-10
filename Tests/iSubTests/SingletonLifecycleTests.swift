@@ -68,13 +68,14 @@ final class JukeboxTests: StoreTestCase {
     // MARK: Command construction
 
     func testPlaySongSendsSkipAndUpdatesIndex() {
-        try? MockSubsonicServer.stub(.jukeboxControl, fixture: "XML/jukeboxControl_status.xml")
+        // Stub a status whose currentIndex matches the skip target: the stub responds
+        // instantly on a background thread and the parsed status overwrites
+        // playQueue.currentIndex, so any other value races the assertion below
+        let statusXML = #"<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0"><jukeboxStatus currentIndex="3" playing="false" gain="0.75" position="42"/></subsonic-response>"#
+        MockSubsonicServer.stub(.jukeboxControl, data: Data(statusXML.utf8))
 
         jukebox.playSong(index: 3)
 
-        // Assert the synchronous index update before waiting on the request: once the
-        // stubbed status response is parsed it overwrites currentIndex with the
-        // fixture's value, so checking after the wait races the response
         XCTAssertEqual(playQueue.currentIndex, 3, "the local index tracks the jukebox immediately")
 
         XCTAssertTrue(waitUntil { self.lastJukeboxRequest() != nil })
