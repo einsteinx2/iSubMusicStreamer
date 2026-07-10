@@ -87,13 +87,12 @@ extension LocalPlaylistViewController: UITableViewConfiguration {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         HUD.show()
-        DispatchQueue.userInitiated.async {
-            // TODO: implement this
-            
-            HUD.hide()
-//            if !song.isVideo {
-//                NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
-//            }
+        DispatchQueue.userInitiated.async { [unowned self] in
+            defer { HUD.hide() }
+            let song = store.playSong(position: indexPath.row, localPlaylistId: localPlaylist.id)
+            if let song, !song.isVideo {
+                NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
+            }
         }
     }
     

@@ -254,6 +254,31 @@ final class PlayQueueTests: StoreTestCase {
         XCTAssertEqual(playQueue.currentIndex, 1)
     }
 
+    // MARK: playSong from a local playlist (STUB-04)
+
+    func testPlaySongFromLocalPlaylistFillsQueueAndStartsAtPosition() {
+        // A saved local playlist with three songs
+        XCTAssertTrue(store.add(localPlaylist: LocalPlaylist(id: 5, name: "Saved")))
+        for number in 1...3 {
+            let song = TestData.song(serverId: 1, id: "\(number)", title: "Song \(number)", path: "A/\(number).mp3")
+            _ = store.add(song: song)
+            XCTAssertTrue(store.add(song: song, localPlaylistId: 5))
+        }
+        // A pre-existing play queue that must be replaced
+        let old = TestData.song(serverId: 1, id: "99", title: "Old", path: "B/99.mp3")
+        _ = store.add(song: old)
+        XCTAssertTrue(store.add(song: old, localPlaylistId: LocalPlaylist.Default.playQueueId))
+
+        let played = store.playSong(position: 1, localPlaylistId: 5)
+
+        XCTAssertEqual(played?.id, "2")
+        XCTAssertEqual(playQueue.currentIndex, 1)
+        XCTAssertFalse(playQueue.isShuffle)
+        XCTAssertEqual(playQueue.songs().map(\.id), ["1", "2", "3"],
+                       "the play queue must be replaced by the playlist's songs in order")
+        XCTAssertGreaterThan(player.stopCount, 0, "the player restarts for the new song")
+    }
+
     // MARK: shuffleToggle
 
     func testShuffleToggleOnCreatesShuffleQueueKeepingCurrentSong() {

@@ -180,13 +180,14 @@ final class OnlinePlaylistsUITests: XCTestCase {
         app.tapCell(containing: "Local Open Test")
         XCTAssertTrue(app.cells.firstMatch.waitForExistence(timeout: 15), "local playlist songs did not load")
         app.tapFirstCellText()
-        XCTExpectFailure("STUB: playing from a local playlist (LocalPlaylistViewController.didSelectRowAt) not implemented yet", strict: false) {
-            XCTAssertTrue(app.buttons[AccessibilityId.playerPlayPause].waitForExistence(timeout: 15),
-                          "playing a local playlist song did not open the player")
-        }
+        XCTAssertTrue(app.buttons[AccessibilityId.playerPlayPause].waitForExistence(timeout: 15),
+                      "playing a local playlist song did not open the player")
 
-        // Delete it via the swipe action
+        // Delete it via the swipe action (the tab restores the detail screen; pop back first)
         app.openTab(AccessibilityId.tabPlaylists)
+        if app.navigationBars["Local Open Test"].waitForExistence(timeout: 5) {
+            app.navigationBars.buttons.firstMatch.tap()
+        }
         XCTAssertTrue(app.cells.staticTexts["Local Open Test"].waitForExistence(timeout: 10))
         app.swipeAction("Delete", onCellContaining: "Local Open Test")
 

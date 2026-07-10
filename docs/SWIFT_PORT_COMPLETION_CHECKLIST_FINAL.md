@@ -242,7 +242,8 @@ Functions that exist but do nothing — a user hitting these today gets silent n
   > **Note (implementation):** deletes via the existing `Store.delete(localPlaylistId:)` cascade (covered by `testDeleteLocalPlaylistCascadesSongs`), off the main thread with a Deleting HUD; the edit header now selects all when nothing is selected. E2E deletion assertion flipped strict.
   > **Prompt:** Implement deleteLocalPlaylists(indexPaths:) in LocalPlaylistsViewController.swift (~142): delete via LocalPlaylistStore (localPlaylist + localPlaylistSong cascade), update the table/array/header, and fix saveEditHeaderSaveDeleteAction to select-all when nothing is selected. Add a Store-level cascade test.
 
-- [ ] **[STUB-04] P0 — Tapping a song in a local playlist doesn't play it.** `LocalPlaylistViewController.didSelectRowAt` (~135) only toggles the HUD.
+- [x] **[STUB-04] P0 — Tapping a song in a local playlist doesn't play it.** `LocalPlaylistViewController.didSelectRowAt` (~135) only toggles the HUD.
+  > **Note (implementation):** mirrors `ServerPlaylistViewController` via the existing `Store.playSong(position:localPlaylistId:)` (whose offline handling lives in `PlayQueue.startSongAtOffsetsInternal`); integration test asserts the queue replacement/order/index, and the E2E play assertion flipped strict. Jukebox/shuffle handling inside that store path is STUB-09.
   > **Prompt:** Implement didSelectRowAt in LocalPlaylistViewController.swift (~135) mirroring the working ServerPlaylistViewController: call LocalPlaylistStore.playSong(position:localPlaylistId:) on a background queue, post showPlayer for non-video songs, handle offline mode. Add an integration test for the store path and a UI test that tapping plays.
 
 - [ ] **[STUB-05] P0 — Bookmark batch delete (edit mode) does nothing.** `BookmarksViewController.saveEditHeaderSaveDeleteAction` (~98) is fully commented out (and references the wrong method); only single swipe-delete works.
