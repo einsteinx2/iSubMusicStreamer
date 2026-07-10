@@ -53,7 +53,14 @@ final class BassStream: Equatable, CustomStringConvertible {
     }
     
     func readBytes(buffer: UnsafeMutableRawPointer, length: DWORD) -> DWORD {
-        return UInt32(fread(buffer, 1, Int(length), file))
+        let bytesRead = fread(buffer, 1, Int(length), file)
+        if bytesRead < Int(length) && feof(file) != 0 {
+            // Clear the sticky EOF flag so that bytes appended to the file by an in-progress
+            // download can be read by subsequent calls (otherwise a partially-downloaded song
+            // could never resume playback after an underrun)
+            clearerr(file)
+        }
+        return UInt32(bytesRead)
     }
     
     func seek(to offset: QWORD) -> Bool {

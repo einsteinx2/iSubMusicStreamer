@@ -103,6 +103,7 @@ final class FakeStreamManager: StreamManaging {
 final class FakeDownloadQueue: DownloadQueueing {
     var isDownloading = false
     var currentQueuedSong: Song?
+    var currentStreamHandler: StreamHandler?
     var queuedSongs = Set<Song>()
 
     private(set) var startCount = 0

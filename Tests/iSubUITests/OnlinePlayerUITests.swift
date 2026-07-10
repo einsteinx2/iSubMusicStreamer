@@ -88,14 +88,12 @@ final class OnlinePlayerUITests: XCTestCase {
         XCTAssertTrue(waitUntil(timeout: 10) { self.sliderValue(app) > 5 }, "seek within song failed")
 
         // Seek far past what has downloaded; the player must survive, and playback should
-        // recover by restarting the stream at the new offset. Recovery currently stalls
-        // because BassPlayer.pauseIfUnderrun is a no-op (BUG-02); flips when that lands.
+        // recover by restarting the stream at the new offset (BUG-02 regression: the
+        // underrun wait loop in BassPlayer.pauseIfUnderrun handles running dry)
         slider.adjust(toNormalizedSliderPosition: 0.9)
         XCTAssertTrue(app.buttons[AccessibilityId.playerPlayPause].waitForExistence(timeout: 10))
-        XCTExpectFailure("BUG-02: underrun handling is a no-op, seeking past the cached point stalls", strict: false) {
-            XCTAssertTrue(waitUntil(timeout: 30) { self.sliderValue(app) > 60 },
-                          "seek past the cache point did not recover")
-        }
+        XCTAssertTrue(waitUntil(timeout: 30) { self.sliderValue(app) > 60 },
+                      "seek past the cache point did not recover")
     }
 
     func testRepeatModeCycling() {

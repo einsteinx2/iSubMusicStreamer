@@ -254,6 +254,7 @@ extension DownloadQueue: StreamHandlerDelegate {
 protocol DownloadQueueing: AnyObject {
     var isDownloading: Bool { get }
     var currentQueuedSong: Song? { get }
+    var currentStreamHandler: StreamHandler? { get }
     func isInQueue(song: Song) -> Bool
     func start()
     func stop()

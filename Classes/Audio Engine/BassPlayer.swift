@@ -21,8 +21,11 @@ final class BassPlayer: NSObject {
     @LazyInjected private var settings: SavedSettings
     @LazyInjected private var social: Social
     @LazyInjected private var streamManager: StreamManager
-    
+    @LazyInjected private var downloadQueue: DownloadQueueing
+
     let streamGcdQueue = DispatchQueue(label: "com.isubapp.BassStreamQueue")
+    // Serial queue for the underrun wait loop so it never blocks the audio callback thread
+    private let underrunWaitQueue = DispatchQueue(label: "com.isubapp.BassUnderrunWaitQueue")
 
     var streamQueue = [BassStream]()
     let streamQueueSync = NSObject()
@@ -536,102 +539,106 @@ final class BassPlayer: NSObject {
     }
     
     private func pauseIfUnderrun(bassStream: BassStream) {
-        return
-        
-        /*
-         * Handle pausing to wait for more data
-         */
-        /*
-            //    if (userInfo.isFileUnderrun && BASS_ChannelIsActive(userInfo.stream)) {
-                    // Get a strong reference to the current song's userInfo object, so that
-                    // if the stream is freed while the wait loop is sleeping, the object will
-                    // still be around to respond to shouldBreakWaitLoop
-                    self.waitLoopStream = userInfo;
+        // Called from the BASS output callback when the mixer returns fewer bytes than
+        // requested. A short read from a fully cached song is just the end of the song,
+        // and a stream that's already waiting is already being handled.
+        guard !bassStream.isWaiting, !bassStream.shouldBreakWaitLoopForever, !bassStream.song.isFullyCached else { return }
 
-                    // Mark the stream as waiting
-                    userInfo.isWaiting = YES;
-            //        userInfo.isFileUnderrun = NO;
-            //        userInfo.wasFileJustUnderrun = YES;
+        // Get a strong reference to the stream, so that if it's freed while the wait
+        // loop is sleeping, the object will still be around to respond to shouldBreakWaitLoop
+        waitLoopStream = bassStream
 
-                    // Handle waiting for additional data
-                    ISMSSong *theSong = userInfo.song;
-                    if (!theSong.isFullyCached) {
-                        if (settingsS.isOfflineMode) {
-                            // This is offline mode and the song can not continue to play
-                            [self moveToNextSong];
-                        } else {
-                            // Calculate the needed size:
-                            // Choose either the current player bitrate, or if for some reason it is not detected properly,
-                            // use the best estimated bitrate. Then use that to determine how much data to let download to continue.
+        // Mark the stream as waiting
+        bassStream.isWaiting = true
+        bassStream.shouldBreakWaitLoop = false
 
-                            NSInteger size = theSong.localFileSize;
-                            NSInteger bitrate = [Bass estimateKiloBitrateWithBassStream:userInfo];
+        // The wait loop must not block the audio callback thread
+        underrunWaitQueue.async { [weak self] in
+            self?.waitForMoreData(bassStream: bassStream)
+        }
+    }
 
-                            // Get the stream for this song
-                            StreamHandler *handler = [StreamManager.shared handlerWithSong:userInfo.song];
-                            if (!handler && [DownloadQueue.shared.currentQueuedSong isEqual:userInfo.song])
-                                handler = [DownloadQueue.shared currentStreamHandler];
+    private func waitForMoreData(bassStream: BassStream) {
+        defer {
+            bassStream.isWaiting = false
+            bassStream.shouldBreakWaitLoop = false
+            if waitLoopStream === bassStream {
+                waitLoopStream = nil
+            }
+        }
 
-                            // Calculate the bytes to wait based on the recent download speed. If the handler is nil or recent download speed is 0
-                            // it will just use the default (currently 10 seconds)
-                            NSInteger bytesToWait = [Bass bytesToBufferWithKiloBitrate:bitrate bytesPerSec:handler.recentDownloadSpeedInBytesPerSec];
+        let song = bassStream.song
 
-                            NSInteger neededSize = size + bytesToWait;
+        if settings.isOfflineMode {
+            // This is offline mode and the song can not continue to play
+            moveToNextSong()
+            return
+        }
 
-                            DDLogInfo(@"[BassPlayer] AUDIO ENGINE - calculating wait, bitrate: %ld, recentBytesPerSec: %ld, bytesToWait: %ld", (long)bitrate, (long)handler.recentDownloadSpeedInBytesPerSec, (long)bytesToWait);
-                            DDLogInfo(@"[BassPlayer] AUDIO ENGINE - waiting for %ld, neededSize: %ld", (long)bytesToWait, (long)neededSize);
+        // Calculate the needed size:
+        // Choose either the current player bitrate, or if for some reason it is not detected properly,
+        // use the best estimated bitrate. Then use that to determine how much data to let download to continue.
+        let kiloBitrate = Bass.estimateKiloBitrate(bassStream: bassStream)
 
-                            // Sleep for 10000 microseconds, or 1/100th of a second
-                            static const QWORD sleepTime = 10000;
-                            // Check file size every second, so 1000000 microseconds
-                            static const QWORD fileSizeCheckWait = 1000000;
-                            QWORD totalSleepTime = 0;
-                            while (YES) {
-                                // Bail if the thread was canceled
-                                if (NSThread.currentThread.isCancelled) break;
+        // Get the stream handler for this song
+        var handler = streamManager.handler(song: song)
+        if handler == nil, downloadQueue.currentQueuedSong == song {
+            handler = downloadQueue.currentStreamHandler
+        }
 
-                                // Check if we should break every 100th of a second
-                                usleep(sleepTime);
-                                totalSleepTime += sleepTime;
-                                if (userInfo.shouldBreakWaitLoop || userInfo.shouldBreakWaitLoopForever) break;
+        // Calculate the bytes to wait based on the recent download speed. If the handler is nil
+        // or recent download speed is 0 it will just use the default (currently 10 seconds)
+        let bytesToWait = Bass.bytesToBuffer(kiloBitrate: kiloBitrate, bytesPerSec: handler?.recentDownloadSpeedInBytesPerSec ?? 0)
+        let neededSize = song.localFileSize + bytesToWait
 
-                                // Bail if the thread was canceled
-                                if (NSThread.currentThread.isCancelled) break;
+        if Debug.audioEngine {
+            DDLogInfo("[BassPlayer] underrun for \(song), kiloBitrate: \(kiloBitrate), bytesToWait: \(bytesToWait), neededSize: \(neededSize)")
+        }
 
-                                // Only check the file size every second
-                                if (totalSleepTime >= fileSizeCheckWait) {
-                                    @autoreleasepool {
-                                        totalSleepTime = 0;
+        // Sleep for 10000 microseconds, or 1/100th of a second
+        let sleepTimeMicros: useconds_t = 10_000
+        // Check file size every second, so 1000000 microseconds
+        let fileSizeCheckWaitMicros = 1_000_000
+        var totalSleepTimeMicros = 0
+        while true {
+            // Check if we should break every 100th of a second (breaks on seek/stop/song change)
+            usleep(sleepTimeMicros)
+            totalSleepTimeMicros += Int(sleepTimeMicros)
+            if bassStream.shouldBreakWaitLoop || bassStream.shouldBreakWaitLoopForever {
+                break
+            }
 
-                                        // If enough of the file has downloaded, break the loop
-                                        if (userInfo.sizeOnDisk >= neededSize) {
-                                            break;
-                                        // Handle temp cached songs ending. When they end, they are set as the last temp cached song, so we know it's done and can stop waiting for data.
-                                        } else if (theSong.isTempCached && [theSong isEqual:StreamManager.shared.lastTempCachedSong]) {
-                                            break;
-                                        // If the song has finished caching, we can stop waiting
-                                        } else if (theSong.isFullyCached) {
-                                            break;
-                                        // If we're not in offline mode, stop waiting and try next song
-                                        } else if (settingsS.isOfflineMode) {
-                                            // Bail if the thread was canceled
-                                            if (NSThread.currentThread.isCancelled) break;
+            // Only check the file size every second
+            if totalSleepTimeMicros >= fileSizeCheckWaitMicros {
+                totalSleepTimeMicros = 0
 
-                                            [self moveToNextSong];
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            DDLogInfo(@"[BassPlayer] done waiting");
-                        }
+                let shouldBreak = autoreleasepool { () -> Bool in
+                    if song.localFileSize >= neededSize {
+                        // Enough of the file has downloaded to continue
+                        return true
+                    } else if song.isTempCached && song == streamManager.lastTempCachedSong {
+                        // Handle temp cached songs ending. When they end, they are set as the last temp
+                        // cached song, so we know it's done and can stop waiting for data.
+                        return true
+                    } else if song.isFullyCached {
+                        // The song has finished caching, so we can stop waiting
+                        return true
+                    } else if settings.isOfflineMode {
+                        // We entered offline mode while waiting, so no more data is coming
+                        moveToNextSong()
+                        return true
                     }
+                    return false
+                }
+                if shouldBreak {
+                    break
+                }
+            }
+        }
 
-                    userInfo.isWaiting = NO;
-                    userInfo.shouldBreakWaitLoop = NO;
-                    self.waitLoopStream = nil;
-            //    }
- */
+        if Debug.audioEngine {
+            DDLogInfo("[BassPlayer] done waiting for more data for \(song)")
+        }
     }
 }
 

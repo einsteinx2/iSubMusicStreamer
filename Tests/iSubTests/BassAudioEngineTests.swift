@@ -174,6 +174,63 @@ final class BassAudioEngineTests: StoreTestCase {
         XCTAssertFalse(player.seekToPosition(bytes: 1000))
     }
 
+    // MARK: Underrun handling (BUG-02)
+
+    // Writes only the first `bytes` of the fixture to the song's local path WITHOUT marking
+    // the download finished, simulating an in-progress stream download
+    private func makePartialSong(id: String, fixture: String, suffix: String, bytes: Int, duration: Int, kiloBitrate: Int = 128) throws -> (song: Song, fullData: Data) {
+        let fixtureURL = try Fixtures.url(fixture)
+        let fullData = try Data(contentsOf: fixtureURL)
+        let song = TestData.song(serverId: 1, id: id, title: "Partial \(id)", path: "Fixtures/\(id).\(suffix)", suffix: suffix, duration: duration, kiloBitrate: kiloBitrate, size: fullData.count)
+        XCTAssertTrue(store.add(song: song))
+
+        let destination = URL(fileURLWithPath: song.localPath)
+        try FileManager.default.createDirectory(at: destination.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try fullData.prefix(bytes).write(to: destination)
+
+        XCTAssertTrue(store.add(downloadedSong: DownloadedSong(song: song)))
+        XCTAssertFalse(song.isFullyCached, "the partial song must not be considered fully cached")
+        return (song, fullData)
+    }
+
+    func testUnderrunPausesThenResumesWhenDataArrives() throws {
+        // Only the first few seconds of the 144s MP3 are on disk, so decoding runs dry
+        let partialBytes = 96 * 1024
+        let (song, fullData) = try makePartialSong(id: "partial", fixture: "Audio/test_song.mp3", suffix: "mp3", bytes: partialBytes, duration: 144)
+        queueAndStart(song)
+
+        XCTAssertTrue(waitUntil { self.player.isStarted && self.player.isPlaying }, "playback should start from the partial file")
+
+        // The decoder exhausts the partial file and the player enters the underrun wait loop
+        XCTAssertTrue(waitUntil(timeout: 30) { self.player.currentStream?.isWaiting == true }, "the stream should enter the underrun wait state")
+        XCTAssertTrue(player.isPlaying, "buffering must not flip the play/pause state")
+        let progressWhileWaiting = player.progress
+
+        // "Download" the rest of the file; the wait loop checks the size once per second
+        let handle = try FileHandle(forWritingTo: URL(fileURLWithPath: song.localPath))
+        try handle.seekToEnd()
+        try handle.write(contentsOf: fullData.suffix(from: partialBytes))
+        try handle.close()
+        _ = store.update(downloadFinished: true, song: song)
+
+        XCTAssertTrue(waitUntil(timeout: 15) { self.player.currentStream?.isWaiting == false }, "the wait loop should end once the data arrives")
+        XCTAssertTrue(waitUntil(timeout: 15) { self.player.progress > progressWhileWaiting + 0.5 }, "playback should resume and progress should advance")
+        XCTAssertNil(player.waitLoopStream, "the wait loop stream reference is cleared")
+    }
+
+    func testUnderrunWaitLoopBreaksOnSeek() throws {
+        let partialBytes = 96 * 1024
+        let (song, _) = try makePartialSong(id: "partialseek", fixture: "Audio/test_song.mp3", suffix: "mp3", bytes: partialBytes, duration: 144)
+        queueAndStart(song)
+
+        XCTAssertTrue(waitUntil { self.player.isStarted && self.player.isPlaying }, "playback should start from the partial file")
+        XCTAssertTrue(waitUntil(timeout: 30) { self.player.currentStream?.isWaiting == true }, "the stream should enter the underrun wait state")
+
+        // Seeking back into the downloaded part breaks the wait loop
+        player.seekToPosition(seconds: 1, fadeVolume: false)
+        XCTAssertTrue(waitUntil(timeout: 10) { self.player.currentStream?.isWaiting == false }, "seeking must break the wait loop")
+    }
+
     // MARK: Gapless playback
 
     func testPrepareNextStreamAndGaplessTransition() throws {
