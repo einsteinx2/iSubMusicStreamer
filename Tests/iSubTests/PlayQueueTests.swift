@@ -484,3 +484,98 @@ final class PlayQueueTests: StoreTestCase {
         XCTAssertEqual(playQueue.repeatMode, RepeatMode.none)
     }
 }
+
+// MARK: - Lock screen remote command handlers (BUG-23)
+
+final class LockScreenAudioControlsTests: StoreTestCase {
+    private var playQueue: PlayQueue!
+    private var settings: SavedSettings!
+    private var player: FakePlayer!
+
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        player = FakePlayer()
+        let fakePlayer = player!
+        TestContainer.register { fakePlayer as PlayerControlling }
+        TestContainer.register { FakeStreamManager() as StreamManaging }
+        TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
+        let freshSettings = SavedSettings()
+        TestContainer.register { freshSettings }
+        settings = freshSettings
+        let freshPlayQueue = PlayQueue()
+        TestContainer.register { freshPlayQueue }
+        playQueue = freshPlayQueue
+    }
+
+    override func tearDownWithError() throws {
+        playQueue = nil
+        settings = nil
+        player = nil
+        try super.tearDownWithError()
+    }
+
+    private func seedQueue(_ count: Int) {
+        for number in 1...count {
+            let song = TestData.song(serverId: 1, id: "\(number)", title: "Song \(number)", path: "A/\(number).mp3")
+            _ = store.add(song: song)
+            XCTAssertTrue(store.add(song: song, localPlaylistId: LocalPlaylist.Default.playQueueId))
+        }
+    }
+
+    func testNextAndPreviousTrackReturnSuccess_BUG23() {
+        seedQueue(3)
+        playQueue.currentIndex = 1
+
+        XCTAssertEqual(LockScreenAudioControls.handleNextTrack(), .success,
+                       "a successful skip must not report .commandFailed to the OS")
+        XCTAssertEqual(playQueue.currentIndex, 2)
+
+        XCTAssertEqual(LockScreenAudioControls.handlePreviousTrack(), .success)
+        XCTAssertEqual(playQueue.currentIndex, 1)
+    }
+
+    func testNextTrackWithEmptyQueueIsNotActionable() {
+        XCTAssertEqual(LockScreenAudioControls.handleNextTrack(), .noActionableNowPlayingItem)
+        XCTAssertEqual(LockScreenAudioControls.handlePreviousTrack(), .noActionableNowPlayingItem)
+    }
+
+    func testChangePlaybackPositionSeeksLocalPlayer() {
+        seedQueue(1)
+        player.isPlaying = true
+
+        XCTAssertEqual(LockScreenAudioControls.handleChangePlaybackPosition(seconds: 42.5), .success)
+        XCTAssertEqual(player.seeks.count, 1)
+        XCTAssertEqual(player.seeks[0].seconds, 42.5, accuracy: 0.001)
+
+        player.isPlaying = false
+        XCTAssertEqual(LockScreenAudioControls.handleChangePlaybackPosition(seconds: 10), .commandFailed)
+    }
+
+    func testChangePlaybackPositionInJukeboxModeSeeksJukebox_BUG23() throws {
+        MockSubsonicServer.install()
+        defer { MockSubsonicServer.uninstall() }
+        try MockSubsonicServer.stub(.jukeboxControl, fixture: "XML/jukeboxControl_status.xml")
+
+        let server = TestData.server(id: 1, urlString: "https://mock.example.com")
+        XCTAssertTrue(store.add(server: server))
+        settings.currentServer = server
+        settings.isJukeboxEnabled = true
+
+        let jukebox = Jukebox()
+        TestContainer.register { jukebox }
+        defer { jukebox.getInfo(delay: 999_999) }
+
+        XCTAssertEqual(LockScreenAudioControls.handleChangePlaybackPosition(seconds: 42), .success,
+                       "lock-screen scrubbing must drive the jukebox, not the (idle) local player")
+        XCTAssertTrue(player.seeks.isEmpty)
+
+        let deadline = Date(timeIntervalSinceNow: 5)
+        var request: MockSubsonicServer.ReceivedRequest?
+        repeat {
+            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
+            request = MockSubsonicServer.receivedRequests(action: .jukeboxControl).last
+        } while (request?.parameter("action") != "skip" || request?.parameter("offset") != "42") && Date() < deadline
+        XCTAssertEqual(request?.parameter("action"), "skip")
+        XCTAssertEqual(request?.parameter("offset"), "42")
+    }
+}

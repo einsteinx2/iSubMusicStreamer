@@ -14,8 +14,34 @@ struct LockScreenAudioControls {
     private static var remote: MPRemoteCommandCenter { MPRemoteCommandCenter.shared() }
     private static var settings: SavedSettings { Resolver.resolve() }
     private static var jukebox: Jukebox { Resolver.resolve() }
-    private static var player: BassPlayer { Resolver.resolve() }
+    private static var player: PlayerControlling { Resolver.resolve() }
     private static var playQueue: PlayQueue { Resolver.resolve() }
+
+    // MARK: Handlers (internal, not private, for test access)
+
+    static func handleNextTrack() -> MPRemoteCommandHandlerStatus {
+        guard playQueue.nextSong != nil else { return .noActionableNowPlayingItem }
+        playQueue.playNextSong()
+        return .success
+    }
+
+    static func handlePreviousTrack() -> MPRemoteCommandHandlerStatus {
+        guard playQueue.prevSong != nil else { return .noActionableNowPlayingItem }
+        playQueue.playPrevSong()
+        return .success
+    }
+
+    static func handleChangePlaybackPosition(seconds: Double) -> MPRemoteCommandHandlerStatus {
+        guard settings.isJukeboxEnabled || playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
+        if settings.isJukeboxEnabled {
+            jukebox.seek(seconds: Int(seconds))
+            return .success
+        } else if player.isPlaying {
+            player.seekToPosition(seconds: seconds, fadeVolume: true)
+            return .success
+        }
+        return .commandFailed
+    }
     
     static func setup() {
         
@@ -97,17 +123,13 @@ struct LockScreenAudioControls {
         // Next Track
         remote.nextTrackCommand.isEnabled = true
         remote.nextTrackCommand.addTarget { _ in
-            guard playQueue.nextSong != nil else { return .noActionableNowPlayingItem }
-            playQueue.playNextSong()
-            return .commandFailed
+            handleNextTrack()
         }
-        
+
         // Previous Track
         remote.previousTrackCommand.isEnabled = true
         remote.previousTrackCommand.addTarget { _ in
-            guard playQueue.prevSong != nil else { return .noActionableNowPlayingItem }
-            playQueue.playPrevSong()
-            return .commandFailed
+            handlePreviousTrack()
         }
         
         // Repeat Mode
@@ -152,13 +174,8 @@ struct LockScreenAudioControls {
         // Seeking
         remote.changePlaybackPositionCommand.isEnabled = true
         remote.changePlaybackPositionCommand.addTarget { event in
-            guard settings.isJukeboxEnabled || playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
             guard let positionEvent = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
-            if player.isPlaying {
-                player.seekToPosition(seconds: positionEvent.positionTime, fadeVolume: true)
-                return .success
-            }
-            return .commandFailed
+            return handleChangePlaybackPosition(seconds: positionEvent.positionTime)
         }
     }
 }
