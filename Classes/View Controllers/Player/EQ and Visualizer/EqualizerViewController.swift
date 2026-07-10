@@ -40,8 +40,8 @@ final class EqualizerViewController: UIViewController {
     var isDeletePresetButtonShowing = false
     var saveDialog: DDSocialDialog?
     var wasVisualizerOffBeforeRotation = false
-    let swipeDetectorLeft: UISwipeGestureRecognizer = { UISwipeGestureRecognizer(target: EqualizerViewController.self, action: #selector(swipeLeft)) }()
-    let swipeDetectorRight: UISwipeGestureRecognizer = { UISwipeGestureRecognizer(target: EqualizerViewController.self, action: #selector(swipeRight)) }()
+    lazy var swipeDetectorLeft = UISwipeGestureRecognizer(target: self, action: #selector(swipeLeft))
+    lazy var swipeDetectorRight = UISwipeGestureRecognizer(target: self, action: #selector(swipeRight))
     @IBOutlet var landscapeButtonsHolder: UIView!
     
 

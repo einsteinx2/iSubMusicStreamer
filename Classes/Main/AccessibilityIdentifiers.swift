@@ -48,6 +48,7 @@ enum AccessibilityId {
     static let equalizerSavePreset = "equalizer.savePreset"
     static let equalizerDeletePreset = "equalizer.deletePreset"
     static let equalizerClose = "equalizer.close"
+    static let equalizerVisualizer = "equalizer.visualizer"
 
     // Home
     static let homeQuickAlbums = "home.quickAlbums"

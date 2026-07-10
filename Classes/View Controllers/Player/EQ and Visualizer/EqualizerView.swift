@@ -135,7 +135,13 @@ final class EqualizerView: UIView {
         setupDrawBitmap()
         
         isUserInteractionEnabled = true
-        
+
+        // Stable identifier for UI tests; accessibilityValue tracks the visualizer type
+        // (set in changeType) so tests can assert the swipe gestures cycle it
+        isAccessibilityElement = true
+        accessibilityIdentifier = AccessibilityId.equalizerVisualizer
+
+
         if let eaglLayer = layer as? CAEAGLLayer {
             eaglLayer.isOpaque = true
             // In this application, we want to retain the EAGLDrawable contents after a call to presentRenderbuffer.
@@ -513,6 +519,7 @@ final class EqualizerView: UIView {
             break
         }
         settings.currentVisualizerType = visualizerType
+        accessibilityValue = String(visualizerType.rawValue)
     }
     
     func nextType() {

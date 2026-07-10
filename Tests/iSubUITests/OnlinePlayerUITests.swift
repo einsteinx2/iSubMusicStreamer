@@ -237,7 +237,19 @@ final class OnlinePlayerUITests: XCTestCase {
             let frame = app.windows.firstMatch.frame
             return frame.width > frame.height
         }, "the app did not rotate to landscape")
-        dismissEqualizerAlerts(app)
+
+        // BUG-12 regression: swiping the fullscreen visualizer cycles the visualizer type
+        // (the recognizers used to target the class instead of the instance and never fired)
+        let visualizer = app.otherElements[AccessibilityId.equalizerVisualizer]
+        XCTAssertTrue(visualizer.waitForExistence(timeout: 5), "visualizer view missing in landscape")
+        let typeBeforeSwipe = visualizer.value as? String
+        visualizer.swipeLeft()
+        XCTAssertTrue(waitUntil(timeout: 5) { (visualizer.value as? String) != typeBeforeSwipe },
+                      "swiping left did not cycle the visualizer type")
+        visualizer.swipeRight()
+        XCTAssertTrue(waitUntil(timeout: 5) { (visualizer.value as? String) == typeBeforeSwipe },
+                      "swiping right did not cycle the visualizer type back")
+
         XCUIDevice.shared.orientation = .portrait
         XCTAssertTrue(waitUntil(timeout: 10) {
             let frame = app.windows.firstMatch.frame
