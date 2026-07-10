@@ -305,11 +305,14 @@ final class BassAudioEngineTests: StoreTestCase {
 
         equalizer.removeEqualizerValue(value: middle)
 
-        XCTExpectFailure("BUG-11: removeEqualizerValue has an inverted bounds guard and no-ops for valid indexes; remove this marker when fixing the bug") {
-            XCTAssertEqual(equalizer.equalizerValues.count, 2, "removing a band must shrink the EQ")
-            XCTAssertEqual(equalizer.equalizerValues.map(\.frequency), [100, 10000], "the middle band must be removed")
-            XCTAssertEqual(equalizer.equalizerValues.map(\.arrayIndex), [0, 1], "remaining indexes must be re-sequenced")
-        }
+        XCTAssertEqual(equalizer.equalizerValues.count, 2, "removing a band must shrink the EQ")
+        XCTAssertEqual(equalizer.equalizerValues.map(\.frequency), [100, 10000], "the middle band must be removed")
+        XCTAssertEqual(equalizer.equalizerValues.map(\.arrayIndex), [0, 1], "remaining indexes must be re-sequenced")
+
+        // An out-of-bounds index must be a safe no-op, not a crash
+        let stale = BassParamEqValue(parameters: BASS_DX8_PARAMEQ(), arrayIndex: 5)
+        equalizer.removeEqualizerValue(value: stale)
+        XCTAssertEqual(equalizer.equalizerValues.count, 2, "an out-of-bounds value must not remove anything")
     }
 
     func testUpdateEqParameter() {

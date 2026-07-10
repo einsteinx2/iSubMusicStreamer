@@ -145,31 +145,25 @@ final class BassEqualizer: NSObject {
     
     @objc(removeEqualizerValue:)
     func removeEqualizerValue(value: BassParamEqValue) {
-        guard value.arrayIndex >= eqValues.count else { return }
-        print("removeEqualizerValue");
-        if isEqActive && channel > 0 {
-            // Disable the effect channel
-            BASS_ChannelRemoveFX(channel, value.handle);
-        }
-        
-        // Remove the handle
-        eqHandles.removeAll { $0 == value.handle }
-        
-        // Remove the value
-        eqValuesLock.sync {
+        // Remove the value and re-sequence the remaining indexes
+        let removed = eqValuesLock.sync { () -> Bool in
+            guard value.arrayIndex >= 0 && value.arrayIndex < eqValues.count else { return false }
             eqValues.remove(at: value.arrayIndex)
             for i in value.arrayIndex..<eqValues.count {
                 // Adjust the arrayIndex values for the other objects
                 eqValues[i].arrayIndex = i
             }
+            return true
         }
-//        eqValuesLock.lock()
-//        eqValues.remove(at: value.arrayIndex)
-//        for i in value.arrayIndex..<eqValues.count {
-//            // Adjust the arrayIndex values for the other objects
-//            eqValues[i].arrayIndex = i
-//        }
-//        eqValuesLock.unlock()
+        guard removed else { return }
+
+        if isEqActive && channel > 0 {
+            // Disable the effect channel
+            BASS_ChannelRemoveFX(channel, value.handle);
+        }
+
+        // Remove the handle
+        eqHandles.removeAll { $0 == value.handle }
     }
     
     func removeAllEqualizerValues() {
