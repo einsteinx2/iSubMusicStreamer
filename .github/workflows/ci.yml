@@ -1,0 +1,114 @@
+name: CI
+
+on:
+  push:
+    branches: [main, new-swift-port]
+  pull_request:
+  schedule:
+    # Nightly UI test run at 09:23 UTC
+    - cron: "23 9 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  SCHEME: iSub Beta
+  DESTINATION: platform=iOS Simulator,name=iPhone 17 Pro
+
+jobs:
+  unit-tests:
+    name: Build & unit/integration tests
+    # Skip the scheduled trigger; nightly only runs the UI job
+    if: github.event_name != 'schedule'
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pin Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "^26.0"
+
+      - name: Cache SPM packages
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData/**/SourcePackages
+          key: spm-${{ runner.os }}-${{ hashFiles('iSub.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: spm-${{ runner.os }}-
+
+      - name: Resolve SPM packages
+        run: |
+          xcodebuild -resolvePackageDependencies -project iSub.xcodeproj -scheme "$SCHEME"
+
+      - name: Build for testing
+        run: |
+          set -o pipefail
+          xcodebuild build-for-testing \
+            -project iSub.xcodeproj \
+            -scheme "$SCHEME" \
+            -destination "$DESTINATION" \
+            | xcbeautify --renderer github-actions || exit 1
+
+      - name: Run unit/integration tests (iSubTests)
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building \
+            -project iSub.xcodeproj \
+            -scheme "$SCHEME" \
+            -destination "$DESTINATION" \
+            -only-testing:iSubTests \
+            -resultBundlePath TestResults/unit.xcresult \
+            | xcbeautify --renderer github-actions || exit 1
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: TestResults
+
+  ui-tests:
+    name: UI (E2E) tests
+    # Nightly, manual, and pushes to the main branches; skipped on PRs to keep them fast
+    if: github.event_name != 'pull_request'
+    runs-on: macos-26
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pin Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "^26.0"
+
+      - name: Cache SPM packages
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData/**/SourcePackages
+          key: spm-${{ runner.os }}-${{ hashFiles('iSub.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: spm-${{ runner.os }}-
+
+      - name: Resolve SPM packages
+        run: |
+          xcodebuild -resolvePackageDependencies -project iSub.xcodeproj -scheme "$SCHEME"
+
+      - name: Run UI tests (iSubUITests)
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project iSub.xcodeproj \
+            -scheme "$SCHEME" \
+            -destination "$DESTINATION" \
+            -only-testing:iSubUITests \
+            -resultBundlePath TestResults/ui.xcresult \
+            | xcbeautify --renderer github-actions || exit 1
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-results
+          path: TestResults

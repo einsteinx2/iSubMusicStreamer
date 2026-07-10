@@ -43,7 +43,7 @@ Current state: zero automated tests. No XCTest or XCUITest target exists in `iSu
 - [x] **[TEST-07] P1 — Embedded mock Subsonic HTTP server for E2E streaming.** The URLProtocol stub covers API calls; full E2E playback/download flows also need real HTTP byte-serving. The repo already vendors GCDWebServer (`Frameworks/GCDWebServer`).
   > **Prompt:** Build a UI-test harness that can run the app against a local in-process mock Subsonic server: use the vendored GCDWebServer (or an embedded HTTP server in the UI-test runner) serving fixture XML plus small real audio files (include at least one non-MP3 format — FLAC/OGG/Opus — to exercise BASS plugin loading) for stream/download endpoints, selected via the -FIXTURES launch argument. This unblocks seekable/partial-download E2E scenarios that a URLProtocol stub can't model well.
 
-- [ ] **[TEST-08] P1 — Continuous integration.** No `.github/workflows`, no fastlane, nothing. Land this as soon as TEST-01 exists so every subsequent change runs the growing suite.
+- [x] **[TEST-08] P1 — Continuous integration.** No `.github/workflows`, no fastlane, nothing. Land this as soon as TEST-01 exists so every subsequent change runs the growing suite.
   > **Prompt:** Set up GitHub Actions CI for the iSub Xcode project: a workflow on push/PR that resolves SPM packages, builds the shared scheme for iOS Simulator, and runs the unit/integration test suite (plus, once E2E exists, the UI tests as a separate/nightly job). Cache SPM/DerivedData, pin an Xcode version compatible with the project settings, fail on compile errors or test failures, and add a build-status badge to README.
 
 ---
