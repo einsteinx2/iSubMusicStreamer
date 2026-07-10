@@ -29,6 +29,10 @@ enum MockSubsonicServer {
         // never finishes — the transfer stays in-flight until cancelled. Used to
         // test cancellation of active downloads.
         var stall = false
+        // When set, the body is delivered in pieces of chunkSize bytes with
+        // chunkDelay seconds between them, simulating a paced network transfer
+        var chunkSize: Int?
+        var chunkDelay: TimeInterval = 0
     }
 
     struct ReceivedRequest {
@@ -99,6 +103,12 @@ enum MockSubsonicServer {
     static func stubStalling(_ action: SubsonicAction, data: Data, contentType: String = "application/octet-stream") {
         lock.lock(); defer { lock.unlock() }
         stubs[action.rawValue] = StubResponse(headers: ["Content-Type": contentType], body: data, stall: true)
+    }
+
+    // Delivers the body in chunkSize pieces with chunkDelay between them
+    static func stubChunked(_ action: SubsonicAction, data: Data, chunkSize: Int, chunkDelay: TimeInterval, contentType: String = "application/octet-stream") {
+        lock.lock(); defer { lock.unlock() }
+        stubs[action.rawValue] = StubResponse(headers: ["Content-Type": contentType], body: data, chunkSize: chunkSize, chunkDelay: chunkDelay)
     }
 
     // Dynamic stub: the handler receives the decoded request and returns the response,
@@ -209,7 +219,19 @@ final class MockSubsonicURLProtocol: URLProtocol {
         }
 
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
-        client?.urlProtocol(self, didLoad: stub.body)
+        if let chunkSize = stub.chunkSize, chunkSize > 0 {
+            var offset = 0
+            while offset < stub.body.count {
+                let end = min(offset + chunkSize, stub.body.count)
+                client?.urlProtocol(self, didLoad: stub.body.subdata(in: offset..<end))
+                offset = end
+                if offset < stub.body.count && stub.chunkDelay > 0 {
+                    Thread.sleep(forTimeInterval: stub.chunkDelay)
+                }
+            }
+        } else {
+            client?.urlProtocol(self, didLoad: stub.body)
+        }
         if !stub.stall {
             client?.urlProtocolDidFinishLoading(self)
         }

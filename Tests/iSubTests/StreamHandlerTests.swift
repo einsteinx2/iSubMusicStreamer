@@ -168,6 +168,50 @@ final class StreamHandlerTests: StoreTestCase {
         XCTAssertEqual(result, .completed, "playback should be told to start after ~10 seconds of audio is buffered")
     }
 
+    func testThrottlingDelaysDownloadWhileSongPlays_BUG04() throws {
+        // Throttling only engages while a song is actively playing
+        let fakePlayer = FakePlayer()
+        fakePlayer.isPlaying = true
+        TestContainer.register { fakePlayer as PlayerControlling }
+
+        // 128 Kbps song: throttling starts after 983,040 bytes (60s of audio); the wifi
+        // cap is ~100 KB per 0.1s interval (~1 MB/s). Deliver ~1.4 MB at ~3 MB/s so the
+        // transfer runs well over the cap once past the threshold.
+        let song = makeSong(id: "84", kiloBitrate: 128)
+        let body = Data(repeating: 6, count: 1_400_000)
+        MockSubsonicServer.stubChunked(.stream, data: body, chunkSize: 64 * 1024, chunkDelay: 0.02)
+
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        activeHandler = handler
+        handler.start()
+
+        wait(for: [delegateSpy.finishedExpectation], timeout: 30)
+
+        XCTAssertGreaterThan(handler.throttleCount, 0, "the transfer should have been throttled at least once")
+        let fileData = try Data(contentsOf: URL(fileURLWithPath: song.localPath))
+        XCTAssertEqual(fileData.count, body.count, "throttling must not lose data")
+    }
+
+    func testNoThrottlingWhenNothingIsPlaying() throws {
+        let fakePlayer = FakePlayer()
+        fakePlayer.isPlaying = false
+        TestContainer.register { fakePlayer as PlayerControlling }
+
+        let song = makeSong(id: "85", kiloBitrate: 128)
+        let body = Data(repeating: 6, count: 1_400_000)
+        MockSubsonicServer.stubChunked(.stream, data: body, chunkSize: 64 * 1024, chunkDelay: 0.02)
+
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        activeHandler = handler
+        handler.start()
+
+        wait(for: [delegateSpy.finishedExpectation], timeout: 30)
+
+        XCTAssertEqual(handler.throttleCount, 0, "downloads run at full speed when no song is playing")
+        let fileData = try Data(contentsOf: URL(fileURLWithPath: song.localPath))
+        XCTAssertEqual(fileData.count, body.count)
+    }
+
     func testContentLengthShortfallFailsInsteadOfFinishing() {
         // Advertise more bytes than are delivered: the handler must treat the early
         // completion as a failure so the download is retried, never a clean finish

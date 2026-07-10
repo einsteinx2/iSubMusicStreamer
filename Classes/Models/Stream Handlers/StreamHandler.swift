@@ -32,6 +32,7 @@ final class StreamHandler: NSObject, Codable {
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var settings: SavedSettings
     @Injected private var store: Store
+    @LazyInjected private var player: PlayerControlling
     
     var delegate: StreamHandlerDelegate?
     
@@ -45,6 +46,8 @@ final class StreamHandler: NSObject, Codable {
     private(set) var totalBytesTransferred = 0
     var numberOfReconnects = 0
     private(set) var recentDownloadSpeedInBytesPerSec = 0
+    // Number of times the transfer was delayed by throttling (exposed for tests)
+    private(set) var throttleCount = 0
     
     private lazy var session: URLSession = {
         let configuration = APIURLSession.ephemeralConfiguration()
@@ -330,6 +333,32 @@ extension StreamHandler: URLSessionDataDelegate {
                 throttlingDate = Date()
                 bytesTransfered = 0
             }
+
+            // Throttle the download after the initial buffer so background caching doesn't
+            // compete with the playing stream or blow through cellular limits. Like the old
+            // rate limiting behavior, only throttle while a song is actively playing.
+            if player.isPlaying {
+                let intervalSinceLastThrottle = Date().timeIntervalSince(throttlingDate)
+                if intervalSinceLastThrottle > throttleTimeInterval && totalBytesTransferred > minBytesToStartLimiting(kiloBitrate: kiloBitrate) {
+                    let delay = throttleDelay(bytesTransferred: bytesTransfered, intervalSinceLastThrottle: intervalSinceLastThrottle, kiloBitrate: kiloBitrate, isCell: !SceneDelegate.shared.isWifi)
+                    if delay > 0 {
+                        if isThrottleLoggingEnabled {
+                            DDLogInfo("[StreamHandler] Throttling: pausing for \(delay), interval: \(intervalSinceLastThrottle), bytesTransferred: \(bytesTransfered)")
+                        }
+
+                        throttleCount += 1
+                        bytesTransfered = 0
+
+                        // Runs on the session's background delegate queue, so sleeping
+                        // delays the next data callback without blocking anything else
+                        Thread.sleep(forTimeInterval: delay)
+
+                        // The download may have been canceled while sleeping
+                        guard isDownloading else { return }
+                    }
+                    throttlingDate = Date()
+                }
+            }
         } else {
             DDLogError("[StreamHandler] received data but file handle was nil for \(song)")
             if dataTask.state != .canceling {
@@ -444,6 +473,19 @@ func minBytesToStartLimiting(kiloBitrate: Int) -> Int {
 }
 
 private let maxContentLengthFailures = 25
+
+// Returns how long the transfer should sleep to stay under the throttling cap: the time
+// the bytes received since the last throttle check *should* have taken at the capped
+// rate, minus the time they actually took. 0 when under the cap.
+func throttleDelay(bytesTransferred: Int, intervalSinceLastThrottle: TimeInterval, kiloBitrate: Int, isCell: Bool) -> TimeInterval {
+    let maxBytes = Double(maxBytesPerInterval(kiloBitrate: kiloBitrate, isCell: isCell))
+    let numberOfIntervals = intervalSinceLastThrottle / throttleTimeInterval
+    let maxBytesPerTotalInterval = maxBytes * numberOfIntervals
+    guard Double(bytesTransferred) > maxBytesPerTotalInterval else { return 0 }
+
+    let speedDifferenceFactor = Double(bytesTransferred) / maxBytesPerTotalInterval
+    return (speedDifferenceFactor * intervalSinceLastThrottle) - intervalSinceLastThrottle
+}
 
 func maxBytesPerInterval(kiloBitrate: Int, isCell: Bool) -> Int {
     let maxBytesDefault = isCell ? maxBytesPerIntervalCell() : maxBytesPerIntervalWifi()

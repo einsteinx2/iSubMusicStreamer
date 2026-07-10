@@ -219,6 +219,37 @@ final class UtilityAndMathTests: XCTestCase {
         XCTAssertEqual(minBytesToStartPlayback(kiloBitrate: 128, bytesPerSec: 40_000_000_000_000), 2 * bytesForSeconds(seconds: 1, kiloBitrate: 128))
     }
 
+    // MARK: Throttle delay math (BUG-04)
+
+    func testThrottleDelayZeroWhenUnderCap() {
+        // 160 Kbps on cell caps at 6400 bytes per 0.1s interval
+        XCTAssertEqual(throttleDelay(bytesTransferred: 6400, intervalSinceLastThrottle: 0.1, kiloBitrate: 160, isCell: true), 0)
+        XCTAssertEqual(throttleDelay(bytesTransferred: 3200, intervalSinceLastThrottle: 0.1, kiloBitrate: 160, isCell: true), 0)
+        XCTAssertEqual(throttleDelay(bytesTransferred: 0, intervalSinceLastThrottle: 1.0, kiloBitrate: 160, isCell: true), 0)
+    }
+
+    func testThrottleDelayForOverage() {
+        // Twice the cap in one interval: the bytes should have taken 2 intervals,
+        // so sleep for the extra interval
+        XCTAssertEqual(throttleDelay(bytesTransferred: 12800, intervalSinceLastThrottle: 0.1, kiloBitrate: 160, isCell: true), 0.1, accuracy: 0.0001)
+        // Four times the cap: sleep the 3 missing intervals
+        XCTAssertEqual(throttleDelay(bytesTransferred: 25600, intervalSinceLastThrottle: 0.1, kiloBitrate: 160, isCell: true), 0.3, accuracy: 0.0001)
+    }
+
+    func testThrottleDelayScalesWithElapsedInterval() {
+        // A longer elapsed interval allows proportionally more bytes before throttling:
+        // 12,800 bytes over 0.2s is exactly at the 160 Kbps cell cap
+        XCTAssertEqual(throttleDelay(bytesTransferred: 12800, intervalSinceLastThrottle: 0.2, kiloBitrate: 160, isCell: true), 0)
+        // ...and twice that sleeps for the one missing 0.2s period
+        XCTAssertEqual(throttleDelay(bytesTransferred: 25600, intervalSinceLastThrottle: 0.2, kiloBitrate: 160, isCell: true), 0.2, accuracy: 0.0001)
+    }
+
+    func testThrottleDelayUsesNetworkTypeCap() {
+        // The same overage that throttles on cell is under the wifi cap
+        XCTAssertGreaterThan(throttleDelay(bytesTransferred: 51200, intervalSinceLastThrottle: 0.1, kiloBitrate: 160, isCell: true), 0)
+        XCTAssertEqual(throttleDelay(bytesTransferred: 51200, intervalSinceLastThrottle: 0.1, kiloBitrate: 160, isCell: false), 0)
+    }
+
     // MARK: SubsonicError mapping
 
     func testSubsonicErrorCodeMapping() {
