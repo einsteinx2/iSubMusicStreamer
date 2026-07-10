@@ -276,7 +276,29 @@ final class PlayQueueTests: StoreTestCase {
         XCTAssertFalse(playQueue.isShuffle)
         XCTAssertEqual(playQueue.songs().map(\.id), ["1", "2", "3"],
                        "the play queue must be replaced by the playlist's songs in order")
+        XCTAssertEqual(playQueue.count, 3, "the play queue's songCount must be updated")
         XCTAssertGreaterThan(player.stopCount, 0, "the player restarts for the new song")
+    }
+
+    func testPlaySongFromLocalPlaylistWithShuffleOnFillsNormalQueue_STUB09() {
+        // With shuffle enabled, currentPlaylistId points at the shuffle queue; playing a
+        // local playlist must turn shuffle off FIRST so the songs land in the play queue
+        XCTAssertTrue(store.add(localPlaylist: LocalPlaylist(id: 5, name: "Saved")))
+        for number in 1...3 {
+            let song = TestData.song(serverId: 1, id: "\(number)", title: "Song \(number)", path: "A/\(number).mp3")
+            _ = store.add(song: song)
+            XCTAssertTrue(store.add(song: song, localPlaylistId: 5))
+        }
+        playQueue.isShuffle = true
+
+        let played = store.playSong(position: 0, localPlaylistId: 5)
+
+        XCTAssertEqual(played?.id, "1")
+        XCTAssertFalse(playQueue.isShuffle)
+        XCTAssertEqual(playQueue.songs().map(\.id), ["1", "2", "3"],
+                       "the songs must fill the normal play queue, not the shuffle queue")
+        XCTAssertEqual(store.songs(localPlaylistId: LocalPlaylist.Default.shuffleQueueId).count, 0,
+                       "nothing may leak into the shuffle queue")
     }
 
     // MARK: shuffleToggle

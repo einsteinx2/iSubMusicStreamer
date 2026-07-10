@@ -62,12 +62,24 @@ extension LocalPlaylist: TableCellModel {
         for position in 0..<self.songCount {
             store.song(localPlaylistId: id, position: position)?.queue()
         }
+        syncJukebox()
     }
     func queueNext() {
         var offset = 0
         for position in 0..<self.songCount {
             store.song(localPlaylistId: id, position: position)?.queueNext(offset: offset)
             offset += 1
+        }
+        syncJukebox()
+    }
+
+    // In jukebox mode the songs were added to the local jukebox queue; sync the
+    // remote playlist to match (same handling as PlayQueue/AsyncSongsHelper)
+    private func syncJukebox() {
+        let settings: SavedSettings = Resolver.resolve()
+        if settings.isJukeboxEnabled {
+            let jukebox: Jukebox = Resolver.resolve()
+            jukebox.replacePlaylistWithLocal()
         }
     }
 }

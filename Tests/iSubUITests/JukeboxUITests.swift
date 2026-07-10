@@ -108,13 +108,9 @@ final class JukeboxUITests: XCTestCase {
         XCTAssertTrue(waitForJukeboxAction("skip"), "server shuffle did not send a jukebox skip/play request")
         XCTAssertEqual(streamRequests(), [], "server shuffle streamed locally despite jukebox mode")
 
-        // The remote playlist should also be replaced with the shuffled songs; the
-        // server-shuffle path never syncs it (only skip is sent), so the remote box
-        // plays stale content — documents the gap until the sync lands
-        XCTExpectFailure("BUG: server shuffle in jukebox mode never syncs the remote playlist (no clear/add sent)", strict: false) {
-            XCTAssertTrue(waitForJukeboxAction("add", timeout: 5),
-                          "server shuffle did not add the shuffled songs to the remote jukebox playlist")
-        }
+        // The remote playlist is replaced with the shuffled songs (STUB-09)
+        XCTAssertTrue(waitForJukeboxAction("add", timeout: 5),
+                      "server shuffle did not add the shuffled songs to the remote jukebox playlist")
     }
 
     func testSearchResultPlaybackIssuesJukeboxCall() {

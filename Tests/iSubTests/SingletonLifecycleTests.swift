@@ -122,6 +122,77 @@ final class JukeboxTests: StoreTestCase {
         XCTAssertEqual(MockSubsonicServer.receivedRequests(action: .jukeboxControl).count, 0)
     }
 
+    // MARK: Playing from local playlists / queues (STUB-09)
+
+    private func seedLocalPlaylist(id: Int, songIds: [String]) {
+        XCTAssertTrue(store.add(localPlaylist: LocalPlaylist(id: id, name: "Saved \(id)")))
+        for songId in songIds {
+            let song = TestData.song(serverId: 1, id: songId, title: "Song \(songId)", path: "A/\(songId).mp3")
+            _ = store.add(song: song)
+            XCTAssertTrue(store.add(song: song, localPlaylistId: id))
+        }
+    }
+
+    func testPlaySongFromLocalPlaylistSyncsJukeboxAndSkips_STUB09() {
+        try? MockSubsonicServer.stub(.jukeboxControl, fixture: "XML/jukeboxControl_status.xml")
+        // The store resolves the Jukebox singleton for the remote sync
+        let registeredJukebox = jukebox!
+        TestContainer.register { registeredJukebox }
+        seedLocalPlaylist(id: 5, songIds: ["1", "2"])
+
+        let played = store.playSong(position: 1, localPlaylistId: 5)
+
+        XCTAssertEqual(played?.id, "2")
+        // The jukebox play queue (not the normal one) is filled, with its count updated
+        XCTAssertEqual(playQueue.currentPlaylistId, LocalPlaylist.Default.jukeboxPlayQueueId)
+        XCTAssertEqual(playQueue.songs().map(\.id), ["1", "2"])
+        XCTAssertEqual(playQueue.count, 2, "the play queue's songCount must be updated")
+
+        // The remote playlist is synced (clear + add) and the song started via skip
+        XCTAssertTrue(waitUntil {
+            let actions = MockSubsonicServer.receivedRequests(action: .jukeboxControl).compactMap { $0.parameter("action") }
+            return actions.contains("clear") && actions.contains("add") && actions.contains("skip")
+        }, "expected clear/add/skip jukebox commands")
+        let requests = MockSubsonicServer.receivedRequests(action: .jukeboxControl)
+        XCTAssertEqual(requests.first { $0.parameter("action") == "add" }?.parameters["id"], ["1", "2"])
+        XCTAssertEqual(requests.first { $0.parameter("action") == "skip" }?.parameter("index"), "1")
+    }
+
+    func testPlaySongsListSyncsJukeboxAndSkips_STUB09() {
+        // The playSong(position:songs:) path backs server shuffle and play-from-search
+        try? MockSubsonicServer.stub(.jukeboxControl, fixture: "XML/jukeboxControl_status.xml")
+        let registeredJukebox = jukebox!
+        TestContainer.register { registeredJukebox }
+        let songs = ["1", "2", "3"].map { TestData.song(serverId: 1, id: $0, title: "Song \($0)", path: "A/\($0).mp3") }
+        songs.forEach { _ = store.add(song: $0) }
+
+        let played = store.playSong(position: 0, songs: songs)
+
+        XCTAssertEqual(played?.id, "1")
+        XCTAssertTrue(waitUntil {
+            let actions = MockSubsonicServer.receivedRequests(action: .jukeboxControl).compactMap { $0.parameter("action") }
+            return actions.contains("clear") && actions.contains("add") && actions.contains("skip")
+        }, "expected clear/add/skip jukebox commands")
+        let addRequest = MockSubsonicServer.receivedRequests(action: .jukeboxControl).first { $0.parameter("action") == "add" }
+        XCTAssertEqual(addRequest?.parameters["id"], ["1", "2", "3"])
+    }
+
+    func testLocalPlaylistQueueSyncsJukebox_STUB09() {
+        try? MockSubsonicServer.stub(.jukeboxControl, fixture: "XML/jukeboxControl_status.xml")
+        let registeredJukebox = jukebox!
+        TestContainer.register { registeredJukebox }
+        seedLocalPlaylist(id: 5, songIds: ["1", "2"])
+
+        store.localPlaylist(id: 5)?.queue()
+
+        // Songs land in the local jukebox queue and the remote playlist is synced
+        XCTAssertEqual(store.songs(localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId).map(\.id), ["1", "2"])
+        XCTAssertTrue(waitUntil {
+            let actions = MockSubsonicServer.receivedRequests(action: .jukeboxControl).compactMap { $0.parameter("action") }
+            return actions.contains("add")
+        }, "queueing a local playlist must add its songs to the remote jukebox playlist")
+    }
+
     // MARK: Response parsing
 
     func testStatusResponseUpdatesPlaybackState() {

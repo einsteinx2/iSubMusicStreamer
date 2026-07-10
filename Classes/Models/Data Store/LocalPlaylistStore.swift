@@ -99,10 +99,13 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
     }
 }
 
-// TODO: Handle Jukebox mode properly
+// Jukebox mode: the queue functions write to the jukebox play queue playlists (see
+// queuePlaylistIds), and the playSong functions sync the remote jukebox playlist and
+// start playback through the Jukebox singleton (playQueue.playSong sends the skip)
 extension Store {
     private var settings: SavedSettings { Resolver.resolve() }
     private var playQueue: PlayQueue { Resolver.resolve() }
+    private var jukebox: Jukebox { Resolver.resolve() }
     
     var nextLocalPlaylistId: Int? {
         do {
@@ -550,22 +553,32 @@ extension Store {
         if clearAndQueue(songIds: songIds, serverId: serverId) {
             // Set player defaults
             playQueue.isShuffle = false
-            
+
+            // Sync the remote jukebox playlist before the skip that playSong sends
+            if settings.isJukeboxEnabled {
+                jukebox.replacePlaylistWithLocal()
+            }
+
             NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
-            
+
             // Start the song
             return playQueue.playSong(position: position)
         }
         return nil
     }
-    
+
     func playSong(position: Int, songs: [Song]) -> Song? {
         if clearAndQueue(songs: songs) {
             // Set player defaults
             playQueue.isShuffle = false
-            
+
+            // Sync the remote jukebox playlist before the skip that playSong sends
+            if settings.isJukeboxEnabled {
+                jukebox.replacePlaylistWithLocal()
+            }
+
             NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
-            
+
             // Start the song
             return playQueue.playSong(position: position)
         }
@@ -578,12 +591,15 @@ extension Store {
         return playSong(position: position, songs: songs)
     }
     
-    // TODO: implement this - handle Jukebox mode and shuffle
     func playSong(position: Int, localPlaylistId: Int, secondsOffset: Double = 0.0, byteOffset: Int = 0) -> Song? {
+        // Turn off shuffle first so the playlist's songs fill the actual play queue
+        // (currentPlaylistId would otherwise point at the shuffle queue)
+        playQueue.isShuffle = false
+
         guard clearPlayQueue() else { return nil }
-        
+
         do {
-            // Fill the play queue
+            // Fill the play queue (the jukebox play queue in jukebox mode)
             try pool.write { db in
                 // Add the songs from the playlist to the play queue
                 // NOTE: This is NOT an SQL as that string interpolation doesn't work in the SELECT statement.
@@ -597,17 +613,29 @@ extension Store {
                     ORDER BY position ASC
                     """
                 try db.execute(sql: sql)
+
+                // Update the play queue's song count
+                let countSql = """
+                    UPDATE localPlaylist
+                    SET songCount = (SELECT COUNT(*) FROM localPlaylistSong WHERE localPlaylistId = \(playQueue.currentPlaylistId))
+                    WHERE id = \(playQueue.currentPlaylistId)
+                    """
+                try db.execute(sql: countSql)
             }
-            
-            // Set player defaults
-            playQueue.isShuffle = false
-            
+
             NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
-            
-            // Start the song
-            playQueue.currentIndex = position
-            playQueue.startSong(offsetInBytes: byteOffset, offsetInSeconds: secondsOffset)
-            return playQueue.currentSong
+
+            if settings.isJukeboxEnabled {
+                // Sync the remote jukebox playlist and start the song through the
+                // jukebox (it can't honor byte/seconds offsets)
+                jukebox.replacePlaylistWithLocal()
+                return playQueue.playSong(position: position)
+            } else {
+                // Start the song
+                playQueue.currentIndex = position
+                playQueue.startSong(offsetInBytes: byteOffset, offsetInSeconds: secondsOffset)
+                return playQueue.currentSong
+            }
         } catch {
             DDLogError("Failed to play song at position \(position) from local playlist \(localPlaylistId) at secondsOffset \(secondsOffset) and byteOffset \(byteOffset): \(error)")
             return nil
