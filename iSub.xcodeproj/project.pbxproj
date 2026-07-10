@@ -583,6 +583,7 @@
 		E2E3730B425716DD27B44213 /* BrowseCacheStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BB5BE140175C4F7C7686BC /* BrowseCacheStoreTests.swift */; };
 		E4729DFF94C3A599C018E188 /* ProtocolSeamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF060FF00FF3A19A5CF6461 /* ProtocolSeamTests.swift */; };
 		E93CD07F23B2AB7578C88AB9 /* UtilityAndMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED06E8E2E37FA60609C8E314 /* UtilityAndMathTests.swift */; };
+		F7689541ED6B27A6377B97DC /* URLRequestSubsonicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC49FC4E61A56434F2523497 /* URLRequestSubsonicTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -950,6 +951,7 @@
 		ADDF0049FFA91CF95DE6383E /* TestSandbox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TestSandbox.swift; sourceTree = "<group>"; };
 		AFEE5B5BB2E3EAB053528E1D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		BBD38BFE8D30605FF509F359 /* ServerStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerStoreTests.swift; sourceTree = "<group>"; };
+		BC49FC4E61A56434F2523497 /* URLRequestSubsonicTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = URLRequestSubsonicTests.swift; sourceTree = "<group>"; };
 		BED04C832956F5B52922ABF7 /* PlaylistStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlaylistStoreTests.swift; sourceTree = "<group>"; };
 		C0C12F5EA82D1F0411C495BA /* SavedSettingsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SavedSettingsTests.swift; sourceTree = "<group>"; };
 		C4390AAE776F0A5012F0276A /* MockSubsonicServer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockSubsonicServer.swift; sourceTree = "<group>"; };
@@ -1733,6 +1735,7 @@
 				BBD38BFE8D30605FF509F359 /* ServerStoreTests.swift */,
 				4DE7EAC0C72A73A4B3BAED05 /* LocalPlaylistQueueTests.swift */,
 				E77EFD55ADCFE823FA242508 /* PlayQueueTests.swift */,
+				BC49FC4E61A56434F2523497 /* URLRequestSubsonicTests.swift */,
 			);
 			name = iSubTests;
 			path = iSubTests;
@@ -2476,6 +2479,7 @@
 				642325DA58624CA59F28AA64 /* StoreTestCase.swift in Sources */,
 				D50B02C4556A6A1FAC157B7D /* LocalPlaylistQueueTests.swift in Sources */,
 				A945205CDCFA7F6699089E94 /* PlayQueueTests.swift in Sources */,
+				F7689541ED6B27A6377B97DC /* URLRequestSubsonicTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
