@@ -111,9 +111,19 @@ final class HomeViewController: UIViewController {
         
         view.backgroundColor = Colors.background
         title = "Home"
-        
+
         registerNotifications()
-        
+
+        // Stable identifiers for UI tests
+        quickAlbumsButton.accessibilityIdentifier = AccessibilityId.homeQuickAlbums
+        serverShuffleButton.accessibilityIdentifier = AccessibilityId.homeServerShuffle
+        jukeboxButton.accessibilityIdentifier = AccessibilityId.homeJukebox
+        settingsButton.accessibilityIdentifier = AccessibilityId.homeSettings
+        nowPlayingButton.accessibilityIdentifier = AccessibilityId.homeNowPlaying
+        chatButton.accessibilityIdentifier = AccessibilityId.homeChat
+        songInfoButton.accessibilityIdentifier = AccessibilityId.homeSongInfo
+        searchBar.accessibilityIdentifier = AccessibilityId.homeSearchBar
+
         quickAlbumsButton.setAction { [unowned self] in
             let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             sheet.addAction(title: "Recently Played", style: .default) { action in

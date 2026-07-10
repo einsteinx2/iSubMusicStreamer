@@ -66,7 +66,23 @@ final class OptionsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        // Stable identifiers for UI tests
+        manualOfflineModeSwitch.accessibilityIdentifier = AccessibilityId.optionsManualOfflineMode
+        enableScrobblingSwitch.accessibilityIdentifier = AccessibilityId.optionsEnableScrobbling
+        autoReloadArtistSwitch.accessibilityIdentifier = AccessibilityId.optionsAutoReloadArtist
+        disablePopupsSwitch.accessibilityIdentifier = AccessibilityId.optionsDisablePopups
+        disableRotationSwitch.accessibilityIdentifier = AccessibilityId.optionsDisableRotation
+        disableScreenSleepSwitch.accessibilityIdentifier = AccessibilityId.optionsDisableScreenSleep
+        enableBasicAuthSwitch.accessibilityIdentifier = AccessibilityId.optionsEnableBasicAuth
+        disableCellUsageSwitch.accessibilityIdentifier = AccessibilityId.optionsDisableCellUsage
+        enableSongCachingSwitch.accessibilityIdentifier = AccessibilityId.optionsEnableSongCaching
+        enableNextSongCacheSwitch.accessibilityIdentifier = AccessibilityId.optionsEnableNextSongCache
+        enableBackupCacheSwitch.accessibilityIdentifier = AccessibilityId.optionsEnableBackupCache
+        autoDeleteCacheSwitch.accessibilityIdentifier = AccessibilityId.optionsAutoDeleteCache
+        enableLockScreenArt.accessibilityIdentifier = AccessibilityId.optionsEnableLockScreenArt
+        quickSkipSegmentControl.accessibilityIdentifier = AccessibilityId.optionsQuickSkipSegment
+
         scrollViewContents.frame.size.width = view.frame.width
         
         scrollView.isScrollEnabled = true

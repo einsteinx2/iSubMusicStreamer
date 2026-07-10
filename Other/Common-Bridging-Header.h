@@ -13,6 +13,7 @@
 #import "GCDWebServerDataResponse.h"
 #import "GCDWebServerErrorResponse.h"
 #import "GCDWebServerFileResponse.h"
+#import "GCDWebServerStreamedResponse.h"
 #import "GCDWebServerURLEncodedFormRequest.h"
 
 // Audio Engine

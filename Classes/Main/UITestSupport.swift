@@ -50,6 +50,27 @@ enum UITestSupport {
     // support for streaming/download E2E flows) instead of the URLProtocol stub
     static var usesMockServer: Bool { ProcessInfo.processInfo.arguments.contains("-MOCKSERVER") }
 
+    // "-REQUESTLOG <path>": append one "action?key=value&..." line per stubbed request
+    // to this file so the UI test process can assert on the app's network traffic
+    // (e.g. jukebox mode issuing jukeboxControl instead of stream requests)
+    static var requestLogPath: String? { UserDefaults.standard.string(forKey: "REQUESTLOG") }
+
+    private static let requestLogLock = NSLock()
+
+    static func logRequest(action: String, parameters: [String: String]) {
+        guard isEnabled, let path = requestLogPath else { return }
+        requestLogLock.lock(); defer { requestLogLock.unlock() }
+        let params = parameters.sorted { $0.key < $1.key }.map { "\($0.key)=\($0.value)" }.joined(separator: "&")
+        let line = "\(action)?\(params)\n"
+        if let handle = FileHandle(forWritingAtPath: path) {
+            defer { try? handle.close() }
+            handle.seekToEndOfFile()
+            handle.write(Data(line.utf8))
+        } else {
+            try? line.write(toFile: path, atomically: true, encoding: .utf8)
+        }
+    }
+
     // Called after store.setup() but before settings.setup(), so the seeded server is
     // picked up as the current server
     static func configureIfEnabled() {
@@ -67,13 +88,14 @@ enum UITestSupport {
         }
 
         // Seed a pre-configured server so tests skip first-run server setup (unless the
-        // test is exercising the first-run flow itself)
+        // test is exercising the first-run flow itself). Always (re)written because the
+        // mock server binds a different port on every launch.
         if !isFirstRun {
             let store: Store = Resolver.resolve()
-            if store.server(id: seededServerId) == nil {
-                let server = Server(id: seededServerId, type: .subsonic, url: serverURL, username: "uitest", password: "uitest")
-                _ = store.add(server: server)
-            }
+            let existing = store.server(id: seededServerId)
+            let server = Server(id: seededServerId, type: .subsonic, url: serverURL,
+                                username: existing?.username ?? "uitest", password: existing?.password ?? "uitest")
+            _ = store.add(server: server)
             UserDefaults.standard.set(seededServerId, forKey: SavedSettings.Key.currentServerId.rawValue)
         }
 
@@ -108,12 +130,16 @@ enum UITestFixtures {
         case "getMusicDirectory":
             switch parameters["id"] {
             case "225": return "getMusicDirectory_album.xml"
-            case "900": return "getMusicDirectory_formats.xml"
+            // The album's disc folders (242/232) resolve to a songs-only directory so
+            // recursive loaders (play all/shuffle/download folder) terminate
+            case "900", "242", "232": return "getMusicDirectory_formats.xml"
             default: return "getMusicDirectory_artist.xml"
             }
         case "getArtists": return "getArtists.xml"
-        case "getArtist": return "getArtist.xml"
-        case "getAlbum": return "getAlbum.xml"
+        // 900A/900B are the tag artist/album of the downloadable fixture songs, so the
+        // Downloads tab's tag browsing has metadata to join against
+        case "getArtist": return parameters["id"] == "900A" ? "getArtist_formats.xml" : "getArtist.xml"
+        case "getAlbum": return parameters["id"] == "900B" ? "getAlbum_formats.xml" : "getAlbum.xml"
         case "getPlaylists": return "getPlaylists.xml"
         case "getPlaylist": return "getPlaylist.xml"
         case "getNowPlaying": return "getNowPlaying.xml"
@@ -173,7 +199,9 @@ final class UITestURLProtocol: URLProtocol {
         }
 
         let action = (url.lastPathComponent as NSString).deletingPathExtension
-        let fixtureURL = UITestFixtures.xmlURL(action: action, parameters: parameters(from: request))
+        let requestParameters = parameters(from: request)
+        UITestSupport.logRequest(action: action, parameters: requestParameters)
+        let fixtureURL = UITestFixtures.xmlURL(action: action, parameters: requestParameters)
 
         guard let fixtureURL = fixtureURL, let body = try? Data(contentsOf: fixtureURL) else {
             let response = HTTPURLResponse(url: url, statusCode: 404, httpVersion: "HTTP/1.1", headerFields: nil)!

@@ -63,6 +63,7 @@ final class PageControlViewController: UIViewController {
             make.leading.trailing.top.equalToSuperview()
         }
         
+        pageControl.accessibilityIdentifier = AccessibilityId.playerPageControl
         pageControl.pageIndicatorTintColor = .secondaryLabel
         pageControl.currentPageIndicatorTintColor = .label
         pageControl.numberOfPages = PageType.count

@@ -42,6 +42,10 @@ final class MockSubsonicHTTPServer {
         let options: [String: Any] = [
             GCDWebServerOption_Port: 0,
             GCDWebServerOption_BindToLocalhost: true,
+            // Without this the socket doesn't bind until the app foregrounds (start() is
+            // called before activation, when the app state is still background), so the
+            // OS-assigned port would read as 0 when the seeded server URL is built
+            GCDWebServerOption_AutomaticallySuspendInBackground: false,
         ]
         do {
             try webServer.start(options: options)
@@ -65,11 +69,19 @@ final class MockSubsonicHTTPServer {
         let action = (request.url.lastPathComponent as NSString).deletingPathExtension
         let bodyData = (request as? GCDWebServerURLEncodedFormRequest)?.data
         let parameters = UITestFixtures.parameters(query: request.url.query, bodyData: bodyData)
+        UITestSupport.logRequest(action: action, parameters: parameters)
 
         if action == "stream" || action == "download" {
             guard let audioURL = UITestFixtures.audioURL(songId: parameters["id"]),
                   FileManager.default.fileExists(atPath: audioURL.path) else {
                 return GCDWebServerResponse(statusCode: 404)
+            }
+            // -SLOWDOWNLOAD trickles the audio bytes so tests can interact with an
+            // in-flight transfer (e.g. deleting the active download from the queue)
+            if ProcessInfo.processInfo.arguments.contains("-SLOWDOWNLOAD"),
+               let data = try? Data(contentsOf: audioURL) {
+                return slowResponse(data: data, byteRange: request.byteRange,
+                                    contentType: action == "stream" ? "audio/mpeg" : "application/octet-stream")
             }
             // GCDWebServerFileResponse handles 206/Content-Range from the request's byte range
             guard let response = GCDWebServerFileResponse(file: audioURL.path, byteRange: request.byteRange) else {
@@ -83,5 +95,41 @@ final class MockSubsonicHTTPServer {
             return GCDWebServerResponse(statusCode: 404)
         }
         return GCDWebServerDataResponse(data: body, contentType: "text/xml; charset=utf-8")
+    }
+
+    // Streams the data in small chunks with a delay between each, keeping the transfer
+    // alive long enough for a test to act on it. Honors "bytes=N-" ranges so a
+    // seek-past-cache-point stream restart behaves like production.
+    private static func slowResponse(data fullData: Data, byteRange: NSRange, contentType: String) -> GCDWebServerResponse {
+        var data = fullData
+        var statusCode = 200
+        var contentRange: String?
+        let location = byteRange.location
+        if location > 0 && location < fullData.count {
+            data = fullData.subdata(in: location..<fullData.count)
+            statusCode = 206
+            contentRange = "bytes \(location)-\(fullData.count - 1)/\(fullData.count)"
+        }
+
+        let chunkSize = 16 * 1024
+        let chunkDelay = 0.2
+        var offset = 0
+        let response = GCDWebServerStreamedResponse(contentType: contentType) { completion in
+            DispatchQueue.global().asyncAfter(deadline: .now() + chunkDelay) {
+                guard offset < data.count else {
+                    completion(Data(), nil) // Empty data signals the end of the stream
+                    return
+                }
+                let chunk = data.subdata(in: offset..<min(offset + chunkSize, data.count))
+                offset += chunk.count
+                completion(chunk, nil)
+            }
+        }
+        response.statusCode = statusCode
+        response.contentLength = UInt(data.count)
+        if let contentRange {
+            response.setValue(contentRange, forAdditionalHeader: "Content-Range")
+        }
+        return response
     }
 }

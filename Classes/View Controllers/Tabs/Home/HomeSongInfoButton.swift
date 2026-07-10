@@ -13,7 +13,13 @@ final class HomeSongInfoButton: UIView {
     private let artistLabel = AutoScrollingLabel()
     private let songLabel = AutoScrollingLabel()
     private let button = UIButton(type: .custom)
-    
+
+    // Forward to the inner button so UI tests can tap the actual control
+    override var accessibilityIdentifier: String? {
+        get { button.accessibilityIdentifier }
+        set { button.accessibilityIdentifier = newValue }
+    }
+
     init(actionHandler: (() -> ())? = nil) {
         super.init(frame: CGRect.zero)
         

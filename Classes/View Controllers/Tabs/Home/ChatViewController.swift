@@ -68,6 +68,8 @@ final class ChatViewController: UIViewController {
         }
         
         let sendButton = UIButton(type: .custom)
+        sendButton.accessibilityIdentifier = AccessibilityId.chatSend
+        textInput.accessibilityIdentifier = AccessibilityId.chatTextInput
         sendButton.addTarget(self, action: #selector(sendAction), for: .touchUpInside)
         sendButton.setImage(UIImage(named: "comment-write"), for: .normal)
         sendButton.setImage(UIImage(named: "comment-write-pressed"), for: .highlighted)

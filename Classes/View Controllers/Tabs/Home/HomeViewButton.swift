@@ -11,7 +11,13 @@ import UIKit
 final class HomeViewButton: UIView {
     private let button = UIButton(type: .custom)
     private let label = UILabel()
-    
+
+    // Forward to the inner button so UI tests can tap the actual control
+    override var accessibilityIdentifier: String? {
+        get { button.accessibilityIdentifier }
+        set { button.accessibilityIdentifier = newValue }
+    }
+
     init(icon: UIImage?, title: String, actionHandler: (() -> ())? = nil) {
         super.init(frame: CGRect.zero)
                 

@@ -14,6 +14,8 @@ deterministic, and fully offline.
 | `-FIXTURES <name>` | Selects a named fixture response set. `default` maps every supported Subsonic action to the captured Airsonic responses in `Tests/iSubTests/Fixtures/XML/` (bundled into beta builds). `badauth` overrides `ping` with the wrong-credentials error for failed-auth flows. Add new sets in `UITestFixtures.fixtureSets`. |
 | `-FIRSTRUN` | Skips the `-UITEST` server seeding while keeping the network stub, so the app routes through the real first-run server setup flow (`SceneDelegate.showSettings`). Used by `FirstRunUITests` (E2E-01); combine with `-FIXTURES badauth` for the failed-auth flow. |
 | `-MOCKSERVER` | Instead of the in-process `URLProtocol` stub, starts an embedded GCDWebServer-backed mock Subsonic server (`Classes/Main/MockSubsonicHTTPServer.swift`) on an OS-assigned loopback port and points the seeded server at it. Requests travel over real HTTP, so streaming, byte ranges, partial downloads, and seek-past-cache-point E2E flows behave like production. `stream`/`download` serve real audio from `Fixtures/Audio/`: song id `9001` is a FLAC tone (exercises BASS plugin loading, browsable via music directory id `900`), all other ids get a small MP3. Honors `-FIXTURES` for the XML responses. |
+| `-SLOWDOWNLOAD` | With `-MOCKSERVER`, trickles `stream`/`download` bytes in 16 KB chunks every 200 ms so tests can interact with in-flight transfers (deleting the active download, seeking past the cache point). |
+| `-REQUESTLOG <path>` | Appends one `action?key=value&…` line per stubbed request (both the `URLProtocol` stub and the mock HTTP server) to the file at `<path>`, so tests can assert on network traffic — e.g. jukebox mode issuing `jukeboxControl` instead of `stream` requests. |
 
 Example:
 
@@ -28,8 +30,21 @@ app.launch()
 UI tests address elements through the constants in `Classes/Main/AccessibilityIdentifiers.swift`
 (compiled into both app targets and the UI test bundle — never match on display strings).
 Currently applied to: the five tab bar items, `UniversalTableViewCell`, the server-edit
-fields/buttons, the player transport controls and seek slider, and the equalizer controls.
-Add new identifiers to that file as tests need them.
+fields/buttons, the player transport controls and seek slider, the equalizer controls,
+the Home screen buttons and search bar, the chat input/send controls, the library
+media-folder dropdown, the save/edit table headers, the player page control, and the
+settings options toggles. Add new identifiers to that file as tests need them.
+
+## Suites
+
+- `SmokeUITests` — one boot-to-root-UI test per launch mode.
+- `FirstRunUITests` (E2E-01) — first-run server setup, incl. the BUG-17 regression.
+- `Online*UITests` (E2E-02) — the online-mode regression suite, one class per area
+  (Home, Library, Player, Playlists, Downloads, Settings, Navigation), adapted from
+  `Testing/Integration Tests.txt` to the 5-tab layout. Flows blocked on still-stubbed
+  features or known bugs assert the target behavior inside non-strict `XCTExpectFailure`
+  blocks (see the checklist items referenced in each), so they flip to passing when the
+  fixes land without failing CI today.
 
 ## Running
 

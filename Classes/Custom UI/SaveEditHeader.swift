@@ -53,8 +53,12 @@ final class SaveEditHeader: UIView {
 //        self.isLargeCount = isLargeCount
         self.delegate = delegate
         super.init(frame: .zero)
-        
+
         set(saveType: saveType, countType: countType, pluralizeClearType: pluralizeClearType, isLargeCount: isLargeCount)
+
+        // Stable identifiers for UI tests
+        saveDeleteButton.accessibilityIdentifier = AccessibilityId.saveEditHeaderSaveDelete
+        editButton.accessibilityIdentifier = AccessibilityId.saveEditHeaderEdit
 
 //        if isLargeCount {
 //            countLabel.textColor = .label

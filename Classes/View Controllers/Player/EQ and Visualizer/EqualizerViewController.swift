@@ -117,6 +117,7 @@ final class EqualizerViewController: UIViewController {
         savePresetButton.accessibilityIdentifier = AccessibilityId.equalizerSavePreset
         deletePresetButton.accessibilityIdentifier = AccessibilityId.equalizerDeletePreset
         closeButton.accessibilityIdentifier = AccessibilityId.equalizerClose
+        presetLabel.accessibilityIdentifier = AccessibilityId.equalizerPresetLabel
         
         overrideUserInterfaceStyle = .dark
         

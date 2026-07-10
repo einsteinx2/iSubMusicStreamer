@@ -44,7 +44,49 @@ enum AccessibilityId {
     // Equalizer
     static let equalizerToggle = "equalizer.toggle"
     static let equalizerPresetPicker = "equalizer.presetPicker"
+    static let equalizerPresetLabel = "equalizer.presetLabel"
     static let equalizerSavePreset = "equalizer.savePreset"
     static let equalizerDeletePreset = "equalizer.deletePreset"
     static let equalizerClose = "equalizer.close"
+
+    // Home
+    static let homeQuickAlbums = "home.quickAlbums"
+    static let homeServerShuffle = "home.serverShuffle"
+    static let homeJukebox = "home.jukebox"
+    static let homeSettings = "home.settings"
+    static let homeNowPlaying = "home.nowPlaying"
+    static let homeChat = "home.chat"
+    static let homeSongInfo = "home.songInfo"
+    static let homeSearchBar = "home.searchBar"
+
+    // Chat
+    static let chatTextInput = "chat.textInput"
+    static let chatSend = "chat.send"
+
+    // Library
+    static let libraryFolderDropdown = "library.folderDropdown"
+
+    // Save/edit table headers (play queue, playlists, bookmarks, downloads)
+    static let saveEditHeaderSaveDelete = "saveEditHeader.saveDelete"
+    static let saveEditHeaderEdit = "saveEditHeader.edit"
+
+    // Player extras
+    static let playerBookmarks = "player.bookmarks"
+    static let playerPageControl = "player.pageControl"
+
+    // Options (settings)
+    static let optionsManualOfflineMode = "options.manualOfflineMode"
+    static let optionsEnableScrobbling = "options.enableScrobbling"
+    static let optionsAutoReloadArtist = "options.autoReloadArtist"
+    static let optionsDisablePopups = "options.disablePopups"
+    static let optionsDisableRotation = "options.disableRotation"
+    static let optionsDisableScreenSleep = "options.disableScreenSleep"
+    static let optionsEnableBasicAuth = "options.enableBasicAuth"
+    static let optionsDisableCellUsage = "options.disableCellUsage"
+    static let optionsEnableSongCaching = "options.enableSongCaching"
+    static let optionsEnableNextSongCache = "options.enableNextSongCache"
+    static let optionsEnableBackupCache = "options.enableBackupCache"
+    static let optionsAutoDeleteCache = "options.autoDeleteCache"
+    static let optionsEnableLockScreenArt = "options.enableLockScreenArt"
+    static let optionsQuickSkipSegment = "options.quickSkipSegment"
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
    <directory id="900" name="Formats" playCount="0">
-      <child id="9001" parent="900" isDir="false" title="FLAC Tone" album="Formats" artist="Test Tones" track="1" size="356827" contentType="audio/flac" suffix="flac" duration="10" bitRate="285" path="Formats/tone.flac" isVideo="false" created="2026-07-09T00:00:00.000Z" type="music"/>
-      <child id="9002" parent="900" isDir="false" title="MP3 Song" album="Formats" artist="Test Tones" track="2" size="584000" contentType="audio/mpeg" suffix="mp3" duration="144" bitRate="32" path="Formats/test_song.mp3" isVideo="false" created="2026-07-09T00:00:00.000Z" type="music"/>
+      <child id="9001" parent="900" isDir="false" title="FLAC Tone" album="Formats" albumId="900B" artistId="900A" artist="Test Tones" track="1" size="356827" contentType="audio/flac" suffix="flac" duration="10" bitRate="285" path="Formats/tone.flac" isVideo="false" created="2026-07-09T00:00:00.000Z" type="music"/>
+      <child id="9002" parent="900" isDir="false" title="MP3 Song" album="Formats" albumId="900B" artistId="900A" artist="Test Tones" track="2" size="584000" contentType="audio/mpeg" suffix="mp3" duration="144" bitRate="32" path="Formats/test_song.mp3" isVideo="false" created="2026-07-09T00:00:00.000Z" type="music"/>
    </directory>
 </subsonic-response>

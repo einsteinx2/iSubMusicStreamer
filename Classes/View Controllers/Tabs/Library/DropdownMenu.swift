@@ -71,6 +71,7 @@ final class DropdownMenu: UIView {
         layer.cornerRadius = 8
         layer.masksToBounds = true
         
+        selectedItemButton.accessibilityIdentifier = AccessibilityId.libraryFolderDropdown
         selectedItemButton.addTarget(self, action: #selector(toggleAction), for: .touchUpInside)
         selectedItemButton.setTitle(loadingTitle, for: .normal)
         selectedItemButton.setTitleColor(labelTextColor, for: .normal)
