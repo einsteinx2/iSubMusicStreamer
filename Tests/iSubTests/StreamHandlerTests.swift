@@ -137,11 +137,11 @@ final class StreamHandlerTests: StoreTestCase {
         XCTAssertEqual(fileData.count, 4096 + 2000)
     }
 
-    func testStartPlaybackNotifiedDuringDownloadAtSixtySecondThreshold() {
+    func testStartPlaybackNotifiedDuringDownloadForLowBitrateSong() {
         // Positive control for the threshold gate: with a very low bitrate song, the
-        // stalled download exceeds even the (wrong) 60-second threshold, so the
-        // playback notification fires mid-download
-        let song = makeSong(id: "80", kiloBitrate: 8) // 60s = 61,440 bytes
+        // stalled download far exceeds the playback threshold, so the playback
+        // notification fires mid-download
+        let song = makeSong(id: "80", kiloBitrate: 8) // 10s = 10,240 bytes
         MockSubsonicServer.stubStalling(.stream, data: Data(repeating: 3, count: 100_000))
 
         let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
@@ -154,9 +154,9 @@ final class StreamHandlerTests: StoreTestCase {
     }
 
     func testStartPlaybackNotifiedAfterTenSecondsOfAudio_BUG03() {
-        // BUG-03: the start-playback gate uses minBytesToStartLimiting (60s of audio)
-        // instead of minimumBytesToStartPlayback (~10s). Buffer 30s worth of a
-        // 128 Kbps song mid-download: playback should start but currently doesn't.
+        // BUG-03 regression: the start-playback gate must use the ~10s
+        // minBytesToStartPlayback threshold, not the 60s limiting threshold.
+        // Buffer 30s worth of a 128 Kbps song mid-download: playback should start.
         let song = makeSong(id: "81", kiloBitrate: 128) // 10s = 163,840 bytes; 60s = 983,040
         MockSubsonicServer.stubStalling(.stream, data: Data(repeating: 3, count: 500_000))
 
@@ -165,9 +165,7 @@ final class StreamHandlerTests: StoreTestCase {
         handler.start()
 
         let result = XCTWaiter.wait(for: [delegateSpy.startPlaybackExpectation], timeout: 2)
-        XCTExpectFailure("BUG-03: playback start gate uses the 60s limiting threshold instead of ~10s; remove this marker when fixing the bug") {
-            XCTAssertEqual(result, .completed, "playback should be told to start after ~10 seconds of audio is buffered")
-        }
+        XCTAssertEqual(result, .completed, "playback should be told to start after ~10 seconds of audio is buffered")
     }
 
     func testContentLengthShortfallFailsInsteadOfFinishing() {
