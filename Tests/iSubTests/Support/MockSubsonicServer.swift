@@ -38,8 +38,11 @@ enum MockSubsonicServer {
         }
     }
 
+    typealias StubHandler = (ReceivedRequest) -> StubResponse
+
     private static let lock = NSLock()
     private static var stubs = [String: StubResponse]()
+    private static var handlers = [String: StubHandler]()
     private static var requests = [ReceivedRequest]()
 
     static var receivedRequests: [ReceivedRequest] {
@@ -68,6 +71,7 @@ enum MockSubsonicServer {
     static func reset() {
         lock.lock(); defer { lock.unlock() }
         stubs.removeAll()
+        handlers.removeAll()
         requests.removeAll()
     }
 
@@ -87,11 +91,30 @@ enum MockSubsonicServer {
         stubs[action.rawValue] = StubResponse(connectionError: URLError(code))
     }
 
+    // Dynamic stub: the handler receives the decoded request and returns the response,
+    // so one action can answer differently per request (e.g. per folder id in recursion)
+    static func stub(_ action: SubsonicAction, handler: @escaping StubHandler) {
+        lock.lock(); defer { lock.unlock() }
+        handlers[action.rawValue] = handler
+    }
+
+    // Convenience builders for handler-based stubs
+    static func xmlResponse(_ xml: String) -> StubResponse {
+        StubResponse(body: Data(xml.utf8))
+    }
+
+    static func xmlResponse(fixture relativePath: String) throws -> StubResponse {
+        StubResponse(body: try Fixtures.data(relativePath))
+    }
+
     // MARK: URLProtocol integration
 
-    fileprivate static func stub(action: String) -> StubResponse? {
+    fileprivate static func response(for received: ReceivedRequest) -> StubResponse? {
         lock.lock(); defer { lock.unlock() }
-        return stubs[action]
+        if let handler = handlers[received.action] {
+            return handler(received)
+        }
+        return stubs[received.action]
     }
 
     fileprivate static func record(_ received: ReceivedRequest) {
@@ -149,13 +172,14 @@ final class MockSubsonicURLProtocol: URLProtocol {
 
     override func startLoading() {
         let action = MockSubsonicServer.action(from: request)
-        MockSubsonicServer.record(MockSubsonicServer.ReceivedRequest(
+        let received = MockSubsonicServer.ReceivedRequest(
             action: action,
             request: request,
             parameters: MockSubsonicServer.parameters(from: request)
-        ))
+        )
+        MockSubsonicServer.record(received)
 
-        guard let stub = MockSubsonicServer.stub(action: action) else {
+        guard let stub = MockSubsonicServer.response(for: received) else {
             // Unstubbed action: fail fast so the offending test is obvious
             client?.urlProtocol(self, didFailWithError: URLError(.unsupportedURL, userInfo: [
                 NSLocalizedDescriptionKey: "MockSubsonicServer: no stub registered for action '\(action)'"
