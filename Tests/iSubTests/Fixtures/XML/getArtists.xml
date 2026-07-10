@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
+   <artists ignoredArticles="The El La Los Las Le Les">
+      <index name="A">
+         <artist id="52" name="Amanda Blank" coverArt="ar-52" albumCount="1"/>
+         <artist id="41" name="Amtrac" coverArt="ar-41" albumCount="3"/>
+         <artist id="58" name="Apparat" coverArt="ar-58" albumCount="1"/>
+         <artist id="31" name="A Tribe Called Quest" albumCount="1"/>
+      </index>
+      <index name="B">
+         <artist id="37" name="B. L'amour" coverArt="ar-37" albumCount="1"/>
+         <artist id="45" name="The Beach Boys" coverArt="ar-45" albumCount="1"/>
+         <artist id="56" name="Beck" coverArt="ar-56" albumCount="1"/>
+         <artist id="55" name="Ben Baron" albumCount="1"/>
+      </index>
+      <index name="C">
+         <artist id="42" name="Chromeo" coverArt="ar-42" albumCount="1"/>
+      </index>
+      <index name="E">
+         <artist id="46" name="Elvis Presley" albumCount="1"/>
+      </index>
+      <index name="F">
+         <artist id="47" name="FLAC" albumCount="2"/>
+      </index>
+      <index name="G">
+         <artist id="49" name="Gapless Playback" albumCount="1"/>
+         <artist id="54" name="Green Day" albumCount="1"/>
+      </index>
+      <index name="J">
+         <artist id="38" name="Jimmy Cobb Quartet" coverArt="ar-38" albumCount="1"/>
+         <artist id="57" name="Jookabox" coverArt="ar-57" albumCount="1"/>
+      </index>
+      <index name="K">
+         <artist id="34" name="Kanye West &amp; Jay-Z" coverArt="ar-34" albumCount="1"/>
+      </index>
+      <index name="L">
+         <artist id="30" name="Lil Flip" coverArt="ar-30" albumCount="1"/>
+         <artist id="35" name="Little Comets" coverArt="ar-35" albumCount="1"/>
+      </index>
+      <index name="M">
+         <artist id="53" name="M.I.A." coverArt="ar-53" albumCount="1"/>
+         <artist id="48" name="McFadden &amp; Whitehead" coverArt="ar-48" albumCount="1"/>
+         <artist id="43" name="Metric" coverArt="ar-43" albumCount="1"/>
+      </index>
+      <index name="N">
+         <artist id="51" name="Norah Jones" albumCount="1"/>
+      </index>
+      <index name="O">
+         <artist id="32" name="One Gud Cide" coverArt="ar-32" albumCount="1"/>
+      </index>
+      <index name="R">
+         <artist id="33" name="Ror-Shak" albumCount="1"/>
+      </index>
+      <index name="S">
+         <artist id="36" name="Shaky Bonez" coverArt="ar-36" albumCount="1"/>
+         <artist id="40" name="Soundgarden" coverArt="ar-40" albumCount="1"/>
+      </index>
+      <index name="T">
+         <artist id="39" name="Toro Y Moi" coverArt="ar-39" albumCount="1"/>
+      </index>
+      <index name="U">
+         <artist id="44" name="UNKLE" coverArt="ar-44" albumCount="1"/>
+      </index>
+      <index name="#">
+         <artist id="50" name="2Pac" coverArt="ar-50" albumCount="1"/>
+      </index>
+   </artists>
+</subsonic-response>

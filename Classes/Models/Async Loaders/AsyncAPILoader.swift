@@ -39,21 +39,41 @@ enum APILoaderType: String {
 }
 
 fileprivate let defaultSessionDelegate = SelfSignedCertURLSessionDelegate()
-fileprivate let defaultSharedSession: URLSession = {
-    let configuration = URLSessionConfiguration.ephemeral
-    configuration.waitsForConnectivity = true
-    configuration.networkServiceType = .responsiveData
-    configuration.timeoutIntervalForResource = 60
-    configuration.timeoutIntervalForRequest = 240
-    return URLSession(configuration: configuration, delegate: defaultSessionDelegate, delegateQueue: nil)
-}()
+
+// Central provider of the URLSession used by all API loaders. Tests can replace `shared`
+// with a session whose configuration registers a URLProtocol stub (see MockSubsonicServer
+// in iSubTests). Code that builds its own session (StreamHandler, Jukebox) creates its
+// configuration via ephemeralConfiguration() so the same stubs apply there too.
+enum APIURLSession {
+    // Test hook: URLProtocol classes inserted into every configuration from ephemeralConfiguration()
+    static var stubProtocolClasses: [AnyClass]?
+
+    static func ephemeralConfiguration() -> URLSessionConfiguration {
+        let configuration = URLSessionConfiguration.ephemeral
+        if let stubProtocolClasses = stubProtocolClasses {
+            configuration.protocolClasses = stubProtocolClasses + (configuration.protocolClasses ?? [])
+        }
+        return configuration
+    }
+
+    static var shared: URLSession = createDefaultSession()
+
+    static func createDefaultSession() -> URLSession {
+        let configuration = ephemeralConfiguration()
+        configuration.waitsForConnectivity = true
+        configuration.networkServiceType = .responsiveData
+        configuration.timeoutIntervalForResource = 60
+        configuration.timeoutIntervalForRequest = 240
+        return URLSession(configuration: configuration, delegate: defaultSessionDelegate, delegateQueue: nil)
+    }
+}
 
 class AsyncAPILoader<T>: AsyncAPILoadable {
     typealias LoadedType = T
-    
+
     var type: APILoaderType { .generic }
-    
-    var sharedSession: URLSession { defaultSharedSession }
+
+    var sharedSession: URLSession { APIURLSession.shared }
     
     func load() async throws -> LoadedType {
         do {

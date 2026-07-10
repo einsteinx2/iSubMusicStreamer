@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
+   <nowPlaying>
+      <entry id="376" parent="257" isDir="false" title="Going Crazy" album="Look What The Streets Made" artist="One Gud Cide" track="13" genre="Rap" coverArt="257" size="7992587" contentType="audio/mpeg" suffix="mp3" duration="243" bitRate="259" path="One Cud Cide/Look What The Streets Made (1996 Reissue) [FLAC]/13 Going Crazy.mp3" isVideo="false" playCount="15" created="2024-02-24T15:30:20.095Z" albumId="60" artistId="32" type="music" username="bbaron" minutesAgo="0" playerId="10" playerName="iSub"/>
+   </nowPlaying>
+</subsonic-response>

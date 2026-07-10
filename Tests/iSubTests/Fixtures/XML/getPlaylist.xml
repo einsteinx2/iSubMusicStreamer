@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
+   <playlist id="0" name="iSub Test Playlist" owner="bbaron" public="false" songCount="2" duration="521" created="2026-07-10T00:23:40.983Z" changed="2026-07-10T00:23:40.988Z" coverArt="pl-0">
+      <entry id="376" parent="257" isDir="false" title="Going Crazy" album="Look What The Streets Made" artist="One Gud Cide" track="13" genre="Rap" coverArt="257" size="7992587" contentType="audio/mpeg" suffix="mp3" duration="243" bitRate="259" path="One Cud Cide/Look What The Streets Made (1996 Reissue) [FLAC]/13 Going Crazy.mp3" isVideo="false" playCount="15" created="2024-02-24T15:30:20.095Z" albumId="60" artistId="32" type="music"/>
+      <entry id="229" parent="216" isDir="false" title="Novacane" album="Odelay (Deluxe Edition)" artist="Test ärtist" track="6" year="2008" genre="Alternative" coverArt="216" size="8284160" contentType="audio/mpeg" suffix="mp3" duration="278" bitRate="235" path="Artists with nonenglish characters/Test ärtist - Novacane.mp3" isVideo="false" playCount="5" discNumber="1" created="2024-02-24T15:30:01.999Z" albumId="37" type="music"/>
+   </playlist>
+</subsonic-response>

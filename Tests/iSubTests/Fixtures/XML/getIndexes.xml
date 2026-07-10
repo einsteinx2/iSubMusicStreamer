@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
+   <indexes lastModified="1783641770702" ignoredArticles="The El La Los Las Le Les">
+      <index name="A">
+         <artist id="221" name="ALAC"/>
+         <artist id="207" name="Amtrac"/>
+         <artist id="212" name="anghami_wont_play"/>
+         <artist id="216" name="Artists with nonenglish characters"/>
+      </index>
+      <index name="B">
+         <artist id="219" name="Beck"/>
+         <artist id="211" name="Ben Baron"/>
+      </index>
+      <index name="C">
+         <artist id="213" name="Causes Crash"/>
+      </index>
+      <index name="D">
+         <artist id="214" name="Doesnt play"/>
+      </index>
+      <index name="F">
+         <artist id="215" name="FLAC"/>
+         <artist id="217" name="Folder"/>
+      </index>
+      <index name="G">
+         <artist id="209" name="Gapless Playback"/>
+      </index>
+      <index name="L">
+         <artist id="222" name="Lil' Flip"/>
+      </index>
+      <index name="O">
+         <artist id="208" name="One Cud Cide"/>
+      </index>
+      <index name="V">
+         <artist id="210" name="Video"/>
+      </index>
+      <index name="W">
+         <artist id="220" name="WMA"/>
+      </index>
+      <index name="#">
+         <artist id="218" name="2Pac"/>
+      </index>
+      <child id="206" isDir="false" title="Me Against The World" album="Me Against The World" artist="2Pac" track="3" year="1995" genre="Rap" size="14929021" contentType="audio/mpeg" suffix="mp3" duration="281" bitRate="217" path="03 - Me Against The World - 2Pac.mp3" isVideo="false" playCount="6" created="2024-02-24T15:30:02.415Z" albumId="62" artistId="50" type="music"/>
+   </indexes>
+</subsonic-response>

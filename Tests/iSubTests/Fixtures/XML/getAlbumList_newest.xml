@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
+   <albumList>
+      <album id="283" parent="207" isDir="true" title="[2011] Fear EP" album="Fear - EP" artist="Amtrac" coverArt="283" playCount="53" created="2024-02-24T15:31:25.050Z"/>
+      <album id="275" parent="207" isDir="true" title="Singles" album="X" artist="UNKLE" coverArt="275" playCount="18" created="2024-02-24T15:31:24.274Z"/>
+      <album id="256" parent="207" isDir="true" title="The Remixes" album="The Remixes" artist="Amtrac" coverArt="256" playCount="209" created="2024-02-24T15:31:24.058Z"/>
+      <album id="260" parent="207" isDir="true" title="[2011] Emergency EP" album="Emergency - EP" artist="Amtrac" genre="Electro/House" coverArt="260" playCount="21826" created="2024-02-24T15:31:20.186Z"/>
+      <album id="294" parent="213" isDir="true" title="Soundgarden > King Animal" album="King Animal" artist="Soundgarden" year="2012" genre="Rock" coverArt="294" playCount="138" created="2024-02-24T15:31:19.386Z"/>
+      <album id="236" parent="211" isDir="true" title="Electric Adrenaline (tracked)" album="Electric Adrenaline" artist="Ben Baron" genre="Electro House" playCount="128" created="2024-02-24T15:31:16.290Z"/>
+      <album id="280" parent="209" isDir="true" title="Shaky Bonez - The Greenroom (2001) [V0]" album="The Greenroom" artist="Shaky Bonez" year="2001" genre="Hip-Hop" coverArt="280" playCount="176" created="2024-02-24T15:31:12.234Z"/>
+      <album id="319" parent="209" isDir="true" title="Ben Baron - Electric Adrenaline [V0] [Tracked]" album="Electric Adrenaline" artist="Ben Baron" genre="Electro House" playCount="320" created="2024-02-24T15:31:09.658Z"/>
+      <album id="305" parent="209" isDir="true" title="Ben Baron - Electric Adrenaline [WAV] [Tracked]" album="Ben Baron - Electric Adrenaline [WAV] [Tracked]" artist="Gapless Playback" playCount="295" created="2024-02-24T15:31:04.326Z"/>
+      <album id="247" parent="215" isDir="true" title="48" album="48" artist="FLAC" playCount="10" created="2024-02-24T15:30:44.290Z"/>
+      <album id="238" parent="215" isDir="true" title="96" album="96" artist="FLAC" playCount="3" created="2024-02-24T15:30:41.818Z"/>
+      <album id="241" parent="215" isDir="true" title="44.1" album="Deep" artist="Ror-Shak" year="2005" genre="Future Jazz, Drum &amp; Bass, Electro" playCount="15" created="2024-02-24T15:30:40.834Z"/>
+      <album id="235" parent="215" isDir="true" title="192" album="Jazz In The Key Of Blue" artist="Jimmy Cobb Quartet" year="2009" genre="Jazz" coverArt="235" playCount="15" created="2024-02-24T15:30:33.539Z"/>
+      <album id="212" isDir="true" title="anghami_wont_play" album="anghami_wont_play" playCount="7" created="2024-02-24T15:30:33.459Z"/>
+      <album id="251" parent="221" isDir="true" title="48" album="Jazz In The Key Of Blue" artist="Jimmy Cobb Quartet" year="2009" genre="Jazz" coverArt="251" playCount="12" created="2024-02-24T15:30:32.139Z"/>
+      <album id="221" isDir="true" title="ALAC" album="People's Instinctive Travels and the Paths of Rhythm" artist="A Tribe Called Quest" year="1990" genre="Hip-Hop" playCount="79" created="2024-02-24T15:30:32.111Z"/>
+      <album id="234" parent="221" isDir="true" title="96" album="Jazz In The Key Of Blue" artist="Jimmy Cobb Quartet" year="2009" genre="Jazz" coverArt="234" playCount="33" created="2024-02-24T15:30:29.627Z"/>
+      <album id="230" parent="221" isDir="true" title="192" album="Jazz In The Key Of Blue" artist="Jimmy Cobb Quartet" year="2009" genre="Jazz" coverArt="230" playCount="38" created="2024-02-24T15:30:20.143Z"/>
+      <album id="257" parent="208" isDir="true" title="Look What The Streets Made (1996 Reissue) [FLAC]" album="Look What The Streets Made" artist="One Gud Cide" genre="Rap" coverArt="257" playCount="409" created="2024-02-24T15:30:19.775Z"/>
+      <album id="268" parent="224" isDir="true" title="Folder 1b" album="Me Against The World" artist="2Pac" year="1995" genre="Rap" playCount="16" created="2024-02-24T15:30:04.915Z"/>
+   </albumList>
+</subsonic-response>

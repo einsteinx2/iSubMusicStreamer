@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
+   <searchResult2>
+      <artist id="219" name="Beck"/>
+      <album id="242" parent="225" isDir="true" title="Disc 1" album="Odelay (Deluxe Edition)" artist="Beck" year="2008" genre="Alternative" coverArt="242" playCount="18" created="2024-02-24T15:30:02.819Z"/>
+      <album id="232" parent="225" isDir="true" title="Disc 2" album="Odelay (Deluxe Edition)" artist="Beck" year="2008" genre="Alternative" coverArt="232" playCount="10" created="2024-02-24T15:30:02.555Z"/>
+      <album id="216" isDir="true" title="Artists with nonenglish characters" album="Odelay (Deluxe Edition)" artist="Beck" year="2008" genre="Alternative" coverArt="216" playCount="8" created="2024-02-24T15:30:01.827Z"/>
+      <song id="248" parent="242" isDir="false" title="Novacane" album="Odelay (Deluxe Edition)" artist="Beck" track="6" year="2008" genre="Alternative" coverArt="242" size="8284160" contentType="audio/mpeg" suffix="mp3" duration="278" bitRate="235" path="Beck/Odeley/Disc 1/06 - Novacane.mp3" isVideo="false" playCount="18" discNumber="1" created="2024-02-24T15:30:02.995Z" albumId="37" artistId="56" type="music"/>
+      <song id="258" parent="232" isDir="false" title="Readymade" album="Odelay (Deluxe Edition)" artist="Beck" track="11" year="2008" genre="Alternative" coverArt="232" size="4775936" contentType="audio/mpeg" suffix="mp3" duration="157" bitRate="238" path="Beck/Odeley/Disc 2/11 - Readymade.mp3" isVideo="false" playCount="10" discNumber="1" created="2024-02-24T15:30:02.775Z" albumId="37" artistId="56" type="music"/>
+      <song id="369" parent="319" isDir="false" title="Logiztik Sounds - Crazy People [D-Nox &amp; Beckers Remix]" album="Electric Adrenaline" artist="Ben Baron" track="10" genre="Electro House" size="9404418" contentType="audio/mpeg" suffix="mp3" duration="285" bitRate="263" path="Gapless Playback/Ben Baron - Electric Adrenaline [V0] [Tracked]/Ben Baron - Electric Adrenaline 10.mp3" isVideo="false" playCount="8" created="2024-02-24T15:31:09.946Z" albumId="46" artistId="55" type="music"/>
+   </searchResult2>
+</subsonic-response>

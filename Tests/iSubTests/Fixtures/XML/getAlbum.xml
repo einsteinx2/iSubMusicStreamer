@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
+   <album id="41" name="The Remixes" artist="Amanda Blank" artistId="52" coverArt="al-41" songCount="1" duration="206" created="2024-02-24T15:31:22.978Z">
+      <song id="353" parent="256" isDir="false" title="Might Like You Better (Amtrac Remix)" album="The Remixes" artist="Amanda Blank" track="12" coverArt="256" size="8484888" contentType="audio/mpeg" suffix="mp3" duration="206" bitRate="320" path="Amtrac/The Remixes/12 Might Like You Better (Amtrac Remix).mp3" isVideo="false" playCount="19" created="2024-02-24T15:31:22.978Z" albumId="41" artistId="52" type="music"/>
+   </album>
+</subsonic-response>

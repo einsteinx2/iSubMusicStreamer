@@ -47,7 +47,7 @@ final class StreamHandler: NSObject, Codable {
     private(set) var recentDownloadSpeedInBytesPerSec = 0
     
     private lazy var session: URLSession = {
-        let configuration = URLSessionConfiguration.ephemeral
+        let configuration = APIURLSession.ephemeralConfiguration()
         configuration.networkServiceType = .avStreaming
         configuration.timeoutIntervalForRequest = 30
         return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)

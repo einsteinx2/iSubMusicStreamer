@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
+   <directory id="225" parent="219" name="Odeley" playCount="0">
+      <child id="242" parent="225" isDir="true" title="Disc 1" album="Odelay (Deluxe Edition)" artist="Beck" year="2008" genre="Alternative" coverArt="242" playCount="18" created="2024-02-24T15:30:02.819Z"/>
+      <child id="232" parent="225" isDir="true" title="Disc 2" album="Odelay (Deluxe Edition)" artist="Beck" year="2008" genre="Alternative" coverArt="232" playCount="10" created="2024-02-24T15:30:02.555Z"/>
+   </directory>
+</subsonic-response>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
+   <jukeboxPlaylist currentIndex="1" playing="true" gain="0.75" position="42">
+      <entry id="376" parent="257" isDir="false" title="Going Crazy" album="Look What The Streets Made" artist="One Gud Cide" track="13" genre="Rap" coverArt="257" size="7992587" contentType="audio/mpeg" suffix="mp3" duration="243" bitRate="256" path="One Gud Cide/Look What The Streets Made/13 Going Crazy.mp3" isVideo="false" playCount="1" created="2024-02-24T15:29:41.876Z" albumId="146" artistId="88" type="music"/>
+      <entry id="229" parent="217" isDir="false" title="Devils Haircut" album="Odeley" artist="Beck" track="1" genre="Alternative" coverArt="217" size="6866411" contentType="audio/mpeg" suffix="mp3" duration="278" bitRate="192" path="Beck/Odeley/01 Devils Haircut.mp3" isVideo="false" playCount="3" created="2024-02-24T15:30:02.799Z" albumId="145" artistId="87" type="music"/>
+   </jukeboxPlaylist>
+</subsonic-response>

@@ -31,7 +31,7 @@ final class Jukebox {
     
     private let sessionDelegate = SelfSignedCertURLSessionDelegate()
     private lazy var session: URLSession = {
-        let configuration = URLSessionConfiguration.ephemeral
+        let configuration = APIURLSession.ephemeralConfiguration()
         configuration.httpMaximumConnectionsPerHost = 1
         return URLSession(configuration: configuration, delegate: sessionDelegate, delegateQueue: nil)
     }()
