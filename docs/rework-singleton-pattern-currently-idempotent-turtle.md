@@ -103,7 +103,7 @@ queue-confined BassPlayer internals with the existing `synchronized()` helper (n
 
 Check off each phase/sub-phase as it lands as a commit on this branch:
 
-- [ ] Phase 0 — Guardrails + characterization backfill
+- [x] Phase 0 — Guardrails + characterization backfill
 - [x] Phase 1 — NetworkStatus service
 - [x] Phase 2 — SavedSettings decomposition
 - [x] Phase 3 — Composition root + leaf constructor conversion
