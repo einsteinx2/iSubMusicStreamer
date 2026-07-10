@@ -112,6 +112,8 @@ enum UITestSupport {
         case .offline:
             settings.isForceOfflineMode = true
             settings.isOfflineMode = true
+            // Suppress the launch "entering offline mode" notice so it doesn't block taps
+            settings.isPopupsEnabled = false
         case .jukebox:
             settings.isJukeboxEnabled = true
         }

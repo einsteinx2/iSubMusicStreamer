@@ -91,13 +91,11 @@ final class OfflineUITests: XCTestCase {
             XCTAssertTrue(app.tabBars.buttons[tab].exists, "tab \(tab) missing in offline mode")
         }
 
-        // The offline indicator banner should tell the user why everything is dimmed.
-        // On a cold offline launch nothing posts didEnterOfflineMode (the mode is set
-        // before the UI loads), so the banner never shows — documents the gap.
-        XCTExpectFailure("BUG: offline indicator banner is not shown on a cold offline-mode launch", strict: false) {
-            XCTAssertTrue(waitUntil(timeout: 5) { self.offlineIndicator(app).isHittable },
-                          "offline banner not visible after an offline launch")
-        }
+        // The offline indicator banner tells the user why everything is dimmed. The
+        // launch offline check (BUG-24) posts didEnterOfflineMode even when the mode
+        // was set before the UI loaded, so it shows on a cold offline launch too.
+        XCTAssertTrue(waitUntil(timeout: 5) { self.offlineIndicator(app).isHittable },
+                      "offline banner not visible after an offline launch")
 
         // Home's server controls are disabled: tapping Server Shuffle must do nothing
         app.openTab(AccessibilityId.tabHome)

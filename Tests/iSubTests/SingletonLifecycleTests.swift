@@ -376,3 +376,34 @@ final class ServerLifecycleTests: StoreTestCase {
         // extend this test when that lands
     }
 }
+
+// MARK: - Launch offline-mode decision (BUG-24)
+
+final class LaunchOfflineCheckTests: XCTestCase {
+    func testForceOfflineModeWinsRegardlessOfNetwork() {
+        let message = SceneDelegate.launchOfflineAlertMessage(isForceOfflineMode: true, isNetworkReachable: true,
+                                                              isWifi: true, isDisableUsageOver3G: false)
+        XCTAssertEqual(message, "Offline mode switch on, entering offline mode.")
+    }
+
+    func testNoNetworkEntersOfflineMode() {
+        let message = SceneDelegate.launchOfflineAlertMessage(isForceOfflineMode: false, isNetworkReachable: false,
+                                                              isWifi: false, isDisableUsageOver3G: false)
+        XCTAssertEqual(message, "No network detected, entering offline mode.")
+    }
+
+    func testCellularWithUsageDisabledEntersOfflineMode() {
+        let message = SceneDelegate.launchOfflineAlertMessage(isForceOfflineMode: false, isNetworkReachable: true,
+                                                              isWifi: false, isDisableUsageOver3G: true)
+        XCTAssertEqual(message, "You are not on Wifi, and have chosen to disable use over cellular. Entering offline mode.")
+    }
+
+    func testOnlineConditionsStayOnline() {
+        // Wifi
+        XCTAssertNil(SceneDelegate.launchOfflineAlertMessage(isForceOfflineMode: false, isNetworkReachable: true,
+                                                             isWifi: true, isDisableUsageOver3G: true))
+        // Cellular with usage allowed
+        XCTAssertNil(SceneDelegate.launchOfflineAlertMessage(isForceOfflineMode: false, isNetworkReachable: true,
+                                                             isWifi: false, isDisableUsageOver3G: false))
+    }
+}

@@ -98,10 +98,57 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
-        if networkMonitor.isNetworkReachable {
+        if !hasPerformedLaunchOfflineCheck {
+            hasPerformedLaunchOfflineCheck = true
+            performLaunchOfflineCheck()
+        } else if networkMonitor.isNetworkReachable {
             serverChecker.checkServer()
         } else {
             enterOfflineMode()
+        }
+    }
+
+    private var hasPerformedLaunchOfflineCheck = false
+
+    // Decides whether to enter offline mode at launch and, if so, with which alert
+    // message (nil means stay online). Static and internal for test access.
+    static func launchOfflineAlertMessage(isForceOfflineMode: Bool, isNetworkReachable: Bool, isWifi: Bool, isDisableUsageOver3G: Bool) -> String? {
+        if isForceOfflineMode {
+            return "Offline mode switch on, entering offline mode."
+        } else if !isNetworkReachable {
+            return "No network detected, entering offline mode."
+        } else if !isWifi && isDisableUsageOver3G {
+            return "You are not on Wifi, and have chosen to disable use over cellular. Entering offline mode."
+        }
+        return nil
+    }
+
+    // Reproduces the old app's launch behavior (iSubAppDelegate.m): enter offline mode
+    // when the force-offline switch is on, there's no network, or we're on cellular
+    // with cellular usage disabled - presenting the explanatory alert when popups are
+    // enabled - and only check the server when staying online
+    private func performLaunchOfflineCheck() {
+        let alertMessage = Self.launchOfflineAlertMessage(isForceOfflineMode: settings.isForceOfflineMode,
+                                                          isNetworkReachable: isNetworkReachable,
+                                                          isWifi: isWifi,
+                                                          isDisableUsageOver3G: settings.isDisableUsageOver3G)
+        if let alertMessage {
+            if settings.isOfflineMode {
+                // Already offline (the mode was set before the UI loaded): still announce
+                // it so the offline indicator banner and controls update
+                NotificationCenter.postOnMainThread(name: Notifications.didEnterOfflineMode)
+            } else {
+                enterOfflineMode()
+            }
+            if settings.isPopupsEnabled {
+                DispatchQueue.main.async(after: 1.1) {
+                    let alert = UIAlertController(title: "Notice", message: alertMessage, preferredStyle: .alert)
+                    alert.addOKAction()
+                    UIApplication.keyWindow?.rootViewController?.present(alert, animated: true)
+                }
+            }
+        } else {
+            serverChecker.checkServer()
         }
     }
 
