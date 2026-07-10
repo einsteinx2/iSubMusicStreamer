@@ -98,7 +98,7 @@ Write these suites against the code **as it behaves today** (asserting *intended
 
 The manual QA script `Testing/Integration Tests.txt` (Online / Offline / Jukebox sections) is the behavioral spec, adapted to the new 5-tab layout (Home / Library / Player / Playlists / Downloads). All suites use the TEST-06 harness and TEST-07 mock server; several will (correctly) fail against today's stubs — they define done for Sections 4–5.
 
-- [ ] **[E2E-01] P1 — Launch + first-run server setup.**
+- [x] **[E2E-01] P1 — Launch + first-run server setup.**
   > **Prompt:** Write XCUITests for first run: launch with -RESET_STATE, assert routing to server setup (SceneDelegate.showSettings), drive ServerEditViewController fields, assert a valid credential (stubbed ping success) lands on the main tab bar, and add a regression test that a failed auth persists NO server entry (BUG-17). Keep fully offline/deterministic.
 
 - [ ] **[E2E-02] P1 — Online-mode regression suite (per tab).**

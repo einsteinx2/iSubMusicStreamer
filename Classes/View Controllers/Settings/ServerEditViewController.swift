@@ -136,7 +136,6 @@ final class ServerEditViewController: UIViewController {
             make.height.equalTo(240)
         }
         
-        let saveButton = UIButton(type: .system)
         saveButton.addTarget(self, action: #selector(saveButtonAction), for: .touchUpInside)
         saveButton.setTitle("Save", for: .normal)
         saveButton.titleLabel?.font = .boldSystemFont(ofSize: 20)

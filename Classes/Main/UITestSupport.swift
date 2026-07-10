@@ -16,9 +16,15 @@ import Resolver
 //   -RESET_STATE       wipe the database, downloads, and UserDefaults before setup
 //   -MODE <mode>       online (default) | offline | jukebox
 //   -FIXTURES <name>   named fixture response set served by the stub (default "default")
+//   -FIRSTRUN          skip the server seeding (keeping the network stub) so tests can
+//                      drive the real first-run server setup flow
 // See docs/UI_TESTING.md for the full contract.
 enum UITestSupport {
     static var isEnabled: Bool { ProcessInfo.processInfo.arguments.contains("-UITEST") }
+
+    // First-run flow: networking is still stubbed, but no server is seeded, so the app
+    // routes to server setup exactly like a fresh install
+    static var isFirstRun: Bool { ProcessInfo.processInfo.arguments.contains("-FIRSTRUN") }
 
     enum Mode: String { case online, offline, jukebox }
 
@@ -60,13 +66,16 @@ enum UITestSupport {
             serverURL = URL(string: "http://uitest.local")!
         }
 
-        // Seed a pre-configured server so tests skip first-run server setup
-        let store: Store = Resolver.resolve()
-        if store.server(id: seededServerId) == nil {
-            let server = Server(id: seededServerId, type: .subsonic, url: serverURL, username: "uitest", password: "uitest")
-            _ = store.add(server: server)
+        // Seed a pre-configured server so tests skip first-run server setup (unless the
+        // test is exercising the first-run flow itself)
+        if !isFirstRun {
+            let store: Store = Resolver.resolve()
+            if store.server(id: seededServerId) == nil {
+                let server = Server(id: seededServerId, type: .subsonic, url: serverURL, username: "uitest", password: "uitest")
+                _ = store.add(server: server)
+            }
+            UserDefaults.standard.set(seededServerId, forKey: SavedSettings.Key.currentServerId.rawValue)
         }
-        UserDefaults.standard.set(seededServerId, forKey: SavedSettings.Key.currentServerId.rawValue)
 
         let settings: SavedSettings = Resolver.resolve()
         switch mode {
