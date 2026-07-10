@@ -12,7 +12,7 @@ import GRDB
 
 // COV-05: PlayQueue navigation, shuffle, edit, and state-persistence tests using
 // the protocol seams (FakePlayer/FakeStreamManager/FakeDownloadQueue) and the
-// in-memory store. The BUG-10 index math regression is gated with XCTExpectFailure.
+// in-memory store.
 final class PlayQueueTests: StoreTestCase {
     private var playQueue: PlayQueue!
     private var settings: SavedSettings!
@@ -81,10 +81,8 @@ final class PlayQueueTests: StoreTestCase {
     func testIndexOffsetRepeatNoneNegativeClampsToZero_BUG10() {
         seedQueue(5)
         playQueue.repeatMode = .none
-        XCTExpectFailure("BUG-10: index(offset:fromIndex:) returns negative indices for .none; remove this marker when fixing the bug") {
-            XCTAssertEqual(playQueue.index(offset: -2, fromIndex: 1), 0, "negative results must clamp to 0")
-            XCTAssertEqual(playQueue.index(offset: -10, fromIndex: 4), 0, "negative results must clamp to 0")
-        }
+        XCTAssertEqual(playQueue.index(offset: -2, fromIndex: 1), 0, "negative results must clamp to 0")
+        XCTAssertEqual(playQueue.index(offset: -10, fromIndex: 4), 0, "negative results must clamp to 0")
     }
 
     func testIndexOffsetRepeatOneAlwaysReturnsFromIndex() {
@@ -101,7 +99,15 @@ final class PlayQueueTests: StoreTestCase {
         XCTAssertEqual(playQueue.index(offset: 2, fromIndex: 4), 1, "wraps past the end")
         XCTAssertEqual(playQueue.index(offset: -2, fromIndex: 0), 3, "wraps below zero")
         XCTAssertEqual(playQueue.index(offset: -12, fromIndex: 0), 3, "wraps multiple times below zero")
+        XCTAssertEqual(playQueue.index(offset: 12, fromIndex: 0), 2, "wraps multiple times past the end")
         XCTAssertEqual(playQueue.index(offset: 1, fromIndex: 2), 3, "no wrap needed")
+    }
+
+    func testIndexOffsetEmptyQueueReturnsZero() {
+        playQueue.repeatMode = .all
+        XCTAssertEqual(playQueue.index(offset: -3, fromIndex: 0), 0, "empty queue must not wrap or hang")
+        playQueue.repeatMode = .none
+        XCTAssertEqual(playQueue.index(offset: 3, fromIndex: 0), 0)
     }
 
     // MARK: nextIndex / prevIndex / nextIndexIgnoringRepeatMode

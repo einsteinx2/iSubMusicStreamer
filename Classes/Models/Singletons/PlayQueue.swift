@@ -177,17 +177,17 @@ final class PlayQueue: NSObject {
         return false
     }
     
-    // TODO: Fix this logic and write unit tests
     func index(offset: Int, fromIndex: Int) -> Int {
-        guard let playlist = currentPlaylist else { return 0 }
-        var newIndex = offset + fromIndex
+        guard let playlist = currentPlaylist, playlist.songCount > 0 else { return 0 }
+        let newIndex = offset + fromIndex
         switch repeatMode {
         case .none:
             if newIndex < 0 {
                 // If we're less than 0, return 0
-                return newIndex
+                return 0
             } else if newIndex >= playlist.songCount {
                 // If we're past the end of the playlist, return the first index past the end
+                // (used by the stream prefetcher to know there's nothing more to queue)
                 return playlist.songCount
             } else {
                 // If we're inside the playlist, return the index
@@ -197,19 +197,9 @@ final class PlayQueue: NSObject {
             // Repeat one always returns the same index
             return fromIndex
         case .all:
-            if newIndex < 0 {
-                // If we're less than 0, wrap around the playlist
-                while newIndex < 0 {
-                    newIndex += playlist.songCount
-                }
-                return newIndex
-            } else if newIndex >= playlist.songCount {
-                // If we're past the end of the playlist, wrap around
-                return newIndex - playlist.songCount
-            } else {
-                // If we're inside the playlist, return the index
-                return newIndex
-            }
+            // Wrap around the playlist in either direction
+            let wrapped = newIndex % playlist.songCount
+            return wrapped < 0 ? wrapped + playlist.songCount : wrapped
         }
     }
     

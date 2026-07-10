@@ -158,7 +158,7 @@ Verified defects. The P0s are crash- or core-functionality-level; fix order with
 
 ### Playback & UI correctness (P1)
 
-- [ ] **[BUG-10] P1 — `PlayQueue.index(offset:fromIndex:)` returns negative indices.** `PlayQueue.swift:180-188` — marked TODO; the `.none` repeat case returns the negative value where the comment says clamp to 0. Feeds prev-song navigation and StreamManager prefetch.
+- [x] **[BUG-10] P1 — `PlayQueue.index(offset:fromIndex:)` returns negative indices.** `PlayQueue.swift:180-188` — marked TODO; the `.none` repeat case returns the negative value where the comment says clamp to 0. Feeds prev-song navigation and StreamManager prefetch.
   > **Prompt:** In PlayQueue.swift index(offset:fromIndex:) (~line 180), fix the logic for all three repeat modes to match the Obj-C indexForOffset:fromIndex: (clamp to 0 for .none negatives, preserve first-index-past-the-end for prefetch), verify prevSong/nextSong at boundaries, and enable the COV-05 tests.
 
 - [ ] **[BUG-11] P1 — Inverted bounds guard in `BassEqualizer.removeEqualizerValue` — deleting an EQ band is a no-op (or crash).** `BassEqualizer.swift:148` — `guard value.arrayIndex >= eqValues.count else { return }` returns for every valid index and proceeds (to an out-of-bounds `remove(at:)`) only for invalid ones.
