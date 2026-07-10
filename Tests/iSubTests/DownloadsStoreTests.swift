@@ -217,11 +217,62 @@ final class DownloadsStoreTests: StoreTestCase {
         XCTAssertEqual(store.songsRecursive(downloadedTagAlbum: album).map(\.id), ["t1", "t2"])
     }
 
-    // NOTE: deleteDownloadedSongs(serverId:level:), deleteDownloadedSongs(downloadedTagArtist:),
-    // and deleteDownloadedSongs(downloadedTagAlbum:) cannot be tested yet: they call
-    // self.song(...) (pool.read) inside pool.write, which trips GRDB's uncatchable
-    // "Database methods are not reentrant" precondition and crashes the process.
-    // Their tests land with the BUG-18 fix.
+    // MARK: Bulk deletion (BUG-18 regression: these used to nest reads inside writes)
+
+    func testDeleteDownloadedSongsForTagArtist() throws {
+        buildTagLibrary()
+        let artist = try XCTUnwrap(store.downloadedTagArtists(serverId: 1).first)
+
+        XCTAssertTrue(store.deleteDownloadedSongs(downloadedTagArtist: artist))
+
+        XCTAssertNil(store.downloadedSong(serverId: 1, songId: "t1"))
+        XCTAssertNil(store.downloadedSong(serverId: 1, songId: "t2"))
+        XCTAssertNil(store.downloadedSong(serverId: 1, songId: "t3"))
+        XCTAssertEqual(store.downloadedTagArtists(serverId: 1).count, 0)
+    }
+
+    func testDeleteDownloadedSongsForTagAlbum() throws {
+        buildTagLibrary()
+        let artist = try XCTUnwrap(store.downloadedTagArtists(serverId: 1).first)
+        let album = try XCTUnwrap(store.downloadedTagAlbums(downloadedTagArtist: artist).first)
+
+        XCTAssertTrue(store.deleteDownloadedSongs(downloadedTagAlbum: album))
+
+        XCTAssertNil(store.downloadedSong(serverId: 1, songId: "t1"))
+        XCTAssertNil(store.downloadedSong(serverId: 1, songId: "t2"))
+        XCTAssertNotNil(store.downloadedSong(serverId: 1, songId: "t3"), "the artist's other album is untouched")
+    }
+
+    func testDeleteDownloadedSongsForTagAlbumRemovesFiles() throws {
+        _ = store.add(server: TestData.server(id: 1))
+        buildTagLibrary()
+        let artist = try XCTUnwrap(store.downloadedTagArtists(serverId: 1).first)
+        let album = try XCTUnwrap(store.downloadedTagAlbums(downloadedTagArtist: artist).first)
+
+        // Put a real file at one of the album's song paths
+        let song = try XCTUnwrap(store.song(serverId: 1, id: "t1"))
+        try FileManager.default.createDirectory(atPath: (song.localPath as NSString).deletingLastPathComponent, withIntermediateDirectories: true)
+        try Data("audio".utf8).write(to: URL(fileURLWithPath: song.localPath))
+
+        XCTAssertTrue(store.deleteDownloadedSongs(downloadedTagAlbum: album))
+
+        XCTAssertFalse(FileManager.default.fileExists(atPath: song.localPath), "the downloaded file is removed with the record")
+    }
+
+    func testDeleteDownloadedSongsAtLevel() throws {
+        buildLibrary(serverId: 1)
+        addFinishedDownload(serverId: 2, songId: "other", path: "Other Artist/other.mp3")
+
+        // Level 0 deletion removes every downloaded song for the server
+        XCTAssertTrue(store.deleteDownloadedSongs(serverId: 1, level: 0))
+
+        XCTAssertEqual(store.downloadedSongsCount(serverId: 1), 0)
+        let remainingComponents = try store.pool.read { db in
+            try DownloadedSongPathComponent.filter(literal: "serverId = 1").fetchCount(db)
+        }
+        XCTAssertEqual(remainingComponents, 0, "path components are removed with the songs")
+        XCTAssertNotNil(store.downloadedSong(serverId: 2, songId: "other"), "other servers are untouched")
+    }
 
     // MARK: Eviction queries
 

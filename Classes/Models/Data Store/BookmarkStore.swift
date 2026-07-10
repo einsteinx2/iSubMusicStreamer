@@ -36,22 +36,31 @@ extension Store {
     var nextBookmarkId: Int? {
         do {
             return try pool.read { db in
-                if let maxId = try SQLRequest<Int>(literal: "SELECT MAX(id) FROM \(Bookmark.self)").fetchOne(db) {
-                    return maxId + 1
-                }
-                return 1
+                try nextBookmarkId(db)
             }
         } catch {
             DDLogError("Failed to select next bookmark ID: \(error)")
             return nil
         }
     }
-    
+
+    // In-transaction variant: database access is not reentrant, so callers already
+    // inside pool.write must use this with their transaction's db handle
+    func nextBookmarkId(_ db: Database) throws -> Int? {
+        if let maxId = try SQLRequest<Int>(literal: "SELECT MAX(id) FROM \(Bookmark.self)").fetchOne(db) {
+            return maxId + 1
+        }
+        return 1
+    }
+
     func addBookmark(name: String, songIndex: Int, offsetInSeconds: Double, offsetInBytes: Int) -> Bool {
+        // Get the song object before opening the write transaction (it reads the
+        // database itself, and database access is not reentrant)
+        guard let song = playQueue.song(index: songIndex) else { return false }
+
         do {
             return try pool.write { db in
-                // Get the song object
-                guard let nextLocalPlaylistId = nextLocalPlaylistId, let nextBookmarkId = nextBookmarkId, let song = playQueue.song(index: songIndex) else { return false }
+                guard let nextLocalPlaylistId = try nextLocalPlaylistId(db), let nextBookmarkId = try nextBookmarkId(db) else { return false }
 
                 // Create the local playlist to store the songs
                 var playlist = LocalPlaylist(id: nextLocalPlaylistId, name: name, isBookmark: true)

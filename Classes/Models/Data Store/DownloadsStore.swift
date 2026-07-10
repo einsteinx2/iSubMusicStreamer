@@ -628,20 +628,27 @@ extension Store {
     @discardableResult
     func deleteDownloadedSongs(serverId: Int, level: Int) -> Bool {
         do {
-            return try pool.write { db in
+            // Look up the affected songs and remove their files before opening the
+            // write transaction: the song lookups (and Song.localPath's server lookup)
+            // read the database, and database access is not reentrant
+            let songIds = try pool.read { db in
                 let songIdsSql: SQL = """
                     SELECT songId
                     FROM \(DownloadedSongPathComponent.self)
                     WHERE serverId = \(serverId) AND level = \(level)
                     GROUP BY serverId, songId
                     """
-                let songIds = try SQLRequest<String>(literal: songIdsSql).fetchAll(db)
+                return try SQLRequest<String>(literal: songIdsSql).fetchAll(db)
+            }
+            for songId in songIds {
+                // Remove song file
+                if let song = self.song(serverId: serverId, id: songId), FileManager.default.fileExists(atPath: song.localPath) {
+                    try FileManager.default.removeItem(atPath: song.localPath)
+                }
+            }
+
+            return try pool.write { db in
                 for songId in songIds {
-                    // Remove song file
-                    if let song = self.song(serverId: serverId, id: songId), FileManager.default.fileExists(atPath: song.localPath) {
-                        try FileManager.default.removeItem(atPath: song.localPath)
-                    }
-                    
                     try db.execute(literal: "DELETE FROM \(DownloadedSong.self) WHERE serverId = \(serverId) AND songId = \(songId)")
                     try db.execute(literal: "DELETE FROM \(DownloadedSongPathComponent.self) WHERE serverId = \(serverId) AND songId = \(songId)")
                 }
@@ -666,14 +673,21 @@ extension Store {
     @discardableResult
     func deleteDownloadedSongs(downloadedTagArtist: DownloadedTagArtist) -> Bool {
         do {
+            // Look up the affected songs and remove their files before opening the
+            // write transaction: the song lookups (and Song.localPath's server lookup)
+            // read the database, and database access is not reentrant
+            let downloadedSongs = try pool.read { db in
+                try DownloadedSong.downloadedSongs(downloadedTagArtist: downloadedTagArtist).fetchAll(db)
+            }
+            for downloadedSong in downloadedSongs {
+                // Remove song file
+                if let song = self.song(serverId: downloadedSong.serverId, id: downloadedSong.songId), FileManager.default.fileExists(atPath: song.localPath) {
+                    try FileManager.default.removeItem(atPath: song.localPath)
+                }
+            }
+
             return try pool.write { db in
-                let downloadedSongs = try DownloadedSong.downloadedSongs(downloadedTagArtist: downloadedTagArtist).fetchAll(db)
                 for downloadedSong in downloadedSongs {
-                    // Remove song file
-                    if let song = self.song(serverId: downloadedSong.serverId, id: downloadedSong.songId), FileManager.default.fileExists(atPath: song.localPath) {
-                        try FileManager.default.removeItem(atPath: song.localPath)
-                    }
-                    
                     try db.execute(literal: "DELETE FROM \(DownloadedSong.self) WHERE serverId = \(downloadedSong.serverId) AND songId = \(downloadedSong.songId)")
                     try db.execute(literal: "DELETE FROM \(DownloadedSongPathComponent.self) WHERE serverId = \(downloadedSong.serverId) AND songId = \(downloadedSong.songId)")
                 }
@@ -688,14 +702,21 @@ extension Store {
     @discardableResult
     func deleteDownloadedSongs(downloadedTagAlbum: DownloadedTagAlbum) -> Bool {
         do {
+            // Look up the affected songs and remove their files before opening the
+            // write transaction: the song lookups (and Song.localPath's server lookup)
+            // read the database, and database access is not reentrant
+            let downloadedSongs = try pool.read { db in
+                try DownloadedSong.downloadedSongs(downloadedTagAlbum: downloadedTagAlbum).fetchAll(db)
+            }
+            for downloadedSong in downloadedSongs {
+                // Remove song file
+                if let song = self.song(serverId: downloadedSong.serverId, id: downloadedSong.songId), FileManager.default.fileExists(atPath: song.localPath) {
+                    try FileManager.default.removeItem(atPath: song.localPath)
+                }
+            }
+
             return try pool.write { db in
-                let downloadedSongs = try DownloadedSong.downloadedSongs(downloadedTagAlbum: downloadedTagAlbum).fetchAll(db)
                 for downloadedSong in downloadedSongs {
-                    // Remove song file
-                    if let song = self.song(serverId: downloadedSong.serverId, id: downloadedSong.songId), FileManager.default.fileExists(atPath: song.localPath) {
-                        try FileManager.default.removeItem(atPath: song.localPath)
-                    }
-                    
                     try db.execute(literal: "DELETE FROM \(DownloadedSong.self) WHERE serverId = \(downloadedSong.serverId) AND songId = \(downloadedSong.songId)")
                     try db.execute(literal: "DELETE FROM \(DownloadedSongPathComponent.self) WHERE serverId = \(downloadedSong.serverId) AND songId = \(downloadedSong.songId)")
                 }

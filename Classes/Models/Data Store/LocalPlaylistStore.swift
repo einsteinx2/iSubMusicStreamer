@@ -107,15 +107,21 @@ extension Store {
     var nextLocalPlaylistId: Int? {
         do {
             return try pool.read { db in
-                if let maxId = try SQLRequest<Int>(literal: "SELECT MAX(id) FROM \(LocalPlaylist.self)").fetchOne(db) {
-                    return maxId + 1
-                }
-                return nil
+                try nextLocalPlaylistId(db)
             }
         } catch {
             DDLogError("Failed to select next local playlist ID: \(error)")
             return nil
         }
+    }
+
+    // In-transaction variant: database access is not reentrant, so callers already
+    // inside pool.write must use this with their transaction's db handle
+    func nextLocalPlaylistId(_ db: Database) throws -> Int? {
+        if let maxId = try SQLRequest<Int>(literal: "SELECT MAX(id) FROM \(LocalPlaylist.self)").fetchOne(db) {
+            return maxId + 1
+        }
+        return nil
     }
     
     func localPlaylistsCount(isBookmark: Bool = false) -> Int? {

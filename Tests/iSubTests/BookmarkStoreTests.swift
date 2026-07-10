@@ -10,14 +10,9 @@ import XCTest
 import GRDB
 @testable import iSub_Beta
 
-// COV-03: CRUD tests for bookmarks and their snapshot local playlists.
-//
-// NOTE: Store.addBookmark cannot be exercised directly yet: it evaluates
-// nextLocalPlaylistId/nextBookmarkId (each a pool.read) inside pool.write, which
-// trips GRDB's uncatchable "Database methods are not reentrant" precondition
-// (BUG-18). These tests build the same snapshot structure addBookmark produces
-// and cover the read/delete paths; addBookmark's own test lands with the
-// BUG-18 fix.
+// COV-03/BUG-18: CRUD tests for bookmarks and their snapshot local playlists,
+// including Store.addBookmark (which used to trip GRDB's reentrancy precondition
+// by nesting pool.read inside pool.write).
 final class BookmarkStoreTests: StoreTestCase {
     private var song: Song!
 
@@ -52,6 +47,62 @@ final class BookmarkStoreTests: StoreTestCase {
         }
         return bookmark
     }
+
+    // MARK: addBookmark (BUG-18 regression)
+
+    private func makePlayQueue(songCount: Int) -> PlayQueue {
+        let freshSettings = SavedSettings()
+        TestContainer.register { freshSettings }
+        let freshPlayQueue = PlayQueue()
+        TestContainer.register { freshPlayQueue }
+        for number in 1...songCount {
+            let queueSong = TestData.song(serverId: 1, id: "q\(number)", title: "Queued \(number)", path: "q/\(number).mp3")
+            _ = store.add(song: queueSong)
+            XCTAssertTrue(store.add(song: queueSong, localPlaylistId: LocalPlaylist.Default.playQueueId))
+        }
+        return freshPlayQueue
+    }
+
+    func testAddBookmarkSnapshotsPlayQueue() throws {
+        _ = makePlayQueue(songCount: 3)
+
+        XCTAssertTrue(store.addBookmark(name: "My Bookmark", songIndex: 1, offsetInSeconds: 30.5, offsetInBytes: 123456))
+
+        let bookmark = try XCTUnwrap(store.bookmarks().first)
+        XCTAssertEqual(bookmark.songId, "q2", "the bookmark points at the song at the given index")
+        XCTAssertEqual(bookmark.songServerId, 1)
+        XCTAssertEqual(bookmark.songIndex, 1)
+        XCTAssertEqual(bookmark.offsetInSeconds, 30.5, accuracy: 0.001)
+        XCTAssertEqual(bookmark.offsetInBytes, 123456)
+
+        // The play queue is snapshotted into a bookmark playlist, in order
+        let playlist = try XCTUnwrap(store.localPlaylist(bookmark: bookmark))
+        XCTAssertEqual(playlist.name, "My Bookmark")
+        XCTAssertTrue(playlist.isBookmark)
+        XCTAssertEqual(playlist.songCount, 3)
+        XCTAssertEqual(store.songs(localPlaylistId: playlist.id).map(\.id), ["q1", "q2", "q3"])
+    }
+
+    func testAddBookmarkAllocatesSequentialIds() throws {
+        _ = makePlayQueue(songCount: 2)
+
+        XCTAssertTrue(store.addBookmark(name: "First", songIndex: 0, offsetInSeconds: 0, offsetInBytes: 0))
+        XCTAssertTrue(store.addBookmark(name: "Second", songIndex: 1, offsetInSeconds: 5, offsetInBytes: 10))
+
+        XCTAssertEqual(store.bookmarks().map(\.id), [2, 1])
+        let first = try XCTUnwrap(store.bookmark(id: 1))
+        let second = try XCTUnwrap(store.bookmark(id: 2))
+        XCTAssertNotEqual(first.localPlaylistId, second.localPlaylistId, "each bookmark gets its own snapshot playlist")
+        XCTAssertEqual(store.localPlaylists(isBookmark: true).count, 2)
+    }
+
+    func testAddBookmarkFailsForMissingSongIndex() {
+        _ = makePlayQueue(songCount: 1)
+        XCTAssertFalse(store.addBookmark(name: "Nope", songIndex: 5, offsetInSeconds: 0, offsetInBytes: 0))
+        XCTAssertEqual(store.bookmarks().count, 0)
+    }
+
+    // MARK: id allocation
 
     func testNextBookmarkIdOnEmptyTableIsOne() {
         XCTAssertEqual(store.nextBookmarkId, 1)
