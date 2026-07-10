@@ -11,7 +11,6 @@ import XCTest
 
 // COV-08: DownloadQueue state machine — start/stop, offline and gating rules,
 // handler stealing from the StreamManager, and download completion bookkeeping.
-// The BUG-05 inverted stop() guard is gated with XCTExpectFailure.
 final class DownloadQueueTests: StoreTestCase {
     private var downloadQueue: DownloadQueue!
     private var streamManager: FakeStreamManager!
@@ -150,18 +149,18 @@ final class DownloadQueueTests: StoreTestCase {
 
         downloadQueue.stop()
 
-        XCTExpectFailure("BUG-05: stop() has an inverted guard and returns while downloading; remove this marker when fixing the bug") {
-            XCTAssertFalse(downloadQueue.isDownloading, "stop() must cancel an in-flight download")
-            XCTAssertNil(downloadQueue.currentStreamHandler)
-            XCTAssertEqual(handler?.isDownloading, false, "the active stream handler must be cancelled")
-        }
+        XCTAssertFalse(downloadQueue.isDownloading, "stop() must cancel an in-flight download")
+        XCTAssertNil(downloadQueue.currentStreamHandler)
+        XCTAssertEqual(handler?.isDownloading, false, "the active stream handler must be cancelled")
     }
 
-    func testStopWhenIdlePostsStoppedNotification() {
-        // With nothing downloading, the (inverted) guard passes and stop() runs
+    func testStopWhenIdleIsANoOp() {
+        // With nothing downloading there is nothing to stop, so no notification fires
+        // (matches the old ISMSCacheQueueManager.stopDownloadQueue semantics)
         let stoppedExpectation = expectation(forNotification: Notifications.downloadQueueStopped, object: nil, handler: nil)
+        stoppedExpectation.isInverted = true
         downloadQueue.stop()
-        wait(for: [stoppedExpectation], timeout: 5)
+        wait(for: [stoppedExpectation], timeout: 1)
         XCTAssertFalse(downloadQueue.isDownloading)
     }
 
@@ -177,9 +176,7 @@ final class DownloadQueueTests: StoreTestCase {
 
         XCTAssertTrue(downloadQueue.removeCurrentSong())
         XCTAssertFalse(store.isSongInDownloadQueue(song: song), "the active song leaves the queue")
-
-        // Cleanup: BUG-05 means the in-flight handler wasn't cancelled by stop()
-        handler?.cancel()
+        XCTAssertEqual(handler?.isDownloading, false, "the in-flight handler is cancelled by stop()")
     }
 
     func testClearEmptiesQueue() {

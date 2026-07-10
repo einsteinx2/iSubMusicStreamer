@@ -119,7 +119,7 @@ final class DownloadQueue {
     }
     
     func stop() {
-        guard !isDownloading else { return }
+        guard isDownloading else { return }
         
         isDownloading = false
         currentStreamHandler?.cancel()
