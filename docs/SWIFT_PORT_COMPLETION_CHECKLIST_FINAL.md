@@ -150,7 +150,7 @@ Verified defects. The P0s are crash- or core-functionality-level; fix order with
 - [x] **[BUG-07] P0 — Download-queue delete SQL only matches serverId == 1.** `DownloadsStore.swift:~864` — `removeFromDownloadQueue` builds `WHERE serverId = (\(serverId) AND songId = \(songId))`; the parens make the RHS a boolean, so deletes silently no-op for any other server. Backs every queue-delete path in DownloadQueueViewController.
   > **Prompt:** In DownloadsStore.swift removeFromDownloadQueue(serverId:songId:) (~line 864), fix the WHERE clause to `WHERE serverId = \(serverId) AND songId = \(songId)`. Add a unit test with a serverId != 1 asserting the correct row is removed and others remain.
 
-- [ ] **[BUG-08] P0 — `downloadedSongs(serverId:)` ignores its serverId — cross-server data bleed.** `DownloadsStore.swift:~534` — the SQL has no WHERE clause; with multiple servers the Downloads songs list shows merged/wrong data.
+- [x] **[BUG-08] P0 — `downloadedSongs(serverId:)` ignores its serverId — cross-server data bleed.** `DownloadsStore.swift:~534` — the SQL has no WHERE clause; with multiple servers the Downloads songs list shows merged/wrong data.
   > **Prompt:** In DownloadsStore.swift downloadedSongs(serverId:) (~line 534), add `WHERE serverId = \(serverId)` (keeping the ORDER BY downloadedDate DESC). Add a unit test inserting DownloadedSong rows for two serverIds and asserting only the requested server's rows return.
 
 - [ ] **[BUG-09] P0 — `songsRecursive` never uses `parentPathComponent` — folder actions operate on the whole library.** `DownloadsStore.swift:~353` — only filters serverId and `level >= level`, so "Download/Queue/Play/Shuffle folder" on any offline folder hits the entire server's downloads.

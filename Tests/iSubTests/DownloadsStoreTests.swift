@@ -392,15 +392,22 @@ final class DownloadsStoreTests: StoreTestCase {
     }
 
     func testDownloadedSongsListIsScopedByServerId_BUG08() {
-        // BUG-08: downloadedSongs(serverId:) has no WHERE clause, so every server's
-        // downloads bleed together
+        // BUG-08 regression: downloadedSongs(serverId:) must only return the
+        // requested server's downloads
         addFinishedDownload(serverId: 1, songId: "1", path: "A/1.mp3", downloadedDate: Date(timeIntervalSince1970: 1000))
         addFinishedDownload(serverId: 2, songId: "2", path: "B/2.mp3", downloadedDate: Date(timeIntervalSince1970: 2000))
 
-        XCTExpectFailure("BUG-08: downloadedSongs(serverId:) ignores its serverId; remove this marker when fixing the bug") {
-            let serverOneSongs = store.downloadedSongs(serverId: 1)
-            XCTAssertEqual(serverOneSongs.map(\.songId), ["1"], "only server 1's downloads should be returned")
-        }
+        XCTAssertEqual(store.downloadedSongs(serverId: 1).map(\.songId), ["1"], "only server 1's downloads should be returned")
+        XCTAssertEqual(store.downloadedSongs(serverId: 2).map(\.songId), ["2"], "only server 2's downloads should be returned")
+        XCTAssertTrue(store.downloadedSongs(serverId: 3).isEmpty)
+    }
+
+    func testDownloadedSongsListOrdersByDownloadedDateDescending() {
+        addFinishedDownload(serverId: 1, songId: "1", path: "A/1.mp3", downloadedDate: Date(timeIntervalSince1970: 1000))
+        addFinishedDownload(serverId: 1, songId: "2", path: "A/2.mp3", downloadedDate: Date(timeIntervalSince1970: 3000))
+        addFinishedDownload(serverId: 1, songId: "3", path: "A/3.mp3", downloadedDate: Date(timeIntervalSince1970: 2000))
+
+        XCTAssertEqual(store.downloadedSongs(serverId: 1).map(\.songId), ["2", "3", "1"], "newest downloads come first")
     }
 
     func testSongsRecursiveIsScopedToParentPathComponent_BUG09() {

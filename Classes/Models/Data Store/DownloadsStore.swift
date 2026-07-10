@@ -537,6 +537,7 @@ extension Store {
                 let sql: SQL = """
                     SELECT *
                     FROM \(DownloadedSong.self)
+                    WHERE \(DownloadedSong.self).serverId = \(serverId)
                     ORDER BY \(DownloadedSong.self).downloadedDate COLLATE NOCASE DESC
                     """
                 return try SQLRequest<DownloadedSong>(literal: sql).fetchAll(db)
