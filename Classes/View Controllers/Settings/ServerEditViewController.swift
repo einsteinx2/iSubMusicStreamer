@@ -10,12 +10,10 @@ import UIKit
 import CocoaLumberjackSwift
 import Resolver
 
-// TODO: implement this - for some reason, after an incorrect password on first server addition, it still adds the entry so you end up with 2 entries
-// Not sure why that's able to happen as it only saves the server on the success callback...
 final class ServerEditViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
-    
+
     let backgroundImageView = UIImageView(image: UIImage(named: "settings-page"))
     let urlField = InsetTextField(inset: 5)
     let usernameField = InsetTextField(inset: 5)
@@ -23,6 +21,7 @@ final class ServerEditViewController: UIViewController {
     let closeButton = UIButton(type: .close)
     let saveButton = UIButton(type: .system)
     var serverToEdit: Server?
+    private var checkTask: Task<Void, Never>?
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
@@ -55,7 +54,7 @@ final class ServerEditViewController: UIViewController {
             
             self.dismiss(animated: true, completion: nil)
             
-            if UserDefaults.standard.object(forKey: "servers") != nil {
+            if self.store.servers().count > 0 {
                 // Pop the view back
                 if let tabBarController = SceneDelegate.shared.tabBarController {
                     if tabBarController.selectedIndex == 4 && tabBarController.moreNavigationController.viewControllers.count >= 2 {
@@ -207,13 +206,18 @@ final class ServerEditViewController: UIViewController {
     }
     
     private func checkServer() {
+        // Prevent a double submission (e.g. keyboard return plus a Save tap) from racing
+        // two status checks and persisting the server twice
+        checkTask?.cancel()
+
         let task = Task {
             do {
                 defer {
                     HUD.hide()
                 }
-                
+
                 let responseData = try await AsyncStatusLoader(urlString: urlField.text ?? "", username: usernameField.text ?? "", password: passwordField.text ?? "").load()
+                try Task.checkCancellation()
                 if let serverToEdit {
                     serverToEdit.isVideoSupported = responseData.isVideoSupported
                     serverToEdit.isNewSearchSupported = responseData.isNewSearchSupported
@@ -221,7 +225,10 @@ final class ServerEditViewController: UIViewController {
                         settings.currentServer = serverToEdit
                     }
                 } else if let url = URL(string: urlField.text ?? ""), let username = usernameField.text, let password = passwordField.text {
-                    let server = Server(id: store.nextServerId(), type: .subsonic, url: url, username: username, password: password)
+                    // Update an existing entry for the same URL and username (e.g. a retry
+                    // after a failed check) instead of ever adding a duplicate
+                    let existingId = store.servers().first { $0.url == url && $0.username == username }?.id
+                    let server = Server(id: existingId ?? store.nextServerId(), type: .subsonic, url: url, username: username, password: password)
                     server.isVideoSupported = responseData.isVideoSupported
                     server.isNewSearchSupported = responseData.isNewSearchSupported
                     if store.add(server: server) {
@@ -257,6 +264,8 @@ final class ServerEditViewController: UIViewController {
             }
         }
         
+        checkTask = task
+
         HUD.show(message: "Checking Server") {
             HUD.hide()
             task.cancel()

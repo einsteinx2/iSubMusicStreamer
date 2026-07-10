@@ -115,4 +115,38 @@ final class FirstRunUITests: XCTestCase {
         let relaunched = launchFirstRun(fixtures: "badauth", resetState: false)
         waitForServerSetup(in: relaunched)
     }
+
+    // BUG-17 regression: correcting the credentials after a failed first add must end
+    // with exactly one server entry, never a duplicate
+    func testRetryAfterFailedAuthCreatesSingleEntry() {
+        // First attempt fails against the badauth fixtures
+        let app = launchFirstRun(fixtures: "badauth")
+        waitForServerSetup(in: app)
+        enterCredentials(in: app, password: "wrongpassword")
+        app.buttons[AccessibilityId.serverEditSave].tap()
+        let alert = app.alerts["Error"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 30), "failed auth did not show an error alert")
+        alert.buttons["OK"].tap()
+        app.terminate()
+
+        // Relaunch (no state reset) with working fixtures and retry with good credentials
+        let relaunched = launchFirstRun(resetState: false)
+        waitForServerSetup(in: relaunched)
+        enterCredentials(in: relaunched)
+        relaunched.buttons[AccessibilityId.serverEditSave].tap()
+        XCTAssertTrue(relaunched.tabBars.buttons[AccessibilityId.tabHome].waitForExistence(timeout: 30),
+                      "valid credentials did not land on the main tab bar")
+
+        // The servers list (Settings root) must contain exactly one entry
+        let settingsButton = relaunched.buttons[AccessibilityId.homeSettings]
+        XCTAssertTrue(settingsButton.waitForExistence(timeout: 10), "home settings button missing")
+        settingsButton.tap()
+        if !relaunched.navigationBars["Settings"].waitForExistence(timeout: 5) {
+            // The home screen occasionally swallows the first tap right after launch
+            settingsButton.tap()
+        }
+        XCTAssertTrue(relaunched.navigationBars["Settings"].waitForExistence(timeout: 10))
+        XCTAssertTrue(relaunched.tables.cells.firstMatch.waitForExistence(timeout: 10), "servers list is empty")
+        XCTAssertEqual(relaunched.tables.cells.count, 1, "the retry must not create a duplicate server entry")
+    }
 }
