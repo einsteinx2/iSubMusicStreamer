@@ -65,6 +65,18 @@ final class LocalPlaylistStoreCRUDTests: StoreTestCase {
         XCTAssertEqual(store.songs(localPlaylistId: 5).count, 2)
     }
 
+    func testLocalPlaylistNameLookupIgnoresDefaultsAndBookmarks_STUB10() {
+        // The overwrite check must not match the fixed queue playlists or bookmark snapshots
+        XCTAssertNil(store.localPlaylist(name: "Play Queue"), "default playlists must not match")
+
+        XCTAssertTrue(store.add(localPlaylist: LocalPlaylist(id: 5, name: "Road Trip")))
+        XCTAssertTrue(store.add(localPlaylist: LocalPlaylist(id: 6, name: "Snapshot", isBookmark: true)))
+
+        XCTAssertEqual(store.localPlaylist(name: "Road Trip")?.id, 5)
+        XCTAssertNil(store.localPlaylist(name: "Snapshot"), "bookmark snapshots must not match")
+        XCTAssertNil(store.localPlaylist(name: "Missing"))
+    }
+
     func testSongIdsAreScopedByServerAndOrderedByPosition() {
         XCTAssertTrue(store.add(localPlaylist: LocalPlaylist(id: 5, name: "Mixed Servers")))
         // Interleave songs from two servers; positions are assigned in add order

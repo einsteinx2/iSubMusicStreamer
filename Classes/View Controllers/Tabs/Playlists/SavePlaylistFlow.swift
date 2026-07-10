@@ -74,22 +74,59 @@ final class SavePlaylistFlow {
 
     // MARK: Local save
 
-    // TODO: optimize this in the store to not require loading each song object
     private func savePlayQueueLocally(name: String) {
-        // TODO: implement this - overwrite check and error handling (STUB-10)
+        if let existing = store.localPlaylist(name: name) {
+            // A playlist with this name already exists, so ask before replacing its songs
+            Task {
+                guard await confirmOverwrite(name: name) else { return }
+                savePlayQueueLocally(overwriting: existing)
+            }
+        } else {
+            savePlayQueueLocally(newPlaylistNamed: name)
+        }
+    }
+
+    private func savePlayQueueLocally(newPlaylistNamed name: String) {
         HUD.show()
         DispatchQueue.userInitiated.async {
             defer { HUD.hide() }
-            if let nextLocalPlaylistId = self.store.nextLocalPlaylistId {
-                let localPlaylist = LocalPlaylist(id: nextLocalPlaylistId, name: name)
-                if self.store.add(localPlaylist: localPlaylist) {
-                    for i in 0..<self.playQueue.count {
-                        if let song = self.playQueue.song(index: i) {
-                            _ = self.store.add(song: song, localPlaylistId: localPlaylist.id)
-                        }
-                    }
-                }
+            guard let nextLocalPlaylistId = self.store.nextLocalPlaylistId,
+                  self.store.add(localPlaylist: LocalPlaylist(id: nextLocalPlaylistId, name: name)),
+                  self.copyPlayQueueSongs(localPlaylistId: nextLocalPlaylistId) else {
+                self.presentLocalSaveError()
+                return
             }
+        }
+    }
+
+    private func savePlayQueueLocally(overwriting localPlaylist: LocalPlaylist) {
+        HUD.show()
+        DispatchQueue.userInitiated.async {
+            defer { HUD.hide() }
+            guard self.store.clear(localPlaylistId: localPlaylist.id),
+                  self.copyPlayQueueSongs(localPlaylistId: localPlaylist.id) else {
+                self.presentLocalSaveError()
+                return
+            }
+        }
+    }
+
+    // TODO: optimize this in the store to not require loading each song object
+    private func copyPlayQueueSongs(localPlaylistId: Int) -> Bool {
+        for i in 0..<playQueue.count {
+            if let song = playQueue.song(index: i) {
+                guard store.add(song: song, localPlaylistId: localPlaylistId) else { return false }
+            }
+        }
+        return true
+    }
+
+    private func presentLocalSaveError() {
+        DispatchQueue.main.async {
+            guard self.settings.isPopupsEnabled, let viewController = self.viewController else { return }
+            let alert = UIAlertController(title: "Error", message: "There was an error saving the playlist.", preferredStyle: .alert)
+            alert.addOKAction()
+            viewController.present(alert, animated: true)
         }
     }
 

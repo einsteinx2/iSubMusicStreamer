@@ -149,6 +149,19 @@ extension Store {
         }
     }
     
+    // Name-collision lookup for the save-playlist overwrite check (ignores the
+    // default queues and bookmark snapshots)
+    func localPlaylist(name: String) -> LocalPlaylist? {
+        do {
+            return try pool.read { db in
+                try LocalPlaylist.filter(literal: "id > \(LocalPlaylist.Default.maxDefaultId) AND isBookmark = false AND name = \(name)").fetchOne(db)
+            }
+        } catch {
+            DDLogError("Failed to select local playlist named \(name): \(error)")
+            return nil
+        }
+    }
+
     func localPlaylist(id: Int) -> LocalPlaylist? {
         do {
             return try pool.read { db in

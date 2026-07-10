@@ -136,14 +136,15 @@ final class OnlinePlaylistsUITests: XCTestCase {
         locationAlert.buttons["Local"].tap()
         app.fillAlert(titled: "Save Playlist", text: "UITest List", confirm: "Save")
 
-        XCTExpectFailure("STUB: overwrite confirmation for duplicate local playlist names not implemented yet", strict: false) {
-            let overwriteAlert = app.alerts.matching(NSPredicate(format: "label CONTAINS[c] 'overwrite'")).firstMatch
-            XCTAssertTrue(overwriteAlert.waitForExistence(timeout: 5),
-                          "no overwrite confirmation for an existing playlist name")
-            if overwriteAlert.exists {
-                overwriteAlert.buttons.element(boundBy: 1).tap()
-            }
-        }
+        let overwriteAlert = app.alerts["Overwrite?"]
+        XCTAssertTrue(overwriteAlert.waitForExistence(timeout: 10),
+                      "no overwrite confirmation for an existing playlist name")
+        overwriteAlert.buttons["Overwrite"].tap()
+
+        // Overwriting must not create a duplicate playlist
+        app.buttons["Local"].firstMatch.tap()
+        XCTAssertTrue(app.cells.staticTexts["UITest List"].waitForExistence(timeout: 15))
+        XCTAssertEqual(app.tables.firstMatch.cells.count, 1, "overwrite created a duplicate playlist")
     }
 
     func testSavePlayQueueToServer() {
