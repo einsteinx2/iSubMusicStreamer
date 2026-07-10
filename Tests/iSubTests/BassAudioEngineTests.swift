@@ -313,20 +313,21 @@ final class BassAudioEngineTests: StoreTestCase {
         queueAndStart(song)
         XCTAssertTrue(waitUntil { self.player.isPlaying })
 
-        // The system delivers the type/options as NSNumber raw values, but
-        // handleInterruption casts them with `as? AVAudioSession.InterruptionType`,
-        // which fails for NSNumber — so real interruptions are currently ignored.
-        // This is a newly-found defect (same family as the audio-session handling
-        // called out in COV-11); the assertions state the intended behavior.
+        // The system delivers the type/options as NSNumber raw values
         NotificationCenter.default.post(name: AVAudioSession.interruptionNotification,
                                         object: AVAudioSession.sharedInstance(),
                                         userInfo: [AVAudioSessionInterruptionTypeKey: NSNumber(value: AVAudioSession.InterruptionType.began.rawValue)])
 
-        let paused = waitUntil(timeout: 2) { !self.player.isPlaying }
-        XCTExpectFailure("handleInterruption cannot decode NSNumber userInfo values (as? enum cast fails), so system interruptions are ignored; remove this marker when fixing the handler") {
-            XCTAssertTrue(paused, "an interruption pauses playback")
-            XCTAssertTrue(player.shouldResumeFromInterruption)
-        }
+        XCTAssertTrue(waitUntil { !self.player.isPlaying }, "an interruption pauses playback")
+        XCTAssertTrue(player.shouldResumeFromInterruption)
+
+        NotificationCenter.default.post(name: AVAudioSession.interruptionNotification,
+                                        object: AVAudioSession.sharedInstance(),
+                                        userInfo: [AVAudioSessionInterruptionTypeKey: NSNumber(value: AVAudioSession.InterruptionType.ended.rawValue),
+                                                   AVAudioSessionInterruptionOptionKey: NSNumber(value: AVAudioSession.InterruptionOptions.shouldResume.rawValue)])
+
+        XCTAssertTrue(waitUntil { self.player.isPlaying }, "a should-resume interruption end resumes playback")
+        XCTAssertFalse(player.shouldResumeFromInterruption)
     }
 
     func testInterruptionWhilePausedDoesNotSetResumeFlag() throws {
@@ -352,10 +353,7 @@ final class BassAudioEngineTests: StoreTestCase {
                                         object: AVAudioSession.sharedInstance(),
                                         userInfo: [AVAudioSessionRouteChangeReasonKey: NSNumber(value: AVAudioSession.RouteChangeReason.oldDeviceUnavailable.rawValue)])
 
-        let paused = waitUntil(timeout: 2) { !self.player.isPlaying }
-        XCTExpectFailure("handleRouteChange cannot decode NSNumber userInfo values (as? enum cast fails), so route changes are ignored; remove this marker when fixing the handler") {
-            XCTAssertTrue(paused, "unplugging the output device pauses playback")
-        }
+        XCTAssertTrue(waitUntil { !self.player.isPlaying }, "unplugging the output device pauses playback")
     }
 
     func testOtherRouteChangesDoNotPause() throws {

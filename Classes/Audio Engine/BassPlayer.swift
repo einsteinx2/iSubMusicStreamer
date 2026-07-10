@@ -428,7 +428,10 @@ final class BassPlayer: NSObject {
     }
     
     @objc private func handleInterruption(notification: Notification) {
-        guard let interruptionType = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? AVAudioSession.InterruptionType else { return }
+        // The system sends the type/options as NSNumber raw values, so they must be
+        // decoded via init(rawValue:) — a direct cast to the enum always fails
+        guard let interruptionTypeValue = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let interruptionType = AVAudioSession.InterruptionType(rawValue: interruptionTypeValue) else { return }
         
         if interruptionType == .began {
             if Debug.audioEngine {
@@ -446,8 +449,8 @@ final class BassPlayer: NSObject {
                 DDLogInfo("[BassPlayer] audio session interruption ended, isPlaying: \(isPlaying) isMainThread: \(Thread.isMainThread)")
             }
             
-            let interruptionOptions = notification.userInfo?[AVAudioSessionInterruptionOptionKey] as? AVAudioSession.InterruptionOptions
-            if let interruptionOptions = interruptionOptions, interruptionOptions == .shouldResume {
+            let interruptionOptionsValue = notification.userInfo?[AVAudioSessionInterruptionOptionKey] as? UInt
+            if let interruptionOptionsValue = interruptionOptionsValue, AVAudioSession.InterruptionOptions(rawValue: interruptionOptionsValue).contains(.shouldResume) {
                 playPause()
             }
             
@@ -457,7 +460,9 @@ final class BassPlayer: NSObject {
     }
     
     @objc private func handleRouteChange(notification: Notification) {
-        if let reason = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? AVAudioSession.RouteChangeReason, reason == .oldDeviceUnavailable {
+        // Same NSNumber decoding requirement as handleInterruption
+        if let reasonValue = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt,
+           let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue), reason == .oldDeviceUnavailable {
             pause()
         }
     }
