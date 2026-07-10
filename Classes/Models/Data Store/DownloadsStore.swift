@@ -353,6 +353,8 @@ extension Store {
     func songsRecursive(serverId: Int, level: Int, parentPathComponent: String) -> [Song] {
         do {
             return try pool.read { db in
+                // A song is inside the folder when its path contains the folder's name
+                // as the path component at the folder's level
                 let sql: SQL = """
                     SELECT *
                     FROM \(Song.self)
@@ -360,7 +362,9 @@ extension Store {
                     ON \(DownloadedSongPathComponent.self).serverId = \(Song.self).serverId
                         AND \(DownloadedSongPathComponent.self).songId = \(Song.self).id
                     WHERE \(DownloadedSongPathComponent.self).serverId = \(serverId)
-                        AND  \(DownloadedSongPathComponent.self).level >= \(level)
+                        AND \(DownloadedSongPathComponent.self).level = \(level)
+                        AND \(DownloadedSongPathComponent.self).maxLevel != \(level)
+                        AND \(DownloadedSongPathComponent.self).pathComponent = \(parentPathComponent)
                     GROUP BY \(Song.self).serverId, \(Song.self).id
                     """
                 return try SQLRequest<Song>(literal: sql).fetchAll(db)

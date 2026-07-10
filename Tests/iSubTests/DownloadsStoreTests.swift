@@ -411,19 +411,23 @@ final class DownloadsStoreTests: StoreTestCase {
     }
 
     func testSongsRecursiveIsScopedToParentPathComponent_BUG09() {
-        // BUG-09: songsRecursive ignores parentPathComponent (and effectively level),
-        // so folder-scoped actions operate on the whole library
+        // BUG-09 regression: songsRecursive must only return songs under the given
+        // folder, not the whole library
         buildLibrary()
 
-        XCTExpectFailure("BUG-09: songsRecursive never uses parentPathComponent; remove this marker when fixing the bug") {
-            // Recursing into "Artist A" should return its 4 songs, not Artist B's
-            let artistSongs = store.songsRecursive(serverId: 1, level: 0, parentPathComponent: "Artist A")
-            XCTAssertEqual(Set(artistSongs.map(\.id)), ["1", "2", "3", "4"], "songs under Artist B must be excluded")
+        // Recursing into "Artist A" should return its 4 songs, not Artist B's
+        let artistSongs = store.songsRecursive(serverId: 1, level: 0, parentPathComponent: "Artist A")
+        XCTAssertEqual(Set(artistSongs.map(\.id)), ["1", "2", "3", "4"], "songs under Artist B must be excluded")
 
-            // Recursing into "Album X" should only return its 2 songs
-            let albumSongs = store.songsRecursive(serverId: 1, level: 1, parentPathComponent: "Album X")
-            XCTAssertEqual(Set(albumSongs.map(\.id)), ["1", "2"], "sibling folders must be excluded")
-        }
+        // Recursing into "Album X" should only return its 2 songs
+        let albumSongs = store.songsRecursive(serverId: 1, level: 1, parentPathComponent: "Album X")
+        XCTAssertEqual(Set(albumSongs.map(\.id)), ["1", "2"], "sibling folders must be excluded")
+
+        // The typed helpers pass the folder's own level/name through
+        let artist = DownloadedFolderArtist(serverId: 1, name: "Artist B")
+        XCTAssertEqual(Set(store.songsRecursive(downloadedFolderArtist: artist).map(\.id)), ["5"])
+        let album = DownloadedFolderAlbum(serverId: 1, level: 1, name: "Album Y", coverArtId: nil)
+        XCTAssertEqual(Set(store.songsRecursive(downloadedFolderAlbum: album).map(\.id)), ["3"])
     }
 
     func testSongsRecursiveIsScopedByServerId() {

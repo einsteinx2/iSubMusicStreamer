@@ -153,7 +153,7 @@ Verified defects. The P0s are crash- or core-functionality-level; fix order with
 - [x] **[BUG-08] P0 — `downloadedSongs(serverId:)` ignores its serverId — cross-server data bleed.** `DownloadsStore.swift:~534` — the SQL has no WHERE clause; with multiple servers the Downloads songs list shows merged/wrong data.
   > **Prompt:** In DownloadsStore.swift downloadedSongs(serverId:) (~line 534), add `WHERE serverId = \(serverId)` (keeping the ORDER BY downloadedDate DESC). Add a unit test inserting DownloadedSong rows for two serverIds and asserting only the requested server's rows return.
 
-- [ ] **[BUG-09] P0 — `songsRecursive` never uses `parentPathComponent` — folder actions operate on the whole library.** `DownloadsStore.swift:~353` — only filters serverId and `level >= level`, so "Download/Queue/Play/Shuffle folder" on any offline folder hits the entire server's downloads.
+- [x] **[BUG-09] P0 — `songsRecursive` never uses `parentPathComponent` — folder actions operate on the whole library.** `DownloadsStore.swift:~353` — only filters serverId and `level >= level`, so "Download/Queue/Play/Shuffle folder" on any offline folder hits the entire server's downloads.
   > **Prompt:** In DownloadsStore.swift songsRecursive(serverId:level:parentPathComponent:) (~line 353), rewrite the query to restrict to songs under the given parentPathComponent at the appropriate level via DownloadedSongPathComponent, matching the callers in DownloadedFolderArtist/DownloadedFolderAlbum. Add unit tests over a small folder tree asserting a subfolder recursion excludes siblings.
 
 ### Playback & UI correctness (P1)
