@@ -104,6 +104,33 @@ final class DownloadQueueTests: StoreTestCase {
         XCTAssertFalse(downloadQueue.isDownloading)
     }
 
+    func testStartHaltsAndAlertsWhenLowOnDiskSpace_STUB07() {
+        // Stubs the free-space check and records the user-facing message
+        final class LowSpaceDownloadsManager: DownloadsManager {
+            var stubbedFreeSpace = 10 * 1024 * 1024 // below the 25MB floor
+            private(set) var noFreeSpaceMessageCount = 0
+            override var freeSpace: Int { stubbedFreeSpace }
+            override func showNoFreeSpaceMessage() { noFreeSpaceMessageCount += 1 }
+        }
+        let lowSpaceManager = LowSpaceDownloadsManager()
+        TestContainer.register { lowSpaceManager as DownloadsManager }
+        _ = makeQueuedSong(id: "1")
+
+        downloadQueue.start()
+
+        XCTAssertFalse(downloadQueue.isDownloading, "the queue must halt when low on space")
+        XCTAssertNil(downloadQueue.currentStreamHandler)
+        XCTAssertTrue(waitUntil { lowSpaceManager.noFreeSpaceMessageCount == 1 },
+                      "the user must be told the device is out of space")
+
+        // With space available again the same start call proceeds
+        lowSpaceManager.stubbedFreeSpace = 100 * 1024 * 1024
+        MockSubsonicServer.stub(.stream, data: Data(repeating: 1, count: 5000), contentType: "audio/mpeg")
+        downloadQueue.start()
+        XCTAssertTrue(downloadQueue.isDownloading)
+        XCTAssertEqual(lowSpaceManager.noFreeSpaceMessageCount, 1, "no repeat alert once space is available")
+    }
+
     // MARK: Downloading
 
     func testStartDownloadsAndMarksSongFinished() {

@@ -10,9 +10,9 @@ import Foundation
 import Resolver
 import CocoaLumberjackSwift
 
-// TODO: implement this
 // TODO: Refactor this and make sure it works correctly
-final class DownloadsManager {
+// NOTE: not final so tests can subclass to stub freeSpace and observe alerts
+class DownloadsManager {
     @LazyInjected private var settings: SavedSettings
     @LazyInjected private var store: Store
     @LazyInjected private var downloadQueue: DownloadQueueing
@@ -27,6 +27,13 @@ final class DownloadsManager {
     
     var totalSpace: Int { FileSystem.downloadsDirectory.systemTotalSpace ?? 0 }
     var freeSpace: Int { FileSystem.downloadsDirectory.systemAvailableSpace ?? 0 }
+
+    // Shown when the download queue halts because the device is out of space
+    func showNoFreeSpaceMessage() {
+        guard settings.isPopupsEnabled else { return }
+        let message = "Your device has run out of space and cannot download any more music. Please free some space and try again."
+        presentAlert(title: "Notice", message: message)
+    }
     var numberOfCachedSongs: Int { store.downloadedSongsCount() ?? 0 }
     
     func setup() {

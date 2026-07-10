@@ -52,12 +52,11 @@ final class DownloadQueue {
         
         // For simplicity sake, just make sure we never go under 25 MB and let the cache check process take care of the rest
         if downloadsManager.freeSpace <= 25 * 1024 * 1024 {
-            /*[EX2Dispatch runInMainThread:^
-             {
-                 [cacheS showNoFreeSpaceMessage:NSLocalizedString(@"Your device has run out of space and cannot download any more music. Please free some space and try again", @"Download manager, device out of space message")];
-             }];*/
-            
-            return;
+            DDLogWarn("[DownloadQueue] Halting download queue: less than 25MB of free space")
+            DispatchQueue.main.async {
+                self.downloadsManager.showNoFreeSpaceMessage()
+            }
+            return
         }
         
         // Check if this is a video
