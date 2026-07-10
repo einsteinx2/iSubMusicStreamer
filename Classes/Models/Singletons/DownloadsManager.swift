@@ -12,7 +12,6 @@ import CocoaLumberjackSwift
 
 // TODO: implement this
 // TODO: Refactor this and make sure it works correctly
-// TODO: Refactor this so everything happens in a background thread
 final class DownloadsManager {
     @LazyInjected private var settings: SavedSettings
     @LazyInjected private var store: Store
@@ -21,6 +20,10 @@ final class DownloadsManager {
     private var cacheCheckInterval = 60.0
     private var cacheCheckWorkItem: DispatchWorkItem?
     private(set) var cacheSize: Int = 0
+
+    // The periodic cache check walks the entire downloads directory and deletes files,
+    // so it runs on this background queue and only hops to the main thread for alerts
+    private let cacheCheckQueue = DispatchQueue(label: "com.isubapp.DownloadsManagerCacheCheckQueue", qos: .utility)
     
     var totalSpace: Int { FileSystem.downloadsDirectory.systemTotalSpace ?? 0 }
     var freeSpace: Int { FileSystem.downloadsDirectory.systemAvailableSpace ?? 0 }
@@ -50,7 +53,7 @@ final class DownloadsManager {
     func startCacheCheckTimer(interval: Double) {
         cacheCheckInterval = interval
         stopCacheCheckTimer()
-        checkCache()
+        checkCache(after: 0)
     }
     
     func stopCacheCheckTimer() {
@@ -73,20 +76,16 @@ final class DownloadsManager {
                 if cacheSize + freeSpace < settings.minFreeSpace {
                     // Looks like even removing all of the cache will not be enough so turn off caching
                     settings.isSongCachingEnabled = false
-                    
+
                     let message = "Free space is running low, but even deleting the entire cache will not bring the free space up higher than your minimum setting. Automatic song caching has been turned off.\n\nYou can re-enable it in the Settings menu (tap the gear, tap Settings at the top)"
-                    let alert = UIAlertController(title: "IMPORTANT", message: message, preferredStyle: .alert)
-                    alert.addOKAction()
-                    UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+                    presentAlert(title: "IMPORTANT", message: message)
                 } else {
                     // Remove the oldest cached songs until freeSpace > minFreeSpace or pop the free space low alert
                     if settings.isAutoDeleteCacheEnabled {
                         removeOldestCachedSongs()
                     } else {
                         let message = "Free space is running low. Delete some cached songs or lower the minimum free space setting."
-                        let alert = UIAlertController(title: "Notice", message: message, preferredStyle: .alert)
-                        alert.addOKAction()
-                        UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+                        presentAlert(title: "Notice", message: message)
                     }
                 }
             }
@@ -98,22 +97,28 @@ final class DownloadsManager {
                 } else {
                     settings.isSongCachingEnabled = false
                     let message = "The song cache is full. Automatic song caching has been disabled.\n\nYou can re-enable it in the Settings menu (tap the gear on the Home tab, tap Settings at the top)"
-                    let alert = UIAlertController(title: "Notice", message: message, preferredStyle: .alert)
-                    alert.addOKAction()
-                    UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+                    presentAlert(title: "Notice", message: message)
                 }
             }
         }
-        
+
         checkCache(after: cacheCheckInterval)
     }
-    
+
     private func checkCache(after delay: Double) {
         let cacheCheckWorkItem = DispatchWorkItem { [weak self] in
             self?.checkCache()
         }
         self.cacheCheckWorkItem = cacheCheckWorkItem
-        DispatchQueue.main.async(after: delay, execute: cacheCheckWorkItem)
+        cacheCheckQueue.async(after: delay, execute: cacheCheckWorkItem)
+    }
+
+    private func presentAlert(title: String, message: String) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addOKAction()
+            UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+        }
     }
     
     private func adjustCacheSize() {
@@ -130,39 +135,46 @@ final class DownloadsManager {
     }
     
     // TODO: Refactor this to improve the logic
-    private func removeOldestCachedSongs() {
+    func removeOldestCachedSongs() {
         if settings.cachingType == CachingType.minSpace.rawValue {
             // Remove the oldest songs based on either oldest played or oldest cached until free space is more than minFreeSpace
             while freeSpace < settings.minFreeSpace {
-                if let downloadedSong = settings.autoDeleteCacheType == 0 ? store.oldestDownloadedSongByPlayedDate() : store.oldestDownloadedSongByDownloadedDate() {
-                    DDLogInfo("[DownloadsManager] removeOldestCachedSongs: min space removing \(downloadedSong)")
-                    if !store.delete(downloadedSong: downloadedSong) {
-                        DDLogError("[DownloadsManager] removeOldestCachedSongs: Failed to delete \(downloadedSong), so bailing")
-                        break
-                    }
+                guard let downloadedSong = settings.autoDeleteCacheType == 0 ? store.oldestDownloadedSongByPlayedDate() : store.oldestDownloadedSongByDownloadedDate() else {
+                    DDLogWarn("[DownloadsManager] removeOldestCachedSongs: No more songs can be deleted, so bailing")
+                    break
+                }
+                DDLogInfo("[DownloadsManager] removeOldestCachedSongs: min space removing \(downloadedSong)")
+                if !store.delete(downloadedSong: downloadedSong) {
+                    DDLogError("[DownloadsManager] removeOldestCachedSongs: Failed to delete \(downloadedSong), so bailing")
+                    break
                 }
             }
         } else if settings.cachingType == CachingType.maxSize.rawValue {
             // Remove the oldest songs based on either oldest played or oldest cached until cache size is less than maxCacheSize
             var size = cacheSize
             while size > settings.maxCacheSize {
-                if let downloadedSong = settings.autoDeleteCacheType == 0 ? store.oldestDownloadedSongByPlayedDate() : store.oldestDownloadedSongByDownloadedDate(), let song = store.song(downloadedSong: downloadedSong) {
-                    if let songSize = URL(fileURLWithPath: song.localPath).fileSize {
-                        if store.delete(downloadedSong: downloadedSong) {
-                            size -= songSize
-                        } else {
-                            DDLogError("[DownloadsManager] removeOldestCachedSongs: Failed to delete \(downloadedSong), so bailing")
-                            break
-                        }
-                    } else {
-                        DDLogError("[DownloadsManager] removeOldestCachedSongs: Failed to get file size of \(downloadedSong), so bailing")
-                        break
-                    }
+                guard let downloadedSong = settings.autoDeleteCacheType == 0 ? store.oldestDownloadedSongByPlayedDate() : store.oldestDownloadedSongByDownloadedDate() else {
+                    DDLogWarn("[DownloadsManager] removeOldestCachedSongs: No more songs can be deleted, so bailing")
+                    break
+                }
+                guard let song = store.song(downloadedSong: downloadedSong) else {
+                    DDLogError("[DownloadsManager] removeOldestCachedSongs: Failed to find the song for \(downloadedSong), so bailing")
+                    break
+                }
+                guard let songSize = URL(fileURLWithPath: song.localPath).fileSize else {
+                    DDLogError("[DownloadsManager] removeOldestCachedSongs: Failed to get file size of \(downloadedSong), so bailing")
+                    break
+                }
+                if store.delete(downloadedSong: downloadedSong) {
+                    size -= songSize
+                } else {
+                    DDLogError("[DownloadsManager] removeOldestCachedSongs: Failed to delete \(downloadedSong), so bailing")
+                    break
                 }
             }
-            
+
             findCacheSize()
-            
+
             if !downloadQueue.isDownloading {
                 downloadQueue.start()
             }
