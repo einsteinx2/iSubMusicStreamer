@@ -382,7 +382,7 @@ final class SavedSettings {
     // MARK: Document Folder Paths
     
     func createDirectoryIfNotExists(path: String) {
-        if FileManager.default.fileExists(atPath:path) {
+        if !FileManager.default.fileExists(atPath: path) {
             do {
                 try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true)
             } catch {

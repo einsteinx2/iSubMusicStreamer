@@ -10,8 +10,8 @@ import XCTest
 @testable import iSub_Beta
 
 // COV-09: SavedSettings behavior — bitrate mapping, wrapper semantics, per-server
-// keys, current-server bookkeeping, isRecover derivation, and the inverted
-// createDirectoryIfNotExists guard (BUG-26, gated with XCTExpectFailure).
+// keys, current-server bookkeeping, isRecover derivation, and the
+// createDirectoryIfNotExists guard (BUG-26).
 final class SavedSettingsBehaviorTests: StoreTestCase {
     private var settings: SavedSettings!
     private var player: FakePlayer!
@@ -219,9 +219,7 @@ final class SavedSettingsBehaviorTests: StoreTestCase {
 
         settings.createDirectoryIfNotExists(path: path)
 
-        XCTExpectFailure("BUG-26: createDirectoryIfNotExists has an inverted guard and never creates missing directories; remove this marker when fixing the bug") {
-            XCTAssertTrue(FileManager.default.fileExists(atPath: path), "the missing directory must be created")
-        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: path), "the missing directory must be created")
     }
 
     func testCreateDirectoryIfNotExistsLeavesExistingDirectoryAlone() throws {
