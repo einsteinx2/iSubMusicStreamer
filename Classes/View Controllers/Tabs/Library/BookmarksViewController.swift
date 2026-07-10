@@ -83,7 +83,24 @@ final class BookmarksViewController: CustomUITableViewController {
         tableView.setEditing(editing, animated: animated)
         saveEditHeader.setEditing(editing, animated: animated)
     }
-    
+
+    private func deleteBookmarks(indexPaths: [IndexPath]) {
+        let bookmarksToDelete = indexPaths.compactMap { $0.row < bookmarks.count ? bookmarks[$0.row] : nil }
+        guard bookmarksToDelete.count > 0 else { return }
+
+        HUD.show(message: "Deleting")
+        DispatchQueue.userInitiated.async {
+            for bookmark in bookmarksToDelete {
+                // Also deletes the bookmark's snapshot local playlist
+                self.store.delete(bookmark: bookmark)
+            }
+            DispatchQueue.main.async {
+                HUD.hide()
+                self.reloadData()
+            }
+        }
+    }
+
     override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
         guard indexPath.row < bookmarks.count else { return nil }
         return store.song(bookmark: bookmarks[indexPath.row])
@@ -95,17 +112,19 @@ extension BookmarksViewController: SaveEditHeaderDelegate {
         setEditing(!isEditing, animated: true)
     }
     
-    // TODO: implement this
     func saveEditHeaderSaveDeleteAction(_ saveEditHeader: SaveEditHeader) {
-//        if saveEditHeader.isEditing {
-//            HUD.show(message: "Deleting")
-//            DispatchQueue.userInitiated.async {
-//                defer { HUD.hide() }
-//                if let indexPathsForSelectedRows = self.tableView.indexPathsForSelectedRows {
-//                    self.deleteLocalPlaylists(indexPaths: indexPathsForSelectedRows)
-//                }
-//            }
-//        }
+        guard saveEditHeader.isEditing else { return }
+
+        if let indexPathsForSelectedRows = tableView.indexPathsForSelectedRows, indexPathsForSelectedRows.count > 0 {
+            deleteBookmarks(indexPaths: indexPathsForSelectedRows)
+        } else {
+            // Nothing selected, so select all the rows for the clear-all flow
+            // (mirrors the Play Queue tab)
+            for i in 0..<bookmarks.count {
+                tableView.selectRow(at: IndexPath(row: i, section: 0), animated: false, scrollPosition: .none)
+            }
+            saveEditHeader.selectedCount = bookmarks.count
+        }
     }
 }
 

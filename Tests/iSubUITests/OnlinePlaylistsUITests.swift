@@ -266,11 +266,15 @@ final class OnlinePlaylistsUITests: XCTestCase {
         XCTAssertTrue(app.cells.firstMatch.waitForExistence(timeout: 15), "bookmark did not appear")
 
         app.buttons[AccessibilityId.saveEditHeaderEdit].tap()
+        // First tap with nothing selected selects all; second tap deletes
+        app.buttons[AccessibilityId.saveEditHeaderSaveDelete].tap()
+        XCTAssertTrue(headerLabel(app, containing: "Remove 1 bookmark").waitForExistence(timeout: 10),
+                      "clear-all did not select the bookmark")
         app.buttons[AccessibilityId.saveEditHeaderSaveDelete].tap()
 
-        XCTExpectFailure("STUB: bookmarks clear-all/delete header action not implemented yet", strict: false) {
-            XCTAssertTrue(waitUntil(timeout: 10) { app.cells.count == 0 },
-                          "clear-all did not delete the bookmarks")
-        }
+        // The edit header disappears once no bookmarks remain (deleted rows can
+        // linger invisibly in the table's reuse pool, so don't assert on cell counts)
+        XCTAssertTrue(waitUntil(timeout: 10) { !app.buttons[AccessibilityId.saveEditHeaderEdit].exists },
+                      "clear-all did not delete the bookmarks")
     }
 }
