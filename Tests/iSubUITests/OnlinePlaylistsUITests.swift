@@ -222,10 +222,34 @@ final class OnlinePlaylistsUITests: XCTestCase {
         }
         app.swipeAction("Delete", onCellContaining: "iSub Test Playlist")
 
-        XCTExpectFailure("STUB: server playlist deletion not implemented yet", strict: false) {
-            XCTAssertTrue(waitUntil(timeout: 10) { !app.cells.staticTexts["iSub Test Playlist"].exists },
-                          "server playlist was not deleted")
-        }
+        // Deleted rows can linger invisibly in the table's reuse pool, so assert on hittability
+        XCTAssertTrue(waitUntil(timeout: 10) { !app.cells.staticTexts["iSub Test Playlist"].firstMatch.isHittable },
+                      "server playlist was not deleted")
+    }
+
+    func testServerPlaylistsSelectAllDelete() {
+        let app = ISubApp.launch(mockServer: true)
+        app.waitForTabBar()
+        app.openTab(AccessibilityId.tabPlaylists)
+
+        // The fixture server has one playlist
+        app.buttons["Server"].firstMatch.tap()
+        XCTAssertTrue(app.cells.staticTexts["iSub Test Playlist"].waitForExistence(timeout: 15),
+                      "fixture server playlist did not load")
+
+        // Tapping delete with nothing selected selects all rows; tapping again deletes them
+        app.buttons[AccessibilityId.saveEditHeaderEdit].tap()
+        app.buttons[AccessibilityId.saveEditHeaderSaveDelete].tap()
+        XCTAssertTrue(headerLabel(app, containing: "Remove 1 playlist").waitForExistence(timeout: 10),
+                      "select-all did not select the playlist")
+        app.buttons[AccessibilityId.saveEditHeaderSaveDelete].tap()
+
+        // Deleted rows can linger invisibly in the table's reuse pool, so assert on
+        // hittability (and the edit header disappearing) rather than existence
+        XCTAssertTrue(waitUntil(timeout: 10) { !app.cells.staticTexts["iSub Test Playlist"].firstMatch.isHittable },
+                      "select-all delete did not remove the playlist")
+        XCTAssertTrue(waitUntil(timeout: 10) { !app.buttons[AccessibilityId.saveEditHeaderEdit].exists },
+                      "the edit header should disappear once no playlists remain")
     }
 
     func testBookmarksClearAll() {

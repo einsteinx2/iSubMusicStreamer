@@ -154,6 +154,7 @@ enum UITestFixtures {
         case "getPlaylists": return "getPlaylists.xml"
         case "getPlaylist": return "getPlaylist.xml"
         case "createPlaylist": return "ping_success.xml"
+        case "deletePlaylist": return "ping_success.xml"
         case "getNowPlaying": return "getNowPlaying.xml"
         case "getChatMessages": return "getChatMessages.xml"
         case "addChatMessage": return "ping_success.xml"

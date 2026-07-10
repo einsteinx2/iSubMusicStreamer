@@ -568,6 +568,7 @@
 		5E71971E2CBA50993869DD3C /* SingletonLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AD837C7CFF79AD56059ADC /* SingletonLifecycleTests.swift */; };
 		60AA2CAE35F3D6877EBA347B /* MockSubsonicServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4390AAE776F0A5012F0276A /* MockSubsonicServer.swift */; };
 		642325DA58624CA59F28AA64 /* StoreTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95792952EED3FA395BC7CAAD /* StoreTestCase.swift */; };
+		6484077091D8B41C80B87E3E /* AsyncServerPlaylistDeleteLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA810434E3A5697ECC554DB /* AsyncServerPlaylistDeleteLoader.swift */; };
 		686768481F889F38E3A1A6A3 /* StreamHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17D1E4D2250282AFC6FA22B /* StreamHandlerTests.swift */; };
 		7D749B0A836D0F7FA0D2C516 /* MockSubsonicHTTPServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107883296110C0B5DAFE1ED3 /* MockSubsonicHTTPServerTests.swift */; };
 		7FE73704060C605A8F25FA37 /* MockSubsonicHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C4D36A62D67D18EB15667 /* MockSubsonicHTTPServer.swift */; };
@@ -610,6 +611,7 @@
 		E7EE2C8BF5BCDF25C8874245 /* DownloadQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127AE74E565AF0419A35BBF /* DownloadQueueTests.swift */; };
 		E93CD07F23B2AB7578C88AB9 /* UtilityAndMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED06E8E2E37FA60609C8E314 /* UtilityAndMathTests.swift */; };
 		EB69E9A47A5365E25F080197 /* OnlineLibraryUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE663B3B7063EC49BED6F71 /* OnlineLibraryUITests.swift */; };
+		EF0A46F09017CACDDDAB4F92 /* AsyncServerPlaylistDeleteLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FA810434E3A5697ECC554DB /* AsyncServerPlaylistDeleteLoader.swift */; };
 		F7689541ED6B27A6377B97DC /* URLRequestSubsonicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC49FC4E61A56434F2523497 /* URLRequestSubsonicTests.swift */; };
 		FBA836D6E636F76BE5EB5927 /* OnlineDownloadsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CBFB3971DECACFA4EFBA01 /* OnlineDownloadsUITests.swift */; };
 /* End PBXBuildFile section */
@@ -673,6 +675,7 @@
 /* Begin PBXFileReference section */
 		0AF060FF00FF3A19A5CF6461 /* ProtocolSeamTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProtocolSeamTests.swift; sourceTree = "<group>"; };
 		0EE663B3B7063EC49BED6F71 /* OnlineLibraryUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnlineLibraryUITests.swift; sourceTree = "<group>"; };
+		0FA810434E3A5697ECC554DB /* AsyncServerPlaylistDeleteLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AsyncServerPlaylistDeleteLoader.swift; sourceTree = "<group>"; };
 		107883296110C0B5DAFE1ED3 /* MockSubsonicHTTPServerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockSubsonicHTTPServerTests.swift; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* iSub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iSub.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1550,6 +1553,7 @@
 				539C05682DF08C69007C3ACE /* AsyncNowPlayingLoader.swift */,
 				539C056B2DF09655007C3ACE /* AsyncScrobbleLoader.swift */,
 				E91C039E02F3671471BA6DE3 /* AsyncServerPlaylistCreateLoader.swift */,
+				0FA810434E3A5697ECC554DB /* AsyncServerPlaylistDeleteLoader.swift */,
 			);
 			path = "Async Loaders";
 			sourceTree = "<group>";
@@ -2306,6 +2310,7 @@
 				4D0EB1DB58BC96F52F53E501 /* MockSubsonicHTTPServer.swift in Sources */,
 				8A60AC96FCA32C785B992ABE /* AsyncServerPlaylistCreateLoader.swift in Sources */,
 				2447E93AC41822345FCF383B /* SavePlaylistFlow.swift in Sources */,
+				EF0A46F09017CACDDDAB4F92 /* AsyncServerPlaylistDeleteLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2555,6 +2560,7 @@
 				7FE73704060C605A8F25FA37 /* MockSubsonicHTTPServer.swift in Sources */,
 				B2223E176EE1545DC20089C1 /* AsyncServerPlaylistCreateLoader.swift in Sources */,
 				887A9DB628772263787EA851 /* SavePlaylistFlow.swift in Sources */,
+				6484077091D8B41C80B87E3E /* AsyncServerPlaylistDeleteLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

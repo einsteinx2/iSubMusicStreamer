@@ -22,6 +22,7 @@ final class ServerPlaylistsViewController: CustomUITableViewController {
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "playlist", pluralizeClearType: false, isLargeCount: true)
     
     private var loaderTask: Task<Void, Never>?
+    private var deleteTask: Task<Void, Never>?
     private var serverPlaylists = [ServerPlaylist]()
     
     override func viewDidLoad() {
@@ -40,9 +41,7 @@ final class ServerPlaylistsViewController: CustomUITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reloadData()
-        if serverPlaylists.count > 0 {
-            addSaveEditHeader()
-        } else {
+        if serverPlaylists.count == 0 {
             loadServerPlaylists()
         }
         analytics.log(event: .serverPlaylistsTab)
@@ -84,8 +83,13 @@ final class ServerPlaylistsViewController: CustomUITableViewController {
     private func reloadData() {
         tableView.refreshControl = nil
         setEditing(false, animated: false)
-        removeSaveEditHeader()
         serverPlaylists = store.serverPlaylists(serverId: serverId)
+        if serverPlaylists.count > 0 {
+            addSaveEditHeader()
+            saveEditHeader.count = serverPlaylists.count
+        } else {
+            removeSaveEditHeader()
+        }
         tableView.reloadData()
         tableView.refreshControl = RefreshControl { [unowned self] in
             loadServerPlaylists()
@@ -99,24 +103,31 @@ final class ServerPlaylistsViewController: CustomUITableViewController {
     }
     
     private func deleteServerPlaylists(indexPaths: [IndexPath]) {
-        // TODO: implement this
-    //    self.tableView.scrollEnabled = NO;
-    //    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
-    //
-    //    for (NSNumber *index in rowIndexes) {
-    //        NSString *playlistId = [[self.serverPlaylistsDataModel.serverPlaylists objectAtIndexSafe:[index intValue]] playlistId];
-    //        NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"deletePlaylist" parameters:@{@"id": n2N(playlistId)}];
-    //        NSURLSessionDataTask *dataTask = [self.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-    //            if (error) {
-    //                // TODO: Handle error
-    //            }
-    //            [EX2Dispatch runInMainThreadAsync:^{
-    //                [HUD hide];
-    //                [self reloadData];
-    //            }];
-    //        }];
-    //        [dataTask resume];
-    //    }
+        let playlistsToDelete = indexPaths.compactMap { $0.row < serverPlaylists.count ? serverPlaylists[$0.row] : nil }
+        guard playlistsToDelete.count > 0 else { return }
+
+        deleteTask?.cancel()
+        deleteTask = Task {
+            defer {
+                HUD.hide()
+                reloadData()
+            }
+            do {
+                HUD.show(message: "Deleting", closeHandler: cancelLoad)
+                for serverPlaylist in playlistsToDelete {
+                    try await AsyncServerPlaylistDeleteLoader(serverPlaylist: serverPlaylist).load()
+                    // Only remove the local copy once the server confirms the deletion
+                    _ = store.delete(serverPlaylist: serverPlaylist)
+                }
+            } catch {
+                if settings.isPopupsEnabled && !error.isCanceled {
+                    let message = "There was an error deleting the playlist.\n\nError: \(error)"
+                    let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+                    alert.addOKAction()
+                    present(alert, animated: true, completion: nil)
+                }
+            }
+        }
     }
     
     private func loadServerPlaylists() {
@@ -141,6 +152,8 @@ final class ServerPlaylistsViewController: CustomUITableViewController {
         HUD.hide()
         loaderTask?.cancel()
         loaderTask = nil
+        deleteTask?.cancel()
+        deleteTask = nil
     }
     
     override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
@@ -155,8 +168,16 @@ extension ServerPlaylistsViewController: SaveEditHeaderDelegate {
     }
     
     func saveEditHeaderSaveDeleteAction(_ saveEditHeader: SaveEditHeader) {
-        if let indexPathsForSelectedRows = tableView.indexPathsForSelectedRows {
+        guard saveEditHeader.isEditing else { return }
+
+        if let indexPathsForSelectedRows = tableView.indexPathsForSelectedRows, indexPathsForSelectedRows.count > 0 {
             deleteServerPlaylists(indexPaths: indexPathsForSelectedRows)
+        } else {
+            // Nothing selected, so select all the rows (mirrors the Play Queue tab)
+            for i in 0..<serverPlaylists.count {
+                tableView.selectRow(at: IndexPath(row: i, section: 0), animated: false, scrollPosition: .none)
+            }
+            saveEditHeader.selectedCount = serverPlaylists.count
         }
     }
 }

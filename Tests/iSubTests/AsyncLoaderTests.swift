@@ -99,6 +99,29 @@ final class AsyncLoaderTests: LoaderTestCase {
         }
     }
 
+    // MARK: AsyncServerPlaylistDeleteLoader
+
+    func testServerPlaylistDeleteLoaderSendsId() async throws {
+        stubEmptyOk(.deletePlaylist)
+
+        try await AsyncServerPlaylistDeleteLoader(serverId: serverId, serverPlaylistId: 17).load()
+
+        let received = try XCTUnwrap(MockSubsonicServer.receivedRequests(action: .deletePlaylist).first)
+        XCTAssertEqual(received.parameter("id"), "17")
+    }
+
+    func testServerPlaylistDeleteLoaderSubsonicErrorThrows() async throws {
+        // e.g. code 70 "Playlist not found"
+        try MockSubsonicServer.stub(.deletePlaylist, fixture: "XML/error_data_not_found.xml")
+
+        do {
+            try await AsyncServerPlaylistDeleteLoader(serverId: serverId, serverPlaylistId: 9999).load()
+            XCTFail("expected SubsonicError")
+        } catch is SubsonicError {
+            // expected
+        }
+    }
+
     // MARK: AsyncCoverArtLoader
 
     private func makePNGData() -> Data {
