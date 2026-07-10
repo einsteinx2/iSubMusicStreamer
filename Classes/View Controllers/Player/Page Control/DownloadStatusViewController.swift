@@ -97,7 +97,7 @@ final class DownloadStatusViewController: UIViewController {
         infoTitleStackView.axis = .vertical
         infoTitleStackView.distribution = .equalSpacing
         infoTitleStackView.spacing = 3
-        let downloadSizeTitle = settings.cachingType == CachingType.minSpace.rawValue ? "Min Free Space:" : "Max Download Space:"
+        let downloadSizeTitle = Self.downloadSizeStat(cachingType: settings.cachingType, minFreeSpace: settings.minFreeSpace, maxCacheSize: settings.maxCacheSize).title
         infoTitleStackView.addArrangedSubviews([makeInfoLabel(text: "Songs Downloaded:"),
                                                 makeInfoLabel(text: "Download Space Used:"),
                                                 makeInfoLabel(text: downloadSizeTitle),
@@ -145,6 +145,17 @@ final class DownloadStatusViewController: UIViewController {
         nextSong = playQueue.nextSong
     }
     
+    // The title/value pairing for the third stats row (internal, not private, for test
+    // access): min-space caching shows the reserved free space, max-size caching shows
+    // the configured maximum download size
+    static func downloadSizeStat(cachingType: Int, minFreeSpace: Int, maxCacheSize: Int) -> (title: String, value: String) {
+        if cachingType == CachingType.minSpace.rawValue {
+            return ("Min Free Space:", formatFileSize(bytes: minFreeSpace))
+        } else {
+            return ("Max Download Space:", formatFileSize(bytes: maxCacheSize))
+        }
+    }
+
     @objc private func startUpdatingStats() {
         stopUpdatingStats()
         
@@ -174,11 +185,7 @@ final class DownloadStatusViewController: UIViewController {
         let numCachedSongs = downloadsManager.numberOfCachedSongs
         songsDownloadedLabel.text = numCachedSongs == 1 ? "1 song" : "\(numCachedSongs) songs"
         downloadSpaceUsedLabel.text = formatFileSize(bytes: downloadsManager.cacheSize)
-        if settings.cachingType == CachingType.minSpace.rawValue {
-            downloadSizeLabel.text = formatFileSize(bytes: settings.minFreeSpace)
-        } else {
-            downloadSizeLabel.text = formatFileSize(bytes: settings.minFreeSpace)
-        }
+        downloadSizeLabel.text = Self.downloadSizeStat(cachingType: settings.cachingType, minFreeSpace: settings.minFreeSpace, maxCacheSize: settings.maxCacheSize).value
         freeSpaceLabel.text = formatFileSize(bytes: downloadsManager.freeSpace)
         
         perform(#selector(startUpdatingStats), with: nil, afterDelay: 1.0)

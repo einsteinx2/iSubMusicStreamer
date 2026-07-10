@@ -163,6 +163,28 @@ final class HomeAlbumPagingTests: LoaderTestCase {
         XCTAssertEqual(MockSubsonicServer.receivedRequests(action: .getAlbumList).count, 1, "an empty page stops further loads")
         XCTAssertEqual(controller.folderAlbums.count, 20)
     }
+
+}
+
+// MARK: - Download status stats (BUG-29)
+
+final class DownloadStatusStatTests: XCTestCase {
+    func testMinSpaceCachingShowsMinFreeSpace() {
+        let stat = DownloadStatusViewController.downloadSizeStat(cachingType: CachingType.minSpace.rawValue,
+                                                                 minFreeSpace: 256 * 1024 * 1024,
+                                                                 maxCacheSize: 1024 * 1024 * 1024)
+        XCTAssertEqual(stat.title, "Min Free Space:")
+        XCTAssertEqual(stat.value, formatFileSize(bytes: 256 * 1024 * 1024))
+    }
+
+    func testMaxSizeCachingShowsMaxDownloadSize_BUG29() {
+        // The maxSize branch used to display minFreeSpace
+        let stat = DownloadStatusViewController.downloadSizeStat(cachingType: CachingType.maxSize.rawValue,
+                                                                 minFreeSpace: 256 * 1024 * 1024,
+                                                                 maxCacheSize: 1024 * 1024 * 1024)
+        XCTAssertEqual(stat.title, "Max Download Space:")
+        XCTAssertEqual(stat.value, formatFileSize(bytes: 1024 * 1024 * 1024))
+    }
 }
 
 // MARK: - ArtistsViewModel
