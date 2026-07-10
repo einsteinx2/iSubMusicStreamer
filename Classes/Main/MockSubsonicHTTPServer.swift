@@ -17,6 +17,10 @@ import CocoaLumberjackSwift
 // Endpoints:
 //   /rest/stream.view (GET/POST) — serves fixture audio bytes with Range support:
 //       song id 9001 -> tone.flac (exercises BASS plugin loading), others -> test_song.mp3
+//   /rest/hls.m3u8               — serves a two-segment HLS playlist (segments relative
+//                                  to the request URL) echoing the requested id/bitRate
+//                                  in a comment line so tests can assert them
+//   /rest/*.ts                   — serves deterministic dummy segment bytes
 //   /rest/<action>.view          — serves the fixture XML mapped by UITestFixtures
 //                                  (honoring the -FIXTURES response set)
 final class MockSubsonicHTTPServer {
@@ -90,12 +94,52 @@ final class MockSubsonicHTTPServer {
             return response
         }
 
+        // HLS video path (E2E-06): the app requests /rest/hls.m3u8, AVPlayer (or the
+        // HLSReverseProxyServer in integration tests) then fetches the segment lines
+        if action == "hls" {
+            return GCDWebServerDataResponse(data: Self.hlsPlaylist(parameters: parameters),
+                                            contentType: "application/x-mpegurl")
+        }
+        if request.url.pathExtension == "ts" {
+            return GCDWebServerDataResponse(data: Self.hlsSegmentData, contentType: "video/mp2t")
+        }
+
         guard let xmlURL = UITestFixtures.xmlURL(action: action, parameters: parameters),
               let body = try? Data(contentsOf: xmlURL) else {
             return GCDWebServerResponse(statusCode: 404)
         }
         return GCDWebServerDataResponse(data: body, contentType: "text/xml; charset=utf-8")
     }
+
+    // Two segments relative to the playlist URL plus a URI attribute line, covering
+    // both rewrite paths in HLSReverseProxyServer. The comment line echoes the request
+    // parameters so tests can assert the Subsonic query reached the origin.
+    static func hlsPlaylist(parameters: [String: String]) -> Data {
+        let playlist = """
+        #EXTM3U
+        #EXT-X-VERSION:3
+        #EXT-X-TARGETDURATION:10
+        #EXT-X-MEDIA-SEQUENCE:0
+        # requested id=\(parameters["id"] ?? "") bitRate=\(parameters["bitRate"] ?? "")
+        #EXT-X-MAP:URI="init.ts"
+        #EXTINF:10,
+        seg0.ts
+        #EXTINF:10,
+        seg1.ts
+        #EXT-X-ENDLIST
+        """
+        return Data(playlist.utf8)
+    }
+
+    // Deterministic filler with TS sync bytes every 188 bytes — not decodable video,
+    // just stable bytes tests can compare against
+    static let hlsSegmentData: Data = {
+        var data = Data(count: 4096)
+        for index in stride(from: 0, to: data.count, by: 188) {
+            data[index] = 0x47
+        }
+        return data
+    }()
 
     // Streams the data in small chunks with a delay between each, keeping the transfer
     // alive long enough for a test to act on it. Honors "bytes=N-" ranges so a

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
+   <directory id="210" name="Video" playCount="0">
+      <child id="9101" parent="210" isDir="false" title="Test Video" album="Videos" artist="Video" size="5000000" contentType="video/mp4" suffix="mp4" duration="60" bitRate="1000" path="Video/test_video.mp4" isVideo="true" created="2026-07-09T00:00:00.000Z" type="video"/>
+      <child id="9102" parent="210" isDir="false" title="Video Folder Song" album="Videos" artist="Video" track="1" size="584000" contentType="audio/mpeg" suffix="mp3" duration="144" bitRate="32" path="Video/audio_extra.mp3" isVideo="false" created="2026-07-09T00:00:00.000Z" type="music"/>
+   </directory>
+</subsonic-response>

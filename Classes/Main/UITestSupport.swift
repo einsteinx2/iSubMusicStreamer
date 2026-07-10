@@ -139,6 +139,9 @@ enum UITestFixtures {
             // The album's disc folders (242/232) resolve to a songs-only directory so
             // recursive loaders (play all/shuffle/download folder) terminate
             case "900", "242", "232": return "getMusicDirectory_formats.xml"
+            // The "Video" folder artist (210 in getIndexes) contains an isVideo entry
+            // for the video-path E2E flows
+            case "210": return "getMusicDirectory_videos.xml"
             default: return "getMusicDirectory_artist.xml"
             }
         case "getArtists": return "getArtists.xml"

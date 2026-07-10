@@ -115,7 +115,8 @@ The manual QA script `Testing/Integration Tests.txt` (Online / Offline / Jukebox
 - [x] **[E2E-05] P3 — iPad split-view / menu suite.**
   > **Prompt:** Add an iPad-destination XCUITest suite for PadRootViewController/PadMenuViewController: selecting each menu item swaps the detail controller, drill-down and the custom back button work, offline mode shows correct content, and the player opens. Wire into the test scheme on an iPad simulator destination.
 
-- [ ] **[E2E-06] P3 — Video (HLS) playback coverage.**
+- [x] **[E2E-06] P3 — Video (HLS) playback coverage.**
+  > **Note (found while writing this suite):** video rows are NOT excluded from the swipe-to-cache/queue actions — `SwipeAction.downloadAndQueueConfig` ignores `isVideo`/`isDownloadable`, so videos still offer Download/Queue (documented in-test with a non-strict `XCTExpectFailure`).
   > **Prompt:** Add coverage for the video path: integration tests for HLSReverseProxyServer URL/origin rewriting and VideoPlayer bitrate/audio-session setup against a stubbed HLS endpoint, plus an XCUITest that tapping an isVideo song presents the video player and that video rows are excluded from swipe-to-cache/queue.
 
 *(The upgrade-migration E2E test lives with the migration work: see MIG-12.)*

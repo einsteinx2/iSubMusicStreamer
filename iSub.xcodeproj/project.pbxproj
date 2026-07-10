@@ -574,6 +574,8 @@
 		87F10C2E5B14A20FFD01E2A1 /* OfflineUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F10C2D5B14A20FFD01E2A0 /* OfflineUITests.swift */; };
 		87F10C305B14A20FFD01E2A3 /* JukeboxUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F10C2F5B14A20FFD01E2A2 /* JukeboxUITests.swift */; };
 		87F10C325B14A20FFD01E2A5 /* PadUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F10C315B14A20FFD01E2A4 /* PadUITests.swift */; };
+		87F10C345B14A20FFD01E2A7 /* HLSVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F10C335B14A20FFD01E2A6 /* HLSVideoTests.swift */; };
+		87F10C365B14A20FFD01E2A9 /* VideoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F10C355B14A20FFD01E2A8 /* VideoUITests.swift */; };
 		90E4AB434A5EDC0499B161DB /* XMLTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC57920E6BF56A9171B2A58 /* XMLTestHelpers.swift */; };
 		911362DD0A88C68C698503DD /* FirstRunUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4F02DA428CAB1AC965D91B /* FirstRunUITests.swift */; };
 		A718D72417E325AA8B3F717E /* Fakes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C72C3647A62E9A226040F40 /* Fakes.swift */; };
@@ -983,6 +985,8 @@
 		87F10C2D5B14A20FFD01E2A0 /* OfflineUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OfflineUITests.swift; sourceTree = "<group>"; };
 		87F10C2F5B14A20FFD01E2A2 /* JukeboxUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JukeboxUITests.swift; sourceTree = "<group>"; };
 		87F10C315B14A20FFD01E2A4 /* PadUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PadUITests.swift; sourceTree = "<group>"; };
+		87F10C335B14A20FFD01E2A6 /* HLSVideoTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HLSVideoTests.swift; sourceTree = "<group>"; };
+		87F10C355B14A20FFD01E2A8 /* VideoUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VideoUITests.swift; sourceTree = "<group>"; };
 		ADDF0049FFA91CF95DE6383E /* TestSandbox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TestSandbox.swift; sourceTree = "<group>"; };
 		AFEE5B5BB2E3EAB053528E1D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B17D1E4D2250282AFC6FA22B /* StreamHandlerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StreamHandlerTests.swift; sourceTree = "<group>"; };
@@ -1770,6 +1774,7 @@
 			children = (
 				9F25A5A31344A86398B632CB /* Support */,
 				9D1B1B918E7A9946A1BBB376 /* HarnessSmokeTests.swift */,
+				87F10C335B14A20FFD01E2A6 /* HLSVideoTests.swift */,
 				2FBCCCBAB13100C9FC48F5FF /* Fixtures */,
 				76DF4EDBD3D42BF1682E9544 /* StoreTests.swift */,
 				74E1AC9E9A2EAEA92AC9F545 /* AsyncStatusLoaderTests.swift */,
@@ -1831,6 +1836,7 @@
 				87F10C2D5B14A20FFD01E2A0 /* OfflineUITests.swift */,
 				87F10C2F5B14A20FFD01E2A2 /* JukeboxUITests.swift */,
 				87F10C315B14A20FFD01E2A4 /* PadUITests.swift */,
+				87F10C355B14A20FFD01E2A8 /* VideoUITests.swift */,
 				236DA89C1BD95ECEBB554207 /* Support */,
 			);
 			name = iSubUITests;
@@ -2307,6 +2313,7 @@
 				87F10C2E5B14A20FFD01E2A1 /* OfflineUITests.swift in Sources */,
 				87F10C305B14A20FFD01E2A3 /* JukeboxUITests.swift in Sources */,
 				87F10C325B14A20FFD01E2A5 /* PadUITests.swift in Sources */,
+				87F10C365B14A20FFD01E2A9 /* VideoUITests.swift in Sources */,
 				D7FA46FF2B7A202F14E0231C /* UITestHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2541,6 +2548,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				32F1F8D23D398924F0D386DC /* HarnessSmokeTests.swift in Sources */,
+				87F10C345B14A20FFD01E2A7 /* HLSVideoTests.swift in Sources */,
 				05B080C3023B626285EE207F /* TestSandbox.swift in Sources */,
 				D21C85E514DE08A422EDB4E0 /* TestContainer.swift in Sources */,
 				072454D81B55A9E9AC966876 /* Fixtures.swift in Sources */,

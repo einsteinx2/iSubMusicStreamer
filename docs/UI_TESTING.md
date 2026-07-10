@@ -66,6 +66,11 @@ settings options toggles. Add new identifiers to that file as tests need them.
     -destination 'platform=iOS Simulator,name=iPad Pro 11-inch (M5)' \
     -only-testing:iSubUITests/PadUITests
   ```
+- `VideoUITests` (E2E-06) — the video path: the "Video" fixture folder contains an
+  `isVideo` entry; tapping it must present the `AVPlayerViewController` (the mock HTTP
+  server serves `/rest/hls.m3u8` + `.ts` segments), and video rows must be excluded
+  from the swipe-to-cache/queue actions. The `HLSReverseProxyServer`/`VideoPlayer`
+  integration tests live in the unit bundle (`HLSVideoTests`).
 
 ## Running
 
