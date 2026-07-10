@@ -13,7 +13,7 @@ import Resolver
 
 final class VideoPlayer: NSObject {
     @Injected private var settings: SavedSettings
-    @Injected private var player: BassPlayer
+    @Injected private var player: PlayerControlling
     
     private var videoPlayerController: AVPlayerViewController?
     private var hlsProxyServer: HLSReverseProxyServer?

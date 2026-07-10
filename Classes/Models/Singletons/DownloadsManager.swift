@@ -16,7 +16,7 @@ import CocoaLumberjackSwift
 final class DownloadsManager {
     @LazyInjected private var settings: SavedSettings
     @LazyInjected private var store: Store
-    @LazyInjected private var downloadQueue: DownloadQueue
+    @LazyInjected private var downloadQueue: DownloadQueueing
 
     private var cacheCheckInterval = 60.0
     private var cacheCheckWorkItem: DispatchWorkItem?

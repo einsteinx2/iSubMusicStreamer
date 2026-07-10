@@ -629,3 +629,24 @@ final class BassPlayer: NSObject {
  */
     }
 }
+
+// Abstraction over the audio player engine so consumers can be unit tested with a fake
+// player instead of the real BASS-backed engine (registered in DependencyInjection.swift)
+protocol PlayerControlling: AnyObject {
+    var isPlaying: Bool { get }
+    var isStarted: Bool { get }
+    var progress: Double { get }
+    var kiloBitrate: Int { get }
+    var currentByteOffset: Int { get }
+    var currentStream: BassStream? { get }
+    var startByteOffset: Int { get set }
+    var startSecondsOffset: Double { get set }
+    func startNewSong(_ song: Song, index: Int, offsetInBytes: Int, offsetInSeconds: Double)
+    func pause()
+    func playPause()
+    func stop()
+    @discardableResult func seekToPosition(seconds: Double, fadeVolume: Bool) -> Bool
+    func streamReadyToStartPlayback(handler: StreamHandler)
+}
+
+extension BassPlayer: PlayerControlling {}

@@ -26,5 +26,10 @@ struct DependencyInjection {
         main.register(factory: { PlayQueue() as PlayQueue }).scope(ResolverScope.application)
         main.register(factory: { Social() as Social }).scope(ResolverScope.application)
         main.register(factory: { Analytics() as Analytics }).scope(ResolverScope.application)
+
+        // Protocol seams resolving to the same singleton instances (tests override these with fakes)
+        main.register(factory: { main.resolve(BassPlayer.self) as PlayerControlling })
+        main.register(factory: { main.resolve(StreamManager.self) as StreamManaging })
+        main.register(factory: { main.resolve(DownloadQueue.self) as DownloadQueueing })
     }
 }

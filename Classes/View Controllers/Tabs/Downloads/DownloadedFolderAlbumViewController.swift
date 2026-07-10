@@ -19,7 +19,7 @@ final class DownloadedFolderAlbumViewController: AbstractDownloadsViewController
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
     @Injected private var downloadsManager: DownloadsManager
-    @Injected private var downloadQueue: DownloadQueue
+    @Injected private var downloadQueue: DownloadQueueing
     
     private let serverId: Int
     private let level: Int

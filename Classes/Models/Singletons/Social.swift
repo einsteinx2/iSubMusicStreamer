@@ -11,7 +11,7 @@ import Resolver
 import CocoaLumberjackSwift
 
 final class Social {
-    @LazyInjected private var player: BassPlayer
+    @LazyInjected private var player: PlayerControlling
     @LazyInjected private var settings: SavedSettings
     @LazyInjected private var playQueue: PlayQueue
     

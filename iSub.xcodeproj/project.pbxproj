@@ -555,8 +555,10 @@
 		53FE67AC256DE9600015FC83 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FE67AB256DE9600015FC83 /* Defines.swift */; };
 		53FE67AD256DE9600015FC83 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FE67AB256DE9600015FC83 /* Defines.swift */; };
 		60AA2CAE35F3D6877EBA347B /* MockSubsonicServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4390AAE776F0A5012F0276A /* MockSubsonicServer.swift */; };
+		A718D72417E325AA8B3F717E /* Fakes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C72C3647A62E9A226040F40 /* Fakes.swift */; };
 		AC8214F9B0976ECB911E710B /* CocoaLumberjackSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 34BE40FCA031FB757D6D3FF9 /* CocoaLumberjackSwift */; };
 		D21C85E514DE08A422EDB4E0 /* TestContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C3342F60ADAC436F6462D1 /* TestContainer.swift */; };
+		E4729DFF94C3A599C018E188 /* ProtocolSeamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF060FF00FF3A19A5CF6461 /* ProtocolSeamTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -609,6 +611,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0AF060FF00FF3A19A5CF6461 /* ProtocolSeamTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProtocolSeamTests.swift; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* iSub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iSub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -897,6 +900,7 @@
 		53FE678C256DD0F00015FC83 /* GCDWebServerFileRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileRequest.m; sourceTree = "<group>"; };
 		53FE678D256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerURLEncodedFormRequest.h; sourceTree = "<group>"; };
 		53FE67AB256DE9600015FC83 /* Defines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
+		5C72C3647A62E9A226040F40 /* Fakes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Fakes.swift; sourceTree = "<group>"; };
 		74E1AC9E9A2EAEA92AC9F545 /* AsyncStatusLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AsyncStatusLoaderTests.swift; sourceTree = "<group>"; };
 		76DF4EDBD3D42BF1682E9544 /* StoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
 		84A64BA72B963BB732F9FF94 /* Fixtures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
@@ -1653,6 +1657,7 @@
 				2FBCCCBAB13100C9FC48F5FF /* Fixtures */,
 				76DF4EDBD3D42BF1682E9544 /* StoreTests.swift */,
 				74E1AC9E9A2EAEA92AC9F545 /* AsyncStatusLoaderTests.swift */,
+				0AF060FF00FF3A19A5CF6461 /* ProtocolSeamTests.swift */,
 			);
 			name = iSubTests;
 			path = iSubTests;
@@ -1665,6 +1670,7 @@
 				A2C3342F60ADAC436F6462D1 /* TestContainer.swift */,
 				84A64BA72B963BB732F9FF94 /* Fixtures.swift */,
 				C4390AAE776F0A5012F0276A /* MockSubsonicServer.swift */,
+				5C72C3647A62E9A226040F40 /* Fakes.swift */,
 			);
 			name = Support;
 			path = Support;
@@ -2323,6 +2329,8 @@
 				28998968DFDEE48E64378E0B /* StoreTests.swift in Sources */,
 				60AA2CAE35F3D6877EBA347B /* MockSubsonicServer.swift in Sources */,
 				3CBF262DDE752DF729DA467B /* AsyncStatusLoaderTests.swift in Sources */,
+				A718D72417E325AA8B3F717E /* Fakes.swift in Sources */,
+				E4729DFF94C3A599C018E188 /* ProtocolSeamTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

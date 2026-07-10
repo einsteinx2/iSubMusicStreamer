@@ -21,9 +21,9 @@ enum RepeatMode: Int {
 final class PlayQueue: NSObject {
     @LazyInjected private var settings: SavedSettings
     @LazyInjected private var jukebox: Jukebox
-    @LazyInjected private var streamManager: StreamManager
-    @LazyInjected private var downloadQueue: DownloadQueue
-    @LazyInjected private var player: BassPlayer
+    @LazyInjected private var streamManager: StreamManaging
+    @LazyInjected private var downloadQueue: DownloadQueueing
+    @LazyInjected private var player: PlayerControlling
     @Injected private var store: Store
     
     var currentPlaylistId: Int {

@@ -15,9 +15,9 @@ import CwlCatchException
 final class ServersViewController: UIViewController {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
-    @Injected private var streamManager: StreamManager
-    @Injected private var downloadQueue: DownloadQueue
-    @Injected private var player: BassPlayer
+    @Injected private var streamManager: StreamManaging
+    @Injected private var downloadQueue: DownloadQueueing
+    @Injected private var player: PlayerControlling
     @Injected private var playQueue: PlayQueue
     
     private let tableView = UITableView()

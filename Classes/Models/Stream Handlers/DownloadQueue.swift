@@ -15,7 +15,7 @@ final class DownloadQueue {
     @LazyInjected private var store: Store
     @LazyInjected private var settings: SavedSettings
     @LazyInjected private var downloadsManager: DownloadsManager
-    @LazyInjected private var streamManager: StreamManager
+    @LazyInjected private var streamManager: StreamManaging
     
     private let maxNumberOfReconnects = 5
     
@@ -248,3 +248,17 @@ extension DownloadQueue: StreamHandlerDelegate {
         }
     }
 }
+
+// Abstraction over the download queue so consumers can be unit tested with a fake
+// (registered in DependencyInjection.swift)
+protocol DownloadQueueing: AnyObject {
+    var isDownloading: Bool { get }
+    var currentQueuedSong: Song? { get }
+    func isInQueue(song: Song) -> Bool
+    func start()
+    func stop()
+    @discardableResult func removeCurrentSong() -> Bool
+    @discardableResult func clear() -> Bool
+}
+
+extension DownloadQueue: DownloadQueueing {}

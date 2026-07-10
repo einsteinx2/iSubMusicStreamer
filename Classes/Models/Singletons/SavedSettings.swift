@@ -16,10 +16,10 @@ enum CachingType: Int {
 }
 
 final class SavedSettings {
-    @LazyInjected private var player: BassPlayer
+    @LazyInjected private var player: PlayerControlling
     @LazyInjected private var playQueue: PlayQueue
     @LazyInjected private var downloadsManager: DownloadsManager
-    @LazyInjected private var downloadQueue: DownloadQueue
+    @LazyInjected private var downloadQueue: DownloadQueueing
     @LazyInjected private var store: Store
     
     private let defaults = UserDefaults.standard

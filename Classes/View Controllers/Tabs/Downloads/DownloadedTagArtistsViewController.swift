@@ -16,7 +16,7 @@ final class DownloadedTagArtistsViewController: AbstractDownloadsViewController 
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
     @Injected private var downloadsManager: DownloadsManager
-    @Injected private var downloadQueue: DownloadQueue
+    @Injected private var downloadQueue: DownloadQueueing
     
     var serverId: Int { (Resolver.resolve() as SavedSettings).currentServerId }
         

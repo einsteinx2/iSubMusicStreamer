@@ -11,11 +11,11 @@ import Resolver
 import CocoaLumberjackSwift
 
 final class StreamManager {
-    @LazyInjected private var downloadQueue: DownloadQueue
+    @LazyInjected private var downloadQueue: DownloadQueueing
     @LazyInjected private var store: Store
     @LazyInjected private var settings: SavedSettings
     @LazyInjected private var playQueue: PlayQueue
-    @LazyInjected private var player: BassPlayer
+    @LazyInjected private var player: PlayerControlling
     
     private let defaultNumberOfStreamsToQueue = 2
     private let maxNumberOfReconnects = 5
@@ -468,3 +468,25 @@ extension StreamManager: StreamHandlerDelegate {
         }
     }
 }
+
+// Abstraction over the stream prefetch/download queue so consumers can be unit tested
+// with a fake (registered in DependencyInjection.swift)
+protocol StreamManaging: AnyObject {
+    var isDownloading: Bool { get }
+    var firstHandlerInQueue: StreamHandler? { get }
+    func setup()
+    func handler(song: Song) -> StreamHandler?
+    func isFirstInQueue(song: Song) -> Bool
+    func isDownloading(song: Song) -> Bool
+    func removeAllStreams()
+    func removeAllStreams(except song: Song)
+    func removeStream(index: Int)
+    func resumeQueue()
+    func stealForDownloadQueue(handler: StreamHandler)
+    func queueStream(song: Song, byteOffset: Int, secondsOffset: Double, index: Int, tempCache: Bool, startDownload: Bool)
+    func queueStream(song: Song, tempCache: Bool, startDownload: Bool)
+    func fillStreamQueue(startDownload: Bool)
+    func streamHandlerStartPlayback(handler: StreamHandler)
+}
+
+extension StreamManager: StreamManaging {}

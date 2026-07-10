@@ -26,7 +26,7 @@ final class PlayerViewController: UIViewController {
     @Injected private var jukebox: Jukebox
     @Injected private var player: BassPlayer
     @Injected private var playQueue: PlayQueue
-    @Injected private var streamManager: StreamManager
+    @Injected private var streamManager: StreamManaging
     @Injected private var analytics: Analytics
     
     override var prefersStatusBarHidden: Bool { true }

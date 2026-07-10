@@ -14,9 +14,9 @@ struct AsyncSongsHelper {
     @Injected private static var store: Store
     @Injected private static var settings: SavedSettings
     @Injected private static var jukebox: Jukebox
-    @Injected private static var player: BassPlayer
+    @Injected private static var player: PlayerControlling
     @Injected private static var playQueue: PlayQueue
-    @Injected private static var streamManager: StreamManager
+    @Injected private static var streamManager: StreamManaging
     
     // MARK: Public Helper Functions
     

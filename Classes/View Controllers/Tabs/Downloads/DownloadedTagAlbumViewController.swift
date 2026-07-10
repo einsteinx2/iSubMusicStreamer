@@ -16,7 +16,7 @@ final class DownloadedTagAlbumViewController: AbstractDownloadsViewController {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
     @Injected private var downloadsManager: DownloadsManager
-    @Injected private var downloadQueue: DownloadQueue
+    @Injected private var downloadQueue: DownloadQueueing
         
     private let downloadedTagAlbum: DownloadedTagAlbum
     private var downloadedSongs = [DownloadedSong]()
