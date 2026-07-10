@@ -67,7 +67,7 @@ final class HomeAlbumViewController: UIViewController {
                     folderAlbums.append(contentsOf: responseFolderAlbums)
                 }
             } catch {
-                if self.settings.isPopupsEnabled {
+                if self.settings.isPopupsEnabled, !error.isCanceled {
                     let message = "There was an error performing the search.\n\nError: \(error.localizedDescription)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
                     alert.addOKAction()

@@ -164,6 +164,25 @@ final class HomeAlbumPagingTests: LoaderTestCase {
         XCTAssertEqual(controller.folderAlbums.count, 20)
     }
 
+    func testCancelledLoadMorePresentsNoAlert_BUG30() {
+        // BUG-30 regression: the load-more catch was missing the !error.isCanceled
+        // guard its siblings have, so a cancelled request popped a spurious error alert
+        let controller = makeController(albums: makeAlbums(0..<20))
+        MockSubsonicServer.stubConnectionError(.getAlbumList, code: .cancelled)
+
+        // Host the controller in a window so a (wrongly) presented alert is detectable
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 400, height: 800))
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+
+        let table = UITableView()
+        _ = controller.tableView(table, cellForRowAt: IndexPath(row: 20, section: 0))
+        XCTAssertTrue(waitUntil { MockSubsonicServer.receivedRequests(action: .getAlbumList).count == 1 })
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.5))
+
+        XCTAssertNil(controller.presentedViewController, "a cancelled load must not present an error alert")
+    }
 }
 
 // MARK: - Download status stats (BUG-29)

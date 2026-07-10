@@ -221,7 +221,7 @@ Verified defects. The P0s are crash- or core-functionality-level; fix order with
 - [x] **[BUG-29] P3 — Download Status page shows minFreeSpace for "Max Download Space".** `DownloadStatusViewController.startUpdatingStats` sets the same `minFreeSpace` value in both cachingType branches.
   > **Prompt:** In DownloadStatusViewController.swift startUpdatingStats, make the maxSpace branch display the configured max download size instead of settings.minFreeSpace. Add a unit test per cachingType asserting the title/value pairing.
 
-- [ ] **[BUG-30] P3 — Spurious error alert on cancelled quick-albums load-more.** `HomeAlbumViewController.loadMoreResults` catch lacks the `!error.isCanceled` guard its siblings have.
+- [x] **[BUG-30] P3 — Spurious error alert on cancelled quick-albums load-more.** `HomeAlbumViewController.loadMoreResults` catch lacks the `!error.isCanceled` guard its siblings have.
   > **Prompt:** In HomeAlbumViewController.swift loadMoreResults, add !error.isCanceled to the alert guard, matching SearchSongsViewController/NowPlayingViewController. Add a test that a cancelled load presents no alert.
 
 ---
