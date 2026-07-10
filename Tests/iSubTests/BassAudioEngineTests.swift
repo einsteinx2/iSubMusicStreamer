@@ -26,11 +26,7 @@ final class BassAudioEngineTests: StoreTestCase {
         TestContainer.register { freshSettings }
         settings = freshSettings
 
-        let freshPlayQueue = PlayQueue()
-        TestContainer.register { freshPlayQueue }
-        playQueue = freshPlayQueue
-
-        let freshPlayer = BassPlayer()
+        let freshPlayer = BassPlayer(store: store, settings: freshSettings, social: FakeSocial())
         TestContainer.register { freshPlayer }
         TestContainer.register { freshPlayer as PlayerControlling }
         player = freshPlayer
@@ -44,10 +40,19 @@ final class BassAudioEngineTests: StoreTestCase {
                                                downloadsManager: DownloadsManager(settings: freshSettings, store: store),
                                                networkStatus: FakeNetworkStatus(),
                                                metadataDownloader: FakeSongMetadataDownloader())
-        freshStreamManager.attach(downloadQueue: fakeDownloadQueue)
-        freshStreamManager.attach(playQueue: freshPlayQueue)
         TestContainer.register { freshStreamManager }
         TestContainer.register { freshStreamManager as StreamManaging }
+
+        let freshPlayQueue = makeTestPlayQueue()
+        TestContainer.register { freshPlayQueue }
+        playQueue = freshPlayQueue
+
+        // Back-edges, exactly as the composition root wires them
+        freshStreamManager.attach(downloadQueue: fakeDownloadQueue)
+        freshStreamManager.attach(playQueue: freshPlayQueue)
+        freshPlayer.attach(playQueue: freshPlayQueue)
+        freshPlayer.attach(streamManager: freshStreamManager)
+        freshPlayer.attach(downloadQueue: fakeDownloadQueue)
 
         player.initializeOutput()
 

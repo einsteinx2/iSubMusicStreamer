@@ -29,24 +29,19 @@ final class AppServices {
     let stateRestorer: StateRestorer
 
     init() {
-        // Leaves first (fully constructor-injected)
+        // Construction order follows the dependency direction: every service is built
+        // after everything it owns a reference to
         store = Store()
         settings = SavedSettings()
         networkMonitor = NetworkMonitor(settings: settings)
         analytics = Analytics()
         social = Social(settings: settings)
         downloadsManager = DownloadsManager(settings: settings, store: store)
-
-        // Not yet constructor-converted; nothing here resolves from the container
-        // during init
-        player = BassPlayer()
-
+        player = BassPlayer(store: store, settings: settings, social: social)
         jukebox = Jukebox(settings: settings, store: store)
-
         streamManager = StreamManager(store: store, settings: settings, player: player, downloadsManager: downloadsManager, networkStatus: networkMonitor, metadataDownloader: SongMetadataDownloader())
         downloadQueue = DownloadQueue(store: store, settings: settings, downloadsManager: downloadsManager, player: player, networkStatus: networkMonitor, streamManager: streamManager, metadataDownloader: SongMetadataDownloader())
-        playQueue = PlayQueue()
-
+        playQueue = PlayQueue(store: store, settings: settings, player: player, jukebox: jukebox, streamManager: streamManager, downloadQueue: downloadQueue)
         stateRestorer = StateRestorer(settings: settings, player: player, playQueue: playQueue)
 
         // Back-edges are weak references attached explicitly, never resolved ambiently
@@ -54,6 +49,9 @@ final class AppServices {
         streamManager.attach(downloadQueue: downloadQueue)
         streamManager.attach(playQueue: playQueue)
         jukebox.attach(playQueue: playQueue)
+        player.attach(playQueue: playQueue)
+        player.attach(streamManager: streamManager)
+        player.attach(downloadQueue: downloadQueue)
     }
 }
 

@@ -53,7 +53,7 @@ final class BookmarkStoreTests: StoreTestCase {
     private func makePlayQueue(songCount: Int) -> PlayQueue {
         let freshSettings = SavedSettings()
         TestContainer.register { freshSettings }
-        let freshPlayQueue = PlayQueue()
+        let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
         for number in 1...songCount {
             let queueSong = TestData.song(serverId: 1, id: "q\(number)", title: "Queued \(number)", path: "q/\(number).mp3")

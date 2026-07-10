@@ -7,21 +7,18 @@
 //
 
 import Foundation
-import Resolver
 import CocoaLumberjackSwift
 
 // Abstraction over play-time scrobbling so the player can be unit tested without
 // spawning background scrobble network tasks (registered in DependencyInjection.swift)
 protocol SocialScrobbling: AnyObject {
     func playerClearSocial()
-    func playerHandleSocial()
+    func playerHandleSocial(currentSong: Song?, progress: Double)
 }
 
 extension Social: SocialScrobbling {}
 
 final class Social {
-    @LazyInjected private var player: PlayerControlling
-    @LazyInjected private var playQueue: PlayQueue
     private let settings: SavedSettings
 
     init(settings: SavedSettings) {
@@ -29,47 +26,50 @@ final class Social {
     }
 
     private let nowPlayingDelay = 10.0
-    private var scrobbleDelay: Double {
-        // Scrobble in 30 seconds (or settings amount) if not canceled
+
+    // Scrobble in 30 seconds (or settings amount) if not canceled
+    private func scrobbleDelay(currentSong: Song?) -> Double {
         var scrobbleDelay = 30.0
-        if let currentSong = player.currentStream?.song, currentSong.duration > 0 {
+        if let currentSong, currentSong.duration > 0 {
             scrobbleDelay = Double(settings.scrobblePercent) * Double(currentSong.duration)
         }
         return scrobbleDelay
     }
-    
+
     // MARK: Player
-    
+
     private var playerHasScrobbled = false
     private var playerHasSubmittedNowPlaying = false
-    
+
     func playerClearSocial() {
         playerHasSubmittedNowPlaying = false
         playerHasScrobbled = false
     }
-    
-    func playerHandleSocial() {
-        if !playerHasSubmittedNowPlaying && player.progress >= nowPlayingDelay {
+
+    // The caller (BassPlayer's output callback) passes the playing stream's song and
+    // progress so no database query ever runs on the audio render thread
+    func playerHandleSocial(currentSong: Song?, progress: Double) {
+        if !playerHasSubmittedNowPlaying && progress >= nowPlayingDelay {
             playerHasSubmittedNowPlaying = true
-            scrobbleSongAsPlaying()
+            scrobbleSongAsPlaying(currentSong: currentSong)
         }
-        
-        if !playerHasScrobbled && player.progress >= scrobbleDelay {
+
+        if !playerHasScrobbled && progress >= scrobbleDelay(currentSong: currentSong) {
             playerHasScrobbled = true
-            scrobbleSongAsSubmission()
+            scrobbleSongAsSubmission(currentSong: currentSong)
         }
     }
-    
+
     // MARK: Scrobbling
-    
-    private func scrobbleSongAsSubmission() {
-        if settings.isScrobbleEnabled && !settings.isOfflineMode, let currentSong = playQueue.currentSong {
+
+    private func scrobbleSongAsSubmission(currentSong: Song?) {
+        if settings.isScrobbleEnabled && !settings.isOfflineMode, let currentSong {
             scrobble(song: currentSong, isSubmission: true)
         }
     }
-    
-    private func scrobbleSongAsPlaying() {
-        if !settings.isOfflineMode, let currentSong = playQueue.currentSong {
+
+    private func scrobbleSongAsPlaying(currentSong: Song?) {
+        if !settings.isOfflineMode, let currentSong {
             scrobble(song: currentSong, isSubmission: false)
         }
     }

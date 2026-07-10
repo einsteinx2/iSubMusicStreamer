@@ -36,7 +36,7 @@ final class StreamManagerTests: StoreTestCase {
         TestContainer.register { freshSettings }
         settings = freshSettings
 
-        let freshPlayQueue = PlayQueue()
+        let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
 

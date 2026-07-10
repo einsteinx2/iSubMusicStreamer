@@ -8,7 +8,6 @@
 
 import Foundation
 import MediaPlayer
-import Resolver
 import CocoaLumberjackSwift
 import ProgressHUD
 
@@ -19,13 +18,23 @@ enum RepeatMode: Int {
 }
 
 final class PlayQueue: NSObject {
-    @LazyInjected private var settings: SavedSettings
-    @LazyInjected private var jukebox: Jukebox
-    @LazyInjected private var streamManager: StreamManaging
-    @LazyInjected private var downloadQueue: DownloadQueueing
-    @LazyInjected private var player: PlayerControlling
-    @LazyInjected private var store: Store
-    
+    private let store: Store
+    private let settings: SavedSettings
+    private let player: PlayerControlling
+    private let jukebox: Jukebox
+    private let streamManager: StreamManaging
+    private let downloadQueue: DownloadQueueing
+
+    init(store: Store, settings: SavedSettings, player: PlayerControlling, jukebox: Jukebox, streamManager: StreamManaging, downloadQueue: DownloadQueueing) {
+        self.store = store
+        self.settings = settings
+        self.player = player
+        self.jukebox = jukebox
+        self.streamManager = streamManager
+        self.downloadQueue = downloadQueue
+        super.init()
+    }
+
     var currentPlaylistId: Int {
         let id: Int
         if settings.isJukeboxEnabled {

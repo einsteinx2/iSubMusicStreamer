@@ -25,12 +25,12 @@ final class SavedSettingsBehaviorTests: StoreTestCase {
         TestContainer.register { fakePlayer as PlayerControlling }
         network = FakeNetworkStatus()
         let fakeNetwork = network!
-        let freshPlayQueue = PlayQueue()
-        TestContainer.register { freshPlayQueue }
         let freshSettings = SavedSettings()
         freshSettings.attach(networkStatus: fakeNetwork)
         TestContainer.register { freshSettings }
         settings = freshSettings
+        let freshPlayQueue = makeTestPlayQueue()
+        TestContainer.register { freshPlayQueue }
         stateRestorer = StateRestorer(settings: freshSettings, player: fakePlayer, playQueue: freshPlayQueue)
     }
 

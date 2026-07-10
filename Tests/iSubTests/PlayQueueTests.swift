@@ -38,7 +38,7 @@ final class PlayQueueTests: StoreTestCase {
         TestContainer.register { freshSettings }
         settings = freshSettings
 
-        let freshPlayQueue = PlayQueue()
+        let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
 
@@ -349,10 +349,15 @@ final class PlayQueueTests: StoreTestCase {
         settings.isJukeboxEnabled = true
 
         let jukebox = Jukebox(settings: settings, store: store)
-        jukebox.attach(playQueue: playQueue)
         TestContainer.register { jukebox }
         // Push the periodic getInfo far past the process lifetime on the way out
         defer { jukebox.getInfo(delay: 999_999) }
+
+        // The play queue must capture this test's jukebox, so build a local one now
+        // that the jukebox is registered (the composition root wires this in the app)
+        let playQueue = makeTestPlayQueue()
+        TestContainer.register { playQueue }
+        jukebox.attach(playQueue: playQueue)
 
         seedQueue(3)
         playQueue.normalIndex = 0
@@ -516,7 +521,7 @@ final class PlayQueueTests: StoreTestCase {
         // Simulate a fresh launch: new queue/player/settings reading the same defaults
         let newPlayer = FakePlayer()
         TestContainer.register { newPlayer as PlayerControlling }
-        let newPlayQueue = PlayQueue()
+        let newPlayQueue = makeTestPlayQueue()
         TestContainer.register { newPlayQueue }
         let newSettings = SavedSettings()
         TestContainer.register { newSettings }
@@ -555,7 +560,7 @@ final class LockScreenAudioControlsTests: StoreTestCase {
         let freshSettings = SavedSettings()
         TestContainer.register { freshSettings }
         settings = freshSettings
-        let freshPlayQueue = PlayQueue()
+        let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
     }

@@ -55,7 +55,7 @@ final class StreamHandlerTests: StoreTestCase {
         XCTAssertTrue(store.add(server: TestData.server(id: 1, urlString: "https://mock.example.com")))
         let freshSettings = SavedSettings()
         TestContainer.register { freshSettings }
-        let freshPlayQueue = PlayQueue()
+        let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
         delegateSpy = StreamHandlerDelegateSpy()
     }

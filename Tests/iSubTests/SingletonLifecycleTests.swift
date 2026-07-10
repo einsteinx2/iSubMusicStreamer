@@ -34,11 +34,16 @@ final class JukeboxTests: StoreTestCase {
         TestContainer.register { FakeStreamManager() as StreamManaging }
         TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
         TestContainer.register { FakePlayer() as PlayerControlling }
-        let freshPlayQueue = PlayQueue()
+
+        // The play queue captures its jukebox at construction, so the test jukebox
+        // must be registered first (mirrors the composition root's ordering)
+        jukebox = Jukebox(settings: settings, store: store)
+        let registeredJukebox = jukebox!
+        TestContainer.register { registeredJukebox }
+
+        let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
-
-        jukebox = Jukebox(settings: settings, store: store)
         jukebox.attach(playQueue: freshPlayQueue)
     }
 

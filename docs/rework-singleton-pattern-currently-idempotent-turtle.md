@@ -110,7 +110,7 @@ Check off each phase/sub-phase as it lands as a commit on this branch:
 - [x] Phase 4 — StreamHandler transient conversion
 - [x] Phase 5a — StreamManager + DownloadQueue
 - [x] Phase 5b — Jukebox
-- [ ] Phase 5c — BassPlayer + PlayQueue + Social
+- [x] Phase 5c — BassPlayer + PlayQueue + Social
 - [ ] Phase 6 — Models, request building, VC boilerplate
 - [ ] Phase 7 — Ambient stragglers + ratchet to zero
 - [ ] Phase 8 — Architectural reshaping (follow-up program, approve separately)

@@ -15,7 +15,7 @@ private let isProgressLoggingEnabled = false
 private let isThrottleLoggingEnabled = true
 private let isSpeedLoggingEnabled = false
 
-protocol StreamHandlerDelegate {
+protocol StreamHandlerDelegate: AnyObject {
     func streamHandlerStarted(handler: StreamHandler)
     func streamHandlerStartPlayback(handler: StreamHandler)
     func streamHandlerConnectionFinished(handler: StreamHandler)
@@ -55,7 +55,9 @@ final class StreamHandler: NSObject, Codable {
     private let player: PlayerControlling
     private let networkStatus: NetworkStatus
 
-    var delegate: StreamHandlerDelegate?
+    // Weak: the delegate (StreamManager/DownloadQueue) owns the handler, so a strong
+    // reference here is a retain cycle that keeps replaced queues alive forever
+    weak var delegate: StreamHandlerDelegate?
     
     let song: Song
     private(set) var byteOffset: Int

@@ -25,7 +25,7 @@ final class SearchSongsPagingTests: LoaderTestCase {
     private func makeController(songs: [Song]) -> SearchSongsViewController {
         let freshSettings = SavedSettings()
         TestContainer.register { freshSettings }
-        let freshPlayQueue = PlayQueue()
+        let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
         return SearchSongsViewController(serverId: serverId, query: "beck", searchType: .tag, searchItemType: .songs, songs: songs)
     }
@@ -402,7 +402,7 @@ final class PlayQueueEditModeTests: StoreTestCase {
         TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
         let freshSettings = SavedSettings()
         TestContainer.register { freshSettings }
-        let freshPlayQueue = PlayQueue()
+        let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
 

@@ -7,7 +7,21 @@
 //
 
 import Foundation
+import Resolver
 @testable import iSub_Beta
+
+// Mirrors the composition root for tests: builds a PlayQueue wired to whatever is
+// currently registered in the container. Register any fakes (player, stream manager,
+// download queue, settings, store) BEFORE calling this — resolution happens here,
+// not lazily on first use.
+func makeTestPlayQueue() -> PlayQueue {
+    PlayQueue(store: Resolver.resolve(),
+              settings: Resolver.resolve(),
+              player: Resolver.resolve(),
+              jukebox: Resolver.resolve(),
+              streamManager: Resolver.resolve(),
+              downloadQueue: Resolver.resolve())
+}
 
 // Recording fakes for the protocol seams registered in DependencyInjection.swift.
 // Register them over the app's singletons with TestContainer, e.g.:
@@ -162,5 +176,5 @@ final class FakeSocial: SocialScrobbling {
     private(set) var handleCount = 0
 
     func playerClearSocial() { clearCount += 1 }
-    func playerHandleSocial() { handleCount += 1 }
+    func playerHandleSocial(currentSong: Song?, progress: Double) { handleCount += 1 }
 }

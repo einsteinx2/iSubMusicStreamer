@@ -21,12 +21,12 @@ final class LocalPlaylistQueueTests: StoreTestCase {
         try super.setUpWithError()
         // LocalPlaylistStore resolves PlayQueue and SavedSettings from the container,
         // so register fresh instances backed by the test store/defaults
-        let freshPlayQueue = PlayQueue()
-        TestContainer.register { freshPlayQueue }
-        playQueue = freshPlayQueue
         let freshSettings = SavedSettings()
         TestContainer.register { freshSettings }
         settings = freshSettings
+        let freshPlayQueue = makeTestPlayQueue()
+        TestContainer.register { freshPlayQueue }
+        playQueue = freshPlayQueue
 
         XCTAssertTrue(store.add(localPlaylist: LocalPlaylist(id: playlistId, name: "Test Queue")))
     }

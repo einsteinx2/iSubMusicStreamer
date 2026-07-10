@@ -40,7 +40,7 @@ final class DownloadQueueTests: StoreTestCase {
         TestContainer.register { freshSettings }
         settings = freshSettings
 
-        let freshPlayQueue = PlayQueue()
+        let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
 
         downloadsManager = DownloadsManager(settings: settings, store: store)
@@ -212,8 +212,10 @@ final class DownloadQueueTests: StoreTestCase {
         MockSubsonicServer.stubStalling(.stream, data: Data(repeating: 1, count: 10_000))
         let song = makeQueuedSong(id: "1")
 
-        // The stream manager already has a handler for this song
-        let handler = StreamHandler(song: song, tempCache: false, delegate: StreamHandlerDelegateSpy(), dependencies: .fromResolver())
+        // The stream manager already has a handler for this song (the delegate is held
+        // weakly, so keep the spy alive for the handler's lifetime)
+        let spy = StreamHandlerDelegateSpy()
+        let handler = StreamHandler(song: song, tempCache: false, delegate: spy, dependencies: .fromResolver())
         streamManager.handlersBySong[song] = handler
 
         downloadQueue.start()

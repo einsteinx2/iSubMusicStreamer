@@ -8,7 +8,6 @@
 
 import Foundation
 import AVFoundation
-import Resolver
 import CocoaLumberjackSwift
 
 private let bassStreamRetryDelay = 2.0
@@ -16,12 +15,16 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
 
 // TODO: Is it necessary to keep setting BASS_SetDevice all the time?
 final class BassPlayer: NSObject {
-    @LazyInjected private var playQueue: PlayQueue
-    @LazyInjected private var store: Store
-    @LazyInjected private var settings: SavedSettings
-    @LazyInjected private var social: SocialScrobbling
-    @LazyInjected private var streamManager: StreamManaging
-    @LazyInjected private var downloadQueue: DownloadQueueing
+    private let store: Store
+    private let settings: SavedSettings
+    private let social: SocialScrobbling
+
+    // Back-edges (communication cycles) attached weakly at the composition root:
+    // the play queue advances on song end, and the stream manager / download queue
+    // are only consulted by the underrun wait loop
+    private weak var playQueue: PlayQueue?
+    private weak var streamManager: StreamManaging?
+    private weak var downloadQueue: DownloadQueueing?
 
     let streamGcdQueue = DispatchQueue(label: "com.isubapp.BassStreamQueue")
     // Serial queue for the underrun wait loop so it never blocks the audio callback thread
@@ -31,23 +34,49 @@ final class BassPlayer: NSObject {
     let streamQueueSync = NSObject()
     private(set) var outStream: HSTREAM = 0
     private(set) var mixerStream: HSTREAM = 0
-    
+
     var isPlaying = false
     var waitLoopStream: BassStream?
-    
-    var startByteOffset = 0
-    var startSecondsOffset = 0.0
-    
+
+    // The start offsets are written from the stream GCD queue and read by the save
+    // state timer on the main thread, so guard them with a lock
+    private let startOffsetsSync = NSObject()
+    private var unsafeStartByteOffset = 0
+    private var unsafeStartSecondsOffset = 0.0
+    var startByteOffset: Int {
+        get { synchronized(startOffsetsSync) { unsafeStartByteOffset } }
+        set { synchronized(startOffsetsSync) { unsafeStartByteOffset = newValue } }
+    }
+    var startSecondsOffset: Double {
+        get { synchronized(startOffsetsSync) { unsafeStartSecondsOffset } }
+        set { synchronized(startOffsetsSync) { unsafeStartSecondsOffset = newValue } }
+    }
+
     var equalizer = BassEqualizer()
     var visualizer = BassVisualizer()
-    
+
     var retrySongOperation: Operation?
     var shouldResumeFromInterruption = false
-    
-    override init() {
+
+    init(store: Store, settings: SavedSettings, social: SocialScrobbling) {
+        self.store = store
+        self.settings = settings
+        self.social = social
         super.init()
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(handleInterruption(notification:)), name: AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance())
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(handleRouteChange(notification:)), name: AVAudioSession.routeChangeNotification, object: AVAudioSession.sharedInstance())
+    }
+
+    func attach(playQueue: PlayQueue) {
+        self.playQueue = playQueue
+    }
+
+    func attach(streamManager: StreamManaging) {
+        self.streamManager = streamManager
+    }
+
+    func attach(downloadQueue: DownloadQueueing) {
+        self.downloadQueue = downloadQueue
     }
     
     deinit {
@@ -146,10 +175,10 @@ final class BassPlayer: NSObject {
         } else {
             if currentStream == nil {
                 // See if we're at the end of the playlist
-                if let _ = playQueue.currentSong {
-                    playQueue.startSong(offsetInBytes: startByteOffset, offsetInSeconds: startSecondsOffset)
+                if let _ = playQueue?.currentSong {
+                    playQueue?.startSong(offsetInBytes: startByteOffset, offsetInSeconds: startSecondsOffset)
                 } else {
-                    playQueue.playPrevSong()
+                    playQueue?.playPrevSong()
                 }
             } else {
                 BASS_Start()
@@ -157,13 +186,13 @@ final class BassPlayer: NSObject {
                 NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
             }
         }
-        
-        playQueue.updateLockScreenInfo()
+
+        playQueue?.updateLockScreenInfo()
     }
-    
+
     func moveToNextSong() {
-        if let _ = playQueue.nextSong {
-            playQueue.playNextSong()
+        if let _ = playQueue?.nextSong {
+            playQueue?.playNextSong()
         } else {
             cleanup()
         }
@@ -287,9 +316,9 @@ final class BassPlayer: NSObject {
                 isPlaying = true
                 
                 social.playerClearSocial()
-                
-                playQueue.updateLockScreenInfo()
-                
+
+                playQueue?.updateLockScreenInfo()
+
                 // Notify listeners that playback has started
                 NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
                 
@@ -303,7 +332,7 @@ final class BassPlayer: NSObject {
                 } else if !song.fileExists {
                     DDLogError("[BassPlayer] Stream for song \(song) failed, file is not on disk, so retrying the song");
                     _ = store.deleteDownloadedSong(song: song)
-                    playQueue.playCurrentSong()
+                    playQueue?.playCurrentSong()
                 } else {
                     // Failed to create the stream, retrying
                     DDLogError("[BassPlayer] ------failed to create stream, retrying in 2 seconds------")
@@ -322,7 +351,7 @@ final class BassPlayer: NSObject {
                 }
             } else {
                 _ = store.deleteDownloadedSong(song: song)
-                playQueue.playCurrentSong()
+                playQueue?.playCurrentSong()
             }
         }
     }
@@ -407,12 +436,13 @@ final class BassPlayer: NSObject {
     
     func prepareNextStream() {
         synchronized(streamQueueSync) {
-            guard streamQueue.count == 1, let nextSong = playQueue.nextSong, nextSong.fileExists else { return }
+            guard streamQueue.count == 1, let nextSong = playQueue?.nextSong, nextSong.fileExists else { return }
             _ = prepareStream(song: nextSong)
         }
     }
-    
+
     func streamReadyToStartPlayback(handler: StreamHandler) {
+        guard let playQueue else { return }
         if !isPlaying || handler.isTempCache, let currentSong = playQueue.currentSong, currentSong == handler.song {
             // We were waiting for the current song to download before playing and now it's ready, so start playback
             startNewSong(handler.song, index: playQueue.currentIndex, offsetInBytes: handler.byteOffset, offsetInSeconds: handler.secondsOffset)
@@ -475,8 +505,10 @@ final class BassPlayer: NSObject {
     }
     
     func bassGetOutputData(buffer: UnsafeMutableRawPointer?, length: DWORD) -> DWORD {
-        social.playerHandleSocial()
-        
+        // Pass the playing song and progress so Social never queries the database
+        // from this audio render thread
+        social.playerHandleSocial(currentSong: currentStream?.song, progress: progress)
+
         guard let currentStream else { return 0 }
         
         let bytesRead = BASS_ChannelGetData(mixerStream, buffer, length)
@@ -502,12 +534,12 @@ final class BassPlayer: NSObject {
             
             autoreleasepool {
                 // Increment current playlist index
-                playQueue.incrementIndex()
-                
+                playQueue?.incrementIndex()
+
                 // Clear the social post status
                 social.playerClearSocial()
-                
-                playQueue.updateLockScreenInfo()
+
+                playQueue?.updateLockScreenInfo()
                 
                 // Remove the stream from the queue
                 BASS_StreamFree(bassStream.hstream)
@@ -585,9 +617,9 @@ final class BassPlayer: NSObject {
         let kiloBitrate = Bass.estimateKiloBitrate(bassStream: bassStream)
 
         // Get the stream handler for this song
-        var handler = streamManager.handler(song: song)
-        if handler == nil, downloadQueue.currentQueuedSong == song {
-            handler = downloadQueue.currentStreamHandler
+        var handler = streamManager?.handler(song: song)
+        if handler == nil, downloadQueue?.currentQueuedSong == song {
+            handler = downloadQueue?.currentStreamHandler
         }
 
         // Calculate the bytes to wait based on the recent download speed. If the handler is nil
@@ -620,7 +652,7 @@ final class BassPlayer: NSObject {
                     if song.localFileSize >= neededSize {
                         // Enough of the file has downloaded to continue
                         return true
-                    } else if song.isTempCached && song == streamManager.lastTempCachedSong {
+                    } else if song.isTempCached && song == streamManager?.lastTempCachedSong {
                         // Handle temp cached songs ending. When they end, they are set as the last temp
                         // cached song, so we know it's done and can stop waiting for data.
                         return true

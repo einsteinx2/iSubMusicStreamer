@@ -647,7 +647,7 @@ final class AsyncRecursiveSongLoaderTests: LoaderTestCase {
         try super.setUpWithError()
         let freshSettings = SavedSettings()
         TestContainer.register { freshSettings }
-        let freshPlayQueue = PlayQueue()
+        let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
     }
