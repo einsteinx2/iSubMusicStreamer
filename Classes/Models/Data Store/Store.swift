@@ -17,12 +17,19 @@ import Resolver
 fileprivate let debugPrintAllQueries = false
 
 final class Store {
+    // Where the database lives. Production uses a DatabasePool at the standard path;
+    // tests can use an in-memory queue or a pool at a temporary file path.
+    enum Location {
+        case production
+        case memory
+        case file(URL)
+    }
+
     // Main database, contains records for all servers
-    var pool: DatabasePool!
-    
-    func setup() {
-        print("Database path: \(FileSystem.databaseDirectory.path)")
-        
+    // (typed as DatabaseWriter so tests can substitute an in-memory DatabaseQueue for the production DatabasePool)
+    var pool: DatabaseWriter!
+
+    func setup(location: Location = .production) {
         // Shared configuration for all databases
         var config = Configuration()
         if debugPrintAllQueries {
@@ -31,14 +38,22 @@ final class Store {
                 db.trace { DDLogDebug("\($0)") }
             }
         }
-        
+
         do {
-            let dbPath = FileSystem.databaseDirectory.appendingPathComponent("iSub.db").path
-            pool = try DatabasePool(path: dbPath, configuration: config)
+            switch location {
+            case .production:
+                print("Database path: \(FileSystem.databaseDirectory.path)")
+                let dbPath = FileSystem.databaseDirectory.appendingPathComponent("iSub.db").path
+                pool = try DatabasePool(path: dbPath, configuration: config)
+            case .memory:
+                pool = try DatabaseQueue(configuration: config)
+            case .file(let url):
+                pool = try DatabasePool(path: url.path, configuration: config)
+            }
         } catch {
             DDLogError("Database failed to initialize: \(error)")
         }
-        
+
         // Migrate database schema to latest
         migrate()
     }
