@@ -30,7 +30,23 @@ final class ArtistsViewController: CustomUITableViewController {
     private var isCountShowing = false
     
     private let dataModel: ArtistsViewModel
-    
+
+    // The Folders and Artists sub-tabs share this controller; each persists its own
+    // media-folder selection, chosen by the data model type
+    private var selectedMediaFolderId: Int {
+        get {
+            dataModel.type == .folders ? settings.rootFoldersSelectedFolderId : settings.rootArtistsSelectedFolderId
+        }
+        set {
+            if dataModel.type == .folders {
+                settings.rootFoldersSelectedFolderId = newValue
+            } else {
+                settings.rootArtistsSelectedFolderId = newValue
+            }
+        }
+    }
+
+
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         // Resize the section headers on rotation
@@ -64,7 +80,7 @@ final class ArtistsViewController: CustomUITableViewController {
         setupDefaultTableView(tableView)
         tableView.register(BlurredSectionHeader.self, forHeaderFooterViewReuseIdentifier: BlurredSectionHeader.reuseId)
         tableView.refreshControl = RefreshControl(handler: { [unowned self] in
-            loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId)
+            loadData(serverId: serverId, mediaFolderId: selectedMediaFolderId)
         })
         
         if dataModel.isCached {
@@ -81,7 +97,7 @@ final class ArtistsViewController: CustomUITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if !dataModel.isCached {
-            loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId)
+            loadData(serverId: serverId, mediaFolderId: selectedMediaFolderId)
         }
         analytics.log(event: .foldersTab)
     }
@@ -190,7 +206,7 @@ final class ArtistsViewController: CustomUITableViewController {
     }
     
     @objc private func reloadAction() {
-        loadData(serverId: serverId, mediaFolderId: settings.rootFoldersSelectedFolderId)
+        loadData(serverId: serverId, mediaFolderId: selectedMediaFolderId)
     }
 
     private func loadData(serverId: Int, mediaFolderId: Int) {
@@ -476,7 +492,7 @@ extension ArtistsViewController: DropdownMenuDelegate {
         
         // Save the default
         let mediaFolderId = dataModel.mediaFolders[index].id
-        settings.rootFoldersSelectedFolderId = mediaFolderId
+        selectedMediaFolderId = mediaFolderId
 
         // Reload the data
         dataModel.mediaFolderId = mediaFolderId

@@ -194,7 +194,7 @@ Verified defects. The P0s are crash- or core-functionality-level; fix order with
 - [x] **[BUG-20] P2 — `FolderAlbum.tagAlbumName` parses the artist attribute.** `FolderAlbum.swift:35` — copy-paste of the `tagArtistName` line above; any consumer gets the artist string.
   > **Prompt:** In FolderAlbum.swift (~line 35), fix tagAlbumName to read the album's own name attribute (title) instead of artist, or remove the field if unused. Covered by the COV-01 regression case.
 
-- [ ] **[BUG-21] P2 — Artists sub-tab reads/writes the Folders tab's media-folder setting.** `ArtistsViewController.swift` serves both sub-tabs but hardcodes `rootFoldersSelectedFolderId` in refresh (~67), viewWillAppear (~84), reloadAction (~193), and the dropdown save (~479); the tabs cross-contaminate.
+- [x] **[BUG-21] P2 — Artists sub-tab reads/writes the Folders tab's media-folder setting.** `ArtistsViewController.swift` serves both sub-tabs but hardcodes `rootFoldersSelectedFolderId` in refresh (~67), viewWillAppear (~84), reloadAction (~193), and the dropdown save (~479); the tabs cross-contaminate.
   > **Prompt:** In ArtistsViewController.swift, introduce a computed accessor that picks rootFoldersSelectedFolderId vs rootArtistsSelectedFolderId based on dataModel.type (.folders vs .tags) and use it at every read/write site (lines ~67/84/193/479), resolving the class TODO. Add a test that the two tabs persist media-folder selection independently.
 
 - [ ] **[BUG-22] P2 — `DownloadQueueViewController.viewWillAppear` never calls super.** The base `AbstractDownloadsViewController.viewWillAppear` performs `registerForNotifications()` and `reloadTable()`, so the queue tab doesn't refresh on appear.

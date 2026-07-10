@@ -274,6 +274,39 @@ final class ArtistsViewModelTests: LoaderTestCase {
         XCTAssertEqual(model.mediaFolderIndex, MediaFolder.allFoldersId, "unknown folder ids fall back to the All Media Folders sentinel")
     }
 
+    func testFoldersAndArtistsTabsPersistMediaFolderSelectionIndependently_BUG21() throws {
+        // BUG-21 regression: ArtistsViewController serves both Library sub-tabs but used
+        // to read/write rootFoldersSelectedFolderId for both, cross-contaminating them
+        try MockSubsonicServer.stub(.getMusicFolders, fixture: "XML/getMusicFolders.xml")
+        try MockSubsonicServer.stub(.getIndexes, fixture: "XML/getIndexes.xml")
+        try MockSubsonicServer.stub(.getArtists, fixture: "XML/getArtists.xml")
+
+        let settings = SavedSettings()
+        TestContainer.register { settings }
+
+        _ = store.add(mediaFolders: [MediaFolder(serverId: 1, id: 0, name: "Music"),
+                                     MediaFolder(serverId: 1, id: 5, name: "Podcasts")])
+
+        let foldersModel = ArtistsViewModel(serverId: 1, mediaFolderId: 0, type: .folders)
+        foldersModel.reset()
+        let tagsModel = ArtistsViewModel(serverId: 1, mediaFolderId: 0, type: .tags)
+        tagsModel.reset()
+
+        let foldersController = ArtistsViewController(dataModel: foldersModel)
+        let tagsController = ArtistsViewController(dataModel: tagsModel)
+        let menu = DropdownMenu()
+
+        // Pick "Podcasts" on the Folders tab, then "Music" on the Artists tab: the
+        // selections must persist independently
+        foldersController.dropdownMenu(menu, selectedItemAt: 1)
+        XCTAssertEqual(settings.rootFoldersSelectedFolderId, 5)
+
+        tagsController.dropdownMenu(menu, selectedItemAt: 0)
+        XCTAssertEqual(settings.rootArtistsSelectedFolderId, 0)
+        XCTAssertEqual(settings.rootFoldersSelectedFolderId, 5,
+                       "the Artists tab must not overwrite the Folders tab's selection")
+    }
+
     func testIncrementalSearchWithSearchLimit() throws {
         _ = store.add(mediaFolders: [MediaFolder(serverId: 1, id: 0, name: "Music")])
         // 150 artists matching the query: the first page returns the 100-item limit,
