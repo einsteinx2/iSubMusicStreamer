@@ -38,7 +38,8 @@ final class JukeboxTests: StoreTestCase {
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
 
-        jukebox = Jukebox()
+        jukebox = Jukebox(settings: settings, store: store)
+        jukebox.attach(playQueue: freshPlayQueue)
     }
 
     override func tearDownWithError() throws {

@@ -348,7 +348,8 @@ final class PlayQueueTests: StoreTestCase {
         settings.currentServer = server
         settings.isJukeboxEnabled = true
 
-        let jukebox = Jukebox()
+        let jukebox = Jukebox(settings: settings, store: store)
+        jukebox.attach(playQueue: playQueue)
         TestContainer.register { jukebox }
         // Push the periodic getInfo far past the process lifetime on the way out
         defer { jukebox.getInfo(delay: 999_999) }
@@ -613,7 +614,8 @@ final class LockScreenAudioControlsTests: StoreTestCase {
         settings.currentServer = server
         settings.isJukeboxEnabled = true
 
-        let jukebox = Jukebox()
+        let jukebox = Jukebox(settings: settings, store: store)
+        jukebox.attach(playQueue: playQueue)
         TestContainer.register { jukebox }
         defer { jukebox.getInfo(delay: 999_999) }
 

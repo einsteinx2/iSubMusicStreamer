@@ -6,8 +6,7 @@
 //  Copyright © 2021 Ben Baron. All rights reserved.
 //
 
-import Foundation
-import Resolver
+import UIKit
 import CocoaLumberjackSwift
 
 final class Jukebox {
@@ -18,10 +17,23 @@ final class Jukebox {
         case action, index, offset, id, gain
     }
     
-    @LazyInjected private var playQueue: PlayQueue
-    @LazyInjected private var settings: SavedSettings
-    @LazyInjected private var store: Store
-    
+    private let settings: SavedSettings
+    private let store: Store
+
+    // The play queue is a weak back-reference attached at the composition root: the
+    // play queue drives the jukebox, and the jukebox mirrors the server's queue and
+    // index back into it
+    private weak var playQueue: PlayQueue?
+
+    init(settings: SavedSettings, store: Store) {
+        self.settings = settings
+        self.store = store
+    }
+
+    func attach(playQueue: PlayQueue) {
+        self.playQueue = playQueue
+    }
+
     private(set) var isPlaying = false
     private(set) var currentIndex = -1
     private(set) var gain: Float = 0.0
@@ -39,7 +51,7 @@ final class Jukebox {
     
     func playSong(index: Int) {
         queueDataTask(action: .skip, parameters: [.index: index])
-        playQueue.currentIndex = index
+        playQueue?.currentIndex = index
     }
     
     func play() {
@@ -53,14 +65,16 @@ final class Jukebox {
     }
     
     func skipPrev() {
+        guard let playQueue else { return }
         let index = playQueue.prevIndex
         if index >= 0 {
             playSong(index: index)
             isPlaying = true
         }
     }
-    
+
     func skipNext() {
+        guard let playQueue else { return }
         let index = playQueue.nextIndex
         if index < playQueue.count {
             playSong(index: index)
@@ -94,20 +108,21 @@ final class Jukebox {
     }
     
     func replacePlaylistWithLocal() {
+        guard let playQueue else { return }
         clearPlaylist(remoteOnly: true)
         add(songIds: playQueue.songs().filter({ $0.serverId == serverId }).map({ $0.id }))
     }
-    
+
     func clearPlaylist(remoteOnly: Bool = false) {
         queueDataTask(action: .clear)
         if !remoteOnly {
-            _ = playQueue.clear()
+            _ = playQueue?.clear()
         }
     }
-    
+
     func shuffle() {
         queueDataTask(action: .shuffle)
-        _ = playQueue.clear()
+        _ = playQueue?.clear()
     }
     
     private var getInfoWorkItem: DispatchWorkItem?
@@ -134,34 +149,39 @@ final class Jukebox {
         
         let dataTask = session.dataTask(with: request) { data, response, error in
             if let data = data, let jukeboxResponse = self.parse(data: data) {
-                // These values are always returned
-                self.playQueue.currentIndex = jukeboxResponse.currentIndex
-                self.gain = jukeboxResponse.gain
-                self.isPlaying = jukeboxResponse.isPlaying
-                self.position = jukeboxResponse.position
-                self.positionLastReportedAt = Date()
-                
-                // Songs are only returned when calling the "get" action
-                if let songs = jukeboxResponse.songs {
-                    // Only replace the local queue when the server's list actually
-                    // differs, so the periodic refresh can't clobber a queue that was
-                    // just built locally (e.g. right after play-all/shuffle)
-                    if self.playQueue.songs().map(\.id) != songs.map(\.id) {
-                        _ = self.playQueue.clear()
-                        for song in songs {
-                            // Persist the metadata along with the queue row: these
-                            // songs may never have been browsed locally, and the queue
-                            // reads JOIN the song table
-                            self.store.queue(persistingSong: song)
+                // The response mutates jukebox state and the (main-confined) play
+                // queue, but this callback runs on the session's background queue,
+                // so apply it on the main thread
+                DispatchQueue.main.async {
+                    // These values are always returned
+                    self.playQueue?.currentIndex = jukeboxResponse.currentIndex
+                    self.gain = jukeboxResponse.gain
+                    self.isPlaying = jukeboxResponse.isPlaying
+                    self.position = jukeboxResponse.position
+                    self.positionLastReportedAt = Date()
+
+                    // Songs are only returned when calling the "get" action
+                    if let songs = jukeboxResponse.songs, let playQueue = self.playQueue {
+                        // Only replace the local queue when the server's list actually
+                        // differs, so the periodic refresh can't clobber a queue that was
+                        // just built locally (e.g. right after play-all/shuffle)
+                        if playQueue.songs().map(\.id) != songs.map(\.id) {
+                            _ = playQueue.clear()
+                            for song in songs {
+                                // Persist the metadata along with the queue row: these
+                                // songs may never have been browsed locally, and the queue
+                                // reads JOIN the song table
+                                self.store.queue(persistingSong: song)
+                            }
                         }
+
+                        NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
+                        NotificationCenter.postOnMainThread(name: Notifications.jukeboxSongInfo)
                     }
 
-                    NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
-                    NotificationCenter.postOnMainThread(name: Notifications.jukeboxSongInfo)
+                    let delay = action == .get ? 30 : 0.5
+                    self.getInfo(delay: delay)
                 }
-                
-                let delay = action == .get ? 30 : 0.5
-                self.getInfo(delay: delay)
             } else if let error {
                 self.handleConnectionError(error: error)
             }

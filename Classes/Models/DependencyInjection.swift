@@ -40,7 +40,8 @@ final class AppServices {
         // Not yet constructor-converted; nothing here resolves from the container
         // during init
         player = BassPlayer()
-        jukebox = Jukebox()
+
+        jukebox = Jukebox(settings: settings, store: store)
 
         streamManager = StreamManager(store: store, settings: settings, player: player, downloadsManager: downloadsManager, networkStatus: networkMonitor, metadataDownloader: SongMetadataDownloader())
         downloadQueue = DownloadQueue(store: store, settings: settings, downloadsManager: downloadsManager, player: player, networkStatus: networkMonitor, streamManager: streamManager, metadataDownloader: SongMetadataDownloader())
@@ -52,6 +53,7 @@ final class AppServices {
         settings.attach(networkStatus: networkMonitor)
         streamManager.attach(downloadQueue: downloadQueue)
         streamManager.attach(playQueue: playQueue)
+        jukebox.attach(playQueue: playQueue)
     }
 }
 
