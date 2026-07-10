@@ -16,6 +16,7 @@ final class DownloadQueue {
     @LazyInjected private var settings: SavedSettings
     @LazyInjected private var downloadsManager: DownloadsManager
     @LazyInjected private var streamManager: StreamManaging
+    @LazyInjected private var metadataDownloader: SongMetadataDownloading
     
     private let maxNumberOfReconnects = 5
     
@@ -106,8 +107,8 @@ final class DownloadQueue {
             handler.start()
         }
         
-        AsyncSongsHelper.downloadMetadata(song: song)
-        
+        metadataDownloader.downloadMetadata(song: song)
+
         NotificationCenter.postOnMainThread(name: Notifications.downloadQueueStarted)
     }
     

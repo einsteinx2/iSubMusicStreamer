@@ -10,6 +10,19 @@ import Foundation
 import Resolver
 import CocoaLumberjackSwift
 
+// Abstraction over the fire-and-forget song metadata prefetch (lyrics, cover art,
+// tag artist/album) so consumers can be unit tested without spawning background
+// network tasks (registered in DependencyInjection.swift)
+protocol SongMetadataDownloading {
+    func downloadMetadata(song: Song)
+}
+
+struct SongMetadataDownloader: SongMetadataDownloading {
+    func downloadMetadata(song: Song) {
+        AsyncSongsHelper.downloadMetadata(song: song)
+    }
+}
+
 struct AsyncSongsHelper {
     @Injected private static var store: Store
     @Injected private static var settings: SavedSettings

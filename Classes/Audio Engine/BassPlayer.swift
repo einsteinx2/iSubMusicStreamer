@@ -19,7 +19,7 @@ final class BassPlayer: NSObject {
     @LazyInjected private var playQueue: PlayQueue
     @LazyInjected private var store: Store
     @LazyInjected private var settings: SavedSettings
-    @LazyInjected private var social: Social
+    @LazyInjected private var social: SocialScrobbling
     @LazyInjected private var streamManager: StreamManager
     @LazyInjected private var downloadQueue: DownloadQueueing
 
@@ -430,7 +430,10 @@ final class BassPlayer: NSObject {
         retrySongOperation = nil
     }
     
-    @objc private func handleInterruption(notification: Notification) {
+    // Internal (not private) so tests can invoke it directly: posting a hand-crafted
+    // AVAudioSession notification to the notification center also delivers it to the
+    // BASS library's own observer, which crashes on non-system notifications
+    @objc func handleInterruption(notification: Notification) {
         // The system sends the type/options as NSNumber raw values, so they must be
         // decoded via init(rawValue:) — a direct cast to the enum always fails
         guard let interruptionTypeValue = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
@@ -462,7 +465,8 @@ final class BassPlayer: NSObject {
         }
     }
     
-    @objc private func handleRouteChange(notification: Notification) {
+    // Internal for direct invocation from tests, same as handleInterruption
+    @objc func handleRouteChange(notification: Notification) {
         // Same NSNumber decoding requirement as handleInterruption
         if let reasonValue = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt,
            let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue), reason == .oldDeviceUnavailable {

@@ -368,23 +368,36 @@ final class BassAudioEngineTests: StoreTestCase {
 
     // MARK: Audio session handling
 
+    // The handlers are invoked directly rather than posting to the notification center:
+    // the BASS library registers its own AVAudioSession observers, and hand-crafted
+    // notifications crash it with an unrecognized selector, killing the test host
+
+    private func interruptionNotification(type: AVAudioSession.InterruptionType, options: AVAudioSession.InterruptionOptions? = nil) -> Notification {
+        // The system delivers the type/options as NSNumber raw values
+        var userInfo: [AnyHashable: Any] = [AVAudioSessionInterruptionTypeKey: NSNumber(value: type.rawValue)]
+        if let options {
+            userInfo[AVAudioSessionInterruptionOptionKey] = NSNumber(value: options.rawValue)
+        }
+        return Notification(name: AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance(), userInfo: userInfo)
+    }
+
+    private func routeChangeNotification(reason: AVAudioSession.RouteChangeReason) -> Notification {
+        Notification(name: AVAudioSession.routeChangeNotification,
+                     object: AVAudioSession.sharedInstance(),
+                     userInfo: [AVAudioSessionRouteChangeReasonKey: NSNumber(value: reason.rawValue)])
+    }
+
     func testInterruptionPausesAndResumesPlayback() throws {
         let song = try makeCachedSong(id: "mp3", fixture: "Audio/test_song.mp3", suffix: "mp3", duration: 144)
         queueAndStart(song)
         XCTAssertTrue(waitUntil { self.player.isPlaying })
 
-        // The system delivers the type/options as NSNumber raw values
-        NotificationCenter.default.post(name: AVAudioSession.interruptionNotification,
-                                        object: AVAudioSession.sharedInstance(),
-                                        userInfo: [AVAudioSessionInterruptionTypeKey: NSNumber(value: AVAudioSession.InterruptionType.began.rawValue)])
+        player.handleInterruption(notification: interruptionNotification(type: .began))
 
         XCTAssertTrue(waitUntil { !self.player.isPlaying }, "an interruption pauses playback")
         XCTAssertTrue(player.shouldResumeFromInterruption)
 
-        NotificationCenter.default.post(name: AVAudioSession.interruptionNotification,
-                                        object: AVAudioSession.sharedInstance(),
-                                        userInfo: [AVAudioSessionInterruptionTypeKey: NSNumber(value: AVAudioSession.InterruptionType.ended.rawValue),
-                                                   AVAudioSessionInterruptionOptionKey: NSNumber(value: AVAudioSession.InterruptionOptions.shouldResume.rawValue)])
+        player.handleInterruption(notification: interruptionNotification(type: .ended, options: .shouldResume))
 
         XCTAssertTrue(waitUntil { self.player.isPlaying }, "a should-resume interruption end resumes playback")
         XCTAssertFalse(player.shouldResumeFromInterruption)
@@ -396,9 +409,7 @@ final class BassAudioEngineTests: StoreTestCase {
         XCTAssertTrue(waitUntil { self.player.isPlaying })
         player.pause()
 
-        NotificationCenter.default.post(name: AVAudioSession.interruptionNotification,
-                                        object: AVAudioSession.sharedInstance(),
-                                        userInfo: [AVAudioSessionInterruptionTypeKey: NSNumber(value: AVAudioSession.InterruptionType.began.rawValue)])
+        player.handleInterruption(notification: interruptionNotification(type: .began))
 
         XCTAssertFalse(player.shouldResumeFromInterruption, "an interruption while paused must not schedule a resume")
         XCTAssertFalse(player.isPlaying)
@@ -409,9 +420,7 @@ final class BassAudioEngineTests: StoreTestCase {
         queueAndStart(song)
         XCTAssertTrue(waitUntil { self.player.isPlaying })
 
-        NotificationCenter.default.post(name: AVAudioSession.routeChangeNotification,
-                                        object: AVAudioSession.sharedInstance(),
-                                        userInfo: [AVAudioSessionRouteChangeReasonKey: NSNumber(value: AVAudioSession.RouteChangeReason.oldDeviceUnavailable.rawValue)])
+        player.handleRouteChange(notification: routeChangeNotification(reason: .oldDeviceUnavailable))
 
         XCTAssertTrue(waitUntil { !self.player.isPlaying }, "unplugging the output device pauses playback")
     }
@@ -421,12 +430,8 @@ final class BassAudioEngineTests: StoreTestCase {
         queueAndStart(song)
         XCTAssertTrue(waitUntil { self.player.isPlaying })
 
-        NotificationCenter.default.post(name: AVAudioSession.routeChangeNotification,
-                                        object: AVAudioSession.sharedInstance(),
-                                        userInfo: [AVAudioSessionRouteChangeReasonKey: NSNumber(value: AVAudioSession.RouteChangeReason.newDeviceAvailable.rawValue)])
+        player.handleRouteChange(notification: routeChangeNotification(reason: .newDeviceAvailable))
 
-        // Give the (main-thread) handler a moment, then confirm playback continues
-        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.2))
         XCTAssertTrue(player.isPlaying)
     }
 }

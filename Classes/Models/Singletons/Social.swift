@@ -10,6 +10,15 @@ import Foundation
 import Resolver
 import CocoaLumberjackSwift
 
+// Abstraction over play-time scrobbling so the player can be unit tested without
+// spawning background scrobble network tasks (registered in DependencyInjection.swift)
+protocol SocialScrobbling: AnyObject {
+    func playerClearSocial()
+    func playerHandleSocial()
+}
+
+extension Social: SocialScrobbling {}
+
 final class Social {
     @LazyInjected private var player: PlayerControlling
     @LazyInjected private var settings: SavedSettings

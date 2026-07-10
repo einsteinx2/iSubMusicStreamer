@@ -12,11 +12,12 @@ import Resolver
 
 final class ProtocolSeamTests: SandboxedTestCase {
     // The app's protocol registrations must resolve to the same singleton instances
-    // as the concrete registrations, or app components would talk past each other
+    // as the concrete registrations, or app components would talk past each other.
+    // Resolved from .main directly: the test container shadows these seams with fakes.
     func testProtocolRegistrationsResolveToConcreteSingletons() {
-        XCTAssertTrue(Resolver.resolve(PlayerControlling.self) === Resolver.resolve(BassPlayer.self))
-        XCTAssertTrue(Resolver.resolve(StreamManaging.self) === Resolver.resolve(StreamManager.self))
-        XCTAssertTrue(Resolver.resolve(DownloadQueueing.self) === Resolver.resolve(DownloadQueue.self))
+        XCTAssertTrue(Resolver.main.resolve(PlayerControlling.self) === Resolver.main.resolve(BassPlayer.self))
+        XCTAssertTrue(Resolver.main.resolve(StreamManaging.self) === Resolver.main.resolve(StreamManager.self))
+        XCTAssertTrue(Resolver.main.resolve(DownloadQueueing.self) === Resolver.main.resolve(DownloadQueue.self))
     }
 
     func testInjectedConsumerReceivesFakePlayer() {
@@ -57,10 +58,15 @@ final class ProtocolSeamTests: SandboxedTestCase {
     }
 
     func testFakesAreScopedToTheTest() {
-        // TestContainer.deactivate() (run in tearDown) must restore the app's wiring;
-        // this asserts the override from other tests doesn't leak into this one
-        XCTAssertTrue(Resolver.resolve(PlayerControlling.self) is BassPlayer)
-        XCTAssertTrue(Resolver.resolve(StreamManaging.self) is StreamManager)
-        XCTAssertTrue(Resolver.resolve(DownloadQueueing.self) is DownloadQueue)
+        // Overrides from other tests must not leak into this one: the seams resolve to
+        // this test's own default fakes (registered in SandboxedTestCase), while
+        // TestContainer.deactivate() (run in tearDown) leaves the app's .main wiring
+        // untouched for the app components themselves
+        XCTAssertTrue(Resolver.resolve(PlayerControlling.self) is FakePlayer)
+        XCTAssertTrue(Resolver.resolve(StreamManaging.self) is FakeStreamManager)
+        XCTAssertTrue(Resolver.resolve(DownloadQueueing.self) is FakeDownloadQueue)
+        XCTAssertTrue(Resolver.main.resolve(PlayerControlling.self) is BassPlayer)
+        XCTAssertTrue(Resolver.main.resolve(StreamManaging.self) is StreamManager)
+        XCTAssertTrue(Resolver.main.resolve(DownloadQueueing.self) is DownloadQueue)
     }
 }

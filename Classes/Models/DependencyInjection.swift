@@ -31,5 +31,7 @@ struct DependencyInjection {
         main.register(factory: { main.resolve(BassPlayer.self) as PlayerControlling })
         main.register(factory: { main.resolve(StreamManager.self) as StreamManaging })
         main.register(factory: { main.resolve(DownloadQueue.self) as DownloadQueueing })
+        main.register(factory: { SongMetadataDownloader() as SongMetadataDownloading })
+        main.register(factory: { main.resolve(Social.self) as SocialScrobbling })
     }
 }

@@ -136,3 +136,25 @@ final class FakeDownloadQueue: DownloadQueueing {
         return true
     }
 }
+
+// Registered by default in SandboxedTestCase so no test spawns the real fire-and-forget
+// metadata prefetch: its background Task outlives the test that triggered it and races
+// the next test's DI re-registration (crashes the test host in ResolverScopeCache)
+final class FakeSongMetadataDownloader: SongMetadataDownloading {
+    private(set) var downloadedSongs = [Song]()
+
+    func downloadMetadata(song: Song) {
+        downloadedSongs.append(song)
+    }
+}
+
+// Registered by default in SandboxedTestCase: the real Social spawns a scrobble
+// network Task once playback passes the now-playing threshold, which outlives the
+// test that triggered it (same leak family as the metadata prefetch above)
+final class FakeSocial: SocialScrobbling {
+    private(set) var clearCount = 0
+    private(set) var handleCount = 0
+
+    func playerClearSocial() { clearCount += 1 }
+    func playerHandleSocial() { handleCount += 1 }
+}

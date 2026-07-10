@@ -15,26 +15,39 @@ import Resolver
 // container. The app's registrations remain reachable as fallbacks, so anything
 // not overridden still resolves normally.
 enum TestContainer {
-    // Per-activation cache so overridden "singletons" live only for one test
-    private static var testScope = ResolverScopeCache()
+    // Resolver reads its static `root` under its internal (private) lock, but the
+    // assignments in activate/deactivate cannot take that lock. Keeping the last few
+    // retired containers alive ensures a background thread mid-resolve never has the
+    // container deallocated out from under it by the swap.
+    private static var retiredRoots = [Resolver]()
 
     static func activate() {
-        testScope = ResolverScopeCache()
+        retire(Resolver.root)
         Resolver.root = Resolver(child: .main)
     }
 
     static func deactivate() {
-        testScope.reset()
+        retire(Resolver.root)
         Resolver.root = .main
     }
 
+    private static func retire(_ root: Resolver) {
+        guard root !== Resolver.main else { return }
+        retiredRoots.append(root)
+        if retiredRoots.count > 2 {
+            retiredRoots.removeFirst()
+        }
+    }
+
     // Registers an override that resolves to a single cached instance for this test.
-    // Resets the scope cache so re-registering a type mid-test takes effect even if
-    // the type was already resolved (cached factories capture their instances, so
-    // previously-resolved services are unaffected by the reset).
+    // Each registration gets its own scope cache: re-registering a type replaces the
+    // whole registration (and its cache) under Resolver's lock, so it takes effect
+    // even if the type was already resolved. A shared cache would instead need a
+    // reset() here, and ResolverScopeCache.reset() mutates its dictionary WITHOUT
+    // taking Resolver's lock — racing any in-flight background resolve (crashes the
+    // test host with a bad access in ResolverScopeCache.resolve).
     @discardableResult
     static func register<Service>(factory: @escaping () -> Service) -> ResolverOptions<Service> {
-        testScope.reset()
-        return Resolver.root.register { factory() }.scope(testScope)
+        return Resolver.root.register { factory() }.scope(ResolverScopeCache())
     }
 }

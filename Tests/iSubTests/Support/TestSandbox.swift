@@ -48,6 +48,18 @@ class SandboxedTestCase: XCTestCase {
         sandbox = TestSandbox()
         try sandbox.activate()
         TestContainer.activate()
+        // Default fakes for every protocol seam, so no test reaches the app's REAL
+        // singletons through the main-container fallback. Those singletons live for the
+        // whole test process, capture the first test's Store, and the real
+        // StreamManager/DownloadQueue/Social start real (failing) network work whose
+        // retry storms and background Tasks outlive the test that spawned them —
+        // burning CPU across the rest of the suite and racing later tests' DI setup.
+        // Tests that want a real instance re-register it over these.
+        TestContainer.register { FakeSongMetadataDownloader() as SongMetadataDownloading }
+        TestContainer.register { FakePlayer() as PlayerControlling }
+        TestContainer.register { FakeStreamManager() as StreamManaging }
+        TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
+        TestContainer.register { FakeSocial() as SocialScrobbling }
         testDefaultsSuiteName = "iSubTests-\(UUID().uuidString)"
         testDefaults = try XCTUnwrap(UserDefaults(suiteName: testDefaultsSuiteName))
         SavedSettings.defaults = testDefaults

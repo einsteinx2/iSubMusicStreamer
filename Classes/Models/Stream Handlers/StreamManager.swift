@@ -16,6 +16,7 @@ final class StreamManager {
     @LazyInjected private var settings: SavedSettings
     @LazyInjected private var playQueue: PlayQueue
     @LazyInjected private var player: PlayerControlling
+    @LazyInjected private var metadataDownloader: SongMetadataDownloading
     
     private let defaultNumberOfStreamsToQueue = 2
     private let maxNumberOfReconnects = 5
@@ -301,8 +302,8 @@ final class StreamManager {
             start(handler: handler)
         }
         saveHandlerStack()
-        
-        AsyncSongsHelper.downloadMetadata(song: song)
+
+        metadataDownloader.downloadMetadata(song: song)
     }
     
     func queueStream(song: Song, tempCache: Bool, startDownload: Bool) {
