@@ -362,16 +362,16 @@ final class DownloadsStoreTests: StoreTestCase {
     // MARK: Known-bug regression gates (BUG-06...BUG-09)
 
     func testBatchAddToDownloadQueue_BUG06() {
-        // BUG-06: the batch INSERT SQL has unbalanced parens and omits the NOT NULL
-        // queuedDate column, so every batch enqueue currently fails
+        // BUG-06 regression: the batch INSERT must insert (serverId, songId, queuedDate)
+        // with balanced parentheses, mirroring the single-song variant
         _ = store.add(song: TestData.song(serverId: 1, id: "1", path: "A/1.mp3"))
         _ = store.add(song: TestData.song(serverId: 1, id: "2", path: "A/2.mp3"))
         _ = store.add(song: TestData.song(serverId: 1, id: "3", path: "A/3.mp3"))
 
-        XCTExpectFailure("BUG-06: addToDownloadQueue(serverId:songIds:) SQL is malformed; remove this marker when fixing the bug") {
-            XCTAssertTrue(store.addToDownloadQueue(serverId: 1, songIds: ["1", "2", "3"]))
-            XCTAssertEqual(store.downloadQueueCount(), 3)
-        }
+        XCTAssertTrue(store.addToDownloadQueue(serverId: 1, songIds: ["1", "2", "3"]))
+        XCTAssertEqual(store.downloadQueueCount(), 3)
+        XCTAssertEqual(store.songFromDownloadQueue(position: 0)?.id, "1")
+        XCTAssertNotNil(store.queuedDateForSongFromDownloadQueue(position: 2), "batch inserts must populate queuedDate")
     }
 
     func testRemoveFromDownloadQueueForOtherServer_BUG07() {

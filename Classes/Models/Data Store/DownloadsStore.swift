@@ -854,8 +854,8 @@ extension Store {
             return try pool.write { db in
                 for songId in songIds {
                     let sql: SQL = """
-                        INSERT OR IGNORE INTO downloadQueue (serverId, songId)
-                        VALUES (\(serverId), \(songId)
+                        INSERT OR IGNORE INTO downloadQueue (serverId, songId, queuedDate)
+                        VALUES (\(serverId), \(songId), \(Date()))
                         """
                     try db.execute(literal: sql)
                 }

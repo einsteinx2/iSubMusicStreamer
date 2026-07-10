@@ -631,15 +631,12 @@ final class AsyncRecursiveSongLoaderTests: LoaderTestCase {
     }
 
     func testFolderRecursionDownloadAll_BUG06() async throws {
-        // downloadAll funnels into the batch addToDownloadQueue, whose SQL is
-        // currently malformed (BUG-06), so nothing lands in the download queue
+        // BUG-06 regression: downloadAll funnels into the batch addToDownloadQueue
         stubFolderTree()
 
         try await AsyncRecursiveSongLoader.load(serverId: serverId, id: "100", idType: .folder, action: .downloadAll)
 
-        XCTExpectFailure("BUG-06: batch addToDownloadQueue SQL is malformed; remove this marker when fixing the bug") {
-            XCTAssertEqual(store.downloadQueueCount(), 3, "all recursively found songs should be queued for download")
-        }
+        XCTAssertEqual(store.downloadQueueCount(), 3, "all recursively found songs should be queued for download")
     }
 
     func testFolderRecursionPropagatesErrors() async throws {
