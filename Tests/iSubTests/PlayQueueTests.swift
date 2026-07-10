@@ -268,6 +268,56 @@ final class PlayQueueTests: StoreTestCase {
         XCTAssertEqual(playQueue.count, 5)
         XCTAssertEqual(Set(playQueue.songs().map(\.id)), Set((1...5).map(String.init)), "shuffle queue must be a permutation")
         XCTAssertEqual(streamManager.fillStreamQueueCalls, [true])
+        XCTAssertEqual(streamManager.removeAllStreamsExceptSongs.map(\.id), ["3"],
+                       "only the playing song's stream survives the queue swap")
+    }
+
+    func testShuffleTogglePostsNotificationOnBothTransitions_BUG14() {
+        seedQueue(3)
+        playQueue.normalIndex = 1
+
+        let enabled = expectation(forNotification: Notifications.currentPlaylistShuffleToggled, object: nil)
+        playQueue.shuffleToggle()
+        wait(for: [enabled], timeout: 5)
+        XCTAssertTrue(playQueue.isShuffle)
+
+        let disabled = expectation(forNotification: Notifications.currentPlaylistShuffleToggled, object: nil)
+        playQueue.shuffleToggle()
+        wait(for: [disabled], timeout: 5)
+        XCTAssertFalse(playQueue.isShuffle)
+    }
+
+    func testShuffleToggleInJukeboxModeReplacesRemotePlaylistAndSkips_BUG14() throws {
+        MockSubsonicServer.install()
+        defer { MockSubsonicServer.uninstall() }
+        try MockSubsonicServer.stub(.jukeboxControl, fixture: "XML/jukeboxControl_status.xml")
+
+        let server = TestData.server(id: 1, urlString: "https://mock.example.com")
+        XCTAssertTrue(store.add(server: server))
+        settings.currentServer = server
+        settings.isJukeboxEnabled = true
+
+        let jukebox = Jukebox()
+        TestContainer.register { jukebox }
+        // Push the periodic getInfo far past the process lifetime on the way out
+        defer { jukebox.getInfo(delay: 999_999) }
+
+        seedQueue(3)
+        playQueue.normalIndex = 0
+
+        playQueue.shuffleToggle()
+        XCTAssertTrue(playQueue.isShuffle)
+
+        // The jukebox's remote playlist is replaced (clear) and playback starts at the
+        // current index (skip)
+        let deadline = Date(timeIntervalSinceNow: 5)
+        var actions = [String]()
+        repeat {
+            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
+            actions = MockSubsonicServer.receivedRequests(action: .jukeboxControl).compactMap { $0.parameter("action") }
+        } while !(actions.contains("clear") && actions.contains("skip")) && Date() < deadline
+        XCTAssertTrue(actions.contains("clear"), "shuffle toggle must replace the remote jukebox playlist")
+        XCTAssertTrue(actions.contains("skip"), "shuffle toggle must start the jukebox at the current index")
     }
 
     func testShuffleToggleOffRestoresNormalIndexOfCurrentSong() {

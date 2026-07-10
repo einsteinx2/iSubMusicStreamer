@@ -231,17 +231,33 @@ final class PlayQueue: NSObject {
                        streamManager.fillStreamQueue(startDownload: true)
                    }
                }
+               didToggleShuffle()
            }
        } else {
            if store.createShuffleQueue(currentPosition: normalIndex) {
                shuffleIndex = 0
                isShuffle = true
-               if let currentSong = song(index: normalIndex) {
+               // The playing song is at position 0 of the freshly created shuffle queue
+               if let currentSong = currentSong {
                    streamManager.removeAllStreams(except: currentSong)
                    streamManager.fillStreamQueue(startDownload: true)
                }
+               didToggleShuffle()
            }
        }
+    }
+
+    private func didToggleShuffle() {
+        if settings.isJukeboxEnabled {
+            jukebox.replacePlaylistWithLocal()
+            jukebox.playSong(index: currentIndex)
+        }
+
+        // Update the playlist views
+        NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistShuffleToggled)
+
+        // Inform the OS
+        MPRemoteCommandCenter.shared().changeShuffleModeCommand.currentShuffleType = isShuffle ? .items : .off
     }
     
     @discardableResult
