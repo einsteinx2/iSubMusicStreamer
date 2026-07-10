@@ -89,8 +89,17 @@ final class OnlinePlayerUITests: XCTestCase {
 
         // Seek far past what has downloaded; the player must survive, and playback should
         // recover by restarting the stream at the new offset (BUG-02 regression: the
-        // underrun wait loop in BassPlayer.pauseIfUnderrun handles running dry)
-        slider.adjust(toNormalizedSliderPosition: 0.9)
+        // underrun wait loop in BassPlayer.pauseIfUnderrun handles running dry).
+        // XCUISlider drags sometimes fail to deliver their touch events to the live
+        // slider (the thumb snaps back to the playing position), so only accept a
+        // seek whose value sticks, retrying the drag otherwise.
+        var seekLanded = false
+        for _ in 0..<5 where !seekLanded {
+            slider.adjust(toNormalizedSliderPosition: 0.9)
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 1.0))
+            seekLanded = sliderValue(app) > 70
+        }
+        XCTAssertTrue(seekLanded, "could not drag the seek slider past the cache point")
         XCTAssertTrue(app.buttons[AccessibilityId.playerPlayPause].waitForExistence(timeout: 10))
         XCTAssertTrue(waitUntil(timeout: 30) { self.sliderValue(app) > 60 },
                       "seek past the cache point did not recover")
