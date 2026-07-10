@@ -643,3 +643,36 @@ final class OptionsMappingTests: XCTestCase {
         XCTAssertNotNil(result.clampedSliderValue)
     }
 }
+
+// MARK: - Download queue tab appearance
+
+final class DownloadQueueViewControllerTests: StoreTestCase {
+    func testViewWillAppearReloadsTableAndShowsEditHeader_BUG22() {
+        // BUG-22 regression: viewWillAppear never called super, skipping the base
+        // class's registerForNotifications()/reloadTable(), so the queue tab neither
+        // refreshed nor showed its edit header on appear
+        TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
+        let freshSettings = SavedSettings()
+        TestContainer.register { freshSettings }
+
+        let song = TestData.song(serverId: 1, id: "1", title: "Queued", path: "a/1.mp3")
+        _ = store.add(song: song)
+        XCTAssertTrue(store.addToDownloadQueue(song: song))
+
+        let controller = DownloadQueueViewController()
+        controller.loadViewIfNeeded()
+        controller.beginAppearanceTransition(true, animated: false)
+        controller.endAppearanceTransition()
+
+        XCTAssertEqual(controller.tableView.numberOfRows(inSection: 0), 1, "the queue loads on appear")
+        XCTAssertNotNil(controller.saveEditHeader.superview, "the edit header appears when the queue has items")
+
+        // The base class's notification registrations must be live: finishing a download
+        // elsewhere reloads this table (observed through the download-deleted path)
+        _ = store.removeFromDownloadQueue(song: song)
+        NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongRemoved)
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.2))
+        XCTAssertEqual(controller.tableView.numberOfRows(inSection: 0), 0)
+        XCTAssertNil(controller.saveEditHeader.superview, "the edit header hides when the queue empties")
+    }
+}

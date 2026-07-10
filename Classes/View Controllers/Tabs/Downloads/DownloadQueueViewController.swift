@@ -29,8 +29,15 @@ final class DownloadQueueViewController: AbstractDownloadsViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.downloadQueueSongAdded)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(reloadTable), name: Notifications.downloadQueueSongRemoved)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.downloadQueueSongAdded)
+        NotificationCenter.removeObserverOnMainThread(self, name: Notifications.downloadQueueSongRemoved)
     }
 
     override func reloadTable() {

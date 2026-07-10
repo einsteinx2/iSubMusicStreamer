@@ -835,15 +835,16 @@ extension Store {
     
     func addToDownloadQueue(serverId: Int, songId: String) -> Bool {
         do {
-            return try pool.write { db in
+            try pool.write { db in
                 let sql: SQL = """
                     INSERT OR IGNORE INTO downloadQueue (serverId, songId, queuedDate)
                     VALUES (\(serverId), \(songId), \(Date()))
                     """
                 try db.execute(literal: sql)
-                NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongAdded)
-                return true
             }
+            // Post outside the write transaction so main-thread observers can read the database
+            NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongAdded)
+            return true
         } catch {
             DDLogError("Failed to add song \(songId) server \(serverId) to download queue: \(error)")
             return false
@@ -856,7 +857,7 @@ extension Store {
     
     func addToDownloadQueue(serverId: Int, songIds: [String]) -> Bool {
         do {
-            return try pool.write { db in
+            try pool.write { db in
                 for songId in songIds {
                     let sql: SQL = """
                         INSERT OR IGNORE INTO downloadQueue (serverId, songId, queuedDate)
@@ -864,9 +865,10 @@ extension Store {
                         """
                     try db.execute(literal: sql)
                 }
-                NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongAdded)
-                return true
             }
+            // Post outside the write transaction so main-thread observers can read the database
+            NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongAdded)
+            return true
         } catch {
             DDLogError("Failed to add songIds \(songIds) server \(serverId) to download queue: \(error)")
             return false
@@ -876,11 +878,12 @@ extension Store {
     @discardableResult
     func clearDownloadQueue() -> Bool {
         do {
-            return try pool.write { db in
+            try pool.write { db in
                 try db.execute(literal: "DELETE FROM downloadQueue")
-                NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongRemoved)
-                return true
             }
+            // Post outside the write transaction so main-thread observers can read the database
+            NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongRemoved)
+            return true
         } catch {
             DDLogError("Failed to clear download queue: \(error)")
             return false
@@ -890,15 +893,16 @@ extension Store {
     @discardableResult
     func removeFromDownloadQueue(serverId: Int, songId: String) -> Bool {
         do {
-            return try pool.write { db in
+            try pool.write { db in
                 let sql: SQL = """
                     DELETE FROM downloadQueue
                     WHERE serverId = \(serverId) AND songId = \(songId)
                     """
                 try db.execute(literal: sql)
-                NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongRemoved)
-                return true
             }
+            // Post outside the write transaction so main-thread observers can read the database
+            NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongRemoved)
+            return true
         } catch {
             DDLogError("Failed to remove song \(songId) server \(serverId) from download queue: \(error)")
             return false
