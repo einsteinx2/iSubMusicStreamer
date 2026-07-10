@@ -153,12 +153,7 @@ final class JukeboxUITests: XCTestCase {
                       "play-all did not open the player")
         XCTAssertTrue(waitForJukeboxAction("clear"), "play-all did not clear the remote jukebox playlist")
         XCTAssertTrue(waitForJukeboxAction("add"), "play-all did not add songs to the remote jukebox playlist")
-        // Starting playback (skip) is swallowed: the getInfo scheduled after every
-        // jukebox call replaces the local queue with metadata-less songs, so
-        // PlayQueue.playSong resolves no current song and never drives the jukebox
-        XCTExpectFailure("BUG-31: jukebox status songs are queued without metadata, breaking playback start", strict: false) {
-            XCTAssertTrue(waitForJukeboxAction("skip"), "play-all did not start jukebox playback")
-        }
+        XCTAssertTrue(waitForJukeboxAction("skip"), "play-all did not start jukebox playback")
         XCTAssertEqual(streamRequests(), [], "play-all streamed locally despite jukebox mode")
 
         // Shuffle at the artist level re-syncs the remote playlist with the shuffled order
@@ -189,13 +184,10 @@ final class JukeboxUITests: XCTestCase {
         XCTAssertTrue(waitUntil(timeout: 15) { table.cells.count == 2 },
                       "queued songs did not reach the jukebox play queue")
 
-        // Playing a row from the queue drives the jukebox. The queue view's getInfo
-        // refresh has already replaced the local queue with metadata-less songs by the
-        // time of the tap, so the skip is currently swallowed (BUG-31).
+        // Playing a row from the queue drives the jukebox (the queue survives the
+        // periodic getInfo refresh since BUG-31 persists the songs' metadata)
         table.cells.element(boundBy: 0).tap()
-        XCTExpectFailure("BUG-31: jukebox status songs are queued without metadata, breaking playback start", strict: false) {
-            XCTAssertTrue(waitForJukeboxAction("skip"), "playing from the queue did not send a jukebox request")
-        }
+        XCTAssertTrue(waitForJukeboxAction("skip"), "playing from the queue did not send a jukebox request")
         XCTAssertEqual(streamRequests(), [], "playing from the queue streamed locally despite jukebox mode")
     }
 }

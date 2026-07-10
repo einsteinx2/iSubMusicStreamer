@@ -364,7 +364,26 @@ extension Store {
         }
         try add(db: db, song: song, localPlaylistId: playQueueId)
     }
-    
+
+    /// Queues a song parsed from a server response (e.g. the jukebox playlist),
+    /// upserting its metadata into the song table in the same transaction: the song may
+    /// never have been browsed locally, and every queue read JOINs the song table, so
+    /// queueing only the (serverId, songId) pair would leave unresolvable rows.
+    @discardableResult
+    func queue(persistingSong song: Song) -> Bool {
+        let (playQueueId, shuffleQueueId) = queuePlaylistIds()
+        do {
+            return try pool.write { db in
+                try song.save(db)
+                try queue(db: db, song: song, playQueueId: playQueueId, shuffleQueueId: shuffleQueueId)
+                return true
+            }
+        } catch {
+            DDLogError("Failed to queue song with metadata: \(error)")
+            return false
+        }
+    }
+
     @discardableResult
     func queueNext(song: Song, offset: Int = 0) -> Bool {
         let (playQueueId, shuffleQueueId) = queuePlaylistIds()

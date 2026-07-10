@@ -135,11 +135,9 @@ final class JukeboxTests: StoreTestCase {
         XCTAssertEqual(playQueue.currentIndex, 1)
     }
 
-    func testGetResponseReplacesLocalJukeboxQueue() {
-        // The jukebox playlist references songs the client already knows (Song.queue()
-        // only writes play-queue rows), so seed the shared song records first
-        _ = store.add(song: TestData.song(serverId: 1, id: "376", title: "Going Crazy", path: "One Gud Cide/13.mp3"))
-        _ = store.add(song: TestData.song(serverId: 1, id: "229", title: "Devils Haircut", path: "Beck/01.mp3"))
+    func testGetResponsePersistsSongsAndReplacesLocalJukeboxQueue_BUG31() {
+        // The playlist references songs never browsed locally: the response must
+        // persist their metadata so the JOIN-based queue reads can resolve them
         try? MockSubsonicServer.stub(.jukeboxControl, fixture: "XML/jukeboxControl_get.xml")
 
         jukebox.getInfo(delay: 0)
@@ -153,9 +151,33 @@ final class JukeboxTests: StoreTestCase {
         XCTAssertEqual(playQueue.currentIndex, 1)
 
         // The playlist entries land in the jukebox play queue (jukebox mode is on)
+        // with their metadata persisted from the response
         let queued = store.songs(localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId)
-        XCTAssertEqual(Set(queued.map(\.id)), ["376", "229"])
+        XCTAssertEqual(queued.map(\.id), ["376", "229"])
+        XCTAssertEqual(queued.map(\.title), ["Going Crazy", "Devils Haircut"], "song metadata comes from the response")
         XCTAssertEqual(playQueue.count, 2)
+        XCTAssertEqual(playQueue.currentSong?.id, "229", "currentSong must resolve so playback skips can be issued")
+    }
+
+    func testGetResponseKeepsMatchingLocalQueueIntact_BUG31() {
+        // A local queue that already matches the server's list (e.g. freshly built by
+        // play-all) must not be cleared and rebuilt by the periodic refresh
+        let localA = TestData.song(serverId: 1, id: "376", title: "Local Title A", path: "a/1.mp3")
+        let localB = TestData.song(serverId: 1, id: "229", title: "Local Title B", path: "a/2.mp3")
+        _ = store.add(song: localA)
+        _ = store.add(song: localB)
+        _ = store.queue(song: localA)
+        _ = store.queue(song: localB)
+        try? MockSubsonicServer.stub(.jukeboxControl, fixture: "XML/jukeboxControl_get.xml")
+
+        jukebox.getInfo(delay: 0)
+        let infoExpectation = expectation(forNotification: Notifications.jukeboxSongInfo, object: nil, handler: nil)
+        wait(for: [infoExpectation], timeout: 10)
+
+        let queued = store.songs(localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId)
+        XCTAssertEqual(queued.map(\.id), ["376", "229"])
+        XCTAssertEqual(queued.map(\.title), ["Local Title A", "Local Title B"],
+                       "a queue matching the server's list is left untouched")
     }
 
     func testNotAuthorizedErrorDisablesJukebox() {

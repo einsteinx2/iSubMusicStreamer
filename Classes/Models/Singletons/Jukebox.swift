@@ -20,6 +20,7 @@ final class Jukebox {
     
     @LazyInjected private var playQueue: PlayQueue
     @LazyInjected private var settings: SavedSettings
+    @LazyInjected private var store: Store
     
     private(set) var isPlaying = false
     private(set) var currentIndex = -1
@@ -142,11 +143,19 @@ final class Jukebox {
                 
                 // Songs are only returned when calling the "get" action
                 if let songs = jukeboxResponse.songs {
-                    _ = self.playQueue.clear()
-                    for song in songs {
-                        song.queue()
+                    // Only replace the local queue when the server's list actually
+                    // differs, so the periodic refresh can't clobber a queue that was
+                    // just built locally (e.g. right after play-all/shuffle)
+                    if self.playQueue.songs().map(\.id) != songs.map(\.id) {
+                        _ = self.playQueue.clear()
+                        for song in songs {
+                            // Persist the metadata along with the queue row: these
+                            // songs may never have been browsed locally, and the queue
+                            // reads JOIN the song table
+                            self.store.queue(persistingSong: song)
+                        }
                     }
-                    
+
                     NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
                     NotificationCenter.postOnMainThread(name: Notifications.jukeboxSongInfo)
                 }
