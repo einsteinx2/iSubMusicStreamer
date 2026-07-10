@@ -12,6 +12,8 @@
 #import "GCDWebServer.h"
 #import "GCDWebServerDataResponse.h"
 #import "GCDWebServerErrorResponse.h"
+#import "GCDWebServerFileResponse.h"
+#import "GCDWebServerURLEncodedFormRequest.h"
 
 // Audio Engine
 #import "BassPluginLoad.h"

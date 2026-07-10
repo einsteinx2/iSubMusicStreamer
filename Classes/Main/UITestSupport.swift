@@ -39,19 +39,31 @@ enum UITestSupport {
         }
     }
 
+    // With -MOCKSERVER, an embedded GCDWebServer-backed mock Subsonic server serves
+    // fixture XML and real audio bytes over loopback HTTP (real byte-serving with Range
+    // support for streaming/download E2E flows) instead of the URLProtocol stub
+    static var usesMockServer: Bool { ProcessInfo.processInfo.arguments.contains("-MOCKSERVER") }
+
     // Called after store.setup() but before settings.setup(), so the seeded server is
     // picked up as the current server
     static func configureIfEnabled() {
         guard isEnabled else { return }
 
-        // All networking (API loaders, stream handlers, jukebox) serves canned fixtures
-        APIURLSession.stubProtocolClasses = [UITestURLProtocol.self]
-        APIURLSession.shared = APIURLSession.createDefaultSession()
+        let serverURL: URL
+        if usesMockServer, let mockServerURL = MockSubsonicHTTPServer.shared.start() {
+            // Real HTTP over loopback: streaming, ranges, and downloads all behave like production
+            serverURL = mockServerURL
+        } else {
+            // All networking (API loaders, stream handlers, jukebox) serves canned fixtures in-process
+            APIURLSession.stubProtocolClasses = [UITestURLProtocol.self]
+            APIURLSession.shared = APIURLSession.createDefaultSession()
+            serverURL = URL(string: "http://uitest.local")!
+        }
 
         // Seed a pre-configured server so tests skip first-run server setup
         let store: Store = Resolver.resolve()
         if store.server(id: seededServerId) == nil {
-            let server = Server(id: seededServerId, type: .subsonic, url: URL(string: "http://uitest.local")!, username: "uitest", password: "uitest")
+            let server = Server(id: seededServerId, type: .subsonic, url: serverURL, username: "uitest", password: "uitest")
             _ = store.add(server: server)
         }
         UserDefaults.standard.set(seededServerId, forKey: SavedSettings.Key.currentServerId.rawValue)
@@ -69,10 +81,10 @@ enum UITestSupport {
     }
 }
 
-// Serves canned Subsonic responses from the Fixtures folder bundled with the app (beta
-// builds only), keyed by the /rest/<action>.view path. The -FIXTURES launch argument
-// selects a named override set; anything not overridden falls back to the default map.
-final class UITestURLProtocol: URLProtocol {
+// Maps Subsonic actions to the fixture XML bundled with the app (beta builds only).
+// The -FIXTURES launch argument selects a named override set; anything not overridden
+// falls back to the default map. Shared by UITestURLProtocol and MockSubsonicHTTPServer.
+enum UITestFixtures {
     // Named response sets: overrides applied on top of the default action map
     private static let fixtureSets: [String: [String: String]] = [
         "default": [:],
@@ -84,7 +96,12 @@ final class UITestURLProtocol: URLProtocol {
         case "ping": return "ping_success.xml"
         case "getMusicFolders": return "getMusicFolders.xml"
         case "getIndexes": return "getIndexes.xml"
-        case "getMusicDirectory": return parameters["id"] == "225" ? "getMusicDirectory_album.xml" : "getMusicDirectory_artist.xml"
+        case "getMusicDirectory":
+            switch parameters["id"] {
+            case "225": return "getMusicDirectory_album.xml"
+            case "900": return "getMusicDirectory_formats.xml"
+            default: return "getMusicDirectory_artist.xml"
+            }
         case "getArtists": return "getArtists.xml"
         case "getArtist": return "getArtist.xml"
         case "getAlbum": return "getAlbum.xml"
@@ -104,12 +121,38 @@ final class UITestURLProtocol: URLProtocol {
         }
     }
 
-    private static func fixture(action: String, parameters: [String: String]) -> String? {
-        if let override = fixtureSets[UITestSupport.fixtureSet]?[action] {
-            return override
-        }
-        return defaultFixture(action: action, parameters: parameters)
+    static func xmlURL(action: String, parameters: [String: String]) -> URL? {
+        let name = fixtureSets[UITestSupport.fixtureSet]?[action] ?? defaultFixture(action: action, parameters: parameters)
+        return name.flatMap { Bundle.main.resourceURL?.appendingPathComponent("Fixtures/XML").appendingPathComponent($0) }
     }
+
+    // Audio served for stream requests: song id 9001 is the FLAC tone (exercises BASS
+    // plugin loading); everything else gets the small MP3
+    static func audioURL(songId: String?) -> URL? {
+        let name = songId == "9001" ? "tone.flac" : "test_song.mp3"
+        return Bundle.main.resourceURL?.appendingPathComponent("Fixtures/Audio").appendingPathComponent(name)
+    }
+
+    // Single-value parameters from a query string and/or form-encoded body
+    static func parameters(query: String?, bodyData: Data?) -> [String: String] {
+        var raw = query ?? ""
+        if let bodyData = bodyData, let bodyString = String(data: bodyData, encoding: .utf8), !bodyString.isEmpty {
+            raw += raw.isEmpty ? bodyString : "&\(bodyString)"
+        }
+        var parameters = [String: String]()
+        for pair in raw.components(separatedBy: "&") where !pair.isEmpty {
+            let parts = pair.components(separatedBy: "=")
+            let name = parts[0].removingPercentEncoding ?? parts[0]
+            if parameters[name] == nil {
+                parameters[name] = parts.count > 1 ? (parts[1].removingPercentEncoding ?? parts[1]) : ""
+            }
+        }
+        return parameters
+    }
+}
+
+// Serves canned Subsonic responses in-process, keyed by the /rest/<action>.view path
+final class UITestURLProtocol: URLProtocol {
 
     override class func canInit(with request: URLRequest) -> Bool { true }
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
@@ -121,10 +164,7 @@ final class UITestURLProtocol: URLProtocol {
         }
 
         let action = (url.lastPathComponent as NSString).deletingPathExtension
-        let fixtureName = Self.fixture(action: action, parameters: parameters(from: request))
-        let fixtureURL = fixtureName.flatMap {
-            Bundle.main.resourceURL?.appendingPathComponent("Fixtures/XML").appendingPathComponent($0)
-        }
+        let fixtureURL = UITestFixtures.xmlURL(action: action, parameters: parameters(from: request))
 
         guard let fixtureURL = fixtureURL, let body = try? Data(contentsOf: fixtureURL) else {
             let response = HTTPURLResponse(url: url, statusCode: 404, httpVersion: "HTTP/1.1", headerFields: nil)!
@@ -144,7 +184,7 @@ final class UITestURLProtocol: URLProtocol {
 
     // Single-value parameters from the query string (GET) or form-encoded body (POST)
     private func parameters(from request: URLRequest) -> [String: String] {
-        var raw = request.url?.query ?? ""
+        var bodyData: Data?
         if let stream = request.httpBodyStream {
             stream.open()
             defer { stream.close() }
@@ -157,18 +197,8 @@ final class UITestURLProtocol: URLProtocol {
                 guard read > 0 else { break }
                 data.append(buffer, count: read)
             }
-            if let bodyString = String(data: data, encoding: .utf8), !bodyString.isEmpty {
-                raw += raw.isEmpty ? bodyString : "&\(bodyString)"
-            }
+            bodyData = data
         }
-        var parameters = [String: String]()
-        for pair in raw.components(separatedBy: "&") where !pair.isEmpty {
-            let parts = pair.components(separatedBy: "=")
-            let name = parts[0].removingPercentEncoding ?? parts[0]
-            if parameters[name] == nil {
-                parameters[name] = parts.count > 1 ? (parts[1].removingPercentEncoding ?? parts[1]) : ""
-            }
-        }
-        return parameters
+        return UITestFixtures.parameters(query: request.url?.query, bodyData: bodyData)
     }
 }

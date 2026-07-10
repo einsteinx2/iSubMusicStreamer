@@ -21,6 +21,7 @@
 		3CBF262DDE752DF729DA467B /* AsyncStatusLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E1AC9E9A2EAEA92AC9F545 /* AsyncStatusLoaderTests.swift */; };
 		3FCD324F5CD04AE120CB9C9D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFEE5B5BB2E3EAB053528E1D /* Foundation.framework */; };
 		48AE165DB428DD91D81C69E7 /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = F48B244700CB5A6E36E74B2F /* Resolver */; };
+		4D0EB1DB58BC96F52F53E501 /* MockSubsonicHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C4D36A62D67D18EB15667 /* MockSubsonicHTTPServer.swift */; };
 		52A400F8AD3569F63217085B /* Fixtures in Resources */ = {isa = PBXBuildFile; fileRef = 2FBCCCBAB13100C9FC48F5FF /* Fixtures */; };
 		5302DE4125BA2AA00036A9B1 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5302DE4025BA2AA00036A9B1 /* StreamManager.swift */; };
 		5302DE4225BA2AA50036A9B1 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5302DE4025BA2AA00036A9B1 /* StreamManager.swift */; };
@@ -559,6 +560,8 @@
 		53FE67AD256DE9600015FC83 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FE67AB256DE9600015FC83 /* Defines.swift */; };
 		578C58F44725CE7A6DA96682 /* SmokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BA4D3DB724BB2A35919FC3 /* SmokeUITests.swift */; };
 		60AA2CAE35F3D6877EBA347B /* MockSubsonicServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4390AAE776F0A5012F0276A /* MockSubsonicServer.swift */; };
+		7D749B0A836D0F7FA0D2C516 /* MockSubsonicHTTPServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107883296110C0B5DAFE1ED3 /* MockSubsonicHTTPServerTests.swift */; };
+		7FE73704060C605A8F25FA37 /* MockSubsonicHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C4D36A62D67D18EB15667 /* MockSubsonicHTTPServer.swift */; };
 		A718D72417E325AA8B3F717E /* Fakes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C72C3647A62E9A226040F40 /* Fakes.swift */; };
 		AA92F3E1D8AAA87EA34D347B /* UITestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 613F9F6DA5D629495D6A1F64 /* UITestSupport.swift */; };
 		AA9A6974E8FC8995CF9FE37D /* AccessibilityIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE37666E2D21C0F4D547A2EA /* AccessibilityIdentifiers.swift */; };
@@ -628,6 +631,7 @@
 
 /* Begin PBXFileReference section */
 		0AF060FF00FF3A19A5CF6461 /* ProtocolSeamTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProtocolSeamTests.swift; sourceTree = "<group>"; };
+		107883296110C0B5DAFE1ED3 /* MockSubsonicHTTPServerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockSubsonicHTTPServerTests.swift; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* iSub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iSub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -931,6 +935,7 @@
 		C4390AAE776F0A5012F0276A /* MockSubsonicServer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockSubsonicServer.swift; sourceTree = "<group>"; };
 		D498ECB51B1CB43DCFF56A9E /* iSubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iSubTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE37666E2D21C0F4D547A2EA /* AccessibilityIdentifiers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AccessibilityIdentifiers.swift; sourceTree = "<group>"; };
+		E09C4D36A62D67D18EB15667 /* MockSubsonicHTTPServer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockSubsonicHTTPServer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1301,6 +1306,7 @@
 				53A6AA632B8A8A22007ABD7A /* Debug.swift */,
 				613F9F6DA5D629495D6A1F64 /* UITestSupport.swift */,
 				DE37666E2D21C0F4D547A2EA /* AccessibilityIdentifiers.swift */,
+				E09C4D36A62D67D18EB15667 /* MockSubsonicHTTPServer.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -1692,6 +1698,7 @@
 				74E1AC9E9A2EAEA92AC9F545 /* AsyncStatusLoaderTests.swift */,
 				0AF060FF00FF3A19A5CF6461 /* ProtocolSeamTests.swift */,
 				C0C12F5EA82D1F0411C495BA /* SavedSettingsTests.swift */,
+				107883296110C0B5DAFE1ED3 /* MockSubsonicHTTPServerTests.swift */,
 			);
 			name = iSubTests;
 			path = iSubTests;
@@ -2168,6 +2175,7 @@
 				535F824A25C1D30C0024C82C /* SubsonicError.swift in Sources */,
 				AA92F3E1D8AAA87EA34D347B /* UITestSupport.swift in Sources */,
 				C7AFBD8E083A37D1E99DC38A /* AccessibilityIdentifiers.swift in Sources */,
+				4D0EB1DB58BC96F52F53E501 /* MockSubsonicHTTPServer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2401,6 +2409,7 @@
 				535F824B25C1D30C0024C82C /* SubsonicError.swift in Sources */,
 				D021C608D30FF55C45411906 /* UITestSupport.swift in Sources */,
 				2413D20A33BBEF10E1AA3592 /* AccessibilityIdentifiers.swift in Sources */,
+				7FE73704060C605A8F25FA37 /* MockSubsonicHTTPServer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2418,6 +2427,7 @@
 				A718D72417E325AA8B3F717E /* Fakes.swift in Sources */,
 				E4729DFF94C3A599C018E188 /* ProtocolSeamTests.swift in Sources */,
 				2AFEC9CCCC7B8E1BC9E19681 /* SavedSettingsTests.swift in Sources */,
+				7D749B0A836D0F7FA0D2C516 /* MockSubsonicHTTPServerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

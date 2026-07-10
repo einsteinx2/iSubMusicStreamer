@@ -21,6 +21,8 @@ let xml = try Fixtures.data("XML/ping_success.xml")
   `jukeboxControl_error_not_authorized.xml`), and `getLyrics.xml` (server returned empty
   lyrics — the real empty response is `getLyrics_empty.xml`). `malformed.xml`,
   `not_xml.txt`, and `not_xml.html` are synthetic bad-response fixtures.
-- `Audio/` — small real audio files for streaming/player tests (MP3 plus at least one
-  non-MP3 format to exercise BASS plugin loading)
+- `Audio/` — small real audio files for streaming/player tests: `test_song.mp3` (a 32 kbps
+  transcode captured from the Airsonic test server) and `tone.flac` (a synthesized 10 s
+  two-tone chord; non-MP3 to exercise BASS plugin loading). Served by
+  MockSubsonicHTTPServer for stream/download requests (song id 9001 = the FLAC).
 - `LegacyDB/` — old FMDB-era SQLite databases and UserDefaults blobs for migration tests

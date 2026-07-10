@@ -51,6 +51,14 @@ final class SmokeUITests: XCTestCase {
         assertRootUI(in: app)
     }
 
+    func testMockServerModeReachesRootUI() {
+        // -MOCKSERVER serves fixtures over real loopback HTTP instead of the URLProtocol stub
+        let app = XCUIApplication()
+        app.launchArguments += ["-UITEST", "-RESET_STATE", "-MOCKSERVER"]
+        app.launch()
+        assertRootUI(in: app)
+    }
+
     func testJukeboxModeReachesRootUI() {
         let app = launchApp(mode: "jukebox")
         assertRootUI(in: app)
