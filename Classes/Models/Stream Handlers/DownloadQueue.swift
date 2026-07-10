@@ -104,7 +104,7 @@ final class DownloadQueue {
             }
         } else {
             DDLogInfo("[DownloadQueue] creating download handler for \(song)")
-            let handler = StreamHandler(song: song, tempCache: false, delegate: self)
+            let handler = StreamHandler(song: song, tempCache: false, delegate: self, dependencies: .fromResolver())
             currentStreamHandler = handler
             handler.start()
         }

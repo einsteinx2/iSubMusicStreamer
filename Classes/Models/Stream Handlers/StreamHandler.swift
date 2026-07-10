@@ -24,17 +24,37 @@ protocol StreamHandlerDelegate {
 
 // TODO: implement this - refactor to clean up the code
 final class StreamHandler: NSObject, Codable {
+    // Everything a handler needs from the outside, passed at creation (or via
+    // decoder.userInfo on the Codable path) instead of resolved ambiently
+    struct Dependencies {
+        let downloadsManager: DownloadsManager
+        let settings: SavedSettings
+        let store: Store
+        let player: PlayerControlling
+        let networkStatus: NetworkStatus
+
+        // Transitional bridge for creators that are not yet constructor-converted
+        // (StreamManager/DownloadQueue, until Phase 5a) and for tests; resolves from
+        // the container at handler-creation time
+        static func fromResolver() -> Dependencies {
+            Dependencies(downloadsManager: Resolver.resolve(),
+                         settings: Resolver.resolve(),
+                         store: Resolver.resolve(),
+                         player: Resolver.resolve(),
+                         networkStatus: Resolver.resolve())
+        }
+    }
+
     private enum CodingKeys: String, CodingKey {
         case serverId, songId, byteOffset, secondsOffset, isDelegateNotifiedToStartPlayback, isTempCache, isDownloading, contentLength, maxBitrateSetting
     }
-    
-    @Injected private var playQueue: PlayQueue
-    @Injected private var downloadsManager: DownloadsManager
-    @Injected private var settings: SavedSettings
-    @Injected private var store: Store
-    @LazyInjected private var player: PlayerControlling
-    @LazyInjected private var networkStatus: NetworkStatus
-    
+
+    private let downloadsManager: DownloadsManager
+    private let settings: SavedSettings
+    private let store: Store
+    private let player: PlayerControlling
+    private let networkStatus: NetworkStatus
+
     var delegate: StreamHandlerDelegate?
     
     let song: Song
@@ -71,22 +91,35 @@ final class StreamHandler: NSObject, Codable {
     
     var filePath: String { isTempCache ? song.localTempPath : song.localPath }
     
-    init(song: Song, byteOffset: Int = 0, secondsOffset: Double = 0.0, tempCache: Bool, delegate: StreamHandlerDelegate) {
+    init(song: Song, byteOffset: Int = 0, secondsOffset: Double = 0.0, tempCache: Bool, delegate: StreamHandlerDelegate, dependencies: Dependencies) {
         self.song = song
         self.byteOffset = byteOffset
         self.secondsOffset = secondsOffset
         self.isTempCache = tempCache
         self.delegate = delegate
+        self.downloadsManager = dependencies.downloadsManager
+        self.settings = dependencies.settings
+        self.store = dependencies.store
+        self.player = dependencies.player
+        self.networkStatus = dependencies.networkStatus
         super.init()
     }
 
     // Custom implementation to prevent storing Song objects directly to allow for easier changes to Song model
     init(from decoder: Decoder) throws {
+        guard let dependencies = decoder.userInfo[.streamHandlerDependencies] as? Dependencies else {
+            throw RuntimeError(message: "Error decoding StreamHandler, Dependencies missing from decoder userInfo (set by StreamManager.loadHandlerStack)")
+        }
+        self.downloadsManager = dependencies.downloadsManager
+        self.settings = dependencies.settings
+        self.store = dependencies.store
+        self.player = dependencies.player
+        self.networkStatus = dependencies.networkStatus
+
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let serverId: Int = try values.decode(forKey: .serverId)
         let songId: String = try values.decode(forKey: .songId)
-        let store: Store = Resolver.resolve()
-        guard let song = store.song(serverId: serverId, id: songId) else {
+        guard let song = dependencies.store.song(serverId: serverId, id: songId) else {
             throw RuntimeError(message: "Error decoding StreamHandler, Song doesn't exist for serverId \(serverId) and songId \(songId)")
         }
         self.song = song
@@ -272,6 +305,12 @@ final class StreamHandler: NSObject, Codable {
     }
     
     override var description: String { "\(super.description): for \(song)" }
+}
+
+extension CodingUserInfoKey {
+    // Carries StreamHandler.Dependencies through JSONDecoder when rehydrating the
+    // persisted handler stack (see StreamManager.loadHandlerStack)
+    static let streamHandlerDependencies = CodingUserInfoKey(rawValue: "streamHandlerDependencies")!
 }
 
 extension StreamHandler {

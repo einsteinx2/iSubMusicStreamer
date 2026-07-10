@@ -38,13 +38,13 @@ final class StreamManagerTests: StoreTestCase {
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
 
+        // The handler stack now persists to SavedSettings.defaults, which the sandbox
+        // isolates per test, so no manual key scrubbing is needed
         streamManager = StreamManager()
-        UserDefaults.standard.removeObject(forKey: "handlerStack")
     }
 
     override func tearDownWithError() throws {
         streamManager?.cancelAllStreams()
-        UserDefaults.standard.removeObject(forKey: "handlerStack")
         streamManager = nil
         playQueue = nil
         settings = nil

@@ -257,20 +257,26 @@ final class StreamManager {
     }
     
     private let handlerStackKey = "handlerStack"
-    
+
+    // The same UserDefaults store as SavedSettings so the persisted stack respects
+    // the test sandbox (production is still .standard, so existing data is kept)
+    private var defaults: UserDefaults { SavedSettings.defaults }
+
     func saveHandlerStack() {
         do {
-            UserDefaults.standard.set(try JSONEncoder().encode(handlerStack), forKey: handlerStackKey)
-            UserDefaults.standard.synchronize()
+            defaults.set(try JSONEncoder().encode(handlerStack), forKey: handlerStackKey)
+            defaults.synchronize()
         } catch {
             DDLogError("[StreamManager] saveHandlerStack: failed to archive handler stack \(error)")
         }
     }
-    
+
     func loadHandlerStack() {
         do {
-            guard let data = UserDefaults.standard.object(forKey: handlerStackKey) as? Data else { return }
-            handlerStack = try JSONDecoder().decode(from: data)
+            guard let data = defaults.object(forKey: handlerStackKey) as? Data else { return }
+            let decoder = JSONDecoder()
+            decoder.userInfo[.streamHandlerDependencies] = StreamHandler.Dependencies.fromResolver()
+            handlerStack = try decoder.decode(from: data)
             handlerStack.forEach { $0.delegate = self }
             if Debug.streamManager {
                 DDLogInfo("[StreamManager] loaded handler stack \(handlerStack)")
@@ -296,7 +302,7 @@ final class StreamManager {
     func queueStream(song: Song, byteOffset: Int = 0, secondsOffset: Double = 0.0, index: Int, tempCache: Bool, startDownload: Bool) {
         guard index >= 0 && index <= handlerStack.count, !isInQueue(song: song) else { return }
         
-        let handler = StreamHandler(song: song, byteOffset: byteOffset, secondsOffset: secondsOffset, tempCache: tempCache, delegate: self)
+        let handler = StreamHandler(song: song, byteOffset: byteOffset, secondsOffset: secondsOffset, tempCache: tempCache, delegate: self, dependencies: .fromResolver())
         handlerStack.insert(handler, at: index)
         if handlerStack.count == 1 && startDownload {
             start(handler: handler)

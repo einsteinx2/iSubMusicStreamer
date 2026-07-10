@@ -107,7 +107,7 @@ Check off each phase/sub-phase as it lands as a commit on this branch:
 - [x] Phase 1 — NetworkStatus service
 - [x] Phase 2 — SavedSettings decomposition
 - [x] Phase 3 — Composition root + leaf constructor conversion
-- [ ] Phase 4 — StreamHandler transient conversion
+- [x] Phase 4 — StreamHandler transient conversion
 - [ ] Phase 5a — StreamManager + DownloadQueue
 - [ ] Phase 5b — Jukebox
 - [ ] Phase 5c — BassPlayer + PlayQueue + Social

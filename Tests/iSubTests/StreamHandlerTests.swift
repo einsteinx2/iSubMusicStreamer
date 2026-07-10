@@ -74,12 +74,20 @@ final class StreamHandlerTests: StoreTestCase {
         return song
     }
 
+    // The Codable path requires Dependencies in the decoder's userInfo (production
+    // sets it in StreamManager.loadHandlerStack)
+    private func makeDecoder() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.userInfo[.streamHandlerDependencies] = StreamHandler.Dependencies.fromResolver()
+        return decoder
+    }
+
     func testDownloadWritesFileAndAddsDownloadedSongRow() throws {
         let body = Data((0..<5000).map { UInt8($0 % 256) })
         MockSubsonicServer.stub(.stream, data: body, contentType: "audio/mpeg")
         let song = makeSong()
 
-        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy, dependencies: .fromResolver())
         activeHandler = handler
         handler.start()
 
@@ -104,7 +112,7 @@ final class StreamHandlerTests: StoreTestCase {
         MockSubsonicServer.stub(.stream, data: Data(repeating: 7, count: 1000), contentType: "audio/mpeg")
         let song = makeSong()
 
-        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy, dependencies: .fromResolver())
         activeHandler = handler
         handler.start()
         wait(for: [delegateSpy.finishedExpectation], timeout: 10)
@@ -118,7 +126,7 @@ final class StreamHandlerTests: StoreTestCase {
         MockSubsonicServer.stub(.stream, data: body, contentType: "audio/mpeg")
         let song = makeSong(id: "78")
 
-        let handler = StreamHandler(song: song, tempCache: true, delegate: delegateSpy)
+        let handler = StreamHandler(song: song, tempCache: true, delegate: delegateSpy, dependencies: .fromResolver())
         activeHandler = handler
         handler.start()
 
@@ -138,7 +146,7 @@ final class StreamHandlerTests: StoreTestCase {
 
         MockSubsonicServer.stub(.stream, data: Data(repeating: 2, count: 2000), contentType: "audio/mpeg")
 
-        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy, dependencies: .fromResolver())
         activeHandler = handler
         handler.start(resume: true)
 
@@ -159,7 +167,7 @@ final class StreamHandlerTests: StoreTestCase {
         let song = makeSong(id: "80", kiloBitrate: 8) // 10s = 10,240 bytes
         MockSubsonicServer.stubStalling(.stream, data: Data(repeating: 3, count: 100_000))
 
-        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy, dependencies: .fromResolver())
         activeHandler = handler
         handler.start()
 
@@ -175,7 +183,7 @@ final class StreamHandlerTests: StoreTestCase {
         let song = makeSong(id: "81", kiloBitrate: 128) // 10s = 163,840 bytes; 60s = 983,040
         MockSubsonicServer.stubStalling(.stream, data: Data(repeating: 3, count: 500_000))
 
-        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy, dependencies: .fromResolver())
         activeHandler = handler
         handler.start()
 
@@ -196,7 +204,7 @@ final class StreamHandlerTests: StoreTestCase {
         let body = Data(repeating: 6, count: 1_400_000)
         MockSubsonicServer.stubChunked(.stream, data: body, chunkSize: 64 * 1024, chunkDelay: 0.02)
 
-        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy, dependencies: .fromResolver())
         activeHandler = handler
         handler.start()
 
@@ -216,7 +224,7 @@ final class StreamHandlerTests: StoreTestCase {
         let body = Data(repeating: 6, count: 1_400_000)
         MockSubsonicServer.stubChunked(.stream, data: body, chunkSize: 64 * 1024, chunkDelay: 0.02)
 
-        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy, dependencies: .fromResolver())
         activeHandler = handler
         handler.start()
 
@@ -235,7 +243,7 @@ final class StreamHandlerTests: StoreTestCase {
             MockSubsonicServer.StubResponse(headers: ["Content-Type": "audio/mpeg", "Content-Length": "1000000"], body: Data(repeating: 4, count: 10_000))
         }
 
-        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy, dependencies: .fromResolver())
         activeHandler = handler
         handler.start()
 
@@ -250,7 +258,7 @@ final class StreamHandlerTests: StoreTestCase {
         let song = makeSong(id: "85")
         MockSubsonicServer.stub(.stream, data: Data("Internal Server Error".utf8), statusCode: 500, contentType: "text/html")
 
-        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy, dependencies: .fromResolver())
         activeHandler = handler
         handler.start()
 
@@ -265,7 +273,7 @@ final class StreamHandlerTests: StoreTestCase {
         let song = makeSong(id: "83")
         MockSubsonicServer.stubStalling(.stream, data: Data(repeating: 5, count: 200_000))
 
-        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy, dependencies: .fromResolver())
         activeHandler = handler
         handler.start()
         wait(for: [delegateSpy.startedExpectation], timeout: 10)
@@ -284,10 +292,10 @@ final class StreamHandlerTests: StoreTestCase {
 
     func testCodableRoundTrip() throws {
         let song = makeSong(id: "84")
-        let handler = StreamHandler(song: song, byteOffset: 1234, secondsOffset: 56.5, tempCache: true, delegate: delegateSpy)
+        let handler = StreamHandler(song: song, byteOffset: 1234, secondsOffset: 56.5, tempCache: true, delegate: delegateSpy, dependencies: .fromResolver())
 
         let data = try JSONEncoder().encode(handler)
-        let decoded = try JSONDecoder().decode(StreamHandler.self, from: data)
+        let decoded = try makeDecoder().decode(StreamHandler.self, from: data)
 
         XCTAssertEqual(decoded.song, song, "the song is rehydrated from the store by serverId+songId")
         XCTAssertEqual(decoded.byteOffset, 1234)
@@ -305,7 +313,7 @@ final class StreamHandlerTests: StoreTestCase {
              "isDelegateNotifiedToStartPlayback": true, "isTempCache": false,
              "isDownloading": true, "contentLength": 555555, "maxBitrateSetting": 160}
             """
-        let decoded = try JSONDecoder().decode(StreamHandler.self, from: Data(json.utf8))
+        let decoded = try makeDecoder().decode(StreamHandler.self, from: Data(json.utf8))
 
         XCTAssertEqual(decoded.song.id, "85")
         XCTAssertEqual(decoded.byteOffset, 999)
@@ -315,6 +323,6 @@ final class StreamHandlerTests: StoreTestCase {
 
     func testCodableDecodeFailsForUnknownSong() {
         let json = #"{"serverId": 1, "songId": "does-not-exist", "byteOffset": 0, "secondsOffset": 0, "isDelegateNotifiedToStartPlayback": false, "isTempCache": false, "isDownloading": false}"#
-        XCTAssertThrowsError(try JSONDecoder().decode(StreamHandler.self, from: Data(json.utf8)))
+        XCTAssertThrowsError(try makeDecoder().decode(StreamHandler.self, from: Data(json.utf8)))
     }
 }

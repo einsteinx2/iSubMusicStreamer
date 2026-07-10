@@ -193,7 +193,7 @@ final class DownloadQueueTests: StoreTestCase {
         let song = makeQueuedSong(id: "1")
 
         // The stream manager already has a handler for this song
-        let handler = StreamHandler(song: song, tempCache: false, delegate: StreamHandlerDelegateSpy())
+        let handler = StreamHandler(song: song, tempCache: false, delegate: StreamHandlerDelegateSpy(), dependencies: .fromResolver())
         streamManager.handlersBySong[song] = handler
 
         downloadQueue.start()
