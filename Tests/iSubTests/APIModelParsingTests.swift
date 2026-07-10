@@ -282,15 +282,13 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testFolderAlbumTagAlbumNameIsTheAlbumTitleNotTheArtist() throws {
-        // Regression for BUG-20: tagAlbumName is currently parsed from the "artist"
+        // Regression for BUG-20: tagAlbumName used to be parsed from the "artist"
         // attribute (copy-paste of the tagArtistName line above it). The album title
-        // lives in the "album" attribute on directory child elements.
+        // lives in the "album" attribute on directory child elements, matching Song.
         let xml = #"<child id="225" parent="219" isDir="true" title="Odelay" album="Odelay" artist="Beck"/>"#
         let element = try XMLTestHelpers.element(tag: "child", xml: xml)
         let album = FolderAlbum(serverId: serverId, element: element)
-        XCTExpectFailure("BUG-20: tagAlbumName currently parses the artist attribute; remove this marker when fixing the bug") {
-            XCTAssertEqual(album.tagAlbumName, "Odelay", "FolderAlbum.tagAlbumName should be the album title, not the artist name (BUG-20)")
-        }
+        XCTAssertEqual(album.tagAlbumName, "Odelay", "FolderAlbum.tagAlbumName should be the album title, not the artist name (BUG-20)")
     }
 
     func testFolderAlbumMissingAttributeDefaults() throws {

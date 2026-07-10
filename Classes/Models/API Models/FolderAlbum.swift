@@ -32,7 +32,7 @@ struct FolderAlbum: Codable, Equatable {
         self.coverArtId = element.attribute("coverArt").stringXMLOptional
         self.parentFolderId = element.attribute("parent").stringXMLOptional
         self.tagArtistName = element.attribute("artist").stringXMLOptional
-        self.tagAlbumName = element.attribute("artist").stringXMLOptional
+        self.tagAlbumName = element.attribute("album").stringXMLOptional
         self.playCount = element.attribute("playCount").intXML
         self.year = element.attribute("year").intXMLOptional
         self.genre = element.attribute("genre").stringXMLOptional
