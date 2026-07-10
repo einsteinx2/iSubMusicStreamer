@@ -10,40 +10,53 @@ import Foundation
 import CocoaLumberjackSwift
 
 struct FileSystem {
-    static let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    static let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-    
-    static var applicationSupportDirectory: URL = {
-        let url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("iSub")
-        createDirectory(url: url)
-        return url
-    }()
-    
-    static var databaseDirectory: URL = {
-        let url = applicationSupportDirectory.appendingPathComponent("database")
-        createDirectory(url: url)
-        return url
-    }()
-    
+    // Test hook: when set, all directories resolve under this root instead of the standard system locations
+    static var rootOverride: URL?
+
+    static var documentDirectory: URL {
+        guard let root = rootOverride else {
+            return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        }
+        return createdDirectory(url: root.appendingPathComponent("Documents"))
+    }
+
+    static var cachesDirectory: URL {
+        guard let root = rootOverride else {
+            return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        }
+        return createdDirectory(url: root.appendingPathComponent("Caches"))
+    }
+
+    static var applicationSupportDirectory: URL {
+        let base: URL
+        if let root = rootOverride {
+            base = root.appendingPathComponent("Application Support")
+        } else {
+            base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        }
+        return createdDirectory(url: base.appendingPathComponent("iSub"))
+    }
+
+    static var databaseDirectory: URL {
+        createdDirectory(url: applicationSupportDirectory.appendingPathComponent("database"))
+    }
+
     static var downloadsDirectory: URL {
-        let url = documentDirectory.appendingPathComponent("Downloads")
-        createDirectory(url: url)
-        return url
+        createdDirectory(url: documentDirectory.appendingPathComponent("Downloads"))
     }
-    
+
     static var tempDownloadsDirectory: URL {
-        let url = cachesDirectory.appendingPathComponent("Temp Downloads")
-        createDirectory(url: url)
-        return url
+        createdDirectory(url: cachesDirectory.appendingPathComponent("Temp Downloads"))
     }
-    
-    private static func createDirectory(url: URL) {
+
+    private static func createdDirectory(url: URL) -> URL {
         if !FileManager.default.fileExists(atPath: url.path) {
             do {
                 try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
             } catch {
-                DDLogError("Failed to create application support directory at \(url.path): \(error)")
+                DDLogError("Failed to create directory at \(url.path): \(error)")
             }
         }
+        return url
     }
 }
