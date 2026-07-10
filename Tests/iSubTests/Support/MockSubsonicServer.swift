@@ -25,6 +25,10 @@ enum MockSubsonicServer {
         var headers: [String: String] = ["Content-Type": "text/xml; charset=utf-8"]
         var body = Data()
         var connectionError: Error?
+        // When true, the response headers and body are delivered but the request
+        // never finishes — the transfer stays in-flight until cancelled. Used to
+        // test cancellation of active downloads.
+        var stall = false
     }
 
     struct ReceivedRequest {
@@ -89,6 +93,12 @@ enum MockSubsonicServer {
     static func stubConnectionError(_ action: SubsonicAction, code: URLError.Code = .cannotConnectToHost) {
         lock.lock(); defer { lock.unlock() }
         stubs[action.rawValue] = StubResponse(connectionError: URLError(code))
+    }
+
+    // Delivers the body but never completes, keeping the transfer in-flight
+    static func stubStalling(_ action: SubsonicAction, data: Data, contentType: String = "application/octet-stream") {
+        lock.lock(); defer { lock.unlock() }
+        stubs[action.rawValue] = StubResponse(headers: ["Content-Type": contentType], body: data, stall: true)
     }
 
     // Dynamic stub: the handler receives the decoded request and returns the response,
@@ -200,7 +210,9 @@ final class MockSubsonicURLProtocol: URLProtocol {
 
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
         client?.urlProtocol(self, didLoad: stub.body)
-        client?.urlProtocolDidFinishLoading(self)
+        if !stub.stall {
+            client?.urlProtocolDidFinishLoading(self)
+        }
     }
 
     override func stopLoading() {}
