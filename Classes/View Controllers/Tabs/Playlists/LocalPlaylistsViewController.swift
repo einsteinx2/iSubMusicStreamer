@@ -85,30 +85,20 @@ final class LocalPlaylistsViewController: CustomUITableViewController {
     }
     
     private func deleteLocalPlaylists(indexPaths: [IndexPath]) {
-        // TODO: implement this
-    //    // Sort the row indexes to make sure they're accending
-    //    NSArray<NSNumber*> *sortedRowIndexes = [rowIndexes sortedArrayUsingSelector:@selector(compare:)];
-    //
-    //    [databaseS.localPlaylistsDbQueue inDatabase:^(FMDatabase *db) {
-    //        [db executeUpdate:@"DROP TABLE localPlaylistsTemp"];
-    //        [db executeUpdate:@"CREATE TABLE localPlaylistsTemp(playlist TEXT, md5 TEXT)"];
-    //        for (NSNumber *index in [sortedRowIndexes reverseObjectEnumerator]) {
-    //            @autoreleasepool {
-    //                NSInteger rowId = [index integerValue] + 1;
-    //                NSString *md5 = [db stringForQuery:[NSString stringWithFormat:@"SELECT md5 FROM localPlaylists WHERE ROWID = %li", (long)rowId]];
-    //                [db executeUpdate:[NSString stringWithFormat:@"DROP TABLE playlist%@", md5]];
-    //                [db executeUpdate:@"DELETE FROM localPlaylists WHERE md5 = ?", md5];
-    //            }
-    //        }
-    //        [db executeUpdate:@"INSERT INTO localPlaylistsTemp SELECT * FROM localPlaylists"];
-    //        [db executeUpdate:@"DROP TABLE localPlaylists"];
-    //        [db executeUpdate:@"ALTER TABLE localPlaylistsTemp RENAME TO localPlaylists"];
-    //    }];
-    //
-    //    [self.tableView reloadData];
-    //
-    //    [self editPlaylistAction:nil];
-    //    [self reloadData];
+        let playlistIds = indexPaths.compactMap { $0.row < localPlaylists.count ? localPlaylists[$0.row].id : nil }
+        guard playlistIds.count > 0 else { return }
+
+        HUD.show(message: "Deleting")
+        DispatchQueue.userInitiated.async {
+            for playlistId in playlistIds {
+                // Deletes the playlist and its localPlaylistSong rows
+                self.store.delete(localPlaylistId: playlistId)
+            }
+            DispatchQueue.main.async {
+                HUD.hide()
+                self.reloadData()
+            }
+        }
     }
     
     func cancelLoad() {
@@ -129,12 +119,14 @@ extension LocalPlaylistsViewController: SaveEditHeaderDelegate {
     
     func saveEditHeaderSaveDeleteAction(_ saveEditHeader: SaveEditHeader) {
         if saveEditHeader.isEditing {
-            HUD.show(message: "Deleting")
-            DispatchQueue.userInitiated.async {
-                defer { HUD.hide() }
-                if let indexPathsForSelectedRows = self.tableView.indexPathsForSelectedRows {
-                    self.deleteLocalPlaylists(indexPaths: indexPathsForSelectedRows)
+            if let indexPathsForSelectedRows = tableView.indexPathsForSelectedRows, indexPathsForSelectedRows.count > 0 {
+                deleteLocalPlaylists(indexPaths: indexPathsForSelectedRows)
+            } else {
+                // Nothing selected, so select all the rows (mirrors the Play Queue tab)
+                for i in 0..<localPlaylists.count {
+                    tableView.selectRow(at: IndexPath(row: i, section: 0), animated: false, scrollPosition: .none)
                 }
+                saveEditHeader.selectedCount = localPlaylists.count
             }
         } else {
             // Save the current play queue as a new playlist, matching the Play Queue tab
