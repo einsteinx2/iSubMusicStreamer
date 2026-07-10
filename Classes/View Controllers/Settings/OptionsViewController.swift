@@ -14,6 +14,7 @@ final class OptionsViewController: UIViewController {
     @Injected private var settings: SavedSettings
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var store: Store
+    @Injected private var networkStatus: NetworkStatus
     
     @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var scrollViewContents: UIView!
@@ -306,10 +307,10 @@ final class OptionsViewController: UIViewController {
             settings.isLockScreenArtEnabled = enableLockScreenArt.isOn
         case disableCellUsageSwitch:
             settings.isDisableUsageOver3G = disableCellUsageSwitch.isOn
-            if !settings.isOfflineMode && settings.isDisableUsageOver3G && !SceneDelegate.shared.isWifi {
+            if !settings.isOfflineMode && settings.isDisableUsageOver3G && !networkStatus.isWifi {
                 // We're on 3G and we just disabled use on 3G, so go offline
                 NotificationCenter.postOnMainThread(name: Notifications.goOffline)
-            } else if settings.isOfflineMode && !settings.isDisableUsageOver3G && !SceneDelegate.shared.isWifi {
+            } else if settings.isOfflineMode && !settings.isDisableUsageOver3G && !networkStatus.isWifi {
                 // We're on 3G and we just enabled use on 3G, so go online if we're offline
                 NotificationCenter.postOnMainThread(name: Notifications.goOnline)
             }

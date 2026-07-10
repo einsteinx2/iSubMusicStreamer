@@ -26,7 +26,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private(set) var tabBarController: CustomUITabBarController?
     private(set) var padRootViewController: PadRootViewController?
         
-    private let networkMonitor = NetworkMonitor()
+    @Injected private var networkMonitor: NetworkMonitor
     
     var isWifi: Bool { networkMonitor.isWifi }
     var isNetworkReachable: Bool { networkMonitor.isNetworkReachable }

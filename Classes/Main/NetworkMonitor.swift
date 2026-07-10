@@ -12,6 +12,13 @@ import CocoaLumberjackSwift
 import ProgressHUD
 import Reachability
 
+// Narrow read-only view of network state so model-layer services don't reach up into
+// SceneDelegate (registered in DependencyInjection.swift; tests override with FakeNetworkStatus)
+protocol NetworkStatus: AnyObject {
+    var isWifi: Bool { get }
+    var isNetworkReachable: Bool { get }
+}
+
 final class NetworkMonitor {
     @Injected private var settings: SavedSettings
     
@@ -69,3 +76,5 @@ final class NetworkMonitor {
         }
     }
 }
+
+extension NetworkMonitor: NetworkStatus {}

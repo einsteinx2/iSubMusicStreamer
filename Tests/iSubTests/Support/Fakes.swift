@@ -14,6 +14,11 @@ import Foundation
 //     let player = FakePlayer()
 //     TestContainer.register { player as PlayerControlling }
 
+final class FakeNetworkStatus: NetworkStatus {
+    var isWifi = true
+    var isNetworkReachable = true
+}
+
 final class FakePlayer: PlayerControlling {
     var isPlaying = false
     var isStarted = false

@@ -21,7 +21,8 @@ final class SavedSettings {
     @LazyInjected private var downloadsManager: DownloadsManager
     @LazyInjected private var downloadQueue: DownloadQueueing
     @LazyInjected private var store: Store
-    
+    @LazyInjected private var networkStatus: NetworkStatus
+
     // The UserDefaults store backing all settings, including the @UserDefault property
     // wrappers. Tests point this at an isolated suite (see SandboxedTestCase); production
     // always uses .standard. Resolved at access time so a swap affects existing instances.
@@ -90,7 +91,7 @@ final class SavedSettings {
     var maxBitrate3G: Int
     
     var currentMaxBitrate: Int {
-        switch SceneDelegate.shared.isWifi ? maxBitrateWifi : maxBitrate3G {
+        switch networkStatus.isWifi ? maxBitrateWifi : maxBitrate3G {
             case 0: return 64
             case 1: return 96
             case 2: return 128
@@ -109,7 +110,7 @@ final class SavedSettings {
     var maxVideoBitrate3G: Int
     
     var currentVideoBitrates: [String]? {
-        if SceneDelegate.shared.isWifi {
+        if networkStatus.isWifi {
             switch maxVideoBitrateWifi {
             case 0: return ["512"]
             case 1: return ["1024", "512"]
@@ -154,7 +155,7 @@ final class SavedSettings {
     @UserDefault(key: .isManualCachingOnWWANEnabled, defaultValue: false)
     var isManualCachingOnWWANEnabled: Bool {
         didSet {
-            if !SceneDelegate.shared.isWifi {
+            if !networkStatus.isWifi {
                 isManualCachingOnWWANEnabled ? downloadQueue.start() : downloadQueue.stop()
             }
         }

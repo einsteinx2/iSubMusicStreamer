@@ -17,7 +17,8 @@ final class DownloadQueue {
     @LazyInjected private var downloadsManager: DownloadsManager
     @LazyInjected private var streamManager: StreamManaging
     @LazyInjected private var metadataDownloader: SongMetadataDownloading
-    
+    @LazyInjected private var networkStatus: NetworkStatus
+
     private let maxNumberOfReconnects = 5
     
     private(set) var isDownloading = false
@@ -45,7 +46,7 @@ final class DownloadQueue {
         guard let song = currentQueuedSongInDb else { return }
         
         // Check if there's another queued song and that were are on Wifi
-        if settings.isOfflineMode || (!SceneDelegate.shared.isWifi && !settings.isManualCachingOnWWANEnabled) {
+        if settings.isOfflineMode || (!networkStatus.isWifi && !settings.isManualCachingOnWWANEnabled) {
             return
         }
         
@@ -146,7 +147,7 @@ final class DownloadQueue {
     // MARK: Notifications
     
     @objc private func didEnterOnlineMode() {
-        if SceneDelegate.shared.isWifi || settings.isManualCachingOnWWANEnabled {
+        if networkStatus.isWifi || settings.isManualCachingOnWWANEnabled {
             start()
         } else {
             stop()

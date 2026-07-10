@@ -33,6 +33,7 @@ final class StreamHandler: NSObject, Codable {
     @Injected private var settings: SavedSettings
     @Injected private var store: Store
     @LazyInjected private var player: PlayerControlling
+    @LazyInjected private var networkStatus: NetworkStatus
     
     var delegate: StreamHandlerDelegate?
     
@@ -395,7 +396,7 @@ extension StreamHandler: URLSessionDataDelegate {
             if player.isPlaying {
                 let intervalSinceLastThrottle = Date().timeIntervalSince(throttlingDate)
                 if intervalSinceLastThrottle > throttleTimeInterval && totalBytesTransferred > minBytesToStartLimiting(kiloBitrate: kiloBitrate) {
-                    let delay = throttleDelay(bytesTransferred: bytesTransfered, intervalSinceLastThrottle: intervalSinceLastThrottle, kiloBitrate: kiloBitrate, isCell: !SceneDelegate.shared.isWifi)
+                    let delay = throttleDelay(bytesTransferred: bytesTransfered, intervalSinceLastThrottle: intervalSinceLastThrottle, kiloBitrate: kiloBitrate, isCell: !networkStatus.isWifi)
                     if delay > 0 {
                         if isThrottleLoggingEnabled {
                             DDLogInfo("[StreamHandler] Throttling: pausing for \(delay), interval: \(intervalSinceLastThrottle), bytesTransferred: \(bytesTransfered)")

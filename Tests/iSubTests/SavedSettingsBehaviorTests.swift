@@ -15,12 +15,16 @@ import XCTest
 final class SavedSettingsBehaviorTests: StoreTestCase {
     private var settings: SavedSettings!
     private var player: FakePlayer!
+    private var network: FakeNetworkStatus!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
         player = FakePlayer()
         let fakePlayer = player!
         TestContainer.register { fakePlayer as PlayerControlling }
+        network = FakeNetworkStatus()
+        let fakeNetwork = network!
+        TestContainer.register { fakeNetwork as NetworkStatus }
         let freshPlayQueue = PlayQueue()
         TestContainer.register { freshPlayQueue }
         let freshSettings = SavedSettings()
@@ -31,31 +35,42 @@ final class SavedSettingsBehaviorTests: StoreTestCase {
     override func tearDownWithError() throws {
         settings = nil
         player = nil
+        network = nil
         try super.tearDownWithError()
     }
 
     // MARK: currentMaxBitrate
 
     func testCurrentMaxBitrateMapping() {
-        // The mapping goes through whichever network branch the simulator reports,
-        // so set both settings identically to make the result deterministic
         let expected: [(setting: Int, kiloBitrate: Int)] = [
             (0, 64), (1, 96), (2, 128), (3, 160), (4, 192), (5, 256), (6, 320),
         ]
         for (setting, kiloBitrate) in expected {
+            // On wifi only the wifi setting is read
+            network.isWifi = true
             settings.maxBitrateWifi = setting
+            settings.maxBitrate3G = 7
+            XCTAssertEqual(settings.currentMaxBitrate, kiloBitrate, "wifi setting \(setting) should map to \(kiloBitrate) Kbps")
+
+            // On cellular only the 3G setting is read
+            network.isWifi = false
+            settings.maxBitrateWifi = 7
             settings.maxBitrate3G = setting
-            XCTAssertEqual(settings.currentMaxBitrate, kiloBitrate, "setting \(setting) should map to \(kiloBitrate) Kbps")
+            XCTAssertEqual(settings.currentMaxBitrate, kiloBitrate, "3G setting \(setting) should map to \(kiloBitrate) Kbps")
         }
     }
 
     func testCurrentMaxBitrateOutOfRangeMeansUnlimited() {
         // 7 is the "Unlimited" slider position and maps to 0 (no cap)
+        network.isWifi = true
         settings.maxBitrateWifi = 7
-        settings.maxBitrate3G = 7
+        XCTAssertEqual(settings.currentMaxBitrate, 0)
+        settings.maxBitrateWifi = 99
         XCTAssertEqual(settings.currentMaxBitrate, 0)
 
-        settings.maxBitrateWifi = 99
+        network.isWifi = false
+        settings.maxBitrate3G = 7
+        XCTAssertEqual(settings.currentMaxBitrate, 0)
         settings.maxBitrate3G = 99
         XCTAssertEqual(settings.currentMaxBitrate, 0)
     }
@@ -68,16 +83,30 @@ final class SavedSettingsBehaviorTests: StoreTestCase {
 
     // MARK: currentVideoBitrates
 
-    func testCurrentVideoBitratesArrays() {
-        let isWifi = SceneDelegate.shared.isWifi
-        let expectedByLevel: [Int: [String]] = isWifi ? [
+    func testCurrentVideoBitratesArraysOnWifi() {
+        network.isWifi = true
+        let expectedByLevel: [Int: [String]] = [
             0: ["512"],
             1: ["1024", "512"],
             2: ["1536", "1024", "512"],
             3: ["2048", "1536", "1024", "512"],
             4: ["4096", "2048", "1536", "1024", "512"],
             5: ["8192@1920x1080", "4096", "2048", "1536", "1024", "512"],
-        ] : [
+        ]
+
+        for (level, expected) in expectedByLevel {
+            settings.maxVideoBitrateWifi = level
+            XCTAssertEqual(settings.currentVideoBitrates, expected, "wifi video bitrate level \(level)")
+        }
+
+        // Out-of-range levels return nil (no bitrate restriction parameter)
+        settings.maxVideoBitrateWifi = 9
+        XCTAssertNil(settings.currentVideoBitrates)
+    }
+
+    func testCurrentVideoBitratesArraysOnCellular() {
+        network.isWifi = false
+        let expectedByLevel: [Int: [String]] = [
             0: ["192"],
             1: ["512", "192"],
             2: ["1024", "512", "192"],
@@ -87,13 +116,11 @@ final class SavedSettingsBehaviorTests: StoreTestCase {
         ]
 
         for (level, expected) in expectedByLevel {
-            settings.maxVideoBitrateWifi = level
             settings.maxVideoBitrate3G = level
-            XCTAssertEqual(settings.currentVideoBitrates, expected, "video bitrate level \(level)")
+            XCTAssertEqual(settings.currentVideoBitrates, expected, "3G video bitrate level \(level)")
         }
 
         // Out-of-range levels return nil (no bitrate restriction parameter)
-        settings.maxVideoBitrateWifi = 9
         settings.maxVideoBitrate3G = 9
         XCTAssertNil(settings.currentVideoBitrates)
     }

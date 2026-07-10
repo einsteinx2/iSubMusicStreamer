@@ -15,6 +15,7 @@ final class DownloadQueueTests: StoreTestCase {
     private var downloadQueue: DownloadQueue!
     private var streamManager: FakeStreamManager!
     private var settings: SavedSettings!
+    private var network: FakeNetworkStatus!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -26,11 +27,18 @@ final class DownloadQueueTests: StoreTestCase {
         TestContainer.register { fakeStreamManager as StreamManaging }
         TestContainer.register { FakePlayer() as PlayerControlling }
 
+        // Deterministic network state regardless of the simulator's actual connection
+        network = FakeNetworkStatus()
+        let fakeNetwork = network!
+        TestContainer.register { fakeNetwork as NetworkStatus }
+
+        // SavedSettings' isManualCachingOnWWANEnabled didSet pokes the DownloadQueueing
+        // seam; point it at a fake so it can't reach the app's singleton queue
+        TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
+
         let freshSettings = SavedSettings()
         TestContainer.register { freshSettings }
         settings = freshSettings
-        // Allow downloading regardless of the simulator's reported network type
-        settings.isManualCachingOnWWANEnabled = true
 
         let freshPlayQueue = PlayQueue()
         TestContainer.register { freshPlayQueue }
@@ -43,6 +51,7 @@ final class DownloadQueueTests: StoreTestCase {
         downloadQueue = nil
         streamManager = nil
         settings = nil
+        network = nil
         MockSubsonicServer.uninstall()
         try super.tearDownWithError()
     }
@@ -80,6 +89,41 @@ final class DownloadQueueTests: StoreTestCase {
         XCTAssertFalse(downloadQueue.isDownloading)
         XCTAssertNil(downloadQueue.currentStreamHandler)
         XCTAssertEqual(MockSubsonicServer.receivedRequests.count, 0)
+    }
+
+    func testStartOnCellularWithoutManualCachingDoesNotDownload() {
+        _ = makeQueuedSong(id: "1")
+        network.isWifi = false
+        settings.isManualCachingOnWWANEnabled = false
+
+        downloadQueue.start()
+
+        XCTAssertFalse(downloadQueue.isDownloading, "cellular downloads are gated behind the manual caching setting")
+        XCTAssertNil(downloadQueue.currentStreamHandler)
+        XCTAssertEqual(MockSubsonicServer.receivedRequests.count, 0)
+    }
+
+    func testStartOnCellularWithManualCachingDownloads() {
+        MockSubsonicServer.stubStalling(.stream, data: Data(repeating: 1, count: 100_000))
+        _ = makeQueuedSong(id: "1")
+        network.isWifi = false
+        settings.isManualCachingOnWWANEnabled = true
+
+        downloadQueue.start()
+
+        XCTAssertTrue(downloadQueue.isDownloading, "manual caching on WWAN allows cellular downloads")
+        XCTAssertNotNil(downloadQueue.currentStreamHandler)
+    }
+
+    func testStartOnWifiDownloadsWithoutManualCaching() {
+        MockSubsonicServer.stubStalling(.stream, data: Data(repeating: 1, count: 100_000))
+        _ = makeQueuedSong(id: "1")
+        network.isWifi = true
+        settings.isManualCachingOnWWANEnabled = false
+
+        downloadQueue.start()
+
+        XCTAssertTrue(downloadQueue.isDownloading, "wifi downloads need no extra setting")
     }
 
     func testStartRemovesVideoSongsFromQueue() {
