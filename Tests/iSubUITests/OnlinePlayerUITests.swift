@@ -169,16 +169,11 @@ final class OnlinePlayerUITests: XCTestCase {
                       "swiping back did not return to the cover art page")
     }
 
-    // Dismisses the EQ screen's transient alerts: the one-time instructions alert and
-    // the delayed save-custom-preset prompt that fires ~2s after appearing
-    private func dismissEqualizerAlerts(_ app: XCUIApplication) {
-        let deadline = Date(timeIntervalSinceNow: 5)
-        while Date() < deadline {
-            let alert = app.alerts.firstMatch
-            if alert.exists, alert.buttons["Cancel"].exists {
-                alert.buttons["Cancel"].tap()
-            }
-            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.5))
+    // Dismisses the EQ screen's one-time instructions alert if it is showing
+    private func dismissEqualizerInstructions(_ app: XCUIApplication) {
+        let alert = app.alerts["Instructions"]
+        if alert.waitForExistence(timeout: 3), alert.buttons["Cancel"].exists {
+            alert.buttons["Cancel"].tap()
         }
     }
 
@@ -194,7 +189,13 @@ final class OnlinePlayerUITests: XCTestCase {
 
         let toggle = app.buttons[AccessibilityId.equalizerToggle]
         XCTAssertTrue(toggle.waitForExistence(timeout: 10), "equalizer screen did not open")
-        dismissEqualizerAlerts(app)
+        dismissEqualizerInstructions(app)
+
+        // BUG-13 regression: no save-preset dialog may auto-appear after opening the EQ
+        // (a debug leftover fired promptToSaveCustomPreset 2s after viewDidAppear)
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 3))
+        XCTAssertFalse(app.alerts["Create Preset"].exists, "the save-preset alert must not auto-appear")
+        XCTAssertFalse(app.staticTexts["Choose Preset To Save"].exists, "the save-preset dialog must not auto-appear")
 
         // Switch presets first: tapping the preset label reveals the picker. This also
         // loads EQ values, which the on/off toggle below needs (with an empty value set

@@ -245,10 +245,6 @@ final class EqualizerViewController: UIViewController {
             alert.addCancelAction()
             present(alert, animated: true)
         }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.promptToSaveCustomPreset()
-        }
     }
     
     func createAndDrawEqualizerPath() {
