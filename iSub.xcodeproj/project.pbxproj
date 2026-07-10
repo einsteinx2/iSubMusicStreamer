@@ -563,6 +563,7 @@
 		53FE67AC256DE9600015FC83 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FE67AB256DE9600015FC83 /* Defines.swift */; };
 		53FE67AD256DE9600015FC83 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FE67AB256DE9600015FC83 /* Defines.swift */; };
 		578C58F44725CE7A6DA96682 /* SmokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BA4D3DB724BB2A35919FC3 /* SmokeUITests.swift */; };
+		5E71971E2CBA50993869DD3C /* SingletonLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AD837C7CFF79AD56059ADC /* SingletonLifecycleTests.swift */; };
 		60AA2CAE35F3D6877EBA347B /* MockSubsonicServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4390AAE776F0A5012F0276A /* MockSubsonicServer.swift */; };
 		642325DA58624CA59F28AA64 /* StoreTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95792952EED3FA395BC7CAAD /* StoreTestCase.swift */; };
 		686768481F889F38E3A1A6A3 /* StreamHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17D1E4D2250282AFC6FA22B /* StreamHandlerTests.swift */; };
@@ -962,6 +963,7 @@
 		ADDF0049FFA91CF95DE6383E /* TestSandbox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TestSandbox.swift; sourceTree = "<group>"; };
 		AFEE5B5BB2E3EAB053528E1D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B17D1E4D2250282AFC6FA22B /* StreamHandlerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StreamHandlerTests.swift; sourceTree = "<group>"; };
+		B9AD837C7CFF79AD56059ADC /* SingletonLifecycleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SingletonLifecycleTests.swift; sourceTree = "<group>"; };
 		BBD38BFE8D30605FF509F359 /* ServerStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerStoreTests.swift; sourceTree = "<group>"; };
 		BC49FC4E61A56434F2523497 /* URLRequestSubsonicTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = URLRequestSubsonicTests.swift; sourceTree = "<group>"; };
 		BED04C832956F5B52922ABF7 /* PlaylistStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlaylistStoreTests.swift; sourceTree = "<group>"; };
@@ -1757,6 +1759,7 @@
 				7BB9A537E6684624B72605F7 /* SavedSettingsBehaviorTests.swift */,
 				53DBB093129F25CDF2334C20 /* GRDBRoundTripTests.swift */,
 				F8337FDA15B0E63C6858971B /* BassAudioEngineTests.swift */,
+				B9AD837C7CFF79AD56059ADC /* SingletonLifecycleTests.swift */,
 			);
 			name = iSubTests;
 			path = iSubTests;
@@ -2508,6 +2511,7 @@
 				4A43507ACB16A1D092D187AD /* SavedSettingsBehaviorTests.swift in Sources */,
 				A7D7FD300FA5D924D56FCE41 /* GRDBRoundTripTests.swift in Sources */,
 				C705DE4953B91C2502AB9A20 /* BassAudioEngineTests.swift in Sources */,
+				5E71971E2CBA50993869DD3C /* SingletonLifecycleTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
