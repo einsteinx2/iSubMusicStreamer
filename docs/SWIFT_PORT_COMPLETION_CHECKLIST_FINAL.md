@@ -129,7 +129,7 @@ Verified defects. The P0s are crash- or core-functionality-level; fix order with
 
 ### Crashes & data-integrity (P0)
 
-- [ ] **[BUG-01] P0 — RepeatMode enum written raw to UserDefaults crashes the app.** `SavedSettings.swift:336` — `saveState()` calls `defaults.set(state.repeatMode, ...)` with a Swift enum (not a plist type), raising `NSInvalidArgumentException`. saveState runs on a 3.3 s timer and on backgrounding, so toggling repeat one/all crashes within seconds. `loadState` already reads it as an integer.
+- [x] **[BUG-01] P0 — RepeatMode enum written raw to UserDefaults crashes the app.** `SavedSettings.swift:336` — `saveState()` calls `defaults.set(state.repeatMode, ...)` with a Swift enum (not a plist type), raising `NSInvalidArgumentException`. saveState runs on a 3.3 s timer and on backgrounding, so toggling repeat one/all crashes within seconds. `loadState` already reads it as an integer.
   > **Prompt:** In Classes/Models/Singletons/SavedSettings.swift saveState() (~line 336), persist state.repeatMode.rawValue instead of the enum (loadState at ~289 already reads defaults.integer). Audit the file for any other non-plist UserDefaults writes. Add a unit test that sets each RepeatMode, runs saveState, and round-trips through loadState without throwing.
 
 - [ ] **[BUG-02] P0 — Buffering/underrun handling is a no-op — streaming songs can run dry.** `BassPlayer.swift:533` — `pauseIfUnderrun(bassStream:)` immediately returns; the old `keepRingBufferFilledInternal` (BassGaplessPlayer.m) paused output and waited when playback outran the download. `BassStream` already carries the dormant `isWaiting`/`shouldBreakWaitLoop`/`shouldBreakWaitLoopForever` fields and `bassGetOutputData` already calls it on short reads.

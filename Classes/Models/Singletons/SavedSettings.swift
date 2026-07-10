@@ -338,7 +338,7 @@ final class SavedSettings {
         
         if playQueue.repeatMode != state.repeatMode {
             state.repeatMode = playQueue.repeatMode
-            defaults.set(state.repeatMode, forKey: .repeatMode)
+            defaults.set(state.repeatMode.rawValue, forKey: .repeatMode)
             isDefaultsDirty = true
         }
         

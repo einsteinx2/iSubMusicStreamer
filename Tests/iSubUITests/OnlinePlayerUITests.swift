@@ -102,20 +102,16 @@ final class OnlinePlayerUITests: XCTestCase {
         let app = launchPlaying()
         XCTAssertTrue(waitUntil(timeout: 20) { self.sliderValue(app) > 0 }, "playback did not start")
 
-        // BUG-01: SavedSettings.saveState writes the RepeatMode enum raw to UserDefaults,
-        // which crashes the app within seconds of changing the repeat mode. Until that
-        // fix lands this test documents the failure without failing the suite.
-        XCTExpectFailure("BUG-01: raw RepeatMode enum written to UserDefaults crashes saveState", strict: false) {
-            let repeatButton = app.buttons[AccessibilityId.playerRepeat]
-            repeatButton.tap() // none -> one
-            repeatButton.tap() // one -> all
-            repeatButton.tap() // all -> none
+        let repeatButton = app.buttons[AccessibilityId.playerRepeat]
+        repeatButton.tap() // none -> one
+        repeatButton.tap() // one -> all
+        repeatButton.tap() // all -> none
 
-            // Survive past the 3.3s save-state timer
-            RunLoop.current.run(until: Date(timeIntervalSinceNow: 5))
-            XCTAssertTrue(app.buttons[AccessibilityId.playerRepeat].exists,
-                          "app crashed after cycling repeat mode (BUG-01)")
-        }
+        // Survive past the 3.3s save-state timer (BUG-01 regression: saveState used to
+        // crash writing the RepeatMode enum raw to UserDefaults)
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 5))
+        XCTAssertTrue(app.buttons[AccessibilityId.playerRepeat].exists,
+                      "app crashed after cycling repeat mode (BUG-01)")
     }
 
     func testShuffleToggleRefreshesQueueView() {

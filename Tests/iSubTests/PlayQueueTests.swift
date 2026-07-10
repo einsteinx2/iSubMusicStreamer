@@ -346,9 +346,7 @@ final class PlayQueueTests: StoreTestCase {
         playQueue.isShuffle = true
         playQueue.normalIndex = 2
         playQueue.shuffleIndex = 1
-        // NOTE: repeatMode is left at .none — saveState currently writes the raw
-        // enum to UserDefaults which raises NSInvalidArgumentException (BUG-01);
-        // the repeatMode save/load round-trip test lands with that fix
+        playQueue.repeatMode = .all
 
         settings.saveState()
 
@@ -356,10 +354,26 @@ final class PlayQueueTests: StoreTestCase {
         XCTAssertTrue(testDefaults.bool(forKey: SavedSettings.Key.isShuffle.rawValue))
         XCTAssertEqual(testDefaults.integer(forKey: SavedSettings.Key.normalPlaylistIndex.rawValue), 2)
         XCTAssertEqual(testDefaults.integer(forKey: SavedSettings.Key.shufflePlaylistIndex.rawValue), 1)
+        XCTAssertEqual(testDefaults.integer(forKey: SavedSettings.Key.repeatMode.rawValue), RepeatMode.all.rawValue)
         XCTAssertEqual(testDefaults.integer(forKey: SavedSettings.Key.kiloBitrate.rawValue), 192)
         XCTAssertEqual(testDefaults.double(forKey: SavedSettings.Key.seekTime.rawValue), 42.5, accuracy: 0.001)
         XCTAssertEqual(testDefaults.integer(forKey: SavedSettings.Key.byteOffset.rawValue), 123456)
         XCTAssertTrue(testDefaults.bool(forKey: SavedSettings.Key.recover.rawValue), "playing with recoverSetting 0 must set the recover flag")
+    }
+
+    func testSaveStateRoundTripsEveryRepeatMode() {
+        // BUG-01 regression: saveState used to write the RepeatMode enum itself to
+        // UserDefaults (not a plist type), raising NSInvalidArgumentException
+        seedQueue(3)
+        for mode in [RepeatMode.one, .all, .none] {
+            playQueue.repeatMode = mode
+            settings.saveState()
+            XCTAssertEqual(testDefaults.integer(forKey: SavedSettings.Key.repeatMode.rawValue), mode.rawValue)
+
+            playQueue.repeatMode = .none
+            settings.loadState()
+            XCTAssertEqual(playQueue.repeatMode, mode, "repeatMode must survive a saveState/loadState round-trip")
+        }
     }
 
     func testLoadStateRestoresQueueAndPlayerOffsets() {
