@@ -56,6 +56,16 @@ settings options toggles. Add new identifiers to that file as tests need them.
   state, and that server shuffle, search playback, Folders play-all/shuffle, and the
   Playlists queue drive the remote player with `jukeboxControl` requests instead of
   local `stream` requests.
+- `PadUITests` (E2E-05) — the iPad split-view UI (`PadRootViewController` /
+  `PadMenuViewController`): menu items swap the detail pane, drill-down + back inside
+  the detail pane, the embedded player, and offline mode with seeded downloads. The
+  suite skips itself on iPhone destinations; run it against an iPad simulator:
+
+  ```sh
+  xcodebuild test -project iSub.xcodeproj -scheme "iSub Beta" \
+    -destination 'platform=iOS Simulator,name=iPad Pro 11-inch (M5)' \
+    -only-testing:iSubUITests/PadUITests
+  ```
 
 ## Running
 

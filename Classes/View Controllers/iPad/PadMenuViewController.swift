@@ -176,6 +176,8 @@ extension PadMenuViewController: UITableViewConfiguration {
         let contents = cellContents[indexPath.row]
         cell.imageView?.image = UIImage(named: contents.imageName)
         cell.textLabel?.text = contents.text
+        // Stable identifier for UI tests (padMenu.settings, padMenu.home, ...)
+        cell.accessibilityIdentifier = "padMenu.\(contents.text.lowercased())"
         return cell
     }
     

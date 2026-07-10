@@ -74,6 +74,14 @@ enum AccessibilityId {
     static let playerBookmarks = "player.bookmarks"
     static let playerPageControl = "player.pageControl"
 
+    // iPad menu (PadMenuViewController rows)
+    static let padMenuSettings = "padMenu.settings"
+    static let padMenuHome = "padMenu.home"
+    static let padMenuLibrary = "padMenu.library"
+    static let padMenuPlaylists = "padMenu.playlists"
+    static let padMenuDownloads = "padMenu.downloads"
+    static let padMenuBack = "padMenu.back"
+
     // Options (settings)
     static let optionsManualOfflineMode = "options.manualOfflineMode"
     static let optionsEnableScrobbling = "options.enableScrobbling"

@@ -112,7 +112,7 @@ The manual QA script `Testing/Integration Tests.txt` (Online / Offline / Jukebox
   > **Note (found while writing this suite):** two real defects surfaced, both documented in-test with non-strict `XCTExpectFailure`: jukebox status responses queue songs without persisting their metadata, which breaks the local jukebox queue and swallows the playback-start (skip) call after play-all/shuffle and queue-row taps (filed as BUG-31); and server shuffle in jukebox mode never syncs the remote playlist (only a skip is sent — no clear/add).
   > **Prompt:** Implement JUKEBOX MODE XCUITests: launch with jukebox enabled and a stub recording jukebox control calls; assert the jukebox UI styling, that Home server-shuffle and play-from-search issue jukebox control requests instead of local streams, Folders queue/play-all/shuffle produce the right calls, and playlists queue correctly under jukebox mode.
 
-- [ ] **[E2E-05] P3 — iPad split-view / menu suite.**
+- [x] **[E2E-05] P3 — iPad split-view / menu suite.**
   > **Prompt:** Add an iPad-destination XCUITest suite for PadRootViewController/PadMenuViewController: selecting each menu item swaps the detail controller, drill-down and the custom back button work, offline mode shows correct content, and the player opens. Wire into the test scheme on an iPad simulator destination.
 
 - [ ] **[E2E-06] P3 — Video (HLS) playback coverage.**
