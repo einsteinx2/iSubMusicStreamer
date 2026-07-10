@@ -6,7 +6,7 @@
 //  Copyright © 2021 Ben Baron. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import Resolver
 import CocoaLumberjackSwift
 import CwlCatchException
@@ -260,6 +260,46 @@ final class StreamHandler: NSObject, Codable {
     }
     
     override var description: String { "\(super.description): for \(song)" }
+}
+
+extension StreamHandler {
+    /// Validates a finished download (shared by StreamManager and DownloadQueue): an
+    /// empty body or a tiny Subsonic error XML body (e.g. trial expired) means the
+    /// server sent no audio. Presents the matching alert, deletes the invalid file,
+    /// and returns false for those failures.
+    func validateFinishedDownload() -> Bool {
+        if totalBytesTransferred == 0 {
+            // Not a trial issue, but no data was returned at all
+            let message = "We asked for a song, but the server didn't send anything!\n\nIt's likely that Subsonic's transcoding failed."
+            let alert = UIAlertController(title: "Uh Oh!", message: message, preferredStyle: .alert)
+            alert.addOKAction()
+            UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+
+            // TODO: Do we care if this fails? Can the file potentially not be there at all?
+            try? FileManager.default.removeItem(at: URL(fileURLWithPath: filePath))
+            return false
+        } else if totalBytesTransferred < 1000 {
+            // Verify that it's a license issue
+            if let data = try? Data(contentsOf: URL(fileURLWithPath: filePath)) {
+                let root = RXMLElement(xmlData: data)
+                if root.isValid {
+                    if let error = root.child("error"), error.isValid {
+                        let subsonicError = SubsonicError(element: error)
+                        if case .trialExpired = subsonicError {
+                            let alert = UIAlertController(title: "Subsonic Error", message: subsonicError.localizedDescription, preferredStyle: .alert)
+                            alert.addOKAction()
+                            UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+
+                            // TODO: Do we care if this fails? Can the file potentially not be there at all?
+                            try? FileManager.default.removeItem(at: URL(fileURLWithPath: filePath))
+                            return false
+                        }
+                    }
+                }
+            }
+        }
+        return true
+    }
 }
 
 extension StreamHandler: URLSessionDataDelegate {

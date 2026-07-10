@@ -24,7 +24,9 @@ final class StreamManager {
     private(set) var lastCachedSong: Song?
     private(set) var lastTempCachedSong: Song?
     
-    private var resumeHandlerWorkItem: DispatchWorkItem?
+    // Per-song retry work items so canceling one handler's pending retry can never
+    // cancel another's
+    private var resumeHandlerWorkItems = [Song: DispatchWorkItem]()
     
     func setup() {
         // Load the handler stack, it may have been full when iSub was closed
@@ -133,11 +135,12 @@ final class StreamManager {
         // Remove the handler
         handlerStack.removeAll { $0 == handler }
         
-        // Remove the song from downloads if necessary
+        // Remove the partial download record unless the song is fully or temp cached,
+        // or the download queue is actively downloading this song itself (matches the
+        // old ISMSStreamManager removeStreamAtIndex: behavior)
         let song = handler.song
-        guard let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == song else { return }
-        // TODO: Why is this checking if the DownloadQueue is downloading?
-        if currentQueuedSong != song && !song.isFullyCached && !song.isTempCached && downloadQueue.isDownloading {
+        let isBeingDownloadedByQueue = downloadQueue.isDownloading && downloadQueue.currentQueuedSong == song
+        if !song.isFullyCached && !song.isTempCached && !isBeingDownloadedByQueue {
             if Debug.streamManager {
                 DDLogInfo("[StreamManager] Removing song from cached songs table: \(song)")
             }
@@ -198,8 +201,8 @@ final class StreamManager {
     }
     
     private func cancelResume(handler: StreamHandler) {
-        resumeHandlerWorkItem?.cancel()
-        resumeHandlerWorkItem = nil
+        resumeHandlerWorkItems[handler.song]?.cancel()
+        resumeHandlerWorkItems[handler.song] = nil
     }
     
     private func resume(handler: StreamHandler) {
@@ -348,11 +351,19 @@ final class StreamManager {
     }
     
     @objc private func currentPlaylistIndexChanged() {
-        // TODO: implement this
-        // TODO: Fix this logic, it's wrong
-        if let prevSong = playQueue.prevSong {
-            removeStream(song: prevSong)
+        // The index moved (skip, jump, previous): drop every handler that isn't for the
+        // current or next song - just removing prevSong left stale handlers behind on
+        // any jump of more than one position - then refill the prefetch queue
+        var songs = [Song]()
+        if let currentSong = playQueue.currentSong {
+            songs.append(currentSong)
         }
+        if let nextSong = playQueue.nextSong {
+            songs.append(nextSong)
+        }
+
+        removeAllStreams(except: songs)
+        fillStreamQueue(startDownload: player.isStarted)
     }
     
     @objc private func currentPlaylistOrderChanged() {
@@ -390,41 +401,8 @@ extension StreamManager: StreamHandlerDelegate {
     }
     
     func streamHandlerConnectionFinished(handler: StreamHandler) {
-        var success = true
-        
-        if handler.totalBytesTransferred == 0 {
-            // Not a trial issue, but no data was returned at all
-            let message = "We asked for a song, but the server didn't send anything!\n\nIt's likely that Subsonic's transcoding failed."
-            let alert = UIAlertController(title: "Uh Oh!", message: message, preferredStyle: .alert)
-            alert.addOKAction()
-            UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
-            
-            // TODO: Do we care if this fails? Can the file potentially not be there at all?
-            try? FileManager.default.removeItem(at: URL(fileURLWithPath: handler.filePath))
-            success = false
-        } else if handler.totalBytesTransferred < 1000 {
-            // Verify that it's a license issue
-            if let data = try? Data(contentsOf: URL(fileURLWithPath: handler.filePath)) {
-                let root = RXMLElement(xmlData: data)
-                if root.isValid {
-                    if let error = root.child("error"), error.isValid {
-                        let subsonicError = SubsonicError(element: error)
-                        if case .trialExpired = subsonicError {
-                            let alert = UIAlertController(title: "Subsonic Error", message: subsonicError.localizedDescription, preferredStyle: .alert)
-                            alert.addOKAction()
-                            UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
-                            
-                            // TODO: Do we care if this fails? Can the file potentially not be there at all?
-                            try? FileManager.default.removeItem(at: URL(fileURLWithPath: handler.filePath))
-                            success = false
-                        }
-                    }
-                }
-            }
-        }
-        
-        guard success else { return }
-        
+        guard handler.validateFinishedDownload() else { return }
+
         // TODO: Should check store return values and do some extra error handling?
         if !handler.isTempCache {
             if downloadQueue.isInQueue(song: handler.song) {
@@ -457,10 +435,12 @@ extension StreamManager: StreamHandlerDelegate {
             handler.numberOfReconnects += 1
             // Retry connection after a delay to prevent a tight loop
             let resumeHandlerWorkItem = DispatchWorkItem { [weak self] in
+                self?.resumeHandlerWorkItems[handler.song] = nil
                 self?.resume(handler: handler)
             }
-            self.resumeHandlerWorkItem = resumeHandlerWorkItem
-            DispatchQueue.main.async(after: 1.5, execute: resumeHandlerWorkItem)            
+            resumeHandlerWorkItems[handler.song]?.cancel()
+            resumeHandlerWorkItems[handler.song] = resumeHandlerWorkItem
+            DispatchQueue.main.async(after: 1.5, execute: resumeHandlerWorkItem)
         } else {
             // Tried max number of times so remove
             NotificationCenter.postOnMainThread(name: Notifications.streamHandlerSongFailed)

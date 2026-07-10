@@ -316,6 +316,77 @@ final class StreamManagerTests: StoreTestCase {
         XCTAssertFalse(streamManager.isInQueue(song: song), "the handler is removed after exhausting retries")
     }
 
+    // MARK: BUG-25 stream-queue maintenance
+
+    func testCurrentPlaylistIndexChangedRemovesStaleHandlersAndRefills_BUG25() {
+        MockSubsonicServer.stubStalling(.stream, data: Data(repeating: 1, count: 10_000))
+        settings.isSongCachingEnabled = true
+        settings.isNextSongCacheEnabled = true
+        let songs = (1...5).map { makeSong(id: "\($0)") }
+        seedPlayQueue(songs)
+        playQueue.currentIndex = 0
+        streamManager.setup()
+
+        streamManager.fillStreamQueue(startDownload: false)
+        XCTAssertTrue(streamManager.isInQueue(song: songs[0]))
+        XCTAssertTrue(streamManager.isInQueue(song: songs[1]))
+
+        // Jump several positions: the handlers for songs 1/2 are now stale and must be
+        // replaced by the new current + next songs (removing only prevSong missed them)
+        playQueue.currentIndex = 3
+
+        XCTAssertFalse(streamManager.isInQueue(song: songs[0]), "stale handler for the old current song must be removed")
+        XCTAssertFalse(streamManager.isInQueue(song: songs[1]), "stale handler for the old next song must be removed")
+        XCTAssertTrue(streamManager.isInQueue(song: songs[3]), "the new current song is prefetched")
+        XCTAssertTrue(streamManager.isInQueue(song: songs[4]), "the new next song is prefetched")
+    }
+
+    func testRemoveStreamDeletesPartialDownloadRecord_BUG25() {
+        // The old guard was self-contradictory, so the delete branch never ran and
+        // partial download rows accumulated
+        let song = makeSong(id: "1")
+        _ = store.add(downloadedSong: DownloadedSong(song: song))
+        streamManager.queueStream(song: song, tempCache: false, startDownload: false)
+
+        streamManager.removeStream(song: song)
+
+        XCTAssertNil(store.downloadedSong(serverId: 1, songId: "1"),
+                     "removing a partial stream must clean up its download record")
+    }
+
+    func testRemoveStreamKeepsDownloadRecordWhenDownloadQueueOwnsTheSong_BUG25() {
+        let song = makeSong(id: "1")
+        _ = store.add(downloadedSong: DownloadedSong(song: song))
+        streamManager.queueStream(song: song, tempCache: false, startDownload: false)
+
+        // The download queue is actively downloading this same song, so the record
+        // must survive the stream handler's removal
+        downloadQueue.currentQueuedSong = song
+        downloadQueue.isDownloading = true
+        streamManager.removeStream(song: song)
+
+        XCTAssertNotNil(store.downloadedSong(serverId: 1, songId: "1"),
+                        "the download queue's active song must keep its record")
+    }
+
+    func testRetrySchedulingIsPerHandler_BUG25() {
+        // Canceling one handler's pending retry must not cancel another's: the old code
+        // kept a single shared work item
+        MockSubsonicServer.stubStalling(.stream, data: Data(repeating: 1, count: 10_000))
+        let songA = makeSong(id: "A")
+        let songB = makeSong(id: "B")
+        streamManager.queueStream(song: songA, tempCache: false, startDownload: false)
+        streamManager.queueStream(song: songB, tempCache: false, startDownload: false)
+        let handlerA = streamManager.handler(song: songA)!
+
+        // Handler A fails and schedules its 1.5s retry; canceling B must not touch it
+        streamManager.streamHandlerConnectionFailed(handler: handlerA, error: APIError.serverUnreachable)
+        streamManager.cancelStream(song: songB)
+
+        XCTAssertTrue(waitUntil(timeout: 5) { self.streamManager.isDownloading(song: songA) },
+                      "handler A's scheduled retry must survive canceling handler B")
+    }
+
     // MARK: Handler stealing
 
     func testStealForDownloadQueueRemovesHandlerFromStack() {

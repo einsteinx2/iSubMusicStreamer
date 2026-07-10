@@ -167,46 +167,12 @@ extension DownloadQueue: StreamHandlerDelegate {
         streamManager.streamHandlerStartPlayback(handler: handler)
     }
     
-    // TODO: implement this - share this logic with stream manager
     func streamHandlerConnectionFinished(handler: StreamHandler) {
-        var success = true
-        
-        if handler.totalBytesTransferred == 0 {
-            // Not a trial issue, but no data was returned at all
-            let message = "We asked for a song, but the server didn't send anything!\n\nIt's likely that Subsonic's transcoding failed."
-            let alert = UIAlertController(title: "Uh Oh!", message: message, preferredStyle: .alert)
-            alert.addOKAction()
-            UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
-            
-            // TODO: Do we care if this fails? Can the file potentially not be there at all?
-            try? FileManager.default.removeItem(at: URL(fileURLWithPath: handler.filePath))
-            success = false
-        } else if handler.totalBytesTransferred < 1000 {
-            // Verify that it's a license issue
-            if let data = try? Data(contentsOf: URL(fileURLWithPath: handler.filePath)) {
-                let root = RXMLElement(xmlData: data)
-                if root.isValid {
-                    if let error = root.child("error"), error.isValid {
-                        let subsonicError = SubsonicError(element: error)
-                        if case .trialExpired = subsonicError {
-                            let alert = UIAlertController(title: "Subsonic Error", message: subsonicError.localizedDescription, preferredStyle: .alert)
-                            alert.addOKAction()
-                            UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
-                            
-                            // TODO: Do we care if this fails? Can the file potentially not be there at all?
-                            try? FileManager.default.removeItem(at: URL(fileURLWithPath: handler.filePath))
-                            success = false
-                        }
-                    }
-                }
-            }
-        }
-        
-        guard success else {
+        guard handler.validateFinishedDownload() else {
             stop()
             return
         }
-        
+
         if let song = currentQueuedSong {
             // Mark song as cached
             _ = store.update(downloadFinished: true, song: song)
@@ -228,14 +194,16 @@ extension DownloadQueue: StreamHandlerDelegate {
         start()
     }
     
-    // TODO: implement this - share this logic with stream manager
     func streamHandlerConnectionFailed(handler: StreamHandler, error: Error) {
         if handler.numberOfReconnects < maxNumberOfReconnects {
             // Less than max number of reconnections, so try again
             handler.numberOfReconnects += 1
-            // Retry connection after a delay to prevent a tight loop
+            // Retry connection after a delay to prevent a tight loop. Only resume if
+            // the failed handler is still the active one, so a stale retry can never
+            // restart a replacement handler
             DispatchQueue.main.async(after: 1.5) { [weak self] in
-                self?.resume(byteOffset: 0)
+                guard let self, self.currentStreamHandler == handler else { return }
+                self.resume(byteOffset: 0)
             }
         } else {
             ProgressHUD.banner("Song failed to download", handler.song.primaryLabelText)
