@@ -6,9 +6,8 @@
 //  Copyright © 2024 Ben Baron. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import CocoaLumberjackSwift
-import Resolver
 
 enum CachingType: Int {
     case minSpace = 0
@@ -16,7 +15,14 @@ enum CachingType: Int {
 }
 
 final class SavedSettings {
-    @LazyInjected private var networkStatus: NetworkStatus
+    // Network state for the bitrate branches: a weak back-reference attached at the
+    // composition root (AppServices) or by tests. When never attached, the wifi
+    // branch is used.
+    private weak var networkStatus: NetworkStatus?
+
+    func attach(networkStatus: NetworkStatus) {
+        self.networkStatus = networkStatus
+    }
 
     // The UserDefaults store backing all settings, including the @UserDefault property
     // wrappers. Tests point this at an isolated suite (see SandboxedTestCase); production
@@ -83,7 +89,7 @@ final class SavedSettings {
     var maxBitrate3G: Int
     
     var currentMaxBitrate: Int {
-        switch networkStatus.isWifi ? maxBitrateWifi : maxBitrate3G {
+        switch (networkStatus?.isWifi ?? true) ? maxBitrateWifi : maxBitrate3G {
             case 0: return 64
             case 1: return 96
             case 2: return 128
@@ -102,7 +108,7 @@ final class SavedSettings {
     var maxVideoBitrate3G: Int
     
     var currentVideoBitrates: [String]? {
-        if networkStatus.isWifi {
+        if networkStatus?.isWifi ?? true {
             switch maxVideoBitrateWifi {
             case 0: return ["512"]
             case 1: return ["1024", "512"]

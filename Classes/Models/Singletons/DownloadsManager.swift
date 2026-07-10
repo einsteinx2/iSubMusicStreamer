@@ -13,8 +13,8 @@ import CocoaLumberjackSwift
 // TODO: Refactor this and make sure it works correctly
 // NOTE: not final so tests can subclass to stub freeSpace and observe alerts
 class DownloadsManager {
-    @LazyInjected private var settings: SavedSettings
-    @LazyInjected private var store: Store
+    private let settings: SavedSettings
+    private let store: Store
     @LazyInjected private var downloadQueue: DownloadQueueing
 
     private var cacheCheckInterval = 60.0
@@ -28,7 +28,9 @@ class DownloadsManager {
     var totalSpace: Int { FileSystem.downloadsDirectory.systemTotalSpace ?? 0 }
     var freeSpace: Int { FileSystem.downloadsDirectory.systemAvailableSpace ?? 0 }
 
-    init() {
+    init(settings: SavedSettings, store: Store) {
+        self.settings = settings
+        self.store = store
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(backupCacheSettingChanged), name: Notifications.backupCacheSettingChanged)
     }
 

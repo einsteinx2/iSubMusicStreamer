@@ -29,7 +29,7 @@ final class DownloadsManagerTests: StoreTestCase {
         let fakeDownloadQueue = downloadQueue!
         TestContainer.register { fakeDownloadQueue as DownloadQueueing }
 
-        manager = DownloadsManager()
+        manager = DownloadsManager(settings: freshSettings, store: store)
     }
 
     override func tearDownWithError() throws {

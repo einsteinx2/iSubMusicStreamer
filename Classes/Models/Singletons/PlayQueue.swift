@@ -24,7 +24,7 @@ final class PlayQueue: NSObject {
     @LazyInjected private var streamManager: StreamManaging
     @LazyInjected private var downloadQueue: DownloadQueueing
     @LazyInjected private var player: PlayerControlling
-    @Injected private var store: Store
+    @LazyInjected private var store: Store
     
     var currentPlaylistId: Int {
         let id: Int

@@ -21,9 +21,13 @@ extension Social: SocialScrobbling {}
 
 final class Social {
     @LazyInjected private var player: PlayerControlling
-    @LazyInjected private var settings: SavedSettings
     @LazyInjected private var playQueue: PlayQueue
-    
+    private let settings: SavedSettings
+
+    init(settings: SavedSettings) {
+        self.settings = settings
+    }
+
     private let nowPlayingDelay = 10.0
     private var scrobbleDelay: Double {
         // Scrobble in 30 seconds (or settings amount) if not canceled

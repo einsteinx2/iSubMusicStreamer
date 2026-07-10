@@ -152,7 +152,7 @@ final class DownloadQueueTests: StoreTestCase {
             override var freeSpace: Int { stubbedFreeSpace }
             override func showNoFreeSpaceMessage() { noFreeSpaceMessageCount += 1 }
         }
-        let lowSpaceManager = LowSpaceDownloadsManager()
+        let lowSpaceManager = LowSpaceDownloadsManager(settings: settings, store: store)
         TestContainer.register { lowSpaceManager as DownloadsManager }
         _ = makeQueuedSong(id: "1")
 

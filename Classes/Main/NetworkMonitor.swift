@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Resolver
 import CocoaLumberjackSwift
 import ProgressHUD
 import Reachability
@@ -20,8 +19,8 @@ protocol NetworkStatus: AnyObject {
 }
 
 final class NetworkMonitor {
-    @Injected private var settings: SavedSettings
-    
+    private let settings: SavedSettings
+
     private let wifiReach: Reachability? = {
         do {
             return try Reachability()
@@ -37,7 +36,8 @@ final class NetworkMonitor {
         wifiReach?.connection != .unavailable
     }
     
-    init() {
+    init(settings: SavedSettings) {
+        self.settings = settings
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(reachabilityChanged(notification:)), name: Notification.Name.reachabilityChanged)
         do {
             try wifiReach?.startNotifier()
