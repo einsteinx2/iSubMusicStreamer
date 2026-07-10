@@ -155,7 +155,8 @@ final class ServerEditViewController: UIViewController {
         }
     }
     
-    private func checkURL() -> Bool {
+    // Internal (not private) for test access
+    func checkURL() -> Bool {
         guard let url = urlField.text, url.count > 0 else { return false }
         
         // Add http:// if needed
@@ -171,11 +172,11 @@ final class ServerEditViewController: UIViewController {
         return true
     }
     
-    private func checkUsername() -> Bool {
+    func checkUsername() -> Bool {
         return usernameField.text?.count ?? 0 > 0
     }
     
-    private func checkPassword() -> Bool {
+    func checkPassword() -> Bool {
         return passwordField.text?.count ?? 0 > 0
     }
     

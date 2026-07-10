@@ -21,6 +21,25 @@ enum VisualizerType: Int {
     case maxValue  = 5
 }
 
+extension VisualizerType {
+    // Cycling math used by the swipe gestures, extracted so it can be unit tested
+    var next: VisualizerType {
+        var newType = rawValue + 1
+        if newType == VisualizerType.maxValue.rawValue {
+            newType = 0
+        }
+        return VisualizerType(rawValue: newType)!
+    }
+
+    var previous: VisualizerType {
+        var newType = rawValue - 1
+        if newType < 0 {
+            newType = VisualizerType.maxValue.rawValue - 1
+        }
+        return VisualizerType(rawValue: newType)!
+    }
+}
+
 struct RGBQUAD2 {
     var rgbRed: UInt8
     var rgbGreen: UInt8
@@ -497,20 +516,10 @@ final class EqualizerView: UIView {
     }
     
     func nextType() {
-        var newType = visualizerType.rawValue + 1
-        if newType == VisualizerType.maxValue.rawValue {
-            newType = 0
-        }
-        
-        changeType(VisualizerType(rawValue: newType)!)
+        changeType(visualizerType.next)
     }
     
     func prevType() {
-        var newType = visualizerType.rawValue - 1
-        if newType < 0 {
-            newType = VisualizerType.maxValue.rawValue - 1
-        }
-        
-        changeType(VisualizerType(rawValue: newType)!)
+        changeType(visualizerType.previous)
     }
 }

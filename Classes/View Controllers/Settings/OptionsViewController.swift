@@ -117,17 +117,8 @@ final class OptionsViewController: UIViewController {
         autoDeleteCacheTypeSegmentedControl.selectedSegmentIndex = settings.autoDeleteCacheType
         cacheSongCellColorSegmentedControl.selectedSegmentIndex = settings.downloadedSongCellColorType
         
-        switch settings.quickSkipNumberOfSeconds {
-        case 5: quickSkipSegmentControl.selectedSegmentIndex = 0
-        case 15: quickSkipSegmentControl.selectedSegmentIndex = 1
-        case 30: quickSkipSegmentControl.selectedSegmentIndex = 2
-        case 45: quickSkipSegmentControl.selectedSegmentIndex = 3
-        case 60: quickSkipSegmentControl.selectedSegmentIndex = 4
-        case 120: quickSkipSegmentControl.selectedSegmentIndex = 5
-        case 300: quickSkipSegmentControl.selectedSegmentIndex = 6
-        case 600: quickSkipSegmentControl.selectedSegmentIndex = 7
-        case 1200: quickSkipSegmentControl.selectedSegmentIndex = 8
-        default: break
+        if let segmentIndex = QuickSkipMapping.segmentIndex(seconds: settings.quickSkipNumberOfSeconds) {
+            quickSkipSegmentControl.selectedSegmentIndex = segmentIndex
         }
         
         // Fix cut off text on small devices
@@ -184,17 +175,8 @@ final class OptionsViewController: UIViewController {
         case cacheSongCellColorSegmentedControl:
             settings.downloadedSongCellColorType = cacheSongCellColorSegmentedControl.selectedSegmentIndex
         case quickSkipSegmentControl:
-            switch quickSkipSegmentControl.selectedSegmentIndex {
-            case 0: settings.quickSkipNumberOfSeconds = 5
-            case 1: settings.quickSkipNumberOfSeconds = 15
-            case 2: settings.quickSkipNumberOfSeconds = 30
-            case 3: settings.quickSkipNumberOfSeconds = 45
-            case 4: settings.quickSkipNumberOfSeconds = 60
-            case 5: settings.quickSkipNumberOfSeconds = 120
-            case 6: settings.quickSkipNumberOfSeconds = 300
-            case 7: settings.quickSkipNumberOfSeconds = 600
-            case 8: settings.quickSkipNumberOfSeconds = 1200
-            default: break
+            if let seconds = QuickSkipMapping.seconds(segmentIndex: quickSkipSegmentControl.selectedSegmentIndex) {
+                settings.quickSkipNumberOfSeconds = seconds
             }
             
             if UIDevice.isPad {
@@ -388,28 +370,17 @@ final class OptionsViewController: UIViewController {
     }
     
     @IBAction func updateMinFreeSpaceSetting() {
+        let result = CacheSpaceSliderMath.spaceSetting(sliderValue: cacheSpaceSlider.value, totalSpace: totalSpace, freeSpace: freeSpace)
         switch cachingTypeSegmentedControl.selectedSegmentIndex {
         case 0:
-            // Check if the user is trying to assing a higher min free space than is available space - 50MB
-            if cacheSpaceSlider.value * Float(totalSpace) > Float(freeSpace) - 52428800 {
-                settings.minFreeSpace = freeSpace - 52428800
-                cacheSpaceSlider.value = Float(settings.minFreeSpace) / Float(totalSpace) // Leave 50MB space
-            } else if cacheSpaceSlider.value * Float(totalSpace) < 52428800 {
-                settings.minFreeSpace = 52428800
-                cacheSpaceSlider.value = Float(settings.minFreeSpace) / Float(totalSpace) // Leave 50MB space
-            } else {
-                settings.minFreeSpace = Int(cacheSpaceSlider.value * Float(totalSpace))
+            settings.minFreeSpace = result.bytes
+            if let clampedSliderValue = result.clampedSliderValue {
+                cacheSpaceSlider.value = clampedSliderValue // Leave 50MB space
             }
         case 1:
-            // Check if the user is trying to assign a larger max cache size than there is available space - 50MB
-            if cacheSpaceSlider.value * Float(totalSpace) > Float(freeSpace) - 52428800 {
-                settings.maxCacheSize = freeSpace - 52428800
-                cacheSpaceSlider.value = Float(settings.maxCacheSize) / Float(totalSpace) // Leave 50MB space
-            } else if cacheSpaceSlider.value * Float(totalSpace) < 52428800 {
-                settings.maxCacheSize = 52428800
-                self.cacheSpaceSlider.value = Float(settings.maxCacheSize) / Float(totalSpace) // Leave 50MB space
-            } else {
-                settings.maxCacheSize = Int(cacheSpaceSlider.value * Float(totalSpace))
+            settings.maxCacheSize = result.bytes
+            if let clampedSliderValue = result.clampedSliderValue {
+                cacheSpaceSlider.value = clampedSliderValue // Leave 50MB space
             }
         default:
             break
@@ -450,5 +421,40 @@ extension OptionsViewController: UITextFieldDelegate {
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         updateCacheSpaceSlider()
+    }
+}
+
+// MARK: Extracted logic (unit tested)
+
+// Maps the quick-skip seconds setting to/from its segmented-control index
+enum QuickSkipMapping {
+    static let secondsOptions = [5, 15, 30, 45, 60, 120, 300, 600, 1200]
+
+    static func segmentIndex(seconds: Int) -> Int? {
+        return secondsOptions.firstIndex(of: seconds)
+    }
+
+    static func seconds(segmentIndex: Int) -> Int? {
+        guard segmentIndex >= 0 && segmentIndex < secondsOptions.count else { return nil }
+        return secondsOptions[segmentIndex]
+    }
+}
+
+// The min-free-space / max-cache-size slider math: clamps the chosen size between
+// 50MB and the available space minus 50MB
+enum CacheSpaceSliderMath {
+    static let reservedBytes = 52428800 // 50MB
+
+    // Returns the byte value for the slider position, plus the corrected slider
+    // position when the value had to be clamped (nil when unclamped)
+    static func spaceSetting(sliderValue: Float, totalSpace: Int, freeSpace: Int) -> (bytes: Int, clampedSliderValue: Float?) {
+        if sliderValue * Float(totalSpace) > Float(freeSpace) - Float(reservedBytes) {
+            let bytes = freeSpace - reservedBytes
+            return (bytes, Float(bytes) / Float(totalSpace))
+        } else if sliderValue * Float(totalSpace) < Float(reservedBytes) {
+            return (reservedBytes, Float(reservedBytes) / Float(totalSpace))
+        } else {
+            return (Int(sliderValue * Float(totalSpace)), nil)
+        }
     }
 }
