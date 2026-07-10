@@ -81,6 +81,9 @@ final class JukeboxTests: StoreTestCase {
         XCTAssertTrue(waitUntil { self.lastJukeboxRequest() != nil })
         XCTAssertEqual(lastJukeboxRequest()?.parameter("action"), "skip")
         XCTAssertEqual(lastJukeboxRequest()?.parameter("index"), "3")
+        // The synthetic status carries a nonzero position (a real server that can't
+        // open an audio device always reports 0, so this is only testable inline)
+        XCTAssertTrue(waitUntil { self.jukebox.position == 42 })
     }
 
     func testTransportActionsSendExpectedCommands() {
@@ -199,10 +202,10 @@ final class JukeboxTests: StoreTestCase {
         try? MockSubsonicServer.stub(.jukeboxControl, fixture: "XML/jukeboxControl_status.xml")
         jukebox.play()
 
-        // The fixture reports currentIndex=1, playing=false, gain=0.75, position=42
+        // The fixture reports currentIndex=1, playing=false, gain=0.75, position=0
         XCTAssertTrue(waitUntil { self.jukebox.gain == 0.75 })
         XCTAssertFalse(jukebox.isPlaying, "the server-reported state wins")
-        XCTAssertEqual(jukebox.position, 42)
+        XCTAssertEqual(jukebox.position, 0)
         XCTAssertEqual(playQueue.currentIndex, 1)
     }
 
@@ -218,23 +221,23 @@ final class JukeboxTests: StoreTestCase {
 
         XCTAssertTrue(jukebox.isPlaying)
         XCTAssertEqual(jukebox.gain, 0.75)
-        XCTAssertEqual(jukebox.position, 42)
+        XCTAssertEqual(jukebox.position, 0)
         XCTAssertEqual(playQueue.currentIndex, 1)
 
         // The playlist entries land in the jukebox play queue (jukebox mode is on)
         // with their metadata persisted from the response
         let queued = store.songs(localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId)
-        XCTAssertEqual(queued.map(\.id), ["376", "229"])
-        XCTAssertEqual(queued.map(\.title), ["Going Crazy", "Devils Haircut"], "song metadata comes from the response")
+        XCTAssertEqual(queued.map(\.id), ["189", "203"])
+        XCTAssertEqual(queued.map(\.title), ["So Many Tears", "Seven Years"], "song metadata comes from the response")
         XCTAssertEqual(playQueue.count, 2)
-        XCTAssertEqual(playQueue.currentSong?.id, "229", "currentSong must resolve so playback skips can be issued")
+        XCTAssertEqual(playQueue.currentSong?.id, "203", "currentSong must resolve so playback skips can be issued")
     }
 
     func testGetResponseKeepsMatchingLocalQueueIntact_BUG31() {
         // A local queue that already matches the server's list (e.g. freshly built by
         // play-all) must not be cleared and rebuilt by the periodic refresh
-        let localA = TestData.song(serverId: 1, id: "376", title: "Local Title A", path: "a/1.mp3")
-        let localB = TestData.song(serverId: 1, id: "229", title: "Local Title B", path: "a/2.mp3")
+        let localA = TestData.song(serverId: 1, id: "189", title: "Local Title A", path: "a/1.mp3")
+        let localB = TestData.song(serverId: 1, id: "203", title: "Local Title B", path: "a/2.mp3")
         _ = store.add(song: localA)
         _ = store.add(song: localB)
         _ = store.queue(song: localA)
@@ -246,7 +249,7 @@ final class JukeboxTests: StoreTestCase {
         wait(for: [infoExpectation], timeout: 10)
 
         let queued = store.songs(localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId)
-        XCTAssertEqual(queued.map(\.id), ["376", "229"])
+        XCTAssertEqual(queued.map(\.id), ["189", "203"])
         XCTAssertEqual(queued.map(\.title), ["Local Title A", "Local Title B"],
                        "a queue matching the server's list is left untouched")
     }

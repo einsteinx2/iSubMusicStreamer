@@ -45,10 +45,26 @@ final class AsyncLoaderTests: LoaderTestCase {
 
         let messages = try await AsyncChatLoader(serverId: serverId).load()
 
+        // The fixture is a real Subsonic response: newest message first, entities
+        // decoded ("&amp;"), and a trailing space where the server stripped an emoji
         XCTAssertEqual(messages.count, 2)
         XCTAssertEqual(messages[0].username, "bbaron")
-        XCTAssertEqual(messages[0].message, "Hello from iSub!")
-        XCTAssertEqual(messages[1].username, "admin")
+        XCTAssertEqual(messages[0].message, "Hi there & welcome — enjoy the music ")
+        XCTAssertEqual(messages[1].message, "Hello from iSub test suite")
+    }
+
+    func testChatLoaderAirsonicRemovedEndpointThrowsResponseNotXML() async throws {
+        // Airsonic-Advanced removed the chat API entirely: it answers HTTP 410 with a
+        // plain-text "No longer supported" body, which must surface as a graceful error
+        let body = try Fixtures.data("XML/getChatMessages_airsonic_410.txt")
+        MockSubsonicServer.stub(.getChatMessages, data: body, statusCode: 410, contentType: "text/plain;charset=UTF-8")
+
+        do {
+            _ = try await AsyncChatLoader(serverId: serverId).load()
+            XCTFail("expected APIError.responseNotXML")
+        } catch APIError.responseNotXML {
+            // expected
+        }
     }
 
     // MARK: AsyncChatSendLoader
@@ -60,6 +76,19 @@ final class AsyncLoaderTests: LoaderTestCase {
 
         let received = try XCTUnwrap(MockSubsonicServer.receivedRequests(action: .addChatMessage).first)
         XCTAssertEqual(received.parameter("message"), "Hello there")
+    }
+
+    func testChatSendLoaderAirsonicRemovedEndpointThrowsResponseNotXML() async throws {
+        // Same Airsonic-Advanced HTTP 410 plain-text response as getChatMessages
+        let body = try Fixtures.data("XML/getChatMessages_airsonic_410.txt")
+        MockSubsonicServer.stub(.addChatMessage, data: body, statusCode: 410, contentType: "text/plain;charset=UTF-8")
+
+        do {
+            try await AsyncChatSendLoader(serverId: serverId, message: "Hello there").load()
+            XCTFail("expected APIError.responseNotXML")
+        } catch APIError.responseNotXML {
+            // expected
+        }
     }
 
     // MARK: AsyncServerPlaylistCreateLoader

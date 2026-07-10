@@ -122,6 +122,17 @@ final class APIModelParsingTests: XCTestCase {
         XCTAssertNil(song.transcodedSuffix)
     }
 
+    func testSongParsedFromRealSubsonicFixtureWithoutIsVideo() throws {
+        // Real Subsonic servers omit the isVideo attribute on music entries (Airsonic
+        // always sends isVideo="false"); parsing must default it to false
+        let element = try XMLTestHelpers.element(tag: "entry", fixture: "XML/jukeboxControl_get.xml")
+        let song = Song(serverId: serverId, element: element)
+        XCTAssertEqual(song.id, "189")
+        XCTAssertEqual(song.title, "So Many Tears")
+        XCTAssertEqual(song.suffix, "mp3")
+        XCTAssertFalse(song.isVideo)
+    }
+
     func testSongEqualityAndHashingUseOnlyServerIdAndId() throws {
         let a = try Song(serverId: 1, element: XMLTestHelpers.element(tag: "song", xml: #"<song id="42" title="Title A" path="a.mp3" suffix="mp3"/>"#))
         let b = try Song(serverId: 1, element: XMLTestHelpers.element(tag: "song", xml: #"<song id="42" title="Completely Different" path="b.flac" suffix="flac"/>"#))
@@ -384,7 +395,10 @@ final class APIModelParsingTests: XCTestCase {
         XCTAssertEqual(lyrics.lyricsText, "")
     }
 
-    func testLyricsParsedFromRealFixture() throws {
+    func testLyricsParsedFromPopulatedFixture() throws {
+        // Note: the populated lyrics fixture is spec-derived — real Subsonic servers
+        // can no longer return lyrics because their external lyrics provider is dead,
+        // so every live response is the empty <lyrics/> covered above
         let element = try XMLTestHelpers.element(tag: "lyrics", fixture: "XML/getLyrics.xml")
         let lyrics = Lyrics(tagArtistName: "a", songTitle: "t", element: element)
         XCTAssertFalse(lyrics.lyricsText.isEmpty)

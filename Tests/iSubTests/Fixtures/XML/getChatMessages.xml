@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.16.1">
    <chatMessages>
-      <chatMessage username="bbaron" time="1783641770702" message="Hello from iSub!"/>
-      <chatMessage username="admin" time="1783641775000" message="Hi there &amp; welcome — enjoy the music 🎵"/>
+      <chatMessage username="bbaron" time="1783718935178" message="Hi there &amp; welcome — enjoy the music "/>
+      <chatMessage username="bbaron" time="1783718777266" message="Hello from iSub test suite"/>
    </chatMessages>
 </subsonic-response>

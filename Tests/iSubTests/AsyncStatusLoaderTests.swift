@@ -40,6 +40,35 @@ final class AsyncStatusLoaderTests: SandboxedTestCase {
         XCTAssertTrue(status.isTagSerachSupported)
     }
 
+    func testPingSuccessSubsonicParsesVersionAndCapabilities() async throws {
+        // Real Subsonic response: API version 1.16.1 and no Airsonic "type" attribute
+        // on the root element — both header styles must parse identically
+        try MockSubsonicServer.stub(.ping, fixture: "XML/ping_success_subsonic.xml")
+
+        let status = try await makeLoader().load()
+
+        XCTAssertEqual(status.versionString, "1.16.1")
+        XCTAssertEqual(status.majorAPIVersion, 1)
+        XCTAssertEqual(status.minorAPIVersion, 16)
+        XCTAssertTrue(status.isVideoSupported)
+        XCTAssertTrue(status.isNewSearchSupported)
+        XCTAssertTrue(status.isTagSerachSupported)
+    }
+
+    func testIncompatibleProtocolVersionThrowsServerVersion() async throws {
+        // Airsonic-Advanced (API 1.15.0) rejects clients announcing v=1.16.1 with
+        // error code 30, where real Subsonic accepts them; the fixture is the real
+        // Airsonic response and must surface as SubsonicError.serverVersion
+        try MockSubsonicServer.stub(.ping, fixture: "XML/ping_error_incompatible_version.xml")
+
+        do {
+            _ = try await makeLoader().load()
+            XCTFail("expected SubsonicError.serverVersion")
+        } catch SubsonicError.serverVersion {
+            // expected
+        }
+    }
+
     func testPingRequestIsWellFormed() async throws {
         try MockSubsonicServer.stub(.ping, fixture: "XML/ping_success.xml")
 
