@@ -15,7 +15,8 @@ final class LocalPlaylistViewController: CustomUITableViewController {
     @Injected private var settings: SavedSettings
     
     private let localPlaylist: LocalPlaylist
-        
+    private lazy var savePlaylistFlow = SavePlaylistFlow(viewController: self)
+
     init(localPlaylist: LocalPlaylist) {
         self.localPlaylist = localPlaylist
         super.init(nibName: nil, bundle: nil)
@@ -48,59 +49,14 @@ final class LocalPlaylistViewController: CustomUITableViewController {
     }
 
     @objc private func uploadPlaylist() {
-        // TODO: implement this
-    //    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(self.title), @"name", nil];
-    //
-    //    NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM playlist%@", self.md5];
-    //    NSInteger count = [databaseS.localPlaylistsDbQueue intForQuery:query];
-    //    NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:count];
-    //    for (int i = 1; i <= count; i++) {
-    //        @autoreleasepool {
-    //            NSString *query = [NSString stringWithFormat:@"SELECT songId FROM playlist%@ WHERE ROWID = %i", self.md5, i];
-    //            NSString *songId = [databaseS.localPlaylistsDbQueue stringForQuery:query];
-    //
-    //            [songIds addObject:n2N(songId)];
-    //        }
-    //    }
-    //    [parameters setObject:[NSArray arrayWithArray:songIds] forKey:@"songId"];
-    //
-    //    NSMutableURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
-    //    self.dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-    //        if (error) {
-    //            if (settingsS.isPopupsEnabled) {
-    //                [EX2Dispatch runInMainThreadAsync:^{
-    //                    NSString *message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)error.code, error.localizedDescription];
-    //                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
-    //                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-    //                    [self presentViewController:alert animated:YES completion:nil];
-    //                }];
-    //            }
-    //        } else {
-    //            DDLogVerbose(@"[PlaylistSongsViewController] upload playlist response: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-    //            RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
-    //            if (!root.isValid) {
-    //                NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
-    //                [self subsonicErrorCode:nil message:error.description];
-    //            } else {
-    //                RXMLElement *error = [root child:@"error"];
-    //                if (error.isValid) {
-    //                    NSString *code = [error attribute:@"code"];
-    //                    NSString *message = [error attribute:@"message"];
-    //                    [self subsonicErrorCode:code message:message];
-    //                }
-    //            }
-    //        }
-    //
-    //        [EX2Dispatch runInMainThreadAsync:^{
-    //            self.tableView.scrollEnabled = YES;
-    //            [HUD hide];
-    //            [self.refreshControl endRefreshing];
-    //        }];
-    //    }];
-    //    [self.dataTask resume];
-    //
-    //    self.tableView.scrollEnabled = NO;
-    //    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
+        let serverId = settings.currentServerId
+        let songIds = store.songIds(localPlaylistId: localPlaylist.id, serverId: serverId)
+        savePlaylistFlow.upload(name: localPlaylist.name, songIds: songIds, serverId: serverId)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        savePlaylistFlow.cancel()
     }
     
     override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {

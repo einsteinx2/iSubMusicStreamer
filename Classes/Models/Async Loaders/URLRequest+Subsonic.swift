@@ -38,6 +38,7 @@ enum SubsonicAction: String {
     case getLyrics
     case getPlaylists
     case getPlaylist
+    case createPlaylist
     case scrobble
     case getNowPlaying
     case ping

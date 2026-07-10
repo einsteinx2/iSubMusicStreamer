@@ -62,6 +62,43 @@ final class AsyncLoaderTests: LoaderTestCase {
         XCTAssertEqual(received.parameter("message"), "Hello there")
     }
 
+    // MARK: AsyncServerPlaylistCreateLoader
+
+    func testServerPlaylistCreateLoaderSendsNameAndOrderedSongIds() async throws {
+        stubEmptyOk(.createPlaylist)
+
+        try await AsyncServerPlaylistCreateLoader(serverId: serverId, name: "Road Trip", songIds: ["30", "10", "20"]).load()
+
+        let received = try XCTUnwrap(MockSubsonicServer.receivedRequests(action: .createPlaylist).first)
+        XCTAssertEqual(received.parameter("name"), "Road Trip")
+        XCTAssertNil(received.parameter("playlistId"))
+        XCTAssertEqual(received.parameters["songId"], ["30", "10", "20"], "songId order must match the playlist order")
+    }
+
+    func testServerPlaylistCreateLoaderOverwriteSendsPlaylistIdInsteadOfName() async throws {
+        // Subsonic's createPlaylist duplicates when given an existing name, so an
+        // overwrite must be keyed by playlistId only
+        stubEmptyOk(.createPlaylist)
+
+        try await AsyncServerPlaylistCreateLoader(serverId: serverId, name: "Road Trip", overwriteServerPlaylistId: 42, songIds: ["10"]).load()
+
+        let received = try XCTUnwrap(MockSubsonicServer.receivedRequests(action: .createPlaylist).first)
+        XCTAssertEqual(received.parameter("playlistId"), "42")
+        XCTAssertNil(received.parameter("name"))
+        XCTAssertEqual(received.parameters["songId"], ["10"])
+    }
+
+    func testServerPlaylistCreateLoaderSubsonicErrorThrows() async throws {
+        try MockSubsonicServer.stub(.createPlaylist, fixture: "XML/error_data_not_found.xml")
+
+        do {
+            try await AsyncServerPlaylistCreateLoader(serverId: serverId, name: "Nope", songIds: ["10"]).load()
+            XCTFail("expected SubsonicError")
+        } catch is SubsonicError {
+            // expected
+        }
+    }
+
     // MARK: AsyncCoverArtLoader
 
     private func makePNGData() -> Data {

@@ -65,6 +65,18 @@ final class LocalPlaylistStoreCRUDTests: StoreTestCase {
         XCTAssertEqual(store.songs(localPlaylistId: 5).count, 2)
     }
 
+    func testSongIdsAreScopedByServerAndOrderedByPosition() {
+        XCTAssertTrue(store.add(localPlaylist: LocalPlaylist(id: 5, name: "Mixed Servers")))
+        // Interleave songs from two servers; positions are assigned in add order
+        _ = store.add(song: TestData.song(serverId: 1, id: "30", path: "a/30.mp3"), localPlaylistId: 5)
+        _ = store.add(song: TestData.song(serverId: 2, id: "99", path: "b/99.mp3"), localPlaylistId: 5)
+        _ = store.add(song: TestData.song(serverId: 1, id: "10", path: "a/10.mp3"), localPlaylistId: 5)
+
+        XCTAssertEqual(store.songIds(localPlaylistId: 5, serverId: 1), ["30", "10"], "must be ordered by position and exclude other servers")
+        XCTAssertEqual(store.songIds(localPlaylistId: 5, serverId: 2), ["99"])
+        XCTAssertEqual(store.songIds(localPlaylistId: 5, serverId: 3), [])
+    }
+
     func testDeleteLocalPlaylistCascadesSongs() throws {
         let song = TestData.song(serverId: 1, id: "1", path: "a/1.mp3")
         _ = store.add(song: song)

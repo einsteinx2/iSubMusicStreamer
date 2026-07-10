@@ -25,6 +25,7 @@ enum APILoaderType: String {
     case coverArt
     case serverPlaylists
     case serverPlaylist
+    case serverPlaylistCreate
     case nowPlaying
     case status
     case quickAlbums

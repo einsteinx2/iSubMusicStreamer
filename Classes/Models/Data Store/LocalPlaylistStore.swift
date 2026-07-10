@@ -234,6 +234,24 @@ extension Store {
         }
     }
     
+    // Ordered song IDs for one server's songs in a playlist (used to upload to that server)
+    func songIds(localPlaylistId: Int, serverId: Int) -> [String] {
+        do {
+            return try pool.read { db in
+                let sql: SQL = """
+                    SELECT songId
+                    FROM localPlaylistSong
+                    WHERE localPlaylistId = \(localPlaylistId) AND serverId = \(serverId)
+                    ORDER BY position ASC
+                    """
+                return try SQLRequest<String>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select songIds in local playlist \(localPlaylistId) for server \(serverId): \(error)")
+            return []
+        }
+    }
+
     func getSongPosition(localPlaylistId: Int, songId: String) -> Int? {
         do {
             return try pool.read { db in

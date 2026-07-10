@@ -17,7 +17,8 @@ final class LocalPlaylistsViewController: CustomUITableViewController {
     @Injected private var analytics: Analytics
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "song", pluralizeClearType: false, isLargeCount: false)
-    
+    private lazy var savePlaylistFlow = SavePlaylistFlow(viewController: self)
+
     private var localPlaylists = [LocalPlaylist]()
     
     override func viewDidLoad() {
@@ -83,61 +84,6 @@ final class LocalPlaylistsViewController: CustomUITableViewController {
         saveEditHeader.setEditing(editing, animated: animated)
     }
     
-    private func uploadPlaylist(name: String) {
-        // TODO: implement this
-    //    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(name), @"name", nil];
-    //
-    //    NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:self.currentPlaylistCount];
-    //    NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-    //    NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-    //    NSString *table = playQueue.isShuffle ? shufTable : currTable;
-    //
-    //    [databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
-    //         for (int i = 0; i < self.currentPlaylistCount; i++) {
-    //             @autoreleasepool {
-    //                 ISMSSong *aSong = [ISMSSong songFromDbRow:i inTable:table inDatabase:db];
-    //                 [songIds addObject:n2N(aSong.songId)];
-    //             }
-    //         }
-    //     }];
-    //    [parameters setObject:[NSArray arrayWithArray:songIds] forKey:@"songId"];
-    //    NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
-    //    NSURLSessionDataTask *dataTask = [self.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-    //        if (error) {
-    //            if (settingsS.isPopupsEnabled) {
-    //                [EX2Dispatch runInMainThreadAsync:^{
-    //                    NSString *message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)error.code, error.localizedDescription];
-    //                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
-    //                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-    //                    [self presentViewController:alert animated:YES completion:nil];
-    //                }];
-    //            }
-    //        } else {
-    //            RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
-    //            if (!root.isValid) {
-    //                NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
-    //                [self subsonicErrorCode:nil message:error.description];
-    //            } else {
-    //                RXMLElement *error = [root child:@"error"];
-    //                if (error.isValid) {
-    //                    NSString *code = [error attribute:@"code"];
-    //                    NSString *message = [error attribute:@"message"];
-    //                    [self subsonicErrorCode:code message:message];
-    //                }
-    //            }
-    //        }
-    //
-    //        [EX2Dispatch runInMainThreadAsync:^{
-    //            self.tableView.scrollEnabled = YES;
-    //            [HUD hide];
-    //        }];
-    //    }];
-    //    [dataTask resume];
-    //
-    //    self.tableView.scrollEnabled = NO;
-    //    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
-    }
-    
     private func deleteLocalPlaylists(indexPaths: [IndexPath]) {
         // TODO: implement this
     //    // Sort the row indexes to make sure they're accending
@@ -166,30 +112,10 @@ final class LocalPlaylistsViewController: CustomUITableViewController {
     }
     
     func cancelLoad() {
-        // TODO: Cancel the upload
+        savePlaylistFlow.cancel()
         HUD.hide()
     }
-    
-    private func showSavePlaylistAlert() {
-        let alert = UIAlertController(title: "Save Playlist", message: nil, preferredStyle: .alert)
-        alert.addTextField { textField in
-            textField.placeholder = "Playlist name"
-        }
-        alert.addAction(title: "Save", style: .default) { action in
-            // TODO: implement this
-    //        NSString *name = [[[alert textFields] firstObject] text];
-    //            NSString *tableName = [NSString stringWithFormat:@"splaylist%@", name.md5];
-    //            if ([databaseS.localPlaylistsDbQueue tableExists:tableName]) {
-    //                // If it exists, ask to overwrite
-    //                [self showOverwritePlaylistAlert:name];
-    //            } else {
-    //                [self uploadPlaylist:name];
-    //            }
-        }
-        alert.addCancelAction()
-        present(alert, animated: true, completion: nil)
-    }
-    
+
     override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
         guard indexPath.row < localPlaylists.count else { return nil }
         return localPlaylists[indexPath.row]
@@ -210,6 +136,9 @@ extension LocalPlaylistsViewController: SaveEditHeaderDelegate {
                     self.deleteLocalPlaylists(indexPaths: indexPathsForSelectedRows)
                 }
             }
+        } else {
+            // Save the current play queue as a new playlist, matching the Play Queue tab
+            savePlaylistFlow.promptToSavePlayQueue()
         }
     }
 }

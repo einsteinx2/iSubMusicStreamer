@@ -19,6 +19,7 @@ final class PlayQueueViewController: CustomUITableViewController {
     @Injected private var analytics: Analytics
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "song", pluralizeClearType: false, isLargeCount: false)
+    private lazy var savePlaylistFlow = SavePlaylistFlow(viewController: self)
     private let backgroundColor: UIColor?
     
     init(backgroundColor: UIColor? = Colors.background) {
@@ -169,40 +170,6 @@ final class PlayQueueViewController: CustomUITableViewController {
         return tableView.indexPathsForSelectedRows?.count ?? 0
     }
     
-    // TODO: implement this - error handling
-    private func showSavePlaylistAlert(isLocal: Bool) {
-        let alert = UIAlertController(title: "Save Playlist", message: nil, preferredStyle: .alert)
-        alert.addTextField { textField in
-            textField.placeholder = "Playlist name"
-        }
-        alert.addAction(title: "Save", style: .default, handler: { _ in
-            guard let name = alert.textFields?.first?.text else { return }
-            if isLocal || self.settings.isOfflineMode {
-                // TODO: optimize this in the store to not require loading each song object
-                // TODO: Add error handling
-                HUD.show()
-                DispatchQueue.userInitiated.async {
-                    defer { HUD.hide() }
-                    if let nextLocalPlaylistId = self.store.nextLocalPlaylistId {
-                        let localPlaylist = LocalPlaylist(id: nextLocalPlaylistId, name: name)
-                        if self.store.add(localPlaylist: localPlaylist) {
-                            for i in 0..<self.playQueue.count {
-                                if let song = self.playQueue.song(index: i) {
-                                    _ = self.store.add(song: song, localPlaylistId: localPlaylist.id)
-                                }
-                            }
-                        }
-                    }
-                }
-                
-            } else {
-                self.uploadPlaylist(name: name)
-            }
-        })
-        alert.addCancelAction()
-        present(alert, animated: true, completion: nil)
-    }
-    
     private func updateTableCellNumbers() {
         if let indexPathsForSelectedRows = tableView.indexPathsForSelectedRows {
             for indexPath in indexPathsForSelectedRows {
@@ -212,75 +179,6 @@ final class PlayQueueViewController: CustomUITableViewController {
             }
         }
     }
-    
-    private func uploadPlaylist(name: String) {
-        // TODO: implement this
-        //    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:n2N(name), @"name", nil];
-        //    NSMutableArray *songIds = [NSMutableArray arrayWithCapacity:self.currentPlaylistCount];
-        //    NSString *currTable = settingsS.isJukeboxEnabled ? @"jukeboxCurrentPlaylist" : @"currentPlaylist";
-        //    NSString *shufTable = settingsS.isJukeboxEnabled ? @"jukeboxShufflePlaylist" : @"shufflePlaylist";
-        //    NSString *table = playQueue.isShuffle ? shufTable : currTable;
-        //
-        //    [databaseS.currentPlaylistDbQueue inDatabase:^(FMDatabase *db) {
-        //         for (int i = 0; i < self.currentPlaylistCount; i++) {
-        //             @autoreleasepool {
-        //                 ISMSSong *aSong = [ISMSSong songFromDbRow:i inTable:table inDatabase:db];
-        //                 [songIds addObject:n2N(aSong.songId)];
-        //             }
-        //         }
-        //     }];
-        //    [parameters setObject:[NSArray arrayWithArray:songIds] forKey:@"songId"];
-        //
-        //    NSURLRequest *request = [NSMutableURLRequest requestWithSUSAction:@"createPlaylist" parameters:parameters];
-        //    NSURLSessionDataTask *dataTask = [SUSLoader.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        //        [EX2Dispatch runInMainThreadAsync:^{
-        //            if (error) {
-        //                // Inform the user that the connection failed.
-        //                if (settingsS.isPopupsEnabled) {
-        //                    NSString *message = [NSString stringWithFormat:@"There was an error saving the playlist to the server.\n\nError %li: %@", (long)error.code, error.localizedDescription];
-        //                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
-        //                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-        //                    [self presentViewController:alert animated:YES completion:nil];
-        //                }
-        //
-        //                self.tableView.scrollEnabled = YES;
-        //                [HUD hide];
-        //            } else {
-        //                RXMLElement *root = [[RXMLElement alloc] initFromXMLData:data];
-        //                if (!root.isValid) {
-        //                    NSError *error = [NSError errorWithISMSCode:ISMSErrorCode_NotXML];
-        //                    [self subsonicErrorCode:nil message:error.description];
-        //                } else {
-        //                    RXMLElement *error = [root child:@"error"];
-        //                    if (error.isValid)
-        //                    {
-        //                        NSString *code = [error attribute:@"code"];
-        //                        NSString *message = [error attribute:@"message"];
-        //                        [self subsonicErrorCode:code message:message];
-        //                    }
-        //                }
-        //
-        //                self.tableView.scrollEnabled = YES;
-        //                [HUD hide];
-        //            }
-        //        }];
-        //    }];
-        //    [dataTask resume];
-        //
-        //    self.tableView.scrollEnabled = NO;
-        //    [viewObjectsS showAlbumLoadingScreen:self.view sender:self];
-    }
-    
-    //- (void)subsonicErrorCode:(NSString *)errorCode message:(NSString *)message {
-    //    DDLogError(@"[CurrentPlaylistViewController] subsonic error %@: %@", errorCode, message);
-    //    if (settingsS.isPopupsEnabled) {
-    //        [EX2Dispatch runInMainThreadAsync:^{
-    //            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Subsonic Error" message:message preferredStyle:UIAlertControllerStyleAlert];
-    //            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-    //            [self presentViewController:alert animated:YES completion:nil];
-    //        }];
-    //    }
-    //}
     
     override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
         return playQueue.song(index: indexPath.row)
@@ -314,20 +212,7 @@ extension PlayQueueViewController: SaveEditHeaderDelegate {
             registerForNotifications()
             addOrRemoveSaveEditHeader()
         } else {
-            if settings.isOfflineMode {
-                showSavePlaylistAlert(isLocal: true)
-            } else {
-                let message = "Would you like to save this playlist to your device or to your Subsonic server?"
-                let alert = UIAlertController(title: "Playlist Location", message: message, preferredStyle: .alert)
-                alert.addAction(title: "Local", style: .default, handler: { _ in
-                    self.showSavePlaylistAlert(isLocal: true)
-                })
-                alert.addAction(title: "Server", style: .default, handler: { _ in
-                    self.showSavePlaylistAlert(isLocal: false)
-                })
-                alert.addCancelAction()
-                present(alert, animated: true, completion: nil)
-            }
+            savePlaylistFlow.promptToSavePlayQueue()
         }
     }
     
