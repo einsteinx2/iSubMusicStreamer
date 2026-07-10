@@ -20,7 +20,7 @@ final class BassPlayer: NSObject {
     @LazyInjected private var store: Store
     @LazyInjected private var settings: SavedSettings
     @LazyInjected private var social: SocialScrobbling
-    @LazyInjected private var streamManager: StreamManager
+    @LazyInjected private var streamManager: StreamManaging
     @LazyInjected private var downloadQueue: DownloadQueueing
 
     let streamGcdQueue = DispatchQueue(label: "com.isubapp.BassStreamQueue")

@@ -16,6 +16,8 @@ final class DownloadQueueTests: StoreTestCase {
     private var streamManager: FakeStreamManager!
     private var settings: SavedSettings!
     private var network: FakeNetworkStatus!
+    private var player: FakePlayer!
+    private var downloadsManager: DownloadsManager!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -25,7 +27,9 @@ final class DownloadQueueTests: StoreTestCase {
         streamManager = FakeStreamManager()
         let fakeStreamManager = streamManager!
         TestContainer.register { fakeStreamManager as StreamManaging }
-        TestContainer.register { FakePlayer() as PlayerControlling }
+        player = FakePlayer()
+        let fakePlayer = player!
+        TestContainer.register { fakePlayer as PlayerControlling }
 
         // Deterministic network state regardless of the simulator's actual connection
         network = FakeNetworkStatus()
@@ -39,7 +43,20 @@ final class DownloadQueueTests: StoreTestCase {
         let freshPlayQueue = PlayQueue()
         TestContainer.register { freshPlayQueue }
 
-        downloadQueue = DownloadQueue()
+        downloadsManager = DownloadsManager(settings: settings, store: store)
+        downloadQueue = makeDownloadQueue(downloadsManager: downloadsManager)
+    }
+
+    // Builds a DownloadQueue wired to this test's fakes (the composition root's job
+    // in production)
+    private func makeDownloadQueue(downloadsManager: DownloadsManager) -> DownloadQueue {
+        DownloadQueue(store: store,
+                      settings: settings,
+                      downloadsManager: downloadsManager,
+                      player: player,
+                      networkStatus: network,
+                      streamManager: streamManager,
+                      metadataDownloader: FakeSongMetadataDownloader())
     }
 
     override func tearDownWithError() throws {
@@ -48,6 +65,8 @@ final class DownloadQueueTests: StoreTestCase {
         streamManager = nil
         settings = nil
         network = nil
+        player = nil
+        downloadsManager = nil
         MockSubsonicServer.uninstall()
         try super.tearDownWithError()
     }
@@ -153,22 +172,23 @@ final class DownloadQueueTests: StoreTestCase {
             override func showNoFreeSpaceMessage() { noFreeSpaceMessageCount += 1 }
         }
         let lowSpaceManager = LowSpaceDownloadsManager(settings: settings, store: store)
-        TestContainer.register { lowSpaceManager as DownloadsManager }
+        let queue = makeDownloadQueue(downloadsManager: lowSpaceManager)
         _ = makeQueuedSong(id: "1")
 
-        downloadQueue.start()
+        queue.start()
 
-        XCTAssertFalse(downloadQueue.isDownloading, "the queue must halt when low on space")
-        XCTAssertNil(downloadQueue.currentStreamHandler)
+        XCTAssertFalse(queue.isDownloading, "the queue must halt when low on space")
+        XCTAssertNil(queue.currentStreamHandler)
         XCTAssertTrue(waitUntil { lowSpaceManager.noFreeSpaceMessageCount == 1 },
                       "the user must be told the device is out of space")
 
         // With space available again the same start call proceeds
         lowSpaceManager.stubbedFreeSpace = 100 * 1024 * 1024
         MockSubsonicServer.stub(.stream, data: Data(repeating: 1, count: 5000), contentType: "audio/mpeg")
-        downloadQueue.start()
-        XCTAssertTrue(downloadQueue.isDownloading)
+        queue.start()
+        XCTAssertTrue(queue.isDownloading)
         XCTAssertEqual(lowSpaceManager.noFreeSpaceMessageCount, 1, "no repeat alert once space is available")
+        queue.currentStreamHandler?.cancel()
     }
 
     // MARK: Downloading

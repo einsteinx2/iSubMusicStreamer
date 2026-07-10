@@ -7,32 +7,44 @@
 //
 
 import Foundation
-import Resolver
 import CocoaLumberjackSwift
 import ProgressHUD
 
 final class DownloadQueue {
-    @LazyInjected private var store: Store
-    @LazyInjected private var settings: SavedSettings
-    @LazyInjected private var downloadsManager: DownloadsManager
-    @LazyInjected private var streamManager: StreamManaging
-    @LazyInjected private var metadataDownloader: SongMetadataDownloading
-    @LazyInjected private var networkStatus: NetworkStatus
+    private let store: Store
+    private let settings: SavedSettings
+    private let downloadsManager: DownloadsManager
+    private let player: PlayerControlling
+    private let networkStatus: NetworkStatus
+    private let streamManager: StreamManaging
+    private let metadataDownloader: SongMetadataDownloading
 
     private let maxNumberOfReconnects = 5
-    
+
     private(set) var isDownloading = false
     private(set) var currentQueuedSong: Song?
     private(set) var currentStreamHandler: StreamHandler?
-    
+
     var currentQueuedSongInDb: Song? {
         return store.firstSongInDownloadQueue()
     }
-    
-    init() {
+
+    init(store: Store, settings: SavedSettings, downloadsManager: DownloadsManager, player: PlayerControlling, networkStatus: NetworkStatus, streamManager: StreamManaging, metadataDownloader: SongMetadataDownloading) {
+        self.store = store
+        self.settings = settings
+        self.downloadsManager = downloadsManager
+        self.player = player
+        self.networkStatus = networkStatus
+        self.streamManager = streamManager
+        self.metadataDownloader = metadataDownloader
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(didEnterOnlineMode), name: Notifications.didEnterOnlineMode)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(didEnterOfflineMode), name: Notifications.didEnterOfflineMode)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(manualCachingOnWWANSettingChanged), name: Notifications.manualCachingOnWWANSettingChanged)
+    }
+
+    // The handler's dependencies are this queue's own dependencies
+    private var handlerDependencies: StreamHandler.Dependencies {
+        StreamHandler.Dependencies(downloadsManager: downloadsManager, settings: settings, store: store, player: player, networkStatus: networkStatus)
     }
     
     func isInQueue(song: Song) -> Bool {
@@ -104,7 +116,7 @@ final class DownloadQueue {
             }
         } else {
             DDLogInfo("[DownloadQueue] creating download handler for \(song)")
-            let handler = StreamHandler(song: song, tempCache: false, delegate: self, dependencies: .fromResolver())
+            let handler = StreamHandler(song: song, tempCache: false, delegate: self, dependencies: handlerDependencies)
             currentStreamHandler = handler
             handler.start()
         }
@@ -225,13 +237,19 @@ extension DownloadQueue: StreamHandlerDelegate {
     }
 }
 
-// Abstraction over the download queue so consumers can be unit tested with a fake
-// (registered in DependencyInjection.swift)
-protocol DownloadQueueing: AnyObject {
+// Read-only view of the download queue for services that only need to ask what is
+// currently downloading (StreamManager holds this as a weak back-reference attached
+// at the composition root)
+protocol DownloadQueueStatus: AnyObject {
     var isDownloading: Bool { get }
     var currentQueuedSong: Song? { get }
-    var currentStreamHandler: StreamHandler? { get }
     func isInQueue(song: Song) -> Bool
+}
+
+// Abstraction over the download queue so consumers can be unit tested with a fake
+// (registered in DependencyInjection.swift)
+protocol DownloadQueueing: DownloadQueueStatus {
+    var currentStreamHandler: StreamHandler? { get }
     func start()
     func stop()
     @discardableResult func removeCurrentSong() -> Bool

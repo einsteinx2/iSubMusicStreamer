@@ -69,6 +69,7 @@ final class FakePlayer: PlayerControlling {
 final class FakeStreamManager: StreamManaging {
     var isDownloading = false
     var firstHandlerInQueue: StreamHandler?
+    var lastTempCachedSong: Song?
 
     private(set) var setupCount = 0
     private(set) var queuedStreams = [(song: Song, byteOffset: Int, secondsOffset: Double, index: Int, tempCache: Bool, startDownload: Bool)]()

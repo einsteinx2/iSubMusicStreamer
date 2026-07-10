@@ -30,14 +30,25 @@ final class BassAudioEngineTests: StoreTestCase {
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
 
-        let freshStreamManager = StreamManager()
-        TestContainer.register { freshStreamManager }
-        TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
-
         let freshPlayer = BassPlayer()
         TestContainer.register { freshPlayer }
         TestContainer.register { freshPlayer as PlayerControlling }
         player = freshPlayer
+
+        let fakeDownloadQueue = FakeDownloadQueue()
+        TestContainer.register { fakeDownloadQueue as DownloadQueueing }
+
+        let freshStreamManager = StreamManager(store: store,
+                                               settings: freshSettings,
+                                               player: freshPlayer,
+                                               downloadsManager: DownloadsManager(settings: freshSettings, store: store),
+                                               networkStatus: FakeNetworkStatus(),
+                                               metadataDownloader: FakeSongMetadataDownloader())
+        freshStreamManager.attach(downloadQueue: fakeDownloadQueue)
+        freshStreamManager.attach(playQueue: freshPlayQueue)
+        TestContainer.register { freshStreamManager }
+        TestContainer.register { freshStreamManager as StreamManaging }
+
         player.initializeOutput()
 
         UserDefaults.standard.removeObject(forKey: "BassEffectSelectedPresetId")

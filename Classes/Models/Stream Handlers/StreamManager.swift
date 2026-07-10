@@ -7,17 +7,44 @@
 //
 
 import Foundation
-import Resolver
 import CocoaLumberjackSwift
 
 final class StreamManager {
-    @LazyInjected private var downloadQueue: DownloadQueueing
-    @LazyInjected private var store: Store
-    @LazyInjected private var settings: SavedSettings
-    @LazyInjected private var playQueue: PlayQueue
-    @LazyInjected private var player: PlayerControlling
-    @LazyInjected private var metadataDownloader: SongMetadataDownloading
-    
+    private let store: Store
+    private let settings: SavedSettings
+    private let player: PlayerControlling
+    private let downloadsManager: DownloadsManager
+    private let networkStatus: NetworkStatus
+    private let metadataDownloader: SongMetadataDownloading
+
+    // Back-edges (communication cycles) attached weakly at the composition root:
+    // the download queue is only read for status, and the play queue is only read
+    // to decide what to prefetch
+    private weak var downloadQueue: DownloadQueueStatus?
+    private weak var playQueue: PlayQueue?
+
+    init(store: Store, settings: SavedSettings, player: PlayerControlling, downloadsManager: DownloadsManager, networkStatus: NetworkStatus, metadataDownloader: SongMetadataDownloading) {
+        self.store = store
+        self.settings = settings
+        self.player = player
+        self.downloadsManager = downloadsManager
+        self.networkStatus = networkStatus
+        self.metadataDownloader = metadataDownloader
+    }
+
+    func attach(downloadQueue: DownloadQueueStatus) {
+        self.downloadQueue = downloadQueue
+    }
+
+    func attach(playQueue: PlayQueue) {
+        self.playQueue = playQueue
+    }
+
+    // The handlers' dependencies are this manager's own dependencies
+    private var handlerDependencies: StreamHandler.Dependencies {
+        StreamHandler.Dependencies(downloadsManager: downloadsManager, settings: settings, store: store, player: player, networkStatus: networkStatus)
+    }
+
     private let defaultNumberOfStreamsToQueue = 2
     private let maxNumberOfReconnects = 5
     
@@ -140,7 +167,7 @@ final class StreamManager {
         // or the download queue is actively downloading this song itself (matches the
         // old ISMSStreamManager removeStreamAtIndex: behavior)
         let song = handler.song
-        let isBeingDownloadedByQueue = downloadQueue.isDownloading && downloadQueue.currentQueuedSong == song
+        let isBeingDownloadedByQueue = (downloadQueue?.isDownloading ?? false) && downloadQueue?.currentQueuedSong == song
         if !song.isFullyCached && !song.isTempCached && !isBeingDownloadedByQueue {
             if Debug.streamManager {
                 DDLogInfo("[StreamManager] Removing song from cached songs table: \(song)")
@@ -209,7 +236,7 @@ final class StreamManager {
     private func resume(handler: StreamHandler) {
         // As an added check, verify that this handler is still in the stack
         guard isInQueue(song: handler.song) else { return }
-        if downloadQueue.isDownloading, let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == handler.song {
+        if let downloadQueue, downloadQueue.isDownloading, let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == handler.song {
             // This song is already being downloaded by the download queue, so just start the player
             streamHandlerStartPlayback(handler: handler)
             
@@ -236,7 +263,7 @@ final class StreamManager {
         if Debug.streamManager {
             DDLogInfo("[StreamManager] starting handler \(handler) resume: \(resume), handlerStack: \(handlerStack)")
         }
-        if downloadQueue.isDownloading, let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == handler.song {
+        if let downloadQueue, downloadQueue.isDownloading, let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == handler.song {
             // This song is already being downloaded by the download queue, so just start the player
             streamHandlerStartPlayback(handler: handler)
             
@@ -275,7 +302,7 @@ final class StreamManager {
         do {
             guard let data = defaults.object(forKey: handlerStackKey) as? Data else { return }
             let decoder = JSONDecoder()
-            decoder.userInfo[.streamHandlerDependencies] = StreamHandler.Dependencies.fromResolver()
+            decoder.userInfo[.streamHandlerDependencies] = handlerDependencies
             handlerStack = try decoder.decode(from: data)
             handlerStack.forEach { $0.delegate = self }
             if Debug.streamManager {
@@ -302,7 +329,7 @@ final class StreamManager {
     func queueStream(song: Song, byteOffset: Int = 0, secondsOffset: Double = 0.0, index: Int, tempCache: Bool, startDownload: Bool) {
         guard index >= 0 && index <= handlerStack.count, !isInQueue(song: song) else { return }
         
-        let handler = StreamHandler(song: song, byteOffset: byteOffset, secondsOffset: secondsOffset, tempCache: tempCache, delegate: self, dependencies: .fromResolver())
+        let handler = StreamHandler(song: song, byteOffset: byteOffset, secondsOffset: secondsOffset, tempCache: tempCache, delegate: self, dependencies: handlerDependencies)
         handlerStack.insert(handler, at: index)
         if handlerStack.count == 1 && startDownload {
             start(handler: handler)
@@ -317,20 +344,20 @@ final class StreamManager {
     }
     
     func fillStreamQueue(startDownload: Bool) {
-        guard !settings.isJukeboxEnabled, !settings.isOfflineMode else { return }
-        
+        guard let playQueue, !settings.isJukeboxEnabled, !settings.isOfflineMode else { return }
+
         let numStreamsToQueue = settings.isSongCachingEnabled && settings.isNextSongCacheEnabled ? defaultNumberOfStreamsToQueue : 1
         guard handlerStack.count < numStreamsToQueue else { return }
-        
+
         for i in 0..<numStreamsToQueue {
             if let song = playQueue.song(index: playQueue.indexFromCurrentIndex(offset: i)), !song.isVideo, !song.isFullyCached, !isInQueue(song: song) {
                 var isLastTempCachedSong = false
                 if let lastTempCachedSong = lastTempCachedSong, lastTempCachedSong == song {
                     isLastTempCachedSong = true
                 }
-                
+
                 var isCurrentQueuedSong = false
-                if let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == song {
+                if let currentQueuedSong = downloadQueue?.currentQueuedSong, currentQueuedSong == song {
                     isCurrentQueuedSong = true
                 }
                 
@@ -362,10 +389,10 @@ final class StreamManager {
         // current or next song - just removing prevSong left stale handlers behind on
         // any jump of more than one position - then refill the prefetch queue
         var songs = [Song]()
-        if let currentSong = playQueue.currentSong {
+        if let currentSong = playQueue?.currentSong {
             songs.append(currentSong)
         }
-        if let nextSong = playQueue.nextSong {
+        if let nextSong = playQueue?.nextSong {
             songs.append(nextSong)
         }
 
@@ -375,10 +402,10 @@ final class StreamManager {
     
     @objc private func currentPlaylistOrderChanged() {
         var songs = [Song]()
-        if let currentSong = playQueue.currentSong {
+        if let currentSong = playQueue?.currentSong {
             songs.append(currentSong)
         }
-        if let nextSong = playQueue.nextSong {
+        if let nextSong = playQueue?.nextSong {
             songs.append(nextSong)
         }
         
@@ -412,7 +439,7 @@ extension StreamManager: StreamHandlerDelegate {
 
         // TODO: Should check store return values and do some extra error handling?
         if !handler.isTempCache {
-            if downloadQueue.isInQueue(song: handler.song) {
+            if downloadQueue?.isInQueue(song: handler.song) ?? false {
                 _ = store.removeFromDownloadQueue(song: handler.song)
             }
             if Debug.streamManager {
@@ -461,6 +488,7 @@ extension StreamManager: StreamHandlerDelegate {
 protocol StreamManaging: AnyObject {
     var isDownloading: Bool { get }
     var firstHandlerInQueue: StreamHandler? { get }
+    var lastTempCachedSong: Song? { get }
     func setup()
     func handler(song: Song) -> StreamHandler?
     func isFirstInQueue(song: Song) -> Bool

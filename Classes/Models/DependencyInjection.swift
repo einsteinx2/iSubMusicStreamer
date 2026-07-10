@@ -38,17 +38,20 @@ final class AppServices {
         downloadsManager = DownloadsManager(settings: settings, store: store)
 
         // Not yet constructor-converted; nothing here resolves from the container
-        // during init, so construction order is free
+        // during init
         player = BassPlayer()
-        downloadQueue = DownloadQueue()
-        streamManager = StreamManager()
         jukebox = Jukebox()
+
+        streamManager = StreamManager(store: store, settings: settings, player: player, downloadsManager: downloadsManager, networkStatus: networkMonitor, metadataDownloader: SongMetadataDownloader())
+        downloadQueue = DownloadQueue(store: store, settings: settings, downloadsManager: downloadsManager, player: player, networkStatus: networkMonitor, streamManager: streamManager, metadataDownloader: SongMetadataDownloader())
         playQueue = PlayQueue()
 
         stateRestorer = StateRestorer(settings: settings, player: player, playQueue: playQueue)
 
         // Back-edges are weak references attached explicitly, never resolved ambiently
         settings.attach(networkStatus: networkMonitor)
+        streamManager.attach(downloadQueue: downloadQueue)
+        streamManager.attach(playQueue: playQueue)
     }
 }
 

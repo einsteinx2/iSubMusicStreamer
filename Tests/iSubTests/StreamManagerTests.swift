@@ -17,6 +17,7 @@ final class StreamManagerTests: StoreTestCase {
     private var settings: SavedSettings!
     private var player: FakePlayer!
     private var downloadQueue: FakeDownloadQueue!
+    private var network: FakeNetworkStatus!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -25,6 +26,7 @@ final class StreamManagerTests: StoreTestCase {
 
         player = FakePlayer()
         downloadQueue = FakeDownloadQueue()
+        network = FakeNetworkStatus()
         let fakePlayer = player!
         let fakeDownloadQueue = downloadQueue!
         TestContainer.register { fakePlayer as PlayerControlling }
@@ -40,7 +42,21 @@ final class StreamManagerTests: StoreTestCase {
 
         // The handler stack now persists to SavedSettings.defaults, which the sandbox
         // isolates per test, so no manual key scrubbing is needed
-        streamManager = StreamManager()
+        streamManager = makeStreamManager()
+    }
+
+    // Builds a StreamManager wired to this test's fakes (the composition root's job
+    // in production)
+    private func makeStreamManager() -> StreamManager {
+        let manager = StreamManager(store: store,
+                                    settings: settings,
+                                    player: player,
+                                    downloadsManager: DownloadsManager(settings: settings, store: store),
+                                    networkStatus: network,
+                                    metadataDownloader: FakeSongMetadataDownloader())
+        manager.attach(downloadQueue: downloadQueue)
+        manager.attach(playQueue: playQueue)
+        return manager
     }
 
     override func tearDownWithError() throws {
@@ -238,7 +254,7 @@ final class StreamManagerTests: StoreTestCase {
         streamManager.saveHandlerStack()
 
         // A fresh manager (fresh launch) loads the same stack from UserDefaults
-        let newManager = StreamManager()
+        let newManager = makeStreamManager()
         newManager.loadHandlerStack()
 
         let handlerA = try XCTUnwrap(newManager.handler(song: songA))
