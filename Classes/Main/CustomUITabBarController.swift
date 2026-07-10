@@ -37,9 +37,11 @@ final class CustomUITabBarController: UITabBarController {
             case .home:
                 controller = CustomUINavigationController(rootViewController: HomeViewController())
                 controller.tabBarItem = UITabBarItem(title: "Home", image: UIImage(named: "tabbaricon-home"), tag: type.rawValue)
+                controller.tabBarItem.accessibilityIdentifier = AccessibilityId.tabHome
             case .library:
                 controller = CustomUINavigationController(rootViewController: LibraryViewController())
                 controller.tabBarItem = UITabBarItem(title: "Library", image: UIImage(named: "tabbaricon-folders"), tag: type.rawValue)
+                controller.tabBarItem.accessibilityIdentifier = AccessibilityId.tabLibrary
                 self.libraryTab = controller
             case .player:
                 controller = CustomUINavigationController(rootViewController: PlayerViewController())
@@ -52,12 +54,15 @@ final class CustomUITabBarController: UITabBarController {
                     image = UIImage(systemName: "music.note", withConfiguration: imageConfig)
                 }
                 controller.tabBarItem = UITabBarItem(title: "Player", image: image, tag: type.rawValue)
+                controller.tabBarItem.accessibilityIdentifier = AccessibilityId.tabPlayer
             case .playlists:
                 controller = CustomUINavigationController(rootViewController: PlaylistsViewController())
                 controller.tabBarItem = UITabBarItem(title: "Playlists", image: UIImage(named: "tabbaricon-playlists"), tag: type.rawValue)
+                controller.tabBarItem.accessibilityIdentifier = AccessibilityId.tabPlaylists
             case .downloads:
                 controller = CustomUINavigationController(rootViewController: DownloadsViewController())
                 controller.tabBarItem = UITabBarItem(title: "Downloads", image: UIImage(named: "tabbaricon-cache"), tag: 0)
+                controller.tabBarItem.accessibilityIdentifier = AccessibilityId.tabDownloads
             }
             controllers.append(controller)
         }

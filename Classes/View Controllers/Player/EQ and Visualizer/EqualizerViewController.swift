@@ -110,6 +110,13 @@ final class EqualizerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // Stable identifiers for UI tests
+        toggleButton.accessibilityIdentifier = AccessibilityId.equalizerToggle
+        presetPicker.accessibilityIdentifier = AccessibilityId.equalizerPresetPicker
+        savePresetButton.accessibilityIdentifier = AccessibilityId.equalizerSavePreset
+        deletePresetButton.accessibilityIdentifier = AccessibilityId.equalizerDeletePreset
+        closeButton.accessibilityIdentifier = AccessibilityId.equalizerClose
         
         overrideUserInterfaceStyle = .dark
         

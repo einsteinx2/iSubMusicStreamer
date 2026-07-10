@@ -32,6 +32,13 @@ final class ServerEditViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        // Stable identifiers for UI tests
+        urlField.accessibilityIdentifier = AccessibilityId.serverEditURL
+        usernameField.accessibilityIdentifier = AccessibilityId.serverEditUsername
+        passwordField.accessibilityIdentifier = AccessibilityId.serverEditPassword
+        saveButton.accessibilityIdentifier = AccessibilityId.serverEditSave
+        closeButton.accessibilityIdentifier = AccessibilityId.serverEditClose
+
         view.backgroundColor = .black
         view.overrideUserInterfaceStyle = .dark
         

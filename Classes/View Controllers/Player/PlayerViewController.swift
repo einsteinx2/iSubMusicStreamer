@@ -269,6 +269,19 @@ final class PlayerViewController: UIViewController {
         controlsStack.alignment = .center
         controlsStack.distribution = .equalCentering
         controlsStack.addArrangedSubviews([quickSkipBackButton, previousButton, playPauseButton, nextButton, quickSkipForwardButton])
+
+        // Stable identifiers for UI tests
+        playPauseButton.accessibilityIdentifier = AccessibilityId.playerPlayPause
+        previousButton.accessibilityIdentifier = AccessibilityId.playerPrevious
+        nextButton.accessibilityIdentifier = AccessibilityId.playerNext
+        quickSkipBackButton.accessibilityIdentifier = AccessibilityId.playerQuickSkipBack
+        quickSkipForwardButton.accessibilityIdentifier = AccessibilityId.playerQuickSkipForward
+        progressSlider.accessibilityIdentifier = AccessibilityId.playerSeekSlider
+        repeatButton.accessibilityIdentifier = AccessibilityId.playerRepeat
+        shuffleButton.accessibilityIdentifier = AccessibilityId.playerShuffle
+        equalizerButton.accessibilityIdentifier = AccessibilityId.playerEqualizer
+        jukeboxVolumeSlider.accessibilityIdentifier = AccessibilityId.playerJukeboxVolume
+
         controlsStack.snp.makeConstraints { make in
             make.height.equalTo(controlStackHeight)
             make.leading.trailing.equalToSuperview()

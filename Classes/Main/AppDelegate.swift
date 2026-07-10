@@ -28,9 +28,15 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: UIApplication Lifecycle
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // UI test mode: wipe state before anything touches disk or defaults
+        UITestSupport.resetStateIfRequested()
+
         // Initialize database
         store.setup()
-        
+
+        // UI test mode: stub the network and seed a pre-configured server
+        UITestSupport.configureIfEnabled()
+
         // Setup singletons
         // TODO: Don't have so many singletons lol
         settings.setup()
@@ -74,20 +80,23 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         batteryStateChanged()
         
         // Request authorization to send background notifications
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
-            DDLogInfo("[AppDelegate] Request for local notifications granted: \(granted)")
-            if !granted {
-                // TODO: Test this alert
-                DispatchQueue.main.async(after: 1) {
-                    let message = "iSub uses local notifications to let you know if it will be put to sleep while you still have downloads running in the background. If you'd like to receive these notifications, you can enable it in the Settings app."
-                    let alert = UIAlertController(title: "Local Notifications", message: message, preferredStyle: .alert)
-                    alert.addAction(title: "Open Settings", style: .default) { _ in
-                        if let url = URL(string: UIApplication.openSettingsURLString) {
-                            UIApplication.shared.open(url)
+        // (skipped in UI test mode so the system permission alert can't block tests)
+        if !UITestSupport.isEnabled {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
+                DDLogInfo("[AppDelegate] Request for local notifications granted: \(granted)")
+                if !granted {
+                    // TODO: Test this alert
+                    DispatchQueue.main.async(after: 1) {
+                        let message = "iSub uses local notifications to let you know if it will be put to sleep while you still have downloads running in the background. If you'd like to receive these notifications, you can enable it in the Settings app."
+                        let alert = UIAlertController(title: "Local Notifications", message: message, preferredStyle: .alert)
+                        alert.addAction(title: "Open Settings", style: .default) { _ in
+                            if let url = URL(string: UIApplication.openSettingsURLString) {
+                                UIApplication.shared.open(url)
+                            }
                         }
+                        alert.addCancelAction()
+                        UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
                     }
-                    alert.addCancelAction()
-                    UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
                 }
             }
         }

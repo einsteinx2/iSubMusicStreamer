@@ -74,6 +74,7 @@ final class UniversalTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        accessibilityIdentifier = AccessibilityId.universalTableViewCell
         
         backgroundColor = .systemBackground
         
