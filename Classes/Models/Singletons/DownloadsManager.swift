@@ -213,15 +213,46 @@ final class DownloadsManager {
         NotificationCenter.postOnMainThread(name: Notifications.downloadsSizeChecked)
     }
     
-    // TODO: implement this
-    // NOTE: The docs say that you can just set it on a single directory and it will apply to all subfolders/files, however various people have tested and found this to be incorrect. So what needs to be done is to use the directory enumerator to enumerate all files and subdirectories in the downloads directory and mark them all. Then any time a new file is created, like in the stream handler, the flag needs to be set according to the user's setting because apparently it won't apply to newly created files, especially in the documents directory. See discussion here: https://stackoverflow.com/a/26683417/299262
+    // NOTE: The isExcludedFromBackup flag must be set on every file individually: despite
+    // the docs, it does not reliably propagate from a directory to its contents, and it
+    // never applies to files created later (see https://stackoverflow.com/a/26683417/299262).
+    // StreamHandler applies the current setting to each newly created download file; these
+    // walk the existing downloads when the setting changes.
     func setAllCachedSongsToBackup() {
-        // Set the flag on the downloads directory, no need to set it on all individual files
-//        (FileSystem.downloadsDirectory as NSURL).removeSkipBackupAttribute()
+        cacheCheckQueue.async {
+            self.applyBackupExclusionToAllDownloads(isExcludedFromBackup: false)
+        }
     }
-    
+
     func setAllCachedSongsToNotBackup() {
-        // Set the flag on the downloads directory, no need to set it on all individual files
-//        (FileSystem.downloadsDirectory as NSURL).addSkipBackupAttribute()
+        cacheCheckQueue.async {
+            self.applyBackupExclusionToAllDownloads(isExcludedFromBackup: true)
+        }
+    }
+
+    // Synchronous worker (internal so tests can call it deterministically)
+    func applyBackupExclusionToAllDownloads(isExcludedFromBackup: Bool) {
+        var resourceValues = URLResourceValues()
+        resourceValues.isExcludedFromBackup = isExcludedFromBackup
+
+        // Mark the directory itself too so newly created intermediate state is covered
+        var directoryURL = FileSystem.downloadsDirectory
+        do {
+            try directoryURL.setResourceValues(resourceValues)
+        } catch {
+            DDLogError("[DownloadsManager] Failed to set isExcludedFromBackup=\(isExcludedFromBackup) on \(directoryURL), \(error)")
+        }
+
+        guard let directoryEnumerator = FileManager.default.enumerator(at: FileSystem.downloadsDirectory, includingPropertiesForKeys: nil) else {
+            DDLogError("[DownloadsManager] applyBackupExclusionToAllDownloads: Failed to initialize directory enumerator")
+            return
+        }
+        while var url = directoryEnumerator.nextObject() as? URL {
+            do {
+                try url.setResourceValues(resourceValues)
+            } catch {
+                DDLogError("[DownloadsManager] Failed to set isExcludedFromBackup=\(isExcludedFromBackup) on \(url), \(error)")
+            }
+        }
     }
 }

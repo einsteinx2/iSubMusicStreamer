@@ -191,6 +191,17 @@ final class StreamHandler: NSObject, Codable {
                 delegate?.streamHandlerConnectionFailed(handler: self, error: APIError.filesystem)
                 return
             }
+
+            // New files never inherit the backup-exclusion flag, so apply the user's
+            // setting to each freshly created download file
+            var fileURL = URL(fileURLWithPath: filePath)
+            var resourceValues = URLResourceValues()
+            resourceValues.isExcludedFromBackup = !settings.isBackupCacheEnabled
+            do {
+                try fileURL.setResourceValues(resourceValues)
+            } catch {
+                DDLogError("[StreamHandler] Failed to set backup exclusion on \(filePath), error: \(error)")
+            }
         }
             
         // TODO: implement this - Make sure that sending estimateContentLength as a bool instead of a string works

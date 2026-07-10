@@ -115,6 +115,53 @@ final class DownloadsManagerTests: StoreTestCase {
         // Reaching this line at all proves the loop terminated
     }
 
+    // MARK: Backup exclusion (STUB-06)
+
+    private func isExcludedFromBackup(_ path: String) throws -> Bool {
+        try URL(fileURLWithPath: path).resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup ?? false
+    }
+
+    private func waitFor(timeout: TimeInterval = 5, _ condition: () -> Bool) -> Bool {
+        let deadline = Date(timeIntervalSinceNow: timeout)
+        while Date() < deadline {
+            if condition() { return true }
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.05))
+        }
+        return condition()
+    }
+
+    func testApplyBackupExclusionMarksEveryFileIndividually() throws {
+        // Two songs in different subdirectories — the flag must be set per file
+        let songA = addDownload(songId: "1", sizeInBytes: 10)
+        let songB = TestData.song(serverId: 1, id: "2", title: "Song 2", path: "Other/Album/2.mp3")
+        let fileB = URL(fileURLWithPath: songB.localPath)
+        try FileManager.default.createDirectory(at: fileB.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try Data(repeating: 1, count: 10).write(to: fileB)
+
+        manager.applyBackupExclusionToAllDownloads(isExcludedFromBackup: true)
+        XCTAssertTrue(try isExcludedFromBackup(songA.localPath))
+        XCTAssertTrue(try isExcludedFromBackup(songB.localPath))
+
+        manager.applyBackupExclusionToAllDownloads(isExcludedFromBackup: false)
+        XCTAssertFalse(try isExcludedFromBackup(songA.localPath))
+        XCTAssertFalse(try isExcludedFromBackup(songB.localPath))
+    }
+
+    func testBackupCacheSettingToggleUpdatesExistingFiles() throws {
+        // The SavedSettings didSet resolves DownloadsManager from the container
+        let registeredManager = manager!
+        TestContainer.register { registeredManager }
+        let song = addDownload(songId: "1", sizeInBytes: 10)
+
+        settings.isBackupCacheEnabled = false
+        XCTAssertTrue(waitFor { (try? isExcludedFromBackup(song.localPath)) == true },
+                      "disabling backup must exclude existing downloads from backup")
+
+        settings.isBackupCacheEnabled = true
+        XCTAssertTrue(waitFor { (try? isExcludedFromBackup(song.localPath)) == false },
+                      "enabling backup must clear the exclusion on existing downloads")
+    }
+
     func testMinSpaceEvictionTerminatesWhenNoCandidatesRemain_BUG16() {
         // Free space can never exceed Int.max, so without the nil-candidate guard this
         // spins forever once the (single) song is gone

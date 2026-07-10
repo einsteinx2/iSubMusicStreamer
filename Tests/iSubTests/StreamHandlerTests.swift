@@ -98,6 +98,21 @@ final class StreamHandlerTests: StoreTestCase {
         XCTAssertNil(received.request.value(forHTTPHeaderField: "Range"), "no range header without a byte offset")
     }
 
+    func testNewDownloadFileIsExcludedFromBackupWhenBackupCacheDisabled() throws {
+        // isBackupCacheEnabled defaults to false, so freshly created download files
+        // must carry the backup-exclusion flag (it is never inherited) — STUB-06
+        MockSubsonicServer.stub(.stream, data: Data(repeating: 7, count: 1000), contentType: "audio/mpeg")
+        let song = makeSong()
+
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        activeHandler = handler
+        handler.start()
+        wait(for: [delegateSpy.finishedExpectation], timeout: 10)
+
+        let values = try URL(fileURLWithPath: song.localPath).resourceValues(forKeys: [.isExcludedFromBackupKey])
+        XCTAssertEqual(values.isExcludedFromBackup, true)
+    }
+
     func testTempCacheDownloadWritesToTempPathWithoutDownloadRow() throws {
         let body = Data(repeating: 7, count: 3000)
         MockSubsonicServer.stub(.stream, data: body, contentType: "audio/mpeg")
