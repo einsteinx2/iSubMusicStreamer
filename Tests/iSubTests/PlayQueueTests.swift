@@ -1,0 +1,416 @@
+//
+//  PlayQueueTests.swift
+//  iSubTests
+//
+//  Created by Benjamin Baron on 7/9/26.
+//  Copyright © 2026 Ben Baron. All rights reserved.
+//
+
+import XCTest
+import GRDB
+@testable import iSub_Beta
+
+// COV-05: PlayQueue navigation, shuffle, edit, and state-persistence tests using
+// the protocol seams (FakePlayer/FakeStreamManager/FakeDownloadQueue) and the
+// in-memory store. The BUG-10 index math regression is gated with XCTExpectFailure.
+final class PlayQueueTests: StoreTestCase {
+    private var playQueue: PlayQueue!
+    private var settings: SavedSettings!
+    private var player: FakePlayer!
+    private var streamManager: FakeStreamManager!
+    private var downloadQueue: FakeDownloadQueue!
+
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+
+        player = FakePlayer()
+        streamManager = FakeStreamManager()
+        downloadQueue = FakeDownloadQueue()
+        let fakePlayer = player!
+        let fakeStreamManager = streamManager!
+        let fakeDownloadQueue = downloadQueue!
+        TestContainer.register { fakePlayer as PlayerControlling }
+        TestContainer.register { fakeStreamManager as StreamManaging }
+        TestContainer.register { fakeDownloadQueue as DownloadQueueing }
+
+        let freshSettings = SavedSettings()
+        TestContainer.register { freshSettings }
+        settings = freshSettings
+
+        let freshPlayQueue = PlayQueue()
+        TestContainer.register { freshPlayQueue }
+        playQueue = freshPlayQueue
+    }
+
+    override func tearDownWithError() throws {
+        playQueue = nil
+        settings = nil
+        player = nil
+        streamManager = nil
+        downloadQueue = nil
+        try super.tearDownWithError()
+    }
+
+    // Seeds numbered songs (ids "1"..."<count>") into the normal play queue
+    private func seedQueue(_ count: Int, playlistId: Int = LocalPlaylist.Default.playQueueId) {
+        for number in 1...count {
+            let song = TestData.song(serverId: 1, id: "\(number)", title: "Song \(number)", path: "A/\(number).mp3")
+            _ = store.add(song: song)
+            XCTAssertTrue(store.add(song: song, localPlaylistId: playlistId))
+        }
+    }
+
+    // MARK: index(offset:fromIndex:)
+
+    func testIndexOffsetRepeatNoneWithinBounds() {
+        seedQueue(5)
+        playQueue.repeatMode = .none
+        XCTAssertEqual(playQueue.index(offset: 2, fromIndex: 1), 3)
+        XCTAssertEqual(playQueue.index(offset: 0, fromIndex: 4), 4)
+        XCTAssertEqual(playQueue.index(offset: -1, fromIndex: 3), 2)
+    }
+
+    func testIndexOffsetRepeatNonePastEndReturnsFirstIndexPastEnd() {
+        // StreamManager prefetch relies on getting songCount (one past the end) back
+        seedQueue(5)
+        playQueue.repeatMode = .none
+        XCTAssertEqual(playQueue.index(offset: 3, fromIndex: 3), 5)
+        XCTAssertEqual(playQueue.index(offset: 10, fromIndex: 0), 5)
+    }
+
+    func testIndexOffsetRepeatNoneNegativeClampsToZero_BUG10() {
+        seedQueue(5)
+        playQueue.repeatMode = .none
+        XCTExpectFailure("BUG-10: index(offset:fromIndex:) returns negative indices for .none; remove this marker when fixing the bug") {
+            XCTAssertEqual(playQueue.index(offset: -2, fromIndex: 1), 0, "negative results must clamp to 0")
+            XCTAssertEqual(playQueue.index(offset: -10, fromIndex: 4), 0, "negative results must clamp to 0")
+        }
+    }
+
+    func testIndexOffsetRepeatOneAlwaysReturnsFromIndex() {
+        seedQueue(5)
+        playQueue.repeatMode = .one
+        XCTAssertEqual(playQueue.index(offset: 3, fromIndex: 2), 2)
+        XCTAssertEqual(playQueue.index(offset: -2, fromIndex: 2), 2)
+        XCTAssertEqual(playQueue.index(offset: 0, fromIndex: 4), 4)
+    }
+
+    func testIndexOffsetRepeatAllWrapsBothDirections() {
+        seedQueue(5)
+        playQueue.repeatMode = .all
+        XCTAssertEqual(playQueue.index(offset: 2, fromIndex: 4), 1, "wraps past the end")
+        XCTAssertEqual(playQueue.index(offset: -2, fromIndex: 0), 3, "wraps below zero")
+        XCTAssertEqual(playQueue.index(offset: -12, fromIndex: 0), 3, "wraps multiple times below zero")
+        XCTAssertEqual(playQueue.index(offset: 1, fromIndex: 2), 3, "no wrap needed")
+    }
+
+    // MARK: nextIndex / prevIndex / nextIndexIgnoringRepeatMode
+
+    func testNextIndexPerRepeatMode() {
+        seedQueue(3)
+        playQueue.currentIndex = 1
+
+        playQueue.repeatMode = .none
+        XCTAssertEqual(playQueue.nextIndex, 2)
+        playQueue.repeatMode = .one
+        XCTAssertEqual(playQueue.nextIndex, 1)
+        playQueue.repeatMode = .all
+        XCTAssertEqual(playQueue.nextIndex, 2)
+
+        // At the last song
+        playQueue.currentIndex = 2
+        playQueue.repeatMode = .none
+        XCTAssertEqual(playQueue.nextIndex, 3, "first index past the end")
+        playQueue.repeatMode = .all
+        XCTAssertEqual(playQueue.nextIndex, 0, "wraps to the beginning")
+
+        // Past the end of the playlist
+        playQueue.currentIndex = 3
+        playQueue.repeatMode = .none
+        XCTAssertEqual(playQueue.nextIndex, 3, "stays past the end")
+    }
+
+    func testPrevIndexPerRepeatMode() {
+        seedQueue(3)
+
+        playQueue.currentIndex = 1
+        playQueue.repeatMode = .none
+        XCTAssertEqual(playQueue.prevIndex, 0)
+        playQueue.repeatMode = .one
+        XCTAssertEqual(playQueue.prevIndex, 1)
+        playQueue.repeatMode = .all
+        XCTAssertEqual(playQueue.prevIndex, 0)
+
+        playQueue.currentIndex = 0
+        playQueue.repeatMode = .none
+        XCTAssertEqual(playQueue.prevIndex, 0, "stays at the first song")
+        playQueue.repeatMode = .all
+        XCTAssertEqual(playQueue.prevIndex, 2, "wraps to the last song")
+    }
+
+    func testNextIndexIgnoringRepeatMode() {
+        seedQueue(3)
+        playQueue.repeatMode = .one
+        playQueue.currentIndex = 1
+        XCTAssertEqual(playQueue.nextIndexIgnoringRepeatMode, 2, "repeat one must be ignored")
+        playQueue.currentIndex = 3
+        XCTAssertEqual(playQueue.nextIndexIgnoringRepeatMode, 3, "stays past the end")
+    }
+
+    // MARK: nextSong / prevSong / currentSong
+
+    func testSongAccessors() {
+        seedQueue(3)
+        playQueue.repeatMode = .none
+        playQueue.currentIndex = 1
+
+        XCTAssertEqual(playQueue.currentSong?.id, "2")
+        XCTAssertEqual(playQueue.nextSong?.id, "3")
+        XCTAssertEqual(playQueue.prevSong?.id, "1")
+        XCTAssertEqual(playQueue.count, 3)
+
+        // Past the end there's no current song, but the display song falls back to prev
+        playQueue.currentIndex = 3
+        XCTAssertNil(playQueue.currentSong)
+        XCTAssertEqual(playQueue.currentDisplaySong?.id, "3")
+    }
+
+    // MARK: currentIndex across the shuffle branch
+
+    func testCurrentIndexTracksShuffleState() {
+        seedQueue(3)
+        playQueue.normalIndex = 2
+        playQueue.shuffleIndex = 1
+
+        playQueue.isShuffle = false
+        XCTAssertEqual(playQueue.currentIndex, 2)
+        playQueue.isShuffle = true
+        XCTAssertEqual(playQueue.currentIndex, 1)
+
+        playQueue.currentIndex = 0
+        XCTAssertEqual(playQueue.shuffleIndex, 0)
+        XCTAssertEqual(playQueue.normalIndex, 2, "setting the index in shuffle mode must not touch the normal index")
+
+        playQueue.isShuffle = false
+        playQueue.currentIndex = 1
+        XCTAssertEqual(playQueue.normalIndex, 1)
+        XCTAssertEqual(playQueue.shuffleIndex, 0, "setting the index in normal mode must not touch the shuffle index")
+    }
+
+    // MARK: playSong / playNextSong / playPrevSong
+
+    func testPlaySongStartsSongAtPosition() throws {
+        seedQueue(3)
+        let played = playQueue.playSong(position: 1)
+        XCTAssertEqual(played?.id, "2")
+        XCTAssertEqual(playQueue.currentIndex, 1)
+        // Streams for other songs are cleared before starting
+        XCTAssertEqual(streamManager.removeAllStreamsExceptSongs.map(\.id), ["2"])
+        XCTAssertEqual(player.stopCount, 1, "the player is stopped before starting a new song")
+    }
+
+    func testPlaySongPastEndReturnsNil() {
+        seedQueue(3)
+        XCTAssertNil(playQueue.playSong(position: 5))
+        XCTAssertEqual(playQueue.currentIndex, 5)
+    }
+
+    func testPlayPrevSongRestartsWhenPastTenSeconds() {
+        seedQueue(3)
+        playQueue.currentIndex = 1
+        player.progress = 15.0
+
+        let played = playQueue.playPrevSong()
+
+        XCTAssertEqual(played?.id, "2", "past 10 seconds the current song restarts")
+        XCTAssertEqual(playQueue.currentIndex, 1)
+    }
+
+    func testPlayPrevSongGoesToPreviousWithinTenSeconds() {
+        seedQueue(3)
+        playQueue.currentIndex = 1
+        player.progress = 5.0
+
+        let played = playQueue.playPrevSong()
+
+        XCTAssertEqual(played?.id, "1", "within 10 seconds playback moves to the previous song")
+        XCTAssertEqual(playQueue.currentIndex, 0)
+    }
+
+    func testPlayNextSongAdvances() {
+        seedQueue(3)
+        playQueue.repeatMode = .none
+        playQueue.currentIndex = 0
+
+        let played = playQueue.playNextSong()
+
+        XCTAssertEqual(played?.id, "2")
+        XCTAssertEqual(playQueue.currentIndex, 1)
+    }
+
+    // MARK: shuffleToggle
+
+    func testShuffleToggleOnCreatesShuffleQueueKeepingCurrentSong() {
+        seedQueue(5)
+        playQueue.normalIndex = 2
+
+        playQueue.shuffleToggle()
+
+        XCTAssertTrue(playQueue.isShuffle)
+        XCTAssertEqual(playQueue.shuffleIndex, 0)
+        XCTAssertEqual(playQueue.currentSong?.id, "3", "the playing song must be first in the shuffle queue")
+        XCTAssertEqual(playQueue.count, 5)
+        XCTAssertEqual(Set(playQueue.songs().map(\.id)), Set((1...5).map(String.init)), "shuffle queue must be a permutation")
+        XCTAssertEqual(streamManager.fillStreamQueueCalls, [true])
+    }
+
+    func testShuffleToggleOffRestoresNormalIndexOfCurrentSong() {
+        seedQueue(5)
+        playQueue.normalIndex = 2
+        playQueue.shuffleToggle()
+        XCTAssertTrue(playQueue.isShuffle)
+
+        playQueue.shuffleToggle()
+
+        XCTAssertFalse(playQueue.isShuffle)
+        XCTAssertEqual(playQueue.normalIndex, 2, "the current song's position in the normal queue is restored")
+        XCTAssertEqual(playQueue.currentSong?.id, "3")
+    }
+
+    // MARK: moveSong index correction
+
+    func testMoveSongCorrectsCurrentIndex() {
+        seedQueue(5)
+        playQueue.currentIndex = 2
+
+        // Moving the current song follows it
+        XCTAssertTrue(playQueue.moveSong(fromIndex: 2, toIndex: 4))
+        XCTAssertEqual(playQueue.currentIndex, 4)
+        XCTAssertEqual(playQueue.currentSong?.id, "3")
+
+        // Moving a song from before the current one to after decrements the index
+        XCTAssertTrue(playQueue.moveSong(fromIndex: 0, toIndex: 4))
+        XCTAssertEqual(playQueue.currentIndex, 3)
+        XCTAssertEqual(playQueue.currentSong?.id, "3")
+
+        // Moving a song from after the current one to before increments the index
+        XCTAssertTrue(playQueue.moveSong(fromIndex: 4, toIndex: 0))
+        XCTAssertEqual(playQueue.currentIndex, 4)
+        XCTAssertEqual(playQueue.currentSong?.id, "3")
+
+        // Moving songs entirely after the current one leaves it alone
+        playQueue.currentIndex = 0
+        XCTAssertTrue(playQueue.moveSong(fromIndex: 3, toIndex: 4))
+        XCTAssertEqual(playQueue.currentIndex, 0)
+    }
+
+    func testMoveSongFailureDoesNotTouchIndex() {
+        seedQueue(3)
+        playQueue.currentIndex = 1
+        XCTAssertFalse(playQueue.moveSong(fromIndex: 1, toIndex: 9))
+        XCTAssertEqual(playQueue.currentIndex, 1)
+    }
+
+    // MARK: removeSongs
+
+    func testRemoveSongsResetsIndexWhenCurrentSongDeleted() {
+        seedQueue(5)
+        playQueue.currentIndex = 2
+
+        XCTAssertTrue(playQueue.removeSongs(indexes: [1, 2]))
+
+        XCTAssertEqual(player.stopCount, 1, "deleting the playing song stops the player")
+        XCTAssertEqual(playQueue.currentIndex, 0)
+        XCTAssertEqual(playQueue.songs().map(\.id), ["1", "4", "5"])
+    }
+
+    func testRemoveSongsKeepsPlayingWhenOtherSongsDeleted() {
+        seedQueue(5)
+        playQueue.currentIndex = 2
+
+        XCTAssertTrue(playQueue.removeSongs(indexes: [4]))
+
+        XCTAssertEqual(player.stopCount, 0)
+        XCTAssertEqual(playQueue.currentIndex, 2)
+        XCTAssertEqual(playQueue.songs().count, 4)
+    }
+
+    // MARK: SavedSettings state persistence
+
+    func testSaveStatePersistsPlayerAndQueueState() {
+        seedQueue(3)
+        player.isPlaying = true
+        player.progress = 42.5
+        player.currentByteOffset = 123456
+        player.kiloBitrate = 192
+        playQueue.isShuffle = true
+        playQueue.normalIndex = 2
+        playQueue.shuffleIndex = 1
+        // NOTE: repeatMode is left at .none — saveState currently writes the raw
+        // enum to UserDefaults which raises NSInvalidArgumentException (BUG-01);
+        // the repeatMode save/load round-trip test lands with that fix
+
+        settings.saveState()
+
+        XCTAssertTrue(testDefaults.bool(forKey: SavedSettings.Key.isPlaying.rawValue))
+        XCTAssertTrue(testDefaults.bool(forKey: SavedSettings.Key.isShuffle.rawValue))
+        XCTAssertEqual(testDefaults.integer(forKey: SavedSettings.Key.normalPlaylistIndex.rawValue), 2)
+        XCTAssertEqual(testDefaults.integer(forKey: SavedSettings.Key.shufflePlaylistIndex.rawValue), 1)
+        XCTAssertEqual(testDefaults.integer(forKey: SavedSettings.Key.kiloBitrate.rawValue), 192)
+        XCTAssertEqual(testDefaults.double(forKey: SavedSettings.Key.seekTime.rawValue), 42.5, accuracy: 0.001)
+        XCTAssertEqual(testDefaults.integer(forKey: SavedSettings.Key.byteOffset.rawValue), 123456)
+        XCTAssertTrue(testDefaults.bool(forKey: SavedSettings.Key.recover.rawValue), "playing with recoverSetting 0 must set the recover flag")
+    }
+
+    func testLoadStateRestoresQueueAndPlayerOffsets() {
+        seedQueue(3)
+        testDefaults.set(true, forKey: SavedSettings.Key.isShuffle.rawValue)
+        testDefaults.set(2, forKey: SavedSettings.Key.normalPlaylistIndex.rawValue)
+        testDefaults.set(1, forKey: SavedSettings.Key.shufflePlaylistIndex.rawValue)
+        testDefaults.set(RepeatMode.all.rawValue, forKey: SavedSettings.Key.repeatMode.rawValue)
+        testDefaults.set(654321, forKey: SavedSettings.Key.byteOffset.rawValue)
+        testDefaults.set(33.25, forKey: SavedSettings.Key.seekTime.rawValue)
+
+        settings.loadState()
+
+        XCTAssertTrue(playQueue.isShuffle)
+        XCTAssertEqual(playQueue.normalIndex, 2)
+        XCTAssertEqual(playQueue.shuffleIndex, 1)
+        XCTAssertEqual(playQueue.repeatMode, .all)
+        XCTAssertEqual(player.startByteOffset, 654321)
+        XCTAssertEqual(player.startSecondsOffset, 33.25, accuracy: 0.001)
+    }
+
+    func testSaveThenLoadStateRoundTrip() {
+        seedQueue(3)
+        player.isPlaying = true
+        player.progress = 10.0
+        player.currentByteOffset = 999
+        playQueue.isShuffle = true
+        playQueue.normalIndex = 1
+        playQueue.shuffleIndex = 2
+        settings.saveState()
+
+        // Simulate a fresh launch: new queue/player/settings reading the same defaults
+        let newPlayer = FakePlayer()
+        TestContainer.register { newPlayer as PlayerControlling }
+        let newPlayQueue = PlayQueue()
+        TestContainer.register { newPlayQueue }
+        let newSettings = SavedSettings()
+        TestContainer.register { newSettings }
+
+        newSettings.loadState()
+
+        XCTAssertTrue(newPlayQueue.isShuffle)
+        XCTAssertEqual(newPlayQueue.normalIndex, 1)
+        XCTAssertEqual(newPlayQueue.shuffleIndex, 2)
+        XCTAssertEqual(newPlayer.startByteOffset, 999)
+        XCTAssertEqual(newPlayer.startSecondsOffset, 10.0, accuracy: 0.001)
+    }
+
+    func testLoadStateInvalidRepeatModeFallsBackToNone() {
+        testDefaults.set(99, forKey: SavedSettings.Key.repeatMode.rawValue)
+        settings.loadState()
+        XCTAssertEqual(playQueue.repeatMode, RepeatMode.none)
+    }
+}

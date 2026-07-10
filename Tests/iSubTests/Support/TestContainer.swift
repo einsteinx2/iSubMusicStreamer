@@ -28,9 +28,13 @@ enum TestContainer {
         Resolver.root = .main
     }
 
-    // Registers an override that resolves to a single cached instance for this test
+    // Registers an override that resolves to a single cached instance for this test.
+    // Resets the scope cache so re-registering a type mid-test takes effect even if
+    // the type was already resolved (cached factories capture their instances, so
+    // previously-resolved services are unaffected by the reset).
     @discardableResult
     static func register<Service>(factory: @escaping () -> Service) -> ResolverOptions<Service> {
-        Resolver.root.register { factory() }.scope(testScope)
+        testScope.reset()
+        return Resolver.root.register { factory() }.scope(testScope)
     }
 }

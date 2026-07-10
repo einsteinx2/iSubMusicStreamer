@@ -64,7 +64,7 @@ Write these suites against the code **as it behaves today** (asserting *intended
 - [x] **[COV-04] P1 — LocalPlaylistStore queue-positioning tests.** The play/shuffle/jukebox queue tables back everything PlayQueue does.
   > **Prompt:** Add unit tests for Classes/Models/Data Store/LocalPlaylistStore.swift: contiguous positions on add, move(songAtPosition:toPosition:) forward/backward preserving relative order, remove(songsAtPositions:) closing gaps, getSongPosition, createShuffleQueue(currentPosition:) producing a permutation containing the current song, song(localPlaylistId:position:), and clearPlayQueue() only affecting the targeted playlist (fixed ids 1-4 in LocalPlaylist.swift).
 
-- [ ] **[COV-05] P1 — PlayQueue navigation & state-persistence tests.** Index math (BUG-10), repeat modes, shuffle, save/restore.
+- [x] **[COV-05] P1 — PlayQueue navigation & state-persistence tests.** Index math (BUG-10), repeat modes, shuffle, save/restore.
   > **Prompt:** Write a unit-test suite for PlayQueue.swift covering index(offset:fromIndex:) across all repeat modes and boundaries (assert clamp-to-0 for .none with negative offsets — currently broken, BUG-10), nextIndex/prevIndex/nextIndexIgnoringRepeatMode, nextSong/prevSong including the 10-second restart-vs-previous rule, currentIndex get/set across the isShuffle branch, shuffleToggle queue swapping keeping the current song, moveSong index correction, removeSongs resetting the current index when the playing song is deleted, and SavedSettings saveState/loadState round-trips via a fake BassPlayer (uses TEST-04/TEST-05 seams).
 
 - [ ] **[COV-06] P1 — URLRequest+Subsonic request-construction tests.** Version selection, auth, GET/POST, ranges, encoding — all directly affect server compatibility.
