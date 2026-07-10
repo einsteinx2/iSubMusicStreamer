@@ -395,8 +395,8 @@ final class ServerLifecycleTests: StoreTestCase {
 
         XCTAssertNil(store.server(id: 1))
         XCTAssertNotNil(store.server(id: 2))
-        // NOTE: cascade deletion of the server's browse/download data is STUB-08;
-        // extend this test when that lands
+        // Cascade deletion of the server's browse/download data is covered by
+        // ServerStoreTests.testDeleteServerCascadesAllScopedDataAndFiles
     }
 }
 

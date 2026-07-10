@@ -77,20 +77,92 @@ extension Store {
         }
     }
     
+    // Deletes the server row plus every row scoped to it across all tables — songs,
+    // browse caches, downloads, server playlists, local playlist memberships, bookmarks
+    // (including their snapshot playlists), media folders, and cover/artist art — then
+    // removes its downloaded files from disk.
     @discardableResult
     func deleteServer(id: Int) -> Bool {
+        // Capture the server's downloads location before its row is deleted
+        let downloadsURL = server(id: id).map { FileSystem.downloadsDirectory.appendingPathComponent($0.path) }
+
         do {
-            return try pool.write { db in
-                let sql: SQL = """
-                DELETE FROM \(Server.self)
-                WHERE id = \(id)
-                """
-                try db.execute(literal: sql)
-                return true
+            try pool.write { db in
+                // Bookmarks and their snapshot playlists
+                let bookmarkPlaylistIds = try SQLRequest<Int>(literal: "SELECT localPlaylistId FROM \(Bookmark.self) WHERE songServerId = \(id)").fetchAll(db)
+                for playlistId in bookmarkPlaylistIds {
+                    try LocalPlaylist.delete(db, id: playlistId)
+                }
+                try db.execute(literal: "DELETE FROM \(Bookmark.self) WHERE songServerId = \(id)")
+
+                // Remove this server's songs from the remaining local playlists (including
+                // the play queues), then close the position gaps and fix the song counts
+                let affectedPlaylistIds = try SQLRequest<Int>(literal: "SELECT DISTINCT localPlaylistId FROM localPlaylistSong WHERE serverId = \(id)").fetchAll(db)
+                try db.execute(literal: "DELETE FROM localPlaylistSong WHERE serverId = \(id)")
+                for playlistId in affectedPlaylistIds {
+                    let repackSql: SQL = """
+                        UPDATE localPlaylistSong
+                        SET position = (
+                            SELECT COUNT(*)
+                            FROM localPlaylistSong AS other
+                            WHERE other.localPlaylistId = \(playlistId) AND other.position < localPlaylistSong.position
+                        )
+                        WHERE localPlaylistId = \(playlistId)
+                        """
+                    try db.execute(literal: repackSql)
+                    let countSql: SQL = """
+                        UPDATE \(LocalPlaylist.self)
+                        SET songCount = (SELECT COUNT(*) FROM localPlaylistSong WHERE localPlaylistId = \(playlistId))
+                        WHERE id = \(playlistId)
+                        """
+                    try db.execute(literal: countSql)
+                }
+
+                // Every remaining serverId-scoped table
+                let tables = [
+                    Song.databaseTableName,
+                    TagArtist.databaseTableName,
+                    TagArtist.Table.tagArtistList,
+                    TagArtist.Table.tagArtistTableSection,
+                    TagArtist.Table.tagArtistListMetadata,
+                    TagAlbum.databaseTableName,
+                    TagAlbum.Table.tagSongList,
+                    FolderArtist.databaseTableName,
+                    FolderArtist.Table.folderArtistList,
+                    FolderArtist.Table.folderArtistTableSection,
+                    FolderArtist.Table.folderArtistListMetadata,
+                    FolderAlbum.databaseTableName,
+                    FolderAlbum.Table.folderAlbumList,
+                    FolderAlbum.Table.folderSongList,
+                    FolderMetadata.databaseTableName,
+                    MediaFolder.databaseTableName,
+                    ServerPlaylist.databaseTableName,
+                    ServerPlaylist.Table.serverPlaylistSong,
+                    CoverArt.databaseTableName,
+                    ArtistArt.databaseTableName,
+                    DownloadedSong.databaseTableName,
+                    DownloadedSong.Table.downloadQueue,
+                    DownloadedSongPathComponent.databaseTableName,
+                ]
+                for table in tables {
+                    try db.execute(sql: "DELETE FROM \(table) WHERE serverId = ?", arguments: [id])
+                }
+
+                try db.execute(literal: "DELETE FROM \(Server.self) WHERE id = \(id)")
             }
         } catch {
             DDLogError("Failed to delete server \(id): \(error)")
             return false
         }
+
+        // Remove the server's downloaded files once the records are gone
+        if let downloadsURL, FileManager.default.fileExists(atPath: downloadsURL.path) {
+            do {
+                try FileManager.default.removeItem(at: downloadsURL)
+            } catch {
+                DDLogError("Failed to delete the downloaded files for server \(id): \(error)")
+            }
+        }
+        return true
     }
 }

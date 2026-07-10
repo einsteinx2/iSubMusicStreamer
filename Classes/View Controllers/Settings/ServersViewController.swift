@@ -102,7 +102,10 @@ final class ServersViewController: UIViewController {
         switchServer()
     }
     
-    // TODO: implement this - refactor this and make sure it actually works
+    // Matches the old ServerListViewController.switchServer: cancel caching, stop
+    // playback, exit jukebox/offline mode, clear the queues, reset the tab stacks,
+    // and post serverSwitched (the single-database Store needs no reset — all
+    // tables are serverId-scoped)
     private func switchServer() {
         if let parent = parent, let first = navigationController?.viewControllers.first, parent === first, !UIDevice.isPad {
             navigationController?.view.removeFromSuperview()
@@ -240,29 +243,42 @@ extension ServersViewController: UITableViewConfiguration {
         return true
     }
     
-    // TODO: Delete all server resources (maybe do it in the Store)
-    // TODO: Automatically switch to another server or show the add server screen
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
-        
+
         let server = servers[indexPath.row]
+        let wasCurrentServer = settings.currentServer == server
+
+        // Deletes the row plus all of the server's records and downloaded files
         _ = store.deleteServer(id: server.id)
         servers = store.servers()
-        
-        // Alert user to select new default server if they deleting the default
-        if settings.isPopupsEnabled, let currentServer = settings.currentServer, currentServer == server {
-            let message = "Make sure to select a new server"
-            let alert = UIAlertController(title: "Notice", message: message, preferredStyle: .alert)
-            alert.addOKAction()
-            present(alert, animated: true, completion: nil)
-        }
-        
+
         do {
             try catchExceptionAsError {
                 tableView.deleteRows(at: [indexPath], with: .automatic)
             }
         } catch {
             tableView.reloadData()
+        }
+
+        // When the current server was deleted, automatically switch to another
+        // server, or show the add-server screen when none remain
+        if wasCurrentServer {
+            if let replacement = servers.first {
+                serverToEdit = replacement
+                settings.currentServer = replacement
+                if settings.isPopupsEnabled {
+                    let message = "The active server was deleted, so iSub switched to \(replacement.url.absoluteString)"
+                    let alert = UIAlertController(title: "Notice", message: message, preferredStyle: .alert)
+                    alert.addOKAction()
+                    present(alert, animated: true, completion: nil)
+                }
+                reloadTable()
+                switchServer()
+            } else {
+                settings.currentServer = nil
+                addAction()
+            }
         }
     }
 }

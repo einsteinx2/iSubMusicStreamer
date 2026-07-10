@@ -93,6 +93,21 @@ final class OnlineSettingsUITests: XCTestCase {
         XCTAssertTrue(persistedQuickSkip.buttons["1m"].isSelected, "quick skip setting did not persist")
     }
 
+    func testDeletingCurrentOnlyServerShowsAddServer() {
+        let app = launch()
+        openServers(in: app)
+
+        XCTAssertTrue(app.cells.firstMatch.waitForExistence(timeout: 10), "servers list is empty")
+        app.cells.firstMatch.swipeLeft()
+        let deleteButton = app.buttons["Delete"].firstMatch
+        XCTAssertTrue(deleteButton.waitForExistence(timeout: 5), "no Delete swipe action on server row")
+        deleteButton.tap()
+
+        // With no servers left the add-server form appears automatically (STUB-08)
+        XCTAssertTrue(app.textFields[AccessibilityId.serverEditURL].waitForExistence(timeout: 10),
+                      "deleting the only server must present the add-server screen")
+    }
+
     func testServersAddEditDeleteSwitch() {
         let app = launch()
         openServers(in: app)
