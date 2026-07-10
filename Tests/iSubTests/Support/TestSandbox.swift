@@ -36,19 +36,28 @@ final class TestSandbox {
     }
 }
 
-// Base class for unit/integration tests that need an isolated file system
-// and a fresh dependency injection container per test
+// Base class for unit/integration tests that need an isolated file system, an isolated
+// UserDefaults suite, and a fresh dependency injection container per test
 class SandboxedTestCase: XCTestCase {
     private(set) var sandbox: TestSandbox!
+    private(set) var testDefaults: UserDefaults!
+    private var testDefaultsSuiteName: String!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
         sandbox = TestSandbox()
         try sandbox.activate()
         TestContainer.activate()
+        testDefaultsSuiteName = "iSubTests-\(UUID().uuidString)"
+        testDefaults = try XCTUnwrap(UserDefaults(suiteName: testDefaultsSuiteName))
+        SavedSettings.defaults = testDefaults
     }
 
     override func tearDownWithError() throws {
+        SavedSettings.defaults = .standard
+        testDefaults.removePersistentDomain(forName: testDefaultsSuiteName)
+        testDefaults = nil
+        testDefaultsSuiteName = nil
         TestContainer.deactivate()
         try sandbox.deactivate()
         sandbox = nil

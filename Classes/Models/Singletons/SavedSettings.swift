@@ -22,7 +22,12 @@ final class SavedSettings {
     @LazyInjected private var downloadQueue: DownloadQueueing
     @LazyInjected private var store: Store
     
-    private let defaults = UserDefaults.standard
+    // The UserDefaults store backing all settings, including the @UserDefault property
+    // wrappers. Tests point this at an isolated suite (see SandboxedTestCase); production
+    // always uses .standard. Resolved at access time so a swap affects existing instances.
+    static var defaults: UserDefaults = .standard
+
+    private var defaults: UserDefaults { Self.defaults }
     
     func setup() {
         // Disable screen sleep if necessary
@@ -572,15 +577,19 @@ extension UserDefaults {
 struct UserDefault<Value> {
     let key: SavedSettings.Key
     let defaultValue: Value
-    var container: UserDefaults = .standard
+    // When nil (the default), the shared SavedSettings.defaults store is used, resolved
+    // at access time so tests can swap in an isolated suite
+    var container: UserDefaults?
+
+    private var resolvedContainer: UserDefaults { container ?? SavedSettings.defaults }
 
     var wrappedValue: Value {
         get {
-            return container.object(forKey: key) as? Value ?? defaultValue
+            return resolvedContainer.object(forKey: key) as? Value ?? defaultValue
         }
         set {
-            container.set(newValue, forKey: key)
-            container.synchronize()
+            resolvedContainer.set(newValue, forKey: key)
+            resolvedContainer.synchronize()
         }
     }
 }
