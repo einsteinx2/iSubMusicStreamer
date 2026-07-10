@@ -574,6 +574,7 @@
 		D6EB056A7409C4B293648163 /* Fixtures in Resources */ = {isa = PBXBuildFile; fileRef = 2FBCCCBAB13100C9FC48F5FF /* Fixtures */; };
 		D7960FF9680EECAB45AD1A87 /* APIModelParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4BA7457D151D893483CD34 /* APIModelParsingTests.swift */; };
 		E4729DFF94C3A599C018E188 /* ProtocolSeamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF060FF00FF3A19A5CF6461 /* ProtocolSeamTests.swift */; };
+		E93CD07F23B2AB7578C88AB9 /* UtilityAndMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED06E8E2E37FA60609C8E314 /* UtilityAndMathTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -941,6 +942,7 @@
 		D498ECB51B1CB43DCFF56A9E /* iSubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iSubTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE37666E2D21C0F4D547A2EA /* AccessibilityIdentifiers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AccessibilityIdentifiers.swift; sourceTree = "<group>"; };
 		E09C4D36A62D67D18EB15667 /* MockSubsonicHTTPServer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockSubsonicHTTPServer.swift; sourceTree = "<group>"; };
+		ED06E8E2E37FA60609C8E314 /* UtilityAndMathTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UtilityAndMathTests.swift; sourceTree = "<group>"; };
 		FF4BA7457D151D893483CD34 /* APIModelParsingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = APIModelParsingTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1707,6 +1709,7 @@
 				107883296110C0B5DAFE1ED3 /* MockSubsonicHTTPServerTests.swift */,
 				FF4BA7457D151D893483CD34 /* APIModelParsingTests.swift */,
 				5FEA16194A97BCC2BDB2B823 /* StringCleanXMLTests.swift */,
+				ED06E8E2E37FA60609C8E314 /* UtilityAndMathTests.swift */,
 			);
 			name = iSubTests;
 			path = iSubTests;
@@ -2440,6 +2443,7 @@
 				D7960FF9680EECAB45AD1A87 /* APIModelParsingTests.swift in Sources */,
 				C5AF14B9926AC63335FAB506 /* StringCleanXMLTests.swift in Sources */,
 				90E4AB434A5EDC0499B161DB /* XMLTestHelpers.swift in Sources */,
+				E93CD07F23B2AB7578C88AB9 /* UtilityAndMathTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

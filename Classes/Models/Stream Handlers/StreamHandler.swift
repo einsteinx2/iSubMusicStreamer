@@ -421,29 +421,30 @@ extension StreamHandler: URLSessionDataDelegate {
 
 // MARK: Constants and Helper Functions
 
-private func minimumBytesToStartPlayback(kiloBitrate: Int) -> Int {
+// Internal (not private) for test access
+func minimumBytesToStartPlayback(kiloBitrate: Int) -> Int {
     return bytesForSeconds(seconds: 10, kiloBitrate: kiloBitrate)
 }
 
-private let throttleTimeInterval = 0.1
+let throttleTimeInterval = 0.1
 
 private let maxKilobitsPerSecondCell = 500
-private func maxBytesPerIntervalCell() -> Int {
+func maxBytesPerIntervalCell() -> Int {
     return bytesForSeconds(seconds: throttleTimeInterval, kiloBitrate: maxKilobitsPerSecondCell)
 }
 
 private let maxKilobitsPerSecondWifi = 8000
-private func maxBytesPerIntervalWifi() -> Int {
+func maxBytesPerIntervalWifi() -> Int {
     return bytesForSeconds(seconds: throttleTimeInterval, kiloBitrate: maxKilobitsPerSecondWifi)
 }
 
-private func minBytesToStartLimiting(kiloBitrate: Int) -> Int {
+func minBytesToStartLimiting(kiloBitrate: Int) -> Int {
     return bytesForSeconds(seconds: 60, kiloBitrate: kiloBitrate)
 }
 
 private let maxContentLengthFailures = 25
 
-private func maxBytesPerInterval(kiloBitrate: Int, isCell: Bool) -> Int {
+func maxBytesPerInterval(kiloBitrate: Int, isCell: Bool) -> Int {
     let maxBytesDefault = isCell ? maxBytesPerIntervalCell() : maxBytesPerIntervalWifi()
     var maxBytesPerInterval = Int(Double(maxBytesDefault) * (Double(kiloBitrate) / 160.0))
     if maxBytesPerInterval < maxBytesDefault {
@@ -457,7 +458,7 @@ private func maxBytesPerInterval(kiloBitrate: Int, isCell: Bool) -> Int {
 }
 
 // TODO: Refactor this to simplify (minSecondsToStartPlayback could be a single equation for example)
-private func minBytesToStartPlayback(kiloBitrate: Int, bytesPerSec: Int) -> Int {
+func minBytesToStartPlayback(kiloBitrate: Int, bytesPerSec: Int) -> Int {
     // If start date is nil somehow, or total bytes transferred is 0 somehow,
     guard kiloBitrate > 0 && bytesPerSec > 0 else { return minimumBytesToStartPlayback(kiloBitrate: kiloBitrate) }
     
