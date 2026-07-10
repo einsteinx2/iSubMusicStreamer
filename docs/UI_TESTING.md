@@ -51,6 +51,11 @@ settings options toggles. Add new identifiers to that file as tests need them.
   browsing/playing downloads at every level, offline play-queue editing and local
   playlists, offline bookmarks, the player, the online↔offline indicator/controls
   transition, and that settings stay reachable.
+- `JukeboxUITests` (E2E-04) — jukebox mode: launched with `-MODE jukebox` and
+  `-REQUESTLOG` so the suite can assert on the app's network traffic — the jukebox UI
+  state, and that server shuffle, search playback, Folders play-all/shuffle, and the
+  Playlists queue drive the remote player with `jukeboxControl` requests instead of
+  local `stream` requests.
 
 ## Running
 

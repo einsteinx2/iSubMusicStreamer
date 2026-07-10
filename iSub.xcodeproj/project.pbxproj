@@ -572,6 +572,7 @@
 		7FE73704060C605A8F25FA37 /* MockSubsonicHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C4D36A62D67D18EB15667 /* MockSubsonicHTTPServer.swift */; };
 		874608D9044A0435C05BE97D /* OnlineNavigationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6E9FFFEEAC0BF68028A4F4 /* OnlineNavigationUITests.swift */; };
 		87F10C2E5B14A20FFD01E2A1 /* OfflineUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F10C2D5B14A20FFD01E2A0 /* OfflineUITests.swift */; };
+		87F10C305B14A20FFD01E2A3 /* JukeboxUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F10C2F5B14A20FFD01E2A2 /* JukeboxUITests.swift */; };
 		90E4AB434A5EDC0499B161DB /* XMLTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC57920E6BF56A9171B2A58 /* XMLTestHelpers.swift */; };
 		911362DD0A88C68C698503DD /* FirstRunUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4F02DA428CAB1AC965D91B /* FirstRunUITests.swift */; };
 		A718D72417E325AA8B3F717E /* Fakes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C72C3647A62E9A226040F40 /* Fakes.swift */; };
@@ -979,6 +980,7 @@
 		A2C3342F60ADAC436F6462D1 /* TestContainer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TestContainer.swift; sourceTree = "<group>"; };
 		AD6E9FFFEEAC0BF68028A4F4 /* OnlineNavigationUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnlineNavigationUITests.swift; sourceTree = "<group>"; };
 		87F10C2D5B14A20FFD01E2A0 /* OfflineUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OfflineUITests.swift; sourceTree = "<group>"; };
+		87F10C2F5B14A20FFD01E2A2 /* JukeboxUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JukeboxUITests.swift; sourceTree = "<group>"; };
 		ADDF0049FFA91CF95DE6383E /* TestSandbox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TestSandbox.swift; sourceTree = "<group>"; };
 		AFEE5B5BB2E3EAB053528E1D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B17D1E4D2250282AFC6FA22B /* StreamHandlerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StreamHandlerTests.swift; sourceTree = "<group>"; };
@@ -1825,6 +1827,7 @@
 				F2D49450CB803A06566FD544 /* OnlineSettingsUITests.swift */,
 				AD6E9FFFEEAC0BF68028A4F4 /* OnlineNavigationUITests.swift */,
 				87F10C2D5B14A20FFD01E2A0 /* OfflineUITests.swift */,
+				87F10C2F5B14A20FFD01E2A2 /* JukeboxUITests.swift */,
 				236DA89C1BD95ECEBB554207 /* Support */,
 			);
 			name = iSubUITests;
@@ -2299,6 +2302,7 @@
 				DF02698C56D18D1F493DC5B1 /* OnlineSettingsUITests.swift in Sources */,
 				874608D9044A0435C05BE97D /* OnlineNavigationUITests.swift in Sources */,
 				87F10C2E5B14A20FFD01E2A1 /* OfflineUITests.swift in Sources */,
+				87F10C305B14A20FFD01E2A3 /* JukeboxUITests.swift in Sources */,
 				D7FA46FF2B7A202F14E0231C /* UITestHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
