@@ -279,18 +279,22 @@ extension StreamHandler: URLSessionDataDelegate {
         
         if let response = response as? HTTPURLResponse {
             if response.statusCode >= 500 {
-                // This is a failure, cancel the connection and call the didFail delegate method
+                // This is a failure, cancel the connection and call the didFail delegate method.
+                // The cancellation also surfaces in didCompleteWithError as NSURLErrorCancelled,
+                // which is ignored there since all cancellations are reported at their source.
                 dataTask.cancel()
                 self.dataTask = nil
-                
-                // TODO: implement this - This was commented out, presumably because this situation will automatically call didCompleteWithError, but I haven't confirmed that (maybe it only happened with NSURLConnection which the implementation was originally ported from), so does this case even need to be handled here? Does dataTask.cancel() need to even be called? This needs to be tested.
-                //[self connection:self.connection didFailWithError:[NSError errorWithISMSCode:ISMSErrorCode_CouldNotReachServer]];
+                DispatchQueue.main.async {
+                    self.connectionFailed(error: APIError.serverUnreachable)
+                }
+                completionHandler(.cancel)
+                return
             } else if contentLength == nil, let contentLengthString = response.value(forHTTPHeaderField: "Content-Length") {
                 // Set the content length if it isn't set already, only set the first connection, not on retries
                 contentLength = Int(contentLengthString)
             }
         }
-        
+
         bytesTransfered = 0
         completionHandler(.allow)
     }
@@ -393,26 +397,34 @@ extension StreamHandler: URLSessionDataDelegate {
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         if let error = error {
-            DispatchQueue.main.async { self.connectionFailed(error: error) }
+            // Cancellations are always initiated locally (cancel() or the HTTP error
+            // handling in didReceive response) and are reported to the delegate at their
+            // source, so don't route them through connectionFailed (which would retry)
+            if !error.isCanceled {
+                DispatchQueue.main.async { self.connectionFailed(error: error) }
+            }
         } else {
             if Debug.streamManager {
                 DDLogInfo("[StreamHandler] Stream handler didFinishLoadingInternal for \(song)")
             }
-            
+
             // Check to see if we're at the contentLength (to allow some leeway for contentLength estimation of transcoded songs)
             if let contentLength = contentLength, song.localFileSize < contentLength && numberOfContentLengthFailures < maxContentLengthFailures {
                 numberOfContentLengthFailures += 1
-                // This is a failed connection that didn't call didFailInternal for some reason, so call didFailWithError
+                // This is a failed connection that didn't call didFailInternal for some reason,
+                // so route it to connectionFailed (which resets state and closes the file
+                // handle) instead of falling through to a clean finish
                 // TODO: Is there a better error code to use?
                 DispatchQueue.main.async { self.connectionFailed(error: APIError.serverUnreachable) }
-            } else {
-                // Make sure the player is told to start
-                if !isDelegateNotifiedToStartPlayback {
-                    isDelegateNotifiedToStartPlayback = true
-                    DispatchQueue.main.async { self.delegate?.streamHandlerStartPlayback(handler: self) }
-                }
+                return
             }
-            
+
+            // Make sure the player is told to start
+            if !isDelegateNotifiedToStartPlayback {
+                isDelegateNotifiedToStartPlayback = true
+                DispatchQueue.main.async { self.delegate?.streamHandlerStartPlayback(handler: self) }
+            }
+
             isDownloading = false
             dataTask = nil
             

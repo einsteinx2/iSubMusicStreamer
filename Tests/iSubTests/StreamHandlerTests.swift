@@ -226,10 +226,24 @@ final class StreamHandlerTests: StoreTestCase {
 
         wait(for: [delegateSpy.failedExpectation], timeout: 10)
         XCTAssertFalse(handler.isDownloading)
-        // NOTE: current behavior ALSO invokes streamHandlerConnectionFinished after
-        // routing the shortfall to connectionFailed (the completion path doesn't
-        // return early), so delegates see both callbacks. That cleanup belongs with
-        // the BUG-15/BUG-25 stream failure-handling fixes.
+        XCTAssertEqual(delegateSpy.finishedCount, 0, "a shortfall is a failure, never also a clean finish")
+    }
+
+    func testServerErrorStatusCodeFailsDownload_BUG15() {
+        // A 5xx must surface as a connection failure so delegates retry/remove, not
+        // silently complete
+        let song = makeSong(id: "85")
+        MockSubsonicServer.stub(.stream, data: Data("Internal Server Error".utf8), statusCode: 500, contentType: "text/html")
+
+        let handler = StreamHandler(song: song, tempCache: false, delegate: delegateSpy)
+        activeHandler = handler
+        handler.start()
+
+        wait(for: [delegateSpy.failedExpectation], timeout: 10)
+        XCTAssertFalse(handler.isDownloading)
+        XCTAssertEqual(delegateSpy.finishedCount, 0, "a 5xx must never look like a clean finish")
+        XCTAssertEqual(delegateSpy.failures.count, 1, "the failure is reported exactly once")
+        XCTAssertFalse(delegateSpy.failures[0].isCanceled, "the failure must not be reported as a local cancellation")
     }
 
     func testCancelStopsDownload() {
@@ -246,6 +260,11 @@ final class StreamHandlerTests: StoreTestCase {
 
         XCTAssertFalse(handler.isDownloading)
         XCTAssertEqual(delegateSpy.finishedCount, 0)
+
+        // A local cancellation must not surface as a connection failure either, or the
+        // delegate would schedule a retry of the download it just canceled
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 1))
+        XCTAssertTrue(delegateSpy.failures.isEmpty, "cancel() must not trigger the failure/retry path")
     }
 
     func testCodableRoundTrip() throws {
