@@ -375,8 +375,9 @@ final class DownloadsStoreTests: StoreTestCase {
     }
 
     func testRemoveFromDownloadQueueForOtherServer_BUG07() {
-        // BUG-07: the WHERE clause parenthesization makes the serverId comparison a
-        // boolean, so deletes only behave for serverId == 1
+        // BUG-07 regression: the WHERE clause must match serverId AND songId directly
+        // (the old parenthesization turned the right-hand side into a boolean, so
+        // deletes only behaved for serverId == 1)
         _ = store.add(server: TestData.server(id: 1))
         _ = store.add(server: TestData.server(id: 2, urlString: "http://two.example.com"))
         _ = store.add(song: TestData.song(serverId: 1, id: "10", path: "A/10.mp3"))
@@ -386,10 +387,8 @@ final class DownloadsStoreTests: StoreTestCase {
 
         store.removeFromDownloadQueue(serverId: 2, songId: "10")
 
-        XCTExpectFailure("BUG-07: removeFromDownloadQueue WHERE clause is wrong for serverId != 1; remove this marker when fixing the bug") {
-            XCTAssertFalse(store.isSongInDownloadQueue(song: TestData.song(serverId: 2, id: "10", path: "A/10.mp3")), "server 2's row should be removed")
-            XCTAssertTrue(store.isSongInDownloadQueue(song: TestData.song(serverId: 1, id: "10", path: "A/10.mp3")), "server 1's row should remain")
-        }
+        XCTAssertFalse(store.isSongInDownloadQueue(song: TestData.song(serverId: 2, id: "10", path: "A/10.mp3")), "server 2's row should be removed")
+        XCTAssertTrue(store.isSongInDownloadQueue(song: TestData.song(serverId: 1, id: "10", path: "A/10.mp3")), "server 1's row should remain")
     }
 
     func testDownloadedSongsListIsScopedByServerId_BUG08() {

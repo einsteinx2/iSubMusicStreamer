@@ -888,7 +888,7 @@ extension Store {
             return try pool.write { db in
                 let sql: SQL = """
                     DELETE FROM downloadQueue
-                    WHERE serverId = (\(serverId) AND songId = \(songId))
+                    WHERE serverId = \(serverId) AND songId = \(songId)
                     """
                 try db.execute(literal: sql)
                 NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongRemoved)
