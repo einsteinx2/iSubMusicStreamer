@@ -76,15 +76,20 @@ enum UITestSupport {
     static func configureIfEnabled() {
         guard isEnabled else { return }
 
-        let serverURL: URL
+        let serverURL: URL?
         if usesMockServer, let mockServerURL = MockSubsonicHTTPServer.shared.start() {
             // Real HTTP over loopback: streaming, ranges, and downloads all behave like production
             serverURL = mockServerURL
         } else {
-            // All networking (API loaders, stream handlers, jukebox) serves canned fixtures in-process
+            // All networking (API loaders, stream handlers, jukebox) serves canned fixtures
+            // in-process. The URLProtocol intercepts every URL, so a previously seeded
+            // server URL keeps working and is preferred below — downloaded file paths are
+            // keyed by Server.path (derived from the URL), so relaunches without
+            // -RESET_STATE must not change the URL or seeded downloads become unplayable
+            // (e.g. the offline suite downloads via -MOCKSERVER, then relaunches offline).
             APIURLSession.stubProtocolClasses = [UITestURLProtocol.self]
             APIURLSession.shared = APIURLSession.createDefaultSession()
-            serverURL = URL(string: "http://uitest.local")!
+            serverURL = nil
         }
 
         // Seed a pre-configured server so tests skip first-run server setup (unless the
@@ -93,7 +98,8 @@ enum UITestSupport {
         if !isFirstRun {
             let store: Store = Resolver.resolve()
             let existing = store.server(id: seededServerId)
-            let server = Server(id: seededServerId, type: .subsonic, url: serverURL,
+            let url = serverURL ?? existing?.url ?? URL(string: "http://uitest.local")!
+            let server = Server(id: seededServerId, type: .subsonic, url: url,
                                 username: existing?.username ?? "uitest", password: existing?.password ?? "uitest")
             _ = store.add(server: server)
             UserDefaults.standard.set(seededServerId, forKey: SavedSettings.Key.currentServerId.rawValue)

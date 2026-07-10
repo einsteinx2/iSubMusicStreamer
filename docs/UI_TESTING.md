@@ -8,7 +8,7 @@ deterministic, and fully offline.
 
 | Argument | Effect |
 | --- | --- |
-| `-UITEST` | Enables test mode: routes **all** app networking (API loaders, stream handlers, jukebox) through an in-app `URLProtocol` that serves canned fixture XML from the app bundle, seeds a pre-configured server (id 1, `http://uitest.local`) so tests skip first-run setup, and suppresses the local-notification permission prompt so no system alert can block tests. |
+| `-UITEST` | Enables test mode: routes **all** app networking (API loaders, stream handlers, jukebox) through an in-app `URLProtocol` that serves canned fixture XML from the app bundle, seeds a pre-configured server (id 1, `http://uitest.local` — a relaunch without `-RESET_STATE` keeps the previous launch's URL, since downloaded file paths are keyed by it) so tests skip first-run setup, and suppresses the local-notification permission prompt so no system alert can block tests. |
 | `-RESET_STATE` | Wipes persisted state before setup: the GRDB database, downloaded songs, temp downloads, and the app's `UserDefaults` persistent domain. Combine with `-UITEST` for a clean deterministic launch (also usable alone for first-run flows). |
 | `-MODE <mode>` | `online` (default), `offline` (sets force-offline + offline mode before the UI loads), or `jukebox` (enables jukebox mode). |
 | `-FIXTURES <name>` | Selects a named fixture response set. `default` maps every supported Subsonic action to the captured Airsonic responses in `Tests/iSubTests/Fixtures/XML/` (bundled into beta builds). `badauth` overrides `ping` with the wrong-credentials error for failed-auth flows. Add new sets in `UITestFixtures.fixtureSets`. |
@@ -45,6 +45,12 @@ settings options toggles. Add new identifiers to that file as tests need them.
   features or known bugs assert the target behavior inside non-strict `XCTExpectFailure`
   blocks (see the checklist items referenced in each), so they flip to passing when the
   fixes land without failing CI today.
+- `OfflineUITests` (E2E-03) — the offline-mode suite: downloads are seeded through the
+  mock HTTP server in an online launch, then the app relaunches with `-MODE offline`
+  (no `-RESET_STATE`, so the downloads persist) and the suite verifies tab behavior,
+  browsing/playing downloads at every level, offline play-queue editing and local
+  playlists, offline bookmarks, the player, the online↔offline indicator/controls
+  transition, and that settings stay reachable.
 
 ## Running
 
