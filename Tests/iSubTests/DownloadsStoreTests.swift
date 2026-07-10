@@ -434,4 +434,22 @@ final class DownloadsStoreTests: StoreTestCase {
         buildLibrary(serverId: 1)
         XCTAssertEqual(store.songsRecursive(serverId: 2, level: 0, parentPathComponent: "Artist A").count, 0)
     }
+
+    func testNonNumericSongIdsSurvivePathComponentJoins_BUG19() throws {
+        // DownloadedSongPathComponent.songId (and DownloadedSong.path) join against TEXT
+        // columns; they used to be declared INTEGER, whose affinity coerces values like
+        // "0042" to 42 and breaks every join-based fetch (and truly non-numeric ids)
+        addFinishedDownload(songId: "0042", path: "Artist A/Album X/03 Zulu.mp3")
+        addFinishedDownload(songId: "tr-9f2c", path: "Artist A/Album X/04 Yankee.mp3")
+
+        let fetched = try XCTUnwrap(store.downloadedSong(serverId: 1, songId: "0042"))
+        XCTAssertEqual(fetched.path, "Artist A/Album X/03 Zulu.mp3", "the path column must store text losslessly")
+
+        let albumSongs = store.songsRecursive(serverId: 1, level: 1, parentPathComponent: "Album X")
+        XCTAssertEqual(Set(albumSongs.map(\.id)), ["0042", "tr-9f2c"], "join-based fetches must return non-numeric ids")
+
+        // Songs directly inside the level-1 "Album X" folder are level-2 components
+        let downloadedSongs = store.downloadedSongs(serverId: 1, level: 2, parentPathComponent: "Album X")
+        XCTAssertEqual(Set(downloadedSongs.map(\.songId)), ["0042", "tr-9f2c"])
+    }
 }

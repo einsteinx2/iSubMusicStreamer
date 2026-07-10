@@ -45,7 +45,7 @@ extension TagAlbum: FetchableRecord, PersistableRecord {
             t.autoIncrementedPrimaryKey(GRDB.Column.rowID).notNull()
             t.column(Column.serverId, .integer).notNull()
             t.column(RelatedColumn.tagAlbumId, .text).notNull()
-            t.column(RelatedColumn.songId, .integer).notNull()
+            t.column(RelatedColumn.songId, .text).notNull()
         }
         try db.create(indexOn: TagAlbum.Table.tagSongList, columns: [Column.serverId, RelatedColumn.tagAlbumId])
     }

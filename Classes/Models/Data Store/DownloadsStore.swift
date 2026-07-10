@@ -26,7 +26,7 @@ extension DownloadedSong: FetchableRecord, PersistableRecord {
         try db.create(table: DownloadedSong.databaseTableName) { t in
             t.column(Column.serverId, .integer).notNull()
             t.column(Column.songId, .text).notNull()
-            t.column(Column.path, .integer).notNull()
+            t.column(Column.path, .text).notNull()
             t.column(Column.isFinished, .boolean).notNull()
             t.column(Column.isPinned, .boolean).notNull()
             t.column(Column.size, .integer).notNull()
@@ -105,7 +105,7 @@ extension DownloadedSongPathComponent: FetchableRecord, PersistableRecord {
             t.column(Column.maxLevel, .integer).notNull()
             t.column(Column.pathComponent, .text).notNull()
             t.column(Column.parentPathComponent, .text)
-            t.column(Column.songId, .integer).notNull()
+            t.column(Column.songId, .text).notNull()
         }
         // TODO: Implement correct indexes
 //        try db.create(indexOn: DownloadedSongPathComponent.databaseTableName, columns: [Column.serverId, Column.songId])

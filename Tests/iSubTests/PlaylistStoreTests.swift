@@ -142,6 +142,23 @@ final class ServerPlaylistStoreTests: StoreTestCase {
         XCTAssertTrue(store.isServerPlaylistSongsCached(serverId: 1, id: 17))
     }
 
+    func testNonNumericSongIdsSurviveTheSnapshotJoin_BUG19() {
+        // serverPlaylistSong.songId joins against the TEXT song.id; the column used to be
+        // declared INTEGER, whose affinity coerces values like "0042" to 42 and breaks
+        // the join (and truly non-numeric ids like UUIDs)
+        XCTAssertTrue(store.add(serverPlaylist: makeServerPlaylist(songCount: 2)))
+        let leadingZero = TestData.song(serverId: 1, id: "0042", title: "Zero", path: "a/1.mp3")
+        let uuidLike = TestData.song(serverId: 1, id: "al-9f2c", title: "UUID", path: "a/2.mp3")
+        _ = store.add(song: leadingZero)
+        _ = store.add(song: uuidLike)
+        XCTAssertTrue(store.add(song: leadingZero, serverId: 1, serverPlaylistId: 17))
+        XCTAssertTrue(store.add(song: uuidLike, serverId: 1, serverPlaylistId: 17))
+
+        XCTAssertEqual(store.songIds(serverId: 1, serverPlaylistId: 17), ["0042", "al-9f2c"])
+        XCTAssertEqual(store.song(serverId: 1, serverPlaylistId: 17, position: 0)?.id, "0042")
+        XCTAssertEqual(store.song(serverId: 1, serverPlaylistId: 17, position: 1)?.id, "al-9f2c")
+    }
+
     func testAddSongToMissingPlaylistFails() {
         let song = TestData.song(serverId: 1, id: "100", path: "a/1.mp3")
         _ = store.add(song: song)

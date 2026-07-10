@@ -263,6 +263,16 @@ final class BrowseCacheStoreTests: StoreTestCase {
         XCTAssertNotNil(store.song(serverId: 1, id: "1"))
     }
 
+    func testTagSongListPreservesNonNumericSongIds_BUG19() {
+        // tagSongList.songId used to be declared INTEGER, whose affinity coerces values
+        // like "0042" to 42 (and non-numeric ids), losing the original song id
+        _ = store.add(tagAlbum: makeTagAlbum(id: "10", name: "Album", tagArtistId: "1", songCount: 2))
+        XCTAssertTrue(store.add(tagSong: TestData.song(serverId: 1, id: "0042", path: "a/1.mp3", tagAlbumId: "10")))
+        XCTAssertTrue(store.add(tagSong: TestData.song(serverId: 1, id: "tr-9f2c", path: "a/2.mp3", tagAlbumId: "10")))
+
+        XCTAssertEqual(store.songIds(serverId: 1, tagAlbumId: "10"), ["0042", "tr-9f2c"])
+    }
+
     func testAddTagSongWithoutTagAlbumIdFails() {
         XCTAssertFalse(store.add(tagSong: TestData.song(serverId: 1, id: "1", path: "a/1.mp3", tagAlbumId: nil)))
     }

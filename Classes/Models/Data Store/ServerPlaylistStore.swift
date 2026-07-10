@@ -43,7 +43,7 @@ extension ServerPlaylist: FetchableRecord, PersistableRecord {
             t.column(Column.serverId, .integer).notNull()
             t.column(RelatedColumn.serverPlaylistId, .integer).notNull()
             t.column(RelatedColumn.position, .integer).notNull()
-            t.column(RelatedColumn.songId, .integer).notNull()
+            t.column(RelatedColumn.songId, .text).notNull()
         }
         try db.create(indexOn: Table.serverPlaylistSong, columns: [Column.serverId, RelatedColumn.serverPlaylistId, RelatedColumn.position])
     }
