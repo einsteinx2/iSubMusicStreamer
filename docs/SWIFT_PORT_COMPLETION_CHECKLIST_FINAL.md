@@ -215,7 +215,7 @@ Verified defects. The P0s are crash- or core-functionality-level; fix order with
 - [x] **[BUG-27] P2 — Force-unwrap crash risks in the EQ view.** `EqualizerView.swift:151` (TODO'd), plus `nextType()`/`prevType()` force-unwrap `VisualizerType(rawValue:)` — a bad persisted `currentVisualizerType` crashes.
   > **Prompt:** In EqualizerView.swift, remove the VisualizerType force unwraps in setup()/nextType()/prevType(), falling back to .none for out-of-range persisted values and normalizing wraparound. Add a unit test cycling past boundaries.
 
-- [ ] **[BUG-28] P3 — Media-folder dropdown off-by-one blank row.** `ArtistsViewController.dropdownMenuNumberOfItems` returns `count + 1` but title/selection handlers no-op for the extra index (the "All Media Folders" entry is already prepended by the loader).
+- [x] **[BUG-28] P3 — Media-folder dropdown off-by-one blank row.** `ArtistsViewController.dropdownMenuNumberOfItems` returns `count + 1` but title/selection handlers no-op for the extra index (the "All Media Folders" entry is already prepended by the loader).
   > **Prompt:** In ArtistsViewController.swift (~lines 465-479), determine whether the +1 in dropdownMenuNumberOfItems produces a stray blank row (AsyncMediaFoldersLoader already prepends the All Media Folders entry); fix the count or implement the extra slot. Add a test asserting item count equals selectable folders.
 
 - [ ] **[BUG-29] P3 — Download Status page shows minFreeSpace for "Max Download Space".** `DownloadStatusViewController.startUpdatingStats` sets the same `minFreeSpace` value in both cachingType branches.

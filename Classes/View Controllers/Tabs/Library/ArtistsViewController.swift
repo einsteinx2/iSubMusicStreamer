@@ -479,7 +479,9 @@ extension ArtistsViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension ArtistsViewController: DropdownMenuDelegate {
     func dropdownMenuNumberOfItems(_ dropdownMenu: DropdownMenu) -> Int {
-        return dataModel.mediaFolders.count + 1
+        // The "All Media Folders" entry is already prepended by AsyncMediaFoldersLoader,
+        // so the folder list maps 1:1 to dropdown rows
+        return dataModel.mediaFolders.count
     }
     
     func dropdownMenu(_ dropdownMenu: DropdownMenu, titleForIndex index: Int) -> String {

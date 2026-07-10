@@ -307,6 +307,21 @@ final class ArtistsViewModelTests: LoaderTestCase {
                        "the Artists tab must not overwrite the Folders tab's selection")
     }
 
+    func testDropdownItemCountMatchesSelectableFolders_BUG28() {
+        // The loader already prepends the "All Media Folders" entry, so the old
+        // count + 1 produced a stray blank row that neither had a title nor selected
+        _ = store.add(mediaFolders: [MediaFolder(serverId: 1, id: MediaFolder.allFoldersId, name: "All Media Folders"),
+                                     MediaFolder(serverId: 1, id: 0, name: "Music")])
+        let model = ArtistsViewModel(serverId: 1, mediaFolderId: 0, type: .folders)
+        model.reset()
+        let controller = ArtistsViewController(dataModel: model)
+        let menu = DropdownMenu()
+
+        XCTAssertEqual(controller.dropdownMenuNumberOfItems(menu), 2, "one row per selectable folder, no blank extra row")
+        XCTAssertEqual(controller.dropdownMenu(menu, titleForIndex: 0), "All Media Folders")
+        XCTAssertEqual(controller.dropdownMenu(menu, titleForIndex: 1), "Music")
+    }
+
     func testIncrementalSearchWithSearchLimit() throws {
         _ = store.add(mediaFolders: [MediaFolder(serverId: 1, id: 0, name: "Music")])
         // 150 artists matching the query: the first page returns the 100-item limit,
