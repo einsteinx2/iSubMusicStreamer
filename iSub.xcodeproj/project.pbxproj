@@ -570,6 +570,7 @@
 		7FE73704060C605A8F25FA37 /* MockSubsonicHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C4D36A62D67D18EB15667 /* MockSubsonicHTTPServer.swift */; };
 		90E4AB434A5EDC0499B161DB /* XMLTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC57920E6BF56A9171B2A58 /* XMLTestHelpers.swift */; };
 		A718D72417E325AA8B3F717E /* Fakes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C72C3647A62E9A226040F40 /* Fakes.swift */; };
+		A7D7FD300FA5D924D56FCE41 /* GRDBRoundTripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DBB093129F25CDF2334C20 /* GRDBRoundTripTests.swift */; };
 		A945205CDCFA7F6699089E94 /* PlayQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77EFD55ADCFE823FA242508 /* PlayQueueTests.swift */; };
 		AA92F3E1D8AAA87EA34D347B /* UITestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 613F9F6DA5D629495D6A1F64 /* UITestSupport.swift */; };
 		AA9A6974E8FC8995CF9FE37D /* AccessibilityIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE37666E2D21C0F4D547A2EA /* AccessibilityIdentifiers.swift */; };
@@ -883,6 +884,7 @@
 		53D97439255C0DA900AABF7F /* AutoScrollingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoScrollingLabel.swift; sourceTree = "<group>"; };
 		53D97453255C51CA00AABF7F /* SwipeAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeAction.swift; sourceTree = "<group>"; };
 		53DA4E31256B600B0057D4C7 /* Launch Screen Beta.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen Beta.storyboard"; sourceTree = "<group>"; };
+		53DBB093129F25CDF2334C20 /* GRDBRoundTripTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GRDBRoundTripTests.swift; sourceTree = "<group>"; };
 		53DE598214F1932C00206529 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		53E03CF625C1F6EF0043355F /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		53E03CFF25C2330D0043355F /* NSError+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSError+Description.swift"; sourceTree = "<group>"; };
@@ -1751,6 +1753,7 @@
 				B17D1E4D2250282AFC6FA22B /* StreamHandlerTests.swift */,
 				5BE66C0606E83260BA683E35 /* StreamManagerTests.swift */,
 				7BB9A537E6684624B72605F7 /* SavedSettingsBehaviorTests.swift */,
+				53DBB093129F25CDF2334C20 /* GRDBRoundTripTests.swift */,
 			);
 			name = iSubTests;
 			path = iSubTests;
@@ -2500,6 +2503,7 @@
 				686768481F889F38E3A1A6A3 /* StreamHandlerTests.swift in Sources */,
 				DF81321454A4A5D2F872F28E /* StreamManagerTests.swift in Sources */,
 				4A43507ACB16A1D092D187AD /* SavedSettingsBehaviorTests.swift in Sources */,
+				A7D7FD300FA5D924D56FCE41 /* GRDBRoundTripTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

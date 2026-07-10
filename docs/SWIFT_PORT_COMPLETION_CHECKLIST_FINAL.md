@@ -79,7 +79,7 @@ Write these suites against the code **as it behaves today** (asserting *intended
 - [x] **[COV-09] P1 — SavedSettings behavior tests.** Bitrate mapping, wrapper semantics, per-server keys, state derivation.
   > **Prompt:** Using the injected UserDefaults from TEST-05, test SavedSettings: currentMaxBitrate for maxBitrateWifi/3G values 0-6 (0 for out-of-range), currentVideoBitrates arrays, @UserDefault default/persist behavior, currentServer didSet clearing currentServerRedirectUrlString and writing currentServerId, rootFoldersSelectedFolderId/rootArtistsSelectedFolderId keyed per server, and isRecover derivation. Include a test that createDirectoryIfNotExists(path:) creates a missing directory — the current guard is inverted (BUG-26) so this fails until fixed.
 
-- [ ] **[COV-10] P2 — GRDB Codable persistence round-trips.** A schema/Codable mismatch silently loses persisted state.
+- [x] **[COV-10] P2 — GRDB Codable persistence round-trips.** A schema/Codable mismatch silently loses persisted state.
   > **Prompt:** For every GRDB record in Classes/Models/DB Models/ and persistable API models (DownloadedSong, Downloaded* hierarchy, Bookmark, LocalPlaylist, ServerPlaylist, CoverArt, ArtistArt, FolderMetadata, RootListMetadata, TableSection, Song), insert into a temp database, fetch back, and assert equality so any Codable/column mismatch is caught.
 
 - [ ] **[COV-11] P2 — Audio-engine integration tests against real BASS.** Drive Bass/BassPlayer/BassEqualizer with bundled fixture audio.
