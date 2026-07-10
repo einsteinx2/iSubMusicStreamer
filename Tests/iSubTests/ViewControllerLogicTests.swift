@@ -475,6 +475,13 @@ final class VisualizerTypeCyclingTests: XCTestCase {
         XCTAssertEqual(VisualizerType.line.previous, .none)
         XCTAssertEqual(VisualizerType.none.previous, .aphexFace, "wraps to the last real type, not maxValue")
     }
+
+    func testCyclingFromTheMaxValueSentinelDoesNotCrash_BUG27() {
+        // A bad persisted setting can land on the maxValue sentinel; cycling from it
+        // used to force-unwrap VisualizerType(rawValue: 5+1) and crash
+        XCTAssertEqual(VisualizerType.maxValue.next, .none, "out-of-range values normalize to .none")
+        XCTAssertEqual(VisualizerType.maxValue.previous, .aphexFace, "previous from the sentinel lands on the last real type")
+    }
 }
 
 // MARK: - BassEffectDAO preset flows

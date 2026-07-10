@@ -22,21 +22,23 @@ enum VisualizerType: Int {
 }
 
 extension VisualizerType {
-    // Cycling math used by the swipe gestures, extracted so it can be unit tested
+    // Cycling math used by the swipe gestures, extracted so it can be unit tested.
+    // maxValue is the count sentinel, not a real type, so cycling from it (e.g. a bad
+    // persisted value) normalizes back into the real range instead of crashing
     var next: VisualizerType {
-        var newType = rawValue + 1
-        if newType == VisualizerType.maxValue.rawValue {
-            newType = 0
-        }
-        return VisualizerType(rawValue: newType)!
+        let newType = rawValue + 1
+        guard newType >= 0 && newType < VisualizerType.maxValue.rawValue else { return .none }
+        return VisualizerType(rawValue: newType) ?? .none
     }
 
     var previous: VisualizerType {
         var newType = rawValue - 1
         if newType < 0 {
             newType = VisualizerType.maxValue.rawValue - 1
+        } else if newType >= VisualizerType.maxValue.rawValue {
+            newType = 0
         }
-        return VisualizerType(rawValue: newType)!
+        return VisualizerType(rawValue: newType) ?? .none
     }
 }
 
@@ -173,8 +175,8 @@ final class EqualizerView: UIView {
         glEnable(GLenum(GL_POINT_SPRITE_OES))
         glTexEnvf(GLenum(GL_POINT_SPRITE_OES), GLenum(GL_COORD_REPLACE_OES), GLfloat(GL_TRUE))
         
-        // TODO: Remove force unwrapping
-        changeType(VisualizerType(rawValue: Int(settings.currentVisualizerType.rawValue))!)
+        // The setting's getter falls back to .none for out-of-range persisted values
+        changeType(settings.currentVisualizerType)
         
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(stopEqDisplay), name: UIApplication.willResignActiveNotification)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(startEqDisplay), name: UIApplication.didBecomeActiveNotification)
