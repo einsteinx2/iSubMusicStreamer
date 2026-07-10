@@ -52,7 +52,7 @@ Current state: zero automated tests. No XCTest or XCUITest target exists in `iSu
 
 Write these suites against the code **as it behaves today** (asserting *intended* behavior where a known bug exists, so the bug fixes in Sections 4–5 flip the tests green). Every fix later in this document should land with its tests; these suites are the safety net that catches regressions while that work happens.
 
-- [ ] **[COV-01] P1 — API model XML parsing + string-helper tests (no refactor needed).** Every API model has `init(serverId:element:)`; the `String+Clean` XML helpers back them all.
+- [x] **[COV-01] P1 — API model XML parsing + string-helper tests (no refactor needed).** Every API model has `init(serverId:element:)`; the `String+Clean` XML helpers back them all.
   > **Prompt:** Write unit tests for the XML helpers in Classes/Extensions/Foundation/String+Clean.swift (stringXML/intXML/boolXML/dateXML and optional variants: trimming, empty-vs-nil, defaults, malformed input) and for each API model's init(serverId:element:) — Song, TagArtist, TagAlbum, FolderArtist, FolderAlbum, MediaFolder, ChatMessage, Lyrics, NowPlayingSong, ServerPlaylist — using fixture Subsonic XML. Cover field mapping, missing-attribute defaults, special characters, video entries, and Song equality/hashing (serverId+id only). Include a regression case asserting FolderAlbum.tagAlbumName is the album title, not the artist (see BUG-20).
 
 - [ ] **[COV-02] P1 — Pure utility & math tests (no refactor needed).** Foundation extensions, formatters, audio math, stream thresholds, error mapping.
