@@ -32,10 +32,6 @@ final class DownloadQueueTests: StoreTestCase {
         let fakeNetwork = network!
         TestContainer.register { fakeNetwork as NetworkStatus }
 
-        // SavedSettings' isManualCachingOnWWANEnabled didSet pokes the DownloadQueueing
-        // seam; point it at a fake so it can't reach the app's singleton queue
-        TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
-
         let freshSettings = SavedSettings()
         TestContainer.register { freshSettings }
         settings = freshSettings

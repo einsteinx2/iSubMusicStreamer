@@ -19,6 +19,7 @@ final class PlayQueueTests: StoreTestCase {
     private var player: FakePlayer!
     private var streamManager: FakeStreamManager!
     private var downloadQueue: FakeDownloadQueue!
+    private var stateRestorer: StateRestorer!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -40,9 +41,12 @@ final class PlayQueueTests: StoreTestCase {
         let freshPlayQueue = PlayQueue()
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
+
+        stateRestorer = StateRestorer(settings: settings, player: player, playQueue: playQueue)
     }
 
     override func tearDownWithError() throws {
+        stateRestorer = nil
         playQueue = nil
         settings = nil
         player = nil
@@ -438,7 +442,7 @@ final class PlayQueueTests: StoreTestCase {
         XCTAssertEqual(playQueue.songs().count, 4)
     }
 
-    // MARK: SavedSettings state persistence
+    // MARK: StateRestorer state persistence
 
     func testSaveStatePersistsPlayerAndQueueState() {
         seedQueue(3)
@@ -451,7 +455,7 @@ final class PlayQueueTests: StoreTestCase {
         playQueue.shuffleIndex = 1
         playQueue.repeatMode = .all
 
-        settings.saveState()
+        stateRestorer.saveState()
 
         XCTAssertTrue(testDefaults.bool(forKey: SavedSettings.Key.isPlaying.rawValue))
         XCTAssertTrue(testDefaults.bool(forKey: SavedSettings.Key.isShuffle.rawValue))
@@ -470,11 +474,11 @@ final class PlayQueueTests: StoreTestCase {
         seedQueue(3)
         for mode in [RepeatMode.one, .all, .none] {
             playQueue.repeatMode = mode
-            settings.saveState()
+            stateRestorer.saveState()
             XCTAssertEqual(testDefaults.integer(forKey: SavedSettings.Key.repeatMode.rawValue), mode.rawValue)
 
             playQueue.repeatMode = .none
-            settings.loadState()
+            stateRestorer.loadState()
             XCTAssertEqual(playQueue.repeatMode, mode, "repeatMode must survive a saveState/loadState round-trip")
         }
     }
@@ -488,7 +492,7 @@ final class PlayQueueTests: StoreTestCase {
         testDefaults.set(654321, forKey: SavedSettings.Key.byteOffset.rawValue)
         testDefaults.set(33.25, forKey: SavedSettings.Key.seekTime.rawValue)
 
-        settings.loadState()
+        stateRestorer.loadState()
 
         XCTAssertTrue(playQueue.isShuffle)
         XCTAssertEqual(playQueue.normalIndex, 2)
@@ -506,7 +510,7 @@ final class PlayQueueTests: StoreTestCase {
         playQueue.isShuffle = true
         playQueue.normalIndex = 1
         playQueue.shuffleIndex = 2
-        settings.saveState()
+        stateRestorer.saveState()
 
         // Simulate a fresh launch: new queue/player/settings reading the same defaults
         let newPlayer = FakePlayer()
@@ -515,8 +519,9 @@ final class PlayQueueTests: StoreTestCase {
         TestContainer.register { newPlayQueue }
         let newSettings = SavedSettings()
         TestContainer.register { newSettings }
+        let newStateRestorer = StateRestorer(settings: newSettings, player: newPlayer, playQueue: newPlayQueue)
 
-        newSettings.loadState()
+        newStateRestorer.loadState()
 
         XCTAssertTrue(newPlayQueue.isShuffle)
         XCTAssertEqual(newPlayQueue.normalIndex, 1)
@@ -527,7 +532,7 @@ final class PlayQueueTests: StoreTestCase {
 
     func testLoadStateInvalidRepeatModeFallsBackToNone() {
         testDefaults.set(99, forKey: SavedSettings.Key.repeatMode.rawValue)
-        settings.loadState()
+        stateRestorer.loadState()
         XCTAssertEqual(playQueue.repeatMode, RepeatMode.none)
     }
 }

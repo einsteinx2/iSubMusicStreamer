@@ -430,6 +430,8 @@
 		53BB79702B8CD6D900677B46 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BB796E2B8CD6D900677B46 /* OptionsViewController.swift */; };
 		53BB79722B8D1E6500677B46 /* SavedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BB79712B8D1E6500677B46 /* SavedSettings.swift */; };
 		53BB79732B8D1E6500677B46 /* SavedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BB79712B8D1E6500677B46 /* SavedSettings.swift */; };
+		5A7E57012F1000010000AB01 /* StateRestorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57032F1000010000AB03 /* StateRestorer.swift */; };
+		5A7E57022F1000010000AB02 /* StateRestorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57032F1000010000AB03 /* StateRestorer.swift */; };
 		53BC2850139AF0DD00A825F1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		53BC2851139AF0DD00A825F1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		53BC2852139AF0DD00A825F1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */; };
@@ -888,6 +890,7 @@
 		53B9C49925A7A6D7007E9E3C /* GRDB+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GRDB+Helper.swift"; sourceTree = "<group>"; };
 		53BB796E2B8CD6D900677B46 /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
 		53BB79712B8D1E6500677B46 /* SavedSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedSettings.swift; sourceTree = "<group>"; };
+		5A7E57032F1000010000AB03 /* StateRestorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateRestorer.swift; sourceTree = "<group>"; };
 		53BC2865139AF0DD00A825F1 /* iSub Beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iSub Beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		53BDC4DB25D4CEB400126D06 /* DropdownMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownMenu.swift; sourceTree = "<group>"; };
 		53C3AB6C257DB7D200B35B99 /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
@@ -1476,6 +1479,7 @@
 				5357CE9B25B90C5B00FA825A /* Social.swift */,
 				536C8DED26338EAA007B81FB /* Analytics.swift */,
 				53BB79712B8D1E6500677B46 /* SavedSettings.swift */,
+				5A7E57032F1000010000AB03 /* StateRestorer.swift */,
 			);
 			path = Singletons;
 			sourceTree = "<group>";
@@ -2114,6 +2118,7 @@
 				536C891025BF92D1008FE1AC /* SettingsViewController.swift in Sources */,
 				5373C69925B60A6900CAA859 /* UIViewController+PushCustom.swift in Sources */,
 				53BB79722B8D1E6500677B46 /* SavedSettings.swift in Sources */,
+				5A7E57012F1000010000AB01 /* StateRestorer.swift in Sources */,
 				536C890A25BB5FED008FE1AC /* StreamHandler.swift in Sources */,
 				535F824725C0FE950024C82C /* Decoding+Generic.swift in Sources */,
 				539D32D825A8E07E00F53797 /* Server.swift in Sources */,
@@ -2363,6 +2368,7 @@
 				53E03D1825C27CE90043355F /* OBSlider.swift in Sources */,
 				536C891125BF92D1008FE1AC /* SettingsViewController.swift in Sources */,
 				53BB79732B8D1E6500677B46 /* SavedSettings.swift in Sources */,
+				5A7E57022F1000010000AB02 /* StateRestorer.swift in Sources */,
 				536C890B25BB5FED008FE1AC /* StreamHandler.swift in Sources */,
 				53FE679F256DD0F00015FC83 /* GCDWebServerStreamedResponse.m in Sources */,
 				535F824825C0FE950024C82C /* Decoding+Generic.swift in Sources */,

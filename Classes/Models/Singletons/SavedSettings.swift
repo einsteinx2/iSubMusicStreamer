@@ -16,11 +16,6 @@ enum CachingType: Int {
 }
 
 final class SavedSettings {
-    @LazyInjected private var player: PlayerControlling
-    @LazyInjected private var playQueue: PlayQueue
-    @LazyInjected private var downloadsManager: DownloadsManager
-    @LazyInjected private var downloadQueue: DownloadQueueing
-    @LazyInjected private var store: Store
     @LazyInjected private var networkStatus: NetworkStatus
 
     // The UserDefaults store backing all settings, including the @UserDefault property
@@ -29,8 +24,8 @@ final class SavedSettings {
     static var defaults: UserDefaults = .standard
 
     private var defaults: UserDefaults { Self.defaults }
-    
-    func setup() {
+
+    func setup(store: Store) {
         // Disable screen sleep if necessary
         if !self.isScreenSleepEnabled {
             UIApplication.shared.isIdleTimerDisabled = true
@@ -38,15 +33,12 @@ final class SavedSettings {
 
         // Run settings migrations
         migrate()
-        
-        
+
+
         if let id = defaults.object(forKey: .currentServerId) as? Int {
             // Load the new server object
             currentServer = store.server(id: id)
         }
-        
-        // Start saving state
-        setupSaveState()
     }
     
     // MARK: Login Settings
@@ -142,22 +134,17 @@ final class SavedSettings {
     @UserDefault(key: .isBackupCacheEnabled, defaultValue: false)
     var isBackupCacheEnabled: Bool {
         didSet {
-            if (isBackupCacheEnabled) {
-                //Set all cached songs to removeSkipBackup
-                downloadsManager.setAllCachedSongsToBackup()
-            } else {
-                // Set all cached songs to removeSkipBackup
-                downloadsManager.setAllCachedSongsToNotBackup()
-            }
+            // DownloadsManager observes and applies the backup exclusion flag to all
+            // existing downloads
+            NotificationCenter.postOnMainThread(name: Notifications.backupCacheSettingChanged)
         }
     }
-    
+
     @UserDefault(key: .isManualCachingOnWWANEnabled, defaultValue: false)
     var isManualCachingOnWWANEnabled: Bool {
         didSet {
-            if !networkStatus.isWifi {
-                isManualCachingOnWWANEnabled ? downloadQueue.start() : downloadQueue.stop()
-            }
+            // DownloadQueue observes and starts/stops itself when on cellular
+            NotificationCenter.postOnMainThread(name: Notifications.manualCachingOnWWANSettingChanged)
         }
     }
     
@@ -249,135 +236,6 @@ final class SavedSettings {
     
     func migrate() {
         // In the future, when settings migrations are required, check the migrateIncrementor number and perform the necessary migrations in order based on the incrementor number
-    }
-    
-    // MARK: State Saving
-    
-    // TODO: Refactor all this state saving stuff into another class using Codable etc
-    private struct State {
-        var isPlaying: Bool = false
-        var isShuffle: Bool = false
-        var normalPlaylistIndex: Int = 0
-        var shufflePlaylistIndex: Int = 0
-        var repeatMode: RepeatMode = .none
-        var kiloBitrate: Int = 0
-        var byteOffset: Int = 0
-        var secondsOffset: Double = 0
-        var isRecover: Bool = false
-        var recoverSetting: Int = 0
-        var currentServer: Server?
-    }
-    
-    private var state = State()
-    
-    func setupSaveState() {
-        // Load saved state first
-        loadState()
-        
-        // Start the timer
-        Timer.scheduledTimer(withTimeInterval: 3.3, repeats: true) { _ in
-            self.saveState()
-        }
-    }
-    
-    func loadState() {
-        state.isPlaying = isJukeboxEnabled ? false : defaults.bool(forKey: .isPlaying)
-        
-        state.isShuffle = defaults.bool(forKey: .isShuffle)
-        playQueue.isShuffle = state.isShuffle
-        
-        state.normalPlaylistIndex = defaults.integer(forKey: .normalPlaylistIndex)
-        playQueue.normalIndex = state.normalPlaylistIndex;
-        
-        state.shufflePlaylistIndex = defaults.integer(forKey: .shufflePlaylistIndex)
-        playQueue.shuffleIndex = state.shufflePlaylistIndex
-        
-        state.repeatMode = RepeatMode(rawValue: defaults.integer(forKey: .repeatMode)) ?? .none
-        playQueue.repeatMode = state.repeatMode;
-        
-        state.kiloBitrate = defaults.integer(forKey: .kiloBitrate)
-        state.byteOffset = byteOffset
-        state.secondsOffset = seekTime
-        state.isRecover = isRecover
-        state.recoverSetting = recoverSetting
-        
-        player.startByteOffset = state.byteOffset
-        player.startSecondsOffset = state.secondsOffset
-    }
-    
-    func saveState() {
-        var isDefaultsDirty = false
-        
-        if player.isPlaying != state.isPlaying {
-            if isJukeboxEnabled {
-                state.isPlaying = false
-            } else {
-                state.isPlaying = player.isPlaying
-            }
-            
-            defaults.set(state.isPlaying, forKey: .isPlaying)
-            isDefaultsDirty = true
-        }
-        
-        if playQueue.isShuffle != state.isShuffle {
-            state.isShuffle = playQueue.isShuffle
-            defaults.set(state.isShuffle, forKey: .isShuffle)
-            isDefaultsDirty = true
-        }
-        
-        if playQueue.normalIndex != state.normalPlaylistIndex {
-            state.normalPlaylistIndex = playQueue.normalIndex
-            defaults.set(state.normalPlaylistIndex, forKey: .normalPlaylistIndex)
-            isDefaultsDirty = true
-        }
-        
-        if playQueue.shuffleIndex != state.shufflePlaylistIndex {
-            state.shufflePlaylistIndex = playQueue.shuffleIndex
-            defaults.set(state.shufflePlaylistIndex, forKey: .shufflePlaylistIndex)
-            isDefaultsDirty = true
-        }
-        
-        if playQueue.repeatMode != state.repeatMode {
-            state.repeatMode = playQueue.repeatMode
-            defaults.set(state.repeatMode.rawValue, forKey: .repeatMode)
-            isDefaultsDirty = true
-        }
-        
-        if player.kiloBitrate != state.kiloBitrate && player.kiloBitrate >= 0 {
-            state.kiloBitrate = player.kiloBitrate;
-            defaults.set(state.kiloBitrate, forKey: .kiloBitrate)
-            isDefaultsDirty = true
-        }
-        
-        if state.secondsOffset != player.progress {
-            state.secondsOffset = player.progress
-            defaults.set(state.secondsOffset, forKey: .seekTime)
-            isDefaultsDirty = true
-        }
-        
-        if state.byteOffset != player.currentByteOffset {
-            state.byteOffset = player.currentByteOffset
-            defaults.set(state.byteOffset, forKey: .byteOffset)
-            isDefaultsDirty = true
-        }
-                
-        var newIsRecover = false
-        if state.isPlaying {
-            newIsRecover = (state.recoverSetting == 0)
-        } else {
-            newIsRecover = false
-        }
-        
-        if state.isRecover != newIsRecover {
-            state.isRecover = newIsRecover
-            defaults.set(state.isRecover, forKey: .recover)
-            isDefaultsDirty = true
-        }
-        
-        // Only synchronize to disk if necessary
-        if isDefaultsDirty {
-            defaults.synchronize()
-        }
     }
     
     // MARK: Document Folder Paths

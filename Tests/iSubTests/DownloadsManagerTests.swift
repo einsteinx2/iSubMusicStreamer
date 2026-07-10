@@ -148,9 +148,8 @@ final class DownloadsManagerTests: StoreTestCase {
     }
 
     func testBackupCacheSettingToggleUpdatesExistingFiles() throws {
-        // The SavedSettings didSet resolves DownloadsManager from the container
-        let registeredManager = manager!
-        TestContainer.register { registeredManager }
+        // The SavedSettings didSet posts backupCacheSettingChanged, which the manager
+        // (observing since init) applies to the existing downloads
         let song = addDownload(songId: "1", sizeInBytes: 10)
 
         settings.isBackupCacheEnabled = false

@@ -18,6 +18,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @Injected private var streamManager: StreamManaging
     @Injected private var jukebox: Jukebox
     @Injected private var analytics: Analytics
+    @Injected private var stateRestorer: StateRestorer
     
     // Temporary singleton access until multiple scenes are properly supported
     static var shared: SceneDelegate { UIApplication.shared.connectedScenes.first!.delegate as! SceneDelegate }
@@ -171,7 +172,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
-        settings.saveState()
+        stateRestorer.saveState()
         UserDefaults.standard.synchronize()
         
         if downloadQueue.isDownloading {

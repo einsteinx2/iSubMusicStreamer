@@ -28,6 +28,18 @@ class DownloadsManager {
     var totalSpace: Int { FileSystem.downloadsDirectory.systemTotalSpace ?? 0 }
     var freeSpace: Int { FileSystem.downloadsDirectory.systemAvailableSpace ?? 0 }
 
+    init() {
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(backupCacheSettingChanged), name: Notifications.backupCacheSettingChanged)
+    }
+
+    @objc private func backupCacheSettingChanged() {
+        if settings.isBackupCacheEnabled {
+            setAllCachedSongsToBackup()
+        } else {
+            setAllCachedSongsToNotBackup()
+        }
+    }
+
     // Shown when the download queue halts because the device is out of space
     func showNoFreeSpaceMessage() {
         guard settings.isPopupsEnabled else { return }

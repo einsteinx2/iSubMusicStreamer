@@ -18,6 +18,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     @Injected private var playQueue: PlayQueue
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var analytics: Analytics
+    @Injected private var stateRestorer: StateRestorer
     
     static var shared: AppDelegate { UIApplication.shared.delegate as! AppDelegate }
     
@@ -39,8 +40,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Setup singletons
         // TODO: Don't have so many singletons lol
-        settings.setup()
+        settings.setup(store: store)
         downloadsManager.setup()
+
+        // Restore playback state and start the periodic save timer. Must run before
+        // SceneDelegate calls streamManager.setup()/playQueue.resumeSong(), which read
+        // the restored indices and offsets
+        stateRestorer.setup()
         
         // Detect app crash on previous launch
         #if RELEASE

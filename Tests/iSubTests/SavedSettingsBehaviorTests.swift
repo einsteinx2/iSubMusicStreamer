@@ -16,6 +16,7 @@ final class SavedSettingsBehaviorTests: StoreTestCase {
     private var settings: SavedSettings!
     private var player: FakePlayer!
     private var network: FakeNetworkStatus!
+    private var stateRestorer: StateRestorer!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -30,9 +31,11 @@ final class SavedSettingsBehaviorTests: StoreTestCase {
         let freshSettings = SavedSettings()
         TestContainer.register { freshSettings }
         settings = freshSettings
+        stateRestorer = StateRestorer(settings: freshSettings, player: fakePlayer, playQueue: freshPlayQueue)
     }
 
     override func tearDownWithError() throws {
+        stateRestorer = nil
         settings = nil
         player = nil
         network = nil
@@ -213,7 +216,7 @@ final class SavedSettingsBehaviorTests: StoreTestCase {
         player.isPlaying = true
         settings.recoverSetting = 0
 
-        settings.saveState()
+        stateRestorer.saveState()
 
         XCTAssertTrue(settings.isRecover)
     }
@@ -222,9 +225,9 @@ final class SavedSettingsBehaviorTests: StoreTestCase {
         player.isPlaying = true
         settings.recoverSetting = 1
         // recoverSetting is captured during loadState
-        settings.loadState()
+        stateRestorer.loadState()
 
-        settings.saveState()
+        stateRestorer.saveState()
 
         XCTAssertFalse(settings.isRecover)
     }
@@ -233,7 +236,7 @@ final class SavedSettingsBehaviorTests: StoreTestCase {
         player.isPlaying = false
         settings.recoverSetting = 0
 
-        settings.saveState()
+        stateRestorer.saveState()
 
         XCTAssertFalse(settings.isRecover)
     }

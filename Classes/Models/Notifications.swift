@@ -39,6 +39,8 @@ struct Notifications {
 
     static let songCachingEnabled = Notification.Name("iSub.songCachingEnabled")
     static let songCachingDisabled = Notification.Name("iSub.songCachingDisabled")
+    static let backupCacheSettingChanged = Notification.Name("iSub.backupCacheSettingChanged")
+    static let manualCachingOnWWANSettingChanged = Notification.Name("iSub.manualCachingOnWWANSettingChanged")
 
     static let showPlayer = Notification.Name("iSub.showPlayer")
 

@@ -32,6 +32,7 @@ final class DownloadQueue {
     init() {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(didEnterOnlineMode), name: Notifications.didEnterOnlineMode)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(didEnterOfflineMode), name: Notifications.didEnterOfflineMode)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(manualCachingOnWWANSettingChanged), name: Notifications.manualCachingOnWWANSettingChanged)
     }
     
     func isInQueue(song: Song) -> Bool {
@@ -156,6 +157,12 @@ final class DownloadQueue {
     
     @objc private func didEnterOfflineMode() {
         stop()
+    }
+
+    @objc private func manualCachingOnWWANSettingChanged() {
+        if !networkStatus.isWifi {
+            settings.isManualCachingOnWWANEnabled ? start() : stop()
+        }
     }
 }
 
