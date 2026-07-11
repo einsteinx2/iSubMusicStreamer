@@ -1,5 +1,5 @@
 //
-//  HomeAlbumViewController.swift
+//  QuickAlbumsViewController.swift
 //  iSub
 //
 //  Created by Benjamin Baron on 1/19/21.
@@ -9,7 +9,7 @@
 import UIKit
 import Resolver
 
-final class HomeAlbumViewController: UIViewController {
+final class QuickAlbumsViewController: UIViewController {
     @Injected private var settings: SavedSettings
     
     var serverId: Int { settings.currentServerId }
@@ -78,7 +78,7 @@ final class HomeAlbumViewController: UIViewController {
     }
 }
 
-extension HomeAlbumViewController: UITableViewConfiguration {
+extension QuickAlbumsViewController: UITableViewConfiguration {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -95,7 +95,7 @@ extension HomeAlbumViewController: UITableViewConfiguration {
             return cell
         } else {
             // This is the last cell and there could be more results, load the next 20 songs;
-            let cell = UITableViewCell(style: .default, reuseIdentifier: "HomeAlbumLoadCell")
+            let cell = UITableViewCell(style: .default, reuseIdentifier: "QuickAlbumsLoadCell")
             cell.backgroundColor = .systemBackground
             if isMoreAlbums {
                 cell.textLabel?.text = "Loading more results...";

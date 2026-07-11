@@ -77,6 +77,8 @@ struct Notifications {
     static let downloadedSongDeleted = Notification.Name("iSub.downloadedSongDeleted")
     
     static let quickSkipSecondsSettingChanged = Notification.Name("iSub.quickSkipSecondsSettingChanged")
+
+    static let jukeboxSettingChanged = Notification.Name("iSub.jukeboxSettingChanged")
 }
 
 final class Notifications_ObjcDeleteMe: NSObject {

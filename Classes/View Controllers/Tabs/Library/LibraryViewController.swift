@@ -13,12 +13,13 @@ import Pageboy
 
 final class LibraryViewController: TabmanViewController {
     private enum TabType: Int, CaseIterable {
-        case folders = 0, artists, bookmarks
+        case folders = 0, artists, bookmarks, browse
         var name: String {
             switch self {
             case .folders:   return "Folders"
             case .artists:   return "Artists"
             case .bookmarks: return "Bookmarks"
+            case .browse:    return "Browse"
             }
         }
     }
@@ -66,6 +67,8 @@ final class LibraryViewController: TabmanViewController {
                 controller = ArtistsViewController(dataModel: artistsDataModel)
             case .bookmarks:
                 controller = BookmarksViewController()
+            case .browse:
+                controller = BrowseViewController()
             }
             controllerCache[type] = controller
             return controller

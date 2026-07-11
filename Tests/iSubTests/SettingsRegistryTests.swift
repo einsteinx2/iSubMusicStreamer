@@ -38,7 +38,7 @@ final class SettingsRegistryTests: SandboxedTestCase {
     // MARK: Reflection shape
 
     func testEveryVisibleSettingHasValidMetadata() {
-        XCTAssertEqual(registry.items.count, 24, "expected exactly the 24 visible settings; add the new setting to the section order test too if this grew intentionally")
+        XCTAssertEqual(registry.items.count, 26, "expected exactly the 26 visible settings; add the new setting to the section order test too if this grew intentionally")
         XCTAssertEqual(Set(registry.items.map(\.id)).count, registry.items.count, "setting ids must be unique")
         for item in registry.items {
             XCTAssertFalse(item.ui.title.isEmpty, "\(item.id) has an empty title")
@@ -53,14 +53,22 @@ final class SettingsRegistryTests: SandboxedTestCase {
                          .isBackupCacheEnabled, .cachingTypeSetting, .autoDeleteCacheSetting,
                          .autoDeleteCacheTypeSetting, .cacheSongCellColorSetting],
             .playback: [.recoverSetting, .quickSkipNumberOfSeconds, .isLockScreenArtEnabled,
-                        .enableScrobblingSetting, .scrobblePercentSetting],
-            .appearanceBehavior: [.isPopupsEnabled, .isScreenSleepEnabled, .lockRotationSetting, .autoReloadArtistsSetting],
+                        .enableScrobblingSetting, .scrobblePercentSetting, .enableJukeboxSetting],
+            .appearanceBehavior: [.isPopupsEnabled, .isScreenSleepEnabled, .lockRotationSetting,
+                                  .autoReloadArtistsSetting, .enableChatSetting],
             .about: [],
         ]
         for (section, keys) in expected {
             XCTAssertEqual(registry.items(in: section).map(\.id), keys.map(\.rawValue),
                            "\(section) rows should match SavedSettings declaration order")
         }
+    }
+
+    func testFeatureGatesDefaultOff() {
+        // Server chat and jukebox mode are opt-in features; their UI entry points
+        // (Browse chat row, Player jukebox button) must be hidden on a fresh install
+        XCTAssertFalse(settings.isChatEnabled)
+        XCTAssertFalse(settings.isJukeboxFeatureEnabled)
     }
 
     func testQuickSkipMappedValuesMatchLabels() throws {

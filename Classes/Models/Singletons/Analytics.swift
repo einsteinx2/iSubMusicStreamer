@@ -14,6 +14,7 @@ final class Analytics {
         case jukeboxDisabled    = "JukeboxDisabled"
         case jukeboxEnabled     = "JukeboxEnabled"
         case homeTab            = "HomeTab"
+        case browseTab          = "BrowseTab"
         case searchAll          = "SearchAll"
         case nowPlayingTab      = "NowPlayingTab"
         case chatTab            = "ChatTab"

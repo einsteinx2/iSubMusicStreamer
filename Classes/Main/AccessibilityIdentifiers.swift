@@ -67,6 +67,15 @@ enum AccessibilityId {
     // Library
     static let libraryFolderDropdown = "library.folderDropdown"
 
+    // Browse (Library tab page)
+    static let browseRecentlyAdded = "browse.recentlyAdded"
+    static let browseRecentlyPlayed = "browse.recentlyPlayed"
+    static let browseFrequentlyPlayed = "browse.frequentlyPlayed"
+    static let browseRandomAlbums = "browse.randomAlbums"
+    static let browseShuffleAll = "browse.shuffleAll"
+    static let browseNowPlaying = "browse.nowPlaying"
+    static let browseChat = "browse.chat"
+
     // Save/edit table headers (play queue, playlists, bookmarks, downloads)
     static let saveEditHeaderSaveDelete = "saveEditHeader.saveDelete"
     static let saveEditHeaderEdit = "saveEditHeader.edit"
@@ -100,6 +109,8 @@ enum AccessibilityId {
     // optionsDisableScreenSleep toggles in the SwiftUI settings
     static let optionsShowPopups = "options.showPopups"
     static let optionsAllowScreenSleep = "options.allowScreenSleep"
+    static let optionsEnableServerChat = "options.enableServerChat"
+    static let optionsEnableJukebox = "options.enableJukebox"
 
     // SwiftUI settings root rows (the per-section ids live on SettingsSection)
     static let settingsSectionServers = "settings.section.servers"

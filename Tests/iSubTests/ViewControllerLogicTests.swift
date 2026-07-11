@@ -96,7 +96,7 @@ final class SearchSongsPagingTests: LoaderTestCase {
 
 // MARK: - Quick albums pagination
 
-final class HomeAlbumPagingTests: LoaderTestCase {
+final class QuickAlbumsPagingTests: LoaderTestCase {
     private func makeAlbums(_ range: Range<Int>) -> [FolderAlbum] {
         range.map { number in
             FolderAlbum(serverId: 1, element: try! XMLTestHelpers.element(tag: "child", xml: "<child id=\"\(number)\" title=\"Album \(number)\" parent=\"0\" created=\"2024-02-24T15:31:22.978Z\"/>"))
@@ -117,11 +117,11 @@ final class HomeAlbumPagingTests: LoaderTestCase {
         return condition()
     }
 
-    private func makeController(albums: [FolderAlbum]) -> HomeAlbumViewController {
+    private func makeController(albums: [FolderAlbum]) -> QuickAlbumsViewController {
         let freshSettings = SavedSettings()
         TestContainer.register { freshSettings }
         freshSettings.currentServer = store.server(id: 1)
-        return HomeAlbumViewController(modifier: .newest, folderAlbums: albums, title: "Newest")
+        return QuickAlbumsViewController(modifier: .newest, folderAlbums: albums, title: "Newest")
     }
 
     func testFullPageTriggersLoadMoreWithSteppedOffset() {

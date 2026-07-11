@@ -330,6 +330,25 @@ final class SavedSettings {
                                dependsOn: .enableScrobblingSetting))
     var scrobblePercent: Float
 
+    // Distinct from isJukeboxEnabled above: this gates whether the jukebox feature is
+    // available at all (shows the Player screen button); that one tracks whether the
+    // mode is currently active
+    @UserDefault(key: .enableJukeboxSetting, defaultValue: false,
+                 ui: SettingUI(title: "Enable Jukebox Mode",
+                               section: .playback,
+                               kind: .toggle,
+                               footer: "Show a jukebox button on the Player screen to play music through your server's speakers instead of this device.",
+                               accessibilityId: AccessibilityId.optionsEnableJukebox),
+                 onChange: { isEnabled in
+                     // Disabling the feature must also exit jukebox mode, otherwise
+                     // playback silently stays routed to the server with no UI to stop it
+                     if !isEnabled, let coordinator = Resolver.optional(PlaybackCoordinator.self) {
+                         coordinator.setJukeboxEnabled(false)
+                     }
+                     NotificationCenter.postOnMainThread(name: Notifications.jukeboxSettingChanged)
+                 })
+    var isJukeboxFeatureEnabled: Bool
+
     // MARK: Appearance & Behavior settings
 
     @UserDefault(key: .isPopupsEnabled, defaultValue: true,
@@ -363,6 +382,14 @@ final class SavedSettings {
                                footer: "Refresh the artist list from the server every time the Library tab appears.",
                                accessibilityId: AccessibilityId.optionsAutoReloadArtist))
     var isAutoReloadArtistsEnabled: Bool
+
+    @UserDefault(key: .enableChatSetting, defaultValue: false,
+                 ui: SettingUI(title: "Enable Server Chat",
+                               section: .appearanceBehavior,
+                               kind: .toggle,
+                               footer: "Show a Server Chat item on the Library tab's Browse page. Not supported by all servers.",
+                               accessibilityId: AccessibilityId.optionsEnableServerChat))
+    var isChatEnabled: Bool
     
     func migrate() {
         // In the future, when settings migrations are required, check the migrateIncrementor number and perform the necessary migrations in order based on the incrementor number
@@ -541,6 +568,8 @@ final class SavedSettings {
         case isEqualizerOn
         case isDisableUsageOver3G
         case isCacheSizeTableFinished
+        case enableChatSetting
+        case enableJukeboxSetting
     }
 }
 

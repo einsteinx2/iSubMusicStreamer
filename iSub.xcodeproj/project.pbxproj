@@ -14,6 +14,7 @@
 		05B080C3023B626285EE207F /* TestSandbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF0049FFA91CF95DE6383E /* TestSandbox.swift */; };
 		072454D81B55A9E9AC966876 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A64BA72B963BB732F9FF94 /* Fixtures.swift */; };
 		0D7110EB2C640AB40719355D /* OnlineHomeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262B7DD225C3CBF3F2BA0461 /* OnlineHomeUITests.swift */; };
+		0D7110EC2E2000020000A002 /* BrowseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262B7DD32E2000020000A002 /* BrowseUITests.swift */; };
 		0EE4D0E4B5EDCE89C79AF646 /* SettingsRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BEE04141CC68F327CE17D8 /* SettingsRegistry.swift */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -445,6 +446,8 @@
 		53CB554C25C9D4AB004F2BAB /* BookmarkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CB554A25C9D4AB004F2BAB /* BookmarkStore.swift */; };
 		53CB554E25C9FAAD004F2BAB /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CB554D25C9FAAD004F2BAB /* BookmarksViewController.swift */; };
 		53CB554F25C9FAAD004F2BAB /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CB554D25C9FAAD004F2BAB /* BookmarksViewController.swift */; };
+		53B7051B2E2000010000A001 /* BrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B7051A2E2000010000A001 /* BrowseViewController.swift */; };
+		53B7051C2E2000010000A001 /* BrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B7051A2E2000010000A001 /* BrowseViewController.swift */; };
 		53CC751025D9F31500D10AB6 /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC750F25D9F31500D10AB6 /* String+Hex.swift */; };
 		53CC751125D9F31500D10AB6 /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC750F25D9F31500D10AB6 /* String+Hex.swift */; };
 		53CC751725DB59B600D10AB6 /* ContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC751625DB59B600D10AB6 /* ContextMenu.swift */; };
@@ -488,8 +491,8 @@
 		53ED671A25B74B4D0002BFAF /* HUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED671825B74B4C0002BFAF /* HUD.swift */; };
 		53ED671F25B74BD40002BFAF /* DownloadedIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED671E25B74BD40002BFAF /* DownloadedIndicatorView.swift */; };
 		53ED672025B74BD40002BFAF /* DownloadedIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED671E25B74BD40002BFAF /* DownloadedIndicatorView.swift */; };
-		53ED672825B76FA60002BFAF /* HomeAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED672725B76FA60002BFAF /* HomeAlbumViewController.swift */; };
-		53ED672925B76FA60002BFAF /* HomeAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED672725B76FA60002BFAF /* HomeAlbumViewController.swift */; };
+		53ED672825B76FA60002BFAF /* QuickAlbumsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED672725B76FA60002BFAF /* QuickAlbumsViewController.swift */; };
+		53ED672925B76FA60002BFAF /* QuickAlbumsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED672725B76FA60002BFAF /* QuickAlbumsViewController.swift */; };
 		53ED672B25B776CB0002BFAF /* SearchSongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED672A25B776CB0002BFAF /* SearchSongsViewController.swift */; };
 		53ED672C25B776CB0002BFAF /* SearchSongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED672A25B776CB0002BFAF /* SearchSongsViewController.swift */; };
 		53ED673125B780070002BFAF /* UIApplication+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED673025B780070002BFAF /* UIApplication+Helper.swift */; };
@@ -718,6 +721,7 @@
 		242F93B4B192824708447875 /* SettingsMath.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsMath.swift; sourceTree = "<group>"; };
 		25DEC7FD7C6C97E6C6D2429F /* ServerEditView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerEditView.swift; sourceTree = "<group>"; };
 		262B7DD225C3CBF3F2BA0461 /* OnlineHomeUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnlineHomeUITests.swift; sourceTree = "<group>"; };
+		262B7DD32E2000020000A002 /* BrowseUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BrowseUITests.swift; sourceTree = "<group>"; };
 		26B74B0C6388733F621EF38F /* SettingsSectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsSectionView.swift; sourceTree = "<group>"; };
 		26BDA00A2FC6D909724EF938 /* AboutView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -928,6 +932,7 @@
 		53CB554725C9D2E1004F2BAB /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		53CB554A25C9D4AB004F2BAB /* BookmarkStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkStore.swift; sourceTree = "<group>"; };
 		53CB554D25C9FAAD004F2BAB /* BookmarksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
+		53B7051A2E2000010000A001 /* BrowseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseViewController.swift; sourceTree = "<group>"; };
 		53CC750F25D9F31500D10AB6 /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
 		53CC751625DB59B600D10AB6 /* ContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenu.swift; sourceTree = "<group>"; };
 		53CC751925DC5B3B00D10AB6 /* CaseIterable+Count.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CaseIterable+Count.swift"; sourceTree = "<group>"; };
@@ -953,7 +958,7 @@
 		53EA2DE1257D7B4D0003F38D /* UIView+ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+ViewController.swift"; sourceTree = "<group>"; };
 		53ED671825B74B4C0002BFAF /* HUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUD.swift; sourceTree = "<group>"; };
 		53ED671E25B74BD40002BFAF /* DownloadedIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadedIndicatorView.swift; sourceTree = "<group>"; };
-		53ED672725B76FA60002BFAF /* HomeAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAlbumViewController.swift; sourceTree = "<group>"; };
+		53ED672725B76FA60002BFAF /* QuickAlbumsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAlbumsViewController.swift; sourceTree = "<group>"; };
 		53ED672A25B776CB0002BFAF /* SearchSongsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSongsViewController.swift; sourceTree = "<group>"; };
 		53ED673025B780070002BFAF /* UIApplication+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Helper.swift"; sourceTree = "<group>"; };
 		53ED673325B7A1360002BFAF /* String+URLEncode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+URLEncode.swift"; sourceTree = "<group>"; };
@@ -1394,11 +1399,8 @@
 				538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */,
 				534BC83E25CCE03700964D82 /* HomeViewButton.swift */,
 				534BC84125CCE05400964D82 /* HomeSongInfoButton.swift */,
-				53ED672725B76FA60002BFAF /* HomeAlbumViewController.swift */,
 				530A167E259277E700E9294E /* SearchAllViewController.swift */,
 				53ED672A25B776CB0002BFAF /* SearchSongsViewController.swift */,
-				531EC85E25B1F8070076973A /* NowPlayingViewController.swift */,
-				53A0EDD625B5EDEE00B78DAA /* ChatViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1593,6 +1595,10 @@
 				53A0EDC725B5DCF400B78DAA /* TagArtistViewController.swift */,
 				53A0EDCD25B5E2DE00B78DAA /* TagAlbumViewController.swift */,
 				53CB554D25C9FAAD004F2BAB /* BookmarksViewController.swift */,
+				53B7051A2E2000010000A001 /* BrowseViewController.swift */,
+				53ED672725B76FA60002BFAF /* QuickAlbumsViewController.swift */,
+				531EC85E25B1F8070076973A /* NowPlayingViewController.swift */,
+				53A0EDD625B5EDEE00B78DAA /* ChatViewController.swift */,
 				53BDC4DB25D4CEB400126D06 /* DropdownMenu.swift */,
 			);
 			path = Library;
@@ -1930,6 +1936,7 @@
 				84BA4D3DB724BB2A35919FC3 /* SmokeUITests.swift */,
 				6A4F02DA428CAB1AC965D91B /* FirstRunUITests.swift */,
 				262B7DD225C3CBF3F2BA0461 /* OnlineHomeUITests.swift */,
+				262B7DD32E2000020000A002 /* BrowseUITests.swift */,
 				0EE663B3B7063EC49BED6F71 /* OnlineLibraryUITests.swift */,
 				F2C70A4602D4CF1E912CBB04 /* OnlinePlayerUITests.swift */,
 				7705A86ABDA388585EDDC4D6 /* OnlinePlaylistsUITests.swift */,
@@ -2192,6 +2199,7 @@
 				5347A1E4256D866A00BFB70A /* HLSReverseProxyServer.swift in Sources */,
 				53246AB6256C975600E11EC4 /* DownloadStatusViewController.swift in Sources */,
 				53CB554E25C9FAAD004F2BAB /* BookmarksViewController.swift in Sources */,
+				53B7051B2E2000010000A001 /* BrowseViewController.swift in Sources */,
 				530A167F259277E700E9294E /* SearchAllViewController.swift in Sources */,
 				531EC87125B22D870076973A /* DownloadedTagArtistsViewController.swift in Sources */,
 				5344830B2DEF4E6C00D04F04 /* AsyncTagAlbumLoader.swift in Sources */,
@@ -2360,7 +2368,7 @@
 				537C93E125B1051200175DF6 /* SaveEditHeader.swift in Sources */,
 				539C05542DEFACF2007C3ACE /* AsyncServerShuffleLoader.swift in Sources */,
 				539D330C25AA55E000F53797 /* LocalPlaylist.swift in Sources */,
-				53ED672825B76FA60002BFAF /* HomeAlbumViewController.swift in Sources */,
+				53ED672825B76FA60002BFAF /* QuickAlbumsViewController.swift in Sources */,
 				538C8FE725609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */,
 				5357CE9925B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */,
 				535E05782DE5412C00BF3477 /* DDSocialDialog.swift in Sources */,
@@ -2423,6 +2431,7 @@
 				AA9A6974E8FC8995CF9FE37D /* AccessibilityIdentifiers.swift in Sources */,
 				911362DD0A88C68C698503DD /* FirstRunUITests.swift in Sources */,
 				0D7110EB2C640AB40719355D /* OnlineHomeUITests.swift in Sources */,
+				0D7110EC2E2000020000A002 /* BrowseUITests.swift in Sources */,
 				EB69E9A47A5365E25F080197 /* OnlineLibraryUITests.swift in Sources */,
 				E56CD971043F99EF07948200 /* OnlinePlayerUITests.swift in Sources */,
 				C1CBF0284BA8EE4859AF249F /* OnlinePlaylistsUITests.swift in Sources */,
@@ -2456,6 +2465,7 @@
 				530A1680259277E700E9294E /* SearchAllViewController.swift in Sources */,
 				531EC87225B22D870076973A /* DownloadedTagArtistsViewController.swift in Sources */,
 				53CB554F25C9FAAD004F2BAB /* BookmarksViewController.swift in Sources */,
+				53B7051C2E2000010000A001 /* BrowseViewController.swift in Sources */,
 				539D331925AC8D8B00F53797 /* DownloadedFolderArtist.swift in Sources */,
 				5344830C2DEF4E6C00D04F04 /* AsyncTagAlbumLoader.swift in Sources */,
 				53ED675625B8AD0F0002BFAF /* AbstractDownloadsViewController.swift in Sources */,
@@ -2628,7 +2638,7 @@
 				530A167A259255D200E9294E /* FolderAlbum.swift in Sources */,
 				537C93E225B1051200175DF6 /* SaveEditHeader.swift in Sources */,
 				539D330D25AA55E000F53797 /* LocalPlaylist.swift in Sources */,
-				53ED672925B76FA60002BFAF /* HomeAlbumViewController.swift in Sources */,
+				53ED672925B76FA60002BFAF /* QuickAlbumsViewController.swift in Sources */,
 				5357CE9A25B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */,
 				535E05772DE5412C00BF3477 /* DDSocialDialog.swift in Sources */,
 				535E142725A7B2020039BCAA /* FolderArtistStore.swift in Sources */,

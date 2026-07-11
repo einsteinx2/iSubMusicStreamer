@@ -307,7 +307,7 @@ final class HomeViewController: UIViewController {
                 }
                 
                 let folderAlbums = try await AsyncQuickAlbumsLoader(serverId: serverId, modifier: modifier).load()
-                let controller = HomeAlbumViewController(modifier: modifier, folderAlbums: folderAlbums, title: title)
+                let controller = QuickAlbumsViewController(modifier: modifier, folderAlbums: folderAlbums, title: title)
                 self.pushViewControllerCustom(controller)
             } catch {
                 if self.settings.isPopupsEnabled && !error.isCanceled {
