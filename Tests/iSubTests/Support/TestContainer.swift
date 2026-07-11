@@ -29,6 +29,11 @@ enum TestContainer {
     static func deactivate() {
         retire(Resolver.root)
         Resolver.root = .main
+        // Restore the model layer's ambient services to the app's instances in case a
+        // test pointed them at its own store/settings/jukebox
+        ModelServices.store = Resolver.main.resolve()
+        ModelServices.settings = Resolver.main.resolve()
+        ModelServices.jukebox = Resolver.main.resolve()
     }
 
     private static func retire(_ root: Resolver) {

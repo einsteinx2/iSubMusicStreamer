@@ -18,7 +18,7 @@ final class DownloadedTagArtistsViewController: AbstractDownloadsViewController 
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var downloadQueue: DownloadQueueing
     
-    var serverId: Int { (Resolver.resolve() as SavedSettings).currentServerId }
+    var serverId: Int { settings.currentServerId }
         
     private var downloadedTagArtists = [DownloadedTagArtist]()
     override var itemCount: Int { downloadedTagArtists.count }

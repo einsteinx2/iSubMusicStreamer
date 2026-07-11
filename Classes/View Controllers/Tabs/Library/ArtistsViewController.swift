@@ -18,7 +18,7 @@ final class ArtistsViewController: CustomUITableViewController {
     @Injected private var settings: SavedSettings
     @Injected private var analytics: Analytics
     
-    var serverId: Int { (Resolver.resolve() as SavedSettings).currentServerId }
+    var serverId: Int { settings.currentServerId }
     
     private let dropdownMenu = DropdownMenu()
     private let searchBar = UISearchBar()

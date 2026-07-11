@@ -78,7 +78,7 @@ extension URLRequest {
         return queryString
     }
     
-    init?(subsonicAction action: SubsonicAction, urlString: String, username: String, password: String, parameters: [String: Any]?, byteOffset: Int) {
+    init?(subsonicAction action: SubsonicAction, urlString: String, username: String, password: String, parameters: [String: Any]?, byteOffset: Int, isBasicAuthEnabled: Bool = false) {
         var finalUrlString: String
         if action == .hls {
             finalUrlString = "\(urlString)/rest/\(action).m3u8"
@@ -138,8 +138,7 @@ extension URLRequest {
         }
         
         // Set the HTTP Basic Auth header if needed
-        let settings: SavedSettings = Resolver.resolve()
-        if settings.isBasicAuthEnabled {
+        if isBasicAuthEnabled {
             let authString = "\(username.URLQueryEncoded):\(password.URLQueryEncoded)"
             if let authData = authString.data(using: .utf8) {
                 let authValue = "Basic \(authData.base64EncodedString())"
@@ -156,16 +155,30 @@ extension URLRequest {
         setValue("no-cache", forHTTPHeaderField: "Cache-Control")
     }
     
+    // Thin shim over the registered SubsonicRequestBuilder so the ~20 async loaders
+    // don't all churn in one commit; new code should take a SubsonicRequestBuilder
     init?(serverId: Int, subsonicAction action: SubsonicAction, parameters: [String: Any]? = nil, byteOffset: Int = 0) {
-        let store: Store = Resolver.resolve()
-        let settings: SavedSettings = Resolver.resolve()
+        let builder: SubsonicRequestBuilder = Resolver.resolve()
+        guard let request = builder.request(serverId: serverId, subsonicAction: action, parameters: parameters, byteOffset: byteOffset) else { return nil }
+        self = request
+    }
+}
+
+// Builds Subsonic API requests from explicit dependencies (registered as a transient
+// in DependencyInjection.swift): the server row comes from the store, and the
+// redirect URL / basic auth flag from settings
+struct SubsonicRequestBuilder {
+    let store: Store
+    let settings: SavedSettings
+
+    func request(serverId: Int, subsonicAction action: SubsonicAction, parameters: [String: Any]? = nil, byteOffset: Int = 0) -> URLRequest? {
         guard let server = store.server(id: serverId) else { return nil }
-        
-        self.init(subsonicAction: action,
-                  urlString: settings.currentServerRedirectUrlString ?? server.url.absoluteString,
-                  username: server.username,
-                  password: server.password,
-                  parameters: parameters,
-                  byteOffset: byteOffset)
+        return URLRequest(subsonicAction: action,
+                          urlString: settings.currentServerRedirectUrlString ?? server.url.absoluteString,
+                          username: server.username,
+                          password: server.password,
+                          parameters: parameters,
+                          byteOffset: byteOffset,
+                          isBasicAuthEnabled: settings.isBasicAuthEnabled)
     }
 }

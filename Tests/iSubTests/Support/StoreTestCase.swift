@@ -21,6 +21,9 @@ class StoreTestCase: SandboxedTestCase {
         store.setup(location: .memory)
         let injectedStore: Store = store
         TestContainer.register { injectedStore }
+        // Value models (Song.localPath etc.) read their store ambiently through
+        // ModelServices; TestContainer.deactivate() restores the app's instance
+        ModelServices.store = injectedStore
     }
 
     override func tearDownWithError() throws {

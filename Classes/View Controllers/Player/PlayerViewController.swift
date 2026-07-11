@@ -28,6 +28,7 @@ final class PlayerViewController: UIViewController {
     @Injected private var playQueue: PlayQueue
     @Injected private var streamManager: StreamManaging
     @Injected private var analytics: Analytics
+    @Injected private var downloadsManager: DownloadsManager
     
     override var prefersStatusBarHidden: Bool { true }
     
@@ -738,7 +739,7 @@ final class PlayerViewController: UIViewController {
         
         downloadProgressView.isHidden = settings.isJukeboxEnabled
         
-        let width = currentSong.downloadProgress == 0 ? 0 : self.progressSlider.frame.width + 6
+        let width = downloadsManager.downloadProgress(song: currentSong) == 0 ? 0 : self.progressSlider.frame.width + 6
         guard width != self.downloadProgressView.frame.width else {
             return
         }
@@ -763,7 +764,7 @@ final class PlayerViewController: UIViewController {
         }
         
         // Set the width based on the download progress + leading/trailing offset size
-        if animated && currentSong.downloadProgress > previousDownloadProgress {
+        if animated && downloadsManager.downloadProgress(song: currentSong) > previousDownloadProgress {
             // If it's longer, animate it
             UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: updateConstraints, completion: nil)
         } else {
@@ -771,7 +772,7 @@ final class PlayerViewController: UIViewController {
             updateConstraints()
         }
         
-        previousDownloadProgress = currentSong.downloadProgress
+        previousDownloadProgress = downloadsManager.downloadProgress(song: currentSong)
     }
     
     @objc private func startUpdatingDownloadProgress() {

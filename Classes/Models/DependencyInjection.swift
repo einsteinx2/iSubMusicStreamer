@@ -9,6 +9,18 @@
 import Foundation
 import Resolver
 
+// Ambient services for value-model conveniences (Song.download(), Song.localPath,
+// LocalPlaylist.queue(), ...). Value types can't be constructor-injected without
+// threading a store through every model at every creation site, so this is the one
+// deliberate, greppable swap point for the model layer. Set once by AppServices at
+// launch; tests point `store` at their in-memory store (StoreTestCase) and the
+// jukebox/settings pair at their fakes when a test exercises the jukebox sync path.
+enum ModelServices {
+    static var store: Store!
+    static var settings: SavedSettings?
+    static var jukebox: Jukebox?
+}
+
 // The application's service graph, built eagerly in dependency order with every
 // back-edge (communication cycle) wired in one visible place. Constructor-converted
 // services take their dependencies here; the rest still resolve ambiently through
@@ -52,6 +64,12 @@ final class AppServices {
         player.attach(playQueue: playQueue)
         player.attach(streamManager: streamManager)
         player.attach(downloadQueue: downloadQueue)
+        downloadsManager.attach(player: player, playQueue: playQueue)
+
+        // Ambient services for the value-model layer
+        ModelServices.store = store
+        ModelServices.settings = settings
+        ModelServices.jukebox = jukebox
     }
 }
 
@@ -81,5 +99,9 @@ struct DependencyInjection {
         main.register(factory: { services.networkMonitor as NetworkStatus })
         main.register(factory: { services.social as SocialScrobbling })
         main.register(factory: { SongMetadataDownloader() as SongMetadataDownloading })
+
+        // Transient request builder; resolves store/settings at build time so tests'
+        // container overrides are honored
+        main.register(factory: { SubsonicRequestBuilder(store: Resolver.resolve(), settings: Resolver.resolve()) })
     }
 }

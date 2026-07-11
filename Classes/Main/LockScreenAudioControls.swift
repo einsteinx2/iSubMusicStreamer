@@ -7,15 +7,23 @@
 //
 
 import UIKit
-import Resolver
 import MediaPlayer
 
 struct LockScreenAudioControls {
     private static var remote: MPRemoteCommandCenter { MPRemoteCommandCenter.shared() }
-    private static var settings: SavedSettings { Resolver.resolve() }
-    private static var jukebox: Jukebox { Resolver.resolve() }
-    private static var player: PlayerControlling { Resolver.resolve() }
-    private static var playQueue: PlayQueue { Resolver.resolve() }
+    private static var settings: SavedSettings!
+    private static var jukebox: Jukebox!
+    private static var player: PlayerControlling!
+    private static var playQueue: PlayQueue!
+
+    // Internal (not private) so tests can swap in fakes without re-registering the
+    // remote command handlers
+    static func attach(settings: SavedSettings, jukebox: Jukebox, player: PlayerControlling, playQueue: PlayQueue) {
+        self.settings = settings
+        self.jukebox = jukebox
+        self.player = player
+        self.playQueue = playQueue
+    }
 
     // MARK: Handlers (internal, not private, for test access)
 
@@ -43,8 +51,9 @@ struct LockScreenAudioControls {
         return .commandFailed
     }
     
-    static func setup() {
-        
+    static func setup(settings: SavedSettings, jukebox: Jukebox, player: PlayerControlling, playQueue: PlayQueue) {
+        attach(settings: settings, jukebox: jukebox, player: player, playQueue: playQueue)
+
         // Enable lock screen controls
         UIApplication.shared.beginReceivingRemoteControlEvents()
         

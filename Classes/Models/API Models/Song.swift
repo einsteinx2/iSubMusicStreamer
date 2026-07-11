@@ -7,14 +7,10 @@
 //
 
 import Foundation
-import Resolver
 
 final class Song: Codable, Hashable, CustomStringConvertible {
-    private var store: Store { Resolver.resolve() }
-    private var settings: SavedSettings { Resolver.resolve() }
-    private var player: BassPlayer { Resolver.resolve() }
-    private var playQueue: PlayQueue { Resolver.resolve() }
-            
+    private var store: Store { ModelServices.store }
+
     let serverId: Int
     let id: String
     let title: String
@@ -99,27 +95,9 @@ final class Song: Codable, Hashable, CustomStringConvertible {
     }
     
     var estimatedKiloBitrate: Int {
-        let currentMaxBitrate = settings.currentMaxBitrate
-        
-        // Default to 128 if there is no bitrate for this song object (should never happen)
-        var rate = kiloBitrate == 0 ? 128 : kiloBitrate
-        
-        // Check if this is being transcoded to the best of our knowledge
-        if transcodedSuffix != nil {
-            // This is probably being transcoded, so attempt to determine the bitrate
-            if (rate > 128 && currentMaxBitrate == 0) {
-                rate = 128 // Subsonic default transcoding bitrate
-            } else if rate > currentMaxBitrate && currentMaxBitrate != 0 {
-                rate = currentMaxBitrate
-            }
-        } else {
-            // This is not being transcoded between formats, however bitrate limiting may be active
-            if rate > currentMaxBitrate && currentMaxBitrate != 0 {
-                rate = currentMaxBitrate
-            }
-        }
-
-        return rate
+        BitratePolicy.estimatedKiloBitrate(songKiloBitrate: kiloBitrate,
+                                           isTranscoded: transcodedSuffix != nil,
+                                           currentMaxBitrate: ModelServices.settings?.currentMaxBitrate ?? 0)
     }
     
     init(serverId: Int, id: String, title: String, coverArtId: String?, parentFolderId: String?, tagArtistName: String?, tagAlbumName: String?, playCount: Int?, year: Int?, tagArtistId: String?, tagAlbumId: String?, genre: String?, path: String, suffix: String, transcodedSuffix: String?, duration: Int, kiloBitrate: Int, track: Int?, discNumber: Int?, size: Int, isVideo: Bool, createdDate: Date, starredDate: Date?) {
@@ -189,39 +167,6 @@ final class Song: Codable, Hashable, CustomStringConvertible {
     
     var isFullyCached: Bool {
         return store.isDownloadFinished(song: self)
-    }
-
-    var downloadProgress: Float {
-        var downloadProgress: Float = 0
-        
-        if isFullyCached {
-            downloadProgress = 1
-        } else {
-            var bitrate = estimatedKiloBitrate
-            if player.isPlaying, let currentStream = player.currentStream {
-                bitrate = Bass.estimateKiloBitrate(bassStream: currentStream)
-            }
-            
-            if transcodedSuffix != nil {
-                // This is a transcode, so we'll want to use the actual bitrate if possible
-                if let currentSong = playQueue.currentSong, currentSong == self {
-                    // This is the current playing song, so see if BASS has an actual bitrate for it
-                    if player.kiloBitrate > 0 {
-                        // Bass has a non-zero bitrate, so use that for the calculation
-                        bitrate = player.kiloBitrate
-                    }
-                }
-            }
-            let totalSize = bytesForSeconds(seconds: Double(duration), kiloBitrate: bitrate)
-            downloadProgress = Float(localFileSize) / Float(totalSize)
-        }
-        
-        // Keep within bounds
-        downloadProgress = downloadProgress < 0 ? 0 : downloadProgress
-        downloadProgress = downloadProgress > 1 ? 1 : downloadProgress
-        
-        // The song hasn't started downloading yet
-        return downloadProgress;
     }
 }
 

@@ -89,16 +89,9 @@ final class SavedSettings {
     var maxBitrate3G: Int
     
     var currentMaxBitrate: Int {
-        switch (networkStatus?.isWifi ?? true) ? maxBitrateWifi : maxBitrate3G {
-            case 0: return 64
-            case 1: return 96
-            case 2: return 128
-            case 3: return 160
-            case 4: return 192
-            case 5: return 256
-            case 6: return 320
-            default: return 0
-        }
+        BitratePolicy.maxKiloBitrate(isWifi: networkStatus?.isWifi ?? true,
+                                     wifiSetting: maxBitrateWifi,
+                                     cellSetting: maxBitrate3G)
     }
     
     @UserDefault(key: .maxVideoBitrateWifi, defaultValue: 5)
@@ -108,27 +101,9 @@ final class SavedSettings {
     var maxVideoBitrate3G: Int
     
     var currentVideoBitrates: [String]? {
-        if networkStatus?.isWifi ?? true {
-            switch maxVideoBitrateWifi {
-            case 0: return ["512"]
-            case 1: return ["1024", "512"]
-            case 2: return ["1536", "1024", "512"]
-            case 3: return ["2048", "1536", "1024", "512"]
-            case 4: return ["4096", "2048", "1536", "1024", "512"]
-            case 5: return ["8192@1920x1080", "4096", "2048", "1536", "1024", "512"]
-            default: return nil
-            }
-        } else {
-            switch (maxVideoBitrate3G) {
-            case 0: return ["192"]
-            case 1: return ["512", "192"]
-            case 2: return ["1024", "512", "192"]
-            case 3: return ["1536", "1024", "512", "192"]
-            case 4: return ["2048", "1536", "1024", "512", "192"]
-            case 5: return ["4096", "2048", "1536", "1024", "512", "192"]
-            default: return nil
-            }
-        }
+        BitratePolicy.videoBitrates(isWifi: networkStatus?.isWifi ?? true,
+                                    wifiSetting: maxVideoBitrateWifi,
+                                    cellSetting: maxVideoBitrate3G)
     }
     
     @UserDefault(key: .enableSongCachingSetting, defaultValue: true)

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Resolver
 
 struct LocalPlaylist: Codable, Equatable {
     struct Default {
@@ -38,7 +37,7 @@ struct LocalPlaylist: Codable, Equatable {
 }
 
 extension LocalPlaylist: TableCellModel {
-    private var store: Store { Resolver.resolve() }
+    private var store: Store { ModelServices.store }
     
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? { songCount == 1 ? "1 song" : "\(songCount) songs" }
@@ -76,10 +75,8 @@ extension LocalPlaylist: TableCellModel {
     // In jukebox mode the songs were added to the local jukebox queue; sync the
     // remote playlist to match (same handling as PlayQueue/AsyncSongsHelper)
     private func syncJukebox() {
-        let settings: SavedSettings = Resolver.resolve()
-        if settings.isJukeboxEnabled {
-            let jukebox: Jukebox = Resolver.resolve()
-            jukebox.replacePlaylistWithLocal()
+        if let settings = ModelServices.settings, settings.isJukeboxEnabled {
+            ModelServices.jukebox?.replacePlaylistWithLocal()
         }
     }
 }

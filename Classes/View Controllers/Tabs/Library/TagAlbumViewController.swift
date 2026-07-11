@@ -14,7 +14,7 @@ final class TagAlbumViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
     
-    var serverId: Int { (Resolver.resolve() as SavedSettings).currentServerId }
+    var serverId: Int { settings.currentServerId }
     
     private let tagAlbum: TagAlbum
     private var loaderTask: Task<Void, Never>?

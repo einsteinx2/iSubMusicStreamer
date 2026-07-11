@@ -45,6 +45,11 @@ final class JukeboxTests: StoreTestCase {
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
         jukebox.attach(playQueue: freshPlayQueue)
+
+        // LocalPlaylist.syncJukebox reads these ambiently (restored by
+        // TestContainer.deactivate in tearDown)
+        ModelServices.settings = settings
+        ModelServices.jukebox = jukebox
     }
 
     override func tearDownWithError() throws {

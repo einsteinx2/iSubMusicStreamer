@@ -563,6 +563,13 @@ final class LockScreenAudioControlsTests: StoreTestCase {
         let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
+
+        // The lock screen handlers read their services from stored statics now, so
+        // point them at this test's instances (production wires this in AppDelegate)
+        LockScreenAudioControls.attach(settings: freshSettings,
+                                       jukebox: Jukebox(settings: freshSettings, store: store),
+                                       player: fakePlayer,
+                                       playQueue: freshPlayQueue)
     }
 
     override func tearDownWithError() throws {
@@ -621,7 +628,7 @@ final class LockScreenAudioControlsTests: StoreTestCase {
 
         let jukebox = Jukebox(settings: settings, store: store)
         jukebox.attach(playQueue: playQueue)
-        TestContainer.register { jukebox }
+        LockScreenAudioControls.attach(settings: settings, jukebox: jukebox, player: player, playQueue: playQueue)
         defer { jukebox.getInfo(delay: 999_999) }
 
         XCTAssertEqual(LockScreenAudioControls.handleChangePlaybackPosition(seconds: 42), .success,

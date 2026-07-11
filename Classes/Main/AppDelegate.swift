@@ -19,6 +19,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var analytics: Analytics
     @Injected private var stateRestorer: StateRestorer
+    @Injected private var jukebox: Jukebox
     
     static var shared: AppDelegate { UIApplication.shared.delegate as! AppDelegate }
     
@@ -55,7 +56,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
         
         // Initialize the lock screen controls
-        LockScreenAudioControls.setup()
+        LockScreenAudioControls.setup(settings: settings, jukebox: jukebox, player: player, playQueue: playQueue)
         
         // Enable console logging for Xcode builds
         #if DEBUG

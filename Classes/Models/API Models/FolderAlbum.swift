@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Resolver
 
 struct FolderAlbum: Codable, Equatable {
     let serverId: Int
@@ -48,7 +47,7 @@ struct FolderAlbum: Codable, Equatable {
 }
 
 extension FolderAlbum: TableCellModel {
-    private var store: Store { Resolver.resolve() }
+    private var store: Store { ModelServices.store }
     
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? { nil }

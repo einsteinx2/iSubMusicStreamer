@@ -17,7 +17,7 @@ final class DownloadedSongsViewController: AbstractDownloadsViewController {
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var downloadQueue: DownloadQueueing
     
-    var serverId: Int { (Resolver.resolve() as SavedSettings).currentServerId }
+    var serverId: Int { settings.currentServerId }
     
     private var downloadedSongs = [DownloadedSong]()
     override var itemCount: Int { downloadedSongs.count }

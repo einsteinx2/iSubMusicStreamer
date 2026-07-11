@@ -15,7 +15,7 @@ final class NowPlayingViewController: CustomUITableViewController {
     @Injected private var settings: SavedSettings
     @Injected private var analytics: Analytics
     
-    var serverId: Int { (Resolver.resolve() as SavedSettings).currentServerId }
+    var serverId: Int { settings.currentServerId }
         
     private var loadingTask: Task<Void, Never>?
     private var nowPlayingSongs = [NowPlayingSong]()

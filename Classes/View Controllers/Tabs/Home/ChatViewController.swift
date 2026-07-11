@@ -15,7 +15,7 @@ final class ChatViewController: UIViewController {
     @Injected private var settings: SavedSettings
     @Injected private var analytics: Analytics
     
-    var serverId: Int { (Resolver.resolve() as SavedSettings).currentServerId }
+    var serverId: Int { settings.currentServerId }
     
     private var loaderTask: Task<Void, Never>?
     

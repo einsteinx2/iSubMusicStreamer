@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Resolver
 
 struct TagAlbum: Codable, Equatable {
     let serverId: Int
@@ -46,7 +45,7 @@ struct TagAlbum: Codable, Equatable {
 }
 
 extension TagAlbum: TableCellModel {
-    private var store: Store { Resolver.resolve() }
+    private var store: Store { ModelServices.store }
     
     var primaryLabelText: String? { name }
     var secondaryLabelText: String? {

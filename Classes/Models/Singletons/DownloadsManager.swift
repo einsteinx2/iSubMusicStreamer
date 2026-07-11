@@ -28,10 +28,54 @@ class DownloadsManager {
     var totalSpace: Int { FileSystem.downloadsDirectory.systemTotalSpace ?? 0 }
     var freeSpace: Int { FileSystem.downloadsDirectory.systemAvailableSpace ?? 0 }
 
+    // Only read by downloadProgress(song:), which needs the live playback bitrate;
+    // attached weakly at the composition root
+    private weak var player: PlayerControlling?
+    private weak var playQueue: PlayQueue?
+
     init(settings: SavedSettings, store: Store) {
         self.settings = settings
         self.store = store
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(backupCacheSettingChanged), name: Notifications.backupCacheSettingChanged)
+    }
+
+    func attach(player: PlayerControlling, playQueue: PlayQueue) {
+        self.player = player
+        self.playQueue = playQueue
+    }
+
+    // Moved from Song so a value model can't reach into the audio engine
+    func downloadProgress(song: Song) -> Float {
+        var downloadProgress: Float = 0
+
+        if song.isFullyCached {
+            downloadProgress = 1
+        } else {
+            var bitrate = song.estimatedKiloBitrate
+            if let player, player.isPlaying, let currentStream = player.currentStream {
+                bitrate = Bass.estimateKiloBitrate(bassStream: currentStream)
+            }
+
+            if song.transcodedSuffix != nil {
+                // This is a transcode, so we'll want to use the actual bitrate if possible
+                if let player, let currentSong = playQueue?.currentSong, currentSong == song {
+                    // This is the current playing song, so see if BASS has an actual bitrate for it
+                    if player.kiloBitrate > 0 {
+                        // Bass has a non-zero bitrate, so use that for the calculation
+                        bitrate = player.kiloBitrate
+                    }
+                }
+            }
+            let totalSize = bytesForSeconds(seconds: Double(song.duration), kiloBitrate: bitrate)
+            downloadProgress = Float(song.localFileSize) / Float(totalSize)
+        }
+
+        // Keep within bounds
+        downloadProgress = downloadProgress < 0 ? 0 : downloadProgress
+        downloadProgress = downloadProgress > 1 ? 1 : downloadProgress
+
+        // The song hasn't started downloading yet
+        return downloadProgress
     }
 
     @objc private func backupCacheSettingChanged() {

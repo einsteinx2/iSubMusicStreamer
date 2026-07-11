@@ -283,6 +283,8 @@
 		5381884E25A67A4300C59CDE /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = 5381884D25A67A4300C59CDE /* Resolver */; };
 		5381885325A67A8F00C59CDE /* DependencyInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5381885225A67A8F00C59CDE /* DependencyInjection.swift */; };
 		5381885425A67A8F00C59CDE /* DependencyInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5381885225A67A8F00C59CDE /* DependencyInjection.swift */; };
+		5A7E57042F1000010000AB04 /* BitratePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57062F1000010000AB06 /* BitratePolicy.swift */; };
+		5A7E57052F1000010000AB05 /* BitratePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57062F1000010000AB06 /* BitratePolicy.swift */; };
 		5381F8061E96FBFB00AAA9BD /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5381F8051E96FBFB00AAA9BD /* Photos.framework */; };
 		5389477D25A4E6F60078FBAF /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5389477925A4E6F60078FBAF /* FileSystem.swift */; };
 		5389477E25A4E6F60078FBAF /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5389477925A4E6F60078FBAF /* FileSystem.swift */; };
@@ -807,6 +809,7 @@
 		537DE2D8113F008C00875852 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		5381884125A65F6100C59CDE /* RootListMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootListMetadata.swift; sourceTree = "<group>"; };
 		5381885225A67A8F00C59CDE /* DependencyInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyInjection.swift; sourceTree = "<group>"; };
+		5A7E57062F1000010000AB06 /* BitratePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitratePolicy.swift; sourceTree = "<group>"; };
 		5381885B25A68F0300C59CDE /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		5381F8051E96FBFB00AAA9BD /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		5389477925A4E6F60078FBAF /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
@@ -1437,6 +1440,7 @@
 			isa = PBXGroup;
 			children = (
 				5381885225A67A8F00C59CDE /* DependencyInjection.swift */,
+				5A7E57062F1000010000AB06 /* BitratePolicy.swift */,
 				5389477925A4E6F60078FBAF /* FileSystem.swift */,
 				539E48B125B666C70041013B /* DispatchQueue.swift */,
 				53ED674225B88C390002BFAF /* Notifications.swift */,
@@ -2221,6 +2225,7 @@
 				539D330025AA2F4E00F53797 /* DownloadsStore.swift in Sources */,
 				53A0EDDD25B5F8E000B78DAA /* ChatTableViewCell.swift in Sources */,
 				5381885325A67A8F00C59CDE /* DependencyInjection.swift in Sources */,
+				5A7E57042F1000010000AB04 /* BitratePolicy.swift in Sources */,
 				5329492A2DE8BF670088B5CE /* AsyncSubfolderLoader.swift in Sources */,
 				531EC87425B2305E0076973A /* DownloadedTagAlbumsViewController.swift in Sources */,
 				5357FE3125C760B7001BDE29 /* BassVisualizer.swift in Sources */,
@@ -2478,6 +2483,7 @@
 				53FE6791256DD0F00015FC83 /* GCDWebServerRequest.m in Sources */,
 				5357FE3225C760B7001BDE29 /* BassVisualizer.swift in Sources */,
 				5381885425A67A8F00C59CDE /* DependencyInjection.swift in Sources */,
+				5A7E57052F1000010000AB05 /* BitratePolicy.swift in Sources */,
 				539E48B325B666C70041013B /* DispatchQueue.swift in Sources */,
 				53530B342DE66522007EFA3A /* AsyncRootFoldersLoader.swift in Sources */,
 				531EC87525B2305E0076973A /* DownloadedTagAlbumsViewController.swift in Sources */,
