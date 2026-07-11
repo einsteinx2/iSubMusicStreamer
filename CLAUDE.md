@@ -63,6 +63,23 @@ Notes:
 
 - When piping xcodebuild through grep/tail, check `${pipestatus[1]}` (zsh) for
   the real exit code.
+- If tests fail with "Failed to install or launch the test runner …
+  Launchd job spawn failed" while the build succeeds, get the real error from
+  the simulator log:
+
+  ```sh
+  xcrun simctl spawn "$UDID" log show --last 10m \
+    --predicate 'eventMessage CONTAINS "spawn"' --style compact
+  ```
+
+  `error=163: Security policy issue` means the built app bundle is unsigned —
+  confirm with `codesign --verify --deep ".../iSub Beta.app"`. This is stale
+  incremental-build state (seen after rewriting project.pbxproj with the ruby
+  `xcodeproj` gem, which re-serializes object UUIDs): the build reports success
+  but skips the codesign step. Delete this checkout's DerivedData directory
+  (each checkout has its own `DerivedData/iSub-<hash>`; match it via
+  `info.plist` → `WorkspacePath`) and rebuild. Rebooting or erasing the
+  simulator does NOT help, and it is not the shared-simulator collision above.
 - Before diagnosing any "signal kill" test failure, check
   `ps aux | grep xcodebuild` for a concurrent run from another checkout, and
   look in `~/Library/Logs/DiagnosticReports/` for real .ips crash reports — a
