@@ -169,6 +169,8 @@
 		5357FE1E25C32C6E001BDE29 /* BassPluginLoad.c in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE1D25C32C6E001BDE29 /* BassPluginLoad.c */; };
 		5357FE1F25C32C6E001BDE29 /* BassPluginLoad.c in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE1D25C32C6E001BDE29 /* BassPluginLoad.c */; };
 		5357FE2125C335B5001BDE29 /* BassCallbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE2025C335B5001BDE29 /* BassCallbacks.swift */; };
+		5A7E57182F1000010000AB18 /* PlayerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E571A2F1000010000AB1A /* PlayerDelegate.swift */; };
+		5A7E57192F1000010000AB19 /* PlayerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E571A2F1000010000AB1A /* PlayerDelegate.swift */; };
 		5357FE2225C335B5001BDE29 /* BassCallbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE2025C335B5001BDE29 /* BassCallbacks.swift */; };
 		5357FE2525C39F96001BDE29 /* BassPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE2425C39F96001BDE29 /* BassPlayer.swift */; };
 		5357FE2625C39F96001BDE29 /* BassPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE2425C39F96001BDE29 /* BassPlayer.swift */; };
@@ -766,6 +768,7 @@
 		5357FE1C25C32C6E001BDE29 /* BassPluginLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BassPluginLoad.h; sourceTree = "<group>"; };
 		5357FE1D25C32C6E001BDE29 /* BassPluginLoad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BassPluginLoad.c; sourceTree = "<group>"; };
 		5357FE2025C335B5001BDE29 /* BassCallbacks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BassCallbacks.swift; sourceTree = "<group>"; };
+		5A7E571A2F1000010000AB1A /* PlayerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDelegate.swift; sourceTree = "<group>"; };
 		5357FE2425C39F96001BDE29 /* BassPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassPlayer.swift; sourceTree = "<group>"; };
 		5357FE2725C39FDB001BDE29 /* BassStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BassStream.swift; sourceTree = "<group>"; };
 		5357FE3025C760B7001BDE29 /* BassVisualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassVisualizer.swift; sourceTree = "<group>"; };
@@ -1481,6 +1484,7 @@
 				5357FE1925C320EF001BDE29 /* Bass.swift */,
 				5357FE2425C39F96001BDE29 /* BassPlayer.swift */,
 				5357FE2025C335B5001BDE29 /* BassCallbacks.swift */,
+				5A7E571A2F1000010000AB1A /* PlayerDelegate.swift */,
 				5357FE2725C39FDB001BDE29 /* BassStream.swift */,
 				5357FE3025C760B7001BDE29 /* BassVisualizer.swift */,
 				5376D5B42B8AB430000C3184 /* BassEffectDAO.swift */,
@@ -2125,6 +2129,7 @@
 				53FE67A4256DD0F00015FC83 /* GCDWebServerDataRequest.m in Sources */,
 				532C624625B6186800185998 /* URL+QueryParameters.swift in Sources */,
 				5357FE2125C335B5001BDE29 /* BassCallbacks.swift in Sources */,
+				5A7E57182F1000010000AB18 /* PlayerDelegate.swift in Sources */,
 				5389478425A4E72E0078FBAF /* Store.swift in Sources */,
 				5357FE2825C39FDB001BDE29 /* BassStream.swift in Sources */,
 				539D32E525A9400400F53797 /* Synchronized.swift in Sources */,
@@ -2378,6 +2383,7 @@
 				53A0EDCF25B5E2DE00B78DAA /* TagAlbumViewController.swift in Sources */,
 				5389478525A4E72E0078FBAF /* Store.swift in Sources */,
 				5357FE2225C335B5001BDE29 /* BassCallbacks.swift in Sources */,
+				5A7E57192F1000010000AB19 /* PlayerDelegate.swift in Sources */,
 				539D32E625A9400400F53797 /* Synchronized.swift in Sources */,
 				53329649255F2E770027C51A /* PlayAllAndShuffleHeader.swift in Sources */,
 				5357FE2925C39FDB001BDE29 /* BassStream.swift in Sources */,

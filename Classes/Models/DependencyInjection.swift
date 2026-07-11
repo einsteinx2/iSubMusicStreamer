@@ -67,7 +67,7 @@ final class AppServices {
         streamManager.attach(downloadQueue: downloadQueue)
         streamManager.attach(playQueue: playQueue)
         jukebox.attach(playQueue: playQueue)
-        player.attach(playQueue: playQueue)
+        player.attach(delegate: playbackCoordinator)
         player.attach(streamManager: streamManager)
         player.attach(downloadQueue: downloadQueue)
         downloadsManager.attach(player: player, playQueue: playQueue)

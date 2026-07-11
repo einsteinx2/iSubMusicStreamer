@@ -19,9 +19,9 @@ final class BassPlayer: NSObject {
     private let settings: SavedSettings
 
     // Back-edges (communication cycles) attached weakly at the composition root:
-    // the play queue advances on song end, and the stream manager / download queue
-    // are only consulted by the underrun wait loop
-    private weak var playQueue: PlayQueue?
+    // the delegate (PlaybackCoordinator) advances the queue on song end, and the
+    // stream manager / download queue are only consulted by the underrun wait loop
+    private weak var delegate: PlayerDelegate?
     private weak var streamManager: StreamManaging?
     private weak var downloadQueue: DownloadQueueing?
 
@@ -65,8 +65,8 @@ final class BassPlayer: NSObject {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(handleRouteChange(notification:)), name: AVAudioSession.routeChangeNotification, object: AVAudioSession.sharedInstance())
     }
 
-    func attach(playQueue: PlayQueue) {
-        self.playQueue = playQueue
+    func attach(delegate: PlayerDelegate) {
+        self.delegate = delegate
     }
 
     func attach(streamManager: StreamManaging) {
@@ -173,10 +173,10 @@ final class BassPlayer: NSObject {
         } else {
             if currentStream == nil {
                 // See if we're at the end of the playlist
-                if let _ = playQueue?.currentSong {
-                    playQueue?.startSong(offsetInBytes: startByteOffset, offsetInSeconds: startSecondsOffset)
+                if delegate?.playerCurrentSong != nil {
+                    delegate?.playerRequestsStart(byteOffset: startByteOffset, secondsOffset: startSecondsOffset)
                 } else {
-                    playQueue?.playPrevSong()
+                    delegate?.playerRequestsPlayPrev()
                 }
             } else {
                 BASS_Start()
@@ -187,8 +187,8 @@ final class BassPlayer: NSObject {
     }
 
     func moveToNextSong() {
-        if let _ = playQueue?.nextSong {
-            playQueue?.playNextSong()
+        if delegate?.playerNextSong != nil {
+            delegate?.playerRequestsPlayNext()
         } else {
             cleanup()
         }
@@ -315,14 +315,14 @@ final class BassPlayer: NSObject {
                 _ = store.update(playedDate: Date(), song: song)
                 
                 // Prepare the next song stream if it's available
-                prepareNextStream()
+                delegate?.playerNeedsNextSongPrepared()
             } else if !song.isFullyCached && song.localFileSize < bassStreamMinFilesizeToFail {
                 if settings.isOfflineMode {
                     moveToNextSong()
                 } else if !song.fileExists {
                     DDLogError("[BassPlayer] Stream for song \(song) failed, file is not on disk, so retrying the song");
                     _ = store.deleteDownloadedSong(song: song)
-                    playQueue?.playCurrentSong()
+                    delegate?.playerRequestsPlayCurrent()
                 } else {
                     // Failed to create the stream, retrying
                     DDLogError("[BassPlayer] ------failed to create stream, retrying in 2 seconds------")
@@ -341,7 +341,7 @@ final class BassPlayer: NSObject {
                 }
             } else {
                 _ = store.deleteDownloadedSong(song: song)
-                playQueue?.playCurrentSong()
+                delegate?.playerRequestsPlayCurrent()
             }
         }
     }
@@ -424,24 +424,26 @@ final class BassPlayer: NSObject {
         return bassStream
     }
     
-    func prepareNextStream() {
+    // The delegate answers playerNeedsNextSongPrepared by pushing the next queue
+    // song here; the count guard keeps a stray double-preparation harmless
+    func prepareNext(song: Song) {
         synchronized(streamQueueSync) {
-            guard streamQueue.count == 1, let nextSong = playQueue?.nextSong, nextSong.fileExists else { return }
-            _ = prepareStream(song: nextSong)
+            guard streamQueue.count == 1, song.fileExists else { return }
+            _ = prepareStream(song: song)
         }
     }
 
     func streamReadyToStartPlayback(handler: StreamHandler) {
-        guard let playQueue else { return }
-        if !isPlaying || handler.isTempCache, let currentSong = playQueue.currentSong, currentSong == handler.song {
+        guard let delegate else { return }
+        if !isPlaying || handler.isTempCache, let currentSong = delegate.playerCurrentSong, currentSong == handler.song {
             // We were waiting for the current song to download before playing and now it's ready, so start playback
-            startNewSong(handler.song, index: playQueue.currentIndex, offsetInBytes: handler.byteOffset, offsetInSeconds: handler.secondsOffset)
-        } else if isPlaying, let nextSong = playQueue.nextSong, nextSong == handler.song {
+            startNewSong(handler.song, index: delegate.playerCurrentIndex, offsetInBytes: handler.byteOffset, offsetInSeconds: handler.secondsOffset)
+        } else if isPlaying, let nextSong = delegate.playerNextSong, nextSong == handler.song {
             // The next song is ready to start playback so create the stream
             if streamQueue.count > 1 {
                 streamQueue.remove(at: 1)
             }
-            prepareNextStream()
+            delegate.playerNeedsNextSongPrepared()
         }
     }
     
@@ -519,8 +521,9 @@ final class BassPlayer: NSObject {
             BASS_SetDevice(Bass.outputDeviceNumber)
             
             autoreleasepool {
-                // Increment current playlist index
-                playQueue?.incrementIndex()
+                // Advance the play queue index. SYNCHRONOUS on this stream GCD
+                // queue: it must land before the songPlaybackEnded post below.
+                delegate?.playerDidFinishSong()
 
                 // Remove the stream from the queue
                 BASS_StreamFree(bassStream.hstream)
@@ -549,8 +552,10 @@ final class BassPlayer: NSObject {
                     _ = store.update(playedDate: Date(), song: bassStream.song)
                 }
                 
-                // If the next song stream was somehow not prepared, prepare it
-                prepareNextStream()
+                // If the next song stream was somehow not prepared, prepare it.
+                // Must stay AFTER the ended stream is freed above so prepareNext's
+                // count == 1 guard passes.
+                delegate?.playerNeedsNextSongPrepared()
             }
         }
     }
@@ -671,6 +676,7 @@ protocol PlayerControlling: AnyObject {
     var startByteOffset: Int { get set }
     var startSecondsOffset: Double { get set }
     func startNewSong(_ song: Song, index: Int, offsetInBytes: Int, offsetInSeconds: Double)
+    func prepareNext(song: Song)
     func pause()
     func playPause()
     func stop()

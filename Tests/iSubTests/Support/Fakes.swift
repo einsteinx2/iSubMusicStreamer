@@ -90,6 +90,9 @@ final class FakePlayer: PlayerControlling {
     }
 
     func streamReadyToStartPlayback(handler: StreamHandler) {}
+
+    private(set) var preparedNextSongs = [Song]()
+    func prepareNext(song: Song) { preparedNextSongs.append(song) }
 }
 
 final class FakeStreamManager: StreamManaging {

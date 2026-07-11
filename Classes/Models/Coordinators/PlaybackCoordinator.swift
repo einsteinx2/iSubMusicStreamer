@@ -107,3 +107,40 @@ final class PlaybackCoordinator: NSObject {
         }
     }
 }
+
+// The player's back-channel (Phase 8.5), attached weakly at the composition root.
+// playerDidFinishSong and playerNeedsNextSongPrepared run SYNCHRONOUSLY on the
+// player's stream GCD queue (gapless-critical — see PlayerDelegate.swift): they must
+// not block, hop threads, or take new locks. The queue reads here are the same GRDB
+// reads PlayQueue performed from that queue when the player held it directly.
+extension PlaybackCoordinator: PlayerDelegate {
+    var playerCurrentSong: Song? { queue.currentSong }
+    var playerCurrentIndex: Int { queue.currentIndex }
+    var playerNextSong: Song? { queue.nextSong }
+
+    func playerDidFinishSong() {
+        queue.incrementIndex()
+    }
+
+    func playerNeedsNextSongPrepared() {
+        if let next = queue.nextSong {
+            player.prepareNext(song: next)
+        }
+    }
+
+    func playerRequestsStart(byteOffset: Int, secondsOffset: Double) {
+        startSong(byteOffset: byteOffset, secondsOffset: secondsOffset)
+    }
+
+    func playerRequestsPlayCurrent() {
+        playCurrent()
+    }
+
+    func playerRequestsPlayNext() {
+        playNext()
+    }
+
+    func playerRequestsPlayPrev() {
+        playPrevious()
+    }
+}

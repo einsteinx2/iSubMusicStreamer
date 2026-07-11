@@ -47,10 +47,13 @@ final class BassAudioEngineTests: StoreTestCase {
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
 
-        // Back-edges, exactly as the composition root wires them
+        // Back-edges, exactly as the composition root wires them: the player's
+        // delegate is a real coordinator over this test's play queue
+        let freshCoordinator = makeTestPlaybackCoordinator(queue: freshPlayQueue)
+        TestContainer.register { freshCoordinator }
         freshStreamManager.attach(downloadQueue: fakeDownloadQueue)
         freshStreamManager.attach(playQueue: freshPlayQueue)
-        freshPlayer.attach(playQueue: freshPlayQueue)
+        freshPlayer.attach(delegate: freshCoordinator)
         freshPlayer.attach(streamManager: freshStreamManager)
         freshPlayer.attach(downloadQueue: fakeDownloadQueue)
 
