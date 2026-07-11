@@ -20,6 +20,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @Injected private var analytics: Analytics
     @Injected private var stateRestorer: StateRestorer
     @Injected private var nowPlayingService: NowPlayingService
+    @Injected private var playbackCoordinator: PlaybackCoordinator
 
     // Temporary singleton access until multiple scenes are properly supported
     static var shared: SceneDelegate { UIApplication.shared.connectedScenes.first!.delegate as! SceneDelegate }
@@ -87,7 +88,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // Recover current state if player was interrupted
         streamManager.setup()
-        playQueue.resumeSong()
+        playbackCoordinator.resumeSong()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

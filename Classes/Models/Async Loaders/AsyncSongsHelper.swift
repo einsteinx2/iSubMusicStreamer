@@ -25,11 +25,7 @@ struct SongMetadataDownloader: SongMetadataDownloading {
 
 struct AsyncSongsHelper {
     @Injected private static var store: Store
-    @Injected private static var settings: SavedSettings
-    @Injected private static var jukebox: Jukebox
-    @Injected private static var player: PlayerControlling
-    @Injected private static var playQueue: PlayQueue
-    @Injected private static var streamManager: StreamManaging
+    @Injected private static var playbackCoordinator: PlaybackCoordinator
     
     // MARK: Public Helper Functions
     
@@ -124,42 +120,25 @@ struct AsyncSongsHelper {
     // MARK: Internal
     
     private static func preparePlayAll() {
-        if settings.isJukeboxEnabled {
-            jukebox.clearPlaylist()
-        } else {
-            _ = store.clearPlayQueue()
-        }
-        playQueue.isShuffle = false
+        playbackCoordinator.prepareForPlayAll()
     }
-    
+
     private static func finishQueue() {
-        if settings.isJukeboxEnabled {
-            jukebox.replacePlaylistWithLocal()
-        } else {
-            streamManager.fillStreamQueue(startDownload: player.isStarted)
-        }
+        playbackCoordinator.queueDidChange()
         NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
     }
-    
+
     private static func finishPlay() {
-        if settings.isJukeboxEnabled {
-            jukebox.replacePlaylistWithLocal()
-        } else {
-            streamManager.fillStreamQueue(startDownload: player.isStarted)
-        }
-        playQueue.playSong(position: 0)
+        playbackCoordinator.queueDidChange()
+        playbackCoordinator.play(position: 0)
         NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
         NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
     }
-    
+
     private static func finishShuffle() {
-        playQueue.shuffleToggle()
-        if settings.isJukeboxEnabled {
-            jukebox.replacePlaylistWithLocal()
-        } else {
-            streamManager.fillStreamQueue(startDownload: player.isStarted)
-        }
-        playQueue.playSong(position: 0)
+        playbackCoordinator.shuffleToggle()
+        playbackCoordinator.queueDidChange()
+        playbackCoordinator.play(position: 0)
         NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
         NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
     }

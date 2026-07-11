@@ -29,6 +29,7 @@ final class PlayerViewController: UIViewController {
     @Injected private var streamManager: StreamManaging
     @Injected private var analytics: Analytics
     @Injected private var downloadsManager: DownloadsManager
+    @Injected private var playbackCoordinator: PlaybackCoordinator
     
     override var prefersStatusBarHidden: Bool { true }
     
@@ -304,7 +305,7 @@ final class PlayerViewController: UIViewController {
                     player.playPause()
                 } else {
                     // If we haven't started the song yet, start the player
-                    playQueue.playCurrentSong()
+                    playbackCoordinator.playCurrent()
                 }
             }
         }
@@ -314,17 +315,17 @@ final class PlayerViewController: UIViewController {
         previousButton.addClosure(for: .touchUpInside) { [unowned self] in
             if player.progress > 10.0 {
                 // If we're more than 10 seconds into the song, restart it
-                playQueue.playCurrentSong()
+                playbackCoordinator.playCurrent()
             } else {
                 // Otherwise, go to the previous song
-                playQueue.playPrevSong()
+                playbackCoordinator.playPrevious()
             }
         }
         
         nextButton.setImage(UIImage(systemName: "forward.end.fill", withConfiguration: ultralightConfig), for: .normal)
         nextButton.tintColor = Colors.playerButton
         nextButton.addClosure(for: .touchUpInside) { [unowned self] in
-            playQueue.playNextSong()
+            playbackCoordinator.playNext()
         }
 
         quickSkipBackButton.setBackgroundImage(UIImage(systemName: "gobackward", withConfiguration: lightConfig), for: .normal)
@@ -345,7 +346,7 @@ final class PlayerViewController: UIViewController {
         quickSkipForwardButton.addClosure(for: .touchUpInside) { [unowned self] in
             let value = progressSlider.value + Float(settings.quickSkipNumberOfSeconds)
             if value >= progressSlider.maximumValue {
-                playQueue.playNextSong()
+                playbackCoordinator.playNext()
             } else {
                 progressSlider.value = value
                 seekedAction()
@@ -429,7 +430,7 @@ final class PlayerViewController: UIViewController {
             let message = playQueue.isShuffle ? "Unshuffling" : "Shuffling"
             HUD.show(message: message)
             DispatchQueue.userInitiated.async {
-                self.playQueue.shuffleToggle()
+                self.playbackCoordinator.shuffleToggle()
                 DispatchQueue.main.async {
                     self.updateShuffleButtonIcon()
                     HUD.hide()

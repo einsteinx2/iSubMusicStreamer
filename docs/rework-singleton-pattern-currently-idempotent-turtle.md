@@ -119,7 +119,7 @@ Check off each phase/sub-phase as it lands as a commit on this branch:
   - [x] 8.1 — ServerSession facade
   - [x] 8.2 — ScrobbleService + ScrobbleRules; delete Social
   - [x] 8.3 — NowPlayingService; delete LockScreenAudioControls
-  - [ ] 8.4 — PlaybackCoordinator facade + call-site migration
+  - [x] 8.4 — PlaybackCoordinator facade + call-site migration
   - [ ] 8.5 — PlayerDelegate; BassPlayer drops its PlayQueue back-edge
   - [ ] 8.6 — store.playSong family → coordinator
   - [ ] 8.7 — PlayQueue orchestration bodies move; PlayQueue = queue math + Store

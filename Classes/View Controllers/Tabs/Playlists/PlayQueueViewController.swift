@@ -17,6 +17,7 @@ final class PlayQueueViewController: CustomUITableViewController {
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
     @Injected private var analytics: Analytics
+    @Injected private var playbackCoordinator: PlaybackCoordinator
     
     private let saveEditHeader = SaveEditHeader(saveType: "playlist", countType: "song", pluralizeClearType: false, isLargeCount: false)
     private lazy var savePlaylistFlow = SavePlaylistFlow(viewController: self)
@@ -198,7 +199,7 @@ extension PlayQueueViewController: SaveEditHeaderDelegate {
                 saveEditHeader.selectedCount = playQueue.count
             } else {
                 // Delete action
-                _ = playQueue.removeSongs(indexes: selectedRows)
+                _ = playbackCoordinator.removeSongs(indexes: selectedRows)
                 saveEditHeader.count = playQueue.count
                 tableView.deleteRows(at: tableView.indexPathsForSelectedRows ?? [], with: .automatic)
                 updateTableCellNumbers()
@@ -251,7 +252,7 @@ extension PlayQueueViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        _ = playQueue.moveSong(fromIndex: sourceIndexPath.row, toIndex: destinationIndexPath.row)
+        _ = playbackCoordinator.moveSong(fromIndex: sourceIndexPath.row, toIndex: destinationIndexPath.row)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -263,10 +264,10 @@ extension PlayQueueViewController: UITableViewConfiguration {
         if isModal {
             dismiss(sender: self)
             DispatchQueue.main.async(after: 0.5) {
-                self.playQueue.playSong(position: indexPath.row)
+                self.playbackCoordinator.play(position: indexPath.row)
             }
         } else {
-            playQueue.playSong(position: indexPath.row)
+            playbackCoordinator.play(position: indexPath.row)
         }
     }
     
@@ -279,7 +280,7 @@ extension PlayQueueViewController: UITableViewConfiguration {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard let model = playQueue.song(index: indexPath.row), !model.isVideo else { return nil }
         return SwipeAction.downloadQueueAndDeleteConfig(model: model) { [unowned self] in
-            _ = playQueue.removeSongs(indexes: [indexPath.row])
+            _ = playbackCoordinator.removeSongs(indexes: [indexPath.row])
             self.saveEditHeader.count = playQueue.count
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
             self.addOrRemoveSaveEditHeader()

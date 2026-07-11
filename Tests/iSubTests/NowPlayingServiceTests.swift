@@ -36,7 +36,8 @@ final class NowPlayingServiceTests: StoreTestCase {
         service = NowPlayingService(settings: freshSettings,
                                     playQueue: freshPlayQueue,
                                     player: fakePlayer,
-                                    jukebox: Jukebox(settings: freshSettings, store: store))
+                                    jukebox: Jukebox(settings: freshSettings, store: store),
+                                    coordinator: makeTestPlaybackCoordinator(queue: freshPlayQueue))
     }
 
     override func tearDownWithError() throws {
@@ -96,7 +97,7 @@ final class NowPlayingServiceTests: StoreTestCase {
 
         let jukebox = Jukebox(settings: settings, store: store)
         jukebox.attach(playQueue: playQueue)
-        service = NowPlayingService(settings: settings, playQueue: playQueue, player: player, jukebox: jukebox)
+        service = NowPlayingService(settings: settings, playQueue: playQueue, player: player, jukebox: jukebox, coordinator: makeTestPlaybackCoordinator(queue: playQueue))
         defer { jukebox.getInfo(delay: 999_999) }
 
         XCTAssertEqual(service.handleChangePlaybackPosition(seconds: 42), .success,

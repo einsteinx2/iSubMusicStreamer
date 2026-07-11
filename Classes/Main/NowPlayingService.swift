@@ -20,17 +20,19 @@ final class NowPlayingService {
     private let playQueue: PlayQueue
     private let player: PlayerControlling
     private let jukebox: Jukebox
+    private let coordinator: PlaybackCoordinator
 
     private var hasSetup = false
     private var refreshTimer: Timer?
 
     // Stores references only; command registration and observers happen in setup()
     // so tests can construct freely without touching MPRemoteCommandCenter
-    init(settings: SavedSettings, playQueue: PlayQueue, player: PlayerControlling, jukebox: Jukebox) {
+    init(settings: SavedSettings, playQueue: PlayQueue, player: PlayerControlling, jukebox: Jukebox, coordinator: PlaybackCoordinator) {
         self.settings = settings
         self.playQueue = playQueue
         self.player = player
         self.jukebox = jukebox
+        self.coordinator = coordinator
     }
 
     // MARK: Now playing info
@@ -99,7 +101,7 @@ final class NowPlayingService {
             player.playPause()
             return .success
         } else {
-            playQueue.startSong()
+            coordinator.startSong()
             return .success
         }
         return .commandFailed
@@ -150,13 +152,13 @@ final class NowPlayingService {
 
     func handleNextTrack() -> MPRemoteCommandHandlerStatus {
         guard playQueue.nextSong != nil else { return .noActionableNowPlayingItem }
-        playQueue.playNextSong()
+        coordinator.playNext()
         return .success
     }
 
     func handlePreviousTrack() -> MPRemoteCommandHandlerStatus {
         guard playQueue.prevSong != nil else { return .noActionableNowPlayingItem }
-        playQueue.playPrevSong()
+        coordinator.playPrevious()
         return .success
     }
 
@@ -185,11 +187,11 @@ final class NowPlayingService {
     func handleChangeShuffleMode(_ shuffleType: MPShuffleType) -> MPRemoteCommandHandlerStatus {
         if shuffleType == .off {
             if playQueue.isShuffle {
-                playQueue.shuffleToggle()
+                coordinator.shuffleToggle()
                 return .success
             }
         } else if !playQueue.isShuffle {
-            playQueue.shuffleToggle()
+            coordinator.shuffleToggle()
             return .success
         }
         return .commandFailed

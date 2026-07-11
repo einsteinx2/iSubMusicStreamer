@@ -39,6 +39,7 @@ final class AppServices {
     let streamManager: StreamManager
     let jukebox: Jukebox
     let playQueue: PlayQueue
+    let playbackCoordinator: PlaybackCoordinator
     let nowPlayingService: NowPlayingService
     let stateRestorer: StateRestorer
 
@@ -57,7 +58,8 @@ final class AppServices {
         streamManager = StreamManager(store: store, settings: settings, player: player, downloadsManager: downloadsManager, networkStatus: networkMonitor, metadataDownloader: SongMetadataDownloader())
         downloadQueue = DownloadQueue(store: store, settings: settings, downloadsManager: downloadsManager, player: player, networkStatus: networkMonitor, streamManager: streamManager, metadataDownloader: SongMetadataDownloader())
         playQueue = PlayQueue(store: store, settings: settings, player: player, jukebox: jukebox, streamManager: streamManager, downloadQueue: downloadQueue)
-        nowPlayingService = NowPlayingService(settings: settings, playQueue: playQueue, player: player, jukebox: jukebox)
+        playbackCoordinator = PlaybackCoordinator(queue: playQueue, settings: settings, store: store, player: player, jukebox: jukebox, streamManager: streamManager, downloadQueue: downloadQueue)
+        nowPlayingService = NowPlayingService(settings: settings, playQueue: playQueue, player: player, jukebox: jukebox, coordinator: playbackCoordinator)
         stateRestorer = StateRestorer(settings: settings, player: player, playQueue: playQueue)
 
         // Back-edges are weak references attached explicitly, never resolved ambiently
@@ -95,6 +97,7 @@ struct DependencyInjection {
         main.register(factory: { services.streamManager })
         main.register(factory: { services.jukebox })
         main.register(factory: { services.playQueue })
+        main.register(factory: { services.playbackCoordinator })
         main.register(factory: { services.nowPlayingService })
         main.register(factory: { services.stateRestorer })
 

@@ -19,6 +19,7 @@ final class PlayQueueTests: StoreTestCase {
     private var player: FakePlayer!
     private var streamManager: FakeStreamManager!
     private var downloadQueue: FakeDownloadQueue!
+    private var coordinator: PlaybackCoordinator!
     private var stateRestorer: StateRestorer!
 
     override func setUpWithError() throws {
@@ -41,12 +42,14 @@ final class PlayQueueTests: StoreTestCase {
         let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
+        coordinator = makeTestPlaybackCoordinator(queue: freshPlayQueue)
 
         stateRestorer = StateRestorer(settings: settings, player: player, playQueue: playQueue)
     }
 
     override func tearDownWithError() throws {
         stateRestorer = nil
+        coordinator = nil
         playQueue = nil
         settings = nil
         player = nil
@@ -211,7 +214,7 @@ final class PlayQueueTests: StoreTestCase {
 
     func testPlaySongStartsSongAtPosition() throws {
         seedQueue(3)
-        let played = playQueue.playSong(position: 1)
+        let played = coordinator.play(position: 1)
         XCTAssertEqual(played?.id, "2")
         XCTAssertEqual(playQueue.currentIndex, 1)
         // Streams for other songs are cleared before starting
@@ -221,7 +224,7 @@ final class PlayQueueTests: StoreTestCase {
 
     func testPlaySongPastEndReturnsNil() {
         seedQueue(3)
-        XCTAssertNil(playQueue.playSong(position: 5))
+        XCTAssertNil(coordinator.play(position: 5))
         XCTAssertEqual(playQueue.currentIndex, 5)
     }
 
@@ -230,7 +233,7 @@ final class PlayQueueTests: StoreTestCase {
         playQueue.currentIndex = 1
         player.progress = 15.0
 
-        let played = playQueue.playPrevSong()
+        let played = coordinator.playPrevious()
 
         XCTAssertEqual(played?.id, "2", "past 10 seconds the current song restarts")
         XCTAssertEqual(playQueue.currentIndex, 1)
@@ -241,7 +244,7 @@ final class PlayQueueTests: StoreTestCase {
         playQueue.currentIndex = 1
         player.progress = 5.0
 
-        let played = playQueue.playPrevSong()
+        let played = coordinator.playPrevious()
 
         XCTAssertEqual(played?.id, "1", "within 10 seconds playback moves to the previous song")
         XCTAssertEqual(playQueue.currentIndex, 0)
@@ -252,7 +255,7 @@ final class PlayQueueTests: StoreTestCase {
         playQueue.repeatMode = .none
         playQueue.currentIndex = 0
 
-        let played = playQueue.playNextSong()
+        let played = coordinator.playNext()
 
         XCTAssertEqual(played?.id, "2")
         XCTAssertEqual(playQueue.currentIndex, 1)
@@ -311,7 +314,7 @@ final class PlayQueueTests: StoreTestCase {
         seedQueue(5)
         playQueue.normalIndex = 2
 
-        playQueue.shuffleToggle()
+        coordinator.shuffleToggle()
 
         XCTAssertTrue(playQueue.isShuffle)
         XCTAssertEqual(playQueue.shuffleIndex, 0)
@@ -328,12 +331,12 @@ final class PlayQueueTests: StoreTestCase {
         playQueue.normalIndex = 1
 
         let enabled = expectation(forNotification: Notifications.currentPlaylistShuffleToggled, object: nil)
-        playQueue.shuffleToggle()
+        coordinator.shuffleToggle()
         wait(for: [enabled], timeout: 5)
         XCTAssertTrue(playQueue.isShuffle)
 
         let disabled = expectation(forNotification: Notifications.currentPlaylistShuffleToggled, object: nil)
-        playQueue.shuffleToggle()
+        coordinator.shuffleToggle()
         wait(for: [disabled], timeout: 5)
         XCTAssertFalse(playQueue.isShuffle)
     }
@@ -362,7 +365,9 @@ final class PlayQueueTests: StoreTestCase {
         seedQueue(3)
         playQueue.normalIndex = 0
 
-        playQueue.shuffleToggle()
+        // The coordinator must wrap this test's local queue and jukebox
+        let coordinator = makeTestPlaybackCoordinator(queue: playQueue)
+        coordinator.shuffleToggle()
         XCTAssertTrue(playQueue.isShuffle)
 
         // The jukebox's remote playlist is replaced (clear) and playback starts at the
@@ -380,10 +385,10 @@ final class PlayQueueTests: StoreTestCase {
     func testShuffleToggleOffRestoresNormalIndexOfCurrentSong() {
         seedQueue(5)
         playQueue.normalIndex = 2
-        playQueue.shuffleToggle()
+        coordinator.shuffleToggle()
         XCTAssertTrue(playQueue.isShuffle)
 
-        playQueue.shuffleToggle()
+        coordinator.shuffleToggle()
 
         XCTAssertFalse(playQueue.isShuffle)
         XCTAssertEqual(playQueue.normalIndex, 2, "the current song's position in the normal queue is restored")
@@ -397,30 +402,30 @@ final class PlayQueueTests: StoreTestCase {
         playQueue.currentIndex = 2
 
         // Moving the current song follows it
-        XCTAssertTrue(playQueue.moveSong(fromIndex: 2, toIndex: 4))
+        XCTAssertTrue(coordinator.moveSong(fromIndex: 2, toIndex: 4))
         XCTAssertEqual(playQueue.currentIndex, 4)
         XCTAssertEqual(playQueue.currentSong?.id, "3")
 
         // Moving a song from before the current one to after decrements the index
-        XCTAssertTrue(playQueue.moveSong(fromIndex: 0, toIndex: 4))
+        XCTAssertTrue(coordinator.moveSong(fromIndex: 0, toIndex: 4))
         XCTAssertEqual(playQueue.currentIndex, 3)
         XCTAssertEqual(playQueue.currentSong?.id, "3")
 
         // Moving a song from after the current one to before increments the index
-        XCTAssertTrue(playQueue.moveSong(fromIndex: 4, toIndex: 0))
+        XCTAssertTrue(coordinator.moveSong(fromIndex: 4, toIndex: 0))
         XCTAssertEqual(playQueue.currentIndex, 4)
         XCTAssertEqual(playQueue.currentSong?.id, "3")
 
         // Moving songs entirely after the current one leaves it alone
         playQueue.currentIndex = 0
-        XCTAssertTrue(playQueue.moveSong(fromIndex: 3, toIndex: 4))
+        XCTAssertTrue(coordinator.moveSong(fromIndex: 3, toIndex: 4))
         XCTAssertEqual(playQueue.currentIndex, 0)
     }
 
     func testMoveSongFailureDoesNotTouchIndex() {
         seedQueue(3)
         playQueue.currentIndex = 1
-        XCTAssertFalse(playQueue.moveSong(fromIndex: 1, toIndex: 9))
+        XCTAssertFalse(coordinator.moveSong(fromIndex: 1, toIndex: 9))
         XCTAssertEqual(playQueue.currentIndex, 1)
     }
 
@@ -430,7 +435,7 @@ final class PlayQueueTests: StoreTestCase {
         seedQueue(5)
         playQueue.currentIndex = 2
 
-        XCTAssertTrue(playQueue.removeSongs(indexes: [1, 2]))
+        XCTAssertTrue(coordinator.removeSongs(indexes: [1, 2]))
 
         XCTAssertEqual(player.stopCount, 1, "deleting the playing song stops the player")
         XCTAssertEqual(playQueue.currentIndex, 0)
@@ -441,7 +446,7 @@ final class PlayQueueTests: StoreTestCase {
         seedQueue(5)
         playQueue.currentIndex = 2
 
-        XCTAssertTrue(playQueue.removeSongs(indexes: [4]))
+        XCTAssertTrue(coordinator.removeSongs(indexes: [4]))
 
         XCTAssertEqual(player.stopCount, 0)
         XCTAssertEqual(playQueue.currentIndex, 2)

@@ -405,6 +405,9 @@ final class PlayQueueEditModeTests: StoreTestCase {
         let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
+        // The VC's @Injected coordinator must wrap this test's queue, not the app's
+        let freshCoordinator = makeTestPlaybackCoordinator(queue: freshPlayQueue)
+        TestContainer.register { freshCoordinator }
 
         for number in 1...5 {
             let song = TestData.song(serverId: 1, id: "\(number)", title: "Song \(number)", path: "a/\(number).mp3")
@@ -444,7 +447,7 @@ final class PlayQueueEditModeTests: StoreTestCase {
     func testMoveRowInShuffleModeReordersShuffleQueue() {
         // Build the shuffle queue, then reorder within it
         playQueue.normalIndex = 0
-        playQueue.shuffleToggle()
+        makeTestPlaybackCoordinator(queue: playQueue).shuffleToggle()
         XCTAssertTrue(playQueue.isShuffle)
         let shuffledBefore = playQueue.songs().map(\.id)
 

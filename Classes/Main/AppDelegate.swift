@@ -20,6 +20,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     @Injected private var analytics: Analytics
     @Injected private var stateRestorer: StateRestorer
     @Injected private var nowPlayingService: NowPlayingService
+    @Injected private var playbackCoordinator: PlaybackCoordinator
     
     static var shared: AppDelegate { UIApplication.shared.delegate as! AppDelegate }
     
@@ -151,16 +152,16 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                 if !player.isPlaying {
                     player.playPause()
                 } else {
-                    playQueue.playCurrentSong()
+                    playbackCoordinator.playCurrent()
                 }
             case "pause":
                 player.pause()
             case "playpause":
                 player.playPause()
             case "next":
-                playQueue.playSong(position: playQueue.nextIndex)
+                playbackCoordinator.play(position: playQueue.nextIndex)
             case "prev":
-                playQueue.playSong(position: playQueue.prevIndex)
+                playbackCoordinator.play(position: playQueue.prevIndex)
             default: break
             }
             

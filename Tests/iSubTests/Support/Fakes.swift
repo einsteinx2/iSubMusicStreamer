@@ -23,6 +23,18 @@ func makeTestPlayQueue() -> PlayQueue {
               downloadQueue: Resolver.resolve())
 }
 
+// Same pattern for the playback facade: builds a PlaybackCoordinator over the given
+// queue (or a fresh one) with whatever is currently registered in the container
+func makeTestPlaybackCoordinator(queue: PlayQueue? = nil) -> PlaybackCoordinator {
+    PlaybackCoordinator(queue: queue ?? makeTestPlayQueue(),
+                        settings: Resolver.resolve(),
+                        store: Resolver.resolve(),
+                        player: Resolver.resolve(),
+                        jukebox: Resolver.resolve(),
+                        streamManager: Resolver.resolve(),
+                        downloadQueue: Resolver.resolve())
+}
+
 // Recording fakes for the protocol seams registered in DependencyInjection.swift.
 // Register them over the app's singletons with TestContainer, e.g.:
 //     let player = FakePlayer()
