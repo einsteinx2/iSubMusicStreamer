@@ -38,6 +38,10 @@ final class AsyncStatusLoaderTests: SandboxedTestCase {
         XCTAssertTrue(status.isVideoSupported)
         XCTAssertTrue(status.isNewSearchSupported)
         XCTAssertTrue(status.isTagSerachSupported)
+        // Airsonic-Advanced identifies itself via the type attribute
+        XCTAssertEqual(status.serverTypeName, "Airsonic-Advanced")
+        XCTAssertFalse(status.isOpenSubsonic)
+        XCTAssertEqual(status.serverType, .airsonic)
     }
 
     func testPingSuccessSubsonicParsesVersionAndCapabilities() async throws {
@@ -53,6 +57,24 @@ final class AsyncStatusLoaderTests: SandboxedTestCase {
         XCTAssertTrue(status.isVideoSupported)
         XCTAssertTrue(status.isNewSearchSupported)
         XCTAssertTrue(status.isTagSerachSupported)
+        // Legacy Subsonic doesn't identify itself: generic fallback
+        XCTAssertNil(status.serverTypeName)
+        XCTAssertNil(status.serverVersion)
+        XCTAssertFalse(status.isOpenSubsonic)
+        XCTAssertEqual(status.serverType, .subsonic)
+    }
+
+    func testPingNavidromeParsesOpenSubsonicAttributes() async throws {
+        // Navidrome self-identifies through the OpenSubsonic extension attributes
+        try MockSubsonicServer.stub(.ping, fixture: "XML/ping_navidrome.xml")
+
+        let status = try await makeLoader().load()
+
+        XCTAssertEqual(status.versionString, "1.16.1")
+        XCTAssertEqual(status.serverTypeName, "navidrome")
+        XCTAssertEqual(status.serverVersion, "0.52.5 (734eb30a)")
+        XCTAssertTrue(status.isOpenSubsonic)
+        XCTAssertEqual(status.serverType, .navidrome)
     }
 
     func testIncompatibleProtocolVersionThrowsServerVersion() async throws {

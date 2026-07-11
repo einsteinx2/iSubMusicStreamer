@@ -11,11 +11,53 @@ import Foundation
 enum ServerType: Int, Codable {
     case none = 0
     case subsonic = 1
+    case navidrome = 2
+    case airsonic = 3
+    case gonic = 4
+    case lms = 5
+    case ampache = 6
+    // A server that self-identifies through the OpenSubsonic type attribute but isn't
+    // one of the known types above
+    case openSubsonic = 99
+
+    var displayName: String {
+        switch self {
+        case .none: return "Unknown"
+        case .subsonic: return "Subsonic"
+        case .navidrome: return "Navidrome"
+        case .airsonic: return "Airsonic"
+        case .gonic: return "gonic"
+        case .lms: return "LMS"
+        case .ampache: return "Ampache"
+        case .openSubsonic: return "OpenSubsonic"
+        }
+    }
 }
 
-final class Server: NSObject, Codable {
+// Maps the ping response's OpenSubsonic attributes to a ServerType. Legacy servers
+// (original Subsonic and original Airsonic) don't identify themselves — their ping
+// responses are indistinguishable — so anything without a type attribute gets the
+// generic .subsonic badge.
+enum ServerTypeDetection {
+    static func serverType(typeAttribute: String?, isOpenSubsonic: Bool) -> ServerType {
+        guard let type = typeAttribute?.lowercased(), !type.isEmpty else { return .subsonic }
+        // e.g. "Airsonic-Advanced" and "AirsonicAdvanced"
+        if type.contains("airsonic") { return .airsonic }
+        switch type {
+        case "navidrome": return .navidrome
+        case "gonic": return .gonic
+        case "lms": return .lms
+        case "ampache": return .ampache
+        case "subsonic": return .subsonic
+        default: return isOpenSubsonic ? .openSubsonic : .subsonic
+        }
+    }
+}
+
+final class Server: NSObject, Codable, Identifiable {
     @objc(serverId) var id: Int
-    let type: ServerType
+    // Updated when a ping response identifies the server type (see ServerTypeDetection)
+    var type: ServerType
     let url: URL
     let username: String
     let password: String

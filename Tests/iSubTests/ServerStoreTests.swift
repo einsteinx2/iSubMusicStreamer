@@ -38,6 +38,18 @@ final class ServerStoreTests: StoreTestCase {
         XCTAssertTrue(fetched.isTagSearchSupported)
     }
 
+    func testDetectedServerTypeRoundTrips() throws {
+        // The new ServerType cases (Navidrome etc.) persist through the existing
+        // Int-encoded type column with no migration
+        let server = Server(id: 1, type: .navidrome, url: URL(string: "http://nd.example.com")!, username: "bbaron", password: "password")
+        XCTAssertTrue(store.add(server: server))
+        XCTAssertEqual(try XCTUnwrap(store.server(id: 1)).type, .navidrome)
+
+        server.type = .openSubsonic
+        XCTAssertTrue(store.add(server: server))
+        XCTAssertEqual(try XCTUnwrap(store.server(id: 1)).type, .openSubsonic)
+    }
+
     func testAddUpdatesExistingServer() throws {
         let server = TestData.server(id: 1)
         XCTAssertTrue(store.add(server: server))

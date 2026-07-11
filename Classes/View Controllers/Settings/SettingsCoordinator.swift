@@ -44,7 +44,7 @@ final class SettingsCoordinator {
     }
 
     func showServers() {
-        // Replaced with the SwiftUI ServersView in the servers phase
+        push(ServersView(), title: "Servers")
     }
 
     func showLicenses() {

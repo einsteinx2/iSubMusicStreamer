@@ -616,58 +616,37 @@ final class BassEffectDAOPresetFlowTests: SandboxedTestCase {
 
 // MARK: - Server edit validation
 
-final class ServerEditValidationTests: SandboxedTestCase {
-    private var controller: ServerEditViewController!
-
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-        controller = ServerEditViewController()
+final class ServerFormValidatorTests: XCTestCase {
+    func testNormalizeURLRejectsEmpty() {
+        XCTAssertNil(ServerFormValidator.normalizeURL(""))
     }
 
-    override func tearDownWithError() throws {
-        controller = nil
-        try super.tearDownWithError()
+    func testNormalizeURLAddsHTTPSchemeWhenMissing() {
+        XCTAssertEqual(ServerFormValidator.normalizeURL("music.example.com"), "http://music.example.com")
     }
 
-    func testCheckURLRejectsEmpty() {
-        controller.urlField.text = ""
-        XCTAssertFalse(controller.checkURL())
-        controller.urlField.text = nil
-        XCTAssertFalse(controller.checkURL())
+    func testNormalizeURLKeepsExistingScheme() {
+        XCTAssertEqual(ServerFormValidator.normalizeURL("https://music.example.com"), "https://music.example.com")
+        XCTAssertEqual(ServerFormValidator.normalizeURL("http://music.example.com:4040/subsonic"), "http://music.example.com:4040/subsonic")
     }
 
-    func testCheckURLAddsHTTPSchemeWhenMissing() {
-        controller.urlField.text = "music.example.com"
-        XCTAssertTrue(controller.checkURL())
-        XCTAssertEqual(controller.urlField.text, "http://music.example.com")
+    func testNormalizeURLStripsTrailingSlash() {
+        XCTAssertEqual(ServerFormValidator.normalizeURL("https://music.example.com/"), "https://music.example.com")
     }
 
-    func testCheckURLKeepsExistingScheme() {
-        controller.urlField.text = "https://music.example.com"
-        XCTAssertTrue(controller.checkURL())
-        XCTAssertEqual(controller.urlField.text, "https://music.example.com")
-
-        controller.urlField.text = "http://music.example.com:4040/subsonic"
-        XCTAssertTrue(controller.checkURL())
-        XCTAssertEqual(controller.urlField.text, "http://music.example.com:4040/subsonic")
+    func testNormalizeURLAppliesBothTransforms() {
+        // The old ServerEditViewController.checkURL applied only one of the two
+        // transforms when a URL needed both the scheme prepended and the trailing
+        // slash stripped
+        XCTAssertEqual(ServerFormValidator.normalizeURL("music.example.com/"), "http://music.example.com")
     }
 
-    func testCheckURLStripsTrailingSlash() {
-        controller.urlField.text = "https://music.example.com/"
-        XCTAssertTrue(controller.checkURL())
-        XCTAssertEqual(controller.urlField.text, "https://music.example.com")
-    }
+    func testUsernameAndPasswordRequireText() {
+        XCTAssertFalse(ServerFormValidator.isValidUsername(""))
+        XCTAssertTrue(ServerFormValidator.isValidUsername("bbaron"))
 
-    func testCheckUsernameAndPasswordRequireText() {
-        controller.usernameField.text = ""
-        XCTAssertFalse(controller.checkUsername())
-        controller.usernameField.text = "bbaron"
-        XCTAssertTrue(controller.checkUsername())
-
-        controller.passwordField.text = nil
-        XCTAssertFalse(controller.checkPassword())
-        controller.passwordField.text = "secret"
-        XCTAssertTrue(controller.checkPassword())
+        XCTAssertFalse(ServerFormValidator.isValidPassword(""))
+        XCTAssertTrue(ServerFormValidator.isValidPassword("secret"))
     }
 }
 

@@ -16,6 +16,15 @@ struct StatusAPIResponseData {
     let majorAPIVersion: Int
     let minorAPIVersion: Int
     let versionString: String?
+    // OpenSubsonic self-identification attributes from the ping response root (all
+    // absent on legacy Subsonic/Airsonic servers)
+    let serverTypeName: String?
+    let serverVersion: String?
+    let isOpenSubsonic: Bool
+
+    var serverType: ServerType {
+        ServerTypeDetection.serverType(typeAttribute: serverTypeName, isOpenSubsonic: isOpenSubsonic)
+    }
 }
 
 final class AsyncStatusLoader: AsyncAPILoader<StatusAPIResponseData> {
@@ -81,9 +90,17 @@ final class AsyncStatusLoader: AsyncAPILoader<StatusAPIResponseData> {
         }
         
         try Task.checkCancellation()
-        
+
         NotificationCenter.postOnMainThread(name: Notifications.serverCheckPassed)
-        return StatusAPIResponseData(isVideoSupported: isVideoSupported, isNewSearchSupported: isNewSearchSupported, isTagSerachSupported: isTagSerachSupported, majorAPIVersion: majorAPIVersion, minorAPIVersion: minorAPIVersion, versionString: version)
+        return StatusAPIResponseData(isVideoSupported: isVideoSupported,
+                                     isNewSearchSupported: isNewSearchSupported,
+                                     isTagSerachSupported: isTagSerachSupported,
+                                     majorAPIVersion: majorAPIVersion,
+                                     minorAPIVersion: minorAPIVersion,
+                                     versionString: version,
+                                     serverTypeName: root.attribute("type"),
+                                     serverVersion: root.attribute("serverVersion"),
+                                     isOpenSubsonic: root.attribute("openSubsonic") == "true")
     }
     
     override func handleFailure() {
