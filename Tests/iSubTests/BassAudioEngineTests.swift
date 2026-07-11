@@ -26,7 +26,7 @@ final class BassAudioEngineTests: StoreTestCase {
         TestContainer.register { freshSettings }
         settings = freshSettings
 
-        let freshPlayer = BassPlayer(store: store, settings: freshSettings, social: FakeSocial())
+        let freshPlayer = BassPlayer(store: store, settings: freshSettings)
         TestContainer.register { freshPlayer }
         TestContainer.register { freshPlayer as PlayerControlling }
         player = freshPlayer

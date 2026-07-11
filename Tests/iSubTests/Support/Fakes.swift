@@ -168,13 +168,3 @@ final class FakeSongMetadataDownloader: SongMetadataDownloading {
     }
 }
 
-// Registered by default in SandboxedTestCase: the real Social spawns a scrobble
-// network Task once playback passes the now-playing threshold, which outlives the
-// test that triggered it (same leak family as the metadata prefetch above)
-final class FakeSocial: SocialScrobbling {
-    private(set) var clearCount = 0
-    private(set) var handleCount = 0
-
-    func playerClearSocial() { clearCount += 1 }
-    func playerHandleSocial(currentSong: Song?, progress: Double) { handleCount += 1 }
-}

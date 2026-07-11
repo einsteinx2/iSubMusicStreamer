@@ -27,6 +27,7 @@
 		3FCD324F5CD04AE120CB9C9D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFEE5B5BB2E3EAB053528E1D /* Foundation.framework */; };
 		48AE165DB428DD91D81C69E7 /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = F48B244700CB5A6E36E74B2F /* Resolver */; };
 		4A43507ACB16A1D092D187AD /* SavedSettingsBehaviorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB9A537E6684624B72605F7 /* SavedSettingsBehaviorTests.swift */; };
+		5A7E570D2F1000010000AB0D /* ScrobbleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E570E2F1000010000AB0E /* ScrobbleServiceTests.swift */; };
 		4D0EB1DB58BC96F52F53E501 /* MockSubsonicHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C4D36A62D67D18EB15667 /* MockSubsonicHTTPServer.swift */; };
 		52A400F8AD3569F63217085B /* Fixtures in Resources */ = {isa = PBXBuildFile; fileRef = 2FBCCCBAB13100C9FC48F5FF /* Fixtures */; };
 		5302DE4125BA2AA00036A9B1 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5302DE4025BA2AA00036A9B1 /* StreamManager.swift */; };
@@ -156,8 +157,8 @@
 		5357CE9425B8D56B00FA825A /* DownloadsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9225B8D56B00FA825A /* DownloadsManager.swift */; };
 		5357CE9925B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */; };
 		5357CE9A25B8F80F00FA825A /* URL+FileSystemAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */; };
-		5357CE9C25B90C5B00FA825A /* Social.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9B25B90C5B00FA825A /* Social.swift */; };
-		5357CE9D25B90C5B00FA825A /* Social.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357CE9B25B90C5B00FA825A /* Social.swift */; };
+		5A7E570A2F1000010000AB0A /* ScrobbleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E570C2F1000010000AB0C /* ScrobbleService.swift */; };
+		5A7E570B2F1000010000AB0B /* ScrobbleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E570C2F1000010000AB0C /* ScrobbleService.swift */; };
 		5357FE1725C320C3001BDE29 /* Bridging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE1625C320C3001BDE29 /* Bridging.swift */; };
 		5357FE1825C320C3001BDE29 /* Bridging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE1625C320C3001BDE29 /* Bridging.swift */; };
 		5357FE1A25C320EF001BDE29 /* Bass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5357FE1925C320EF001BDE29 /* Bass.swift */; };
@@ -755,7 +756,7 @@
 		5354914A11B03FC900928E0F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		5357CE9225B8D56B00FA825A /* DownloadsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsManager.swift; sourceTree = "<group>"; };
 		5357CE9825B8F80F00FA825A /* URL+FileSystemAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+FileSystemAttributes.swift"; sourceTree = "<group>"; };
-		5357CE9B25B90C5B00FA825A /* Social.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Social.swift; sourceTree = "<group>"; };
+		5A7E570C2F1000010000AB0C /* ScrobbleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrobbleService.swift; sourceTree = "<group>"; };
 		5357FE1625C320C3001BDE29 /* Bridging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bridging.swift; sourceTree = "<group>"; };
 		5357FE1925C320EF001BDE29 /* Bass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bass.swift; sourceTree = "<group>"; };
 		5357FE1C25C32C6E001BDE29 /* BassPluginLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BassPluginLoad.h; sourceTree = "<group>"; };
@@ -991,6 +992,7 @@
 		76DF4EDBD3D42BF1682E9544 /* StoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
 		7705A86ABDA388585EDDC4D6 /* OnlinePlaylistsUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnlinePlaylistsUITests.swift; sourceTree = "<group>"; };
 		7BB9A537E6684624B72605F7 /* SavedSettingsBehaviorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SavedSettingsBehaviorTests.swift; sourceTree = "<group>"; };
+		5A7E570E2F1000010000AB0E /* ScrobbleServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScrobbleServiceTests.swift; sourceTree = "<group>"; };
 		7DBF3A165AC59FC04A477080 /* iSubUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iSubUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		83FC51166708C92BB0AA12A3 /* AsyncLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AsyncLoaderTests.swift; sourceTree = "<group>"; };
 		84A64BA72B963BB732F9FF94 /* Fixtures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
@@ -1483,7 +1485,7 @@
 				539D331125AB691B00F53797 /* PlayQueue.swift */,
 				53ED673925B7A4550002BFAF /* Jukebox.swift */,
 				5357CE9225B8D56B00FA825A /* DownloadsManager.swift */,
-				5357CE9B25B90C5B00FA825A /* Social.swift */,
+				5A7E570C2F1000010000AB0C /* ScrobbleService.swift */,
 				536C8DED26338EAA007B81FB /* Analytics.swift */,
 				53BB79712B8D1E6500677B46 /* SavedSettings.swift */,
 				5A7E57032F1000010000AB03 /* StateRestorer.swift */,
@@ -1824,6 +1826,7 @@
 				B17D1E4D2250282AFC6FA22B /* StreamHandlerTests.swift */,
 				5BE66C0606E83260BA683E35 /* StreamManagerTests.swift */,
 				7BB9A537E6684624B72605F7 /* SavedSettingsBehaviorTests.swift */,
+				5A7E570E2F1000010000AB0E /* ScrobbleServiceTests.swift */,
 				53DBB093129F25CDF2334C20 /* GRDBRoundTripTests.swift */,
 				F8337FDA15B0E63C6858971B /* BassAudioEngineTests.swift */,
 				B9AD837C7CFF79AD56059ADC /* SingletonLifecycleTests.swift */,
@@ -2211,7 +2214,7 @@
 				536C8E032634A1F5007B81FB /* CustomUITableViewController.swift in Sources */,
 				53D9743A255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */,
 				539C05572DEFAE12007C3ACE /* AsyncQuickAlbumsLoader.swift in Sources */,
-				5357CE9C25B90C5B00FA825A /* Social.swift in Sources */,
+				5A7E570A2F1000010000AB0A /* ScrobbleService.swift in Sources */,
 				53BDC4DC25D4CEB400126D06 /* DropdownMenu.swift in Sources */,
 				531EC86525B220E10076973A /* Colors.swift in Sources */,
 				539D331225AB691B00F53797 /* PlayQueue.swift in Sources */,
@@ -2468,7 +2471,7 @@
 				532C625325B62F5800185998 /* NetworkMonitor.swift in Sources */,
 				53BDC4DD25D4CEB400126D06 /* DropdownMenu.swift in Sources */,
 				534B20E125619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */,
-				5357CE9D25B90C5B00FA825A /* Social.swift in Sources */,
+				5A7E570B2F1000010000AB0B /* ScrobbleService.swift in Sources */,
 				531EC86625B220E10076973A /* Colors.swift in Sources */,
 				539D331325AB691B00F53797 /* PlayQueue.swift in Sources */,
 				53530B372DE786CA007EFA3A /* AsyncMediaFoldersLoader.swift in Sources */,
@@ -2617,6 +2620,7 @@
 				686768481F889F38E3A1A6A3 /* StreamHandlerTests.swift in Sources */,
 				DF81321454A4A5D2F872F28E /* StreamManagerTests.swift in Sources */,
 				4A43507ACB16A1D092D187AD /* SavedSettingsBehaviorTests.swift in Sources */,
+				5A7E570D2F1000010000AB0D /* ScrobbleServiceTests.swift in Sources */,
 				A7D7FD300FA5D924D56FCE41 /* GRDBRoundTripTests.swift in Sources */,
 				C705DE4953B91C2502AB9A20 /* BassAudioEngineTests.swift in Sources */,
 				5E71971E2CBA50993869DD3C /* SingletonLifecycleTests.swift in Sources */,

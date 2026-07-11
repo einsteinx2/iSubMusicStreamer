@@ -17,7 +17,6 @@ private let bassStreamMinFilesizeToFail = 15 * 1024 * 1024 // 15 MB
 final class BassPlayer: NSObject {
     private let store: Store
     private let settings: SavedSettings
-    private let social: SocialScrobbling
 
     // Back-edges (communication cycles) attached weakly at the composition root:
     // the play queue advances on song end, and the stream manager / download queue
@@ -58,10 +57,9 @@ final class BassPlayer: NSObject {
     var retrySongOperation: Operation?
     var shouldResumeFromInterruption = false
 
-    init(store: Store, settings: SavedSettings, social: SocialScrobbling) {
+    init(store: Store, settings: SavedSettings) {
         self.store = store
         self.settings = settings
-        self.social = social
         super.init()
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(handleInterruption(notification:)), name: AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance())
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(handleRouteChange(notification:)), name: AVAudioSession.routeChangeNotification, object: AVAudioSession.sharedInstance())
@@ -247,9 +245,7 @@ final class BassPlayer: NSObject {
 //        visualizer = BassVisualizer()
         
         isPlaying = false
-        
-        social.playerClearSocial()
-        
+
         do {
             try AVAudioSession.sharedInstance().setActive(false)
         } catch {
@@ -314,8 +310,6 @@ final class BassPlayer: NSObject {
                 // Start playback
                 BASS_ChannelPlay(outStream, 0)
                 isPlaying = true
-                
-                social.playerClearSocial()
 
                 playQueue?.updateLockScreenInfo()
 
@@ -505,10 +499,6 @@ final class BassPlayer: NSObject {
     }
     
     func bassGetOutputData(buffer: UnsafeMutableRawPointer?, length: DWORD) -> DWORD {
-        // Pass the playing song and progress so Social never queries the database
-        // from this audio render thread
-        social.playerHandleSocial(currentSong: currentStream?.song, progress: progress)
-
         guard let currentStream else { return 0 }
         
         let bytesRead = BASS_ChannelGetData(mixerStream, buffer, length)
@@ -535,9 +525,6 @@ final class BassPlayer: NSObject {
             autoreleasepool {
                 // Increment current playlist index
                 playQueue?.incrementIndex()
-
-                // Clear the social post status
-                social.playerClearSocial()
 
                 playQueue?.updateLockScreenInfo()
                 

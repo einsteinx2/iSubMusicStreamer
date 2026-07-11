@@ -117,7 +117,7 @@ Check off each phase/sub-phase as it lands as a commit on this branch:
   `~/.claude/plans/serene-plotting-flamingo.md`; DownloadArbiter replaced by a full
   DownloadEngine merge per user decision)
   - [x] 8.1 — ServerSession facade
-  - [ ] 8.2 — ScrobbleService + ScrobbleRules; delete Social
+  - [x] 8.2 — ScrobbleService + ScrobbleRules; delete Social
   - [ ] 8.3 — NowPlayingService; delete LockScreenAudioControls
   - [ ] 8.4 — PlaybackCoordinator facade + call-site migration
   - [ ] 8.5 — PlayerDelegate; BassPlayer drops its PlayQueue back-edge

@@ -32,7 +32,7 @@ final class AppServices {
     let settings: SavedSettings
     let networkMonitor: NetworkMonitor
     let analytics: Analytics
-    let social: Social
+    let scrobbleService: ScrobbleService
     let downloadsManager: DownloadsManager
     let player: BassPlayer
     let downloadQueue: DownloadQueue
@@ -49,9 +49,9 @@ final class AppServices {
         settings = SavedSettings(session: session)
         networkMonitor = NetworkMonitor(settings: settings)
         analytics = Analytics()
-        social = Social(settings: settings)
         downloadsManager = DownloadsManager(settings: settings, store: store)
-        player = BassPlayer(store: store, settings: settings, social: social)
+        player = BassPlayer(store: store, settings: settings)
+        scrobbleService = ScrobbleService(settings: settings, session: session, player: player)
         jukebox = Jukebox(settings: settings, store: store)
         streamManager = StreamManager(store: store, settings: settings, player: player, downloadsManager: downloadsManager, networkStatus: networkMonitor, metadataDownloader: SongMetadataDownloader())
         downloadQueue = DownloadQueue(store: store, settings: settings, downloadsManager: downloadsManager, player: player, networkStatus: networkMonitor, streamManager: streamManager, metadataDownloader: SongMetadataDownloader())
@@ -86,7 +86,7 @@ struct DependencyInjection {
         main.register(factory: { services.settings })
         main.register(factory: { services.networkMonitor })
         main.register(factory: { services.analytics })
-        main.register(factory: { services.social })
+        main.register(factory: { services.scrobbleService })
         main.register(factory: { services.downloadsManager })
         main.register(factory: { services.player })
         main.register(factory: { services.downloadQueue })
@@ -100,7 +100,6 @@ struct DependencyInjection {
         main.register(factory: { services.streamManager as StreamManaging })
         main.register(factory: { services.downloadQueue as DownloadQueueing })
         main.register(factory: { services.networkMonitor as NetworkStatus })
-        main.register(factory: { services.social as SocialScrobbling })
         main.register(factory: { SongMetadataDownloader() as SongMetadataDownloading })
 
         // Transient request builder; resolves store/settings at build time so tests'
