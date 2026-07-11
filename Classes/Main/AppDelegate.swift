@@ -39,8 +39,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         // UI test mode: stub the network and seed a pre-configured server
         UITestSupport.configureIfEnabled()
 
-        // Setup singletons
-        // TODO: Don't have so many singletons lol
+        // Setup services (constructed and wired in DependencyInjection.swift)
         settings.setup(store: store)
         downloadsManager.setup()
 
