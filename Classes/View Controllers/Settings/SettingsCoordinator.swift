@@ -31,6 +31,10 @@ final class SettingsCoordinator {
     // through the root's navigationController at push time.
     func makeRootViewController() -> UIViewController {
         let controller = host(SettingsRootView(), title: "Settings")
+        // The root lives as the Settings tab's root screen, where the tab bar must
+        // stay visible (setViewControllers respects the flag even for the stack root);
+        // the deeper screens keep hiding it
+        controller.hidesBottomBarWhenPushed = false
         rootViewController = controller
         return controller
     }

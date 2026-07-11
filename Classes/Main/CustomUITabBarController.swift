@@ -11,7 +11,7 @@ import Resolver
 
 final class CustomUITabBarController: UITabBarController {
     enum TabType: Int, CaseIterable {
-        case home = 0, library, player, playlists, downloads
+        case library = 0, playlists, player, downloads, settings
     }
     
     @Injected private var settings: SavedSettings
@@ -34,15 +34,15 @@ final class CustomUITabBarController: UITabBarController {
         for type in TabType.allCases {
             let controller: CustomUINavigationController
             switch type {
-            case .home:
-                controller = CustomUINavigationController(rootViewController: HomeViewController())
-                controller.tabBarItem = UITabBarItem(title: "Home", image: UIImage(named: "tabbaricon-home"), tag: type.rawValue)
-                controller.tabBarItem.accessibilityIdentifier = AccessibilityId.tabHome
             case .library:
                 controller = CustomUINavigationController(rootViewController: LibraryViewController())
                 controller.tabBarItem = UITabBarItem(title: "Library", image: UIImage(named: "tabbaricon-folders"), tag: type.rawValue)
                 controller.tabBarItem.accessibilityIdentifier = AccessibilityId.tabLibrary
                 self.libraryTab = controller
+            case .playlists:
+                controller = CustomUINavigationController(rootViewController: PlaylistsViewController())
+                controller.tabBarItem = UITabBarItem(title: "Playlists", image: UIImage(named: "tabbaricon-playlists"), tag: type.rawValue)
+                controller.tabBarItem.accessibilityIdentifier = AccessibilityId.tabPlaylists
             case .player:
                 controller = CustomUINavigationController(rootViewController: PlayerViewController())
                 controller.setNavigationBarHidden(true, animated: false)
@@ -50,14 +50,19 @@ final class CustomUITabBarController: UITabBarController {
                 let image = UIImage(systemName: "music.quarternote.3", withConfiguration: imageConfig)
                 controller.tabBarItem = UITabBarItem(title: "Player", image: image, tag: type.rawValue)
                 controller.tabBarItem.accessibilityIdentifier = AccessibilityId.tabPlayer
-            case .playlists:
-                controller = CustomUINavigationController(rootViewController: PlaylistsViewController())
-                controller.tabBarItem = UITabBarItem(title: "Playlists", image: UIImage(named: "tabbaricon-playlists"), tag: type.rawValue)
-                controller.tabBarItem.accessibilityIdentifier = AccessibilityId.tabPlaylists
             case .downloads:
                 controller = CustomUINavigationController(rootViewController: DownloadsViewController())
-                controller.tabBarItem = UITabBarItem(title: "Downloads", image: UIImage(named: "tabbaricon-cache"), tag: 0)
+                controller.tabBarItem = UITabBarItem(title: "Downloads", image: UIImage(named: "tabbaricon-cache"), tag: type.rawValue)
                 controller.tabBarItem.accessibilityIdentifier = AccessibilityId.tabDownloads
+            case .settings:
+                controller = CustomUINavigationController()
+                // One operation: on first run this is root + server list (see
+                // SettingsCoordinator.makeInitialViewControllers)
+                controller.setViewControllers(SettingsCoordinator().makeInitialViewControllers(), animated: false)
+                let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular, scale: .large)
+                let image = UIImage(systemName: "gearshape.fill", withConfiguration: imageConfig)
+                controller.tabBarItem = UITabBarItem(title: "Settings", image: image, tag: type.rawValue)
+                controller.tabBarItem.accessibilityIdentifier = AccessibilityId.tabSettings
             }
             controllers.append(controller)
         }

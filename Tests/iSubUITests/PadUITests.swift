@@ -28,7 +28,7 @@ final class PadUITests: XCTestCase {
 
     private func launchPad(mode: String? = nil, mockServer: Bool = false, resetState: Bool = true) -> XCUIApplication {
         let app = ISubApp.launch(mode: mode, mockServer: mockServer, resetState: resetState)
-        XCTAssertTrue(app.cells[AccessibilityId.padMenuHome].waitForExistence(timeout: 30),
+        XCTAssertTrue(app.cells[AccessibilityId.padMenuLibrary].waitForExistence(timeout: 30),
                       "iPad menu did not appear")
         return app
     }
@@ -48,15 +48,11 @@ final class PadUITests: XCTestCase {
     func testMenuSwapsDetailControllers() {
         let app = launchPad()
 
-        // The first load lands on Home
-        XCTAssertTrue(app.buttons[AccessibilityId.homeQuickAlbums].waitForExistence(timeout: 15),
-                      "iPad did not land on the Home detail controller")
+        // The first load lands on Library
+        XCTAssertTrue(app.navigationBars["Library"].waitForExistence(timeout: 15),
+                      "iPad did not land on the Library detail controller")
 
         // Each menu item swaps in its detail controller
-        tapMenuItem(AccessibilityId.padMenuLibrary, in: app)
-        XCTAssertTrue(app.navigationBars["Library"].waitForExistence(timeout: 10),
-                      "Library menu item did not swap the detail controller")
-
         tapMenuItem(AccessibilityId.padMenuPlaylists, in: app)
         XCTAssertTrue(app.navigationBars["Playlists"].waitForExistence(timeout: 10),
                       "Playlists menu item did not swap the detail controller")
@@ -69,9 +65,9 @@ final class PadUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10),
                       "Settings menu item did not swap the detail controller")
 
-        tapMenuItem(AccessibilityId.padMenuHome, in: app)
-        XCTAssertTrue(app.buttons[AccessibilityId.homeQuickAlbums].waitForExistence(timeout: 10),
-                      "Home menu item did not swap the detail controller back")
+        tapMenuItem(AccessibilityId.padMenuLibrary, in: app)
+        XCTAssertTrue(app.navigationBars["Library"].waitForExistence(timeout: 10),
+                      "Library menu item did not swap the detail controller back")
     }
 
     func testDetailDrillDownAndBackButton() {
@@ -89,7 +85,7 @@ final class PadUITests: XCTestCase {
                       "back button did not return to the folder artists list")
 
         // The menu column stays in place through the drill-down
-        XCTAssertTrue(app.cells[AccessibilityId.padMenuHome].exists, "menu column disappeared during drill-down")
+        XCTAssertTrue(app.cells[AccessibilityId.padMenuSettings].exists, "menu column disappeared during drill-down")
     }
 
     func testEmbeddedPlayerPlays() {

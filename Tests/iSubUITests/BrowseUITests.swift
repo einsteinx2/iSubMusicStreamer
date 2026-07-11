@@ -162,23 +162,17 @@ final class BrowseUITests: XCTestCase {
         XCTAssertFalse(app.cells[AccessibilityId.browseChat].exists,
                        "chat row is visible without the setting enabled")
 
-        // Enable Server Chat in Appearance & Behavior
-        app.openTab(AccessibilityId.tabHome)
-        app.buttons[AccessibilityId.homeSettings].tap()
-        if !app.navigationBars["Settings"].waitForExistence(timeout: 5) {
-            app.buttons[AccessibilityId.homeSettings].tap()
-        }
+        // Enable Server Chat in Settings > Appearance & Behavior
+        app.openTab(AccessibilityId.tabSettings)
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
         app.buttons["settings.section.appearanceBehavior"].tap()
         XCTAssertTrue(app.navigationBars["Appearance & Behavior"].waitForExistence(timeout: 10))
         app.tapToggle(AccessibilityId.optionsEnableServerChat)
 
-        // Settings screens hide the tab bar, so pop back out before switching tabs
-        app.navigationBars.buttons.firstMatch.tap()
-        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
+        // Section screens hide the tab bar, so pop back to the settings root first
         app.navigationBars.buttons.firstMatch.tap()
         XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabLibrary].waitForExistence(timeout: 10),
-                      "tab bar did not reappear after leaving settings")
+                      "tab bar did not reappear on the settings root")
 
         // The chat row appears on the Browse page now
         openBrowse(in: app)

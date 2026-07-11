@@ -9,8 +9,8 @@
 import XCTest
 
 // E2E-01: Launch + first-run server setup. Launches with -FIRSTRUN (network stubbed, no
-// seeded server) so the app routes through the real first-run flow: SceneDelegate pushes
-// Settings, the root auto-opens the Servers screen, and ServersView auto-presents the
+// seeded server) so the app routes through the real first-run flow: SceneDelegate
+// selects the Settings tab (stacked root + Servers), and ServersView auto-presents the
 // server-edit sheet. Fully offline — ping responses come from the fixture stub
 // (-FIXTURES badauth for the failure flow).
 final class FirstRunUITests: XCTestCase {
@@ -68,7 +68,7 @@ final class FirstRunUITests: XCTestCase {
         XCTAssertTrue(app.buttons[AccessibilityId.serverEditSave].exists)
 
         // And the app did not silently land on the main UI behind it
-        XCTAssertFalse(app.tabBars.buttons[AccessibilityId.tabHome].isHittable)
+        XCTAssertFalse(app.tabBars.buttons[AccessibilityId.tabLibrary].isHittable)
     }
 
     func testValidCredentialsLandOnMainTabBar() {
@@ -79,14 +79,14 @@ final class FirstRunUITests: XCTestCase {
         app.buttons[AccessibilityId.serverEditSave].tap()
 
         // Stubbed ping success: the form dismisses and the main tab bar appears
-        let homeTab = app.tabBars.buttons[AccessibilityId.tabHome]
-        XCTAssertTrue(homeTab.waitForExistence(timeout: 30), "valid credentials did not land on the main tab bar")
+        let libraryTab = app.tabBars.buttons[AccessibilityId.tabLibrary]
+        XCTAssertTrue(libraryTab.waitForExistence(timeout: 30), "valid credentials did not land on the main tab bar")
         XCTAssertFalse(app.textFields[AccessibilityId.serverEditURL].exists)
 
         // The server persisted: a relaunch (no state reset) goes straight to the main UI
         app.terminate()
         let relaunched = launchFirstRun(resetState: false)
-        XCTAssertTrue(relaunched.tabBars.buttons[AccessibilityId.tabHome].waitForExistence(timeout: 30),
+        XCTAssertTrue(relaunched.tabBars.buttons[AccessibilityId.tabLibrary].waitForExistence(timeout: 30),
                       "server did not persist across relaunch")
         XCTAssertFalse(relaunched.textFields[AccessibilityId.serverEditURL].exists)
     }
@@ -135,17 +135,11 @@ final class FirstRunUITests: XCTestCase {
         waitForServerSetup(in: relaunched)
         enterCredentials(in: relaunched)
         relaunched.buttons[AccessibilityId.serverEditSave].tap()
-        XCTAssertTrue(relaunched.tabBars.buttons[AccessibilityId.tabHome].waitForExistence(timeout: 30),
+        XCTAssertTrue(relaunched.tabBars.buttons[AccessibilityId.tabLibrary].waitForExistence(timeout: 30),
                       "valid credentials did not land on the main tab bar")
 
         // The servers list (Settings root) must contain exactly one entry
-        let settingsButton = relaunched.buttons[AccessibilityId.homeSettings]
-        XCTAssertTrue(settingsButton.waitForExistence(timeout: 10), "home settings button missing")
-        settingsButton.tap()
-        if !relaunched.navigationBars["Settings"].waitForExistence(timeout: 5) {
-            // The home screen occasionally swallows the first tap right after launch
-            settingsButton.tap()
-        }
+        relaunched.openTab(AccessibilityId.tabSettings)
         XCTAssertTrue(relaunched.navigationBars["Settings"].waitForExistence(timeout: 10))
         relaunched.buttons[AccessibilityId.settingsSectionServers].tap()
         XCTAssertTrue(relaunched.navigationBars["Servers"].waitForExistence(timeout: 10))

@@ -42,22 +42,16 @@ final class OnlinePlayerUITests: XCTestCase {
 
     // Flips the Enable Jukebox Mode toggle in Settings > Playback and returns to the tab bar
     private func toggleJukeboxSetting(in app: XCUIApplication) {
-        app.openTab(AccessibilityId.tabHome)
-        app.buttons[AccessibilityId.homeSettings].tap()
-        if !app.navigationBars["Settings"].waitForExistence(timeout: 5) {
-            app.buttons[AccessibilityId.homeSettings].tap()
-        }
+        app.openTab(AccessibilityId.tabSettings)
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
         app.buttons["settings.section.playback"].tap()
         XCTAssertTrue(app.navigationBars["Playback"].waitForExistence(timeout: 10))
         app.tapToggle(AccessibilityId.optionsEnableJukebox)
 
-        // Settings screens hide the tab bar, so pop back out before switching tabs
-        app.navigationBars.buttons.firstMatch.tap()
-        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
+        // Section screens hide the tab bar, so pop back to the settings root first
         app.navigationBars.buttons.firstMatch.tap()
         XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabPlayer].waitForExistence(timeout: 10),
-                      "tab bar did not reappear after leaving settings")
+                      "tab bar did not reappear on the settings root")
     }
 
     func testJukeboxButtonGatedBySettingAndTogglesMode() {

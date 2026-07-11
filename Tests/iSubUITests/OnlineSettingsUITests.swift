@@ -26,12 +26,7 @@ final class OnlineSettingsUITests: XCTestCase {
     }
 
     private func openSettings(in app: XCUIApplication) {
-        app.openTab(AccessibilityId.tabHome)
-        app.buttons[AccessibilityId.homeSettings].tap()
-        if !app.navigationBars["Settings"].waitForExistence(timeout: 5) {
-            // The tap can get swallowed during the initial layout; try once more
-            app.buttons[AccessibilityId.homeSettings].tap()
-        }
+        app.openTab(AccessibilityId.tabSettings)
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
     }
 
@@ -138,7 +133,7 @@ final class OnlineSettingsUITests: XCTestCase {
         app.buttons[AccessibilityId.serverEditSave].tap()
 
         // Saving a new server switches to it and returns to the app; go back to the list
-        XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabHome].waitForExistence(timeout: 20))
+        XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabLibrary].waitForExistence(timeout: 20))
         openServers(in: app)
         XCTAssertTrue(app.cells.staticTexts["http://second.server.local"].waitForExistence(timeout: 10),
                       "added server not listed")
@@ -152,14 +147,14 @@ final class OnlineSettingsUITests: XCTestCase {
         usernameField.tap()
         usernameField.typeText("-renamed")
         app.buttons[AccessibilityId.serverEditSave].tap()
-        XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabHome].waitForExistence(timeout: 20))
+        XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabLibrary].waitForExistence(timeout: 20))
         openServers(in: app)
         XCTAssertTrue(app.cells.staticTexts["username: seconduser-renamed"].waitForExistence(timeout: 10),
                       "edited username not shown")
 
         // Switch: tapping the first (seeded) server verifies and switches to it
         app.tapCell(containing: "http://uitest.local")
-        XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabHome].waitForExistence(timeout: 20),
+        XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabLibrary].waitForExistence(timeout: 20),
                       "switching servers did not return to the app")
 
         // Delete: swipe-delete the second server

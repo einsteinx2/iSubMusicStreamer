@@ -161,7 +161,7 @@ class DownloadsManager {
                     removeOldestCachedSongs()
                 } else {
                     settings.isSongCachingEnabled = false
-                    let message = "The song cache is full. Automatic song caching has been disabled.\n\nYou can re-enable it in the Settings menu (tap the gear on the Home tab, tap Settings at the top)"
+                    let message = "The song cache is full. Automatic song caching has been disabled.\n\nYou can re-enable it in the Settings tab under Downloads & Cache."
                     presentAlert(title: "Notice", message: message)
                 }
             }

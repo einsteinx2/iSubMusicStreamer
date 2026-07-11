@@ -86,8 +86,8 @@ final class OfflineUITests: XCTestCase {
         let app = launchOfflineWithDownloads()
 
         // All five tabs stay in place offline
-        for tab in [AccessibilityId.tabHome, AccessibilityId.tabLibrary, AccessibilityId.tabPlayer,
-                    AccessibilityId.tabPlaylists, AccessibilityId.tabDownloads] {
+        for tab in [AccessibilityId.tabLibrary, AccessibilityId.tabPlaylists, AccessibilityId.tabPlayer,
+                    AccessibilityId.tabDownloads, AccessibilityId.tabSettings] {
             XCTAssertTrue(app.tabBars.buttons[tab].exists, "tab \(tab) missing in offline mode")
         }
 
@@ -97,19 +97,19 @@ final class OfflineUITests: XCTestCase {
         XCTAssertTrue(waitUntil(timeout: 5) { self.offlineIndicator(app).isHittable },
                       "offline banner not visible after an offline launch")
 
-        // Home's server controls are disabled: tapping Server Shuffle must do nothing
-        app.openTab(AccessibilityId.tabHome)
-        app.buttons[AccessibilityId.homeServerShuffle].tap()
+        // The Browse page's server rows are disabled: tapping Shuffle All must do
+        // nothing, and the server search bar disappears entirely
+        app.openBrowsePage()
+        XCTAssertFalse(app.searchFields.firstMatch.exists,
+                       "the server search bar is visible while offline")
+        app.cells[AccessibilityId.browseShuffleAll].firstMatch.tap()
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 2))
         XCTAssertEqual(app.sheets.count, 0, "server shuffle showed its folder picker while offline")
         XCTAssertFalse(app.buttons[AccessibilityId.playerPlayPause].isHittable,
                        "server shuffle started playback while offline")
 
-        // App Settings stays reachable, and the server list still shows the saved server
-        app.buttons[AccessibilityId.homeSettings].tap()
-        if !app.navigationBars["Settings"].waitForExistence(timeout: 5) {
-            app.buttons[AccessibilityId.homeSettings].tap()
-        }
+        // Settings stay reachable, and the server list still shows the saved server
+        app.openTab(AccessibilityId.tabSettings)
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10),
                       "settings not reachable in offline mode")
         app.buttons[AccessibilityId.settingsSectionServers].tap()
@@ -282,10 +282,7 @@ final class OfflineUITests: XCTestCase {
         XCTAssertFalse(offlineIndicator(app).isHittable, "offline banner visible while online")
 
         // Settings > Network & Streaming > Force Offline Mode ON drives the goOffline transition
-        app.buttons[AccessibilityId.homeSettings].tap()
-        if !app.navigationBars["Settings"].waitForExistence(timeout: 5) {
-            app.buttons[AccessibilityId.homeSettings].tap()
-        }
+        app.openTab(AccessibilityId.tabSettings)
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
         app.buttons["settings.section.network"].tap()
         XCTAssertTrue(app.navigationBars["Network & Streaming"].waitForExistence(timeout: 10))
@@ -295,13 +292,12 @@ final class OfflineUITests: XCTestCase {
         XCTAssertTrue(waitUntil(timeout: 10) { self.offlineIndicator(app).isHittable },
                       "offline banner did not appear after entering offline mode")
 
-        // Back on Home (two levels: section screen, then settings root) the server
-        // controls are disabled
+        // Back out of the section screen (which hides the tab bar) and the Browse
+        // page's server rows are disabled
         app.navigationBars.buttons.firstMatch.tap()
-        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
-        app.navigationBars.buttons.firstMatch.tap()
-        XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabHome].waitForExistence(timeout: 10))
-        app.buttons[AccessibilityId.homeServerShuffle].tap()
+        XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabLibrary].waitForExistence(timeout: 10))
+        app.openBrowsePage()
+        app.cells[AccessibilityId.browseShuffleAll].firstMatch.tap()
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 2))
         XCTAssertEqual(app.sheets.count, 0, "server shuffle responded while offline")
         XCTAssertFalse(app.buttons[AccessibilityId.playerPlayPause].isHittable,
@@ -309,10 +305,7 @@ final class OfflineUITests: XCTestCase {
 
         // Toggle force offline mode back OFF: goOnline fires, the banner hides and the
         // server controls come back to life
-        app.buttons[AccessibilityId.homeSettings].tap()
-        if !app.navigationBars["Settings"].waitForExistence(timeout: 5) {
-            app.buttons[AccessibilityId.homeSettings].tap()
-        }
+        app.openTab(AccessibilityId.tabSettings)
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
         app.buttons["settings.section.network"].tap()
         XCTAssertTrue(app.navigationBars["Network & Streaming"].waitForExistence(timeout: 10))
@@ -321,9 +314,7 @@ final class OfflineUITests: XCTestCase {
                       "offline banner did not hide after going back online")
 
         app.navigationBars.buttons.firstMatch.tap()
-        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
-        app.navigationBars.buttons.firstMatch.tap()
-        XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabHome].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabLibrary].waitForExistence(timeout: 10))
         app.startPlaybackViaServerShuffle()
     }
 }

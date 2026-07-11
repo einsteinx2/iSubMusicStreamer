@@ -10,9 +10,9 @@ import XCTest
 
 // E2E-04 Jukebox mode: launched with -MODE jukebox and -REQUESTLOG so every stubbed
 // request the app makes is recorded to a file this process can read. The suite asserts
-// the jukebox UI state (Home toggle label, player volume slider) and that playback
-// entry points — Home server shuffle, search-result playback, Folders play-all/shuffle,
-// and the Playlists queue — issue jukeboxControl requests to drive the remote player
+// the jukebox UI state (player toggle button, volume slider) and that playback entry
+// points — Browse shuffle all, search-result playback, Folders play-all/shuffle, and
+// the Playlists queue — issue jukeboxControl requests to drive the remote player
 // instead of streaming locally.
 final class JukeboxUITests: XCTestCase {
     private var requestLogPath: String!
@@ -79,12 +79,10 @@ final class JukeboxUITests: XCTestCase {
     func testJukeboxUIStateAndRemoteVolume() {
         let app = launchJukebox()
 
-        // Home reflects the enabled state
-        XCTAssertTrue(app.staticTexts["Jukebox\nMode is ON"].waitForExistence(timeout: 10),
-                      "home jukebox button does not show Mode is ON")
-
         // The player swaps in the jukebox volume slider and polls the remote status
         app.openTab(AccessibilityId.tabPlayer)
+        XCTAssertTrue(app.buttons[AccessibilityId.playerJukebox].waitForExistence(timeout: 10),
+                      "player jukebox button missing while the mode is active")
         let volumeSlider = app.sliders[AccessibilityId.playerJukeboxVolume]
         XCTAssertTrue(volumeSlider.waitForExistence(timeout: 10), "jukebox volume slider missing from the player")
         XCTAssertTrue(waitForJukeboxAction("get"), "opening the player did not poll jukebox status")
@@ -99,10 +97,8 @@ final class JukeboxUITests: XCTestCase {
     func testServerShuffleIssuesJukeboxCallsInsteadOfStreams() {
         let app = launchJukebox()
 
-        // No media folders are cached on a fresh launch, so the shuffle starts immediately
-        app.buttons[AccessibilityId.homeServerShuffle].tap()
-        XCTAssertTrue(app.buttons[AccessibilityId.playerPlayPause].waitForExistence(timeout: 30),
-                      "server shuffle did not land on the player")
+        // The helper handles the folder-picker sheet if media folders are cached
+        app.startPlaybackViaServerShuffle()
 
         // Starting playback drives the remote jukebox rather than a local stream
         XCTAssertTrue(waitForJukeboxAction("skip"), "server shuffle did not send a jukebox skip/play request")

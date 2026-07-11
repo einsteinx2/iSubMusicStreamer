@@ -13,7 +13,6 @@
 		056783EEAE072C6FFE1229A3 /* SettingsMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242F93B4B192824708447875 /* SettingsMath.swift */; };
 		05B080C3023B626285EE207F /* TestSandbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF0049FFA91CF95DE6383E /* TestSandbox.swift */; };
 		072454D81B55A9E9AC966876 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A64BA72B963BB732F9FF94 /* Fixtures.swift */; };
-		0D7110EB2C640AB40719355D /* OnlineHomeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262B7DD225C3CBF3F2BA0461 /* OnlineHomeUITests.swift */; };
 		0D7110EC2E2000020000A002 /* BrowseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262B7DD32E2000020000A002 /* BrowseUITests.swift */; };
 		0EE4D0E4B5EDCE89C79AF646 /* SettingsRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BEE04141CC68F327CE17D8 /* SettingsRegistry.swift */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -139,10 +138,6 @@
 		534B20EA256202CF007FF1D7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20E8256202CF007FF1D7 /* PlayerViewController.swift */; };
 		534BC83925CCC83700964D82 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534BC83825CCC83700964D82 /* LibraryViewController.swift */; };
 		534BC83A25CCC83A00964D82 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534BC83825CCC83700964D82 /* LibraryViewController.swift */; };
-		534BC83F25CCE03700964D82 /* HomeViewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534BC83E25CCE03700964D82 /* HomeViewButton.swift */; };
-		534BC84025CCE03700964D82 /* HomeViewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534BC83E25CCE03700964D82 /* HomeViewButton.swift */; };
-		534BC84225CCE05400964D82 /* HomeSongInfoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534BC84125CCE05400964D82 /* HomeSongInfoButton.swift */; };
-		534BC84325CCE05400964D82 /* HomeSongInfoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534BC84125CCE05400964D82 /* HomeSongInfoButton.swift */; };
 		53530B312DE65A53007EFA3A /* AsyncAPILoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53530B302DE65A50007EFA3A /* AsyncAPILoader.swift */; };
 		53530B322DE65A53007EFA3A /* AsyncAPILoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53530B302DE65A50007EFA3A /* AsyncAPILoader.swift */; };
 		53530B342DE66522007EFA3A /* AsyncRootFoldersLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53530B332DE6651E007EFA3A /* AsyncRootFoldersLoader.swift */; };
@@ -297,8 +292,6 @@
 		538C8FE225606299005D6CA9 /* RefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE025606299005D6CA9 /* RefreshControl.swift */; };
 		538C8FE725609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE625609F4F005D6CA9 /* BlurredSectionHeader.swift */; };
 		538C8FE825609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE625609F4F005D6CA9 /* BlurredSectionHeader.swift */; };
-		538C8FEA2560C7AB005D6CA9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */; };
-		538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */; };
 		539148BA2559E597004AAC3F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 539148B92559E597004AAC3F /* CoreServices.framework */; };
 		539148E02559FEFD004AAC3F /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 539148DF2559FEFD004AAC3F /* Launch Screen.storyboard */; };
 		539C05442DEF72AB007C3ACE /* AsyncLyricsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539C05432DEF72A8007C3ACE /* AsyncLyricsLoader.swift */; };
@@ -720,7 +713,6 @@
 		234696D67472F285DB3B8A57 /* BookmarkStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BookmarkStoreTests.swift; sourceTree = "<group>"; };
 		242F93B4B192824708447875 /* SettingsMath.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsMath.swift; sourceTree = "<group>"; };
 		25DEC7FD7C6C97E6C6D2429F /* ServerEditView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerEditView.swift; sourceTree = "<group>"; };
-		262B7DD225C3CBF3F2BA0461 /* OnlineHomeUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnlineHomeUITests.swift; sourceTree = "<group>"; };
 		262B7DD32E2000020000A002 /* BrowseUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BrowseUITests.swift; sourceTree = "<group>"; };
 		26B74B0C6388733F621EF38F /* SettingsSectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsSectionView.swift; sourceTree = "<group>"; };
 		26BDA00A2FC6D909724EF938 /* AboutView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
@@ -780,8 +772,6 @@
 		534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+AddArrangedSubviews.swift"; sourceTree = "<group>"; };
 		534B20E8256202CF007FF1D7 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		534BC83825CCC83700964D82 /* LibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
-		534BC83E25CCE03700964D82 /* HomeViewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewButton.swift; sourceTree = "<group>"; };
-		534BC84125CCE05400964D82 /* HomeSongInfoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSongInfoButton.swift; sourceTree = "<group>"; };
 		53530B302DE65A50007EFA3A /* AsyncAPILoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncAPILoader.swift; sourceTree = "<group>"; };
 		53530B332DE6651E007EFA3A /* AsyncRootFoldersLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncRootFoldersLoader.swift; sourceTree = "<group>"; };
 		53530B362DE786C7007EFA3A /* AsyncMediaFoldersLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncMediaFoldersLoader.swift; sourceTree = "<group>"; };
@@ -853,7 +843,6 @@
 		538B3EC125B65E1E00824068 /* Artist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
 		538C8FE025606299005D6CA9 /* RefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshControl.swift; sourceTree = "<group>"; };
 		538C8FE625609F4F005D6CA9 /* BlurredSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurredSectionHeader.swift; sourceTree = "<group>"; };
-		538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		539148A72559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/EqualizerViewController.xib; sourceTree = "<group>"; };
 		539148B92559E597004AAC3F /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		539148DF2559FEFD004AAC3F /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -1393,20 +1382,9 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
-		531D39E6255AB2A5000CB0DF /* Home */ = {
-			isa = PBXGroup;
-			children = (
-				538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */,
-				534BC83E25CCE03700964D82 /* HomeViewButton.swift */,
-				534BC84125CCE05400964D82 /* HomeSongInfoButton.swift */,
-			);
-			path = Home;
-			sourceTree = "<group>";
-		};
 		531D39E8255AB2C1000CB0DF /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
-				531D39E6255AB2A5000CB0DF /* Home */,
 				534BC84425CCE0BA00964D82 /* Library */,
 				531D39EB255AB300000CB0DF /* Playlists */,
 				531D39EF255AB344000CB0DF /* Downloads */,
@@ -1935,7 +1913,6 @@
 			children = (
 				84BA4D3DB724BB2A35919FC3 /* SmokeUITests.swift */,
 				6A4F02DA428CAB1AC965D91B /* FirstRunUITests.swift */,
-				262B7DD225C3CBF3F2BA0461 /* OnlineHomeUITests.swift */,
 				262B7DD32E2000020000A002 /* BrowseUITests.swift */,
 				0EE663B3B7063EC49BED6F71 /* OnlineLibraryUITests.swift */,
 				F2C70A4602D4CF1E912CBB04 /* OnlinePlayerUITests.swift */,
@@ -2215,7 +2192,6 @@
 				539D32D825A8E07E00F53797 /* Server.swift in Sources */,
 				53ED675B25B8B5190002BFAF /* DownloadedTagArtistViewController.swift in Sources */,
 				539D330625AA353C00F53797 /* DownloadedSongPathComponent.swift in Sources */,
-				534BC84225CCE05400964D82 /* HomeSongInfoButton.swift in Sources */,
 				53A6AA0A2B89797C007ABD7A /* GCDWebDAVServer.m in Sources */,
 				53ED674025B88B5B0002BFAF /* NotificationCenter+MainThread.swift in Sources */,
 				534BC83925CCC83700964D82 /* LibraryViewController.swift in Sources */,
@@ -2237,10 +2213,8 @@
 				53762C7A25ACE86D00476F2D /* ServerPlaylistStore.swift in Sources */,
 				537B05BC256B04360008892C /* PadMenuViewController.swift in Sources */,
 				53CC751025D9F31500D10AB6 /* String+Hex.swift in Sources */,
-				538C8FEA2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53CC751A25DC5B3B00D10AB6 /* CaseIterable+Count.swift in Sources */,
 				53ED674325B88C390002BFAF /* Notifications.swift in Sources */,
-				534BC83F25CCE03700964D82 /* HomeViewButton.swift in Sources */,
 				539D330325AA336600F53797 /* DownloadedSong.swift in Sources */,
 				53FE67A6256DD0F00015FC83 /* GCDWebServerFileRequest.m in Sources */,
 				53FE6790256DD0F00015FC83 /* GCDWebServerRequest.m in Sources */,
@@ -2430,7 +2404,6 @@
 				578C58F44725CE7A6DA96682 /* SmokeUITests.swift in Sources */,
 				AA9A6974E8FC8995CF9FE37D /* AccessibilityIdentifiers.swift in Sources */,
 				911362DD0A88C68C698503DD /* FirstRunUITests.swift in Sources */,
-				0D7110EB2C640AB40719355D /* OnlineHomeUITests.swift in Sources */,
 				0D7110EC2E2000020000A002 /* BrowseUITests.swift in Sources */,
 				EB69E9A47A5365E25F080197 /* OnlineLibraryUITests.swift in Sources */,
 				E56CD971043F99EF07948200 /* OnlinePlayerUITests.swift in Sources */,
@@ -2460,7 +2433,6 @@
 				5357FE2925C39FDB001BDE29 /* BassStream.swift in Sources */,
 				530A16742592468C00E9294E /* FolderArtist.swift in Sources */,
 				535F824525C0F64C0024C82C /* RuntimeError.swift in Sources */,
-				538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53FE6799256DD0F00015FC83 /* GCDWebServerErrorResponse.m in Sources */,
 				530A1680259277E700E9294E /* SearchAllViewController.swift in Sources */,
 				531EC87225B22D870076973A /* DownloadedTagArtistsViewController.swift in Sources */,
@@ -2482,7 +2454,6 @@
 				53ED675C25B8B5190002BFAF /* DownloadedTagArtistViewController.swift in Sources */,
 				53ED674125B88B5B0002BFAF /* NotificationCenter+MainThread.swift in Sources */,
 				53A6AA0B2B89797C007ABD7A /* GCDWebDAVServer.m in Sources */,
-				534BC84325CCE05400964D82 /* HomeSongInfoButton.swift in Sources */,
 				534BC83A25CCC83A00964D82 /* LibraryViewController.swift in Sources */,
 				539D330A25AA3B5200F53797 /* TableCellModel.swift in Sources */,
 				535E144225A7D3480039BCAA /* ArtistArt.swift in Sources */,
@@ -2506,7 +2477,6 @@
 				53CC751125D9F31500D10AB6 /* String+Hex.swift in Sources */,
 				53CC751B25DC5B3B00D10AB6 /* CaseIterable+Count.swift in Sources */,
 				537B05BD256B04360008892C /* PadMenuViewController.swift in Sources */,
-				534BC84025CCE03700964D82 /* HomeViewButton.swift in Sources */,
 				53ED674425B88C390002BFAF /* Notifications.swift in Sources */,
 				53FE6793256DD0F00015FC83 /* GCDWebServerFunctions.m in Sources */,
 				539D330425AA336600F53797 /* DownloadedSong.swift in Sources */,

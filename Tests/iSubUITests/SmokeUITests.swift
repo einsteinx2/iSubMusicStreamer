@@ -31,7 +31,7 @@ final class SmokeUITests: XCTestCase {
     }
 
     private func assertRootUI(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
-        XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabHome].waitForExistence(timeout: 30),
+        XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabLibrary].waitForExistence(timeout: 30),
                       "app did not reach the root tab bar", file: file, line: line)
         for tab in [AccessibilityId.tabLibrary, AccessibilityId.tabPlayer, AccessibilityId.tabPlaylists, AccessibilityId.tabDownloads] {
             XCTAssertTrue(app.tabBars.buttons[tab].exists, "missing tab \(tab)", file: file, line: line)

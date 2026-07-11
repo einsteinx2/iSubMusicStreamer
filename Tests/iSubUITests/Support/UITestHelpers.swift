@@ -60,7 +60,7 @@ extension XCTestCase {
 extension XCUIApplication {
     @discardableResult
     func waitForTabBar(file: StaticString = #filePath, line: UInt = #line) -> Bool {
-        let exists = tabBars.buttons[AccessibilityId.tabHome].waitForExistence(timeout: 30)
+        let exists = tabBars.buttons[AccessibilityId.tabLibrary].waitForExistence(timeout: 30)
         XCTAssertTrue(exists, "app did not reach the root tab bar", file: file, line: line)
         return exists
     }
@@ -144,10 +144,23 @@ extension XCUIApplication {
         alert.buttons[confirm].tap()
     }
 
-    // Starts playback via Home > Server Shuffle (10 fixture songs) and waits for the player
+    // Opens the Library tab's Browse page (quick albums, shuffle all, now playing, ...)
+    func openBrowsePage(file: StaticString = #filePath, line: UInt = #line) {
+        openTab(AccessibilityId.tabLibrary)
+        let browseTab = buttons["Browse"].firstMatch
+        XCTAssertTrue(browseTab.waitForExistence(timeout: 10), "no Browse page button in Library", file: file, line: line)
+        browseTab.tap()
+        XCTAssertTrue(cells[AccessibilityId.browseShuffleAll].waitForExistence(timeout: 10),
+                      "Browse page rows did not appear", file: file, line: line)
+    }
+
+    // Starts playback via Library > Browse > Shuffle All (10 fixture songs) and waits
+    // for the player
     func startPlaybackViaServerShuffle(file: StaticString = #filePath, line: UInt = #line) {
-        openTab(AccessibilityId.tabHome)
-        buttons[AccessibilityId.homeServerShuffle].tap()
+        openBrowsePage(file: file, line: line)
+        let shuffleRow = cells[AccessibilityId.browseShuffleAll].firstMatch
+        XCTAssertTrue(pollUntil(timeout: 10) { shuffleRow.isHittable }, "shuffle all row is not tappable", file: file, line: line)
+        shuffleRow.tap()
         // With multiple media folders cached a folder-picker sheet appears first
         let allFolders = sheets.buttons["All Media Folders"]
         if allFolders.waitForExistence(timeout: 2) {

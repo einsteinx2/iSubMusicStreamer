@@ -13,11 +13,11 @@ import Foundation
 // constants instead of display strings.
 enum AccessibilityId {
     // Tab bar
-    static let tabHome = "tab.home"
     static let tabLibrary = "tab.library"
     static let tabPlayer = "tab.player"
     static let tabPlaylists = "tab.playlists"
     static let tabDownloads = "tab.downloads"
+    static let tabSettings = "tab.settings"
 
     // Tables and cells
     static let universalTableViewCell = "cell.universal"
@@ -51,16 +51,6 @@ enum AccessibilityId {
     static let equalizerClose = "equalizer.close"
     static let equalizerVisualizer = "equalizer.visualizer"
 
-    // Home
-    static let homeQuickAlbums = "home.quickAlbums"
-    static let homeServerShuffle = "home.serverShuffle"
-    static let homeJukebox = "home.jukebox"
-    static let homeSettings = "home.settings"
-    static let homeNowPlaying = "home.nowPlaying"
-    static let homeChat = "home.chat"
-    static let homeSongInfo = "home.songInfo"
-    static let homeSearchBar = "home.searchBar"
-
     // Chat
     static let chatTextInput = "chat.textInput"
     static let chatSend = "chat.send"
@@ -88,7 +78,6 @@ enum AccessibilityId {
 
     // iPad menu (PadMenuViewController rows)
     static let padMenuSettings = "padMenu.settings"
-    static let padMenuHome = "padMenu.home"
     static let padMenuLibrary = "padMenu.library"
     static let padMenuPlaylists = "padMenu.playlists"
     static let padMenuDownloads = "padMenu.downloads"

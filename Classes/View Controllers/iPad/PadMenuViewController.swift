@@ -12,7 +12,7 @@ import Resolver
 
 final class PadMenuViewController: UIViewController {
     enum TabType: Int, CaseIterable {
-        case settings = 0, home, library, playlists, downloads, back
+        case settings = 0, library, playlists, downloads, back
     }
     
     @Injected private var settings: SavedSettings
@@ -79,7 +79,7 @@ final class PadMenuViewController: UIViewController {
         super.viewDidAppear(animated)
         if isFirstLoad {
             isFirstLoad = false
-            showHome()
+            showLibrary()
         }
     }
     
@@ -95,7 +95,6 @@ final class PadMenuViewController: UIViewController {
             cellContents.append((imageName: "tabbaricon-back", text: "Back"))
         }
         cellContents.append((imageName: "tabbaricon-settings", text: "Settings"))
-        cellContents.append((imageName: "tabbaricon-home", text: "Home"))
         cellContents.append((imageName: "tabbaricon-folders", text: "Library"))
         cellContents.append((imageName: "tabbaricon-playlists", text: "Playlists"))
         cellContents.append((imageName: "tabbaricon-cache", text: "Downloads"))
@@ -111,11 +110,11 @@ final class PadMenuViewController: UIViewController {
         tableView(tableView, didSelectRowAt: indexPath)
     }
     
-    func showHome() {
+    func showLibrary() {
         let isShowingBackCell = AppDelegate.shared.referringAppUrl != nil
         let indexPath = IndexPath(row: isShowingBackCell ? 2 : 1, section: 0)
         tableView.selectRow(at: indexPath, animated: true, scrollPosition: .middle)
-        
+
         // TODO: Is this hack still necessary?
         tableView(tableView, didSelectRowAt: indexPath)
     }
@@ -139,7 +138,6 @@ final class PadMenuViewController: UIViewController {
         } else {
             var controller: UIViewController? = nil
             switch type {
-            case .home:      controller = HomeViewController()
             case .library:   controller = LibraryViewController()
             case .playlists: controller = PlaylistsViewController()
             case .downloads: controller = DownloadsViewController()

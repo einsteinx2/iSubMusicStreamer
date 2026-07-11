@@ -189,14 +189,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func showSettings() {
         if UIDevice.isPad {
             padRootViewController?.menuViewController.showSettings()
-        } else if let tabBarController = tabBarController {
-            if let navigationController = tabBarController.selectedViewController as? UINavigationController {
-                // The coordinator's root screen hides the tab bar and pushes the
-                // deeper settings screens onto this same navigation controller. On
-                // first run this includes the server list in the same operation.
-                let controllers = navigationController.viewControllers + SettingsCoordinator().makeInitialViewControllers()
-                navigationController.setViewControllers(controllers, animated: true)
-            }
+        } else {
+            // The Settings tab's navigation stack is built in createTabs(); on first
+            // run it already holds root + server list in one operation
+            tabBarController?.selectedIndex = CustomUITabBarController.TabType.settings.rawValue
         }
     }
     

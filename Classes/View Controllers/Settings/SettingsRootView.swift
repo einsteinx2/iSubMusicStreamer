@@ -15,6 +15,7 @@ struct SettingsRootView: View {
     @Environment(\.settingsCoordinator) private var coordinator
 
     private let settings: SavedSettings = Resolver.resolve()
+    private let analytics: Analytics = Resolver.resolve()
 
     var body: some View {
         List {
@@ -55,6 +56,9 @@ struct SettingsRootView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .onAppear {
+            analytics.log(event: .settingsTab)
+        }
     }
 }
 
