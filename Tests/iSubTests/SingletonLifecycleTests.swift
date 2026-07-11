@@ -15,6 +15,7 @@ import XCTest
 final class JukeboxTests: StoreTestCase {
     private var jukebox: Jukebox!
     private var playQueue: PlayQueue!
+    private var coordinator: PlaybackCoordinator!
     private var settings: SavedSettings!
     private var server: Server!
 
@@ -45,6 +46,7 @@ final class JukeboxTests: StoreTestCase {
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
         jukebox.attach(playQueue: freshPlayQueue)
+        coordinator = makeTestPlaybackCoordinator(queue: freshPlayQueue)
 
         // LocalPlaylist.syncJukebox reads these ambiently (restored by
         // TestContainer.deactivate in tearDown)
@@ -56,6 +58,7 @@ final class JukeboxTests: StoreTestCase {
         // Push any pending periodic getInfo far past the process lifetime
         jukebox?.getInfo(delay: 999_999)
         jukebox = nil
+        coordinator = nil
         playQueue = nil
         settings = nil
         server = nil
@@ -163,7 +166,7 @@ final class JukeboxTests: StoreTestCase {
         TestContainer.register { registeredJukebox }
         seedLocalPlaylist(id: 5, songIds: ["1", "2"])
 
-        let played = store.playSong(position: 1, localPlaylistId: 5)
+        let played = coordinator.play(localPlaylistId: 5, position: 1)
 
         XCTAssertEqual(played?.id, "2")
         // The jukebox play queue (not the normal one) is filled, with its count updated
@@ -189,7 +192,7 @@ final class JukeboxTests: StoreTestCase {
         let songs = ["1", "2", "3"].map { TestData.song(serverId: 1, id: $0, title: "Song \($0)", path: "A/\($0).mp3") }
         songs.forEach { _ = store.add(song: $0) }
 
-        let played = store.playSong(position: 0, songs: songs)
+        let played = coordinator.play(songs: songs, position: 0)
 
         XCTAssertEqual(played?.id, "1")
         XCTAssertTrue(waitUntil {

@@ -13,6 +13,7 @@ import Resolver
 final class LocalPlaylistViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
+    @Injected private var playbackCoordinator: PlaybackCoordinator
     
     private let localPlaylist: LocalPlaylist
     private lazy var savePlaylistFlow = SavePlaylistFlow(viewController: self)
@@ -89,7 +90,7 @@ extension LocalPlaylistViewController: UITableViewConfiguration {
         HUD.show()
         DispatchQueue.userInitiated.async { [unowned self] in
             defer { HUD.hide() }
-            let song = store.playSong(position: indexPath.row, localPlaylistId: localPlaylist.id)
+            let song = playbackCoordinator.play(localPlaylistId: localPlaylist.id, position: indexPath.row)
             if let song, !song.isVideo {
                 NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
             }

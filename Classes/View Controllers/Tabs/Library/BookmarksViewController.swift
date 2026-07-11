@@ -15,6 +15,7 @@ final class BookmarksViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var analytics: Analytics
     @Injected private var settings: SavedSettings
+    @Injected private var playbackCoordinator: PlaybackCoordinator
     
     private let saveEditHeader = SaveEditHeader(saveType: "bookmark", countType: "bookmark", pluralizeClearType: false, isLargeCount: false)
     
@@ -163,7 +164,7 @@ extension BookmarksViewController: UITableViewConfiguration {
             return
         }
         
-        if let song = store.playSong(bookmark: bookmarks[indexPath.row]), !song.isVideo {
+        if let song = playbackCoordinator.play(bookmark: bookmarks[indexPath.row]), !song.isVideo {
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
     }

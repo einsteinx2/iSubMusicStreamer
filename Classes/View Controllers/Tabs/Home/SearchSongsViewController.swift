@@ -15,6 +15,7 @@ final class SearchSongsViewController: CustomUITableViewController {
     @Injected private var settings: SavedSettings
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
+    @Injected private var playbackCoordinator: PlaybackCoordinator
     
     let serverId: Int
     let query: String
@@ -254,7 +255,7 @@ extension SearchSongsViewController: UITableViewConfiguration {
             }
         case .songs:
             if indexPath.row < songs.count {
-                if let song = store.playSong(position: indexPath.row, songs: songs), !song.isVideo {
+                if let song = playbackCoordinator.play(songs: songs, position: indexPath.row), !song.isVideo {
                     NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
                 }
                 return

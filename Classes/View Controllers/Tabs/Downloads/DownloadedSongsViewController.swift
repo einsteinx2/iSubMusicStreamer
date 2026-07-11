@@ -16,6 +16,7 @@ final class DownloadedSongsViewController: AbstractDownloadsViewController {
     @Injected private var settings: SavedSettings
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var downloadQueue: DownloadQueueing
+    @Injected private var playbackCoordinator: PlaybackCoordinator
     
     var serverId: Int { settings.currentServerId }
     
@@ -66,7 +67,7 @@ extension DownloadedSongsViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         super.tableView(tableView, didSelectRowAt: indexPath)
-        if !isEditing, let song = store.playSong(position: indexPath.row, downloadedSongs: downloadedSongs), !song.isVideo {
+        if !isEditing, let song = playbackCoordinator.play(downloadedSongs: downloadedSongs, position: indexPath.row), !song.isVideo {
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
     }

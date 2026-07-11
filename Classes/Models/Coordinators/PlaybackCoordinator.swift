@@ -85,6 +85,78 @@ final class PlaybackCoordinator: NSObject {
         queue.removeSongs(indexes: indexes)
     }
 
+    // MARK: Playing collections (moved from LocalPlaylistStore/ServerPlaylistStore;
+    // the stores keep the persistence halves: clearAndQueue and fillPlayQueue)
+
+    @discardableResult
+    func play(songIds: [String], serverId: Int, position: Int) -> Song? {
+        guard store.clearAndQueue(songIds: songIds, serverId: serverId) else { return nil }
+        return startQueuedCollection(position: position)
+    }
+
+    @discardableResult
+    func play(songs: [Song], position: Int) -> Song? {
+        guard store.clearAndQueue(songs: songs) else { return nil }
+        return startQueuedCollection(position: position)
+    }
+
+    // TODO: Improve performance by preventing the need to convert to song objects
+    @discardableResult
+    func play(downloadedSongs: [DownloadedSong], position: Int) -> Song? {
+        let songs = downloadedSongs.compactMap { store.song(downloadedSong: $0) }
+        return play(songs: songs, position: position)
+    }
+
+    private func startQueuedCollection(position: Int) -> Song? {
+        // Set player defaults
+        queue.isShuffle = false
+
+        // Sync the remote jukebox playlist before the skip that play sends
+        if settings.isJukeboxEnabled {
+            jukebox.replacePlaylistWithLocal()
+        }
+
+        NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
+
+        // Start the song
+        return queue.playSong(position: position)
+    }
+
+    @discardableResult
+    func play(localPlaylistId: Int, position: Int, secondsOffset: Double = 0.0, byteOffset: Int = 0) -> Song? {
+        // Turn off shuffle first so the playlist's songs fill the actual play queue
+        // (currentPlaylistId would otherwise point at the shuffle queue)
+        queue.isShuffle = false
+
+        guard store.clearPlayQueue() else { return nil }
+        guard store.fillPlayQueue(fromLocalPlaylistId: localPlaylistId, intoPlaylistId: queue.currentPlaylistId) else { return nil }
+
+        NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
+
+        if settings.isJukeboxEnabled {
+            // Sync the remote jukebox playlist and start the song through the
+            // jukebox (it can't honor byte/seconds offsets)
+            jukebox.replacePlaylistWithLocal()
+            return queue.playSong(position: position)
+        } else {
+            // Start the song
+            queue.currentIndex = position
+            queue.startSong(offsetInBytes: byteOffset, offsetInSeconds: secondsOffset)
+            return queue.currentSong
+        }
+    }
+
+    @discardableResult
+    func play(bookmark: Bookmark) -> Song? {
+        play(localPlaylistId: bookmark.localPlaylistId, position: bookmark.songIndex, secondsOffset: bookmark.offsetInSeconds, byteOffset: bookmark.offsetInBytes)
+    }
+
+    @discardableResult
+    func playServerPlaylist(serverId: Int, serverPlaylistId: Int, position: Int) -> Song? {
+        let songIds = store.songIds(serverId: serverId, serverPlaylistId: serverPlaylistId)
+        return play(songIds: songIds, serverId: serverId, position: position)
+    }
+
     // MARK: Queue-changed hooks (moved from AsyncSongsHelper, minus its notification posts)
 
     // Clears the live queue before a play-all/shuffle-all replaces it

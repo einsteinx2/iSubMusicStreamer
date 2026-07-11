@@ -13,6 +13,7 @@ import Resolver
 final class TagAlbumViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
+    @Injected private var playbackCoordinator: PlaybackCoordinator
     
     var serverId: Int { settings.currentServerId }
     
@@ -153,7 +154,7 @@ extension TagAlbumViewController: UITableViewConfiguration {
     
     private func playSong(indexPath: IndexPath) -> Song? {
         guard indexPath.row < songIds.count else { return nil }
-        return store.playSong(position: indexPath.row, songIds: songIds, serverId: serverId)
+        return playbackCoordinator.play(songIds: songIds, serverId: serverId, position: indexPath.row)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

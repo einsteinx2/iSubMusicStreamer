@@ -20,6 +20,7 @@ final class DownloadedFolderAlbumViewController: AbstractDownloadsViewController
     @Injected private var settings: SavedSettings
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var downloadQueue: DownloadQueueing
+    @Injected private var playbackCoordinator: PlaybackCoordinator
     
     private let serverId: Int
     private let level: Int
@@ -121,7 +122,7 @@ extension DownloadedFolderAlbumViewController {
         if indexPath.section == SectionType.albums.rawValue {
             let controller = DownloadedFolderAlbumViewController(folderAlbum: downloadedFolderAlbums[indexPath.row])
             pushViewControllerCustom(controller)
-        } else if let song = store.playSong(position: indexPath.row, downloadedSongs: downloadedSongs), !song.isVideo {
+        } else if let song = playbackCoordinator.play(downloadedSongs: downloadedSongs, position: indexPath.row), !song.isVideo {
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
     }

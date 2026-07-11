@@ -121,7 +121,7 @@ Check off each phase/sub-phase as it lands as a commit on this branch:
   - [x] 8.3 — NowPlayingService; delete LockScreenAudioControls
   - [x] 8.4 — PlaybackCoordinator facade + call-site migration
   - [x] 8.5 — PlayerDelegate; BassPlayer drops its PlayQueue back-edge
-  - [ ] 8.6 — store.playSong family → coordinator
+  - [x] 8.6 — store.playSong family → coordinator
   - [ ] 8.7 — PlayQueue orchestration bodies move; PlayQueue = queue math + Store
   - [ ] 8.8 — PlaybackMode strategy (Local vs Jukebox)
   - [ ] 8.9 — Slim Jukebox to remote-control client; alerts → notification

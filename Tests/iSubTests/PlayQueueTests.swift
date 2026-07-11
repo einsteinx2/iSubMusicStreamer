@@ -276,7 +276,7 @@ final class PlayQueueTests: StoreTestCase {
         _ = store.add(song: old)
         XCTAssertTrue(store.add(song: old, localPlaylistId: LocalPlaylist.Default.playQueueId))
 
-        let played = store.playSong(position: 1, localPlaylistId: 5)
+        let played = coordinator.play(localPlaylistId: 5, position: 1)
 
         XCTAssertEqual(played?.id, "2")
         XCTAssertEqual(playQueue.currentIndex, 1)
@@ -298,7 +298,7 @@ final class PlayQueueTests: StoreTestCase {
         }
         playQueue.isShuffle = true
 
-        let played = store.playSong(position: 0, localPlaylistId: 5)
+        let played = coordinator.play(localPlaylistId: 5, position: 0)
 
         XCTAssertEqual(played?.id, "1")
         XCTAssertFalse(playQueue.isShuffle)

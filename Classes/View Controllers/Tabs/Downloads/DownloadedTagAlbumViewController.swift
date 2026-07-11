@@ -17,6 +17,7 @@ final class DownloadedTagAlbumViewController: AbstractDownloadsViewController {
     @Injected private var settings: SavedSettings
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var downloadQueue: DownloadQueueing
+    @Injected private var playbackCoordinator: PlaybackCoordinator
         
     private let downloadedTagAlbum: DownloadedTagAlbum
     private var downloadedSongs = [DownloadedSong]()
@@ -72,7 +73,7 @@ extension DownloadedTagAlbumViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let song = store.playSong(position: indexPath.row, downloadedSongs: downloadedSongs), !song.isVideo {
+        if let song = playbackCoordinator.play(downloadedSongs: downloadedSongs, position: indexPath.row), !song.isVideo {
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
     }

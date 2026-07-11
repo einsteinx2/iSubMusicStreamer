@@ -18,6 +18,7 @@ final class HomeViewController: UIViewController {
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
     @Injected private var analytics: Analytics
+    @Injected private var playbackCoordinator: PlaybackCoordinator
     
     var serverId: Int { settings.currentServerId }
     
@@ -336,7 +337,7 @@ final class HomeViewController: UIViewController {
                 }
                 
                 let songs = try await AsyncServerShuffleLoader(serverId: serverId, mediaFolderId: mediaFolderId).load()
-                let _ = store.playSong(position: 0, songs: songs)
+                playbackCoordinator.play(songs: songs, position: 0)
                 NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
             } catch {
                 if settings.isPopupsEnabled, !error.isCanceled {

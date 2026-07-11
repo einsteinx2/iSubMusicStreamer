@@ -14,6 +14,7 @@ final class NowPlayingViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
     @Injected private var analytics: Analytics
+    @Injected private var playbackCoordinator: PlaybackCoordinator
     
     var serverId: Int { settings.currentServerId }
         
@@ -106,7 +107,7 @@ extension NowPlayingViewController: UITableViewConfiguration {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let song = song(indexPath: indexPath), let playingSong = store.playSong(position: indexPath.row, songs: [song]), !playingSong.isVideo {
+        if let song = song(indexPath: indexPath), let playingSong = playbackCoordinator.play(songs: [song], position: indexPath.row), !playingSong.isVideo {
             NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
     }

@@ -268,8 +268,4 @@ extension Store {
     }
     
     // TODO: Optimize this
-    func playSongFromServerPlaylist(serverId: Int, serverPlaylistId: Int, position: Int) -> Song? {
-        let songIds = self.songIds(serverId: serverId, serverPlaylistId: serverPlaylistId)
-        return playSong(position: position, songIds: songIds, serverId: serverId)
-    }
 }

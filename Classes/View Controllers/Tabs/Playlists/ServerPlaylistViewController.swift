@@ -13,6 +13,7 @@ import Resolver
 final class ServerPlaylistViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
+    @Injected private var playbackCoordinator: PlaybackCoordinator
         
     private var loaderTask: Task<Void, Never>?
     private var serverPlaylist: ServerPlaylist
@@ -102,7 +103,7 @@ extension ServerPlaylistViewController: UITableViewConfiguration {
         HUD.show()
         DispatchQueue.userInitiated.async { [unowned self] in
             defer { HUD.hide() }
-            let song = store.playSongFromServerPlaylist(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id, position: indexPath.row)
+            let song = playbackCoordinator.playServerPlaylist(serverId: serverPlaylist.serverId, serverPlaylistId: serverPlaylist.id, position: indexPath.row)
             if let song, !song.isVideo {
                 NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
             }

@@ -100,12 +100,11 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
 }
 
 // Jukebox mode: the queue functions write to the jukebox play queue playlists (see
-// queuePlaylistIds), and the playSong functions sync the remote jukebox playlist and
-// start playback through the Jukebox singleton (playQueue.playSong sends the skip)
+// queuePlaylistIds). Starting playback lives in PlaybackCoordinator; this store owns
+// only the persistence halves (clearAndQueue, fillPlayQueue).
 extension Store {
     private var settings: SavedSettings { Resolver.resolve() }
     private var playQueue: PlayQueue { Resolver.resolve() }
-    private var jukebox: Jukebox { Resolver.resolve() }
     
     var nextLocalPlaylistId: Int? {
         do {
@@ -562,57 +561,10 @@ extension Store {
         }
     }
     
-    func playSong(position: Int, songIds: [String], serverId: Int) -> Song? {
-        if clearAndQueue(songIds: songIds, serverId: serverId) {
-            // Set player defaults
-            playQueue.isShuffle = false
-
-            // Sync the remote jukebox playlist before the skip that playSong sends
-            if settings.isJukeboxEnabled {
-                jukebox.replacePlaylistWithLocal()
-            }
-
-            NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
-
-            // Start the song
-            return playQueue.playSong(position: position)
-        }
-        return nil
-    }
-
-    func playSong(position: Int, songs: [Song]) -> Song? {
-        if clearAndQueue(songs: songs) {
-            // Set player defaults
-            playQueue.isShuffle = false
-
-            // Sync the remote jukebox playlist before the skip that playSong sends
-            if settings.isJukeboxEnabled {
-                jukebox.replacePlaylistWithLocal()
-            }
-
-            NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
-
-            // Start the song
-            return playQueue.playSong(position: position)
-        }
-        return nil
-    }
-    
-    // TODO: Improve performance by preventing the need to convert to song objects
-    func playSong(position: Int, downloadedSongs: [DownloadedSong]) -> Song? {
-        let songs = downloadedSongs.compactMap { song(downloadedSong: $0) }
-        return playSong(position: position, songs: songs)
-    }
-    
-    func playSong(position: Int, localPlaylistId: Int, secondsOffset: Double = 0.0, byteOffset: Int = 0) -> Song? {
-        // Turn off shuffle first so the playlist's songs fill the actual play queue
-        // (currentPlaylistId would otherwise point at the shuffle queue)
-        playQueue.isShuffle = false
-
-        guard clearPlayQueue() else { return nil }
-
+    // Copies a local playlist's songs into the live play queue (the jukebox play
+    // queue in jukebox mode — the caller passes the live queue's playlist id)
+    func fillPlayQueue(fromLocalPlaylistId localPlaylistId: Int, intoPlaylistId playQueueId: Int) -> Bool {
         do {
-            // Fill the play queue (the jukebox play queue in jukebox mode)
             try pool.write { db in
                 // Add the songs from the playlist to the play queue
                 // NOTE: This is NOT an SQL as that string interpolation doesn't work in the SELECT statement.
@@ -620,7 +572,7 @@ extension Store {
                 //       there is no posibility of SQL injection. Plus the values come from the code not user input.
                 let sql = """
                     INSERT INTO localPlaylistSong (localPlaylistId, position, serverId, songId)
-                    SELECT \(playQueue.currentPlaylistId) AS localPlaylistId, position, serverId, songId
+                    SELECT \(playQueueId) AS localPlaylistId, position, serverId, songId
                     FROM localPlaylistSong
                     WHERE localPlaylistId = \(localPlaylistId)
                     ORDER BY position ASC
@@ -630,33 +582,16 @@ extension Store {
                 // Update the play queue's song count
                 let countSql = """
                     UPDATE localPlaylist
-                    SET songCount = (SELECT COUNT(*) FROM localPlaylistSong WHERE localPlaylistId = \(playQueue.currentPlaylistId))
-                    WHERE id = \(playQueue.currentPlaylistId)
+                    SET songCount = (SELECT COUNT(*) FROM localPlaylistSong WHERE localPlaylistId = \(playQueueId))
+                    WHERE id = \(playQueueId)
                     """
                 try db.execute(sql: countSql)
             }
-
-            NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
-
-            if settings.isJukeboxEnabled {
-                // Sync the remote jukebox playlist and start the song through the
-                // jukebox (it can't honor byte/seconds offsets)
-                jukebox.replacePlaylistWithLocal()
-                return playQueue.playSong(position: position)
-            } else {
-                // Start the song
-                playQueue.currentIndex = position
-                playQueue.startSong(offsetInBytes: byteOffset, offsetInSeconds: secondsOffset)
-                return playQueue.currentSong
-            }
+            return true
         } catch {
-            DDLogError("Failed to play song at position \(position) from local playlist \(localPlaylistId) at secondsOffset \(secondsOffset) and byteOffset \(byteOffset): \(error)")
-            return nil
+            DDLogError("Failed to fill the play queue from local playlist \(localPlaylistId): \(error)")
+            return false
         }
-    }
-    
-    func playSong(bookmark: Bookmark) -> Song? {
-        return playSong(position: bookmark.songIndex, localPlaylistId: bookmark.localPlaylistId, secondsOffset: bookmark.offsetInSeconds, byteOffset: bookmark.offsetInBytes)
     }
     
     /// Change the song position in a playlist.
