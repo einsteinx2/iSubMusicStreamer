@@ -125,6 +125,12 @@ final class Jukebox {
         _ = playQueue?.clear()
     }
     
+    // Stops the periodic getInfo polling chain (used when leaving jukebox mode)
+    func cancelGetInfo() {
+        getInfoWorkItem?.cancel()
+        getInfoWorkItem = nil
+    }
+
     private var getInfoWorkItem: DispatchWorkItem?
     func getInfo(delay: Double = 0.5) {
         // Make sure this doesn't run a bunch of times in a row

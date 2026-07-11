@@ -344,7 +344,7 @@ final class StreamManager {
     }
     
     func fillStreamQueue(startDownload: Bool) {
-        guard let playQueue, !settings.isJukeboxEnabled, !settings.isOfflineMode else { return }
+        guard let playQueue, !settings.isOfflineMode else { return }
 
         let numStreamsToQueue = settings.isSongCachingEnabled && settings.isNextSongCacheEnabled ? defaultNumberOfStreamsToQueue : 1
         guard handlerStack.count < numStreamsToQueue else { return }

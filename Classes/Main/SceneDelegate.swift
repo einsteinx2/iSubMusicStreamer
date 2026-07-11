@@ -219,8 +219,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         NotificationCenter.postOnMainThread(name: Notifications.didEnterOfflineMode)
         
         if settings.isJukeboxEnabled {
-            settings.isJukeboxEnabled = false
-            NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
+            playbackCoordinator.setJukeboxEnabled(false)
             analytics.log(event: .jukeboxDisabled)
         }
     }

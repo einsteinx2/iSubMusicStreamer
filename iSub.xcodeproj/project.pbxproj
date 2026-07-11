@@ -137,6 +137,8 @@
 		5A7E570F2F1000010000AB0F /* NowPlayingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57112F1000010000AB11 /* NowPlayingService.swift */; };
 		5A7E57142F1000010000AB14 /* PlaybackCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57162F1000010000AB16 /* PlaybackCoordinator.swift */; };
 		5A7E57152F1000010000AB15 /* PlaybackCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57162F1000010000AB16 /* PlaybackCoordinator.swift */; };
+		5A7E571B2F1000010000AB1B /* PlaybackMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E571D2F1000010000AB1D /* PlaybackMode.swift */; };
+		5A7E571C2F1000010000AB1C /* PlaybackMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E571D2F1000010000AB1D /* PlaybackMode.swift */; };
 		5A7E57102F1000010000AB10 /* NowPlayingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57112F1000010000AB11 /* NowPlayingService.swift */; };
 		534B20E9256202CF007FF1D7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20E8256202CF007FF1D7 /* PlayerViewController.swift */; };
 		534B20EA256202CF007FF1D7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20E8256202CF007FF1D7 /* PlayerViewController.swift */; };
@@ -750,6 +752,7 @@
 		534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+AddArrangedSubviews.swift"; sourceTree = "<group>"; };
 		5A7E57112F1000010000AB11 /* NowPlayingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingService.swift; sourceTree = "<group>"; };
 		5A7E57162F1000010000AB16 /* PlaybackCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackCoordinator.swift; sourceTree = "<group>"; };
+		5A7E571D2F1000010000AB1D /* PlaybackMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackMode.swift; sourceTree = "<group>"; };
 		534B20E8256202CF007FF1D7 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		534BC83825CCC83700964D82 /* LibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
 		534BC83E25CCE03700964D82 /* HomeViewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewButton.swift; sourceTree = "<group>"; };
@@ -1474,6 +1477,7 @@
 			isa = PBXGroup;
 			children = (
 				5A7E57162F1000010000AB16 /* PlaybackCoordinator.swift */,
+				5A7E571D2F1000010000AB1D /* PlaybackMode.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -2222,6 +2226,7 @@
 				532C625E25B6559A00185998 /* main.swift in Sources */,
 				5A7E570F2F1000010000AB0F /* NowPlayingService.swift in Sources */,
 				5A7E57142F1000010000AB14 /* PlaybackCoordinator.swift in Sources */,
+				5A7E571B2F1000010000AB1B /* PlaybackMode.swift in Sources */,
 				5376D5B52B8AB430000C3184 /* BassEffectDAO.swift in Sources */,
 				531EC85C25B1F43A0076973A /* ServerPlaylistViewController.swift in Sources */,
 				53E03D1125C279AC0043355F /* SnappySlider.swift in Sources */,
@@ -2468,6 +2473,7 @@
 				537C93FA25B127BF00175DF6 /* UIViewController+IsModal.swift in Sources */,
 				5A7E57102F1000010000AB10 /* NowPlayingService.swift in Sources */,
 				5A7E57152F1000010000AB15 /* PlaybackCoordinator.swift in Sources */,
+				5A7E571C2F1000010000AB1C /* PlaybackMode.swift in Sources */,
 				53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */,
 				53ED672025B74BD40002BFAF /* DownloadedIndicatorView.swift in Sources */,
 				53A0EDC925B5DCF400B78DAA /* TagArtistViewController.swift in Sources */,

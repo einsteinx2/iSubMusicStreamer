@@ -35,6 +35,70 @@ final class PlaybackCoordinator: NSObject {
         self.streamManager = streamManager
         self.downloadQueue = downloadQueue
         super.init()
+
+        // Mode-switch side effects run from these observers regardless of who flipped
+        // the setting (setJukeboxEnabled below, the jukebox's auth-error self-disable,
+        // or SceneDelegate's offline disable); both mode hooks are idempotent
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxWasEnabled), name: Notifications.jukeboxEnabled)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxWasDisabled), name: Notifications.jukeboxDisabled)
+    }
+
+    deinit {
+        NotificationCenter.removeObserverOnMainThread(self)
+    }
+
+    // MARK: Playback mode (jukebox vs local)
+
+    private lazy var localMode: PlaybackMode = LocalPlaybackMode(player: player, streamManager: streamManager, store: store, coordinator: self)
+    private lazy var jukeboxMode: PlaybackMode = JukeboxPlaybackMode(jukebox: jukebox)
+    // Computed from the setting so there is no duplicated mode state
+    private var activeMode: PlaybackMode { settings.isJukeboxEnabled ? jukeboxMode : localMode }
+
+    var isPlaying: Bool { activeMode.isPlaying }
+
+    // The single place a jukebox-mode flip happens (aside from raw settings writes
+    // that intentionally skip the side effects, e.g. server switching)
+    func setJukeboxEnabled(_ enabled: Bool) {
+        guard settings.isJukeboxEnabled != enabled else { return }
+        settings.isJukeboxEnabled = enabled
+        NotificationCenter.postOnMainThread(name: enabled ? Notifications.jukeboxEnabled : Notifications.jukeboxDisabled)
+    }
+
+    @objc private func jukeboxWasEnabled() {
+        localMode.deactivate()
+        jukeboxMode.activate()
+    }
+
+    @objc private func jukeboxWasDisabled() {
+        jukeboxMode.deactivate()
+        localMode.activate()
+    }
+
+    // MARK: Transport (dispatched to the active mode)
+
+    @discardableResult
+    func play() -> Bool {
+        activeMode.play()
+    }
+
+    @discardableResult
+    func pause() -> Bool {
+        activeMode.pause()
+    }
+
+    @discardableResult
+    func togglePlayPause() -> Bool {
+        activeMode.togglePlayPause()
+    }
+
+    @discardableResult
+    func stop() -> Bool {
+        activeMode.stop()
+    }
+
+    @discardableResult
+    func seek(seconds: Double) -> Bool {
+        activeMode.seek(seconds: seconds)
     }
 
     // MARK: Transport / orchestration (bodies moved verbatim from PlayQueue in 8.7)
@@ -50,21 +114,12 @@ final class PlaybackCoordinator: NSObject {
                 NotificationCenter.postOnMainThread(name: Notifications.removeVideoPlayer)
             }
 
-            if settings.isJukeboxEnabled {
-                if currentSong.isVideo {
-                    ProgressHUD.banner("Cannot play videos in Jukebox mode.", nil)
-                    return nil
-                } else {
-                    jukebox.playSong(index: position)
-                }
-            } else {
-                streamManager.removeAllStreams(except: currentSong)
-                if currentSong.isVideo {
-                    NotificationCenter.postOnMainThread(name: Notifications.playVideo, userInfo: ["song": currentSong])
-                } else {
-                    startSong()
-                }
+            if currentSong.isVideo && !activeMode.canPlayVideos {
+                ProgressHUD.banner("Cannot play videos in Jukebox mode.", nil)
+                return nil
             }
+
+            activeMode.playSong(at: position, song: currentSong)
             return currentSong
         }
     }
@@ -225,10 +280,7 @@ final class PlaybackCoordinator: NSObject {
     }
 
     private func didToggleShuffle() {
-        if settings.isJukeboxEnabled {
-            jukebox.replacePlaylistWithLocal()
-            jukebox.playSong(index: queue.currentIndex)
-        }
+        activeMode.didToggleShuffle(currentIndex: queue.currentIndex)
 
         // Update the playlist views; NowPlayingService observes and informs the OS
         NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistShuffleToggled)
@@ -237,9 +289,7 @@ final class PlaybackCoordinator: NSObject {
     @discardableResult
     func moveSong(fromIndex: Int, toIndex: Int) -> Bool {
         if store.move(songAtPosition: fromIndex, toPosition: toIndex, localPlaylistId: queue.currentPlaylistId) {
-            if settings.isJukeboxEnabled {
-                jukebox.replacePlaylistWithLocal()
-            }
+            activeMode.syncRemoteQueueIfNeeded()
 
             // Correct the value of currentPlaylistPosition
             if fromIndex == queue.currentIndex {
@@ -294,9 +344,7 @@ final class PlaybackCoordinator: NSObject {
         queue.isShuffle = false
 
         // Sync the remote jukebox playlist before the skip that play sends
-        if settings.isJukeboxEnabled {
-            jukebox.replacePlaylistWithLocal()
-        }
+        activeMode.syncRemoteQueueIfNeeded()
 
         NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
 
@@ -315,10 +363,10 @@ final class PlaybackCoordinator: NSObject {
 
         NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
 
+        // Offset-capability branch (not transport routing): the jukebox can't honor
+        // byte/seconds offsets, so it syncs the remote playlist and skips instead
         if settings.isJukeboxEnabled {
-            // Sync the remote jukebox playlist and start the song through the
-            // jukebox (it can't honor byte/seconds offsets)
-            jukebox.replacePlaylistWithLocal()
+            activeMode.syncRemoteQueueIfNeeded()
             return play(position: position)
         } else {
             // Start the song
@@ -343,22 +391,14 @@ final class PlaybackCoordinator: NSObject {
 
     // Clears the live queue before a play-all/shuffle-all replaces it
     func prepareForPlayAll() {
-        if settings.isJukeboxEnabled {
-            jukebox.clearPlaylist()
-        } else {
-            _ = store.clearPlayQueue()
-        }
+        activeMode.prepareForPlayAll()
         queue.isShuffle = false
     }
 
     // The queue contents changed (songs appended/inserted): sync the remote playlist
     // in jukebox mode, or top up the stream queue locally
     func queueDidChange() {
-        if settings.isJukeboxEnabled {
-            jukebox.replacePlaylistWithLocal()
-        } else {
-            streamManager.fillStreamQueue(startDownload: player.isStarted)
-        }
+        activeMode.queueDidChange()
     }
 }
 

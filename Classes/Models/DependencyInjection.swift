@@ -59,7 +59,7 @@ final class AppServices {
         downloadQueue = DownloadQueue(store: store, settings: settings, downloadsManager: downloadsManager, player: player, networkStatus: networkMonitor, streamManager: streamManager, metadataDownloader: SongMetadataDownloader())
         playQueue = PlayQueue(store: store, settings: settings)
         playbackCoordinator = PlaybackCoordinator(queue: playQueue, settings: settings, store: store, player: player, jukebox: jukebox, streamManager: streamManager, downloadQueue: downloadQueue)
-        nowPlayingService = NowPlayingService(settings: settings, playQueue: playQueue, player: player, jukebox: jukebox, coordinator: playbackCoordinator)
+        nowPlayingService = NowPlayingService(settings: settings, playQueue: playQueue, player: player, coordinator: playbackCoordinator)
         stateRestorer = StateRestorer(settings: settings, player: player, playQueue: playQueue)
 
         // Back-edges are weak references attached explicitly, never resolved ambiently

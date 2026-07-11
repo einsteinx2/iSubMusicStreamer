@@ -36,7 +36,6 @@ final class NowPlayingServiceTests: StoreTestCase {
         service = NowPlayingService(settings: freshSettings,
                                     playQueue: freshPlayQueue,
                                     player: fakePlayer,
-                                    jukebox: Jukebox(settings: freshSettings, store: store),
                                     coordinator: makeTestPlaybackCoordinator(queue: freshPlayQueue))
     }
 
@@ -97,7 +96,9 @@ final class NowPlayingServiceTests: StoreTestCase {
 
         let jukebox = Jukebox(settings: settings, store: store)
         jukebox.attach(playQueue: playQueue)
-        service = NowPlayingService(settings: settings, playQueue: playQueue, player: player, jukebox: jukebox, coordinator: makeTestPlaybackCoordinator(queue: playQueue))
+        // The coordinator's jukebox mode must drive this test's jukebox
+        TestContainer.register { jukebox }
+        service = NowPlayingService(settings: settings, playQueue: playQueue, player: player, coordinator: makeTestPlaybackCoordinator(queue: playQueue))
         defer { jukebox.getInfo(delay: 999_999) }
 
         XCTAssertEqual(service.handleChangePlaybackPosition(seconds: 42), .success,
@@ -158,5 +159,69 @@ final class NowPlayingServiceTests: StoreTestCase {
         XCTAssertEqual(playQueue.repeatMode, .all)
         XCTAssertEqual(service.handleChangeRepeatMode(.off), .success)
         XCTAssertEqual(playQueue.repeatMode, RepeatMode.none)
+    }
+}
+
+// Phase 8.8: the PlaybackMode strategy — mode switching runs the right side effects
+// exactly once, no matter who flipped the setting
+final class PlaybackModeTests: StoreTestCase {
+    func testSetJukeboxEnabledFlipsSettingPostsOnceAndStopsLocalPlayer() {
+        let player = FakePlayer()
+        TestContainer.register { player as PlayerControlling }
+        TestContainer.register { FakeStreamManager() as StreamManaging }
+        TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
+        let settings = SavedSettings()
+        TestContainer.register { settings }
+        let jukebox = Jukebox(settings: settings, store: store)
+        TestContainer.register { jukebox }
+        let queue = makeTestPlayQueue()
+        TestContainer.register { queue }
+        let coordinator = makeTestPlaybackCoordinator(queue: queue)
+        defer {
+            // Leave jukebox mode so the getInfo polling scheduled by activate() is
+            // canceled before the next test runs
+            coordinator.setJukeboxEnabled(false)
+        }
+
+        var enabledPosts = 0
+        let observer = NotificationCenter.default.addObserver(forName: Notifications.jukeboxEnabled, object: nil, queue: nil) { _ in
+            enabledPosts += 1
+        }
+        defer { NotificationCenter.default.removeObserver(observer) }
+
+        coordinator.setJukeboxEnabled(true)
+        XCTAssertTrue(settings.isJukeboxEnabled)
+        XCTAssertEqual(enabledPosts, 1)
+        XCTAssertEqual(player.stopCount, 1, "enabling jukebox mode must stop the local player")
+
+        // Idempotent: flipping to the current state does nothing
+        coordinator.setJukeboxEnabled(true)
+        XCTAssertEqual(enabledPosts, 1)
+        XCTAssertEqual(player.stopCount, 1)
+    }
+
+    func testExternallyPostedDisableRunsModeSideEffects() {
+        let player = FakePlayer()
+        TestContainer.register { player as PlayerControlling }
+        TestContainer.register { FakeStreamManager() as StreamManaging }
+        TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
+        let settings = SavedSettings()
+        TestContainer.register { settings }
+        let jukebox = Jukebox(settings: settings, store: store)
+        TestContainer.register { jukebox }
+        let queue = makeTestPlayQueue()
+        TestContainer.register { queue }
+        let coordinator = makeTestPlaybackCoordinator(queue: queue)
+        withExtendedLifetime(coordinator) {
+            // Simulate the jukebox disabling itself (auth error 50): raw settings
+            // write + notification, exactly as Jukebox.parse does
+            settings.isJukeboxEnabled = true
+            settings.isJukeboxEnabled = false
+            NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
+
+            // The disable path activates local mode (a no-op) and cancels jukebox
+            // polling; the local player must NOT be stopped by a disable
+            XCTAssertEqual(player.stopCount, 0)
+        }
     }
 }

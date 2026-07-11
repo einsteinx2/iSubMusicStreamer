@@ -293,20 +293,11 @@ final class PlayerViewController: UIViewController {
         playPauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: ultralightConfig), for: .normal)
         playPauseButton.tintColor = Colors.playerButton
         playPauseButton.addClosure(for: .touchUpInside) { [unowned self] in
-            if settings.isJukeboxEnabled {
-                if jukebox.isPlaying {
-                    jukebox.stop()
-                } else {
-                    jukebox.play()
-                }
+            if let currentSong = self.currentSong, currentSong.isVideo {
+                // Videos restart through the video player path
+                playbackCoordinator.playCurrent()
             } else {
-                if let currentSong = self.currentSong, !currentSong.isVideo {
-                    // If we're already playing, toggle the player state
-                    player.playPause()
-                } else {
-                    // If we haven't started the song yet, start the player
-                    playbackCoordinator.playCurrent()
-                }
+                playbackCoordinator.togglePlayPause()
             }
         }
         

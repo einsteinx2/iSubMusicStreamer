@@ -177,21 +177,13 @@ final class HomeViewController: UIViewController {
         }
         
         jukeboxButton.setAction { [unowned self] in
-            if settings.isJukeboxEnabled {
-                self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-off"))
-                self.jukeboxButton.setTitle(title: "Jukebox\nMode is OFF")
-                settings.isJukeboxEnabled = false
-                NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
-                analytics.log(event: .jukeboxDisabled)
-            } else {
-                player.stop()
-                self.jukeboxButton.setIcon(image: UIImage(named: "home-jukebox-on"))
-                self.jukeboxButton.setTitle(title: "Jukebox\nMode is ON")
-                settings.isJukeboxEnabled = true
-                self.jukebox.getInfo()
-                NotificationCenter.postOnMainThread(name: Notifications.jukeboxEnabled)
-                analytics.log(event: .jukeboxEnabled)
-            }
+            // The coordinator flips the setting and runs the mode side effects
+            // (stopping the local player / starting jukebox polling)
+            let enabling = !settings.isJukeboxEnabled
+            playbackCoordinator.setJukeboxEnabled(enabling)
+            self.jukeboxButton.setIcon(image: UIImage(named: enabling ? "home-jukebox-on" : "home-jukebox-off"))
+            self.jukeboxButton.setTitle(title: "Jukebox\nMode is \(enabling ? "ON" : "OFF")")
+            analytics.log(event: enabling ? .jukeboxEnabled : .jukeboxDisabled)
             self.initSongInfo()
         }
         

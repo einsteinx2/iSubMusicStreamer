@@ -19,7 +19,6 @@ final class NowPlayingService {
     private let settings: SavedSettings
     private let playQueue: PlayQueue
     private let player: PlayerControlling
-    private let jukebox: Jukebox
     private let coordinator: PlaybackCoordinator
 
     private var hasSetup = false
@@ -27,11 +26,10 @@ final class NowPlayingService {
 
     // Stores references only; command registration and observers happen in setup()
     // so tests can construct freely without touching MPRemoteCommandCenter
-    init(settings: SavedSettings, playQueue: PlayQueue, player: PlayerControlling, jukebox: Jukebox, coordinator: PlaybackCoordinator) {
+    init(settings: SavedSettings, playQueue: PlayQueue, player: PlayerControlling, coordinator: PlaybackCoordinator) {
         self.settings = settings
         self.playQueue = playQueue
         self.player = player
-        self.jukebox = jukebox
         self.coordinator = coordinator
     }
 
@@ -92,62 +90,22 @@ final class NowPlayingService {
 
     func handlePlay() -> MPRemoteCommandHandlerStatus {
         guard playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
-        if settings.isJukeboxEnabled {
-            if !jukebox.isPlaying {
-                jukebox.play()
-                return .success
-            }
-        } else if !player.isPlaying {
-            player.playPause()
-            return .success
-        } else {
-            coordinator.startSong()
-            return .success
-        }
-        return .commandFailed
+        return coordinator.play() ? .success : .commandFailed
     }
 
     func handlePause() -> MPRemoteCommandHandlerStatus {
         guard playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
-        if settings.isJukeboxEnabled {
-            if jukebox.isPlaying {
-                jukebox.stop()
-                return .success
-            }
-        } else if player.isPlaying {
-            player.pause()
-            return .success
-        }
-        return .commandFailed
+        return coordinator.pause() ? .success : .commandFailed
     }
 
     func handleTogglePlayPause() -> MPRemoteCommandHandlerStatus {
         guard playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
-        if settings.isJukeboxEnabled {
-            if jukebox.isPlaying {
-                jukebox.stop()
-            } else {
-                jukebox.play()
-            }
-            return .success
-        } else {
-            player.playPause()
-            return .success
-        }
+        return coordinator.togglePlayPause() ? .success : .commandFailed
     }
 
     func handleStop() -> MPRemoteCommandHandlerStatus {
         guard playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
-        if settings.isJukeboxEnabled {
-            if jukebox.isPlaying {
-                jukebox.stop()
-                return .success
-            }
-        } else if player.isPlaying {
-            player.stop()
-            return .success
-        }
-        return .commandFailed
+        return coordinator.stop() ? .success : .commandFailed
     }
 
     func handleNextTrack() -> MPRemoteCommandHandlerStatus {
@@ -163,15 +121,11 @@ final class NowPlayingService {
     }
 
     func handleChangePlaybackPosition(seconds: Double) -> MPRemoteCommandHandlerStatus {
-        guard settings.isJukeboxEnabled || playQueue.currentSong != nil else { return .noActionableNowPlayingItem }
-        if settings.isJukeboxEnabled {
-            jukebox.seek(seconds: Int(seconds))
-            return .success
-        } else if player.isPlaying {
-            player.seekToPosition(seconds: seconds, fadeVolume: true)
+        if coordinator.seek(seconds: seconds) {
             return .success
         }
-        return .commandFailed
+        // The local player only seeks while playing; report the queue state precisely
+        return playQueue.currentSong != nil ? .commandFailed : .noActionableNowPlayingItem
     }
 
     func handleChangeRepeatMode(_ repeatType: MPRepeatType) -> MPRemoteCommandHandlerStatus {
