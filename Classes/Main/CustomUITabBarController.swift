@@ -47,12 +47,7 @@ final class CustomUITabBarController: UITabBarController {
                 controller = CustomUINavigationController(rootViewController: PlayerViewController())
                 controller.setNavigationBarHidden(true, animated: false)
                 let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular, scale: .large)
-                let image: UIImage?
-                if #available(iOS 14.0, *) {
-                    image = UIImage(systemName: "music.quarternote.3", withConfiguration: imageConfig)
-                } else {
-                    image = UIImage(systemName: "music.note", withConfiguration: imageConfig)
-                }
+                let image = UIImage(systemName: "music.quarternote.3", withConfiguration: imageConfig)
                 controller.tabBarItem = UITabBarItem(title: "Player", image: image, tag: type.rawValue)
                 controller.tabBarItem.accessibilityIdentifier = AccessibilityId.tabPlayer
             case .playlists:
