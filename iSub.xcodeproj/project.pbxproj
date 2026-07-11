@@ -28,6 +28,7 @@
 		48AE165DB428DD91D81C69E7 /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = F48B244700CB5A6E36E74B2F /* Resolver */; };
 		4A43507ACB16A1D092D187AD /* SavedSettingsBehaviorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB9A537E6684624B72605F7 /* SavedSettingsBehaviorTests.swift */; };
 		5A7E570D2F1000010000AB0D /* ScrobbleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E570E2F1000010000AB0E /* ScrobbleServiceTests.swift */; };
+		5A7E57122F1000010000AB12 /* NowPlayingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */; };
 		4D0EB1DB58BC96F52F53E501 /* MockSubsonicHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C4D36A62D67D18EB15667 /* MockSubsonicHTTPServer.swift */; };
 		52A400F8AD3569F63217085B /* Fixtures in Resources */ = {isa = PBXBuildFile; fileRef = 2FBCCCBAB13100C9FC48F5FF /* Fixtures */; };
 		5302DE4125BA2AA00036A9B1 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5302DE4025BA2AA00036A9B1 /* StreamManager.swift */; };
@@ -133,8 +134,8 @@
 		5349DF87161E408A0044A781 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D44F8415AA621A00CDD3B8 /* Accelerate.framework */; };
 		534B20E025619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */; };
 		534B20E125619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */; };
-		534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20E52561E444007FF1D7 /* LockScreenAudioControls.swift */; };
-		534B20E72561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20E52561E444007FF1D7 /* LockScreenAudioControls.swift */; };
+		5A7E570F2F1000010000AB0F /* NowPlayingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57112F1000010000AB11 /* NowPlayingService.swift */; };
+		5A7E57102F1000010000AB10 /* NowPlayingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57112F1000010000AB11 /* NowPlayingService.swift */; };
 		534B20E9256202CF007FF1D7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20E8256202CF007FF1D7 /* PlayerViewController.swift */; };
 		534B20EA256202CF007FF1D7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20E8256202CF007FF1D7 /* PlayerViewController.swift */; };
 		534BC83925CCC83700964D82 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534BC83825CCC83700964D82 /* LibraryViewController.swift */; };
@@ -743,7 +744,7 @@
 		53493F2C15FC6BD90059492E /* KeychainAccessGroups.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = KeychainAccessGroups.plist; path = Other/KeychainAccessGroups.plist; sourceTree = "<group>"; };
 		53493F3715FC6C3A0059492E /* BassEffectDefaultPresets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = BassEffectDefaultPresets.plist; path = Other/BassEffectDefaultPresets.plist; sourceTree = "<group>"; };
 		534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+AddArrangedSubviews.swift"; sourceTree = "<group>"; };
-		534B20E52561E444007FF1D7 /* LockScreenAudioControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenAudioControls.swift; sourceTree = "<group>"; };
+		5A7E57112F1000010000AB11 /* NowPlayingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingService.swift; sourceTree = "<group>"; };
 		534B20E8256202CF007FF1D7 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		534BC83825CCC83700964D82 /* LibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
 		534BC83E25CCE03700964D82 /* HomeViewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewButton.swift; sourceTree = "<group>"; };
@@ -993,6 +994,7 @@
 		7705A86ABDA388585EDDC4D6 /* OnlinePlaylistsUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnlinePlaylistsUITests.swift; sourceTree = "<group>"; };
 		7BB9A537E6684624B72605F7 /* SavedSettingsBehaviorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SavedSettingsBehaviorTests.swift; sourceTree = "<group>"; };
 		5A7E570E2F1000010000AB0E /* ScrobbleServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScrobbleServiceTests.swift; sourceTree = "<group>"; };
+		5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NowPlayingServiceTests.swift; sourceTree = "<group>"; };
 		7DBF3A165AC59FC04A477080 /* iSubUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iSubUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		83FC51166708C92BB0AA12A3 /* AsyncLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AsyncLoaderTests.swift; sourceTree = "<group>"; };
 		84A64BA72B963BB732F9FF94 /* Fixtures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
@@ -1401,7 +1403,7 @@
 				532C624A25B6197E00185998 /* VideoPlayer.swift */,
 				532C624E25B6230600185998 /* ServerChecker.swift */,
 				532C625125B62F5800185998 /* NetworkMonitor.swift */,
-				534B20E52561E444007FF1D7 /* LockScreenAudioControls.swift */,
+				5A7E57112F1000010000AB11 /* NowPlayingService.swift */,
 				53FE67AB256DE9600015FC83 /* Defines.swift */,
 				539D32E425A9400400F53797 /* Synchronized.swift */,
 				531EC86425B220E10076973A /* Colors.swift */,
@@ -1827,6 +1829,7 @@
 				5BE66C0606E83260BA683E35 /* StreamManagerTests.swift */,
 				7BB9A537E6684624B72605F7 /* SavedSettingsBehaviorTests.swift */,
 				5A7E570E2F1000010000AB0E /* ScrobbleServiceTests.swift */,
+				5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */,
 				53DBB093129F25CDF2334C20 /* GRDBRoundTripTests.swift */,
 				F8337FDA15B0E63C6858971B /* BassAudioEngineTests.swift */,
 				B9AD837C7CFF79AD56059ADC /* SingletonLifecycleTests.swift */,
@@ -2200,7 +2203,7 @@
 				5381884225A65F6100C59CDE /* RootListMetadata.swift in Sources */,
 				53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
 				532C625E25B6559A00185998 /* main.swift in Sources */,
-				534B20E62561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
+				5A7E570F2F1000010000AB0F /* NowPlayingService.swift in Sources */,
 				5376D5B52B8AB430000C3184 /* BassEffectDAO.swift in Sources */,
 				531EC85C25B1F43A0076973A /* ServerPlaylistViewController.swift in Sources */,
 				53E03D1125C279AC0043355F /* SnappySlider.swift in Sources */,
@@ -2444,7 +2447,7 @@
 				538C8FE825609F4F005D6CA9 /* BlurredSectionHeader.swift in Sources */,
 				537C93FD25B134DE00175DF6 /* PlaylistsViewController.swift in Sources */,
 				537C93FA25B127BF00175DF6 /* UIViewController+IsModal.swift in Sources */,
-				534B20E72561E444007FF1D7 /* LockScreenAudioControls.swift in Sources */,
+				5A7E57102F1000010000AB10 /* NowPlayingService.swift in Sources */,
 				53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */,
 				53ED672025B74BD40002BFAF /* DownloadedIndicatorView.swift in Sources */,
 				53A0EDC925B5DCF400B78DAA /* TagArtistViewController.swift in Sources */,
@@ -2621,6 +2624,7 @@
 				DF81321454A4A5D2F872F28E /* StreamManagerTests.swift in Sources */,
 				4A43507ACB16A1D092D187AD /* SavedSettingsBehaviorTests.swift in Sources */,
 				5A7E570D2F1000010000AB0D /* ScrobbleServiceTests.swift in Sources */,
+				5A7E57122F1000010000AB12 /* NowPlayingServiceTests.swift in Sources */,
 				A7D7FD300FA5D924D56FCE41 /* GRDBRoundTripTests.swift in Sources */,
 				C705DE4953B91C2502AB9A20 /* BassAudioEngineTests.swift in Sources */,
 				5E71971E2CBA50993869DD3C /* SingletonLifecycleTests.swift in Sources */,

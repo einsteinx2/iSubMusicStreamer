@@ -19,7 +19,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     @Injected private var downloadsManager: DownloadsManager
     @Injected private var analytics: Analytics
     @Injected private var stateRestorer: StateRestorer
-    @Injected private var jukebox: Jukebox
+    @Injected private var nowPlayingService: NowPlayingService
     
     static var shared: AppDelegate { UIApplication.shared.delegate as! AppDelegate }
     
@@ -54,8 +54,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         settings.appTerminatedCleanly = false
         #endif
         
-        // Initialize the lock screen controls
-        LockScreenAudioControls.setup(settings: settings, jukebox: jukebox, player: player, playQueue: playQueue)
+        // Initialize the lock screen controls and now playing info
+        nowPlayingService.setup()
         
         // Enable console logging for Xcode builds
         #if DEBUG

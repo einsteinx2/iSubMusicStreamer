@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import MediaPlayer
 import CocoaLumberjackSwift
 import ProgressHUD
 
@@ -54,15 +53,8 @@ final class PlayQueue: NSObject {
     var repeatMode: RepeatMode = .none {
         didSet {
             if repeatMode != oldValue {
+                // NowPlayingService observes and syncs MPRemoteCommandCenter
                 NotificationCenter.postOnMainThread(name: Notifications.repeatModeChanged)
-                
-                let repeatType: MPRepeatType
-                switch repeatMode {
-                case .none: repeatType = .off
-                case .one: repeatType = .one
-                case .all: repeatType = .all
-                }
-                MPRemoteCommandCenter.shared().changeRepeatModeCommand.currentRepeatType = repeatType
             }
         }
     }
@@ -262,11 +254,8 @@ final class PlayQueue: NSObject {
             jukebox.playSong(index: currentIndex)
         }
 
-        // Update the playlist views
+        // Update the playlist views; NowPlayingService observes and informs the OS
         NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistShuffleToggled)
-
-        // Inform the OS
-        MPRemoteCommandCenter.shared().changeShuffleModeCommand.currentShuffleType = isShuffle ? .items : .off
     }
     
     @discardableResult
@@ -335,41 +324,6 @@ final class PlayQueue: NSObject {
             player.startByteOffset = settings.byteOffset
             player.startSecondsOffset = settings.seekTime
             return nil
-        }
-    }
-    
-    @objc func updateLockScreenInfo() {
-        DispatchQueue.main.async {
-            var info = [String: Any]()
-            
-            if let song = self.currentSong {
-                info[MPMediaItemPropertyTitle] = song.title
-                info[MPMediaItemPropertyAlbumTitle] = song.tagAlbumName
-                info[MPMediaItemPropertyArtist] = song.tagArtistName
-                info[MPMediaItemPropertyGenre] = song.genre
-                if song.duration > 0 {
-                    info[MPMediaItemPropertyPlaybackDuration] = song.duration
-                }
-                info[MPNowPlayingInfoPropertyPlaybackQueueIndex] = self.currentIndex
-                info[MPNowPlayingInfoPropertyPlaybackQueueCount] = self.count
-                info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.player.progress
-                info[MPNowPlayingInfoPropertyPlaybackRate] = 1
-                
-                if let coverArtId = song.coverArtId, self.settings.isLockScreenArtEnabled {
-                    if let image = AsyncCoverArtLoaderManager.shared.coverArtImage(serverId: song.serverId, coverArtId: coverArtId, isLarge: true) {
-                        let artwork = MPMediaItemArtwork(boundsSize: image.size) { size -> UIImage in
-                            return image
-                        }
-                        info[MPMediaItemPropertyArtwork] = artwork
-                    }
-                }
-            }
-            
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = info
-            
-            // Run this every 30 seconds to update the progress and keep it in sync
-            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.updateLockScreenInfo), object: nil)
-            self.perform(#selector(self.updateLockScreenInfo), with: nil, afterDelay: 30)
         }
     }
     

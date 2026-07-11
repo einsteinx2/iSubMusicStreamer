@@ -184,8 +184,6 @@ final class BassPlayer: NSObject {
                 NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
             }
         }
-
-        playQueue?.updateLockScreenInfo()
     }
 
     func moveToNextSong() {
@@ -310,8 +308,6 @@ final class BassPlayer: NSObject {
                 // Start playback
                 BASS_ChannelPlay(outStream, 0)
                 isPlaying = true
-
-                playQueue?.updateLockScreenInfo()
 
                 // Notify listeners that playback has started
                 NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
@@ -526,8 +522,6 @@ final class BassPlayer: NSObject {
                 // Increment current playlist index
                 playQueue?.incrementIndex()
 
-                playQueue?.updateLockScreenInfo()
-                
                 // Remove the stream from the queue
                 BASS_StreamFree(bassStream.hstream)
                 synchronized(streamQueueSync) {

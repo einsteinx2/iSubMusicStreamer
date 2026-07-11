@@ -19,7 +19,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @Injected private var jukebox: Jukebox
     @Injected private var analytics: Analytics
     @Injected private var stateRestorer: StateRestorer
-    
+    @Injected private var nowPlayingService: NowPlayingService
+
     // Temporary singleton access until multiple scenes are properly supported
     static var shared: SceneDelegate { UIApplication.shared.connectedScenes.first!.delegate as! SceneDelegate }
     
@@ -165,7 +166,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         cancelBackgroundTask()
         
         // Update the lock screen art in case were were using another app
-        playQueue.updateLockScreenInfo()
+        nowPlayingService.refresh()
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
