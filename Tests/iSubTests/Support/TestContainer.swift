@@ -30,10 +30,12 @@ enum TestContainer {
         retire(Resolver.root)
         Resolver.root = .main
         // Restore the model layer's ambient services to the app's instances in case a
-        // test pointed them at its own store/settings/jukebox
-        ModelServices.store = Resolver.main.resolve()
-        ModelServices.settings = Resolver.main.resolve()
-        ModelServices.jukebox = Resolver.main.resolve()
+        // test pointed them at its own store/settings/jukebox. The service types must
+        // be explicit: ModelServices' properties are optionals, so a bare resolve()
+        // infers Optional<Store> etc., which is not registered (fatalError at teardown).
+        ModelServices.store = Resolver.main.resolve(Store.self)
+        ModelServices.settings = Resolver.main.resolve(SavedSettings.self)
+        ModelServices.jukebox = Resolver.main.resolve(Jukebox.self)
     }
 
     private static func retire(_ root: Resolver) {

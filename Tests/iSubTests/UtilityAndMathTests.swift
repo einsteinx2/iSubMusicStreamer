@@ -321,23 +321,9 @@ final class UtilityAndMathTests: XCTestCase {
 }
 
 // Song.localPath/localTempPath need a Store (for the server path prefix) and the
-// sandboxed FileSystem, so they get a SandboxedTestCase of their own
-final class SongLocalPathTests: SandboxedTestCase {
-    private var store: Store!
-
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-        store = Store()
-        store.setup(location: .memory)
-        let injectedStore: Store = store
-        TestContainer.register { injectedStore }
-    }
-
-    override func tearDownWithError() throws {
-        store = nil
-        try super.tearDownWithError()
-    }
-
+// sandboxed FileSystem. StoreTestCase provides both AND points ModelServices.store at
+// the test store, which is where Song reads its store ambiently.
+final class SongLocalPathTests: StoreTestCase {
     private func makeSong(serverId: Int, path: String, suffix: String = "mp3", transcodedSuffix: String? = nil) throws -> Song {
         let xml = "<song id=\"1\" title=\"t\" path=\"\(path)\" suffix=\"\(suffix)\"\(transcodedSuffix.map { " transcodedSuffix=\"\($0)\"" } ?? "")/>"
         return Song(serverId: serverId, element: try XMLTestHelpers.element(tag: "song", xml: xml))

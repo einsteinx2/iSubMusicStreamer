@@ -72,8 +72,18 @@ final class JukeboxTests: StoreTestCase {
         return condition()
     }
 
-    private func lastJukeboxRequest() -> MockSubsonicServer.ReceivedRequest? {
-        MockSubsonicServer.receivedRequests(action: .jukeboxControl).last
+    // The jukebox schedules a follow-up "get" 0.5s after every command, and after a
+    // get it goes quiet for 30s — so a command is only briefly the LAST received
+    // request, and asserting on .last races the follow-up (one main-thread stall at
+    // the wrong moment misses the window forever). Always scan all received requests.
+    @discardableResult
+    private func waitForJukeboxRequest(timeout: TimeInterval = 5, matching predicate: (MockSubsonicServer.ReceivedRequest) -> Bool) -> MockSubsonicServer.ReceivedRequest? {
+        var match: MockSubsonicServer.ReceivedRequest?
+        waitUntil(timeout: timeout) {
+            match = MockSubsonicServer.receivedRequests(action: .jukeboxControl).first(where: predicate)
+            return match != nil
+        }
+        return match
     }
 
     // MARK: Command construction
@@ -89,9 +99,9 @@ final class JukeboxTests: StoreTestCase {
 
         XCTAssertEqual(playQueue.currentIndex, 3, "the local index tracks the jukebox immediately")
 
-        XCTAssertTrue(waitUntil { self.lastJukeboxRequest() != nil })
-        XCTAssertEqual(lastJukeboxRequest()?.parameter("action"), "skip")
-        XCTAssertEqual(lastJukeboxRequest()?.parameter("index"), "3")
+        let skipRequest = waitForJukeboxRequest { $0.parameter("action") == "skip" }
+        XCTAssertNotNil(skipRequest, "no jukebox skip request was sent")
+        XCTAssertEqual(skipRequest?.parameter("index"), "3")
         // The synthetic status carries a nonzero position (a real server that can't
         // open an audio device always reports 0, so this is only testable inline)
         XCTAssertTrue(waitUntil { self.jukebox.position == 42 })
@@ -102,22 +112,20 @@ final class JukeboxTests: StoreTestCase {
 
         jukebox.play()
         XCTAssertTrue(jukebox.isPlaying)
-        XCTAssertTrue(waitUntil { self.lastJukeboxRequest()?.parameter("action") == "start" })
+        XCTAssertNotNil(waitForJukeboxRequest { $0.parameter("action") == "start" })
 
         jukebox.stop()
         XCTAssertFalse(jukebox.isPlaying)
-        XCTAssertTrue(waitUntil { self.lastJukeboxRequest()?.parameter("action") == "stop" })
+        XCTAssertNotNil(waitForJukeboxRequest { $0.parameter("action") == "stop" })
 
         jukebox.setVolume(level: 0.5)
-        XCTAssertTrue(waitUntil {
-            let request = self.lastJukeboxRequest()
-            return request?.parameter("action") == "setGain" && request?.parameter("gain") == "0.5"
+        XCTAssertNotNil(waitForJukeboxRequest {
+            $0.parameter("action") == "setGain" && $0.parameter("gain") == "0.5"
         })
 
         jukebox.seek(seconds: 42)
-        XCTAssertTrue(waitUntil {
-            let request = self.lastJukeboxRequest()
-            return request?.parameter("action") == "skip" && request?.parameter("offset") == "42"
+        XCTAssertNotNil(waitForJukeboxRequest {
+            $0.parameter("action") == "skip" && $0.parameter("offset") == "42"
         })
     }
 
@@ -126,8 +134,9 @@ final class JukeboxTests: StoreTestCase {
 
         jukebox.add(songIds: ["10", "20", "30"])
 
-        XCTAssertTrue(waitUntil { self.lastJukeboxRequest()?.parameter("action") == "add" })
-        XCTAssertEqual(lastJukeboxRequest()?.parameters["id"], ["10", "20", "30"])
+        let addRequest = waitForJukeboxRequest { $0.parameter("action") == "add" }
+        XCTAssertNotNil(addRequest, "no jukebox add request was sent")
+        XCTAssertEqual(addRequest?.parameters["id"], ["10", "20", "30"])
     }
 
     func testAddEmptySongIdsSendsNothing() {
@@ -285,7 +294,7 @@ final class JukeboxTests: StoreTestCase {
 
         wait(for: [endedExpectation], timeout: 10)
         XCTAssertFalse(jukebox.isPlaying)
-        XCTAssertTrue(waitUntil { self.lastJukeboxRequest()?.parameter("action") == "stop" })
+        XCTAssertNotNil(waitForJukeboxRequest { $0.parameter("action") == "stop" })
     }
 }
 
