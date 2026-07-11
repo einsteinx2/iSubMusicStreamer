@@ -15,7 +15,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @Injected private var settings: SavedSettings
     @Injected private var downloadQueue: DownloadQueueing
     @Injected private var playQueue: PlayQueue
-    @Injected private var streamManager: StreamManaging
+    @Injected private var downloadEngine: DownloadEngine
     @Injected private var jukebox: Jukebox
     @Injected private var analytics: Analytics
     @Injected private var stateRestorer: StateRestorer
@@ -88,7 +88,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(showJukeboxError(notification:)), name: Notifications.jukeboxError)
         
         // Recover current state if player was interrupted
-        streamManager.setup()
+        downloadEngine.setup()
         playbackCoordinator.resumeSong()
     }
 

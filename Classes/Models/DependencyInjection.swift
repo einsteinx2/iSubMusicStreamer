@@ -35,8 +35,7 @@ final class AppServices {
     let scrobbleService: ScrobbleService
     let downloadsManager: DownloadsManager
     let player: BassPlayer
-    let downloadQueue: DownloadQueue
-    let streamManager: StreamManager
+    let downloadEngine: DownloadEngine
     let jukebox: Jukebox
     let playQueue: PlayQueue
     let playbackCoordinator: PlaybackCoordinator
@@ -55,20 +54,19 @@ final class AppServices {
         player = BassPlayer(store: store, settings: settings)
         scrobbleService = ScrobbleService(settings: settings, session: session, player: player)
         jukebox = Jukebox(settings: settings)
-        streamManager = StreamManager(store: store, settings: settings, player: player, downloadsManager: downloadsManager, networkStatus: networkMonitor, metadataDownloader: SongMetadataDownloader())
-        downloadQueue = DownloadQueue(store: store, settings: settings, downloadsManager: downloadsManager, player: player, networkStatus: networkMonitor, streamManager: streamManager, metadataDownloader: SongMetadataDownloader())
+        downloadEngine = DownloadEngine(store: store, settings: settings, downloadsManager: downloadsManager, player: player, networkStatus: networkMonitor)
         playQueue = PlayQueue(store: store, settings: settings)
-        playbackCoordinator = PlaybackCoordinator(queue: playQueue, settings: settings, store: store, player: player, jukebox: jukebox, streamManager: streamManager, downloadQueue: downloadQueue)
+        playbackCoordinator = PlaybackCoordinator(queue: playQueue, settings: settings, store: store, player: player, jukebox: jukebox, streamManager: downloadEngine.streamManager, downloadQueue: downloadEngine.downloadQueue)
         nowPlayingService = NowPlayingService(settings: settings, playQueue: playQueue, player: player, coordinator: playbackCoordinator)
         stateRestorer = StateRestorer(settings: settings, player: player, playQueue: playQueue)
 
         // Back-edges are weak references attached explicitly, never resolved ambiently
+        // (the stream manager <-> download queue steal edge is wired inside the engine)
         settings.attach(networkStatus: networkMonitor)
-        streamManager.attach(downloadQueue: downloadQueue)
-        streamManager.attach(playQueue: playQueue)
+        downloadEngine.attach(playQueue: playQueue)
         player.attach(delegate: playbackCoordinator)
-        player.attach(streamManager: streamManager)
-        player.attach(downloadQueue: downloadQueue)
+        player.attach(streamManager: downloadEngine.streamManager)
+        player.attach(downloadQueue: downloadEngine.downloadQueue)
         downloadsManager.attach(player: player, playQueue: playQueue)
 
         // Ambient services for the value-model layer
@@ -92,8 +90,9 @@ struct DependencyInjection {
         main.register(factory: { services.scrobbleService })
         main.register(factory: { services.downloadsManager })
         main.register(factory: { services.player })
-        main.register(factory: { services.downloadQueue })
-        main.register(factory: { services.streamManager })
+        main.register(factory: { services.downloadEngine })
+        main.register(factory: { services.downloadEngine.downloadQueue })
+        main.register(factory: { services.downloadEngine.streamManager })
         main.register(factory: { services.jukebox })
         main.register(factory: { services.playQueue })
         main.register(factory: { services.playbackCoordinator })
@@ -102,8 +101,8 @@ struct DependencyInjection {
 
         // Protocol seams resolving to the same singleton instances (tests override these with fakes)
         main.register(factory: { services.player as PlayerControlling })
-        main.register(factory: { services.streamManager as StreamManaging })
-        main.register(factory: { services.downloadQueue as DownloadQueueing })
+        main.register(factory: { services.downloadEngine.streamManager as StreamManaging })
+        main.register(factory: { services.downloadEngine.downloadQueue as DownloadQueueing })
         main.register(factory: { services.networkMonitor as NetworkStatus })
         main.register(factory: { SongMetadataDownloader() as SongMetadataDownloading })
 

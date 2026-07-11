@@ -32,6 +32,8 @@
 		4D0EB1DB58BC96F52F53E501 /* MockSubsonicHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C4D36A62D67D18EB15667 /* MockSubsonicHTTPServer.swift */; };
 		52A400F8AD3569F63217085B /* Fixtures in Resources */ = {isa = PBXBuildFile; fileRef = 2FBCCCBAB13100C9FC48F5FF /* Fixtures */; };
 		5302DE4125BA2AA00036A9B1 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5302DE4025BA2AA00036A9B1 /* StreamManager.swift */; };
+		5A7E571E2F1000010000AB1E /* DownloadEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57202F1000010000AB20 /* DownloadEngine.swift */; };
+		5A7E571F2F1000010000AB1F /* DownloadEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57202F1000010000AB20 /* DownloadEngine.swift */; };
 		5302DE4225BA2AA50036A9B1 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5302DE4025BA2AA00036A9B1 /* StreamManager.swift */; };
 		530738F41FAF6A72005C2650 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 530738F31FAF6A72005C2650 /* Media.xcassets */; };
 		530738F51FAF6A72005C2650 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 530738F31FAF6A72005C2650 /* Media.xcassets */; };
@@ -702,6 +704,7 @@
 		4DE7EAC0C72A73A4B3BAED05 /* LocalPlaylistQueueTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalPlaylistQueueTests.swift; sourceTree = "<group>"; };
 		50C449CBD3A0CDF83C8355DA /* ViewControllerLogicTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ViewControllerLogicTests.swift; sourceTree = "<group>"; };
 		5302DE4025BA2AA00036A9B1 /* StreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamManager.swift; sourceTree = "<group>"; };
+		5A7E57202F1000010000AB20 /* DownloadEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadEngine.swift; sourceTree = "<group>"; };
 		530738F31FAF6A72005C2650 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		530A16722592468C00E9294E /* FolderArtist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderArtist.swift; sourceTree = "<group>"; };
 		530A1678259255D200E9294E /* FolderAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAlbum.swift; sourceTree = "<group>"; };
@@ -1539,6 +1542,7 @@
 			isa = PBXGroup;
 			children = (
 				5302DE4025BA2AA00036A9B1 /* StreamManager.swift */,
+				5A7E57202F1000010000AB20 /* DownloadEngine.swift */,
 				536C890625BB37F5008FE1AC /* DownloadQueue.swift */,
 				536C890925BB5FED008FE1AC /* StreamHandler.swift */,
 			);
@@ -2332,6 +2336,7 @@
 				535E143525A7BB910039BCAA /* FolderAlbumStore.swift in Sources */,
 				53CB554825C9D2E1004F2BAB /* Bookmark.swift in Sources */,
 				5302DE4125BA2AA00036A9B1 /* StreamManager.swift in Sources */,
+				5A7E571E2F1000010000AB1E /* DownloadEngine.swift in Sources */,
 				531EC85025B1E6420076973A /* LocalPlaylistsViewController.swift in Sources */,
 				531EC87D25B24B6B0076973A /* ArtistsViewController.swift in Sources */,
 				539C05502DEFA195007C3ACE /* Error+IsCanceled.swift in Sources */,
@@ -2588,6 +2593,7 @@
 				535E143625A7BB910039BCAA /* FolderAlbumStore.swift in Sources */,
 				53CB554925C9D2E1004F2BAB /* Bookmark.swift in Sources */,
 				5302DE4225BA2AA50036A9B1 /* StreamManager.swift in Sources */,
+				5A7E571F2F1000010000AB1F /* DownloadEngine.swift in Sources */,
 				531EC85125B1E6420076973A /* LocalPlaylistsViewController.swift in Sources */,
 				531EC87E25B24B6B0076973A /* ArtistsViewController.swift in Sources */,
 				539C05512DEFA195007C3ACE /* Error+IsCanceled.swift in Sources */,
