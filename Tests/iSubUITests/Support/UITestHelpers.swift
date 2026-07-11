@@ -75,6 +75,24 @@ extension XCUIApplication {
         }
     }
 
+    // Taps a SwiftUI Toggle row by its accessibility identifier. The identified switch
+    // element spans the whole row (label + switch), and a center tap lands on the
+    // label, which doesn't toggle — tap the nested switch when it's exposed, else the
+    // trailing edge where the switch control lives.
+    func tapToggle(_ identifier: String, file: StaticString = #filePath, line: UInt = #line) {
+        let element = switches[identifier].firstMatch
+        XCTAssertTrue(element.waitForExistence(timeout: 10), "no toggle '\(identifier)'", file: file, line: line)
+        if !element.isHittable {
+            swipeUp()
+        }
+        let inner = element.switches.firstMatch
+        if inner.exists && inner.isHittable {
+            inner.tap()
+        } else {
+            element.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        }
+    }
+
     // Taps a row by the visible text inside it (UniversalTableViewCell exposes its
     // labels as static texts). Waits for hittability too — paged containers (Tabman)
     // keep neighboring pages in the hierarchy, so existence alone isn't tappable.

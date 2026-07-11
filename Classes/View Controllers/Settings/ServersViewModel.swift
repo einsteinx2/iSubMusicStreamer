@@ -20,14 +20,34 @@ import CocoaLumberjackSwift
         let message: String
     }
 
+    // One sheet state for both flows — two chained .sheet modifiers on the same view
+    // are unreliable, so add/edit share a single item-driven sheet
+    enum Sheet: Identifiable {
+        case add
+        case edit(Server)
+
+        var id: Int {
+            switch self {
+            case .add: return -1
+            case .edit(let server): return server.id
+            }
+        }
+
+        var serverToEdit: Server? {
+            switch self {
+            case .add: return nil
+            case .edit(let server): return server
+            }
+        }
+    }
+
     @ObservationIgnored @Injected private var store: Store
     @ObservationIgnored @Injected private var settings: SavedSettings
     @ObservationIgnored @Injected private var serverSwitcher: ServerSwitcher
 
     private(set) var servers = [Server]()
     var alert: AlertInfo?
-    var addSheetPresented = false
-    var serverToEdit: Server?
+    var sheet: Sheet?
 
     @ObservationIgnored private var checkTask: Task<Void, Never>?
     @ObservationIgnored private var observers = [NSObjectProtocol]()
@@ -130,7 +150,7 @@ import CocoaLumberjackSwift
             serverSwitcher.switchServer()
         } else {
             settings.currentServer = nil
-            addSheetPresented = true
+            sheet = .add
         }
     }
 }

@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftUI
+import Resolver
 
 // Drives navigation between the SwiftUI settings screens. Each screen is its own
 // UIHostingController pushed onto the app's existing UIKit navigation stack (no inner
@@ -34,6 +35,19 @@ final class SettingsCoordinator {
         return controller
     }
 
+    // The controllers to show when settings opens: just the root, or root + server
+    // list on first run (no servers yet — the list auto-presents the add sheet).
+    // Callers apply these in ONE navigation operation (setViewControllers/push):
+    // chaining a second animated push at launch wedges UIKit mid-transition.
+    func makeInitialViewControllers() -> [UIViewController] {
+        let root = makeRootViewController()
+        let store: Store = Resolver.resolve()
+        if store.servers().isEmpty {
+            return [root, host(ServersView(), title: "Servers")]
+        }
+        return [root]
+    }
+
     func showSection(_ section: SettingsSection) {
         switch section {
         case .about:
@@ -56,7 +70,22 @@ final class SettingsCoordinator {
     }
 
     private func push<V: View>(_ view: V, title: String) {
-        navigationController?.pushViewController(host(view, title: title), animated: true)
+        guard let navigationController else { return }
+        let controller = host(view, title: title)
+        // UIKit silently drops a push made while another transition is running (e.g.
+        // the first-run flow pushes Servers from the root screen's onAppear, which
+        // fires during the root's own push animation) — defer until it completes.
+        // The async hop matters: pushing from inside the transition completion itself
+        // leaves the navigation controller in a stuck half-transition.
+        if let transitionCoordinator = navigationController.transitionCoordinator {
+            transitionCoordinator.animate(alongsideTransition: nil) { _ in
+                DispatchQueue.main.async {
+                    navigationController.pushViewController(controller, animated: true)
+                }
+            }
+        } else {
+            navigationController.pushViewController(controller, animated: true)
+        }
     }
 
     private func host<V: View>(_ view: V, title: String) -> UIViewController {

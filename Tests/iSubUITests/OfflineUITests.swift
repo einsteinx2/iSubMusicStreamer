@@ -289,7 +289,7 @@ final class OfflineUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
         app.buttons["settings.section.network"].tap()
         XCTAssertTrue(app.navigationBars["Network & Streaming"].waitForExistence(timeout: 10))
-        app.switches[AccessibilityId.optionsManualOfflineMode].firstMatch.tap()
+        app.tapToggle(AccessibilityId.optionsManualOfflineMode)
 
         // The "iSub is Offline" banner appears
         XCTAssertTrue(waitUntil(timeout: 10) { self.offlineIndicator(app).isHittable },
@@ -316,7 +316,7 @@ final class OfflineUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
         app.buttons["settings.section.network"].tap()
         XCTAssertTrue(app.navigationBars["Network & Streaming"].waitForExistence(timeout: 10))
-        app.switches[AccessibilityId.optionsManualOfflineMode].firstMatch.tap()
+        app.tapToggle(AccessibilityId.optionsManualOfflineMode)
         XCTAssertTrue(waitUntil(timeout: 10) { !self.offlineIndicator(app).isHittable },
                       "offline banner did not hide after going back online")
 

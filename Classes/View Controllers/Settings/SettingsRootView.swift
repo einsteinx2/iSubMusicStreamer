@@ -15,9 +15,6 @@ struct SettingsRootView: View {
     @Environment(\.settingsCoordinator) private var coordinator
 
     private let settings: SavedSettings = Resolver.resolve()
-    private let store: Store = Resolver.resolve()
-
-    @State private var hasAutoShownServers = false
 
     var body: some View {
         List {
@@ -58,14 +55,6 @@ struct SettingsRootView: View {
             }
         }
         .listStyle(.insetGrouped)
-        .onAppear {
-            // First run: no servers yet, so go straight to the server list, which
-            // auto-presents the add-server sheet
-            if !hasAutoShownServers && store.servers().isEmpty {
-                hasAutoShownServers = true
-                coordinator?.showServers()
-            }
-        }
     }
 }
 

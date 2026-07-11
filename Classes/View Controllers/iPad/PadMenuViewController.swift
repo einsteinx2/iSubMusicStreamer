@@ -129,10 +129,16 @@ final class PadMenuViewController: UIViewController {
         var navController: UINavigationController? = nil
         if let cachedController = cachedTabs[type] {
             navController = cachedController
+        } else if type == .settings {
+            // Settings needs its whole initial stack set in one operation (on first
+            // run that's root + server list)
+            let nav = CustomUINavigationController()
+            nav.setViewControllers(SettingsCoordinator().makeInitialViewControllers(), animated: false)
+            navController = nav
+            cachedTabs[type] = nav
         } else {
             var controller: UIViewController? = nil
             switch type {
-            case .settings:  controller = SettingsCoordinator().makeRootViewController()
             case .home:      controller = HomeViewController()
             case .library:   controller = LibraryViewController()
             case .playlists: controller = PlaylistsViewController()

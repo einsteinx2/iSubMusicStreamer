@@ -52,11 +52,7 @@ final class OnlineSettingsUITests: XCTestCase {
     }
 
     private func toggle(_ app: XCUIApplication, _ identifier: String) {
-        let control = app.switches[identifier].firstMatch
-        if !control.isHittable {
-            app.swipeUp()
-        }
-        control.tap()
+        app.tapToggle(identifier)
     }
 
     func testOptionsTogglesPersistAcrossRelaunch() {
@@ -151,7 +147,7 @@ final class OnlineSettingsUITests: XCTestCase {
         // Edit: the row's info button opens the form; changing the username persists
         // (the old ServerEditViewController silently discarded field edits — fixed)
         let secondRow = app.cell(containing: "http://second.server.local")
-        secondRow.buttons[AccessibilityId.serversEdit].tap()
+        secondRow.buttons[AccessibilityId.serversEdit].firstMatch.tap()
         XCTAssertTrue(urlField.waitForExistence(timeout: 10))
         usernameField.tap()
         usernameField.typeText("-renamed")

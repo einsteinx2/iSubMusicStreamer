@@ -79,7 +79,7 @@ final class ServersViewModelTests: StoreTestCase {
         XCTAssertEqual(settings.currentServer?.id, 2, "the first remaining server becomes current")
         XCTAssertEqual(switcher.switchCount, 1, "the switch teardown runs for the replacement server")
         XCTAssertEqual(viewModel.alert?.title, "Notice")
-        XCTAssertFalse(viewModel.addSheetPresented)
+        XCTAssertNil(viewModel.sheet)
     }
 
     @MainActor func testDeletingCurrentServerWithPopupsDisabledSkipsNotice() {
@@ -119,7 +119,11 @@ final class ServersViewModelTests: StoreTestCase {
         XCTAssertTrue(viewModel.servers.isEmpty)
         XCTAssertNil(settings.currentServer)
         XCTAssertEqual(switcher.switchCount, 0)
-        XCTAssertTrue(viewModel.addSheetPresented, "no servers left, so the add-server sheet presents")
+        if case .add = viewModel.sheet {
+            // expected: no servers left, so the add-server sheet presents
+        } else {
+            XCTFail("no servers left, so the add-server sheet must present (got \(String(describing: viewModel.sheet)))")
+        }
     }
 
     @MainActor func testReloadServerListNotificationRefreshes() {
