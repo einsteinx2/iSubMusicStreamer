@@ -205,8 +205,6 @@
 		5367C6D31EA92D1A00B1C242 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D21EA92D1A00B1C242 /* libxml2.tbd */; };
 		5367C6D51EA92D2400B1C242 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D41EA92D2400B1C242 /* libz.tbd */; };
 		5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D61EA92D3000B1C242 /* libSystem.tbd */; };
-		536C890725BB37F5008FE1AC /* DownloadQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890625BB37F5008FE1AC /* DownloadQueue.swift */; };
-		536C890825BB37F5008FE1AC /* DownloadQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890625BB37F5008FE1AC /* DownloadQueue.swift */; };
 		536C890A25BB5FED008FE1AC /* StreamHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890925BB5FED008FE1AC /* StreamHandler.swift */; };
 		536C890B25BB5FED008FE1AC /* StreamHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890925BB5FED008FE1AC /* StreamHandler.swift */; };
 		536C891025BF92D1008FE1AC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890F25BF92D1008FE1AC /* SettingsViewController.swift */; };
@@ -791,7 +789,6 @@
 		5367C6D21EA92D1A00B1C242 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		5367C6D41EA92D2400B1C242 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		5367C6D61EA92D3000B1C242 /* libSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.tbd; path = usr/lib/libSystem.tbd; sourceTree = SDKROOT; };
-		536C890625BB37F5008FE1AC /* DownloadQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueue.swift; sourceTree = "<group>"; };
 		536C890925BB5FED008FE1AC /* StreamHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamHandler.swift; sourceTree = "<group>"; };
 		536C890F25BF92D1008FE1AC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		536C891225BF93FF008FE1AC /* ServersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServersViewController.swift; sourceTree = "<group>"; };
@@ -1543,7 +1540,6 @@
 			children = (
 				5302DE4025BA2AA00036A9B1 /* StreamManager.swift */,
 				5A7E57202F1000010000AB20 /* DownloadEngine.swift */,
-				536C890625BB37F5008FE1AC /* DownloadQueue.swift */,
 				536C890925BB5FED008FE1AC /* StreamHandler.swift */,
 			);
 			path = "Stream Handlers";
@@ -2224,7 +2220,6 @@
 				53E03CF725C1F6EF0043355F /* APIError.swift in Sources */,
 				53ED673125B780070002BFAF /* UIApplication+Helper.swift in Sources */,
 				53A0EDC825B5DCF400B78DAA /* TagArtistViewController.swift in Sources */,
-				536C890725BB37F5008FE1AC /* DownloadQueue.swift in Sources */,
 				5381884225A65F6100C59CDE /* RootListMetadata.swift in Sources */,
 				53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
 				532C625E25B6559A00185998 /* main.swift in Sources */,
@@ -2484,7 +2479,6 @@
 				53A0EDC925B5DCF400B78DAA /* TagArtistViewController.swift in Sources */,
 				53E03CF825C1F6EF0043355F /* APIError.swift in Sources */,
 				53ED673225B780070002BFAF /* UIApplication+Helper.swift in Sources */,
-				536C890825BB37F5008FE1AC /* DownloadQueue.swift in Sources */,
 				53EA2DE3257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
 				5381884325A65F6100C59CDE /* RootListMetadata.swift in Sources */,
 				5376D5B62B8AB430000C3184 /* BassEffectDAO.swift in Sources */,

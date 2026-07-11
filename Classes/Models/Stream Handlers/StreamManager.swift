@@ -313,11 +313,13 @@ final class StreamManager {
         }
     }
     
-    // MARK: Handler Stealing
-    
-    func stealForDownloadQueue(handler: StreamHandler) {
+    // MARK: Lane transfer
+
+    // Called only by DownloadEngine.promote(handler:) as half of the atomic transfer
+    // to the permanent download lane (the engine flips the delegate first)
+    func removeFromStack(handler: StreamHandler) {
         if Debug.streamManager {
-            DDLogInfo("[StreamManager] download queue manager stole handler for song \(handler.song)")
+            DDLogInfo("[StreamManager] handler for song \(handler.song) promoted to the download lane")
         }
         handlerStack.removeAll { $0 == handler }
         saveHandlerStack()
@@ -497,7 +499,6 @@ protocol StreamManaging: AnyObject {
     func removeAllStreams(except song: Song)
     func removeStream(index: Int)
     func resumeQueue()
-    func stealForDownloadQueue(handler: StreamHandler)
     func queueStream(song: Song, byteOffset: Int, secondsOffset: Double, index: Int, tempCache: Bool, startDownload: Bool)
     func queueStream(song: Song, tempCache: Bool, startDownload: Bool)
     func fillStreamQueue(startDownload: Bool)

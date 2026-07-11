@@ -9,11 +9,11 @@
 import XCTest
 @testable import iSub_Beta
 
-// COV-08: DownloadQueue state machine — start/stop, offline and gating rules,
-// handler stealing from the StreamManager, and download completion bookkeeping.
+// COV-08: the permanent download lane's state machine — start/stop, offline and
+// gating rules, handler promotion from the stream lane, and download completion
+// bookkeeping. Drives the DownloadEngine (which absorbed the old DownloadQueue).
 final class DownloadQueueTests: StoreTestCase {
-    private var downloadQueue: DownloadQueue!
-    private var streamManager: FakeStreamManager!
+    private var downloadQueue: DownloadEngine!
     private var settings: SavedSettings!
     private var network: FakeNetworkStatus!
     private var player: FakePlayer!
@@ -24,9 +24,6 @@ final class DownloadQueueTests: StoreTestCase {
         MockSubsonicServer.install()
         XCTAssertTrue(store.add(server: TestData.server(id: 1, urlString: "https://mock.example.com")))
 
-        streamManager = FakeStreamManager()
-        let fakeStreamManager = streamManager!
-        TestContainer.register { fakeStreamManager as StreamManaging }
         player = FakePlayer()
         let fakePlayer = player!
         TestContainer.register { fakePlayer as PlayerControlling }
@@ -44,25 +41,23 @@ final class DownloadQueueTests: StoreTestCase {
         TestContainer.register { freshPlayQueue }
 
         downloadsManager = DownloadsManager(settings: settings, store: store)
-        downloadQueue = makeDownloadQueue(downloadsManager: downloadsManager)
+        downloadQueue = makeDownloadEngine(downloadsManager: downloadsManager)
     }
 
-    // Builds a DownloadQueue wired to this test's fakes (the composition root's job
-    // in production)
-    private func makeDownloadQueue(downloadsManager: DownloadsManager) -> DownloadQueue {
-        DownloadQueue(store: store,
-                      settings: settings,
-                      downloadsManager: downloadsManager,
-                      player: player,
-                      networkStatus: network,
-                      streamManager: streamManager,
-                      metadataDownloader: FakeSongMetadataDownloader())
+    // Builds a DownloadEngine wired to this test's fakes (the composition root's job
+    // in production); its stream lane is a real StreamManager over the same fakes
+    private func makeDownloadEngine(downloadsManager: DownloadsManager) -> DownloadEngine {
+        DownloadEngine(store: store,
+                       settings: settings,
+                       downloadsManager: downloadsManager,
+                       player: player,
+                       networkStatus: network,
+                       metadataDownloader: FakeSongMetadataDownloader())
     }
 
     override func tearDownWithError() throws {
         downloadQueue?.currentStreamHandler?.cancel()
         downloadQueue = nil
-        streamManager = nil
         settings = nil
         network = nil
         player = nil
@@ -172,7 +167,7 @@ final class DownloadQueueTests: StoreTestCase {
             override func showNoFreeSpaceMessage() { noFreeSpaceMessageCount += 1 }
         }
         let lowSpaceManager = LowSpaceDownloadsManager(settings: settings, store: store)
-        let queue = makeDownloadQueue(downloadsManager: lowSpaceManager)
+        let queue = makeDownloadEngine(downloadsManager: lowSpaceManager)
         _ = makeQueuedSong(id: "1")
 
         queue.start()
@@ -208,22 +203,22 @@ final class DownloadQueueTests: StoreTestCase {
         XCTAssertTrue(FileManager.default.fileExists(atPath: song.localPath))
     }
 
-    func testStartStealsHandlerFromStreamManager() {
+    func testStartPromotesHandlerFromStreamLane() {
         MockSubsonicServer.stubStalling(.stream, data: Data(repeating: 1, count: 10_000))
         let song = makeQueuedSong(id: "1")
 
-        // The stream manager already has a handler for this song (the delegate is held
-        // weakly, so keep the spy alive for the handler's lifetime)
-        let spy = StreamHandlerDelegateSpy()
-        let handler = StreamHandler(song: song, tempCache: false, delegate: spy, dependencies: .fromResolver())
-        streamManager.handlersBySong[song] = handler
+        // The stream lane already has a handler for this song
+        let streamManager = downloadQueue.streamManager
+        streamManager.queueStream(song: song, tempCache: false, startDownload: false)
+        let handler = try! XCTUnwrap(streamManager.handler(song: song))
 
         downloadQueue.start()
 
         XCTAssertTrue(downloadQueue.isDownloading)
-        XCTAssertTrue(streamManager.stolenHandlers.contains(handler), "the existing stream handler is stolen instead of duplicated")
+        XCTAssertNil(streamManager.handler(song: song), "the promoted handler leaves the stream lane's stack")
+        XCTAssertTrue(handler.delegate === downloadQueue, "the promotion atomically flips the handler's delegate to the engine")
         XCTAssertTrue(downloadQueue.currentStreamHandler === handler)
-        XCTAssertTrue(waitUntil { handler.isDownloading }, "the stolen handler is resumed")
+        XCTAssertTrue(waitUntil { handler.isDownloading }, "the promoted handler is resumed")
     }
 
     // MARK: stop (BUG-05)

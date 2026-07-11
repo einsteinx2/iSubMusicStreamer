@@ -405,12 +405,12 @@ final class StreamManagerTests: StoreTestCase {
 
     // MARK: Handler stealing
 
-    func testStealForDownloadQueueRemovesHandlerFromStack() {
+    func testRemoveFromStackRemovesHandler() {
         let song = makeSong(id: "1")
         streamManager.queueStream(song: song, tempCache: false, startDownload: false)
         let handler = streamManager.handler(song: song)!
 
-        streamManager.stealForDownloadQueue(handler: handler)
+        streamManager.removeFromStack(handler: handler)
 
         XCTAssertFalse(streamManager.isInQueue(song: song), "a stolen handler no longer belongs to the stream manager")
     }

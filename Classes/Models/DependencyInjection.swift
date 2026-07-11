@@ -54,9 +54,9 @@ final class AppServices {
         player = BassPlayer(store: store, settings: settings)
         scrobbleService = ScrobbleService(settings: settings, session: session, player: player)
         jukebox = Jukebox(settings: settings)
-        downloadEngine = DownloadEngine(store: store, settings: settings, downloadsManager: downloadsManager, player: player, networkStatus: networkMonitor)
+        downloadEngine = DownloadEngine(store: store, settings: settings, downloadsManager: downloadsManager, player: player, networkStatus: networkMonitor, metadataDownloader: SongMetadataDownloader())
         playQueue = PlayQueue(store: store, settings: settings)
-        playbackCoordinator = PlaybackCoordinator(queue: playQueue, settings: settings, store: store, player: player, jukebox: jukebox, streamManager: downloadEngine.streamManager, downloadQueue: downloadEngine.downloadQueue)
+        playbackCoordinator = PlaybackCoordinator(queue: playQueue, settings: settings, store: store, player: player, jukebox: jukebox, streamManager: downloadEngine.streamManager, downloadQueue: downloadEngine)
         nowPlayingService = NowPlayingService(settings: settings, playQueue: playQueue, player: player, coordinator: playbackCoordinator)
         stateRestorer = StateRestorer(settings: settings, player: player, playQueue: playQueue)
 
@@ -66,7 +66,7 @@ final class AppServices {
         downloadEngine.attach(playQueue: playQueue)
         player.attach(delegate: playbackCoordinator)
         player.attach(streamManager: downloadEngine.streamManager)
-        player.attach(downloadQueue: downloadEngine.downloadQueue)
+        player.attach(downloadQueue: downloadEngine)
         downloadsManager.attach(player: player, playQueue: playQueue)
 
         // Ambient services for the value-model layer
@@ -91,7 +91,6 @@ struct DependencyInjection {
         main.register(factory: { services.downloadsManager })
         main.register(factory: { services.player })
         main.register(factory: { services.downloadEngine })
-        main.register(factory: { services.downloadEngine.downloadQueue })
         main.register(factory: { services.downloadEngine.streamManager })
         main.register(factory: { services.jukebox })
         main.register(factory: { services.playQueue })
@@ -102,7 +101,7 @@ struct DependencyInjection {
         // Protocol seams resolving to the same singleton instances (tests override these with fakes)
         main.register(factory: { services.player as PlayerControlling })
         main.register(factory: { services.downloadEngine.streamManager as StreamManaging })
-        main.register(factory: { services.downloadEngine.downloadQueue as DownloadQueueing })
+        main.register(factory: { services.downloadEngine as DownloadQueueing })
         main.register(factory: { services.networkMonitor as NetworkStatus })
         main.register(factory: { SongMetadataDownloader() as SongMetadataDownloading })
 

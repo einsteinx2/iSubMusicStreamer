@@ -102,7 +102,6 @@ final class FakeStreamManager: StreamManaging {
     private(set) var removeAllStreamsExceptSongs = [Song]()
     private(set) var removedStreamIndexes = [Int]()
     private(set) var resumeQueueCount = 0
-    private(set) var stolenHandlers = [StreamHandler]()
 
     var downloadingSongs = Set<Song>()
     var firstInQueueSongs = Set<Song>()
@@ -116,7 +115,6 @@ final class FakeStreamManager: StreamManaging {
     func removeAllStreams(except song: Song) { removeAllStreamsExceptSongs.append(song) }
     func removeStream(index: Int) { removedStreamIndexes.append(index) }
     func resumeQueue() { resumeQueueCount += 1 }
-    func stealForDownloadQueue(handler: StreamHandler) { stolenHandlers.append(handler) }
 
     func queueStream(song: Song, byteOffset: Int, secondsOffset: Double, index: Int, tempCache: Bool, startDownload: Bool) {
         queuedStreams.append((song, byteOffset, secondsOffset, index, tempCache, startDownload))

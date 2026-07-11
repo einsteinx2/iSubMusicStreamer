@@ -17,7 +17,7 @@ final class ProtocolSeamTests: SandboxedTestCase {
     func testProtocolRegistrationsResolveToConcreteSingletons() {
         XCTAssertTrue(Resolver.main.resolve(PlayerControlling.self) === Resolver.main.resolve(BassPlayer.self))
         XCTAssertTrue(Resolver.main.resolve(StreamManaging.self) === Resolver.main.resolve(StreamManager.self))
-        XCTAssertTrue(Resolver.main.resolve(DownloadQueueing.self) === Resolver.main.resolve(DownloadQueue.self))
+        XCTAssertTrue(Resolver.main.resolve(DownloadQueueing.self) === Resolver.main.resolve(DownloadEngine.self))
     }
 
     func testInjectedConsumerReceivesFakePlayer() {
@@ -67,6 +67,6 @@ final class ProtocolSeamTests: SandboxedTestCase {
         XCTAssertTrue(Resolver.resolve(DownloadQueueing.self) is FakeDownloadQueue)
         XCTAssertTrue(Resolver.main.resolve(PlayerControlling.self) is BassPlayer)
         XCTAssertTrue(Resolver.main.resolve(StreamManaging.self) is StreamManager)
-        XCTAssertTrue(Resolver.main.resolve(DownloadQueueing.self) is DownloadQueue)
+        XCTAssertTrue(Resolver.main.resolve(DownloadQueueing.self) is DownloadEngine)
     }
 }

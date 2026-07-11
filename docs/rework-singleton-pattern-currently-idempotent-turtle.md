@@ -126,7 +126,7 @@ Check off each phase/sub-phase as it lands as a commit on this branch:
   - [x] 8.8 — PlaybackMode strategy (Local vs Jukebox)
   - [x] 8.9 — Slim Jukebox to remote-control client; alerts → notification
   - [x] 8.10a — DownloadEngine facade over StreamManager+DownloadQueue
-  - [ ] 8.10b — DownloadEngine internalization (the steal dies)
+  - [x] 8.10b — DownloadEngine internalization (the steal dies)
   - [ ] 8.11 — AppBootstrap + ServerSession transition methods
 
 ## Implementation phases
