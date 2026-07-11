@@ -137,6 +137,8 @@
 		534B20E025619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */; };
 		534B20E125619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */; };
 		5A7E570F2F1000010000AB0F /* NowPlayingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57112F1000010000AB11 /* NowPlayingService.swift */; };
+		5A7E57212F1000010000AB21 /* AppBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57232F1000010000AB23 /* AppBootstrap.swift */; };
+		5A7E57222F1000010000AB22 /* AppBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57232F1000010000AB23 /* AppBootstrap.swift */; };
 		5A7E57142F1000010000AB14 /* PlaybackCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57162F1000010000AB16 /* PlaybackCoordinator.swift */; };
 		5A7E57152F1000010000AB15 /* PlaybackCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57162F1000010000AB16 /* PlaybackCoordinator.swift */; };
 		5A7E571B2F1000010000AB1B /* PlaybackMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E571D2F1000010000AB1D /* PlaybackMode.swift */; };
@@ -752,6 +754,7 @@
 		53493F3715FC6C3A0059492E /* BassEffectDefaultPresets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = BassEffectDefaultPresets.plist; path = Other/BassEffectDefaultPresets.plist; sourceTree = "<group>"; };
 		534B20DF25619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+AddArrangedSubviews.swift"; sourceTree = "<group>"; };
 		5A7E57112F1000010000AB11 /* NowPlayingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingService.swift; sourceTree = "<group>"; };
+		5A7E57232F1000010000AB23 /* AppBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBootstrap.swift; sourceTree = "<group>"; };
 		5A7E57162F1000010000AB16 /* PlaybackCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackCoordinator.swift; sourceTree = "<group>"; };
 		5A7E571D2F1000010000AB1D /* PlaybackMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackMode.swift; sourceTree = "<group>"; };
 		534B20E8256202CF007FF1D7 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
@@ -1413,6 +1416,7 @@
 				532C624E25B6230600185998 /* ServerChecker.swift */,
 				532C625125B62F5800185998 /* NetworkMonitor.swift */,
 				5A7E57112F1000010000AB11 /* NowPlayingService.swift */,
+				5A7E57232F1000010000AB23 /* AppBootstrap.swift */,
 				53FE67AB256DE9600015FC83 /* Defines.swift */,
 				539D32E425A9400400F53797 /* Synchronized.swift */,
 				531EC86425B220E10076973A /* Colors.swift */,
@@ -2224,6 +2228,7 @@
 				53FE678E256DD0F00015FC83 /* GCDWebServerResponse.m in Sources */,
 				532C625E25B6559A00185998 /* main.swift in Sources */,
 				5A7E570F2F1000010000AB0F /* NowPlayingService.swift in Sources */,
+				5A7E57212F1000010000AB21 /* AppBootstrap.swift in Sources */,
 				5A7E57142F1000010000AB14 /* PlaybackCoordinator.swift in Sources */,
 				5A7E571B2F1000010000AB1B /* PlaybackMode.swift in Sources */,
 				5376D5B52B8AB430000C3184 /* BassEffectDAO.swift in Sources */,
@@ -2472,6 +2477,7 @@
 				537C93FD25B134DE00175DF6 /* PlaylistsViewController.swift in Sources */,
 				537C93FA25B127BF00175DF6 /* UIViewController+IsModal.swift in Sources */,
 				5A7E57102F1000010000AB10 /* NowPlayingService.swift in Sources */,
+				5A7E57222F1000010000AB22 /* AppBootstrap.swift in Sources */,
 				5A7E57152F1000010000AB15 /* PlaybackCoordinator.swift in Sources */,
 				5A7E571C2F1000010000AB1C /* PlaybackMode.swift in Sources */,
 				53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */,

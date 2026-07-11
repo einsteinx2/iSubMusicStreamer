@@ -13,6 +13,8 @@ import CocoaLumberjackSwift
 // TODO: Refactor to support multiple scenes/windows
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @Injected private var settings: SavedSettings
+    @Injected private var session: ServerSession
+    @Injected private var bootstrap: AppBootstrap
     @Injected private var downloadQueue: DownloadQueueing
     @Injected private var playQueue: PlayQueue
     @Injected private var downloadEngine: DownloadEngine
@@ -88,8 +90,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(showJukeboxError(notification:)), name: Notifications.jukeboxError)
         
         // Recover current state if player was interrupted
-        downloadEngine.setup()
-        playbackCoordinator.resumeSong()
+        bootstrap.sceneDidConnect()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -218,16 +219,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     @objc private func enterOnlineMode() {
-        guard settings.isOfflineMode && !settings.isForceOfflineMode && isNetworkReachable && (isWifi || !settings.isDisableUsageOver3G) else { return }
-        settings.isOfflineMode = false
-        NotificationCenter.postOnMainThread(name: Notifications.didEnterOnlineMode)
+        session.enterOnlineMode(isNetworkReachable: isNetworkReachable,
+                                isWifi: isWifi,
+                                isForceOfflineMode: settings.isForceOfflineMode,
+                                isDisableUsageOver3G: settings.isDisableUsageOver3G)
     }
-    
+
     @objc private func enterOfflineMode() {
-        guard !settings.isOfflineMode else { return }
-        settings.isOfflineMode = true
-        NotificationCenter.postOnMainThread(name: Notifications.didEnterOfflineMode)
-        
+        guard session.enterOfflineMode() else { return }
+
         if settings.isJukeboxEnabled {
             playbackCoordinator.setJukeboxEnabled(false)
             analytics.log(event: .jukeboxDisabled)

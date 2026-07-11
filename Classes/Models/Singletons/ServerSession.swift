@@ -43,4 +43,25 @@ final class ServerSession {
             currentServer = store.server(id: id)
         }
     }
+
+    // MARK: Offline-mode transitions (Phase 8.11)
+    // The goOnline/goOffline request notifications are observed by SceneDelegate,
+    // which forwards here with its network context; these flip the mode and post the
+    // didEnter* fact notifications. Both return whether a transition happened.
+
+    @discardableResult
+    func enterOnlineMode(isNetworkReachable: Bool, isWifi: Bool, isForceOfflineMode: Bool, isDisableUsageOver3G: Bool) -> Bool {
+        guard isOfflineMode && !isForceOfflineMode && isNetworkReachable && (isWifi || !isDisableUsageOver3G) else { return false }
+        isOfflineMode = false
+        NotificationCenter.postOnMainThread(name: Notifications.didEnterOnlineMode)
+        return true
+    }
+
+    @discardableResult
+    func enterOfflineMode() -> Bool {
+        guard !isOfflineMode else { return false }
+        isOfflineMode = true
+        NotificationCenter.postOnMainThread(name: Notifications.didEnterOfflineMode)
+        return true
+    }
 }

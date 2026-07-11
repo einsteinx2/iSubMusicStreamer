@@ -79,7 +79,12 @@ final class AppServices {
 struct DependencyInjection {
     static func setupRegistrations() {
         let services = AppServices()
+        let bootstrap = AppBootstrap(services: services)
         let main = Resolver.main
+
+        // The service graph and its startup sequencer
+        main.register(factory: { services })
+        main.register(factory: { bootstrap })
 
         // Register the eagerly built instances (tests shadow them via TestContainer)
         main.register(factory: { services.store })

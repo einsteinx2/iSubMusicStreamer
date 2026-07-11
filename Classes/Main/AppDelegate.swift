@@ -12,14 +12,10 @@ import CocoaLumberjackSwift
 
 // TODO: Refactor to support multiple scenes/windows
 final class AppDelegate: UIResponder, UIApplicationDelegate {
-    @Injected private var store: Store
+    @Injected private var bootstrap: AppBootstrap
     @Injected private var settings: SavedSettings
     @Injected private var player: PlayerControlling
     @Injected private var playQueue: PlayQueue
-    @Injected private var downloadsManager: DownloadsManager
-    @Injected private var analytics: Analytics
-    @Injected private var stateRestorer: StateRestorer
-    @Injected private var nowPlayingService: NowPlayingService
     @Injected private var playbackCoordinator: PlaybackCoordinator
     
     static var shared: AppDelegate { UIApplication.shared.delegate as! AppDelegate }
@@ -31,56 +27,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: UIApplication Lifecycle
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // UI test mode: wipe state before anything touches disk or defaults
-        UITestSupport.resetStateIfRequested()
+        // The order-sensitive service setup lives in AppBootstrap; only UI concerns
+        // (battery monitoring, notification authorization) remain here
+        bootstrap.launch()
 
-        // Initialize database
-        store.setup()
-
-        // UI test mode: stub the network and seed a pre-configured server
-        UITestSupport.configureIfEnabled()
-
-        // Setup services (constructed and wired in DependencyInjection.swift)
-        settings.setup(store: store)
-        downloadsManager.setup()
-
-        // Restore playback state and start the periodic save timer. Must run before
-        // SceneDelegate calls streamManager.setup()/playQueue.resumeSong(), which read
-        // the restored indices and offsets
-        stateRestorer.setup()
-        
-        // Detect app crash on previous launch
-        #if RELEASE
-        settings.appCrashedOnLastRun = !settings.appTerminatedCleanly
-        settings.appTerminatedCleanly = false
-        #endif
-        
-        // Initialize the lock screen controls and now playing info
-        nowPlayingService.setup()
-        
-        // Enable console logging for Xcode builds
-        #if DEBUG
-        DDLog.add(DDOSLogger.sharedInstance)
-        #endif
-        
-        // Enable file logging (Use local time zone when formatting dates)
-        let dateFormatter = DateFormatter()
-        dateFormatter.formatterBehavior = .behavior10_4
-        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss:SSS"
-        let fileLogger = DDFileLogger()
-        fileLogger.logFormatter = DDLogFileFormatterDefault(dateFormatter: dateFormatter)
-        fileLogger.rollingFrequency = 60 * 60 * 24 // 24 hour rolling
-        fileLogger.logFileManager.maximumNumberOfLogFiles = 7
-        DDLog.add(fileLogger)
-        
-        // Set default log level (verbose logs only included in beta builds)
-        Defines.setupDefaultLogLevel()
-        
-        // Log system info
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? "Unknown"
-        let build = Bundle.main.infoDictionary?[kCFBundleVersionKey as String] ?? "Unknown"
-        DDLogInfo("\n---------------------------------\niSub \(version) build \(build) launched\n---------------------------------")
-        
         // Check battery state and register for notifications
         UIDevice.current.isBatteryMonitoringEnabled = true
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(batteryStateChanged), name: UIDevice.batteryStateDidChangeNotification)
@@ -107,21 +57,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
         }
-        
-        // Load Flurry
-        analytics.setup()
-        
+
         return true
     }
     
     // Called if the application terminates without crashing
     func applicationWillTerminate(_ application: UIApplication) {
-        // Save settings and state
-        settings.appTerminatedCleanly = true
-        
-        // Cleanly terminate audio
-        UIApplication.shared.endReceivingRemoteControlEvents()
-        player.stop()
+        bootstrap.terminate()
     }
     
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {

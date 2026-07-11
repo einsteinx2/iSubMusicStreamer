@@ -113,7 +113,7 @@ Check off each phase/sub-phase as it lands as a commit on this branch:
 - [x] Phase 5c — BassPlayer + PlayQueue + Social
 - [x] Phase 6 — Models, request building, VC boilerplate
 - [x] Phase 7 — Ambient stragglers + ratchet to zero
-- [ ] Phase 8 — Architectural reshaping (approved 2026-07-11; sub-plan in
+- [x] Phase 8 — Architectural reshaping (approved 2026-07-11; sub-plan in
   `~/.claude/plans/serene-plotting-flamingo.md`; DownloadArbiter replaced by a full
   DownloadEngine merge per user decision)
   - [x] 8.1 — ServerSession facade
@@ -127,7 +127,7 @@ Check off each phase/sub-phase as it lands as a commit on this branch:
   - [x] 8.9 — Slim Jukebox to remote-control client; alerts → notification
   - [x] 8.10a — DownloadEngine facade over StreamManager+DownloadQueue
   - [x] 8.10b — DownloadEngine internalization (the steal dies)
-  - [ ] 8.11 — AppBootstrap + ServerSession transition methods
+  - [x] 8.11 — AppBootstrap + ServerSession transition methods
 
 ## Implementation phases
 
