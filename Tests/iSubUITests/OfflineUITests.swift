@@ -97,11 +97,12 @@ final class OfflineUITests: XCTestCase {
         XCTAssertTrue(waitUntil(timeout: 5) { self.offlineIndicator(app).isHittable },
                       "offline banner not visible after an offline launch")
 
-        // The Browse page's server rows are disabled: tapping Shuffle All must do
-        // nothing, and the server search bar disappears entirely
+        // The Browse page's server rows are disabled: tapping Server Search or
+        // Shuffle All must do nothing
         app.openBrowsePage()
-        XCTAssertFalse(app.searchFields.firstMatch.exists,
-                       "the server search bar is visible while offline")
+        app.cells[AccessibilityId.browseServerSearch].firstMatch.tap()
+        XCTAssertFalse(app.navigationBars["Server Search"].waitForExistence(timeout: 2),
+                       "the search page opened while offline")
         app.cells[AccessibilityId.browseShuffleAll].firstMatch.tap()
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 2))
         XCTAssertEqual(app.sheets.count, 0, "server shuffle showed its folder picker while offline")

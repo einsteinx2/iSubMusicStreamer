@@ -60,6 +60,7 @@ enum AccessibilityId {
     static let librarySearchBar = "library.searchBar"
 
     // Browse (Library tab page)
+    static let browseServerSearch = "browse.serverSearch"
     static let browseRecentlyAdded = "browse.recentlyAdded"
     static let browseRecentlyPlayed = "browse.recentlyPlayed"
     static let browseFrequentlyPlayed = "browse.frequentlyPlayed"

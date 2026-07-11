@@ -11,8 +11,8 @@ import XCTest
 // E2E-02 Library Browse page + server search: quick albums + load-more, shuffle all
 // (all folders + specific folder), now playing tap-to-play and swipe-to-queue, the
 // server chat row that only appears once the Enable Server Chat setting is on, and the
-// nav-bar server search with Folders/Tags scopes. Runs against the embedded mock HTTP
-// server so playback flows behave like production.
+// dedicated Server Search page with Folders/Tags scopes. Runs against the embedded mock
+// HTTP server so playback flows behave like production.
 final class BrowseUITests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -123,10 +123,13 @@ final class BrowseUITests: XCTestCase {
 
     func testSearchScopesAndAllSectionsAndResultPlayback() {
         let app = launch()
-        app.openTab(AccessibilityId.tabLibrary)
+        openBrowse(in: app)
+        tapBrowseRow(AccessibilityId.browseServerSearch, in: app)
+        XCTAssertTrue(app.navigationBars["Server Search"].waitForExistence(timeout: 10),
+                      "the dedicated search page did not open")
 
         let searchField = app.searchFields.firstMatch
-        XCTAssertTrue(searchField.waitForExistence(timeout: 10), "no search field on the Library tab")
+        XCTAssertTrue(searchField.waitForExistence(timeout: 10), "no search field on the search page")
         searchField.tap()
         app.typeText("beck")
 

@@ -18,6 +18,7 @@ final class BrowseViewController: CustomUITableViewController {
     var serverId: Int { settings.currentServerId }
 
     private enum Row {
+        case serverSearch
         case recentlyAdded, recentlyPlayed, frequentlyPlayed, randomAlbums
         case shuffleAll
         case nowPlayingOnServer
@@ -25,6 +26,7 @@ final class BrowseViewController: CustomUITableViewController {
 
         var title: String {
             switch self {
+            case .serverSearch:       return "Server Search"
             case .recentlyAdded:      return "Recently Added"
             case .recentlyPlayed:     return "Recently Played"
             case .frequentlyPlayed:   return "Frequently Played"
@@ -37,6 +39,7 @@ final class BrowseViewController: CustomUITableViewController {
 
         var accessibilityId: String {
             switch self {
+            case .serverSearch:       return AccessibilityId.browseServerSearch
             case .recentlyAdded:      return AccessibilityId.browseRecentlyAdded
             case .recentlyPlayed:     return AccessibilityId.browseRecentlyPlayed
             case .frequentlyPlayed:   return AccessibilityId.browseFrequentlyPlayed
@@ -87,7 +90,7 @@ final class BrowseViewController: CustomUITableViewController {
     }
 
     @objc private func reloadRows() {
-        rows = [.recentlyAdded, .recentlyPlayed, .frequentlyPlayed, .randomAlbums, .shuffleAll, .nowPlayingOnServer]
+        rows = [.serverSearch, .recentlyAdded, .recentlyPlayed, .frequentlyPlayed, .randomAlbums, .shuffleAll, .nowPlayingOnServer]
         if settings.isChatEnabled {
             rows.append(.serverChat)
         }
@@ -202,6 +205,8 @@ extension BrowseViewController: UITableViewConfiguration {
             return
         }
         switch row {
+        case .serverSearch:
+            pushViewControllerCustom(ServerSearchViewController())
         case .shuffleAll:
             shuffleAll(sourceCell: tableView.cellForRow(at: indexPath))
         case .nowPlayingOnServer:
