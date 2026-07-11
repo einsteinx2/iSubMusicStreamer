@@ -57,7 +57,7 @@ final class AppServices {
         jukebox = Jukebox(settings: settings, store: store)
         streamManager = StreamManager(store: store, settings: settings, player: player, downloadsManager: downloadsManager, networkStatus: networkMonitor, metadataDownloader: SongMetadataDownloader())
         downloadQueue = DownloadQueue(store: store, settings: settings, downloadsManager: downloadsManager, player: player, networkStatus: networkMonitor, streamManager: streamManager, metadataDownloader: SongMetadataDownloader())
-        playQueue = PlayQueue(store: store, settings: settings, player: player, jukebox: jukebox, streamManager: streamManager, downloadQueue: downloadQueue)
+        playQueue = PlayQueue(store: store, settings: settings)
         playbackCoordinator = PlaybackCoordinator(queue: playQueue, settings: settings, store: store, player: player, jukebox: jukebox, streamManager: streamManager, downloadQueue: downloadQueue)
         nowPlayingService = NowPlayingService(settings: settings, playQueue: playQueue, player: player, jukebox: jukebox, coordinator: playbackCoordinator)
         stateRestorer = StateRestorer(settings: settings, player: player, playQueue: playQueue)

@@ -7,12 +7,13 @@
 //
 
 import Foundation
+import CocoaLumberjackSwift
+import ProgressHUD
 
-// The playback facade (Phase 8.4): the only type UI code and services call to start,
-// stop, or reorganize playback. In this phase every queue-orchestration method
-// forwards to the existing PlayQueue implementation; Phase 8.7 moves those bodies
-// here and reduces PlayQueue to queue math + Store persistence, and Phase 8.8
-// dissolves the jukebox-vs-local branches behind the PlaybackMode strategy.
+// The playback facade (Phase 8.4/8.7): the only type UI code and services call to
+// start, stop, or reorganize playback. Owns the orchestration that used to live in
+// PlayQueue (which is now queue math + Store persistence); Phase 8.8 dissolves the
+// jukebox-vs-local branches here behind the PlaybackMode strategy.
 final class PlaybackCoordinator: NSObject {
     private let queue: PlayQueue
     private let settings: SavedSettings
@@ -36,53 +37,234 @@ final class PlaybackCoordinator: NSObject {
         super.init()
     }
 
-    // MARK: Transport / orchestration (forwarding until Phase 8.7)
+    // MARK: Transport / orchestration (bodies moved verbatim from PlayQueue in 8.7)
 
     @discardableResult
     func play(position: Int) -> Song? {
-        queue.playSong(position: position)
+        queue.currentIndex = position
+        guard let currentSong = queue.currentSong else { return nil }
+
+        return DispatchQueue.mainSyncSafe {
+            if !currentSong.isVideo {
+                // Remove the video player if this is not a video
+                NotificationCenter.postOnMainThread(name: Notifications.removeVideoPlayer)
+            }
+
+            if settings.isJukeboxEnabled {
+                if currentSong.isVideo {
+                    ProgressHUD.banner("Cannot play videos in Jukebox mode.", nil)
+                    return nil
+                } else {
+                    jukebox.playSong(index: position)
+                }
+            } else {
+                streamManager.removeAllStreams(except: currentSong)
+                if currentSong.isVideo {
+                    NotificationCenter.postOnMainThread(name: Notifications.playVideo, userInfo: ["song": currentSong])
+                } else {
+                    startSong()
+                }
+            }
+            return currentSong
+        }
     }
 
     @discardableResult
     func playNext() -> Song? {
-        queue.playNextSong()
+        DDLogVerbose("[PlaybackCoordinator] playNext called, calling play(position: \(queue.nextIndex))")
+        return play(position: queue.nextIndex)
     }
 
     @discardableResult
     func playPrevious() -> Song? {
-        queue.playPrevSong()
+        DDLogVerbose("[PlaybackCoordinator] playPrevious called")
+        if player.progress > 10.0 {
+            // Past 10 seconds in the song, so restart playback instead of changing songs
+            DDLogVerbose("[PlaybackCoordinator] playPrevious past 10 seconds in the song, so restart playback instead of changing songs, calling play(position: \(queue.currentIndex))")
+            return play(position: queue.currentIndex)
+        } else {
+            // Within first 10 seconds, go to previous song
+            DDLogVerbose("[PlaybackCoordinator] playPrevious within first 10 seconds, so go to previous, calling play(position: \(queue.prevIndex))")
+            return play(position: queue.prevIndex)
+        }
     }
 
     @discardableResult
     func playCurrent() -> Song? {
-        queue.playCurrentSong()
+        DDLogVerbose("[PlaybackCoordinator] playCurrent called, calling play(position: \(queue.currentIndex))")
+        return play(position: queue.currentIndex)
     }
 
+    // Resume song after iSub shuts down
     @discardableResult
     func resumeSong() -> Song? {
-        queue.resumeSong()
+        if let currentSong = queue.currentSong, settings.isRecover {
+            startSong(byteOffset: settings.byteOffset, secondsOffset: settings.seekTime)
+            return currentSong
+        } else {
+            player.startByteOffset = settings.byteOffset
+            player.startSecondsOffset = settings.seekTime
+            return nil
+        }
     }
 
     func startSong() {
-        queue.startSong()
+        startSong(byteOffset: 0, secondsOffset: 0)
     }
 
+    private var offsetInBytes = 0
+    private var offsetInSeconds = 0.0
     func startSong(byteOffset: Int, secondsOffset: Double) {
-        queue.startSong(offsetInBytes: byteOffset, offsetInSeconds: secondsOffset)
+        DispatchQueue.mainSyncSafe {
+            // Destroy the streamer/video player to start a new song
+            player.stop()
+            NotificationCenter.postOnMainThread(name: Notifications.removeVideoPlayer)
+
+            guard queue.currentSong != nil else { return }
+
+            offsetInBytes = byteOffset
+            offsetInSeconds = secondsOffset
+
+            // Only start the caching process if it's been a half second after the last request. Prevents crash when skipping through playlist fast.
+            // NOTE: perform(afterDelay:) schedules on the main run loop's default mode
+            // only, so it coalesces and defers during scroll tracking — do not convert
+            // to DispatchQueue.main.async(after:)
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(startSongAtOffsetsInternal), object: nil)
+            perform(#selector(startSongAtOffsetsInternal), with: nil, afterDelay: 1)
+        }
     }
 
+    @objc private func startSongAtOffsetsInternal() {
+        guard let song = queue.currentSong else { return }
+        let index = queue.currentIndex
+
+        // Fix for bug that caused songs to sometimes start playing then immediately restart
+        if player.isPlaying, let playerSong = player.currentStream?.song, playerSong == song {
+            // We're already playing this song so bail
+            return
+        }
+
+        // Check to see if the song is already cached
+        if song.isFullyCached {
+            // The song is fully cached, start streaming from the local copy
+            player.startNewSong(song, index: index, offsetInBytes: offsetInBytes, offsetInSeconds: offsetInSeconds)
+
+            // Fill the stream queue
+            if !settings.isOfflineMode {
+                streamManager.fillStreamQueue(startDownload: true)
+            }
+        } else if !song.isFullyCached && settings.isOfflineMode {
+            playNext()
+        } else {
+            if let currentQueuedSong = downloadQueue.currentQueuedSong, currentQueuedSong == song {
+                // The cache queue is downloading this song, remove it before continuing
+                _ = downloadQueue.removeCurrentSong()
+            }
+
+            if streamManager.isDownloading(song: song) {
+                // The song is caching, start streaming from the local copy
+                if let handler = streamManager.handler(song: song), !player.isPlaying, !handler.isDelegateNotifiedToStartPlayback {
+                    // Only start the player if the handler isn't going to do it itself
+                    player.startNewSong(song, index: index, offsetInBytes: offsetInBytes, offsetInSeconds: offsetInSeconds)
+                }
+            } else if streamManager.isFirstInQueue(song: song) && !streamManager.isDownloading {
+                // The song is first in queue, but the queue is not downloading. Probably the song was downloading when the app quit. Resume the download and start the player
+                streamManager.resumeQueue()
+
+                // The song is caching, start streaming from the local copy
+                if let handler = streamManager.handler(song: song), !player.isPlaying, !handler.isDelegateNotifiedToStartPlayback {
+                    // Only start the player if the handler isn't going to do it itself
+                    player.startNewSong(song, index: index, offsetInBytes: offsetInBytes, offsetInSeconds: offsetInSeconds)
+                }
+            } else {
+                // Clear the stream manager
+                streamManager.removeAllStreams()
+
+                // Start downloading the current song from the correct offset
+                streamManager.queueStream(song: song,
+                                          byteOffset: offsetInBytes,
+                                          secondsOffset: offsetInSeconds,
+                                          index: 0,
+                                          tempCache: offsetInBytes > 0 || !settings.isSongCachingEnabled,
+                                          startDownload: true)
+
+                // Fill the stream queue
+                if settings.isSongCachingEnabled {
+                    streamManager.fillStreamQueue(startDownload: player.isStarted)
+                }
+            }
+        }
+    }
+
+    /// Called when the shuffle button is pushed.
     func shuffleToggle() {
-        queue.shuffleToggle()
+        if queue.isShuffle {
+            if let shuffleCurrentSong = queue.currentSong {
+                queue.isShuffle = false
+                if let currentPosition = store.getSongPosition(localPlaylistId: LocalPlaylist.Default.playQueueId, songId: shuffleCurrentSong.id) {
+                    queue.normalIndex = currentPosition
+                    if let shuffleQueueCurrentSong = queue.song(index: currentPosition) {
+                        streamManager.removeAllStreams(except: shuffleQueueCurrentSong)
+                        streamManager.fillStreamQueue(startDownload: true)
+                    }
+                }
+                didToggleShuffle()
+            }
+        } else {
+            if store.createShuffleQueue(currentPosition: queue.normalIndex) {
+                queue.shuffleIndex = 0
+                queue.isShuffle = true
+                // The playing song is at position 0 of the freshly created shuffle queue
+                if let currentSong = queue.currentSong {
+                    streamManager.removeAllStreams(except: currentSong)
+                    streamManager.fillStreamQueue(startDownload: true)
+                }
+                didToggleShuffle()
+            }
+        }
+    }
+
+    private func didToggleShuffle() {
+        if settings.isJukeboxEnabled {
+            jukebox.replacePlaylistWithLocal()
+            jukebox.playSong(index: queue.currentIndex)
+        }
+
+        // Update the playlist views; NowPlayingService observes and informs the OS
+        NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistShuffleToggled)
     }
 
     @discardableResult
     func moveSong(fromIndex: Int, toIndex: Int) -> Bool {
-        queue.moveSong(fromIndex: fromIndex, toIndex: toIndex)
+        if store.move(songAtPosition: fromIndex, toPosition: toIndex, localPlaylistId: queue.currentPlaylistId) {
+            if settings.isJukeboxEnabled {
+                jukebox.replacePlaylistWithLocal()
+            }
+
+            // Correct the value of currentPlaylistPosition
+            if fromIndex == queue.currentIndex {
+                queue.currentIndex = toIndex
+            } else if fromIndex < queue.currentIndex && toIndex >= queue.currentIndex {
+                queue.currentIndex -= 1
+            } else if fromIndex > queue.currentIndex && toIndex <= queue.currentIndex {
+                queue.currentIndex += 1
+            }
+            return true
+        }
+        return false
     }
 
     @discardableResult
     func removeSongs(indexes: [Int]) -> Bool {
-        queue.removeSongs(indexes: indexes)
+        if store.remove(songsAtPositions: indexes, localPlaylistId: queue.currentPlaylistId) {
+            // Stop the player if we deleted the current song
+            if indexes.contains(queue.currentIndex) {
+                player.stop()
+                queue.currentIndex = 0
+            }
+            return true
+        }
+        return false
     }
 
     // MARK: Playing collections (moved from LocalPlaylistStore/ServerPlaylistStore;
@@ -119,7 +301,7 @@ final class PlaybackCoordinator: NSObject {
         NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
 
         // Start the song
-        return queue.playSong(position: position)
+        return play(position: position)
     }
 
     @discardableResult
@@ -137,11 +319,11 @@ final class PlaybackCoordinator: NSObject {
             // Sync the remote jukebox playlist and start the song through the
             // jukebox (it can't honor byte/seconds offsets)
             jukebox.replacePlaylistWithLocal()
-            return queue.playSong(position: position)
+            return play(position: position)
         } else {
             // Start the song
             queue.currentIndex = position
-            queue.startSong(offsetInBytes: byteOffset, offsetInSeconds: secondsOffset)
+            startSong(byteOffset: byteOffset, secondsOffset: secondsOffset)
             return queue.currentSong
         }
     }

@@ -11,16 +11,11 @@ import Resolver
 @testable import iSub_Beta
 
 // Mirrors the composition root for tests: builds a PlayQueue wired to whatever is
-// currently registered in the container. Register any fakes (player, stream manager,
-// download queue, settings, store) BEFORE calling this — resolution happens here,
-// not lazily on first use.
+// currently registered in the container. Register any fakes (settings, store)
+// BEFORE calling this — resolution happens here, not lazily on first use.
 func makeTestPlayQueue() -> PlayQueue {
     PlayQueue(store: Resolver.resolve(),
-              settings: Resolver.resolve(),
-              player: Resolver.resolve(),
-              jukebox: Resolver.resolve(),
-              streamManager: Resolver.resolve(),
-              downloadQueue: Resolver.resolve())
+              settings: Resolver.resolve())
 }
 
 // Same pattern for the playback facade: builds a PlaybackCoordinator over the given
