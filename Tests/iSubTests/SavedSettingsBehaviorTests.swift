@@ -263,3 +263,71 @@ final class SavedSettingsBehaviorTests: StoreTestCase {
         XCTAssertTrue(FileManager.default.fileExists(atPath: marker.path), "existing contents must be untouched")
     }
 }
+
+// Phase 8.1: ServerSession owns the server-session state directly; SavedSettings
+// forwards to it. These cover the session type itself plus the forwarding contract.
+final class ServerSessionTests: StoreTestCase {
+    func testCurrentServerDidSetWritesIdAndClearsRedirect() {
+        let session = ServerSession()
+        let server = TestData.server(id: 5)
+        _ = store.add(server: server)
+        session.currentServerRedirectUrlString = "https://redirect.example.com"
+
+        session.currentServer = server
+
+        XCTAssertNil(session.currentServerRedirectUrlString, "changing servers must clear the redirect URL")
+        XCTAssertEqual(testDefaults.object(forKey: SavedSettings.Key.currentServerId.rawValue) as? Int, 5)
+        XCTAssertEqual(session.currentServerId, 5)
+    }
+
+    func testSetupLoadsPersistedServerFromStore() {
+        let server = TestData.server(id: 7)
+        _ = store.add(server: server)
+        testDefaults.set(7, forKey: SavedSettings.Key.currentServerId.rawValue)
+
+        let session = ServerSession()
+        session.setup(store: store)
+
+        XCTAssertEqual(session.currentServer?.id, 7)
+        XCTAssertEqual(session.currentServerId, 7)
+    }
+
+    func testSetupWithoutPersistedIdLeavesServerNil() {
+        let session = ServerSession()
+        session.setup(store: store)
+        XCTAssertNil(session.currentServer)
+        XCTAssertEqual(session.currentServerId, -1)
+    }
+
+    func testSavedSettingsForwardsToOwnedSession() {
+        let session = ServerSession()
+        let settings = SavedSettings(session: session)
+        let server = TestData.server(id: 9)
+        _ = store.add(server: server)
+
+        settings.currentServer = server
+        XCTAssertEqual(session.currentServer?.id, 9, "writes through SavedSettings land in the session")
+        XCTAssertEqual(settings.currentServerId, 9)
+
+        session.currentServerRedirectUrlString = "https://redirect.example.com"
+        XCTAssertEqual(settings.currentServerRedirectUrlString, "https://redirect.example.com", "reads through SavedSettings come from the session")
+
+        settings.isOfflineMode = true
+        XCTAssertTrue(session.isOfflineMode)
+        session.isOfflineMode = false
+        XCTAssertFalse(settings.isOfflineMode)
+    }
+
+    func testSettingsSetupRoutesThroughSession() {
+        let server = TestData.server(id: 11)
+        _ = store.add(server: server)
+        testDefaults.set(11, forKey: SavedSettings.Key.currentServerId.rawValue)
+
+        let session = ServerSession()
+        let settings = SavedSettings(session: session)
+        settings.setup(store: store)
+
+        XCTAssertEqual(session.currentServer?.id, 11)
+        XCTAssertEqual(settings.currentServerId, 11)
+    }
+}

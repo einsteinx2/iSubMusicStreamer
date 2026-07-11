@@ -15,6 +15,16 @@ enum CachingType: Int {
 }
 
 final class SavedSettings {
+    // The server-session state (current server, redirect, offline mode) lives in
+    // ServerSession; SavedSettings owns it strongly and forwards the legacy property
+    // names below so existing call sites and tests compile untouched. Deliberate,
+    // acyclic shim — new code should inject ServerSession directly.
+    let session: ServerSession
+
+    init(session: ServerSession = ServerSession()) {
+        self.session = session
+    }
+
     // Network state for the bitrate branches: a weak back-reference attached at the
     // composition root (AppServices) or by tests. When never attached, the wifi
     // branch is used.
@@ -40,35 +50,34 @@ final class SavedSettings {
         // Run settings migrations
         migrate()
 
+        session.setup(store: store)
+    }
 
-        if let id = defaults.object(forKey: .currentServerId) as? Int {
-            // Load the new server object
-            currentServer = store.server(id: id)
-        }
-    }
-    
-    // MARK: Login Settings
-    
+    // MARK: Login Settings (forwarded to ServerSession)
+
     var currentServerId: Int {
-        return currentServer?.id ?? -1
+        return session.currentServerId
     }
-    
+
     var currentServer: Server? {
-        didSet {
-            currentServerRedirectUrlString = nil
-            defaults.set(currentServer?.id, forKey: .currentServerId)
-            defaults.synchronize()
-        }
+        get { session.currentServer }
+        set { session.currentServer = newValue }
     }
-    
-    var currentServerRedirectUrlString: String?
-    
+
+    var currentServerRedirectUrlString: String? {
+        get { session.currentServerRedirectUrlString }
+        set { session.currentServerRedirectUrlString = newValue }
+    }
+
     // MARK: Other Settings
-    
+
     var appCrashedOnLastRun: Bool = false
-    
-    var isOfflineMode: Bool = false
-    
+
+    var isOfflineMode: Bool {
+        get { session.isOfflineMode }
+        set { session.isOfflineMode = newValue }
+    }
+
     var isInvalidSSLCert: Bool = false
     
     var showPlayerIcon: Bool { !UIDevice.isPad }

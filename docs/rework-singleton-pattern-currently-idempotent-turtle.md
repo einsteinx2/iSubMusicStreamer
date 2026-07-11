@@ -113,7 +113,21 @@ Check off each phase/sub-phase as it lands as a commit on this branch:
 - [x] Phase 5c — BassPlayer + PlayQueue + Social
 - [x] Phase 6 — Models, request building, VC boilerplate
 - [x] Phase 7 — Ambient stragglers + ratchet to zero
-- [ ] Phase 8 — Architectural reshaping (follow-up program, approve separately)
+- [ ] Phase 8 — Architectural reshaping (approved 2026-07-11; sub-plan in
+  `~/.claude/plans/serene-plotting-flamingo.md`; DownloadArbiter replaced by a full
+  DownloadEngine merge per user decision)
+  - [x] 8.1 — ServerSession facade
+  - [ ] 8.2 — ScrobbleService + ScrobbleRules; delete Social
+  - [ ] 8.3 — NowPlayingService; delete LockScreenAudioControls
+  - [ ] 8.4 — PlaybackCoordinator facade + call-site migration
+  - [ ] 8.5 — PlayerDelegate; BassPlayer drops its PlayQueue back-edge
+  - [ ] 8.6 — store.playSong family → coordinator
+  - [ ] 8.7 — PlayQueue orchestration bodies move; PlayQueue = queue math + Store
+  - [ ] 8.8 — PlaybackMode strategy (Local vs Jukebox)
+  - [ ] 8.9 — Slim Jukebox to remote-control client; alerts → notification
+  - [ ] 8.10a — DownloadEngine facade over StreamManager+DownloadQueue
+  - [ ] 8.10b — DownloadEngine internalization (the steal dies)
+  - [ ] 8.11 — AppBootstrap + ServerSession transition methods
 
 ## Implementation phases
 

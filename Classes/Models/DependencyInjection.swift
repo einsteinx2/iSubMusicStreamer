@@ -28,6 +28,7 @@ enum ModelServices {
 // phase converts them.
 final class AppServices {
     let store: Store
+    let session: ServerSession
     let settings: SavedSettings
     let networkMonitor: NetworkMonitor
     let analytics: Analytics
@@ -44,7 +45,8 @@ final class AppServices {
         // Construction order follows the dependency direction: every service is built
         // after everything it owns a reference to
         store = Store()
-        settings = SavedSettings()
+        session = ServerSession()
+        settings = SavedSettings(session: session)
         networkMonitor = NetworkMonitor(settings: settings)
         analytics = Analytics()
         social = Social(settings: settings)
@@ -80,6 +82,7 @@ struct DependencyInjection {
 
         // Register the eagerly built instances (tests shadow them via TestContainer)
         main.register(factory: { services.store })
+        main.register(factory: { services.session })
         main.register(factory: { services.settings })
         main.register(factory: { services.networkMonitor })
         main.register(factory: { services.analytics })
