@@ -116,8 +116,9 @@ final class JukeboxUITests: XCTestCase {
     func testSearchResultPlaybackIssuesJukeboxCall() {
         let app = launchJukebox()
 
-        let searchBar = app.otherElements[AccessibilityId.homeSearchBar].firstMatch
-        let searchField = searchBar.exists ? searchBar : app.searchFields.firstMatch
+        app.openTab(AccessibilityId.tabLibrary)
+        let searchField = app.searchFields.firstMatch
+        XCTAssertTrue(searchField.waitForExistence(timeout: 10), "no search field on the Library tab")
         searchField.tap()
         app.typeText("beck\n")
 

@@ -66,6 +66,7 @@ enum AccessibilityId {
 
     // Library
     static let libraryFolderDropdown = "library.folderDropdown"
+    static let librarySearchBar = "library.searchBar"
 
     // Browse (Library tab page)
     static let browseRecentlyAdded = "browse.recentlyAdded"

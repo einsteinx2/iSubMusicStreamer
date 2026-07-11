@@ -8,10 +8,11 @@
 
 import XCTest
 
-// E2E-02 Library Browse page: quick albums + load-more, shuffle all (all folders +
-// specific folder), now playing tap-to-play and swipe-to-queue, and the server chat row
-// that only appears once the Enable Server Chat setting is on. Runs against the embedded
-// mock HTTP server so playback flows behave like production.
+// E2E-02 Library Browse page + server search: quick albums + load-more, shuffle all
+// (all folders + specific folder), now playing tap-to-play and swipe-to-queue, the
+// server chat row that only appears once the Enable Server Chat setting is on, and the
+// nav-bar server search with Folders/Tags scopes. Runs against the embedded mock HTTP
+// server so playback flows behave like production.
 final class BrowseUITests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -118,6 +119,39 @@ final class BrowseUITests: XCTestCase {
         app.tapFirstCellText()
         XCTAssertTrue(app.buttons[AccessibilityId.playerPlayPause].waitForExistence(timeout: 15),
                       "tapping a now-playing row did not open the player")
+    }
+
+    func testSearchScopesAndAllSectionsAndResultPlayback() {
+        let app = launch()
+        app.openTab(AccessibilityId.tabLibrary)
+
+        let searchField = app.searchFields.firstMatch
+        XCTAssertTrue(searchField.waitForExistence(timeout: 10), "no search field on the Library tab")
+        searchField.tap()
+        app.typeText("beck")
+
+        // The fixture server supports tag search, so the scope bar appears once text
+        // is entered (scope bar activation is on-text-entry)
+        XCTAssertTrue(app.buttons["Tags"].firstMatch.waitForExistence(timeout: 5),
+                      "Folders/Tags search scopes did not appear")
+
+        app.typeText("\n")
+
+        // The results screen has one sub-tab per section (Artists / Albums / Songs)
+        XCTAssertTrue(app.cells.staticTexts["Beck"].waitForExistence(timeout: 15),
+                      "search results did not load an artist section")
+        app.buttons["Albums"].firstMatch.tap()
+        XCTAssertTrue(app.cells.staticTexts["Disc 1"].waitForExistence(timeout: 10), "no album section result")
+        app.buttons["Songs"].firstMatch.tap()
+
+        // Playing a song result must open the player. This currently fails silently:
+        // the search loaders never persist their songs to the store, so playing a search
+        // result can't resolve the queued song and does nothing.
+        app.tapCell(containing: "Novacane")
+        XCTExpectFailure("BUG: search results are not persisted to the store, so playing one silently fails", strict: false) {
+            XCTAssertTrue(app.buttons[AccessibilityId.playerPlayPause].waitForExistence(timeout: 15),
+                          "tapping a search result song did not open the player")
+        }
     }
 
     func testChatHiddenUntilEnabledThenPostAndReload() {

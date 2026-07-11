@@ -1399,8 +1399,6 @@
 				538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */,
 				534BC83E25CCE03700964D82 /* HomeViewButton.swift */,
 				534BC84125CCE05400964D82 /* HomeSongInfoButton.swift */,
-				530A167E259277E700E9294E /* SearchAllViewController.swift */,
-				53ED672A25B776CB0002BFAF /* SearchSongsViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1599,6 +1597,8 @@
 				53ED672725B76FA60002BFAF /* QuickAlbumsViewController.swift */,
 				531EC85E25B1F8070076973A /* NowPlayingViewController.swift */,
 				53A0EDD625B5EDEE00B78DAA /* ChatViewController.swift */,
+				530A167E259277E700E9294E /* SearchAllViewController.swift */,
+				53ED672A25B776CB0002BFAF /* SearchSongsViewController.swift */,
 				53BDC4DB25D4CEB400126D06 /* DropdownMenu.swift */,
 			);
 			path = Library;
