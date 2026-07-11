@@ -73,10 +73,8 @@ extension LocalPlaylist: TableCellModel {
     }
 
     // In jukebox mode the songs were added to the local jukebox queue; sync the
-    // remote playlist to match (same handling as PlayQueue/AsyncSongsHelper)
+    // remote playlist to match (the mode no-ops in local playback)
     private func syncJukebox() {
-        if let settings = ModelServices.settings, settings.isJukeboxEnabled {
-            ModelServices.jukebox?.replacePlaylistWithLocal()
-        }
+        ModelServices.playbackCoordinator?.syncRemoteQueueIfNeeded()
     }
 }

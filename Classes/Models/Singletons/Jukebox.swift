@@ -6,9 +6,21 @@
 //  Copyright © 2021 Ben Baron. All rights reserved.
 //
 
-import UIKit
+import Foundation
 import CocoaLumberjackSwift
 
+// The jukebox's one seam back to the play queue (Phase 8.9), implemented by
+// JukeboxPlaybackMode and attached by the PlaybackCoordinator that owns it.
+// Both methods are called on the main thread.
+protocol JukeboxDelegate: AnyObject {
+    func jukebox(_ jukebox: Jukebox, didReportCurrentIndex index: Int)
+    func jukebox(_ jukebox: Jukebox, didReceiveQueue songs: [Song])
+}
+
+// A remote-control client for the Subsonic jukebox (Phase 8.9): sends commands,
+// polls status, parses responses, and reports state through JukeboxDelegate. All
+// queue mirroring and mode policy lives in JukeboxPlaybackMode; all alert
+// presentation lives in the UI (Notifications.jukeboxError).
 final class Jukebox {
     enum ActionType: String {
         case get, status, set, start, stop, skip, add, clear, remove, shuffle, setGain
@@ -16,22 +28,17 @@ final class Jukebox {
     enum ParameterType: String {
         case action, index, offset, id, gain
     }
-    
+
     private let settings: SavedSettings
-    private let store: Store
 
-    // The play queue is a weak back-reference attached at the composition root: the
-    // play queue drives the jukebox, and the jukebox mirrors the server's queue and
-    // index back into it
-    private weak var playQueue: PlayQueue?
+    private weak var delegate: JukeboxDelegate?
 
-    init(settings: SavedSettings, store: Store) {
+    init(settings: SavedSettings) {
         self.settings = settings
-        self.store = store
     }
 
-    func attach(playQueue: PlayQueue) {
-        self.playQueue = playQueue
+    func attach(delegate: JukeboxDelegate) {
+        self.delegate = delegate
     }
 
     private(set) var isPlaying = false
@@ -39,92 +46,58 @@ final class Jukebox {
     private(set) var gain: Float = 0.0
     private(set) var position = 0
     private(set) var positionLastReportedAt = Date()
-    
+
     private var serverId: Int { settings.currentServerId }
-    
+
     private let sessionDelegate = SelfSignedCertURLSessionDelegate()
     private lazy var session: URLSession = {
         let configuration = APIURLSession.ephemeralConfiguration()
         configuration.httpMaximumConnectionsPerHost = 1
         return URLSession(configuration: configuration, delegate: sessionDelegate, delegateQueue: nil)
     }()
-    
+
     func playSong(index: Int) {
         queueDataTask(action: .skip, parameters: [.index: index])
-        playQueue?.currentIndex = index
+        delegate?.jukebox(self, didReportCurrentIndex: index)
     }
-    
+
     func play() {
         queueDataTask(action: .start)
         isPlaying = true
     }
-    
+
     func stop() {
         queueDataTask(action: .stop)
         isPlaying = false
     }
-    
-    func skipPrev() {
-        guard let playQueue else { return }
-        let index = playQueue.prevIndex
-        if index >= 0 {
-            playSong(index: index)
-            isPlaying = true
-        }
-    }
 
-    func skipNext() {
-        guard let playQueue else { return }
-        let index = playQueue.nextIndex
-        if index < playQueue.count {
-            playSong(index: index)
-        } else {
-            NotificationCenter.postOnMainThread(name: Notifications.songPlaybackEnded)
-            stop()
-        }
-    }
-    
     func setVolume(level: Float) {
         queueDataTask(action: .setGain, parameters: [.gain: level])
     }
-    
+
     func seek(seconds: Int) {
         // Subsonic supports this using the "skip" action with the "offset" parameter and reports back the seek position with the "position" attribute of "jukeboxStatus"
         queueDataTask(action: .skip, parameters: [.offset: seconds])
     }
-    
+
     func add(songId: String) {
         queueDataTask(action: .add, parameters: [.id: songId])
     }
-    
+
     func add(songIds: [String]) {
         if songIds.count > 0 {
             queueDataTask(action: .add, parameters: [.id: songIds])
         }
     }
-    
+
     func remove(songId: String) {
         queueDataTask(action: .remove, parameters: [.id: songId])
     }
-    
-    func replacePlaylistWithLocal() {
-        guard let playQueue else { return }
-        clearPlaylist(remoteOnly: true)
-        add(songIds: playQueue.songs().filter({ $0.serverId == serverId }).map({ $0.id }))
-    }
 
-    func clearPlaylist(remoteOnly: Bool = false) {
+    func clearRemotePlaylist() {
         queueDataTask(action: .clear)
-        if !remoteOnly {
-            _ = playQueue?.clear()
-        }
     }
 
-    func shuffle() {
-        queueDataTask(action: .shuffle)
-        _ = playQueue?.clear()
-    }
-    
     // Stops the periodic getInfo polling chain (used when leaving jukebox mode)
     func cancelGetInfo() {
         getInfoWorkItem?.cancel()
@@ -141,48 +114,35 @@ final class Jukebox {
         self.getInfoWorkItem = getInfoWorkItem
         DispatchQueue.main.async(after: delay, execute: getInfoWorkItem)
     }
-    
+
     private func queueDataTask(action: ActionType, parameters: [ParameterType: Any] = [:]) {
         var finalParameters: [String: Any] = [ParameterType.action.rawValue: action.rawValue]
         for (key, value) in parameters {
             finalParameters[key.rawValue] = value
         }
-        
+
         guard let request = URLRequest(serverId: serverId, subsonicAction: .jukeboxControl, parameters: finalParameters) else {
             DDLogError("[Jukebox] Failed to create URLRequest with parameters \(finalParameters)")
             return
         }
-        
+
         let dataTask = session.dataTask(with: request) { data, response, error in
             if let data = data, let jukeboxResponse = self.parse(data: data) {
                 // The response mutates jukebox state and the (main-confined) play
-                // queue, but this callback runs on the session's background queue,
-                // so apply it on the main thread
+                // queue via the delegate, but this callback runs on the session's
+                // background queue, so apply it on the main thread
                 DispatchQueue.main.async {
                     // These values are always returned
-                    self.playQueue?.currentIndex = jukeboxResponse.currentIndex
+                    self.delegate?.jukebox(self, didReportCurrentIndex: jukeboxResponse.currentIndex)
                     self.gain = jukeboxResponse.gain
                     self.isPlaying = jukeboxResponse.isPlaying
                     self.position = jukeboxResponse.position
                     self.positionLastReportedAt = Date()
 
-                    // Songs are only returned when calling the "get" action
-                    if let songs = jukeboxResponse.songs, let playQueue = self.playQueue {
-                        // Only replace the local queue when the server's list actually
-                        // differs, so the periodic refresh can't clobber a queue that was
-                        // just built locally (e.g. right after play-all/shuffle)
-                        if playQueue.songs().map(\.id) != songs.map(\.id) {
-                            _ = playQueue.clear()
-                            for song in songs {
-                                // Persist the metadata along with the queue row: these
-                                // songs may never have been browsed locally, and the queue
-                                // reads JOIN the song table
-                                self.store.queue(persistingSong: song)
-                            }
-                        }
-
-                        NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
-                        NotificationCenter.postOnMainThread(name: Notifications.jukeboxSongInfo)
+                    // Songs are only returned when calling the "get" action; the
+                    // delegate mirrors them into the local queue
+                    if let songs = jukeboxResponse.songs {
+                        self.delegate?.jukebox(self, didReceiveQueue: songs)
                     }
 
                     let delay = action == .get ? 30 : 0.5
@@ -194,16 +154,12 @@ final class Jukebox {
         }
         dataTask.resume()
     }
-    
+
     private func handleConnectionError(error: Error) {
-        DispatchQueue.main.async {
-            let message = "There was an error controlling the Jukebox.\n\nError: \(error)"
-            let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-            alert.addOKAction()
-            UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
-        }
+        let message = "There was an error controlling the Jukebox.\n\nError: \(error)"
+        NotificationCenter.postOnMainThread(name: Notifications.jukeboxError, userInfo: ["title": "Error", "message": message])
     }
-    
+
     private func parse(data: Data) -> JukeboxResponse? {
         let root = RXMLElement(xmlData: data)
         if root.isValid {
@@ -215,13 +171,9 @@ final class Jukebox {
                     settings.isJukeboxEnabled = false
                     NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
                 }
-                
-                DispatchQueue.main.async {
-                    let message = "There was an error controlling the Jukebox.\n\nError \(code): \(message)"
-                    let alert = UIAlertController(title: "Subsonic Error", message: message, preferredStyle: .alert)
-                    alert.addOKAction()
-                    UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
-                }
+
+                let alertMessage = "There was an error controlling the Jukebox.\n\nError \(code): \(message)"
+                NotificationCenter.postOnMainThread(name: Notifications.jukeboxError, userInfo: ["title": "Subsonic Error", "message": alertMessage])
             } else if let status = root.child("jukeboxStatus") {
                 return JukeboxResponse(songs: nil,
                                        currentIndex: status.attribute("currentIndex").intXML,
@@ -240,12 +192,8 @@ final class Jukebox {
                                        position: playlist.attribute("position").intXML)
             }
         } else {
-            DispatchQueue.main.async {
-                let message = "There was an error controlling the Jukebox.\n\nError reading the response from Subsonic."
-                let alert = UIAlertController(title: "Subsonic Error", message: message, preferredStyle: .alert)
-                alert.addOKAction()
-                UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
-            }
+            let message = "There was an error controlling the Jukebox.\n\nError reading the response from Subsonic."
+            NotificationCenter.postOnMainThread(name: Notifications.jukeboxError, userInfo: ["title": "Subsonic Error", "message": message])
         }
         return nil
     }

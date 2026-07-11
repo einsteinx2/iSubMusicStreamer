@@ -85,6 +85,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxToggled), name: Notifications.jukeboxEnabled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(enterOnlineMode), name: Notifications.goOnline)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(enterOfflineMode), name: Notifications.goOffline)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(showJukeboxError(notification:)), name: Notifications.jukeboxError)
         
         // Recover current state if player was interrupted
         streamManager.setup()
@@ -205,6 +206,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     @objc private func jukeboxToggled() {
         window?.backgroundColor = settings.isJukeboxEnabled ? Colors.jukeboxWindow : Colors.window
+    }
+
+    // The jukebox posts errors instead of presenting alerts itself (Phase 8.9)
+    @objc private func showJukeboxError(notification: Notification) {
+        let title = notification.userInfo?["title"] as? String ?? "Error"
+        let message = notification.userInfo?["message"] as? String ?? "There was an error controlling the Jukebox."
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addOKAction()
+        UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
     }
     
     @objc private func enterOnlineMode() {

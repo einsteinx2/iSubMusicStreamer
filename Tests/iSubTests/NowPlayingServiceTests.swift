@@ -94,9 +94,9 @@ final class NowPlayingServiceTests: StoreTestCase {
         settings.currentServer = server
         settings.isJukeboxEnabled = true
 
-        let jukebox = Jukebox(settings: settings, store: store)
-        jukebox.attach(playQueue: playQueue)
-        // The coordinator's jukebox mode must drive this test's jukebox
+        let jukebox = Jukebox(settings: settings)
+        // The coordinator's jukebox mode must drive this test's jukebox (the
+        // coordinator attaches itself as the jukebox delegate on construction)
         TestContainer.register { jukebox }
         service = NowPlayingService(settings: settings, playQueue: playQueue, player: player, coordinator: makeTestPlaybackCoordinator(queue: playQueue))
         defer { jukebox.getInfo(delay: 999_999) }
@@ -172,7 +172,7 @@ final class PlaybackModeTests: StoreTestCase {
         TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
         let settings = SavedSettings()
         TestContainer.register { settings }
-        let jukebox = Jukebox(settings: settings, store: store)
+        let jukebox = Jukebox(settings: settings)
         TestContainer.register { jukebox }
         let queue = makeTestPlayQueue()
         TestContainer.register { queue }
@@ -207,7 +207,7 @@ final class PlaybackModeTests: StoreTestCase {
         TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
         let settings = SavedSettings()
         TestContainer.register { settings }
-        let jukebox = Jukebox(settings: settings, store: store)
+        let jukebox = Jukebox(settings: settings)
         TestContainer.register { jukebox }
         let queue = makeTestPlayQueue()
         TestContainer.register { queue }

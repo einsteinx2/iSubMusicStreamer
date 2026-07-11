@@ -137,9 +137,21 @@ final class LocalPlaybackMode: PlaybackMode {
 
 final class JukeboxPlaybackMode: PlaybackMode {
     private let jukebox: Jukebox
+    private let queue: PlayQueue
+    private let store: Store
+    private let settings: SavedSettings
 
-    init(jukebox: Jukebox) {
+    init(jukebox: Jukebox, queue: PlayQueue, store: Store, settings: SavedSettings) {
         self.jukebox = jukebox
+        self.queue = queue
+        self.store = store
+        self.settings = settings
+    }
+
+    // Replaces the remote playlist with the local queue's songs for the current server
+    private func replaceRemotePlaylistWithLocal() {
+        jukebox.clearRemotePlaylist()
+        jukebox.add(songIds: queue.songs().filter { $0.serverId == settings.currentServerId }.map(\.id))
     }
 
     var isPlaying: Bool { jukebox.isPlaying }
@@ -197,19 +209,46 @@ final class JukeboxPlaybackMode: PlaybackMode {
     }
 
     func queueDidChange() {
-        jukebox.replacePlaylistWithLocal()
+        replaceRemotePlaylistWithLocal()
     }
 
     func syncRemoteQueueIfNeeded() {
-        jukebox.replacePlaylistWithLocal()
+        replaceRemotePlaylistWithLocal()
     }
 
     func prepareForPlayAll() {
-        jukebox.clearPlaylist()
+        jukebox.clearRemotePlaylist()
+        _ = queue.clear()
     }
 
     func didToggleShuffle(currentIndex: Int) {
-        jukebox.replacePlaylistWithLocal()
+        replaceRemotePlaylistWithLocal()
         jukebox.playSong(index: currentIndex)
+    }
+}
+
+// The jukebox reports server state back through this seam; both methods arrive on
+// the main thread. This replaces the jukebox's old direct weak PlayQueue reference.
+extension JukeboxPlaybackMode: JukeboxDelegate {
+    func jukebox(_ jukebox: Jukebox, didReportCurrentIndex index: Int) {
+        queue.currentIndex = index
+    }
+
+    func jukebox(_ jukebox: Jukebox, didReceiveQueue songs: [Song]) {
+        // Only replace the local queue when the server's list actually differs, so
+        // the periodic refresh can't clobber a queue that was just built locally
+        // (e.g. right after play-all/shuffle) — BUG-31
+        if queue.songs().map(\.id) != songs.map(\.id) {
+            _ = queue.clear()
+            for song in songs {
+                // Persist the metadata along with the queue row: these songs may
+                // never have been browsed locally, and the queue reads JOIN the
+                // song table
+                store.queue(persistingSong: song)
+            }
+        }
+
+        NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
+        NotificationCenter.postOnMainThread(name: Notifications.jukeboxSongInfo)
     }
 }

@@ -351,7 +351,7 @@ final class PlayQueueTests: StoreTestCase {
         settings.currentServer = server
         settings.isJukeboxEnabled = true
 
-        let jukebox = Jukebox(settings: settings, store: store)
+        let jukebox = Jukebox(settings: settings)
         TestContainer.register { jukebox }
         // Push the periodic getInfo far past the process lifetime on the way out
         defer { jukebox.getInfo(delay: 999_999) }
@@ -360,7 +360,6 @@ final class PlayQueueTests: StoreTestCase {
         // that the jukebox is registered (the composition root wires this in the app)
         let playQueue = makeTestPlayQueue()
         TestContainer.register { playQueue }
-        jukebox.attach(playQueue: playQueue)
 
         seedQueue(3)
         playQueue.normalIndex = 0

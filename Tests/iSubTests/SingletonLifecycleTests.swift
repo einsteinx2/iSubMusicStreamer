@@ -38,20 +38,20 @@ final class JukeboxTests: StoreTestCase {
 
         // The play queue captures its jukebox at construction, so the test jukebox
         // must be registered first (mirrors the composition root's ordering)
-        jukebox = Jukebox(settings: settings, store: store)
+        jukebox = Jukebox(settings: settings)
         let registeredJukebox = jukebox!
         TestContainer.register { registeredJukebox }
 
         let freshPlayQueue = makeTestPlayQueue()
         TestContainer.register { freshPlayQueue }
         playQueue = freshPlayQueue
-        jukebox.attach(playQueue: freshPlayQueue)
+        // The coordinator attaches its jukebox mode as the jukebox's delegate
         coordinator = makeTestPlaybackCoordinator(queue: freshPlayQueue)
 
         // LocalPlaylist.syncJukebox reads these ambiently (restored by
         // TestContainer.deactivate in tearDown)
         ModelServices.settings = settings
-        ModelServices.jukebox = jukebox
+        ModelServices.playbackCoordinator = coordinator
     }
 
     override func tearDownWithError() throws {
@@ -288,17 +288,6 @@ final class JukeboxTests: StoreTestCase {
         XCTAssertFalse(settings.isJukeboxEnabled, "a code-50 error turns jukebox mode off")
     }
 
-    func testSkipNextPastEndStops() {
-        try? MockSubsonicServer.stub(.jukeboxControl, fixture: "XML/jukeboxControl_status.xml")
-        // Empty play queue: nextIndex (0) is not < count (0), so playback ends
-        let endedExpectation = expectation(forNotification: Notifications.songPlaybackEnded, object: nil, handler: nil)
-
-        jukebox.skipNext()
-
-        wait(for: [endedExpectation], timeout: 10)
-        XCTAssertFalse(jukebox.isPlaying)
-        XCTAssertNotNil(waitForJukeboxRequest { $0.parameter("action") == "stop" })
-    }
 }
 
 // MARK: - ServerChecker

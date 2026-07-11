@@ -67,6 +67,8 @@ struct Notifications {
     static let jukeboxDisabled = Notification.Name("iSub.jukeboxDisabled")
 
     static let jukeboxSongInfo = Notification.Name("iSub.jukeboxSongInfo")
+    // userInfo: ["title": String, "message": String] — the UI presents the alert
+    static let jukeboxError = Notification.Name("iSub.jukeboxError")
 
     static let playVideo = Notification.Name("iSub.playVideo")
     static let removeVideoPlayer = Notification.Name("iSub.removeVideoPlayer")

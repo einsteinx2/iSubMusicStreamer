@@ -35,7 +35,7 @@ enum TestContainer {
         // infers Optional<Store> etc., which is not registered (fatalError at teardown).
         ModelServices.store = Resolver.main.resolve(Store.self)
         ModelServices.settings = Resolver.main.resolve(SavedSettings.self)
-        ModelServices.jukebox = Resolver.main.resolve(Jukebox.self)
+        ModelServices.playbackCoordinator = Resolver.main.resolve(PlaybackCoordinator.self)
     }
 
     private static func retire(_ root: Resolver) {

@@ -18,7 +18,7 @@ import Resolver
 enum ModelServices {
     static var store: Store!
     static var settings: SavedSettings?
-    static var jukebox: Jukebox?
+    static var playbackCoordinator: PlaybackCoordinator?
 }
 
 // The application's service graph, built eagerly in dependency order with every
@@ -54,7 +54,7 @@ final class AppServices {
         downloadsManager = DownloadsManager(settings: settings, store: store)
         player = BassPlayer(store: store, settings: settings)
         scrobbleService = ScrobbleService(settings: settings, session: session, player: player)
-        jukebox = Jukebox(settings: settings, store: store)
+        jukebox = Jukebox(settings: settings)
         streamManager = StreamManager(store: store, settings: settings, player: player, downloadsManager: downloadsManager, networkStatus: networkMonitor, metadataDownloader: SongMetadataDownloader())
         downloadQueue = DownloadQueue(store: store, settings: settings, downloadsManager: downloadsManager, player: player, networkStatus: networkMonitor, streamManager: streamManager, metadataDownloader: SongMetadataDownloader())
         playQueue = PlayQueue(store: store, settings: settings)
@@ -66,7 +66,6 @@ final class AppServices {
         settings.attach(networkStatus: networkMonitor)
         streamManager.attach(downloadQueue: downloadQueue)
         streamManager.attach(playQueue: playQueue)
-        jukebox.attach(playQueue: playQueue)
         player.attach(delegate: playbackCoordinator)
         player.attach(streamManager: streamManager)
         player.attach(downloadQueue: downloadQueue)
@@ -75,7 +74,7 @@ final class AppServices {
         // Ambient services for the value-model layer
         ModelServices.store = store
         ModelServices.settings = settings
-        ModelServices.jukebox = jukebox
+        ModelServices.playbackCoordinator = playbackCoordinator
     }
 }
 

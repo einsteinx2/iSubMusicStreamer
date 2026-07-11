@@ -41,6 +41,12 @@ final class PlaybackCoordinator: NSObject {
         // or SceneDelegate's offline disable); both mode hooks are idempotent
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxWasEnabled), name: Notifications.jukeboxEnabled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxWasDisabled), name: Notifications.jukeboxDisabled)
+
+        localMode = LocalPlaybackMode(player: player, streamManager: streamManager, store: store, coordinator: self)
+        jukeboxMode = JukeboxPlaybackMode(jukebox: jukebox, queue: queue, store: store, settings: settings)
+        // The jukebox reports server state (index, mirrored queue) back through its
+        // delegate — the jukebox mode this coordinator owns
+        jukebox.attach(delegate: jukeboxMode)
     }
 
     deinit {
@@ -49,8 +55,8 @@ final class PlaybackCoordinator: NSObject {
 
     // MARK: Playback mode (jukebox vs local)
 
-    private lazy var localMode: PlaybackMode = LocalPlaybackMode(player: player, streamManager: streamManager, store: store, coordinator: self)
-    private lazy var jukeboxMode: PlaybackMode = JukeboxPlaybackMode(jukebox: jukebox)
+    private var localMode: LocalPlaybackMode!
+    private var jukeboxMode: JukeboxPlaybackMode!
     // Computed from the setting so there is no duplicated mode state
     private var activeMode: PlaybackMode { settings.isJukeboxEnabled ? jukeboxMode : localMode }
 
@@ -399,6 +405,12 @@ final class PlaybackCoordinator: NSObject {
     // in jukebox mode, or top up the stream queue locally
     func queueDidChange() {
         activeMode.queueDidChange()
+    }
+
+    // The queue was reordered or appended without wanting a stream-queue fill
+    // (LocalPlaylist.queue/queueNext); jukebox mirrors it remotely, local no-ops
+    func syncRemoteQueueIfNeeded() {
+        activeMode.syncRemoteQueueIfNeeded()
     }
 }
 
