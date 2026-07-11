@@ -85,10 +85,6 @@
 		531EC88425B250BB0076973A /* UIViewController+TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC88225B250BB0076973A /* UIViewController+TableView.swift */; };
 		531EC88C25B33E5E0076973A /* CountReloadTimeHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC88B25B33E5E0076973A /* CountReloadTimeHeader.swift */; };
 		531EC88D25B33E5E0076973A /* CountReloadTimeHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531EC88B25B33E5E0076973A /* CountReloadTimeHeader.swift */; };
-		53246AA3256C209E00E11EC4 /* ServerEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */; };
-		53246AA4256C209E00E11EC4 /* ServerEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */; };
-		53246AA9256C324500E11EC4 /* InsetTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA8256C324500E11EC4 /* InsetTextField.swift */; };
-		53246AAA256C324500E11EC4 /* InsetTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AA8256C324500E11EC4 /* InsetTextField.swift */; };
 		53246AB3256C918500E11EC4 /* LyricsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB2256C918500E11EC4 /* LyricsViewController.swift */; };
 		53246AB4256C918500E11EC4 /* LyricsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB2256C918500E11EC4 /* LyricsViewController.swift */; };
 		53246AB6256C975600E11EC4 /* DownloadStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53246AB5256C975600E11EC4 /* DownloadStatusViewController.swift */; };
@@ -119,8 +115,6 @@
 		53329649255F2E770027C51A /* PlayAllAndShuffleHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53329647255F2E770027C51A /* PlayAllAndShuffleHeader.swift */; };
 		53329652255F30220027C51A /* ClosureSleeve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53329651255F30220027C51A /* ClosureSleeve.swift */; };
 		53329653255F30220027C51A /* ClosureSleeve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53329651255F30220027C51A /* ClosureSleeve.swift */; };
-		533C65CE15ABB9D6003EAF29 /* OptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65D415ABB9D6003EAF29 /* OptionsViewController.xib */; };
-		533C65D015ABB9D6003EAF29 /* OptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65D415ABB9D6003EAF29 /* OptionsViewController.xib */; };
 		533C65DC15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */; };
 		533C65DE15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */; };
 		5344830B2DEF4E6C00D04F04 /* AsyncTagAlbumLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5344830A2DEF4E6900D04F04 /* AsyncTagAlbumLoader.swift */; };
@@ -201,10 +195,6 @@
 		5367C6D71EA92D3000B1C242 /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5367C6D61EA92D3000B1C242 /* libSystem.tbd */; };
 		536C890A25BB5FED008FE1AC /* StreamHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890925BB5FED008FE1AC /* StreamHandler.swift */; };
 		536C890B25BB5FED008FE1AC /* StreamHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890925BB5FED008FE1AC /* StreamHandler.swift */; };
-		536C891025BF92D1008FE1AC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890F25BF92D1008FE1AC /* SettingsViewController.swift */; };
-		536C891125BF92D1008FE1AC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C890F25BF92D1008FE1AC /* SettingsViewController.swift */; };
-		536C891325BF93FF008FE1AC /* ServersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C891225BF93FF008FE1AC /* ServersViewController.swift */; };
-		536C891425BF93FF008FE1AC /* ServersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C891225BF93FF008FE1AC /* ServersViewController.swift */; };
 		536C8DEE26338EAA007B81FB /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8DED26338EAA007B81FB /* Analytics.swift */; };
 		536C8DEF26338FAF007B81FB /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8DED26338EAA007B81FB /* Analytics.swift */; };
 		536C8E0026349B46007B81FB /* UIView+EnableDisable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C8DFF26349B45007B81FB /* UIView+EnableDisable.swift */; };
@@ -428,8 +418,6 @@
 		53B9C49825A7A650007E9E3C /* SongStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B9C49625A7A650007E9E3C /* SongStore.swift */; };
 		53B9C49A25A7A6D7007E9E3C /* GRDB+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B9C49925A7A6D7007E9E3C /* GRDB+Helper.swift */; };
 		53B9C49B25A7A6D7007E9E3C /* GRDB+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B9C49925A7A6D7007E9E3C /* GRDB+Helper.swift */; };
-		53BB796F2B8CD6D900677B46 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BB796E2B8CD6D900677B46 /* OptionsViewController.swift */; };
-		53BB79702B8CD6D900677B46 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BB796E2B8CD6D900677B46 /* OptionsViewController.swift */; };
 		53BB79722B8D1E6500677B46 /* SavedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BB79712B8D1E6500677B46 /* SavedSettings.swift */; };
 		53BB79732B8D1E6500677B46 /* SavedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BB79712B8D1E6500677B46 /* SavedSettings.swift */; };
 		53BC2850139AF0DD00A825F1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -447,8 +435,6 @@
 		53C3AB6E257DB7D200B35B99 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB6C257DB7D200B35B99 /* AsyncImageView.swift */; };
 		53C3AB70257DD38400B35B99 /* open_source_licenses.html in Resources */ = {isa = PBXBuildFile; fileRef = 53C3AB6F257DD38400B35B99 /* open_source_licenses.html */; };
 		53C3AB71257DD38400B35B99 /* open_source_licenses.html in Resources */ = {isa = PBXBuildFile; fileRef = 53C3AB6F257DD38400B35B99 /* open_source_licenses.html */; };
-		53C3AB73257DDA1000B35B99 /* LicensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB72257DDA1000B35B99 /* LicensesViewController.swift */; };
-		53C3AB74257DDA1000B35B99 /* LicensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C3AB72257DDA1000B35B99 /* LicensesViewController.swift */; };
 		53C7FD9E150F0EA9008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
 		53C7FDA0150F0EAF008DA51C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C7FD9C150F0E94008DA51C /* MessageUI.framework */; };
 		53CB553F25C915F2004F2BAB /* EqualizerPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CB553E25C915F2004F2BAB /* EqualizerPointView.swift */; };
@@ -765,8 +751,6 @@
 		531EC87C25B24B6B0076973A /* ArtistsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistsViewController.swift; sourceTree = "<group>"; };
 		531EC88225B250BB0076973A /* UIViewController+TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+TableView.swift"; sourceTree = "<group>"; };
 		531EC88B25B33E5E0076973A /* CountReloadTimeHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountReloadTimeHeader.swift; sourceTree = "<group>"; };
-		53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEditViewController.swift; sourceTree = "<group>"; };
-		53246AA8256C324500E11EC4 /* InsetTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetTextField.swift; sourceTree = "<group>"; };
 		53246AB2256C918500E11EC4 /* LyricsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsViewController.swift; sourceTree = "<group>"; };
 		53246AB5256C975600E11EC4 /* DownloadStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadStatusViewController.swift; sourceTree = "<group>"; };
 		53266BF92562D4D0002C64BB /* PageControlViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlViewController.swift; sourceTree = "<group>"; };
@@ -824,8 +808,6 @@
 		5367C6D41EA92D2400B1C242 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		5367C6D61EA92D3000B1C242 /* libSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.tbd; path = usr/lib/libSystem.tbd; sourceTree = SDKROOT; };
 		536C890925BB5FED008FE1AC /* StreamHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamHandler.swift; sourceTree = "<group>"; };
-		536C890F25BF92D1008FE1AC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		536C891225BF93FF008FE1AC /* ServersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServersViewController.swift; sourceTree = "<group>"; };
 		536C8DED26338EAA007B81FB /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		536C8DFF26349B45007B81FB /* UIView+EnableDisable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+EnableDisable.swift"; sourceTree = "<group>"; };
 		536C8E022634A1F4007B81FB /* CustomUITableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUITableViewController.swift; sourceTree = "<group>"; };
@@ -869,7 +851,6 @@
 		538C8FE625609F4F005D6CA9 /* BlurredSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurredSectionHeader.swift; sourceTree = "<group>"; };
 		538C8FE92560C7AB005D6CA9 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		539148A72559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/EqualizerViewController.xib; sourceTree = "<group>"; };
-		539148A82559CBDF004AAC3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OptionsViewController.xib; sourceTree = "<group>"; };
 		539148B92559E597004AAC3F /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		539148DF2559FEFD004AAC3F /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		539C05432DEF72A8007C3ACE /* AsyncLyricsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLyricsLoader.swift; sourceTree = "<group>"; };
@@ -937,13 +918,11 @@
 		53B9C49325A7A5F9007E9E3C /* TagAlbumStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagAlbumStore.swift; sourceTree = "<group>"; };
 		53B9C49625A7A650007E9E3C /* SongStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongStore.swift; sourceTree = "<group>"; };
 		53B9C49925A7A6D7007E9E3C /* GRDB+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GRDB+Helper.swift"; sourceTree = "<group>"; };
-		53BB796E2B8CD6D900677B46 /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
 		53BB79712B8D1E6500677B46 /* SavedSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedSettings.swift; sourceTree = "<group>"; };
 		53BC2865139AF0DD00A825F1 /* iSub Beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iSub Beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		53BDC4DB25D4CEB400126D06 /* DropdownMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownMenu.swift; sourceTree = "<group>"; };
 		53C3AB6C257DB7D200B35B99 /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
 		53C3AB6F257DD38400B35B99 /* open_source_licenses.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = open_source_licenses.html; sourceTree = "<group>"; };
-		53C3AB72257DDA1000B35B99 /* LicensesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicensesViewController.swift; sourceTree = "<group>"; };
 		53C7FD9C150F0E94008DA51C /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		53CB553E25C915F2004F2BAB /* EqualizerPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualizerPointView.swift; sourceTree = "<group>"; };
 		53CB554725C9D2E1004F2BAB /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
@@ -1396,12 +1375,6 @@
 		531D39E4255AB284000CB0DF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				536C890F25BF92D1008FE1AC /* SettingsViewController.swift */,
-				536C891225BF93FF008FE1AC /* ServersViewController.swift */,
-				53246AA2256C209E00E11EC4 /* ServerEditViewController.swift */,
-				53C3AB72257DDA1000B35B99 /* LicensesViewController.swift */,
-				53BB796E2B8CD6D900677B46 /* OptionsViewController.swift */,
-				533C65D415ABB9D6003EAF29 /* OptionsViewController.xib */,
 				3BFFE38ADFE4D606B889FF97 /* SettingsCoordinator.swift */,
 				A9F4498159753C113F26755F /* SettingsSectionViewModel.swift */,
 				D7D471FF72299EC55CB181D2 /* SettingsRows.swift */,
@@ -1504,7 +1477,6 @@
 			isa = PBXGroup;
 			children = (
 				53329651255F30220027C51A /* ClosureSleeve.swift */,
-				53246AA8256C324500E11EC4 /* InsetTextField.swift */,
 				53C3AB6C257DB7D200B35B99 /* AsyncImageView.swift */,
 				538C8FE025606299005D6CA9 /* RefreshControl.swift */,
 				53329647255F2E770027C51A /* PlayAllAndShuffleHeader.swift */,
@@ -2141,7 +2113,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				533C65CE15ABB9D6003EAF29 /* OptionsViewController.xib in Resources */,
 				530738F41FAF6A72005C2650 /* Media.xcassets in Resources */,
 				533C65DC15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */,
 				539148E02559FEFD004AAC3F /* Launch Screen.storyboard in Resources */,
@@ -2156,7 +2127,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				530738F51FAF6A72005C2650 /* Media.xcassets in Resources */,
-				533C65D015ABB9D6003EAF29 /* OptionsViewController.xib in Resources */,
 				53DA4E33256B600C0057D4C7 /* Launch Screen Beta.storyboard in Resources */,
 				533C65DE15ABB9F5003EAF29 /* EqualizerViewController.xib in Resources */,
 				53493F3215FC6BD90059492E /* KeychainAccessGroups.plist in Resources */,
@@ -2228,7 +2198,6 @@
 				53ED675525B8AD0F0002BFAF /* AbstractDownloadsViewController.swift in Sources */,
 				539D331825AC8D8B00F53797 /* DownloadedFolderArtist.swift in Sources */,
 				53E03D1725C27CE90043355F /* OBSlider.swift in Sources */,
-				536C891025BF92D1008FE1AC /* SettingsViewController.swift in Sources */,
 				5373C69925B60A6900CAA859 /* UIViewController+PushCustom.swift in Sources */,
 				53BB79722B8D1E6500677B46 /* SavedSettings.swift in Sources */,
 				5A7E57012F1000010000AB01 /* StateRestorer.swift in Sources */,
@@ -2246,7 +2215,6 @@
 				535E144125A7D3480039BCAA /* ArtistArt.swift in Sources */,
 				536CD55C2B8BA0C300C2BFEC /* NSLocking+Sync.swift in Sources */,
 				532C624F25B6230600185998 /* ServerChecker.swift in Sources */,
-				53C3AB73257DDA1000B35B99 /* LicensesViewController.swift in Sources */,
 				53530B322DE65A53007EFA3A /* AsyncAPILoader.swift in Sources */,
 				53A6AA6A2B8AA066007ABD7A /* BassEqualizer.swift in Sources */,
 				53E03D0025C2330D0043355F /* NSError+Description.swift in Sources */,
@@ -2283,7 +2251,6 @@
 				538B3EBC25B65BCF00824068 /* ArtistsViewModel.swift in Sources */,
 				5344830E2DEF50D700D04F04 /* AsyncSongLoader.swift in Sources */,
 				53CB554B25C9D4AB004F2BAB /* BookmarkStore.swift in Sources */,
-				53246AA9256C324500E11EC4 /* InsetTextField.swift in Sources */,
 				539C056D2DF09658007C3ACE /* AsyncScrobbleLoader.swift in Sources */,
 				539D32FA25AA21AA00F53797 /* LyricsStore.swift in Sources */,
 				53A0EDD125B5E6DA00B78DAA /* FolderAlbumViewController.swift in Sources */,
@@ -2381,14 +2348,11 @@
 				53ED673425B7A1360002BFAF /* String+URLEncode.swift in Sources */,
 				535E143E25A7CC870039BCAA /* CoverArt.swift in Sources */,
 				53D973FE255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
-				53246AA3256C209E00E11EC4 /* ServerEditViewController.swift in Sources */,
 				53A6AA642B8A8A22007ABD7A /* Debug.swift in Sources */,
 				53762C7725ACE7E700476F2D /* ServerPlaylist.swift in Sources */,
 				53CB553F25C915F2004F2BAB /* EqualizerPointView.swift in Sources */,
 				534483112DEF52E100D04F04 /* AsyncRecursiveSongLoader.swift in Sources */,
-				53BB796F2B8CD6D900677B46 /* OptionsViewController.swift in Sources */,
 				530A1679259255D200E9294E /* FolderAlbum.swift in Sources */,
-				536C891325BF93FF008FE1AC /* ServersViewController.swift in Sources */,
 				539C054B2DEF7482007C3ACE /* AsyncCoverArtLoaderManager.swift in Sources */,
 				53530B3E2DE7C79E007EFA3A /* RXMLElement.swift in Sources */,
 				53EA2DE2257D7B4D0003F38D /* UIView+ViewController.swift in Sources */,
@@ -2486,7 +2450,6 @@
 				53329649255F2E770027C51A /* PlayAllAndShuffleHeader.swift in Sources */,
 				5357FE2925C39FDB001BDE29 /* BassStream.swift in Sources */,
 				530A16742592468C00E9294E /* FolderArtist.swift in Sources */,
-				53246AAA256C324500E11EC4 /* InsetTextField.swift in Sources */,
 				535F824525C0F64C0024C82C /* RuntimeError.swift in Sources */,
 				538C8FEB2560C7AB005D6CA9 /* HomeViewController.swift in Sources */,
 				53FE6799256DD0F00015FC83 /* GCDWebServerErrorResponse.m in Sources */,
@@ -2499,7 +2462,6 @@
 				5373C69A25B60A6900CAA859 /* UIViewController+PushCustom.swift in Sources */,
 				539D32D925A8E07E00F53797 /* Server.swift in Sources */,
 				53E03D1825C27CE90043355F /* OBSlider.swift in Sources */,
-				536C891125BF92D1008FE1AC /* SettingsViewController.swift in Sources */,
 				53BB79732B8D1E6500677B46 /* SavedSettings.swift in Sources */,
 				5A7E57022F1000010000AB02 /* StateRestorer.swift in Sources */,
 				5A7E57082F1000010000AB08 /* ServerSession.swift in Sources */,
@@ -2528,7 +2490,6 @@
 				538B3EC325B65E1E00824068 /* Artist.swift in Sources */,
 				539C05602DF08102007C3ACE /* AsyncChatSendLoader.swift in Sources */,
 				535E143C25A7CC690039BCAA /* CoverArtStore.swift in Sources */,
-				53C3AB74257DDA1000B35B99 /* LicensesViewController.swift in Sources */,
 				53762C7B25ACE86D00476F2D /* ServerPlaylistStore.swift in Sources */,
 				5389478125A4E7170078FBAF /* MediaFolder.swift in Sources */,
 				53FE67AD256DE9600015FC83 /* Defines.swift in Sources */,
@@ -2657,12 +2618,10 @@
 				53D973FF255BFCF500AABF7F /* UniversalTableViewCell.swift in Sources */,
 				53CB554025C915F2004F2BAB /* EqualizerPointView.swift in Sources */,
 				534483122DEF52E100D04F04 /* AsyncRecursiveSongLoader.swift in Sources */,
-				53BB79702B8CD6D900677B46 /* OptionsViewController.swift in Sources */,
 				532C624C25B6197E00185998 /* VideoPlayer.swift in Sources */,
 				53762C7825ACE7E700476F2D /* ServerPlaylist.swift in Sources */,
 				539C054A2DEF7482007C3ACE /* AsyncCoverArtLoaderManager.swift in Sources */,
 				53530B3D2DE7C79E007EFA3A /* RXMLElement.swift in Sources */,
-				536C891425BF93FF008FE1AC /* ServersViewController.swift in Sources */,
 				5357FE1F25C32C6E001BDE29 /* BassPluginLoad.c in Sources */,
 				537B05C0256B0E4B0008892C /* PadMenuTableCell.swift in Sources */,
 				539C05532DEFACF2007C3ACE /* AsyncServerShuffleLoader.swift in Sources */,
@@ -2692,7 +2651,6 @@
 				539D331C25AC95A300F53797 /* DownloadedFolderAlbum.swift in Sources */,
 				5329492E2DE90D270088B5CE /* AsyncTagArtistLoader.swift in Sources */,
 				531EC87825B230920076973A /* DownloadedTagAlbum.swift in Sources */,
-				53246AA4256C209E00E11EC4 /* ServerEditViewController.swift in Sources */,
 				53FE6797256DD0F00015FC83 /* GCDWebServerConnection.m in Sources */,
 				53FE67A1256DD0F00015FC83 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
 				531EC85A25B1F0390076973A /* LocalPlaylistViewController.swift in Sources */,
@@ -2787,14 +2745,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		533C65D415ABB9D6003EAF29 /* OptionsViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				539148A82559CBDF004AAC3F /* Base */,
-			);
-			name = OptionsViewController.xib;
-			sourceTree = "<group>";
-		};
 		533C65E215ABB9F5003EAF29 /* EqualizerViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

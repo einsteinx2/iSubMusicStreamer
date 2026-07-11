@@ -112,7 +112,8 @@ final class OfflineUITests: XCTestCase {
         }
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10),
                       "settings not reachable in offline mode")
-        app.segmentedControls.buttons["Servers"].tap()
+        app.buttons[AccessibilityId.settingsSectionServers].tap()
+        XCTAssertTrue(app.navigationBars["Servers"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.cells.firstMatch.waitForExistence(timeout: 10),
                       "server list is empty in offline mode")
     }
@@ -280,22 +281,24 @@ final class OfflineUITests: XCTestCase {
         app.waitForTabBar()
         XCTAssertFalse(offlineIndicator(app).isHittable, "offline banner visible while online")
 
-        // Settings > Options > manual offline mode ON drives the goOffline transition
+        // Settings > Network & Streaming > Force Offline Mode ON drives the goOffline transition
         app.buttons[AccessibilityId.homeSettings].tap()
         if !app.navigationBars["Settings"].waitForExistence(timeout: 5) {
             app.buttons[AccessibilityId.homeSettings].tap()
         }
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
-        app.segmentedControls.buttons["Options"].tap()
-        // The options screen ignores control changes made within 0.5s of loading
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 1))
-        app.switches[AccessibilityId.optionsManualOfflineMode].tap()
+        app.buttons["settings.section.network"].tap()
+        XCTAssertTrue(app.navigationBars["Network & Streaming"].waitForExistence(timeout: 10))
+        app.switches[AccessibilityId.optionsManualOfflineMode].firstMatch.tap()
 
         // The "iSub is Offline" banner appears
         XCTAssertTrue(waitUntil(timeout: 10) { self.offlineIndicator(app).isHittable },
                       "offline banner did not appear after entering offline mode")
 
-        // Back on Home the server controls are disabled
+        // Back on Home (two levels: section screen, then settings root) the server
+        // controls are disabled
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
         app.navigationBars.buttons.firstMatch.tap()
         XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabHome].waitForExistence(timeout: 10))
         app.buttons[AccessibilityId.homeServerShuffle].tap()
@@ -304,19 +307,21 @@ final class OfflineUITests: XCTestCase {
         XCTAssertFalse(app.buttons[AccessibilityId.playerPlayPause].isHittable,
                        "server shuffle started playback while offline")
 
-        // Toggle manual offline mode back OFF: goOnline fires, the banner hides and the
+        // Toggle force offline mode back OFF: goOnline fires, the banner hides and the
         // server controls come back to life
         app.buttons[AccessibilityId.homeSettings].tap()
         if !app.navigationBars["Settings"].waitForExistence(timeout: 5) {
             app.buttons[AccessibilityId.homeSettings].tap()
         }
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
-        app.segmentedControls.buttons["Options"].tap()
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 1))
-        app.switches[AccessibilityId.optionsManualOfflineMode].tap()
+        app.buttons["settings.section.network"].tap()
+        XCTAssertTrue(app.navigationBars["Network & Streaming"].waitForExistence(timeout: 10))
+        app.switches[AccessibilityId.optionsManualOfflineMode].firstMatch.tap()
         XCTAssertTrue(waitUntil(timeout: 10) { !self.offlineIndicator(app).isHittable },
                       "offline banner did not hide after going back online")
 
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
         app.navigationBars.buttons.firstMatch.tap()
         XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabHome].waitForExistence(timeout: 10))
         app.startPlaybackViaServerShuffle()

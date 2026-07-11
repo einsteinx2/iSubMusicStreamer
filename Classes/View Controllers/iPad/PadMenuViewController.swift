@@ -132,7 +132,7 @@ final class PadMenuViewController: UIViewController {
         } else {
             var controller: UIViewController? = nil
             switch type {
-            case .settings:  controller = SettingsViewController()
+            case .settings:  controller = SettingsCoordinator().makeRootViewController()
             case .home:      controller = HomeViewController()
             case .library:   controller = LibraryViewController()
             case .playlists: controller = PlaylistsViewController()

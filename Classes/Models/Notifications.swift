@@ -16,10 +16,8 @@ struct Notifications {
     
     static let albumArtLargeDownloaded = Notification.Name("iSub.albumArtLargeDownloaded")
     
-    static let switchServer = Notification.Name("iSub.switchServer")
     static let reloadServerList = Notification.Name("iSub.reloadServerList")
-    static let showBackButton = Notification.Name("iSub.showBackButton")
-    
+
     static let serverSwitched = Notification.Name("iSub.serverSwitched")
     static let checkServer = Notification.Name("iSub.checkServer")
     static let serverCheckPassed = Notification.Name("iSub.serverCheckPassed")

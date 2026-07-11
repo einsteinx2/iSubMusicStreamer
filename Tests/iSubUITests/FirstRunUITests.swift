@@ -10,8 +10,9 @@ import XCTest
 
 // E2E-01: Launch + first-run server setup. Launches with -FIRSTRUN (network stubbed, no
 // seeded server) so the app routes through the real first-run flow: SceneDelegate pushes
-// Settings, ServersViewController auto-presents the server-edit form. Fully offline —
-// ping responses come from the fixture stub (-FIXTURES badauth for the failure flow).
+// Settings, the root auto-opens the Servers screen, and ServersView auto-presents the
+// server-edit sheet. Fully offline — ping responses come from the fixture stub
+// (-FIXTURES badauth for the failure flow).
 final class FirstRunUITests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -29,8 +30,8 @@ final class FirstRunUITests: XCTestCase {
     }
 
     // The server-edit form auto-presents only when the store contains zero servers
-    // (ServersViewController.viewWillAppear), so its appearance doubles as an assertion
-    // that no server entry is persisted.
+    // (ServersView.onAppear), so its appearance doubles as an assertion that no server
+    // entry is persisted.
     @discardableResult
     private func waitForServerSetup(in app: XCUIApplication, timeout: TimeInterval = 30,
                                     file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
@@ -104,10 +105,10 @@ final class FirstRunUITests: XCTestCase {
         alert.buttons["OK"].tap()
         XCTAssertTrue(app.textFields[AccessibilityId.serverEditURL].exists)
 
-        // Behind the form, the servers table must contain no entry
+        // Behind the sheet, the servers list must contain no entry
         app.buttons[AccessibilityId.serverEditClose].tap()
-        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
-        XCTAssertEqual(app.tables.cells.count, 0, "failed auth persisted a server entry (BUG-17)")
+        XCTAssertTrue(app.navigationBars["Servers"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.cells.count, 0, "failed auth persisted a server entry (BUG-17)")
 
         // And a relaunch (no state reset) must route to first-run setup again — the
         // auto-presented form asserts the store still has zero servers
@@ -146,7 +147,9 @@ final class FirstRunUITests: XCTestCase {
             settingsButton.tap()
         }
         XCTAssertTrue(relaunched.navigationBars["Settings"].waitForExistence(timeout: 10))
-        XCTAssertTrue(relaunched.tables.cells.firstMatch.waitForExistence(timeout: 10), "servers list is empty")
-        XCTAssertEqual(relaunched.tables.cells.count, 1, "the retry must not create a duplicate server entry")
+        relaunched.buttons[AccessibilityId.settingsSectionServers].tap()
+        XCTAssertTrue(relaunched.navigationBars["Servers"].waitForExistence(timeout: 10))
+        XCTAssertTrue(relaunched.cells.firstMatch.waitForExistence(timeout: 10), "servers list is empty")
+        XCTAssertEqual(relaunched.cells.count, 1, "the retry must not create a duplicate server entry")
     }
 }

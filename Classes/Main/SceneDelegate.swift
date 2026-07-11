@@ -190,10 +190,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if UIDevice.isPad {
             padRootViewController?.menuViewController.showSettings()
         } else if let tabBarController = tabBarController {
-            let controller = SettingsViewController()
-            controller.hidesBottomBarWhenPushed = true
             if let navigationController = tabBarController.selectedViewController as? UINavigationController {
-                navigationController.pushViewController(controller, animated: true)
+                // The coordinator's root screen hides the tab bar and pushes the
+                // deeper settings screens onto this same navigation controller
+                navigationController.pushViewController(SettingsCoordinator().makeRootViewController(), animated: true)
             }
         }
     }
