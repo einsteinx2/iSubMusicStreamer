@@ -33,6 +33,32 @@ xcodebuild test-without-building -project iSub.xcodeproj -scheme "iSub Beta" \
 CI (.github/workflows/ci.yml) keeps using the plain "iPhone 17 Pro" device name;
 its runners are isolated so collisions cannot happen there.
 
+## Git worktrees: never use bare `git stash`
+
+The sibling checkouts are linked worktrees of one repo, and the stash stack
+(refs/stash) is SHARED across all of them. A bare `git stash` / `git stash pop`
+in one worktree can pop another session's stash into the wrong worktree (this
+has happened). Prefer, in order:
+
+1. A WIP commit instead of a stash — it lives on your branch and other
+   worktrees can't touch it:
+
+   ```sh
+   git commit -am "WIP: <what and why>"   # ...do the other thing...
+   git reset --soft HEAD^                 # restore the working state
+   ```
+
+2. If you must stash, always push with this worktree's name in the message and
+   only ever pop your own entry by index — never bare `git stash pop`:
+
+   ```sh
+   git stash push -m "$(basename "$PWD"): <what>"
+   IDX=$(git stash list | grep -F "$(basename "$PWD"):" | head -1 | cut -d: -f1)
+   [ -n "$IDX" ] && git stash pop "$IDX"
+   ```
+
+Never pop or drop a stash entry whose message names a different checkout.
+
 Notes:
 
 - When piping xcodebuild through grep/tail, check `${pipestatus[1]}` (zsh) for
