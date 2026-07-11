@@ -8,6 +8,7 @@
 
 import UIKit
 import CocoaLumberjackSwift
+import Resolver
 
 enum CachingType: Int {
     case minSpace = 0
@@ -82,147 +83,286 @@ final class SavedSettings {
     
     var showPlayerIcon: Bool { !UIDevice.isPad }
     
+    // NOTE: Properties with a `ui:` argument automatically appear as rows in the
+    // settings UI, grouped by their SettingUI.section and displayed in declaration
+    // order within each section (SettingsRegistry enumerates this class via Mirror).
+    // Properties without `ui:` are internal-only. Side effects belong in `onChange:`,
+    // never in didSet (see the note on UserDefault below).
+
+    // MARK: Internal settings (no UI row)
+
     @UserDefault(key: .appTerminatedCleanly, defaultValue: true)
     var appTerminatedCleanly: Bool
-    
-    @UserDefault(key: .manualOfflineModeSetting, defaultValue: false)
+
+    @UserDefault(key: .checkUpdatesSetting, defaultValue: true)
+    var isUpdateCheckEnabled: Bool
+
+    @UserDefault(key: .isUpdateCheckQuestionAsked, defaultValue: false)
+    var isUpdateCheckQuestionAsked: Bool
+
+    @UserDefault(key: .recover, defaultValue: false)
+    var isRecover: Bool
+
+    @UserDefault(key: .seekTime, defaultValue: 0.0)
+    var seekTime: Double
+
+    @UserDefault(key: .byteOffset, defaultValue: 0)
+    var byteOffset: Int
+
+    @UserDefault(key: .gainMultiplier, defaultValue: 1.0)
+    var gainMultiplier: Float
+
+    @UserDefault(key: .isJukeboxEnabled, defaultValue: false)
+    var isJukeboxEnabled: Bool
+
+    @UserDefault(key: .isShouldShowEQViewInstructions, defaultValue: true)
+    var isShouldShowEQViewInstructions: Bool
+
+    @UserDefault(key: .isEqualizerOn, defaultValue: false)
+    var isEqualizerOn: Bool
+
+    @UserDefault(key: .migrateIncrementor, defaultValue: 0)
+    var migrateIncrementor: Int
+
+    @UserDefault(key: .isCacheSizeTableFinished, defaultValue: false)
+    var isCacheSizeTableFinished: Bool
+
+    // The cache space limits have UI, but through the custom cache-space row (slider +
+    // editable size field) rather than a registry-generated row, so no `ui:` here
+    @UserDefault(key: .maxCacheSize, defaultValue: 1073741824)
+    var maxCacheSize: Int
+
+    @UserDefault(key: .minFreeSpace, defaultValue: 268435456)
+    var minFreeSpace: Int
+
+    var currentVisualizerType: VisualizerType {
+        get { VisualizerType(rawValue: defaults.integer(forKey: .currentVisualizerType)) ?? .none }
+        set { defaults.set(newValue.rawValue, forKey: .currentVisualizerType) }
+    }
+
+    // MARK: Network & Streaming settings
+
+    @UserDefault(key: .manualOfflineModeSetting, defaultValue: false,
+                 ui: SettingUI(title: "Force Offline Mode",
+                               section: .network,
+                               kind: .toggle,
+                               footer: "Use iSub in offline mode even when a network connection is available.",
+                               accessibilityId: AccessibilityId.optionsManualOfflineMode),
+                 onChange: { isOn in
+                     NotificationCenter.postOnMainThread(name: isOn ? Notifications.goOffline : Notifications.goOnline)
+                 })
     var isForceOfflineMode: Bool
-    
-    @UserDefault(key: .recoverSetting, defaultValue: 0)
-    var recoverSetting: Int
-    
-    @UserDefault(key: .maxBitrateWifiSetting, defaultValue: 7)
+
+    @UserDefault(key: .isDisableUsageOver3G, defaultValue: false,
+                 ui: SettingUI(title: "Disable Usage Over Cellular",
+                               section: .network,
+                               kind: .toggle,
+                               footer: "Automatically switch to offline mode when not connected to Wi-Fi.",
+                               accessibilityId: AccessibilityId.optionsDisableCellUsage),
+                 onChange: { isDisabled in
+                     // When on cellular right now, entering/leaving this mode takes
+                     // effect immediately
+                     guard let settings = Resolver.optional(SavedSettings.self),
+                           let networkStatus = Resolver.optional(NetworkStatus.self) else { return }
+                     if !settings.isOfflineMode && isDisabled && !networkStatus.isWifi {
+                         NotificationCenter.postOnMainThread(name: Notifications.goOffline)
+                     } else if settings.isOfflineMode && !isDisabled && !networkStatus.isWifi {
+                         NotificationCenter.postOnMainThread(name: Notifications.goOnline)
+                     }
+                 })
+    var isDisableUsageOver3G: Bool
+
+    @UserDefault(key: .isBasicAuthEnabled, defaultValue: false,
+                 ui: SettingUI(title: "HTTP Basic Authentication",
+                               section: .network,
+                               kind: .toggle,
+                               footer: "Send credentials using HTTP Basic Authentication. Only needed for certain proxy setups.",
+                               accessibilityId: AccessibilityId.optionsEnableBasicAuth))
+    var isBasicAuthEnabled: Bool
+
+    @UserDefault(key: .maxBitrateWifiSetting, defaultValue: 7,
+                 ui: SettingUI(title: "Max Audio Bitrate (Wi-Fi)",
+                               section: .network,
+                               kind: .picker(labels: ["64", "96", "128", "160", "192", "256", "320", "Unlimited"])))
     var maxBitrateWifi: Int
-    
-    @UserDefault(key: .maxBitrate3GSetting, defaultValue: 7)
+
+    @UserDefault(key: .maxBitrate3GSetting, defaultValue: 7,
+                 ui: SettingUI(title: "Max Audio Bitrate (Cellular)",
+                               section: .network,
+                               kind: .picker(labels: ["64", "96", "128", "160", "192", "256", "320", "Unlimited"])))
     var maxBitrate3G: Int
-    
+
     var currentMaxBitrate: Int {
         BitratePolicy.maxKiloBitrate(isWifi: networkStatus?.isWifi ?? true,
                                      wifiSetting: maxBitrateWifi,
                                      cellSetting: maxBitrate3G)
     }
-    
-    @UserDefault(key: .maxVideoBitrateWifi, defaultValue: 5)
+
+    @UserDefault(key: .maxVideoBitrateWifi, defaultValue: 5,
+                 ui: SettingUI(title: "Max Video Bitrate (Wi-Fi)",
+                               section: .network,
+                               kind: .picker(labels: ["512", "1024", "1536", "2048", "4096", "8192"])))
     var maxVideoBitrateWifi: Int
-    
-    @UserDefault(key: .maxVideoBitrate3G, defaultValue: 5)
+
+    @UserDefault(key: .maxVideoBitrate3G, defaultValue: 5,
+                 ui: SettingUI(title: "Max Video Bitrate (Cellular)",
+                               section: .network,
+                               kind: .picker(labels: ["192", "512", "1024", "1536", "2048", "4096"])))
     var maxVideoBitrate3G: Int
-    
+
     var currentVideoBitrates: [String]? {
         BitratePolicy.videoBitrates(isWifi: networkStatus?.isWifi ?? true,
                                     wifiSetting: maxVideoBitrateWifi,
                                     cellSetting: maxVideoBitrate3G)
     }
-    
-    @UserDefault(key: .enableSongCachingSetting, defaultValue: true)
-    var isSongCachingEnabled: Bool
-    
-    @UserDefault(key: .enableNextSongCacheSetting, defaultValue: true)
-    var isNextSongCacheEnabled: Bool
-    
-    @UserDefault(key: .isBackupCacheEnabled, defaultValue: false)
-    var isBackupCacheEnabled: Bool {
-        didSet {
-            // DownloadsManager observes and applies the backup exclusion flag to all
-            // existing downloads
-            NotificationCenter.postOnMainThread(name: Notifications.backupCacheSettingChanged)
-        }
-    }
 
-    @UserDefault(key: .isManualCachingOnWWANEnabled, defaultValue: false)
-    var isManualCachingOnWWANEnabled: Bool {
-        didSet {
-            // DownloadQueue observes and starts/stops itself when on cellular
-            NotificationCenter.postOnMainThread(name: Notifications.manualCachingOnWWANSettingChanged)
-        }
-    }
-    
-    @UserDefault(key: .cachingTypeSetting, defaultValue: 0)
+    // MARK: Downloads & Cache settings
+
+    @UserDefault(key: .enableSongCachingSetting, defaultValue: true,
+                 ui: SettingUI(title: "Download Songs for Offline Use",
+                               section: .downloads,
+                               kind: .toggle,
+                               footer: "Automatically save streamed songs so they can be played offline.",
+                               accessibilityId: AccessibilityId.optionsEnableSongCaching))
+    var isSongCachingEnabled: Bool
+
+    @UserDefault(key: .enableNextSongCacheSetting, defaultValue: true,
+                 ui: SettingUI(title: "Pre-Download Next Song",
+                               section: .downloads,
+                               kind: .toggle,
+                               accessibilityId: AccessibilityId.optionsEnableNextSongCache,
+                               dependsOn: .enableSongCachingSetting))
+    var isNextSongCacheEnabled: Bool
+
+    @UserDefault(key: .isManualCachingOnWWANEnabled, defaultValue: false,
+                 ui: SettingUI(title: "Manual Downloads Over Cellular",
+                               section: .downloads,
+                               kind: .toggle,
+                               confirmation: SettingUI.Confirmation(title: "Warning",
+                                                                    message: "This feature can use a large amount of data. Please be sure to monitor your data plan usage to avoid overage charges from your wireless provider.")),
+                 onChange: { _ in
+                     // DownloadQueue observes and starts/stops itself when on cellular
+                     NotificationCenter.postOnMainThread(name: Notifications.manualCachingOnWWANSettingChanged)
+                 })
+    var isManualCachingOnWWANEnabled: Bool
+
+    @UserDefault(key: .isBackupCacheEnabled, defaultValue: false,
+                 ui: SettingUI(title: "Back Up Downloaded Songs",
+                               section: .downloads,
+                               kind: .toggle,
+                               accessibilityId: AccessibilityId.optionsEnableBackupCache,
+                               confirmation: SettingUI.Confirmation(title: "Warning",
+                                                                    message: "This setting can take up a large amount of space on your computer or iCloud storage. Are you sure you want to backup your cached songs?")),
+                 onChange: { _ in
+                     // DownloadsManager observes and applies the backup exclusion flag
+                     // to all existing downloads
+                     NotificationCenter.postOnMainThread(name: Notifications.backupCacheSettingChanged)
+                 })
+    var isBackupCacheEnabled: Bool
+
+    @UserDefault(key: .cachingTypeSetting, defaultValue: 0,
+                 ui: SettingUI(title: "Cache Limit Type",
+                               section: .downloads,
+                               kind: .picker(labels: ["Minimum Free Space", "Maximum Cache Size"]),
+                               dependsOn: .enableSongCachingSetting))
     var cachingType: Int
-    
-    @UserDefault(key: .maxCacheSize, defaultValue: 1073741824)
-    var maxCacheSize: Int
-    
-    @UserDefault(key: .minFreeSpace, defaultValue: 268435456)
-    var minFreeSpace: Int
-    
-    @UserDefault(key: .autoDeleteCacheSetting, defaultValue: false)
+
+    @UserDefault(key: .autoDeleteCacheSetting, defaultValue: false,
+                 ui: SettingUI(title: "Auto-Delete Old Downloads",
+                               section: .downloads,
+                               kind: .toggle,
+                               accessibilityId: AccessibilityId.optionsAutoDeleteCache))
     var isAutoDeleteCacheEnabled: Bool
-    
-    @UserDefault(key: .autoDeleteCacheTypeSetting, defaultValue: 0)
+
+    @UserDefault(key: .autoDeleteCacheTypeSetting, defaultValue: 0,
+                 ui: SettingUI(title: "Auto-Delete By",
+                               section: .downloads,
+                               kind: .picker(labels: ["Oldest Played", "Oldest Downloaded"])))
     var autoDeleteCacheType: Int
-    
-    @UserDefault(key: .cacheSongCellColorSetting, defaultValue: 3)
+
+    @UserDefault(key: .cacheSongCellColorSetting, defaultValue: 3,
+                 ui: SettingUI(title: "Downloaded Song Highlight",
+                               section: .downloads,
+                               kind: .picker(labels: ["Red", "Yellow", "Green", "Blue", "None"])))
     var downloadedSongCellColorType: Int
-    
-    @UserDefault(key: .autoReloadArtistsSetting, defaultValue: false)
-    var isAutoReloadArtistsEnabled: Bool
-    
-    @UserDefault(key: .scrobblePercentSetting, defaultValue: 0.5)
-    var scrobblePercent: Float
-    
-    @UserDefault(key: .enableScrobblingSetting, defaultValue: false)
-    var isScrobbleEnabled: Bool
-    
-    @UserDefault(key: .lockRotationSetting, defaultValue: false)
-    var isRotationLockEnabled: Bool
-    
-    @UserDefault(key: .isJukeboxEnabled, defaultValue: false)
-    var isJukeboxEnabled: Bool
-    
-    @UserDefault(key: .isScreenSleepEnabled, defaultValue: true)
-    var isScreenSleepEnabled: Bool
-    
-    @UserDefault(key: .isPopupsEnabled, defaultValue: true)
-    var isPopupsEnabled: Bool
-    
-    @UserDefault(key: .checkUpdatesSetting, defaultValue: true)
-    var isUpdateCheckEnabled: Bool
-    
-    @UserDefault(key: .isUpdateCheckQuestionAsked, defaultValue: false)
-    var isUpdateCheckQuestionAsked: Bool
-    
-    @UserDefault(key: .recover, defaultValue: false)
-    var isRecover: Bool
-    
-    @UserDefault(key: .seekTime, defaultValue: 0.0)
-    var seekTime: Double
-    
-    @UserDefault(key: .byteOffset, defaultValue: 0)
-    var byteOffset: Int
-    
-    @UserDefault(key: .isBasicAuthEnabled, defaultValue: false)
-    var isBasicAuthEnabled: Bool
-    
-    @UserDefault(key: .gainMultiplier, defaultValue: 1.0)
-    var gainMultiplier: Float
-    
-    var currentVisualizerType: VisualizerType {
-        get { VisualizerType(rawValue: defaults.integer(forKey: .currentVisualizerType)) ?? .none }
-        set { defaults.set(newValue.rawValue, forKey: .currentVisualizerType) }
-    }
-    
-    @UserDefault(key: .quickSkipNumberOfSeconds, defaultValue: 30)
+
+    // MARK: Playback settings
+
+    @UserDefault(key: .recoverSetting, defaultValue: 0,
+                 ui: SettingUI(title: "Resume on Launch",
+                               section: .playback,
+                               kind: .picker(labels: ["Playing", "Paused"]),
+                               footer: "Whether playback resumes playing or paused when iSub restarts mid-song."))
+    var recoverSetting: Int
+
+    @UserDefault(key: .quickSkipNumberOfSeconds, defaultValue: 30,
+                 ui: SettingUI(title: "Quick Skip Length",
+                               section: .playback,
+                               kind: .pickerMapped(labels: ["5 seconds", "15 seconds", "30 seconds", "45 seconds", "1 minute", "2 minutes", "5 minutes", "10 minutes", "20 minutes"],
+                                                   values: QuickSkipMapping.secondsOptions),
+                               accessibilityId: AccessibilityId.optionsQuickSkipSegment),
+                 onChange: { _ in
+                     // The player updates its quick skip button labels
+                     NotificationCenter.postOnMainThread(name: Notifications.quickSkipSecondsSettingChanged)
+                 })
     var quickSkipNumberOfSeconds: Int
-    
-    @UserDefault(key: .isShouldShowEQViewInstructions, defaultValue: true)
-    var isShouldShowEQViewInstructions: Bool
-    
-    @UserDefault(key: .isLockScreenArtEnabled, defaultValue: true)
+
+    @UserDefault(key: .isLockScreenArtEnabled, defaultValue: true,
+                 ui: SettingUI(title: "Album Art on Lock Screen",
+                               section: .playback,
+                               kind: .toggle,
+                               accessibilityId: AccessibilityId.optionsEnableLockScreenArt))
     var isLockScreenArtEnabled: Bool
-    
-    @UserDefault(key: .isEqualizerOn, defaultValue: false)
-    var isEqualizerOn: Bool
-    
-    @UserDefault(key: .isDisableUsageOver3G, defaultValue: false)
-    var isDisableUsageOver3G: Bool
-    
-    @UserDefault(key: .migrateIncrementor, defaultValue: 0)
-    var migrateIncrementor: Int
-    
-    @UserDefault(key: .isCacheSizeTableFinished, defaultValue: false)
-    var isCacheSizeTableFinished: Bool
+
+    @UserDefault(key: .enableScrobblingSetting, defaultValue: false,
+                 ui: SettingUI(title: "Last.fm Scrobbling",
+                               section: .playback,
+                               kind: .toggle,
+                               footer: "Scrobbling requires Last.fm credentials configured on your server.",
+                               accessibilityId: AccessibilityId.optionsEnableScrobbling))
+    var isScrobbleEnabled: Bool
+
+    @UserDefault(key: .scrobblePercentSetting, defaultValue: 0.5,
+                 ui: SettingUI(title: "Scrobble At",
+                               section: .playback,
+                               kind: .percentSlider,
+                               footer: "How much of a song must play before it's scrobbled.",
+                               dependsOn: .enableScrobblingSetting))
+    var scrobblePercent: Float
+
+    // MARK: Appearance & Behavior settings
+
+    @UserDefault(key: .isPopupsEnabled, defaultValue: true,
+                 ui: SettingUI(title: "Show Alert Popups",
+                               section: .appearanceBehavior,
+                               kind: .toggle,
+                               accessibilityId: AccessibilityId.optionsShowPopups))
+    var isPopupsEnabled: Bool
+
+    @UserDefault(key: .isScreenSleepEnabled, defaultValue: true,
+                 ui: SettingUI(title: "Allow Screen Sleep",
+                               section: .appearanceBehavior,
+                               kind: .toggle,
+                               accessibilityId: AccessibilityId.optionsAllowScreenSleep),
+                 onChange: { isEnabled in
+                     UIApplication.shared.isIdleTimerDisabled = !isEnabled
+                 })
+    var isScreenSleepEnabled: Bool
+
+    @UserDefault(key: .lockRotationSetting, defaultValue: false,
+                 ui: SettingUI(title: "Lock Rotation",
+                               section: .appearanceBehavior,
+                               kind: .toggle,
+                               accessibilityId: AccessibilityId.optionsDisableRotation))
+    var isRotationLockEnabled: Bool
+
+    @UserDefault(key: .autoReloadArtistsSetting, defaultValue: false,
+                 ui: SettingUI(title: "Auto-Reload Library Tab",
+                               section: .appearanceBehavior,
+                               kind: .toggle,
+                               footer: "Refresh the artist list from the server every time the Library tab appears.",
+                               accessibilityId: AccessibilityId.optionsAutoReloadArtist))
+    var isAutoReloadArtistsEnabled: Bool
     
     func migrate() {
         // In the future, when settings migrations are required, check the migrateIncrementor number and perform the necessary migrations in order based on the incrementor number
@@ -429,6 +569,15 @@ struct UserDefault<Value> {
     // When nil (the default), the shared SavedSettings.defaults store is used, resolved
     // at access time so tests can swap in an isolated suite
     var container: UserDefaults?
+    // Display metadata for the data-driven settings UI. nil (the default) means the
+    // setting is internal-only and gets no row (see SettingsRegistry).
+    var ui: SettingUI? = nil
+    // Change side effects. IMPORTANT: never use didSet on a @UserDefault property —
+    // the settings UI writes through a type-erased copy of this wrapper (via
+    // SettingsRegistry), which bypasses the enclosing property's observers. onChange
+    // fires on every write path. Closures here can't capture self; resolve any
+    // services they need via Resolver at fire time.
+    var onChange: ((Value) -> Void)? = nil
 
     private var resolvedContainer: UserDefaults { container ?? SavedSettings.defaults }
 
@@ -436,9 +585,34 @@ struct UserDefault<Value> {
         get {
             return resolvedContainer.object(forKey: key) as? Value ?? defaultValue
         }
-        set {
+        nonmutating set {
             resolvedContainer.set(newValue, forKey: key)
             resolvedContainer.synchronize()
+            onChange?(newValue)
         }
+    }
+}
+
+// Type-erased access to a UserDefault wrapper, used by SettingsRegistry to enumerate
+// and bind settings without knowing their value types
+protocol AnySettingProperty {
+    var settingKey: SavedSettings.Key { get }
+    var settingUI: SettingUI? { get }
+    func anyValue() -> Any
+    func setAnyValue(_ value: Any)
+}
+
+extension UserDefault: AnySettingProperty {
+    var settingKey: SavedSettings.Key { key }
+    var settingUI: SettingUI? { ui }
+
+    func anyValue() -> Any { wrappedValue }
+
+    func setAnyValue(_ value: Any) {
+        guard let value = value as? Value else {
+            DDLogError("[UserDefault] Ignoring write of \(type(of: value)) value to \(key) which expects \(Value.self)")
+            return
+        }
+        wrappedValue = value
     }
 }

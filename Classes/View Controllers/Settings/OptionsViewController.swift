@@ -192,13 +192,9 @@ final class OptionsViewController: UIViewController {
         case cacheSongCellColorSegmentedControl:
             settings.downloadedSongCellColorType = cacheSongCellColorSegmentedControl.selectedSegmentIndex
         case quickSkipSegmentControl:
+            // The player update notification is posted by the setting's onChange
             if let seconds = QuickSkipMapping.seconds(segmentIndex: quickSkipSegmentControl.selectedSegmentIndex) {
                 settings.quickSkipNumberOfSeconds = seconds
-            }
-            
-            if UIDevice.isPad {
-                // Update the quick skip buttons in the player with the new values on iPad since player is always visible
-                NotificationCenter.postOnMainThread(name: Notifications.quickSkipSecondsSettingChanged)
             }
         case maxVideoBitrate3GSegmentedControl:
             settings.maxVideoBitrate3G = maxVideoBitrate3GSegmentedControl.selectedSegmentIndex
@@ -247,9 +243,8 @@ final class OptionsViewController: UIViewController {
         
         switch sender {
         case manualOfflineModeSwitch:
+            // The go offline/online notification is posted by the setting's onChange
             settings.isForceOfflineMode = manualOfflineModeSwitch.isOn
-            let name = manualOfflineModeSwitch.isOn ? Notifications.goOffline : Notifications.goOnline
-            NotificationCenter.postOnMainThread(name: name)
         case enableScrobblingSwitch:
             settings.isScrobbleEnabled = enableScrobblingSwitch.isOn
         case enableManualCachingOnWWANSwitch:
@@ -299,21 +294,15 @@ final class OptionsViewController: UIViewController {
         case disableRotationSwitch:
             settings.isRotationLockEnabled = disableRotationSwitch.isOn
         case disableScreenSleepSwitch:
+            // The idle timer is updated by the setting's onChange
             settings.isScreenSleepEnabled = !disableScreenSleepSwitch.isOn
-            UIApplication.shared.isIdleTimerDisabled = disableScreenSleepSwitch.isOn
         case enableBasicAuthSwitch:
             settings.isBasicAuthEnabled = enableBasicAuthSwitch.isOn
         case enableLockScreenArt:
             settings.isLockScreenArtEnabled = enableLockScreenArt.isOn
         case disableCellUsageSwitch:
+            // The go offline/online transition is handled by the setting's onChange
             settings.isDisableUsageOver3G = disableCellUsageSwitch.isOn
-            if !settings.isOfflineMode && settings.isDisableUsageOver3G && !networkStatus.isWifi {
-                // We're on 3G and we just disabled use on 3G, so go offline
-                NotificationCenter.postOnMainThread(name: Notifications.goOffline)
-            } else if settings.isOfflineMode && !settings.isDisableUsageOver3G && !networkStatus.isWifi {
-                // We're on 3G and we just enabled use on 3G, so go online if we're offline
-                NotificationCenter.postOnMainThread(name: Notifications.goOnline)
-            }
         default:
             break
         }
@@ -438,40 +427,5 @@ extension OptionsViewController: UITextFieldDelegate {
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         updateCacheSpaceSlider()
-    }
-}
-
-// MARK: Extracted logic (unit tested)
-
-// Maps the quick-skip seconds setting to/from its segmented-control index
-enum QuickSkipMapping {
-    static let secondsOptions = [5, 15, 30, 45, 60, 120, 300, 600, 1200]
-
-    static func segmentIndex(seconds: Int) -> Int? {
-        return secondsOptions.firstIndex(of: seconds)
-    }
-
-    static func seconds(segmentIndex: Int) -> Int? {
-        guard segmentIndex >= 0 && segmentIndex < secondsOptions.count else { return nil }
-        return secondsOptions[segmentIndex]
-    }
-}
-
-// The min-free-space / max-cache-size slider math: clamps the chosen size between
-// 50MB and the available space minus 50MB
-enum CacheSpaceSliderMath {
-    static let reservedBytes = 52428800 // 50MB
-
-    // Returns the byte value for the slider position, plus the corrected slider
-    // position when the value had to be clamped (nil when unclamped)
-    static func spaceSetting(sliderValue: Float, totalSpace: Int, freeSpace: Int) -> (bytes: Int, clampedSliderValue: Float?) {
-        if sliderValue * Float(totalSpace) > Float(freeSpace) - Float(reservedBytes) {
-            let bytes = freeSpace - reservedBytes
-            return (bytes, Float(bytes) / Float(totalSpace))
-        } else if sliderValue * Float(totalSpace) < Float(reservedBytes) {
-            return (reservedBytes, Float(reservedBytes) / Float(totalSpace))
-        } else {
-            return (Int(sliderValue * Float(totalSpace)), nil)
-        }
     }
 }

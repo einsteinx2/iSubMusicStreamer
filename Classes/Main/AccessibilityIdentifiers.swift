@@ -98,4 +98,8 @@ enum AccessibilityId {
     static let optionsAutoDeleteCache = "options.autoDeleteCache"
     static let optionsEnableLockScreenArt = "options.enableLockScreenArt"
     static let optionsQuickSkipSegment = "options.quickSkipSegment"
+    // Positive-phrasing replacements for the retired optionsDisablePopups /
+    // optionsDisableScreenSleep toggles in the SwiftUI settings
+    static let optionsShowPopups = "options.showPopups"
+    static let optionsAllowScreenSleep = "options.allowScreenSleep"
 }
