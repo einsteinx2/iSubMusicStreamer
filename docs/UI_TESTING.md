@@ -31,7 +31,7 @@ UI tests address elements through the constants in `Classes/Main/AccessibilityId
 (compiled into both app targets and the UI test bundle — never match on display strings).
 Currently applied to: the five tab bar items, `UniversalTableViewCell`, the server-edit
 fields/buttons, the player transport controls and seek slider, the equalizer controls,
-the Home screen buttons and search bar, the chat input/send controls, the library
+the Library Browse page rows and search bar, the chat input/send controls, the library
 media-folder dropdown, the save/edit table headers, the player page control, and the
 settings options toggles. Add new identifiers to that file as tests need them.
 
@@ -39,8 +39,9 @@ settings options toggles. Add new identifiers to that file as tests need them.
 
 - `SmokeUITests` — one boot-to-root-UI test per launch mode.
 - `FirstRunUITests` (E2E-01) — first-run server setup, incl. the BUG-17 regression.
-- `Online*UITests` (E2E-02) — the online-mode regression suite, one class per area
-  (Home, Library, Player, Playlists, Downloads, Settings, Navigation), adapted from
+- `Online*UITests` / `BrowseUITests` (E2E-02) — the online-mode regression suite, one
+  class per area (Browse/search, Library, Player, Playlists, Downloads, Settings,
+  Navigation), adapted from
   `Testing/Integration Tests.txt` to the 5-tab layout. Flows blocked on still-stubbed
   features or known bugs assert the target behavior inside non-strict `XCTExpectFailure`
   blocks (see the checklist items referenced in each), so they flip to passing when the
