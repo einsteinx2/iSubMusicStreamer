@@ -40,6 +40,62 @@ final class OnlinePlayerUITests: XCTestCase {
         return Double(value.replacingOccurrences(of: "%", with: "")) ?? 0
     }
 
+    // Flips the Enable Jukebox Mode toggle in Settings > Playback and returns to the tab bar
+    private func toggleJukeboxSetting(in app: XCUIApplication) {
+        app.openTab(AccessibilityId.tabHome)
+        app.buttons[AccessibilityId.homeSettings].tap()
+        if !app.navigationBars["Settings"].waitForExistence(timeout: 5) {
+            app.buttons[AccessibilityId.homeSettings].tap()
+        }
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
+        app.buttons["settings.section.playback"].tap()
+        XCTAssertTrue(app.navigationBars["Playback"].waitForExistence(timeout: 10))
+        app.tapToggle(AccessibilityId.optionsEnableJukebox)
+
+        // Settings screens hide the tab bar, so pop back out before switching tabs
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 10))
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabPlayer].waitForExistence(timeout: 10),
+                      "tab bar did not reappear after leaving settings")
+    }
+
+    func testJukeboxButtonGatedBySettingAndTogglesMode() {
+        let app = ISubApp.launch(mockServer: true)
+        app.waitForTabBar()
+
+        // Hidden until the Enable Jukebox Mode setting is turned on. The queue is empty
+        // here on purpose: the toggle must work without any songs queued.
+        app.openTab(AccessibilityId.tabPlayer)
+        XCTAssertFalse(app.buttons[AccessibilityId.playerJukebox].exists,
+                       "jukebox button is visible without the setting enabled")
+
+        toggleJukeboxSetting(in: app)
+
+        app.openTab(AccessibilityId.tabPlayer)
+        let jukeboxButton = app.buttons[AccessibilityId.playerJukebox]
+        XCTAssertTrue(jukeboxButton.waitForExistence(timeout: 10),
+                      "jukebox button did not appear after enabling the setting")
+
+        // Toggling on swaps in the jukebox volume slider; off removes it
+        jukeboxButton.tap()
+        let volumeSlider = app.sliders[AccessibilityId.playerJukeboxVolume]
+        XCTAssertTrue(volumeSlider.waitForExistence(timeout: 10), "jukebox mode did not activate")
+        jukeboxButton.tap()
+        XCTAssertTrue(waitUntil(timeout: 10) { !volumeSlider.exists }, "jukebox mode did not deactivate")
+
+        // Turning the setting off while the mode is active exits jukebox mode too,
+        // otherwise playback would silently stay routed to the server
+        jukeboxButton.tap()
+        XCTAssertTrue(volumeSlider.waitForExistence(timeout: 10))
+        toggleJukeboxSetting(in: app)
+        app.openTab(AccessibilityId.tabPlayer)
+        XCTAssertTrue(waitUntil(timeout: 10) { !volumeSlider.exists },
+                      "disabling the setting did not exit jukebox mode")
+        XCTAssertTrue(waitUntil(timeout: 10) { !app.buttons[AccessibilityId.playerJukebox].exists },
+                      "jukebox button still visible with the setting disabled")
+    }
+
     func testTransportPlayPauseNextPrevious() {
         let app = launchPlaying()
 

@@ -39,6 +39,7 @@ enum AccessibilityId {
     static let playerRepeat = "player.repeat"
     static let playerShuffle = "player.shuffle"
     static let playerEqualizer = "player.equalizer"
+    static let playerJukebox = "player.jukebox"
     static let playerJukeboxVolume = "player.jukeboxVolume"
 
     // Equalizer

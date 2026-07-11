@@ -115,6 +115,7 @@ enum UITestSupport {
             // Suppress the launch "entering offline mode" notice so it doesn't block taps
             settings.isPopupsEnabled = false
         case .jukebox:
+            settings.isJukeboxFeatureEnabled = true
             settings.isJukeboxEnabled = true
         }
     }

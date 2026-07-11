@@ -65,6 +65,7 @@ final class PlayerViewController: UIViewController {
     private let bookmarksButton = UIButton(type: .custom)
     private let equalizerButton = UIButton(type: .custom)
     private let shuffleButton = UIButton(type: .custom)
+    private let jukeboxButton = UIButton(type: .custom)
     
     // Progress bar
     private var progressDisplayLink: CADisplayLink?
@@ -282,6 +283,7 @@ final class PlayerViewController: UIViewController {
         repeatButton.accessibilityIdentifier = AccessibilityId.playerRepeat
         shuffleButton.accessibilityIdentifier = AccessibilityId.playerShuffle
         equalizerButton.accessibilityIdentifier = AccessibilityId.playerEqualizer
+        jukeboxButton.accessibilityIdentifier = AccessibilityId.playerJukebox
         jukeboxVolumeSlider.accessibilityIdentifier = AccessibilityId.playerJukeboxVolume
         bookmarksButton.accessibilityIdentifier = AccessibilityId.playerBookmarks
 
@@ -354,7 +356,7 @@ final class PlayerViewController: UIViewController {
         moreControlsStack.axis = .horizontal
         moreControlsStack.alignment = .center
         moreControlsStack.distribution = .equalCentering
-        moreControlsStack.addArrangedSubviews([repeatButton, bookmarksButton, equalizerButton, shuffleButton])
+        moreControlsStack.addArrangedSubviews([repeatButton, bookmarksButton, equalizerButton, shuffleButton, jukeboxButton])
         moreControlsStack.snp.makeConstraints { make in
             make.height.equalTo(controlStackHeight)
             make.leading.trailing.equalToSuperview()
@@ -424,7 +426,18 @@ final class PlayerViewController: UIViewController {
             }
         }
         updateShuffleButtonIcon()
-        
+
+        // Only shown when the Enable Jukebox Mode setting is on (see updateJukeboxControls)
+        jukeboxButton.setImage(UIImage(systemName: "av.remote", withConfiguration: regularConfig), for: .normal)
+        jukeboxButton.addClosure(for: .touchUpInside) { [unowned self] in
+            // The coordinator flips the setting and runs the mode side effects (stopping
+            // the local player / starting jukebox polling), then posts the notifications
+            // that drive updateJukeboxControls
+            let enabling = !settings.isJukeboxEnabled
+            playbackCoordinator.setJukeboxEnabled(enabling)
+            analytics.log(event: enabling ? .jukeboxEnabled : .jukeboxDisabled)
+        }
+
         // Adjust button sizes and image scaling modes
         for arrangedSubview in (controlsStack.arrangedSubviews + moreControlsStack.arrangedSubviews) {
             // Set the size and content mode on buttons that have background images
@@ -516,6 +529,9 @@ final class PlayerViewController: UIViewController {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.jukeboxSongInfo)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.jukeboxDisabled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.jukeboxEnabled)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.jukeboxSettingChanged)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.didEnterOfflineMode)
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.didEnterOnlineMode)
         
         if UIDevice.isPad {
             NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateQuickSkipButtons), name: Notifications.quickSkipSecondsSettingChanged)
@@ -683,6 +699,9 @@ final class PlayerViewController: UIViewController {
             progressSlider.setThumbImage(UIImage(named: "controller-slider-thumb")?.withTintColor(sliderTintColor), for: .normal)
             
             for subview in (controlsStack.arrangedSubviews + moreControlsStack.arrangedSubviews) {
+                // The jukebox toggle must stay usable with an empty queue;
+                // updateJukeboxControls owns its state
+                guard subview !== jukeboxButton else { continue }
                 subview.alpha = alpha
                 if let control = subview as? UIControl {
                     control.isEnabled = enable
@@ -796,6 +815,15 @@ final class PlayerViewController: UIViewController {
     @objc private func updateJukeboxControls() {
         let jukeboxEnabled = settings.isJukeboxEnabled
         equalizerButton.isHidden = jukeboxEnabled
+
+        // Visible only when the feature setting is on; the || keeps an escape hatch if
+        // the mode is somehow active while the setting is off. Enabled state is owned
+        // here, not by updateSongInfo's empty-queue loop - toggling jukebox mode must
+        // work with an empty queue.
+        jukeboxButton.isHidden = !(settings.isJukeboxFeatureEnabled || jukeboxEnabled)
+        jukeboxButton.tintColor = jukeboxEnabled ? Colors.playerButtonActivated : Colors.playerButton
+        jukeboxButton.alpha = settings.isOfflineMode ? 0.7 : 1.0
+        jukeboxButton.isEnabled = !settings.isOfflineMode
         
         self.playPauseButton.tintColor = Colors.playerButton
         if jukeboxEnabled {
