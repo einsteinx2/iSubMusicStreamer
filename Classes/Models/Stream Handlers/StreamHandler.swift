@@ -197,7 +197,11 @@ final class StreamHandler: NSObject, Codable {
             }
         }
         
-        if !resume {
+        // No usable file handle at this point means the file doesn't exist yet — either
+        // a fresh start, or a resume whose partial file is missing (handler never
+        // started, or the file was evicted between sessions). Create it and download
+        // from the requested byteOffset rather than failing on the first data callback.
+        if fileHandle == nil {
             // Create intermediary directory if needed
             let containingDirectory = (filePath as NSString).deletingLastPathComponent
             if !FileManager.default.fileExists(atPath: containingDirectory) {
