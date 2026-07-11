@@ -346,7 +346,11 @@ final class StreamManager {
     }
     
     func fillStreamQueue(startDownload: Bool) {
-        guard let playQueue, !settings.isOfflineMode else { return }
+        // The jukebox guard is NOT redundant: several callers (shuffleToggle's
+        // deliberately-unconditional stream rebuild, this manager's own internal
+        // refills after promotions and finished downloads) rely on this method
+        // no-oping in jukebox mode
+        guard let playQueue, !settings.isJukeboxEnabled, !settings.isOfflineMode else { return }
 
         let numStreamsToQueue = settings.isSongCachingEnabled && settings.isNextSongCacheEnabled ? defaultNumberOfStreamsToQueue : 1
         guard handlerStack.count < numStreamsToQueue else { return }

@@ -194,6 +194,10 @@ final class StreamManagerTests: StoreTestCase {
         playQueue.currentIndex = 0
 
         settings.isJukeboxEnabled = true
+        // Seed the jukebox play queue too: in jukebox mode currentPlaylistId points
+        // there, so an empty jukebox queue would mask a missing guard (it did —
+        // the Phase 8.8 guard removal passed this test but broke JukeboxUITests)
+        XCTAssertTrue(store.add(song: song, localPlaylistId: LocalPlaylist.Default.jukeboxPlayQueueId))
         streamManager.fillStreamQueue(startDownload: false)
         XCTAssertFalse(streamManager.isInQueue(song: song))
 
