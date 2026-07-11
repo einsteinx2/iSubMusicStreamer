@@ -102,4 +102,12 @@ enum AccessibilityId {
     // optionsDisableScreenSleep toggles in the SwiftUI settings
     static let optionsShowPopups = "options.showPopups"
     static let optionsAllowScreenSleep = "options.allowScreenSleep"
+
+    // SwiftUI settings root rows (the per-section ids live on SettingsSection)
+    static let settingsSectionServers = "settings.section.servers"
+
+    // SwiftUI server list
+    static let serversList = "servers.list"
+    static let serversAdd = "servers.add"
+    static let serversEdit = "servers.edit"
 }
