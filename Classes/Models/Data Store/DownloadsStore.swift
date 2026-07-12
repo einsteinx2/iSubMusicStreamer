@@ -631,16 +631,23 @@ extension Store {
     }
     
     @discardableResult
-    func deleteDownloadedSongs(serverId: Int, level: Int) -> Bool {
+    func deleteDownloadedSongs(serverId: Int, level: Int, pathComponent: String) -> Bool {
         do {
             // Look up the affected songs and remove their files before opening the
             // write transaction: the song lookups (and Song.localPath's server lookup)
-            // read the database, and database access is not reentrant
+            // read the database, and database access is not reentrant.
+            // A song is inside the folder when its path contains the folder's name as
+            // the path component at the folder's level (same scoping as songsRecursive)
+            // — without the pathComponent filter this used to delete every download
+            // that merely had a component at this level, i.e. all of them for level 0
             let songIds = try pool.read { db in
                 let songIdsSql: SQL = """
                     SELECT songId
                     FROM \(DownloadedSongPathComponent.self)
-                    WHERE serverId = \(serverId) AND level = \(level)
+                    WHERE serverId = \(serverId)
+                        AND level = \(level)
+                        AND maxLevel != \(level)
+                        AND pathComponent = \(pathComponent)
                     GROUP BY serverId, songId
                     """
                 return try SQLRequest<String>(literal: songIdsSql).fetchAll(db)
@@ -660,19 +667,19 @@ extension Store {
                 return true
             }
         } catch {
-            DDLogError("Failed to delete downloaded songs for server \(serverId) and level \(level): \(error)")
+            DDLogError("Failed to delete downloaded songs for server \(serverId) level \(level) folder \(pathComponent): \(error)")
             return false
         }
     }
     
     @discardableResult
     func deleteDownloadedSongs(downloadedFolderArtist: DownloadedFolderArtist) -> Bool {
-        return deleteDownloadedSongs(serverId: downloadedFolderArtist.serverId, level: 0)
+        return deleteDownloadedSongs(serverId: downloadedFolderArtist.serverId, level: 0, pathComponent: downloadedFolderArtist.name)
     }
     
     @discardableResult
     func deleteDownloadedSongs(downloadedFolderAlbum: DownloadedFolderAlbum) -> Bool {
-        return deleteDownloadedSongs(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level)
+        return deleteDownloadedSongs(serverId: downloadedFolderAlbum.serverId, level: downloadedFolderAlbum.level, pathComponent: downloadedFolderAlbum.name)
     }
     
     @discardableResult

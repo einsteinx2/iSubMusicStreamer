@@ -259,19 +259,38 @@ final class DownloadsStoreTests: StoreTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: song.localPath), "the downloaded file is removed with the record")
     }
 
-    func testDeleteDownloadedSongsAtLevel() throws {
+    func testDeleteDownloadedSongsForFolderArtistOnlyDeletesThatArtist() throws {
         buildLibrary(serverId: 1)
-        addFinishedDownload(serverId: 2, songId: "other", path: "Other Artist/other.mp3")
+        addFinishedDownload(serverId: 2, songId: "other", path: "Artist A/other.mp3")
 
-        // Level 0 deletion removes every downloaded song for the server
-        XCTAssertTrue(store.deleteDownloadedSongs(serverId: 1, level: 0))
+        // Deleting the Artist A folder removes only Artist A's songs — this used to
+        // delete every download at the level (i.e. everything for level 0)
+        XCTAssertTrue(store.deleteDownloadedSongs(serverId: 1, level: 0, pathComponent: "Artist A"))
 
-        XCTAssertEqual(store.downloadedSongsCount(serverId: 1), 0)
+        XCTAssertNil(store.downloadedSong(serverId: 1, songId: "1"))
+        XCTAssertNil(store.downloadedSong(serverId: 1, songId: "2"))
+        XCTAssertNil(store.downloadedSong(serverId: 1, songId: "3"))
+        XCTAssertNil(store.downloadedSong(serverId: 1, songId: "4"), "songs directly in the artist folder are removed")
+        XCTAssertNotNil(store.downloadedSong(serverId: 1, songId: "5"), "Artist B's downloads are untouched")
+
         let remainingComponents = try store.pool.read { db in
-            try DownloadedSongPathComponent.filter(literal: "serverId = 1").fetchCount(db)
+            try DownloadedSongPathComponent.filter(literal: "serverId = 1 AND pathComponent = 'Artist A'").fetchCount(db)
         }
         XCTAssertEqual(remainingComponents, 0, "path components are removed with the songs")
-        XCTAssertNotNil(store.downloadedSong(serverId: 2, songId: "other"), "other servers are untouched")
+        XCTAssertNotNil(store.downloadedSong(serverId: 2, songId: "other"), "other servers are untouched even for the same folder name")
+    }
+
+    func testDeleteDownloadedSongsForFolderAlbumOnlyDeletesThatAlbum() throws {
+        buildLibrary(serverId: 1)
+
+        // Deleting Album X (level 1) keeps the artist's other album and direct files
+        XCTAssertTrue(store.deleteDownloadedSongs(serverId: 1, level: 1, pathComponent: "Album X"))
+
+        XCTAssertNil(store.downloadedSong(serverId: 1, songId: "1"))
+        XCTAssertNil(store.downloadedSong(serverId: 1, songId: "2"))
+        XCTAssertNotNil(store.downloadedSong(serverId: 1, songId: "3"), "the artist's other album is untouched")
+        XCTAssertNotNil(store.downloadedSong(serverId: 1, songId: "4"), "files directly in the artist folder are untouched")
+        XCTAssertNotNil(store.downloadedSong(serverId: 1, songId: "5"), "other artists are untouched")
     }
 
     // MARK: Eviction queries
