@@ -271,6 +271,11 @@ extension DownloadEngine: StreamHandlerDelegate {
             NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongFailed)
             _ = store.removeFromDownloadQueue(song: handler.song)
             currentStreamHandler = nil
+
+            // Move on to the next queued song; without resetting isDownloading the
+            // guard in start() makes this (and every later) start() a no-op and the
+            // download queue stalls until an offline/online cycle or relaunch
+            isDownloading = false
             start()
         }
     }

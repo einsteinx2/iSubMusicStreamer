@@ -248,6 +248,31 @@ final class DownloadQueueTests: StoreTestCase {
         XCTAssertFalse(downloadQueue.isDownloading)
     }
 
+    // MARK: connection failure
+
+    func testConnectionFailureAfterMaxReconnectsContinuesQueue() throws {
+        MockSubsonicServer.stubStalling(.stream, data: Data(repeating: 1, count: 100_000))
+        let song1 = makeQueuedSong(id: "1")
+        _ = makeQueuedSong(id: "2")
+
+        downloadQueue.start()
+        XCTAssertTrue(downloadQueue.isDownloading)
+        let handler = try XCTUnwrap(downloadQueue.currentStreamHandler)
+
+        // Exhaust the retries: the give-up branch must remove the failed song AND
+        // reset isDownloading before continuing, or start()'s guard no-ops and the
+        // download queue stalls forever
+        handler.numberOfReconnects = 5
+        let failedExpectation = expectation(forNotification: Notifications.downloadQueueSongFailed, object: nil, handler: nil)
+        downloadQueue.streamHandlerConnectionFailed(handler: handler, error: APIError.filesystem)
+        wait(for: [failedExpectation], timeout: 5)
+
+        XCTAssertFalse(store.isSongInDownloadQueue(song: song1), "the failed song leaves the queue")
+        XCTAssertTrue(waitUntil { self.downloadQueue.currentQueuedSong?.id == "2" },
+                      "the queue must move on to the next song after giving up")
+        XCTAssertTrue(downloadQueue.isDownloading, "the next song's download starts")
+    }
+
     // MARK: removeCurrentSong / clear
 
     func testRemoveCurrentSongRemovesQueueRowAndContinues() {
