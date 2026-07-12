@@ -32,8 +32,10 @@ struct HUD {
             // guard above, its dismiss is processed before the HUD ever shows and is
             // dropped, leaving a stray fullscreen HUD that blocks all interaction.
             // By this point the show work is enqueued on main, so a dismiss enqueued
-            // now is guaranteed to run after it.
-            if Task.isCancelled {
+            // now is guaranteed to run after it. Skip the re-dismiss when a NEWER
+            // show has already replaced this task — its HUD must stay up (its own
+            // lifecycle handles hiding it).
+            if Task.isCancelled, HUD.task == nil {
                 await ProgressHUD.dismiss()
             }
         }
