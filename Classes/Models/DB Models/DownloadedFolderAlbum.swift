@@ -53,7 +53,7 @@ extension DownloadedFolderAlbum: TableCellModel {
     }
     func queueNext() {
         var offset = 0
-        let songs = store.songsRecursive(serverId: serverId, level: 0, parentPathComponent: name)
+        let songs = store.songsRecursive(serverId: serverId, level: level, parentPathComponent: name)
         for song in songs {
             song.queueNext(offset: offset)
             offset += 1
