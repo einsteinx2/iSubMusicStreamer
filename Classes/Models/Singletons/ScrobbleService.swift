@@ -42,6 +42,7 @@ final class ScrobbleService {
     private var hasSubmittedNowPlaying = false
     private var hasScrobbled = false
     private var lastSongId: String?
+    private var isPaused = false
 
     init(settings: SavedSettings, session: ServerSession, player: PlayerControlling,
          submit: ((Song, _ isSubmission: Bool) -> Void)? = nil) {
@@ -75,17 +76,28 @@ final class ScrobbleService {
     }
 
     @objc private func playbackStarted() {
-        resetFlags()
+        // BassPlayer.playPause() posts songPlaybackStarted on resume-from-pause too
+        // (including audio-session interruption resumes); resetting then would re-arm
+        // the submissions mid-song and scrobble the same song a second time on every
+        // pause/resume. A genuine new playback is always preceded by
+        // songPlaybackEnded/bassFreed (which reset below), so skip the reset when
+        // this start is just a resume.
+        if !isPaused {
+            resetFlags()
+        }
+        isPaused = false
         startTimer()
     }
 
     @objc private func playbackPaused() {
         // Flags survive a pause, matching the old behavior (the render callback
         // simply stopped running); only the polling stops
+        isPaused = true
         stopTimer()
     }
 
     @objc private func playbackStopped() {
+        isPaused = false
         resetFlags()
         stopTimer()
     }

@@ -168,4 +168,47 @@ final class ScrobbleServiceTests: SandboxedTestCase {
         service.handle(song: song, progress: 16)
         XCTAssertEqual(submissions.count, 1, "flags survive a pause, matching the old render-callback behavior")
     }
+
+    func testResumeFromPauseDoesNotRearmSubmissions() {
+        settings.isScrobbleEnabled = true
+        settings.scrobblePercent = 0.5
+        let song = TestData.song(duration: 240)
+
+        // Both thresholds crossed: now-playing + scrobble
+        service.handle(song: song, progress: 130)
+        XCTAssertEqual(submissions.count, 2)
+
+        // Pause then resume: BassPlayer.playPause() posts songPlaybackStarted again
+        // on resume — the per-song flags must survive or the song scrobbles twice
+        NotificationCenter.postOnMainThread(name: Notifications.songPlaybackPaused)
+        NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
+
+        service.handle(song: song, progress: 140)
+        XCTAssertEqual(submissions.count, 2, "a pause/resume cycle must not re-scrobble the song")
+    }
+
+    // MARK: Timer plumbing
+
+    func testPlaybackStartedNotificationStartsThePollingTimerWhichSubmits() throws {
+        // The production driver is the songPlaybackStarted notification starting the
+        // 5-second polling timer, whose tick reads the player — every other test
+        // calls handle() directly, so deleting startTimer() would leave production
+        // silent while the suite stayed green
+        let song = TestData.song()
+        try FileManager.default.createDirectory(atPath: (song.currentPath as NSString).deletingLastPathComponent,
+                                                withIntermediateDirectories: true)
+        try Data("audio".utf8).write(to: URL(fileURLWithPath: song.currentPath))
+        player.currentStream = try XCTUnwrap(BassStream(song: song))
+        player.progress = 15
+
+        NotificationCenter.postOnMainThread(name: Notifications.songPlaybackStarted)
+
+        // The first tick fires within the 5s interval (+1s tolerance)
+        let deadline = Date(timeIntervalSinceNow: 8)
+        while submissions.isEmpty && Date() < deadline {
+            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
+        }
+        XCTAssertEqual(submissions.count, 1, "the polling timer never ticked a now-playing submission")
+        XCTAssertFalse(submissions[0].isSubmission)
+    }
 }
