@@ -132,6 +132,12 @@ final class Jukebox {
                 // queue via the delegate, but this callback runs on the session's
                 // background queue, so apply it on the main thread
                 DispatchQueue.main.async {
+                    // Jukebox mode may have been left (or the server switched) while
+                    // this request was in flight. Applying the response now would
+                    // clobber the LOCAL play queue through the delegate and revive
+                    // the polling chain that deactivate() just cancelled.
+                    guard self.settings.isJukeboxEnabled else { return }
+
                     // These values are always returned
                     self.delegate?.jukebox(self, didReportCurrentIndex: jukeboxResponse.currentIndex)
                     self.gain = jukeboxResponse.gain
@@ -167,9 +173,15 @@ final class Jukebox {
                 let code = error.attribute("code").intXML
                 let message = error.attribute("message").stringXMLOptional ?? "Unknown error"
                 if code == 50 {
-                    // User is not authorized to control the jukebox
-                    settings.isJukeboxEnabled = false
-                    NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
+                    // User is not authorized to control the jukebox. parse() runs on
+                    // the session's background queue and the mode state is
+                    // main-confined, so flip the setting on the main thread (before
+                    // the jukeboxDisabled observers run, since both are enqueued in
+                    // order)
+                    DispatchQueue.main.async {
+                        self.settings.isJukeboxEnabled = false
+                        NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
+                    }
                 }
 
                 let alertMessage = "There was an error controlling the Jukebox.\n\nError \(code): \(message)"
