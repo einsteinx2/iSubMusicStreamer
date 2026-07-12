@@ -89,17 +89,22 @@ class ArtistsViewModel {
     
         loaderTask = Task {
             do {
-                self.mediaFolders = try await AsyncMediaFoldersLoader(serverId: serverId).load()
+                let mediaFolders = try await AsyncMediaFoldersLoader(serverId: serverId).load()
                 _ = self.store.deleteMediaFolders()
-                _ = self.store.add(mediaFolders: self.mediaFolders)
-                
+                _ = self.store.add(mediaFolders: mediaFolders)
+
                 let artistsLoader = type == .folders ? AsyncRootFoldersLoader(serverId: serverId, mediaFolderId: mediaFolderId) : AsyncRootArtistsLoader(serverId: serverId, mediaFolderId: mediaFolderId)
                 let artistsResponse = try await artistsLoader.load()
-                self.metadata = artistsResponse.metadata
-                self.tableSections = artistsResponse.tableSections
-                self.artistIds = artistsResponse.artistIds
-                
+
+                // This Task is not actor-isolated, so the table view state must be
+                // published on the main thread: assigning it here races UITableView
+                // layout (numberOfSections reads one snapshot, cellForRowAt another)
+                // and crashes on the tableSections subscript
                 await MainActor.run {
+                    self.mediaFolders = mediaFolders
+                    self.metadata = artistsResponse.metadata
+                    self.tableSections = artistsResponse.tableSections
+                    self.artistIds = artistsResponse.artistIds
                     self.delegate?.loadingFinished()
                 }
             } catch {
@@ -145,6 +150,7 @@ class ArtistsViewModel {
     }
     
     func artist(indexPath: IndexPath) -> Artist? {
+        guard indexPath.section < tableSections.count else { return nil }
         let index = tableSections[indexPath.section].position + indexPath.row
         guard index < artistIds.count else { return nil }
         
