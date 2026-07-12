@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 import Resolver
 
 // The top-level settings screen, styled like the iOS Settings app: Servers first,
@@ -17,6 +18,12 @@ struct SettingsRootView: View {
     private let settings: SavedSettings = Resolver.resolve()
     private let analytics: Analytics = Resolver.resolve()
 
+    // The current server URL is plain state refreshed on appear and on the server
+    // notifications — reading settings.currentServer directly in body would be
+    // evaluated once and go stale after adding/switching servers (SavedSettings is
+    // not observable)
+    @State private var currentServerURL: String?
+
     var body: some View {
         List {
             Section {
@@ -26,7 +33,7 @@ struct SettingsRootView: View {
                     SettingsRootRow(systemImage: "server.rack",
                                     iconColor: .blue,
                                     title: "Servers",
-                                    subtitle: settings.currentServer?.url.absoluteString)
+                                    subtitle: currentServerURL)
                 }
                 .accessibilityIdentifier(AccessibilityId.settingsSectionServers)
             }
@@ -57,7 +64,14 @@ struct SettingsRootView: View {
         }
         .listStyle(.insetGrouped)
         .onAppear {
+            currentServerURL = settings.currentServer?.url.absoluteString
             analytics.log(event: .settingsTab)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: Notifications.serverSwitched).receive(on: RunLoop.main)) { _ in
+            currentServerURL = settings.currentServer?.url.absoluteString
+        }
+        .onReceive(NotificationCenter.default.publisher(for: Notifications.reloadServerList).receive(on: RunLoop.main)) { _ in
+            currentServerURL = settings.currentServer?.url.absoluteString
         }
     }
 }
