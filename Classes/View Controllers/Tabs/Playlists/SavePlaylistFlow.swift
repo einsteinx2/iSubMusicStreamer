@@ -87,36 +87,46 @@ final class SavePlaylistFlow {
     }
 
     private func savePlayQueueLocally(newPlaylistNamed name: String) {
+        // Snapshot the queue on the main actor before hopping off it: the background
+        // block used to read the live playQueue while the main thread could mutate it
+        // mid-copy (song advance, shuffle, jukebox refresh), saving a truncated or
+        // reordered playlist
+        let songs = playQueueSongsSnapshot()
+        let store = self.store
         HUD.show()
         DispatchQueue.userInitiated.async {
             defer { HUD.hide() }
-            guard let nextLocalPlaylistId = self.store.nextLocalPlaylistId,
-                  self.store.add(localPlaylist: LocalPlaylist(id: nextLocalPlaylistId, name: name)),
-                  self.copyPlayQueueSongs(localPlaylistId: nextLocalPlaylistId) else {
-                self.presentLocalSaveError()
+            guard let nextLocalPlaylistId = store.nextLocalPlaylistId,
+                  store.add(localPlaylist: LocalPlaylist(id: nextLocalPlaylistId, name: name)),
+                  Self.copy(songs: songs, localPlaylistId: nextLocalPlaylistId, store: store) else {
+                Task { @MainActor in self.presentLocalSaveError() }
                 return
             }
         }
     }
 
     private func savePlayQueueLocally(overwriting localPlaylist: LocalPlaylist) {
+        let songs = playQueueSongsSnapshot()
+        let store = self.store
         HUD.show()
         DispatchQueue.userInitiated.async {
             defer { HUD.hide() }
-            guard self.store.clear(localPlaylistId: localPlaylist.id),
-                  self.copyPlayQueueSongs(localPlaylistId: localPlaylist.id) else {
-                self.presentLocalSaveError()
+            guard store.clear(localPlaylistId: localPlaylist.id),
+                  Self.copy(songs: songs, localPlaylistId: localPlaylist.id, store: store) else {
+                Task { @MainActor in self.presentLocalSaveError() }
                 return
             }
         }
     }
 
-    // TODO: optimize this in the store to not require loading each song object
-    private func copyPlayQueueSongs(localPlaylistId: Int) -> Bool {
-        for i in 0..<playQueue.count {
-            if let song = playQueue.song(index: i) {
-                guard store.add(song: song, localPlaylistId: localPlaylistId) else { return false }
-            }
+    private func playQueueSongsSnapshot() -> [Song] {
+        (0..<playQueue.count).compactMap { playQueue.song(index: $0) }
+    }
+
+    // TODO: optimize this in the store to not require a write per song
+    private nonisolated static func copy(songs: [Song], localPlaylistId: Int, store: Store) -> Bool {
+        for song in songs {
+            guard store.add(song: song, localPlaylistId: localPlaylistId) else { return false }
         }
         return true
     }
@@ -166,8 +176,10 @@ final class SavePlaylistFlow {
                                                           overwriteServerPlaylistId: overwriteServerPlaylistId,
                                                           songIds: songIds).load()
 
-                // Refresh the cached server playlists so the Server tab shows the result
-                _ = try await AsyncServerPlaylistsLoader(serverId: serverId).load()
+                // Refresh the cached server playlists so the Server tab shows the
+                // result. The save has already succeeded at this point, so a failed
+                // refresh must not fall into the catch and report a save error
+                _ = try? await AsyncServerPlaylistsLoader(serverId: serverId).load()
             } catch {
                 if settings.isPopupsEnabled && !error.isCanceled, let viewController {
                     let message = "There was an error saving the playlist to the server.\n\nError: \(error)"
