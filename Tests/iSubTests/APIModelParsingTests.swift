@@ -266,8 +266,10 @@ final class APIModelParsingTests: XCTestCase {
     func testFolderArtistParsedFromRealFixture() throws {
         let element = try XMLTestHelpers.element(tag: "artist", fixture: "XML/getIndexes.xml")
         let artist = FolderArtist(serverId: serverId, element: element)
-        XCTAssertFalse(artist.id.isEmpty)
-        XCTAssertFalse(artist.name.isEmpty)
+        // Exact fixture values: a missing/misnamed attribute parses to the literal
+        // string "nil", which a non-empty assertion would happily accept
+        XCTAssertEqual(artist.id, "221")
+        XCTAssertEqual(artist.name, "ALAC")
     }
 
     // MARK: FolderAlbum
@@ -345,7 +347,10 @@ final class APIModelParsingTests: XCTestCase {
     func testMediaFolderParsedFromRealFixture() throws {
         let element = try XMLTestHelpers.element(tag: "musicFolder", fixture: "XML/getMusicFolders.xml")
         let folder = MediaFolder(serverId: serverId, element: element)
-        XCTAssertFalse(folder.name.isEmpty)
+        // The first fixture folder's id (0) matches the missing-attribute default, so
+        // the name is the discriminating assertion here
+        XCTAssertEqual(folder.id, 0)
+        XCTAssertEqual(folder.name, "Music")
     }
 
     // MARK: ChatMessage
@@ -373,8 +378,10 @@ final class APIModelParsingTests: XCTestCase {
     func testChatMessageParsedFromRealFixture() throws {
         let element = try XMLTestHelpers.element(tag: "chatMessage", fixture: "XML/getChatMessages.xml")
         let message = ChatMessage(serverId: serverId, element: element)
-        XCTAssertFalse(message.username.isEmpty)
-        XCTAssertGreaterThan(message.timestamp, 0)
+        // Exact fixture values ("nil" placeholders would pass a non-empty check)
+        XCTAssertEqual(message.username, "bbaron")
+        XCTAssertEqual(message.message, "Hi there & welcome — enjoy the music ")
+        XCTAssertEqual(message.timestamp, 1783718935.178, accuracy: 0.001)
     }
 
     // MARK: Lyrics
@@ -431,8 +438,13 @@ final class APIModelParsingTests: XCTestCase {
     func testNowPlayingSongParsedFromRealFixture() throws {
         let element = try XMLTestHelpers.element(tag: "entry", fixture: "XML/getNowPlaying.xml")
         let nowPlaying = NowPlayingSong(serverId: serverId, element: element)
-        XCTAssertFalse(nowPlaying.songId.isEmpty)
-        XCTAssertFalse(nowPlaying.username.isEmpty)
+        // Exact fixture values ("nil" placeholders would pass a non-empty check);
+        // minutesAgo (0) matches the missing-attribute default, so playerId and
+        // playerName carry the attribute-mapping assertion
+        XCTAssertEqual(nowPlaying.songId, "376")
+        XCTAssertEqual(nowPlaying.username, "bbaron")
+        XCTAssertEqual(nowPlaying.playerId, 10)
+        XCTAssertEqual(nowPlaying.playerName, "iSub")
     }
 
     // MARK: ServerPlaylist
