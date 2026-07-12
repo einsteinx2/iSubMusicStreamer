@@ -238,6 +238,47 @@ new-swift-port. Each finding lists a status:
     but the CI xcresult's crash log showed the real cause (the ArtistsViewModel
     off-main mutation crash, finding 2/CI) — fixed.
 
+## Verification round (adversarial re-review of this branch's own commits)
+
+An independent re-review of the new commits confirmed all of them except two
+defects that were caught and corrected before landing:
+
+- The last-server-delete teardown initially popped every tab to root, tearing down
+  the ServersView right before it presented the add-server sheet — fixed with
+  `switchServer(resetTabs: false)` for that path.
+- The first attempt at exposing the player's song title forwarded the accessibility
+  identifier to the clipped inner label, which doesn't surface — replaced with an
+  `accessibilityLabel` override plus per-instance `isAccessibilityElement` +
+  `.staticText` trait on the player's title only (cells unchanged).
+
+Two low-severity residuals from that review were also addressed: the HUD's
+trailing re-dismiss now checks that no newer show() replaced the task (so it can
+never hide a legitimate newer HUD), and the cache-eviction test now runs the
+eviction from a background queue and asserts the queue restart lands on the main
+thread (previously the test passed with or without the main-thread hop). Remaining
+noted-but-accepted residuals: a stale jukebox response can still cross servers if
+jukebox mode is re-enabled within the response latency (narrow, pre-existing
+serverId-at-parse-time ambiguity), and the download give-up path doesn't guard
+against a stale handler the way the retry path does (not shown reachable).
+
+## Found while strengthening the seek test (new, discovered 2026-07-12)
+
+33. **DEFERRED (real app edge bug)** Seeking a partially-downloaded song to/past its
+    end wedges playback: the elapsed label counts past the song's duration
+    (observed 4:27 on a 4:03 song, remaining pinned at -0:00) and the song neither
+    ends nor advances for 60+ seconds. Reproduced deterministically by
+    testSeekWithinSongAndPastCachePoint once its recovery assertion was made real:
+    the slider drag snaps to ~100%, and the underrun wait loop waits for bytes the
+    file will never have. Needs audio-engine work (clamp the seek/needed-size to
+    the actual file size and end the song at real EOF).
+34. **DEFERRED (test-infra gap)** The -SLOWDOWNLOAD fixture song's metadata
+    (size 7992587 / duration 4:03) doesn't match the served audio (test_song.mp3,
+    584KB ≈ 36s), so slider-fraction seeks land past the real EOF and any
+    progress-based recovery assertion is meaningless in the mock environment. The
+    seek test now validates BUG-02's actual contract instead (the wait loop must
+    not wedge the transport: Next still advances after running dry). A
+    metadata-accurate slow fixture would let the progress assertion return.
+
 ## Test-correctness checklist status (docs/TEST_CORRECTNESS_REVIEW.md)
 
 Fixed in this pass: R-01 (units bug + tier tests), R-02 (transport tautology),
