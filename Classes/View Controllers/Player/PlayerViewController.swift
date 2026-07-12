@@ -286,7 +286,11 @@ final class PlayerViewController: UIViewController {
         jukeboxButton.accessibilityIdentifier = AccessibilityId.playerJukebox
         jukeboxVolumeSlider.accessibilityIdentifier = AccessibilityId.playerJukeboxVolume
         bookmarksButton.accessibilityIdentifier = AccessibilityId.playerBookmarks
+        // Expose the auto-scrolling title as a single staticText element for UI tests
+        // (its inner labels are clipped inside a scroll view and don't surface)
         songNameLabel.accessibilityIdentifier = AccessibilityId.playerSongTitle
+        songNameLabel.isAccessibilityElement = true
+        songNameLabel.accessibilityTraits = .staticText
 
         controlsStack.snp.makeConstraints { make in
             make.height.equalTo(controlStackHeight)

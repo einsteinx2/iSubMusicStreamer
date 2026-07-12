@@ -46,11 +46,14 @@ final class AutoScrollingLabel: UIView {
         }
     }
     
-    // Expose the identifier on the inner label so XCUITest sees a staticText whose
-    // label is the current text (the outer UIView has no accessibility value)
-    override var accessibilityIdentifier: String? {
-        get { label1.accessibilityIdentifier }
-        set { label1.accessibilityIdentifier = newValue }
+    // The inner labels are duplicated for the scroll effect and clipped by the
+    // scroll view, so they don't surface reliably in the accessibility tree. Report
+    // the text as the view's own accessibility label; instances that should appear
+    // as a single readable element (e.g. the player's song title) opt in by setting
+    // isAccessibilityElement = true and the staticText trait.
+    override var accessibilityLabel: String? {
+        get { label1.text }
+        set { }
     }
 
     var text: String? {

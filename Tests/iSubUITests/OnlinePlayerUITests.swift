@@ -164,12 +164,19 @@ final class OnlinePlayerUITests: XCTestCase {
         }
         XCTAssertTrue(seekLanded, "could not drag the seek slider past the cache point")
         XCTAssertTrue(app.buttons[AccessibilityId.playerPlayPause].waitForExistence(timeout: 10))
-        // Recovery means playback advances PAST where the drag landed — the landed
-        // value is already > 70, so asserting > 60 would pass even if the player
-        // silently stalled at the seek point (BUG-02 revert)
-        let landed = sliderValue(app)
-        XCTAssertTrue(waitUntil(timeout: 30) { self.sliderValue(app) > landed + 2 },
-                      "seek past the cache point did not recover playback")
+        // The fixture's metadata duration (4:03/8MB) doesn't match its actual audio
+        // (~584KB), so a deep slider seek lands past the real EOF and playback
+        // position is not meaningful here (progress-based recovery assertions can't
+        // work — see docs/REVIEW_FINDINGS_2026-07-12.md). What BUG-02 guarantees is
+        // that running dry at the seek point never wedges the player: the underrun
+        // wait loop must break for transport commands, so Next must still advance
+        // the queue.
+        let title = app.staticTexts[AccessibilityId.playerSongTitle].firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 10), "no song title on the player")
+        let stuckTitle = title.label
+        app.buttons[AccessibilityId.playerNext].tap()
+        XCTAssertTrue(waitUntil(timeout: 20) { title.label != stuckTitle },
+                      "the player wedged after seeking past the cache point (BUG-02)")
     }
 
     func testRepeatModeCycling() {
