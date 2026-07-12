@@ -412,7 +412,17 @@ extension StreamHandler: URLSessionDataDelegate {
             do {
                 try fileHandle.write(contentsOf: data)
             } catch {
-                DispatchQueue.main.async { self.cancel() }
+                // Report the failure like the nil-file-handle branch below: cancel()
+                // alone never reaches the delegate (didCompleteWithError filters the
+                // resulting NSURLErrorCancelled), so the download would die silently
+                // with no retry or removal
+                DDLogError("[StreamHandler] failed to write to file for \(song): \(error)")
+                dataTask.cancel()
+                self.dataTask = nil
+                DispatchQueue.main.async {
+                    self.connectionFailed(error: APIError.filesystem)
+                }
+                return
             }
             
             // Notify delegate if enough bytes received to start playback (~10 seconds of audio,
