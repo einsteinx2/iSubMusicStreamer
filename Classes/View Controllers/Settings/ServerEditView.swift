@@ -57,7 +57,7 @@ struct ServerEditView: View {
                         .accessibilityIdentifier(AccessibilityId.serverEditURL)
 
                     TextField("username", text: $username)
-                        .textContentType(.username)
+                        .textContentType(credentialContentType(.username))
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
                         .focused($focusedField, equals: .username)
@@ -66,7 +66,7 @@ struct ServerEditView: View {
                         .accessibilityIdentifier(AccessibilityId.serverEditUsername)
 
                     SecureField("password", text: $password)
-                        .textContentType(.password)
+                        .textContentType(credentialContentType(.password))
                         .focused($focusedField, equals: .password)
                         .submitLabel(.go)
                         .onSubmit { saveAction() }
@@ -108,6 +108,13 @@ struct ServerEditView: View {
         .onDisappear {
             checkTask?.cancel()
         }
+    }
+
+    // Under XCUITest the credential content types must be dropped: after a successful
+    // save iOS presents the system "Save Password?" AutoFill prompt, an out-of-process
+    // sheet that blocks every subsequent tap and fails any test that keeps interacting
+    private func credentialContentType(_ type: UITextContentType) -> UITextContentType? {
+        UITestSupport.isEnabled ? nil : type
     }
 
     private func saveAction() {
