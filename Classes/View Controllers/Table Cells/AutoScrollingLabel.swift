@@ -46,6 +46,13 @@ final class AutoScrollingLabel: UIView {
         }
     }
     
+    // Expose the identifier on the inner label so XCUITest sees a staticText whose
+    // label is the current text (the outer UIView has no accessibility value)
+    override var accessibilityIdentifier: String? {
+        get { label1.accessibilityIdentifier }
+        set { label1.accessibilityIdentifier = newValue }
+    }
+
     var text: String? {
         get {
             label1.text

@@ -76,6 +76,7 @@ enum AccessibilityId {
     // Player extras
     static let playerBookmarks = "player.bookmarks"
     static let playerPageControl = "player.pageControl"
+    static let playerSongTitle = "player.songTitle"
 
     // iPad menu (PadMenuViewController rows)
     static let padMenuSettings = "padMenu.settings"

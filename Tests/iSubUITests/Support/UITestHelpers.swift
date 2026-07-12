@@ -183,6 +183,12 @@ extension XCUIApplication {
         }
         XCTAssertTrue(buttons[AccessibilityId.playerPlayPause].waitForExistence(timeout: 30),
                       "server shuffle did not land on the player", file: file, line: line)
+        // The shuffle's loading HUD installs an invisible full-window cancel button
+        // that is only removed in the dismiss animation's completion — playPause can
+        // exist while that overlay still swallows the next tap, so wait for
+        // hittability before returning
+        XCTAssertTrue(pollUntil(timeout: 10) { buttons[AccessibilityId.playerPlayPause].isHittable },
+                      "player controls are covered (loading HUD still dismissing)", file: file, line: line)
     }
 
     // The download queue only starts on a server check (app activation) or from the

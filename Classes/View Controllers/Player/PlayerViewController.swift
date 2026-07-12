@@ -286,6 +286,7 @@ final class PlayerViewController: UIViewController {
         jukeboxButton.accessibilityIdentifier = AccessibilityId.playerJukebox
         jukeboxVolumeSlider.accessibilityIdentifier = AccessibilityId.playerJukeboxVolume
         bookmarksButton.accessibilityIdentifier = AccessibilityId.playerBookmarks
+        songNameLabel.accessibilityIdentifier = AccessibilityId.playerSongTitle
 
         controlsStack.snp.makeConstraints { make in
             make.height.equalTo(controlStackHeight)

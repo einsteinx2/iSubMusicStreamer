@@ -104,10 +104,17 @@ final class OnlinePlayerUITests: XCTestCase {
         app.buttons[AccessibilityId.playerPlayPause].tap()
         XCTAssertTrue(waitUntil(timeout: 10) { self.sliderValue(app) > paused + 0.5 }, "playback did not resume")
 
-        // Next then previous move through the queue without losing the player
+        // Next then previous actually move through the queue (the shuffled fixture
+        // queue has 10 distinct songs, so the title must change and change back)
+        let title = app.staticTexts[AccessibilityId.playerSongTitle].firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 10), "no song title on the player")
+        let firstTitle = title.label
         app.buttons[AccessibilityId.playerNext].tap()
-        XCTAssertTrue(waitUntil(timeout: 20) { self.sliderValue(app) < paused || self.sliderValue(app) >= 0 })
+        XCTAssertTrue(waitUntil(timeout: 20) { title.label != firstTitle },
+                      "next did not advance to a different song")
         app.buttons[AccessibilityId.playerPrevious].tap()
+        XCTAssertTrue(waitUntil(timeout: 20) { title.label == firstTitle },
+                      "previous did not return to the original song")
         XCTAssertTrue(app.buttons[AccessibilityId.playerPlayPause].waitForExistence(timeout: 10))
     }
 
@@ -157,8 +164,12 @@ final class OnlinePlayerUITests: XCTestCase {
         }
         XCTAssertTrue(seekLanded, "could not drag the seek slider past the cache point")
         XCTAssertTrue(app.buttons[AccessibilityId.playerPlayPause].waitForExistence(timeout: 10))
-        XCTAssertTrue(waitUntil(timeout: 30) { self.sliderValue(app) > 60 },
-                      "seek past the cache point did not recover")
+        // Recovery means playback advances PAST where the drag landed — the landed
+        // value is already > 70, so asserting > 60 would pass even if the player
+        // silently stalled at the seek point (BUG-02 revert)
+        let landed = sliderValue(app)
+        XCTAssertTrue(waitUntil(timeout: 30) { self.sliderValue(app) > landed + 2 },
+                      "seek past the cache point did not recover playback")
     }
 
     func testRepeatModeCycling() {
@@ -177,23 +188,38 @@ final class OnlinePlayerUITests: XCTestCase {
                       "app crashed after cycling repeat mode (BUG-01)")
     }
 
+    // A queue row's combined text, used to detect order changes
+    private func queueRowText(_ app: XCUIApplication, index: Int) -> String {
+        let cell = app.tables.firstMatch.cells.element(boundBy: index)
+        return cell.staticTexts.allElementsBoundByIndex.map(\.label).joined(separator: "|")
+    }
+
     func testShuffleToggleRefreshesQueueView() {
         let app = launchPlaying()
 
+        // Snapshot the top of the original queue before shuffling
+        app.openTab(AccessibilityId.tabPlaylists)
+        let countLabel = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] '10 song'")).firstMatch
+        XCTAssertTrue(countLabel.waitForExistence(timeout: 15), "queue view did not load")
+        let originalRows = (0..<3).map { queueRowText(app, index: $0) }
+
         // Shuffle on
+        app.openTab(AccessibilityId.tabPlayer)
         app.buttons[AccessibilityId.playerShuffle].tap()
         XCTAssertTrue(app.buttons[AccessibilityId.playerShuffle].waitForExistence(timeout: 15))
 
         // The queue view still lists the songs (reshuffled order, same count)
         app.openTab(AccessibilityId.tabPlaylists)
-        let countLabel = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] '10 song'")).firstMatch
         XCTAssertTrue(countLabel.waitForExistence(timeout: 15), "queue view did not refresh after shuffle")
 
-        // Shuffle off restores the original queue
+        // Shuffle off restores the original queue ORDER, not just the count — a
+        // broken unshuffle used to pass when only the count label was checked
         app.openTab(AccessibilityId.tabPlayer)
         app.buttons[AccessibilityId.playerShuffle].tap()
         app.openTab(AccessibilityId.tabPlaylists)
         XCTAssertTrue(countLabel.waitForExistence(timeout: 15), "queue view did not refresh after unshuffle")
+        XCTAssertTrue(waitUntil(timeout: 10) { (0..<3).map { self.queueRowText(app, index: $0) } == originalRows },
+                      "unshuffle did not restore the original queue order")
     }
 
     func testBookmarkCreation() {
