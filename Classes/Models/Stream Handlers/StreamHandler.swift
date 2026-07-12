@@ -619,7 +619,7 @@ func minBytesToStartPlayback(kiloBitrate: Int, bytesPerSec: Int) -> Int {
     
     // Find out out many bytes equals 1 second of audio
     let bytesForOneSecond = bytesForSeconds(seconds: 1, kiloBitrate: kiloBitrate)
-    let kiloBytesForOneSecond = Double(bytesForOneSecond) * 1024.0
+    let kiloBytesForOneSecond = Double(bytesForOneSecond) / 1024.0
     
     // Calculate the amount of seconds to start as a factor of how many seconds of audio are being downloaded per second
     let secondsPerSecondFactor = kiloBytesPerSec / kiloBytesForOneSecond

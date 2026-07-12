@@ -155,17 +155,24 @@ final class UtilityAndMathTests: XCTestCase {
         XCTAssertEqual(Bass.bytesToBuffer(kiloBitrate: 0, bytesPerSec: 100000), 0)
     }
 
+    // One second of 128 kbps audio is 16384 bytes, so the seconds-per-second factor
+    // is bytesPerSec / 16384 for these cases
     func testBassBytesToBufferSlowDownloadBuffersTwentySeconds() {
-        // At any realistic download speed the seconds-per-second factor computes as
-        // far below 0.5, so the slowest tier (20 seconds of audio) applies
+        // 4000 B/s on a 128 kbps song is ~0.24x realtime → slowest tier (20 seconds)
         let expected = 20 * bytesForSeconds(seconds: 1, kiloBitrate: 128)
-        XCTAssertEqual(Bass.bytesToBuffer(kiloBitrate: 128, bytesPerSec: 100_000), expected)
+        XCTAssertEqual(Bass.bytesToBuffer(kiloBitrate: 128, bytesPerSec: 4_000), expected)
+    }
+
+    func testBassBytesToBufferSlightlySlowDownloadBuffersTwelveSeconds() {
+        // ~0.6x realtime lands in the 12-second tier
+        let expected = 12 * bytesForSeconds(seconds: 1, kiloBitrate: 128)
+        XCTAssertEqual(Bass.bytesToBuffer(kiloBitrate: 128, bytesPerSec: 9_830), expected)
     }
 
     func testBassBytesToBufferVeryFastDownloadBuffersTwoSeconds() {
-        // Push the factor above 1.0 to reach the fastest tier (2 seconds of audio)
+        // 100 KB/s is ~6x realtime for 128 kbps → fastest tier (2 seconds of audio)
         let expected = 2 * bytesForSeconds(seconds: 1, kiloBitrate: 128)
-        XCTAssertEqual(Bass.bytesToBuffer(kiloBitrate: 128, bytesPerSec: 40_000_000_000_000), expected)
+        XCTAssertEqual(Bass.bytesToBuffer(kiloBitrate: 128, bytesPerSec: 100_000), expected)
     }
 
     // MARK: StreamHandler thresholds
@@ -213,10 +220,13 @@ final class UtilityAndMathTests: XCTestCase {
     }
 
     func testMinBytesToStartPlaybackAdaptiveTiers() {
-        // Realistic speeds compute a factor below 1.0 → 16-second buffer tier
-        XCTAssertEqual(minBytesToStartPlayback(kiloBitrate: 128, bytesPerSec: 100_000), 16 * bytesForSeconds(seconds: 1, kiloBitrate: 128))
-        // An extreme speed pushes the factor past 2.0 → 2-second tier
-        XCTAssertEqual(minBytesToStartPlayback(kiloBitrate: 128, bytesPerSec: 40_000_000_000_000), 2 * bytesForSeconds(seconds: 1, kiloBitrate: 128))
+        // One second of 128 kbps audio is 16384 bytes, so the factor is bytesPerSec/16384.
+        // Below realtime (8000 B/s ≈ 0.49x) → 16-second buffer tier
+        XCTAssertEqual(minBytesToStartPlayback(kiloBitrate: 128, bytesPerSec: 8_000), 16 * bytesForSeconds(seconds: 1, kiloBitrate: 128))
+        // Slightly above realtime (20000 B/s ≈ 1.2x) → 8-second tier
+        XCTAssertEqual(minBytesToStartPlayback(kiloBitrate: 128, bytesPerSec: 20_000), 8 * bytesForSeconds(seconds: 1, kiloBitrate: 128))
+        // Comfortably past 2x realtime (100 KB/s ≈ 6x) → 2-second tier
+        XCTAssertEqual(minBytesToStartPlayback(kiloBitrate: 128, bytesPerSec: 100_000), 2 * bytesForSeconds(seconds: 1, kiloBitrate: 128))
     }
 
     // MARK: Throttle delay math (BUG-04)
