@@ -59,12 +59,17 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
 //    }
     
     static func fetchSongs(_ db: Database, playlistId: Int) throws -> [Song] {
+        // ORDER BY position matters: without it rows come back in rowid order, which
+        // diverges from the playlist order after any move (Store.move deletes and
+        // re-inserts rows) — jukebox mode mirrors this list to the server, where
+        // index-based skips would then target the wrong song
         let sql: SQL = """
             SELECT *
             FROM \(Song.self)
             JOIN localPlaylistSong
             ON \(Song.self).serverId = localPlaylistSong.serverId AND \(Song.self).id = localPlaylistSong.songId
             WHERE localPlaylistSong.localPlaylistId = \(playlistId)
+            ORDER BY localPlaylistSong.position ASC
             """
         return try SQLRequest<Song>(literal: sql).fetchAll(db)
     }
