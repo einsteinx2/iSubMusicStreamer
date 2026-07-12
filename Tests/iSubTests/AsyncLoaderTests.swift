@@ -834,12 +834,18 @@ final class AsyncLoaderErrorTests: LoaderTestCase {
         }
     }
 
-    func testCancellationThrowsBeforeWriting() async throws {
+    func testCancellationMidFlightThrowsAndPersistsNothing() async throws {
         for spec in specs {
             MockSubsonicServer.reset()
-            stubEmptyOk(spec.action)
+            // Stall the response so the cancel deterministically lands while the
+            // request is in flight — past the loader's first cancellation gate.
+            // (The old version cancelled before load() even started, which always
+            // won at the first gate and raced the stub under CI load.)
+            MockSubsonicServer.stubStalling(spec.action, data: Data())
             let load = spec.load
             let task = Task { try await load() }
+            let arrived = await waitForRequest(spec.action)
+            XCTAssertTrue(arrived, "[\(spec.name)] request never reached the mock server")
             task.cancel()
             do {
                 _ = try await task.value
@@ -852,5 +858,20 @@ final class AsyncLoaderErrorTests: LoaderTestCase {
                 XCTFail("[\(spec.name)] expected cancellation, got \(error)")
             }
         }
+
+        // None of the cancelled loads may have persisted anything — the browse
+        // caches are the loaders' store side effects
+        XCTAssertNil(store.folderArtistMetadata(serverId: serverId, mediaFolderId: 0))
+        XCTAssertNil(store.tagArtistMetadata(serverId: serverId, mediaFolderId: 0))
+        XCTAssertEqual(store.mediaFolders(serverId: serverId).count, 0)
+    }
+
+    private func waitForRequest(_ action: SubsonicAction, timeout: TimeInterval = 10) async -> Bool {
+        let deadline = Date(timeIntervalSinceNow: timeout)
+        while Date() < deadline {
+            if !MockSubsonicServer.receivedRequests(action: action).isEmpty { return true }
+            try? await Task.sleep(nanoseconds: 50_000_000)
+        }
+        return !MockSubsonicServer.receivedRequests(action: action).isEmpty
     }
 }

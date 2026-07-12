@@ -161,12 +161,20 @@ final class AsyncStatusLoaderTests: SandboxedTestCase {
         }
     }
 
-    func testCancelledTaskThrowsBeforeLoading() async throws {
-        try MockSubsonicServer.stub(.ping, fixture: "XML/ping_success.xml")
+    func testCancelledMidFlightThrows() async throws {
+        // Stall the response so the cancel deterministically lands while the request
+        // is in flight, past the loader's first cancellation gate (cancelling before
+        // load() started always won at the first gate and raced the stub)
+        MockSubsonicServer.stubStalling(.ping, data: Data())
 
         let task = Task {
             try await makeLoader().load()
         }
+        let deadline = Date(timeIntervalSinceNow: 10)
+        while MockSubsonicServer.receivedRequests(action: .ping).isEmpty && Date() < deadline {
+            try? await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertFalse(MockSubsonicServer.receivedRequests(action: .ping).isEmpty, "request never reached the mock server")
         task.cancel()
 
         do {
