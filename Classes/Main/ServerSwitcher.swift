@@ -29,7 +29,10 @@ class ServerSwitcher {
         self.settings = settings
     }
 
-    func switchServer() {
+    // resetTabs: false keeps the navigation stacks in place — used when deleting the
+    // last server, where popping would tear down the ServersView that is about to
+    // present the add-server sheet
+    func switchServer(resetTabs: Bool = true) {
         // The teardown below is all local — it must run even with no network, or a
         // server switch/delete leaves streams, the queue, and jukebox mode pointing
         // at the old server (the caller has already reassigned currentServer)
@@ -66,7 +69,7 @@ class ServerSwitcher {
         _ = downloadQueue.clear()
 
         // Reset the tabs
-        if !UIDevice.isPad, let viewControllers = SceneDelegate.shared.tabBarController?.viewControllers {
+        if resetTabs, !UIDevice.isPad, let viewControllers = SceneDelegate.shared.tabBarController?.viewControllers {
             for controller in viewControllers {
                 if let controller = controller as? UINavigationController {
                     controller.popToRootViewController(animated: true)

@@ -152,8 +152,10 @@ import CocoaLumberjackSwift
             settings.currentServer = nil
             // The deleted server's rows and files are already gone, but playback,
             // streams, the queues, and jukebox mode may still reference it — run the
-            // same switch teardown as the replacement path
-            serverSwitcher.switchServer()
+            // same switch teardown as the replacement path. Keep the navigation
+            // stacks though: popping would remove this ServersView and drop the
+            // add-server sheet it is about to present.
+            serverSwitcher.switchServer(resetTabs: false)
             sheet = .add
         }
     }

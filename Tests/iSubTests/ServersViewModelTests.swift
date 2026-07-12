@@ -19,8 +19,10 @@ import XCTest
 final class ServersViewModelTests: StoreTestCase {
     private final class FakeServerSwitcher: ServerSwitcher {
         var switchCount = 0
-        override func switchServer() {
+        var lastResetTabs: Bool?
+        override func switchServer(resetTabs: Bool) {
             switchCount += 1
+            lastResetTabs = resetTabs
         }
     }
 
@@ -119,6 +121,7 @@ final class ServersViewModelTests: StoreTestCase {
         XCTAssertTrue(viewModel.servers.isEmpty)
         XCTAssertNil(settings.currentServer)
         XCTAssertEqual(switcher.switchCount, 1, "playback teardown must run even with no replacement server")
+        XCTAssertEqual(switcher.lastResetTabs, false, "the servers screen must stay in place to present the add sheet")
         if case .add = viewModel.sheet {
             // expected: no servers left, so the add-server sheet presents
         } else {
