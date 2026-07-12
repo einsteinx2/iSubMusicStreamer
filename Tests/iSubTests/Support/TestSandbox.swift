@@ -59,6 +59,16 @@ class SandboxedTestCase: XCTestCase {
         TestContainer.register { FakePlayer() as PlayerControlling }
         TestContainer.register { FakeStreamManager() as StreamManaging }
         TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
+        // The value-model layer reads these statics ambiently (song.localPath's server
+        // lookup, LocalPlaylist.queue()'s coordinator); without interposing them here a
+        // plain SandboxedTestCase test reaches the app's REAL database and playback
+        // coordinator. TestContainer.deactivate() restores the app's instances in
+        // tearDown; StoreTestCase re-points `store` at its own in-memory store.
+        let modelStore = Store()
+        modelStore.setup(location: .memory)
+        ModelServices.store = modelStore
+        ModelServices.settings = nil
+        ModelServices.playbackCoordinator = nil
         testDefaultsSuiteName = "iSubTests-\(UUID().uuidString)"
         testDefaults = try XCTUnwrap(UserDefaults(suiteName: testDefaultsSuiteName))
         SavedSettings.defaults = testDefaults
