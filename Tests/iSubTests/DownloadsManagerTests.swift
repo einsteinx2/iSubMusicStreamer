@@ -80,6 +80,12 @@ final class DownloadsManagerTests: StoreTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: oldest.localPath))
         XCTAssertFalse(FileManager.default.fileExists(atPath: middle.localPath))
         XCTAssertTrue(FileManager.default.fileExists(atPath: newest.localPath))
+        // The restart hops to the main queue (eviction runs on the background
+        // cache-check queue in production, and the engine's state is main-confined)
+        let deadline = Date(timeIntervalSinceNow: 2)
+        while downloadQueue.startCount == 0 && Date() < deadline {
+            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
+        }
         XCTAssertEqual(downloadQueue.startCount, 1, "the download queue is restarted after eviction frees space")
     }
 

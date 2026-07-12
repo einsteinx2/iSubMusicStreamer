@@ -240,8 +240,13 @@ class DownloadsManager {
 
             findCacheSize()
 
-            if !downloadQueue.isDownloading {
-                downloadQueue.start()
+            // This runs on cacheCheckQueue (BUG-16 moved the periodic scan off-main),
+            // but the download engine's state is main-confined — starting it from
+            // here races the main-thread download callbacks
+            DispatchQueue.main.async {
+                if !self.downloadQueue.isDownloading {
+                    self.downloadQueue.start()
+                }
             }
         }
     }
