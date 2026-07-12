@@ -132,10 +132,16 @@ final class OnlinePlayerUITests: XCTestCase {
         let app = launchPlaying(slowDownload: true)
         XCTAssertTrue(waitUntil(timeout: 30) { self.sliderValue(app) > 0 }, "playback did not start")
 
-        // Seek within the buffered part
+        // Seek within the buffered part. Like the past-cache-point drag below, the
+        // XCUISlider drag sometimes drops its touches, so retry until the value sticks.
         let slider = app.sliders[AccessibilityId.playerSeekSlider]
-        slider.adjust(toNormalizedSliderPosition: 0.15)
-        XCTAssertTrue(waitUntil(timeout: 10) { self.sliderValue(app) > 5 }, "seek within song failed")
+        var withinSeekLanded = false
+        for _ in 0..<5 where !withinSeekLanded {
+            slider.adjust(toNormalizedSliderPosition: 0.15)
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 1.0))
+            withinSeekLanded = sliderValue(app) > 5
+        }
+        XCTAssertTrue(withinSeekLanded, "seek within song failed")
 
         // Seek far past what has downloaded; the player must survive, and playback should
         // recover by restarting the stream at the new offset (BUG-02 regression: the
@@ -193,7 +199,7 @@ final class OnlinePlayerUITests: XCTestCase {
     func testBookmarkCreation() {
         let app = launchPlaying()
 
-        app.buttons[AccessibilityId.playerBookmarks].tap()
+        app.tapExpectingAlert(button: AccessibilityId.playerBookmarks, alertTitle: "Create Bookmark")
         app.fillAlert(titled: "Create Bookmark", text: "Player Bookmark", confirm: "Save")
 
         // No error alert means the bookmark saved; verify it listed under Library > Bookmarks

@@ -133,6 +133,21 @@ extension XCUIApplication {
         action.tap()
     }
 
+    // Taps a button that presents an alert, retrying once when the alert doesn't show
+    // up: a tap synthesized right after a screen animates in (e.g. the player after
+    // shuffle starts playback) can land mid-transition and drop its touchUpInside,
+    // which made the bookmark tests flaky on slow CI machines
+    func tapExpectingAlert(button identifier: String, alertTitle: String,
+                           file: StaticString = #filePath, line: UInt = #line) {
+        let button = buttons[identifier].firstMatch
+        XCTAssertTrue(button.waitForExistence(timeout: 15), "no button '\(identifier)'", file: file, line: line)
+        XCTAssertTrue(pollUntil(timeout: 10) { button.isHittable }, "button '\(identifier)' is not tappable", file: file, line: line)
+        button.tap()
+        if !alerts[alertTitle].waitForExistence(timeout: 5), button.isHittable {
+            button.tap()
+        }
+    }
+
     // Fills the single text field of the presented alert and taps the given button
     func fillAlert(titled title: String, text: String, confirm: String,
                    file: StaticString = #filePath, line: UInt = #line) {

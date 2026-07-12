@@ -258,7 +258,7 @@ final class OfflineUITests: XCTestCase {
         XCTAssertTrue(waitUntil(timeout: 10) { self.sliderValue(app) > 30 }, "offline seek did not jump")
 
         // Bookmarks are created and opened entirely locally
-        app.buttons[AccessibilityId.playerBookmarks].tap()
+        app.tapExpectingAlert(button: AccessibilityId.playerBookmarks, alertTitle: "Create Bookmark")
         app.fillAlert(titled: "Create Bookmark", text: "Offline Bookmark", confirm: "Save")
         XCTAssertFalse(app.alerts["Error"].exists, "offline bookmark creation reported an error")
 

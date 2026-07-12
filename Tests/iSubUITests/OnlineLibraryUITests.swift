@@ -140,7 +140,7 @@ final class OnlineLibraryUITests: XCTestCase {
 
         // Create a bookmark from the player
         app.startPlaybackViaServerShuffle()
-        app.buttons[AccessibilityId.playerBookmarks].tap()
+        app.tapExpectingAlert(button: AccessibilityId.playerBookmarks, alertTitle: "Create Bookmark")
         app.fillAlert(titled: "Create Bookmark", text: "UITest Bookmark", confirm: "Save")
 
         // The bookmark shows up under Library > Bookmarks (the cell header carries its name)

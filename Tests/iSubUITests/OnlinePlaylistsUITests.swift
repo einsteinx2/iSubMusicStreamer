@@ -259,7 +259,7 @@ final class OnlinePlaylistsUITests: XCTestCase {
         app.startPlaybackViaServerShuffle()
 
         // Create a bookmark, then clear all from the bookmarks edit header
-        app.buttons[AccessibilityId.playerBookmarks].tap()
+        app.tapExpectingAlert(button: AccessibilityId.playerBookmarks, alertTitle: "Create Bookmark")
         app.fillAlert(titled: "Create Bookmark", text: "Clear All Test", confirm: "Save")
 
         app.openTab(AccessibilityId.tabLibrary)
