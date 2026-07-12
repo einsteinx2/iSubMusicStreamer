@@ -124,7 +124,7 @@ final class TagAlbumViewController: CustomUITableViewController {
                 self.tableView.reloadData()
                 self.addHeader()
             } catch {
-                if self.settings.isPopupsEnabled {
+                if self.settings.isPopupsEnabled, !error.isCanceled {
                     let message = "There was an error loading the album.\n\nError: \(error)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
                     alert.addOKAction()

@@ -87,7 +87,7 @@ final class TagArtistViewController: CustomUITableViewController {
                 self.tagAlbumIds = try await AsyncTagArtistLoader(serverId: serverId, tagArtistId: tagArtist.id).load()
                 self.tableView.reloadData()
             } catch {
-                if self.settings.isPopupsEnabled {
+                if self.settings.isPopupsEnabled, !error.isCanceled {
                     let message = "There was an error loading the artist.\n\nError: \(error)"
                     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
                     alert.addOKAction()
