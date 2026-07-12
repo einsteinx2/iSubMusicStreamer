@@ -30,7 +30,9 @@ class ServerSwitcher {
     }
 
     func switchServer() {
-        guard SceneDelegate.shared.isNetworkReachable else { return }
+        // The teardown below is all local — it must run even with no network, or a
+        // server switch/delete leaves streams, the queue, and jukebox mode pointing
+        // at the old server (the caller has already reassigned currentServer)
 
         // Cancel any caching
         streamManager.removeAllStreams()
@@ -38,9 +40,16 @@ class ServerSwitcher {
         // Stop any playing song
         player.stop()
         settings.isRecover = false
-        settings.isJukeboxEnabled = false
+        if settings.isJukeboxEnabled {
+            // Post the mode-change notification instead of only flipping the raw
+            // setting so JukeboxPlaybackMode deactivates (stopping the getInfo
+            // polling chain from hitting the new server) and the window tint resets
+            settings.isJukeboxEnabled = false
+            NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
+        }
 
-        if settings.isOfflineMode {
+        // Only exit offline mode when the network is actually reachable
+        if settings.isOfflineMode && SceneDelegate.shared.isNetworkReachable {
             settings.isOfflineMode = false
 
             if UIDevice.isPad {

@@ -118,7 +118,7 @@ final class ServersViewModelTests: StoreTestCase {
 
         XCTAssertTrue(viewModel.servers.isEmpty)
         XCTAssertNil(settings.currentServer)
-        XCTAssertEqual(switcher.switchCount, 0)
+        XCTAssertEqual(switcher.switchCount, 1, "playback teardown must run even with no replacement server")
         if case .add = viewModel.sheet {
             // expected: no servers left, so the add-server sheet presents
         } else {
