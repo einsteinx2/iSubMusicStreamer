@@ -72,21 +72,28 @@ final class DownloadsManagerTests: StoreTestCase {
         manager.findCacheSize()
         XCTAssertGreaterThanOrEqual(manager.cacheSize, 30_000)
 
-        // Allow one file to remain: the two oldest must be evicted, oldest first
+        // Allow one file to remain: the two oldest must be evicted, oldest first.
+        // Run the eviction from a background queue like the production cache-check
+        // timer does, so the main-thread hop for the restart is actually exercised.
         settings.maxCacheSize = 15_000
-        manager.removeOldestCachedSongs()
+        let evicted = expectation(description: "eviction finished")
+        DispatchQueue.global(qos: .utility).async {
+            self.manager.removeOldestCachedSongs()
+            evicted.fulfill()
+        }
+        wait(for: [evicted], timeout: 10)
 
         XCTAssertEqual(downloadedSongIds(), ["3"], "only the newest download survives")
         XCTAssertFalse(FileManager.default.fileExists(atPath: oldest.localPath))
         XCTAssertFalse(FileManager.default.fileExists(atPath: middle.localPath))
         XCTAssertTrue(FileManager.default.fileExists(atPath: newest.localPath))
-        // The restart hops to the main queue (eviction runs on the background
-        // cache-check queue in production, and the engine's state is main-confined)
+        // The restart must hop to the main queue — the engine's state is main-confined
         let deadline = Date(timeIntervalSinceNow: 2)
         while downloadQueue.startCount == 0 && Date() < deadline {
             RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
         }
         XCTAssertEqual(downloadQueue.startCount, 1, "the download queue is restarted after eviction frees space")
+        XCTAssertEqual(downloadQueue.startedOnMainThread, true, "the restart must run on the main thread")
     }
 
     func testMaxSizeEvictionRemovesOldestPlayedFirst() {

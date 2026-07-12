@@ -135,6 +135,7 @@ final class FakeDownloadQueue: DownloadQueueing {
     var queuedSongs = Set<Song>()
 
     private(set) var startCount = 0
+    private(set) var startedOnMainThread: Bool?
     private(set) var stopCount = 0
     private(set) var removeCurrentSongCount = 0
     private(set) var clearCount = 0
@@ -143,6 +144,7 @@ final class FakeDownloadQueue: DownloadQueueing {
 
     func start() {
         startCount += 1
+        startedOnMainThread = Thread.isMainThread
         isDownloading = true
     }
 
