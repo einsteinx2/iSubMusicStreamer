@@ -221,19 +221,29 @@ final class ArtistsViewModelTests: LoaderTestCase {
         }
     }
 
+    // The model resolves its scope live from the active context, so these tests pin
+    // the current server to the LoaderTestCase mock server
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        let session = ServerSession()
+        let settings = SavedSettings(session: session)
+        session.currentServer = store.server(id: serverId)
+        TestContainer.register { settings }
+    }
+
     func testStartLoadFoldersBranchUsesGetIndexes() throws {
         try MockSubsonicServer.stub(.getMusicFolders, fixture: "XML/getMusicFolders.xml")
         try MockSubsonicServer.stub(.getIndexes, fixture: "XML/getIndexes.xml")
 
         let delegateSpy = DelegateSpy()
-        let model = ArtistsViewModel(serverId: 1, mediaFolderId: MediaFolder.allFoldersId, type: .folders, delegate: delegateSpy)
+        let model = ArtistsViewModel(mediaFolderId: MediaFolder.allFoldersId, type: .folders, delegate: delegateSpy)
         model.startLoad()
         wait(for: [delegateSpy.finishedExpectation], timeout: 10)
 
         XCTAssertEqual(MockSubsonicServer.receivedRequests(action: .getIndexes).count, 1)
         XCTAssertEqual(MockSubsonicServer.receivedRequests(action: .getArtists).count, 0)
         XCTAssertEqual(model.count, 16, "metadata comes from the loaded fixture")
-        XCTAssertEqual(model.artistIds.count, 16)
+        XCTAssertEqual(model.artistRefs.count, 16)
         XCTAssertEqual(model.tableSections.count, 11)
         XCTAssertTrue(model.isCached)
         XCTAssertEqual(model.itemType, "Folder")
@@ -245,7 +255,7 @@ final class ArtistsViewModelTests: LoaderTestCase {
         try MockSubsonicServer.stub(.getArtists, fixture: "XML/getArtists.xml")
 
         let delegateSpy = DelegateSpy()
-        let model = ArtistsViewModel(serverId: 1, mediaFolderId: MediaFolder.allFoldersId, type: .tags, delegate: delegateSpy)
+        let model = ArtistsViewModel(mediaFolderId: MediaFolder.allFoldersId, type: .tags, delegate: delegateSpy)
         model.startLoad()
         wait(for: [delegateSpy.finishedExpectation], timeout: 10)
 
@@ -259,7 +269,7 @@ final class ArtistsViewModelTests: LoaderTestCase {
         MockSubsonicServer.stubConnectionError(.getMusicFolders)
 
         let delegateSpy = DelegateSpy()
-        let model = ArtistsViewModel(serverId: 1, mediaFolderId: MediaFolder.allFoldersId, type: .folders, delegate: delegateSpy)
+        let model = ArtistsViewModel(mediaFolderId: MediaFolder.allFoldersId, type: .folders, delegate: delegateSpy)
         model.startLoad()
         wait(for: [delegateSpy.failedExpectation], timeout: 10)
 
@@ -267,7 +277,7 @@ final class ArtistsViewModelTests: LoaderTestCase {
     }
 
     func testIsCachedAndLoadFromCache() throws {
-        XCTAssertFalse(ArtistsViewModel(serverId: 1, mediaFolderId: 0, type: .folders).isCached)
+        XCTAssertFalse(ArtistsViewModel(mediaFolderId: 0, type: .folders).isCached)
 
         // Seed the cache the way the loader would
         _ = store.add(mediaFolders: [MediaFolder(serverId: 1, id: 0, name: "Music")])
@@ -275,12 +285,12 @@ final class ArtistsViewModelTests: LoaderTestCase {
         _ = store.add(folderArtistSection: TableSection(serverId: 1, mediaFolderId: 0, name: "A", position: 0, itemCount: 1))
         _ = store.add(folderArtistListMetadata: RootListMetadata(serverId: 1, mediaFolderId: 0, itemCount: 1, reloadDate: Date()))
 
-        let model = ArtistsViewModel(serverId: 1, mediaFolderId: 0, type: .folders)
+        let model = ArtistsViewModel(mediaFolderId: 0, type: .folders)
         model.reset()
 
         XCTAssertTrue(model.isCached)
         XCTAssertEqual(model.count, 1)
-        XCTAssertEqual(model.artistIds, ["a1"])
+        XCTAssertEqual(model.artistRefs.map(\.id), ["a1"])
         XCTAssertEqual(model.artist(indexPath: IndexPath(row: 0, section: 0))?.name, "Artist")
     }
 
@@ -294,7 +304,7 @@ final class ArtistsViewModelTests: LoaderTestCase {
         _ = store.add(folderArtistSection: TableSection(serverId: 1, mediaFolderId: 0, name: "B", position: 2, itemCount: 2))
         _ = store.add(folderArtistListMetadata: RootListMetadata(serverId: 1, mediaFolderId: 0, itemCount: 4, reloadDate: Date()))
 
-        let model = ArtistsViewModel(serverId: 1, mediaFolderId: 0, type: .folders)
+        let model = ArtistsViewModel(mediaFolderId: 0, type: .folders)
         model.reset()
 
         XCTAssertEqual(model.artist(indexPath: IndexPath(row: 0, section: 0))?.name, "Alpha")
@@ -307,7 +317,7 @@ final class ArtistsViewModelTests: LoaderTestCase {
     func testMediaFolderIndexFallback() {
         _ = store.add(mediaFolders: [MediaFolder(serverId: 1, id: 0, name: "Music"), MediaFolder(serverId: 1, id: 5, name: "Podcasts")])
 
-        let model = ArtistsViewModel(serverId: 1, mediaFolderId: 5, type: .folders)
+        let model = ArtistsViewModel(mediaFolderId: 5, type: .folders)
         model.reset()
         XCTAssertEqual(model.mediaFolderIndex, 1, "index of the selected media folder in the list")
 
@@ -322,15 +332,17 @@ final class ArtistsViewModelTests: LoaderTestCase {
         try MockSubsonicServer.stub(.getIndexes, fixture: "XML/getIndexes.xml")
         try MockSubsonicServer.stub(.getArtists, fixture: "XML/getArtists.xml")
 
-        let settings = SavedSettings()
+        let session = ServerSession()
+        let settings = SavedSettings(session: session)
+        session.currentServer = store.server(id: 1)
         TestContainer.register { settings }
 
         _ = store.add(mediaFolders: [MediaFolder(serverId: 1, id: 0, name: "Music"),
                                      MediaFolder(serverId: 1, id: 5, name: "Podcasts")])
 
-        let foldersModel = ArtistsViewModel(serverId: 1, mediaFolderId: 0, type: .folders)
+        let foldersModel = ArtistsViewModel(mediaFolderId: 0, type: .folders)
         foldersModel.reset()
-        let tagsModel = ArtistsViewModel(serverId: 1, mediaFolderId: 0, type: .tags)
+        let tagsModel = ArtistsViewModel(mediaFolderId: 0, type: .tags)
         tagsModel.reset()
 
         let foldersController = ArtistsViewController(dataModel: foldersModel)
@@ -353,7 +365,7 @@ final class ArtistsViewModelTests: LoaderTestCase {
         // count + 1 produced a stray blank row that neither had a title nor selected
         _ = store.add(mediaFolders: [MediaFolder(serverId: 1, id: MediaFolder.allFoldersId, name: "All Media Folders"),
                                      MediaFolder(serverId: 1, id: 0, name: "Music")])
-        let model = ArtistsViewModel(serverId: 1, mediaFolderId: 0, type: .folders)
+        let model = ArtistsViewModel(mediaFolderId: 0, type: .folders)
         model.reset()
         let controller = ArtistsViewController(dataModel: model)
         let menu = DropdownMenu()
@@ -371,7 +383,7 @@ final class ArtistsViewModelTests: LoaderTestCase {
             _ = store.add(folderArtist: FolderArtist(serverId: 1, element: try XMLTestHelpers.element(tag: "artist", xml: "<artist id=\"ar\(number)\" name=\"Match \(number)\"/>")), mediaFolderId: 0)
         }
 
-        let model = ArtistsViewModel(serverId: 1, mediaFolderId: 0, type: .folders)
+        let model = ArtistsViewModel(mediaFolderId: 0, type: .folders)
         model.search(name: "Match")
         XCTAssertEqual(model.searchCount, 100, "the first search page is capped at the search limit")
 

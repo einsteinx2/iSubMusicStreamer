@@ -53,10 +53,10 @@ final class BrowseCacheStoreTests: StoreTestCase {
         XCTAssertEqual(store.mediaFolders(serverId: 1).map(\.name).sorted(), ["Music", "Podcasts"])
         XCTAssertEqual(store.mediaFolders(serverId: 2).map(\.name), ["Other Server"])
 
-        // deleteMediaFolders is global (used when reloading the list)
-        XCTAssertTrue(store.deleteMediaFolders())
+        // deleteMediaFolders is per server (a reload replaces only that server's list)
+        XCTAssertTrue(store.deleteMediaFolders(serverId: 1))
         XCTAssertEqual(store.mediaFolders(serverId: 1).count, 0)
-        XCTAssertEqual(store.mediaFolders(serverId: 2).count, 0)
+        XCTAssertEqual(store.mediaFolders(serverId: 2).count, 1)
     }
 
     // MARK: Folder artists

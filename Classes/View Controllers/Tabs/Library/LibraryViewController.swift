@@ -58,12 +58,10 @@ final class LibraryViewController: TabmanViewController {
             let controller: UIViewController
             switch type {
             case .folders:
-                let foldersMediaFolderId = settings.rootFoldersSelectedFolderId
-                let foldersDataModel = ArtistsViewModel(serverId: settings.currentServerId, mediaFolderId: foldersMediaFolderId, type: .folders)
+                let foldersDataModel = ArtistsViewModel(mediaFolderId: settings.rootFoldersSelectedFolderId, type: .folders)
                 controller = ArtistsViewController(dataModel: foldersDataModel)
             case .artists:
-                let artistsMediaFolderId = settings.rootArtistsSelectedFolderId
-                let artistsDataModel = ArtistsViewModel(serverId: settings.currentServerId, mediaFolderId: artistsMediaFolderId, type: .tags)
+                let artistsDataModel = ArtistsViewModel(mediaFolderId: settings.rootArtistsSelectedFolderId, type: .tags)
                 controller = ArtistsViewController(dataModel: artistsDataModel)
             case .bookmarks:
                 controller = BookmarksViewController()

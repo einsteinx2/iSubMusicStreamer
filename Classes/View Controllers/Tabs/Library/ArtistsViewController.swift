@@ -118,14 +118,21 @@ final class ArtistsViewController: CustomUITableViewController {
     private func updateCount() {
         let count = isSearching ? dataModel.searchCount : dataModel.count
         countLabel.text = "\(count) \(dataModel.itemType.pluralize(amount: count))"
-        if let reloadDate = dataModel.reloadDate {
+        if !dataModel.lastLoadFailedServerLabels.isEmpty {
+            // A partial combined reload: show which servers are missing instead of
+            // the reload time (the merged rows below are still browsable)
+            reloadTimeLabel.text = "Couldn't reach: \(dataModel.lastLoadFailedServerLabels.joined(separator: ", "))"
+            reloadTimeLabel.textColor = .systemOrange
+        } else if let reloadDate = dataModel.reloadDate {
             let formatter = DateFormatter()
             formatter.dateStyle = .medium
             formatter.timeStyle = .short
             let formattedTime = formatter.string(from: reloadDate)
             reloadTimeLabel.text = "last reload \(formattedTime)"
+            reloadTimeLabel.textColor = .secondaryLabel
         } else {
             reloadTimeLabel.text = ""
+            reloadTimeLabel.textColor = .secondaryLabel
         }
     }
     
@@ -135,14 +142,19 @@ final class ArtistsViewController: CustomUITableViewController {
         isCountShowing = false
     }
     
+    // The media-folder dropdown is per-server state, so the merged Combined view
+    // hides it (each server contributes its own saved selection instead)
+    private var showsDropdown: Bool { !settings.isCombinedContext }
+
     private func addCount() {
         guard !isCountShowing else { return }
         isCountShowing = true
-        
+
         // NOTE: Unfortunately the header container view must not use autolayout or the
         //       header resizing won't work, but all of it's subviews can use it at least.
+        let dropdownHeight: CGFloat = showsDropdown ? 44 : 0
         let headerView = UIView()
-        headerView.frame = CGRect(x: 0, y: 0, width: 320, height: UIDevice.isSmall ? 154 : 158)
+        headerView.frame = CGRect(x: 0, y: 0, width: 320, height: (UIDevice.isSmall ? 110 : 114) + dropdownHeight)
         headerView.autoresizingMask = .flexibleWidth
         headerView.backgroundColor = view.backgroundColor
         tableView.tableHeaderView = headerView
@@ -167,15 +179,19 @@ final class ArtistsViewController: CustomUITableViewController {
             make.top.equalTo(countLabel.snp.bottom).offset(5)
         }
         
-        headerView.addSubview(dropdownMenu)
-        dropdownMenu.snp.makeConstraints { make in
-            make.width.lessThanOrEqualTo(300)
-            make.centerX.equalToSuperview()
-            make.leading.equalToSuperview().offset(50).priority(.high)
-            make.trailing.equalToSuperview().offset(-50).priority(.high)
-            make.top.equalTo(reloadTimeLabel.snp.bottom).offset(5)
+        if showsDropdown {
+            headerView.addSubview(dropdownMenu)
+            dropdownMenu.snp.makeConstraints { make in
+                make.width.lessThanOrEqualTo(300)
+                make.centerX.equalToSuperview()
+                make.leading.equalToSuperview().offset(50).priority(.high)
+                make.trailing.equalToSuperview().offset(-50).priority(.high)
+                make.top.equalTo(reloadTimeLabel.snp.bottom).offset(5)
+            }
+        } else {
+            dropdownMenu.removeFromSuperview()
         }
-        
+
         searchBar.searchBarStyle = .minimal
         searchBar.delegate = self
         searchBar.autocorrectionType = .no
@@ -184,7 +200,11 @@ final class ArtistsViewController: CustomUITableViewController {
         searchBar.snp.makeConstraints { make in
             make.height.equalTo(40)
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(dropdownMenu.snp.bottom).offset(5)
+            if showsDropdown {
+                make.top.equalTo(dropdownMenu.snp.bottom).offset(5)
+            } else {
+                make.top.equalTo(reloadTimeLabel.snp.bottom).offset(5)
+            }
             make.bottom.equalToSuperview().offset(-5)
         }
 
@@ -211,18 +231,24 @@ final class ArtistsViewController: CustomUITableViewController {
 
     private func loadData(serverId: Int, mediaFolderId: Int) {
         HUD.show(closeHandler: cancelLoad)
-        dataModel.serverId = serverId
-        dataModel.mediaFolderId = mediaFolderId
+        if !dataModel.isCombined {
+            dataModel.mediaFolderId = mediaFolderId
+        }
         dataModel.startLoad()
     }
-    
+
     @objc private func serverSwitched() {
         dataModel.reset()
-        if !dataModel.isCached {
-            tableView.reloadData()
-            removeCount()
+        // Rebuild the header for the incoming context (the dropdown only exists in
+        // single-server mode), or drop it until the first load
+        removeCount()
+        if dataModel.isCached {
+            addCount()
         }
-        dropdownMenu.selectedIndex = 0
+        tableView.reloadData()
+        if showsDropdown {
+            dropdownMenu.selectedIndex = 0
+        }
     }
     
     override func tableCellModel(at indexPath: IndexPath) -> TableCellModel? {
@@ -239,14 +265,16 @@ extension ArtistsViewController: ArtistsViewModelDelegate {
     
     func loadingFinished() {
         HUD.hide()
-        dropdownMenu.selectedIndex = dataModel.mediaFolderIndex
-        dropdownMenu.updateItems()
+        if showsDropdown {
+            dropdownMenu.selectedIndex = dataModel.mediaFolderIndex
+            dropdownMenu.updateItems()
+        }
         if isCountShowing {
             updateCount()
         } else {
             addCount()
         }
-        
+
         tableView.reloadData()
         tableView.refreshControl?.endRefreshing()
     }

@@ -37,15 +37,17 @@ extension Store {
         }
     }
     
+    // Scoped per server: Combined Library reloads fan out one refresh per server,
+    // and a global wipe here would have each server's load clobber the others'
     @discardableResult
-    func deleteMediaFolders() -> Bool {
+    func deleteMediaFolders(serverId: Int) -> Bool {
         do {
             return try pool.write { db in
-                try MediaFolder.deleteAll(db)
+                try db.execute(literal: "DELETE FROM \(MediaFolder.self) WHERE serverId = \(serverId)")
                 return true
             }
         } catch {
-            DDLogError("Failed to delete all media folders: \(error)")
+            DDLogError("Failed to delete media folders for server \(serverId): \(error)")
             return false
         }
     }
