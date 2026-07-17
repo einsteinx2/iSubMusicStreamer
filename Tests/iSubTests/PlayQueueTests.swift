@@ -457,6 +457,7 @@ final class PlayQueueTests: StoreTestCase {
     func testSaveStatePersistsPlayerAndQueueState() {
         seedQueue(3)
         player.isPlaying = true
+        player.isStarted = true
         player.progress = 42.5
         player.currentByteOffset = 123456
         player.kiloBitrate = 192
@@ -515,6 +516,7 @@ final class PlayQueueTests: StoreTestCase {
     func testSaveThenLoadStateRoundTrip() {
         seedQueue(3)
         player.isPlaying = true
+        player.isStarted = true
         player.progress = 10.0
         player.currentByteOffset = 999
         playQueue.isShuffle = true

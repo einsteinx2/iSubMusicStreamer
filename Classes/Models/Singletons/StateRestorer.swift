@@ -83,6 +83,56 @@ final class StateRestorer {
         player.startSecondsOffset = state.secondsOffset
     }
 
+    // Reads the live playback state for a context snapshot. When the player has no
+    // active stream its progress/currentByteOffset read 0 (see BassPlayer.progress),
+    // so fall back to the primed start offsets — otherwise switching away from a
+    // context that was restored but never played would zero its saved seek position.
+    func captureSnapshot() -> PlayQueueStateSnapshot {
+        PlayQueueStateSnapshot(
+            isShuffle: playQueue.isShuffle,
+            repeatMode: playQueue.repeatMode,
+            normalIndex: playQueue.normalIndex,
+            shuffleIndex: playQueue.shuffleIndex,
+            seekTime: player.isStarted ? player.progress : player.startSecondsOffset,
+            byteOffset: player.isStarted ? player.currentByteOffset : player.startByteOffset,
+            kiloBitrate: player.isStarted && player.kiloBitrate >= 0 ? player.kiloBitrate : state.kiloBitrate)
+    }
+
+    // Paused restore for a context switch: mirrors loadState()'s no-recover shape —
+    // queue fields, primed player offsets, and the live defaults with isPlaying and
+    // recover off — and refreshes the internal diff cache so the next save tick
+    // doesn't rewrite stale values over what was just applied.
+    func apply(snapshot: PlayQueueStateSnapshot) {
+        playQueue.isShuffle = snapshot.isShuffle
+        playQueue.repeatMode = snapshot.repeatMode
+        playQueue.normalIndex = snapshot.normalIndex
+        playQueue.shuffleIndex = snapshot.shuffleIndex
+
+        player.startByteOffset = snapshot.byteOffset
+        player.startSecondsOffset = snapshot.seekTime
+
+        state.isPlaying = false
+        state.isShuffle = snapshot.isShuffle
+        state.normalPlaylistIndex = snapshot.normalIndex
+        state.shufflePlaylistIndex = snapshot.shuffleIndex
+        state.repeatMode = snapshot.repeatMode
+        state.kiloBitrate = snapshot.kiloBitrate
+        state.byteOffset = snapshot.byteOffset
+        state.secondsOffset = snapshot.seekTime
+        state.isRecover = false
+
+        defaults.set(false, forKey: .isPlaying)
+        defaults.set(snapshot.isShuffle, forKey: .isShuffle)
+        defaults.set(snapshot.normalIndex, forKey: .normalPlaylistIndex)
+        defaults.set(snapshot.shuffleIndex, forKey: .shufflePlaylistIndex)
+        defaults.set(snapshot.repeatMode.rawValue, forKey: .repeatMode)
+        defaults.set(snapshot.kiloBitrate, forKey: .kiloBitrate)
+        defaults.set(snapshot.seekTime, forKey: .seekTime)
+        defaults.set(snapshot.byteOffset, forKey: .byteOffset)
+        defaults.set(false, forKey: .recover)
+        defaults.synchronize()
+    }
+
     func saveState() {
         var isDefaultsDirty = false
 
@@ -127,14 +177,19 @@ final class StateRestorer {
             isDefaultsDirty = true
         }
 
-        if state.secondsOffset != player.progress {
-            state.secondsOffset = player.progress
+        // A stopped player reports progress/currentByteOffset of 0, so fall back to
+        // the primed start offsets — otherwise the first tick after a paused launch or
+        // a context switch clobbers the saved position with zero
+        let liveSecondsOffset = player.isStarted ? player.progress : player.startSecondsOffset
+        if state.secondsOffset != liveSecondsOffset {
+            state.secondsOffset = liveSecondsOffset
             defaults.set(state.secondsOffset, forKey: .seekTime)
             isDefaultsDirty = true
         }
 
-        if state.byteOffset != player.currentByteOffset {
-            state.byteOffset = player.currentByteOffset
+        let liveByteOffset = player.isStarted ? player.currentByteOffset : player.startByteOffset
+        if state.byteOffset != liveByteOffset {
+            state.byteOffset = liveByteOffset
             defaults.set(state.byteOffset, forKey: .byteOffset)
             isDefaultsDirty = true
         }
