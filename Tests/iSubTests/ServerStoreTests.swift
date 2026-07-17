@@ -174,4 +174,69 @@ final class ServerStoreTests: StoreTestCase {
         XCTAssertNil(store.server(id: 1))
         XCTAssertNotNil(store.server(id: 2))
     }
+
+    // MARK: Library-context cascade
+
+    func testDeleteServerRemovesItsContextPlaylistsAndBookmarks() throws {
+        XCTAssertTrue(store.add(server: TestData.server(id: 1, urlString: "http://one.example.com")))
+        XCTAssertTrue(store.add(server: TestData.server(id: 2, urlString: "http://two.example.com")))
+        // Context 1's playlist holds ONLY server 2's songs — ownership, not song
+        // membership, decides its fate
+        let contextOnePlaylist = LocalPlaylist(id: 10, name: "Server One Mix", contextId: 1)
+        let contextTwoPlaylist = LocalPlaylist(id: 11, name: "Server Two Mix", contextId: 2)
+        XCTAssertTrue(store.add(localPlaylist: contextOnePlaylist))
+        XCTAssertTrue(store.add(localPlaylist: contextTwoPlaylist))
+        XCTAssertTrue(store.add(song: TestData.song(serverId: 2, id: "77"), localPlaylistId: 10))
+        let snapshotPlaylist = LocalPlaylist(id: 12, name: "Bookmark Snap", isBookmark: true, contextId: 1)
+        XCTAssertTrue(store.add(localPlaylist: snapshotPlaylist))
+        try store.pool.write { db in
+            try Bookmark(id: 1, song: TestData.song(serverId: 2, id: "77"), localPlaylist: snapshotPlaylist,
+                         songIndex: 0, offsetInSeconds: 10, offsetInBytes: 100).save(db)
+        }
+
+        XCTAssertTrue(store.deleteServer(id: 1))
+
+        XCTAssertTrue(store.localPlaylists(contextId: 1).isEmpty, "the deleted server's context playlists go with it")
+        XCTAssertEqual(store.localPlaylists(contextId: 2).map(\.id), [11])
+        XCTAssertTrue(store.bookmarks(contextId: 1).isEmpty)
+        XCTAssertNil(store.localPlaylist(id: 12), "the context bookmark's snapshot playlist goes too")
+        XCTAssertEqual(try count(table: "localPlaylistSong", where: "localPlaylistId = 10"), 0)
+    }
+
+    func testDeleteServerScrubsOtherContextsQueueSnapshots() throws {
+        XCTAssertTrue(store.add(server: TestData.server(id: 1, urlString: "http://one.example.com")))
+        XCTAssertTrue(store.add(server: TestData.server(id: 2, urlString: "http://two.example.com")))
+        // Context 2's saved queue: [server1, server2, server1], current index 2
+        XCTAssertTrue(store.add(song: TestData.song(serverId: 1, id: "a"), localPlaylistId: LocalPlaylist.Default.playQueueId))
+        XCTAssertTrue(store.add(song: TestData.song(serverId: 2, id: "b"), localPlaylistId: LocalPlaylist.Default.playQueueId))
+        XCTAssertTrue(store.add(song: TestData.song(serverId: 1, id: "c"), localPlaylistId: LocalPlaylist.Default.playQueueId))
+        _ = store.swapLiveQueue(outgoingContextId: 2,
+                                outgoingState: PlayQueueStateSnapshot(normalIndex: 2),
+                                incomingContextId: LibraryContext.noContextId)
+
+        XCTAssertTrue(store.deleteServer(id: 1))
+
+        let rows = try store.pool.read { db in
+            try Row.fetchAll(db, sql: "SELECT position, serverId, songId FROM contextQueueSong WHERE contextId = 2 AND queueKind = 0 ORDER BY position")
+        }
+        XCTAssertEqual(rows.count, 1, "only server 2's song survives in context 2's snapshot")
+        XCTAssertEqual(rows.first?["position"], 0, "positions repack after the removal")
+        XCTAssertEqual(rows.first?["songId"], "b")
+        XCTAssertEqual(store.contextQueueState(contextId: 2)?.normalIndex, 1,
+                       "the saved index shifts down by the removed rows before it")
+    }
+
+    func testDeleteServerClearsOwnSnapshotAndMarker() throws {
+        XCTAssertTrue(store.add(server: TestData.server(id: 1, urlString: "http://one.example.com")))
+        XCTAssertTrue(store.add(song: TestData.song(serverId: 1, id: "a"), localPlaylistId: LocalPlaylist.Default.playQueueId))
+        _ = store.swapLiveQueue(outgoingContextId: 1, outgoingState: nil, incomingContextId: 1)
+        XCTAssertEqual(store.liveQueueContextId(), 1)
+
+        XCTAssertTrue(store.deleteServer(id: 1))
+
+        XCTAssertNil(store.contextQueueState(contextId: 1))
+        XCTAssertEqual(try count(table: "contextQueueSong", where: "contextId = 1"), 0)
+        XCTAssertEqual(store.liveQueueContextId(), LibraryContext.noContextId,
+                       "the marker resets so the follow-up switch owns it")
+    }
 }

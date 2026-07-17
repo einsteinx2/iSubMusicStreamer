@@ -37,6 +37,7 @@ final class ServersViewModelTests: StoreTestCase {
     private var session: ServerSession!
     private var settings: SavedSettings!
     private var switcher: FakeServerSwitcher!
+    private var downloadQueue: FakeDownloadQueue!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -46,12 +47,17 @@ final class ServersViewModelTests: StoreTestCase {
         settings.setup(store: store)
         TestContainer.register { settings }
         self.settings = settings
+        let downloadQueue = FakeDownloadQueue()
+        TestContainer.register { downloadQueue as DownloadQueueing }
+        self.downloadQueue = downloadQueue
+        let playQueue = makeTestPlayQueue()
+        TestContainer.register { playQueue }
         let switcher = FakeServerSwitcher(streamManager: FakeStreamManager(),
                                           player: FakePlayer(),
                                           settings: settings,
                                           session: session,
                                           store: store,
-                                          stateRestorer: StateRestorer(settings: settings, player: FakePlayer(), playQueue: makeTestPlayQueue()))
+                                          stateRestorer: StateRestorer(settings: settings, player: FakePlayer(), playQueue: playQueue))
         self.switcher = switcher
         let injectedSwitcher: ServerSwitcher = switcher
         TestContainer.register { injectedSwitcher }
@@ -59,6 +65,7 @@ final class ServersViewModelTests: StoreTestCase {
 
     override func tearDownWithError() throws {
         switcher = nil
+        downloadQueue = nil
         settings = nil
         session = nil
         try super.tearDownWithError()
@@ -140,6 +147,33 @@ final class ServersViewModelTests: StoreTestCase {
         } else {
             XCTFail("no servers left, so the add-server sheet must present (got \(String(describing: viewModel.sheet)))")
         }
+    }
+
+    @MainActor func testDeletingServerWithInFlightDownloadRestartsQueue() {
+        _ = addServer(id: 1, host: "one.example.com")
+        let second = addServer(id: 2, host: "two.example.com")
+        settings.currentServer = second
+        downloadQueue.currentQueuedSong = TestData.song(serverId: 1, id: "55")
+
+        let viewModel = ServersViewModel()
+        viewModel.delete(at: IndexSet(integer: 0))
+
+        XCTAssertEqual(downloadQueue.stopCount, 1, "the in-flight download for the doomed server stops first")
+        XCTAssertEqual(downloadQueue.startCount, 1, "the queue restarts to advance past the deleted server's song")
+        XCTAssertEqual(switcher.switchCount, 0, "deleting a non-current server does not switch contexts")
+    }
+
+    @MainActor func testDeletingServerWithoutInFlightDownloadLeavesQueueAlone() {
+        _ = addServer(id: 1, host: "one.example.com")
+        let second = addServer(id: 2, host: "two.example.com")
+        settings.currentServer = second
+        downloadQueue.currentQueuedSong = TestData.song(serverId: 2, id: "55")
+
+        let viewModel = ServersViewModel()
+        viewModel.delete(at: IndexSet(integer: 0))
+
+        XCTAssertEqual(downloadQueue.stopCount, 0)
+        XCTAssertEqual(downloadQueue.startCount, 0)
     }
 
     @MainActor func testReloadServerListNotificationRefreshes() {

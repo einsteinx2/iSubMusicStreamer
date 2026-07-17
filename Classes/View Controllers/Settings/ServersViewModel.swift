@@ -45,6 +45,8 @@ import CocoaLumberjackSwift
     @ObservationIgnored @Injected private var settings: SavedSettings
     @ObservationIgnored @Injected private var serverSwitcher: ServerSwitcher
     @ObservationIgnored @Injected private var redirects: ServerRedirectRegistry
+    @ObservationIgnored @Injected private var downloadQueue: DownloadQueueing
+    @ObservationIgnored @Injected private var playQueue: PlayQueue
 
     private(set) var servers = [Server]()
     var alert: AlertInfo?
@@ -135,10 +137,29 @@ import CocoaLumberjackSwift
     private func delete(_ server: Server) {
         let wasCurrentServer = settings.currentServer == server
 
+        // Stop an in-flight download for this server before its rows and files
+        // vanish; start() below advances to the next remaining queued song
+        let hadInFlightDownload = downloadQueue.currentQueuedSong?.serverId == server.id
+        if hadInFlightDownload {
+            downloadQueue.stop()
+        }
+
         // Deletes the row plus all of the server's records and downloaded files
         _ = store.deleteServer(id: server.id)
         redirects.clearRedirect(serverId: server.id)
         reload()
+
+        if hadInFlightDownload {
+            downloadQueue.start()
+        }
+
+        // The cascade may have removed this server's songs from the live queue rows
+        // (they can sit in any context's queue); re-clamp the in-memory index and let
+        // the queue UI reload
+        if playQueue.currentIndex >= playQueue.count {
+            playQueue.currentIndex = max(0, playQueue.count - 1)
+        }
+        NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
 
         // When the current server was deleted, automatically switch to another server,
         // or show the add-server sheet when none remain

@@ -100,7 +100,18 @@ extension Store {
 
         do {
             try pool.write { db in
-                // Bookmarks and their snapshot playlists
+                // Everything owned by this server's library CONTEXT first: its user
+                // playlists and bookmarks (bookmark snapshots included) — they may
+                // hold other servers' songs, so the per-song cascade below must not
+                // waste work repacking playlists that are about to disappear
+                let contextPlaylistIds = try SQLRequest<Int>(literal: "SELECT id FROM \(LocalPlaylist.self) WHERE contextId = \(id) AND id > \(LocalPlaylist.Default.maxDefaultId)").fetchAll(db)
+                for playlistId in contextPlaylistIds {
+                    try LocalPlaylist.delete(db, id: playlistId)
+                }
+                try db.execute(literal: "DELETE FROM \(Bookmark.self) WHERE contextId = \(id)")
+
+                // Other contexts' bookmarks that point at this server's songs, and
+                // their snapshot playlists
                 let bookmarkPlaylistIds = try SQLRequest<Int>(literal: "SELECT localPlaylistId FROM \(Bookmark.self) WHERE songServerId = \(id)").fetchAll(db)
                 for playlistId in bookmarkPlaylistIds {
                     try LocalPlaylist.delete(db, id: playlistId)
@@ -159,6 +170,41 @@ extension Store {
                 for table in tables {
                     try db.execute(sql: "DELETE FROM \(table) WHERE serverId = ?", arguments: [id])
                 }
+
+                // This server's own queue snapshot
+                try db.execute(sql: "DELETE FROM \(ContextQueue.Table.contextQueueState) WHERE contextId = ?", arguments: [id])
+                try db.execute(sql: "DELETE FROM \(ContextQueue.Table.contextQueueSong) WHERE contextId = ?", arguments: [id])
+
+                // Other contexts' snapshots holding this server's songs: decrement
+                // their saved indexes by the rows about to vanish below them, then
+                // remove the rows and repack the positions (mirrors the live-queue
+                // repack above)
+                try db.execute(sql: """
+                    UPDATE \(ContextQueue.Table.contextQueueState) SET
+                        normalIndex = MAX(0, normalIndex - (
+                            SELECT COUNT(*) FROM \(ContextQueue.Table.contextQueueSong) s
+                            WHERE s.contextId = \(ContextQueue.Table.contextQueueState).contextId
+                              AND s.queueKind = 0 AND s.serverId = ?
+                              AND s.position < \(ContextQueue.Table.contextQueueState).normalIndex)),
+                        shuffleIndex = MAX(0, shuffleIndex - (
+                            SELECT COUNT(*) FROM \(ContextQueue.Table.contextQueueSong) s
+                            WHERE s.contextId = \(ContextQueue.Table.contextQueueState).contextId
+                              AND s.queueKind = 1 AND s.serverId = ?
+                              AND s.position < \(ContextQueue.Table.contextQueueState).shuffleIndex))
+                    """, arguments: [id, id])
+                try db.execute(sql: "DELETE FROM \(ContextQueue.Table.contextQueueSong) WHERE serverId = ?", arguments: [id])
+                try db.execute(sql: """
+                    UPDATE \(ContextQueue.Table.contextQueueSong) SET position = (
+                        SELECT COUNT(*) FROM \(ContextQueue.Table.contextQueueSong) other
+                        WHERE other.contextId = \(ContextQueue.Table.contextQueueSong).contextId
+                          AND other.queueKind = \(ContextQueue.Table.contextQueueSong).queueKind
+                          AND other.position < \(ContextQueue.Table.contextQueueSong).position)
+                    """)
+
+                // If the marker still points at this context, the follow-up
+                // switchContext sets it properly
+                try db.execute(sql: "UPDATE \(ContextQueue.Table.activeQueueContext) SET contextId = ? WHERE contextId = ?",
+                               arguments: [LibraryContext.noContextId, id])
 
                 try db.execute(literal: "DELETE FROM \(Server.self) WHERE id = \(id)")
             }
