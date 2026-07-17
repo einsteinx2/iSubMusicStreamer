@@ -62,11 +62,17 @@ final class ServerSearchViewController: UIViewController {
         super.viewWillAppear(animated)
         // In the Combined Library the Tags scope appears when ANY server supports tag
         // search; tag-incapable servers just sit out that scope
-        let isTagSearchSupported = settings.isCombinedContext
+        let isCombined = settings.isCombinedContext
+        let isTagSearchSupported = isCombined
             ? store.servers().contains { $0.isTagSearchSupported }
             : settings.currentServer?.isTagSearchSupported ?? false
         // The scope bar only shows while the search bar is active
         searchController.searchBar.scopeButtonTitles = isTagSearchSupported ? ["Folders", "Tags"] : nil
+
+        searchController.searchBar.placeholder = isCombined ? "Search all of your servers" : "Search your server's library"
+        hintLabel.text = isCombined
+            ? "Search for artists, albums, and songs\nacross all of your servers"
+            : "Search for artists, albums, and songs\non your server"
     }
 
     deinit {
