@@ -155,14 +155,12 @@ final class SavedSettingsBehaviorTests: StoreTestCase {
 
     // MARK: currentServer
 
-    func testCurrentServerDidSetWritesIdAndClearsRedirect() {
+    func testCurrentServerDidSetWritesId() {
         let server = TestData.server(id: 3)
         _ = store.add(server: server)
-        settings.currentServerRedirectUrlString = "https://redirect.example.com"
 
         settings.currentServer = server
 
-        XCTAssertNil(settings.currentServerRedirectUrlString, "changing servers must clear the redirect URL")
         XCTAssertEqual(testDefaults.object(forKey: SavedSettings.Key.currentServerId.rawValue) as? Int, 3)
         XCTAssertEqual(settings.currentServerId, 3)
     }
@@ -267,15 +265,13 @@ final class SavedSettingsBehaviorTests: StoreTestCase {
 // Phase 8.1: ServerSession owns the server-session state directly; SavedSettings
 // forwards to it. These cover the session type itself plus the forwarding contract.
 final class ServerSessionTests: StoreTestCase {
-    func testCurrentServerDidSetWritesIdAndClearsRedirect() {
+    func testCurrentServerDidSetWritesId() {
         let session = ServerSession()
         let server = TestData.server(id: 5)
         _ = store.add(server: server)
-        session.currentServerRedirectUrlString = "https://redirect.example.com"
 
         session.currentServer = server
 
-        XCTAssertNil(session.currentServerRedirectUrlString, "changing servers must clear the redirect URL")
         XCTAssertEqual(testDefaults.object(forKey: SavedSettings.Key.currentServerId.rawValue) as? Int, 5)
         XCTAssertEqual(session.currentServerId, 5)
     }
@@ -308,9 +304,6 @@ final class ServerSessionTests: StoreTestCase {
         settings.currentServer = server
         XCTAssertEqual(session.currentServer?.id, 9, "writes through SavedSettings land in the session")
         XCTAssertEqual(settings.currentServerId, 9)
-
-        session.currentServerRedirectUrlString = "https://redirect.example.com"
-        XCTAssertEqual(settings.currentServerRedirectUrlString, "https://redirect.example.com", "reads through SavedSettings come from the session")
 
         settings.isOfflineMode = true
         XCTAssertTrue(session.isOfflineMode)

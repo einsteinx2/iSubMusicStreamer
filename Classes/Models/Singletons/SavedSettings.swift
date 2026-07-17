@@ -65,11 +65,6 @@ final class SavedSettings {
         set { session.currentServer = newValue }
     }
 
-    var currentServerRedirectUrlString: String? {
-        get { session.currentServerRedirectUrlString }
-        set { session.currentServerRedirectUrlString = newValue }
-    }
-
     // MARK: Other Settings
 
     var appCrashedOnLastRun: Bool = false

@@ -59,6 +59,10 @@ class SandboxedTestCase: XCTestCase {
         TestContainer.register { FakePlayer() as PlayerControlling }
         TestContainer.register { FakeStreamManager() as StreamManaging }
         TestContainer.register { FakeDownloadQueue() as DownloadQueueing }
+        // Fresh per-test registry so redirects recorded by one test (or the app's
+        // instance) never leak into another
+        let redirectRegistry = ServerRedirectRegistry()
+        TestContainer.register { redirectRegistry }
         // The value-model layer reads these statics ambiently (song.localPath's server
         // lookup, LocalPlaylist.queue()'s coordinator); without interposing them here a
         // plain SandboxedTestCase test reaches the app's REAL database and playback

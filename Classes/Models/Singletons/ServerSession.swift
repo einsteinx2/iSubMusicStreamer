@@ -8,15 +8,16 @@
 
 import Foundation
 
-/// The active server connection state: which server the app is talking to, the redirect
-/// URL negotiated for it, and whether the app is currently in offline mode.
+/// The active server connection state: which server the app is talking to and whether
+/// the app is currently in offline mode. (Redirect URLs are per-server state and live
+/// in ServerRedirectRegistry.)
 ///
 /// Split out of SavedSettings (Phase 8.1) so session state has a single owner.
 /// SavedSettings owns this instance strongly and forwards the legacy property names
-/// (currentServer, currentServerId, currentServerRedirectUrlString, isOfflineMode) so
-/// existing view controllers, services, and tests keep compiling untouched. That
-/// SavedSettings→ServerSession ownership is a deliberate, acyclic compatibility shim —
-/// new code should inject ServerSession directly.
+/// (currentServer, currentServerId, isOfflineMode) so existing view controllers,
+/// services, and tests keep compiling untouched. That SavedSettings→ServerSession
+/// ownership is a deliberate, acyclic compatibility shim — new code should inject
+/// ServerSession directly.
 final class ServerSession {
     // Shares the SavedSettings.defaults swap point so tests stay sandboxed
     private var defaults: UserDefaults { SavedSettings.defaults }
@@ -27,13 +28,10 @@ final class ServerSession {
 
     var currentServer: Server? {
         didSet {
-            currentServerRedirectUrlString = nil
             defaults.set(currentServer?.id, forKey: .currentServerId)
             defaults.synchronize()
         }
     }
-
-    var currentServerRedirectUrlString: String?
 
     var isOfflineMode: Bool = false
 

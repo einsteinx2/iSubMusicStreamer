@@ -28,15 +28,11 @@ final class SelfSignedCertURLSessionDelegate: NSObject, URLSessionDelegate, URLS
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
-        if let url = request.url, let scheme = url.scheme, let host = url.host, let port = url.port {
-            let settings: SavedSettings = Resolver.resolve()
-            let redirectedUrlString = "\(scheme)://\(host):\(port)"
-            DDLogInfo("Redirecting to \(redirectedUrlString)")
-            settings.currentServerRedirectUrlString = redirectedUrlString
-        } else {
-            DDLogError("Redirecting request, but url is nil")
-        }
-        
+        let registry: ServerRedirectRegistry = Resolver.resolve()
+        let store: Store = Resolver.resolve()
+        registry.recordRedirect(originalRequestUrl: task.originalRequest?.url,
+                                redirectedRequestUrl: request.url,
+                                knownServers: store.servers())
         completionHandler(request)
     }
 }

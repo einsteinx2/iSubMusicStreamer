@@ -44,6 +44,7 @@ import CocoaLumberjackSwift
     @ObservationIgnored @Injected private var store: Store
     @ObservationIgnored @Injected private var settings: SavedSettings
     @ObservationIgnored @Injected private var serverSwitcher: ServerSwitcher
+    @ObservationIgnored @Injected private var redirects: ServerRedirectRegistry
 
     private(set) var servers = [Server]()
     var alert: AlertInfo?
@@ -137,6 +138,7 @@ import CocoaLumberjackSwift
 
         // Deletes the row plus all of the server's records and downloaded files
         _ = store.deleteServer(id: server.id)
+        redirects.clearRedirect(serverId: server.id)
         reload()
 
         // When the current server was deleted, automatically switch to another server,

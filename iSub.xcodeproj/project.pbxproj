@@ -561,6 +561,9 @@
 		5A7E570A2F1000010000AB0A /* ScrobbleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E570C2F1000010000AB0C /* ScrobbleService.swift */; };
 		5A7E570B2F1000010000AB0B /* ScrobbleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E570C2F1000010000AB0C /* ScrobbleService.swift */; };
 		5A7E570D2F1000010000AB0D /* ScrobbleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E570E2F1000010000AB0E /* ScrobbleServiceTests.swift */; };
+		D8C2000000000000000C0201 /* ServerRedirectRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0203 /* ServerRedirectRegistry.swift */; };
+		D8C2000000000000000C0202 /* ServerRedirectRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0203 /* ServerRedirectRegistry.swift */; };
+		D8C2000000000000000C0204 /* ServerRedirectRegistryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0205 /* ServerRedirectRegistryTests.swift */; };
 		5A7E570F2F1000010000AB0F /* NowPlayingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57112F1000010000AB11 /* NowPlayingService.swift */; };
 		5A7E57102F1000010000AB10 /* NowPlayingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57112F1000010000AB11 /* NowPlayingService.swift */; };
 		5A7E57122F1000010000AB12 /* NowPlayingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */; };
@@ -1003,6 +1006,8 @@
 		5A7E57092F1000010000AB09 /* ServerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSession.swift; sourceTree = "<group>"; };
 		5A7E570C2F1000010000AB0C /* ScrobbleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrobbleService.swift; sourceTree = "<group>"; };
 		5A7E570E2F1000010000AB0E /* ScrobbleServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScrobbleServiceTests.swift; sourceTree = "<group>"; };
+		D8C2000000000000000C0203 /* ServerRedirectRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRedirectRegistry.swift; sourceTree = "<group>"; };
+		D8C2000000000000000C0205 /* ServerRedirectRegistryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerRedirectRegistryTests.swift; sourceTree = "<group>"; };
 		5A7E57112F1000010000AB11 /* NowPlayingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingService.swift; sourceTree = "<group>"; };
 		5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NowPlayingServiceTests.swift; sourceTree = "<group>"; };
 		5A7E57162F1000010000AB16 /* PlaybackCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackCoordinator.swift; sourceTree = "<group>"; };
@@ -1591,6 +1596,7 @@
 			children = (
 				53ED673625B7A3020002BFAF /* URLRequest+Subsonic.swift */,
 				53E04946255E2BC5007D4578 /* SelfSignedCertURLSessionDelegate.swift */,
+				D8C2000000000000000C0203 /* ServerRedirectRegistry.swift */,
 				53530B302DE65A50007EFA3A /* AsyncAPILoader.swift */,
 				53530B362DE786C7007EFA3A /* AsyncMediaFoldersLoader.swift */,
 				53530B332DE6651E007EFA3A /* AsyncRootFoldersLoader.swift */,
@@ -1884,6 +1890,7 @@
 				5BE66C0606E83260BA683E35 /* StreamManagerTests.swift */,
 				7BB9A537E6684624B72605F7 /* SavedSettingsBehaviorTests.swift */,
 				5A7E570E2F1000010000AB0E /* ScrobbleServiceTests.swift */,
+				D8C2000000000000000C0205 /* ServerRedirectRegistryTests.swift */,
 				5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */,
 				53DBB093129F25CDF2334C20 /* GRDBRoundTripTests.swift */,
 				F8337FDA15B0E63C6858971B /* BassAudioEngineTests.swift */,
@@ -2273,6 +2280,7 @@
 				53D9743A255C0DA900AABF7F /* AutoScrollingLabel.swift in Sources */,
 				539C05572DEFAE12007C3ACE /* AsyncQuickAlbumsLoader.swift in Sources */,
 				5A7E570A2F1000010000AB0A /* ScrobbleService.swift in Sources */,
+				D8C2000000000000000C0201 /* ServerRedirectRegistry.swift in Sources */,
 				53BDC4DC25D4CEB400126D06 /* DropdownMenu.swift in Sources */,
 				531EC86525B220E10076973A /* Colors.swift in Sources */,
 				539D331225AB691B00F53797 /* PlayQueue.swift in Sources */,
@@ -2541,6 +2549,7 @@
 				53BDC4DD25D4CEB400126D06 /* DropdownMenu.swift in Sources */,
 				534B20E125619F3B007FF1D7 /* UIStackView+AddArrangedSubviews.swift in Sources */,
 				5A7E570B2F1000010000AB0B /* ScrobbleService.swift in Sources */,
+				D8C2000000000000000C0202 /* ServerRedirectRegistry.swift in Sources */,
 				531EC86625B220E10076973A /* Colors.swift in Sources */,
 				539D331325AB691B00F53797 /* PlayQueue.swift in Sources */,
 				53530B372DE786CA007EFA3A /* AsyncMediaFoldersLoader.swift in Sources */,
@@ -2702,6 +2711,7 @@
 				DF81321454A4A5D2F872F28E /* StreamManagerTests.swift in Sources */,
 				4A43507ACB16A1D092D187AD /* SavedSettingsBehaviorTests.swift in Sources */,
 				5A7E570D2F1000010000AB0D /* ScrobbleServiceTests.swift in Sources */,
+				D8C2000000000000000C0204 /* ServerRedirectRegistryTests.swift in Sources */,
 				5A7E57122F1000010000AB12 /* NowPlayingServiceTests.swift in Sources */,
 				A7D7FD300FA5D924D56FCE41 /* GRDBRoundTripTests.swift in Sources */,
 				C705DE4953B91C2502AB9A20 /* BassAudioEngineTests.swift in Sources */,

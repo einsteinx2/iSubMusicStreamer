@@ -158,7 +158,7 @@ final class URLRequestSubsonicTests: SandboxedTestCase {
         store.setup(location: .memory)
         let url = try XCTUnwrap(URL(string: "https://music.example.com"))
         XCTAssertTrue(store.add(server: Server(id: 1, type: .subsonic, url: url, username: "user", password: "pass")))
-        let builder = SubsonicRequestBuilder(store: store, settings: settings)
+        let builder = SubsonicRequestBuilder(store: store, settings: settings, redirects: ServerRedirectRegistry())
 
         let plain = try XCTUnwrap(builder.request(serverId: 1, subsonicAction: .getIndexes))
         XCTAssertNil(plain.value(forHTTPHeaderField: "Authorization"))
@@ -254,15 +254,27 @@ final class URLRequestSubsonicTests: SandboxedTestCase {
         XCTAssertNil(URLRequest(serverId: 42, subsonicAction: .ping), "missing server must fail request creation")
     }
 
-    func testServerIdInitializerHonorsRedirectUrl() throws {
+    func testServerIdInitializerHonorsPerServerRedirectUrl() throws {
         let store = Store()
         store.setup(location: .memory)
         let injectedStore: Store = store
         TestContainer.register { injectedStore }
-        XCTAssertTrue(store.add(server: TestData.server(id: 1, urlString: "https://original.example.com")))
-        settings.currentServerRedirectUrlString = "https://redirected.example.com"
+        let serverA = TestData.server(id: 1, urlString: "https://original.example.com")
+        let serverB = TestData.server(id: 2, urlString: "https://other.example.com")
+        XCTAssertTrue(store.add(server: serverA))
+        XCTAssertTrue(store.add(server: serverB))
 
-        let request = try XCTUnwrap(URLRequest(serverId: 1, subsonicAction: .ping))
-        XCTAssertEqual(request.url?.host, "redirected.example.com")
+        // Register a known registry instance so the resolved builder reads it
+        let redirects = ServerRedirectRegistry()
+        TestContainer.register { redirects }
+        redirects.recordRedirect(originalRequestUrl: URL(string: "https://original.example.com/rest/ping.view"),
+                                 redirectedRequestUrl: URL(string: "https://redirected.example.com/rest/ping.view"),
+                                 knownServers: [serverA, serverB])
+
+        let redirected = try XCTUnwrap(URLRequest(serverId: 1, subsonicAction: .ping))
+        XCTAssertEqual(redirected.url?.host, "redirected.example.com")
+
+        let untouched = try XCTUnwrap(URLRequest(serverId: 2, subsonicAction: .ping))
+        XCTAssertEqual(untouched.url?.host, "other.example.com", "server 1's redirect must not apply to server 2")
     }
 }

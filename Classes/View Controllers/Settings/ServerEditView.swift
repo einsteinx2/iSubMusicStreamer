@@ -24,6 +24,7 @@ struct ServerEditView: View {
     private let store: Store = Resolver.resolve()
     private let settings: SavedSettings = Resolver.resolve()
     private let serverSwitcher: ServerSwitcher = Resolver.resolve()
+    private let redirects: ServerRedirectRegistry = Resolver.resolve()
 
     private struct AlertInfo: Identifiable {
         let id = UUID()
@@ -159,6 +160,10 @@ struct ServerEditView: View {
                 // same URL and username (e.g. a retry after a failed check) instead
                 // of ever adding a duplicate
                 let existingId = serverToEdit?.id ?? store.servers().first { $0.url == serverURL && $0.username == username }?.id
+                // A changed URL invalidates any redirect negotiated for the old address
+                if let serverToEdit, serverToEdit.url != serverURL {
+                    redirects.clearRedirect(serverId: serverToEdit.id)
+                }
                 let server = Server(id: existingId ?? store.nextServerId(), type: responseData.serverType, url: serverURL, username: username, password: password)
                 server.isVideoSupported = responseData.isVideoSupported
                 server.isNewSearchSupported = responseData.isNewSearchSupported

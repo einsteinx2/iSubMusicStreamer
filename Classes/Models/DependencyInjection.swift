@@ -30,6 +30,7 @@ final class AppServices {
     let store: Store
     let session: ServerSession
     let settings: SavedSettings
+    let redirectRegistry: ServerRedirectRegistry
     let networkMonitor: NetworkMonitor
     let analytics: Analytics
     let scrobbleService: ScrobbleService
@@ -49,6 +50,7 @@ final class AppServices {
         store = Store()
         session = ServerSession()
         settings = SavedSettings(session: session)
+        redirectRegistry = ServerRedirectRegistry()
         networkMonitor = NetworkMonitor(settings: settings)
         analytics = Analytics()
         downloadsManager = DownloadsManager(settings: settings, store: store)
@@ -92,6 +94,7 @@ struct DependencyInjection {
         main.register(factory: { services.store })
         main.register(factory: { services.session })
         main.register(factory: { services.settings })
+        main.register(factory: { services.redirectRegistry })
         main.register(factory: { services.networkMonitor })
         main.register(factory: { services.analytics })
         main.register(factory: { services.scrobbleService })
@@ -115,7 +118,7 @@ struct DependencyInjection {
 
         // Transient request builder; resolves store/settings at build time so tests'
         // container overrides are honored
-        main.register(factory: { SubsonicRequestBuilder(store: Resolver.resolve(), settings: Resolver.resolve()) })
+        main.register(factory: { SubsonicRequestBuilder(store: Resolver.resolve(), settings: Resolver.resolve(), redirects: Resolver.resolve()) })
 
         // The cover art manager keeps its `.shared` default-argument convenience for
         // views, but is also resolvable so new code can inject it
