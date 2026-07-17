@@ -103,6 +103,7 @@ enum UITestSupport {
                                 username: existing?.username ?? "uitest", password: existing?.password ?? "uitest")
             _ = store.add(server: server)
             UserDefaults.standard.set(seededServerId, forKey: SavedSettings.Key.currentServerId.rawValue)
+            UserDefaults.standard.set(seededServerId, forKey: SavedSettings.Key.activeContextId.rawValue)
         }
 
         let settings: SavedSettings = Resolver.resolve()

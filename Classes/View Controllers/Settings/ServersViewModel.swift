@@ -100,9 +100,8 @@ import CocoaLumberjackSwift
                 server.type = responseData.serverType
                 _ = store.add(server: server)
 
-                settings.currentServer = server
+                serverSwitcher.switchContext(to: .server(server))
                 reload()
-                serverSwitcher.switchServer()
                 coordinator?.popSettings()
             } catch {
                 if error.isCanceled {
@@ -145,19 +144,17 @@ import CocoaLumberjackSwift
         // or show the add-server sheet when none remain
         guard wasCurrentServer else { return }
         if let replacement = servers.first {
-            settings.currentServer = replacement
+            serverSwitcher.switchContext(to: .server(replacement))
             if settings.isPopupsEnabled {
-                alert = AlertInfo(title: "Notice", message: "The active server was deleted, so iSub switched to \(replacement.url.absoluteString)")
+                alert = AlertInfo(title: "Notice", message: "The active server was deleted, so iSub switched to \(replacement.displayLabel)")
             }
-            serverSwitcher.switchServer()
         } else {
-            settings.currentServer = nil
             // The deleted server's rows and files are already gone, but playback,
-            // streams, the queues, and jukebox mode may still reference it — run the
-            // same switch teardown as the replacement path. Keep the navigation
-            // stacks though: popping would remove this ServersView and drop the
-            // add-server sheet it is about to present.
-            serverSwitcher.switchServer(resetTabs: false)
+            // streams, and jukebox mode may still reference it — run the same switch
+            // teardown as the replacement path. Keep the navigation stacks though:
+            // popping would remove this ServersView and drop the add-server sheet it
+            // is about to present.
+            serverSwitcher.switchContext(to: nil, resetTabs: false)
             sheet = .add
         }
     }

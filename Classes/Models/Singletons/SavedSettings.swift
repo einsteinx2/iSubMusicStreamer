@@ -65,6 +65,18 @@ final class SavedSettings {
         set { session.currentServer = newValue }
     }
 
+    var activeContext: LibraryContext? {
+        return session.activeContext
+    }
+
+    var activeContextId: Int {
+        return session.activeContextId
+    }
+
+    var isCombinedContext: Bool {
+        return session.isCombinedContext
+    }
+
     // MARK: Other Settings
 
     var appCrashedOnLastRun: Bool = false
@@ -515,6 +527,7 @@ final class SavedSettings {
         case byteOffset
         
         case currentServerId
+        case activeContextId
         case appTerminatedCleanly
         
         // Settings

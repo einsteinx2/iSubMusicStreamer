@@ -124,11 +124,10 @@ extension Store {
     private var settings: SavedSettings { Resolver.resolve() }
     private var playQueue: PlayQueue { Resolver.resolve() }
 
-    // The library context that display queries scope to by default. Until the context
-    // switcher lands this is the current server id; the Combined Library work replaces
-    // it with the active context (0 while Combined is active). In tests with no
-    // current server this is -1, matching rows created without an explicit context.
-    var activeContextId: Int { settings.currentServerId }
+    // The library context that display queries scope to by default (0 while the
+    // Combined Library is active). In tests with no active context this is -1,
+    // matching rows created without an explicit context.
+    var activeContextId: Int { settings.activeContextId }
 
     var nextLocalPlaylistId: Int? {
         do {

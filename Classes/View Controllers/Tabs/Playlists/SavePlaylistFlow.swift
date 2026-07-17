@@ -92,7 +92,7 @@ final class SavePlaylistFlow {
         // mid-copy (song advance, shuffle, jukebox refresh), saving a truncated or
         // reordered playlist
         let songs = playQueueSongsSnapshot()
-        let contextId = settings.currentServerId
+        let contextId = settings.activeContextId
         let store = self.store
         HUD.show()
         DispatchQueue.userInitiated.async {

@@ -66,7 +66,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
         self.window = window
         
-        if settings.currentServer == nil {
+        // No active context at all (fresh install / all servers deleted) routes to
+        // first-run setup; the Combined Library has a nil currentServer but is active
+        if settings.activeContext == nil {
             if settings.isOfflineMode {
                 DispatchQueue.main.async(after: 1) {
                     let message = "Looks like this is your first time using iSub!\n\nYou'll need an internet connection to get started."

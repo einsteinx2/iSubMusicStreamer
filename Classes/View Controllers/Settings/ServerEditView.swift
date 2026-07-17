@@ -191,9 +191,7 @@ struct ServerEditView: View {
                                     name: trimmedNickname.isEmpty ? nil : trimmedNickname, isBasicAuthEnabled: isBasicAuthEnabled)
                 server.isVideoSupported = responseData.isVideoSupported
                 server.isNewSearchSupported = responseData.isNewSearchSupported
-                if store.add(server: server) {
-                    settings.currentServer = server
-                }
+                let saved = store.add(server: server)
 
                 NotificationCenter.postOnMainThread(name: Notifications.reloadServerList)
 
@@ -203,7 +201,9 @@ struct ServerEditView: View {
                     SceneDelegate.shared.padRootViewController?.menuViewController.showLibrary()
                 }
 
-                serverSwitcher.switchServer()
+                if saved {
+                    serverSwitcher.switchContext(to: .server(server))
+                }
             } catch {
                 if error.isCanceled {
                     return

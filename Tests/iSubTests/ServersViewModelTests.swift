@@ -19,27 +19,39 @@ import XCTest
 final class ServersViewModelTests: StoreTestCase {
     private final class FakeServerSwitcher: ServerSwitcher {
         var switchCount = 0
+        var lastContext: LibraryContext?
+        var switchedToNoContext = false
         var lastResetTabs: Bool?
-        override func switchServer(resetTabs: Bool) {
+        var reloadCount = 0
+        override func switchContext(to newContext: LibraryContext?, resetTabs: Bool) {
             switchCount += 1
+            lastContext = newContext
+            switchedToNoContext = newContext == nil
             lastResetTabs = resetTabs
+        }
+        override func reloadContext() {
+            reloadCount += 1
         }
     }
 
+    private var session: ServerSession!
     private var settings: SavedSettings!
     private var switcher: FakeServerSwitcher!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        let settings = SavedSettings()
+        let session = ServerSession()
+        self.session = session
+        let settings = SavedSettings(session: session)
         settings.setup(store: store)
         TestContainer.register { settings }
         self.settings = settings
         let switcher = FakeServerSwitcher(streamManager: FakeStreamManager(),
                                           player: FakePlayer(),
-                                          playQueue: makeTestPlayQueue(),
-                                          downloadQueue: FakeDownloadQueue(),
-                                          settings: settings)
+                                          settings: settings,
+                                          session: session,
+                                          store: store,
+                                          stateRestorer: StateRestorer(settings: settings, player: FakePlayer(), playQueue: makeTestPlayQueue()))
         self.switcher = switcher
         let injectedSwitcher: ServerSwitcher = switcher
         TestContainer.register { injectedSwitcher }
@@ -48,6 +60,7 @@ final class ServersViewModelTests: StoreTestCase {
     override func tearDownWithError() throws {
         switcher = nil
         settings = nil
+        session = nil
         try super.tearDownWithError()
     }
 
@@ -78,7 +91,7 @@ final class ServersViewModelTests: StoreTestCase {
         viewModel.delete(at: IndexSet(integer: 0))
 
         XCTAssertEqual(viewModel.servers.map(\.id), [2])
-        XCTAssertEqual(settings.currentServer?.id, 2, "the first remaining server becomes current")
+        XCTAssertEqual(switcher.lastContext?.server?.id, 2, "the first remaining server becomes the requested context")
         XCTAssertEqual(switcher.switchCount, 1, "the switch teardown runs for the replacement server")
         XCTAssertEqual(viewModel.alert?.title, "Notice")
         XCTAssertNil(viewModel.sheet)
@@ -93,7 +106,7 @@ final class ServersViewModelTests: StoreTestCase {
         let viewModel = ServersViewModel()
         viewModel.delete(at: IndexSet(integer: 0))
 
-        XCTAssertEqual(settings.currentServer?.id, 2)
+        XCTAssertEqual(switcher.lastContext?.server?.id, 2)
         XCTAssertNil(viewModel.alert)
     }
 
@@ -119,7 +132,7 @@ final class ServersViewModelTests: StoreTestCase {
         viewModel.delete(at: IndexSet(integer: 0))
 
         XCTAssertTrue(viewModel.servers.isEmpty)
-        XCTAssertNil(settings.currentServer)
+        XCTAssertTrue(switcher.switchedToNoContext, "no servers remain, so the requested context is none")
         XCTAssertEqual(switcher.switchCount, 1, "playback teardown must run even with no replacement server")
         XCTAssertEqual(switcher.lastResetTabs, false, "the servers screen must stay in place to present the add sheet")
         if case .add = viewModel.sheet {
