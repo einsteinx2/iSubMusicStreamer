@@ -30,7 +30,7 @@ final class DownloadedSongsViewController: AbstractDownloadsViewController {
     }
 
     override func reloadTable() {
-        downloadedSongs = store.downloadedSongs(serverId: serverId)
+        downloadedSongs = settings.isCombinedContext ? store.downloadedSongs() : store.downloadedSongs(serverId: serverId)
         super.reloadTable()
         addOrRemoveSaveEditHeader()
     }

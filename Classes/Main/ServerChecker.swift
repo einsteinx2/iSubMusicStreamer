@@ -35,39 +35,77 @@ final class ServerChecker {
         // have internet access or if the host url entered was wrong.
         task = Task { [weak self] in
             while !Task.isCancelled, let self {
-                do {
-                    if let currentServer = settings.currentServer {
-                        let loader = AsyncStatusLoader(server: currentServer)
-                        let responseData = try await loader.load()
-                        
-                        if let server = settings.currentServer, server.isVideoSupported != responseData.isVideoSupported || server.isNewSearchSupported != responseData.isNewSearchSupported {
-                            server.isVideoSupported = responseData.isVideoSupported
-                            server.isNewSearchSupported = responseData.isNewSearchSupported
-                            settings.currentServer = server
-                            _ = store.add(server: server)
+                if settings.isCombinedContext {
+                    await checkAllServers()
+                } else {
+                    do {
+                        if let currentServer = settings.currentServer {
+                            let loader = AsyncStatusLoader(server: currentServer)
+                            let responseData = try await loader.load()
+
+                            if let server = settings.currentServer, server.isVideoSupported != responseData.isVideoSupported || server.isNewSearchSupported != responseData.isNewSearchSupported {
+                                server.isVideoSupported = responseData.isVideoSupported
+                                server.isNewSearchSupported = responseData.isNewSearchSupported
+                                settings.currentServer = server
+                                _ = store.add(server: server)
+                            }
+
+                            if settings.isOfflineMode {
+                                NotificationCenter.postOnMainThread(name: Notifications.goOnline)
+                                // TODO: change the setting value here?
+                            }
+
+                            // Since the download queue has been a frequent source of crashes in the past, and we start this on launch automatically potentially resulting in a crash loop, do NOT start the download queue automatically if the app crashed on last launch.
+                            if !settings.appCrashedOnLastRun {
+                                downloadQueue.start()
+                            }
                         }
-                        
-                        if settings.isOfflineMode {
-                            NotificationCenter.postOnMainThread(name: Notifications.goOnline)
+                    } catch {
+                        if !settings.isOfflineMode, !error.isCanceled {
+                            DDLogError("[ServerChecker] Status loader failed, entering offline mode. Error: \(error)")
+                            NotificationCenter.postOnMainThread(name: Notifications.goOffline)
                             // TODO: change the setting value here?
                         }
-                        
-                        // Since the download queue has been a frequent source of crashes in the past, and we start this on launch automatically potentially resulting in a crash loop, do NOT start the download queue automatically if the app crashed on last launch.
-                        if !settings.appCrashedOnLastRun {
-                            downloadQueue.start()
-                        }
-                    }
-                } catch {
-                    if !settings.isOfflineMode, !error.isCanceled {
-                        DDLogError("[ServerChecker] Status loader failed, entering offline mode. Error: \(error)")
-                        NotificationCenter.postOnMainThread(name: Notifications.goOffline)
-                        // TODO: change the setting value here?
                     }
                 }
-                
+
                 // Sleep for 30 minutes (30 * 60 seconds = 1800 seconds * 1 billion for nanoseconds)
                 try? await Task.sleep(nanoseconds: 1_800_000_000_000)
             }
+        }
+    }
+
+    // Combined Library health check: ping every server, persist per-server capability
+    // changes, and only treat the app as offline when NO server answers — one dead
+    // server must not knock the whole merged library offline
+    private func checkAllServers() async {
+        let servers = store.servers()
+        guard !servers.isEmpty else { return }
+
+        let result = await ServerFanOut.run(servers: servers) { server in
+            try await AsyncStatusLoader(server: server).load()
+        }
+        guard !Task.isCancelled else { return }
+
+        for success in result.successes {
+            let server = success.server
+            if server.isVideoSupported != success.value.isVideoSupported || server.isNewSearchSupported != success.value.isNewSearchSupported {
+                server.isVideoSupported = success.value.isVideoSupported
+                server.isNewSearchSupported = success.value.isNewSearchSupported
+                _ = store.add(server: server)
+            }
+        }
+
+        if !result.successes.isEmpty {
+            if settings.isOfflineMode {
+                NotificationCenter.postOnMainThread(name: Notifications.goOnline)
+            }
+            if !settings.appCrashedOnLastRun {
+                downloadQueue.start()
+            }
+        } else if !settings.isOfflineMode {
+            DDLogError("[ServerChecker] No server reachable, entering offline mode")
+            NotificationCenter.postOnMainThread(name: Notifications.goOffline)
         }
     }
 

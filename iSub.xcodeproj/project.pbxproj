@@ -584,6 +584,7 @@
 		D8C2000000000000000C0C01 /* CombinedBrowseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0C03 /* CombinedBrowseStore.swift */; };
 		D8C2000000000000000C0C02 /* CombinedBrowseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0C03 /* CombinedBrowseStore.swift */; };
 		D8C2000000000000000C0C04 /* CombinedBrowseStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0C05 /* CombinedBrowseStoreTests.swift */; };
+		D8C2000000000000000C1001 /* ServerCheckerCombinedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C1002 /* ServerCheckerCombinedTests.swift */; };
 		5A7E570F2F1000010000AB0F /* NowPlayingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57112F1000010000AB11 /* NowPlayingService.swift */; };
 		5A7E57102F1000010000AB10 /* NowPlayingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57112F1000010000AB11 /* NowPlayingService.swift */; };
 		5A7E57122F1000010000AB12 /* NowPlayingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */; };
@@ -1041,6 +1042,7 @@
 		D8C2000000000000000C0908 /* ServerFanOutTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerFanOutTests.swift; sourceTree = "<group>"; };
 		D8C2000000000000000C0C03 /* CombinedBrowseStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinedBrowseStore.swift; sourceTree = "<group>"; };
 		D8C2000000000000000C0C05 /* CombinedBrowseStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CombinedBrowseStoreTests.swift; sourceTree = "<group>"; };
+		D8C2000000000000000C1002 /* ServerCheckerCombinedTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerCheckerCombinedTests.swift; sourceTree = "<group>"; };
 		5A7E57112F1000010000AB11 /* NowPlayingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingService.swift; sourceTree = "<group>"; };
 		5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NowPlayingServiceTests.swift; sourceTree = "<group>"; };
 		5A7E57162F1000010000AB16 /* PlaybackCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackCoordinator.swift; sourceTree = "<group>"; };
@@ -1945,6 +1947,7 @@
 				D8C2000000000000000C0808 /* ServerLabelsTests.swift */,
 				D8C2000000000000000C0908 /* ServerFanOutTests.swift */,
 				D8C2000000000000000C0C05 /* CombinedBrowseStoreTests.swift */,
+				D8C2000000000000000C1002 /* ServerCheckerCombinedTests.swift */,
 				5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */,
 				53DBB093129F25CDF2334C20 /* GRDBRoundTripTests.swift */,
 				F8337FDA15B0E63C6858971B /* BassAudioEngineTests.swift */,
@@ -2786,6 +2789,7 @@
 				D8C2000000000000000C0807 /* ServerLabelsTests.swift in Sources */,
 				D8C2000000000000000C0907 /* ServerFanOutTests.swift in Sources */,
 				D8C2000000000000000C0C04 /* CombinedBrowseStoreTests.swift in Sources */,
+				D8C2000000000000000C1001 /* ServerCheckerCombinedTests.swift in Sources */,
 				5A7E57122F1000010000AB12 /* NowPlayingServiceTests.swift in Sources */,
 				A7D7FD300FA5D924D56FCE41 /* GRDBRoundTripTests.swift in Sources */,
 				C705DE4953B91C2502AB9A20 /* BassAudioEngineTests.swift in Sources */,

@@ -79,9 +79,13 @@ struct AboutView: View {
     }
 
     private func resetAlbumArtCache() {
-        let serverId = settings.currentServerId
-        store.resetCoverArtCache(serverId: serverId)
-        store.resetArtistArtCache(serverId: serverId)
+        // The maintenance action stays useful in the Combined Library — it just
+        // covers every server instead of the (nonexistent) current one
+        let serverIds = settings.isCombinedContext ? store.servers().map(\.id) : [settings.currentServerId]
+        for serverId in serverIds {
+            store.resetCoverArtCache(serverId: serverId)
+            store.resetArtistArtCache(serverId: serverId)
+        }
         SceneDelegate.shared.popLibraryTab()
     }
 

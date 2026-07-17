@@ -212,6 +212,26 @@ extension Store {
             return []
         }
     }
+
+    // Every server's downloads for the Combined Library (grouped per server, so the
+    // same folder name on two servers stays two rows with badges)
+    func downloadedFolderArtists() -> [DownloadedFolderArtist] {
+        do {
+            return try pool.read { db in
+                let sql: SQL = """
+                    SELECT serverId, pathComponent AS name
+                    FROM \(DownloadedSongPathComponent.self)
+                    WHERE level = 0
+                    GROUP BY serverId, pathComponent
+                    ORDER BY pathComponent COLLATE NOCASE
+                    """
+                return try SQLRequest<DownloadedFolderArtist>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select all downloaded folder artists: \(error)")
+            return []
+        }
+    }
     
 //    func downloadedFolderAlbums(level: Int) -> [DownloadedFolderArtist] {
 //        do {
@@ -299,6 +319,29 @@ extension Store {
         }
     }
     
+    func downloadedTagArtists() -> [DownloadedTagArtist] {
+        do {
+            return try pool.read { db in
+                let sql: SQL = """
+                    SELECT \(TagArtist.self).*
+                    FROM \(DownloadedSong.self)
+                    JOIN \(Song.self)
+                    ON \(DownloadedSong.self).serverId = \(Song.self).serverId
+                        AND \(DownloadedSong.self).songId = \(Song.self).id
+                    JOIN \(TagArtist.self)
+                    ON \(DownloadedSong.self).serverId = \(TagArtist.self).serverId
+                        AND \(Song.self).tagArtistId = \(TagArtist.self).id
+                    GROUP BY \(TagArtist.self).serverId, \(TagArtist.self).id
+                    ORDER BY \(TagArtist.self).name COLLATE NOCASE ASC
+                    """
+                return try SQLRequest<DownloadedTagArtist>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select all downloaded tag artists: \(error)")
+            return []
+        }
+    }
+
     // TODO: Check query plan and try different join orders and group by tables to see which is fastest (i.e. TagAlbum.id vs Song.tagAlbumId)
     func downloadedTagAlbums(serverId: Int) -> [DownloadedTagAlbum] {
         do {
@@ -324,6 +367,29 @@ extension Store {
         }
     }
     
+    func downloadedTagAlbums() -> [DownloadedTagAlbum] {
+        do {
+            return try pool.read { db in
+                let sql: SQL = """
+                    SELECT \(TagAlbum.self).*
+                    FROM \(DownloadedSong.self)
+                    JOIN \(Song.self)
+                    ON \(DownloadedSong.self).serverId = \(Song.self).serverId
+                        AND \(DownloadedSong.self).songId = \(Song.self).id
+                    JOIN \(TagAlbum.self)
+                    ON \(DownloadedSong.self).serverId = \(TagAlbum.self).serverId
+                        AND \(Song.self).tagAlbumId = \(TagAlbum.self).id
+                    GROUP BY \(TagAlbum.self).serverId, \(TagAlbum.self).id
+                    ORDER BY \(TagAlbum.self).name COLLATE NOCASE ASC
+                    """
+                return try SQLRequest<DownloadedTagAlbum>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select all downloaded tag albums: \(error)")
+            return []
+        }
+    }
+
     func downloadedTagAlbums(downloadedTagArtist: DownloadedTagArtist) -> [DownloadedTagAlbum] {
         do {
             return try pool.read { db in
@@ -548,6 +614,22 @@ extension Store {
             }
         } catch {
             DDLogError("Failed to select all downloaded songs for server \(serverId): \(error)")
+            return []
+        }
+    }
+
+    func downloadedSongs() -> [DownloadedSong] {
+        do {
+            return try pool.read { db in
+                let sql: SQL = """
+                    SELECT *
+                    FROM \(DownloadedSong.self)
+                    ORDER BY \(DownloadedSong.self).downloadedDate COLLATE NOCASE DESC
+                    """
+                return try SQLRequest<DownloadedSong>(literal: sql).fetchAll(db)
+            }
+        } catch {
+            DDLogError("Failed to select all downloaded songs: \(error)")
             return []
         }
     }

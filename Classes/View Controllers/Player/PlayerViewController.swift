@@ -531,6 +531,9 @@ final class PlayerViewController: UIViewController {
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: Notifications.currentPlaylistShuffleToggled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateSongInfo), name: Notifications.showPlayer)
         
+        // serverSwitched re-applies the Combined Library hide — this matters on the
+        // iPad, where the docked player is always alive across context switches
+        NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.serverSwitched)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.jukeboxSongInfo)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.jukeboxDisabled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(updateJukeboxControls), name: Notifications.jukeboxEnabled)
@@ -824,8 +827,9 @@ final class PlayerViewController: UIViewController {
         // Visible only when the feature setting is on; the || keeps an escape hatch if
         // the mode is somehow active while the setting is off. Enabled state is owned
         // here, not by updateSongInfo's empty-queue loop - toggling jukebox mode must
-        // work with an empty queue.
-        jukeboxButton.isHidden = !(settings.isJukeboxFeatureEnabled || jukeboxEnabled)
+        // work with an empty queue. The Combined Library hides it outright: jukebox
+        // drives ONE server's hardware player.
+        jukeboxButton.isHidden = !(settings.isJukeboxFeatureEnabled || jukeboxEnabled) || settings.isCombinedContext
         jukeboxButton.tintColor = jukeboxEnabled ? Colors.playerButtonActivated : Colors.playerButton
         jukeboxButton.alpha = settings.isOfflineMode ? 0.7 : 1.0
         jukeboxButton.isEnabled = !settings.isOfflineMode

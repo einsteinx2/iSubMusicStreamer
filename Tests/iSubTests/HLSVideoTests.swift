@@ -198,9 +198,12 @@ final class VideoPlayerTests: StoreTestCase {
         videoPlayer.playVideo(song: TestData.song(id: "1", isVideo: false), bitrates: ["512"])
         XCTAssertEqual(fakePlayer.stopCount, 0, "playVideo acted on a non-video song")
 
-        // A video song on a server without video support must also be ignored
+        // A video song on a server without video support must also be ignored — the
+        // capability is read from the SONG's server's stored row (correct in the
+        // Combined Library and for cross-server queue items), so persist the flip
+        // the way the capability refreshes do
         server.isVideoSupported = false
-        settings.currentServer = server
+        XCTAssertTrue(store.add(server: server))
         videoPlayer.playVideo(song: TestData.song(id: "9101", isVideo: true), bitrates: ["512"])
         XCTAssertEqual(fakePlayer.stopCount, 0, "playVideo acted despite isVideoSupported == false")
         // Stray app alerts can be presented by unrelated async work in the shared host,

@@ -30,7 +30,7 @@ final class DownloadedTagArtistsViewController: AbstractDownloadsViewController 
     }
     
     override func reloadTable() {
-        downloadedTagArtists = store.downloadedTagArtists(serverId: serverId)
+        downloadedTagArtists = settings.isCombinedContext ? store.downloadedTagArtists() : store.downloadedTagArtists(serverId: serverId)
         super.reloadTable()
         addOrRemoveSaveEditHeader()
     }

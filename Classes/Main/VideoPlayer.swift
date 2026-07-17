@@ -14,6 +14,7 @@ import Resolver
 final class VideoPlayer: NSObject {
     @Injected private var settings: SavedSettings
     @Injected private var player: PlayerControlling
+    @Injected private var store: Store
     
     private var videoPlayerController: AVPlayerViewController?
     private var hlsProxyServer: HLSReverseProxyServer?
@@ -49,7 +50,10 @@ final class VideoPlayer: NSObject {
     // MARK: Video Playback
     
     func playVideo(song: Song, bitrates: [String]? = nil) {
-        let isVideoSupported = settings.currentServer?.isVideoSupported ?? false
+        // The capability belongs to the song's OWN server — in the Combined Library
+        // there is no current server, and even outside it a queued video can come
+        // from a different server than the active one
+        let isVideoSupported = store.server(id: song.serverId)?.isVideoSupported ?? false
         guard let bitRate = bitrates ?? settings.currentVideoBitrates, song.isVideo && isVideoSupported else { return }
         
         // Stop the player

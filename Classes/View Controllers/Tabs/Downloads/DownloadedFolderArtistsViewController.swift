@@ -29,7 +29,7 @@ final class DownloadedFolderArtistsViewController: AbstractDownloadsViewControll
     }
     
     override func reloadTable() {
-        downloadedFolderArtists = store.downloadedFolderArtists(serverId: serverId)
+        downloadedFolderArtists = settings.isCombinedContext ? store.downloadedFolderArtists() : store.downloadedFolderArtists(serverId: serverId)
         super.reloadTable()
         addOrRemoveSaveEditHeader()
     }
