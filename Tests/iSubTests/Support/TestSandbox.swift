@@ -30,9 +30,11 @@ final class TestSandbox {
         if FileSystem.rootOverride == root {
             FileSystem.rootOverride = nil
         }
-        if FileManager.default.fileExists(atPath: root.path) {
-            try FileManager.default.removeItem(at: root)
-        }
+        // Best-effort cleanup: settings onChange side effects (e.g. the backup-cache
+        // toggle) can start real file work on app singletons inside this directory,
+        // racing the removal (seen as NSCocoaErrorDomain 513 in tearDown). A leftover
+        // UUID directory under the temp dir must not fail the test that ran here.
+        try? FileManager.default.removeItem(at: root)
     }
 }
 
