@@ -798,6 +798,34 @@ final class DownloadQueueViewControllerTests: StoreTestCase {
     }
 }
 
+// MARK: - Save playlist gating
+
+final class SavePlaylistFlowGatingTests: StoreTestCase {
+    @MainActor func testCombinedForcesLocalOnlySave() {
+        let session = ServerSession()
+        let settings = SavedSettings(session: session)
+        TestContainer.register { settings }
+        let playQueue = makeTestPlayQueue()
+        TestContainer.register { playQueue }
+        session.setActiveContext(.combined)
+
+        // Host in a window so the presented alert is observable
+        let host = UIViewController()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 400, height: 800))
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+
+        let flow = SavePlaylistFlow(viewController: host)
+        flow.promptToSavePlayQueue()
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.3))
+
+        let alert = host.presentedViewController as? UIAlertController
+        XCTAssertEqual(alert?.title, "Save Playlist",
+                       "Combined skips the Local/Server location choice and goes straight to the local name prompt")
+    }
+}
+
 // MARK: - Browse row gating
 
 final class BrowseRowGatingTests: StoreTestCase {

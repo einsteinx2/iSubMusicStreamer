@@ -32,7 +32,9 @@ final class LocalPlaylistViewController: CustomUITableViewController {
         title = localPlaylist.name
         setupDefaultTableView(tableView)
         
-        if !settings.isOfflineMode {
+        // Offline can't reach a server; the Combined Library has no single server to
+        // upload to
+        if !settings.isOfflineMode && !settings.isCombinedContext {
             let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
             
             let saveButton = UIButton(type: .custom)
@@ -50,6 +52,9 @@ final class LocalPlaylistViewController: CustomUITableViewController {
     }
 
     @objc private func uploadPlaylist() {
+        // Defensive: the button is hidden while Combined is active (currentServerId
+        // would be -1 here)
+        guard !settings.isCombinedContext else { return }
         let serverId = settings.currentServerId
         let songIds = store.songIds(localPlaylistId: localPlaylist.id, serverId: serverId)
         savePlaylistFlow.upload(name: localPlaylist.name, songIds: songIds, serverId: serverId)

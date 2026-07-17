@@ -37,7 +37,9 @@ final class SavePlaylistFlow {
     func promptToSavePlayQueue() {
         guard let viewController else { return }
 
-        if settings.isOfflineMode {
+        // Offline can't reach a server; the Combined Library has no single server to
+        // save to — both force a local save
+        if settings.isOfflineMode || settings.isCombinedContext {
             promptForPlaylistName(isLocal: true)
         } else {
             let message = "Would you like to save this playlist to your device or to your Subsonic server?"

@@ -83,7 +83,9 @@ final class ServerPlaylistsViewController: CustomUITableViewController {
     private func reloadData() {
         tableView.refreshControl = nil
         setEditing(false, animated: false)
-        serverPlaylists = store.serverPlaylists(serverId: serverId)
+        // Combined shows every server's playlists; playback and deletion already use
+        // each playlist's own serverId
+        serverPlaylists = settings.isCombinedContext ? store.serverPlaylists() : store.serverPlaylists(serverId: serverId)
         if serverPlaylists.count > 0 {
             addSaveEditHeader()
             saveEditHeader.count = serverPlaylists.count
@@ -133,17 +135,27 @@ final class ServerPlaylistsViewController: CustomUITableViewController {
     private func loadServerPlaylists() {
         loaderTask?.cancel()
         loaderTask = Task {
-            do {
-                HUD.show(closeHandler: cancelLoad)
-                defer {
-                    HUD.hide()
-                    tableView.refreshControl?.endRefreshing()
+            HUD.show(closeHandler: cancelLoad)
+            defer {
+                HUD.hide()
+                tableView.refreshControl?.endRefreshing()
+            }
+
+            if settings.isCombinedContext {
+                // Refresh every server's playlists; reloadData reads the merged
+                // cache, so unreachable servers keep their last-known lists
+                let store = store
+                _ = await ServerFanOut.run(servers: store.servers()) { server in
+                    _ = try await AsyncServerPlaylistsLoader(serverId: server.id).load()
                 }
-                
-                serverPlaylists = try await AsyncServerPlaylistsLoader(serverId: serverId).load()
                 reloadData()
-            } catch {
-                // TODO: Show error message
+            } else {
+                do {
+                    serverPlaylists = try await AsyncServerPlaylistsLoader(serverId: serverId).load()
+                    reloadData()
+                } catch {
+                    // TODO: Show error message
+                }
             }
         }
     }
