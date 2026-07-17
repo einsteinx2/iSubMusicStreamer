@@ -84,15 +84,16 @@ private struct ServerRow: View {
                     .accessibilityLabel(isCurrent ? "Current server" : "")
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(server.url.absoluteString)
+                    Text(server.displayLabel)
                         .font(.headline)
                         .foregroundStyle(.primary)
                         .lineLimit(1)
                     HStack(spacing: 6) {
                         ServerTypeBadge(type: server.type)
-                        Text("username: \(server.username)")
+                        Text("\(server.username) @ \(server.url.absoluteString)")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
+                            .lineLimit(1)
                     }
                 }
 

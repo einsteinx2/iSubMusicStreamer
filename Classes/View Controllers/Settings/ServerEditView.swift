@@ -39,6 +39,8 @@ struct ServerEditView: View {
     @State private var url = ""
     @State private var username = ""
     @State private var password = ""
+    @State private var nickname = ""
+    @State private var isBasicAuthEnabled = false
     @State private var alert: AlertInfo?
     @State private var checkTask: Task<Void, Never>?
     @FocusState private var focusedField: Field?
@@ -75,6 +77,24 @@ struct ServerEditView: View {
                 } footer: {
                     Text("The URL must be in the format: http://mywebsite.com:port/folder — both the :port and /folder are optional.")
                 }
+
+                Section {
+                    TextField("Nickname (optional)", text: $nickname)
+                        .accessibilityIdentifier(AccessibilityId.serverEditNickname)
+                } header: {
+                    Text("Display Name")
+                } footer: {
+                    Text("Shown wherever iSub labels this server, including Combined Library badges.")
+                }
+
+                Section {
+                    Toggle("HTTP Basic Authentication", isOn: $isBasicAuthEnabled)
+                        .accessibilityIdentifier(AccessibilityId.serverEditBasicAuth)
+                } header: {
+                    Text("Advanced")
+                } footer: {
+                    Text("Send credentials using HTTP Basic Authentication. Only needed for certain proxy setups.")
+                }
             }
             .navigationTitle(serverToEdit == nil ? "Add Server" : "Edit Server")
             .navigationBarTitleDisplayMode(.inline)
@@ -102,6 +122,8 @@ struct ServerEditView: View {
                 url = serverToEdit.url.absoluteString
                 username = serverToEdit.username
                 password = serverToEdit.password
+                nickname = serverToEdit.name ?? ""
+                isBasicAuthEnabled = serverToEdit.isBasicAuthEnabled
             } else {
                 focusedField = .url
             }
@@ -164,7 +186,9 @@ struct ServerEditView: View {
                 if let serverToEdit, serverToEdit.url != serverURL {
                     redirects.clearRedirect(serverId: serverToEdit.id)
                 }
-                let server = Server(id: existingId ?? store.nextServerId(), type: responseData.serverType, url: serverURL, username: username, password: password)
+                let trimmedNickname = nickname.trimmingCharacters(in: .whitespacesAndNewlines)
+                let server = Server(id: existingId ?? store.nextServerId(), type: responseData.serverType, url: serverURL, username: username, password: password,
+                                    name: trimmedNickname.isEmpty ? nil : trimmedNickname, isBasicAuthEnabled: isBasicAuthEnabled)
                 server.isVideoSupported = responseData.isVideoSupported
                 server.isNewSearchSupported = responseData.isNewSearchSupported
                 if store.add(server: server) {

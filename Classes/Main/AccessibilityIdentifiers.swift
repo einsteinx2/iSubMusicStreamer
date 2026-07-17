@@ -26,6 +26,8 @@ enum AccessibilityId {
     static let serverEditURL = "serverEdit.url"
     static let serverEditUsername = "serverEdit.username"
     static let serverEditPassword = "serverEdit.password"
+    static let serverEditNickname = "serverEdit.nickname"
+    static let serverEditBasicAuth = "serverEdit.basicAuth"
     static let serverEditSave = "serverEdit.save"
     static let serverEditClose = "serverEdit.close"
 
@@ -90,7 +92,6 @@ enum AccessibilityId {
     static let optionsEnableScrobbling = "options.enableScrobbling"
     static let optionsAutoReloadArtist = "options.autoReloadArtist"
     static let optionsDisableRotation = "options.disableRotation"
-    static let optionsEnableBasicAuth = "options.enableBasicAuth"
     static let optionsDisableCellUsage = "options.disableCellUsage"
     static let optionsEnableSongCaching = "options.enableSongCaching"
     static let optionsEnableNextSongCache = "options.enableNextSongCache"

@@ -38,7 +38,7 @@ final class SettingsRegistryTests: SandboxedTestCase {
     // MARK: Reflection shape
 
     func testEveryVisibleSettingHasValidMetadata() {
-        XCTAssertEqual(registry.items.count, 26, "expected exactly the 26 visible settings; add the new setting to the section order test too if this grew intentionally")
+        XCTAssertEqual(registry.items.count, 25, "expected exactly the 25 visible settings; add the new setting to the section order test too if this grew intentionally")
         XCTAssertEqual(Set(registry.items.map(\.id)).count, registry.items.count, "setting ids must be unique")
         for item in registry.items {
             XCTAssertFalse(item.ui.title.isEmpty, "\(item.id) has an empty title")
@@ -47,7 +47,7 @@ final class SettingsRegistryTests: SandboxedTestCase {
 
     func testSectionMembershipAndDeclarationOrder() {
         let expected: [SettingsSection: [SavedSettings.Key]] = [
-            .network: [.manualOfflineModeSetting, .isDisableUsageOver3G, .isBasicAuthEnabled,
+            .network: [.manualOfflineModeSetting, .isDisableUsageOver3G,
                        .maxBitrateWifiSetting, .maxBitrate3GSetting, .maxVideoBitrateWifi, .maxVideoBitrate3G],
             .downloads: [.enableSongCachingSetting, .enableNextSongCacheSetting, .isManualCachingOnWWANEnabled,
                          .isBackupCacheEnabled, .cachingTypeSetting, .autoDeleteCacheSetting,

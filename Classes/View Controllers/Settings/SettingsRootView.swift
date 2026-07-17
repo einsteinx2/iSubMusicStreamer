@@ -18,11 +18,11 @@ struct SettingsRootView: View {
     private let settings: SavedSettings = Resolver.resolve()
     private let analytics: Analytics = Resolver.resolve()
 
-    // The current server URL is plain state refreshed on appear and on the server
+    // The current server label is plain state refreshed on appear and on the server
     // notifications — reading settings.currentServer directly in body would be
     // evaluated once and go stale after adding/switching servers (SavedSettings is
     // not observable)
-    @State private var currentServerURL: String?
+    @State private var currentServerLabel: String?
 
     var body: some View {
         List {
@@ -33,7 +33,7 @@ struct SettingsRootView: View {
                     SettingsRootRow(systemImage: "server.rack",
                                     iconColor: .blue,
                                     title: "Servers",
-                                    subtitle: currentServerURL)
+                                    subtitle: currentServerLabel)
                 }
                 .accessibilityIdentifier(AccessibilityId.settingsSectionServers)
             }
@@ -64,14 +64,14 @@ struct SettingsRootView: View {
         }
         .listStyle(.insetGrouped)
         .onAppear {
-            currentServerURL = settings.currentServer?.url.absoluteString
+            currentServerLabel = settings.currentServer?.displayLabel
             analytics.log(event: .settingsTab)
         }
         .onReceive(NotificationCenter.default.publisher(for: Notifications.serverSwitched).receive(on: RunLoop.main)) { _ in
-            currentServerURL = settings.currentServer?.url.absoluteString
+            currentServerLabel = settings.currentServer?.displayLabel
         }
         .onReceive(NotificationCenter.default.publisher(for: Notifications.reloadServerList).receive(on: RunLoop.main)) { _ in
-            currentServerURL = settings.currentServer?.url.absoluteString
+            currentServerLabel = settings.currentServer?.displayLabel
         }
     }
 }

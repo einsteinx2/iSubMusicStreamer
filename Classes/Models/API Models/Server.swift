@@ -78,6 +78,12 @@ final class Server: NSObject, Codable, Identifiable {
     // list, Combined Library badges); nil falls back to the host name
     var name: String?
 
+    // The user-facing label for this server: the nickname when set, else the host
+    var displayLabel: String {
+        if let name, !name.isEmpty { return name }
+        return url.host ?? url.absoluteString
+    }
+
     // HTTP Basic Auth is a per-server need (e.g. a reverse proxy in front of one
     // server), not an app-wide one
     var isBasicAuthEnabled: Bool = false

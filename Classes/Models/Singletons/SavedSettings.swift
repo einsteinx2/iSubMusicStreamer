@@ -167,13 +167,9 @@ final class SavedSettings {
                  })
     var isDisableUsageOver3G: Bool
 
-    @UserDefault(key: .isBasicAuthEnabled, defaultValue: false,
-                 ui: SettingUI(title: "HTTP Basic Authentication",
-                               section: .network,
-                               kind: .toggle,
-                               footer: "Send credentials using HTTP Basic Authentication. Only needed for certain proxy setups.",
-                               accessibilityId: AccessibilityId.optionsEnableBasicAuth))
-    var isBasicAuthEnabled: Bool
+    // NOTE: Basic auth became a per-server flag (Server.isBasicAuthEnabled, edited on
+    // the server form); Key.isBasicAuthEnabled remains only for the libraryContexts
+    // migration to seed the column from the old global setting
 
     @UserDefault(key: .maxBitrateWifiSetting, defaultValue: 7,
                  ui: SettingUI(title: "Max Audio Bitrate (Wi-Fi)",
