@@ -107,6 +107,12 @@ final class SavedSettings {
     @UserDefault(key: .isUpdateCheckQuestionAsked, defaultValue: false)
     var isUpdateCheckQuestionAsked: Bool
 
+    @UserDefault(key: .hasSeenCombinedIntro, defaultValue: false)
+    var hasSeenCombinedIntro: Bool
+
+    @UserDefault(key: .hasSeenCombinedExitNote, defaultValue: false)
+    var hasSeenCombinedExitNote: Bool
+
     @UserDefault(key: .recover, defaultValue: false)
     var isRecover: Bool
 
@@ -449,15 +455,26 @@ final class SavedSettings {
     }
     
     // MARK: Root Folders Settings
-    
+
+    // The media-folder selection is stored per server; the Combined Library honors
+    // each server's own saved selection, so fan-out loads read by explicit server id
+    // (the current-server properties would interpolate -1 while Combined is active)
+    func rootFoldersSelectedFolderId(serverId: Int) -> Int {
+        defaults.object(forKey: "rootFoldersSelectedFolder\(serverId)") as? Int ?? MediaFolder.allFoldersId
+    }
+
     private var rootFoldersSelectedFolderIdKey: String { "rootFoldersSelectedFolder\(currentServerId)" }
     var rootFoldersSelectedFolderId: Int {
         get { defaults.object(forKey: rootFoldersSelectedFolderIdKey) as? Int ?? MediaFolder.allFoldersId }
         set { defaults.set(newValue, forKey: rootFoldersSelectedFolderIdKey) }
     }
-   
+
     // MARK: Root Artists Settings
-    
+
+    func rootArtistsSelectedFolderId(serverId: Int) -> Int {
+        defaults.object(forKey: "rootArtistsSelectedFolder\(serverId)") as? Int ?? MediaFolder.allFoldersId
+    }
+
     private var rootArtistsSelectedFolderIdKey: String { "rootArtistsSelectedFolder\(currentServerId)" }
     var rootArtistsSelectedFolderId: Int {
         get { defaults.object(forKey: rootArtistsSelectedFolderIdKey) as? Int ?? MediaFolder.allFoldersId }
@@ -528,6 +545,8 @@ final class SavedSettings {
         
         case currentServerId
         case activeContextId
+        case hasSeenCombinedIntro
+        case hasSeenCombinedExitNote
         case appTerminatedCleanly
         
         // Settings

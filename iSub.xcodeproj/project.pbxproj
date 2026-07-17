@@ -571,6 +571,11 @@
 		D8C2000000000000000C0307 /* LibraryContextMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0308 /* LibraryContextMigrationTests.swift */; };
 		D8C2000000000000000C0401 /* ContextQueueSwapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0402 /* ContextQueueSwapTests.swift */; };
 		D8C2000000000000000C0403 /* ServerSwitcherContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0404 /* ServerSwitcherContextTests.swift */; };
+		D8C2000000000000000C0801 /* CombinedLibraryStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0803 /* CombinedLibraryStrings.swift */; };
+		D8C2000000000000000C0802 /* CombinedLibraryStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0803 /* CombinedLibraryStrings.swift */; };
+		D8C2000000000000000C0804 /* ServerLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0806 /* ServerLabels.swift */; };
+		D8C2000000000000000C0805 /* ServerLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0806 /* ServerLabels.swift */; };
+		D8C2000000000000000C0807 /* ServerLabelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0808 /* ServerLabelsTests.swift */; };
 		5A7E570F2F1000010000AB0F /* NowPlayingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57112F1000010000AB11 /* NowPlayingService.swift */; };
 		5A7E57102F1000010000AB10 /* NowPlayingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57112F1000010000AB11 /* NowPlayingService.swift */; };
 		5A7E57122F1000010000AB12 /* NowPlayingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */; };
@@ -1020,6 +1025,9 @@
 		D8C2000000000000000C0308 /* LibraryContextMigrationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LibraryContextMigrationTests.swift; sourceTree = "<group>"; };
 		D8C2000000000000000C0402 /* ContextQueueSwapTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContextQueueSwapTests.swift; sourceTree = "<group>"; };
 		D8C2000000000000000C0404 /* ServerSwitcherContextTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerSwitcherContextTests.swift; sourceTree = "<group>"; };
+		D8C2000000000000000C0803 /* CombinedLibraryStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinedLibraryStrings.swift; sourceTree = "<group>"; };
+		D8C2000000000000000C0806 /* ServerLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerLabels.swift; sourceTree = "<group>"; };
+		D8C2000000000000000C0808 /* ServerLabelsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerLabelsTests.swift; sourceTree = "<group>"; };
 		5A7E57112F1000010000AB11 /* NowPlayingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingService.swift; sourceTree = "<group>"; };
 		5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NowPlayingServiceTests.swift; sourceTree = "<group>"; };
 		5A7E57162F1000010000AB16 /* PlaybackCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackCoordinator.swift; sourceTree = "<group>"; };
@@ -1511,11 +1519,21 @@
 				531D39FB255AB575000CB0DF /* API Models */,
 				531D39FA255AB554000CB0DF /* Singletons */,
 				5A7E57172F1000010000AB17 /* Coordinators */,
+				D8C2000000000000000C0800 /* Combined */,
 				535F824C25C1E7130024C82C /* Errors */,
 				5347A1E3256D866A00BFB70A /* HLSReverseProxyServer.swift */,
 				4506F2382576B5200D1339E6 /* Settings */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		D8C2000000000000000C0800 /* Combined */ = {
+			isa = PBXGroup;
+			children = (
+				D8C2000000000000000C0803 /* CombinedLibraryStrings.swift */,
+				D8C2000000000000000C0806 /* ServerLabels.swift */,
+			);
+			path = Combined;
 			sourceTree = "<group>";
 		};
 		531D39F9255AB53C000CB0DF /* Audio Engine */ = {
@@ -1908,6 +1926,7 @@
 				D8C2000000000000000C0308 /* LibraryContextMigrationTests.swift */,
 				D8C2000000000000000C0402 /* ContextQueueSwapTests.swift */,
 				D8C2000000000000000C0404 /* ServerSwitcherContextTests.swift */,
+				D8C2000000000000000C0808 /* ServerLabelsTests.swift */,
 				5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */,
 				53DBB093129F25CDF2334C20 /* GRDBRoundTripTests.swift */,
 				F8337FDA15B0E63C6858971B /* BassAudioEngineTests.swift */,
@@ -2300,6 +2319,8 @@
 				D8C2000000000000000C0201 /* ServerRedirectRegistry.swift in Sources */,
 				D8C2000000000000000C0301 /* LibraryContext.swift in Sources */,
 				D8C2000000000000000C0304 /* ContextQueueStore.swift in Sources */,
+				D8C2000000000000000C0801 /* CombinedLibraryStrings.swift in Sources */,
+				D8C2000000000000000C0804 /* ServerLabels.swift in Sources */,
 				53BDC4DC25D4CEB400126D06 /* DropdownMenu.swift in Sources */,
 				531EC86525B220E10076973A /* Colors.swift in Sources */,
 				539D331225AB691B00F53797 /* PlayQueue.swift in Sources */,
@@ -2571,6 +2592,8 @@
 				D8C2000000000000000C0202 /* ServerRedirectRegistry.swift in Sources */,
 				D8C2000000000000000C0302 /* LibraryContext.swift in Sources */,
 				D8C2000000000000000C0305 /* ContextQueueStore.swift in Sources */,
+				D8C2000000000000000C0802 /* CombinedLibraryStrings.swift in Sources */,
+				D8C2000000000000000C0805 /* ServerLabels.swift in Sources */,
 				531EC86625B220E10076973A /* Colors.swift in Sources */,
 				539D331325AB691B00F53797 /* PlayQueue.swift in Sources */,
 				53530B372DE786CA007EFA3A /* AsyncMediaFoldersLoader.swift in Sources */,
@@ -2736,6 +2759,7 @@
 				D8C2000000000000000C0307 /* LibraryContextMigrationTests.swift in Sources */,
 				D8C2000000000000000C0401 /* ContextQueueSwapTests.swift in Sources */,
 				D8C2000000000000000C0403 /* ServerSwitcherContextTests.swift in Sources */,
+				D8C2000000000000000C0807 /* ServerLabelsTests.swift in Sources */,
 				5A7E57122F1000010000AB12 /* NowPlayingServiceTests.swift in Sources */,
 				A7D7FD300FA5D924D56FCE41 /* GRDBRoundTripTests.swift in Sources */,
 				C705DE4953B91C2502AB9A20 /* BassAudioEngineTests.swift in Sources */,
