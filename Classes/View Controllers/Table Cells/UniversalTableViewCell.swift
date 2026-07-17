@@ -9,11 +9,34 @@
 import UIKit
 import SnapKit
 
+// A small tinted capsule naming the item's server in Combined Library lists.
+// Collapses to nothing when it has no text, so it can sit in the constraint chain
+// permanently.
+private final class ServerBadgeLabel: UILabel {
+    private let insets = UIEdgeInsets(top: 2, left: 6, bottom: 2, right: 6)
+
+    override func drawText(in rect: CGRect) {
+        super.drawText(in: rect.inset(by: insets))
+    }
+
+    override var intrinsicContentSize: CGSize {
+        guard let text, !text.isEmpty else { return .zero }
+        let size = super.intrinsicContentSize
+        return CGSize(width: size.width + insets.left + insets.right,
+                      height: size.height + insets.top + insets.bottom)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = bounds.height / 2
+    }
+}
+
 final class UniversalTableViewCell: UITableViewCell {
     static let reuseId = "UniversalTableViewCell"
-    
+
     private var tableCellModel: TableCellModel?
-    
+
     private let headerLabel = UILabel()
     private let downloadedIndicator = DownloadedIndicatorView()
     private let numberLabel = UILabel()
@@ -21,6 +44,12 @@ final class UniversalTableViewCell: UITableViewCell {
     private let primaryLabel = UILabel()
     private let secondaryLabel = UILabel()
     private let durationLabel = UILabel()
+    private let serverBadgeLabel = ServerBadgeLabel()
+
+    // Test seam: the server badge's current text (nil outside the Combined Library)
+    var serverBadgeText: String? {
+        (serverBadgeLabel.text?.isEmpty ?? true) ? nil : serverBadgeLabel.text
+    }
     
 //    var autoScroll: Bool {
 //        get { return primaryLabel.autoScroll }
@@ -111,6 +140,15 @@ final class UniversalTableViewCell: UITableViewCell {
         durationLabel.minimumScaleFactor = 0.25
         durationLabel.textAlignment = .center
         contentView.addSubview(durationLabel)
+
+        serverBadgeLabel.textColor = .secondaryLabel
+        serverBadgeLabel.font = .systemFont(ofSize: 11, weight: .semibold)
+        serverBadgeLabel.backgroundColor = .secondarySystemFill
+        serverBadgeLabel.clipsToBounds = true
+        // The badge must never truncate — the primary label yields instead
+        serverBadgeLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        serverBadgeLabel.setContentHuggingPriority(.required, for: .horizontal)
+        contentView.addSubview(serverBadgeLabel)
         
         // TODO: Flip for RTL
         downloadedIndicator.isHidden = true
@@ -126,6 +164,7 @@ final class UniversalTableViewCell: UITableViewCell {
         makePrimaryLabelConstraints()
         makeSecondaryLabelConstraints()
         makeDurationLabelConstraints()
+        makeServerBadgeConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -140,20 +179,29 @@ final class UniversalTableViewCell: UITableViewCell {
             if !hideSecondaryLabel { secondaryLabel.text = model.secondaryLabelText }
             if !hideDurationLabel { durationLabel.text = model.durationLabelText }
             downloadedIndicator.isHidden = hideDownloadIndicator || !model.isDownloaded
+            // Non-nil only while the Combined Library is active, so every list gets
+            // its badges (or none) with no per-screen wiring
+            updateServerBadge(MainActor.assumeIsolated { ServerLabels.shared.badgeText(serverId: model.serverId) })
         }
     }
-    
+
     func update(primaryText: String, secondaryText: String? = nil, serverId: Int? = nil, coverArtId: String? = nil) {
         tableCellModel = nil
-        
+
         hideNumberLabel = true
         hideSecondaryLabel = (secondaryText == nil)
         hideDurationLabel = true
         hideCoverArt = (serverId == nil || coverArtId == nil)
-        
+
         primaryLabel.text = primaryText
         secondaryLabel.text = secondaryText
         updateCoverArtView(hideCoverArt: hideCoverArt, serverId: serverId, coverArtId: coverArtId)
+        updateServerBadge(nil)
+    }
+
+    private func updateServerBadge(_ text: String?) {
+        serverBadgeLabel.text = text
+        serverBadgeLabel.invalidateIntrinsicContentSize()
     }
     
     private func updateCoverArtView(hideCoverArt: Bool, serverId: Int?, coverArtId: String? = nil) {
@@ -215,8 +263,17 @@ final class UniversalTableViewCell: UITableViewCell {
                 make.bottom.equalTo(secondaryLabel.snp.top)
             }
             make.leading.equalTo(coverArtView.snp.trailing).offset(10)
-            make.trailing.equalTo(durationLabel.snp.leading).offset(-10)
+            make.trailing.equalTo(serverBadgeLabel.snp.leading).offset(-8)
             make.top.equalTo(headerLabel.snp.bottom).offset(UIDevice.isSmall ? 5 : 10)
+        }
+    }
+
+    private func makeServerBadgeConstraints() {
+        // Sits between the primary label and the duration; intrinsic size collapses
+        // to zero when there is no badge
+        serverBadgeLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(primaryLabel)
+            make.trailing.equalTo(durationLabel.snp.leading).offset(-10)
         }
     }
     

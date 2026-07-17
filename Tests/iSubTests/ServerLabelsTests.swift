@@ -70,3 +70,36 @@ final class ServerLabelsTests: StoreTestCase {
         XCTAssertEqual(labels.label(serverId: 1), "Renamed")
     }
 }
+
+// The universal cell picks its badge up from ServerLabels centrally, so every list
+// (queue, playlists, downloads, search…) shows badges in Combined with no per-screen
+// wiring — and none anywhere else.
+final class UniversalTableViewCellBadgeTests: StoreTestCase {
+    @MainActor func testBadgeAppearsOnlyInCombinedContext() {
+        let session = ServerSession()
+        let settings = SavedSettings(session: session)
+        TestContainer.register { settings }
+        let server = Server(id: 1, type: .subsonic, url: URL(string: "https://one.example.com")!,
+                            username: "u", password: "p", name: "NAS")
+        _ = store.add(server: server)
+        // The shared cache may hold another test's store contents
+        ServerLabels.shared.invalidate()
+        defer { ServerLabels.shared.invalidate() }
+
+        let cell = UniversalTableViewCell(style: .default, reuseIdentifier: nil)
+
+        session.setActiveContext(.server(server))
+        cell.update(model: TestData.song(serverId: 1))
+        XCTAssertNil(cell.serverBadgeText, "single-server mode shows no badge")
+
+        session.setActiveContext(.combined)
+        cell.update(model: TestData.song(serverId: 1))
+        XCTAssertEqual(cell.serverBadgeText, "NAS")
+
+        cell.update(model: LocalPlaylist(id: 10, name: "Mix", contextId: 0))
+        XCTAssertNil(cell.serverBadgeText, "models without a server (serverId -1) get no badge")
+
+        cell.update(primaryText: "Plain")
+        XCTAssertNil(cell.serverBadgeText, "the plain-text overload clears the badge")
+    }
+}
