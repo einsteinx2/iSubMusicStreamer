@@ -16,18 +16,23 @@ final class QuickAlbumsViewController: UIViewController {
     
     let modifier: QuickAlbumsModifier
     var folderAlbums: [FolderAlbum]
-    
+
     private let tableView = UITableView()
-    
+
+    // Combined Library paging: one cursor per server, rounds interleaved. nil in
+    // single-server mode, which keeps its own offset-stepping below.
+    private let pager: PerServerPager<FolderAlbum>?
+
     private var isMoreAlbums: Bool
     private var isLoading = false
     private var offset = 0
     private var loaderTask: Task<Void, Never>?
-    
-    init(modifier: QuickAlbumsModifier, folderAlbums: [FolderAlbum], title: String) {
+
+    init(modifier: QuickAlbumsModifier, folderAlbums: [FolderAlbum], title: String, pager: PerServerPager<FolderAlbum>? = nil) {
         self.modifier = modifier
         self.folderAlbums = folderAlbums
-        self.isMoreAlbums = folderAlbums.count >= AsyncSearchLoader.searchItemCount
+        self.pager = pager
+        self.isMoreAlbums = pager?.hasMore ?? (folderAlbums.count >= AsyncSearchLoader.searchItemCount)
         super.init(nibName: nil, bundle: nil)
         self.title = title
     }
@@ -49,17 +54,32 @@ final class QuickAlbumsViewController: UIViewController {
     
     private func loadMoreResults() {
         guard !isLoading else { return }
-        
+
         isLoading = true
+
+        if let pager {
+            loaderTask = Task {
+                defer {
+                    tableView.reloadData()
+                    isLoading = false
+                }
+
+                let page = await pager.nextPage()
+                folderAlbums.append(contentsOf: page.items)
+                isMoreAlbums = pager.hasMore
+            }
+            return
+        }
+
         offset += 20
-        
+
         loaderTask = Task {
             do {
                 defer {
                     tableView.reloadData()
                     isLoading = false
                 }
-                
+
                 let responseFolderAlbums = try await AsyncQuickAlbumsLoader(serverId: serverId, modifier: modifier, offset: offset).load()
                 if responseFolderAlbums.count == 0 {
                     isMoreAlbums = false

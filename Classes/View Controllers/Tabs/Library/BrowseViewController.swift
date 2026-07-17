@@ -91,7 +91,8 @@ final class BrowseViewController: CustomUITableViewController {
 
     @objc private func reloadRows() {
         rows = [.serverSearch, .recentlyAdded, .recentlyPlayed, .frequentlyPlayed, .randomAlbums, .shuffleAll, .nowPlayingOnServer]
-        if settings.isChatEnabled {
+        // Chat is one room per server — there is no coherent merged room
+        if settings.isChatEnabled && !settings.isCombinedContext {
             rows.append(.serverChat)
         }
         tableView.reloadData()
@@ -106,8 +107,22 @@ final class BrowseViewController: CustomUITableViewController {
                     HUD.hide()
                 }
 
-                let folderAlbums = try await AsyncQuickAlbumsLoader(serverId: serverId, modifier: modifier).load()
-                let controller = QuickAlbumsViewController(modifier: modifier, folderAlbums: folderAlbums, title: title)
+                let controller: QuickAlbumsViewController
+                if settings.isCombinedContext {
+                    // One paging cursor per server, rounds interleaved; a dead server
+                    // is dropped by the pager rather than failing the merged list
+                    let pager = PerServerPager(servers: store.servers(), pageSize: AsyncSearchLoader.searchItemCount) { server, offset in
+                        try await AsyncQuickAlbumsLoader(serverId: server.id, modifier: modifier, offset: offset).load()
+                    }
+                    let first = await pager.nextPage()
+                    if first.items.isEmpty, let failure = first.failures.first {
+                        throw failure.error
+                    }
+                    controller = QuickAlbumsViewController(modifier: modifier, folderAlbums: first.items, title: title, pager: pager)
+                } else {
+                    let folderAlbums = try await AsyncQuickAlbumsLoader(serverId: serverId, modifier: modifier).load()
+                    controller = QuickAlbumsViewController(modifier: modifier, folderAlbums: folderAlbums, title: title)
+                }
                 self.pushViewControllerCustom(controller)
             } catch {
                 if self.settings.isPopupsEnabled && !error.isCanceled {
@@ -120,6 +135,13 @@ final class BrowseViewController: CustomUITableViewController {
     }
 
     private func shuffleAll(sourceCell: UITableViewCell?) {
+        // The media-folder sheet is per-server state; the Combined Library shuffles
+        // every server's whole library into one mix
+        if settings.isCombinedContext {
+            performCombinedShuffle()
+            return
+        }
+
         let mediaFolders = store.mediaFolders(serverId: serverId)
         if mediaFolders.count <= 2 {
             // 2 media folders means the "All Media Folders" option plus one folder aka only 1 actual media folder
@@ -144,6 +166,32 @@ final class BrowseViewController: CustomUITableViewController {
                 popoverPresentationController.sourceRect = sourceCell.bounds
             }
             present(sheet, animated: true, completion: nil)
+        }
+    }
+
+    private func performCombinedShuffle() {
+        loaderTask?.cancel()
+        loaderTask = Task {
+            HUD.show(closeHandler: cancelLoad)
+            defer {
+                HUD.hide()
+            }
+
+            let result = await ServerFanOut.run(servers: store.servers()) { server in
+                try await AsyncServerShuffleLoader(serverId: server.id, mediaFolderId: MediaFolder.allFoldersId).load()
+            }
+            guard !result.isTotalFailure else {
+                if settings.isPopupsEnabled {
+                    let alert = UIAlertController(title: "Error", message: "There was an error creating the server shuffle list.\n\nThe connection could not be created", preferredStyle: .alert)
+                    alert.addOKAction()
+                    present(alert, animated: true)
+                }
+                return
+            }
+
+            let songs = result.concatenated().shuffled()
+            playbackCoordinator.play(songs: songs, position: 0)
+            NotificationCenter.postOnMainThread(name: Notifications.showPlayer)
         }
     }
 

@@ -164,6 +164,39 @@ final class QuickAlbumsPagingTests: LoaderTestCase {
         XCTAssertEqual(controller.folderAlbums.count, 20)
     }
 
+    @MainActor func testCombinedPagerModeInterleavesAndPages() async {
+        let servers = [TestData.server(id: 1, urlString: "https://one.example.com"),
+                       TestData.server(id: 2, urlString: "https://two.example.com")]
+        // Server 1 has 3 albums, server 2 has 1; pure function of (server, offset)
+        let pager = PerServerPager(servers: servers, pageSize: 2) { server, offset -> [FolderAlbum] in
+            let total = server.id == 1 ? 3 : 1
+            guard offset < total else { return [] }
+            return (offset..<min(offset + 2, total)).map { number in
+                FolderAlbum(serverId: server.id, element: try! XMLTestHelpers.element(tag: "child", xml: "<child id=\"s\(server.id)-\(number)\" title=\"Album \(number)\" parent=\"0\" created=\"2024-02-24T15:31:22.978Z\"/>"))
+            }
+        }
+
+        let first = await pager.nextPage()
+        XCTAssertEqual(first.items.map(\.serverId), [1, 2, 1], "rounds interleave across servers")
+
+        let controller = QuickAlbumsViewController(modifier: .newest, folderAlbums: first.items, title: "Newest", pager: pager)
+        let table = UITableView()
+        XCTAssertEqual(controller.tableView(table, numberOfRowsInSection: 0), 4, "3 albums + the loading row while the pager has more")
+
+        // Requesting the extra row pages through the pager, not the offset loader
+        _ = controller.tableView(table, cellForRowAt: IndexPath(row: 3, section: 0))
+        let deadline = Date(timeIntervalSinceNow: 5)
+        while controller.folderAlbums.count < 4 && Date() < deadline {
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+
+        XCTAssertEqual(controller.folderAlbums.map(\.serverId), [1, 2, 1, 1])
+        XCTAssertEqual(MockSubsonicServer.receivedRequests(action: .getAlbumList).count, 0, "pager mode never hits the single-server loader")
+
+        let endCell = controller.tableView(table, cellForRowAt: IndexPath(row: 4, section: 0))
+        XCTAssertEqual(endCell.textLabel?.text, "No more results")
+    }
+
     func testCancelledLoadMorePresentsNoAlert_BUG30() {
         // BUG-30 regression: the load-more catch was missing the !error.isCanceled
         // guard its siblings have, so a cancelled request popped a spurious error alert
@@ -731,5 +764,29 @@ final class DownloadQueueViewControllerTests: StoreTestCase {
         RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.2))
         XCTAssertEqual(controller.tableView.numberOfRows(inSection: 0), 0)
         XCTAssertNil(controller.saveEditHeader.superview, "the edit header hides when the queue empties")
+    }
+}
+
+// MARK: - Browse row gating
+
+final class BrowseRowGatingTests: StoreTestCase {
+    @MainActor func testChatRowHiddenWhileCombinedActive() {
+        let session = ServerSession()
+        let settings = SavedSettings(session: session)
+        TestContainer.register { settings }
+        settings.isChatEnabled = true
+        let server = TestData.server(id: 1)
+        _ = store.add(server: server)
+        session.setActiveContext(.server(server))
+
+        let controller = BrowseViewController()
+        controller.loadViewIfNeeded()
+        controller.viewWillAppear(false)
+        let table = UITableView()
+        XCTAssertEqual(controller.tableView(table, numberOfRowsInSection: 0), 8, "chat row present in single-server mode")
+
+        session.setActiveContext(.combined)
+        controller.viewWillAppear(false)
+        XCTAssertEqual(controller.tableView(table, numberOfRowsInSection: 0), 7, "chat is one room per server, so Combined hides it")
     }
 }

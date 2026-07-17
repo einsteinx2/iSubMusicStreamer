@@ -51,8 +51,20 @@ final class NowPlayingViewController: CustomUITableViewController {
                     HUD.hide()
                     tableView.refreshControl?.endRefreshing()
                 }
-                
-                nowPlayingSongs = try await AsyncNowPlayingLoader(serverId: serverId).load()
+
+                if settings.isCombinedContext {
+                    // Every server's listeners in one list, most recent first; rows
+                    // already resolve their song by its own serverId
+                    let result = await ServerFanOut.run(servers: store.servers()) { server in
+                        try await AsyncNowPlayingLoader(serverId: server.id).load()
+                    }
+                    if result.isTotalFailure, let failure = result.failures.first {
+                        throw failure.error
+                    }
+                    nowPlayingSongs = result.sorted { $0.minutesAgo < $1.minutesAgo }
+                } else {
+                    nowPlayingSongs = try await AsyncNowPlayingLoader(serverId: serverId).load()
+                }
                 tableView.reloadData()
             } catch {
                 if settings.isPopupsEnabled, !error.isCanceled {
