@@ -38,10 +38,17 @@ final class ScrobbleService {
     // Seam for tests; the default performs the real scrobble network call
     private let submit: (Song, _ isSubmission: Bool) -> Void
 
+    // Song ids are only unique within a server, so the per-song identity must
+    // include the serverId or the same id on two servers reads as one song
+    private struct SongKey: Equatable {
+        let serverId: Int
+        let songId: String
+    }
+
     private var timer: Timer?
     private var hasSubmittedNowPlaying = false
     private var hasScrobbled = false
-    private var lastSongId: String?
+    private var lastSongKey: SongKey?
     private var isPaused = false
 
     init(settings: SavedSettings, session: ServerSession, player: PlayerControlling,
@@ -105,7 +112,7 @@ final class ScrobbleService {
     private func resetFlags() {
         hasSubmittedNowPlaying = false
         hasScrobbled = false
-        lastSongId = nil
+        lastSongKey = nil
     }
 
     private func startTimer() {
@@ -139,10 +146,11 @@ final class ScrobbleService {
     func handle(song: Song?, progress: Double) {
         // Belt-and-braces: if the song changed without a lifecycle notification,
         // start the per-song state over
-        if song?.id != lastSongId {
+        let songKey = song.map { SongKey(serverId: $0.serverId, songId: $0.id) }
+        if songKey != lastSongKey {
             hasSubmittedNowPlaying = false
             hasScrobbled = false
-            lastSongId = song?.id
+            lastSongKey = songKey
         }
 
         if !hasSubmittedNowPlaying && progress >= ScrobbleRules.nowPlayingDelay {

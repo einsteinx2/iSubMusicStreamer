@@ -158,6 +158,20 @@ final class ScrobbleServiceTests: SandboxedTestCase {
         XCTAssertEqual(submissions[1].song, songB)
     }
 
+    func testSameSongIdOnDifferentServerResetsFlags() {
+        // Song ids are per-server, so id "1" on server 1 and id "1" on server 2 are
+        // different songs — a mixed-server queue must re-arm the submissions
+        let songA = TestData.song(serverId: 1, id: "1")
+        let songB = TestData.song(serverId: 2, id: "1")
+
+        service.handle(song: songA, progress: 15)
+        XCTAssertEqual(submissions.count, 1)
+
+        service.handle(song: songB, progress: 15)
+        XCTAssertEqual(submissions.count, 2, "the same song id on a different server is a different song")
+        XCTAssertEqual(submissions[1].song, songB)
+    }
+
     func testPauseDoesNotResetFlags() {
         let song = TestData.song()
         service.handle(song: song, progress: 15)
