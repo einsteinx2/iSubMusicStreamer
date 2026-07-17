@@ -202,7 +202,13 @@ struct ServerEditView: View {
                 }
 
                 if saved {
-                    serverSwitcher.switchContext(to: .server(server))
+                    if settings.isCombinedContext {
+                        // Stay in the Combined Library: the saved server joins (or
+                        // updates within) the merged views on their next reload
+                        serverSwitcher.reloadContext()
+                    } else {
+                        serverSwitcher.switchContext(to: .server(server))
+                    }
                 }
             } catch {
                 if error.isCanceled {

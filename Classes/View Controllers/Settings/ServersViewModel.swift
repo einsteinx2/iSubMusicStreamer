@@ -18,6 +18,10 @@ import CocoaLumberjackSwift
         let id = UUID()
         let title: String
         let message: String
+        // A confirm/cancel pair when set (the Combined Library intro and exit
+        // notices); a plain OK alert otherwise
+        var confirmTitle: String? = nil
+        var confirmAction: (() -> Void)? = nil
     }
 
     // One sheet state for both flows — two chained .sheet modifiers on the same view
@@ -82,9 +86,56 @@ import CocoaLumberjackSwift
         settings.currentServer == server
     }
 
+    var isCombinedActive: Bool {
+        settings.isCombinedContext
+    }
+
+    // Enter the Combined Library: a one-time explainer, then an instant context
+    // switch — no blocking pings (each merged screen surfaces its own per-server
+    // errors; the background check refreshes reachability and capabilities)
+    func selectCombined(coordinator: SettingsCoordinator?) {
+        guard !settings.isCombinedContext else {
+            coordinator?.popSettings()
+            return
+        }
+        guard settings.hasSeenCombinedIntro else {
+            alert = AlertInfo(title: CombinedLibraryStrings.introTitle,
+                              message: CombinedLibraryStrings.introMessage,
+                              confirmTitle: CombinedLibraryStrings.introConfirm,
+                              confirmAction: { [weak self] in
+                                  self?.settings.hasSeenCombinedIntro = true
+                                  self?.enterCombined(coordinator: coordinator)
+                              })
+            return
+        }
+        enterCombined(coordinator: coordinator)
+    }
+
+    private func enterCombined(coordinator: SettingsCoordinator?) {
+        serverSwitcher.switchContext(to: .combined)
+        reload()
+        NotificationCenter.postOnMainThread(name: Notifications.checkServer)
+        coordinator?.popSettings()
+    }
+
     // Ping the server, persist its capabilities, make it current, and run the switch
-    // teardown; on success the settings stack pops back to its root
+    // teardown; on success the settings stack pops back to its root. Leaving the
+    // Combined Library shows a one-time note that its state is kept.
     func select(_ server: Server, coordinator: SettingsCoordinator?) {
+        if settings.isCombinedContext && !settings.hasSeenCombinedExitNote {
+            alert = AlertInfo(title: CombinedLibraryStrings.exitTitle,
+                              message: CombinedLibraryStrings.exitMessage,
+                              confirmTitle: CombinedLibraryStrings.exitConfirm,
+                              confirmAction: { [weak self] in
+                                  self?.settings.hasSeenCombinedExitNote = true
+                                  self?.startSelect(server, coordinator: coordinator)
+                              })
+            return
+        }
+        startSelect(server, coordinator: coordinator)
+    }
+
+    private func startSelect(_ server: Server, coordinator: SettingsCoordinator?) {
         checkTask?.cancel()
 
         let task = Task {
@@ -160,6 +211,25 @@ import CocoaLumberjackSwift
             playQueue.currentIndex = max(0, playQueue.count - 1)
         }
         NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
+
+        // While the Combined Library is active every server is "in use": with two or
+        // more remaining it stays active and the merged screens refresh; dropping to
+        // one forces a switch to that server (no exit note — this wasn't a choice)
+        if settings.isCombinedContext {
+            if servers.count >= 2 {
+                serverSwitcher.reloadContext()
+            } else if let remaining = servers.first {
+                serverSwitcher.switchContext(to: .server(remaining))
+                reload()
+                if settings.isPopupsEnabled {
+                    alert = AlertInfo(title: "Notice", message: CombinedLibraryStrings.forcedSwitchMessage(serverLabel: remaining.displayLabel))
+                }
+            } else {
+                serverSwitcher.switchContext(to: nil, resetTabs: false)
+                sheet = .add
+            }
+            return
+        }
 
         // When the current server was deleted, automatically switch to another server,
         // or show the add-server sheet when none remain

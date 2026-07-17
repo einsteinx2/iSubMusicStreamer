@@ -184,4 +184,79 @@ final class ServersViewModelTests: StoreTestCase {
         NotificationCenter.postOnMainThread(name: Notifications.reloadServerList)
         XCTAssertEqual(viewModel.servers.map(\.id), [1])
     }
+
+    // MARK: Combined Library
+
+    @MainActor func testSelectCombinedShowsIntroOnceThenSwitches() {
+        _ = addServer(id: 1, host: "one.example.com")
+        _ = addServer(id: 2, host: "two.example.com")
+        settings.hasSeenCombinedIntro = false
+
+        let viewModel = ServersViewModel()
+        viewModel.selectCombined(coordinator: nil)
+
+        XCTAssertEqual(viewModel.alert?.title, CombinedLibraryStrings.introTitle)
+        XCTAssertEqual(switcher.switchCount, 0, "nothing switches until the intro is confirmed")
+
+        viewModel.alert?.confirmAction?()
+
+        XCTAssertTrue(settings.hasSeenCombinedIntro)
+        XCTAssertEqual(switcher.lastContext, .combined)
+        XCTAssertEqual(switcher.switchCount, 1)
+    }
+
+    @MainActor func testSelectCombinedAfterIntroSwitchesImmediately() {
+        _ = addServer(id: 1, host: "one.example.com")
+        _ = addServer(id: 2, host: "two.example.com")
+        settings.hasSeenCombinedIntro = true
+
+        let viewModel = ServersViewModel()
+        viewModel.selectCombined(coordinator: nil)
+
+        XCTAssertNil(viewModel.alert)
+        XCTAssertEqual(switcher.lastContext, .combined)
+        XCTAssertEqual(switcher.switchCount, 1, "after the one-time intro, entering Combined is instant")
+    }
+
+    @MainActor func testSelectFromCombinedShowsExitNoteWithoutSwitching() {
+        let first = addServer(id: 1, host: "one.example.com")
+        _ = addServer(id: 2, host: "two.example.com")
+        session.setActiveContext(.combined)
+        settings.hasSeenCombinedExitNote = false
+
+        let viewModel = ServersViewModel()
+        viewModel.select(first, coordinator: nil)
+
+        XCTAssertEqual(viewModel.alert?.title, CombinedLibraryStrings.exitTitle)
+        XCTAssertEqual(switcher.switchCount, 0, "the exit note blocks the switch until confirmed")
+        XCTAssertNotNil(viewModel.alert?.confirmAction, "confirming continues into the normal select flow")
+    }
+
+    @MainActor func testDeleteWhileCombinedKeepsContextWithTwoRemaining() {
+        _ = addServer(id: 1, host: "one.example.com")
+        _ = addServer(id: 2, host: "two.example.com")
+        _ = addServer(id: 3, host: "three.example.com")
+        session.setActiveContext(.combined)
+
+        let viewModel = ServersViewModel()
+        viewModel.delete(at: IndexSet(integer: 0))
+
+        XCTAssertEqual(switcher.reloadCount, 1, "the merged screens refresh without a context switch")
+        XCTAssertEqual(switcher.switchCount, 0)
+        XCTAssertNil(viewModel.alert)
+    }
+
+    @MainActor func testDeleteWhileCombinedForcesSwitchAtOneRemaining() {
+        _ = addServer(id: 1, host: "one.example.com")
+        _ = addServer(id: 2, host: "two.example.com")
+        session.setActiveContext(.combined)
+        settings.isPopupsEnabled = true
+
+        let viewModel = ServersViewModel()
+        viewModel.delete(at: IndexSet(integer: 0))
+
+        XCTAssertEqual(switcher.lastContext?.server?.id, 2, "one server can't combine — iSub switches to it")
+        XCTAssertEqual(viewModel.alert?.message, CombinedLibraryStrings.forcedSwitchMessage(serverLabel: "two.example.com"))
+        XCTAssertNil(viewModel.alert?.confirmAction, "the forced switch is a notice, not a choice")
+    }
 }

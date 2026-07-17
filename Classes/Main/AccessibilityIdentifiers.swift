@@ -113,4 +113,5 @@ enum AccessibilityId {
     static let serversList = "servers.list"
     static let serversAdd = "servers.add"
     static let serversEdit = "servers.edit"
+    static let serversCombined = "servers.combined"
 }

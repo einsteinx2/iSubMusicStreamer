@@ -19,14 +19,25 @@ struct ServersView: View {
     var body: some View {
         @Bindable var viewModel = viewModel
         List {
-            ForEach(viewModel.servers) { server in
-                ServerRow(server: server,
-                          isCurrent: viewModel.isCurrent(server),
-                          selectAction: { viewModel.select(server, coordinator: coordinator) },
-                          editAction: { viewModel.sheet = .edit(server) })
+            // Outside the servers ForEach so Edit mode's delete offsets stay aligned
+            // and the row gets no delete affordance
+            if viewModel.servers.count > 1 {
+                Section {
+                    CombinedLibraryRow(isCurrent: viewModel.isCombinedActive,
+                                       serverCount: viewModel.servers.count,
+                                       selectAction: { viewModel.selectCombined(coordinator: coordinator) })
+                }
             }
-            .onDelete { offsets in
-                viewModel.delete(at: offsets)
+            Section {
+                ForEach(viewModel.servers) { server in
+                    ServerRow(server: server,
+                              isCurrent: viewModel.isCurrent(server),
+                              selectAction: { viewModel.select(server, coordinator: coordinator) },
+                              editAction: { viewModel.sheet = .edit(server) })
+                }
+                .onDelete { offsets in
+                    viewModel.delete(at: offsets)
+                }
             }
         }
         .listStyle(.insetGrouped)
@@ -45,7 +56,13 @@ struct ServersView: View {
             }
         }
         .alert(item: $viewModel.alert) { alert in
-            Alert(title: Text(alert.title), message: Text(alert.message), dismissButton: .default(Text("OK")))
+            if let confirmTitle = alert.confirmTitle, let confirmAction = alert.confirmAction {
+                Alert(title: Text(alert.title), message: Text(alert.message),
+                      primaryButton: .default(Text(confirmTitle), action: confirmAction),
+                      secondaryButton: .cancel())
+            } else {
+                Alert(title: Text(alert.title), message: Text(alert.message), dismissButton: .default(Text("OK")))
+            }
         }
         .sheet(item: $viewModel.sheet) { sheet in
             ServerEditView(serverToEdit: sheet.serverToEdit)
@@ -63,6 +80,38 @@ struct ServersView: View {
                 }
             }
         }
+    }
+}
+
+// The pinned Combined Library entry, shown only when there is something to combine
+private struct CombinedLibraryRow: View {
+    let isCurrent: Bool
+    let serverCount: Int
+    let selectAction: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: isCurrent ? "checkmark.circle.fill" : "circle")
+                .foregroundStyle(isCurrent ? Color.accentColor : Color(.tertiaryLabel))
+                .accessibilityLabel(isCurrent ? "Current selection" : "")
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Combined Library")
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                Text("Browse all \(serverCount) servers as one library")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer(minLength: 0)
+
+            Image(systemName: "square.stack.3d.up.fill")
+                .foregroundStyle(Color.accentColor)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture(perform: selectAction)
+        .accessibilityIdentifier(AccessibilityId.serversCombined)
     }
 }
 
