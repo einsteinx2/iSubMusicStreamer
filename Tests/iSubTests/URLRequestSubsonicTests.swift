@@ -151,21 +151,21 @@ final class URLRequestSubsonicTests: SandboxedTestCase {
         XCTAssertEqual(decoded, "user:pass")
     }
 
-    // The isBasicAuthEnabled setting is applied by SubsonicRequestBuilder, not the
-    // low-level init, so verify the wiring at that seam
-    func testBuilderAppliesBasicAuthSetting() throws {
+    // The basic auth flag lives on each server row and is applied by
+    // SubsonicRequestBuilder, not the low-level init, so verify the wiring at that seam
+    func testBuilderAppliesServerBasicAuthFlag() throws {
         let store = Store()
         store.setup(location: .memory)
         let url = try XCTUnwrap(URL(string: "https://music.example.com"))
         XCTAssertTrue(store.add(server: Server(id: 1, type: .subsonic, url: url, username: "user", password: "pass")))
-        let builder = SubsonicRequestBuilder(store: store, settings: settings, redirects: ServerRedirectRegistry())
+        XCTAssertTrue(store.add(server: Server(id: 2, type: .subsonic, url: url, username: "user", password: "pass", isBasicAuthEnabled: true)))
+        let builder = SubsonicRequestBuilder(store: store, redirects: ServerRedirectRegistry())
 
         let plain = try XCTUnwrap(builder.request(serverId: 1, subsonicAction: .getIndexes))
         XCTAssertNil(plain.value(forHTTPHeaderField: "Authorization"))
 
-        settings.isBasicAuthEnabled = true
-        let authed = try XCTUnwrap(builder.request(serverId: 1, subsonicAction: .getIndexes))
-        XCTAssertNotNil(authed.value(forHTTPHeaderField: "Authorization"))
+        let authed = try XCTUnwrap(builder.request(serverId: 2, subsonicAction: .getIndexes))
+        XCTAssertNotNil(authed.value(forHTTPHeaderField: "Authorization"), "the flag is per-server, read from the server row")
     }
 
     // MARK: Range header

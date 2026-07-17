@@ -13,9 +13,9 @@ import Resolver
 
 extension Bookmark: FetchableRecord, PersistableRecord {
     enum Column: String, ColumnExpression {
-        case id, songServerId, songId, localPlaylistId, songIndex, offsetInSeconds, offsetInBytes
+        case id, songServerId, songId, localPlaylistId, songIndex, offsetInSeconds, offsetInBytes, contextId
     }
-    
+
     static func createInitialSchema(_ db: Database) throws {
         try db.create(table: Bookmark.databaseTableName) { t in
             t.column(Column.id, .integer).notNull().primaryKey()
@@ -27,6 +27,14 @@ extension Bookmark: FetchableRecord, PersistableRecord {
             t.column(Column.offsetInBytes, .integer).notNull()
         }
         try db.create(indexOn: Bookmark.databaseTableName, columns: [Column.songServerId, Column.songId])
+    }
+
+    static func createLibraryContextsSchema(_ db: Database, legacyContextId: Int) throws {
+        try db.alter(table: Bookmark.databaseTableName) { t in
+            t.add(column: Column.contextId.rawValue, .integer).notNull().defaults(to: LibraryContext.noContextId)
+        }
+        try db.execute(literal: "UPDATE \(Bookmark.self) SET contextId = \(legacyContextId)")
+        try db.create(indexOn: Bookmark.databaseTableName, columns: [Column.contextId])
     }
 }
 
@@ -57,13 +65,15 @@ extension Store {
         // Get the song object before opening the write transaction (it reads the
         // database itself, and database access is not reentrant)
         guard let song = playQueue.song(index: songIndex) else { return false }
+        let contextId = activeContextId
 
         do {
             return try pool.write { db in
                 guard let nextLocalPlaylistId = try nextLocalPlaylistId(db), let nextBookmarkId = try nextBookmarkId(db) else { return false }
 
-                // Create the local playlist to store the songs
-                var playlist = LocalPlaylist(id: nextLocalPlaylistId, name: name, isBookmark: true)
+                // Create the local playlist to store the songs (the bookmark record
+                // derives its contextId from this playlist)
+                var playlist = LocalPlaylist(id: nextLocalPlaylistId, name: name, isBookmark: true, contextId: contextId)
                 try playlist.save(db)
 
                 // Create the bookmark record
@@ -97,10 +107,11 @@ extension Store {
         }
     }
     
-    func bookmarks() -> [Bookmark] {
+    func bookmarks(contextId: Int? = nil) -> [Bookmark] {
+        let contextId = contextId ?? activeContextId
         do {
             return try pool.read { db in
-                try Bookmark.order(Bookmark.Column.id.desc).fetchAll(db)
+                try Bookmark.filter(literal: "contextId = \(contextId)").order(Bookmark.Column.id.desc).fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select all bookmarks: \(error)")
@@ -119,10 +130,11 @@ extension Store {
         }
     }
     
-    func bookmarksCount(song: Song) -> Int? {
+    func bookmarksCount(song: Song, contextId: Int? = nil) -> Int? {
+        let contextId = contextId ?? activeContextId
         do {
             return try pool.read { db in
-                try Bookmark.filter(literal: "songServerId = \(song.serverId) AND songId = \(song.id)").fetchCount(db)
+                try Bookmark.filter(literal: "songServerId = \(song.serverId) AND songId = \(song.id) AND contextId = \(contextId)").fetchCount(db)
             }
         } catch {
             DDLogError("Failed to select count of bookmarks for song \(song): \(error)")

@@ -22,13 +22,17 @@ struct LocalPlaylist: Codable, Equatable {
     var songCount: Int
     var isBookmark: Bool
     var createdDate: Date
-    
-    init(id: Int, name: String, songCount: Int = 0, isBookmark: Bool = false, createdDate: Date = Date()) {
+    // The library context (server id, or 0 for the Combined Library) this playlist
+    // belongs to; -1 on the reserved queue rows, which are context-free
+    var contextId: Int
+
+    init(id: Int, name: String, songCount: Int = 0, isBookmark: Bool = false, createdDate: Date = Date(), contextId: Int = LibraryContext.noContextId) {
         self.id = id
         self.name = name
         self.songCount = songCount
         self.isBookmark = isBookmark
         self.createdDate = createdDate
+        self.contextId = contextId
     }
 
     static func ==(lhs: LocalPlaylist, rhs: LocalPlaylist) -> Bool {

@@ -16,7 +16,9 @@ struct Bookmark: Codable, Equatable {
     let songIndex: Int
     let offsetInSeconds: Double
     let offsetInBytes: Int
-    
+    // Owned by the same library context as its snapshot playlist
+    let contextId: Int
+
     init(id: Int, song: Song, localPlaylist: LocalPlaylist, songIndex: Int, offsetInSeconds: Double, offsetInBytes: Int) {
         self.id = id
         self.songServerId = song.serverId
@@ -25,5 +27,6 @@ struct Bookmark: Codable, Equatable {
         self.songIndex = songIndex
         self.offsetInSeconds = offsetInSeconds
         self.offsetInBytes = offsetInBytes
+        self.contextId = localPlaylist.contextId
     }
 }

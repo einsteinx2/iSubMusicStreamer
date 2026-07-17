@@ -17,12 +17,12 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
     }
     
     enum Column: String, ColumnExpression {
-        case id, name, songCount, isBookmark, createdDate
+        case id, name, songCount, isBookmark, createdDate, contextId
     }
     enum RelatedColumn: String, ColumnExpression {
         case localPlaylistId, serverId, songId, position
     }
-    
+
     static func createInitialSchema(_ db: Database) throws {
         try db.create(table: LocalPlaylist.databaseTableName) { t in
             t.column(Column.id, .integer).notNull().primaryKey()
@@ -31,14 +31,17 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
             t.column(Column.isBookmark, .boolean).notNull().indexed()
             t.column(Column.createdDate, .datetime).notNull()
         }
-        
-        // Create default playlists
-        let defaultPlaylists = [LocalPlaylist(id: LocalPlaylist.Default.playQueueId, name: "Play Queue"),
-                                LocalPlaylist(id: LocalPlaylist.Default.shuffleQueueId, name: "Shuffle Queue"),
-                                LocalPlaylist(id: LocalPlaylist.Default.jukeboxPlayQueueId, name: "Jukebox Play Queue"),
-                                LocalPlaylist(id: LocalPlaylist.Default.jukeboxShuffleQueueId, name: "Jukebox Shuffle Queue")]
-        for playlist in defaultPlaylists {
-            try playlist.save(db)
+
+        // Create the default playlists with schema-frozen SQL, not model saves: the
+        // model encodes every CURRENT property, and this migration must keep producing
+        // the original columns even as later migrations grow the table
+        let defaultPlaylists = [(LocalPlaylist.Default.playQueueId, "Play Queue"),
+                                (LocalPlaylist.Default.shuffleQueueId, "Shuffle Queue"),
+                                (LocalPlaylist.Default.jukeboxPlayQueueId, "Jukebox Play Queue"),
+                                (LocalPlaylist.Default.jukeboxShuffleQueueId, "Jukebox Shuffle Queue")]
+        for (id, name) in defaultPlaylists {
+            try db.execute(sql: "INSERT INTO localPlaylist (id, name, songCount, isBookmark, createdDate) VALUES (?, ?, 0, 0, ?)",
+                           arguments: [id, name, Date()])
         }
         
         try db.create(table: Table.localPlaylistSong) { t in
@@ -58,6 +61,16 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
 //        try localPlaylist.save(db)
 //    }
     
+    static func createLibraryContextsSchema(_ db: Database, legacyContextId: Int) throws {
+        try db.alter(table: LocalPlaylist.databaseTableName) { t in
+            t.add(column: Column.contextId.rawValue, .integer).notNull().defaults(to: LibraryContext.noContextId)
+        }
+        // The reserved queue rows (1-4) stay context-free; user playlists and bookmark
+        // snapshots belong to the last active server (or the migration fallback)
+        try db.execute(literal: "UPDATE \(LocalPlaylist.self) SET contextId = \(legacyContextId) WHERE id > \(Default.maxDefaultId)")
+        try db.create(indexOn: LocalPlaylist.databaseTableName, columns: [Column.contextId, Column.isBookmark])
+    }
+
     static func fetchSongs(_ db: Database, playlistId: Int) throws -> [Song] {
         // ORDER BY position matters: without it rows come back in rowid order, which
         // diverges from the playlist order after any move (Store.move deletes and
@@ -110,7 +123,13 @@ extension LocalPlaylist: FetchableRecord, PersistableRecord {
 extension Store {
     private var settings: SavedSettings { Resolver.resolve() }
     private var playQueue: PlayQueue { Resolver.resolve() }
-    
+
+    // The library context that display queries scope to by default. Until the context
+    // switcher lands this is the current server id; the Combined Library work replaces
+    // it with the active context (0 while Combined is active). In tests with no
+    // current server this is -1, matching rows created without an explicit context.
+    var activeContextId: Int { settings.currentServerId }
+
     var nextLocalPlaylistId: Int? {
         do {
             return try pool.read { db in
@@ -131,34 +150,37 @@ extension Store {
         return nil
     }
     
-    func localPlaylistsCount(isBookmark: Bool = false) -> Int? {
+    func localPlaylistsCount(isBookmark: Bool = false, contextId: Int? = nil) -> Int? {
+        let contextId = contextId ?? activeContextId
         do {
             return try pool.read { db in
-                try LocalPlaylist.filter(literal: "id > \(LocalPlaylist.Default.maxDefaultId) AND isBookmark = \(isBookmark)").fetchCount(db)
+                try LocalPlaylist.filter(literal: "id > \(LocalPlaylist.Default.maxDefaultId) AND isBookmark = \(isBookmark) AND contextId = \(contextId)").fetchCount(db)
             }
         } catch {
             DDLogError("Failed to select count of local playlists, isBookmark \(isBookmark): \(error)")
             return nil
         }
     }
-    
-    func localPlaylists(isBookmark: Bool = false) -> [LocalPlaylist] {
+
+    func localPlaylists(isBookmark: Bool = false, contextId: Int? = nil) -> [LocalPlaylist] {
+        let contextId = contextId ?? activeContextId
         do {
             return try pool.read { db in
-                try LocalPlaylist.filter(literal: "id > \(LocalPlaylist.Default.maxDefaultId) AND isBookmark = \(isBookmark)").fetchAll(db)
+                try LocalPlaylist.filter(literal: "id > \(LocalPlaylist.Default.maxDefaultId) AND isBookmark = \(isBookmark) AND contextId = \(contextId)").fetchAll(db)
             }
         } catch {
             DDLogError("Failed to select all local playlists: \(error)")
             return []
         }
     }
-    
+
     // Name-collision lookup for the save-playlist overwrite check (ignores the
-    // default queues and bookmark snapshots)
-    func localPlaylist(name: String) -> LocalPlaylist? {
+    // default queues, bookmark snapshots, and other contexts' playlists)
+    func localPlaylist(name: String, contextId: Int? = nil) -> LocalPlaylist? {
+        let contextId = contextId ?? activeContextId
         do {
             return try pool.read { db in
-                try LocalPlaylist.filter(literal: "id > \(LocalPlaylist.Default.maxDefaultId) AND isBookmark = false AND name = \(name)").fetchOne(db)
+                try LocalPlaylist.filter(literal: "id > \(LocalPlaylist.Default.maxDefaultId) AND isBookmark = false AND name = \(name) AND contextId = \(contextId)").fetchOne(db)
             }
         } catch {
             DDLogError("Failed to select local playlist named \(name): \(error)")

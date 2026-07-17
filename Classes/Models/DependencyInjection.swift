@@ -118,7 +118,7 @@ struct DependencyInjection {
 
         // Transient request builder; resolves store/settings at build time so tests'
         // container overrides are honored
-        main.register(factory: { SubsonicRequestBuilder(store: Resolver.resolve(), settings: Resolver.resolve(), redirects: Resolver.resolve()) })
+        main.register(factory: { SubsonicRequestBuilder(store: Resolver.resolve(), redirects: Resolver.resolve()) })
 
         // The cover art manager keeps its `.shared` default-argument convenience for
         // views, but is also resolvable so new code can inject it

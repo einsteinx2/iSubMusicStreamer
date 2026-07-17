@@ -165,11 +165,10 @@ extension URLRequest {
 }
 
 // Builds Subsonic API requests from explicit dependencies (registered as a transient
-// in DependencyInjection.swift): the server row comes from the store, the redirect
-// URL from the per-server registry, and the basic auth flag from settings
+// in DependencyInjection.swift): the server row (including its basic auth flag)
+// comes from the store, and the redirect URL from the per-server registry
 struct SubsonicRequestBuilder {
     let store: Store
-    let settings: SavedSettings
     let redirects: ServerRedirectRegistry
 
     func request(serverId: Int, subsonicAction action: SubsonicAction, parameters: [String: Any]? = nil, byteOffset: Int = 0) -> URLRequest? {
@@ -180,6 +179,6 @@ struct SubsonicRequestBuilder {
                           password: server.password,
                           parameters: parameters,
                           byteOffset: byteOffset,
-                          isBasicAuthEnabled: settings.isBasicAuthEnabled)
+                          isBasicAuthEnabled: server.isBasicAuthEnabled)
     }
 }

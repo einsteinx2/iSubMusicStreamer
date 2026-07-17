@@ -73,7 +73,15 @@ final class Server: NSObject, Codable, Identifiable {
     var isVideoSupported: Bool = true
     var isNewSearchSupported: Bool = true
     var isTagSearchSupported: Bool = true
-    
+
+    // Optional user-set nickname, shown wherever iSub labels this server (servers
+    // list, Combined Library badges); nil falls back to the host name
+    var name: String?
+
+    // HTTP Basic Auth is a per-server need (e.g. a reverse proxy in front of one
+    // server), not an app-wide one
+    var isBasicAuthEnabled: Bool = false
+
     static func generatePathFromURL(url: URL) -> String {
         let scheme = url.scheme ?? "scheme"
         let host = url.host ?? "host"
@@ -93,7 +101,7 @@ final class Server: NSObject, Codable, Identifiable {
         return path
     }
     
-    init(id: Int, type: ServerType, url: URL, username: String, password: String, path: String, isVideoSupported: Bool, isNewSearchSupported: Bool, isTagSearchSupported: Bool) {
+    init(id: Int, type: ServerType, url: URL, username: String, password: String, path: String, isVideoSupported: Bool, isNewSearchSupported: Bool, isTagSearchSupported: Bool, name: String? = nil, isBasicAuthEnabled: Bool = false) {
         self.id = id
         self.type = type
         self.url = url
@@ -103,16 +111,20 @@ final class Server: NSObject, Codable, Identifiable {
         self.isVideoSupported = isVideoSupported
         self.isNewSearchSupported = isNewSearchSupported
         self.isTagSearchSupported = isTagSearchSupported
+        self.name = name
+        self.isBasicAuthEnabled = isBasicAuthEnabled
         super.init()
     }
-    
-    init(id: Int, type: ServerType, url: URL, username: String, password: String) {
+
+    init(id: Int, type: ServerType, url: URL, username: String, password: String, name: String? = nil, isBasicAuthEnabled: Bool = false) {
         self.id = id
         self.type = type
         self.url = url
         self.username = username
         self.password = password
         self.path = Self.generatePathFromURL(url: url)
+        self.name = name
+        self.isBasicAuthEnabled = isBasicAuthEnabled
         super.init()
     }
     

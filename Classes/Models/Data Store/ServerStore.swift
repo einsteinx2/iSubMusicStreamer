@@ -12,9 +12,9 @@ import CocoaLumberjackSwift
 
 extension Server: FetchableRecord, PersistableRecord {
     enum Column: String, ColumnExpression {
-        case id, type, url, username, password, path, isVideoSupported, isNewSearchSupported, isTagSearchSupported
+        case id, type, url, username, password, path, isVideoSupported, isNewSearchSupported, isTagSearchSupported, name, isBasicAuthEnabled
     }
-    
+
     static func createInitialSchema(_ db: Database) throws {
         try db.create(table: Server.databaseTableName) { t in
             t.autoIncrementedPrimaryKey(Column.id).notNull()
@@ -26,6 +26,18 @@ extension Server: FetchableRecord, PersistableRecord {
             t.column(Column.isVideoSupported, .boolean).notNull()
             t.column(Column.isNewSearchSupported, .boolean).notNull()
             t.column(Column.isTagSearchSupported, .boolean).notNull()
+        }
+    }
+
+    static func createLibraryContextsSchema(_ db: Database, seedBasicAuthFromGlobalSetting: Bool) throws {
+        try db.alter(table: Server.databaseTableName) { t in
+            t.add(column: Column.isBasicAuthEnabled.rawValue, .boolean).notNull().defaults(to: false)
+            t.add(column: Column.name.rawValue, .text)
+        }
+        // The flag used to be one app-wide setting; carry its value onto the servers
+        // that existed when it was on
+        if seedBasicAuthFromGlobalSetting {
+            try db.execute(sql: "UPDATE server SET isBasicAuthEnabled = 1")
         }
     }
 }

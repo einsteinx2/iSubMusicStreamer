@@ -92,12 +92,13 @@ final class SavePlaylistFlow {
         // mid-copy (song advance, shuffle, jukebox refresh), saving a truncated or
         // reordered playlist
         let songs = playQueueSongsSnapshot()
+        let contextId = settings.currentServerId
         let store = self.store
         HUD.show()
         DispatchQueue.userInitiated.async {
             defer { HUD.hide() }
             guard let nextLocalPlaylistId = store.nextLocalPlaylistId,
-                  store.add(localPlaylist: LocalPlaylist(id: nextLocalPlaylistId, name: name)),
+                  store.add(localPlaylist: LocalPlaylist(id: nextLocalPlaylistId, name: name, contextId: contextId)),
                   Self.copy(songs: songs, localPlaylistId: nextLocalPlaylistId, store: store) else {
                 Task { @MainActor in self.presentLocalSaveError() }
                 return
