@@ -13,7 +13,8 @@ final class TagArtistViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
     
-    var serverId: Int { settings.currentServerId }
+    // The pushed artist's server, NOT the global current server (nil in Combined)
+    var serverId: Int { tagArtist.serverId }
     
     private let tagArtist: TagArtist
     private var loaderTask: Task<Void, Never>?

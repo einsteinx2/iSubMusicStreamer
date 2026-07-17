@@ -585,6 +585,7 @@
 		D8C2000000000000000C0C02 /* CombinedBrowseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0C03 /* CombinedBrowseStore.swift */; };
 		D8C2000000000000000C0C04 /* CombinedBrowseStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0C05 /* CombinedBrowseStoreTests.swift */; };
 		D8C2000000000000000C1001 /* ServerCheckerCombinedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C1002 /* ServerCheckerCombinedTests.swift */; };
+		D8C2000000000000000C1101 /* CombinedLibraryUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C1102 /* CombinedLibraryUITests.swift */; };
 		5A7E570F2F1000010000AB0F /* NowPlayingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57112F1000010000AB11 /* NowPlayingService.swift */; };
 		5A7E57102F1000010000AB10 /* NowPlayingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57112F1000010000AB11 /* NowPlayingService.swift */; };
 		5A7E57122F1000010000AB12 /* NowPlayingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */; };
@@ -1043,6 +1044,7 @@
 		D8C2000000000000000C0C03 /* CombinedBrowseStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinedBrowseStore.swift; sourceTree = "<group>"; };
 		D8C2000000000000000C0C05 /* CombinedBrowseStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CombinedBrowseStoreTests.swift; sourceTree = "<group>"; };
 		D8C2000000000000000C1002 /* ServerCheckerCombinedTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerCheckerCombinedTests.swift; sourceTree = "<group>"; };
+		D8C2000000000000000C1102 /* CombinedLibraryUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CombinedLibraryUITests.swift; sourceTree = "<group>"; };
 		5A7E57112F1000010000AB11 /* NowPlayingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingService.swift; sourceTree = "<group>"; };
 		5A7E57132F1000010000AB13 /* NowPlayingServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NowPlayingServiceTests.swift; sourceTree = "<group>"; };
 		5A7E57162F1000010000AB16 /* PlaybackCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackCoordinator.swift; sourceTree = "<group>"; };
@@ -1982,6 +1984,7 @@
 				84BA4D3DB724BB2A35919FC3 /* SmokeUITests.swift */,
 				6A4F02DA428CAB1AC965D91B /* FirstRunUITests.swift */,
 				262B7DD32E2000020000A002 /* BrowseUITests.swift */,
+				D8C2000000000000000C1102 /* CombinedLibraryUITests.swift */,
 				0EE663B3B7063EC49BED6F71 /* OnlineLibraryUITests.swift */,
 				F2C70A4602D4CF1E912CBB04 /* OnlinePlayerUITests.swift */,
 				7705A86ABDA388585EDDC4D6 /* OnlinePlaylistsUITests.swift */,
@@ -2482,6 +2485,7 @@
 				AA9A6974E8FC8995CF9FE37D /* AccessibilityIdentifiers.swift in Sources */,
 				911362DD0A88C68C698503DD /* FirstRunUITests.swift in Sources */,
 				0D7110EC2E2000020000A002 /* BrowseUITests.swift in Sources */,
+				D8C2000000000000000C1101 /* CombinedLibraryUITests.swift in Sources */,
 				EB69E9A47A5365E25F080197 /* OnlineLibraryUITests.swift in Sources */,
 				E56CD971043F99EF07948200 /* OnlinePlayerUITests.swift in Sources */,
 				C1CBF0284BA8EE4859AF249F /* OnlinePlaylistsUITests.swift in Sources */,

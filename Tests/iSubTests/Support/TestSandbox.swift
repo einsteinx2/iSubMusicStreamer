@@ -65,6 +65,14 @@ class SandboxedTestCase: XCTestCase {
         // instance) never leak into another
         let redirectRegistry = ServerRedirectRegistry()
         TestContainer.register { redirectRegistry }
+        // Fresh per-test session/settings so no test resolves the app's REAL session
+        // state: after a UI-test run on the same simulator the app's standard
+        // defaults carry an active library context, which would leak into the
+        // context-scoped store queries' default resolution
+        let sandboxedSession = ServerSession()
+        let sandboxedSettings = SavedSettings(session: sandboxedSession)
+        TestContainer.register { sandboxedSession }
+        TestContainer.register { sandboxedSettings }
         // The value-model layer reads these statics ambiently (song.localPath's server
         // lookup, LocalPlaylist.queue()'s coordinator); without interposing them here a
         // plain SandboxedTestCase test reaches the app's REAL database and playback

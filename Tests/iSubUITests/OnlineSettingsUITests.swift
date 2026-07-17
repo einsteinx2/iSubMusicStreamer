@@ -135,9 +135,10 @@ final class OnlineSettingsUITests: XCTestCase {
         // Saving a new server switches to it and returns to the app; go back to the list
         XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabLibrary].waitForExistence(timeout: 20))
         openServers(in: app)
-        XCTAssertTrue(app.cells.staticTexts["http://second.server.local"].waitForExistence(timeout: 10),
+        // Rows lead with the nickname-or-host label; the URL moved to the subtitle
+        XCTAssertTrue(app.cells.staticTexts["second.server.local"].waitForExistence(timeout: 10),
                       "added server not listed")
-        XCTAssertEqual(app.cells.count, 2)
+        XCTAssertEqual(app.cells.count, 3, "two servers plus the Combined Library row")
 
         // Edit: the row's info button opens the form; changing the username persists
         // (the old ServerEditViewController silently discarded field edits — fixed)
@@ -149,17 +150,17 @@ final class OnlineSettingsUITests: XCTestCase {
         app.buttons[AccessibilityId.serverEditSave].tap()
         XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabLibrary].waitForExistence(timeout: 20))
         openServers(in: app)
-        XCTAssertTrue(app.cells.staticTexts["username: seconduser-renamed"].waitForExistence(timeout: 10),
+        XCTAssertTrue(app.cell(containing: "seconduser-renamed").waitForExistence(timeout: 10),
                       "edited username not shown")
 
         // Switch: tapping the first (seeded) server verifies and switches to it
-        app.tapCell(containing: "http://uitest.local")
+        app.tapCell(containing: "uitest.local")
         XCTAssertTrue(app.tabBars.buttons[AccessibilityId.tabLibrary].waitForExistence(timeout: 20),
                       "switching servers did not return to the app")
 
         // Delete: swipe-delete the second server
         openServers(in: app)
-        let secondRowText = app.cells.staticTexts["http://second.server.local"]
+        let secondRowText = app.cells.staticTexts["second.server.local"]
         XCTAssertTrue(secondRowText.waitForExistence(timeout: 10))
         secondRowText.swipeLeft()
         let deleteButton = app.buttons["Delete"].firstMatch

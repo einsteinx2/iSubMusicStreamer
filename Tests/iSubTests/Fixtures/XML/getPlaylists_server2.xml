@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
+   <playlists>
+      <playlist id="9300" name="Server Two Playlist" owner="uitest2" public="false" songCount="1" duration="144" created="2026-07-10T00:23:40.983Z" changed="2026-07-10T00:23:40.988Z"/>
+   </playlists>
+</subsonic-response>

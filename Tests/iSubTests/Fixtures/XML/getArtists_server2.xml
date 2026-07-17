@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0" type="Airsonic-Advanced">
+   <artists ignoredArticles="The El La Los Las Le Les">
+      <index name="Z">
+         <artist id="9200T" name="Zebra Ensemble" albumCount="1"/>
+      </index>
+   </artists>
+</subsonic-response>

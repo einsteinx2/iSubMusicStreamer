@@ -68,6 +68,11 @@ final class PlayQueueViewController: CustomUITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // The queue notifications are only observed while on screen (see
+        // viewWillDisappear), so anything that changed the queue while this tab was
+        // hidden — queueing from the Library, a library-context switch — would
+        // otherwise leave a stale table
+        tableView.reloadData()
         selectRow()
         addOrRemoveSaveEditHeader()
         analytics.log(event: isModal ? .playerPlayQueue : .playQueueTab)

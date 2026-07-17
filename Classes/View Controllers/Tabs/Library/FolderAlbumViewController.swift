@@ -19,7 +19,9 @@ final class FolderAlbumViewController: CustomUITableViewController {
     @Injected private var settings: SavedSettings
     @Injected private var playbackCoordinator: PlaybackCoordinator
     
-    var serverId: Int { settings.currentServerId }
+    // The pushed model's server, NOT the global current server: in the Combined
+    // Library there is no current server, and the item can come from any of them
+    var serverId: Int { folderArtist?.serverId ?? folderAlbum?.serverId ?? settings.currentServerId }
     
     private let folderArtist: FolderArtist?
     private let folderAlbum: FolderAlbum?

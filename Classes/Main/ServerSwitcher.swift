@@ -99,6 +99,10 @@ class ServerSwitcher {
         // Bring the incoming context back paused and primed at its saved position
         stateRestorer.apply(snapshot: incomingState)
 
+        // The queue rows just changed wholesale; any on-screen queue UI reloads on
+        // this (off-screen ones catch up in viewWillAppear)
+        NotificationCenter.postOnMainThread(name: Notifications.currentPlaylistSongsQueued)
+
         // Reset the tabs
         if resetTabs, !UIDevice.isPad, let viewControllers = SceneDelegate.shared.tabBarController?.viewControllers {
             for controller in viewControllers {

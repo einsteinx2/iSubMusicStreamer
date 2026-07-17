@@ -34,6 +34,13 @@ enum UITestSupport {
 
     static let seededServerId = 1
 
+    // "-SERVERS 2" seeds a second server for the Combined Library suites. It only
+    // works in URLProtocol-stub mode (the loopback mock server binds one port);
+    // fixture responses for its host come from the *_server2.xml files.
+    static let secondServerId = 2
+    static let secondServerHost = "uitest2.local"
+    static var seedsSecondServer: Bool { UserDefaults.standard.string(forKey: "SERVERS") == "2" }
+
     // Called first thing in AppDelegate, before anything touches disk or defaults
     static func resetStateIfRequested() {
         guard ProcessInfo.processInfo.arguments.contains("-RESET_STATE") else { return }
@@ -102,6 +109,14 @@ enum UITestSupport {
             let server = Server(id: seededServerId, type: .subsonic, url: url,
                                 username: existing?.username ?? "uitest", password: existing?.password ?? "uitest")
             _ = store.add(server: server)
+            if seedsSecondServer && !usesMockServer {
+                // A nickname on one server and none on the other exercises both badge
+                // label paths (nickname vs host fallback)
+                let secondServer = Server(id: secondServerId, type: .subsonic,
+                                          url: URL(string: "http://\(secondServerHost)")!,
+                                          username: "uitest2", password: "uitest2", name: "Server Two")
+                _ = store.add(server: secondServer)
+            }
             UserDefaults.standard.set(seededServerId, forKey: SavedSettings.Key.currentServerId.rawValue)
             UserDefaults.standard.set(seededServerId, forKey: SavedSettings.Key.activeContextId.rawValue)
         }
@@ -171,8 +186,27 @@ enum UITestFixtures {
         }
     }
 
-    static func xmlURL(action: String, parameters: [String: String]) -> URL? {
-        let name = fixtureSets[UITestSupport.fixtureSet]?[action] ?? defaultFixture(action: action, parameters: parameters)
+    // The Combined Library suites need the two seeded servers to answer differently,
+    // so the second server's host resolves its own fixture set first and falls back
+    // to the shared map for anything it doesn't override (ping, music folders, ...)
+    private static func secondServerFixture(action: String) -> String? {
+        switch action {
+        case "getIndexes": return "getIndexes_server2.xml"
+        case "getArtists": return "getArtists_server2.xml"
+        case "getMusicDirectory": return "getMusicDirectory_server2.xml"
+        case "getPlaylists": return "getPlaylists_server2.xml"
+        case "search2": return "search2_server2.xml"
+        case "search3": return "search3_server2.xml"
+        case "getAlbumList": return "getAlbumList_server2.xml"
+        default: return nil
+        }
+    }
+
+    static func xmlURL(action: String, parameters: [String: String], host: String? = nil) -> URL? {
+        var name = fixtureSets[UITestSupport.fixtureSet]?[action] ?? defaultFixture(action: action, parameters: parameters)
+        if host == UITestSupport.secondServerHost, let override = secondServerFixture(action: action) {
+            name = override
+        }
         return name.flatMap { Bundle.main.resourceURL?.appendingPathComponent("Fixtures/XML").appendingPathComponent($0) }
     }
 
@@ -216,7 +250,7 @@ final class UITestURLProtocol: URLProtocol {
         let action = (url.lastPathComponent as NSString).deletingPathExtension
         let requestParameters = parameters(from: request)
         UITestSupport.logRequest(action: action, parameters: requestParameters)
-        let fixtureURL = UITestFixtures.xmlURL(action: action, parameters: requestParameters)
+        let fixtureURL = UITestFixtures.xmlURL(action: action, parameters: requestParameters, host: url.host)
 
         guard let fixtureURL = fixtureURL, let body = try? Data(contentsOf: fixtureURL) else {
             let response = HTTPURLResponse(url: url, statusCode: 404, httpVersion: "HTTP/1.1", headerFields: nil)!

@@ -214,16 +214,21 @@ import CocoaLumberjackSwift
 
         // While the Combined Library is active every server is "in use": with two or
         // more remaining it stays active and the merged screens refresh; dropping to
-        // one forces a switch to that server (no exit note — this wasn't a choice)
+        // one forces a switch to that server (no exit note — this wasn't a choice).
+        // The notice presents BEFORE the switch pops the tab stacks: presenting from
+        // a screen the pop is dismantling wedges the navigation state.
         if settings.isCombinedContext {
             if servers.count >= 2 {
                 serverSwitcher.reloadContext()
             } else if let remaining = servers.first {
-                serverSwitcher.switchContext(to: .server(remaining))
-                reload()
                 if settings.isPopupsEnabled {
                     alert = AlertInfo(title: "Notice", message: CombinedLibraryStrings.forcedSwitchMessage(serverLabel: remaining.displayLabel))
                 }
+                // resetTabs: false — popping the settings stack out from under the
+                // notice alert wedges the navigation (tab bar never returns), and the
+                // merged root screens all refresh themselves on serverSwitched anyway
+                serverSwitcher.switchContext(to: .server(remaining), resetTabs: false)
+                reload()
             } else {
                 serverSwitcher.switchContext(to: nil, resetTabs: false)
                 sheet = .add
@@ -232,13 +237,14 @@ import CocoaLumberjackSwift
         }
 
         // When the current server was deleted, automatically switch to another server,
-        // or show the add-server sheet when none remain
+        // or show the add-server sheet when none remain. As above, the notice
+        // presents before the switch's tab pops.
         guard wasCurrentServer else { return }
         if let replacement = servers.first {
-            serverSwitcher.switchContext(to: .server(replacement))
             if settings.isPopupsEnabled {
                 alert = AlertInfo(title: "Notice", message: "The active server was deleted, so iSub switched to \(replacement.displayLabel)")
             }
+            serverSwitcher.switchContext(to: .server(replacement))
         } else {
             // The deleted server's rows and files are already gone, but playback,
             // streams, and jukebox mode may still reference it — run the same switch

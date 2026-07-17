@@ -15,7 +15,8 @@ final class TagAlbumViewController: CustomUITableViewController {
     @Injected private var settings: SavedSettings
     @Injected private var playbackCoordinator: PlaybackCoordinator
     
-    var serverId: Int { settings.currentServerId }
+    // The pushed album's server, NOT the global current server (nil in Combined)
+    var serverId: Int { tagAlbum.serverId }
     
     private let tagAlbum: TagAlbum
     private var loaderTask: Task<Void, Never>?
