@@ -27,10 +27,12 @@ final class PerServerPager<Item> {
     private let fetchPage: @Sendable (Server, _ offset: Int) async throws -> [Item]
     private var cursors: [Cursor]
 
-    init(servers: [Server], pageSize: Int, fetchPage: @escaping @Sendable (Server, _ offset: Int) async throws -> [Item]) {
+    // startingOffsets seeds each server's cursor when an initial page was already
+    // fetched outside the pager (e.g. the combined search's first fan-out)
+    init(servers: [Server], pageSize: Int, startingOffsets: [Int: Int] = [:], fetchPage: @escaping @Sendable (Server, _ offset: Int) async throws -> [Item]) {
         self.pageSize = pageSize
         self.fetchPage = fetchPage
-        self.cursors = servers.map { Cursor(server: $0) }
+        self.cursors = servers.map { Cursor(server: $0, offset: startingOffsets[$0.id] ?? 0) }
     }
 
     var hasMore: Bool {

@@ -10,31 +10,55 @@ import UIKit
 import Resolver
 import CocoaLumberjackSwift
 
+// Combined Library paging for one results screen: each case wraps a typed
+// per-server pager matching that screen's item type
+enum SearchResultsPager {
+    case folderArtists(PerServerPager<FolderArtist>)
+    case folderAlbums(PerServerPager<FolderAlbum>)
+    case tagArtists(PerServerPager<TagArtist>)
+    case tagAlbums(PerServerPager<TagAlbum>)
+    case songs(PerServerPager<Song>)
+
+    @MainActor var hasMore: Bool {
+        switch self {
+        case .folderArtists(let pager): return pager.hasMore
+        case .folderAlbums(let pager): return pager.hasMore
+        case .tagArtists(let pager): return pager.hasMore
+        case .tagAlbums(let pager): return pager.hasMore
+        case .songs(let pager): return pager.hasMore
+        }
+    }
+}
+
 final class SearchSongsViewController: CustomUITableViewController {
     @Injected private var store: Store
     @Injected private var settings: SavedSettings
     @Injected private var jukebox: Jukebox
     @Injected private var playQueue: PlayQueue
     @Injected private var playbackCoordinator: PlaybackCoordinator
-    
+
     let serverId: Int
     let query: String
     let searchType: AsyncSearchLoader.SearchType
     let searchItemType: AsyncSearchLoader.SearchItemType
-    
+
     private(set) var folderArtists: [FolderArtist]
     private(set) var folderAlbums: [FolderAlbum]
     private(set) var tagArtists: [TagArtist]
     private(set) var tagAlbums: [TagAlbum]
     private(set) var songs: [Song]
-        
+
+    // Combined Library paging (nil in single-server mode, which keeps its own
+    // offset stepping below)
+    private let pager: SearchResultsPager?
+
     private var offset = 0
     private var isMoreResults = true
     private var isLoading = false
 //    private var searchLoader: SearchLoader
     private var loaderTask: Task<Void, Never>?
-    
-    init(serverId: Int, query: String, searchType: AsyncSearchLoader.SearchType, searchItemType: AsyncSearchLoader.SearchItemType, folderArtists: [FolderArtist] = [], folderAlbums: [FolderAlbum] = [], tagArtists: [TagArtist] = [], tagAlbums: [TagAlbum] = [], songs: [Song] = []) {
+
+    init(serverId: Int, query: String, searchType: AsyncSearchLoader.SearchType, searchItemType: AsyncSearchLoader.SearchItemType, folderArtists: [FolderArtist] = [], folderAlbums: [FolderAlbum] = [], tagArtists: [TagArtist] = [], tagAlbums: [TagAlbum] = [], songs: [Song] = [], pager: SearchResultsPager? = nil) {
         self.serverId = serverId
         self.query = query
         self.searchType = searchType
@@ -44,21 +68,26 @@ final class SearchSongsViewController: CustomUITableViewController {
         self.tagArtists = tagArtists
         self.tagAlbums = tagAlbums
         self.songs = songs
+        self.pager = pager
 //        self.searchLoader = SearchLoader(serverId: serverId, searchType: searchType, searchItemType: searchItemType, query: query)
-        
-        switch searchItemType {
-        case .artists:
-            let artists: [Any] = searchType == .folder ? folderArtists : tagArtists
-            isMoreResults = artists.count >= AsyncSearchLoader.searchItemCount
-        case .albums:
-            let albums: [Any] = searchType == .folder ? folderAlbums : tagAlbums
-            isMoreResults = albums.count >= AsyncSearchLoader.searchItemCount
-        case .songs:
-            isMoreResults = songs.count >= AsyncSearchLoader.searchItemCount
-        default:
-            isMoreResults = true
+
+        if let pager {
+            isMoreResults = pager.hasMore
+        } else {
+            switch searchItemType {
+            case .artists:
+                let artists: [Any] = searchType == .folder ? folderArtists : tagArtists
+                isMoreResults = artists.count >= AsyncSearchLoader.searchItemCount
+            case .albums:
+                let albums: [Any] = searchType == .folder ? folderAlbums : tagAlbums
+                isMoreResults = albums.count >= AsyncSearchLoader.searchItemCount
+            case .songs:
+                isMoreResults = songs.count >= AsyncSearchLoader.searchItemCount
+            default:
+                isMoreResults = true
+            }
         }
-        
+
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -82,7 +111,31 @@ final class SearchSongsViewController: CustomUITableViewController {
     private func loadMoreResults() {
         guard !isLoading else { return }
         isLoading = true
-        
+
+        if let pager {
+            loaderTask = Task {
+                defer {
+                    tableView.reloadData()
+                    isLoading = false
+                }
+
+                switch pager {
+                case .folderArtists(let itemPager):
+                    folderArtists.append(contentsOf: await itemPager.nextPage().items)
+                case .folderAlbums(let itemPager):
+                    folderAlbums.append(contentsOf: await itemPager.nextPage().items)
+                case .tagArtists(let itemPager):
+                    tagArtists.append(contentsOf: await itemPager.nextPage().items)
+                case .tagAlbums(let itemPager):
+                    tagAlbums.append(contentsOf: await itemPager.nextPage().items)
+                case .songs(let itemPager):
+                    songs.append(contentsOf: await itemPager.nextPage().items)
+                }
+                isMoreResults = pager.hasMore
+            }
+            return
+        }
+
         offset += AsyncSearchLoader.searchItemCount
         loaderTask = Task {
             do {

@@ -76,6 +76,37 @@ final class SearchSongsPagingTests: LoaderTestCase {
         XCTAssertEqual(cell.textLabel?.text, "No more search results")
     }
 
+    @MainActor func testCombinedPagerModePagesThroughTypedPager() async {
+        let servers = [TestData.server(id: 1, urlString: "https://one.example.com"),
+                       TestData.server(id: 2, urlString: "https://two.example.com")]
+        // Both servers already contributed a full first page; each has exactly one
+        // more song at offset 20
+        let pager = PerServerPager(servers: servers, pageSize: 20, startingOffsets: [1: 20, 2: 20]) { server, offset -> [Song] in
+            guard offset == 20 else { return [] }
+            return [TestData.song(serverId: server.id, id: "s\(server.id)-more", path: "a/\(server.id)-more.mp3")]
+        }
+        let freshSettings = SavedSettings()
+        TestContainer.register { freshSettings }
+        let freshPlayQueue = makeTestPlayQueue()
+        TestContainer.register { freshPlayQueue }
+        let controller = SearchSongsViewController(serverId: 1, query: "beck", searchType: .tag, searchItemType: .songs,
+                                                   songs: makeSongs(0..<20), pager: .songs(pager))
+
+        let table = UITableView()
+        XCTAssertEqual(controller.tableView(table, numberOfRowsInSection: 0), 21)
+        _ = controller.tableView(table, cellForRowAt: IndexPath(row: 20, section: 0))
+        let deadline = Date(timeIntervalSinceNow: 5)
+        while controller.songs.count < 22 && Date() < deadline {
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+
+        XCTAssertEqual(controller.songs.suffix(2).map(\.serverId), [1, 2], "one page-2 song per server, interleaved")
+        XCTAssertEqual(MockSubsonicServer.receivedRequests(action: .search3).count, 0, "pager mode replaces the offset loader")
+
+        let endCell = controller.tableView(table, cellForRowAt: IndexPath(row: 22, section: 0))
+        XCTAssertEqual(endCell.textLabel?.text, "No more search results", "short pages exhausted every server")
+    }
+
     func testEmptyPageFlipsIsMoreResultsToFalse() {
         let controller = makeController(songs: makeSongs(0..<20))
         MockSubsonicServer.stub(.search3, data: Data(searchResponseXML(songs: 20..<20).utf8))

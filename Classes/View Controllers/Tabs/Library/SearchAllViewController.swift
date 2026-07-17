@@ -35,12 +35,16 @@ final class SearchAllViewController: TabmanViewController {
     let tagArtists: [TagArtist]
     let tagAlbums: [TagAlbum]
     let songs: [Song]
-    
+
+    // Combined Library: builds the per-server pager for a child results screen
+    // (nil in single-server mode, where children page by offset themselves)
+    private let combinedPagerFactory: (@MainActor (AsyncSearchLoader.SearchItemType) -> SearchResultsPager?)?
+
     private var tabs = [TabType]()
     private let buttonBar = TMBar.ButtonBar()
     private var controllerCache = [TabType: UIViewController]()
-    
-    init(serverId: Int, query: String, searchType: AsyncSearchLoader.SearchType, folderArtists: [FolderArtist] = [], folderAlbums: [FolderAlbum] = [], tagArtists: [TagArtist] = [], tagAlbums: [TagAlbum] = [], songs: [Song] = []) {
+
+    init(serverId: Int, query: String, searchType: AsyncSearchLoader.SearchType, folderArtists: [FolderArtist] = [], folderAlbums: [FolderAlbum] = [], tagArtists: [TagArtist] = [], tagAlbums: [TagAlbum] = [], songs: [Song] = [], combinedPagerFactory: (@MainActor (AsyncSearchLoader.SearchItemType) -> SearchResultsPager?)? = nil) {
         self.serverId = serverId
         self.query = query
         self.searchType = searchType
@@ -49,6 +53,7 @@ final class SearchAllViewController: TabmanViewController {
         self.tagArtists = tagArtists
         self.tagAlbums = tagAlbums
         self.songs = songs
+        self.combinedPagerFactory = combinedPagerFactory
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -94,15 +99,15 @@ final class SearchAllViewController: TabmanViewController {
             let controller: SearchSongsViewController
             switch type {
             case .folderArtists:
-                controller = SearchSongsViewController(serverId: serverId, query: query, searchType: .folder, searchItemType: .artists, folderArtists: folderArtists)
+                controller = SearchSongsViewController(serverId: serverId, query: query, searchType: .folder, searchItemType: .artists, folderArtists: folderArtists, pager: combinedPagerFactory?(.artists))
             case .folderAlbums:
-                controller = SearchSongsViewController(serverId: serverId, query: query, searchType: .folder, searchItemType: .albums, folderAlbums: folderAlbums)
+                controller = SearchSongsViewController(serverId: serverId, query: query, searchType: .folder, searchItemType: .albums, folderAlbums: folderAlbums, pager: combinedPagerFactory?(.albums))
             case .tagArtists:
-                controller = SearchSongsViewController(serverId: serverId, query: query, searchType: .tag, searchItemType: .artists, tagArtists: tagArtists)
+                controller = SearchSongsViewController(serverId: serverId, query: query, searchType: .tag, searchItemType: .artists, tagArtists: tagArtists, pager: combinedPagerFactory?(.artists))
             case .tagAlbums:
-                controller = SearchSongsViewController(serverId: serverId, query: query, searchType: .tag, searchItemType: .albums, tagAlbums: tagAlbums)
+                controller = SearchSongsViewController(serverId: serverId, query: query, searchType: .tag, searchItemType: .albums, tagAlbums: tagAlbums, pager: combinedPagerFactory?(.albums))
             case .songs:
-                controller = SearchSongsViewController(serverId: serverId, query: query, searchType: searchType, searchItemType: .songs, songs: songs)
+                controller = SearchSongsViewController(serverId: serverId, query: query, searchType: searchType, searchItemType: .songs, songs: songs, pager: combinedPagerFactory?(.songs))
             }
             controllerCache[type] = controller
             return controller

@@ -15,6 +15,7 @@ import Resolver
 // and pushes the results screens onto the same navigation stack.
 final class ServerSearchViewController: UIViewController {
     @Injected private var settings: SavedSettings
+    @Injected private var store: Store
 
     private let searchController = UISearchController(searchResultsController: nil)
     private var loaderTask: Task<Void, Never>?
@@ -59,7 +60,11 @@ final class ServerSearchViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let isTagSearchSupported = settings.currentServer?.isTagSearchSupported ?? false
+        // In the Combined Library the Tags scope appears when ANY server supports tag
+        // search; tag-incapable servers just sit out that scope
+        let isTagSearchSupported = settings.isCombinedContext
+            ? store.servers().contains { $0.isTagSearchSupported }
+            : settings.currentServer?.isTagSearchSupported ?? false
         // The scope bar only shows while the search bar is active
         searchController.searchBar.scopeButtonTitles = isTagSearchSupported ? ["Folders", "Tags"] : nil
     }
@@ -72,6 +77,11 @@ final class ServerSearchViewController: UIViewController {
 extension ServerSearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let query = searchBar.text, !query.isEmpty else { return }
+
+        if settings.isCombinedContext {
+            performCombinedSearch(query: query, useTagScope: searchBar.selectedScopeButtonIndex == 1)
+            return
+        }
 
         var searchType = AsyncSearchLoader.SearchType.old
         if settings.currentServer?.isTagSearchSupported ?? false {
@@ -94,15 +104,7 @@ extension ServerSearchViewController: UISearchBarDelegate {
                 } else {
                     controller = SearchAllViewController(serverId: serverId, query: query, searchType: searchType, folderArtists: responseData.folderArtists, folderAlbums: responseData.folderAlbums, tagArtists: responseData.tagArtists, tagAlbums: responseData.tagAlbums, songs: responseData.songs)
                 }
-                // A push during the search UI's dismissal transition gets dropped, so
-                // dismiss first and push from the completion
-                if searchController.isActive {
-                    searchController.dismiss(animated: true) {
-                        self.pushViewControllerCustom(controller)
-                    }
-                } else {
-                    self.pushViewControllerCustom(controller)
-                }
+                self.pushSearchResults(controller)
             } catch {
                 if self.settings.isPopupsEnabled, !error.isCanceled {
                     let alert = UIAlertController(title: "Error", message: "There was an error completing the search.\n\nError: \(error.localizedDescription)", preferredStyle: .alert)
@@ -110,6 +112,108 @@ extension ServerSearchViewController: UISearchBarDelegate {
                     self.present(alert, animated: true)
                 }
             }
+        }
+    }
+
+    // Every server searched at once, honoring each server's capabilities: the Tags
+    // scope asks only tag-capable servers; the Folders scope uses search2 where
+    // supported and the old search (songs only) elsewhere. Results interleave so
+    // every server stays visible near the top; further pages go through per-server
+    // pagers seeded past this first fetch.
+    private func performCombinedSearch(query: String, useTagScope: Bool) {
+        let servers = store.servers()
+        let participants: [Server]
+        var searchTypesByServerId = [Int: AsyncSearchLoader.SearchType]()
+        if useTagScope {
+            participants = servers.filter { $0.isTagSearchSupported }
+            for server in participants { searchTypesByServerId[server.id] = .tag }
+        } else {
+            participants = servers
+            for server in participants { searchTypesByServerId[server.id] = server.isNewSearchSupported ? .folder : .old }
+        }
+
+        loaderTask?.cancel()
+        loaderTask = Task {
+            HUD.show(closeHandler: cancelLoad)
+            defer {
+                HUD.hide()
+            }
+
+            let result = await ServerFanOut.run(servers: participants) { server in
+                try await AsyncSearchLoader(serverId: server.id, searchType: searchTypesByServerId[server.id] ?? .folder, searchItemType: .all, query: query).load()
+            }
+            if result.isTotalFailure, let failure = result.failures.first {
+                if settings.isPopupsEnabled {
+                    let alert = UIAlertController(title: "Error", message: "There was an error completing the search.\n\nError: \(failure.error.localizedDescription)", preferredStyle: .alert)
+                    alert.addOKAction()
+                    present(alert, animated: true)
+                }
+                return
+            }
+
+            func merged<Item>(_ keyPath: KeyPath<SearchAPIResponseData, [Item]>) -> [Item] {
+                ServerFanOutResult(successes: result.successes.map { .init(server: $0.server, value: $0.value[keyPath: keyPath]) },
+                                   failures: []).interleaved()
+            }
+            // A server whose first page for a field came back short has no more of
+            // that field; only full-page servers keep paging
+            @MainActor func pager<Item>(_ keyPath: KeyPath<SearchAPIResponseData, [Item]>,
+                                        fetchPage: @escaping @Sendable (Server, Int) async throws -> [Item]) -> PerServerPager<Item> {
+                let counts = Dictionary(uniqueKeysWithValues: result.successes.map { ($0.server.id, $0.value[keyPath: keyPath].count) })
+                let pagingServers = result.successes.map(\.server).filter { (counts[$0.id] ?? 0) >= AsyncSearchLoader.searchItemCount }
+                return PerServerPager(servers: pagingServers, pageSize: AsyncSearchLoader.searchItemCount,
+                                      startingOffsets: counts, fetchPage: fetchPage)
+            }
+
+            let searchTypes = searchTypesByServerId
+            let combinedPagerFactory: @MainActor (AsyncSearchLoader.SearchItemType) -> SearchResultsPager? = { itemType in
+                switch itemType {
+                case .artists where useTagScope:
+                    return .tagArtists(pager(\.tagArtists) { server, offset in
+                        try await AsyncSearchLoader(serverId: server.id, searchType: .tag, searchItemType: .artists, query: query, offset: offset).load().tagArtists
+                    })
+                case .artists:
+                    return .folderArtists(pager(\.folderArtists) { server, offset in
+                        try await AsyncSearchLoader(serverId: server.id, searchType: .folder, searchItemType: .artists, query: query, offset: offset).load().folderArtists
+                    })
+                case .albums where useTagScope:
+                    return .tagAlbums(pager(\.tagAlbums) { server, offset in
+                        try await AsyncSearchLoader(serverId: server.id, searchType: .tag, searchItemType: .albums, query: query, offset: offset).load().tagAlbums
+                    })
+                case .albums:
+                    return .folderAlbums(pager(\.folderAlbums) { server, offset in
+                        try await AsyncSearchLoader(serverId: server.id, searchType: .folder, searchItemType: .albums, query: query, offset: offset).load().folderAlbums
+                    })
+                case .songs:
+                    return .songs(pager(\.songs) { server, offset in
+                        try await AsyncSearchLoader(serverId: server.id, searchType: searchTypes[server.id] ?? .folder, searchItemType: .songs, query: query, offset: offset).load().songs
+                    })
+                default:
+                    return nil
+                }
+            }
+
+            let controller = SearchAllViewController(serverId: settings.currentServerId, query: query,
+                                                     searchType: useTagScope ? .tag : .folder,
+                                                     folderArtists: merged(\.folderArtists),
+                                                     folderAlbums: merged(\.folderAlbums),
+                                                     tagArtists: merged(\.tagArtists),
+                                                     tagAlbums: merged(\.tagAlbums),
+                                                     songs: merged(\.songs),
+                                                     combinedPagerFactory: combinedPagerFactory)
+            pushSearchResults(controller)
+        }
+    }
+
+    // A push during the search UI's dismissal transition gets dropped, so dismiss
+    // first and push from the completion
+    private func pushSearchResults(_ controller: UIViewController) {
+        if searchController.isActive {
+            searchController.dismiss(animated: true) {
+                self.pushViewControllerCustom(controller)
+            }
+        } else {
+            self.pushViewControllerCustom(controller)
         }
     }
 
