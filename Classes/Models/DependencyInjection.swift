@@ -62,7 +62,7 @@ final class AppServices {
         nowPlayingService = NowPlayingService(settings: settings, playQueue: playQueue, player: player, coordinator: playbackCoordinator)
         stateRestorer = StateRestorer(settings: settings, player: player, playQueue: playQueue)
         serverSwitcher = ServerSwitcher(streamManager: downloadEngine.streamManager, player: player, playQueue: playQueue, downloadQueue: downloadEngine, settings: settings, networkStatus: networkMonitor)
-        offlineModeCoordinator = OfflineModeCoordinator(settings: settings, session: session, networkMonitor: networkMonitor, playbackCoordinator: playbackCoordinator, analytics: analytics)
+        offlineModeCoordinator = OfflineModeCoordinator(settings: settings, session: session, networkStatus: networkMonitor, playbackCoordinator: playbackCoordinator, analytics: analytics)
 
         // Back-edges are weak references attached explicitly, never resolved ambiently
         // (the stream manager <-> download queue steal edge is wired inside the engine)

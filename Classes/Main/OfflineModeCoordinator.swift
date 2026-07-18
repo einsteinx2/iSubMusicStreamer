@@ -16,7 +16,7 @@ import CocoaLumberjackSwift
 final class OfflineModeCoordinator {
     private let settings: SavedSettings
     private let session: ServerSession
-    private let networkMonitor: NetworkMonitor
+    private let networkStatus: NetworkStatus
     private let playbackCoordinator: PlaybackCoordinator
     private let analytics: Analytics
 
@@ -31,10 +31,10 @@ final class OfflineModeCoordinator {
     // (e.g. a CarPlay-first launch); the phone scene consumes it when it appears
     private var pendingLaunchAlertMessage: String?
 
-    init(settings: SavedSettings, session: ServerSession, networkMonitor: NetworkMonitor, playbackCoordinator: PlaybackCoordinator, analytics: Analytics) {
+    init(settings: SavedSettings, session: ServerSession, networkStatus: NetworkStatus, playbackCoordinator: PlaybackCoordinator, analytics: Analytics) {
         self.settings = settings
         self.session = session
-        self.networkMonitor = networkMonitor
+        self.networkStatus = networkStatus
         self.playbackCoordinator = playbackCoordinator
         self.analytics = analytics
 
@@ -62,8 +62,8 @@ final class OfflineModeCoordinator {
         hasPerformedLaunchOfflineCheck = true
 
         let alertMessage = SceneDelegate.launchOfflineAlertMessage(isForceOfflineMode: settings.isForceOfflineMode,
-                                                                   isNetworkReachable: networkMonitor.isNetworkReachable,
-                                                                   isWifi: networkMonitor.isWifi,
+                                                                   isNetworkReachable: networkStatus.isNetworkReachable,
+                                                                   isWifi: networkStatus.isWifi,
                                                                    isDisableUsageOver3G: settings.isDisableUsageOver3G)
         if let alertMessage {
             if settings.isOfflineMode {
@@ -93,7 +93,7 @@ final class OfflineModeCoordinator {
     func sceneBecameActive() {
         if !hasPerformedLaunchOfflineCheck {
             performLaunchOfflineCheckIfNeeded()
-        } else if networkMonitor.isNetworkReachable {
+        } else if networkStatus.isNetworkReachable {
             serverChecker.checkServer()
         } else {
             enterOfflineMode()
@@ -107,8 +107,8 @@ final class OfflineModeCoordinator {
     // MARK: Transitions (moved verbatim from SceneDelegate)
 
     @objc private func enterOnlineMode() {
-        session.enterOnlineMode(isNetworkReachable: networkMonitor.isNetworkReachable,
-                                isWifi: networkMonitor.isWifi,
+        session.enterOnlineMode(isNetworkReachable: networkStatus.isNetworkReachable,
+                                isWifi: networkStatus.isWifi,
                                 isForceOfflineMode: settings.isForceOfflineMode,
                                 isDisableUsageOver3G: settings.isDisableUsageOver3G)
     }

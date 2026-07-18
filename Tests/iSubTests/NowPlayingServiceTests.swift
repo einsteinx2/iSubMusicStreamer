@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import MediaPlayer
 @testable import iSub_Beta
 
 // Remote command handler behavior (BUG-23), moved from the old static
@@ -159,6 +160,29 @@ final class NowPlayingServiceTests: StoreTestCase {
         XCTAssertEqual(playQueue.repeatMode, .all)
         XCTAssertEqual(service.handleChangeRepeatMode(.off), .success)
         XCTAssertEqual(playQueue.repeatMode, RepeatMode.none)
+    }
+
+    // MARK: Now playing info (drives the lock screen AND CarPlay's Now Playing)
+
+    func testCurrentNowPlayingInfoReportsPausedRate() {
+        seedQueue(1)
+        playQueue.currentIndex = 0
+
+        player.isPlaying = false
+        var info = service.currentNowPlayingInfo()
+        XCTAssertEqual(info[MPMediaItemPropertyTitle] as? String, "Song 1")
+        XCTAssertEqual(info[MPNowPlayingInfoPropertyPlaybackRate] as? Double, 0.0,
+                       "a paused rate of 1 makes the CarPlay/lock-screen progress bar keep advancing")
+
+        player.isPlaying = true
+        info = service.currentNowPlayingInfo()
+        XCTAssertEqual(info[MPNowPlayingInfoPropertyPlaybackRate] as? Double, 1.0)
+        XCTAssertEqual(info[MPNowPlayingInfoPropertyPlaybackQueueIndex] as? Int, 0)
+        XCTAssertEqual(info[MPNowPlayingInfoPropertyPlaybackQueueCount] as? Int, 1)
+    }
+
+    func testCurrentNowPlayingInfoEmptyWithNoCurrentSong() {
+        XCTAssertTrue(service.currentNowPlayingInfo().isEmpty)
     }
 }
 
