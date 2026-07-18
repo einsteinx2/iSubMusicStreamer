@@ -112,4 +112,17 @@ enum AccessibilityId {
     static let serversList = "servers.list"
     static let serversAdd = "servers.add"
     static let serversEdit = "servers.edit"
+
+    // CarPlay UI-test mirror (UI test mode with -CARPLAY only; see
+    // CarPlayUITestMirror.swift)
+    static let carPlayToggle = "carplay.toggle"
+    static let carPlayPhone = "carplay.phone"
+    static let carPlayBack = "carplay.back"
+    static let carPlayTitle = "carplay.title"
+    static let carPlayList = "carplay.list"
+    static let carPlayEmptyTitle = "carplay.empty.title"
+    static let carPlayNowPlayingTitle = "carplay.nowPlaying.title"
+    static let carPlayNowPlayingUpNext = "carplay.nowPlaying.upNext"
+
+    static func carPlayTab(_ title: String) -> String { "carplay.tab.\(title)" }
 }

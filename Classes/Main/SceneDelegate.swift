@@ -88,6 +88,11 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // Recover current state if player was interrupted
         bootstrap.sceneDidConnect()
+
+        // UI-test-only CarPlay mirror (-CARPLAY): runs the real CarPlayManager in
+        // this process and renders its template stack so XCUITests can drive the
+        // car UI (the real car screen has no automation hooks)
+        UITestCarPlaySupport.connectIfEnabled(windowScene: windowScene)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

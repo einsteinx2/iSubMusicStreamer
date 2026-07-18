@@ -61,10 +61,20 @@ management, download-queue management, playlist editing, bookmark creation
   must be enabled on the App IDs in the developer portal and included in the
   provisioning profiles. Both targets reference their entitlements files via
   `CODE_SIGN_ENTITLEMENTS`.
-- **Tests**: `CarPlayScreenTests`, `CarPlayManagerTests`,
+- **Unit tests**: `CarPlayScreenTests`, `CarPlayManagerTests`,
   `OfflineModeCoordinatorTests`, plus the now-playing info additions in
   `NowPlayingServiceTests`. CP list/tab templates construct fine in simulator
   unit tests; only `CPInterfaceController` needs the fake.
+- **UI (E2E) tests**: `CarPlayUITests` in iSubUITests. XCUITest cannot drive
+  the real car screen (templates render out-of-process in the system CarPlay
+  host, there are no public automation APIs, and headless CI simulators can't
+  attach the CarPlay display), so the suite launches the app with `-CARPLAY`,
+  which runs the real `CarPlayManager` in-process and renders its live template
+  stack in a native mirror window (`CarPlayUITestMirror.swift`). Row taps
+  invoke the real `CPListItem` handlers — browsing, playback, queue, offline
+  reordering, and the jukebox handoff are exercised end-to-end against the
+  fixture server; the mirror's "Phone" / floating "Car" buttons let tests hop
+  between the car and phone UIs in one launch.
 
 ## Gotchas
 
