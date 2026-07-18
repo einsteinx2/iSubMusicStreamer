@@ -82,7 +82,7 @@ struct AboutView: View {
         let serverId = settings.currentServerId
         store.resetCoverArtCache(serverId: serverId)
         store.resetArtistArtCache(serverId: serverId)
-        SceneDelegate.shared.popLibraryTab()
+        SceneDelegate.shared?.popLibraryTab()
     }
 
     private func shareAppLogs() {

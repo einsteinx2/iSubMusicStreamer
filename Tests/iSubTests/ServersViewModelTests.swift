@@ -39,7 +39,8 @@ final class ServersViewModelTests: StoreTestCase {
                                           player: FakePlayer(),
                                           playQueue: makeTestPlayQueue(),
                                           downloadQueue: FakeDownloadQueue(),
-                                          settings: settings)
+                                          settings: settings,
+                                          networkStatus: FakeNetworkStatus())
         self.switcher = switcher
         let injectedSwitcher: ServerSwitcher = switcher
         TestContainer.register { injectedSwitcher }

@@ -39,34 +39,54 @@ final class NowPlayingService {
     // 30 second timer running to keep the elapsed time in sync
     func refresh() {
         DispatchQueue.main.async {
-            var info = [String: Any]()
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = self.currentNowPlayingInfo()
+            self.startRefreshTimer()
+        }
+    }
 
-            if let song = self.playQueue.currentSong {
-                info[MPMediaItemPropertyTitle] = song.title
-                info[MPMediaItemPropertyAlbumTitle] = song.tagAlbumName
-                info[MPMediaItemPropertyArtist] = song.tagArtistName
-                info[MPMediaItemPropertyGenre] = song.genre
-                if song.duration > 0 {
-                    info[MPMediaItemPropertyPlaybackDuration] = song.duration
-                }
-                info[MPNowPlayingInfoPropertyPlaybackQueueIndex] = self.playQueue.currentIndex
-                info[MPNowPlayingInfoPropertyPlaybackQueueCount] = self.playQueue.count
-                info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.player.progress
-                info[MPNowPlayingInfoPropertyPlaybackRate] = 1
+    // Internal, not private, for test access. This surface also drives CarPlay's
+    // now playing screen, so the values must be precise — in particular the rate
+    // must be 0 while paused or the system progress bars keep advancing
+    func currentNowPlayingInfo() -> [String: Any] {
+        var info = [String: Any]()
 
-                if let coverArtId = song.coverArtId, self.settings.isLockScreenArtEnabled {
-                    if let image = AsyncCoverArtLoaderManager.shared.coverArtImage(serverId: song.serverId, coverArtId: coverArtId, isLarge: true) {
-                        let artwork = MPMediaItemArtwork(boundsSize: image.size) { size -> UIImage in
-                            return image
-                        }
-                        info[MPMediaItemPropertyArtwork] = artwork
-                    }
+        if let song = playQueue.currentSong {
+            info[MPMediaItemPropertyTitle] = song.title
+            info[MPMediaItemPropertyAlbumTitle] = song.tagAlbumName
+            info[MPMediaItemPropertyArtist] = song.tagArtistName
+            info[MPMediaItemPropertyGenre] = song.genre
+            if song.duration > 0 {
+                info[MPMediaItemPropertyPlaybackDuration] = song.duration
+            }
+            info[MPNowPlayingInfoPropertyPlaybackQueueIndex] = playQueue.currentIndex
+            info[MPNowPlayingInfoPropertyPlaybackQueueCount] = playQueue.count
+            info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.progress
+            info[MPNowPlayingInfoPropertyPlaybackRate] = player.isPlaying ? 1.0 : 0.0
+
+            if let coverArtId = song.coverArtId, settings.isLockScreenArtEnabled {
+                if let image = AsyncCoverArtLoaderManager.shared.coverArtImage(serverId: song.serverId, coverArtId: coverArtId, isLarge: true) {
+                    info[MPMediaItemPropertyArtwork] = Self.artwork(for: image)
                 }
             }
+        }
 
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+        return info
+    }
 
-            self.startRefreshTimer()
+    // Honors the consumer's requested size (the lock screen and CarPlay ask for
+    // different sizes) instead of always returning the full stored bitmap. The
+    // request handler can be called off-main; UIGraphicsImageRenderer is safe there.
+    static func artwork(for image: UIImage) -> MPMediaItemArtwork {
+        return MPMediaItemArtwork(boundsSize: image.size) { size -> UIImage in
+            // Never upscale; only render down when a smaller size is requested
+            guard size.width < image.size.width || size.height < image.size.height else { return image }
+            let fitScale = min(size.width / image.size.width, size.height / image.size.height)
+            let fitSize = CGSize(width: image.size.width * fitScale, height: image.size.height * fitScale)
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = 3 // sharp on any display without shipping the full-size bitmap
+            return UIGraphicsImageRenderer(size: fitSize, format: format).image { _ in
+                image.draw(in: CGRect(origin: .zero, size: fitSize))
+            }
         }
     }
 

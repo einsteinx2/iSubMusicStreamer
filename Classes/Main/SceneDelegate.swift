@@ -13,31 +13,28 @@ import CocoaLumberjackSwift
 // TODO: Refactor to support multiple scenes/windows
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @Injected private var settings: SavedSettings
-    @Injected private var session: ServerSession
     @Injected private var bootstrap: AppBootstrap
     @Injected private var downloadQueue: DownloadQueueing
-    @Injected private var playQueue: PlayQueue
-    @Injected private var downloadEngine: DownloadEngine
-    @Injected private var jukebox: Jukebox
-    @Injected private var analytics: Analytics
     @Injected private var stateRestorer: StateRestorer
     @Injected private var nowPlayingService: NowPlayingService
-    @Injected private var playbackCoordinator: PlaybackCoordinator
 
-    // Temporary singleton access until multiple scenes are properly supported
-    static var shared: SceneDelegate { UIApplication.shared.connectedScenes.first!.delegate as! SceneDelegate }
+    // Temporary singleton access until multiple scenes are properly supported.
+    // Optional because the phone scene is not guaranteed to exist: with CarPlay,
+    // the car scene can connect first (or be the only scene in a headless launch)
+    static var shared: SceneDelegate? {
+        UIApplication.shared.connectedScenes.compactMap { $0.delegate as? SceneDelegate }.first
+    }
     
     var window: UIWindow?
     private(set) var tabBarController: CustomUITabBarController?
     private(set) var padRootViewController: PadRootViewController?
         
     @Injected private var networkMonitor: NetworkMonitor
-    
+    @Injected private var offlineModeCoordinator: OfflineModeCoordinator
+
     var isWifi: Bool { networkMonitor.isWifi }
     var isNetworkReachable: Bool { networkMonitor.isNetworkReachable }
-    
-    private let serverChecker = ServerChecker()
-    
+
     private var isInBackground = false
     private var backgroundTask = UIBackgroundTaskIdentifier.invalid
     
@@ -82,15 +79,20 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         // TODO: Handle these properly for multiple scenes/windows
+        // (goOnline/goOffline transitions live in OfflineModeCoordinator now so
+        // they work in CarPlay-only launches)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(showPlayer), name: Notifications.showPlayer)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxToggled), name: Notifications.jukeboxDisabled)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(jukeboxToggled), name: Notifications.jukeboxEnabled)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(enterOnlineMode), name: Notifications.goOnline)
-        NotificationCenter.addObserverOnMainThread(self, selector: #selector(enterOfflineMode), name: Notifications.goOffline)
         NotificationCenter.addObserverOnMainThread(self, selector: #selector(showJukeboxError(notification:)), name: Notifications.jukeboxError)
         
         // Recover current state if player was interrupted
         bootstrap.sceneDidConnect()
+
+        // UI-test-only CarPlay mirror (-CARPLAY): runs the real CarPlayManager in
+        // this process and renders its template stack so XCUITests can drive the
+        // car UI (the real car screen has no automation hooks)
+        UITestCarPlaySupport.connectIfEnabled(windowScene: windowScene)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -103,20 +105,22 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
-        if !hasPerformedLaunchOfflineCheck {
-            hasPerformedLaunchOfflineCheck = true
-            performLaunchOfflineCheck()
-        } else if networkMonitor.isNetworkReachable {
-            serverChecker.checkServer()
-        } else {
-            enterOfflineMode()
+        offlineModeCoordinator.sceneBecameActive()
+
+        // Present the launch offline alert if a check (run by this activation or by
+        // an earlier CarPlay-only launch) decided to show one
+        if let alertMessage = offlineModeCoordinator.consumePendingLaunchAlertMessage(), settings.isPopupsEnabled {
+            DispatchQueue.main.async(after: 1.1) {
+                let alert = UIAlertController(title: "Notice", message: alertMessage, preferredStyle: .alert)
+                alert.addOKAction()
+                UIApplication.keyWindow?.rootViewController?.present(alert, animated: true)
+            }
         }
     }
 
-    private var hasPerformedLaunchOfflineCheck = false
-
     // Decides whether to enter offline mode at launch and, if so, with which alert
-    // message (nil means stay online). Static and internal for test access.
+    // message (nil means stay online). Static and internal for test access; the
+    // runtime caller is OfflineModeCoordinator.performLaunchOfflineCheckIfNeeded.
     static func launchOfflineAlertMessage(isForceOfflineMode: Bool, isNetworkReachable: Bool, isWifi: Bool, isDisableUsageOver3G: Bool) -> String? {
         if isForceOfflineMode {
             return "Offline mode switch on, entering offline mode."
@@ -126,35 +130,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return "You are not on Wifi, and have chosen to disable use over cellular. Entering offline mode."
         }
         return nil
-    }
-
-    // Reproduces the old app's launch behavior (iSubAppDelegate.m): enter offline mode
-    // when the force-offline switch is on, there's no network, or we're on cellular
-    // with cellular usage disabled - presenting the explanatory alert when popups are
-    // enabled - and only check the server when staying online
-    private func performLaunchOfflineCheck() {
-        let alertMessage = Self.launchOfflineAlertMessage(isForceOfflineMode: settings.isForceOfflineMode,
-                                                          isNetworkReachable: isNetworkReachable,
-                                                          isWifi: isWifi,
-                                                          isDisableUsageOver3G: settings.isDisableUsageOver3G)
-        if let alertMessage {
-            if settings.isOfflineMode {
-                // Already offline (the mode was set before the UI loaded): still announce
-                // it so the offline indicator banner and controls update
-                NotificationCenter.postOnMainThread(name: Notifications.didEnterOfflineMode)
-            } else {
-                enterOfflineMode()
-            }
-            if settings.isPopupsEnabled {
-                DispatchQueue.main.async(after: 1.1) {
-                    let alert = UIAlertController(title: "Notice", message: alertMessage, preferredStyle: .alert)
-                    alert.addOKAction()
-                    UIApplication.keyWindow?.rootViewController?.present(alert, animated: true)
-                }
-            }
-        } else {
-            serverChecker.checkServer()
-        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
@@ -216,22 +191,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
     }
     
-    @objc private func enterOnlineMode() {
-        session.enterOnlineMode(isNetworkReachable: isNetworkReachable,
-                                isWifi: isWifi,
-                                isForceOfflineMode: settings.isForceOfflineMode,
-                                isDisableUsageOver3G: settings.isDisableUsageOver3G)
-    }
-
-    @objc private func enterOfflineMode() {
-        guard session.enterOfflineMode() else { return }
-
-        if settings.isJukeboxEnabled {
-            playbackCoordinator.setJukeboxEnabled(false)
-            analytics.log(event: .jukeboxDisabled)
-        }
-    }
-    
     // MARK: Multitasking
     
     private func backgroundTaskExpirationHandler() {
@@ -242,9 +201,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // Make sure to end the background so we don't get killed by the OS
         cancelBackgroundTask()
-        
+
         // Cancel the next server check otherwise it will fire immediately on launch
-        serverChecker.cancelNextServerCheck()
+        offlineModeCoordinator.cancelNextServerCheck()
     }
     
     @objc private func checkRemainingBackgroundTime() {
@@ -266,7 +225,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else if !downloadQueue.isDownloading {
             // Cancel the next server check otherwise it will fire immediately on launch
             // TODO: See if this is necessary since the expiration handler should fire and handle it...
-            serverChecker.cancelNextServerCheck()
+            offlineModeCoordinator.cancelNextServerCheck()
             cancelBackgroundTask()
         } else {
             perform(#selector(checkRemainingBackgroundTime), with: nil, afterDelay: 1)

@@ -8,7 +8,6 @@
 
 import Foundation
 import CocoaLumberjackSwift
-import ProgressHUD
 import Reachability
 
 // Narrow read-only view of network state so model-layer services don't reach up into
@@ -68,7 +67,7 @@ final class NetworkMonitor {
             if !settings.isOfflineMode {
                 DDLogVerbose("[NetworkMonitor] Reachability changed to cellular and usage over cellular is disabled, entering offline mode")
                 NotificationCenter.postOnMainThread(name: Notifications.goOffline)
-                ProgressHUD.banner("You have chosen to disable usage over cellular in settings and are no longer on Wifi. Entering offline mode.", nil)
+                HUD.banner("You have chosen to disable usage over cellular in settings and are no longer on Wifi. Entering offline mode.", nil)
             }
         } else {
             // Check that the server is available before entering online mode
