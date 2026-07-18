@@ -65,6 +65,7 @@ final class CarPlayPlayQueueScreen: CarPlayListScreen {
             CarPlayRowBuilder.songRow(song: song,
                                       currentSong: currentSong,
                                       isOfflineMode: isOfflineMode,
+                                      isPlayingOverride: start + offset == currentIndex,
                                       action: .playQueuePosition(start + offset))
         }
         return [CarPlaySection(rows: rows)]

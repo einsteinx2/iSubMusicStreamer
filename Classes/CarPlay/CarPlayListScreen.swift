@@ -116,13 +116,15 @@ class CarPlayListScreen {
 // MARK: Shared row builders
 
 struct CarPlayRowBuilder {
-    // A tappable song row; the playing indicator follows the queue's current song
-    static func songRow(song: Song, currentSong: Song?, isOfflineMode: Bool, showTrackNumber: Bool = false, action: CarPlayRowAction) -> CarPlayRow {
+    // A tappable song row; the playing indicator follows the queue's current song.
+    // Screens that know the row's queue position pass isPlayingOverride so a song
+    // queued twice doesn't light up both rows.
+    static func songRow(song: Song, currentSong: Song?, isOfflineMode: Bool, showTrackNumber: Bool = false, isPlayingOverride: Bool? = nil, action: CarPlayRowAction) -> CarPlayRow {
         var title = song.title
         if showTrackNumber, let track = song.track, track > 0 {
             title = "\(track). \(song.title)"
         }
-        let isPlaying = currentSong.map { $0.serverId == song.serverId && $0.id == song.id } ?? false
+        let isPlaying = isPlayingOverride ?? currentSong.map { $0.serverId == song.serverId && $0.id == song.id } ?? false
         return CarPlayRow(title: title,
                           subtitle: song.tagArtistName,
                           artId: artId(serverId: song.serverId, coverArtId: song.coverArtId),
