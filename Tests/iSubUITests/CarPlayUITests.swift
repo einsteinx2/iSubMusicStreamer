@@ -49,7 +49,24 @@ final class CarPlayUITests: XCTestCase {
         XCTAssertTrue(element.waitForExistence(timeout: timeout), "no CarPlay row containing '\(text)'", file: file, line: line)
         XCTAssertTrue(pollUntil(timeout: 10) { element.isHittable }, "CarPlay row '\(text)' is not tappable", file: file, line: line)
         element.tap()
+        // Every car row tap navigates or starts playback, so the row should leave
+        // the foreground; if it's still hittable the tap was eaten by a cell swap
+        // mid-reload — tap once more. (Flows where the tapped text recurs on the
+        // next screen must use tapCarCellOnce instead.)
+        if !pollUntil(timeout: 2, { !element.isHittable }), element.isHittable {
+            element.tap()
+        }
         return true
+    }
+
+    // No-retry variant for rows whose text also appears on the destination screen
+    // (retrying there would tap the wrong element)
+    private func tapCarCellOnce(_ app: XCUIApplication, containing text: String, timeout: TimeInterval = 20,
+                                file: StaticString = #filePath, line: UInt = #line) {
+        let element = carCell(app, containing: text)
+        XCTAssertTrue(element.waitForExistence(timeout: timeout), "no CarPlay row containing '\(text)'", file: file, line: line)
+        XCTAssertTrue(pollUntil(timeout: 10) { element.isHittable }, "CarPlay row '\(text)' is not tappable", file: file, line: line)
+        element.tap()
     }
 
     private func openCarTab(_ app: XCUIApplication, _ title: String,
@@ -146,13 +163,15 @@ final class CarPlayUITests: XCTestCase {
         let app = launchCarPlay()
 
         tapCarCell(app, containing: "Folders")
-        tapCarCell(app, containing: "Media Folder")
+        // No-retry taps: "Media Folder" recurs as the picker's "All Media Folders"
+        // row, and "Podcasts" recurs as the picker row's subtitle after selection
+        tapCarCellOnce(app, containing: "Media Folder")
 
         // Picker lists the synthetic all-folders entry plus the fixture folders
         for row in ["All Media Folders", "Music", "Podcasts"] {
             XCTAssertTrue(carCell(app, containing: row).waitForExistence(timeout: 15), "missing media folder '\(row)'")
         }
-        tapCarCell(app, containing: "Podcasts")
+        tapCarCellOnce(app, containing: "Podcasts")
 
         // Selection pops back to the artist list and the picker row shows the choice
         // (the fixture stub serves the same index for every folder, so the list
@@ -320,7 +339,11 @@ final class CarPlayUITests: XCTestCase {
         tapCarCell(app, containing: "Bookmarks")
         let bookmarkRow = carList(app).cells.firstMatch
         XCTAssertTrue(bookmarkRow.waitForExistence(timeout: 15), "bookmark not listed in the car")
+        XCTAssertTrue(pollUntil(timeout: 10) { bookmarkRow.isHittable }, "bookmark row is not tappable")
         bookmarkRow.tap()
+        if !pollUntil(timeout: 2, { !bookmarkRow.isHittable }), bookmarkRow.isHittable {
+            bookmarkRow.tap()
+        }
         waitForCarNowPlaying(app)
     }
 }

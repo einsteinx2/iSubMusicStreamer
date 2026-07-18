@@ -188,6 +188,11 @@ private final class CarPlayMirrorViewController: UIViewController, UITableViewDa
     private var refreshTimer: Timer?
     // Snapshot rebuilt on every reload so table callbacks and taps agree
     private var displayedSections = [CPListSection]()
+    // Content signature of the last render: the poll timer only touches the view
+    // hierarchy when something actually changed, otherwise the constant
+    // reloadData() churn destroys cells mid-tap and XCUITest interactions fail
+    // with "activation point invalid"
+    private var lastRenderSignature = ""
 
     private var playQueue: PlayQueue { Resolver.resolve() }
 
@@ -303,6 +308,9 @@ private final class CarPlayMirrorViewController: UIViewController, UITableViewDa
 
     private func reloadNow() {
         guard isViewLoaded, view.window != nil else { return }
+        let signature = renderSignature()
+        guard signature != lastRenderSignature else { return }
+        lastRenderSignature = signature
 
         rebuildTabButtons()
 
@@ -343,6 +351,30 @@ private final class CarPlayMirrorViewController: UIViewController, UITableViewDa
             emptySubtitleLabel.text = listTemplate.emptyViewSubtitleVariants.first ?? ""
         }
         tableView.reloadData()
+    }
+
+    // Everything user-visible that reloadNow renders, cheap to compute. Images are
+    // deliberately excluded: async art arriving must not churn the table.
+    private func renderSignature() -> String {
+        var parts = [String]()
+        parts.append("tabs:\(tabTemplates.map { $0.tabTitle ?? $0.title ?? "" }.joined(separator: ","))")
+        parts.append("selected:\(selectedTabIndex)")
+        parts.append("depth:\(mirror.interface.templates.count)")
+
+        let top = topTemplate
+        if top === CPNowPlayingTemplate.shared {
+            parts.append("nowPlaying:\(playQueue.currentSong?.title ?? "")")
+        } else if let listTemplate = top as? CPListTemplate {
+            parts.append("list:\(ObjectIdentifier(listTemplate).hashValue):\(listTemplate.title ?? "")")
+            parts.append("empty:\(listTemplate.emptyViewTitleVariants.first ?? "")")
+            for section in listTemplate.sections {
+                parts.append("s:\(section.header ?? "")")
+                for case let item as CPListItem in section.items {
+                    parts.append("i:\(item.text ?? "")|\(item.detailText ?? "")|\(item.isEnabled)|\(item.isPlaying)")
+                }
+            }
+        }
+        return parts.joined(separator: "\n")
     }
 
     private func rebuildTabButtons() {
