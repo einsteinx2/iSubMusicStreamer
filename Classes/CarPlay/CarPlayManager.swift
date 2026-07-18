@@ -144,6 +144,10 @@ final class CarPlayManager: NSObject {
                 let template = makeTemplate(for: screen)
                 template.tabTitle = screen.title
                 template.tabImage = tabImage(for: screen)
+                if screen is CarPlayLibraryRootScreen {
+                    // "Hey Siri" cell backed by the INPlayMediaIntent in-app handler
+                    template.assistantCellConfiguration = CPAssistantCellConfiguration(position: .top, visibility: .always, assistantAction: .playMedia)
+                }
                 return (screen, template)
             }
         } else {
