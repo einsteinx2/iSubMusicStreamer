@@ -225,12 +225,15 @@ final class CarPlayManager: NSObject {
 
     func push(screen: CarPlayListScreen) {
         let template = makeTemplate(for: screen)
-        pushedScreens.append((screen, template))
         if interface.templates.count >= Self.maximumTemplateDepth {
             // At the depth limit: replace the top template instead of failing
             interface.popTemplate(animated: false)
         }
         interface.pushTemplate(template, animated: true)
+        // Recorded only after the push is issued: the depth-guard pop above fires
+        // the stack-changed prune, which would otherwise sweep away an entry whose
+        // template isn't in the stack yet
+        pushedScreens.append((screen, template))
     }
 
     private func showNowPlaying() {
