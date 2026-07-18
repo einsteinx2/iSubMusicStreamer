@@ -8,7 +8,6 @@
 
 import Foundation
 import CocoaLumberjackSwift
-import ProgressHUD
 
 // The single owner of the download subsystem (Phase 8.10): the stream manager is
 // the temp/prefetch lane, and the permanent download lane (the old DownloadQueue
@@ -265,7 +264,7 @@ extension DownloadEngine: StreamHandlerDelegate {
                 self.resume(byteOffset: 0)
             }
         } else {
-            ProgressHUD.banner("Song failed to download", handler.song.primaryLabelText)
+            HUD.banner("Song failed to download", handler.song.primaryLabelText)
 
             // Tried max number of times so remove
             NotificationCenter.postOnMainThread(name: Notifications.downloadQueueSongFailed)

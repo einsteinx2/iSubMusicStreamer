@@ -171,7 +171,7 @@ struct ServerEditView: View {
                 dismiss()
 
                 if UIDevice.isPad {
-                    SceneDelegate.shared.padRootViewController?.menuViewController.showLibrary()
+                    SceneDelegate.shared?.padRootViewController?.menuViewController.showLibrary()
                 }
 
                 serverSwitcher.switchServer()

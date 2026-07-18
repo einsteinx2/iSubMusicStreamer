@@ -24,8 +24,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @Injected private var nowPlayingService: NowPlayingService
     @Injected private var playbackCoordinator: PlaybackCoordinator
 
-    // Temporary singleton access until multiple scenes are properly supported
-    static var shared: SceneDelegate { UIApplication.shared.connectedScenes.first!.delegate as! SceneDelegate }
+    // Temporary singleton access until multiple scenes are properly supported.
+    // Optional because the phone scene is not guaranteed to exist: with CarPlay,
+    // the car scene can connect first (or be the only scene in a headless launch)
+    static var shared: SceneDelegate? {
+        UIApplication.shared.connectedScenes.compactMap { $0.delegate as? SceneDelegate }.first
+    }
     
     var window: UIWindow?
     private(set) var tabBarController: CustomUITabBarController?

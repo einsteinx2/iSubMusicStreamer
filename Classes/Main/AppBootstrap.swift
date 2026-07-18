@@ -78,10 +78,16 @@ final class AppBootstrap {
         services.analytics.setup()
     }
 
-    // The playback-recovery kickoff from scene(_:willConnectTo:).
-    // INVARIANT: runs after launch() (state restoration) and after SceneDelegate has
-    // registered its observers, so resumeSong-triggered notifications are seen
+    // The playback-recovery kickoff from scene(_:willConnectTo:). Either the phone
+    // scene or the CarPlay scene may connect first (or both, in either order), so
+    // this runs exactly once for whichever arrives first.
+    // INVARIANT: runs after launch() (state restoration) and after the connecting
+    // scene delegate has registered its observers, so resumeSong-triggered
+    // notifications are seen
+    private var hasConnectedFirstScene = false
     func sceneDidConnect() {
+        guard !hasConnectedFirstScene else { return }
+        hasConnectedFirstScene = true
         services.downloadEngine.setup()
         services.playbackCoordinator.resumeSong()
     }

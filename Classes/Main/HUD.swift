@@ -24,6 +24,10 @@ struct HUD {
             try? await Task.sleep(nanoseconds: defaultGraceTime)
             guard !Task.isCancelled else { return }
 
+            // ProgressHUD presents in the key window; in a headless launch (e.g.
+            // CarPlay-only, no phone scene) there is none, so skip entirely
+            guard await MainActor.run(body: { UIApplication.keyWindow != nil }) else { return }
+
             let text = message ?? defaultMessage
             let secondaryText = closeHandler == nil ? nil : "tap to cancel"
             await ProgressHUD.animate(text, secondaryText: secondaryText, type: .activityIndicator, interaction: false, tapHandler: closeHandler)
@@ -45,5 +49,16 @@ struct HUD {
         task?.cancel()
         task = nil
         ProgressHUD.dismiss()
+    }
+
+    // Banner variant with the same no-key-window guard, for call sites that can
+    // fire from headless (CarPlay-only) launches where ProgressHUD has no window
+    // to present in. Pure UI call sites (context menus, swipe actions) can keep
+    // using ProgressHUD.banner directly.
+    static func banner(_ text: String?, _ subtitle: String?) {
+        DispatchQueue.mainSyncSafe {
+            guard UIApplication.keyWindow != nil else { return }
+            ProgressHUD.banner(text, subtitle)
+        }
     }
 }

@@ -8,7 +8,6 @@
 
 import Foundation
 import CocoaLumberjackSwift
-import ProgressHUD
 
 // The playback facade (Phase 8.4/8.7): the only type UI code and services call to
 // start, stop, or reorganize playback. Owns the orchestration that used to live in
@@ -121,7 +120,7 @@ final class PlaybackCoordinator: NSObject {
             }
 
             if currentSong.isVideo && !activeMode.canPlayVideos {
-                ProgressHUD.banner("Cannot play videos in Jukebox mode.", nil)
+                HUD.banner("Cannot play videos in Jukebox mode.", nil)
                 return nil
             }
 

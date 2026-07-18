@@ -20,13 +20,15 @@ class ServerSwitcher {
     private let playQueue: PlayQueue
     private let downloadQueue: DownloadQueueing
     private let settings: SavedSettings
+    private let networkStatus: NetworkStatus
 
-    init(streamManager: StreamManaging, player: PlayerControlling, playQueue: PlayQueue, downloadQueue: DownloadQueueing, settings: SavedSettings) {
+    init(streamManager: StreamManaging, player: PlayerControlling, playQueue: PlayQueue, downloadQueue: DownloadQueueing, settings: SavedSettings, networkStatus: NetworkStatus) {
         self.streamManager = streamManager
         self.player = player
         self.playQueue = playQueue
         self.downloadQueue = downloadQueue
         self.settings = settings
+        self.networkStatus = networkStatus
     }
 
     // resetTabs: false keeps the navigation stacks in place — used when deleting the
@@ -52,12 +54,14 @@ class ServerSwitcher {
         }
 
         // Only exit offline mode when the network is actually reachable
-        if settings.isOfflineMode && SceneDelegate.shared.isNetworkReachable {
+        if settings.isOfflineMode && networkStatus.isNetworkReachable {
             settings.isOfflineMode = false
 
+            // The phone scene may not exist (e.g. a CarPlay-only launch); the UI
+            // cleanup below is skipped, not required, in that case
             if UIDevice.isPad {
-                SceneDelegate.shared.padRootViewController?.menuViewController.toggleOfflineMode()
-            } else if let window = SceneDelegate.shared.window {
+                SceneDelegate.shared?.padRootViewController?.menuViewController.toggleOfflineMode()
+            } else if let window = SceneDelegate.shared?.window {
                 for subview in window.subviews {
                     subview.removeFromSuperview()
                 }
@@ -69,7 +73,7 @@ class ServerSwitcher {
         _ = downloadQueue.clear()
 
         // Reset the tabs
-        if resetTabs, !UIDevice.isPad, let viewControllers = SceneDelegate.shared.tabBarController?.viewControllers {
+        if resetTabs, !UIDevice.isPad, let viewControllers = SceneDelegate.shared?.tabBarController?.viewControllers {
             for controller in viewControllers {
                 if let controller = controller as? UINavigationController {
                     controller.popToRootViewController(animated: true)
