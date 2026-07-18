@@ -29,6 +29,7 @@ final class Analytics {
         case downloadsTab       = "DownloadsTab"
         case quickSkip          = "QuickSkip"
         case equalizer          = "Equalizer"
+        case carPlayConnected   = "CarPlayConnected"
     }
     
     func setup() {

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CarPlay
 import Resolver
 import CocoaLumberjackSwift
 
@@ -75,6 +76,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.
         // Use this method to select a configuration to create the new scene with.
+        // The configuration names must byte-match the UISceneConfigurations entries
+        // in the Info.plists
+        if connectingSceneSession.role == .carTemplateApplication {
+            return UISceneConfiguration(name: "CarPlay Configuration", sessionRole: connectingSceneSession.role)
+        }
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
 
