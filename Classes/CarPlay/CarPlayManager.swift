@@ -24,6 +24,7 @@ final class CarPlayManager: NSObject {
     @Injected private var playQueue: PlayQueue
     @Injected private var playbackCoordinator: PlaybackCoordinator
     @Injected private var analytics: Analytics
+    @Injected private var offlineModeCoordinator: OfflineModeCoordinator
 
     // Audio apps may show at most 5 templates in a stack (root tab bar included);
     // pushing deeper replaces the top template so unbounded folder trees still browse
@@ -46,6 +47,11 @@ final class CarPlayManager: NSObject {
 
     func connect() {
         analytics.log(event: .carPlayConnected)
+
+        // Runs the launch offline check on car-first launches (or the periodic
+        // server re-check on later connects) so the tab order and row filtering
+        // below see the correct online/offline mode
+        offlineModeCoordinator.sceneBecameActive()
 
         // Jukebox mode renders audio on the remote server — the car would be
         // silent. Always play locally while connected; the user can re-enable

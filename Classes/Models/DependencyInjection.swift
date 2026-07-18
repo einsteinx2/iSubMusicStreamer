@@ -42,6 +42,7 @@ final class AppServices {
     let nowPlayingService: NowPlayingService
     let stateRestorer: StateRestorer
     let serverSwitcher: ServerSwitcher
+    let offlineModeCoordinator: OfflineModeCoordinator
 
     init() {
         // Construction order follows the dependency direction: every service is built
@@ -61,6 +62,7 @@ final class AppServices {
         nowPlayingService = NowPlayingService(settings: settings, playQueue: playQueue, player: player, coordinator: playbackCoordinator)
         stateRestorer = StateRestorer(settings: settings, player: player, playQueue: playQueue)
         serverSwitcher = ServerSwitcher(streamManager: downloadEngine.streamManager, player: player, playQueue: playQueue, downloadQueue: downloadEngine, settings: settings, networkStatus: networkMonitor)
+        offlineModeCoordinator = OfflineModeCoordinator(settings: settings, session: session, networkMonitor: networkMonitor, playbackCoordinator: playbackCoordinator, analytics: analytics)
 
         // Back-edges are weak references attached explicitly, never resolved ambiently
         // (the stream manager <-> download queue steal edge is wired inside the engine)
@@ -105,6 +107,7 @@ struct DependencyInjection {
         main.register(factory: { services.nowPlayingService })
         main.register(factory: { services.stateRestorer })
         main.register(factory: { services.serverSwitcher })
+        main.register(factory: { services.offlineModeCoordinator })
 
         // Protocol seams resolving to the same singleton instances (tests override these with fakes)
         main.register(factory: { services.player as PlayerControlling })

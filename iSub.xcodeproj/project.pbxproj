@@ -594,6 +594,8 @@
 		5A7E573E2F1000010000AB3E /* CarPlayRowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E573F2F1000010000AB3F /* CarPlayRowModel.swift */; };
 		5A7E57402F1000010000AB40 /* CarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57422F1000010000AB42 /* CarPlaySceneDelegate.swift */; };
 		5A7E57412F1000010000AB41 /* CarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57422F1000010000AB42 /* CarPlaySceneDelegate.swift */; };
+		5A7E57432F1000010000AB43 /* OfflineModeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57452F1000010000AB45 /* OfflineModeCoordinator.swift */; };
+		5A7E57442F1000010000AB44 /* OfflineModeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7E57452F1000010000AB45 /* OfflineModeCoordinator.swift */; };
 		5D782AC122BBA10DA9936F3D /* SettingsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B74B0C6388733F621EF38F /* SettingsSectionView.swift */; };
 		5E71971E2CBA50993869DD3C /* SingletonLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AD837C7CFF79AD56059ADC /* SingletonLifecycleTests.swift */; };
 		60AA2CAE35F3D6877EBA347B /* MockSubsonicServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4390AAE776F0A5012F0276A /* MockSubsonicServer.swift */; };
@@ -1040,6 +1042,7 @@
 		5A7E573C2F1000010000AB3C /* CarPlayPlaylistScreens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayPlaylistScreens.swift; sourceTree = "<group>"; };
 		5A7E573F2F1000010000AB3F /* CarPlayRowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayRowModel.swift; sourceTree = "<group>"; };
 		5A7E57422F1000010000AB42 /* CarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySceneDelegate.swift; sourceTree = "<group>"; };
+		5A7E57452F1000010000AB45 /* OfflineModeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineModeCoordinator.swift; sourceTree = "<group>"; };
 		5AC57920E6BF56A9171B2A58 /* XMLTestHelpers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = XMLTestHelpers.swift; sourceTree = "<group>"; };
 		5BE66C0606E83260BA683E35 /* StreamManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StreamManagerTests.swift; sourceTree = "<group>"; };
 		5C72C3647A62E9A226040F40 /* Fakes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Fakes.swift; sourceTree = "<group>"; };
@@ -1488,6 +1491,7 @@
 				532C625125B62F5800185998 /* NetworkMonitor.swift */,
 				5A7E57112F1000010000AB11 /* NowPlayingService.swift */,
 				5A7E57232F1000010000AB23 /* AppBootstrap.swift */,
+				5A7E57452F1000010000AB45 /* OfflineModeCoordinator.swift */,
 				53FE67AB256DE9600015FC83 /* Defines.swift */,
 				539D32E425A9400400F53797 /* Synchronized.swift */,
 				531EC86425B220E10076973A /* Colors.swift */,
@@ -2315,6 +2319,7 @@
 				5A7E573A2F1000010000AB3A /* CarPlayPlaylistScreens.swift in Sources */,
 				5A7E573D2F1000010000AB3D /* CarPlayRowModel.swift in Sources */,
 				5A7E57402F1000010000AB40 /* CarPlaySceneDelegate.swift in Sources */,
+				5A7E57432F1000010000AB43 /* OfflineModeCoordinator.swift in Sources */,
 				5A7E57142F1000010000AB14 /* PlaybackCoordinator.swift in Sources */,
 				5A7E571B2F1000010000AB1B /* PlaybackMode.swift in Sources */,
 				5376D5B52B8AB430000C3184 /* BassEffectDAO.swift in Sources */,
@@ -2581,6 +2586,7 @@
 				5A7E573B2F1000010000AB3B /* CarPlayPlaylistScreens.swift in Sources */,
 				5A7E573E2F1000010000AB3E /* CarPlayRowModel.swift in Sources */,
 				5A7E57412F1000010000AB41 /* CarPlaySceneDelegate.swift in Sources */,
+				5A7E57442F1000010000AB44 /* OfflineModeCoordinator.swift in Sources */,
 				5A7E57152F1000010000AB15 /* PlaybackCoordinator.swift in Sources */,
 				5A7E571C2F1000010000AB1C /* PlaybackMode.swift in Sources */,
 				53D97455255C51CA00AABF7F /* SwipeAction.swift in Sources */,
