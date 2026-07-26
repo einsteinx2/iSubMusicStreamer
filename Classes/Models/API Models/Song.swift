@@ -126,9 +126,10 @@ final class Song: Codable, Hashable, CustomStringConvertible {
         self.starredDate = starredDate
     }
     
-    // NOTE: The dto inits reproduce the XML inits' defaults exactly (including the
-    // "nil" string sentinel from stringXML) so DB rows are byte-identical whichever
-    // wire format produced them — Combined Library dedup/equality depends on that.
+    // NOTE: The dto inits reproduce the legacy XML inits' defaults exactly (including
+    // the legacy XML parser's "nil" string sentinel) so DB rows are byte-identical
+    // whichever wire format produced them — Combined Library dedup/equality depends
+    // on that.
     init(serverId: Int, dto: ChildDTO) {
         self.serverId = serverId
         self.id = dto.id.value
@@ -155,32 +156,6 @@ final class Song: Codable, Hashable, CustomStringConvertible {
         self.starredDate = dto.starred
     }
 
-    init(serverId: Int, element: RXMLElement) {
-        self.serverId = serverId
-        self.id = element.attribute("id").stringXML
-        self.title = element.attribute("title").stringXML
-        self.coverArtId = element.attribute("coverArt").stringXMLOptional
-        self.parentFolderId = element.attribute("parent").stringXMLOptional
-        self.tagArtistName = element.attribute("artist").stringXMLOptional
-        self.tagAlbumName = element.attribute("album").stringXMLOptional
-        self.playCount = element.attribute("playCount").intXMLOptional
-        self.year = element.attribute("year").intXMLOptional
-        self.tagArtistId = element.attribute("artistId").stringXMLOptional
-        self.tagAlbumId = element.attribute("albumId").stringXMLOptional
-        self.genre = element.attribute("genre").stringXMLOptional
-        self.path = element.attribute("path").stringXML
-        self.suffix = element.attribute("suffix").stringXML
-        self.transcodedSuffix = element.attribute("transcodedSuffix").stringXMLOptional
-        self.duration = element.attribute("duration").intXML
-        self.kiloBitrate = element.attribute("bitRate").intXML
-        self.track = element.attribute("track").intXMLOptional
-        self.discNumber = element.attribute("discNumber").intXMLOptional
-        self.size = element.attribute("size").intXML
-        self.isVideo = element.attribute("isVideo").boolXML
-        self.createdDate = element.attribute("created").dateXML
-        self.starredDate = element.attribute("starred").dateXMLOptional
-    }
-    
     // MARK: Hashable
     
     func hash(into hasher: inout Hasher) {

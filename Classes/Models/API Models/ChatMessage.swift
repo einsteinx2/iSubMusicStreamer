@@ -14,14 +14,7 @@ struct ChatMessage: Equatable {
     let username: String
     let message: String
     
-    init(serverId: Int, element: RXMLElement) {
-        self.serverId = serverId
-        self.timestamp = TimeInterval(element.attribute("time").intXML) / 1000
-        self.username = element.attribute("username").stringXML
-        self.message = element.attribute("message").stringXML
-    }
-
-    // Reproduces the XML init's defaults exactly (incl. the "nil" sentinel)
+    // Reproduces the legacy XML init's defaults exactly (incl. the "nil" sentinel)
     init(serverId: Int, dto: ChatMessageDTO) {
         self.serverId = serverId
         self.timestamp = TimeInterval(dto.time ?? 0) / 1000

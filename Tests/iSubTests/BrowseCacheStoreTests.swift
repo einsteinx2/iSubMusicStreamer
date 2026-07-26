@@ -62,7 +62,7 @@ final class BrowseCacheStoreTests: StoreTestCase {
     // MARK: Folder artists
 
     private func makeFolderArtist(serverId: Int = 1, id: String, name: String) -> FolderArtist {
-        FolderArtist(serverId: serverId, element: try! XMLTestHelpers.element(tag: "artist", xml: "<artist id=\"\(id)\" name=\"\(name)\"/>"))
+        FolderArtist(serverId: serverId, dto: try! TestDTO.json(FolderArtistDTO.self, #"{"id": "\#(id)", "name": "\#(name)"}"#))
     }
 
     func testFolderArtistListRoundTrip() throws {
@@ -130,7 +130,7 @@ final class BrowseCacheStoreTests: StoreTestCase {
     // MARK: Folder albums
 
     private func makeFolderAlbum(serverId: Int = 1, id: String, name: String, parentFolderId: String) -> FolderAlbum {
-        FolderAlbum(serverId: serverId, element: try! XMLTestHelpers.element(tag: "child", xml: "<child id=\"\(id)\" title=\"\(name)\" parent=\"\(parentFolderId)\" created=\"2024-02-24T15:31:22.978Z\"/>"))
+        FolderAlbum(serverId: serverId, dto: try! TestDTO.json(ChildDTO.self, #"{"id": "\#(id)", "title": "\#(name)", "parent": "\#(parentFolderId)", "created": "2024-02-24T15:31:22.978Z"}"#))
     }
 
     func testFolderAlbumListRoundTrip() throws {
@@ -191,11 +191,11 @@ final class BrowseCacheStoreTests: StoreTestCase {
     // MARK: Tag artists
 
     private func makeTagArtist(serverId: Int = 1, id: String, name: String, albumCount: Int = 1) -> TagArtist {
-        TagArtist(serverId: serverId, element: try! XMLTestHelpers.element(tag: "artist", xml: "<artist id=\"\(id)\" name=\"\(name)\" albumCount=\"\(albumCount)\"/>"))
+        TagArtist(serverId: serverId, dto: try! TestDTO.json(ArtistID3DTO.self, #"{"id": "\#(id)", "name": "\#(name)", "albumCount": \#(albumCount)}"#))
     }
 
     private func makeTagAlbum(serverId: Int = 1, id: String, name: String, tagArtistId: String, songCount: Int = 1) -> TagAlbum {
-        TagAlbum(serverId: serverId, element: try! XMLTestHelpers.element(tag: "album", xml: "<album id=\"\(id)\" name=\"\(name)\" artistId=\"\(tagArtistId)\" songCount=\"\(songCount)\" duration=\"100\" created=\"2024-02-24T15:31:22.978Z\"/>"))
+        TagAlbum(serverId: serverId, dto: try! TestDTO.json(AlbumID3DTO.self, #"{"id": "\#(id)", "name": "\#(name)", "artistId": "\#(tagArtistId)", "songCount": \#(songCount), "duration": 100, "created": "2024-02-24T15:31:22.978Z"}"#))
     }
 
     func testTagArtistListSectionsMetadataAndSearch() throws {
@@ -331,8 +331,8 @@ final class BrowseCacheStoreTests: StoreTestCase {
     }
 
     func testLyricsRoundTrip() throws {
-        let element = try XMLTestHelpers.element(tag: "lyrics", xml: "<lyrics artist=\"Beck\" title=\"Loser\">Soy un perdedor</lyrics>")
-        let lyrics = Lyrics(tagArtistName: "Beck", songTitle: "Loser", element: element)
+        let dto = LyricsDTO(artist: "Beck", title: "Loser", value: "Soy un perdedor")
+        let lyrics = Lyrics(tagArtistName: "Beck", songTitle: "Loser", dto: dto)
 
         XCTAssertFalse(store.isLyricsCached(tagArtistName: "Beck", songTitle: "Loser"))
         XCTAssertTrue(store.add(lyrics: lyrics))
@@ -345,7 +345,7 @@ final class BrowseCacheStoreTests: StoreTestCase {
     func testIsLyricsCachedForSongRequiresArtistName() {
         let withArtist = TestData.song(serverId: 1, id: "1", title: "Loser", path: "a.mp3", tagArtistName: "Beck")
         let withoutArtist = TestData.song(serverId: 1, id: "2", title: "Loser", path: "b.mp3", tagArtistName: nil)
-        _ = store.add(lyrics: Lyrics(tagArtistName: "Beck", songTitle: "Loser", element: try! XMLTestHelpers.element(tag: "lyrics", xml: "<lyrics>text</lyrics>")))
+        _ = store.add(lyrics: Lyrics(tagArtistName: "Beck", songTitle: "Loser", dto: LyricsDTO(artist: nil, title: nil, value: "text")))
 
         XCTAssertTrue(store.isLyricsCached(song: withArtist))
         XCTAssertFalse(store.isLyricsCached(song: withoutArtist))

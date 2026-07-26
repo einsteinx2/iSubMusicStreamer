@@ -22,14 +22,7 @@ struct MediaFolder: Codable, Equatable {
         self.name = name
     }
     
-    init(serverId: Int, element: RXMLElement) {
-        self.serverId = serverId
-        self.id = element.attribute("id").intXML
-        self.name = element.attribute("name").stringXML
-    }
-
-    // Reproduces the XML init's defaults exactly (incl. the "nil" sentinel) so DB
-    // rows are identical whichever wire format produced them
+    // Reproduces the legacy XML init's defaults exactly (incl. the "nil" sentinel)
     init(serverId: Int, dto: MusicFolderDTO) {
         self.serverId = serverId
         self.id = Int(dto.id.value) ?? 0

@@ -68,22 +68,22 @@ final class GRDBRoundTripTests: StoreTestCase {
     }
 
     func testTagArtistRoundTrip() throws {
-        let artist = TagArtist(serverId: 1, element: try XMLTestHelpers.element(tag: "artist", xml: #"<artist id="ar1" name="Ärtist" coverArt="ca1" artistImageUrl="http://x.com/img.jpg" albumCount="4" starred="2024-02-24T15:31:22.978Z"/>"#))
+        let artist = TagArtist(serverId: 1, dto: try TestDTO.json(ArtistID3DTO.self, #"{"id": "ar1", "name": "Ärtist", "coverArt": "ca1", "artistImageUrl": "http://x.com/img.jpg", "albumCount": 4, "starred": "2024-02-24T15:31:22.978Z"}"#))
         try assertRoundTrip(artist) { try TagArtist.filter(literal: "serverId = 1 AND id = 'ar1'").fetchOne($0) }
     }
 
     func testTagAlbumRoundTrip() throws {
-        let album = TagAlbum(serverId: 1, element: try XMLTestHelpers.element(tag: "album", xml: #"<album id="al1" name="Albüm" coverArt="ca2" artistId="ar1" artist="Ärtist" songCount="12" duration="3600" playCount="3" year="1996" genre="Rock" created="2024-02-24T15:31:22.978Z" starred="2024-03-01T10:00:00.000Z"/>"#))
+        let album = TagAlbum(serverId: 1, dto: try TestDTO.json(AlbumID3DTO.self, #"{"id": "al1", "name": "Albüm", "coverArt": "ca2", "artistId": "ar1", "artist": "Ärtist", "songCount": 12, "duration": 3600, "playCount": 3, "year": 1996, "genre": "Rock", "created": "2024-02-24T15:31:22.978Z", "starred": "2024-03-01T10:00:00.000Z"}"#))
         try assertRoundTrip(album) { try TagAlbum.filter(literal: "serverId = 1 AND id = 'al1'").fetchOne($0) }
     }
 
     func testFolderArtistRoundTrip() throws {
-        let artist = FolderArtist(serverId: 1, element: try XMLTestHelpers.element(tag: "artist", xml: #"<artist id="f1" name="Földer Artist" userRating="4" averageRating="3.5" starred="2024-02-24T15:31:22.978Z"/>"#))
+        let artist = FolderArtist(serverId: 1, dto: try TestDTO.json(FolderArtistDTO.self, #"{"id": "f1", "name": "Földer Artist", "userRating": 4, "averageRating": 3.5, "starred": "2024-02-24T15:31:22.978Z"}"#))
         try assertRoundTrip(artist) { try FolderArtist.filter(literal: "serverId = 1 AND id = 'f1'").fetchOne($0) }
     }
 
     func testFolderAlbumRoundTrip() throws {
-        let album = FolderAlbum(serverId: 1, element: try XMLTestHelpers.element(tag: "child", xml: #"<child id="fa1" parent="p1" title="Ölbum" artist="Ärtist" coverArt="ca3" playCount="9" year="2001" genre="Pop" userRating="5" averageRating="4.5" created="2024-02-24T15:31:22.978Z" starred="2024-03-01T10:00:00.000Z"/>"#))
+        let album = FolderAlbum(serverId: 1, dto: try TestDTO.json(ChildDTO.self, #"{"id": "fa1", "parent": "p1", "title": "Ölbum", "artist": "Ärtist", "coverArt": "ca3", "playCount": 9, "year": 2001, "genre": "Pop", "userRating": 5, "averageRating": 4.5, "created": "2024-02-24T15:31:22.978Z", "starred": "2024-03-01T10:00:00.000Z"}"#))
         try assertRoundTrip(album) { try FolderAlbum.filter(literal: "serverId = 1 AND id = 'fa1'").fetchOne($0) }
     }
 
@@ -93,7 +93,7 @@ final class GRDBRoundTripTests: StoreTestCase {
     }
 
     func testLyricsRoundTrip() throws {
-        let lyrics = Lyrics(tagArtistName: "Béck", songTitle: "Löser", element: try XMLTestHelpers.element(tag: "lyrics", xml: "<lyrics>Soy un perdedor\nI'm a loser baby 🎵</lyrics>"))
+        let lyrics = Lyrics(tagArtistName: "Béck", songTitle: "Löser", dto: LyricsDTO(artist: nil, title: nil, value: "Soy un perdedor\nI'm a loser baby 🎵"))
         try assertRoundTrip(lyrics) { try Lyrics.filter(literal: "tagArtistName = 'Béck'").fetchOne($0) }
     }
 
@@ -143,13 +143,13 @@ final class GRDBRoundTripTests: StoreTestCase {
     }
 
     func testServerPlaylistRoundTrip() throws {
-        var playlist = ServerPlaylist(serverId: 1, element: try XMLTestHelpers.element(tag: "playlist", xml: #"<playlist id="17" name="Plàylist" comment="çomment" owner="öwner" public="true" songCount="25" duration="5000" coverArt="pl-17" created="2024-02-24T15:31:22.978Z" changed="2024-03-01T10:00:00.000Z"/>"#))
+        var playlist = ServerPlaylist(serverId: 1, dto: try TestDTO.json(PlaylistDTO.self, #"{"id": 17, "name": "Plàylist", "comment": "çomment", "owner": "öwner", "public": true, "songCount": 25, "duration": 5000, "coverArt": "pl-17", "created": "2024-02-24T15:31:22.978Z", "changed": "2024-03-01T10:00:00.000Z"}"#))
         playlist.loadedSongCount = 10
         try assertRoundTrip(playlist) { try ServerPlaylist.filter(literal: "serverId = 1 AND id = 17").fetchOne($0) }
     }
 
     func testServerPlaylistRoundTripNilOptionals() throws {
-        let playlist = ServerPlaylist(serverId: 1, element: try XMLTestHelpers.element(tag: "playlist", xml: #"<playlist id="18" name="Bare"/>"#))
+        let playlist = ServerPlaylist(serverId: 1, dto: try TestDTO.json(PlaylistDTO.self, #"{"id": 18, "name": "Bare"}"#))
         try assertRoundTrip(playlist) { try ServerPlaylist.filter(literal: "serverId = 1 AND id = 18").fetchOne($0) }
     }
 

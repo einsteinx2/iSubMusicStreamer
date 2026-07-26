@@ -41,22 +41,6 @@ struct TagAlbum: Codable, Equatable {
         self.starredDate = dto.starred
     }
 
-    init(serverId: Int, element: RXMLElement) {
-        self.serverId = serverId
-        self.id = element.attribute("id").stringXML
-        self.name = element.attribute("name").stringXML
-        self.coverArtId = element.attribute("coverArt").stringXMLOptional
-        self.tagArtistId = element.attribute("artistId").stringXMLOptional
-        self.tagArtistName = element.attribute("artist").stringXMLOptional
-        self.songCount = element.attribute("songCount").intXML
-        self.duration = element.attribute("duration").intXML
-        self.playCount = element.attribute("playCount").intXML
-        self.year = element.attribute("year").intXML
-        self.genre = element.attribute("genre").stringXML
-        self.createdDate = element.attribute("created").dateXML
-        self.starredDate = element.attribute("starred").dateXMLOptional
-    }
-    
     static func ==(lhs: TagAlbum, rhs: TagAlbum) -> Bool {
         return lhs.serverId == rhs.serverId && lhs.id == rhs.id
     }

@@ -13,8 +13,6 @@ enum APIError: Error {
     case serverUnsupported
     case serverUnreachable
     case requestCreation
-    // TODO: Remove responseNotXML once all loaders migrate to the DTO layer (use responseNotSubsonic)
-    case responseNotXML
     case responseNotSubsonic
     case responseMissingElement(parent: String, tag: String)
     case responseMissingAttribute(tag: String, attribute: String)
@@ -27,7 +25,6 @@ enum APIError: Error {
         case .serverUnsupported:        return "APIError.serverUnsupported"
         case .serverUnreachable:        return "APIError.serverUnreachable"
         case .requestCreation:          return "APIError.requestCreation"
-        case .responseNotXML:           return "APIError.responseNotXML"
         case .responseNotSubsonic:      return "APIError.responseNotSubsonic"
         case .responseMissingElement:   return "APIError.responseMissingElement"
         case .responseMissingAttribute: return "APIError.responseMissingAttribute"
@@ -46,8 +43,6 @@ enum APIError: Error {
             return "The server is unreachable. Either the server is turned off or it's not reachable from your current network. For example, port forwarding is not setup and you're not at home, your internet connection is down, etc."
         case .requestCreation:
             return "There was an error creating the API request."
-        case .responseNotXML:
-            return "The server did not respond with XML. This usually means that somehow you did not reach your Subsonic server, or your Subsonic server is crashing."
         case .responseNotSubsonic:
             return "The server did not respond with a valid Subsonic API response. This usually means that somehow you did not reach your Subsonic server, or your Subsonic server is crashing."
         case .responseMissingElement(let parent, let tag):

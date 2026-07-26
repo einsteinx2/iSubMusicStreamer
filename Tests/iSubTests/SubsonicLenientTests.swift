@@ -98,6 +98,21 @@ final class SubsonicLenientTests: XCTestCase {
         XCTAssertEqual(date?.timeIntervalSince1970 ?? 0, 1609909384, accuracy: 0.001)
     }
 
+    func testDateWithMillisecondsAndNumericOffset() {
+        // Compact (no-colon) numeric offsets, handled by the DateFormatter "Z" specifier
+        let date = SubsonicDateParsing.date(from: "2024-02-24T15:31:22.978+0100")
+        XCTAssertNotNil(date)
+        XCTAssertEqual(date?.timeIntervalSince1970 ?? 0, 1708785082.978, accuracy: 0.001)
+    }
+
+    func testDateWithSecondsAndZuluSuffix() {
+        // Formerly a parser gap in the legacy XML helpers; the ISO8601 fallback
+        // (added for JSON support, since Navidrome emits this shape) accepts it
+        let date = SubsonicDateParsing.date(from: "2024-02-24T15:31:22Z")
+        XCTAssertNotNil(date)
+        XCTAssertEqual(date?.timeIntervalSince1970 ?? 0, 1708788682.0, accuracy: 0.001)
+    }
+
     func testDateWithFractionalSecondsAndOffset() {
         // Navidrome emits colon-separated offsets and long fractional seconds
         let date = SubsonicDateParsing.date(from: "2021-01-06T05:03:04.123+02:00")
@@ -114,12 +129,5 @@ final class SubsonicLenientTests: XCTestCase {
     func testDateGarbageReturnsNil() {
         XCTAssertNil(SubsonicDateParsing.date(from: "not a date"))
         XCTAssertNil(SubsonicDateParsing.date(from: ""))
-    }
-
-    func testDateHelperParityWithStringCleanXML() {
-        // String+Clean's dateXML helpers route through SubsonicDateParsing, so both
-        // parse paths must agree for identical DB rows across formats.
-        let raw: String? = "2021-01-06T05:03:04.123Z"
-        XCTAssertEqual(raw.dateXMLOptional, SubsonicDateParsing.date(from: "2021-01-06T05:03:04.123Z"))
     }
 }

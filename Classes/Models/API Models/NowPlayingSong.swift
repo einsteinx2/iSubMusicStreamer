@@ -16,16 +16,7 @@ struct NowPlayingSong: Codable, Equatable {
     let playerId: Int
     let playerName: String
     
-    init(serverId: Int, element: RXMLElement) {
-        self.serverId = serverId
-        self.songId = element.attribute("id").stringXML
-        self.username = element.attribute("username").stringXML
-        self.minutesAgo = element.attribute("minutesAgo").intXML
-        self.playerId = element.attribute("playerId").intXML
-        self.playerName = element.attribute("playerName").stringXML
-    }
-
-    // Reproduces the XML init's defaults exactly (incl. the "nil" sentinel)
+    // Reproduces the legacy XML init's defaults exactly (incl. the "nil" sentinel)
     init(serverId: Int, dto: ChildDTO) {
         self.serverId = serverId
         self.songId = dto.id.value

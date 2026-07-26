@@ -43,23 +43,6 @@ struct FolderAlbum: Codable, Equatable {
         self.starredDate = dto.starred
     }
 
-    init(serverId: Int, element: RXMLElement) {
-        self.serverId = serverId
-        self.id = element.attribute("id").stringXML
-        self.name = element.attribute("title").stringXML
-        self.coverArtId = element.attribute("coverArt").stringXMLOptional
-        self.parentFolderId = element.attribute("parent").stringXMLOptional
-        self.tagArtistName = element.attribute("artist").stringXMLOptional
-        self.tagAlbumName = element.attribute("album").stringXMLOptional
-        self.playCount = element.attribute("playCount").intXML
-        self.year = element.attribute("year").intXMLOptional
-        self.genre = element.attribute("genre").stringXMLOptional
-        self.userRating = element.attribute("userRating").intXMLOptional
-        self.averageRating = element.attribute("averageRating").doubleXMLOptional
-        self.createdDate = element.attribute("created").dateXML
-        self.starredDate = element.attribute("starred").dateXMLOptional
-    }
-    
     static func ==(lhs: FolderAlbum, rhs: FolderAlbum) -> Bool {
         return lhs.serverId == rhs.serverId && lhs.id == rhs.id
     }

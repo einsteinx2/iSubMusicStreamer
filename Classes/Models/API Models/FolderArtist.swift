@@ -27,15 +27,6 @@ struct FolderArtist: Codable, Equatable {
         self.starredDate = dto.starred
     }
 
-    init(serverId: Int, element: RXMLElement) {
-        self.serverId = serverId
-        self.id =  element.attribute("id").stringXML
-        self.name = element.attribute("name").stringXML
-        self.userRating = element.attribute("userRating").intXMLOptional
-        self.averageRating = element.attribute("averageRating").doubleXMLOptional
-        self.starredDate = element.attribute("starred").dateXMLOptional
-    }
-    
     static func ==(lhs: FolderArtist, rhs: FolderArtist) -> Bool {
         return lhs.serverId == rhs.serverId && lhs.id == rhs.id
     }

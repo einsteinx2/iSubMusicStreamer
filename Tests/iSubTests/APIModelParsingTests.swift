@@ -9,9 +9,12 @@
 import XCTest
 @testable import iSub_Beta
 
-// COV-01: Unit tests for every API model's init(serverId:element:), driven by both
-// inline XML (full control of attributes) and realistic fixture XML captured from
-// an Airsonic server.
+// COV-01: Unit tests for every API model's init(serverId:dto:), driven by inline
+// XML payloads (decoded through SubsonicXMLDecoder, pinning the XML scalar
+// defaults), inline JSON literals, and realistic fixture responses captured from
+// an Airsonic server. The leniency contract is load-bearing: missing values must
+// map to the "nil" string sentinel / 0 / false / .distantPast defaults so DB rows
+// are byte-identical whichever wire format produced them.
 final class APIModelParsingTests: XCTestCase {
     private let serverId = 7
 
@@ -25,9 +28,12 @@ final class APIModelParsingTests: XCTestCase {
         starred="2024-03-01T10:00:00.000Z" albumId="41" artistId="52" type="music"/>
         """
 
+    private func songDTO(payloadXML: String) throws -> ChildDTO {
+        try XCTUnwrap(TestDTO.xmlResponse(payloadXML).song)
+    }
+
     func testSongParsesAllFields() throws {
-        let element = try XMLTestHelpers.element(tag: "song", xml: fullSongXML)
-        let song = Song(serverId: serverId, element: element)
+        let song = Song(serverId: serverId, dto: try songDTO(payloadXML: fullSongXML))
 
         XCTAssertEqual(song.serverId, serverId)
         XCTAssertEqual(song.id, "353")
@@ -58,63 +64,69 @@ final class APIModelParsingTests: XCTestCase {
     func testSongParsesCoverArtIdIncorrectlyNamedParent() throws {
         // The song element uses the "coverArt" attribute for cover art and "parent"
         // for the parent folder; make sure they don't get crossed
-        let element = try XMLTestHelpers.element(tag: "song", xml: #"<song id="1" coverArt="99" parent="55" title="t" path="p" suffix="mp3"/>"#)
-        let song = Song(serverId: serverId, element: element)
+        let song = Song(serverId: serverId, dto: try songDTO(payloadXML: #"<song id="1" coverArt="99" parent="55" title="t" path="p" suffix="mp3"/>"#))
         XCTAssertEqual(song.coverArtId, "99")
         XCTAssertEqual(song.parentFolderId, "55")
     }
 
-    func testSongMissingAttributeDefaults() throws {
-        let element = try XMLTestHelpers.element(tag: "song", xml: #"<song id="10"/>"#)
-        let song = Song(serverId: serverId, element: element)
-
-        XCTAssertEqual(song.id, "10")
+    private func assertSongMissingValueDefaults(_ song: Song, file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertEqual(song.id, "10", file: file, line: line)
         // Non-optional strings fall back to the literal "nil" placeholder
-        XCTAssertEqual(song.title, "nil")
-        XCTAssertEqual(song.path, "nil")
-        XCTAssertEqual(song.suffix, "nil")
+        XCTAssertEqual(song.title, "nil", file: file, line: line)
+        XCTAssertEqual(song.path, "nil", file: file, line: line)
+        XCTAssertEqual(song.suffix, "nil", file: file, line: line)
         // Optional fields stay nil
-        XCTAssertNil(song.coverArtId)
-        XCTAssertNil(song.parentFolderId)
-        XCTAssertNil(song.tagArtistName)
-        XCTAssertNil(song.tagAlbumName)
-        XCTAssertNil(song.playCount)
-        XCTAssertNil(song.year)
-        XCTAssertNil(song.tagArtistId)
-        XCTAssertNil(song.tagAlbumId)
-        XCTAssertNil(song.genre)
-        XCTAssertNil(song.transcodedSuffix)
-        XCTAssertNil(song.track)
-        XCTAssertNil(song.discNumber)
-        XCTAssertNil(song.starredDate)
+        XCTAssertNil(song.coverArtId, file: file, line: line)
+        XCTAssertNil(song.parentFolderId, file: file, line: line)
+        XCTAssertNil(song.tagArtistName, file: file, line: line)
+        XCTAssertNil(song.tagAlbumName, file: file, line: line)
+        XCTAssertNil(song.playCount, file: file, line: line)
+        XCTAssertNil(song.year, file: file, line: line)
+        XCTAssertNil(song.tagArtistId, file: file, line: line)
+        XCTAssertNil(song.tagAlbumId, file: file, line: line)
+        XCTAssertNil(song.genre, file: file, line: line)
+        XCTAssertNil(song.transcodedSuffix, file: file, line: line)
+        XCTAssertNil(song.track, file: file, line: line)
+        XCTAssertNil(song.discNumber, file: file, line: line)
+        XCTAssertNil(song.starredDate, file: file, line: line)
         // Non-optional numerics default to 0, bools to false, dates to distantPast
-        XCTAssertEqual(song.duration, 0)
-        XCTAssertEqual(song.kiloBitrate, 0)
-        XCTAssertEqual(song.size, 0)
-        XCTAssertFalse(song.isVideo)
-        XCTAssertEqual(song.createdDate, .distantPast)
+        XCTAssertEqual(song.duration, 0, file: file, line: line)
+        XCTAssertEqual(song.kiloBitrate, 0, file: file, line: line)
+        XCTAssertEqual(song.size, 0, file: file, line: line)
+        XCTAssertFalse(song.isVideo, file: file, line: line)
+        XCTAssertEqual(song.createdDate, .distantPast, file: file, line: line)
+    }
+
+    func testSongMissingAttributeDefaultsFromXML() throws {
+        let song = Song(serverId: serverId, dto: try songDTO(payloadXML: #"<song id="10"/>"#))
+        assertSongMissingValueDefaults(song)
+    }
+
+    func testSongMissingKeyDefaultsFromJSON() throws {
+        // Both wire formats must produce the identical defaults for missing values
+        let song = Song(serverId: serverId, dto: try TestDTO.json(ChildDTO.self, #"{"id": "10"}"#))
+        assertSongMissingValueDefaults(song)
     }
 
     func testSongParsesVideoEntry() throws {
-        let xml = #"<child id="900" title="Concert" path="videos/concert.mkv" suffix="mkv" isVideo="true" duration="5400" size="123456789"/>"#
-        let element = try XMLTestHelpers.element(tag: "child", xml: xml)
-        let song = Song(serverId: serverId, element: element)
+        let payload = #"<directory id="1"><child id="900" title="Concert" path="videos/concert.mkv" suffix="mkv" isVideo="true" duration="5400" size="123456789"/></directory>"#
+        let dto = try XCTUnwrap(TestDTO.xmlResponse(payload).directory?.child?.values.first)
+        let song = Song(serverId: serverId, dto: dto)
         XCTAssertTrue(song.isVideo)
         XCTAssertEqual(song.suffix, "mkv")
     }
 
     func testSongParsesSpecialCharactersInAttributes() throws {
-        let xml = #"<song id="5" title="Sigur R&#243;s &amp; friends &lt;live&gt; &quot;encore&quot;" artist="Bj&#246;rk" path="S/&#208;j&#243;&#240;/01.mp3" suffix="mp3"/>"#
-        let element = try XMLTestHelpers.element(tag: "song", xml: xml)
-        let song = Song(serverId: serverId, element: element)
+        let payload = #"<song id="5" title="Sigur R&#243;s &amp; friends &lt;live&gt; &quot;encore&quot;" artist="Bj&#246;rk" path="S/&#208;j&#243;&#240;/01.mp3" suffix="mp3"/>"#
+        let song = Song(serverId: serverId, dto: try songDTO(payloadXML: payload))
         XCTAssertEqual(song.title, "Sigur Rós & friends <live> \"encore\"")
         XCTAssertEqual(song.tagArtistName, "Björk")
         XCTAssertEqual(song.path, "S/Ðjóð/01.mp3")
     }
 
     func testSongParsedFromRealFixture() throws {
-        let element = try XMLTestHelpers.element(tag: "song", fixture: "XML/getAlbum.xml")
-        let song = Song(serverId: serverId, element: element)
+        let dto = try XCTUnwrap(TestDTO.response(fixture: "XML/getAlbum.xml").album?.song?.values.first)
+        let song = Song(serverId: serverId, dto: dto)
         XCTAssertEqual(song.id, "353")
         XCTAssertEqual(song.title, "Might Like You Better (Amtrac Remix)")
         XCTAssertEqual(song.tagAlbumName, "The Remixes")
@@ -125,8 +137,8 @@ final class APIModelParsingTests: XCTestCase {
     func testSongParsedFromRealSubsonicFixtureWithoutIsVideo() throws {
         // Real Subsonic servers omit the isVideo attribute on music entries (Airsonic
         // always sends isVideo="false"); parsing must default it to false
-        let element = try XMLTestHelpers.element(tag: "entry", fixture: "XML/jukeboxControl_get.xml")
-        let song = Song(serverId: serverId, element: element)
+        let dto = try XCTUnwrap(TestDTO.response(fixture: "XML/jukeboxControl_get.xml").jukeboxPlaylist?.entry?.values.first)
+        let song = Song(serverId: serverId, dto: dto)
         XCTAssertEqual(song.id, "189")
         XCTAssertEqual(song.title, "So Many Tears")
         XCTAssertEqual(song.suffix, "mp3")
@@ -134,10 +146,13 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testSongEqualityAndHashingUseOnlyServerIdAndId() throws {
-        let a = try Song(serverId: 1, element: XMLTestHelpers.element(tag: "song", xml: #"<song id="42" title="Title A" path="a.mp3" suffix="mp3"/>"#))
-        let b = try Song(serverId: 1, element: XMLTestHelpers.element(tag: "song", xml: #"<song id="42" title="Completely Different" path="b.flac" suffix="flac"/>"#))
-        let differentId = try Song(serverId: 1, element: XMLTestHelpers.element(tag: "song", xml: #"<song id="43" title="Title A" path="a.mp3" suffix="mp3"/>"#))
-        let differentServer = try Song(serverId: 2, element: XMLTestHelpers.element(tag: "song", xml: #"<song id="42" title="Title A" path="a.mp3" suffix="mp3"/>"#))
+        func makeSong(serverId: Int, json: String) throws -> Song {
+            Song(serverId: serverId, dto: try TestDTO.json(ChildDTO.self, json))
+        }
+        let a = try makeSong(serverId: 1, json: #"{"id": "42", "title": "Title A", "path": "a.mp3", "suffix": "mp3"}"#)
+        let b = try makeSong(serverId: 1, json: #"{"id": "42", "title": "Completely Different", "path": "b.flac", "suffix": "flac"}"#)
+        let differentId = try makeSong(serverId: 1, json: #"{"id": "43", "title": "Title A", "path": "a.mp3", "suffix": "mp3"}"#)
+        let differentServer = try makeSong(serverId: 2, json: #"{"id": "42", "title": "Title A", "path": "a.mp3", "suffix": "mp3"}"#)
 
         XCTAssertEqual(a, b)
         XCTAssertEqual(a.hashValue, b.hashValue)
@@ -153,9 +168,9 @@ final class APIModelParsingTests: XCTestCase {
     // MARK: TagArtist
 
     func testTagArtistParsesAllFields() throws {
-        let xml = #"<artist id="52" name="Amanda Blank" coverArt="ar-52" artistImageUrl="http://example.com/a.jpg" albumCount="3" starred="2024-02-24T15:31:22.978Z"/>"#
-        let element = try XMLTestHelpers.element(tag: "artist", xml: xml)
-        let artist = TagArtist(serverId: serverId, element: element)
+        let payload = #"<artist id="52" name="Amanda Blank" coverArt="ar-52" artistImageUrl="http://example.com/a.jpg" albumCount="3" starred="2024-02-24T15:31:22.978Z"/>"#
+        let dto = try XCTUnwrap(TestDTO.xmlResponse(payload).artist)
+        let artist = TagArtist(serverId: serverId, dto: dto)
 
         XCTAssertEqual(artist.serverId, serverId)
         XCTAssertEqual(artist.id, "52")
@@ -167,8 +182,8 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testTagArtistMissingAttributeDefaults() throws {
-        let element = try XMLTestHelpers.element(tag: "artist", xml: #"<artist id="31" name="A Tribe Called Quest"/>"#)
-        let artist = TagArtist(serverId: serverId, element: element)
+        let dto = try XCTUnwrap(TestDTO.xmlResponse(#"<artist id="31" name="A Tribe Called Quest"/>"#).artist)
+        let artist = TagArtist(serverId: serverId, dto: dto)
         XCTAssertNil(artist.coverArtId)
         XCTAssertNil(artist.artistImageUrl)
         XCTAssertEqual(artist.albumCount, 0)
@@ -176,8 +191,9 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testTagArtistParsedFromRealFixture() throws {
-        let element = try XMLTestHelpers.element(tag: "artist", fixture: "XML/getArtists.xml")
-        let artist = TagArtist(serverId: serverId, element: element)
+        let response = try TestDTO.response(fixture: "XML/getArtists.xml")
+        let dto = try XCTUnwrap(response.artists?.index?.values.first?.artist?.values.first)
+        let artist = TagArtist(serverId: serverId, dto: dto)
         XCTAssertEqual(artist.id, "52")
         XCTAssertEqual(artist.name, "Amanda Blank")
         XCTAssertEqual(artist.coverArtId, "ar-52")
@@ -185,9 +201,9 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testTagArtistEqualityUsesOnlyServerIdAndId() throws {
-        let a = try TagArtist(serverId: 1, element: XMLTestHelpers.element(tag: "artist", xml: #"<artist id="1" name="One"/>"#))
-        let b = try TagArtist(serverId: 1, element: XMLTestHelpers.element(tag: "artist", xml: #"<artist id="1" name="Other Name"/>"#))
-        let c = try TagArtist(serverId: 2, element: XMLTestHelpers.element(tag: "artist", xml: #"<artist id="1" name="One"/>"#))
+        let a = TagArtist(serverId: 1, dto: try TestDTO.json(ArtistID3DTO.self, #"{"id": "1", "name": "One"}"#))
+        let b = TagArtist(serverId: 1, dto: try TestDTO.json(ArtistID3DTO.self, #"{"id": "1", "name": "Other Name"}"#))
+        let c = TagArtist(serverId: 2, dto: try TestDTO.json(ArtistID3DTO.self, #"{"id": "1", "name": "One"}"#))
         XCTAssertEqual(a, b)
         XCTAssertNotEqual(a, c)
     }
@@ -195,9 +211,9 @@ final class APIModelParsingTests: XCTestCase {
     // MARK: TagAlbum
 
     func testTagAlbumParsesAllFields() throws {
-        let xml = #"<album id="41" name="The Remixes" artist="Amanda Blank" artistId="52" coverArt="al-41" songCount="12" duration="2967" playCount="4" year="2010" genre="Electronic" created="2024-02-24T15:31:22.978Z" starred="2024-03-01T10:00:00.000Z"/>"#
-        let element = try XMLTestHelpers.element(tag: "album", xml: xml)
-        let album = TagAlbum(serverId: serverId, element: element)
+        let payload = #"<album id="41" name="The Remixes" artist="Amanda Blank" artistId="52" coverArt="al-41" songCount="12" duration="2967" playCount="4" year="2010" genre="Electronic" created="2024-02-24T15:31:22.978Z" starred="2024-03-01T10:00:00.000Z"/>"#
+        let dto = try XCTUnwrap(TestDTO.xmlResponse(payload).album)
+        let album = TagAlbum(serverId: serverId, dto: dto)
 
         XCTAssertEqual(album.serverId, serverId)
         XCTAssertEqual(album.id, "41")
@@ -215,8 +231,8 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testTagAlbumMissingAttributeDefaults() throws {
-        let element = try XMLTestHelpers.element(tag: "album", xml: #"<album id="9" name="Bare"/>"#)
-        let album = TagAlbum(serverId: serverId, element: element)
+        let dto = try XCTUnwrap(TestDTO.xmlResponse(#"<album id="9" name="Bare"/>"#).album)
+        let album = TagAlbum(serverId: serverId, dto: dto)
         XCTAssertNil(album.coverArtId)
         XCTAssertNil(album.tagArtistId)
         XCTAssertNil(album.tagArtistName)
@@ -224,15 +240,15 @@ final class APIModelParsingTests: XCTestCase {
         XCTAssertEqual(album.duration, 0)
         XCTAssertEqual(album.playCount, 0)
         XCTAssertEqual(album.year, 0)
-        // genre uses the non-optional accessor, so a missing attribute becomes "nil"
+        // genre keeps the non-optional accessor's behavior, so a missing value becomes "nil"
         XCTAssertEqual(album.genre, "nil")
         XCTAssertEqual(album.createdDate, .distantPast)
         XCTAssertNil(album.starredDate)
     }
 
     func testTagAlbumParsedFromRealFixture() throws {
-        let element = try XMLTestHelpers.element(tag: "album", fixture: "XML/getAlbum.xml")
-        let album = TagAlbum(serverId: serverId, element: element)
+        let dto = try XCTUnwrap(TestDTO.response(fixture: "XML/getAlbum.xml").album)
+        let album = TagAlbum(serverId: serverId, dto: dto)
         XCTAssertEqual(album.id, "41")
         XCTAssertEqual(album.name, "The Remixes")
         XCTAssertEqual(album.tagArtistName, "Amanda Blank")
@@ -242,10 +258,14 @@ final class APIModelParsingTests: XCTestCase {
 
     // MARK: FolderArtist
 
+    private func folderArtistDTO(payloadXML: String) throws -> FolderArtistDTO {
+        let response = try TestDTO.xmlResponse("<indexes><index name=\"A\">\(payloadXML)</index></indexes>")
+        return try XCTUnwrap(response.indexes?.index?.values.first?.artist?.values.first)
+    }
+
     func testFolderArtistParsesAllFields() throws {
-        let xml = #"<artist id="219" name="Beck" userRating="4" averageRating="3.5" starred="2024-02-24T15:31:22.978Z"/>"#
-        let element = try XMLTestHelpers.element(tag: "artist", xml: xml)
-        let artist = FolderArtist(serverId: serverId, element: element)
+        let payload = #"<artist id="219" name="Beck" userRating="4" averageRating="3.5" starred="2024-02-24T15:31:22.978Z"/>"#
+        let artist = FolderArtist(serverId: serverId, dto: try folderArtistDTO(payloadXML: payload))
 
         XCTAssertEqual(artist.serverId, serverId)
         XCTAssertEqual(artist.id, "219")
@@ -256,28 +276,32 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testFolderArtistMissingAttributeDefaults() throws {
-        let element = try XMLTestHelpers.element(tag: "artist", xml: #"<artist id="219" name="Beck"/>"#)
-        let artist = FolderArtist(serverId: serverId, element: element)
+        let artist = FolderArtist(serverId: serverId, dto: try folderArtistDTO(payloadXML: #"<artist id="219" name="Beck"/>"#))
         XCTAssertNil(artist.userRating)
         XCTAssertNil(artist.averageRating)
         XCTAssertNil(artist.starredDate)
     }
 
     func testFolderArtistParsedFromRealFixture() throws {
-        let element = try XMLTestHelpers.element(tag: "artist", fixture: "XML/getIndexes.xml")
-        let artist = FolderArtist(serverId: serverId, element: element)
-        // Exact fixture values: a missing/misnamed attribute parses to the literal
-        // string "nil", which a non-empty assertion would happily accept
+        let response = try TestDTO.response(fixture: "XML/getIndexes.xml")
+        let dto = try XCTUnwrap(response.indexes?.index?.values.first?.artist?.values.first)
+        let artist = FolderArtist(serverId: serverId, dto: dto)
+        // Exact fixture values: a missing/misnamed value maps to the literal string
+        // "nil", which a non-empty assertion would happily accept
         XCTAssertEqual(artist.id, "221")
         XCTAssertEqual(artist.name, "ALAC")
     }
 
     // MARK: FolderAlbum
 
+    private func folderAlbumDTO(payloadXML: String) throws -> ChildDTO {
+        let response = try TestDTO.xmlResponse("<directory id=\"219\">\(payloadXML)</directory>")
+        return try XCTUnwrap(response.directory?.child?.values.first)
+    }
+
     func testFolderAlbumParsesAllFields() throws {
-        let xml = #"<child id="225" parent="219" isDir="true" title="Odelay" artist="Beck" album="Odelay" playCount="7" year="1996" genre="Alternative" userRating="5" averageRating="4.5" coverArt="225" created="2024-02-24T15:30:02.799Z" starred="2024-03-01T10:00:00.000Z"/>"#
-        let element = try XMLTestHelpers.element(tag: "child", xml: xml)
-        let album = FolderAlbum(serverId: serverId, element: element)
+        let payload = #"<child id="225" parent="219" isDir="true" title="Odelay" artist="Beck" album="Odelay" playCount="7" year="1996" genre="Alternative" userRating="5" averageRating="4.5" coverArt="225" created="2024-02-24T15:30:02.799Z" starred="2024-03-01T10:00:00.000Z"/>"#
+        let album = FolderAlbum(serverId: serverId, dto: try folderAlbumDTO(payloadXML: payload))
 
         XCTAssertEqual(album.serverId, serverId)
         XCTAssertEqual(album.id, "225")
@@ -298,15 +322,13 @@ final class APIModelParsingTests: XCTestCase {
         // Regression for BUG-20: tagAlbumName used to be parsed from the "artist"
         // attribute (copy-paste of the tagArtistName line above it). The album title
         // lives in the "album" attribute on directory child elements, matching Song.
-        let xml = #"<child id="225" parent="219" isDir="true" title="Odelay" album="Odelay" artist="Beck"/>"#
-        let element = try XMLTestHelpers.element(tag: "child", xml: xml)
-        let album = FolderAlbum(serverId: serverId, element: element)
+        let payload = #"<child id="225" parent="219" isDir="true" title="Odelay" album="Odelay" artist="Beck"/>"#
+        let album = FolderAlbum(serverId: serverId, dto: try folderAlbumDTO(payloadXML: payload))
         XCTAssertEqual(album.tagAlbumName, "Odelay", "FolderAlbum.tagAlbumName should be the album title, not the artist name (BUG-20)")
     }
 
     func testFolderAlbumMissingAttributeDefaults() throws {
-        let element = try XMLTestHelpers.element(tag: "child", xml: #"<child id="225" title="Odelay"/>"#)
-        let album = FolderAlbum(serverId: serverId, element: element)
+        let album = FolderAlbum(serverId: serverId, dto: try folderAlbumDTO(payloadXML: #"<child id="225" title="Odelay"/>"#))
         XCTAssertNil(album.coverArtId)
         XCTAssertNil(album.parentFolderId)
         XCTAssertNil(album.tagArtistName)
@@ -320,8 +342,9 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testFolderAlbumParsedFromRealFixture() throws {
-        let element = try XMLTestHelpers.element(tag: "child", fixture: "XML/getMusicDirectory_artist.xml")
-        let album = FolderAlbum(serverId: serverId, element: element)
+        let response = try TestDTO.response(fixture: "XML/getMusicDirectory_artist.xml")
+        let dto = try XCTUnwrap(response.directory?.child?.values.first)
+        let album = FolderAlbum(serverId: serverId, dto: dto)
         XCTAssertEqual(album.id, "225")
         XCTAssertEqual(album.name, "Odeley")
         XCTAssertEqual(album.parentFolderId, "219")
@@ -329,36 +352,46 @@ final class APIModelParsingTests: XCTestCase {
 
     // MARK: MediaFolder
 
+    private func mediaFolderDTO(payloadXML: String) throws -> MusicFolderDTO {
+        let response = try TestDTO.xmlResponse("<musicFolders>\(payloadXML)</musicFolders>")
+        return try XCTUnwrap(response.musicFolders?.musicFolder?.values.first)
+    }
+
     func testMediaFolderParsesElement() throws {
-        let element = try XMLTestHelpers.element(tag: "musicFolder", xml: #"<musicFolder id="1" name="Music"/>"#)
-        let folder = MediaFolder(serverId: serverId, element: element)
+        let folder = MediaFolder(serverId: serverId, dto: try mediaFolderDTO(payloadXML: #"<musicFolder id="1" name="Music"/>"#))
         XCTAssertEqual(folder.serverId, serverId)
         XCTAssertEqual(folder.id, 1)
         XCTAssertEqual(folder.name, "Music")
     }
 
     func testMediaFolderMissingAttributeDefaults() throws {
-        let element = try XMLTestHelpers.element(tag: "musicFolder", xml: #"<musicFolder/>"#)
-        let folder = MediaFolder(serverId: serverId, element: element)
+        // The DTO layer requires an id (an id-less <musicFolder/> fails to decode),
+        // but a non-numeric id still falls back to 0 and a missing name to "nil"
+        let folder = MediaFolder(serverId: serverId, dto: try mediaFolderDTO(payloadXML: #"<musicFolder id="not-a-number"/>"#))
         XCTAssertEqual(folder.id, 0)
         XCTAssertEqual(folder.name, "nil")
     }
 
     func testMediaFolderParsedFromRealFixture() throws {
-        let element = try XMLTestHelpers.element(tag: "musicFolder", fixture: "XML/getMusicFolders.xml")
-        let folder = MediaFolder(serverId: serverId, element: element)
-        // The first fixture folder's id (0) matches the missing-attribute default, so
-        // the name is the discriminating assertion here
+        let response = try TestDTO.response(fixture: "XML/getMusicFolders.xml")
+        let dto = try XCTUnwrap(response.musicFolders?.musicFolder?.values.first)
+        let folder = MediaFolder(serverId: serverId, dto: dto)
+        // The first fixture folder's id (0) matches the fallback default, so the
+        // name is the discriminating assertion here
         XCTAssertEqual(folder.id, 0)
         XCTAssertEqual(folder.name, "Music")
     }
 
     // MARK: ChatMessage
 
+    private func chatMessageDTO(payloadXML: String) throws -> ChatMessageDTO {
+        let response = try TestDTO.xmlResponse("<chatMessages>\(payloadXML)</chatMessages>")
+        return try XCTUnwrap(response.chatMessages?.chatMessage?.values.first)
+    }
+
     func testChatMessageParsesElementAndConvertsMillisecondTimestamp() throws {
-        let xml = #"<chatMessage username="bbaron" time="1678318407778" message="Hello &amp; welcome!"/>"#
-        let element = try XMLTestHelpers.element(tag: "chatMessage", xml: xml)
-        let message = ChatMessage(serverId: serverId, element: element)
+        let payload = #"<chatMessage username="bbaron" time="1678318407778" message="Hello &amp; welcome!"/>"#
+        let message = ChatMessage(serverId: serverId, dto: try chatMessageDTO(payloadXML: payload))
 
         XCTAssertEqual(message.serverId, serverId)
         XCTAssertEqual(message.username, "bbaron")
@@ -368,16 +401,16 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testChatMessageMissingAttributeDefaults() throws {
-        let element = try XMLTestHelpers.element(tag: "chatMessage", xml: #"<chatMessage/>"#)
-        let message = ChatMessage(serverId: serverId, element: element)
+        let message = ChatMessage(serverId: serverId, dto: try chatMessageDTO(payloadXML: #"<chatMessage/>"#))
         XCTAssertEqual(message.username, "nil")
         XCTAssertEqual(message.message, "nil")
         XCTAssertEqual(message.timestamp, 0)
     }
 
     func testChatMessageParsedFromRealFixture() throws {
-        let element = try XMLTestHelpers.element(tag: "chatMessage", fixture: "XML/getChatMessages.xml")
-        let message = ChatMessage(serverId: serverId, element: element)
+        let response = try TestDTO.response(fixture: "XML/getChatMessages.xml")
+        let dto = try XCTUnwrap(response.chatMessages?.chatMessage?.values.first)
+        let message = ChatMessage(serverId: serverId, dto: dto)
         // Exact fixture values ("nil" placeholders would pass a non-empty check)
         XCTAssertEqual(message.username, "bbaron")
         XCTAssertEqual(message.message, "Hi there & welcome — enjoy the music ")
@@ -387,9 +420,9 @@ final class APIModelParsingTests: XCTestCase {
     // MARK: Lyrics
 
     func testLyricsParsesElementText() throws {
-        let xml = "<lyrics artist=\"Bob Dylan\" title=\"Blowin' in the Wind\">How many roads&#10;must a man walk down</lyrics>"
-        let element = try XMLTestHelpers.element(tag: "lyrics", xml: xml)
-        let lyrics = Lyrics(tagArtistName: "Bob Dylan", songTitle: "Blowin' in the Wind", element: element)
+        let payload = "<lyrics artist=\"Bob Dylan\" title=\"Blowin' in the Wind\">How many roads&#10;must a man walk down</lyrics>"
+        let dto = try XCTUnwrap(TestDTO.xmlResponse(payload).lyrics)
+        let lyrics = Lyrics(tagArtistName: "Bob Dylan", songTitle: "Blowin' in the Wind", dto: dto)
 
         XCTAssertEqual(lyrics.tagArtistName, "Bob Dylan")
         XCTAssertEqual(lyrics.songTitle, "Blowin' in the Wind")
@@ -397,8 +430,8 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testLyricsEmptyElementProducesEmptyText() throws {
-        let element = try XMLTestHelpers.element(tag: "lyrics", fixture: "XML/getLyrics_empty.xml")
-        let lyrics = Lyrics(tagArtistName: "a", songTitle: "t", element: element)
+        let dto = try XCTUnwrap(TestDTO.response(fixture: "XML/getLyrics_empty.xml").lyrics)
+        let lyrics = Lyrics(tagArtistName: "a", songTitle: "t", dto: dto)
         XCTAssertEqual(lyrics.lyricsText, "")
     }
 
@@ -406,17 +439,21 @@ final class APIModelParsingTests: XCTestCase {
         // Note: the populated lyrics fixture is spec-derived — real Subsonic servers
         // can no longer return lyrics because their external lyrics provider is dead,
         // so every live response is the empty <lyrics/> covered above
-        let element = try XMLTestHelpers.element(tag: "lyrics", fixture: "XML/getLyrics.xml")
-        let lyrics = Lyrics(tagArtistName: "a", songTitle: "t", element: element)
+        let dto = try XCTUnwrap(TestDTO.response(fixture: "XML/getLyrics.xml").lyrics)
+        let lyrics = Lyrics(tagArtistName: "a", songTitle: "t", dto: dto)
         XCTAssertFalse(lyrics.lyricsText.isEmpty)
     }
 
     // MARK: NowPlayingSong
 
+    private func nowPlayingDTO(payloadXML: String) throws -> ChildDTO {
+        let response = try TestDTO.xmlResponse("<nowPlaying>\(payloadXML)</nowPlaying>")
+        return try XCTUnwrap(response.nowPlaying?.entry?.values.first)
+    }
+
     func testNowPlayingSongParsesEntryAttributes() throws {
-        let xml = #"<entry id="353" username="bbaron" minutesAgo="3" playerId="2" playerName="iSub" title="Song"/>"#
-        let element = try XMLTestHelpers.element(tag: "entry", xml: xml)
-        let nowPlaying = NowPlayingSong(serverId: serverId, element: element)
+        let payload = #"<entry id="353" username="bbaron" minutesAgo="3" playerId="2" playerName="iSub" title="Song"/>"#
+        let nowPlaying = NowPlayingSong(serverId: serverId, dto: try nowPlayingDTO(payloadXML: payload))
 
         XCTAssertEqual(nowPlaying.serverId, serverId)
         XCTAssertEqual(nowPlaying.songId, "353")
@@ -427,8 +464,7 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testNowPlayingSongMissingAttributeDefaults() throws {
-        let element = try XMLTestHelpers.element(tag: "entry", xml: #"<entry id="353"/>"#)
-        let nowPlaying = NowPlayingSong(serverId: serverId, element: element)
+        let nowPlaying = NowPlayingSong(serverId: serverId, dto: try nowPlayingDTO(payloadXML: #"<entry id="353"/>"#))
         XCTAssertEqual(nowPlaying.username, "nil")
         XCTAssertEqual(nowPlaying.minutesAgo, 0)
         XCTAssertEqual(nowPlaying.playerId, 0)
@@ -436,8 +472,9 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testNowPlayingSongParsedFromRealFixture() throws {
-        let element = try XMLTestHelpers.element(tag: "entry", fixture: "XML/getNowPlaying.xml")
-        let nowPlaying = NowPlayingSong(serverId: serverId, element: element)
+        let response = try TestDTO.response(fixture: "XML/getNowPlaying.xml")
+        let dto = try XCTUnwrap(response.nowPlaying?.entry?.values.first)
+        let nowPlaying = NowPlayingSong(serverId: serverId, dto: dto)
         // Exact fixture values ("nil" placeholders would pass a non-empty check);
         // minutesAgo (0) matches the missing-attribute default, so playerId and
         // playerName carry the attribute-mapping assertion
@@ -450,9 +487,9 @@ final class APIModelParsingTests: XCTestCase {
     // MARK: ServerPlaylist
 
     func testServerPlaylistParsesAllFields() throws {
-        let xml = #"<playlist id="17" name="Road Trip" comment="Best driving songs" owner="bbaron" public="true" songCount="25" duration="5000" created="2024-02-24T15:31:22.978Z" changed="2024-03-01T10:00:00.000Z" coverArt="pl-17"/>"#
-        let element = try XMLTestHelpers.element(tag: "playlist", xml: xml)
-        let playlist = ServerPlaylist(serverId: serverId, element: element)
+        let payload = #"<playlist id="17" name="Road Trip" comment="Best driving songs" owner="bbaron" public="true" songCount="25" duration="5000" created="2024-02-24T15:31:22.978Z" changed="2024-03-01T10:00:00.000Z" coverArt="pl-17"/>"#
+        let dto = try XCTUnwrap(TestDTO.xmlResponse(payload).playlist)
+        let playlist = ServerPlaylist(serverId: serverId, dto: dto)
 
         XCTAssertEqual(playlist.serverId, serverId)
         XCTAssertEqual(playlist.id, 17)
@@ -471,8 +508,8 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testServerPlaylistMissingAttributeDefaults() throws {
-        let element = try XMLTestHelpers.element(tag: "playlist", xml: #"<playlist id="17" name="Bare"/>"#)
-        let playlist = ServerPlaylist(serverId: serverId, element: element)
+        let dto = try XCTUnwrap(TestDTO.xmlResponse(#"<playlist id="17" name="Bare"/>"#).playlist)
+        let playlist = ServerPlaylist(serverId: serverId, dto: dto)
         XCTAssertNil(playlist.coverArtId)
         XCTAssertNil(playlist.comment)
         XCTAssertEqual(playlist.songCount, 0)
@@ -486,8 +523,9 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testServerPlaylistParsedFromRealFixture() throws {
-        let element = try XMLTestHelpers.element(tag: "playlist", fixture: "XML/getPlaylists.xml")
-        let playlist = ServerPlaylist(serverId: serverId, element: element)
+        let response = try TestDTO.response(fixture: "XML/getPlaylists.xml")
+        let dto = try XCTUnwrap(response.playlists?.playlist?.values.first)
+        let playlist = ServerPlaylist(serverId: serverId, dto: dto)
         XCTAssertEqual(playlist.name, "iSub Test Playlist")
         XCTAssertEqual(playlist.songCount, 2)
         XCTAssertEqual(playlist.owner, "bbaron")
@@ -495,9 +533,9 @@ final class APIModelParsingTests: XCTestCase {
     }
 
     func testServerPlaylistEqualityUsesOnlyServerIdAndId() throws {
-        let a = try ServerPlaylist(serverId: 1, element: XMLTestHelpers.element(tag: "playlist", xml: #"<playlist id="1" name="One"/>"#))
-        let b = try ServerPlaylist(serverId: 1, element: XMLTestHelpers.element(tag: "playlist", xml: #"<playlist id="1" name="Different"/>"#))
-        let c = try ServerPlaylist(serverId: 2, element: XMLTestHelpers.element(tag: "playlist", xml: #"<playlist id="1" name="One"/>"#))
+        let a = ServerPlaylist(serverId: 1, dto: try TestDTO.json(PlaylistDTO.self, #"{"id": "1", "name": "One"}"#))
+        let b = ServerPlaylist(serverId: 1, dto: try TestDTO.json(PlaylistDTO.self, #"{"id": "1", "name": "Different"}"#))
+        let c = ServerPlaylist(serverId: 2, dto: try TestDTO.json(PlaylistDTO.self, #"{"id": "1", "name": "One"}"#))
         XCTAssertEqual(a, b)
         XCTAssertNotEqual(a, c)
     }

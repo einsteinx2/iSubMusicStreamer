@@ -103,8 +103,8 @@ final class ServerStoreTests: StoreTestCase {
         }
         XCTAssertTrue(store.addToDownloadQueue(serverId: serverId, songId: song.id))
 
-        let playlistXML = "<playlist id=\"77\" name=\"List\" owner=\"o\" public=\"false\" songCount=\"1\" duration=\"100\"/>"
-        let serverPlaylist = ServerPlaylist(serverId: serverId, element: try XMLTestHelpers.element(tag: "playlist", xml: playlistXML))
+        let playlistJSON = #"{"id": 77, "name": "List", "owner": "o", "public": false, "songCount": 1, "duration": 100}"#
+        let serverPlaylist = ServerPlaylist(serverId: serverId, dto: try TestDTO.json(PlaylistDTO.self, playlistJSON))
         XCTAssertTrue(store.add(serverPlaylist: serverPlaylist))
         XCTAssertTrue(store.add(song: song, serverId: serverId, serverPlaylistId: 77))
 
@@ -121,7 +121,7 @@ final class ServerStoreTests: StoreTestCase {
         XCTAssertTrue(store.add(mediaFolders: [MediaFolder(serverId: serverId, id: 1, name: "Music")]))
         XCTAssertTrue(store.add(coverArt: CoverArt(serverId: serverId, id: "al-1", isLarge: false, data: Data([1, 2, 3]))))
 
-        let folderArtist = FolderArtist(serverId: serverId, element: try XMLTestHelpers.element(tag: "artist", xml: #"<artist id="9" name="Artist"/>"#))
+        let folderArtist = FolderArtist(serverId: serverId, dto: try TestDTO.json(FolderArtistDTO.self, #"{"id": "9", "name": "Artist"}"#))
         XCTAssertTrue(store.add(folderArtist: folderArtist, mediaFolderId: 1))
 
         // A downloaded file on disk under the server's downloads directory

@@ -16,7 +16,7 @@ final class CombinedBrowseStoreTests: StoreTestCase {
 
     private func addTagArtist(serverId: Int, id: String, name: String, mediaFolderId: Int = MediaFolder.allFoldersId) {
         let artist = TagArtist(serverId: serverId,
-                               element: try! XMLTestHelpers.element(tag: "artist", xml: "<artist id=\"\(id)\" name=\"\(name)\" albumCount=\"1\"/>"))
+                               dto: try! TestDTO.json(ArtistID3DTO.self, #"{"id": "\#(id)", "name": "\#(name)", "albumCount": 1}"#))
         XCTAssertTrue(store.add(tagArtist: artist, mediaFolderId: mediaFolderId))
     }
 

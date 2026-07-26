@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@testable import iSub_Beta
 
 private final class FixturesBundleToken {}
 
@@ -33,5 +34,30 @@ enum Fixtures {
 
     static func string(_ relativePath: String) throws -> String {
         try String(contentsOf: url(relativePath), encoding: .utf8)
+    }
+}
+
+// Builds DTO values for tests by decoding inline literals (or fixtures) through the
+// app's real wire decoders, so test models take the same construction path as
+// production responses.
+enum TestDTO {
+    /// Decodes a single DTO from an inline JSON literal via the Subsonic JSON decoder.
+    static func json<T: Decodable>(_ type: T.Type, _ json: String) throws -> T {
+        try SubsonicJSON.decode(T.self, from: Data(json.utf8))
+    }
+
+    /// Wraps an inline XML payload in a subsonic-response envelope, decodes it with
+    /// the XML decoder, and returns the response payload.
+    static func xmlResponse(_ payloadXML: String, status: String = "ok") throws -> SubsonicResponse {
+        let document = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <subsonic-response xmlns="http://subsonic.org/restapi" status="\(status)" version="1.15.0">\(payloadXML)</subsonic-response>
+            """
+        return try SubsonicXMLDecoder.decode(SubsonicEnvelope.self, from: Data(document.utf8)).response
+    }
+
+    /// Decodes a fixture file (either wire format) and returns the response payload.
+    static func response(fixture relativePath: String) throws -> SubsonicResponse {
+        try SubsonicEnvelope.decode(from: Fixtures.data(relativePath)).response
     }
 }

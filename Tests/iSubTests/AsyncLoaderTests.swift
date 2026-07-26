@@ -348,7 +348,7 @@ class AsyncLoaderTests: LoaderTestCase {
     }
 
     func testRootFoldersLoaderReplacesExistingCache() async throws {
-        _ = store.add(folderArtist: FolderArtist(serverId: serverId, element: try XMLTestHelpers.element(tag: "artist", xml: #"<artist id="old" name="Old"/>"#)), mediaFolderId: 0)
+        _ = store.add(folderArtist: FolderArtist(serverId: serverId, dto: try TestDTO.json(FolderArtistDTO.self, #"{"id": "old", "name": "Old"}"#)), mediaFolderId: 0)
         try stubFixture(.getIndexes, name: "getIndexes")
 
         _ = try await AsyncRootFoldersLoader(serverId: serverId, mediaFolderId: 0).load()
@@ -791,7 +791,7 @@ class AsyncLoaderErrorTests: LoaderTestCase {
         let serverId = self.serverId
         // The server playlist loader needs its playlist row to exist so that error
         // paths (which throw before touching the store) are what's actually tested
-        _ = store.add(serverPlaylist: ServerPlaylist(serverId: serverId, element: try XMLTestHelpers.element(tag: "playlist", xml: #"<playlist id="0" name="p" songCount="1"/>"#)))
+        _ = store.add(serverPlaylist: ServerPlaylist(serverId: serverId, dto: try TestDTO.json(PlaylistDTO.self, #"{"id": 0, "name": "p", "songCount": 1}"#)))
 
         specs = [
             LoaderSpec(name: "chat", action: .getChatMessages, missingElementTag: "chatMessages") { _ = try await AsyncChatLoader(serverId: serverId).load() },

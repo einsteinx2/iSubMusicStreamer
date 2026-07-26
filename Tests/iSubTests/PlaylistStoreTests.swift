@@ -121,8 +121,8 @@ final class LocalPlaylistStoreCRUDTests: StoreTestCase {
 // COV-03: CRUD tests for server playlists and the serverPlaylistSong snapshot table
 final class ServerPlaylistStoreTests: StoreTestCase {
     private func makeServerPlaylist(serverId: Int = 1, id: Int = 17, name: String = "Road Trip", songCount: Int = 2) -> ServerPlaylist {
-        let xml = "<playlist id=\"\(id)\" name=\"\(name)\" owner=\"bbaron\" public=\"false\" songCount=\"\(songCount)\" duration=\"500\"/>"
-        return ServerPlaylist(serverId: serverId, element: try! XMLTestHelpers.element(tag: "playlist", xml: xml))
+        let json = #"{"id": \#(id), "name": "\#(name)", "owner": "bbaron", "public": false, "songCount": \#(songCount), "duration": 500}"#
+        return ServerPlaylist(serverId: serverId, dto: try! TestDTO.json(PlaylistDTO.self, json))
     }
 
     func testAddAndFetchServerPlaylist() throws {

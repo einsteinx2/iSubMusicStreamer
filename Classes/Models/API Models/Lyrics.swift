@@ -13,12 +13,6 @@ struct Lyrics: Codable, Equatable {
     let songTitle: String
     let lyricsText: String
     
-    init(tagArtistName: String, songTitle: String, element: RXMLElement) {
-        self.tagArtistName = tagArtistName
-        self.songTitle = songTitle
-        self.lyricsText = element.text
-    }
-
     init(tagArtistName: String, songTitle: String, dto: LyricsDTO) {
         self.tagArtistName = tagArtistName
         self.songTitle = songTitle

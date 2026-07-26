@@ -21,12 +21,6 @@ enum SubsonicError: Error {
     case dataNotFound(message: String)
     case unknown(code: Int, message: String)
     
-    init(element: RXMLElement) {
-        let code = element.attribute("code").intXML
-        let message = element.attribute("message").stringXML
-        self = .init(code: code, message: message)
-    }
-    
     init(code: Int, message: String) {
         switch code {
         case  0: self = .generic(message: message)

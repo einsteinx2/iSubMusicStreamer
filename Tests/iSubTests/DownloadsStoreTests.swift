@@ -173,10 +173,10 @@ final class DownloadsStoreTests: StoreTestCase {
     // MARK: Tag-based queries
 
     private func buildTagLibrary() {
-        let artist = TagArtist(serverId: 1, element: try! XMLTestHelpers.element(tag: "artist", xml: #"<artist id="ar1" name="Tag Artist" albumCount="2"/>"#))
+        let artist = TagArtist(serverId: 1, dto: try! TestDTO.json(ArtistID3DTO.self, #"{"id": "ar1", "name": "Tag Artist", "albumCount": 2}"#))
         _ = store.add(tagArtist: artist, mediaFolderId: 0)
-        let album1 = TagAlbum(serverId: 1, element: try! XMLTestHelpers.element(tag: "album", xml: #"<album id="al1" name="Tag Album One" artistId="ar1" songCount="2" duration="100" created="2024-02-24T15:31:22.978Z"/>"#))
-        let album2 = TagAlbum(serverId: 1, element: try! XMLTestHelpers.element(tag: "album", xml: #"<album id="al2" name="Tag Album Two" artistId="ar1" songCount="1" duration="100" created="2024-02-24T15:31:22.978Z"/>"#))
+        let album1 = TagAlbum(serverId: 1, dto: try! TestDTO.json(AlbumID3DTO.self, #"{"id": "al1", "name": "Tag Album One", "artistId": "ar1", "songCount": 2, "duration": 100, "created": "2024-02-24T15:31:22.978Z"}"#))
+        let album2 = TagAlbum(serverId: 1, dto: try! TestDTO.json(AlbumID3DTO.self, #"{"id": "al2", "name": "Tag Album Two", "artistId": "ar1", "songCount": 1, "duration": 100, "created": "2024-02-24T15:31:22.978Z"}"#))
         _ = store.add(tagAlbum: album1)
         _ = store.add(tagAlbum: album2)
 

@@ -42,21 +42,6 @@ struct ServerPlaylist: Codable, Equatable {
         self.loadedSongCount = 0
     }
 
-    init(serverId: Int, element: RXMLElement) {
-        self.serverId = serverId
-        self.id = element.attribute("id").intXML
-        self.coverArtId = element.attribute("coverArt")
-        self.name = element.attribute("name").stringXML
-        self.comment = element.attribute("comment")
-        self.songCount = element.attribute("songCount").intXML
-        self.duration = element.attribute("duration").intXML
-        self.owner = element.attribute("owner").stringXML
-        self.isPublic = element.attribute("public").boolXML
-        self.createdDate = element.attribute("created").dateXMLOptional
-        self.changedDate = element.attribute("changed").dateXMLOptional
-        self.loadedSongCount = 0
-    }
-    
     static func ==(lhs: ServerPlaylist, rhs: ServerPlaylist) -> Bool {
         return lhs.serverId == rhs.serverId && lhs.id == rhs.id
     }

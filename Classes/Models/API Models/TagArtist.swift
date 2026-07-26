@@ -29,16 +29,6 @@ struct TagArtist: Artist, Codable, Equatable {
         self.starredDate = dto.starred
     }
 
-    init(serverId: Int, element: RXMLElement) {
-        self.serverId = serverId
-        self.id = element.attribute("id").stringXML
-        self.name = element.attribute("name").stringXML
-        self.coverArtId = element.attribute("coverArt").stringXMLOptional
-        self.artistImageUrl = element.attribute("artistImageUrl").stringXMLOptional
-        self.albumCount = element.attribute("albumCount").intXML
-        self.starredDate = element.attribute("starred").dateXMLOptional
-    }
-    
     static func ==(lhs: TagArtist, rhs: TagArtist) -> Bool {
         return lhs.serverId == rhs.serverId && lhs.id == rhs.id
     }

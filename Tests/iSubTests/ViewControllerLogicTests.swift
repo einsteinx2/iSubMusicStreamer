@@ -130,7 +130,7 @@ final class SearchSongsPagingTests: LoaderTestCase {
 final class QuickAlbumsPagingTests: LoaderTestCase {
     private func makeAlbums(_ range: Range<Int>) -> [FolderAlbum] {
         range.map { number in
-            FolderAlbum(serverId: 1, element: try! XMLTestHelpers.element(tag: "child", xml: "<child id=\"\(number)\" title=\"Album \(number)\" parent=\"0\" created=\"2024-02-24T15:31:22.978Z\"/>"))
+            FolderAlbum(serverId: 1, dto: try! TestDTO.json(ChildDTO.self, #"{"id": "\#(number)", "title": "Album \#(number)", "parent": "0", "created": "2024-02-24T15:31:22.978Z"}"#))
         }
     }
 
@@ -203,7 +203,7 @@ final class QuickAlbumsPagingTests: LoaderTestCase {
             let total = server.id == 1 ? 3 : 1
             guard offset < total else { return [] }
             return (offset..<min(offset + 2, total)).map { number in
-                FolderAlbum(serverId: server.id, element: try! XMLTestHelpers.element(tag: "child", xml: "<child id=\"s\(server.id)-\(number)\" title=\"Album \(number)\" parent=\"0\" created=\"2024-02-24T15:31:22.978Z\"/>"))
+                FolderAlbum(serverId: server.id, dto: try! TestDTO.json(ChildDTO.self, #"{"id": "s\#(server.id)-\#(number)", "title": "Album \#(number)", "parent": "0", "created": "2024-02-24T15:31:22.978Z"}"#))
             }
         }
 
@@ -345,7 +345,7 @@ final class ArtistsViewModelTests: LoaderTestCase {
 
         // Seed the cache the way the loader would
         _ = store.add(mediaFolders: [MediaFolder(serverId: 1, id: 0, name: "Music")])
-        _ = store.add(folderArtist: FolderArtist(serverId: 1, element: try XMLTestHelpers.element(tag: "artist", xml: #"<artist id="a1" name="Artist"/>"#)), mediaFolderId: 0)
+        _ = store.add(folderArtist: FolderArtist(serverId: 1, dto: try TestDTO.json(FolderArtistDTO.self, #"{"id": "a1", "name": "Artist"}"#)), mediaFolderId: 0)
         _ = store.add(folderArtistSection: TableSection(serverId: 1, mediaFolderId: 0, name: "A", position: 0, itemCount: 1))
         _ = store.add(folderArtistListMetadata: RootListMetadata(serverId: 1, mediaFolderId: 0, itemCount: 1, reloadDate: Date()))
 
@@ -362,7 +362,7 @@ final class ArtistsViewModelTests: LoaderTestCase {
         _ = store.add(mediaFolders: [MediaFolder(serverId: 1, id: 0, name: "Music")])
         // Two sections: A (positions 0-1), B (positions 2-3)
         for (index, name) in ["Alpha", "Apple", "Beta", "Bravo"].enumerated() {
-            _ = store.add(folderArtist: FolderArtist(serverId: 1, element: try XMLTestHelpers.element(tag: "artist", xml: "<artist id=\"ar\(index)\" name=\"\(name)\"/>")), mediaFolderId: 0)
+            _ = store.add(folderArtist: FolderArtist(serverId: 1, dto: try TestDTO.json(FolderArtistDTO.self, #"{"id": "ar\#(index)", "name": "\#(name)"}"#)), mediaFolderId: 0)
         }
         _ = store.add(folderArtistSection: TableSection(serverId: 1, mediaFolderId: 0, name: "A", position: 0, itemCount: 2))
         _ = store.add(folderArtistSection: TableSection(serverId: 1, mediaFolderId: 0, name: "B", position: 2, itemCount: 2))
@@ -444,7 +444,7 @@ final class ArtistsViewModelTests: LoaderTestCase {
         // 150 artists matching the query: the first page returns the 100-item limit,
         // continueSearch fetches the remaining 50 and then stops
         for number in 0..<150 {
-            _ = store.add(folderArtist: FolderArtist(serverId: 1, element: try XMLTestHelpers.element(tag: "artist", xml: "<artist id=\"ar\(number)\" name=\"Match \(number)\"/>")), mediaFolderId: 0)
+            _ = store.add(folderArtist: FolderArtist(serverId: 1, dto: try TestDTO.json(FolderArtistDTO.self, #"{"id": "ar\#(number)", "name": "Match \#(number)"}"#)), mediaFolderId: 0)
         }
 
         let model = ArtistsViewModel(mediaFolderId: 0, type: .folders)

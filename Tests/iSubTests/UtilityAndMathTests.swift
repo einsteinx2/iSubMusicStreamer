@@ -281,19 +281,28 @@ final class UtilityAndMathTests: XCTestCase {
         assertCase(99, "SubsonicError.unknown")
     }
 
-    func testSubsonicErrorFromXMLElement() throws {
-        let element = try XMLTestHelpers.element(tag: "error", xml: #"<error code="60" message="Trial period is over."/>"#)
-        let error = SubsonicError(element: element)
+    // The loaders build SubsonicError from the decoded error DTO exactly like this
+    // (see AsyncAPILoader), so these tests pin that mapping end to end.
+    private func subsonicError(from response: SubsonicResponse) throws -> SubsonicError {
+        let dto = try XCTUnwrap(response.error)
+        return SubsonicError(code: dto.code, message: dto.message ?? "nil")
+    }
+
+    func testSubsonicErrorFromXMLPayload() throws {
+        let response = try TestDTO.xmlResponse(#"<error code="60" message="Trial period is over."/>"#, status: "failed")
+        let error = try subsonicError(from: response)
         guard case .trialExpired(let message) = error else {
             return XCTFail("expected .trialExpired, got \(error)")
         }
         XCTAssertEqual(message, "Trial period is over.")
     }
 
-    func testSubsonicErrorFromXMLElementWithMissingAttributes() throws {
-        // Missing code parses as 0 → .generic; missing message becomes the "nil" placeholder
-        let element = try XMLTestHelpers.element(tag: "error", xml: #"<error/>"#)
-        let error = SubsonicError(element: element)
+    func testSubsonicErrorFromXMLPayloadWithMissingMessage() throws {
+        // A missing message becomes the "nil" placeholder (the code, unlike every
+        // other field, is required by the DTO layer: a code-less <error/> is a
+        // decode failure rather than the old lenient 0 → .generic fallback)
+        let response = try TestDTO.xmlResponse(#"<error code="0"/>"#, status: "failed")
+        let error = try subsonicError(from: response)
         guard case .generic(let message) = error else {
             return XCTFail("expected .generic, got \(error)")
         }
@@ -301,8 +310,8 @@ final class UtilityAndMathTests: XCTestCase {
     }
 
     func testSubsonicErrorFromRealErrorFixture() throws {
-        let element = try XMLTestHelpers.element(tag: "error", fixture: "XML/ping_error_wrong_credentials.xml")
-        let error = SubsonicError(element: element)
+        let response = try TestDTO.response(fixture: "XML/ping_error_wrong_credentials.xml")
+        let error = try subsonicError(from: response)
         guard case .badCredentials = error else {
             return XCTFail("expected .badCredentials, got \(error)")
         }
@@ -335,8 +344,12 @@ final class UtilityAndMathTests: XCTestCase {
 // the test store, which is where Song reads its store ambiently.
 final class SongLocalPathTests: StoreTestCase {
     private func makeSong(serverId: Int, path: String, suffix: String = "mp3", transcodedSuffix: String? = nil) throws -> Song {
-        let xml = "<song id=\"1\" title=\"t\" path=\"\(path)\" suffix=\"\(suffix)\"\(transcodedSuffix.map { " transcodedSuffix=\"\($0)\"" } ?? "")/>"
-        return Song(serverId: serverId, element: try XMLTestHelpers.element(tag: "song", xml: xml))
+        var json = #"{"id": "1", "title": "t", "path": "\#(path)", "suffix": "\#(suffix)""#
+        if let transcodedSuffix {
+            json += #", "transcodedSuffix": "\#(transcodedSuffix)""#
+        }
+        json += "}"
+        return Song(serverId: serverId, dto: try TestDTO.json(ChildDTO.self, json))
     }
 
     func testLocalPathUsesServerPathPrefixAndSongPath() throws {
