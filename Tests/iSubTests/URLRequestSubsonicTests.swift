@@ -27,8 +27,8 @@ final class URLRequestSubsonicTests: SandboxedTestCase {
         try super.tearDownWithError()
     }
 
-    private func makeRequest(action: SubsonicAction, urlString: String = "https://music.example.com", username: String = "user", password: String = "pass", parameters: [String: Any]? = nil, byteOffset: Int = 0, file: StaticString = #filePath, line: UInt = #line) throws -> URLRequest {
-        try XCTUnwrap(URLRequest(subsonicAction: action, urlString: urlString, username: username, password: password, parameters: parameters, byteOffset: byteOffset), "request creation failed", file: file, line: line)
+    private func makeRequest(action: SubsonicAction, urlString: String = "https://music.example.com", username: String = "user", password: String = "pass", parameters: [String: Any]? = nil, byteOffset: Int = 0, format: SubsonicRequestFormat = .xml, file: StaticString = #filePath, line: UInt = #line) throws -> URLRequest {
+        try XCTUnwrap(URLRequest(subsonicAction: action, urlString: urlString, username: username, password: password, parameters: parameters, byteOffset: byteOffset, format: format), "request creation failed", file: file, line: line)
     }
 
     // Decodes "a=1&b=2&b=3" into ["a": ["1"], "b": ["2", "3"]]
@@ -166,6 +166,63 @@ final class URLRequestSubsonicTests: SandboxedTestCase {
 
         let authed = try XCTUnwrap(builder.request(serverId: 2, subsonicAction: .getIndexes))
         XCTAssertNotNil(authed.value(forHTTPHeaderField: "Authorization"), "the flag is per-server, read from the server row")
+    }
+
+    // MARK: Response format (f parameter)
+
+    func testDefaultFormatOmitsFParameter() throws {
+        let request = try makeRequest(action: .getIndexes)
+        XCTAssertNil(try sentParameters(request)["f"])
+    }
+
+    func testJSONFormatAddsFParameter() throws {
+        let request = try makeRequest(action: .getIndexes, format: .json)
+        XCTAssertEqual(try sentParameters(request)["f"], ["json"])
+    }
+
+    func testJSONFormatFloorsAPIVersionAt140() throws {
+        // getIndexes is a 1.0.0 action, but the f parameter requires 1.4.0
+        let floored = try makeRequest(action: .getIndexes, format: .json)
+        XCTAssertEqual(try sentParameters(floored)["v"], ["1.4.0"])
+
+        // Actions at or above 1.4.0 keep their per-action lowest version
+        let scrobble = try makeRequest(action: .scrobble, format: .json)
+        XCTAssertEqual(try sentParameters(scrobble)["v"], ["1.5.0"])
+        let artists = try makeRequest(action: .getArtists, format: .json)
+        XCTAssertEqual(try sentParameters(artists)["v"], ["1.8.0"])
+
+        // XML requests never floor
+        let xml = try makeRequest(action: .getIndexes)
+        XCTAssertEqual(try sentParameters(xml)["v"], ["1.0.0"])
+    }
+
+    func testBinaryActionsNeverRequestJSON() throws {
+        for action in [SubsonicAction.stream, .hls, .getCoverArt] {
+            let request = try makeRequest(action: action, format: .json)
+            XCTAssertNil(try sentParameters(request)["f"], "\(action) returns binary data and must not send f=json")
+        }
+    }
+
+    func testBuilderUsesServerJsonCapability() throws {
+        let store = Store()
+        store.setup(location: .memory)
+        let url = try XCTUnwrap(URL(string: "https://music.example.com"))
+        let xmlServer = Server(id: 1, type: .subsonic, url: url, username: "user", password: "pass")
+        let jsonServer = Server(id: 2, type: .navidrome, url: url, username: "user", password: "pass")
+        jsonServer.isJsonSupported = true
+        XCTAssertTrue(store.add(server: xmlServer))
+        XCTAssertTrue(store.add(server: jsonServer))
+        let builder = SubsonicRequestBuilder(store: store, redirects: ServerRedirectRegistry())
+
+        let xmlRequest = try XCTUnwrap(builder.request(serverId: 1, subsonicAction: .getIndexes))
+        XCTAssertNil(try sentParameters(xmlRequest)["f"])
+
+        let jsonRequest = try XCTUnwrap(builder.request(serverId: 2, subsonicAction: .getIndexes))
+        XCTAssertEqual(try sentParameters(jsonRequest)["f"], ["json"])
+
+        // A per-call format override beats the server capability (the ping uses this)
+        let forced = try XCTUnwrap(builder.request(serverId: 1, subsonicAction: .ping, format: .json))
+        XCTAssertEqual(try sentParameters(forced)["f"], ["json"])
     }
 
     // MARK: Range header

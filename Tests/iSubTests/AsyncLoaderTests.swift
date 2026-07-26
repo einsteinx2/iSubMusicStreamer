@@ -18,10 +18,20 @@ import UIKit
 class LoaderTestCase: StoreTestCase {
     let serverId = 1
 
+    // Overridden by the JSON twin suites so every inherited test reruns against the
+    // JSON fixture corpus (with the server row flagged JSON-capable so requests
+    // carry f=json)
+    var fixtureFolder: String { "XML" }
+    var fixtureExtension: String { "xml" }
+    var fixtureContentType: String { "text/xml; charset=utf-8" }
+    var isJsonServer: Bool { false }
+
     override func setUpWithError() throws {
         try super.setUpWithError()
         MockSubsonicServer.install()
-        XCTAssertTrue(store.add(server: TestData.server(id: serverId, urlString: "https://mock.example.com")))
+        let server = TestData.server(id: serverId, urlString: "https://mock.example.com")
+        server.isJsonSupported = isJsonServer
+        XCTAssertTrue(store.add(server: server))
     }
 
     override func tearDownWithError() throws {
@@ -31,17 +41,25 @@ class LoaderTestCase: StoreTestCase {
 
     // A minimal valid empty response (no child elements)
     let emptyOkXML = #"<?xml version="1.0" encoding="UTF-8"?><subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.15.0"/>"#
+    let emptyOkJSON = #"{"subsonic-response": {"status": "ok", "version": "1.15.0"}}"#
 
     func stubEmptyOk(_ action: SubsonicAction) {
-        MockSubsonicServer.stub(action, data: Data(emptyOkXML.utf8))
+        let body = fixtureExtension == "json" ? emptyOkJSON : emptyOkXML
+        MockSubsonicServer.stub(action, data: Data(body.utf8), contentType: fixtureContentType)
+    }
+
+    // Stubs the named fixture in this suite's format (XML/name.xml or JSON/name.json)
+    func stubFixture(_ action: SubsonicAction, name: String) throws {
+        let data = try Fixtures.data("\(fixtureFolder)/\(name).\(fixtureExtension)")
+        MockSubsonicServer.stub(action, data: data, contentType: fixtureContentType)
     }
 }
 
-final class AsyncLoaderTests: LoaderTestCase {
+class AsyncLoaderTests: LoaderTestCase {
     // MARK: AsyncChatLoader
 
     func testChatLoaderParsesMessages() async throws {
-        try MockSubsonicServer.stub(.getChatMessages, fixture: "XML/getChatMessages.xml")
+        try stubFixture(.getChatMessages, name: "getChatMessages")
 
         let messages = try await AsyncChatLoader(serverId: serverId).load()
 
@@ -65,6 +83,18 @@ final class AsyncLoaderTests: LoaderTestCase {
         } catch APIError.responseNotSubsonic {
             // expected
         }
+    }
+
+    // MARK: JSON negotiation
+
+    func testRequestsCarryFormatMatchingServerCapability() async throws {
+        try stubFixture(.getChatMessages, name: "getChatMessages")
+
+        _ = try await AsyncChatLoader(serverId: serverId).load()
+
+        let received = try XCTUnwrap(MockSubsonicServer.receivedRequests(action: .getChatMessages).first)
+        XCTAssertEqual(received.parameter("f"), isJsonServer ? "json" : nil,
+                       "requests must carry f=json exactly when the server row is flagged JSON-capable")
     }
 
     // MARK: AsyncChatSendLoader
@@ -118,7 +148,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     }
 
     func testServerPlaylistCreateLoaderSubsonicErrorThrows() async throws {
-        try MockSubsonicServer.stub(.createPlaylist, fixture: "XML/error_data_not_found.xml")
+        try stubFixture(.createPlaylist, name: "error_data_not_found")
 
         do {
             try await AsyncServerPlaylistCreateLoader(serverId: serverId, name: "Nope", songIds: ["10"]).load()
@@ -141,7 +171,7 @@ final class AsyncLoaderTests: LoaderTestCase {
 
     func testServerPlaylistDeleteLoaderSubsonicErrorThrows() async throws {
         // e.g. code 70 "Playlist not found"
-        try MockSubsonicServer.stub(.deletePlaylist, fixture: "XML/error_data_not_found.xml")
+        try stubFixture(.deletePlaylist, name: "error_data_not_found")
 
         do {
             try await AsyncServerPlaylistDeleteLoader(serverId: serverId, serverPlaylistId: 9999).load()
@@ -182,7 +212,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     func testCoverArtLoaderNonImageThrowsDataNotFound() async throws {
         // The cover art loader never parses XML, so even a Subsonic error body
         // surfaces as dataNotFound (the bytes aren't an image)
-        try MockSubsonicServer.stub(.getCoverArt, fixture: "XML/error_data_not_found.xml")
+        try stubFixture(.getCoverArt, name: "error_data_not_found")
 
         do {
             _ = try await AsyncCoverArtLoader(serverId: serverId, coverArtId: "nope", isLarge: true).load()
@@ -195,7 +225,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     // MARK: AsyncLyricsLoader
 
     func testLyricsLoaderParsesAndPersists() async throws {
-        try MockSubsonicServer.stub(.getLyrics, fixture: "XML/getLyrics.xml")
+        try stubFixture(.getLyrics, name: "getLyrics")
 
         let lyrics = try await AsyncLyricsLoader(serverId: serverId, tagArtistName: "Beck", songTitle: "Loser").load()
 
@@ -208,7 +238,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     }
 
     func testLyricsLoaderEmptyLyricsThrowsDataNotFound() async throws {
-        try MockSubsonicServer.stub(.getLyrics, fixture: "XML/getLyrics_empty.xml")
+        try stubFixture(.getLyrics, name: "getLyrics_empty")
 
         do {
             _ = try await AsyncLyricsLoader(serverId: serverId, tagArtistName: "a", songTitle: "t").load()
@@ -226,7 +256,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     // MARK: AsyncMediaFoldersLoader
 
     func testMediaFoldersLoaderPrependsAllFoldersEntry() async throws {
-        try MockSubsonicServer.stub(.getMusicFolders, fixture: "XML/getMusicFolders.xml")
+        try stubFixture(.getMusicFolders, name: "getMusicFolders")
 
         let mediaFolders = try await AsyncMediaFoldersLoader(serverId: serverId).load()
 
@@ -240,7 +270,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     // MARK: AsyncNowPlayingLoader
 
     func testNowPlayingLoaderParsesEntriesAndPersistsSongs() async throws {
-        try MockSubsonicServer.stub(.getNowPlaying, fixture: "XML/getNowPlaying.xml")
+        try stubFixture(.getNowPlaying, name: "getNowPlaying")
 
         let nowPlaying = try await AsyncNowPlayingLoader(serverId: serverId).load()
 
@@ -254,7 +284,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     // MARK: AsyncQuickAlbumsLoader
 
     func testQuickAlbumsLoaderParsesAlbumsAndRequestParameters() async throws {
-        try MockSubsonicServer.stub(.getAlbumList, fixture: "XML/getAlbumList_newest.xml")
+        try stubFixture(.getAlbumList, name: "getAlbumList_newest")
 
         let albums = try await AsyncQuickAlbumsLoader(serverId: serverId, modifier: .newest, offset: 20).load()
 
@@ -283,7 +313,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     // MARK: AsyncRootFoldersLoader
 
     func testRootFoldersLoaderPersistsArtistsSectionsAndMetadata() async throws {
-        try MockSubsonicServer.stub(.getIndexes, fixture: "XML/getIndexes.xml")
+        try stubFixture(.getIndexes, name: "getIndexes")
 
         let response = try await AsyncRootFoldersLoader(serverId: serverId, mediaFolderId: 0).load()
 
@@ -319,7 +349,7 @@ final class AsyncLoaderTests: LoaderTestCase {
 
     func testRootFoldersLoaderReplacesExistingCache() async throws {
         _ = store.add(folderArtist: FolderArtist(serverId: serverId, element: try XMLTestHelpers.element(tag: "artist", xml: #"<artist id="old" name="Old"/>"#)), mediaFolderId: 0)
-        try MockSubsonicServer.stub(.getIndexes, fixture: "XML/getIndexes.xml")
+        try stubFixture(.getIndexes, name: "getIndexes")
 
         _ = try await AsyncRootFoldersLoader(serverId: serverId, mediaFolderId: 0).load()
 
@@ -327,7 +357,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     }
 
     func testRootFoldersLoaderSendsMusicFolderIdOnlyWhenSpecific() async throws {
-        try MockSubsonicServer.stub(.getIndexes, fixture: "XML/getIndexes.xml")
+        try stubFixture(.getIndexes, name: "getIndexes")
 
         _ = try await AsyncRootFoldersLoader(serverId: serverId, mediaFolderId: 5).load()
         _ = try await AsyncRootFoldersLoader(serverId: serverId, mediaFolderId: MediaFolder.allFoldersId).load()
@@ -340,7 +370,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     // MARK: AsyncRootArtistsLoader
 
     func testRootArtistsLoaderPersistsTagArtistsSectionsAndMetadata() async throws {
-        try MockSubsonicServer.stub(.getArtists, fixture: "XML/getArtists.xml")
+        try stubFixture(.getArtists, name: "getArtists")
 
         let response = try await AsyncRootArtistsLoader(serverId: serverId, mediaFolderId: 0).load()
 
@@ -356,7 +386,7 @@ final class AsyncLoaderTests: LoaderTestCase {
 
     func testSubfolderLoaderPersistsSubfoldersAndMetadata() async throws {
         // The album fixture contains two disc subfolders and no songs
-        try MockSubsonicServer.stub(.getMusicDirectory, fixture: "XML/getMusicDirectory_album.xml")
+        try stubFixture(.getMusicDirectory, name: "getMusicDirectory_album")
 
         let response = try await AsyncSubfolderLoader(serverId: serverId, parentFolderId: "225").load()
 
@@ -373,7 +403,7 @@ final class AsyncLoaderTests: LoaderTestCase {
 
     func testSubfolderLoaderPersistsSongsAndMetadata() async throws {
         // The formats fixture contains two songs and no subfolders
-        try MockSubsonicServer.stub(.getMusicDirectory, fixture: "XML/getMusicDirectory_formats.xml")
+        try stubFixture(.getMusicDirectory, name: "getMusicDirectory_formats")
 
         let response = try await AsyncSubfolderLoader(serverId: serverId, parentFolderId: "900").load()
 
@@ -423,7 +453,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     // MARK: AsyncTagArtistLoader
 
     func testTagArtistLoaderPersistsArtistAndAlbums() async throws {
-        try MockSubsonicServer.stub(.getArtist, fixture: "XML/getArtist.xml")
+        try stubFixture(.getArtist, name: "getArtist")
 
         let albumIds = try await AsyncTagArtistLoader(serverId: serverId, tagArtistId: "52").load()
 
@@ -441,7 +471,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     // MARK: AsyncTagAlbumLoader
 
     func testTagAlbumLoaderPersistsAlbumAndSongs() async throws {
-        try MockSubsonicServer.stub(.getAlbum, fixture: "XML/getAlbum.xml")
+        try stubFixture(.getAlbum, name: "getAlbum")
 
         let songIds = try await AsyncTagAlbumLoader(serverId: serverId, tagAlbumId: "41").load()
 
@@ -471,7 +501,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     // MARK: AsyncServerPlaylistsLoader
 
     func testServerPlaylistsLoaderPersistsPlaylists() async throws {
-        try MockSubsonicServer.stub(.getPlaylists, fixture: "XML/getPlaylists.xml")
+        try stubFixture(.getPlaylists, name: "getPlaylists")
 
         let playlists = try await AsyncServerPlaylistsLoader(serverId: serverId).load()
 
@@ -485,9 +515,9 @@ final class AsyncLoaderTests: LoaderTestCase {
 
     func testServerPlaylistLoaderPersistsSongsAndLoadedCount() async throws {
         // The playlist row must exist (normally created by the playlists loader)
-        try MockSubsonicServer.stub(.getPlaylists, fixture: "XML/getPlaylists.xml")
+        try stubFixture(.getPlaylists, name: "getPlaylists")
         _ = try await AsyncServerPlaylistsLoader(serverId: serverId).load()
-        try MockSubsonicServer.stub(.getPlaylist, fixture: "XML/getPlaylist.xml")
+        try stubFixture(.getPlaylist, name: "getPlaylist")
 
         let playlist = try await AsyncServerPlaylistLoader(serverId: serverId, serverPlaylistId: 0).load()
 
@@ -502,9 +532,9 @@ final class AsyncLoaderTests: LoaderTestCase {
     }
 
     func testServerPlaylistLoaderReloadReplacesSongs() async throws {
-        try MockSubsonicServer.stub(.getPlaylists, fixture: "XML/getPlaylists.xml")
+        try stubFixture(.getPlaylists, name: "getPlaylists")
         _ = try await AsyncServerPlaylistsLoader(serverId: serverId).load()
-        try MockSubsonicServer.stub(.getPlaylist, fixture: "XML/getPlaylist.xml")
+        try stubFixture(.getPlaylist, name: "getPlaylist")
 
         _ = try await AsyncServerPlaylistLoader(serverId: serverId, serverPlaylistId: 0).load()
         let reloaded = try await AsyncServerPlaylistLoader(serverId: serverId, serverPlaylistId: 0).load()
@@ -516,7 +546,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     // MARK: AsyncServerShuffleLoader
 
     func testServerShuffleLoaderPersistsSongs() async throws {
-        try MockSubsonicServer.stub(.getRandomSongs, fixture: "XML/getRandomSongs.xml")
+        try stubFixture(.getRandomSongs, name: "getRandomSongs")
 
         let songs = try await AsyncServerShuffleLoader(serverId: serverId, mediaFolderId: nil).load()
 
@@ -530,7 +560,7 @@ final class AsyncLoaderTests: LoaderTestCase {
     }
 
     func testServerShuffleLoaderSendsMediaFolderId() async throws {
-        try MockSubsonicServer.stub(.getRandomSongs, fixture: "XML/getRandomSongs.xml")
+        try stubFixture(.getRandomSongs, name: "getRandomSongs")
 
         _ = try await AsyncServerShuffleLoader(serverId: serverId, mediaFolderId: 3).load()
 
@@ -556,7 +586,7 @@ final class AsyncLoaderTests: LoaderTestCase {
 
 final class AsyncSearchLoaderTests: LoaderTestCase {
     func testFolderSearchParsesAllResultTypes() async throws {
-        try MockSubsonicServer.stub(.search2, fixture: "XML/search2.xml")
+        try stubFixture(.search2, name: "search2")
 
         let results = try await AsyncSearchLoader(serverId: serverId, searchType: .folder, searchItemType: .all, query: "beck").load()
 
@@ -567,7 +597,7 @@ final class AsyncSearchLoaderTests: LoaderTestCase {
     }
 
     func testTagSearchParsesAllResultTypes() async throws {
-        try MockSubsonicServer.stub(.search3, fixture: "XML/search3.xml")
+        try stubFixture(.search3, name: "search3")
 
         let results = try await AsyncSearchLoader(serverId: serverId, searchType: .tag, searchItemType: .all, query: "beck").load()
 
@@ -578,7 +608,7 @@ final class AsyncSearchLoaderTests: LoaderTestCase {
     }
 
     func testSearchAppendsWildcardForLatinQueries() async throws {
-        try MockSubsonicServer.stub(.search2, fixture: "XML/search2.xml")
+        try stubFixture(.search2, name: "search2")
 
         _ = try await AsyncSearchLoader(serverId: serverId, searchType: .folder, query: "beck").load()
         _ = try await AsyncSearchLoader(serverId: serverId, searchType: .folder, query: "日本語").load()
@@ -589,7 +619,7 @@ final class AsyncSearchLoaderTests: LoaderTestCase {
     }
 
     func testSearchPagingParametersPerItemType() async throws {
-        try MockSubsonicServer.stub(.search3, fixture: "XML/search3.xml")
+        try stubFixture(.search3, name: "search3")
 
         _ = try await AsyncSearchLoader(serverId: serverId, searchType: .tag, searchItemType: .all, query: "q", offset: 0).load()
         _ = try await AsyncSearchLoader(serverId: serverId, searchType: .tag, searchItemType: .songs, query: "q", offset: 40).load()
@@ -744,7 +774,7 @@ final class AsyncRecursiveSongLoaderTests: LoaderTestCase {
 
 // MARK: - Shared negative paths for every loader
 
-final class AsyncLoaderErrorTests: LoaderTestCase {
+class AsyncLoaderErrorTests: LoaderTestCase {
     private struct LoaderSpec {
         let name: String
         let action: SubsonicAction
@@ -792,7 +822,7 @@ final class AsyncLoaderErrorTests: LoaderTestCase {
     func testSubsonicErrorBodyThrowsSubsonicError() async throws {
         for spec in specs {
             MockSubsonicServer.reset()
-            try MockSubsonicServer.stub(spec.action, fixture: "XML/error_data_not_found.xml")
+            try stubFixture(spec.action, name: "error_data_not_found")
             do {
                 try await spec.load()
                 XCTFail("[\(spec.name)] expected SubsonicError.dataNotFound")
@@ -874,4 +904,25 @@ final class AsyncLoaderErrorTests: LoaderTestCase {
         }
         return !MockSubsonicServer.receivedRequests(action: action).isEmpty
     }
+}
+
+// MARK: - JSON twin suites
+
+// Rerun every inherited loader test against the JSON fixture corpus with the server
+// row flagged JSON-capable, so requests carry f=json and responses exercise the JSON
+// decoding leg end to end. Tests that stub raw XML inline (dynamic handlers, the
+// Airsonic 410 body, not_xml garbage) still pass here because the response decoder
+// sniffs the actual payload format.
+final class AsyncLoaderJSONTests: AsyncLoaderTests {
+    override var fixtureFolder: String { "JSON" }
+    override var fixtureExtension: String { "json" }
+    override var fixtureContentType: String { "application/json" }
+    override var isJsonServer: Bool { true }
+}
+
+final class AsyncLoaderErrorJSONTests: AsyncLoaderErrorTests {
+    override var fixtureFolder: String { "JSON" }
+    override var fixtureExtension: String { "json" }
+    override var fixtureContentType: String { "application/json" }
+    override var isJsonServer: Bool { true }
 }

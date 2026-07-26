@@ -21,6 +21,8 @@ struct StatusAPIResponseData {
     let serverTypeName: String?
     let serverVersion: String?
     let isOpenSubsonic: Bool
+    // The ping always probes with f=json; a server that answered in JSON supports it
+    let isJsonSupported: Bool
 
     var serverType: ServerType {
         ServerTypeDetection.serverType(typeAttribute: serverTypeName, isOpenSubsonic: isOpenSubsonic)
@@ -48,7 +50,10 @@ final class AsyncStatusLoader: AsyncAPILoader<StatusAPIResponseData> {
     override var type: APILoaderType { .status }
     
     override func createRequest() -> URLRequest? {
-        URLRequest(subsonicAction: .ping, urlString: urlString, username: username, password: password, parameters: nil, byteOffset: 0)
+        // Always probe with f=json: a capable server answers JSON, anything else
+        // ignores the unknown parameter and answers XML, and the response decoder
+        // sniffs the format either way
+        URLRequest(subsonicAction: .ping, urlString: urlString, username: username, password: password, parameters: nil, byteOffset: 0, format: .json)
     }
     
     override func processResponse(data: Data) async throws -> StatusAPIResponseData {
@@ -101,7 +106,8 @@ final class AsyncStatusLoader: AsyncAPILoader<StatusAPIResponseData> {
                                      versionString: version,
                                      serverTypeName: response.type,
                                      serverVersion: response.serverVersion,
-                                     isOpenSubsonic: response.openSubsonic ?? false)
+                                     isOpenSubsonic: response.openSubsonic ?? false,
+                                     isJsonSupported: SubsonicEnvelope.sniffsAsJSON(data))
     }
     
     override func handleFailure() {

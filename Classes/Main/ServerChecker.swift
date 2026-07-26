@@ -43,9 +43,10 @@ final class ServerChecker {
                             let loader = AsyncStatusLoader(server: currentServer)
                             let responseData = try await loader.load()
 
-                            if let server = settings.currentServer, server.isVideoSupported != responseData.isVideoSupported || server.isNewSearchSupported != responseData.isNewSearchSupported {
+                            if let server = settings.currentServer, server.isVideoSupported != responseData.isVideoSupported || server.isNewSearchSupported != responseData.isNewSearchSupported || server.isJsonSupported != responseData.isJsonSupported {
                                 server.isVideoSupported = responseData.isVideoSupported
                                 server.isNewSearchSupported = responseData.isNewSearchSupported
+                                server.isJsonSupported = responseData.isJsonSupported
                                 settings.currentServer = server
                                 _ = store.add(server: server)
                             }

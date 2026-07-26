@@ -49,14 +49,28 @@ enum SubsonicAction: String {
     case jukeboxControl
 }
 
+// Response format to request via the f parameter. Omitted for .xml (the Subsonic
+// default) and never sent on binary endpoints (stream/hls/getCoverArt).
+enum SubsonicRequestFormat {
+    case xml
+    case json
+}
+
 extension URLRequest {
     // Always perform status checks using GET so that redirection work on connection, as well as other small requests
     private static func isGetRequest(action: SubsonicAction) -> Bool {
         return action == .hls || action == .ping
     }
-    
-    private static func createQueryString(parameters: [String: Any]?, version: String, username: String, password: String) -> String {
+
+    private static func isBinaryAction(_ action: SubsonicAction) -> Bool {
+        return action == .stream || action == .hls || action == .getCoverArt
+    }
+
+    private static func createQueryString(parameters: [String: Any]?, version: String, username: String, password: String, format: SubsonicRequestFormat) -> String {
         var queryString = "v=\(version)&c=iSub&u=\(username.URLQueryEncoded)&p=\(password.URLQueryEncoded)"
+        if format == .json {
+            queryString += "&f=json"
+        }
         if let parameters = parameters {
             for (key, value) in parameters {
                 switch value {
@@ -78,7 +92,10 @@ extension URLRequest {
         return queryString
     }
     
-    init?(subsonicAction action: SubsonicAction, urlString: String, username: String, password: String, parameters: [String: Any]?, byteOffset: Int, isBasicAuthEnabled: Bool = false) {
+    init?(subsonicAction action: SubsonicAction, urlString: String, username: String, password: String, parameters: [String: Any]?, byteOffset: Int, isBasicAuthEnabled: Bool = false, format: SubsonicRequestFormat = .xml) {
+        // Binary endpoints return audio/images/m3u8 regardless of format, so never
+        // ask them for JSON
+        let format = Self.isBinaryAction(action) ? .xml : format
         var finalUrlString: String
         if action == .hls {
             finalUrlString = "\(urlString)/rest/\(action).m3u8"
@@ -103,10 +120,17 @@ extension URLRequest {
             }
         }
         assert(version != nil, "Subsonic API call version number not set!")
-        
-        guard let finalVersion = version else {
+
+        guard var finalVersion = version else {
             DDLogError("Subsonic API call version number not set!")
             return nil
+        }
+
+        // The f parameter requires API 1.4.0, so floor the announced version when
+        // requesting JSON. Safe because JSON is only requested from servers that
+        // already answered a JSON ping (i.e. proved they are at least 1.4.0).
+        if format == .json, ["1.0.0", "1.2.0", "1.3.0"].contains(finalVersion) {
+            finalVersion = "1.4.0"
         }
         
         // Handle special case when loading playlists
@@ -120,7 +144,7 @@ extension URLRequest {
         }
         
         // If performing a GET request, append the query string
-        let queryString = Self.createQueryString(parameters: parameters, version: finalVersion, username: username, password: finalPassword)
+        let queryString = Self.createQueryString(parameters: parameters, version: finalVersion, username: username, password: finalPassword, format: format)
         if Self.isGetRequest(action: action) {
             finalUrlString += "?\(queryString)"
         }
@@ -171,7 +195,8 @@ struct SubsonicRequestBuilder {
     let store: Store
     let redirects: ServerRedirectRegistry
 
-    func request(serverId: Int, subsonicAction action: SubsonicAction, parameters: [String: Any]? = nil, byteOffset: Int = 0) -> URLRequest? {
+    // format nil means "use the server's detected capability" (see Server.isJsonSupported)
+    func request(serverId: Int, subsonicAction action: SubsonicAction, parameters: [String: Any]? = nil, byteOffset: Int = 0, format: SubsonicRequestFormat? = nil) -> URLRequest? {
         guard let server = store.server(id: serverId) else { return nil }
         return URLRequest(subsonicAction: action,
                           urlString: redirects.redirectUrlString(serverId: serverId) ?? server.url.absoluteString,
@@ -179,6 +204,7 @@ struct SubsonicRequestBuilder {
                           password: server.password,
                           parameters: parameters,
                           byteOffset: byteOffset,
-                          isBasicAuthEnabled: server.isBasicAuthEnabled)
+                          isBasicAuthEnabled: server.isBasicAuthEnabled,
+                          format: format ?? (server.isJsonSupported ? .json : .xml))
     }
 }

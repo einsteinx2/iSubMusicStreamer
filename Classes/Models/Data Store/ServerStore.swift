@@ -12,7 +12,7 @@ import CocoaLumberjackSwift
 
 extension Server: FetchableRecord, PersistableRecord {
     enum Column: String, ColumnExpression {
-        case id, type, url, username, password, path, isVideoSupported, isNewSearchSupported, isTagSearchSupported, name, isBasicAuthEnabled
+        case id, type, url, username, password, path, isVideoSupported, isNewSearchSupported, isTagSearchSupported, name, isBasicAuthEnabled, isJsonSupported
     }
 
     static func createInitialSchema(_ db: Database) throws {
@@ -38,6 +38,14 @@ extension Server: FetchableRecord, PersistableRecord {
         // that existed when it was on
         if seedBasicAuthFromGlobalSetting {
             try db.execute(sql: "UPDATE server SET isBasicAuthEnabled = 1")
+        }
+    }
+
+    static func createJsonSupportSchema(_ db: Database) throws {
+        // Defaults to false so existing servers keep speaking XML until their next
+        // ping re-detects the capability
+        try db.alter(table: Server.databaseTableName) { t in
+            t.add(column: Column.isJsonSupported.rawValue, .boolean).notNull().defaults(to: false)
         }
     }
 }

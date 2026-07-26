@@ -29,6 +29,12 @@ extension SubsonicEnvelope {
     /// Decodes either wire format by sniffing the first meaningful byte, so a server
     /// that answers XML despite f=json (or vice versa) parses fine. Throws
     /// DecodingError; callers translate into their own error domains.
+    /// True when the payload looks like JSON. The ping loader uses the observed
+    /// response format as the server's JSON-capability signal.
+    static func sniffsAsJSON(_ data: Data) -> Bool {
+        firstMeaningfulByte(of: data) == UInt8(ascii: "{")
+    }
+
     static func decode(from data: Data) throws -> SubsonicEnvelope {
         switch firstMeaningfulByte(of: data) {
         case UInt8(ascii: "{"):

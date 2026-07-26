@@ -88,6 +88,11 @@ final class Server: NSObject, Codable, Identifiable {
     // server), not an app-wide one
     var isBasicAuthEnabled: Bool = false
 
+    // Auto-detected from the ping response format: the ping always probes with
+    // f=json, and a server that answers JSON gets all subsequent requests in JSON.
+    // Re-verified on every ping, so the flag self-heals in both directions.
+    var isJsonSupported: Bool = false
+
     static func generatePathFromURL(url: URL) -> String {
         let scheme = url.scheme ?? "scheme"
         let host = url.host ?? "host"

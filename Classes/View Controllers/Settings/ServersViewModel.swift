@@ -150,6 +150,7 @@ import CocoaLumberjackSwift
 
                 server.isVideoSupported = responseData.isVideoSupported
                 server.isNewSearchSupported = responseData.isNewSearchSupported
+                server.isJsonSupported = responseData.isJsonSupported
                 server.type = responseData.serverType
                 _ = store.add(server: server)
 

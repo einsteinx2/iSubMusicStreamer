@@ -141,6 +141,36 @@ final class AsyncStatusLoaderTests: SandboxedTestCase {
         }
     }
 
+    // MARK: JSON capability negotiation
+
+    func testPingProbesWithJSONFormat() async throws {
+        try MockSubsonicServer.stub(.ping, fixture: "XML/ping_success.xml")
+
+        _ = try await makeLoader().load()
+
+        let received = try XCTUnwrap(MockSubsonicServer.receivedRequests(action: .ping).first)
+        XCTAssertEqual(received.parameter("f"), "json", "the ping always probes for JSON support")
+    }
+
+    func testJSONPingResponseSetsJsonSupported() async throws {
+        try MockSubsonicServer.stub(.ping, fixture: "JSON/ping_success.json")
+
+        let status = try await makeLoader().load()
+
+        XCTAssertTrue(status.isJsonSupported)
+        XCTAssertEqual(status.versionString, "1.15.0")
+        XCTAssertEqual(status.serverType, .airsonic)
+    }
+
+    func testXMLPingResponseClearsJsonSupported() async throws {
+        // A server that ignores f=json and answers XML doesn't support JSON
+        try MockSubsonicServer.stub(.ping, fixture: "XML/ping_success.xml")
+
+        let status = try await makeLoader().load()
+
+        XCTAssertFalse(status.isJsonSupported)
+    }
+
     func testTruncatedXMLStillParsesViaRecovery() async throws {
         // RXMLElement parses with XML_PARSE_RECOVER, so a truncated response whose
         // root element and attributes survived still loads successfully

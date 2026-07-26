@@ -114,6 +114,10 @@ final class Store {
                 try ContextQueue.createLibraryContextsSchema(db, legacyContextId: legacyContextId)
             }
 
+            migrator.registerMigration("jsonSupport") { db in
+                try Server.createJsonSupportSchema(db)
+            }
+
             // Migrate old data
             // TODO: implement this
 //            migrator.registerMigration("migrateOldData") { db in
