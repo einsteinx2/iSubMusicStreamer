@@ -37,15 +37,13 @@ final class AsyncServerShuffleLoader: AsyncAPILoader<[Song]> {
     override func processResponse(data: Data) async throws -> [Song] {
         try Task.checkCancellation()
         
-        guard let root = try await validate(data: data) else {
-            throw APIError.responseNotXML
-        }
-        
+        let response = try decodeSubsonicResponse(data: data)
+
         try Task.checkCancellation()
-                
+
         var songs = [Song]()
-        for try await element in root.iterate("randomSongs.song") {
-            let song = Song(serverId: serverId, element: element)
+        for dto in response.randomSongs?.song?.values ?? [] {
+            let song = Song(serverId: serverId, dto: dto)
             guard self.store.add(song: song) else {
                 throw APIError.database
             }

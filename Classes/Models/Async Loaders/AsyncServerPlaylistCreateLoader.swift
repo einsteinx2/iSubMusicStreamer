@@ -40,8 +40,6 @@ final class AsyncServerPlaylistCreateLoader: AsyncAPILoader<Void> {
     }
 
     override func processResponse(data: Data) async throws {
-        guard let _ = try await validate(data: data) else {
-            throw APIError.responseNotXML
-        }
+        _ = try decodeSubsonicResponse(data: data)
     }
 }

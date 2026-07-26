@@ -27,17 +27,10 @@ final class AsyncChatLoader: AsyncAPILoader<[ChatMessage]> {
     override func processResponse(data: Data) async throws -> [ChatMessage] {
         try Task.checkCancellation()
         
-        guard let root = try await validate(data: data), let chatMessages = try await validateChild(parent: root, childTag: "chatMessages") else {
-            throw APIError.responseNotXML
-        }
-        
+        let chatMessages = try require(decodeSubsonicResponse(data: data).chatMessages, "chatMessages")
+
         try Task.checkCancellation()
 
-        var messages = [ChatMessage]()
-        for try await element in chatMessages.iterate("chatMessage") {
-            messages.append(ChatMessage(serverId: serverId, element: element))
-        }
-
-        return messages
+        return (chatMessages.chatMessage?.values ?? []).map { ChatMessage(serverId: serverId, dto: $0) }
     }
 }

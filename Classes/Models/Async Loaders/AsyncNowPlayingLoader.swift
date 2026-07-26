@@ -30,19 +30,17 @@ final class AsyncNowPlayingLoader: AsyncAPILoader<[NowPlayingSong]> {
     override func processResponse(data: Data) async throws -> [NowPlayingSong] {
         try Task.checkCancellation()
         
-        guard let root = try await validate(data: data), let nowPlaying = try await validateChild(parent: root, childTag: "nowPlaying") else {
-            throw APIError.responseNotXML
-        }
-        
+        let nowPlaying = try require(decodeSubsonicResponse(data: data).nowPlaying, "nowPlaying")
+
         try Task.checkCancellation()
-        
+
         var nowPlayingSongs = [NowPlayingSong]()
-        for try await element in nowPlaying.iterate("entry") {
-            let song = Song(serverId: self.serverId, element: element)
+        for dto in nowPlaying.entry?.values ?? [] {
+            let song = Song(serverId: self.serverId, dto: dto)
             guard store.add(song: song) else {
                 throw APIError.database
             }
-            nowPlayingSongs.append(NowPlayingSong(serverId: serverId, element: element))
+            nowPlayingSongs.append(NowPlayingSong(serverId: serverId, dto: dto))
         }
         
         return nowPlayingSongs

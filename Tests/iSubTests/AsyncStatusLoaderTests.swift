@@ -117,13 +117,13 @@ final class AsyncStatusLoaderTests: SandboxedTestCase {
         }
     }
 
-    func testPlainTextResponseThrowsResponseNotXML() async throws {
+    func testPlainTextResponseThrowsResponseNotSubsonic() async throws {
         try MockSubsonicServer.stub(.ping, fixture: "XML/not_xml.txt")
 
         do {
             _ = try await makeLoader().load()
-            XCTFail("expected APIError.responseNotXML")
-        } catch APIError.responseNotXML {
+            XCTFail("expected APIError.responseNotSubsonic")
+        } catch APIError.responseNotSubsonic {
             // expected
         }
     }

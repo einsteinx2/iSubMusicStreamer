@@ -130,14 +130,7 @@ extension AsyncAPILoader {
     func decodeSubsonicResponse(data: Data) throws -> SubsonicResponse {
         let envelope: SubsonicEnvelope
         do {
-            switch firstMeaningfulByte(of: data) {
-            case UInt8(ascii: "{"):
-                envelope = try SubsonicJSON.decode(SubsonicEnvelope.self, from: data)
-            case UInt8(ascii: "<"):
-                envelope = try SubsonicXMLDecoder.decode(SubsonicEnvelope.self, from: data)
-            default:
-                throw APIError.responseNotSubsonic
-            }
+            envelope = try SubsonicEnvelope.decode(from: data)
         } catch let error as DecodingError {
             DDLogError("[APILoader \(type)] Failed to decode Subsonic response: \(error)")
             // A parseable document whose top level isn't subsonic-response means we
@@ -159,15 +152,6 @@ extension AsyncAPILoader {
             throw APIError.responseMissingElement(parent: "subsonic-response", tag: name)
         }
         return payload
-    }
-
-    private func firstMeaningfulByte(of data: Data) -> UInt8? {
-        var bytes = data[...]
-        // Skip a UTF-8 BOM if present
-        if bytes.count >= 3, bytes.prefix(3).elementsEqual([0xEF, 0xBB, 0xBF]) {
-            bytes = bytes.dropFirst(3)
-        }
-        return bytes.first { $0 != 0x09 && $0 != 0x0A && $0 != 0x0D && $0 != 0x20 }
     }
 }
 

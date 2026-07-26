@@ -25,6 +25,31 @@ struct SubsonicEnvelope: Decodable, Equatable {
     }
 }
 
+extension SubsonicEnvelope {
+    /// Decodes either wire format by sniffing the first meaningful byte, so a server
+    /// that answers XML despite f=json (or vice versa) parses fine. Throws
+    /// DecodingError; callers translate into their own error domains.
+    static func decode(from data: Data) throws -> SubsonicEnvelope {
+        switch firstMeaningfulByte(of: data) {
+        case UInt8(ascii: "{"):
+            return try SubsonicJSON.decode(SubsonicEnvelope.self, from: data)
+        case UInt8(ascii: "<"):
+            return try SubsonicXMLDecoder.decode(SubsonicEnvelope.self, from: data)
+        default:
+            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: [], debugDescription: "Data is neither JSON nor XML"))
+        }
+    }
+
+    private static func firstMeaningfulByte(of data: Data) -> UInt8? {
+        var bytes = data[...]
+        // Skip a UTF-8 BOM if present
+        if bytes.count >= 3, bytes.prefix(3).elementsEqual([0xEF, 0xBB, 0xBF]) {
+            bytes = bytes.dropFirst(3)
+        }
+        return bytes.first { $0 != 0x09 && $0 != 0x0A && $0 != 0x0D && $0 != 0x20 }
+    }
+}
+
 struct SubsonicResponse: Decodable, Equatable {
     let status: String?
     let version: String?

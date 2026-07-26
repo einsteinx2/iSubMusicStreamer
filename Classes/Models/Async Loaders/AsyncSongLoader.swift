@@ -33,13 +33,11 @@ final class AsyncSongLoader: AsyncAPILoader<Song> {
     override func processResponse(data: Data) async throws -> Song {
         try Task.checkCancellation()
         
-        guard let root = try await validate(data: data), let element = try await validateChild(parent: root, childTag: "song") else {
-            throw APIError.responseNotXML
-        }
-        
+        let songDTO = try require(decodeSubsonicResponse(data: data).song, "song")
+
         try Task.checkCancellation()
 
-        let song = Song(serverId: serverId, element: element)
+        let song = Song(serverId: serverId, dto: songDTO)
         guard store.add(song: song) else {
             throw APIError.database
         }

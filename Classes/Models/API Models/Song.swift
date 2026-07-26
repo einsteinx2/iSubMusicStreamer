@@ -126,6 +126,35 @@ final class Song: Codable, Hashable, CustomStringConvertible {
         self.starredDate = starredDate
     }
     
+    // NOTE: The dto inits reproduce the XML inits' defaults exactly (including the
+    // "nil" string sentinel from stringXML) so DB rows are byte-identical whichever
+    // wire format produced them — Combined Library dedup/equality depends on that.
+    init(serverId: Int, dto: ChildDTO) {
+        self.serverId = serverId
+        self.id = dto.id.value
+        self.title = dto.title ?? "nil"
+        self.coverArtId = dto.coverArt?.value
+        self.parentFolderId = dto.parent?.value
+        self.tagArtistName = dto.artist
+        self.tagAlbumName = dto.album
+        self.playCount = dto.playCount
+        self.year = dto.year
+        self.tagArtistId = dto.artistId?.value
+        self.tagAlbumId = dto.albumId?.value
+        self.genre = dto.genre
+        self.path = dto.path ?? "nil"
+        self.suffix = dto.suffix ?? "nil"
+        self.transcodedSuffix = dto.transcodedSuffix
+        self.duration = dto.duration ?? 0
+        self.kiloBitrate = dto.bitRate ?? 0
+        self.track = dto.track
+        self.discNumber = dto.discNumber
+        self.size = dto.size ?? 0
+        self.isVideo = dto.isVideo ?? false
+        self.createdDate = dto.created ?? .distantPast
+        self.starredDate = dto.starred
+    }
+
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
         self.id = element.attribute("id").stringXML

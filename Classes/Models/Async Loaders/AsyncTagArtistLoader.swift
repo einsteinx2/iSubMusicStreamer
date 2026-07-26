@@ -31,25 +31,23 @@ final class AsyncTagArtistLoader: AsyncAPILoader<[String]> {
     override func processResponse(data: Data) async throws -> [String] {
         try Task.checkCancellation()
         
-        guard let root = try await validate(data: data), let artist = try await validateChild(parent: root, childTag: "artist") else {
-            return []
-        }
+        let artist = try require(decodeSubsonicResponse(data: data).artist, "artist")
         guard store.deleteTagAlbums(serverId: serverId, tagArtistId: tagArtistId) else  {
             throw APIError.database
         }
-        
+
         try Task.checkCancellation()
-            
-        let tagArtist = TagArtist(serverId: serverId, element: artist)
+
+        let tagArtist = TagArtist(serverId: serverId, dto: artist)
         guard store.add(tagArtist: tagArtist, mediaFolderId: MediaFolder.allFoldersId) else {
             throw APIError.database
         }
-        
+
         try Task.checkCancellation()
-        
+
         var tagAlbumIds = [String]()
-        for try await element in artist.iterate("album") {
-            let tagAlbum = TagAlbum(serverId: serverId, element: element)
+        for dto in artist.album?.values ?? [] {
+            let tagAlbum = TagAlbum(serverId: serverId, dto: dto)
             guard store.add(tagAlbum: tagAlbum) else {
                 throw APIError.database
             }

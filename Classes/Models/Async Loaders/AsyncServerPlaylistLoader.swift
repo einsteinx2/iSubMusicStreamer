@@ -36,18 +36,16 @@ final class AsyncServerPlaylistLoader: AsyncAPILoader<ServerPlaylist> {
     override func processResponse(data: Data) async throws -> ServerPlaylist {
         try Task.checkCancellation()
         
-        guard let root = try await validate(data: data), let playlist = try await validateChild(parent: root, childTag: "playlist") else {
-            throw APIError.responseNotXML
-        }
-        
+        let playlist = try require(decodeSubsonicResponse(data: data).playlist, "playlist")
+
         try Task.checkCancellation()
-        
+
         guard store.clear(serverId: serverId, serverPlaylistId: serverPlaylistId) else {
             throw APIError.database
         }
 
-        for try await element in playlist.iterate("entry") {
-            let song = Song(serverId: serverId, element: element)
+        for dto in playlist.entry?.values ?? [] {
+            let song = Song(serverId: serverId, dto: dto)
             guard store.add(song: song) && store.add(song: song, serverId: serverId, serverPlaylistId: serverPlaylistId) else {
                 throw APIError.database
             }

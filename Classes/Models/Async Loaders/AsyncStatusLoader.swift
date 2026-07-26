@@ -54,8 +54,9 @@ final class AsyncStatusLoader: AsyncAPILoader<StatusAPIResponseData> {
     override func processResponse(data: Data) async throws -> StatusAPIResponseData {
         try Task.checkCancellation()
         
-        guard let root = try await validate(data: data), let version = try await validateAttribute(element: root, attribute: "version") else {
-            throw APIError.responseNotXML
+        let response = try decodeSubsonicResponse(data: data)
+        guard let version = response.version else {
+            throw APIError.responseMissingAttribute(tag: "subsonic-response", attribute: "version")
         }
         
         var isVideoSupported = false
@@ -98,9 +99,9 @@ final class AsyncStatusLoader: AsyncAPILoader<StatusAPIResponseData> {
                                      majorAPIVersion: majorAPIVersion,
                                      minorAPIVersion: minorAPIVersion,
                                      versionString: version,
-                                     serverTypeName: root.attribute("type"),
-                                     serverVersion: root.attribute("serverVersion"),
-                                     isOpenSubsonic: root.attribute("openSubsonic") == "true")
+                                     serverTypeName: response.type,
+                                     serverVersion: response.serverVersion,
+                                     isOpenSubsonic: response.openSubsonic ?? false)
     }
     
     override func handleFailure() {

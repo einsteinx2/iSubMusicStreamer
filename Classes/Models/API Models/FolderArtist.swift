@@ -16,6 +16,17 @@ struct FolderArtist: Codable, Equatable {
     let averageRating: Double?
     let starredDate: Date?
     
+    // Reproduces the XML init's defaults exactly (incl. the "nil" sentinel) so DB
+    // rows are identical whichever wire format produced them
+    init(serverId: Int, dto: FolderArtistDTO) {
+        self.serverId = serverId
+        self.id = dto.id.value
+        self.name = dto.name ?? "nil"
+        self.userRating = dto.userRating
+        self.averageRating = dto.averageRating
+        self.starredDate = dto.starred
+    }
+
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
         self.id =  element.attribute("id").stringXML

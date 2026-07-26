@@ -92,49 +92,29 @@ final class AsyncSearchLoader: AsyncAPILoader<SearchAPIResponseData> {
     override func processResponse(data: Data) async throws -> SearchAPIResponseData {
         try Task.checkCancellation()
         
-        guard let root = try await validate(data: data) else {
-            throw APIError.responseNotXML
-        }
-        
+        let response = try decodeSubsonicResponse(data: data)
+
         try Task.checkCancellation()
-        
+
         var folderArtists = [FolderArtist]()
         var folderAlbums = [FolderAlbum]()
         var tagArtists = [TagArtist]()
         var tagAlbums = [TagAlbum]()
         var songs = [Song]()
-        
-        if let searchResult = root.child("searchResult") {
+
+        if let searchResult = response.searchResult {
             // Old search
-            for try await element in searchResult.iterate("match") {
-                songs.append(Song(serverId: self.serverId, element: element))
-            }
-        } else if let searchResult2 = root.child("searchResult2") {
+            songs = (searchResult.match?.values ?? []).map { Song(serverId: serverId, dto: $0) }
+        } else if let searchResult2 = response.searchResult2 {
             // Folder search
-            for try await element in searchResult2.iterate("artist") {
-                folderArtists.append(FolderArtist(serverId: serverId, element: element))
-            }
-            try Task.checkCancellation()
-            for try await element in searchResult2.iterate("album") {
-                folderAlbums.append(FolderAlbum(serverId: serverId, element: element))
-            }
-            try Task.checkCancellation()
-            for try await element in searchResult2.iterate("song") {
-                songs.append(Song(serverId: serverId, element: element))
-            }
-        } else if let searchResult3 = root.child("searchResult3") {
+            folderArtists = (searchResult2.artist?.values ?? []).map { FolderArtist(serverId: serverId, dto: $0) }
+            folderAlbums = (searchResult2.album?.values ?? []).map { FolderAlbum(serverId: serverId, dto: $0) }
+            songs = (searchResult2.song?.values ?? []).map { Song(serverId: serverId, dto: $0) }
+        } else if let searchResult3 = response.searchResult3 {
             // Tag search
-            for try await element in searchResult3.iterate("artist") {
-                tagArtists.append(TagArtist(serverId: serverId, element: element))
-            }
-            try Task.checkCancellation()
-            for try await element in searchResult3.iterate("album") {
-                tagAlbums.append(TagAlbum(serverId: serverId, element: element))
-            }
-            try Task.checkCancellation()
-            for try await element in searchResult3.iterate("song") {
-                songs.append(Song(serverId: serverId, element: element))
-            }
+            tagArtists = (searchResult3.artist?.values ?? []).map { TagArtist(serverId: serverId, dto: $0) }
+            tagAlbums = (searchResult3.album?.values ?? []).map { TagAlbum(serverId: serverId, dto: $0) }
+            songs = (searchResult3.song?.values ?? []).map { Song(serverId: serverId, dto: $0) }
         }
         
         return SearchAPIResponseData(folderArtists: folderArtists, folderAlbums: folderAlbums, tagArtists: tagArtists, tagAlbums: tagAlbums, songs: songs)

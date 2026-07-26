@@ -35,25 +35,23 @@ final class AsyncTagAlbumLoader: AsyncAPILoader<[String]> {
     override func processResponse(data: Data) async throws -> [String] {
         try Task.checkCancellation()
         
-        guard let root = try await validate(data: data), let album = try await validateChild(parent: root, childTag: "album") else {
-            return []
-        }
+        let album = try require(decodeSubsonicResponse(data: data).album, "album")
         guard store.deleteTagSongs(serverId: serverId, tagAlbumId: tagAlbumId) else {
             throw APIError.database
         }
-        
+
         try Task.checkCancellation()
-        
-        let tagAlbum = TagAlbum(serverId: serverId, element: album)
+
+        let tagAlbum = TagAlbum(serverId: serverId, dto: album)
         guard store.add(tagAlbum: tagAlbum) else {
             throw APIError.database
         }
-        
+
         try Task.checkCancellation()
-        
+
         var songIds = [String]()
-        for try await element in album.iterate("song") {
-            let song = Song(serverId: serverId, element: element)
+        for dto in album.song?.values ?? [] {
+            let song = Song(serverId: serverId, dto: dto)
             let isVideoSupported = store.server(id: serverId)?.isVideoSupported ?? false
             if song.path != "" && (isVideoSupported || !song.isVideo) {
                 // Fix for pdfs showing in directory listing

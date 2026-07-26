@@ -39,11 +39,9 @@ final class AsyncLyricsLoader: AsyncAPILoader<Lyrics> {
     override func processResponse(data: Data) async throws -> Lyrics {
         try Task.checkCancellation()
         
-        guard let root = try await validate(data: data), let element = try await validateChild(parent: root, childTag: "lyrics") else {
-            throw APIError.responseNotXML
-        }
+        let lyricsDTO = try require(decodeSubsonicResponse(data: data).lyrics, "lyrics")
 
-        let lyrics = Lyrics(tagArtistName: tagArtistName, songTitle: songTitle, element: element)
+        let lyrics = Lyrics(tagArtistName: tagArtistName, songTitle: songTitle, dto: lyricsDTO)
         guard lyrics.lyricsText.count > 0 else {
             throw APIError.dataNotFound
         }

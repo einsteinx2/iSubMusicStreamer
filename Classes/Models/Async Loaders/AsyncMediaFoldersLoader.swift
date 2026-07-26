@@ -27,17 +27,10 @@ final class AsyncMediaFoldersLoader: AsyncAPILoader<[MediaFolder]> {
         
         let allFoldersMediaFolder = MediaFolder(serverId: serverId, id: MediaFolder.allFoldersId, name: "All Media Folders")
         
-        guard let root = try await validate(data: data), let musicFolders = try await validateChild(parent: root, childTag: "musicFolders") else {
-            return [allFoldersMediaFolder]
-        }
-        
+        let musicFolders = try require(decodeSubsonicResponse(data: data).musicFolders, "musicFolders")
+
         try Task.checkCancellation()
-        
-        var mediaFolders = [allFoldersMediaFolder]
-        for try await element in musicFolders.iterate("musicFolder") {
-            mediaFolders.append(MediaFolder(serverId: serverId, element: element))
-        }
-        
-        return mediaFolders
+
+        return [allFoldersMediaFolder] + (musicFolders.musicFolder?.values ?? []).map { MediaFolder(serverId: serverId, dto: $0) }
     }
 }

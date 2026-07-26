@@ -53,7 +53,7 @@ final class AsyncLoaderTests: LoaderTestCase {
         XCTAssertEqual(messages[1].message, "Hello from iSub test suite")
     }
 
-    func testChatLoaderAirsonicRemovedEndpointThrowsResponseNotXML() async throws {
+    func testChatLoaderAirsonicRemovedEndpointThrowsResponseNotSubsonic() async throws {
         // Airsonic-Advanced removed the chat API entirely: it answers HTTP 410 with a
         // plain-text "No longer supported" body, which must surface as a graceful error
         let body = try Fixtures.data("XML/getChatMessages_airsonic_410.txt")
@@ -61,8 +61,8 @@ final class AsyncLoaderTests: LoaderTestCase {
 
         do {
             _ = try await AsyncChatLoader(serverId: serverId).load()
-            XCTFail("expected APIError.responseNotXML")
-        } catch APIError.responseNotXML {
+            XCTFail("expected APIError.responseNotSubsonic")
+        } catch APIError.responseNotSubsonic {
             // expected
         }
     }
@@ -78,15 +78,15 @@ final class AsyncLoaderTests: LoaderTestCase {
         XCTAssertEqual(received.parameter("message"), "Hello there")
     }
 
-    func testChatSendLoaderAirsonicRemovedEndpointThrowsResponseNotXML() async throws {
+    func testChatSendLoaderAirsonicRemovedEndpointThrowsResponseNotSubsonic() async throws {
         // Same Airsonic-Advanced HTTP 410 plain-text response as getChatMessages
         let body = try Fixtures.data("XML/getChatMessages_airsonic_410.txt")
         MockSubsonicServer.stub(.addChatMessage, data: body, statusCode: 410, contentType: "text/plain;charset=UTF-8")
 
         do {
             try await AsyncChatSendLoader(serverId: serverId, message: "Hello there").load()
-            XCTFail("expected APIError.responseNotXML")
-        } catch APIError.responseNotXML {
+            XCTFail("expected APIError.responseNotSubsonic")
+        } catch APIError.responseNotSubsonic {
             // expected
         }
     }
@@ -804,17 +804,17 @@ final class AsyncLoaderErrorTests: LoaderTestCase {
         }
     }
 
-    func testNonXMLResponseThrowsResponseNotXML() async throws {
+    func testNonSubsonicResponseThrowsResponseNotSubsonic() async throws {
         for spec in specs {
             MockSubsonicServer.reset()
             try MockSubsonicServer.stub(spec.action, fixture: "XML/not_xml.txt")
             do {
                 try await spec.load()
-                XCTFail("[\(spec.name)] expected APIError.responseNotXML")
-            } catch APIError.responseNotXML {
+                XCTFail("[\(spec.name)] expected APIError.responseNotSubsonic")
+            } catch APIError.responseNotSubsonic {
                 // expected
             } catch {
-                XCTFail("[\(spec.name)] expected APIError.responseNotXML, got \(error)")
+                XCTFail("[\(spec.name)] expected APIError.responseNotSubsonic, got \(error)")
             }
         }
     }

@@ -18,4 +18,10 @@ struct Lyrics: Codable, Equatable {
         self.songTitle = songTitle
         self.lyricsText = element.text
     }
+
+    init(tagArtistName: String, songTitle: String, dto: LyricsDTO) {
+        self.tagArtistName = tagArtistName
+        self.songTitle = songTitle
+        self.lyricsText = dto.value ?? ""
+    }
 }

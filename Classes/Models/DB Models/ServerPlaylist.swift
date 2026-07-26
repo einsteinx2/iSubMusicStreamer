@@ -25,6 +25,23 @@ struct ServerPlaylist: Codable, Equatable {
     
     var isLoaded: Bool { return songCount == loadedSongCount }
     
+    // Reproduces the XML init's defaults exactly (incl. the "nil" sentinel) so DB
+    // rows are identical whichever wire format produced them
+    init(serverId: Int, dto: PlaylistDTO) {
+        self.serverId = serverId
+        self.id = Int(dto.id.value) ?? 0
+        self.coverArtId = dto.coverArt?.value
+        self.name = dto.name ?? "nil"
+        self.comment = dto.comment
+        self.songCount = dto.songCount ?? 0
+        self.duration = dto.duration ?? 0
+        self.owner = dto.owner ?? "nil"
+        self.isPublic = dto.isPublic ?? false
+        self.createdDate = dto.created
+        self.changedDate = dto.changed
+        self.loadedSongCount = 0
+    }
+
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
         self.id = element.attribute("id").intXML

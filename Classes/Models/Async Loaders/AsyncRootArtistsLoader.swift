@@ -35,9 +35,7 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData> {
         var tableSections = [TableSection]()
         var artistIds = [String]()
         
-        guard let root = try await validate(data: data), let artists = try await validateChild(parent: root, childTag: "artists") else {
-            throw APIError.responseNotXML
-        }
+        let artists = try require(decodeSubsonicResponse(data: data).artists, "artists")
         guard store.deleteTagArtists(serverId: serverId, mediaFolderId: mediaFolderId) else {
             throw APIError.database
         }
@@ -48,12 +46,12 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData> {
         var sectionCount = 0
         var rowIndex = 0
         
-        for try await element in artists.iterate("index") {
+        for index in artists.index?.values ?? [] {
             sectionCount = 0
             rowIndex = rowCount
-            for try await artist in element.iterate("artist") {
+            for dto in index.artist?.values ?? [] {
                 // Add the artist to the DB
-                let tagArtist = TagArtist(serverId: serverId, element: artist)
+                let tagArtist = TagArtist(serverId: serverId, dto: dto)
                 guard store.add(tagArtist: tagArtist, mediaFolderId: mediaFolderId) else {
                     throw APIError.database
                 }
@@ -64,7 +62,7 @@ final class AsyncRootArtistsLoader: AsyncAPILoader<ArtistsAPIResponseData> {
             
             let section = TableSection(serverId: serverId,
                                        mediaFolderId: mediaFolderId,
-                                       name: element.attribute("name").stringXML,
+                                       name: index.name ?? "nil",
                                        position: rowIndex,
                                        itemCount: sectionCount)
             guard store.add(tagArtistSection: section) else {

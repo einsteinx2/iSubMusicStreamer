@@ -23,6 +23,24 @@ struct TagAlbum: Codable, Equatable {
     let createdDate: Date
     let starredDate: Date?
     
+    // Reproduces the XML init's defaults exactly (incl. the "nil" sentinel) so DB
+    // rows are identical whichever wire format produced them
+    init(serverId: Int, dto: AlbumID3DTO) {
+        self.serverId = serverId
+        self.id = dto.id.value
+        self.name = dto.name ?? "nil"
+        self.coverArtId = dto.coverArt?.value
+        self.tagArtistId = dto.artistId?.value
+        self.tagArtistName = dto.artist
+        self.songCount = dto.songCount ?? 0
+        self.duration = dto.duration ?? 0
+        self.playCount = dto.playCount ?? 0
+        self.year = dto.year ?? 0
+        self.genre = dto.genre ?? "nil"
+        self.createdDate = dto.created ?? .distantPast
+        self.starredDate = dto.starred
+    }
+
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
         self.id = element.attribute("id").stringXML

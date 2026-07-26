@@ -27,6 +27,14 @@ struct MediaFolder: Codable, Equatable {
         self.id = element.attribute("id").intXML
         self.name = element.attribute("name").stringXML
     }
+
+    // Reproduces the XML init's defaults exactly (incl. the "nil" sentinel) so DB
+    // rows are identical whichever wire format produced them
+    init(serverId: Int, dto: MusicFolderDTO) {
+        self.serverId = serverId
+        self.id = Int(dto.id.value) ?? 0
+        self.name = dto.name ?? "nil"
+    }
     
     static func ==(lhs: MediaFolder, rhs: MediaFolder) -> Bool {
         return lhs.serverId == rhs.serverId && lhs.id == rhs.id

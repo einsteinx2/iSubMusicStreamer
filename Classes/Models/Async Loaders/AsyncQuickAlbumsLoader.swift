@@ -41,15 +41,13 @@ final class AsyncQuickAlbumsLoader: AsyncAPILoader<[FolderAlbum]> {
     override func processResponse(data: Data) async throws -> [FolderAlbum] {
         try Task.checkCancellation()
         
-        guard let root = try await validate(data: data), let albumList = try await validateChild(parent: root, childTag: "albumList") else {
-            throw APIError.responseNotXML
-        }
-        
+        let albumList = try require(decodeSubsonicResponse(data: data).albumList, "albumList")
+
         try Task.checkCancellation()
-        
+
         var folderAlbums = [FolderAlbum]()
-        for try await element in albumList.iterate("album") {
-            let folderAlbum = FolderAlbum(serverId: serverId, element: element)
+        for dto in albumList.album?.values ?? [] {
+            let folderAlbum = FolderAlbum(serverId: serverId, dto: dto)
             if folderAlbum.name != ".AppleDouble" {
                 folderAlbums.append(folderAlbum)
             }

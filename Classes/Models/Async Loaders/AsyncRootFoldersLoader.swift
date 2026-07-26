@@ -42,9 +42,7 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData> {
         var tableSections = [TableSection]()
         var artistIds = [String]()
         
-        guard let root = try await validate(data: data), let indexes = try await validateChild(parent: root, childTag: "indexes") else {
-            throw APIError.responseNotXML
-        }
+        let indexes = try require(decodeSubsonicResponse(data: data).indexes, "indexes")
         guard store.deleteFolderArtists(serverId: serverId, mediaFolderId: mediaFolderId) else {
             throw APIError.database
         }
@@ -56,8 +54,8 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData> {
         var sectionCount = 0
         var rowIndex = 0
         
-        for try await element in indexes.iterate("shortcut") {
-            let shortcut = FolderArtist(serverId: serverId, element: element)
+        for dto in indexes.shortcut?.values ?? [] {
+            let shortcut = FolderArtist(serverId: serverId, dto: dto)
             guard store.add(folderArtist: shortcut, mediaFolderId: mediaFolderId) else {
                 throw APIError.database
             }
@@ -83,12 +81,12 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData> {
         try Task.checkCancellation()
         
         // Process folder artists
-        for try await element in indexes.iterate("index") {
+        for index in indexes.index?.values ?? [] {
             sectionCount = 0
             rowIndex = rowCount
-            for try await artist in element.iterate("artist") {
+            for dto in index.artist?.values ?? [] {
                 // Add the artist to the DB
-                let folderArtist = FolderArtist(serverId: serverId, element: artist)
+                let folderArtist = FolderArtist(serverId: serverId, dto: dto)
                 // Prevent inserting .AppleDouble folders
                 if folderArtist.name != ".AppleDouble" {
                     guard store.add(folderArtist: folderArtist, mediaFolderId: mediaFolderId) else {
@@ -104,7 +102,7 @@ final class AsyncRootFoldersLoader: AsyncAPILoader<ArtistsAPIResponseData> {
             
             let section = TableSection(serverId: serverId,
                                        mediaFolderId: mediaFolderId,
-                                       name: element.attribute("name").stringXML,
+                                       name: index.name ?? "nil",
                                        position: rowIndex,
                                        itemCount: sectionCount)
             guard store.add(folderArtistSection: section) else {

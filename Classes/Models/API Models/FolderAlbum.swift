@@ -24,6 +24,25 @@ struct FolderAlbum: Codable, Equatable {
     let createdDate: Date
     let starredDate: Date?
     
+    // Reproduces the XML init's defaults exactly (incl. the "nil" sentinel) so DB
+    // rows are identical whichever wire format produced them
+    init(serverId: Int, dto: ChildDTO) {
+        self.serverId = serverId
+        self.id = dto.id.value
+        self.name = dto.title ?? "nil"
+        self.coverArtId = dto.coverArt?.value
+        self.parentFolderId = dto.parent?.value
+        self.tagArtistName = dto.artist
+        self.tagAlbumName = dto.album
+        self.playCount = dto.playCount ?? 0
+        self.year = dto.year
+        self.genre = dto.genre
+        self.userRating = dto.userRating
+        self.averageRating = dto.averageRating
+        self.createdDate = dto.created ?? .distantPast
+        self.starredDate = dto.starred
+    }
+
     init(serverId: Int, element: RXMLElement) {
         self.serverId = serverId
         self.id = element.attribute("id").stringXML

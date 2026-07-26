@@ -24,4 +24,14 @@ struct NowPlayingSong: Codable, Equatable {
         self.playerId = element.attribute("playerId").intXML
         self.playerName = element.attribute("playerName").stringXML
     }
+
+    // Reproduces the XML init's defaults exactly (incl. the "nil" sentinel)
+    init(serverId: Int, dto: ChildDTO) {
+        self.serverId = serverId
+        self.songId = dto.id.value
+        self.username = dto.username ?? "nil"
+        self.minutesAgo = dto.minutesAgo ?? 0
+        self.playerId = Int(dto.playerId?.value ?? "") ?? 0
+        self.playerName = dto.playerName ?? "nil"
+    }
 }
