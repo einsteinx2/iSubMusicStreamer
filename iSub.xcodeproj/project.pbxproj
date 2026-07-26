@@ -577,6 +577,9 @@
 		D8C2000000000000000D0242 /* SubsonicJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000D0241 /* SubsonicJSON.swift */; };
 		D8C2000000000000000D0243 /* SubsonicJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000D0241 /* SubsonicJSON.swift */; };
 		D8C2000000000000000D0252 /* SubsonicDTODecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000D0251 /* SubsonicDTODecodingTests.swift */; };
+		D8C2000000000000000D0302 /* SubsonicXMLDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000D0301 /* SubsonicXMLDecoder.swift */; };
+		D8C2000000000000000D0303 /* SubsonicXMLDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000D0301 /* SubsonicXMLDecoder.swift */; };
+		D8C2000000000000000D0312 /* SubsonicXMLDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000D0311 /* SubsonicXMLDecoderTests.swift */; };
 		D8C2000000000000000C0201 /* ServerRedirectRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0203 /* ServerRedirectRegistry.swift */; };
 		D8C2000000000000000C0202 /* ServerRedirectRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0203 /* ServerRedirectRegistry.swift */; };
 		D8C2000000000000000C0204 /* ServerRedirectRegistryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2000000000000000C0205 /* ServerRedirectRegistryTests.swift */; };
@@ -1053,6 +1056,8 @@
 		D8C2000000000000000D0231 /* SubsonicListDTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubsonicListDTOs.swift; sourceTree = "<group>"; };
 		D8C2000000000000000D0241 /* SubsonicJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubsonicJSON.swift; sourceTree = "<group>"; };
 		D8C2000000000000000D0251 /* SubsonicDTODecodingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubsonicDTODecodingTests.swift; sourceTree = "<group>"; };
+		D8C2000000000000000D0301 /* SubsonicXMLDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubsonicXMLDecoder.swift; sourceTree = "<group>"; };
+		D8C2000000000000000D0311 /* SubsonicXMLDecoderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubsonicXMLDecoderTests.swift; sourceTree = "<group>"; };
 		D8C2000000000000000C0203 /* ServerRedirectRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRedirectRegistry.swift; sourceTree = "<group>"; };
 		D8C2000000000000000C0205 /* ServerRedirectRegistryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerRedirectRegistryTests.swift; sourceTree = "<group>"; };
 		D8C2000000000000000C0303 /* LibraryContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryContext.swift; sourceTree = "<group>"; };
@@ -1591,6 +1596,7 @@
 				D8C2000000000000000D0221 /* SubsonicBrowsingDTOs.swift */,
 				D8C2000000000000000D0231 /* SubsonicListDTOs.swift */,
 				D8C2000000000000000D0241 /* SubsonicJSON.swift */,
+				D8C2000000000000000D0301 /* SubsonicXMLDecoder.swift */,
 			);
 			path = "API DTOs";
 			sourceTree = "<group>";
@@ -1984,6 +1990,7 @@
 				5A7E570E2F1000010000AB0E /* ScrobbleServiceTests.swift */,
 				D8C2000000000000000D0121 /* SubsonicLenientTests.swift */,
 				D8C2000000000000000D0251 /* SubsonicDTODecodingTests.swift */,
+				D8C2000000000000000D0311 /* SubsonicXMLDecoderTests.swift */,
 				D8C2000000000000000C0205 /* ServerRedirectRegistryTests.swift */,
 				D8C2000000000000000C0308 /* LibraryContextMigrationTests.swift */,
 				D8C2000000000000000C0402 /* ContextQueueSwapTests.swift */,
@@ -2389,6 +2396,7 @@
 				D8C2000000000000000D0222 /* SubsonicBrowsingDTOs.swift in Sources */,
 				D8C2000000000000000D0232 /* SubsonicListDTOs.swift in Sources */,
 				D8C2000000000000000D0242 /* SubsonicJSON.swift in Sources */,
+				D8C2000000000000000D0302 /* SubsonicXMLDecoder.swift in Sources */,
 				D8C2000000000000000C0201 /* ServerRedirectRegistry.swift in Sources */,
 				D8C2000000000000000C0301 /* LibraryContext.swift in Sources */,
 				D8C2000000000000000C0304 /* ContextQueueStore.swift in Sources */,
@@ -2673,6 +2681,7 @@
 				D8C2000000000000000D0223 /* SubsonicBrowsingDTOs.swift in Sources */,
 				D8C2000000000000000D0233 /* SubsonicListDTOs.swift in Sources */,
 				D8C2000000000000000D0243 /* SubsonicJSON.swift in Sources */,
+				D8C2000000000000000D0303 /* SubsonicXMLDecoder.swift in Sources */,
 				D8C2000000000000000C0202 /* ServerRedirectRegistry.swift in Sources */,
 				D8C2000000000000000C0302 /* LibraryContext.swift in Sources */,
 				D8C2000000000000000C0305 /* ContextQueueStore.swift in Sources */,
@@ -2844,6 +2853,7 @@
 				5A7E570D2F1000010000AB0D /* ScrobbleServiceTests.swift in Sources */,
 				D8C2000000000000000D0122 /* SubsonicLenientTests.swift in Sources */,
 				D8C2000000000000000D0252 /* SubsonicDTODecodingTests.swift in Sources */,
+				D8C2000000000000000D0312 /* SubsonicXMLDecoderTests.swift in Sources */,
 				D8C2000000000000000C0204 /* ServerRedirectRegistryTests.swift in Sources */,
 				D8C2000000000000000C0307 /* LibraryContextMigrationTests.swift in Sources */,
 				D8C2000000000000000C0401 /* ContextQueueSwapTests.swift in Sources */,

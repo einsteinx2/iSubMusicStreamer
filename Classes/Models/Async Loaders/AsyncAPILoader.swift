@@ -123,7 +123,56 @@ class AsyncAPILoader<T>: AsyncAPILoadable {
     }
 }
 
+// Format-neutral Subsonic response decoding into the Codable DTO layer. The wire
+// format is detected by sniffing, so a server that answers XML despite f=json (or
+// vice versa) parses fine with no special-casing.
+extension AsyncAPILoader {
+    func decodeSubsonicResponse(data: Data) throws -> SubsonicResponse {
+        let envelope: SubsonicEnvelope
+        do {
+            switch firstMeaningfulByte(of: data) {
+            case UInt8(ascii: "{"):
+                envelope = try SubsonicJSON.decode(SubsonicEnvelope.self, from: data)
+            case UInt8(ascii: "<"):
+                envelope = try SubsonicXMLDecoder.decode(SubsonicEnvelope.self, from: data)
+            default:
+                throw APIError.responseNotSubsonic
+            }
+        } catch let error as DecodingError {
+            DDLogError("[APILoader \(type)] Failed to decode Subsonic response: \(error)")
+            // A parseable document whose top level isn't subsonic-response means we
+            // reached something that isn't a Subsonic server
+            if case .keyNotFound(let key, let context) = error, key.stringValue == "subsonic-response", context.codingPath.isEmpty {
+                throw APIError.serverUnsupported
+            }
+            throw APIError.responseNotSubsonic
+        }
+        if let error = envelope.response.error {
+            throw SubsonicError(code: error.code, message: error.message ?? "nil")
+        }
+        return envelope.response
+    }
+
+    // Unwraps the endpoint's payload from the response (replaces validateChild)
+    func require<P>(_ payload: P?, _ name: String) throws -> P {
+        guard let payload else {
+            throw APIError.responseMissingElement(parent: "subsonic-response", tag: name)
+        }
+        return payload
+    }
+
+    private func firstMeaningfulByte(of data: Data) -> UInt8? {
+        var bytes = data[...]
+        // Skip a UTF-8 BOM if present
+        if bytes.count >= 3, bytes.prefix(3).elementsEqual([0xEF, 0xBB, 0xBF]) {
+            bytes = bytes.dropFirst(3)
+        }
+        return bytes.first { $0 != 0x09 && $0 != 0x0A && $0 != 0x0D && $0 != 0x20 }
+    }
+}
+
 // Subsonic API validation
+// TODO: Remove once all loaders migrate to decodeSubsonicResponse (DTO layer)
 extension AsyncAPILoader {
     // Returns a valid root XML element if it exists
     func validateRoot(data: Data) async throws -> RXMLElement? {
