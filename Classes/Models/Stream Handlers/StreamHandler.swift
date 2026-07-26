@@ -336,22 +336,19 @@ extension StreamHandler {
             try? FileManager.default.removeItem(at: URL(fileURLWithPath: filePath))
             return false
         } else if totalBytesTransferred < 1000 {
-            // Verify that it's a license issue
-            if let data = try? Data(contentsOf: URL(fileURLWithPath: filePath)) {
-                let root = RXMLElement(xmlData: data)
-                if root.isValid {
-                    if let error = root.child("error"), error.isValid {
-                        let subsonicError = SubsonicError(element: error)
-                        if case .trialExpired = subsonicError {
-                            let alert = UIAlertController(title: "Subsonic Error", message: subsonicError.localizedDescription, preferredStyle: .alert)
-                            alert.addOKAction()
-                            UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+            // Verify that it's a license issue (a tiny body is a Subsonic error
+            // response, XML or JSON, rather than audio data)
+            if let data = try? Data(contentsOf: URL(fileURLWithPath: filePath)),
+               let error = (try? SubsonicEnvelope.decode(from: data))?.response.error {
+                let subsonicError = SubsonicError(code: error.code, message: error.message ?? "nil")
+                if case .trialExpired = subsonicError {
+                    let alert = UIAlertController(title: "Subsonic Error", message: subsonicError.localizedDescription, preferredStyle: .alert)
+                    alert.addOKAction()
+                    UIApplication.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
 
-                            // TODO: Do we care if this fails? Can the file potentially not be there at all?
-                            try? FileManager.default.removeItem(at: URL(fileURLWithPath: filePath))
-                            return false
-                        }
-                    }
+                    // TODO: Do we care if this fails? Can the file potentially not be there at all?
+                    try? FileManager.default.removeItem(at: URL(fileURLWithPath: filePath))
+                    return false
                 }
             }
         }

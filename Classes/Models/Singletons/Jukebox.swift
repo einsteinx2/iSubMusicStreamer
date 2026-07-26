@@ -167,45 +167,41 @@ final class Jukebox {
     }
 
     private func parse(data: Data) -> JukeboxResponse? {
-        let root = RXMLElement(xmlData: data)
-        if root.isValid {
-            if let error = root.child("error"), error.isValid {
-                let code = error.attribute("code").intXML
-                let message = error.attribute("message").stringXMLOptional ?? "Unknown error"
-                if code == 50 {
-                    // User is not authorized to control the jukebox. parse() runs on
-                    // the session's background queue and the mode state is
-                    // main-confined, so flip the setting on the main thread (before
-                    // the jukeboxDisabled observers run, since both are enqueued in
-                    // order)
-                    DispatchQueue.main.async {
-                        self.settings.isJukeboxEnabled = false
-                        NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
-                    }
-                }
-
-                let alertMessage = "There was an error controlling the Jukebox.\n\nError \(code): \(message)"
-                NotificationCenter.postOnMainThread(name: Notifications.jukeboxError, userInfo: ["title": "Subsonic Error", "message": alertMessage])
-            } else if let status = root.child("jukeboxStatus") {
-                return JukeboxResponse(songs: nil,
-                                       currentIndex: status.attribute("currentIndex").intXML,
-                                       isPlaying: status.attribute("playing").boolXML,
-                                       gain: status.attribute("gain").floatXML,
-                                       position: status.attribute("position").intXML)
-            } else if let playlist = root.child("jukeboxPlaylist") {
-                var songs = [Song]()
-                playlist.iterate("entry") { e, _ in
-                    songs.append(Song(serverId: self.serverId, element: e))
-                }
-                return JukeboxResponse(songs: songs,
-                                       currentIndex: playlist.attribute("currentIndex").intXML,
-                                       isPlaying: playlist.attribute("playing").boolXML,
-                                       gain: playlist.attribute("gain").floatXML,
-                                       position: playlist.attribute("position").intXML)
-            }
-        } else {
+        guard let response = try? SubsonicEnvelope.decode(from: data).response else {
             let message = "There was an error controlling the Jukebox.\n\nError reading the response from Subsonic."
             NotificationCenter.postOnMainThread(name: Notifications.jukeboxError, userInfo: ["title": "Subsonic Error", "message": message])
+            return nil
+        }
+
+        if let error = response.error {
+            let message = error.message ?? "Unknown error"
+            if error.code == 50 {
+                // User is not authorized to control the jukebox. parse() runs on
+                // the session's background queue and the mode state is
+                // main-confined, so flip the setting on the main thread (before
+                // the jukeboxDisabled observers run, since both are enqueued in
+                // order)
+                DispatchQueue.main.async {
+                    self.settings.isJukeboxEnabled = false
+                    NotificationCenter.postOnMainThread(name: Notifications.jukeboxDisabled)
+                }
+            }
+
+            let alertMessage = "There was an error controlling the Jukebox.\n\nError \(error.code): \(message)"
+            NotificationCenter.postOnMainThread(name: Notifications.jukeboxError, userInfo: ["title": "Subsonic Error", "message": alertMessage])
+        } else if let status = response.jukeboxStatus {
+            return JukeboxResponse(songs: nil,
+                                   currentIndex: status.currentIndex ?? 0,
+                                   isPlaying: status.playing ?? false,
+                                   gain: Float(status.gain ?? 0),
+                                   position: status.position ?? 0)
+        } else if let playlist = response.jukeboxPlaylist {
+            let songs = (playlist.entry?.values ?? []).map { Song(serverId: serverId, dto: $0) }
+            return JukeboxResponse(songs: songs,
+                                   currentIndex: playlist.currentIndex ?? 0,
+                                   isPlaying: playlist.playing ?? false,
+                                   gain: Float(playlist.gain ?? 0),
+                                   position: playlist.position ?? 0)
         }
         return nil
     }
