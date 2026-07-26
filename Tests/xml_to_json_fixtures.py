@@ -32,17 +32,24 @@ INT_ATTRS = {
     "currentIndex", "position", "userRating", "playerId", "offset", "totalHits",
 }
 FLOAT_ATTRS = {"gain", "averageRating"}
+# Attributes that are numeric only on specific elements: real servers (Airsonic,
+# Subsonic, and Navidrome alike, observed 2026-07-26) send musicFolder ids as JSON
+# numbers even though every other id in the API is a string.
+INT_ATTRS_BY_ELEMENT = {"musicFolder": {"id"}}
 SKIPPED_XML_ONLY = {"malformed.xml"}
+# XML fixtures whose JSON twin is a real f=json capture, not a conversion — never
+# overwrite those with converter output.
+REAL_JSON_CAPTURES = {"getAlbum_navidrome.xml"}
 
 
 def strip_ns(tag: str) -> str:
     return tag.split("}", 1)[1] if "}" in tag else tag
 
 
-def typed(name: str, value: str):
+def typed(name: str, value: str, element_tag: str):
     if name in BOOL_ATTRS:
         return value == "true"
-    if name in INT_ATTRS:
+    if name in INT_ATTRS or name in INT_ATTRS_BY_ELEMENT.get(element_tag, ()):
         return int(value)
     if name in FLOAT_ATTRS:
         return float(value)
@@ -50,7 +57,8 @@ def typed(name: str, value: str):
 
 
 def element_to_dict(element: ET.Element, parent_tag: str) -> dict:
-    obj = {name: typed(name, value) for name, value in element.attrib.items()}
+    tag = strip_ns(element.tag)
+    obj = {name: typed(name, value, tag) for name, value in element.attrib.items()}
     text = (element.text or "").strip()
     if text:
         obj["value"] = text
@@ -73,7 +81,7 @@ def convert(path: Path) -> dict:
 def main():
     JSON_DIR.mkdir(exist_ok=True)
     for xml_path in sorted(XML_DIR.glob("*.xml")):
-        if xml_path.name in SKIPPED_XML_ONLY:
+        if xml_path.name in SKIPPED_XML_ONLY or xml_path.name in REAL_JSON_CAPTURES:
             continue
         out_path = JSON_DIR / (xml_path.stem + ".json")
         with out_path.open("w") as f:

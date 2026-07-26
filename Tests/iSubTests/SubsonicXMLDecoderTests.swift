@@ -14,10 +14,13 @@ import XCTest
 // correctness is asserted by SubsonicDTODecodingTests against the JSON corpus, so
 // envelope equality here transfers all of those assertions to the XML decoder.
 final class SubsonicXMLDecoderTests: XCTestCase {
-    // Every converted fixture pair (XML original -> generated JSON twin)
+    // Every converted fixture pair (XML original -> generated JSON twin), plus
+    // getAlbum_navidrome where BOTH sides are real captures of the same response
+    // from a live Navidrome server (f=xml and f=json), so equality also covers
+    // real cross-format server output rather than only our conversion rules.
     private static let pairedFixtures = [
         "error_data_not_found",
-        "getAlbum", "getAlbum_formats",
+        "getAlbum", "getAlbum_formats", "getAlbum_navidrome",
         "getAlbumList_newest", "getAlbumList_server2",
         "getArtist", "getArtist_formats",
         "getArtists", "getArtists_server2",

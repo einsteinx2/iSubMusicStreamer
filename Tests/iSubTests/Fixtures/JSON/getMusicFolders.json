@@ -6,11 +6,11 @@
     "musicFolders": {
       "musicFolder": [
         {
-          "id": "0",
+          "id": 0,
           "name": "Music"
         },
         {
-          "id": "1",
+          "id": 1,
           "name": "Podcasts"
         }
       ]

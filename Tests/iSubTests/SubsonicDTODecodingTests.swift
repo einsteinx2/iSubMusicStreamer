@@ -117,6 +117,33 @@ final class SubsonicDTODecodingTests: XCTestCase {
         XCTAssertEqual(album.song?.values.first?.playCount, 19)
     }
 
+    // Real f=json capture from a live Navidrome server (0.63.2): OpenSubsonic extras
+    // (genres, artists, replayGain, ...) must be ignored, string ids pass through, and
+    // nanosecond-precision created dates parse to the correct instant (truncated to
+    // millisecond precision, not misread as a larger unit).
+    func testGetAlbumNavidromeRealCapture() throws {
+        let album = try XCTUnwrap(decode("getAlbum_navidrome").album)
+        XCTAssertEqual(album.id.value, "7oli7U18zDNKQoRSCrQUVK")
+        XCTAssertEqual(album.name, "Me Against The World")
+        XCTAssertEqual(album.artist, "2Pac")
+        XCTAssertEqual(album.artistId?.value, "1ZHez3tEDSdaETpth5Q8Lm")
+        XCTAssertEqual(album.songCount, 7)
+        XCTAssertEqual(album.year, 1995)
+        XCTAssertEqual(album.genre, "Rap")
+        // "2026-07-11T19:39:55.981744906Z"
+        let created = try XCTUnwrap(album.created)
+        XCTAssertEqual(created.timeIntervalSince1970, 1783798795.981, accuracy: 0.001)
+
+        let song = try XCTUnwrap(album.song?.values.first)
+        XCTAssertEqual(song.id.value, "bY6Zl0uULHVEFtIHmDBY5e")
+        XCTAssertEqual(song.parent?.value, "7oli7U18zDNKQoRSCrQUVK")
+        XCTAssertEqual(song.title, "Me Against The World")
+        XCTAssertEqual(song.track, 3)
+        XCTAssertEqual(song.size, 14929021)
+        XCTAssertEqual(song.bitRate, 217)
+        XCTAssertEqual(song.isDir, false)
+    }
+
     // MARK: Lists
 
     func testGetAlbumList() throws {
