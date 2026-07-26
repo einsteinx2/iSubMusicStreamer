@@ -1,0 +1,156 @@
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.15.0",
+    "type": "Airsonic-Advanced",
+    "indexes": {
+      "lastModified": 1783641770702,
+      "ignoredArticles": "The El La Los Las Le Les",
+      "index": [
+        {
+          "name": "A",
+          "artist": [
+            {
+              "id": "221",
+              "name": "ALAC"
+            },
+            {
+              "id": "207",
+              "name": "Amtrac"
+            },
+            {
+              "id": "212",
+              "name": "anghami_wont_play"
+            },
+            {
+              "id": "216",
+              "name": "Artists with nonenglish characters"
+            }
+          ]
+        },
+        {
+          "name": "B",
+          "artist": [
+            {
+              "id": "219",
+              "name": "Beck"
+            },
+            {
+              "id": "211",
+              "name": "Ben Baron"
+            }
+          ]
+        },
+        {
+          "name": "C",
+          "artist": [
+            {
+              "id": "213",
+              "name": "Causes Crash"
+            }
+          ]
+        },
+        {
+          "name": "D",
+          "artist": [
+            {
+              "id": "214",
+              "name": "Doesnt play"
+            }
+          ]
+        },
+        {
+          "name": "F",
+          "artist": [
+            {
+              "id": "215",
+              "name": "FLAC"
+            },
+            {
+              "id": "217",
+              "name": "Folder"
+            }
+          ]
+        },
+        {
+          "name": "G",
+          "artist": [
+            {
+              "id": "209",
+              "name": "Gapless Playback"
+            }
+          ]
+        },
+        {
+          "name": "L",
+          "artist": [
+            {
+              "id": "222",
+              "name": "Lil' Flip"
+            }
+          ]
+        },
+        {
+          "name": "O",
+          "artist": [
+            {
+              "id": "208",
+              "name": "One Cud Cide"
+            }
+          ]
+        },
+        {
+          "name": "V",
+          "artist": [
+            {
+              "id": "210",
+              "name": "Video"
+            }
+          ]
+        },
+        {
+          "name": "W",
+          "artist": [
+            {
+              "id": "220",
+              "name": "WMA"
+            }
+          ]
+        },
+        {
+          "name": "#",
+          "artist": [
+            {
+              "id": "218",
+              "name": "2Pac"
+            }
+          ]
+        }
+      ],
+      "child": [
+        {
+          "id": "206",
+          "isDir": false,
+          "title": "Me Against The World",
+          "album": "Me Against The World",
+          "artist": "2Pac",
+          "track": 3,
+          "year": 1995,
+          "genre": "Rap",
+          "size": 14929021,
+          "contentType": "audio/mpeg",
+          "suffix": "mp3",
+          "duration": 281,
+          "bitRate": 217,
+          "path": "03 - Me Against The World - 2Pac.mp3",
+          "isVideo": false,
+          "playCount": 6,
+          "created": "2024-02-24T15:30:02.415Z",
+          "albumId": "62",
+          "artistId": "50",
+          "type": "music"
+        }
+      ]
+    }
+  }
+}

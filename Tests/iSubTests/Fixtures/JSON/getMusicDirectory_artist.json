@@ -1,0 +1,23 @@
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.15.0",
+    "type": "Airsonic-Advanced",
+    "directory": {
+      "id": "219",
+      "name": "Beck",
+      "playCount": 0,
+      "child": [
+        {
+          "id": "225",
+          "parent": "219",
+          "isDir": true,
+          "title": "Odeley",
+          "artist": "Odeley",
+          "playCount": 0,
+          "created": "2024-02-24T15:30:02.799Z"
+        }
+      ]
+    }
+  }
+}

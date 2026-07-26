@@ -1,0 +1,19 @@
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.15.0",
+    "type": "Airsonic-Advanced",
+    "musicFolders": {
+      "musicFolder": [
+        {
+          "id": "0",
+          "name": "Music"
+        },
+        {
+          "id": "1",
+          "name": "Podcasts"
+        }
+      ]
+    }
+  }
+}

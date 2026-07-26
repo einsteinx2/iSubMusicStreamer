@@ -1,0 +1,37 @@
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.15.0",
+    "type": "Airsonic-Advanced",
+    "searchResult2": {
+      "artist": [
+        {
+          "id": "9200",
+          "name": "Zebra Ensemble"
+        }
+      ],
+      "song": [
+        {
+          "id": "9201",
+          "parent": "9200",
+          "isDir": false,
+          "title": "Zebra Song",
+          "album": "Stripes",
+          "artist": "Zebra Ensemble",
+          "track": 1,
+          "size": 584000,
+          "contentType": "audio/mpeg",
+          "suffix": "mp3",
+          "duration": 144,
+          "bitRate": 32,
+          "path": "Zebra Ensemble/Stripes/01 Zebra Song.mp3",
+          "isVideo": false,
+          "created": "2026-07-09T00:00:00.000Z",
+          "albumId": "9200B",
+          "artistId": "9200T",
+          "type": "music"
+        }
+      ]
+    }
+  }
+}

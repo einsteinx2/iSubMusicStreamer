@@ -1,0 +1,22 @@
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.15.0",
+    "type": "Airsonic-Advanced",
+    "playlists": {
+      "playlist": [
+        {
+          "id": "0",
+          "name": "iSub Test Playlist",
+          "owner": "bbaron",
+          "public": false,
+          "songCount": 2,
+          "duration": 521,
+          "created": "2026-07-10T00:23:40.983Z",
+          "changed": "2026-07-10T00:23:40.988Z",
+          "coverArt": "pl-0"
+        }
+      ]
+    }
+  }
+}

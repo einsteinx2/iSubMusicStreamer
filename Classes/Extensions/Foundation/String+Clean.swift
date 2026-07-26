@@ -8,30 +8,6 @@
 
 import Foundation
 
-// This is the format that my server seems to reply with
-private let iso8601FormatterWithMilliseconds: DateFormatter = {
-    let dateFormatter = DateFormatter()
-    dateFormatter.calendar = Calendar(identifier: .iso8601)
-    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-    dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
-    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-    return dateFormatter
-}()
-
-// This is the format shown in the documentation
-private let iso8601FormatterWithoutTimezone: DateFormatter = {
-    let dateFormatter = DateFormatter()
-    dateFormatter.calendar = Calendar(identifier: .iso8601)
-    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-    dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
-    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-    return dateFormatter
-}()
-
-private func formatDate(dateString: String) -> Date? {
-    iso8601FormatterWithMilliseconds.date(from: dateString) ?? iso8601FormatterWithoutTimezone.date(from: dateString)
-}
-
 private extension String {
     // NOTE: Presumably Subsonic was sending back some characters using HTML encoding for some reason...but that doesn't seem to be the case anymore
     // NOTE: Previously was using GTMNSString library to string HTML encoding from strings, leaving this here in case it need to be re-enabled
@@ -98,7 +74,7 @@ extension Optional where Wrapped == String {
     }
     var dateXMLOptional: Date? {
         if let self {
-            return formatDate(dateString: self)
+            return SubsonicDateParsing.date(from: self)
         } else {
             return nil
         }

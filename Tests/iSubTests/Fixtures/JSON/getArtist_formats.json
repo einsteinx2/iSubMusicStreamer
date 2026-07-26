@@ -1,0 +1,25 @@
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.15.0",
+    "type": "Airsonic-Advanced",
+    "artist": {
+      "id": "900A",
+      "name": "Test Tones",
+      "coverArt": "ar-900A",
+      "albumCount": 1,
+      "album": [
+        {
+          "id": "900B",
+          "name": "Formats",
+          "artist": "Test Tones",
+          "artistId": "900A",
+          "coverArt": "al-900B",
+          "songCount": 2,
+          "duration": 154,
+          "created": "2026-07-09T00:00:00.000Z"
+        }
+      ]
+    }
+  }
+}

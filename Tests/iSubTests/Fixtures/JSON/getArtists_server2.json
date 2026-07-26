@@ -1,0 +1,22 @@
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.15.0",
+    "type": "Airsonic-Advanced",
+    "artists": {
+      "ignoredArticles": "The El La Los Las Le Les",
+      "index": [
+        {
+          "name": "Z",
+          "artist": [
+            {
+              "id": "9200T",
+              "name": "Zebra Ensemble",
+              "albumCount": 1
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

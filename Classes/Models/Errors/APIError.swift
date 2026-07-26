@@ -13,7 +13,9 @@ enum APIError: Error {
     case serverUnsupported
     case serverUnreachable
     case requestCreation
+    // TODO: Remove responseNotXML once all loaders migrate to the DTO layer (use responseNotSubsonic)
     case responseNotXML
+    case responseNotSubsonic
     case responseMissingElement(parent: String, tag: String)
     case responseMissingAttribute(tag: String, attribute: String)
     case dataNotFound
@@ -25,7 +27,8 @@ enum APIError: Error {
         case .serverUnsupported:        return "APIError.serverUnsupported"
         case .serverUnreachable:        return "APIError.serverUnreachable"
         case .requestCreation:          return "APIError.requestCreation"
-        case .responseNotXML:           return "APIError.esponseNotXML"
+        case .responseNotXML:           return "APIError.responseNotXML"
+        case .responseNotSubsonic:      return "APIError.responseNotSubsonic"
         case .responseMissingElement:   return "APIError.responseMissingElement"
         case .responseMissingAttribute: return "APIError.responseMissingAttribute"
         case .dataNotFound:             return "APIError.dataNotFound"
@@ -45,10 +48,12 @@ enum APIError: Error {
             return "There was an error creating the API request."
         case .responseNotXML:
             return "The server did not respond with XML. This usually means that somehow you did not reach your Subsonic server, or your Subsonic server is crashing."
+        case .responseNotSubsonic:
+            return "The server did not respond with a valid Subsonic API response. This usually means that somehow you did not reach your Subsonic server, or your Subsonic server is crashing."
         case .responseMissingElement(let parent, let tag):
-            return "The response was missing a required XML element \"\(tag)\" inside \(parent), so the requested information could not be read."
+            return "The response was missing required information \"\(tag)\" inside \(parent), so the requested information could not be read."
         case .responseMissingAttribute(let tag, let attribute):
-            return "The response was missing a required XML attribute \"\(attribute)\" inside \(tag), so the requested information could not be read."
+            return "The response was missing a required value \"\(attribute)\" inside \(tag), so the requested information could not be read."
         case .dataNotFound:
             return "The requested information was not found."
         case .database:

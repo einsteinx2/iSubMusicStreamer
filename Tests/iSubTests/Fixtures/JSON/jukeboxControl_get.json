@@ -1,0 +1,61 @@
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.16.1",
+    "jukeboxPlaylist": {
+      "currentIndex": 1,
+      "playing": true,
+      "gain": 0.75,
+      "position": 0,
+      "entry": [
+        {
+          "id": "189",
+          "parent": "188",
+          "isDir": false,
+          "title": "So Many Tears",
+          "album": "Me Against The World",
+          "artist": "2Pac",
+          "track": 4,
+          "year": 1995,
+          "genre": "Rap",
+          "coverArt": "188",
+          "size": 7534126,
+          "contentType": "audio/mpeg",
+          "suffix": "mp3",
+          "duration": 239,
+          "bitRate": 251,
+          "path": "2Pac/Me Against The World/04 - So Many Tears - 2Pac.mp3",
+          "playCount": 0,
+          "created": "2025-06-02T16:18:50.047Z",
+          "albumId": "1",
+          "artistId": "1",
+          "type": "music"
+        },
+        {
+          "id": "203",
+          "parent": "23",
+          "isDir": false,
+          "title": "Seven Years",
+          "album": "Come Away With Me",
+          "artist": "Norah Jones",
+          "track": 2,
+          "year": 2002,
+          "size": 113330742,
+          "contentType": "audio/mp4",
+          "suffix": "m4a",
+          "transcodedContentType": "audio/mpeg",
+          "transcodedSuffix": "mp3",
+          "duration": 144,
+          "bitRate": 6266,
+          "path": "ALAC/02 Seven Years.m4a",
+          "playCount": 0,
+          "discNumber": 1,
+          "created": "2025-06-02T16:18:52.315Z",
+          "albumId": "21",
+          "artistId": "17",
+          "type": "music"
+        }
+      ]
+    }
+  }
+}

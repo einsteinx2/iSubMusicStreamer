@@ -1,0 +1,20 @@
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.15.0",
+    "type": "Airsonic-Advanced",
+    "albumList": {
+      "album": [
+        {
+          "id": "9202",
+          "parent": "9200",
+          "isDir": true,
+          "title": "Stripes",
+          "album": "Stripes",
+          "artist": "Zebra Ensemble",
+          "created": "2026-07-09T00:00:00.000Z"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.16.1",
+    "chatMessages": {
+      "chatMessage": [
+        {
+          "username": "bbaron",
+          "time": 1783718935178,
+          "message": "Hi there & welcome — enjoy the music "
+        },
+        {
+          "username": "bbaron",
+          "time": 1783718777266,
+          "message": "Hello from iSub test suite"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "subsonic-response": {
+    "status": "failed",
+    "version": "1.15.0",
+    "type": "Airsonic-Advanced",
+    "error": {
+      "code": 30,
+      "message": "Incompatible Airsonic REST protocol version. Server must upgrade."
+    }
+  }
+}

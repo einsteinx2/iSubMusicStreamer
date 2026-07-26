@@ -1,0 +1,11 @@
+{
+  "subsonic-response": {
+    "status": "failed",
+    "version": "1.15.0",
+    "type": "Airsonic-Advanced",
+    "error": {
+      "code": 70,
+      "message": "Directory not found"
+    }
+  }
+}

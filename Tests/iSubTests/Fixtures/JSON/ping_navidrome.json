@@ -1,0 +1,9 @@
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.16.1",
+    "type": "navidrome",
+    "serverVersion": "0.52.5 (734eb30a)",
+    "openSubsonic": true
+  }
+}

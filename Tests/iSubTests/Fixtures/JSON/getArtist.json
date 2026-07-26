@@ -1,0 +1,25 @@
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.15.0",
+    "type": "Airsonic-Advanced",
+    "artist": {
+      "id": "52",
+      "name": "Amanda Blank",
+      "coverArt": "ar-52",
+      "albumCount": 1,
+      "album": [
+        {
+          "id": "41",
+          "name": "The Remixes",
+          "artist": "Amanda Blank",
+          "artistId": "52",
+          "coverArt": "al-41",
+          "songCount": 1,
+          "duration": 206,
+          "created": "2024-02-24T15:31:22.978Z"
+        }
+      ]
+    }
+  }
+}

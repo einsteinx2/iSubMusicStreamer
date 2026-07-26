@@ -1,0 +1,37 @@
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.15.0",
+    "indexes": {
+      "ignoredArticles": "The El La Los Las Le Les",
+      "index": {
+        "name": "Z",
+        "artist": {
+          "id": "9200",
+          "name": "Zebra Ensemble"
+        }
+      },
+      "child": {
+        "id": "206",
+        "isDir": false,
+        "title": "Me Against The World",
+        "album": "Me Against The World",
+        "artist": "2Pac",
+        "track": 3,
+        "year": 1995,
+        "genre": "Rap",
+        "size": 14929021,
+        "suffix": "mp3",
+        "duration": 281,
+        "bitRate": 217,
+        "path": "03 - Me Against The World - 2Pac.mp3",
+        "isVideo": false,
+        "playCount": 6,
+        "created": "2024-02-24T15:30:02.415Z",
+        "albumId": "62",
+        "artistId": "50",
+        "type": "music"
+      }
+    }
+  }
+}

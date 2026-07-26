@@ -148,12 +148,12 @@ final class StringCleanXMLTests: XCTestCase {
         XCTAssertEqual(date.timeIntervalSince1970, 1708788682.0, accuracy: 0.001)
     }
 
-    func testDateXMLSecondsWithZuluSuffixIsNotParsed() {
-        // Documents a known parser gap: neither formatter accepts seconds precision
-        // plus a "Z" suffix, so such dates fall back to the defaults
+    func testDateXMLSecondsWithZuluSuffixParses() throws {
+        // Formerly a parser gap; the ISO8601 fallback in SubsonicDateParsing (added
+        // for JSON support, since Navidrome emits this shape) now accepts it
         let value: String? = "2024-02-24T15:31:22Z"
-        XCTAssertNil(value.dateXMLOptional)
-        XCTAssertEqual(value.dateXML, .distantPast)
+        let date = try XCTUnwrap(value.dateXMLOptional)
+        XCTAssertEqual(date.timeIntervalSince1970, 1708788682.0, accuracy: 0.001)
     }
 
     func testDateXMLNilAndMalformedDefaultToDistantPast() {
